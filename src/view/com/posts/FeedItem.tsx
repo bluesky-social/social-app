@@ -1,15 +1,18 @@
-import React, {useMemo, useState} from 'react'
-import {observer} from 'mobx-react-lite'
-import {Linking, StyleSheet, View} from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard'
-import {AtUri} from '@atproto/api'
+import React, {memo, useMemo, useState} from 'react'
+import {StyleSheet, View} from 'react-native'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  PostModeration,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {PostsFeedItemModel} from 'state/models/feeds/post'
-import {FeedSourceInfo} from 'lib/api/feed/types'
-import {Link, DesktopWebTextLink} from '../util/Link'
+import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
+import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
 import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
@@ -19,44 +22,91 @@ import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
-import * as Toast from '../util/Toast'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {getTranslatorLink} from '../../../locale/helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {isEmbedByEmbedder} from 'lib/embeds'
+import {MAX_POST_LINES} from 'lib/constants'
+import {countLines} from 'lib/strings/helpers'
+import {useComposerControls} from '#/state/shell/composer'
+import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {FeedNameText} from '../util/FeedInfoText'
 
-export const FeedItem = observer(function FeedItemImpl({
-  item,
-  source,
+export function FeedItem({
+  post,
+  record,
+  reason,
+  moderation,
   isThreadChild,
   isThreadLastChild,
   isThreadParent,
 }: {
-  item: PostsFeedItemModel
-  source?: FeedSourceInfo
+  post: AppBskyFeedDefs.PostView
+  record: AppBskyFeedPost.Record
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  moderation: PostModeration
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
-  showReplyLine?: boolean
 }) {
-  const store = useStores()
+  const postShadowed = usePostShadow(post)
+  const richText = useMemo(
+    () =>
+      new RichTextAPI({
+        text: record.text,
+        facets: record.facets,
+      }),
+    [record],
+  )
+  if (postShadowed === POST_TOMBSTONE) {
+    return null
+  }
+  if (richText && moderation) {
+    return (
+      <FeedItemInner
+        post={postShadowed}
+        record={record}
+        reason={reason}
+        richText={richText}
+        moderation={moderation}
+        isThreadChild={isThreadChild}
+        isThreadLastChild={isThreadLastChild}
+        isThreadParent={isThreadParent}
+      />
+    )
+  }
+  return null
+}
+
+let FeedItemInner = ({
+  post,
+  record,
+  reason,
+  richText,
+  moderation,
+  isThreadChild,
+  isThreadLastChild,
+  isThreadParent,
+}: {
+  post: Shadow<AppBskyFeedDefs.PostView>
+  record: AppBskyFeedPost.Record
+  reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
+  richText: RichTextAPI
+  moderation: PostModeration
+  isThreadChild?: boolean
+  isThreadLastChild?: boolean
+  isThreadParent?: boolean
+}): React.ReactNode => {
+  const {openComposer} = useComposerControls()
   const pal = usePalette('default')
-  const {track} = useAnalytics()
-  const [deleted, setDeleted] = useState(false)
-  const record = item.postRecord
-  const itemUri = item.post.uri
-  const itemCid = item.post.cid
-  const itemHref = useMemo(() => {
-    const urip = new AtUri(item.post.uri)
-    return makeProfileLink(item.post.author, 'post', urip.rkey)
-  }, [item.post.uri, item.post.author])
-  const itemTitle = `Post by ${item.post.author.handle}`
+  const href = useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(post.author, 'post', urip.rkey)
+  }, [post.uri, post.author])
+
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
       return ''
@@ -64,77 +114,21 @@ export const FeedItem = observer(function FeedItemImpl({
     const urip = new AtUri(record.reply.parent?.uri || record.reply.root.uri)
     return urip.hostname
   }, [record?.reply])
-  const translatorUrl = getTranslatorLink(
-    record?.text || '',
-    store.preferences.primaryLanguage,
-  )
 
   const onPressReply = React.useCallback(() => {
-    track('FeedItem:PostReply')
-    store.shell.openComposer({
+    openComposer({
       replyTo: {
-        uri: item.post.uri,
-        cid: item.post.cid,
-        text: record?.text || '',
+        uri: post.uri,
+        cid: post.cid,
+        text: record.text || '',
         author: {
-          handle: item.post.author.handle,
-          displayName: item.post.author.displayName,
-          avatar: item.post.author.avatar,
+          handle: post.author.handle,
+          displayName: post.author.displayName,
+          avatar: post.author.avatar,
         },
       },
     })
-  }, [item, track, record, store])
-
-  const onPressToggleRepost = React.useCallback(() => {
-    track('FeedItem:PostRepost')
-    return item
-      .toggleRepost()
-      .catch(e => store.log.error('Failed to toggle repost', e))
-  }, [track, item, store])
-
-  const onPressToggleLike = React.useCallback(() => {
-    track('FeedItem:PostLike')
-    return item
-      .toggleLike()
-      .catch(e => store.log.error('Failed to toggle like', e))
-  }, [track, item, store])
-
-  const onCopyPostText = React.useCallback(() => {
-    Clipboard.setString(record?.text || '')
-    Toast.show('Copied to clipboard')
-  }, [record])
-
-  const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
-
-  const onToggleThreadMute = React.useCallback(async () => {
-    track('FeedItem:ThreadMute')
-    try {
-      await item.toggleThreadMute()
-      if (item.isThreadMuted) {
-        Toast.show('You will no longer receive notifications for this thread')
-      } else {
-        Toast.show('You will now receive notifications for this thread')
-      }
-    } catch (e) {
-      store.log.error('Failed to toggle thread mute', e)
-    }
-  }, [track, item, store])
-
-  const onDeletePost = React.useCallback(() => {
-    track('FeedItem:PostDelete')
-    item.delete().then(
-      () => {
-        setDeleted(true)
-        Toast.show('Post deleted')
-      },
-      e => {
-        store.log.error('Failed to delete post', e)
-        Toast.show('Failed to delete post, please try again')
-      },
-    )
-  }, [track, item, setDeleted, store])
+  }, [post, record, openComposer])
 
   const outerStyles = [
     styles.outer,
@@ -149,15 +143,11 @@ export const FeedItem = observer(function FeedItemImpl({
     isThreadChild ? styles.outerSmallTop : undefined,
   ]
 
-  if (!record || deleted) {
-    return <View />
-  }
-
   return (
     <Link
-      testID={`feedItem-by-${item.post.author.handle}`}
+      testID={`feedItem-by-${post.author.handle}`}
       style={outerStyles}
-      href={itemHref}
+      href={href}
       noFeedback
       accessible={false}>
       <PostSandboxWarning />
@@ -179,32 +169,30 @@ export const FeedItem = observer(function FeedItemImpl({
         </View>
 
         <View style={{paddingTop: 12, flexShrink: 1}}>
-          {source ? (
-            <Link
-              title={sanitizeDisplayName(source.displayName)}
-              href={source.uri}>
+          {isReasonFeedSource(reason) ? (
+            <Link href={reason.href}>
               <Text
                 type="sm-bold"
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
                 From{' '}
-                <DesktopWebTextLink
+                <FeedNameText
                   type="sm-bold"
-                  style={pal.textLight}
+                  uri={reason.uri}
+                  href={reason.href}
                   lineHeight={1.2}
                   numberOfLines={1}
-                  text={sanitizeDisplayName(source.displayName)}
-                  href={source.uri}
+                  style={pal.textLight}
                 />
               </Text>
             </Link>
-          ) : item.reasonRepost ? (
+          ) : AppBskyFeedDefs.isReasonRepost(reason) ? (
             <Link
               style={styles.includeReason}
-              href={makeProfileLink(item.reasonRepost.by)}
+              href={makeProfileLink(reason.by)}
               title={`Reposted by ${sanitizeDisplayName(
-                item.reasonRepost.by.displayName || item.reasonRepost.by.handle,
+                reason.by.displayName || reason.by.handle,
               )}`}>
               <FontAwesomeIcon
                 icon="retweet"
@@ -220,16 +208,15 @@ export const FeedItem = observer(function FeedItemImpl({
                 lineHeight={1.2}
                 numberOfLines={1}>
                 Reposted by{' '}
-                <DesktopWebTextLink
+                <TextLinkOnWebOnly
                   type="sm-bold"
                   style={pal.textLight}
                   lineHeight={1.2}
                   numberOfLines={1}
                   text={sanitizeDisplayName(
-                    item.reasonRepost.by.displayName ||
-                      sanitizeHandle(item.reasonRepost.by.handle),
+                    reason.by.displayName || sanitizeHandle(reason.by.handle),
                   )}
-                  href={makeProfileLink(item.reasonRepost.by)}
+                  href={makeProfileLink(reason.by)}
                 />
               </Text>
             </Link>
@@ -241,10 +228,10 @@ export const FeedItem = observer(function FeedItemImpl({
         <View style={styles.layoutAvi}>
           <PreviewableUserAvatar
             size={52}
-            did={item.post.author.did}
-            handle={item.post.author.handle}
-            avatar={item.post.author.avatar}
-            moderation={item.moderation.avatar}
+            did={post.author.did}
+            handle={post.author.handle}
+            avatar={post.author.avatar}
+            moderation={moderation.avatar}
           />
           {isThreadParent && (
             <View
@@ -261,10 +248,10 @@ export const FeedItem = observer(function FeedItemImpl({
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
-            author={item.post.author}
-            authorHasWarning={!!item.post.author.labels?.length}
-            timestamp={item.post.indexedAt}
-            postHref={itemHref}
+            author={post.author}
+            authorHasWarning={!!post.author.labels?.length}
+            timestamp={post.indexedAt}
+            postHref={href}
           />
           {!isThreadChild && replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
@@ -291,70 +278,86 @@ export const FeedItem = observer(function FeedItemImpl({
               </Text>
             </View>
           )}
-          <ContentHider
-            testID="contentHider-post"
-            moderation={item.moderation.content}
-            ignoreMute
-            childContainerStyle={styles.contentHiderChild}>
-            <PostAlerts
-              moderation={item.moderation.content}
-              style={styles.alert}
-            />
-            {item.richText?.text ? (
-              <View style={styles.postTextContainer}>
-                <RichText
-                  testID="postText"
-                  type="post-text"
-                  richText={item.richText}
-                  lineHeight={1.3}
-                  style={s.flex1}
-                />
-              </View>
-            ) : undefined}
-            {item.post.embed ? (
-              <ContentHider
-                testID="contentHider-embed"
-                moderation={item.moderation.embed}
-                ignoreMute={isEmbedByEmbedder(
-                  item.post.embed,
-                  item.post.author.did,
-                )}
-                style={styles.embed}>
-                <PostEmbeds
-                  embed={item.post.embed}
-                  moderation={item.moderation.embed}
-                />
-              </ContentHider>
-            ) : null}
-          </ContentHider>
-          <PostCtrls
-            itemUri={itemUri}
-            itemCid={itemCid}
-            itemHref={itemHref}
-            itemTitle={itemTitle}
-            author={item.post.author}
-            text={item.richText?.text || record.text}
-            indexedAt={item.post.indexedAt}
-            isAuthor={item.post.author.did === store.me.did}
-            replyCount={item.post.replyCount}
-            repostCount={item.post.repostCount}
-            likeCount={item.post.likeCount}
-            isReposted={!!item.post.viewer?.repost}
-            isLiked={!!item.post.viewer?.like}
-            isThreadMuted={item.isThreadMuted}
-            onPressReply={onPressReply}
-            onPressToggleRepost={onPressToggleRepost}
-            onPressToggleLike={onPressToggleLike}
-            onCopyPostText={onCopyPostText}
-            onOpenTranslate={onOpenTranslate}
-            onToggleThreadMute={onToggleThreadMute}
-            onDeletePost={onDeletePost}
+          <PostContent
+            moderation={moderation}
+            richText={richText}
+            postEmbed={post.embed}
+            postAuthor={post.author}
           />
+          <PostCtrls post={post} record={record} onPressReply={onPressReply} />
         </View>
       </View>
     </Link>
   )
-})
+}
+FeedItemInner = memo(FeedItemInner)
+
+let PostContent = ({
+  moderation,
+  richText,
+  postEmbed,
+  postAuthor,
+}: {
+  moderation: PostModeration
+  richText: RichTextAPI
+  postEmbed: AppBskyFeedDefs.PostView['embed']
+  postAuthor: AppBskyFeedDefs.PostView['author']
+}): React.ReactNode => {
+  const pal = usePalette('default')
+  const [limitLines, setLimitLines] = useState(
+    () => countLines(richText.text) >= MAX_POST_LINES,
+  )
+
+  const onPressShowMore = React.useCallback(() => {
+    setLimitLines(false)
+  }, [setLimitLines])
+
+  return (
+    <ContentHider
+      testID="contentHider-post"
+      moderation={moderation.content}
+      ignoreMute
+      childContainerStyle={styles.contentHiderChild}>
+      <PostAlerts moderation={moderation.content} style={styles.alert} />
+      {richText.text ? (
+        <View style={styles.postTextContainer}>
+          <RichText
+            testID="postText"
+            type="post-text"
+            richText={richText}
+            lineHeight={1.3}
+            numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+            style={s.flex1}
+          />
+        </View>
+      ) : undefined}
+      {limitLines ? (
+        <TextLink
+          text="Show More"
+          style={pal.link}
+          onPress={onPressShowMore}
+          href="#"
+        />
+      ) : undefined}
+      {postEmbed ? (
+        <ContentHider
+          testID="contentHider-embed"
+          moderation={moderation.embed}
+          moderationDecisions={moderation.decisions}
+          ignoreMute={isEmbedByEmbedder(postEmbed, postAuthor.did)}
+          ignoreQuoteDecisions
+          style={styles.embed}>
+          <PostEmbeds
+            embed={postEmbed}
+            moderation={moderation.embed}
+            moderationDecisions={moderation.decisions}
+          />
+        </ContentHider>
+      ) : null}
+    </ContentHider>
+  )
+}
+PostContent = memo(PostContent)
 
 const styles = StyleSheet.create({
   outer: {

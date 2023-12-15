@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - main
-      - jake/bskyweb-additions
+      - traffic-reduction
+      - respect-optout-for-embeds
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}

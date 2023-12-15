@@ -39,29 +39,10 @@ const useImageDimensions = (image: ImageSource): Dimensions | null => {
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const getImageDimensions = (image: ImageSource): Promise<Dimensions> => {
     return new Promise(resolve => {
-      if (typeof image === 'number') {
-        const cacheKey = `${image}`
-        let imageDimensions = imageDimensionsCache.get(cacheKey)
-
-        if (!imageDimensions) {
-          const {width, height} = Image.resolveAssetSource(image)
-          imageDimensions = {width, height}
-          imageDimensionsCache.set(cacheKey, imageDimensions)
-        }
-
-        resolve(imageDimensions)
-
-        return
-      }
-
-      // @ts-ignore
       if (image.uri) {
         const source = image as ImageURISource
-
         const cacheKey = source.uri as string
-
         const imageDimensions = imageDimensionsCache.get(cacheKey)
-
         if (imageDimensions) {
           resolve(imageDimensions)
         } else {

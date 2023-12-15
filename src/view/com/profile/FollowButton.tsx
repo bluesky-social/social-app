@@ -1,47 +1,65 @@
 import React from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
-import {FollowState} from 'state/models/cache/my-follows'
-import {useFollowProfile} from 'lib/hooks/useFollowProfile'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {Shadow} from '#/state/cache/types'
 
-export const FollowButton = observer(function FollowButtonImpl({
+export function FollowButton({
   unfollowedType = 'inverted',
   followedType = 'default',
   profile,
-  onToggleFollow,
   labelStyle,
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
-  profile: AppBskyActorDefs.ProfileViewBasic
-  onToggleFollow?: (v: boolean) => void
+  profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   labelStyle?: StyleProp<TextStyle>
 }) {
-  const {state, following, toggle} = useFollowProfile(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
-  const onPress = React.useCallback(async () => {
+  const onPressFollow = async () => {
     try {
-      const {following} = await toggle()
-      onToggleFollow?.(following)
+      await queueFollow()
     } catch (e: any) {
-      Toast.show('An issue occurred, please try again.')
+      if (e?.name !== 'AbortError') {
+        Toast.show(`An issue occurred, please try again.`)
+      }
     }
-  }, [toggle, onToggleFollow])
+  }
 
-  if (state === FollowState.Unknown) {
+  const onPressUnfollow = async () => {
+    try {
+      await queueUnfollow()
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        Toast.show(`An issue occurred, please try again.`)
+      }
+    }
+  }
+
+  if (!profile.viewer) {
     return <View />
   }
 
-  return (
-    <Button
-      type={following ? followedType : unfollowedType}
-      labelStyle={labelStyle}
-      onPress={onPress}
-      label={following ? 'Unfollow' : 'Follow'}
-      withLoading={true}
-    />
-  )
-})
+  if (profile.viewer.following) {
+    return (
+      <Button
+        type={followedType}
+        labelStyle={labelStyle}
+        onPress={onPressUnfollow}
+        label="Unfollow"
+      />
+    )
+  } else {
+    return (
+      <Button
+        type={unfollowedType}
+        labelStyle={labelStyle}
+        onPress={onPressFollow}
+        label="Follow"
+      />
+    )
+  }
+}

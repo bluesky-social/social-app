@@ -1,78 +1,114 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView} from 'react-native-gesture-handler'
 import {Text} from '../com/util/text/Text'
 import {Button} from '../com/util/forms/Button'
 import * as Toast from '../com/util/Toast'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useModalControls} from '#/state/modals'
+import {useLanguagePrefs} from '#/state/preferences'
+import {
+  useAppPasswordsQuery,
+  useAppPasswordDeleteMutation,
+} from '#/state/queries/app-passwords'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {cleanError} from '#/lib/strings/errors'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
-export const AppPasswords = withAuthRequired(
-  observer(function AppPasswordsImpl({}: Props) {
-    const pal = usePalette('default')
-    const store = useStores()
-    const {screen} = useAnalytics()
-    const {isTabletOrDesktop} = useWebMediaQueries()
+export function AppPasswords({}: Props) {
+  const pal = usePalette('default')
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {screen} = useAnalytics()
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const {openModal} = useModalControls()
+  const {data: appPasswords, error} = useAppPasswordsQuery()
 
-    useFocusEffect(
-      React.useCallback(() => {
-        screen('AppPasswords')
-        store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
+  useFocusEffect(
+    React.useCallback(() => {
+      screen('AppPasswords')
+      setMinimalShellMode(false)
+    }, [screen, setMinimalShellMode]),
+  )
+
+  const onAdd = React.useCallback(async () => {
+    openModal({name: 'add-app-password'})
+  }, [openModal])
+
+  if (error) {
+    return (
+      <CenteredView
+        style={[
+          styles.container,
+          isTabletOrDesktop && styles.containerDesktop,
+          pal.view,
+          pal.border,
+        ]}
+        testID="appPasswordsScreen">
+        <ErrorScreen
+          title="Oops!"
+          message="There was an issue with fetching your app passwords"
+          details={cleanError(error)}
+        />
+      </CenteredView>
     )
+  }
 
-    const onAdd = React.useCallback(async () => {
-      store.shell.openModal({name: 'add-app-password'})
-    }, [store])
-
-    // no app passwords (empty) state
-    if (store.me.appPasswords.length === 0) {
-      return (
-        <CenteredView
-          style={[
-            styles.container,
-            isTabletOrDesktop && styles.containerDesktop,
-            pal.view,
-            pal.border,
-          ]}
-          testID="appPasswordsScreen">
-          <AppPasswordsHeader />
-          <View style={[styles.empty, pal.viewLight]}>
-            <Text type="lg" style={[pal.text, styles.emptyText]}>
+  // no app passwords (empty) state
+  if (appPasswords?.length === 0) {
+    return (
+      <CenteredView
+        style={[
+          styles.container,
+          isTabletOrDesktop && styles.containerDesktop,
+          pal.view,
+          pal.border,
+        ]}
+        testID="appPasswordsScreen">
+        <AppPasswordsHeader />
+        <View style={[styles.empty, pal.viewLight]}>
+          <Text type="lg" style={[pal.text, styles.emptyText]}>
+            <Trans>
               You have not created any app passwords yet. You can create one by
               pressing the button below.
-            </Text>
-          </View>
-          {!isTabletOrDesktop && <View style={styles.flex1} />}
-          <View
-            style={[
-              styles.btnContainer,
-              isTabletOrDesktop && styles.btnContainerDesktop,
-            ]}>
-            <Button
-              testID="appPasswordBtn"
-              type="primary"
-              label="Add App Password"
-              style={styles.btn}
-              labelStyle={styles.btnLabel}
-              onPress={onAdd}
-            />
-          </View>
-        </CenteredView>
-      )
-    }
+            </Trans>
+          </Text>
+        </View>
+        {!isTabletOrDesktop && <View style={styles.flex1} />}
+        <View
+          style={[
+            styles.btnContainer,
+            isTabletOrDesktop && styles.btnContainerDesktop,
+          ]}>
+          <Button
+            testID="appPasswordBtn"
+            type="primary"
+            label="Add App Password"
+            style={styles.btn}
+            labelStyle={styles.btnLabel}
+            onPress={onAdd}
+          />
+        </View>
+      </CenteredView>
+    )
+  }
 
+  if (appPasswords?.length) {
     // has app passwords
     return (
       <CenteredView
@@ -90,7 +126,7 @@ export const AppPasswords = withAuthRequired(
             pal.border,
             !isTabletOrDesktop && styles.flex1,
           ]}>
-          {store.me.appPasswords.map((password, i) => (
+          {appPasswords.map((password, i) => (
             <AppPassword
               key={password.name}
               testID={`appPassword-${i}`}
@@ -125,15 +161,29 @@ export const AppPasswords = withAuthRequired(
         )}
       </CenteredView>
     )
-  }),
-)
+  }
+
+  return (
+    <CenteredView
+      style={[
+        styles.container,
+        isTabletOrDesktop && styles.containerDesktop,
+        pal.view,
+        pal.border,
+      ]}
+      testID="appPasswordsScreen">
+      <ActivityIndicator />
+    </CenteredView>
+  )
+}
 
 function AppPasswordsHeader() {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
   return (
     <>
-      <ViewHeader title="App Passwords" showOnDesktop />
+      <ViewHeader title={_(msg`App Passwords`)} showOnDesktop />
       <Text
         type="sm"
         style={[
@@ -141,8 +191,10 @@ function AppPasswordsHeader() {
           pal.text,
           isTabletOrDesktop && styles.descriptionDesktop,
         ]}>
-        Use app passwords to login to other Bluesky clients without giving full
-        access to your account or password.
+        <Trans>
+          Use app passwords to login to other Bluesky clients without giving
+          full access to your account or password.
+        </Trans>
       </Text>
     </>
   )
@@ -158,21 +210,24 @@ function AppPassword({
   createdAt: string
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {_} = useLingui()
+  const {openModal} = useModalControls()
+  const {contentLanguages} = useLanguagePrefs()
+  const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
-      title: 'Delete App Password',
-      message: `Are you sure you want to delete the app password "${name}"?`,
+      title: _(msg`Delete app password`),
+      message: _(
+        msg`Are you sure you want to delete the app password "${name}"?`,
+      ),
       async onPressConfirm() {
-        await store.me.deleteAppPassword(name)
+        await deleteMutation.mutateAsync({name})
         Toast.show('App password deleted')
       },
     })
-  }, [store, name])
-
-  const {contentLanguages} = store.preferences
+  }, [deleteMutation, openModal, name, _])
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
@@ -183,22 +238,24 @@ function AppPassword({
       style={[styles.item, pal.border]}
       onPress={onDelete}
       accessibilityRole="button"
-      accessibilityLabel="Delete app password"
+      accessibilityLabel={_(msg`Delete app password`)}
       accessibilityHint="">
       <View>
         <Text type="md-bold" style={pal.text}>
           {name}
         </Text>
         <Text type="md" style={[pal.text, styles.pr10]} numberOfLines={1}>
-          Created{' '}
-          {Intl.DateTimeFormat(primaryLocale, {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-          }).format(new Date(createdAt))}
+          <Trans>
+            Created{' '}
+            {Intl.DateTimeFormat(primaryLocale, {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+            }).format(new Date(createdAt))}
+          </Trans>
         </Text>
       </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />

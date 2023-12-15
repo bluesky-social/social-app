@@ -3,18 +3,21 @@ import {
   AppBskyEmbedExternal,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  AppBskyFeedThreadgate,
   AppBskyRichtextFacet,
+  BskyAgent,
   ComAtprotoLabelDefs,
   ComAtprotoRepoUploadBlob,
   RichText,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {RootStoreModel} from 'state/models/root-store'
 import {isNetworkError} from 'lib/strings/errors'
 import {LinkMeta} from '../link-meta/link-meta'
 import {isWeb} from 'platform/detection'
 import {ImageModel} from 'state/models/media/image'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {logger} from '#/logger'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -24,46 +27,19 @@ export interface ExternalEmbedDraft {
   localThumb?: ImageModel
 }
 
-export async function resolveName(store: RootStoreModel, didOrHandle: string) {
-  if (!didOrHandle) {
-    throw new Error('Invalid handle: ""')
-  }
-  if (didOrHandle.startsWith('did:')) {
-    return didOrHandle
-  }
-
-  // we run the resolution always to ensure freshness
-  const promise = store.agent
-    .resolveHandle({
-      handle: didOrHandle,
-    })
-    .then(res => {
-      store.handleResolutions.cache.set(didOrHandle, res.data.did)
-      return res.data.did
-    })
-
-  // but we can return immediately if it's cached
-  const cached = store.handleResolutions.cache.get(didOrHandle)
-  if (cached) {
-    return cached
-  }
-
-  return promise
-}
-
 export async function uploadBlob(
-  store: RootStoreModel,
+  agent: BskyAgent,
   blob: string,
   encoding: string,
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (isWeb) {
     // `blob` should be a data uri
-    return store.agent.uploadBlob(convertDataURIToUint8Array(blob), {
+    return agent.uploadBlob(convertDataURIToUint8Array(blob), {
       encoding,
     })
   } else {
     // `blob` should be a path to a file in the local FS
-    return store.agent.uploadBlob(
+    return agent.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
@@ -80,12 +56,12 @@ interface PostOpts {
   extLink?: ExternalEmbedDraft
   images?: ImageModel[]
   labels?: string[]
-  knownHandles?: Set<string>
+  threadgate?: ThreadgateSetting[]
   onStateChange?: (state: string) => void
   langs?: string[]
 }
 
-export async function post(store: RootStoreModel, opts: PostOpts) {
+export async function post(agent: BskyAgent, opts: PostOpts) {
   let embed:
     | AppBskyEmbedImages.Main
     | AppBskyEmbedExternal.Main
@@ -101,7 +77,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   )
 
   opts.onStateChange?.('Processing...')
-  await rt.detectFacets(store.agent)
+  await rt.detectFacets(agent)
   rt = shortenLinks(rt)
 
   // filter out any mention facets that didn't map to a user
@@ -128,13 +104,19 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
 
   // add image embed if present
   if (opts.images?.length) {
+    logger.info(`Uploading images`, {
+      count: opts.images.length,
+    })
+
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
+      logger.info(`Compressing image`)
       await image.compress()
       const path = image.compressed?.path ?? image.path
       const {width, height} = image.compressed || image
-      const res = await uploadBlob(store, path, 'image/jpeg')
+      logger.info(`Uploading image`)
+      const res = await uploadBlob(agent, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
         alt: image.altText ?? '',
@@ -178,14 +160,13 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
         ) {
           encoding = 'image/jpeg'
         } else {
-          store.log.warn(
-            'Unexpected image format for thumbnail, skipping',
-            opts.extLink.localThumb.path,
-          )
+          logger.warn('Unexpected image format for thumbnail, skipping', {
+            thumbnail: opts.extLink.localThumb.path,
+          })
         }
         if (encoding) {
           const thumbUploadRes = await uploadBlob(
-            store,
+            agent,
             opts.extLink.localThumb.path,
             encoding,
           )
@@ -224,7 +205,7 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
   // add replyTo if post is a reply to another post
   if (opts.replyTo) {
     const replyToUrip = new AtUri(opts.replyTo)
-    const parentPost = await store.agent.getPost({
+    const parentPost = await agent.getPost({
       repo: replyToUrip.host,
       rkey: replyToUrip.rkey,
     })
@@ -255,9 +236,10 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
     langs = opts.langs.slice(0, 3)
   }
 
+  let res
   try {
     opts.onStateChange?.('Posting...')
-    return await store.agent.post({
+    res = await agent.post({
       text: rt.text,
       facets: rt.facets,
       reply,
@@ -275,6 +257,52 @@ export async function post(store: RootStoreModel, opts: PostOpts) {
       throw e
     }
   }
+
+  try {
+    // TODO: this needs to be batch-created with the post!
+    if (opts.threadgate?.length) {
+      await createThreadgate(agent, res.uri, opts.threadgate)
+    }
+  } catch (e: any) {
+    console.error(`Failed to create threadgate: ${e.toString()}`)
+    throw new Error(
+      'Post reply-controls failed to be set. Your post was created but anyone can reply to it.',
+    )
+  }
+
+  return res
+}
+
+async function createThreadgate(
+  agent: BskyAgent,
+  postUri: string,
+  threadgate: ThreadgateSetting[],
+) {
+  let allow: (
+    | AppBskyFeedThreadgate.MentionRule
+    | AppBskyFeedThreadgate.FollowingRule
+    | AppBskyFeedThreadgate.ListRule
+  )[] = []
+  if (!threadgate.find(v => v.type === 'nobody')) {
+    for (const rule of threadgate) {
+      if (rule.type === 'mention') {
+        allow.push({$type: 'app.bsky.feed.threadgate#mentionRule'})
+      } else if (rule.type === 'following') {
+        allow.push({$type: 'app.bsky.feed.threadgate#followingRule'})
+      } else if (rule.type === 'list') {
+        allow.push({
+          $type: 'app.bsky.feed.threadgate#listRule',
+          list: rule.list,
+        })
+      }
+    }
+  }
+
+  const postUrip = new AtUri(postUri)
+  await agent.api.app.bsky.feed.threadgate.create(
+    {repo: agent.session!.did, rkey: postUrip.rkey},
+    {post: postUri, createdAt: new Date().toISOString(), allow},
+  )
 }
 
 // helpers

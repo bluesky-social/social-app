@@ -2,7 +2,6 @@ import React, {useState, useMemo} from 'react'
 import {Linking, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {ScrollView} from 'react-native-gesture-handler'
 import {AtUri} from '@atproto/api'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../../util/text/Text'
@@ -14,8 +13,12 @@ import {SendReportButton} from './SendReportButton'
 import {InputIssueDetails} from './InputIssueDetails'
 import {ReportReasonOptions} from './ReasonOptions'
 import {CollectionId} from './types'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {getAgent} from '#/state/session'
 
-const DMCA_LINK = 'https://bsky.app/support/copyright'
+const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
 
 export const snapPoints = [575]
 
@@ -36,7 +39,7 @@ type ReportComponentProps =
     }
 
 export function Component(content: ReportComponentProps) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
@@ -60,12 +63,13 @@ export function Component(content: ReportComponentProps) {
     try {
       if (issue === '__copyright__') {
         Linking.openURL(DMCA_LINK)
+        closeModal()
         return
       }
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await store.agent.createModerationReport({
+      await getAgent().createModerationReport({
         reasonType: issue,
         subject: {
           $type,
@@ -75,7 +79,7 @@ export function Component(content: ReportComponentProps) {
       })
       Toast.show("Thank you for your report! We'll look into it promptly.")
 
-      store.shell.closeModal()
+      closeModal()
       return
     } catch (e: any) {
       setError(cleanError(e))
@@ -145,6 +149,7 @@ const SelectIssue = ({
   atUri: AtUri | null
 }) => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const collectionName = getCollectionNameForReport(atUri)
   const onSelectIssue = (v: string) => setIssue(v)
   const goToDetails = () => {
@@ -157,9 +162,11 @@ const SelectIssue = ({
 
   return (
     <>
-      <Text style={[pal.text, styles.title]}>Report {collectionName}</Text>
+      <Text style={[pal.text, styles.title]}>
+        <Trans>Report {collectionName}</Trans>
+      </Text>
       <Text style={[pal.textLight, styles.description]}>
-        What is the issue with this {collectionName}?
+        <Trans>What is the issue with this {collectionName}?</Trans>
       </Text>
       <View style={{marginBottom: 10}}>
         <ReportReasonOptions
@@ -181,9 +188,11 @@ const SelectIssue = ({
             style={styles.addDetailsBtn}
             onPress={goToDetails}
             accessibilityRole="button"
-            accessibilityLabel="Add details"
+            accessibilityLabel={_(msg`Add details`)}
             accessibilityHint="Add more details to your report">
-            <Text style={[s.f18, pal.link]}>Add details to report</Text>
+            <Text style={[s.f18, pal.link]}>
+              <Trans>Add details to report</Trans>
+            </Text>
           </TouchableOpacity>
         </>
       ) : undefined}

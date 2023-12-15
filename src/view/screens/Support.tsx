@@ -3,40 +3,45 @@ import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {ViewHeader} from '../com/util/ViewHeader'
-import {useStores} from 'state/index'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
 import {CenteredView} from 'view/com/util/Views'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
+import {HELP_DESK_URL} from 'lib/constants'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Support'>
 export const SupportScreen = (_props: Props) => {
-  const store = useStores()
   const pal = usePalette('default')
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {_} = useLingui()
 
   useFocusEffect(
     React.useCallback(() => {
-      store.shell.setMinimalShellMode(false)
-    }, [store]),
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
   )
 
   return (
     <View>
-      <ViewHeader title="Support" />
+      <ViewHeader title={_(msg`Support`)} />
       <CenteredView>
         <Text type="title-xl" style={[pal.text, s.p20, s.pb5]}>
-          Support
+          <Trans>Support</Trans>
         </Text>
         <Text style={[pal.text, s.p20]}>
-          If you need help, email us at{' '}
-          <TextLink
-            href="mailto:support@bsky.app"
-            text="support@bsky.app"
-            style={pal.link}
-          />{' '}
-          with a description of your issue and information about how we can help
-          you.
+          <Trans>
+            The support form has been moved. If you need help, please
+            <TextLink
+              href={HELP_DESK_URL}
+              text=" click here"
+              style={pal.link}
+            />{' '}
+            or visit {HELP_DESK_URL} to get in touch with us.
+          </Trans>
         </Text>
       </CenteredView>
     </View>

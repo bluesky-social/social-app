@@ -13,7 +13,7 @@ export interface TabBarProps {
   items: string[]
   indicatorColor?: string
   onSelect?: (index: number) => void
-  onPressSelected?: () => void
+  onPressSelected?: (index: number) => void
 }
 
 export function TabBar({
@@ -44,7 +44,7 @@ export function TabBar({
     (index: number) => {
       onSelect?.(index)
       if (index === selectedPage) {
-        onPressSelected?.()
+        onPressSelected?.(index)
       }
     },
     [onSelect, selectedPage, onPressSelected],
@@ -64,9 +64,11 @@ export function TabBar({
   )
 
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
+
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
+        testID={`${testID}-selector`}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollElRef}
@@ -75,6 +77,7 @@ export function TabBar({
           const selected = i === selectedPage
           return (
             <PressableWithHover
+              testID={`${testID}-selector-${i}`}
               key={item}
               onLayout={e => onItemLayout(e, i)}
               style={[styles.item, selected && indicatorStyle]}
@@ -117,10 +120,7 @@ const desktopStyles = StyleSheet.create({
 
 const mobileStyles = StyleSheet.create({
   outer: {
-    flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'transparent',
-    maxWidth: '100%',
   },
   contentContainer: {
     columnGap: isWeb ? 0 : 20,

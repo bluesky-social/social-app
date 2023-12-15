@@ -1,12 +1,13 @@
-import React, {useCallback} from 'react'
+import React, {memo, useCallback} from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 import {RepostIcon} from 'lib/icons'
 import {s, colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {Text} from '../text/Text'
 import {pluralize} from 'lib/strings/helpers'
-import {useStores} from 'state/index'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {useModalControls} from '#/state/modals'
+import {useRequireAuth} from '#/state/session'
 
 interface Props {
   isReposted: boolean
@@ -16,15 +17,16 @@ interface Props {
   onQuote: () => void
 }
 
-export const RepostButton = ({
+let RepostButton = ({
   isReposted,
   repostCount,
   big,
   onRepost,
   onQuote,
-}: Props) => {
-  const store = useStores()
+}: Props): React.ReactNode => {
   const theme = useTheme()
+  const {openModal} = useModalControls()
+  const requireAuth = useRequireAuth()
 
   const defaultControlColor = React.useMemo(
     () => ({
@@ -34,18 +36,20 @@ export const RepostButton = ({
   )
 
   const onPressToggleRepostWrapper = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'repost',
       onRepost: onRepost,
       onQuote: onQuote,
       isReposted,
     })
-  }, [onRepost, onQuote, isReposted, store.shell])
+  }, [onRepost, onQuote, isReposted, openModal])
 
   return (
     <TouchableOpacity
       testID="repostBtn"
-      onPress={onPressToggleRepostWrapper}
+      onPress={() => {
+        requireAuth(() => onPressToggleRepostWrapper())
+      }}
       style={[styles.control, !big && styles.controlPad]}
       accessibilityRole="button"
       accessibilityLabel={`${
@@ -76,6 +80,8 @@ export const RepostButton = ({
     </TouchableOpacity>
   )
 }
+RepostButton = memo(RepostButton)
+export {RepostButton}
 
 const styles = StyleSheet.create({
   control: {

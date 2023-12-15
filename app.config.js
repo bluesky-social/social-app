@@ -1,12 +1,41 @@
+const pkg = require('./package.json')
+
 module.exports = function () {
-  const hasSentryToken = !!process.env.SENTRY_AUTH_TOKEN
+  /**
+   * App version number. Should be incremented as part of a release cycle.
+   */
+  const VERSION = pkg.version
+
+  /**
+   * iOS build number. Must be incremented for each TestFlight version.
+   */
+  const IOS_BUILD_NUMBER = '2'
+
+  /**
+   * Android build number. Must be incremented for each release.
+   */
+  const ANDROID_VERSION_CODE = 49
+
+  /**
+   * Uses built-in Expo env vars
+   *
+   * @see https://docs.expo.dev/build-reference/variables/#built-in-environment-variables
+   */
+  const PLATFORM = process.env.EAS_BUILD_PLATFORM
+
+  /**
+   * Additional granularity for the `dist` field
+   */
+  const DIST_BUILD_NUMBER =
+    PLATFORM === 'android' ? ANDROID_VERSION_CODE : IOS_BUILD_NUMBER
+
   return {
     expo: {
+      version: VERSION,
       name: 'Bluesky',
       slug: 'bluesky',
       scheme: 'bluesky',
       owner: 'blueskysocial',
-      version: '1.52.0',
       runtimeVersion: {
         policy: 'appVersion',
       },
@@ -14,12 +43,12 @@ module.exports = function () {
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
       splash: {
-        image: './assets/cloud-splash.png',
+        image: './assets/splash.png',
         resizeMode: 'cover',
         backgroundColor: '#ffffff',
       },
       ios: {
-        buildNumber: '1',
+        buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
@@ -43,10 +72,13 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: 40,
+        versionCode: ANDROID_VERSION_CODE,
+        icon: './assets/icon.png',
         adaptiveIcon: {
-          foregroundImage: './assets/adaptive-icon.png',
-          backgroundColor: '#ffffff',
+          foregroundImage: './assets/icon-android-foreground.png',
+          monochromeImage: './assets/icon-android-foreground.png',
+          backgroundImage: './assets/icon-android-background.png',
+          backgroundColor: '#1185FE',
         },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
@@ -74,7 +106,7 @@ module.exports = function () {
       },
       plugins: [
         'expo-localization',
-        hasSentryToken && 'sentry-expo',
+        Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
         [
           'expo-build-properties',
           {
@@ -92,6 +124,7 @@ module.exports = function () {
             username: 'blueskysocial',
           },
         ],
+        './plugins/withAndroidManifestPlugin.js',
       ].filter(Boolean),
       extra: {
         eas: {
@@ -100,11 +133,16 @@ module.exports = function () {
       },
       hooks: {
         postPublish: [
+          /*
+           * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
+           */
           {
             file: 'sentry-expo/upload-sourcemaps',
             config: {
               organization: 'blueskyweb',
               project: 'react-native',
+              release: VERSION,
+              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
             },
           },
         ],

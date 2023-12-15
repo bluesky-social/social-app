@@ -1,5 +1,4 @@
 import {useState, useEffect} from 'react'
-import {useStores} from 'state/index'
 import {ImageModel} from 'state/models/media/image'
 import * as apilib from 'lib/api/index'
 import {getLinkMeta} from 'lib/link-meta/link-meta'
@@ -14,18 +13,21 @@ import {
   isBskyCustomFeedUrl,
   isBskyListUrl,
 } from 'lib/strings/url-helpers'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {ComposerOpts} from 'state/shell/composer'
 import {POST_IMG_MAX} from 'lib/constants'
+import {logger} from '#/logger'
+import {getAgent} from '#/state/session'
+import {useGetPost} from '#/state/queries/post'
 
 export function useExternalLinkFetch({
   setQuote,
 }: {
   setQuote: (opts: ComposerOpts['quote']) => void
 }) {
-  const store = useStores()
   const [extLink, setExtLink] = useState<apilib.ExternalEmbedDraft | undefined>(
     undefined,
   )
+  const getPost = useGetPost()
 
   useEffect(() => {
     let aborted = false
@@ -37,7 +39,7 @@ export function useExternalLinkFetch({
     }
     if (!extLink.meta) {
       if (isBskyPostUrl(extLink.uri)) {
-        getPostAsQuote(store, extLink.uri).then(
+        getPostAsQuote(getPost, extLink.uri).then(
           newQuote => {
             if (aborted) {
               return
@@ -46,12 +48,14 @@ export function useExternalLinkFetch({
             setExtLink(undefined)
           },
           err => {
-            store.log.error('Failed to fetch post for quote embedding', {err})
+            logger.error('Failed to fetch post for quote embedding', {
+              error: err.toString(),
+            })
             setExtLink(undefined)
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(store, extLink.uri).then(
+        getFeedAsEmbed(getAgent(), extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -64,12 +68,12 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            store.log.error('Failed to fetch feed for embedding', {err})
+            logger.error('Failed to fetch feed for embedding', {error: err})
             setExtLink(undefined)
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(store, extLink.uri).then(
+        getListAsEmbed(getAgent(), extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -82,12 +86,12 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            store.log.error('Failed to fetch list for embedding', {err})
+            logger.error('Failed to fetch list for embedding', {error: err})
             setExtLink(undefined)
           },
         )
       } else {
-        getLinkMeta(store, extLink.uri).then(meta => {
+        getLinkMeta(getAgent(), extLink.uri).then(meta => {
           if (aborted) {
             return
           }
@@ -117,9 +121,7 @@ export function useExternalLinkFetch({
           setExtLink({
             ...extLink,
             isLoading: false, // done
-            localThumb: localThumb
-              ? new ImageModel(store, localThumb)
-              : undefined,
+            localThumb: localThumb ? new ImageModel(localThumb) : undefined,
           })
         })
       return cleanup
@@ -131,7 +133,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [store, extLink, setQuote])
+  }, [extLink, setQuote, getPost])
 
   return {extLink, setExtLink}
 }

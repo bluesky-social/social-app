@@ -14,7 +14,7 @@ build-web: ## Compile web bundle, copy to bskyweb directory
 
 .PHONY: test
 test: ## Run all tests
-	yarn test
+	NODE_ENV=test EXPO_PUBLIC_ENV=test yarn test
 
 .PHONY: lint
 lint: ## Run style checks and verify syntax

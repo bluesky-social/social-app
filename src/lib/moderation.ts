@@ -1,4 +1,4 @@
-import {ModerationCause, ProfileModeration} from '@atproto/api'
+import {ModerationCause, ProfileModeration, PostModeration} from '@atproto/api'
 
 export interface ModerationCauseDescription {
   name: string
@@ -17,9 +17,18 @@ export function describeModerationCause(
     }
   }
   if (cause.type === 'blocking') {
-    return {
-      name: 'User Blocked',
-      description: 'You have blocked this user. You cannot view their content.',
+    if (cause.source.type === 'list') {
+      return {
+        name: `User Blocked by "${cause.source.list.name}"`,
+        description:
+          'You have blocked this user. You cannot view their content.',
+      }
+    } else {
+      return {
+        name: 'User Blocked',
+        description:
+          'You have blocked this user. You cannot view their content.',
+      }
     }
   }
   if (cause.type === 'blocked-by') {
@@ -81,6 +90,25 @@ export function getProfileModerationCauses(
     }
     return true
   }) as ModerationCause[]
+}
+
+export function isPostMediaBlurred(
+  decisions: PostModeration['decisions'],
+): boolean {
+  return decisions.post.blurMedia
+}
+
+export function isQuoteBlurred(
+  decisions: PostModeration['decisions'],
+): boolean {
+  return (
+    decisions.quote?.blur ||
+    decisions.quote?.blurMedia ||
+    decisions.quote?.filter ||
+    decisions.quotedAccount?.blur ||
+    decisions.quotedAccount?.filter ||
+    false
+  )
 }
 
 export function isCauseALabelOnUri(

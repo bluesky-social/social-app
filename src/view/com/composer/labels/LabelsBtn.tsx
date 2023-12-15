@@ -1,15 +1,16 @@
 import React from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Button} from 'view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {ShieldExclamation} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {isNative} from 'platform/detection'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
 
-export const LabelsBtn = observer(function LabelsBtn({
+export function LabelsBtn({
   labels,
   hasMedia,
   onChange,
@@ -19,14 +20,15 @@ export const LabelsBtn = observer(function LabelsBtn({
   onChange: (v: string[]) => void
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {_} = useLingui()
+  const {openModal} = useModalControls()
 
   return (
     <Button
       type="default-light"
       testID="labelsBtn"
       style={[styles.button, !hasMedia && styles.dimmed]}
-      accessibilityLabel="Content warnings"
+      accessibilityLabel={_(msg`Content warnings`)}
       accessibilityHint=""
       onPress={() => {
         if (isNative) {
@@ -34,9 +36,9 @@ export const LabelsBtn = observer(function LabelsBtn({
             Keyboard.dismiss()
           }
         }
-        store.shell.openModal({name: 'self-label', labels, hasMedia, onChange})
+        openModal({name: 'self-label', labels, hasMedia, onChange})
       }}>
-      <ShieldExclamation style={pal.link} size={26} />
+      <ShieldExclamation style={pal.link} size={24} />
       {labels.length > 0 ? (
         <FontAwesomeIcon
           icon="check"
@@ -46,14 +48,13 @@ export const LabelsBtn = observer(function LabelsBtn({
       ) : null}
     </Button>
   )
-})
+}
 
 const styles = StyleSheet.create({
   button: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    marginRight: 4,
+    paddingHorizontal: 6,
   },
   dimmed: {
     opacity: 0.4,

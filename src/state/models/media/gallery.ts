@@ -1,18 +1,14 @@
 import {makeAutoObservable, runInAction} from 'mobx'
-import {RootStoreModel} from 'state/index'
 import {ImageModel} from './image'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {openPicker} from 'lib/media/picker'
 import {getImageDim} from 'lib/media/manip'
-import {isNative} from 'platform/detection'
 
 export class GalleryModel {
   images: ImageModel[] = []
 
-  constructor(public rootStore: RootStoreModel) {
-    makeAutoObservable(this, {
-      rootStore: false,
-    })
+  constructor() {
+    makeAutoObservable(this)
   }
 
   get isEmpty() {
@@ -34,23 +30,11 @@ export class GalleryModel {
 
     // Temporarily enforce uniqueness but can eventually also use index
     if (!this.images.some(i => i.path === image_.path)) {
-      const image = new ImageModel(this.rootStore, image_)
+      const image = new ImageModel(image_)
 
       // Initial resize
       image.manipulate({})
       this.images.push(image)
-    }
-  }
-
-  async edit(image: ImageModel) {
-    if (isNative) {
-      this.crop(image)
-    } else {
-      this.rootStore.shell.openModal({
-        name: 'edit-image',
-        image,
-        gallery: this,
-      })
     }
   }
 

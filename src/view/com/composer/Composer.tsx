@@ -16,7 +16,6 @@ import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {UserAutocompleteModel} from 'state/models/discovery/user-autocomplete'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {ExternalEmbed} from './ExternalEmbed'
 import {Text} from '../util/text/Text'
@@ -26,9 +25,8 @@ import * as Toast from '../util/Toast'
 import {TextInput, TextInputRef} from './text-input/TextInput'
 import {CharProgress} from './char-progress/CharProgress'
 import {UserAvatar} from '../util/UserAvatar'
-import {useStores} from 'state/index'
 import * as apilib from 'lib/api/index'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {ComposerOpts} from 'state/shell/composer'
 import {s, colors, gradients} from 'lib/styles'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -37,6 +35,7 @@ import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
 import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
@@ -49,6 +48,21 @@ import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
 import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModals, useModalControls} from '#/state/modals'
+import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+  toPostLanguages,
+} from '#/state/preferences/languages'
+import {useSession, getAgent} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useComposerControls} from '#/state/shell/composer'
+import {emitPostCreated} from '#/state/events'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {logger} from '#/logger'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -57,10 +71,18 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
 }: Props) {
+  const {currentAccount} = useSession()
+  const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
+  const {activeModals} = useModals()
+  const {openModal, closeModal} = useModalControls()
+  const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
-  const store = useStores()
+  const {_} = useLingui()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -85,16 +107,12 @@ export const ComposePost = observer(function ComposePost({
   )
   const {extLink, setExtLink} = useExternalLinkFetch({setQuote})
   const [labels, setLabels] = useState<string[]>([])
+  const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const gallery = useMemo(() => new GalleryModel(store), [store])
+  const gallery = useMemo(() => new GalleryModel(), [])
   const onClose = useCallback(() => {
-    store.shell.closeComposer()
-  }, [store])
-
-  const autocompleteView = useMemo<UserAutocompleteModel>(
-    () => new UserAutocompleteModel(store),
-    [store],
-  )
+    closeComposer()
+  }, [closeComposer])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -108,27 +126,27 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (store.shell.activeModals.some(modal => modal.name === 'confirm')) {
-        store.shell.closeModal()
+      if (activeModals.some(modal => modal.name === 'confirm')) {
+        closeModal()
       }
       if (Keyboard) {
         Keyboard.dismiss()
       }
-      store.shell.openModal({
+      openModal({
         name: 'confirm',
-        title: 'Discard draft',
+        title: _(msg`Discard draft`),
         onPressConfirm: onClose,
         onPressCancel: () => {
-          store.shell.closeModal()
+          closeModal()
         },
-        message: "Are you sure you'd like to discard this draft?",
-        confirmBtnText: 'Discard',
+        message: _(msg`Are you sure you'd like to discard this draft?`),
+        confirmBtnText: _(msg`Discard`),
         confirmBtnStyle: {backgroundColor: colors.red4},
       })
     } else {
       onClose()
     }
-  }, [store, onClose, graphemeLength, gallery])
+  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery, _])
   // android back button
   useEffect(() => {
     if (!isAndroid) {
@@ -146,11 +164,6 @@ export const ComposePost = observer(function ComposePost({
       backHandler.remove()
     }
   }, [onPressCancel])
-
-  // initial setup
-  useEffect(() => {
-    autocompleteView.setup()
-  }, [autocompleteView])
 
   // listen to escape key on desktop web
   const onEscape = useCallback(
@@ -187,32 +200,40 @@ export const ComposePost = observer(function ComposePost({
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
       return
     }
-    if (store.preferences.requireAltTextEnabled && gallery.needsAltText) {
+    if (requireAltTextEnabled && gallery.needsAltText) {
       return
     }
 
     setError('')
 
-    if (richtext.text.trim().length === 0 && gallery.isEmpty) {
+    if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
       setError('Did you want to say anything?')
       return
     }
 
     setIsProcessing(true)
 
+    let postUri
     try {
-      await apilib.post(store, {
-        rawText: richtext.text,
-        replyTo: replyTo?.uri,
-        images: gallery.images,
-        quote,
-        extLink,
-        labels,
-        onStateChange: setProcessingState,
-        knownHandles: autocompleteView.knownHandles,
-        langs: store.preferences.postLanguages,
-      })
+      postUri = (
+        await apilib.post(getAgent(), {
+          rawText: richtext.text,
+          replyTo: replyTo?.uri,
+          images: gallery.images,
+          quote,
+          extLink,
+          labels,
+          threadgate,
+          onStateChange: setProcessingState,
+          langs: toPostLanguages(langPrefs.postLanguage),
+        })
+      ).uri
     } catch (e: any) {
+      logger.error(e, {
+        message: `Composer: create post failed`,
+        hasImages: gallery.size > 0,
+      })
+
       if (extLink) {
         setExtLink({
           ...extLink,
@@ -229,10 +250,10 @@ export const ComposePost = observer(function ComposePost({
       })
       if (replyTo && replyTo.uri) track('Post:Reply')
     }
-    if (!replyTo) {
-      store.me.mainFeed.onPostCreated()
+    if (postUri && !replyTo) {
+      emitPostCreated()
     }
-    store.preferences.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
@@ -241,12 +262,8 @@ export const ComposePost = observer(function ComposePost({
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
-      (!store.preferences.requireAltTextEnabled || !gallery.needsAltText),
-    [
-      graphemeLength,
-      store.preferences.requireAltTextEnabled,
-      gallery.needsAltText,
-    ],
+      (!requireAltTextEnabled || !gallery.needsAltText),
+    [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
   const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
 
@@ -265,9 +282,11 @@ export const ComposePost = observer(function ComposePost({
             onPress={onPressCancel}
             onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
-            accessibilityLabel="Cancel"
+            accessibilityLabel={_(msg`Cancel`)}
             accessibilityHint="Closes post composer and discards post draft">
-            <Text style={[pal.link, s.f18]}>Cancel</Text>
+            <Text style={[pal.link, s.f18]}>
+              <Trans>Cancel</Trans>
+            </Text>
           </TouchableOpacity>
           <View style={s.flex1} />
           {isProcessing ? (
@@ -284,6 +303,12 @@ export const ComposePost = observer(function ComposePost({
                 onChange={setLabels}
                 hasMedia={hasMedia}
               />
+              {replyTo ? null : (
+                <ThreadgateBtn
+                  threadgate={threadgate}
+                  onChange={setThreadgate}
+                />
+              )}
               {canPost ? (
                 <TouchableOpacity
                   testID="composerPublishBtn"
@@ -308,13 +333,15 @@ export const ComposePost = observer(function ComposePost({
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
-                  <Text style={[pal.textLight, s.f16, s.bold]}>Post</Text>
+                  <Text style={[pal.textLight, s.f16, s.bold]}>
+                    <Trans>Post</Trans>
+                  </Text>
                 </View>
               )}
             </>
           )}
         </View>
-        {store.preferences.requireAltTextEnabled && gallery.needsAltText && (
+        {requireAltTextEnabled && gallery.needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon
@@ -324,7 +351,7 @@ export const ComposePost = observer(function ComposePost({
               />
             </View>
             <Text style={[pal.text, s.flex1]}>
-              One or more images is missing alt text.
+              <Trans>One or more images is missing alt text.</Trans>
             </Text>
           </View>
         )}
@@ -366,13 +393,12 @@ export const ComposePost = observer(function ComposePost({
               styles.textInputLayout,
               isNative && styles.textInputLayoutMobile,
             ]}>
-            <UserAvatar avatar={store.me.avatar} size={50} />
+            <UserAvatar avatar={currentProfile?.avatar} size={50} />
             <TextInput
               ref={textInput}
               richtext={richtext}
               placeholder={selectTextInputPlaceholder}
               suggestedLinks={suggestedLinks}
-              autocompleteView={autocompleteView}
               autoFocus={true}
               setRichText={setRichText}
               onPhotoPasted={onPhotoPasted}
@@ -380,7 +406,7 @@ export const ComposePost = observer(function ComposePost({
               onSuggestedLinksChanged={setSuggestedLinks}
               onError={setError}
               accessible={true}
-              accessibilityLabel="Write post"
+              accessibilityLabel={_(msg`Write post`)}
               accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
             />
           </View>
@@ -409,11 +435,11 @@ export const ComposePost = observer(function ComposePost({
                   style={[pal.borderDark, styles.addExtLinkBtn]}
                   onPress={() => onPressAddLinkCard(url)}
                   accessibilityRole="button"
-                  accessibilityLabel="Add link card"
+                  accessibilityLabel={_(msg`Add link card`)}
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
-                    Add link card:{' '}
-                    <Text style={pal.link}>{toShortUrl(url)}</Text>
+                    <Trans>Add link card:</Trans>
+                    <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
                   </Text>
                 </TouchableOpacity>
               ))}
@@ -445,9 +471,11 @@ const styles = StyleSheet.create({
   topbar: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: 6,
     paddingBottom: 4,
     paddingHorizontal: 20,
     height: 55,
+    gap: 4,
   },
   topbarDesktop: {
     paddingTop: 10,
@@ -457,6 +485,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 6,
+    marginLeft: 12,
   },
   errorLine: {
     flexDirection: 'row',

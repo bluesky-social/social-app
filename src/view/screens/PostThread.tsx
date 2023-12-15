@@ -1,100 +1,111 @@
-import React, {useMemo} from 'react'
-import {InteractionManager, StyleSheet, View} from 'react-native'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
-import {observer} from 'mobx-react-lite'
+import {useQueryClient} from '@tanstack/react-query'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
-import {PostThreadModel} from 'state/models/content/post-thread'
-import {useStores} from 'state/index'
 import {s} from 'lib/styles'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  RQKEY as POST_THREAD_RQKEY,
+  ThreadNode,
+} from '#/state/queries/post-thread'
 import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-
-const SHELL_FOOTER_HEIGHT = 44
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
+import {CenteredView} from '../com/util/Views'
+import {useComposerControls} from '#/state/shell/composer'
+import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
-export const PostThreadScreen = withAuthRequired(
-  observer(function PostThreadScreenImpl({route}: Props) {
-    const store = useStores()
-    const safeAreaInsets = useSafeAreaInsets()
-    const {name, rkey} = route.params
-    const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
-    const view = useMemo<PostThreadModel>(
-      () => new PostThreadModel(store, {uri}),
-      [store, uri],
+export function PostThreadScreen({route}: Props) {
+  const queryClient = useQueryClient()
+  const {_} = useLingui()
+  const {hasSession} = useSession()
+  const {fabMinimalShellTransform} = useMinimalShellMode()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {openComposer} = useComposerControls()
+  const safeAreaInsets = useSafeAreaInsets()
+  const {name, rkey} = route.params
+  const {isMobile} = useWebMediaQueries()
+  const uri = makeRecordUri(name, 'app.bsky.feed.post', rkey)
+  const {data: resolvedUri, error: uriError} = useResolveUriQuery(uri)
+  const [canReply, setCanReply] = React.useState(false)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+    }, [setMinimalShellMode]),
+  )
+
+  const onPressReply = React.useCallback(() => {
+    if (!resolvedUri) {
+      return
+    }
+    const thread = queryClient.getQueryData<ThreadNode>(
+      POST_THREAD_RQKEY(resolvedUri.uri),
     )
-    const {isMobile} = useWebMediaQueries()
-
-    useFocusEffect(
-      React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
-        const threadCleanup = view.registerListeners()
-
-        InteractionManager.runAfterInteractions(() => {
-          if (!view.hasLoaded && !view.isLoading) {
-            view.setup().catch(err => {
-              store.log.error('Failed to fetch thread', err)
-            })
-          }
-        })
-
-        return () => {
-          threadCleanup()
-        }
-      }, [store, view]),
-    )
-
-    const onPressReply = React.useCallback(() => {
-      if (!view.thread) {
-        return
-      }
-      store.shell.openComposer({
-        replyTo: {
-          uri: view.thread.post.uri,
-          cid: view.thread.post.cid,
-          text: view.thread.postRecord?.text as string,
-          author: {
-            handle: view.thread.post.author.handle,
-            displayName: view.thread.post.author.displayName,
-            avatar: view.thread.post.author.avatar,
-          },
+    if (thread?.type !== 'post') {
+      return
+    }
+    openComposer({
+      replyTo: {
+        uri: thread.post.uri,
+        cid: thread.post.cid,
+        text: thread.record.text,
+        author: {
+          handle: thread.post.author.handle,
+          displayName: thread.post.author.displayName,
+          avatar: thread.post.author.avatar,
         },
-        onPost: () => view.refresh(),
-      })
-    }, [view, store])
+      },
+      onPost: () =>
+        queryClient.invalidateQueries({
+          queryKey: POST_THREAD_RQKEY(resolvedUri.uri || ''),
+        }),
+    })
+  }, [openComposer, queryClient, resolvedUri])
 
-    return (
-      <View style={s.hContentRegion}>
-        {isMobile && <ViewHeader title="Post" />}
-        <View style={s.flex1}>
+  return (
+    <View style={s.hContentRegion}>
+      {isMobile && <ViewHeader title={_(msg`Post`)} />}
+      <View style={s.flex1}>
+        {uriError ? (
+          <CenteredView>
+            <ErrorMessage message={String(uriError)} />
+          </CenteredView>
+        ) : (
           <PostThreadComponent
-            uri={uri}
-            view={view}
+            uri={resolvedUri?.uri}
             onPressReply={onPressReply}
-            treeView={!!store.preferences.thread.lab_treeViewEnabled}
+            onCanReply={setCanReply}
           />
-        </View>
-        {isMobile && !store.shell.minimalShellMode && (
-          <View
-            style={[
-              styles.prompt,
-              {
-                bottom:
-                  SHELL_FOOTER_HEIGHT + clamp(safeAreaInsets.bottom, 15, 30),
-              },
-            ]}>
-            <ComposePrompt onPressCompose={onPressReply} />
-          </View>
         )}
       </View>
-    )
-  }),
-)
+      {isMobile && canReply && hasSession && (
+        <Animated.View
+          style={[
+            styles.prompt,
+            fabMinimalShellTransform,
+            {
+              bottom: clamp(safeAreaInsets.bottom, 15, 30),
+            },
+          ]}>
+          <ComposePrompt onPressCompose={onPressReply} />
+        </Animated.View>
+      )}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   prompt: {

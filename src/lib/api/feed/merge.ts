@@ -1,11 +1,13 @@
 import {AppBskyFeedDefs, AppBskyFeedGetTimeline} from '@atproto/api'
 import shuffle from 'lodash.shuffle'
-import {RootStoreModel} from 'state/index'
 import {timeout} from 'lib/async/timeout'
 import {bundleAsync} from 'lib/async/bundle'
 import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
-import {FeedAPI, FeedAPIResponse, FeedSourceInfo} from './types'
+import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
+import {FeedParams} from '#/state/queries/post-feed'
+import {FeedTunerFn} from '../feed-manip'
+import {getAgent} from '#/state/session'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -17,34 +19,50 @@ export class MergeFeedAPI implements FeedAPI {
   itemCursor = 0
   sampleCursor = 0
 
-  constructor(public rootStore: RootStoreModel) {
-    this.following = new MergeFeedSource_Following(this.rootStore)
+  constructor(public params: FeedParams, public feedTuners: FeedTunerFn[]) {
+    this.following = new MergeFeedSource_Following(this.feedTuners)
   }
 
   reset() {
-    this.following = new MergeFeedSource_Following(this.rootStore)
+    this.following = new MergeFeedSource_Following(this.feedTuners)
     this.customFeeds = [] // just empty the array, they will be captured in _fetchNext()
     this.feedCursor = 0
     this.itemCursor = 0
     this.sampleCursor = 0
+    if (this.params.mergeFeedSources) {
+      this.customFeeds = shuffle(
+        this.params.mergeFeedSources.map(
+          feedUri => new MergeFeedSource_Custom(feedUri, this.feedTuners),
+        ),
+      )
+    } else {
+      this.customFeeds = []
+    }
   }
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.rootStore.agent.getTimeline({
+    const res = await getAgent().getTimeline({
       limit: 1,
     })
     return res.data.feed[0]
   }
 
-  async fetchNext({limit}: {limit: number}): Promise<FeedAPIResponse> {
-    // we capture here to ensure the data has loaded
-    this._captureFeedsIfNeeded()
+  async fetch({
+    cursor,
+    limit,
+  }: {
+    cursor: string | undefined
+    limit: number
+  }): Promise<FeedAPIResponse> {
+    if (!cursor) {
+      this.reset()
+    }
 
     const promises = []
 
     // always keep following topped up
     if (this.following.numReady < limit) {
-      promises.push(this.following.fetchNext(60))
+      await this.following.fetchNext(60)
     }
 
     // pick the next feeds to sample from
@@ -55,9 +73,13 @@ export class MergeFeedAPI implements FeedAPI {
     }
 
     // top up the feeds
-    for (const feed of feeds) {
-      if (feed.numReady < 5) {
-        promises.push(feed.fetchNext(10))
+    const outOfFollows =
+      !this.following.hasMore && this.following.numReady < limit
+    if (this.params.mergeFeedEnabled || outOfFollows) {
+      for (const feed of feeds) {
+        if (feed.numReady < 5) {
+          promises.push(feed.fetchNext(10))
+        }
       }
     }
 
@@ -76,7 +98,7 @@ export class MergeFeedAPI implements FeedAPI {
     }
 
     return {
-      cursor: posts.length ? 'fake' : undefined,
+      cursor: posts.length ? String(this.itemCursor) : undefined,
       feed: posts,
     }
   }
@@ -90,7 +112,10 @@ export class MergeFeedAPI implements FeedAPI {
 
     // this condition establishes the frequency that custom feeds are woven into follows
     const shouldSample =
-      i >= 15 && candidateFeeds.length >= 2 && (i % 4 === 0 || i % 5 === 0)
+      this.params.mergeFeedEnabled &&
+      i >= 15 &&
+      candidateFeeds.length >= 2 &&
+      (i % 4 === 0 || i % 5 === 0)
 
     if (!canSample && !hasFollows) {
       // no data available
@@ -107,33 +132,15 @@ export class MergeFeedAPI implements FeedAPI {
     // provide follow
     return this.following.take(1)
   }
-
-  _captureFeedsIfNeeded() {
-    if (!this.rootStore.preferences.homeFeed.lab_mergeFeedEnabled) {
-      return
-    }
-    if (this.customFeeds.length === 0) {
-      this.customFeeds = shuffle(
-        this.rootStore.me.savedFeeds.all.map(
-          feed =>
-            new MergeFeedSource_Custom(
-              this.rootStore,
-              feed.uri,
-              feed.displayName,
-            ),
-        ),
-      )
-    }
-  }
 }
 
 class MergeFeedSource {
-  sourceInfo: FeedSourceInfo | undefined
+  sourceInfo: ReasonFeedSource | undefined
   cursor: string | undefined = undefined
   queue: AppBskyFeedDefs.FeedViewPost[] = []
   hasMore = true
 
-  constructor(public rootStore: RootStoreModel) {}
+  constructor(public feedTuners: FeedTunerFn[]) {}
 
   get numReady() {
     return this.queue.length
@@ -180,7 +187,7 @@ class MergeFeedSource {
 }
 
 class MergeFeedSource_Following extends MergeFeedSource {
-  tuner = new FeedTuner()
+  tuner = new FeedTuner(this.feedTuners)
 
   reset() {
     super.reset()
@@ -195,16 +202,12 @@ class MergeFeedSource_Following extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await this.rootStore.agent.getTimeline({cursor, limit})
+    const res = await getAgent().getTimeline({cursor, limit})
     // run the tuner pre-emptively to ensure better mixing
-    const slices = this.tuner.tune(
-      res.data.feed,
-      this.rootStore.preferences.getFeedTuners('home'),
-      {
-        dryRun: false,
-        maintainOrder: true,
-      },
-    )
+    const slices = this.tuner.tune(res.data.feed, {
+      dryRun: false,
+      maintainOrder: true,
+    })
     res.data.feed = slices.map(slice => slice.rootItem)
     return res
   }
@@ -213,15 +216,12 @@ class MergeFeedSource_Following extends MergeFeedSource {
 class MergeFeedSource_Custom extends MergeFeedSource {
   minDate: Date
 
-  constructor(
-    public rootStore: RootStoreModel,
-    public feedUri: string,
-    public feedDisplayName: string,
-  ) {
-    super(rootStore)
+  constructor(public feedUri: string, public feedTuners: FeedTunerFn[]) {
+    super(feedTuners)
     this.sourceInfo = {
-      displayName: feedDisplayName,
-      uri: feedUriToHref(feedUri),
+      $type: 'reasonFeedSource',
+      uri: feedUri,
+      href: feedUriToHref(feedUri),
     }
     this.minDate = new Date(Date.now() - POST_AGE_CUTOFF)
   }
@@ -230,26 +230,31 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
-    const res = await this.rootStore.agent.app.bsky.feed.getFeed({
-      cursor,
-      limit,
-      feed: this.feedUri,
-    })
-    // NOTE
-    // some custom feeds fail to enforce the pagination limit
-    // so we manually truncate here
-    // -prf
-    if (limit && res.data.feed.length > limit) {
-      res.data.feed = res.data.feed.slice(0, limit)
+    try {
+      const res = await getAgent().app.bsky.feed.getFeed({
+        cursor,
+        limit,
+        feed: this.feedUri,
+      })
+      // NOTE
+      // some custom feeds fail to enforce the pagination limit
+      // so we manually truncate here
+      // -prf
+      if (limit && res.data.feed.length > limit) {
+        res.data.feed = res.data.feed.slice(0, limit)
+      }
+      // filter out older posts
+      res.data.feed = res.data.feed.filter(
+        post => new Date(post.post.indexedAt) > this.minDate,
+      )
+      // attach source info
+      for (const post of res.data.feed) {
+        post.__source = this.sourceInfo
+      }
+      return res
+    } catch {
+      // dont bubble custom-feed errors
+      return {success: false, headers: {}, data: {feed: []}}
     }
-    // filter out older posts
-    res.data.feed = res.data.feed.filter(
-      post => new Date(post.post.indexedAt) > this.minDate,
-    )
-    // attach source info
-    for (const post of res.data.feed) {
-      post.__source = this.sourceInfo
-    }
-    return res
   }
 }

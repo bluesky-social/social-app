@@ -1,4 +1,7 @@
-import 'platform/polyfills'
+import '#/platform/polyfills'
 import {registerRootComponent} from 'expo'
-import App from './src/App'
+import {doPolyfill} from '#/lib/api/api-polyfill'
+import App from '#/App'
+
+doPolyfill()
 registerRootComponent(App)

@@ -6,13 +6,15 @@ import {
   View,
 } from 'react-native'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
-import type {ConfirmModal} from 'state/models/ui/shell'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import type {ConfirmModal} from '#/state/modals'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['50%']
 
@@ -26,7 +28,8 @@ export function Component({
   cancelBtnText,
 }: ConfirmModal) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const onPress = async () => {
@@ -34,7 +37,7 @@ export function Component({
     setIsProcessing(true)
     try {
       await onPressConfirm()
-      store.shell.closeModal()
+      closeModal()
       return
     } catch (e: any) {
       setError(cleanError(e))
@@ -69,7 +72,7 @@ export function Component({
           onPress={onPress}
           style={[styles.btn, confirmBtnStyle]}
           accessibilityRole="button"
-          accessibilityLabel="Confirm"
+          accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
             {confirmBtnText ?? 'Confirm'}
@@ -82,7 +85,7 @@ export function Component({
           onPress={onPressCancel}
           style={[styles.btnCancel, s.mt10]}
           accessibilityRole="button"
-          accessibilityLabel="Cancel"
+          accessibilityLabel={_(msg`Cancel`)}
           accessibilityHint="">
           <Text type="button-lg" style={pal.textLight}>
             {cancelBtnText ?? 'Cancel'}

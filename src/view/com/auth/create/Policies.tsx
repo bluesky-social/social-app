@@ -4,11 +4,13 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {TextLink} from '../../util/Link'
 import {Text} from '../../util/text/Text'
 import {s, colors} from 'lib/styles'
-import {ServiceDescription} from 'state/models/session'
 import {usePalette} from 'lib/hooks/usePalette'
+
+type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
 export const Policies = ({
   serviceDescription,
@@ -25,8 +27,12 @@ export const Policies = ({
   const pp = validWebLink(serviceDescription.links?.privacyPolicy)
   if (!tos && !pp) {
     return (
-      <View style={styles.policies}>
-        <View style={[styles.errorIcon, {borderColor: pal.colors.text}, s.mt2]}>
+      <View style={[styles.policies, {flexDirection: 'row'}]}>
+        <View
+          style={[
+            styles.errorIcon,
+            {borderColor: pal.colors.text, marginTop: 1},
+          ]}>
           <FontAwesomeIcon
             icon="exclamation"
             style={pal.textLight as FontAwesomeIconStyle}
@@ -93,7 +99,7 @@ function validWebLink(url?: string): string | undefined {
 
 const styles = StyleSheet.create({
   policies: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     gap: 8,
   },
   errorIcon: {
@@ -104,6 +110,5 @@ const styles = StyleSheet.create({
     height: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 5,
   },
 })

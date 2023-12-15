@@ -1,5 +1,7 @@
 /* eslint-env detox/detox */
 
+import {describe, beforeAll, it} from '@jest/globals'
+import {expect} from 'detox'
 import {openApp, loginAsAlice, loginAsBob, createServer} from '../util'
 
 describe('Thread muting', () => {
@@ -48,7 +50,7 @@ describe('Thread muting', () => {
     await loginAsBob()
 
     await element(by.id('bottomBarProfileBtn')).tap()
-    await element(by.id('selector-1')).tap()
+    await element(by.id('profilePager-selector-1')).tap()
     const bobPosts = by.id('feedItem-by-bob.test')
     await element(by.id('replyBtn').withAncestor(bobPosts)).atIndex(0).tap()
     await element(by.id('composerTextInput')).typeText('Reply 2')

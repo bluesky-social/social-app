@@ -16,11 +16,11 @@ import {
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   ModerationUI,
+  PostModeration,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {ImagesLightbox} from 'state/models/ui/shell'
-import {useStores} from 'state/index'
+import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
@@ -28,9 +28,10 @@ import {ExternalPlayerEmbed} from './ExternalPlayerEmbed'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
-import {CustomFeedEmbed} from './CustomFeedEmbed'
 import {ListEmbed} from './ListEmbed'
-import {isCauseALabelOnUri} from 'lib/moderation'
+import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
+import {ContentHider} from '../moderation/ContentHider'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -42,28 +43,33 @@ type Embed =
 export function PostEmbeds({
   embed,
   moderation,
+  moderationDecisions,
   style,
 }: {
   embed?: Embed
   moderation: ModerationUI
+  moderationDecisions?: PostModeration['decisions']
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {openLightbox} = useLightboxControls()
   const {isMobile} = useWebMediaQueries()
 
   // quote post with media
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
     const isModOnQuote =
-      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
-      isCauseALabelOnUri(moderation.cause, embed.record.record.uri)
+      (AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+        isCauseALabelOnUri(moderation.cause, embed.record.record.uri)) ||
+      (moderationDecisions && isQuoteBlurred(moderationDecisions))
     const mediaModeration = isModOnQuote ? {} : moderation
     const quoteModeration = isModOnQuote ? moderation : {}
     return (
       <View style={[styles.stackContainer, style]}>
         <PostEmbeds embed={embed.media} moderation={mediaModeration} />
-        <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
+        <ContentHider moderation={quoteModeration}>
+          <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
+        </ContentHider>
       </View>
     )
   }
@@ -72,10 +78,16 @@ export function PostEmbeds({
     // custom feed embed (i.e. generator view)
     // =
     if (AppBskyFeedDefs.isGeneratorView(embed.record)) {
-      return <CustomFeedEmbed record={embed.record} />
+      return (
+        <FeedSourceCard
+          feedUri={embed.record.uri}
+          style={[pal.view, pal.border, styles.customFeedOuter]}
+          showLikes
+        />
+      )
     }
 
-    // list embed (e.g. mute lists; i.e. ListView)
+    // list embed
     if (AppBskyGraphDefs.isListView(embed.record)) {
       return <ListEmbed item={embed.record} />
     }
@@ -83,7 +95,9 @@ export function PostEmbeds({
     // quote post
     // =
     return (
-      <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
+      <ContentHider moderation={moderation}>
+        <MaybeQuoteEmbed embed={embed} style={style} moderation={moderation} />
+      </ContentHider>
     )
   }
 
@@ -98,8 +112,8 @@ export function PostEmbeds({
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
-      const openLightbox = (index: number) => {
-        store.shell.openLightbox(new ImagesLightbox(items, index))
+      const _openLightbox = (index: number) => {
+        openLightbox(new ImagesLightbox(items, index))
       }
       const onPressIn = (_: number) => {
         InteractionManager.runAfterInteractions(() => {
@@ -115,7 +129,7 @@ export function PostEmbeds({
               alt={alt}
               uri={thumb}
               dimensionsHint={aspectRatio}
-              onPress={() => openLightbox(0)}
+              onPress={() => _openLightbox(0)}
               onPressIn={() => onPressIn(0)}
               style={[
                 styles.singleImage,
@@ -137,7 +151,7 @@ export function PostEmbeds({
         <View style={[styles.imagesContainer, style]}>
           <ImageLayoutGrid
             images={embed.images}
-            onPress={openLightbox}
+            onPress={_openLightbox}
             onPressIn={onPressIn}
             style={
               embed.images.length === 1
@@ -212,5 +226,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 10,
     fontWeight: 'bold',
+  },
+  customFeedOuter: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
   },
 })

@@ -11,48 +11,57 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {AppBskyActorDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
-import {ProfileModel} from 'state/models/content/profile'
 import {s, colors, gradients} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {MAX_DISPLAY_NAME, MAX_DESCRIPTION} from 'lib/constants'
 import {compressIfNeeded} from 'lib/media/manip'
 import {UserBanner} from '../util/UserBanner'
-import {UserAvatar} from '../util/UserAvatar'
+import {EditableUserAvatar} from '../util/UserAvatar'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {cleanError} from 'lib/strings/errors'
+import Animated, {FadeOut} from 'react-native-reanimated'
+import {isWeb} from 'platform/detection'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {useProfileUpdateMutation} from '#/state/queries/profile'
+import {logger} from '#/logger'
+
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity)
 
 export const snapPoints = ['fullscreen']
 
 export function Component({
-  profileView,
+  profile,
   onUpdate,
 }: {
-  profileView: ProfileModel
+  profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }) {
-  const store = useStores()
-  const [error, setError] = useState<string>('')
   const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
-
-  const [isProcessing, setProcessing] = useState<boolean>(false)
+  const {_} = useLingui()
+  const {closeModal} = useModalControls()
+  const updateMutation = useProfileUpdateMutation()
+  const [imageError, setImageError] = useState<string>('')
   const [displayName, setDisplayName] = useState<string>(
-    profileView.displayName || '',
+    profile.displayName || '',
   )
   const [description, setDescription] = useState<string>(
-    profileView.description || '',
+    profile.description || '',
   )
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
-    profileView.banner,
+    profile.banner,
   )
   const [userAvatar, setUserAvatar] = useState<string | undefined | null>(
-    profileView.avatar,
+    profile.avatar,
   )
   const [newUserBanner, setNewUserBanner] = useState<
     RNImage | undefined | null
@@ -61,10 +70,11 @@ export function Component({
     RNImage | undefined | null
   >()
   const onPressCancel = () => {
-    store.shell.closeModal()
+    closeModal()
   }
   const onSelectNewAvatar = useCallback(
     async (img: RNImage | null) => {
+      setImageError('')
       if (img === null) {
         setNewUserAvatar(null)
         setUserAvatar(null)
@@ -76,14 +86,15 @@ export function Component({
         setNewUserAvatar(finalImg)
         setUserAvatar(finalImg.path)
       } catch (e: any) {
-        setError(cleanError(e))
+        setImageError(cleanError(e))
       }
     },
-    [track, setNewUserAvatar, setUserAvatar, setError],
+    [track, setNewUserAvatar, setUserAvatar, setImageError],
   )
 
   const onSelectNewBanner = useCallback(
     async (img: RNImage | null) => {
+      setImageError('')
       if (!img) {
         setNewUserBanner(null)
         setUserBanner(null)
@@ -95,79 +106,78 @@ export function Component({
         setNewUserBanner(finalImg)
         setUserBanner(finalImg.path)
       } catch (e: any) {
-        setError(cleanError(e))
+        setImageError(cleanError(e))
       }
     },
-    [track, setNewUserBanner, setUserBanner, setError],
+    [track, setNewUserBanner, setUserBanner, setImageError],
   )
 
   const onPressSave = useCallback(async () => {
     track('EditProfile:Save')
-    setProcessing(true)
-    if (error) {
-      setError('')
-    }
+    setImageError('')
     try {
-      await profileView.updateProfile(
-        {
+      await updateMutation.mutateAsync({
+        profile,
+        updates: {
           displayName,
           description,
         },
         newUserAvatar,
         newUserBanner,
-      )
+      })
       Toast.show('Profile updated')
       onUpdate?.()
-      store.shell.closeModal()
+      closeModal()
     } catch (e: any) {
-      if (isNetworkError(e)) {
-        setError(
-          'Failed to save your profile. Check your internet connection and try again.',
-        )
-      } else {
-        setError(cleanError(e))
-      }
+      logger.error('Failed to update user profile', {error: String(e)})
     }
-    setProcessing(false)
   }, [
     track,
-    setProcessing,
-    setError,
-    error,
-    profileView,
+    updateMutation,
+    profile,
     onUpdate,
-    store,
+    closeModal,
     displayName,
     description,
     newUserAvatar,
     newUserBanner,
+    setImageError,
   ])
 
   return (
-    <KeyboardAvoidingView behavior="height">
+    <KeyboardAvoidingView style={s.flex1} behavior="height">
       <ScrollView style={[pal.view]} testID="editProfileModal">
-        <Text style={[styles.title, pal.text]}>Edit my profile</Text>
+        <Text style={[styles.title, pal.text]}>
+          <Trans>Edit my profile</Trans>
+        </Text>
         <View style={styles.photos}>
           <UserBanner
             banner={userBanner}
             onSelectNewBanner={onSelectNewBanner}
           />
           <View style={[styles.avi, {borderColor: pal.colors.background}]}>
-            <UserAvatar
+            <EditableUserAvatar
               size={80}
               avatar={userAvatar}
               onSelectNewAvatar={onSelectNewAvatar}
             />
           </View>
         </View>
-        {error !== '' && (
+        {updateMutation.isError && (
           <View style={styles.errorContainer}>
-            <ErrorMessage message={error} />
+            <ErrorMessage message={cleanError(updateMutation.error)} />
+          </View>
+        )}
+        {imageError !== '' && (
+          <View style={styles.errorContainer}>
+            <ErrorMessage message={imageError} />
           </View>
         )}
         <View style={styles.form}>
           <View>
-            <Text style={[styles.label, pal.text]}>Display Name</Text>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Display Name</Trans>
+            </Text>
             <TextInput
               testID="editProfileDisplayNameInput"
               style={[styles.textInput, pal.border, pal.text]}
@@ -178,12 +188,14 @@ export function Component({
                 setDisplayName(enforceLen(v, MAX_DISPLAY_NAME))
               }
               accessible={true}
-              accessibilityLabel="Display name"
+              accessibilityLabel={_(msg`Display name`)}
               accessibilityHint="Edit your display name"
             />
           </View>
           <View style={s.pb10}>
-            <Text style={[styles.label, pal.text]}>Description</Text>
+            <Text style={[styles.label, pal.text]}>
+              <Trans>Description</Trans>
+            </Text>
             <TextInput
               testID="editProfileDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
@@ -194,11 +206,11 @@ export function Component({
               value={description}
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
-              accessibilityLabel="Description"
+              accessibilityLabel={_(msg`Description`)}
               accessibilityHint="Edit your profile description"
             />
           </View>
-          {isProcessing ? (
+          {updateMutation.isPending ? (
             <View style={[styles.btn, s.mt10, {backgroundColor: colors.gray2}]}>
               <ActivityIndicator />
             </View>
@@ -208,29 +220,36 @@ export function Component({
               style={s.mt10}
               onPress={onPressSave}
               accessibilityRole="button"
-              accessibilityLabel="Save"
+              accessibilityLabel={_(msg`Save`)}
               accessibilityHint="Saves any changes to your profile">
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
-                <Text style={[s.white, s.bold]}>Save Changes</Text>
+                <Text style={[s.white, s.bold]}>
+                  <Trans>Save Changes</Trans>
+                </Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
-          <TouchableOpacity
-            testID="editProfileCancelBtn"
-            style={s.mt5}
-            onPress={onPressCancel}
-            accessibilityRole="button"
-            accessibilityLabel="Cancel profile editing"
-            accessibilityHint=""
-            onAccessibilityEscape={onPressCancel}>
-            <View style={[styles.btn]}>
-              <Text style={[s.black, s.bold, pal.text]}>Cancel</Text>
-            </View>
-          </TouchableOpacity>
+          {!updateMutation.isPending && (
+            <AnimatedTouchableOpacity
+              exiting={!isWeb ? FadeOut : undefined}
+              testID="editProfileCancelBtn"
+              style={s.mt5}
+              onPress={onPressCancel}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Cancel profile editing`)}
+              accessibilityHint=""
+              onAccessibilityEscape={onPressCancel}>
+              <View style={[styles.btn]}>
+                <Text style={[s.black, s.bold, pal.text]}>
+                  <Trans>Cancel</Trans>
+                </Text>
+              </View>
+            </AnimatedTouchableOpacity>
+          )}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

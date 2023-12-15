@@ -1,5 +1,4 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
+import React, {memo} from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -8,15 +7,17 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+import {
+  AppBskyActorDefs,
+  ProfileModeration,
+  RichText as RichTextAPI,
+} from '@atproto/api'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {NavigationProp} from 'lib/routes/types'
+import {isNative, isWeb} from 'platform/detection'
 import {BlurView} from '../util/BlurView'
-import {ProfileModel} from 'state/models/content/profile'
-import {useStores} from 'state/index'
-import {ProfileImageLightbox} from 'state/models/ui/shell'
-import {pluralize} from 'lib/strings/helpers'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {s, colors} from 'lib/styles'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -25,31 +26,46 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
+import {formatCount} from '../util/numeric/format'
+import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
+import {Link} from '../util/Link'
+import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
+import {useModalControls} from '#/state/modals'
+import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
+import {
+  RQKEY as profileQueryKey,
+  useProfileMuteMutationQueue,
+  useProfileBlockMutationQueue,
+  useProfileFollowMutationQueue,
+} from '#/state/queries/profile'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {isNative} from 'platform/detection'
-import {FollowState} from 'state/models/cache/my-follows'
-import {shareUrl} from 'lib/sharing'
-import {formatCount} from '../util/numeric/format'
-import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {Link} from '../util/Link'
-import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
+import {pluralize} from 'lib/strings/helpers'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {shareUrl} from 'lib/sharing'
+import {s, colors} from 'lib/styles'
+import {logger} from '#/logger'
+import {useSession, getAgent} from '#/state/session'
+import {Shadow} from '#/state/cache/types'
+import {useRequireAuth} from '#/state/session'
+import {LabelInfo} from '../util/moderation/LabelInfo'
 
 interface Props {
-  view: ProfileModel
-  onRefreshAll: () => void
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
+  moderation: ProfileModeration | null
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
 
-export const ProfileHeader = observer(function ProfileHeaderImpl({
-  view,
-  onRefreshAll,
+export function ProfileHeader({
+  profile,
+  moderation,
   hideBackButton = false,
   isProfilePreview,
 }: Props) {
@@ -57,36 +73,19 @@ export const ProfileHeader = observer(function ProfileHeaderImpl({
 
   // loading
   // =
-  if (!view || !view.hasLoaded) {
+  if (!profile || !moderation) {
     return (
       <View style={pal.view}>
-        <LoadingPlaceholder width="100%" height={120} />
+        <LoadingPlaceholder width="100%" height={153} />
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
           <LoadingPlaceholder width={80} height={80} style={styles.br40} />
         </View>
         <View style={styles.content}>
           <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder width={100} height={31} style={styles.br50} />
-          </View>
-          <View>
-            <Text type="title-2xl" style={[pal.text, styles.title]}>
-              {sanitizeDisplayName(
-                view.displayName || sanitizeHandle(view.handle),
-              )}
-            </Text>
+            <LoadingPlaceholder width={167} height={31} style={styles.br50} />
           </View>
         </View>
-      </View>
-    )
-  }
-
-  // error
-  // =
-  if (view.hasError) {
-    return (
-      <View testID="profileHeaderHasError">
-        <Text>{view.error}</Text>
       </View>
     )
   }
@@ -95,174 +94,248 @@ export const ProfileHeader = observer(function ProfileHeaderImpl({
   // =
   return (
     <ProfileHeaderLoaded
-      view={view}
-      onRefreshAll={onRefreshAll}
+      profile={profile}
+      moderation={moderation}
       hideBackButton={hideBackButton}
       isProfilePreview={isProfilePreview}
     />
   )
-})
+}
 
-const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
-  view,
-  onRefreshAll,
+interface LoadedProps {
+  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  moderation: ProfileModeration
+  hideBackButton?: boolean
+  isProfilePreview?: boolean
+}
+
+let ProfileHeaderLoaded = ({
+  profile,
+  moderation,
   hideBackButton = false,
   isProfilePreview,
-}: Props) {
+}: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
-  const store = useStores()
+  const {currentAccount, hasSession} = useSession()
+  const requireAuth = useRequireAuth()
+  const {_} = useLingui()
+  const {openModal} = useModalControls()
+  const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
-  const invalidHandle = isInvalidHandle(view.handle)
+  const invalidHandle = isInvalidHandle(profile.handle)
   const {isDesktop} = useWebMediaQueries()
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
+  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const queryClient = useQueryClient()
+
+  /*
+   * BEGIN handle bio facet resolution
+   */
+  // should be undefined on first render to trigger a resolution
+  const prevProfileDescription = React.useRef<string | undefined>()
+  const [descriptionRT, setDescriptionRT] = React.useState<
+    RichTextAPI | undefined
+  >(
+    profile.description
+      ? new RichTextAPI({text: profile.description})
+      : undefined,
+  )
+  React.useEffect(() => {
+    async function resolveRTFacets() {
+      // new each time
+      const rt = new RichTextAPI({text: profile.description || ''})
+      await rt.detectFacets(getAgent())
+      // replace existing RT instance
+      setDescriptionRT(rt)
+    }
+
+    if (profile.description !== prevProfileDescription.current) {
+      // update prev immediately
+      prevProfileDescription.current = profile.description
+      resolveRTFacets()
+    }
+  }, [profile.description, setDescriptionRT])
+  /*
+   * END handle bio facet resolution
+   */
+
+  const invalidateProfileQuery = React.useCallback(() => {
+    queryClient.invalidateQueries({
+      queryKey: profileQueryKey(profile.did),
+    })
+  }, [queryClient, profile.did])
 
   const onPressBack = React.useCallback(() => {
-    navigation.goBack()
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
   }, [navigation])
 
   const onPressAvi = React.useCallback(() => {
     if (
-      view.avatar &&
-      !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
+      profile.avatar &&
+      !(moderation.avatar.blur && moderation.avatar.noOverride)
     ) {
-      store.shell.openLightbox(new ProfileImageLightbox(view))
+      openLightbox(new ProfileImageLightbox(profile))
     }
-  }, [store, view])
+  }, [openLightbox, profile, moderation])
 
-  const onPressToggleFollow = React.useCallback(() => {
-    track(
-      view.viewer.following
-        ? 'ProfileHeader:FollowButtonClicked'
-        : 'ProfileHeader:UnfollowButtonClicked',
-    )
-    view?.toggleFollowing().then(
-      () => {
-        setShowSuggestedFollows(Boolean(view.viewer.following))
-
+  const onPressFollow = () => {
+    requireAuth(async () => {
+      try {
+        track('ProfileHeader:FollowButtonClicked')
+        await queueFollow()
         Toast.show(
-          `${
-            view.viewer.following ? 'Following' : 'No longer following'
-          } ${sanitizeDisplayName(view.displayName || view.handle)}`,
+          `Following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
         )
-      },
-      err => store.log.error('Failed to toggle follow', err),
-    )
-  }, [track, view, store.log, setShowSuggestedFollows])
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to follow', {error: String(e)})
+          Toast.show(`There was an issue! ${e.toString()}`)
+        }
+      }
+    })
+  }
+
+  const onPressUnfollow = () => {
+    requireAuth(async () => {
+      try {
+        track('ProfileHeader:UnfollowButtonClicked')
+        await queueUnfollow()
+        Toast.show(
+          `No longer following ${sanitizeDisplayName(
+            profile.displayName || profile.handle,
+          )}`,
+        )
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to unfollow', {error: String(e)})
+          Toast.show(`There was an issue! ${e.toString()}`)
+        }
+      }
+    })
+  }
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'edit-profile',
-      profileView: view,
-      onUpdate: onRefreshAll,
+      profile,
     })
-  }, [track, store, view, onRefreshAll])
-
-  const trackPress = React.useCallback(
-    (f: 'Followers' | 'Follows') => {
-      track(`ProfileHeader:${f}ButtonClicked`, {
-        handle: view.handle,
-      })
-    },
-    [track, view],
-  )
+  }, [track, openModal, profile])
 
   const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
-    const url = toShareUrl(makeProfileLink(view))
-    shareUrl(url)
-  }, [track, view])
+    shareUrl(toShareUrl(makeProfileLink(profile)))
+  }, [track, profile])
 
   const onPressAddRemoveLists = React.useCallback(() => {
     track('ProfileHeader:AddToListsButtonClicked')
-    store.shell.openModal({
-      name: 'list-add-remove-user',
-      subject: view.did,
-      displayName: view.displayName || view.handle,
+    openModal({
+      name: 'user-add-remove-lists',
+      subject: profile.did,
+      handle: profile.handle,
+      displayName: profile.displayName || profile.handle,
+      onAdd: invalidateProfileQuery,
+      onRemove: invalidateProfileQuery,
     })
-  }, [track, view, store])
+  }, [track, profile, openModal, invalidateProfileQuery])
 
   const onPressMuteAccount = React.useCallback(async () => {
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
-      await view.muteAccount()
+      await queueMute()
       Toast.show('Account muted')
     } catch (e: any) {
-      store.log.error('Failed to mute account', e)
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to mute account', {error: e})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
-  }, [track, view, store])
+  }, [track, queueMute])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
-      await view.unmuteAccount()
+      await queueUnmute()
       Toast.show('Account unmuted')
     } catch (e: any) {
-      store.log.error('Failed to unmute account', e)
-      Toast.show(`There was an issue! ${e.toString()}`)
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unmute account', {error: e})
+        Toast.show(`There was an issue! ${e.toString()}`)
+      }
     }
-  }, [track, view, store])
+  }, [track, queueUnmute])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
-      title: 'Block Account',
-      message:
-        'Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.',
+      title: _(msg`Block Account`),
+      message: _(
+        msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+      ),
       onPressConfirm: async () => {
         try {
-          await view.blockAccount()
-          onRefreshAll()
+          await queueBlock()
           Toast.show('Account blocked')
         } catch (e: any) {
-          store.log.error('Failed to block account', e)
-          Toast.show(`There was an issue! ${e.toString()}`)
+          if (e?.name !== 'AbortError') {
+            logger.error('Failed to block account', {error: e})
+            Toast.show(`There was an issue! ${e.toString()}`)
+          }
         }
       },
     })
-  }, [track, view, store, onRefreshAll])
+  }, [track, queueBlock, openModal, _])
 
   const onPressUnblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
-      title: 'Unblock Account',
-      message:
-        'The account will be able to interact with you after unblocking.',
+      title: _(msg`Unblock Account`),
+      message: _(
+        msg`The account will be able to interact with you after unblocking.`,
+      ),
       onPressConfirm: async () => {
         try {
-          await view.unblockAccount()
-          onRefreshAll()
+          await queueUnblock()
           Toast.show('Account unblocked')
         } catch (e: any) {
-          store.log.error('Failed to unblock account', e)
-          Toast.show(`There was an issue! ${e.toString()}`)
+          if (e?.name !== 'AbortError') {
+            logger.error('Failed to unblock account', {error: e})
+            Toast.show(`There was an issue! ${e.toString()}`)
+          }
         }
       },
     })
-  }, [track, view, store, onRefreshAll])
+  }, [track, queueUnblock, openModal, _])
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
-    store.shell.openModal({
+    openModal({
       name: 'report',
-      did: view.did,
+      did: profile.did,
     })
-  }, [track, store, view])
+  }, [track, openModal, profile])
 
   const isMe = React.useMemo(
-    () => store.me.did === view.did,
-    [store.me.did, view.did],
+    () => currentAccount?.did === profile.did,
+    [currentAccount, profile],
   )
   const dropdownItems: DropdownItem[] = React.useMemo(() => {
     let items: DropdownItem[] = [
       {
         testID: 'profileHeaderDropdownShareBtn',
-        label: 'Share',
+        label: isWeb ? _(msg`Copy link to profile`) : _(msg`Share`),
         onPress: onPressShare,
         icon: {
           ios: {
@@ -273,12 +346,11 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         },
       },
     ]
-    if (!isMe) {
+    if (hasSession) {
       items.push({label: 'separator'})
-      // Only add "Add to Lists" on other user's profiles, doesn't make sense to mute my own self!
       items.push({
         testID: 'profileHeaderDropdownListAddRemoveBtn',
-        label: 'Add to Lists',
+        label: _(msg`Add to Lists`),
         onPress: onPressAddRemoveLists,
         icon: {
           ios: {
@@ -288,54 +360,67 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           web: 'list',
         },
       })
-      if (!view.viewer.blocking) {
+      if (!isMe) {
+        if (!profile.viewer?.blocking) {
+          if (!profile.viewer?.mutedByList) {
+            items.push({
+              testID: 'profileHeaderDropdownMuteBtn',
+              label: profile.viewer?.muted
+                ? _(msg`Unmute Account`)
+                : _(msg`Mute Account`),
+              onPress: profile.viewer?.muted
+                ? onPressUnmuteAccount
+                : onPressMuteAccount,
+              icon: {
+                ios: {
+                  name: 'speaker.slash',
+                },
+                android: 'ic_lock_silent_mode',
+                web: 'comment-slash',
+              },
+            })
+          }
+        }
+        if (!profile.viewer?.blockingByList) {
+          items.push({
+            testID: 'profileHeaderDropdownBlockBtn',
+            label: profile.viewer?.blocking
+              ? _(msg`Unblock Account`)
+              : _(msg`Block Account`),
+            onPress: profile.viewer?.blocking
+              ? onPressUnblockAccount
+              : onPressBlockAccount,
+            icon: {
+              ios: {
+                name: 'person.fill.xmark',
+              },
+              android: 'ic_menu_close_clear_cancel',
+              web: 'user-slash',
+            },
+          })
+        }
         items.push({
-          testID: 'profileHeaderDropdownMuteBtn',
-          label: view.viewer.muted ? 'Unmute Account' : 'Mute Account',
-          onPress: view.viewer.muted
-            ? onPressUnmuteAccount
-            : onPressMuteAccount,
+          testID: 'profileHeaderDropdownReportBtn',
+          label: _(msg`Report Account`),
+          onPress: onPressReportAccount,
           icon: {
             ios: {
-              name: 'speaker.slash',
+              name: 'exclamationmark.triangle',
             },
-            android: 'ic_lock_silent_mode',
-            web: 'comment-slash',
+            android: 'ic_menu_report_image',
+            web: 'circle-exclamation',
           },
         })
       }
-      items.push({
-        testID: 'profileHeaderDropdownBlockBtn',
-        label: view.viewer.blocking ? 'Unblock Account' : 'Block Account',
-        onPress: view.viewer.blocking
-          ? onPressUnblockAccount
-          : onPressBlockAccount,
-        icon: {
-          ios: {
-            name: 'person.fill.xmark',
-          },
-          android: 'ic_menu_close_clear_cancel',
-          web: 'user-slash',
-        },
-      })
-      items.push({
-        testID: 'profileHeaderDropdownReportBtn',
-        label: 'Report Account',
-        onPress: onPressReportAccount,
-        icon: {
-          ios: {
-            name: 'exclamationmark.triangle',
-          },
-          android: 'ic_menu_report_image',
-          web: 'circle-exclamation',
-        },
-      })
     }
     return items
   }, [
     isMe,
-    view.viewer.muted,
-    view.viewer.blocking,
+    hasSession,
+    profile.viewer?.muted,
+    profile.viewer?.mutedByList,
+    profile.viewer?.blocking,
+    profile.viewer?.blockingByList,
     onPressShare,
     onPressUnmuteAccount,
     onPressMuteAccount,
@@ -343,45 +428,51 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
     onPressBlockAccount,
     onPressReportAccount,
     onPressAddRemoveLists,
+    _,
   ])
 
-  const blockHide = !isMe && (view.viewer.blocking || view.viewer.blockedBy)
-  const following = formatCount(view.followsCount)
-  const followers = formatCount(view.followersCount)
-  const pluralizedFollowers = pluralize(view.followersCount, 'follower')
+  const blockHide =
+    !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
+  const following = formatCount(profile.followsCount || 0)
+  const followers = formatCount(profile.followersCount || 0)
+  const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
-    <View style={pal.view}>
-      <UserBanner banner={view.banner} moderation={view.moderation.avatar} />
-      <View style={styles.content}>
-        <View style={[styles.buttonsLine]}>
+    <View style={pal.view} pointerEvents="box-none">
+      <View pointerEvents="none">
+        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+      </View>
+      <View style={styles.content} pointerEvents="box-none">
+        <View style={[styles.buttonsLine]} pointerEvents="box-none">
           {isMe ? (
             <TouchableOpacity
               testID="profileHeaderEditProfileButton"
               onPress={onPressEditProfile}
               style={[styles.btn, styles.mainBtn, pal.btn]}
               accessibilityRole="button"
-              accessibilityLabel="Edit profile"
+              accessibilityLabel={_(msg`Edit profile`)}
               accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
               <Text type="button" style={pal.text}>
-                Edit Profile
+                <Trans>Edit Profile</Trans>
               </Text>
             </TouchableOpacity>
-          ) : view.viewer.blocking ? (
-            <TouchableOpacity
-              testID="unblockBtn"
-              onPress={onPressUnblockAccount}
-              style={[styles.btn, styles.mainBtn, pal.btn]}
-              accessibilityRole="button"
-              accessibilityLabel="Unblock"
-              accessibilityHint="">
-              <Text type="button" style={[pal.text, s.bold]}>
-                Unblock
-              </Text>
-            </TouchableOpacity>
-          ) : !view.viewer.blockedBy ? (
+          ) : profile.viewer?.blocking ? (
+            profile.viewer?.blockingByList ? null : (
+              <TouchableOpacity
+                testID="unblockBtn"
+                onPress={onPressUnblockAccount}
+                style={[styles.btn, styles.mainBtn, pal.btn]}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Unblock`)}
+                accessibilityHint="">
+                <Text type="button" style={[pal.text, s.bold]}>
+                  <Trans>Unblock</Trans>
+                </Text>
+              </TouchableOpacity>
+            )
+          ) : !profile.viewer?.blockedBy ? (
             <>
-              {!isProfilePreview && (
+              {!isProfilePreview && hasSession && (
                 <TouchableOpacity
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
@@ -397,7 +488,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                     },
                   ]}
                   accessibilityRole="button"
-                  accessibilityLabel={`Show follows similar to ${view.handle}`}
+                  accessibilityLabel={`Show follows similar to ${profile.handle}`}
                   accessibilityHint={`Shows a list of users similar to this user.`}>
                   <FontAwesomeIcon
                     icon="user-plus"
@@ -405,7 +496,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                       pal.text,
                       {
                         color: showSuggestedFollows
-                          ? colors.white
+                          ? pal.textInverted.color
                           : pal.text.color,
                       },
                     ]}
@@ -414,38 +505,37 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                 </TouchableOpacity>
               )}
 
-              {store.me.follows.getFollowState(view.did) ===
-              FollowState.Following ? (
+              {profile.viewer?.following ? (
                 <TouchableOpacity
                   testID="unfollowBtn"
-                  onPress={onPressToggleFollow}
+                  onPress={onPressUnfollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}
                   accessibilityRole="button"
-                  accessibilityLabel={`Unfollow ${view.handle}`}
-                  accessibilityHint={`Hides posts from ${view.handle} in your feed`}>
+                  accessibilityLabel={`Unfollow ${profile.handle}`}
+                  accessibilityHint={`Hides posts from ${profile.handle} in your feed`}>
                   <FontAwesomeIcon
                     icon="check"
                     style={[pal.text, s.mr5]}
                     size={14}
                   />
                   <Text type="button" style={pal.text}>
-                    Following
+                    <Trans>Following</Trans>
                   </Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
                   testID="followBtn"
-                  onPress={onPressToggleFollow}
+                  onPress={onPressFollow}
                   style={[styles.btn, styles.mainBtn, palInverted.view]}
                   accessibilityRole="button"
-                  accessibilityLabel={`Follow ${view.handle}`}
-                  accessibilityHint={`Shows posts from ${view.handle} in your feed`}>
+                  accessibilityLabel={`Follow ${profile.handle}`}
+                  accessibilityHint={`Shows posts from ${profile.handle} in your feed`}>
                   <FontAwesomeIcon
                     icon="plus"
                     style={[palInverted.text, s.mr5]}
                   />
                   <Text type="button" style={[palInverted.text, s.bold]}>
-                    Follow
+                    <Trans>Follow</Trans>
                   </Text>
                 </TouchableOpacity>
               )}
@@ -455,7 +545,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             <NativeDropdown
               testID="profileHeaderDropdownBtn"
               items={dropdownItems}
-              accessibilityLabel="More options"
+              accessibilityLabel={_(msg`More options`)}
               accessibilityHint="">
               <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                 <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.text]} />
@@ -463,22 +553,22 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
             </NativeDropdown>
           ) : undefined}
         </View>
-        <View>
+        <View pointerEvents="none">
           <Text
             testID="profileHeaderDisplayName"
             type="title-2xl"
             style={[pal.text, styles.title]}>
             {sanitizeDisplayName(
-              view.displayName || sanitizeHandle(view.handle),
-              view.moderation.profile,
+              profile.displayName || sanitizeHandle(profile.handle),
+              moderation.profile,
             )}
           </Text>
         </View>
-        <View style={styles.handleLine}>
-          {view.viewer.followedBy && !blockHide ? (
+        <View style={styles.handleLine} pointerEvents="none">
+          {profile.viewer?.followedBy && !blockHide ? (
             <View style={[styles.pill, pal.btn, s.mr5]}>
               <Text type="xs" style={[pal.text]}>
-                Follows you
+                <Trans>Follows you</Trans>
               </Text>
             </View>
           ) : undefined}
@@ -490,17 +580,21 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               invalidHandle ? styles.invalidHandle : undefined,
               styles.handle,
             ]}>
-            {invalidHandle ? '⚠Invalid Handle' : `@${view.handle}`}
+            {invalidHandle ? '⚠Invalid Handle' : `@${profile.handle}`}
           </ThemedText>
         </View>
         {!blockHide && (
           <>
-            <View style={styles.metricsLine}>
+            <View style={styles.metricsLine} pointerEvents="box-none">
               <Link
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
-                href={makeProfileLink(view, 'followers')}
-                onPressOut={() => trackPress('Followers')}
+                href={makeProfileLink(profile, 'followers')}
+                onPressOut={() =>
+                  track(`ProfileHeader:FollowersButtonClicked`, {
+                    handle: profile.handle,
+                  })
+                }
                 asAnchor
                 accessibilityLabel={`${followers} ${pluralizedFollowers}`}
                 accessibilityHint={'Opens followers list'}>
@@ -514,8 +608,12 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
               <Link
                 testID="profileHeaderFollowsButton"
                 style={[s.flexRow, s.mr10]}
-                href={makeProfileLink(view, 'follows')}
-                onPressOut={() => trackPress('Follows')}
+                href={makeProfileLink(profile, 'follows')}
+                onPressOut={() =>
+                  track(`ProfileHeader:FollowsButtonClicked`, {
+                    handle: profile.handle,
+                  })
+                }
                 asAnchor
                 accessibilityLabel={`${following} following`}
                 accessibilityHint={'Opens following list'}>
@@ -523,36 +621,45 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
                   {following}{' '}
                 </Text>
                 <Text type="md" style={[pal.textLight]}>
-                  following
+                  <Trans>following</Trans>
                 </Text>
               </Link>
               <Text type="md" style={[s.bold, pal.text]}>
-                {formatCount(view.postsCount)}{' '}
+                {formatCount(profile.postsCount || 0)}{' '}
                 <Text type="md" style={[pal.textLight]}>
-                  {pluralize(view.postsCount, 'post')}
+                  {pluralize(profile.postsCount || 0, 'post')}
                 </Text>
               </Text>
             </View>
-            {view.description &&
-            view.descriptionRichText &&
-            !view.moderation.profile.blur ? (
-              <RichText
-                testID="profileHeaderDescription"
-                style={[styles.description, pal.text]}
-                numberOfLines={15}
-                richText={view.descriptionRichText}
-              />
+            {descriptionRT && !moderation.profile.blur ? (
+              <View pointerEvents={isNative ? 'auto' : 'none'}>
+                <RichText
+                  testID="profileHeaderDescription"
+                  style={[styles.description, pal.text]}
+                  numberOfLines={15}
+                  richText={descriptionRT}
+                />
+              </View>
             ) : undefined}
           </>
         )}
-        <ProfileHeaderAlerts moderation={view.moderation} />
+        <ProfileHeaderAlerts moderation={moderation} />
+        {isMe && (
+          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
+        )}
       </View>
 
-      {!isProfilePreview && (
+      {!isProfilePreview && showSuggestedFollows && (
         <ProfileHeaderSuggestedFollows
-          actorDid={view.did}
-          active={showSuggestedFollows}
-          requestDismiss={() => setShowSuggestedFollows(!showSuggestedFollows)}
+          actorDid={profile.did}
+          requestDismiss={() => {
+            if (showSuggestedFollows) {
+              setShowSuggestedFollows(false)
+            } else {
+              track('ProfileHeader:SuggestedFollowsOpened')
+              setShowSuggestedFollows(true)
+            }
+          }}
         />
       )}
 
@@ -562,7 +669,7 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
           onPress={onPressBack}
           hitSlop={BACK_HITSLOP}
           accessibilityRole="button"
-          accessibilityLabel="Back"
+          accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
             <BlurView style={styles.backBtn} blurType="dark">
@@ -575,20 +682,21 @@ const ProfileHeaderLoaded = observer(function ProfileHeaderLoadedImpl({
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
         accessibilityRole="image"
-        accessibilityLabel={`View ${view.handle}'s avatar`}
+        accessibilityLabel={`View ${profile.handle}'s avatar`}
         accessibilityHint="">
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
           <UserAvatar
             size={80}
-            avatar={view.avatar}
-            moderation={view.moderation.avatar}
+            avatar={profile.avatar}
+            moderation={moderation.avatar}
           />
         </View>
       </TouchableWithoutFeedback>
     </View>
   )
-})
+}
+ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 
 const styles = StyleSheet.create({
   banner: {

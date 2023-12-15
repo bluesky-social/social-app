@@ -8,7 +8,10 @@ import {
   describeModerationCause,
   getProfileModerationCauses,
 } from 'lib/moderation'
-import {useStores} from 'state/index'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useModalControls} from '#/state/modals'
 
 export function ProfileHeaderAlerts({
   moderation,
@@ -17,8 +20,9 @@ export function ProfileHeaderAlerts({
   moderation: ProfileModeration
   style?: StyleProp<ViewStyle>
 }) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
+  const {openModal} = useModalControls()
 
   const causes = getProfileModerationCauses(moderation)
   if (!causes.length) {
@@ -28,28 +32,37 @@ export function ProfileHeaderAlerts({
   return (
     <View style={styles.grid}>
       {causes.map(cause => {
+        const isMute = cause.type === 'muted'
         const desc = describeModerationCause(cause, 'account')
         return (
           <Pressable
             testID="profileHeaderAlert"
             key={desc.name}
             onPress={() => {
-              store.shell.openModal({
+              openModal({
                 name: 'moderation-details',
                 context: 'content',
                 moderation: {cause},
               })
             }}
             accessibilityRole="button"
-            accessibilityLabel="Learn more about this warning"
+            accessibilityLabel={_(msg`Learn more about this warning`)}
             accessibilityHint=""
             style={[styles.container, pal.viewLight, style]}>
-            <ShieldExclamation style={pal.text} size={24} />
-            <Text type="lg" style={pal.text}>
+            {isMute ? (
+              <FontAwesomeIcon
+                icon={['far', 'eye-slash']}
+                size={14}
+                color={pal.colors.textLight}
+              />
+            ) : (
+              <ShieldExclamation style={pal.text} size={18} />
+            )}
+            <Text type="sm" style={[{flex: 1}, pal.text]}>
               {desc.name}
             </Text>
-            <Text type="lg" style={[pal.link, styles.learnMoreBtn]}>
-              Learn More
+            <Text type="sm" style={[pal.link, styles.learnMoreBtn]}>
+              <Trans>Learn More</Trans>
             </Text>
           </Pressable>
         )

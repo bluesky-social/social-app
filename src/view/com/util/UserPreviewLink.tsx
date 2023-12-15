@@ -1,9 +1,9 @@
 import React from 'react'
 import {Pressable, StyleProp, ViewStyle} from 'react-native'
-import {useStores} from 'state/index'
 import {Link} from './Link'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {makeProfileLink} from 'lib/routes/links'
+import {useModalControls} from '#/state/modals'
 
 interface UserPreviewLinkProps {
   did: string
@@ -13,9 +13,9 @@ interface UserPreviewLinkProps {
 export function UserPreviewLink(
   props: React.PropsWithChildren<UserPreviewLinkProps>,
 ) {
-  const store = useStores()
+  const {openModal} = useModalControls()
 
-  if (isWeb) {
+  if (isWeb || isAndroid) {
     return (
       <Link
         href={makeProfileLink(props)}
@@ -29,7 +29,7 @@ export function UserPreviewLink(
   return (
     <Pressable
       onPress={() =>
-        store.shell.openModal({
+        openModal({
           name: 'profile-preview',
           did: props.did,
         })

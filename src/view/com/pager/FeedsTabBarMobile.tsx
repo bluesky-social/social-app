@@ -1,58 +1,79 @@
-import React, {useMemo} from 'react'
-import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
+import React from 'react'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {TabBar} from 'view/com/pager/TabBar'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {s} from 'lib/styles'
 import {HITSLOP_10} from 'lib/constants'
+import Animated from 'react-native-reanimated'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useSetDrawerOpen} from '#/state/shell/drawer-open'
+import {useShellLayout} from '#/state/shell/shell-layout'
+import {useSession} from '#/state/session'
+import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {isWeb} from 'platform/detection'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
+import {Logo} from '#/view/icons/Logo'
 
-export const FeedsTabBar = observer(function FeedsTabBarImpl(
+export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const store = useStores()
   const pal = usePalette('default')
-  const interp = useAnimatedValue(0)
+  const {hasSession} = useSession()
+  const {_} = useLingui()
+  const setDrawerOpen = useSetDrawerOpen()
+  const navigation = useNavigation<NavigationProp>()
+  const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
+  const {headerHeight} = useShellLayout()
+  const {headerMinimalShellTransform} = useMinimalShellMode()
+  const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
+  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
+  const items = showFeedsLinkInTabBar
+    ? pinnedDisplayNames.concat('Feeds ✨')
+    : pinnedDisplayNames
 
-  React.useEffect(() => {
-    Animated.timing(interp, {
-      toValue: store.shell.minimalShellMode ? 1 : 0,
-      duration: 100,
-      useNativeDriver: true,
-      isInteraction: false,
-    }).start()
-  }, [interp, store.shell.minimalShellMode])
-  const transform = {
-    transform: [{translateY: Animated.multiply(interp, -100)}],
-  }
+  const onPressFeedsLink = React.useCallback(() => {
+    if (isWeb) {
+      navigation.navigate('Feeds')
+    } else {
+      navigation.navigate('FeedsTab')
+      navigation.popToTop()
+    }
+  }, [navigation])
 
-  const brandBlue = useColorSchemeStyle(s.brandBlue, s.blue3)
-
-  const onPressAvi = React.useCallback(() => {
-    store.shell.openDrawer()
-  }, [store])
-
-  const items = useMemo(
-    () => ['Following', ...store.me.savedFeeds.pinnedFeedNames],
-    [store.me.savedFeeds.pinnedFeedNames],
+  const onSelect = React.useCallback(
+    (index: number) => {
+      if (showFeedsLinkInTabBar && index === items.length - 1) {
+        onPressFeedsLink()
+      } else if (props.onSelect) {
+        props.onSelect(index)
+      }
+    },
+    [items.length, onPressFeedsLink, props, showFeedsLinkInTabBar],
   )
 
+  const onPressAvi = React.useCallback(() => {
+    setDrawerOpen(true)
+  }, [setDrawerOpen])
+
   return (
-    <Animated.View style={[pal.view, pal.border, styles.tabBar, transform]}>
+    <Animated.View
+      style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
+      onLayout={e => {
+        headerHeight.value = e.nativeEvent.layout.height
+      }}>
       <View style={[pal.view, styles.topBar]}>
         <View style={[pal.view]}>
           <TouchableOpacity
             testID="viewHeaderDrawerBtn"
             onPress={onPressAvi}
             accessibilityRole="button"
-            accessibilityLabel="Open navigation"
+            accessibilityLabel={_(msg`Open navigation`)}
             accessibilityHint="Access profile and other navigation links"
             hitSlop={HITSLOP_10}>
             <FontAwesomeIcon
@@ -62,33 +83,41 @@ export const FeedsTabBar = observer(function FeedsTabBarImpl(
             />
           </TouchableOpacity>
         </View>
-        <Text style={[brandBlue, s.bold, styles.title]}>
-          {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}
-        </Text>
-        <View style={[pal.view]}>
-          <Link
-            testID="viewHeaderHomeFeedPrefsBtn"
-            href="/settings/home-feed"
-            hitSlop={HITSLOP_10}
-            accessibilityRole="button"
-            accessibilityLabel="Home Feed Preferences"
-            accessibilityHint="">
-            <FontAwesomeIcon
-              icon="sliders"
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
-          </Link>
+        <View>
+          <Logo width={30} />
+        </View>
+        <View style={[pal.view, {width: 18}]}>
+          {hasSession && (
+            <Link
+              testID="viewHeaderHomeFeedPrefsBtn"
+              href="/settings/home-feed"
+              hitSlop={HITSLOP_10}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Home Feed Preferences`)}
+              accessibilityHint="">
+              <FontAwesomeIcon
+                icon="sliders"
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+            </Link>
+          )}
         </View>
       </View>
-      <TabBar
-        key={items.join(',')}
-        {...props}
-        items={items}
-        indicatorColor={pal.colors.link}
-      />
+
+      {items.length > 0 && (
+        <TabBar
+          key={items.join(',')}
+          onPressSelected={props.onPressSelected}
+          selectedPage={props.selectedPage}
+          onSelect={onSelect}
+          testID={props.testID}
+          items={items}
+          indicatorColor={pal.colors.link}
+        />
+      )}
     </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   tabBar: {
@@ -98,7 +127,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     flexDirection: 'column',
-    alignItems: 'center',
     borderBottomWidth: 1,
   },
   topBar: {
@@ -106,8 +134,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 18,
-    paddingTop: 8,
-    paddingBottom: 2,
+    paddingVertical: 8,
     width: '100%',
   },
   title: {

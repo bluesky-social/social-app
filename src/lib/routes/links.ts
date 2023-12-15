@@ -7,9 +7,21 @@ export function makeProfileLink(
   },
   ...segments: string[]
 ) {
-  return [
-    `/profile`,
-    `${isInvalidHandle(info.handle) ? info.did : info.handle}`,
-    ...segments,
-  ].join('/')
+  let handleSegment = info.did
+  if (info.handle && !isInvalidHandle(info.handle)) {
+    handleSegment = info.handle
+  }
+  return [`/profile`, handleSegment, ...segments].join('/')
+}
+
+export function makeCustomFeedLink(
+  did: string,
+  rkey: string,
+  ...segments: string[]
+) {
+  return [`/profile`, did, 'feed', rkey, ...segments].join('/')
+}
+
+export function makeListLink(did: string, rkey: string, ...segments: string[]) {
+  return [`/profile`, did, 'lists', rkey, ...segments].join('/')
 }

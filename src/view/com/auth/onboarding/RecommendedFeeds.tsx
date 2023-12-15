@@ -1,6 +1,5 @@
 import React from 'react'
 import {ActivityIndicator, FlatList, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TabletOrDesktop, Mobile} from 'view/com/util/layouts/Breakpoints'
 import {Text} from 'view/com/util/text/Text'
@@ -10,74 +9,55 @@ import {Button} from 'view/com/util/forms/Button'
 import {RecommendedFeedsItem} from './RecommendedFeedsItem'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useQuery} from '@tanstack/react-query'
-import {useStores} from 'state/index'
-import {CustomFeedModel} from 'state/models/feeds/custom-feed'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useSuggestedFeedsQuery} from '#/state/queries/suggested-feeds'
 
 type Props = {
   next: () => void
 }
-export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
-  next,
-}: Props) {
-  const store = useStores()
+export function RecommendedFeeds({next}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isTabletOrMobile} = useWebMediaQueries()
-  const {isLoading, data: recommendedFeeds} = useQuery({
-    staleTime: Infinity, // fixed list rn, never refetch
-    queryKey: ['onboarding', 'recommended_feeds'],
-    async queryFn() {
-      try {
-        const {
-          data: {feeds},
-          success,
-        } = await store.agent.app.bsky.feed.getSuggestedFeeds()
+  const {isLoading, data} = useSuggestedFeedsQuery()
 
-        if (!success) {
-          return []
-        }
-
-        return (feeds.length ? feeds : []).map(feed => {
-          return new CustomFeedModel(store, feed)
-        })
-      } catch (e) {
-        return []
-      }
-    },
-  })
-
-  const hasFeeds = recommendedFeeds && recommendedFeeds.length
+  const hasFeeds = data && data.pages[0].feeds.length
 
   const title = (
     <>
-      <Text
-        style={[
-          pal.textLight,
-          tdStyles.title1,
-          isTabletOrMobile && tdStyles.title1Small,
-        ]}>
-        Choose your
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          tdStyles.title2,
-          isTabletOrMobile && tdStyles.title2Small,
-        ]}>
-        Recommended
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          tdStyles.title2,
-          isTabletOrMobile && tdStyles.title2Small,
-        ]}>
-        Feeds
-      </Text>
+      <Trans>
+        <Text
+          style={[
+            pal.textLight,
+            tdStyles.title1,
+            isTabletOrMobile && tdStyles.title1Small,
+          ]}>
+          Choose your
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            tdStyles.title2,
+            isTabletOrMobile && tdStyles.title2Small,
+          ]}>
+          Recommended
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            tdStyles.title2,
+            isTabletOrMobile && tdStyles.title2Small,
+          ]}>
+          Feeds
+        </Text>
+      </Trans>
       <Text type="2xl-medium" style={[pal.textLight, tdStyles.description]}>
-        Feeds are created by users to curate content. Choose some feeds that you
-        find interesting.
+        <Trans>
+          Feeds are created by users to curate content. Choose some feeds that
+          you find interesting.
+        </Trans>
       </Text>
       <View
         style={{
@@ -96,7 +76,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Next
+              <Trans>Next</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>
@@ -116,7 +96,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
           contentStyle={{paddingHorizontal: 0}}>
           {hasFeeds ? (
             <FlatList
-              data={recommendedFeeds}
+              data={data.pages[0].feeds}
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
@@ -126,25 +106,27 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
               <ActivityIndicator size="large" />
             </View>
           ) : (
-            <ErrorMessage message="Failed to load recommended feeds" />
+            <ErrorMessage message={_(msg`Failed to load recommended feeds`)} />
           )}
         </TitleColumnLayout>
       </TabletOrDesktop>
       <Mobile>
         <View style={[mStyles.container]} testID="recommendedFeedsOnboarding">
           <ViewHeader
-            title="Recommended Feeds"
+            title={_(msg`Recommended Feeds`)}
             showBackButton={false}
             showOnDesktop
           />
           <Text type="lg-medium" style={[pal.text, mStyles.header]}>
-            Check out some recommended feeds. Tap + to add them to your list of
-            pinned feeds.
+            <Trans>
+              Check out some recommended feeds. Tap + to add them to your list
+              of pinned feeds.
+            </Trans>
           </Text>
 
           {hasFeeds ? (
             <FlatList
-              data={recommendedFeeds}
+              data={data.pages[0].feeds}
               renderItem={({item}) => <RecommendedFeedsItem item={item} />}
               keyExtractor={item => item.uri}
               style={{flex: 1}}
@@ -155,13 +137,15 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
             </View>
           ) : (
             <View style={{flex: 1}}>
-              <ErrorMessage message="Failed to load recommended feeds" />
+              <ErrorMessage
+                message={_(msg`Failed to load recommended feeds`)}
+              />
             </View>
           )}
 
           <Button
             onPress={next}
-            label="Continue"
+            label={_(msg`Continue`)}
             testID="continueBtn"
             style={mStyles.button}
             labelStyle={mStyles.buttonText}
@@ -170,7 +154,7 @@ export const RecommendedFeeds = observer(function RecommendedFeedsImpl({
       </Mobile>
     </>
   )
-})
+}
 
 const tdStyles = StyleSheet.create({
   container: {

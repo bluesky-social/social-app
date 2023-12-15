@@ -13,6 +13,8 @@ import {
 import {Text} from '../text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function ErrorMessage({
   message,
@@ -27,6 +29,7 @@ export function ErrorMessage({
 }) {
   const theme = useTheme()
   const pal = usePalette('error')
+  const {_} = useLingui()
   return (
     <View testID="errorMessageView" style={[styles.outer, pal.view, style]}>
       <View
@@ -49,7 +52,7 @@ export function ErrorMessage({
           style={styles.btn}
           onPress={onPressTryAgain}
           accessibilityRole="button"
-          accessibilityLabel="Retry"
+          accessibilityLabel={_(msg`Retry`)}
           accessibilityHint="Retries the last action, which errored out">
           <FontAwesomeIcon
             icon="arrows-rotate"

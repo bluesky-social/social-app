@@ -1,5 +1,5 @@
+import {BskyAgent} from '@atproto/api'
 import {isBskyAppUrl} from '../strings/url-helpers'
-import {RootStoreModel} from 'state/index'
 import {extractBskyMeta} from './bsky'
 import {LINK_META_PROXY} from 'lib/constants'
 
@@ -23,12 +23,12 @@ export interface LinkMeta {
 }
 
 export async function getLinkMeta(
-  store: RootStoreModel,
+  agent: BskyAgent,
   url: string,
   timeout = 5e3,
 ): Promise<LinkMeta> {
   if (isBskyAppUrl(url)) {
-    return extractBskyMeta(store, url)
+    return extractBskyMeta(agent, url)
   }
 
   let urlp
@@ -55,9 +55,9 @@ export async function getLinkMeta(
     const to = setTimeout(() => controller.abort(), timeout || 5e3)
 
     const response = await fetch(
-      `${LINK_META_PROXY(
-        store.session.currentSession?.service || '',
-      )}${encodeURIComponent(url)}`,
+      `${LINK_META_PROXY(agent.service.toString() || '')}${encodeURIComponent(
+        url,
+      )}`,
       {signal: controller.signal},
     )
 
@@ -92,7 +92,7 @@ export function getLikelyType(url: URL | string): LikelyType {
   }
 
   const ext = url.pathname.split('.').pop() || ''
-  if (ext === 'html' || ext === 'htm') {
+  if (ext === 'html' || ext === 'htm' || ext === 'php') {
     return LikelyType.HTML
   }
   const mimeType = EXT_MIME_TYPES[ext]

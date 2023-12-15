@@ -1,5 +1,4 @@
-import React, {ComponentProps, useMemo} from 'react'
-import {observer} from 'mobx-react-lite'
+import React, {ComponentProps, memo, useMemo} from 'react'
 import {
   Linking,
   GestureResponderEvent,
@@ -22,17 +21,16 @@ import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
-import {useStores, RootStoreModel} from 'state/index'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
 } from 'lib/strings/url-helpers'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useModalControls} from '#/state/modals'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -48,9 +46,10 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   noFeedback?: boolean
   asAnchor?: boolean
   anchorNoUnderline?: boolean
+  navigationAction?: 'push' | 'replace' | 'navigate'
 }
 
-export const Link = observer(function Link({
+export const Link = memo(function Link({
   testID,
   style,
   href,
@@ -60,19 +59,26 @@ export const Link = observer(function Link({
   asAnchor,
   accessible,
   anchorNoUnderline,
+  navigationAction,
   ...props
 }: Props) {
-  const store = useStores()
+  const {closeModal} = useModalControls()
   const navigation = useNavigation<NavigationProp>()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
 
   const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
-        return onPressInner(store, navigation, sanitizeUrl(href), e)
+        return onPressInner(
+          closeModal,
+          navigation,
+          sanitizeUrl(href),
+          navigationAction,
+          e,
+        )
       }
     },
-    [store, navigation, href],
+    [closeModal, navigation, navigationAction, href],
   )
 
   if (noFeedback) {
@@ -136,7 +142,7 @@ export const Link = observer(function Link({
   )
 })
 
-export const TextLink = observer(function TextLink({
+export const TextLink = memo(function TextLink({
   testID,
   type = 'md',
   style,
@@ -148,6 +154,7 @@ export const TextLink = observer(function TextLink({
   title,
   onPress,
   warnOnMismatchingLabel,
+  navigationAction,
   ...orgProps
 }: {
   testID?: string
@@ -160,10 +167,11 @@ export const TextLink = observer(function TextLink({
   dataSet?: any
   title?: string
   warnOnMismatchingLabel?: boolean
+  navigationAction?: 'push' | 'replace' | 'navigate'
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
-  const store = useStores()
   const navigation = useNavigation<NavigationProp>()
+  const {openModal, closeModal} = useModalControls()
 
   if (warnOnMismatchingLabel && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
@@ -176,7 +184,7 @@ export const TextLink = observer(function TextLink({
         linkRequiresWarning(href, typeof text === 'string' ? text : '')
       if (requiresWarning) {
         e?.preventDefault?.()
-        store.shell.openModal({
+        openModal({
           name: 'link-warning',
           text: typeof text === 'string' ? text : '',
           href,
@@ -187,9 +195,24 @@ export const TextLink = observer(function TextLink({
         // @ts-ignore function signature differs by platform -prf
         return onPress()
       }
-      return onPressInner(store, navigation, sanitizeUrl(href), e)
+      return onPressInner(
+        closeModal,
+        navigation,
+        sanitizeUrl(href),
+        navigationAction,
+        e,
+      )
     },
-    [onPress, store, navigation, href, text, warnOnMismatchingLabel],
+    [
+      onPress,
+      closeModal,
+      openModal,
+      navigation,
+      href,
+      text,
+      warnOnMismatchingLabel,
+      navigationAction,
+    ],
   )
   const hrefAttrs = useMemo(() => {
     const isExternal = isExternalUrl(href)
@@ -223,7 +246,7 @@ export const TextLink = observer(function TextLink({
 /**
  * Only acts as a link on desktop web
  */
-interface DesktopWebTextLinkProps extends TextProps {
+interface TextLinkOnWebOnlyProps extends TextProps {
   testID?: string
   type?: TypographyVariant
   style?: StyleProp<TextStyle>
@@ -235,8 +258,9 @@ interface DesktopWebTextLinkProps extends TextProps {
   accessibilityLabel?: string
   accessibilityHint?: string
   title?: string
+  navigationAction?: 'push' | 'replace' | 'navigate'
 }
-export const DesktopWebTextLink = observer(function DesktopWebTextLink({
+export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
   type = 'md',
   style,
@@ -244,11 +268,10 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
   text,
   numberOfLines,
   lineHeight,
+  navigationAction,
   ...props
-}: DesktopWebTextLinkProps) {
-  const {isDesktop} = useWebMediaQueries()
-
-  if (isDesktop) {
+}: TextLinkOnWebOnlyProps) {
+  if (isWeb) {
     return (
       <TextLink
         testID={testID}
@@ -259,6 +282,7 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
         numberOfLines={numberOfLines}
         lineHeight={lineHeight}
         title={props.title}
+        navigationAction={navigationAction}
         {...props}
       />
     )
@@ -289,9 +313,10 @@ export const DesktopWebTextLink = observer(function DesktopWebTextLink({
 // needed customizations
 // -prf
 function onPressInner(
-  store: RootStoreModel,
+  closeModal = () => {},
   navigation: NavigationProp,
   href: string,
+  navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   e?: Event,
 ) {
   let shouldHandle = false
@@ -322,10 +347,20 @@ function onPressInner(
     if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
       Linking.openURL(href)
     } else {
-      store.shell.closeModal() // close any active modals
+      closeModal() // close any active modals
 
-      // @ts-ignore we're not able to type check on this one -prf
-      navigation.dispatch(StackActions.push(...router.matchPath(href)))
+      if (navigationAction === 'push') {
+        // @ts-ignore we're not able to type check on this one -prf
+        navigation.dispatch(StackActions.push(...router.matchPath(href)))
+      } else if (navigationAction === 'replace') {
+        // @ts-ignore we're not able to type check on this one -prf
+        navigation.dispatch(StackActions.replace(...router.matchPath(href)))
+      } else if (navigationAction === 'navigate') {
+        // @ts-ignore we're not able to type check on this one -prf
+        navigation.navigate(...router.matchPath(href))
+      } else {
+        throw Error('Unsupported navigator action.')
+      }
     }
   }
 }

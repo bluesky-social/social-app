@@ -72,8 +72,9 @@ export function EmojiPicker({close}: {close: () => void}) {
               },
             ]}>
             <Picker
-              // @ts-ignore we set emojiMartData in `emoji-mart-data.js` file
-              data={window.emojiMartData}
+              data={async () => {
+                return (await import('./EmojiPickerData.json')).default
+              }}
               onEmojiSelect={onInsert}
               autoFocus={false}
             />
@@ -97,7 +98,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     border: 'none',
     paddingTop: 4,
-    paddingHorizontal: 10,
+    paddingLeft: 12,
+    paddingRight: 12,
     cursor: 'pointer',
   },
   picker: {

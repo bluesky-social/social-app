@@ -5,7 +5,6 @@ import {ModerationUI} from '@atproto/api'
 import {Image} from 'expo-image'
 import {colors} from 'lib/styles'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
-import {useStores} from 'state/index'
 import {
   usePhotoLibraryPermission,
   useCameraPermission,
@@ -14,6 +13,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function UserBanner({
   banner,
@@ -24,8 +25,8 @@ export function UserBanner({
   moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
 }) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
@@ -34,7 +35,7 @@ export function UserBanner({
       [
         !isWeb && {
           testID: 'changeBannerCameraBtn',
-          label: 'Camera',
+          label: _(msg`Camera`),
           icon: {
             ios: {
               name: 'camera',
@@ -47,7 +48,7 @@ export function UserBanner({
               return
             }
             onSelectNewBanner?.(
-              await openCamera(store, {
+              await openCamera({
                 width: 3000,
                 height: 1000,
               }),
@@ -56,7 +57,7 @@ export function UserBanner({
         },
         {
           testID: 'changeBannerLibraryBtn',
-          label: 'Library',
+          label: _(msg`Library`),
           icon: {
             ios: {
               name: 'photo.on.rectangle.angled',
@@ -74,7 +75,7 @@ export function UserBanner({
             }
 
             onSelectNewBanner?.(
-              await openCropper(store, {
+              await openCropper({
                 mediaType: 'photo',
                 path: items[0].path,
                 width: 3000,
@@ -85,13 +86,13 @@ export function UserBanner({
         },
         !!banner && {
           testID: 'changeBannerRemoveBtn',
-          label: 'Remove',
+          label: _(msg`Remove`),
           icon: {
             ios: {
               name: 'trash',
             },
             android: 'ic_delete',
-            web: 'trash',
+            web: ['far', 'trash-can'],
           },
           onPress: () => {
             onSelectNewBanner?.(null)
@@ -103,7 +104,7 @@ export function UserBanner({
       onSelectNewBanner,
       requestCameraAccessIfNeeded,
       requestPhotoAccessIfNeeded,
-      store,
+      _,
     ],
   )
 
@@ -112,7 +113,7 @@ export function UserBanner({
     <NativeDropdown
       testID="changeBannerBtn"
       items={dropdownItems}
-      accessibilityLabel="Image options"
+      accessibilityLabel={_(msg`Image options`)}
       accessibilityHint="">
       {banner ? (
         <Image

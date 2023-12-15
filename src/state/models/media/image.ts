@@ -1,5 +1,4 @@
 import {Image as RNImage} from 'react-native-image-crop-picker'
-import {RootStoreModel} from 'state/index'
 import {makeAutoObservable, runInAction} from 'mobx'
 import {POST_IMG_MAX} from 'lib/constants'
 import * as ImageManipulator from 'expo-image-manipulator'
@@ -9,6 +8,7 @@ import {ActionCrop, FlipType, SaveFormat} from 'expo-image-manipulator'
 import {Position} from 'react-avatar-editor'
 import {Dimensions} from 'lib/media/types'
 import {isIOS} from 'platform/detection'
+import {logger} from '#/logger'
 
 export interface ImageManipulationAttributes {
   aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'
@@ -41,10 +41,8 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   }
   prevAttributes: ImageManipulationAttributes = {}
 
-  constructor(public rootStore: RootStoreModel, image: Omit<RNImage, 'size'>) {
-    makeAutoObservable(this, {
-      rootStore: false,
-    })
+  constructor(image: Omit<RNImage, 'size'>) {
+    makeAutoObservable(this)
 
     this.path = image.path
     this.width = image.width
@@ -166,7 +164,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   async crop() {
     try {
       // NOTE
-      // on ios, react-native-image-cropper gives really bad quality
+      // on ios, react-native-image-crop-picker gives really bad quality
       // without specifying width and height. on android, however, the
       // crop stretches incorrectly if you do specify it. these are
       // both separate bugs in the library. we deal with that by
@@ -177,7 +175,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
         height: this.height,
       })
 
-      const cropped = await openCropper(this.rootStore, {
+      const cropped = await openCropper({
         mediaType: 'photo',
         path: this.path,
         freeStyleCropEnabled: true,
@@ -188,7 +186,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
         this.cropped = cropped
       })
     } catch (err) {
-      this.rootStore.log.error('Failed to crop photo', err)
+      logger.error('Failed to crop photo', {error: err})
     }
   }
 

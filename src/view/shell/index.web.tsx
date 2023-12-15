@@ -1,9 +1,5 @@
 import React, {useEffect} from 'react'
-import {observer} from 'mobx-react-lite'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
-import {useStores} from 'state/index'
-import {DesktopLeftNav} from './desktop/LeftNav'
-import {DesktopRightNav} from './desktop/RightNav'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
 import {Lightbox} from '../com/lightbox/Lightbox'
 import {ModalsContainer} from '../com/modals/Modal'
@@ -13,26 +9,29 @@ import {s, colors} from 'lib/styles'
 import {RoutesContainer, FlatNavigator} from '../../Navigation'
 import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
-import {BottomBarWeb} from './bottom-bar/BottomBarWeb'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useAuxClick} from 'lib/hooks/useAuxClick'
+import {t} from '@lingui/macro'
+import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
+import {useCloseAllActiveElements} from '#/state/util'
 
-const ShellInner = observer(function ShellInnerImpl() {
-  const store = useStores()
-  const {isDesktop, isMobile} = useWebMediaQueries()
+function ShellInner() {
+  const isDrawerOpen = useIsDrawerOpen()
+  const setDrawerOpen = useSetDrawerOpen()
+  const {isDesktop} = useWebMediaQueries()
   const navigator = useNavigation<NavigationProp>()
+  const closeAllActiveElements = useCloseAllActiveElements()
+
   useAuxClick()
 
   useEffect(() => {
-    navigator.addListener('state', () => {
-      store.shell.closeAnyActiveElement()
+    const unsubscribe = navigator.addListener('state', () => {
+      closeAllActiveElements()
     })
-  }, [navigator, store.shell])
+    return unsubscribe
+  }, [navigator, closeAllActiveElements])
 
-  const showBottomBar = isMobile && !store.onboarding.isActive
-  const showSideNavs =
-    !isMobile && store.session.hasSession && !store.onboarding.isActive
   return (
     <View style={[s.hContentRegion, {overflow: 'hidden'}]}>
       <View style={s.hContentRegion}>
@@ -40,28 +39,14 @@ const ShellInner = observer(function ShellInnerImpl() {
           <FlatNavigator />
         </ErrorBoundary>
       </View>
-      {showSideNavs && (
-        <>
-          <DesktopLeftNav />
-          <DesktopRightNav />
-        </>
-      )}
-      <Composer
-        active={store.shell.isComposerActive}
-        winHeight={0}
-        replyTo={store.shell.composerOpts?.replyTo}
-        quote={store.shell.composerOpts?.quote}
-        onPost={store.shell.composerOpts?.onPost}
-        mention={store.shell.composerOpts?.mention}
-      />
-      {showBottomBar && <BottomBarWeb />}
+      <Composer winHeight={0} />
       <ModalsContainer />
       <Lightbox />
-      {!isDesktop && store.shell.isDrawerOpen && (
+      {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
-          onPress={() => store.shell.closeDrawer()}
+          onPress={() => setDrawerOpen(false)}
           style={styles.drawerMask}
-          accessibilityLabel="Close navigation footer"
+          accessibilityLabel={t`Close navigation footer`}
           accessibilityHint="Closes bottom navigation bar">
           <View style={styles.drawerContainer}>
             <DrawerContent />
@@ -70,9 +55,9 @@ const ShellInner = observer(function ShellInnerImpl() {
       )}
     </View>
   )
-})
+}
 
-export const Shell: React.FC = observer(function ShellImpl() {
+export const Shell: React.FC = function ShellImpl() {
   const pageBg = useColorSchemeStyle(styles.bgLight, styles.bgDark)
   return (
     <View style={[s.hContentRegion, pageBg]}>
@@ -81,7 +66,7 @@ export const Shell: React.FC = observer(function ShellImpl() {
       </RoutesContainer>
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   bgLight: {

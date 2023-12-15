@@ -91,6 +91,11 @@ func serve(cctx *cli.Context) error {
 	}
 
 	e.HideBanner = true
+	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
+	e.HTTPErrorHandler = server.errorHandler
+
+	e.IPExtractor = echo.ExtractIPFromXFFHeader()
+
 	// SECURITY: Do not modify without due consideration.
 	e.Use(middleware.SecureWithConfig(middleware.SecureConfig{
 		ContentTypeNosniff: "nosniff",
@@ -106,8 +111,23 @@ func serve(cctx *cli.Context) error {
 			return strings.HasPrefix(c.Request().URL.Path, "/static")
 		},
 	}))
-	e.Renderer = NewRenderer("templates/", &bskyweb.TemplateFS, debug)
-	e.HTTPErrorHandler = server.errorHandler
+	e.Use(middleware.RateLimiterWithConfig(middleware.RateLimiterConfig{
+		Skipper: middleware.DefaultSkipper,
+		Store: middleware.NewRateLimiterMemoryStoreWithConfig(
+			middleware.RateLimiterMemoryStoreConfig{
+				Rate:      10,              // requests per second
+				Burst:     30,              // allow bursts
+				ExpiresIn: 3 * time.Minute, // garbage collect entries older than 3 minutes
+			},
+		),
+		IdentifierExtractor: func(ctx echo.Context) (string, error) {
+			id := ctx.RealIP()
+			return id, nil
+		},
+		DenyHandler: func(c echo.Context, identifier string, err error) error {
+			return c.String(http.StatusTooManyRequests, "Your request has been rate limited. Please try again later. Contact security@bsky.app if you believe this was a mistake.\n")
+		},
+	}))
 
 	// redirect trailing slash to non-trailing slash.
 	// all of our current endpoints have no trailing slash.
@@ -161,8 +181,9 @@ func serve(cctx *cli.Context) error {
 	e.GET("/search", server.WebGeneric)
 	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)
+	e.GET("/lists", server.WebGeneric)
 	e.GET("/moderation", server.WebGeneric)
-	e.GET("/moderation/mute-lists", server.WebGeneric)
+	e.GET("/moderation/modlists", server.WebGeneric)
 	e.GET("/moderation/muted-accounts", server.WebGeneric)
 	e.GET("/moderation/blocked-accounts", server.WebGeneric)
 	e.GET("/settings", server.WebGeneric)
@@ -275,21 +296,30 @@ func (srv *Server) WebPost(c echo.Context) error {
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
-			did := pv.Did
-			data["did"] = did
+			unauthedViewingOkay := true
+			for _, label := range pv.Labels {
+				if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+					unauthedViewingOkay = false
+				}
+			}
 
-			// then fetch the post thread (with extra context)
-			uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
-			tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
-			if err != nil {
-				log.Warnf("failed to fetch post: %s\t%v", uri, err)
-			} else {
-				req := c.Request()
-				postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
-				data["postView"] = postView
-				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-				if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
-					data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+			if unauthedViewingOkay {
+				did := pv.Did
+				data["did"] = did
+
+				// then fetch the post thread (with extra context)
+				uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+				tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
+				if err != nil {
+					log.Warnf("failed to fetch post: %s\t%v", uri, err)
+				} else {
+					req := c.Request()
+					postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+					data["postView"] = postView
+					data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+					if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
+						data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+					}
 				}
 			}
 		}
@@ -308,9 +338,17 @@ func (srv *Server) WebProfile(c echo.Context) error {
 		if err != nil {
 			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
 		} else {
-			req := c.Request()
-			data["profileView"] = pv
-			data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+			unauthedViewingOkay := true
+			for _, label := range pv.Labels {
+				if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+					unauthedViewingOkay = false
+				}
+			}
+			if unauthedViewingOkay {
+				req := c.Request()
+				data["profileView"] = pv
+				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+			}
 		}
 	}
 

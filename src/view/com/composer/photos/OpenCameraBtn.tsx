@@ -6,12 +6,14 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {useStores} from 'state/index'
 import {openCamera} from 'lib/media/picker'
 import {useCameraPermission} from 'lib/hooks/usePermissions'
 import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {GalleryModel} from 'state/models/media/gallery'
 import {isMobileWeb, isNative} from 'platform/detection'
+import {logger} from '#/logger'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 type Props = {
   gallery: GalleryModel
@@ -20,7 +22,7 @@ type Props = {
 export function OpenCameraBtn({gallery}: Props) {
   const pal = usePalette('default')
   const {track} = useAnalytics()
-  const store = useStores()
+  const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
 
   const onPressTakePicture = useCallback(async () => {
@@ -30,7 +32,7 @@ export function OpenCameraBtn({gallery}: Props) {
         return
       }
 
-      const img = await openCamera(store, {
+      const img = await openCamera({
         width: POST_IMG_MAX.width,
         height: POST_IMG_MAX.height,
         freeStyleCropEnabled: true,
@@ -39,9 +41,9 @@ export function OpenCameraBtn({gallery}: Props) {
       gallery.add(img)
     } catch (err: any) {
       // ignore
-      store.log.warn('Error using camera', err)
+      logger.warn('Error using camera', {error: err})
     }
-  }, [gallery, track, store, requestCameraAccessIfNeeded])
+  }, [gallery, track, requestCameraAccessIfNeeded])
 
   const shouldShowCameraButton = isNative || isMobileWeb
   if (!shouldShowCameraButton) {
@@ -55,7 +57,7 @@ export function OpenCameraBtn({gallery}: Props) {
       style={styles.button}
       hitSlop={HITSLOP_10}
       accessibilityRole="button"
-      accessibilityLabel="Camera"
+      accessibilityLabel={_(msg`Camera`)}
       accessibilityHint="Opens camera on device">
       <FontAwesomeIcon
         icon="camera"

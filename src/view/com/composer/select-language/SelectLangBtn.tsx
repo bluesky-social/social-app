@@ -1,6 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
 import {StyleSheet, Keyboard} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -12,13 +11,24 @@ import {
   DropdownItemButton,
 } from 'view/com/util/forms/DropdownButton'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
 import {isNative} from 'platform/detection'
 import {codeToLanguageName} from '../../../../locale/helpers'
+import {useModalControls} from '#/state/modals'
+import {
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+  toPostLanguages,
+  hasPostLanguage,
+} from '#/state/preferences/languages'
+import {t, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-export const SelectLangBtn = observer(function SelectLangBtn() {
+export function SelectLangBtn() {
   const pal = usePalette('default')
-  const store = useStores()
+  const {_} = useLingui()
+  const {openModal} = useModalControls()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
 
   const onPressMore = useCallback(async () => {
     if (isNative) {
@@ -26,11 +36,10 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
         Keyboard.dismiss()
       }
     }
-    store.shell.openModal({name: 'post-languages-settings'})
-  }, [store])
+    openModal({name: 'post-languages-settings'})
+  }, [openModal])
 
-  const postLanguagesPref = store.preferences.postLanguages
-  const postLanguagePref = store.preferences.postLanguage
+  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
   const items: DropdownItem[] = useMemo(() => {
     let arr: DropdownItemButton[] = []
 
@@ -49,13 +58,14 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
 
       arr.push({
         icon:
-          langCodes.every(code => store.preferences.hasPostLanguage(code)) &&
-          langCodes.length === postLanguagesPref.length
+          langCodes.every(code =>
+            hasPostLanguage(langPrefs.postLanguage, code),
+          ) && langCodes.length === postLanguagesPref.length
             ? ['fas', 'circle-dot']
             : ['far', 'circle'],
         label: langName,
         onPress() {
-          store.preferences.setPostLanguage(commaSeparatedLangCodes)
+          setLangPrefs.setPostLanguage(commaSeparatedLangCodes)
         },
       })
     }
@@ -65,24 +75,24 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
        * Re-join here after sanitization bc postLanguageHistory is an array of
        * comma-separated strings too
        */
-      add(postLanguagePref)
+      add(langPrefs.postLanguage)
     }
 
     // comma-separted strings of lang codes that have been used in the past
-    for (const lang of store.preferences.postLanguageHistory) {
+    for (const lang of langPrefs.postLanguageHistory) {
       add(lang)
     }
 
     return [
-      {heading: true, label: 'Post language'},
+      {heading: true, label: t`Post language`},
       ...arr.slice(0, 6),
       {sep: true},
       {
-        label: 'Other...',
+        label: t`Other...`,
         onPress: onPressMore,
       },
     ]
-  }, [store.preferences, onPressMore, postLanguagePref, postLanguagesPref])
+  }, [onPressMore, langPrefs, setLangPrefs, postLanguagesPref])
 
   return (
     <DropdownButton
@@ -91,7 +101,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       items={items}
       openUpwards
       style={styles.button}
-      accessibilityLabel="Language selection"
+      accessibilityLabel={_(msg`Language selection`)}
       accessibilityHint="">
       {postLanguagesPref.length > 0 ? (
         <Text type="lg-bold" style={[pal.link, styles.label]} numberOfLines={1}>
@@ -106,7 +116,7 @@ export const SelectLangBtn = observer(function SelectLangBtn() {
       )}
     </DropdownButton>
   )
-})
+}
 
 const styles = StyleSheet.create({
   button: {

@@ -7,78 +7,134 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
 import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
-import {CreateAccountModel} from 'state/models/ui/create-account'
 import {usePalette} from 'lib/hooks/usePalette'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useOnboardingDispatch} from '#/state/shell'
+import {useSessionApi} from '#/state/session'
+import {useCreateAccount, submit} from './state'
+import {useServiceQuery} from '#/state/queries/service'
+import {
+  usePreferencesSetBirthDateMutation,
+  useSetSaveFeedsMutation,
+  DEFAULT_PROD_FEEDS,
+} from '#/state/queries/preferences'
+import {IS_PROD} from '#/lib/constants'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
 
-export const CreateAccount = observer(function CreateAccountImpl({
-  onPressBack,
-}: {
-  onPressBack: () => void
-}) {
+export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {track, screen} = useAnalytics()
   const pal = usePalette('default')
-  const store = useStores()
-  const model = React.useMemo(() => new CreateAccountModel(store), [store])
+  const {_} = useLingui()
+  const [uiState, uiDispatch] = useCreateAccount()
+  const onboardingDispatch = useOnboardingDispatch()
+  const {createAccount} = useSessionApi()
+  const {mutate: setBirthDate} = usePreferencesSetBirthDateMutation()
+  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
 
   React.useEffect(() => {
     screen('CreateAccount')
   }, [screen])
 
-  React.useEffect(() => {
-    model.fetchServiceDescription()
-  }, [model])
+  // fetch service info
+  // =
 
-  const onPressRetryConnect = React.useCallback(
-    () => model.fetchServiceDescription(),
-    [model],
-  )
+  const {
+    data: serviceInfo,
+    isFetching: serviceInfoIsFetching,
+    error: serviceInfoError,
+    refetch: refetchServiceInfo,
+  } = useServiceQuery(uiState.serviceUrl)
+
+  React.useEffect(() => {
+    if (serviceInfo) {
+      uiDispatch({type: 'set-service-description', value: serviceInfo})
+      uiDispatch({type: 'set-error', value: ''})
+    } else if (serviceInfoError) {
+      uiDispatch({
+        type: 'set-error',
+        value: _(
+          msg`Unable to contact your service. Please check your Internet connection.`,
+        ),
+      })
+    }
+  }, [_, uiDispatch, serviceInfo, serviceInfoError])
+
+  // event handlers
+  // =
 
   const onPressBackInner = React.useCallback(() => {
-    if (model.canBack) {
-      model.back()
+    if (uiState.canBack) {
+      uiDispatch({type: 'back'})
     } else {
       onPressBack()
     }
-  }, [model, onPressBack])
+  }, [uiState, uiDispatch, onPressBack])
 
   const onPressNext = React.useCallback(async () => {
-    if (!model.canNext) {
+    if (!uiState.canNext) {
       return
     }
-    if (model.step < 3) {
-      model.next()
+    if (uiState.step < 3) {
+      uiDispatch({type: 'next'})
     } else {
       try {
-        await model.submit()
+        await submit({
+          onboardingDispatch,
+          createAccount,
+          uiState,
+          uiDispatch,
+          _,
+        })
+        track('Create Account')
+        setBirthDate({birthDate: uiState.birthDate})
+        if (IS_PROD(uiState.serviceUrl)) {
+          setSavedFeeds(DEFAULT_PROD_FEEDS)
+        }
       } catch {
         // dont need to handle here
       } finally {
         track('Try Create Account')
       }
     }
-  }, [model, track])
+  }, [
+    uiState,
+    uiDispatch,
+    track,
+    onboardingDispatch,
+    createAccount,
+    setBirthDate,
+    setSavedFeeds,
+    _,
+  ])
+
+  // rendering
+  // =
 
   return (
     <LoggedOutLayout
-      leadin={`Step ${model.step}`}
-      title="Create Account"
-      description="We're so excited to have you join us!">
+      leadin={`Step ${uiState.step}`}
+      title={_(msg`Create Account`)}
+      description={_(msg`We're so excited to have you join us!`)}>
       <ScrollView testID="createAccount" style={pal.view}>
         <KeyboardAvoidingView behavior="padding">
           <View style={styles.stepContainer}>
-            {model.step === 1 && <Step1 model={model} />}
-            {model.step === 2 && <Step2 model={model} />}
-            {model.step === 3 && <Step3 model={model} />}
+            {uiState.step === 1 && (
+              <Step1 uiState={uiState} uiDispatch={uiDispatch} />
+            )}
+            {uiState.step === 2 && (
+              <Step2 uiState={uiState} uiDispatch={uiDispatch} />
+            )}
+            {uiState.step === 3 && (
+              <Step3 uiState={uiState} uiDispatch={uiDispatch} />
+            )}
           </View>
           <View style={[s.flexRow, s.pl20, s.pr20]}>
             <TouchableOpacity
@@ -86,40 +142,40 @@ export const CreateAccount = observer(function CreateAccountImpl({
               testID="backBtn"
               accessibilityRole="button">
               <Text type="xl" style={pal.link}>
-                Back
+                <Trans>Back</Trans>
               </Text>
             </TouchableOpacity>
             <View style={s.flex1} />
-            {model.canNext ? (
+            {uiState.canNext ? (
               <TouchableOpacity
                 testID="nextBtn"
                 onPress={onPressNext}
                 accessibilityRole="button">
-                {model.isProcessing ? (
+                {uiState.isProcessing ? (
                   <ActivityIndicator />
                 ) : (
                   <Text type="xl-bold" style={[pal.link, s.pr5]}>
-                    Next
+                    <Trans>Next</Trans>
                   </Text>
                 )}
               </TouchableOpacity>
-            ) : model.didServiceDescriptionFetchFail ? (
+            ) : serviceInfoError ? (
               <TouchableOpacity
                 testID="retryConnectBtn"
-                onPress={onPressRetryConnect}
+                onPress={() => refetchServiceInfo()}
                 accessibilityRole="button"
-                accessibilityLabel="Retry"
-                accessibilityHint="Retries account creation"
+                accessibilityLabel={_(msg`Retry`)}
+                accessibilityHint=""
                 accessibilityLiveRegion="polite">
                 <Text type="xl-bold" style={[pal.link, s.pr5]}>
-                  Retry
+                  <Trans>Retry</Trans>
                 </Text>
               </TouchableOpacity>
-            ) : model.isFetchingServiceDescription ? (
+            ) : serviceInfoIsFetching ? (
               <>
                 <ActivityIndicator color="#fff" />
                 <Text type="xl" style={[pal.text, s.pr5]}>
-                  Connecting...
+                  <Trans>Connecting...</Trans>
                 </Text>
               </>
             ) : undefined}
@@ -129,7 +185,7 @@ export const CreateAccount = observer(function CreateAccountImpl({
       </ScrollView>
     </LoggedOutLayout>
   )
-})
+}
 
 const styles = StyleSheet.create({
   stepContainer: {

@@ -7,6 +7,7 @@ export type ScreenEvent = (
   name: keyof ScreenPropertiesMap,
   properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
 ) => Promise<void>
+
 interface TrackPropertiesMap {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
@@ -20,6 +21,7 @@ interface TrackPropertiesMap {
   'Composer:PastedPhotos': {}
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
+  'Composer:ThreadgateOpened': {}
   'HomeScreen:PressCompose': {}
   'ProfileScreen:PressCompose': {}
   // EDIT PROFILE events
@@ -41,12 +43,6 @@ interface TrackPropertiesMap {
   'Post:ThreadMute': {} // CAN BE SERVER
   'Post:ThreadUnmute': {} // CAN BE SERVER
   'Post:Reply': {} // CAN BE SERVER
-  // FEED ITEM events
-  'FeedItem:PostReply': {} // CAN BE SERVER
-  'FeedItem:PostRepost': {} // CAN BE SERVER
-  'FeedItem:PostLike': {} // CAN BE SERVER
-  'FeedItem:PostDelete': {} // CAN BE SERVER
-  'FeedItem:ThreadMute': {} // CAN BE SERVER
   // PROFILE events
   'Profile:Follow': {
     username: string
@@ -79,7 +75,6 @@ interface TrackPropertiesMap {
   'Settings:AddAccountButtonClicked': {}
   'Settings:ChangeHandleButtonClicked': {}
   'Settings:InvitecodesButtonClicked': {}
-  'Settings:ContentfilteringButtonClicked': {}
   'Settings:SignOutButtonClicked': {}
   'Settings:ContentlanguagesButtonClicked': {}
   // MENU events
@@ -97,10 +92,15 @@ interface TrackPropertiesMap {
   // LISTS events
   'Lists:onRefresh': {}
   'Lists:onEndReached': {}
-  'CreateMuteList:AvatarSelected': {}
-  'CreateMuteList:Save': {} // CAN BE SERVER
-  'Lists:Subscribe': {} // CAN BE SERVER
-  'Lists:Unsubscribe': {} // CAN BE SERVER
+  'CreateList:AvatarSelected': {}
+  'CreateList:SaveCurateList': {} // CAN BE SERVER
+  'CreateList:SaveModList': {} // CAN BE SERVER
+  'Lists:Mute': {} // CAN BE SERVER
+  'Lists:Unmute': {} // CAN BE SERVER
+  'Lists:Block': {} // CAN BE SERVER
+  'Lists:Unblock': {} // CAN BE SERVER
+  'Lists:Delete': {} // CAN BE SERVER
+  'Lists:Share': {} // CAN BE SERVER
   // CUSTOM FEED events
   'CustomFeed:Save': {}
   'CustomFeed:Unsave': {}
@@ -131,6 +131,7 @@ interface TrackPropertiesMap {
   'Onboarding:Skipped': {}
   'Onboarding:Reset': {}
   'Onboarding:SuggestedFollowFollowed': {}
+  'Onboarding:CustomFeedAdded': {}
 }
 
 interface ScreenPropertiesMap {
@@ -150,4 +151,9 @@ interface ScreenPropertiesMap {
   BlockedAccounts: {}
   MutedAccounts: {}
   SavedFeeds: {}
+}
+
+export type AnalyticsMethods = {
+  screen: ScreenEvent
+  track: TrackEvent
 }

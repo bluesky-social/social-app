@@ -1,10 +1,14 @@
 import React from 'react'
-import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -14,40 +18,47 @@ export const SplashScreen = ({
   onPressCreateAccount: () => void
 }) => {
   const pal = usePalette('default')
+  const {_} = useLingui()
+
   return (
     <CenteredView style={[styles.container, pal.view]}>
-      <SafeAreaView testID="noSessionView" style={styles.container}>
-        <ErrorBoundary>
-          <View style={styles.hero}>
-            <Text style={[styles.title, pal.link]}>Bluesky</Text>
-            <Text style={[styles.subtitle, pal.textLight]}>
-              See what's next
+      <ErrorBoundary>
+        <View style={styles.hero}>
+          <Logo width={92} fill="sky" />
+
+          <View style={{paddingTop: 40, paddingBottom: 6}}>
+            <Logotype width={161} />
+          </View>
+
+          <Text type="lg-medium" style={[pal.textLight]}>
+            <Trans>What's next?</Trans>
+          </Text>
+        </View>
+        <View testID="signinOrCreateAccount" style={styles.btns}>
+          <TouchableOpacity
+            testID="createAccountButton"
+            style={[styles.btn, {backgroundColor: colors.blue3}]}
+            onPress={onPressCreateAccount}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Create new account`)}
+            accessibilityHint="Opens flow to create a new Bluesky account">
+            <Text style={[s.white, styles.btnLabel]}>
+              <Trans>Create a new account</Trans>
             </Text>
-          </View>
-          <View testID="signinOrCreateAccount" style={styles.btns}>
-            <TouchableOpacity
-              testID="createAccountButton"
-              style={[styles.btn, {backgroundColor: colors.blue3}]}
-              onPress={onPressCreateAccount}
-              accessibilityRole="button"
-              accessibilityLabel="Create new account"
-              accessibilityHint="Opens flow to create a new Bluesky account">
-              <Text style={[s.white, styles.btnLabel]}>
-                Create a new account
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              testID="signInButton"
-              style={[styles.btn, pal.btn]}
-              onPress={onPressSignin}
-              accessibilityRole="button"
-              accessibilityLabel="Sign in"
-              accessibilityHint="Opens flow to sign into your existing Bluesky account">
-              <Text style={[pal.text, styles.btnLabel]}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
-        </ErrorBoundary>
-      </SafeAreaView>
+          </TouchableOpacity>
+          <TouchableOpacity
+            testID="signInButton"
+            style={[styles.btn, pal.btn]}
+            onPress={onPressSignin}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Sign in`)}
+            accessibilityHint="Opens flow to sign into your existing Bluesky account">
+            <Text style={[pal.text, styles.btnLabel]}>
+              <Trans>Sign In</Trans>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ErrorBoundary>
     </CenteredView>
   )
 }
@@ -59,6 +70,7 @@ const styles = StyleSheet.create({
   hero: {
     flex: 2,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   btns: {
     paddingBottom: 40,

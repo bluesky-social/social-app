@@ -7,11 +7,13 @@ import {s, colors} from 'lib/styles'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Image} from 'expo-image'
 import {Text} from 'view/com/util/text/Text'
-import {openAltTextModal} from 'lib/media/alt-text'
 import {Dimensions} from 'lib/media/types'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {isNative} from 'platform/detection'
 
 const IMAGE_GAP = 8
 
@@ -47,9 +49,10 @@ const GalleryInner = observer(function GalleryImpl({
   gallery,
   containerInfo,
 }: GalleryInnerProps) {
-  const store = useStores()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  const {openModal} = useModalControls()
 
   let side: number
 
@@ -113,15 +116,18 @@ const GalleryInner = observer(function GalleryImpl({
             <TouchableOpacity
               testID="altTextButton"
               accessibilityRole="button"
-              accessibilityLabel="Add alt text"
+              accessibilityLabel={_(msg`Add alt text`)}
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
-                openAltTextModal(store, image)
+                openModal({
+                  name: 'alt-text-image',
+                  image,
+                })
               }}
               style={[styles.altTextControl, altTextControlStyle]}>
               <Text style={styles.altTextControlLabel} accessible={false}>
-                ALT
+                <Trans>ALT</Trans>
               </Text>
               {image.altText.length > 0 ? (
                 <FontAwesomeIcon
@@ -135,9 +141,19 @@ const GalleryInner = observer(function GalleryImpl({
               <TouchableOpacity
                 testID="editPhotoButton"
                 accessibilityRole="button"
-                accessibilityLabel="Edit image"
+                accessibilityLabel={_(msg`Edit image`)}
                 accessibilityHint=""
-                onPress={() => gallery.edit(image)}
+                onPress={() => {
+                  if (isNative) {
+                    gallery.crop(image)
+                  } else {
+                    openModal({
+                      name: 'edit-image',
+                      image,
+                      gallery,
+                    })
+                  }
+                }}
                 style={styles.imageControl}>
                 <FontAwesomeIcon
                   icon="pen"
@@ -148,7 +164,7 @@ const GalleryInner = observer(function GalleryImpl({
               <TouchableOpacity
                 testID="removePhotoButton"
                 accessibilityRole="button"
-                accessibilityLabel="Remove image"
+                accessibilityLabel={_(msg`Remove image`)}
                 accessibilityHint=""
                 onPress={() => gallery.remove(image)}
                 style={styles.imageControl}>
@@ -161,11 +177,14 @@ const GalleryInner = observer(function GalleryImpl({
             </View>
             <TouchableOpacity
               accessibilityRole="button"
-              accessibilityLabel="Add alt text"
+              accessibilityLabel={_(msg`Add alt text`)}
               accessibilityHint=""
               onPress={() => {
                 Keyboard.dismiss()
-                openAltTextModal(store, image)
+                openModal({
+                  name: 'alt-text-image',
+                  image,
+                })
               }}
               style={styles.altTextHiddenRegion}
             />
@@ -187,8 +206,10 @@ const GalleryInner = observer(function GalleryImpl({
           <FontAwesomeIcon icon="info" size={12} color={pal.colors.text} />
         </View>
         <Text type="sm" style={[pal.textLight, s.flex1]}>
-          Alt text describes images for blind and low-vision users, and helps
-          give context to everyone.
+          <Trans>
+            Alt text describes images for blind and low-vision users, and helps
+            give context to everyone.
+          </Trans>
         </Text>
       </View>
     </>

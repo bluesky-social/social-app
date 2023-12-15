@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {CreateAccountModel} from 'state/models/ui/create-account'
+import {CreateAccountState, CreateAccountDispatch, is18} from './state'
 import {Text} from 'view/com/util/text/Text'
 import {DateInput} from 'view/com/util/forms/DateInput'
 import {StepHeader} from './StepHeader'
@@ -10,7 +9,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
 import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {useStores} from 'state/index'
+import {isWeb} from 'platform/detection'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -21,23 +23,26 @@ import {useStores} from 'state/index'
  * @field Birth date
  * @readonly Terms of service & privacy policy
  */
-export const Step2 = observer(function Step2Impl({
-  model,
+export function Step2({
+  uiState,
+  uiDispatch,
 }: {
-  model: CreateAccountModel
+  uiState: CreateAccountState
+  uiDispatch: CreateAccountDispatch
 }) {
   const pal = usePalette('default')
-  const store = useStores()
+  const {_} = useLingui()
+  const {openModal} = useModalControls()
 
   const onPressWaitlist = React.useCallback(() => {
-    store.shell.openModal({name: 'waitlist'})
-  }, [store])
+    openModal({name: 'waitlist'})
+  }, [openModal])
 
   return (
     <View>
-      <StepHeader step="2" title="Your account" />
+      <StepHeader step="2" title={_(msg`Your account`)} />
 
-      {model.isInviteCodeRequired && (
+      {uiState.isInviteCodeRequired && (
         <View style={s.pb20}>
           <Text type="md-medium" style={[pal.text, s.mb2]}>
             Invite code
@@ -45,41 +50,44 @@ export const Step2 = observer(function Step2Impl({
           <TextInput
             testID="inviteCodeInput"
             icon="ticket"
-            placeholder="Required for this provider"
-            value={model.inviteCode}
+            placeholder={_(msg`Required for this provider`)}
+            value={uiState.inviteCode}
             editable
-            onChange={model.setInviteCode}
-            accessibilityLabel="Invite code"
+            onChange={value => uiDispatch({type: 'set-invite-code', value})}
+            accessibilityLabel={_(msg`Invite code`)}
             accessibilityHint="Input invite code to proceed"
           />
         </View>
       )}
 
-      {!model.inviteCode && model.isInviteCodeRequired ? (
+      {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
         <Text style={[s.alignBaseline, pal.text]}>
           Don't have an invite code?{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
-            accessibilityRole="button"
-            accessibilityLabel="Waitlist"
-            accessibilityHint="Opens Bluesky waitlist form">
-            <Text style={pal.link}>Join the waitlist.</Text>
+            accessibilityLabel={_(msg`Join the waitlist.`)}
+            accessibilityHint="">
+            <View style={styles.touchable}>
+              <Text style={pal.link}>
+                <Trans>Join the waitlist.</Trans>
+              </Text>
+            </View>
           </TouchableWithoutFeedback>
         </Text>
       ) : (
         <>
           <View style={s.pb20}>
             <Text type="md-medium" style={[pal.text, s.mb2]} nativeID="email">
-              Email address
+              <Trans>Email address</Trans>
             </Text>
             <TextInput
               testID="emailInput"
               icon="envelope"
-              placeholder="Enter your email address"
-              value={model.email}
+              placeholder={_(msg`Enter your email address`)}
+              value={uiState.email}
               editable
-              onChange={model.setEmail}
-              accessibilityLabel="Email"
+              onChange={value => uiDispatch({type: 'set-email', value})}
+              accessibilityLabel={_(msg`Email`)}
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
             />
@@ -90,17 +98,17 @@ export const Step2 = observer(function Step2Impl({
               type="md-medium"
               style={[pal.text, s.mb2]}
               nativeID="password">
-              Password
+              <Trans>Password</Trans>
             </Text>
             <TextInput
               testID="passwordInput"
               icon="lock"
-              placeholder="Choose your password"
-              value={model.password}
+              placeholder={_(msg`Choose your password`)}
+              value={uiState.password}
               editable
               secureTextEntry
-              onChange={model.setPassword}
-              accessibilityLabel="Password"
+              onChange={value => uiDispatch({type: 'set-password', value})}
+              accessibilityLabel={_(msg`Password`)}
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
             />
@@ -111,35 +119,35 @@ export const Step2 = observer(function Step2Impl({
               type="md-medium"
               style={[pal.text, s.mb2]}
               nativeID="birthDate">
-              Your birth date
+              <Trans>Your birth date</Trans>
             </Text>
             <DateInput
               testID="birthdayInput"
-              value={model.birthDate}
-              onChange={model.setBirthDate}
+              value={uiState.birthDate}
+              onChange={value => uiDispatch({type: 'set-birth-date', value})}
               buttonType="default-light"
               buttonStyle={[pal.border, styles.dateInputButton]}
               buttonLabelType="lg"
-              accessibilityLabel="Birthday"
+              accessibilityLabel={_(msg`Birthday`)}
               accessibilityHint="Enter your birth date"
               accessibilityLabelledBy="birthDate"
             />
           </View>
 
-          {model.serviceDescription && (
+          {uiState.serviceDescription && (
             <Policies
-              serviceDescription={model.serviceDescription}
-              needsGuardian={!model.isAge18}
+              serviceDescription={uiState.serviceDescription}
+              needsGuardian={!is18(uiState)}
             />
           )}
         </>
       )}
-      {model.error ? (
-        <ErrorMessage message={model.error} style={styles.error} />
+      {uiState.error ? (
+        <ErrorMessage message={uiState.error} style={styles.error} />
       ) : undefined}
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   error: {
@@ -150,5 +158,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
     paddingVertical: 14,
+  },
+  // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
+  touchable: {
+    ...(isWeb && {cursor: 'pointer'}),
   },
 })

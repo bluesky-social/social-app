@@ -1,40 +1,35 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, View} from 'react-native'
+import Animated, {FadeIn, FadeInDown, FadeOut} from 'react-native-reanimated'
 import {ComposePost} from '../com/composer/Composer'
-import {ComposerOpts} from 'state/models/ui/shell'
+import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const BOTTOM_BAR_HEIGHT = 61
 
-export const Composer = observer(function ComposerImpl({
-  active,
-  replyTo,
-  quote,
-  onPost,
-  mention,
-}: {
-  active: boolean
-  winHeight: number
-  replyTo?: ComposerOpts['replyTo']
-  quote: ComposerOpts['quote']
-  onPost?: ComposerOpts['onPost']
-  mention?: ComposerOpts['mention']
-}) {
+export function Composer({}: {winHeight: number}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const state = useComposerState()
 
   // rendering
   // =
 
-  if (!active) {
+  if (!state) {
     return <View />
   }
 
   return (
-    <View style={styles.mask} aria-modal accessibilityViewIsModal>
-      <View
+    <Animated.View
+      style={styles.mask}
+      aria-modal
+      accessibilityViewIsModal
+      entering={FadeIn.duration(100)}
+      exiting={FadeOut}>
+      <Animated.View
+        entering={FadeInDown.duration(150)}
+        exiting={FadeOut}
         style={[
           styles.container,
           isMobile && styles.containerMobile,
@@ -42,15 +37,15 @@ export const Composer = observer(function ComposerImpl({
           pal.border,
         ]}>
         <ComposePost
-          replyTo={replyTo}
-          quote={quote}
-          onPost={onPost}
-          mention={mention}
+          replyTo={state.replyTo}
+          quote={state.quote}
+          onPost={state.onPost}
+          mention={state.mention}
         />
-      </View>
-    </View>
+      </Animated.View>
+    </Animated.View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   mask: {

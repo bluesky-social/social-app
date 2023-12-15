@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   StyleProp,
   StyleSheet,
@@ -10,15 +9,15 @@ import {
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {CenteredView} from './Views'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
+import {useSetDrawerOpen} from '#/state/shell'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
-export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
+export function SimpleViewHeader({
   showBackButton = true,
   style,
   children,
@@ -27,7 +26,7 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
   style?: StyleProp<ViewStyle>
 }>) {
   const pal = usePalette('default')
-  const store = useStores()
+  const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isMobile} = useWebMediaQueries()
@@ -43,8 +42,8 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
-    store.shell.openDrawer()
-  }, [track, store])
+    setDrawerOpen(true)
+  }, [track, setDrawerOpen])
 
   const Container = isMobile ? View : CenteredView
   return (
@@ -76,7 +75,7 @@ export const SimpleViewHeader = observer(function SimpleViewHeaderImpl({
       {children}
     </Container>
   )
-})
+}
 
 const styles = StyleSheet.create({
   header: {

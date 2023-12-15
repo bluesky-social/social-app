@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import {PROD_SERVICE} from 'state/index'
+import {PROD_SERVICE} from 'lib/constants'
 import TLDs from 'tlds'
 import psl from 'psl'
 
@@ -139,29 +139,61 @@ export function feedUriToHref(url: string): string {
   }
 }
 
+/**
+ * Checks if the label in the post text matches the host of the link facet.
+ *
+ * Hosts are case-insensitive, so should be lowercase for comparison.
+ * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
+ */
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
-  if (!labelDomain) {
-    return true
-  }
+
+  let urip
   try {
-    const urip = new URL(uri)
-    return labelDomain !== urip.hostname
+    urip = new URL(uri)
   } catch {
     return true
   }
+
+  const host = urip.hostname.toLowerCase()
+
+  if (host === 'bsky.app') {
+    // if this is a link to internal content,
+    // warn if it represents itself as a URL to another app
+    if (
+      labelDomain &&
+      labelDomain !== 'bsky.app' &&
+      isPossiblyAUrl(labelDomain)
+    ) {
+      return true
+    }
+    return false
+  } else {
+    // if this is a link to external content,
+    // warn if the label doesnt match the target
+    if (!labelDomain) {
+      return true
+    }
+    return labelDomain !== host
+  }
 }
 
-function labelToDomain(label: string): string | undefined {
+/**
+ * Returns a lowercase domain hostname if the label is a valid URL.
+ *
+ * Hosts are case-insensitive, so should be lowercase for comparison.
+ * @see https://www.rfc-editor.org/rfc/rfc3986#section-3.2.2
+ */
+export function labelToDomain(label: string): string | undefined {
   // any spaces just immediately consider the label a non-url
   if (/\s/.test(label)) {
     return undefined
   }
   try {
-    return new URL(label).hostname
+    return new URL(label).hostname.toLowerCase()
   } catch {}
   try {
-    return new URL('https://' + label).hostname
+    return new URL('https://' + label).hostname.toLowerCase()
   } catch {}
   return undefined
 }

@@ -1,21 +1,24 @@
 import React from 'react'
 import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import type {Modal as ModalIface} from 'state/models/ui/shell'
 
+import {useModals, useModalControls} from '#/state/modals'
+import type {Modal as ModalIface} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportModal from './report/Modal'
-import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
-import * as ListAddRemoveUserModal from './ListAddRemoveUser'
+import * as AppealLabelModal from './AppealLabel'
+import * as CreateOrEditListModal from './CreateOrEditList'
+import * as UserAddRemoveLists from './UserAddRemoveLists'
+import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
+import * as ThreadgateModal from './Threadgate'
 import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
 import * as EditImageModal from './EditImage'
@@ -32,28 +35,29 @@ import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as LinkWarningModal from './LinkWarning'
 
-export const ModalsContainer = observer(function ModalsContainer() {
-  const store = useStores()
+export function ModalsContainer() {
+  const {isModalActive, activeModals} = useModals()
 
-  if (!store.shell.isModalActive) {
+  if (!isModalActive) {
     return null
   }
 
   return (
     <>
-      {store.shell.activeModals.map((modal, i) => (
+      {activeModals.map((modal, i) => (
         <Modal key={`modal-${i}`} modal={modal} />
       ))}
     </>
   )
-})
+}
 
 function Modal({modal}: {modal: ModalIface}) {
-  const store = useStores()
+  const {isModalActive} = useModals()
+  const {closeModal} = useModalControls()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
 
-  if (!store.shell.isModalActive) {
+  if (!isModalActive) {
     return null
   }
 
@@ -61,7 +65,7 @@ function Modal({modal}: {modal: ModalIface}) {
     if (modal.name === 'crop-image' || modal.name === 'edit-image') {
       return // dont close on mask presses during crop
     }
-    store.shell.closeModal()
+    closeModal()
   }
   const onInnerPress = () => {
     // TODO: can we use prevent default?
@@ -79,10 +83,14 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report') {
     element = <ReportModal.Component {...modal} />
-  } else if (modal.name === 'create-or-edit-mute-list') {
-    element = <CreateOrEditMuteListModal.Component {...modal} />
-  } else if (modal.name === 'list-add-remove-user') {
-    element = <ListAddRemoveUserModal.Component {...modal} />
+  } else if (modal.name === 'appeal-label') {
+    element = <AppealLabelModal.Component {...modal} />
+  } else if (modal.name === 'create-or-edit-list') {
+    element = <CreateOrEditListModal.Component {...modal} />
+  } else if (modal.name === 'user-add-remove-lists') {
+    element = <UserAddRemoveLists.Component {...modal} />
+  } else if (modal.name === 'list-add-remove-users') {
+    element = <ListAddUserModal.Component {...modal} />
   } else if (modal.name === 'crop-image') {
     element = <CropImageModal.Component {...modal} />
   } else if (modal.name === 'delete-account') {
@@ -91,6 +99,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <RepostModal.Component {...modal} />
   } else if (modal.name === 'self-label') {
     element = <SelfLabelModal.Component {...modal} />
+  } else if (modal.name === 'threadgate') {
+    element = <ThreadgateModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
   } else if (modal.name === 'waitlist') {
@@ -126,7 +136,10 @@ function Modal({modal}: {modal: ModalIface}) {
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
     <TouchableWithoutFeedback onPress={onPressMask}>
-      <View style={styles.mask}>
+      <Animated.View
+        style={styles.mask}
+        entering={FadeIn.duration(150)}
+        exiting={FadeOut}>
         {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
         <TouchableWithoutFeedback onPress={onInnerPress}>
           <View
@@ -139,7 +152,7 @@ function Modal({modal}: {modal: ModalIface}) {
             {element}
           </View>
         </TouchableWithoutFeedback>
-      </View>
+      </Animated.View>
     </TouchableWithoutFeedback>
   )
 }

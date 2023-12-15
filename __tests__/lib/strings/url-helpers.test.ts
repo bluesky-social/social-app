@@ -1,3 +1,5 @@
+import {it, describe, expect} from '@jest/globals'
+
 import {
   linkRequiresWarning,
   isPossiblyAUrl,
@@ -6,6 +8,7 @@ import {
 
 describe('linkRequiresWarning', () => {
   type Case = [string, string, boolean]
+
   const cases: Case[] = [
     ['http://example.com', 'http://example.com', false],
     ['http://example.com', 'example.com', false],
@@ -27,6 +30,46 @@ describe('linkRequiresWarning', () => {
     ['http://site.pages', 'http://site.pages.dev', true],
     ['http://site.pages.dev', 'site.pages', true],
     ['http://site.pages', 'site.pages.dev', true],
+    ['http://bsky.app/profile/bob.test/post/3kbeuduu7m22v', 'my post', false],
+    ['https://bsky.app/profile/bob.test/post/3kbeuduu7m22v', 'my post', false],
+    ['http://bsky.app/', 'bluesky', false],
+    ['https://bsky.app/', 'bluesky', false],
+    [
+      'http://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      'http://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      false,
+    ],
+    [
+      'https://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      'http://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      false,
+    ],
+    [
+      'http://bsky.app/',
+      'http://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      false,
+    ],
+    [
+      'https://bsky.app/',
+      'http://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      false,
+    ],
+    [
+      'http://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      'https://google.com',
+      true,
+    ],
+    [
+      'https://bsky.app/profile/bob.test/post/3kbeuduu7m22v',
+      'https://google.com',
+      true,
+    ],
+    ['http://bsky.app/', 'https://google.com', true],
+    ['https://bsky.app/', 'https://google.com', true],
+
+    // case insensitive
+    ['https://Example.com', 'example.com', false],
+    ['https://example.com', 'Example.com', false],
 
     // bad uri inputs, default to true
     ['', '', true],

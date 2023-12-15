@@ -5,41 +5,47 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {Text} from '../util/text/Text'
 import {DateInput} from '../util/forms/DateInput'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {
+  usePreferencesQuery,
+  usePreferencesSetBirthDateMutation,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences'
+import {logger} from '#/logger'
 
 export const snapPoints = ['50%']
 
-export const Component = observer(function Component({}: {}) {
+function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const pal = usePalette('default')
-  const store = useStores()
-  const [date, setDate] = useState<Date>(
-    store.preferences.birthDate || new Date(),
-  )
-  const [isProcessing, setIsProcessing] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
+  const {_} = useLingui()
+  const {
+    isPending,
+    isError,
+    error,
+    mutateAsync: setBirthDate,
+  } = usePreferencesSetBirthDateMutation()
+  const [date, setDate] = useState(preferences.birthDate || new Date())
+  const {closeModal} = useModalControls()
 
-  const onSave = async () => {
-    setError('')
-    setIsProcessing(true)
+  const onSave = React.useCallback(async () => {
     try {
-      await store.preferences.setBirthDate(date)
-      store.shell.closeModal()
+      await setBirthDate({birthDate: date})
+      closeModal()
     } catch (e) {
-      setError(cleanError(String(e)))
-    } finally {
-      setIsProcessing(false)
+      logger.error(`setBirthDate failed`, {error: e})
     }
-  }
+  }, [date, setBirthDate, closeModal])
 
   return (
     <View
@@ -47,12 +53,12 @@ export const Component = observer(function Component({}: {}) {
       style={[pal.view, styles.container, isMobile && {paddingHorizontal: 18}]}>
       <View style={styles.titleSection}>
         <Text type="title-lg" style={[pal.text, styles.title]}>
-          My Birthday
+          <Trans>My Birthday</Trans>
         </Text>
       </View>
 
       <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-        This information is not shared with other users.
+        <Trans>This information is not shared with other users.</Trans>
       </Text>
 
       <View>
@@ -63,18 +69,18 @@ export const Component = observer(function Component({}: {}) {
           buttonType="default-light"
           buttonStyle={[pal.border, styles.dateInputButton]}
           buttonLabelType="lg"
-          accessibilityLabel="Birthday"
+          accessibilityLabel={_(msg`Birthday`)}
           accessibilityHint="Enter your birth date"
           accessibilityLabelledBy="birthDate"
         />
       </View>
 
-      {error ? (
-        <ErrorMessage message={error} style={styles.error} />
+      {isError ? (
+        <ErrorMessage message={cleanError(error)} style={styles.error} />
       ) : undefined}
 
       <View style={[styles.btnContainer, pal.borderDark]}>
-        {isProcessing ? (
+        {isPending ? (
           <View style={styles.btn}>
             <ActivityIndicator color="#fff" />
           </View>
@@ -84,15 +90,27 @@ export const Component = observer(function Component({}: {}) {
             onPress={onSave}
             style={styles.btn}
             accessibilityRole="button"
-            accessibilityLabel="Save"
+            accessibilityLabel={_(msg`Save`)}
             accessibilityHint="">
-            <Text style={[s.white, s.bold, s.f18]}>Save</Text>
+            <Text style={[s.white, s.bold, s.f18]}>
+              <Trans>Save</Trans>
+            </Text>
           </TouchableOpacity>
         )}
       </View>
     </View>
   )
-})
+}
+
+export function Component({}: {}) {
+  const {data: preferences} = usePreferencesQuery()
+
+  return !preferences ? (
+    <ActivityIndicator />
+  ) : (
+    <Inner preferences={preferences} />
+  )
+}
 
 const styles = StyleSheet.create({
   container: {

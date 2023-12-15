@@ -9,7 +9,6 @@ import {TextInput} from './util'
 import LinearGradient from 'react-native-linear-gradient'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
-import {useStores} from 'state/index'
 import {s, colors, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
@@ -17,13 +16,20 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {resetToTab} from '../../../Navigation'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {useSession, useSessionApi, getAgent} from '#/state/session'
 
 export const snapPoints = ['60%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
   const theme = useTheme()
-  const store = useStores()
+  const {currentAccount} = useSession()
+  const {clearCurrentAccount, removeAccount} = useSessionApi()
+  const {_} = useLingui()
+  const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const [isEmailSent, setIsEmailSent] = React.useState<boolean>(false)
   const [confirmCode, setConfirmCode] = React.useState<string>('')
@@ -34,7 +40,7 @@ export function Component({}: {}) {
     setError('')
     setIsProcessing(true)
     try {
-      await store.agent.com.atproto.server.requestAccountDelete()
+      await getAgent().com.atproto.server.requestAccountDelete()
       setIsEmailSent(true)
     } catch (e: any) {
       setError(cleanError(e))
@@ -42,34 +48,39 @@ export function Component({}: {}) {
     setIsProcessing(false)
   }
   const onPressConfirmDelete = async () => {
+    if (!currentAccount?.did) {
+      throw new Error(`DeleteAccount modal: currentAccount.did is undefined`)
+    }
+
     setError('')
     setIsProcessing(true)
     const token = confirmCode.replace(/\s/g, '')
 
     try {
-      await store.agent.com.atproto.server.deleteAccount({
-        did: store.me.did,
+      await getAgent().com.atproto.server.deleteAccount({
+        did: currentAccount.did,
         password,
         token,
       })
       Toast.show('Your account has been deleted')
       resetToTab('HomeTab')
-      store.session.clear()
-      store.shell.closeModal()
+      removeAccount(currentAccount)
+      clearCurrentAccount()
+      closeModal()
     } catch (e: any) {
       setError(cleanError(e))
     }
     setIsProcessing(false)
   }
   const onCancel = () => {
-    store.shell.closeModal()
+    closeModal()
   }
   return (
     <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
         <View style={[styles.titleContainer, pal.view]}>
           <Text type="title-xl" style={[s.textCenter, pal.text]}>
-            Delete Account
+            <Trans>Delete Account</Trans>
           </Text>
           <View style={[pal.view, s.flexRow]}>
             <Text type="title-xl" style={[pal.text, s.bold]}>
@@ -83,7 +94,7 @@ export function Component({}: {}) {
                 pal.text,
                 s.bold,
               ]}>
-              {store.me.handle}
+              {currentAccount?.handle}
             </Text>
             <Text type="title-xl" style={[pal.text, s.bold]}>
               {'"'}
@@ -93,8 +104,10 @@ export function Component({}: {}) {
         {!isEmailSent ? (
           <>
             <Text type="lg" style={[styles.description, pal.text]}>
-              For security reasons, we'll need to send a confirmation code to
-              your email address.
+              <Trans>
+                For security reasons, we'll need to send a confirmation code to
+                your email address.
+              </Trans>
             </Text>
             {error ? (
               <View style={s.mt10}>
@@ -111,7 +124,7 @@ export function Component({}: {}) {
                   style={styles.mt20}
                   onPress={onPressSendEmail}
                   accessibilityRole="button"
-                  accessibilityLabel="Send email"
+                  accessibilityLabel={_(msg`Send email`)}
                   accessibilityHint="Sends email with confirmation code for account deletion">
                   <LinearGradient
                     colors={[
@@ -122,7 +135,7 @@ export function Component({}: {}) {
                     end={{x: 1, y: 1}}
                     style={[styles.btn]}>
                     <Text type="button-lg" style={[s.white, s.bold]}>
-                      Send Email
+                      <Trans>Send Email</Trans>
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -130,11 +143,11 @@ export function Component({}: {}) {
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
                   accessibilityRole="button"
-                  accessibilityLabel="Cancel account deletion"
+                  accessibilityLabel={_(msg`Cancel account deletion`)}
                   accessibilityHint=""
                   onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
-                    Cancel
+                    <Trans>Cancel</Trans>
                   </Text>
                 </TouchableOpacity>
               </>
@@ -147,8 +160,10 @@ export function Component({}: {}) {
               type="lg"
               style={styles.description}
               nativeID="confirmationCode">
-              Check your inbox for an email with the confirmation code to enter
-              below:
+              <Trans>
+                Check your inbox for an email with the confirmation code to
+                enter below:
+              </Trans>
             </Text>
             <TextInput
               style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
@@ -158,11 +173,11 @@ export function Component({}: {}) {
               value={confirmCode}
               onChangeText={setConfirmCode}
               accessibilityLabelledBy="confirmationCode"
-              accessibilityLabel="Confirmation code"
+              accessibilityLabel={_(msg`Confirmation code`)}
               accessibilityHint="Input confirmation code for account deletion"
             />
             <Text type="lg" style={styles.description} nativeID="password">
-              Please enter your password as well:
+              <Trans>Please enter your password as well:</Trans>
             </Text>
             <TextInput
               style={[styles.textInput, pal.borderDark, pal.text]}
@@ -173,7 +188,7 @@ export function Component({}: {}) {
               value={password}
               onChangeText={setPassword}
               accessibilityLabelledBy="password"
-              accessibilityLabel="Password"
+              accessibilityLabel={_(msg`Password`)}
               accessibilityHint="Input password for account deletion"
             />
             {error ? (
@@ -191,21 +206,21 @@ export function Component({}: {}) {
                   style={[styles.btn, styles.evilBtn, styles.mt20]}
                   onPress={onPressConfirmDelete}
                   accessibilityRole="button"
-                  accessibilityLabel="Confirm delete account"
+                  accessibilityLabel={_(msg`Confirm delete account`)}
                   accessibilityHint="">
                   <Text type="button-lg" style={[s.white, s.bold]}>
-                    Delete my account
+                    <Trans>Delete my account</Trans>
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.btn, s.mt10]}
                   onPress={onCancel}
                   accessibilityRole="button"
-                  accessibilityLabel="Cancel account deletion"
+                  accessibilityLabel={_(msg`Cancel account deletion`)}
                   accessibilityHint="Exits account deletion process"
                   onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
-                    Cancel
+                    <Trans>Cancel</Trans>
                   </Text>
                 </TouchableOpacity>
               </>

@@ -7,7 +7,7 @@ import {RichText as RichTextCom} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useStores} from 'state/index'
+import {useSession} from '#/state/session'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
@@ -28,7 +28,7 @@ export const ListCard = ({
   style?: StyleProp<ViewStyle>
 }) => {
   const pal = usePalette('default')
-  const store = useStores()
+  const {currentAccount} = useSession()
 
   const rkey = React.useMemo(() => {
     try {
@@ -76,8 +76,11 @@ export const ListCard = ({
             {sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.purpose === 'app.bsky.graph.defs#modlist' && 'Mute list'} by{' '}
-            {list.creator.did === store.me.did
+            {list.purpose === 'app.bsky.graph.defs#curatelist' && 'User list '}
+            {list.purpose === 'app.bsky.graph.defs#modlist' &&
+              'Moderation list '}
+            by{' '}
+            {list.creator.did === currentAccount?.did
               ? 'you'
               : sanitizeHandle(list.creator.handle, '@')}
           </Text>

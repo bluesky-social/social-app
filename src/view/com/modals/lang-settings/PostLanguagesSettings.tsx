@@ -1,8 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {observer} from 'mobx-react-lite'
 import {ScrollView} from '../util'
-import {useStores} from 'state/index'
 import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -10,16 +8,25 @@ import {deviceLocales} from 'platform/detection'
 import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
 import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {Trans} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
+import {
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+  hasPostLanguage,
+} from '#/state/preferences/languages'
 
 export const snapPoints = ['100%']
 
-export const Component = observer(function PostLanguagesSettingsImpl() {
-  const store = useStores()
+export function Component() {
+  const {closeModal} = useModalControls()
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const onPressDone = React.useCallback(() => {
-    store.shell.closeModal()
-  }, [store])
+    closeModal()
+  }, [closeModal])
 
   const languages = React.useMemo(() => {
     const langs = LANGUAGES.filter(
@@ -30,23 +37,23 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
     // sort so that device & selected languages are on top, then alphabetically
     langs.sort((a, b) => {
       const hasA =
-        store.preferences.hasPostLanguage(a.code2) ||
+        hasPostLanguage(langPrefs.postLanguage, a.code2) ||
         deviceLocales.includes(a.code2)
       const hasB =
-        store.preferences.hasPostLanguage(b.code2) ||
+        hasPostLanguage(langPrefs.postLanguage, b.code2) ||
         deviceLocales.includes(b.code2)
       if (hasA === hasB) return a.name.localeCompare(b.name)
       if (hasA) return -1
       return 1
     })
     return langs
-  }, [store])
+  }, [langPrefs])
 
   const onPress = React.useCallback(
     (code2: string) => {
-      store.preferences.togglePostLanguage(code2)
+      setLangPrefs.togglePostLanguage(code2)
     },
-    [store],
+    [setLangPrefs],
   )
 
   return (
@@ -64,20 +71,19 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
               maxHeight: '90vh',
             },
       ]}>
-      <Text style={[pal.text, styles.title]}>Post Languages</Text>
+      <Text style={[pal.text, styles.title]}>
+        <Trans>Post Languages</Trans>
+      </Text>
       <Text style={[pal.text, styles.description]}>
-        Which languages are used in this post?
+        <Trans>Which languages are used in this post?</Trans>
       </Text>
       <ScrollView style={styles.scrollContainer}>
         {languages.map(lang => {
-          const isSelected = store.preferences.hasPostLanguage(lang.code2)
+          const isSelected = hasPostLanguage(langPrefs.postLanguage, lang.code2)
 
           // enforce a max of 3 selections for post languages
           let isDisabled = false
-          if (
-            store.preferences.postLanguage.split(',').length >= 3 &&
-            !isSelected
-          ) {
+          if (langPrefs.postLanguage.split(',').length >= 3 && !isSelected) {
             isDisabled = true
           }
 
@@ -104,7 +110,7 @@ export const Component = observer(function PostLanguagesSettingsImpl() {
       <ConfirmLanguagesButton onPress={onPressDone} />
     </View>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

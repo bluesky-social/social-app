@@ -1,354 +1,215 @@
 import React from 'react'
-import {FlatList, View, useWindowDimensions} from 'react-native'
-import {useFocusEffect, useIsFocused} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {AppBskyFeedGetFeed as GetCustomFeed} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
-import useAppState from 'react-native-appstate-hook'
-import isEqual from 'lodash.isequal'
+import {View, ActivityIndicator, StyleSheet} from 'react-native'
+import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
-import {PostsFeedModel} from 'state/models/feeds/posts'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
-import {TextLink} from 'view/com/util/Link'
-import {Feed} from '../com/posts/Feed'
+import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {LoadLatestBtn} from '../com/util/load-latest/LoadLatestBtn'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
-import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {FAB} from '../com/util/fab/FAB'
-import {useStores} from 'state/index'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s, colors} from 'lib/styles'
-import {useOnMainScroll} from 'lib/hooks/useOnMainScroll'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from 'lib/icons'
-
-const POLL_FREQ = 30e3 // 30sec
+import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {FeedPage} from 'view/com/feeds/FeedPage'
+import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {emitSoftReset} from '#/state/events'
+import {useSession} from '#/state/session'
+import {loadString, saveString} from '#/lib/storage'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
-export const HomeScreen = withAuthRequired(
-  observer(function HomeScreenImpl({}: Props) {
-    const store = useStores()
-    const pagerRef = React.useRef<PagerRef>(null)
-    const [selectedPage, setSelectedPage] = React.useState(0)
-    const [customFeeds, setCustomFeeds] = React.useState<PostsFeedModel[]>([])
-    const [requestedCustomFeeds, setRequestedCustomFeeds] = React.useState<
-      string[]
-    >([])
-
-    React.useEffect(() => {
-      const {pinned} = store.me.savedFeeds
-
-      if (
-        isEqual(
-          pinned.map(p => p.uri),
-          requestedCustomFeeds,
-        )
-      ) {
-        // no changes
-        return
-      }
-
-      const feeds = []
-      for (const feed of pinned) {
-        const model = new PostsFeedModel(store, 'custom', {feed: feed.uri})
-        feeds.push(model)
-      }
-      pagerRef.current?.setPage(0)
-      setCustomFeeds(feeds)
-      setRequestedCustomFeeds(pinned.map(p => p.uri))
-    }, [
-      store,
-      store.me.savedFeeds.pinned,
-      customFeeds,
-      setCustomFeeds,
-      pagerRef,
-      requestedCustomFeeds,
-      setRequestedCustomFeeds,
-    ])
-
-    useFocusEffect(
-      React.useCallback(() => {
-        store.shell.setMinimalShellMode(false)
-        store.shell.setIsDrawerSwipeDisabled(selectedPage > 0)
-        return () => {
-          store.shell.setIsDrawerSwipeDisabled(false)
-        }
-      }, [store, selectedPage]),
-    )
-
-    const onPageSelected = React.useCallback(
-      (index: number) => {
-        store.shell.setMinimalShellMode(false)
-        setSelectedPage(index)
-        store.shell.setIsDrawerSwipeDisabled(index > 0)
-      },
-      [store, setSelectedPage],
-    )
-
-    const onPressSelected = React.useCallback(() => {
-      store.emitScreenSoftReset()
-    }, [store])
-
-    const renderTabBar = React.useCallback(
-      (props: RenderTabBarFnProps) => {
-        return (
-          <FeedsTabBar
-            {...props}
-            testID="homeScreenFeedTabs"
-            onPressSelected={onPressSelected}
-          />
-        )
-      },
-      [onPressSelected],
-    )
-
-    const renderFollowingEmptyState = React.useCallback(() => {
-      return <FollowingEmptyState />
-    }, [])
-
-    const renderFollowingEndOfFeed = React.useCallback(() => {
-      return <FollowingEndOfFeed />
-    }, [])
-
-    const renderCustomFeedEmptyState = React.useCallback(() => {
-      return <CustomFeedEmptyState />
-    }, [])
-
-    return (
-      <Pager
-        ref={pagerRef}
-        testID="homeScreen"
-        onPageSelected={onPageSelected}
-        renderTabBar={renderTabBar}
-        tabBarPosition="top">
-        <FeedPage
-          key="1"
-          testID="followingFeedPage"
-          isPageFocused={selectedPage === 0}
-          feed={store.me.mainFeed}
-          renderEmptyState={renderFollowingEmptyState}
-          renderEndOfFeed={renderFollowingEndOfFeed}
-        />
-        {customFeeds.map((f, index) => {
-          return (
-            <FeedPage
-              key={(f.params as GetCustomFeed.QueryParams).feed}
-              testID="customFeedPage"
-              isPageFocused={selectedPage === 1 + index}
-              feed={f}
-              renderEmptyState={renderCustomFeedEmptyState}
-            />
-          )
-        })}
-      </Pager>
-    )
-  }),
-)
-
-const FeedPage = observer(function FeedPageImpl({
-  testID,
-  isPageFocused,
-  feed,
-  renderEmptyState,
-  renderEndOfFeed,
-}: {
-  testID?: string
-  feed: PostsFeedModel
-  isPageFocused: boolean
-  renderEmptyState?: () => JSX.Element
-  renderEndOfFeed?: () => JSX.Element
-}) {
-  const store = useStores()
-  const pal = usePalette('default')
+export function HomeScreen(props: Props) {
+  const {data: preferences} = usePreferencesQuery()
   const {isDesktop} = useWebMediaQueries()
-  const [onMainScroll, isScrolledDown, resetMainScroll] = useOnMainScroll(store)
-  const {screen, track} = useAnalytics()
-  const headerOffset = useHeaderOffset()
-  const scrollElRef = React.useRef<FlatList>(null)
-  const {appState} = useAppState({
-    onForeground: () => doPoll(true),
-  })
-  const isScreenFocused = useIsFocused()
-  const hasNew = feed.hasNewLatest && !feed.isRefreshing
-
-  React.useEffect(() => {
-    // called on first load
-    if (!feed.hasLoaded && isPageFocused) {
-      feed.setup()
-    }
-  }, [isPageFocused, feed])
-
-  const doPoll = React.useCallback(
-    (knownActive = false) => {
-      if (
-        (!knownActive && appState !== 'active') ||
-        !isScreenFocused ||
-        !isPageFocused
-      ) {
-        return
-      }
-      if (feed.isLoading) {
-        return
-      }
-      store.log.debug('HomeScreen: Polling for new posts')
-      feed.checkForLatest()
-    },
-    [appState, isScreenFocused, isPageFocused, store, feed],
+  const [initialPage, setInitialPage] = React.useState<string | undefined>(
+    undefined,
   )
 
-  const scrollToTop = React.useCallback(() => {
-    scrollElRef.current?.scrollToOffset({offset: -headerOffset})
-    resetMainScroll()
-  }, [headerOffset, resetMainScroll])
-
-  const onSoftReset = React.useCallback(() => {
-    if (isPageFocused) {
-      scrollToTop()
-      feed.refresh()
-    }
-  }, [isPageFocused, scrollToTop, feed])
-
-  // fires when page within screen is activated/deactivated
-  // - check for latest
   React.useEffect(() => {
-    if (!isPageFocused || !isScreenFocused) {
-      return
+    const loadLastActivePage = async () => {
+      try {
+        const lastActivePage =
+          (await loadString('lastActivePage')) ?? 'Following'
+        setInitialPage(lastActivePage)
+      } catch {
+        setInitialPage('Following')
+      }
     }
+    loadLastActivePage()
+  }, [])
 
-    const softResetSub = store.onScreenSoftReset(onSoftReset)
-    const feedCleanup = feed.registerListeners()
-    const pollInterval = setInterval(doPoll, POLL_FREQ)
-
-    screen('Feed')
-    store.log.debug('HomeScreen: Updating feed')
-    feed.checkForLatest()
-
-    return () => {
-      clearInterval(pollInterval)
-      softResetSub.remove()
-      feedCleanup()
-    }
-  }, [store, doPoll, onSoftReset, screen, feed, isPageFocused, isScreenFocused])
-
-  const onPressCompose = React.useCallback(() => {
-    track('HomeScreen:PressCompose')
-    store.shell.openComposer({})
-  }, [store, track])
-
-  const onPressTryAgain = React.useCallback(() => {
-    feed.refresh()
-  }, [feed])
-
-  const onPressLoadLatest = React.useCallback(() => {
-    scrollToTop()
-    feed.refresh()
-  }, [feed, scrollToTop])
-
-  const ListHeaderComponent = React.useCallback(() => {
-    if (isDesktop) {
-      return (
-        <View
-          style={[
-            pal.view,
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingHorizontal: 18,
-              paddingVertical: 12,
-            },
-          ]}>
-          <TextLink
-            type="title-lg"
-            href="/"
-            style={[pal.text, {fontWeight: 'bold'}]}
-            text={
-              <>
-                {store.session.isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
-                {hasNew && (
-                  <View
-                    style={{
-                      top: -8,
-                      backgroundColor: colors.blue3,
-                      width: 8,
-                      height: 8,
-                      borderRadius: 4,
-                    }}
-                  />
-                )}
-              </>
-            }
-            onPress={() => store.emitScreenSoftReset()}
-          />
-          <TextLink
-            type="title-lg"
-            href="/settings/home-feed"
-            style={{fontWeight: 'bold'}}
-            accessibilityLabel="Feed Preferences"
-            accessibilityHint=""
-            text={
-              <FontAwesomeIcon
-                icon="sliders"
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            }
-          />
-        </View>
-      )
-    }
-    return <></>
-  }, [isDesktop, pal, store, hasNew])
-
-  return (
-    <View testID={testID} style={s.h100pct}>
-      <Feed
-        testID={testID ? `${testID}-feed` : undefined}
-        key="default"
-        feed={feed}
-        scrollElRef={scrollElRef}
-        onPressTryAgain={onPressTryAgain}
-        onScroll={onMainScroll}
-        scrollEventThrottle={100}
-        renderEmptyState={renderEmptyState}
-        renderEndOfFeed={renderEndOfFeed}
-        ListHeaderComponent={ListHeaderComponent}
-        headerOffset={headerOffset}
+  if (preferences && initialPage !== undefined) {
+    return (
+      <HomeScreenReady
+        {...props}
+        preferences={preferences}
+        initialPage={isDesktop ? 'Following' : initialPage}
       />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label="Load new posts"
-          showIndicator={hasNew}
-          minimalShellMode={store.shell.minimalShellMode}
-        />
-      )}
-      <FAB
-        testID="composeFAB"
-        onPress={onPressCompose}
-        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
-        accessibilityRole="button"
-        accessibilityLabel="New post"
-        accessibilityHint=""
-      />
-    </View>
-  )
-})
-
-function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
-  const {fontScale} = useWindowDimensions()
-  if (isDesktop) {
-    return 0
+    )
+  } else {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
   }
-  if (isTablet) {
-    return 50
-  }
-  // default text takes 44px, plus 34px of pad
-  // scale the 44px by the font scale
-  return 34 + 44 * fontScale
 }
+
+function HomeScreenReady({
+  preferences,
+  initialPage,
+}: Props & {
+  preferences: UsePreferencesQueryResponse
+  initialPage: string
+}) {
+  const {hasSession} = useSession()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const [selectedPage, setSelectedPage] = React.useState<string>(initialPage)
+
+  /**
+   * Used to ensure that we re-compute `customFeeds` AND force a re-render of
+   * the pager with the new order of feeds.
+   */
+  const pinnedFeedOrderKey = JSON.stringify(preferences.feeds.pinned)
+
+  const selectedPageIndex = React.useMemo(() => {
+    const index = ['Following', ...preferences.feeds.pinned].indexOf(
+      selectedPage,
+    )
+    return Math.max(index, 0)
+  }, [preferences.feeds.pinned, selectedPage])
+
+  const customFeeds = React.useMemo(() => {
+    const pinned = preferences.feeds.pinned
+    const feeds: FeedDescriptor[] = []
+    for (const uri of pinned) {
+      if (uri.includes('app.bsky.feed.generator')) {
+        feeds.push(`feedgen|${uri}`)
+      } else if (uri.includes('app.bsky.graph.list')) {
+        feeds.push(`list|${uri}`)
+      }
+    }
+    return feeds
+  }, [preferences.feeds.pinned])
+
+  const homeFeedParams = React.useMemo<FeedParams>(() => {
+    return {
+      mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
+      mergeFeedSources: preferences.feeds.saved,
+    }
+  }, [preferences])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+      setDrawerSwipeDisabled(selectedPageIndex > 0)
+      return () => {
+        setDrawerSwipeDisabled(false)
+      }
+    }, [setDrawerSwipeDisabled, selectedPageIndex, setMinimalShellMode]),
+  )
+
+  const onPageSelected = React.useCallback(
+    (index: number) => {
+      setMinimalShellMode(false)
+      setDrawerSwipeDisabled(index > 0)
+      const page = ['Following', ...preferences.feeds.pinned][index]
+      setSelectedPage(page)
+      saveString('lastActivePage', page)
+    },
+    [
+      setDrawerSwipeDisabled,
+      setSelectedPage,
+      setMinimalShellMode,
+      preferences.feeds.pinned,
+    ],
+  )
+
+  const onPressSelected = React.useCallback(() => {
+    emitSoftReset()
+  }, [])
+
+  const onPageScrollStateChanged = React.useCallback(
+    (state: 'idle' | 'dragging' | 'settling') => {
+      if (state === 'dragging') {
+        setMinimalShellMode(false)
+      }
+    },
+    [setMinimalShellMode],
+  )
+
+  const renderTabBar = React.useCallback(
+    (props: RenderTabBarFnProps) => {
+      return (
+        <FeedsTabBar
+          key="FEEDS_TAB_BAR"
+          selectedPage={props.selectedPage}
+          onSelect={props.onSelect}
+          testID="homeScreenFeedTabs"
+          onPressSelected={onPressSelected}
+        />
+      )
+    },
+    [onPressSelected],
+  )
+
+  const renderFollowingEmptyState = React.useCallback(() => {
+    return <FollowingEmptyState />
+  }, [])
+
+  const renderCustomFeedEmptyState = React.useCallback(() => {
+    return <CustomFeedEmptyState />
+  }, [])
+
+  return hasSession ? (
+    <Pager
+      key={pinnedFeedOrderKey}
+      testID="homeScreen"
+      initialPage={selectedPageIndex}
+      onPageSelected={onPageSelected}
+      onPageScrollStateChanged={onPageScrollStateChanged}
+      renderTabBar={renderTabBar}
+      tabBarPosition="top">
+      <FeedPage
+        key="1"
+        testID="followingFeedPage"
+        isPageFocused={selectedPageIndex === 0}
+        feed="home"
+        feedParams={homeFeedParams}
+        renderEmptyState={renderFollowingEmptyState}
+        renderEndOfFeed={FollowingEndOfFeed}
+      />
+      {customFeeds.map((f, index) => {
+        return (
+          <FeedPage
+            key={f}
+            testID="customFeedPage"
+            isPageFocused={selectedPageIndex === 1 + index}
+            feed={f}
+            renderEmptyState={renderCustomFeedEmptyState}
+          />
+        )
+      })}
+    </Pager>
+  ) : (
+    <Pager
+      testID="homeScreen"
+      onPageSelected={onPageSelected}
+      onPageScrollStateChanged={onPageScrollStateChanged}
+      renderTabBar={renderTabBar}
+      tabBarPosition="top">
+      <HomeLoggedOutCTA />
+    </Pager>
+  )
+}
+
+const styles = StyleSheet.create({
+  loading: {
+    height: '100%',
+    alignContent: 'center',
+    justifyContent: 'center',
+    paddingBottom: 100,
+  },
+})

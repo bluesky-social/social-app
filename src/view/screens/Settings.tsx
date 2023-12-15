@@ -10,20 +10,13 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  useFocusEffect,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {observer} from 'mobx-react-lite'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {withAuthRequired} from 'view/com/auth/withAuthRequired'
 import * as AppInfo from 'lib/app-info'
-import {useStores} from 'state/index'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
@@ -39,662 +32,766 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
-import {pluralize} from 'lib/strings/helpers'
 import {HandIcon, HashtagIcon} from 'lib/icons'
-import {formatCount} from 'view/com/util/numeric/format'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
+import {useModalControls} from '#/state/modals'
+import {
+  useSetMinimalShellMode,
+  useColorMode,
+  useSetColorMode,
+  useOnboardingDispatch,
+} from '#/state/shell'
+import {
+  useRequireAltTextEnabled,
+  useSetRequireAltTextEnabled,
+} from '#/state/preferences'
+import {
+  useSession,
+  useSessionApi,
+  SessionAccount,
+  getAgent,
+} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useClearPreferencesMutation} from '#/state/queries/preferences'
+import {useInviteCodesQuery} from '#/state/queries/invites'
+import {clear as clearStorage} from '#/state/persisted/store'
+import {clearLegacyStorage} from '#/state/persisted/legacy'
 
 // TEMPORARY (APP-700)
 // remove after backend testing finishes
 // -prf
 import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+
+function SettingsAccountCard({account}: {account: SessionAccount}) {
+  const pal = usePalette('default')
+  const {isSwitchingAccounts, currentAccount} = useSession()
+  const {logout} = useSessionApi()
+  const {data: profile} = useProfileQuery({did: account.did})
+  const isCurrentAccount = account.did === currentAccount?.did
+  const {onPressSwitchAccount} = useAccountSwitcher()
+
+  const contents = (
+    <View style={[pal.view, styles.linkCard]}>
+      <View style={styles.avi}>
+        <UserAvatar size={40} avatar={profile?.avatar} />
+      </View>
+      <View style={[s.flex1]}>
+        <Text type="md-bold" style={pal.text}>
+          {profile?.displayName || account.handle}
+        </Text>
+        <Text type="sm" style={pal.textLight}>
+          {account.handle}
+        </Text>
+      </View>
+
+      {isCurrentAccount ? (
+        <TouchableOpacity
+          testID="signOutBtn"
+          onPress={logout}
+          accessibilityRole="button"
+          accessibilityLabel="Sign out"
+          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
+          <Text type="lg" style={pal.link}>
+            Sign out
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        <AccountDropdownBtn account={account} />
+      )}
+    </View>
+  )
+
+  return isCurrentAccount ? (
+    <Link
+      href={makeProfileLink({
+        did: currentAccount?.did,
+        handle: currentAccount?.handle,
+      })}
+      title="Your profile"
+      noFeedback>
+      {contents}
+    </Link>
+  ) : (
+    <TouchableOpacity
+      testID={`switchToAccountBtn-${account.handle}`}
+      key={account.did}
+      onPress={
+        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+      }
+      accessibilityRole="button"
+      accessibilityLabel={`Switch to ${account.handle}`}
+      accessibilityHint="Switches the account you are logged in to">
+      {contents}
+    </TouchableOpacity>
+  )
+}
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
-export const SettingsScreen = withAuthRequired(
-  observer(function Settings({}: Props) {
-    const pal = usePalette('default')
-    const store = useStores()
-    const navigation = useNavigation<NavigationProp>()
-    const {isMobile} = useWebMediaQueries()
-    const {screen, track} = useAnalytics()
-    const [isSwitching, setIsSwitching, onPressSwitchAccount] =
-      useAccountSwitcher()
-    const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
-      store.agent,
+export function SettingsScreen({}: Props) {
+  const queryClient = useQueryClient()
+  const colorMode = useColorMode()
+  const setColorMode = useSetColorMode()
+  const pal = usePalette('default')
+  const {_} = useLingui()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
+  const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
+  const onboardingDispatch = useOnboardingDispatch()
+  const navigation = useNavigation<NavigationProp>()
+  const {isMobile} = useWebMediaQueries()
+  const {screen, track} = useAnalytics()
+  const {openModal} = useModalControls()
+  const {isSwitchingAccounts, accounts, currentAccount} = useSession()
+  const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
+    getAgent(),
+  )
+  const {mutate: clearPreferences} = useClearPreferencesMutation()
+  const {data: invites} = useInviteCodesQuery()
+  const invitesAvailable = invites?.available?.length ?? 0
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const closeAllActiveElements = useCloseAllActiveElements()
+
+  const primaryBg = useCustomPalette<ViewStyle>({
+    light: {backgroundColor: colors.blue0},
+    dark: {backgroundColor: colors.blue6},
+  })
+  const primaryText = useCustomPalette<TextStyle>({
+    light: {color: colors.blue3},
+    dark: {color: colors.blue2},
+  })
+
+  const dangerBg = useCustomPalette<ViewStyle>({
+    light: {backgroundColor: colors.red1},
+    dark: {backgroundColor: colors.red7},
+  })
+  const dangerText = useCustomPalette<TextStyle>({
+    light: {color: colors.red4},
+    dark: {color: colors.red2},
+  })
+
+  useFocusEffect(
+    React.useCallback(() => {
+      screen('Settings')
+      setMinimalShellMode(false)
+    }, [screen, setMinimalShellMode]),
+  )
+
+  const onPressAddAccount = React.useCallback(() => {
+    track('Settings:AddAccountButtonClicked')
+    setShowLoggedOut(true)
+    closeAllActiveElements()
+  }, [track, setShowLoggedOut, closeAllActiveElements])
+
+  const onPressChangeHandle = React.useCallback(() => {
+    track('Settings:ChangeHandleButtonClicked')
+    openModal({
+      name: 'change-handle',
+      onChanged() {
+        if (currentAccount) {
+          // refresh my profile
+          queryClient.invalidateQueries({
+            queryKey: RQKEY_PROFILE(currentAccount.did),
+          })
+        }
+      },
+    })
+  }, [track, queryClient, openModal, currentAccount])
+
+  const onPressInviteCodes = React.useCallback(() => {
+    track('Settings:InvitecodesButtonClicked')
+    openModal({name: 'invite-codes'})
+  }, [track, openModal])
+
+  const onPressLanguageSettings = React.useCallback(() => {
+    navigation.navigate('LanguageSettings')
+  }, [navigation])
+
+  const onPressDeleteAccount = React.useCallback(() => {
+    openModal({name: 'delete-account'})
+  }, [openModal])
+
+  const onPressResetPreferences = React.useCallback(async () => {
+    clearPreferences()
+  }, [clearPreferences])
+
+  const onPressResetOnboarding = React.useCallback(async () => {
+    onboardingDispatch({type: 'start'})
+    Toast.show('Onboarding reset')
+  }, [onboardingDispatch])
+
+  const onPressBuildInfo = React.useCallback(() => {
+    Clipboard.setString(
+      `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
     )
+    Toast.show('Copied build version to clipboard')
+  }, [])
 
-    const primaryBg = useCustomPalette<ViewStyle>({
-      light: {backgroundColor: colors.blue0},
-      dark: {backgroundColor: colors.blue6},
-    })
-    const primaryText = useCustomPalette<TextStyle>({
-      light: {color: colors.blue3},
-      dark: {color: colors.blue2},
-    })
+  const openHomeFeedPreferences = React.useCallback(() => {
+    navigation.navigate('PreferencesHomeFeed')
+  }, [navigation])
 
-    const dangerBg = useCustomPalette<ViewStyle>({
-      light: {backgroundColor: colors.red1},
-      dark: {backgroundColor: colors.red7},
-    })
-    const dangerText = useCustomPalette<TextStyle>({
-      light: {color: colors.red4},
-      dark: {color: colors.red2},
-    })
+  const openThreadsPreferences = React.useCallback(() => {
+    navigation.navigate('PreferencesThreads')
+  }, [navigation])
 
-    useFocusEffect(
-      React.useCallback(() => {
-        screen('Settings')
-        store.shell.setMinimalShellMode(false)
-      }, [screen, store]),
-    )
+  const onPressAppPasswords = React.useCallback(() => {
+    navigation.navigate('AppPasswords')
+  }, [navigation])
 
-    const onPressAddAccount = React.useCallback(() => {
-      track('Settings:AddAccountButtonClicked')
-      navigation.navigate('HomeTab')
-      navigation.dispatch(StackActions.popToTop())
-      store.session.clear()
-    }, [track, navigation, store])
+  const onPressSystemLog = React.useCallback(() => {
+    navigation.navigate('Log')
+  }, [navigation])
 
-    const onPressChangeHandle = React.useCallback(() => {
-      track('Settings:ChangeHandleButtonClicked')
-      store.shell.openModal({
-        name: 'change-handle',
-        onChanged() {
-          setIsSwitching(true)
-          store.session.reloadFromServer().then(
-            () => {
-              setIsSwitching(false)
-              Toast.show('Your handle has been updated')
-            },
-            err => {
-              store.log.error(
-                'Failed to reload from server after handle update',
-                {err},
-              )
-              setIsSwitching(false)
-            },
-          )
-        },
-      })
-    }, [track, store, setIsSwitching])
+  const onPressStorybook = React.useCallback(() => {
+    navigation.navigate('Debug')
+  }, [navigation])
 
-    const onPressInviteCodes = React.useCallback(() => {
-      track('Settings:InvitecodesButtonClicked')
-      store.shell.openModal({name: 'invite-codes'})
-    }, [track, store])
+  const onPressSavedFeeds = React.useCallback(() => {
+    navigation.navigate('SavedFeeds')
+  }, [navigation])
 
-    const onPressLanguageSettings = React.useCallback(() => {
-      navigation.navigate('LanguageSettings')
-    }, [navigation])
+  const onPressStatusPage = React.useCallback(() => {
+    Linking.openURL(STATUS_PAGE_URL)
+  }, [])
 
-    const onPressSignout = React.useCallback(() => {
-      track('Settings:SignOutButtonClicked')
-      store.session.logout()
-    }, [track, store])
+  const clearAllStorage = React.useCallback(async () => {
+    await clearStorage()
+    Toast.show(`Storage cleared, you need to restart the app now.`)
+  }, [])
+  const clearAllLegacyStorage = React.useCallback(async () => {
+    await clearLegacyStorage()
+    Toast.show(`Legacy storage cleared, you need to restart the app now.`)
+  }, [])
 
-    const onPressDeleteAccount = React.useCallback(() => {
-      store.shell.openModal({name: 'delete-account'})
-    }, [store])
-
-    const onPressResetPreferences = React.useCallback(async () => {
-      await store.preferences.reset()
-      Toast.show('Preferences reset')
-    }, [store])
-
-    const onPressResetOnboarding = React.useCallback(async () => {
-      store.onboarding.reset()
-      Toast.show('Onboarding reset')
-    }, [store])
-
-    const onPressBuildInfo = React.useCallback(() => {
-      Clipboard.setString(
-        `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
-      )
-      Toast.show('Copied build version to clipboard')
-    }, [])
-
-    const openHomeFeedPreferences = React.useCallback(() => {
-      navigation.navigate('PreferencesHomeFeed')
-    }, [navigation])
-
-    const openThreadsPreferences = React.useCallback(() => {
-      navigation.navigate('PreferencesThreads')
-    }, [navigation])
-
-    const onPressAppPasswords = React.useCallback(() => {
-      navigation.navigate('AppPasswords')
-    }, [navigation])
-
-    const onPressSystemLog = React.useCallback(() => {
-      navigation.navigate('Log')
-    }, [navigation])
-
-    const onPressStorybook = React.useCallback(() => {
-      navigation.navigate('Debug')
-    }, [navigation])
-
-    const onPressSavedFeeds = React.useCallback(() => {
-      navigation.navigate('SavedFeeds')
-    }, [navigation])
-
-    const onPressStatusPage = React.useCallback(() => {
-      Linking.openURL(STATUS_PAGE_URL)
-    }, [])
-
-    return (
-      <View style={[s.hContentRegion]} testID="settingsScreen">
-        <ViewHeader title="Settings" />
-        <ScrollView
-          style={[s.hContentRegion]}
-          contentContainerStyle={isMobile && pal.viewLight}
-          scrollIndicatorInsets={{right: 1}}>
-          <View style={styles.spacer20} />
-          {store.session.currentSession !== undefined ? (
-            <>
-              <Text type="xl-bold" style={[pal.text, styles.heading]}>
-                Account
-              </Text>
-              <View style={[styles.infoLine]}>
-                <Text type="lg-medium" style={pal.text}>
-                  Email:{' '}
-                </Text>
-                {!store.session.emailNeedsConfirmation && (
-                  <>
-                    <FontAwesomeIcon
-                      icon="check"
-                      size={10}
-                      style={{color: colors.green3, marginRight: 2}}
-                    />
-                  </>
-                )}
-                <Text type="lg" style={pal.text}>
-                  {store.session.currentSession?.email}{' '}
-                </Text>
-                <Link
-                  onPress={() => store.shell.openModal({name: 'change-email'})}>
-                  <Text type="lg" style={pal.link}>
-                    Change
-                  </Text>
-                </Link>
-              </View>
-              <View style={[styles.infoLine]}>
-                <Text type="lg-medium" style={pal.text}>
-                  Birthday:{' '}
-                </Text>
-                <Link
-                  onPress={() =>
-                    store.shell.openModal({name: 'birth-date-settings'})
-                  }>
-                  <Text type="lg" style={pal.link}>
-                    Show
-                  </Text>
-                </Link>
-              </View>
-              <View style={styles.spacer20} />
-              <EmailConfirmationNotice />
-            </>
-          ) : null}
-          <View style={[s.flexRow, styles.heading]}>
-            <Text type="xl-bold" style={pal.text}>
-              Signed in as
+  return (
+    <View style={[s.hContentRegion]} testID="settingsScreen">
+      <ViewHeader title={_(msg`Settings`)} />
+      <ScrollView
+        style={[s.hContentRegion]}
+        contentContainerStyle={isMobile && pal.viewLight}
+        scrollIndicatorInsets={{right: 1}}>
+        <View style={styles.spacer20} />
+        {currentAccount ? (
+          <>
+            <Text type="xl-bold" style={[pal.text, styles.heading]}>
+              <Trans>Account</Trans>
             </Text>
-            <View style={s.flex1} />
-          </View>
-          {isSwitching ? (
-            <View style={[pal.view, styles.linkCard]}>
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <Link
-              href={makeProfileLink(store.me)}
-              title="Your profile"
-              noFeedback>
-              <View style={[pal.view, styles.linkCard]}>
-                <View style={styles.avi}>
-                  <UserAvatar size={40} avatar={store.me.avatar} />
-                </View>
-                <View style={[s.flex1]}>
-                  <Text type="md-bold" style={pal.text} numberOfLines={1}>
-                    {store.me.displayName || store.me.handle}
-                  </Text>
-                  <Text type="sm" style={pal.textLight} numberOfLines={1}>
-                    {store.me.handle}
-                  </Text>
-                </View>
-                <TouchableOpacity
-                  testID="signOutBtn"
-                  onPress={isSwitching ? undefined : onPressSignout}
-                  accessibilityRole="button"
-                  accessibilityLabel="Sign out"
-                  accessibilityHint={`Signs ${store.me.displayName} out of Bluesky`}>
-                  <Text type="lg" style={pal.link}>
-                    Sign out
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </Link>
-          )}
-          {store.session.switchableAccounts.map(account => (
-            <TouchableOpacity
-              testID={`switchToAccountBtn-${account.handle}`}
-              key={account.did}
-              style={[pal.view, styles.linkCard, isSwitching && styles.dimmed]}
-              onPress={
-                isSwitching ? undefined : () => onPressSwitchAccount(account)
-              }
-              accessibilityRole="button"
-              accessibilityLabel={`Switch to ${account.handle}`}
-              accessibilityHint="Switches the account you are logged in to">
-              <View style={styles.avi}>
-                <UserAvatar size={40} avatar={account.aviUrl} />
-              </View>
-              <View style={[s.flex1]}>
-                <Text type="md-bold" style={pal.text}>
-                  {account.displayName || account.handle}
-                </Text>
-                <Text type="sm" style={pal.textLight}>
-                  {account.handle}
-                </Text>
-              </View>
-              <AccountDropdownBtn handle={account.handle} />
-            </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            testID="switchToNewAccountBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressAddAccount}
-            accessibilityRole="button"
-            accessibilityLabel="Add account"
-            accessibilityHint="Create a new Bluesky account">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="plus"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Add account
-            </Text>
-          </TouchableOpacity>
-
-          <View style={styles.spacer20} />
-
-          {store.me.invitesAvailable !== null && (
-            <>
-              <Text type="xl-bold" style={[pal.text, styles.heading]}>
-                Invite a Friend
+            <View style={[styles.infoLine]}>
+              <Text type="lg-medium" style={pal.text}>
+                <Trans>Email:</Trans>{' '}
               </Text>
-              <TouchableOpacity
-                testID="inviteFriendBtn"
-                style={[
-                  styles.linkCard,
-                  pal.view,
-                  isSwitching && styles.dimmed,
-                ]}
-                onPress={isSwitching ? undefined : onPressInviteCodes}
-                accessibilityRole="button"
-                accessibilityLabel="Invite"
-                accessibilityHint="Opens invite code list">
-                <View
-                  style={[
-                    styles.iconContainer,
-                    store.me.invitesAvailable > 0 ? primaryBg : pal.btn,
-                  ]}>
+              {currentAccount.emailConfirmed && (
+                <>
                   <FontAwesomeIcon
-                    icon="ticket"
-                    style={
-                      (store.me.invitesAvailable > 0
-                        ? primaryText
-                        : pal.text) as FontAwesomeIconStyle
-                    }
+                    icon="check"
+                    size={10}
+                    style={{color: colors.green3, marginRight: 2}}
                   />
-                </View>
-                <Text
-                  type="lg"
-                  style={store.me.invitesAvailable > 0 ? pal.link : pal.text}>
-                  {formatCount(store.me.invitesAvailable)} invite{' '}
-                  {pluralize(store.me.invitesAvailable, 'code')} available
-                </Text>
-              </TouchableOpacity>
-            </>
-          )}
-
-          <View style={styles.spacer20} />
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Accessibility
-          </Text>
-          <View style={[pal.view, styles.toggleCard]}>
-            <ToggleButton
-              type="default-light"
-              label="Require alt text before posting"
-              labelType="lg"
-              isSelected={store.preferences.requireAltTextEnabled}
-              onPress={store.preferences.toggleRequireAltTextEnabled}
-            />
-          </View>
-
-          <View style={styles.spacer20} />
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Appearance
-          </Text>
-          <View>
-            <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-              <SelectableBtn
-                selected={store.shell.colorMode === 'system'}
-                label="System"
-                left
-                onSelect={() => store.shell.setColorMode('system')}
-                accessibilityHint="Set color theme to system setting"
-              />
-              <SelectableBtn
-                selected={store.shell.colorMode === 'light'}
-                label="Light"
-                onSelect={() => store.shell.setColorMode('light')}
-                accessibilityHint="Set color theme to light"
-              />
-              <SelectableBtn
-                selected={store.shell.colorMode === 'dark'}
-                label="Dark"
-                right
-                onSelect={() => store.shell.setColorMode('dark')}
-                accessibilityHint="Set color theme to dark"
-              />
-            </View>
-          </View>
-          <View style={styles.spacer20} />
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Basics
-          </Text>
-          <TouchableOpacity
-            testID="preferencesHomeFeedButton"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={openHomeFeedPreferences}
-            accessibilityRole="button"
-            accessibilityHint=""
-            accessibilityLabel="Opens the home feed preferences">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="sliders"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Home Feed Preferences
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            testID="preferencesThreadsButton"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={openThreadsPreferences}
-            accessibilityRole="button"
-            accessibilityHint=""
-            accessibilityLabel="Opens the threads preferences">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon={['far', 'comments']}
-                style={pal.text as FontAwesomeIconStyle}
-                size={18}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Thread Preferences
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            testID="savedFeedsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            accessibilityHint="My Saved Feeds"
-            accessibilityLabel="Opens screen with all saved feeds"
-            onPress={onPressSavedFeeds}>
-            <View style={[styles.iconContainer, pal.btn]}>
-              <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
-            </View>
-            <Text type="lg" style={pal.text}>
-              My Saved Feeds
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            testID="languageSettingsBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressLanguageSettings}
-            accessibilityRole="button"
-            accessibilityHint="Language settings"
-            accessibilityLabel="Opens configurable language settings">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="language"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Languages
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            testID="moderationBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={
-              isSwitching ? undefined : () => navigation.navigate('Moderation')
-            }
-            accessibilityRole="button"
-            accessibilityHint=""
-            accessibilityLabel="Opens moderation settings">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <HandIcon style={pal.text} size={18} strokeWidth={6} />
-            </View>
-            <Text type="lg" style={pal.text}>
-              Moderation
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.spacer20} />
-
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Advanced
-          </Text>
-          <TouchableOpacity
-            testID="appPasswordBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={onPressAppPasswords}
-            accessibilityRole="button"
-            accessibilityHint="Open app password settings"
-            accessibilityLabel="Opens the app password settings page">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="lock"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text}>
-              App passwords
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            testID="changeHandleBtn"
-            style={[styles.linkCard, pal.view, isSwitching && styles.dimmed]}
-            onPress={isSwitching ? undefined : onPressChangeHandle}
-            accessibilityRole="button"
-            accessibilityLabel="Change handle"
-            accessibilityHint="Choose a new Bluesky username or create">
-            <View style={[styles.iconContainer, pal.btn]}>
-              <FontAwesomeIcon
-                icon="at"
-                style={pal.text as FontAwesomeIconStyle}
-              />
-            </View>
-            <Text type="lg" style={pal.text} numberOfLines={1}>
-              Change handle
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.spacer20} />
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Danger Zone
-          </Text>
-          <TouchableOpacity
-            style={[pal.view, styles.linkCard]}
-            onPress={onPressDeleteAccount}
-            accessible={true}
-            accessibilityRole="button"
-            accessibilityLabel="Delete account"
-            accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
-            <View style={[styles.iconContainer, dangerBg]}>
-              <FontAwesomeIcon
-                icon={['far', 'trash-can']}
-                style={dangerText as FontAwesomeIconStyle}
-                size={18}
-              />
-            </View>
-            <Text type="lg" style={dangerText}>
-              Delete my account…
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.spacer20} />
-          <Text type="xl-bold" style={[pal.text, styles.heading]}>
-            Developer Tools
-          </Text>
-          <TouchableOpacity
-            style={[pal.view, styles.linkCardNoIcon]}
-            onPress={onPressSystemLog}
-            accessibilityRole="button"
-            accessibilityHint="Open system log"
-            accessibilityLabel="Opens the system log page">
-            <Text type="lg" style={pal.text}>
-              System log
-            </Text>
-          </TouchableOpacity>
-          {__DEV__ ? (
-            <ToggleButton
-              type="default-light"
-              label="Experiment: Use AppView Proxy"
-              isSelected={debugHeaderEnabled}
-              onPress={toggleDebugHeader}
-            />
-          ) : null}
-          {__DEV__ ? (
-            <>
-              <TouchableOpacity
-                style={[pal.view, styles.linkCardNoIcon]}
-                onPress={onPressStorybook}
-                accessibilityRole="button"
-                accessibilityHint="Open storybook page"
-                accessibilityLabel="Opens the storybook page">
-                <Text type="lg" style={pal.text}>
-                  Storybook
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[pal.view, styles.linkCardNoIcon]}
-                onPress={onPressResetPreferences}
-                accessibilityRole="button"
-                accessibilityHint="Reset preferences"
-                accessibilityLabel="Resets the preferences state">
-                <Text type="lg" style={pal.text}>
-                  Reset preferences state
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[pal.view, styles.linkCardNoIcon]}
-                onPress={onPressResetOnboarding}
-                accessibilityRole="button"
-                accessibilityHint="Reset onboarding"
-                accessibilityLabel="Resets the onboarding state">
-                <Text type="lg" style={pal.text}>
-                  Reset onboarding state
-                </Text>
-              </TouchableOpacity>
-            </>
-          ) : null}
-          <View style={[styles.footer]}>
-            <TouchableOpacity
-              accessibilityRole="button"
-              onPress={onPressBuildInfo}>
-              <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-                Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+                </>
+              )}
+              <Text type="lg" style={pal.text}>
+                {currentAccount.email || '(no email)'}{' '}
               </Text>
-            </TouchableOpacity>
-            <Text type="sm" style={[pal.textLight]}>
-              &middot; &nbsp;
-            </Text>
-            <TouchableOpacity
-              accessibilityRole="button"
-              onPress={onPressStatusPage}>
-              <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-                Status page
+              <Link onPress={() => openModal({name: 'change-email'})}>
+                <Text type="lg" style={pal.link}>
+                  <Trans>Change</Trans>
+                </Text>
+              </Link>
+            </View>
+            <View style={[styles.infoLine]}>
+              <Text type="lg-medium" style={pal.text}>
+                <Trans>Birthday:</Trans>{' '}
               </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={s.footerSpacer} />
-        </ScrollView>
-      </View>
-    )
-  }),
-)
+              <Link onPress={() => openModal({name: 'birth-date-settings'})}>
+                <Text type="lg" style={pal.link}>
+                  <Trans>Show</Trans>
+                </Text>
+              </Link>
+            </View>
+            <View style={styles.spacer20} />
 
-const EmailConfirmationNotice = observer(
-  function EmailConfirmationNoticeImpl() {
-    const pal = usePalette('default')
-    const palInverted = usePalette('inverted')
-    const store = useStores()
-    const {isMobile} = useWebMediaQueries()
-
-    if (!store.session.emailNeedsConfirmation) {
-      return null
-    }
-
-    return (
-      <View style={{marginBottom: 20}}>
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          Verify email
-        </Text>
-        <View
-          style={[
-            {
-              paddingVertical: isMobile ? 12 : 0,
-              paddingHorizontal: 18,
-            },
-            pal.view,
-          ]}>
-          <View style={{flexDirection: 'row', marginBottom: 8}}>
-            <Pressable
-              style={[
-                palInverted.view,
-                {
-                  flexDirection: 'row',
-                  gap: 6,
-                  borderRadius: 6,
-                  paddingHorizontal: 12,
-                  paddingVertical: 10,
-                  alignItems: 'center',
-                },
-                isMobile && {flex: 1},
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Verify my email"
-              accessibilityHint=""
-              onPress={() => store.shell.openModal({name: 'verify-email'})}>
-              <FontAwesomeIcon
-                icon="envelope"
-                color={palInverted.colors.text}
-                size={16}
-              />
-              <Text type="button" style={palInverted.text}>
-                Verify My Email
-              </Text>
-            </Pressable>
-          </View>
-          <Text style={pal.textLight}>
-            Protect your account by verifying your email.
+            {!currentAccount.emailConfirmed && <EmailConfirmationNotice />}
+          </>
+        ) : null}
+        <View style={[s.flexRow, styles.heading]}>
+          <Text type="xl-bold" style={pal.text}>
+            <Trans>Signed in as</Trans>
           </Text>
+          <View style={s.flex1} />
         </View>
+
+        {isSwitchingAccounts ? (
+          <View style={[pal.view, styles.linkCard]}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <SettingsAccountCard account={currentAccount!} />
+        )}
+
+        {accounts
+          .filter(a => a.did !== currentAccount?.did)
+          .map(account => (
+            <SettingsAccountCard key={account.did} account={account} />
+          ))}
+
+        <TouchableOpacity
+          testID="switchToNewAccountBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Add account`)}
+          accessibilityHint="Create a new Bluesky account">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="plus"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Add account</Trans>
+          </Text>
+        </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Invite a Friend</Trans>
+        </Text>
+
+        <TouchableOpacity
+          testID="inviteFriendBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Invite`)}
+          accessibilityHint="Opens invite code list"
+          disabled={invites?.disabled}>
+          <View
+            style={[
+              styles.iconContainer,
+              invitesAvailable > 0 ? primaryBg : pal.btn,
+            ]}>
+            <FontAwesomeIcon
+              icon="ticket"
+              style={
+                (invitesAvailable > 0
+                  ? primaryText
+                  : pal.text) as FontAwesomeIconStyle
+              }
+            />
+          </View>
+          <Text type="lg" style={invitesAvailable > 0 ? pal.link : pal.text}>
+            {invites?.disabled ? (
+              <Trans>
+                Your invite codes are hidden when logged in using an App
+                Password
+              </Trans>
+            ) : invitesAvailable === 1 ? (
+              <Trans>{invitesAvailable} invite code available</Trans>
+            ) : (
+              <Trans>{invitesAvailable} invite codes available</Trans>
+            )}
+          </Text>
+        </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Accessibility</Trans>
+        </Text>
+        <View style={[pal.view, styles.toggleCard]}>
+          <ToggleButton
+            type="default-light"
+            label="Require alt text before posting"
+            labelType="lg"
+            isSelected={requireAltTextEnabled}
+            onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
+          />
+        </View>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Appearance</Trans>
+        </Text>
+        <View>
+          <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
+            <SelectableBtn
+              selected={colorMode === 'system'}
+              label="System"
+              left
+              onSelect={() => setColorMode('system')}
+              accessibilityHint="Set color theme to system setting"
+            />
+            <SelectableBtn
+              selected={colorMode === 'light'}
+              label="Light"
+              onSelect={() => setColorMode('light')}
+              accessibilityHint="Set color theme to light"
+            />
+            <SelectableBtn
+              selected={colorMode === 'dark'}
+              label="Dark"
+              right
+              onSelect={() => setColorMode('dark')}
+              accessibilityHint="Set color theme to dark"
+            />
+          </View>
+        </View>
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Basics</Trans>
+        </Text>
+        <TouchableOpacity
+          testID="preferencesHomeFeedButton"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={openHomeFeedPreferences}
+          accessibilityRole="button"
+          accessibilityHint=""
+          accessibilityLabel={_(msg`Opens the home feed preferences`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="sliders"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Home Feed Preferences</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="preferencesThreadsButton"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={openThreadsPreferences}
+          accessibilityRole="button"
+          accessibilityHint=""
+          accessibilityLabel={_(msg`Opens the threads preferences`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon={['far', 'comments']}
+              style={pal.text as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Thread Preferences</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="savedFeedsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          accessibilityHint="My Saved Feeds"
+          accessibilityLabel={_(msg`Opens screen with all saved feeds`)}
+          onPress={onPressSavedFeeds}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>My Saved Feeds</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="languageSettingsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
+          accessibilityRole="button"
+          accessibilityHint="Language settings"
+          accessibilityLabel={_(msg`Opens configurable language settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="language"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Languages</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="moderationBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('Moderation')
+          }
+          accessibilityRole="button"
+          accessibilityHint=""
+          accessibilityLabel={_(msg`Opens moderation settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HandIcon style={pal.text} size={18} strokeWidth={6} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Moderation</Trans>
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Advanced</Trans>
+        </Text>
+        <TouchableOpacity
+          testID="appPasswordBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={onPressAppPasswords}
+          accessibilityRole="button"
+          accessibilityHint="Open app password settings"
+          accessibilityLabel={_(msg`Opens the app password settings page`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="lock"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>App passwords</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="changeHandleBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Change handle`)}
+          accessibilityHint="Choose a new Bluesky username or create">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="at"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text} numberOfLines={1}>
+            <Trans>Change handle</Trans>
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.spacer20} />
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Danger Zone</Trans>
+        </Text>
+        <TouchableOpacity
+          style={[pal.view, styles.linkCard]}
+          onPress={onPressDeleteAccount}
+          accessible={true}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Delete account`)}
+          accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
+          <View style={[styles.iconContainer, dangerBg]}>
+            <FontAwesomeIcon
+              icon={['far', 'trash-can']}
+              style={dangerText as FontAwesomeIconStyle}
+              size={18}
+            />
+          </View>
+          <Text type="lg" style={dangerText}>
+            <Trans>Delete my account…</Trans>
+          </Text>
+        </TouchableOpacity>
+        <View style={styles.spacer20} />
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Developer Tools</Trans>
+        </Text>
+        <TouchableOpacity
+          style={[pal.view, styles.linkCardNoIcon]}
+          onPress={onPressSystemLog}
+          accessibilityRole="button"
+          accessibilityHint="Open system log"
+          accessibilityLabel={_(msg`Opens the system log page`)}>
+          <Text type="lg" style={pal.text}>
+            <Trans>System log</Trans>
+          </Text>
+        </TouchableOpacity>
+        {__DEV__ ? (
+          <ToggleButton
+            type="default-light"
+            label="Experiment: Use AppView Proxy"
+            isSelected={debugHeaderEnabled}
+            onPress={toggleDebugHeader}
+          />
+        ) : null}
+        {__DEV__ ? (
+          <>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressStorybook}
+              accessibilityRole="button"
+              accessibilityHint="Open storybook page"
+              accessibilityLabel={_(msg`Opens the storybook page`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Storybook</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressResetPreferences}
+              accessibilityRole="button"
+              accessibilityHint="Reset preferences"
+              accessibilityLabel={_(msg`Resets the preferences state`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Reset preferences state</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressResetOnboarding}
+              accessibilityRole="button"
+              accessibilityHint="Reset onboarding"
+              accessibilityLabel={_(msg`Resets the onboarding state`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Reset onboarding state</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={clearAllLegacyStorage}
+              accessibilityRole="button"
+              accessibilityHint="Clear all legacy storage data"
+              accessibilityLabel={_(msg`Clear all legacy storage data`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>
+                  Clear all legacy storage data (restart after this)
+                </Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={clearAllStorage}
+              accessibilityRole="button"
+              accessibilityHint="Clear all storage data"
+              accessibilityLabel={_(msg`Clear all storage data`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Clear all storage data (restart after this)</Trans>
+              </Text>
+            </TouchableOpacity>
+          </>
+        ) : null}
+        <View style={[styles.footer]}>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressBuildInfo}>
+            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+              <Trans>
+                Build version {AppInfo.appVersion} {AppInfo.updateChannel}
+              </Trans>
+            </Text>
+          </TouchableOpacity>
+          <Text type="sm" style={[pal.textLight]}>
+            &middot; &nbsp;
+          </Text>
+          <TouchableOpacity
+            accessibilityRole="button"
+            onPress={onPressStatusPage}>
+            <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
+              <Trans>Status page</Trans>
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={s.footerSpacer} />
+      </ScrollView>
+    </View>
+  )
+}
+
+function EmailConfirmationNotice() {
+  const pal = usePalette('default')
+  const palInverted = usePalette('inverted')
+  const {_} = useLingui()
+  const {isMobile} = useWebMediaQueries()
+  const {openModal} = useModalControls()
+
+  return (
+    <View style={{marginBottom: 20}}>
+      <Text type="xl-bold" style={[pal.text, styles.heading]}>
+        <Trans>Verify email</Trans>
+      </Text>
+      <View
+        style={[
+          {
+            paddingVertical: isMobile ? 12 : 0,
+            paddingHorizontal: 18,
+          },
+          pal.view,
+        ]}>
+        <View style={{flexDirection: 'row', marginBottom: 8}}>
+          <Pressable
+            style={[
+              palInverted.view,
+              {
+                flexDirection: 'row',
+                gap: 6,
+                borderRadius: 6,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                alignItems: 'center',
+              },
+              isMobile && {flex: 1},
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Verify my email`)}
+            accessibilityHint=""
+            onPress={() => openModal({name: 'verify-email'})}>
+            <FontAwesomeIcon
+              icon="envelope"
+              color={palInverted.colors.text}
+              size={16}
+            />
+            <Text type="button" style={palInverted.text}>
+              <Trans>Verify My Email</Trans>
+            </Text>
+          </Pressable>
+        </View>
+        <Text style={pal.textLight}>
+          <Trans>Protect your account by verifying your email.</Trans>
+        </Text>
       </View>
-    )
-  },
-)
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   dimmed: {

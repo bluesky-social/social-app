@@ -1,25 +1,29 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
-import {observer} from 'mobx-react-lite'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet from '@gorhom/bottom-sheet'
-import {useStores} from 'state/index'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
+import {timeout} from 'lib/async/timeout'
 import {navigate} from '../../../Navigation'
 import once from 'lodash.once'
 
+import {useModals, useModalControls} from '#/state/modals'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
-import * as CreateOrEditMuteListModal from './CreateOrEditMuteList'
-import * as ListAddRemoveUserModal from './ListAddRemoveUser'
+import * as ThreadgateModal from './Threadgate'
+import * as CreateOrEditListModal from './CreateOrEditList'
+import * as UserAddRemoveListsModal from './UserAddRemoveLists'
+import * as ListAddUserModal from './ListAddRemoveUsers'
 import * as AltImageModal from './AltImage'
 import * as EditImageModal from './AltImage'
 import * as ReportModal from './report/Modal'
+import * as AppealLabelModal from './AppealLabel'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
@@ -36,45 +40,55 @@ import * as SwitchAccountModal from './SwitchAccount'
 import * as LinkWarningModal from './LinkWarning'
 
 const DEFAULT_SNAPPOINTS = ['90%']
+const HANDLE_HEIGHT = 24
 
-export const ModalsContainer = observer(function ModalsContainer() {
-  const store = useStores()
+export function ModalsContainer() {
+  const {isModalActive, activeModals} = useModals()
+  const {closeModal} = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
+  const safeAreaInsets = useSafeAreaInsets()
 
-  const activeModal =
-    store.shell.activeModals[store.shell.activeModals.length - 1]
+  const activeModal = activeModals[activeModals.length - 1]
 
   const navigateOnce = once(navigate)
 
-  const onBottomSheetAnimate = (fromIndex: number, toIndex: number) => {
-    if (activeModal?.name === 'profile-preview' && toIndex === 1) {
-      // begin loading the profile screen behind the scenes
-      navigateOnce('Profile', {name: activeModal.did})
-    }
-  }
-  const onBottomSheetChange = (snapPoint: number) => {
+  // It seems like the bottom sheet bugs out when this callback changes.
+  const onBottomSheetAnimate = useNonReactiveCallback(
+    (_fromIndex: number, toIndex: number) => {
+      if (activeModal?.name === 'profile-preview' && toIndex === 1) {
+        // begin loading the profile screen behind the scenes
+        navigateOnce('Profile', {name: activeModal.did})
+      }
+    },
+  )
+  const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
-      store.shell.closeModal()
+      closeModal()
     } else if (activeModal?.name === 'profile-preview' && snapPoint === 1) {
-      // ensure we navigate to Profile and close the modal
-      navigateOnce('Profile', {name: activeModal.did})
-      store.shell.closeModal()
+      await navigateOnce('Profile', {name: activeModal.did})
+      // There is no particular callback for when the view has actually been presented.
+      // This delay gives us a decent chance the navigation has flushed *and* images have loaded.
+      // It's acceptable because the data is already being fetched + it usually takes longer anyway.
+      // TODO: Figure out why avatar/cover don't always show instantly from cache.
+      await timeout(200)
+      closeModal()
     }
   }
   const onClose = () => {
     bottomSheetRef.current?.close()
-    store.shell.closeModal()
+    closeModal()
   }
 
   useEffect(() => {
-    if (store.shell.isModalActive) {
+    if (isModalActive) {
       bottomSheetRef.current?.expand()
     } else {
       bottomSheetRef.current?.close()
     }
-  }, [store.shell.isModalActive, bottomSheetRef, activeModal?.name])
+  }, [isModalActive, bottomSheetRef, activeModal?.name])
 
+  let needsSafeTopInset = false
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
   if (activeModal?.name === 'confirm') {
@@ -86,18 +100,25 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'profile-preview') {
     snapPoints = ProfilePreviewModal.snapPoints
     element = <ProfilePreviewModal.Component {...activeModal} />
+    needsSafeTopInset = true // Need to align with the target profile screen.
   } else if (activeModal?.name === 'server-input') {
     snapPoints = ServerInputModal.snapPoints
     element = <ServerInputModal.Component {...activeModal} />
   } else if (activeModal?.name === 'report') {
     snapPoints = ReportModal.snapPoints
     element = <ReportModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'create-or-edit-mute-list') {
-    snapPoints = CreateOrEditMuteListModal.snapPoints
-    element = <CreateOrEditMuteListModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'list-add-remove-user') {
-    snapPoints = ListAddRemoveUserModal.snapPoints
-    element = <ListAddRemoveUserModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'appeal-label') {
+    snapPoints = AppealLabelModal.snapPoints
+    element = <AppealLabelModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'create-or-edit-list') {
+    snapPoints = CreateOrEditListModal.snapPoints
+    element = <CreateOrEditListModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'user-add-remove-lists') {
+    snapPoints = UserAddRemoveListsModal.snapPoints
+    element = <UserAddRemoveListsModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'list-add-remove-users') {
+    snapPoints = ListAddUserModal.snapPoints
+    element = <ListAddUserModal.Component {...activeModal} />
   } else if (activeModal?.name === 'delete-account') {
     snapPoints = DeleteAccountModal.snapPoints
     element = <DeleteAccountModal.Component />
@@ -107,6 +128,9 @@ export const ModalsContainer = observer(function ModalsContainer() {
   } else if (activeModal?.name === 'self-label') {
     snapPoints = SelfLabelModal.snapPoints
     element = <SelfLabelModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'threadgate') {
+    snapPoints = ThreadgateModal.snapPoints
+    element = <ThreadgateModal.Component {...activeModal} />
   } else if (activeModal?.name === 'alt-text-image') {
     snapPoints = AltImageModal.snapPoints
     element = <AltImageModal.Component {...activeModal} />
@@ -164,16 +188,19 @@ export const ModalsContainer = observer(function ModalsContainer() {
     )
   }
 
+  const topInset = needsSafeTopInset ? safeAreaInsets.top - HANDLE_HEIGHT : 0
   return (
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      index={store.shell.isModalActive ? 0 : -1}
+      topInset={topInset}
+      handleHeight={HANDLE_HEIGHT}
+      index={isModalActive ? 0 : -1}
       enablePanDownToClose
       android_keyboardInputMode="adjustResize"
       keyboardBlurBehavior="restore"
       backdropComponent={
-        store.shell.isModalActive ? createCustomBackdrop(onClose) : undefined
+        isModalActive ? createCustomBackdrop(onClose) : undefined
       }
       handleIndicatorStyle={{backgroundColor: pal.text.color}}
       handleStyle={[styles.handle, pal.view]}
@@ -182,7 +209,7 @@ export const ModalsContainer = observer(function ModalsContainer() {
       {element}
     </BottomSheet>
   )
-})
+}
 
 const styles = StyleSheet.create({
   handle: {

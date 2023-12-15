@@ -1,27 +1,28 @@
 import * as Updates from 'expo-updates'
 import {useCallback, useEffect} from 'react'
 import {AppState} from 'react-native'
-import {useStores} from 'state/index'
+import {logger} from '#/logger'
+import {useModalControls} from '#/state/modals'
+import {t} from '@lingui/macro'
 
 export function useOTAUpdate() {
-  const store = useStores()
+  const {openModal} = useModalControls()
 
   // HELPER FUNCTIONS
   const showUpdatePopup = useCallback(() => {
-    store.shell.openModal({
+    openModal({
       name: 'confirm',
-      title: 'Update Available',
-      message:
-        'A new version of the app is available. Please update to continue using the app.',
+      title: t`Update Available`,
+      message: t`A new version of the app is available. Please update to continue using the app.`,
       onPressConfirm: async () => {
         Updates.reloadAsync().catch(err => {
           throw err
         })
       },
     })
-  }, [store.shell])
+  }, [openModal])
   const checkForUpdate = useCallback(async () => {
-    store.log.debug('useOTAUpdate: Checking for update...')
+    logger.debug('useOTAUpdate: Checking for update...')
     try {
       // Check if new OTA update is available
       const update = await Updates.checkForUpdateAsync()
@@ -34,18 +35,18 @@ export function useOTAUpdate() {
       // show a popup modal
       showUpdatePopup()
     } catch (e) {
-      console.error('useOTAUpdate: Error while checking for update', e)
-      store.log.error('useOTAUpdate: Error while checking for update', e)
+      logger.error('useOTAUpdate: Error while checking for update', {
+        error: e,
+      })
     }
-  }, [showUpdatePopup, store.log])
+  }, [showUpdatePopup])
   const updateEventListener = useCallback(
     (event: Updates.UpdateEvent) => {
-      store.log.debug('useOTAUpdate: Listening for update...')
+      logger.debug('useOTAUpdate: Listening for update...')
       if (event.type === Updates.UpdateEventType.ERROR) {
-        store.log.error(
-          'useOTAUpdate: Error while listening for update',
-          event.message,
-        )
+        logger.error('useOTAUpdate: Error while listening for update', {
+          message: event.message,
+        })
       } else if (event.type === Updates.UpdateEventType.NO_UPDATE_AVAILABLE) {
         // Handle no update available
         // do nothing
@@ -55,7 +56,7 @@ export function useOTAUpdate() {
         showUpdatePopup()
       }
     },
-    [showUpdatePopup, store.log],
+    [showUpdatePopup],
   )
 
   useEffect(() => {

@@ -1,65 +1,70 @@
 import React from 'react'
-import {
-  createClient,
-  AnalyticsProvider,
-  useAnalytics as useAnalyticsOrig,
-} from '@segment/analytics-react'
-import {RootStoreModel} from 'state/models/root-store'
-import {useStores} from 'state/models/root-store'
+import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
+import {Browser} from 'sentry-expo'
 
-const segmentClient = createClient(
-  {
-    writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
-  },
-  {
-    integrations: {
-      'Segment.io': {
-        apiHost: 'api.events.bsky.app/v1',
+import {TrackEvent, AnalyticsMethods} from './types'
+import {useSession, SessionAccount} from '#/state/session'
+import {logger} from '#/logger'
+
+type SegmentClient = ReturnType<typeof createClient>
+
+// Delay creating until first actual use.
+let segmentClient: SegmentClient | null = null
+function getClient(): SegmentClient {
+  if (!segmentClient) {
+    segmentClient = createClient(
+      {
+        writeKey: '8I6DsgfiSLuoONyaunGoiQM7A6y2ybdI',
       },
-    },
-  },
-)
-export const track = segmentClient?.track?.bind?.(segmentClient)
+      {
+        integrations: {
+          'Segment.io': {
+            apiHost: 'api.events.bsky.app/v1',
+          },
+        },
+      },
+    )
+  }
+  return segmentClient
+}
 
-export function useAnalytics() {
-  const store = useStores()
-  const methods = useAnalyticsOrig()
+export const track: TrackEvent = async (...args) => {
+  await getClient().track(...args)
+}
+
+export function useAnalytics(): AnalyticsMethods {
+  const {hasSession} = useSession()
   return React.useMemo(() => {
-    if (store.session.hasSession) {
-      return methods
+    if (hasSession) {
+      return {
+        async screen(...args) {
+          await getClient().screen(...args)
+        },
+        async track(...args) {
+          await getClient().track(...args)
+        },
+      }
     }
     // dont send analytics pings for anonymous users
     return {
-      screen: () => {},
-      track: () => {},
-      identify: () => {},
-      flush: () => {},
-      group: () => {},
-      alias: () => {},
-      reset: () => {},
+      screen: async () => {},
+      track: async () => {},
     }
-  }, [store, methods])
+  }, [hasSession])
 }
 
-export function init(store: RootStoreModel) {
-  store.onSessionLoaded(() => {
-    const sess = store.session.currentSession
-    if (sess) {
-      if (sess.email) {
-        store.log.debug('Ping w/hash')
-        const email_hashed = sha256(sess.email)
-        segmentClient.identify(email_hashed, {email_hashed})
-      } else {
-        store.log.debug('Ping w/o hash')
-        segmentClient.identify()
-      }
+export function init(account: SessionAccount | undefined) {
+  if (account) {
+    const client = getClient()
+    if (account.did) {
+      const did_hashed = sha256(account.did)
+      client.identify(did_hashed, {did_hashed})
+      Browser.setUser({id: did_hashed})
+      logger.debug('Ping w/hash')
+    } else {
+      logger.debug('Ping w/o hash')
+      client.identify()
     }
-  })
-}
-
-export function Provider({children}: React.PropsWithChildren<{}>) {
-  return (
-    <AnalyticsProvider client={segmentClient}>{children}</AnalyticsProvider>
-  )
+  }
 }

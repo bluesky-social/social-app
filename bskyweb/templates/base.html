@@ -71,6 +71,7 @@
       overflow-y: auto;
       overscroll-behavior-y: none;
       text-rendering: optimizeLegibility;
+      background-color: var(--background);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
       -ms-overflow-style: scrollbar;
@@ -176,8 +177,8 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
   {% block html_head_extra -%}{%- endblock %}
-  <meta name="application-name" name="Bluesky">
-  <meta name="generator" name="bskyweb">
+  <meta name="application-name" content="Bluesky">
+  <meta name="generator" content="bskyweb">
 </head>
 <body>
 {%- block body_all %}

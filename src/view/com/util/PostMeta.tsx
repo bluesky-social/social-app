@@ -1,12 +1,11 @@
-import React from 'react'
+import React, {memo} from 'react'
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {Text} from './text/Text'
-import {DesktopWebTextLink} from './Link'
+import {TextLinkOnWebOnly} from './Link'
 import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {UserAvatar} from './UserAvatar'
-import {observer} from 'mobx-react-lite'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
@@ -30,7 +29,7 @@ interface PostMetaOpts {
   style?: StyleProp<ViewStyle>
 }
 
-export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
+let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
@@ -47,7 +46,7 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
         </View>
       )}
       <View style={styles.maxWidth}>
-        <DesktopWebTextLink
+        <TextLinkOnWebOnly
           type={opts.displayNameType || 'lg-bold'}
           style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
@@ -78,7 +77,7 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
       )}
       <TimeElapsed timestamp={opts.timestamp}>
         {({timeElapsed}) => (
-          <DesktopWebTextLink
+          <TextLinkOnWebOnly
             type="md"
             style={pal.textLight}
             lineHeight={1.2}
@@ -92,7 +91,9 @@ export const PostMeta = observer(function PostMetaImpl(opts: PostMetaOpts) {
       </TimeElapsed>
     </View>
   )
-})
+}
+PostMeta = memo(PostMeta)
+export {PostMeta}
 
 const styles = StyleSheet.create({
   container: {

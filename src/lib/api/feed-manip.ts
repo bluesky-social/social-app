@@ -4,7 +4,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   AppBskyEmbedRecord,
 } from '@atproto/api'
-import {FeedSourceInfo} from './feed/types'
+import {ReasonFeedSource} from './feed/types'
 import {isPostInLanguage} from '../../locale/helpers'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
@@ -14,13 +14,13 @@ export type FeedTunerFn = (
 ) => FeedViewPostsSlice[]
 
 export class FeedViewPostsSlice {
+  _reactKey: string
   isFlattenedReply = false
 
-  constructor(public items: FeedViewPost[] = []) {}
-
-  get _reactKey() {
-    return `slice-${this.items[0].post.uri}-${
-      this.items[0].reason?.indexedAt || this.items[0].post.indexedAt
+  constructor(public items: FeedViewPost[]) {
+    const item = items[0]
+    this._reactKey = `slice-${item.post.uri}-${
+      item.reason?.indexedAt || item.post.indexedAt
     }`
   }
 
@@ -65,9 +65,9 @@ export class FeedViewPostsSlice {
     )
   }
 
-  get source(): FeedSourceInfo | undefined {
+  get source(): ReasonFeedSource | undefined {
     return this.items.find(item => '__source' in item && !!item.__source)
-      ?.__source as FeedSourceInfo
+      ?.__source as ReasonFeedSource
   }
 
   containsUri(uri: string) {
@@ -116,24 +116,52 @@ export class FeedViewPostsSlice {
   }
 }
 
-export class FeedTuner {
-  seenUris: Set<string> = new Set()
-
-  constructor() {}
+export class NoopFeedTuner {
+  private keyCounter = 0
 
   reset() {
+    this.keyCounter = 0
+  }
+  tune(
+    feed: FeedViewPost[],
+    _opts?: {dryRun: boolean; maintainOrder: boolean},
+  ): FeedViewPostsSlice[] {
+    return feed.map(item => new FeedViewPostsSlice([item]))
+  }
+}
+
+export class FeedTuner {
+  private keyCounter = 0
+  seenUris: Set<string> = new Set()
+
+  constructor(public tunerFns: FeedTunerFn[]) {}
+
+  reset() {
+    this.keyCounter = 0
     this.seenUris.clear()
   }
 
   tune(
     feed: FeedViewPost[],
-    tunerFns: FeedTunerFn[] = [],
     {dryRun, maintainOrder}: {dryRun: boolean; maintainOrder: boolean} = {
       dryRun: false,
       maintainOrder: false,
     },
   ): FeedViewPostsSlice[] {
     let slices: FeedViewPostsSlice[] = []
+
+    // remove posts that are replies, but which don't have the parent
+    // hydrated. this means the parent was either deleted or blocked
+    feed = feed.filter(item => {
+      if (
+        AppBskyFeedPost.isRecord(item.post.record) &&
+        item.post.record.reply &&
+        !item.reply
+      ) {
+        return false
+      }
+      return true
+    })
 
     if (maintainOrder) {
       slices = feed.map(item => new FeedViewPostsSlice([item]))
@@ -157,7 +185,7 @@ export class FeedTuner {
     }
 
     // run the custom tuners
-    for (const tunerFn of tunerFns) {
+    for (const tunerFn of this.tunerFns) {
       slices = tunerFn(this, slices.slice())
     }
 

@@ -1,32 +1,45 @@
-import React from 'react'
-import {useStores} from 'state/index'
-import {Animated} from 'react-native'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
+import {useMinimalShellMode as useMinimalShellModeState} from '#/state/shell/minimal-mode'
+import {useShellLayout} from '#/state/shell/shell-layout'
 
 export function useMinimalShellMode() {
-  const store = useStores()
-  const minimalShellInterp = useAnimatedValue(0)
-  const footerMinimalShellTransform = {
-    transform: [{translateY: Animated.multiply(minimalShellInterp, 100)}],
-  }
+  const mode = useMinimalShellModeState()
+  const {footerHeight, headerHeight} = useShellLayout()
 
-  React.useEffect(() => {
-    if (store.shell.minimalShellMode) {
-      Animated.timing(minimalShellInterp, {
-        toValue: 1,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
-    } else {
-      Animated.timing(minimalShellInterp, {
-        toValue: 0,
-        duration: 100,
-        useNativeDriver: true,
-        isInteraction: false,
-      }).start()
+  const footerMinimalShellTransform = useAnimatedStyle(() => {
+    return {
+      pointerEvents: mode.value === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - mode.value, 2),
+      transform: [
+        {
+          translateY: interpolate(mode.value, [0, 1], [0, footerHeight.value]),
+        },
+      ],
     }
-  }, [minimalShellInterp, store.shell.minimalShellMode])
-
-  return {footerMinimalShellTransform}
+  })
+  const headerMinimalShellTransform = useAnimatedStyle(() => {
+    return {
+      pointerEvents: mode.value === 0 ? 'auto' : 'none',
+      opacity: Math.pow(1 - mode.value, 2),
+      transform: [
+        {
+          translateY: interpolate(mode.value, [0, 1], [0, -headerHeight.value]),
+        },
+      ],
+    }
+  })
+  const fabMinimalShellTransform = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(mode.value, [0, 1], [-44, 0]),
+        },
+      ],
+    }
+  })
+  return {
+    footerMinimalShellTransform,
+    headerMinimalShellTransform,
+    fabMinimalShellTransform,
+  }
 }

@@ -23,19 +23,19 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onLongPress,
 }) => {
   const image = images[index]
-
   return (
-    <View>
+    <View style={styles.fullWidth}>
       <Pressable
         onPress={onPress ? () => onPress(index) : undefined}
         onPressIn={onPressIn ? () => onPressIn(index) : undefined}
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
+        style={styles.fullWidth}
         accessibilityRole="button"
         accessibilityLabel={image.alt || 'Image'}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}
-          style={imageStyle}
+          style={[styles.image, imageStyle]}
           accessible={true}
           accessibilityLabel={image.alt}
           accessibilityHint=""
@@ -54,14 +54,21 @@ export const GalleryItem: FC<GalleryItemProps> = ({
 }
 
 const styles = StyleSheet.create({
+  fullWidth: {
+    flex: 1,
+  },
+  image: {
+    flex: 1,
+    borderRadius: 4,
+  },
   altContainer: {
     backgroundColor: 'rgba(0, 0, 0, 0.75)',
     borderRadius: 6,
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    left: 6,
-    bottom: 6,
+    left: 8,
+    bottom: 8,
   },
   alt: {
     color: 'white',

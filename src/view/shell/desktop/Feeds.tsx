@@ -1,16 +1,17 @@
 import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import {useNavigationState} from '@react-navigation/native'
-import {AtUri} from '@atproto/api'
-import {observer} from 'mobx-react-lite'
-import {useStores} from 'state/index'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TextLink} from 'view/com/util/Link'
 import {getCurrentRoute} from 'lib/routes/helpers'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {usePinnedFeedsInfos} from '#/state/queries/feed'
 
-export const DesktopFeeds = observer(function DesktopFeeds() {
-  const store = useStores()
+export function DesktopFeeds() {
   const pal = usePalette('default')
+  const {_} = useLingui()
+  const {feeds} = usePinnedFeedsInfos()
 
   const route = useNavigationState(state => {
     if (!state) {
@@ -22,38 +23,40 @@ export const DesktopFeeds = observer(function DesktopFeeds() {
   return (
     <View style={[styles.container, pal.view, pal.border]}>
       <FeedItem href="/" title="Following" current={route.name === 'Home'} />
-      {store.me.savedFeeds.pinned.map(feed => {
-        try {
-          const {hostname, rkey} = new AtUri(feed.uri)
-          const href = `/profile/${hostname}/feed/${rkey}`
-          const params = route.params as Record<string, string>
-          return (
-            <FeedItem
-              key={feed.uri}
-              href={href}
-              title={feed.displayName}
-              current={
-                route.name === 'CustomFeed' &&
-                params.name === hostname &&
-                params.rkey === rkey
-              }
-            />
-          )
-        } catch {
-          return null
-        }
-      })}
+      {feeds
+        .filter(f => f.displayName !== 'Following')
+        .map(feed => {
+          try {
+            const params = route.params as Record<string, string>
+            const routeName =
+              feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList'
+            return (
+              <FeedItem
+                key={feed.uri}
+                href={feed.route.href}
+                title={feed.displayName}
+                current={
+                  route.name === routeName &&
+                  params.name === feed.route.params.name &&
+                  params.rkey === feed.route.params.rkey
+                }
+              />
+            )
+          } catch {
+            return null
+          }
+        })}
       <View style={{paddingTop: 8, paddingBottom: 6}}>
         <TextLink
           type="lg"
           href="/feeds"
-          text="More feeds"
+          text={_(msg`More feeds`)}
           style={[pal.link]}
         />
       </View>
     </View>
   )
-})
+}
 
 function FeedItem({
   title,

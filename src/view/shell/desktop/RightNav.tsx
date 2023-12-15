@@ -1,5 +1,4 @@
 import React from 'react'
-import {observer} from 'mobx-react-lite'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -7,18 +6,21 @@ import {DesktopSearch} from './Search'
 import {DesktopFeeds} from './Feeds'
 import {Text} from 'view/com/util/text/Text'
 import {TextLink} from 'view/com/util/Link'
-import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
-import {useStores} from 'state/index'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {pluralize} from 'lib/strings/helpers'
 import {formatCount} from 'view/com/util/numeric/format'
+import {useModalControls} from '#/state/modals'
+import {useLingui} from '@lingui/react'
+import {Plural, Trans, msg, plural} from '@lingui/macro'
+import {useSession} from '#/state/session'
+import {useInviteCodesQuery} from '#/state/queries/invites'
 
-export const DesktopRightNav = observer(function DesktopRightNavImpl() {
-  const store = useStores()
+export function DesktopRightNav() {
   const pal = usePalette('default')
   const palError = usePalette('error')
+  const {_} = useLingui()
+  const {isSandbox, hasSession, currentAccount} = useSession()
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -27,138 +29,171 @@ export const DesktopRightNav = observer(function DesktopRightNavImpl() {
 
   return (
     <View style={[styles.rightNav, pal.view]}>
-      {store.session.hasSession && <DesktopSearch />}
-      {store.session.hasSession && <DesktopFeeds />}
-      <View style={styles.message}>
-        {store.session.isSandbox ? (
-          <View style={[palError.view, styles.messageLine, s.p10]}>
-            <Text type="md" style={[palError.text, s.bold]}>
-              SANDBOX. Posts and accounts are not permanent.
-            </Text>
+      <View style={{paddingVertical: 20}}>
+        <DesktopSearch />
+
+        {hasSession && (
+          <View style={{paddingTop: 18, marginBottom: 18}}>
+            <DesktopFeeds />
           </View>
-        ) : undefined}
-        <View style={[s.flexRow]}>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href={FEEDBACK_FORM_URL({
-              email: store.session.currentSession?.email,
-              handle: store.session.currentSession?.handle,
-            })}
-            text="Send feedback"
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://blueskyweb.xyz/support/privacy-policy"
-            text="Privacy"
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href="https://blueskyweb.xyz/support/tos"
-            text="Terms"
-          />
-          <Text type="md" style={pal.textLight}>
-            &nbsp;&middot;&nbsp;
-          </Text>
-          <TextLink
-            type="md"
-            style={pal.link}
-            href={HELP_DESK_URL}
-            text="Help"
-          />
+        )}
+
+        <View
+          style={[
+            styles.message,
+            {
+              paddingTop: hasSession ? 0 : 18,
+            },
+          ]}>
+          {isSandbox ? (
+            <View style={[palError.view, styles.messageLine, s.p10]}>
+              <Text type="md" style={[palError.text, s.bold]}>
+                SANDBOX. Posts and accounts are not permanent.
+              </Text>
+            </View>
+          ) : undefined}
+          <View style={[s.flexRow]}>
+            {hasSession && (
+              <>
+                <TextLink
+                  type="md"
+                  style={pal.link}
+                  href={FEEDBACK_FORM_URL({
+                    email: currentAccount?.email,
+                    handle: currentAccount?.handle,
+                  })}
+                  text={_(msg`Feedback`)}
+                />
+                <Text type="md" style={pal.textLight}>
+                  &nbsp;&middot;&nbsp;
+                </Text>
+              </>
+            )}
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/privacy-policy"
+              text={_(msg`Privacy`)}
+            />
+            <Text type="md" style={pal.textLight}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/tos"
+              text={_(msg`Terms`)}
+            />
+            <Text type="md" style={pal.textLight}>
+              &nbsp;&middot;&nbsp;
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href={HELP_DESK_URL}
+              text={_(msg`Help`)}
+            />
+          </View>
         </View>
+
+        {hasSession && <InviteCodes />}
       </View>
-      <InviteCodes />
     </View>
   )
-})
+}
 
-const InviteCodes = observer(function InviteCodesImpl() {
-  const store = useStores()
+function InviteCodes() {
   const pal = usePalette('default')
-
-  const {invitesAvailable} = store.me
+  const {openModal} = useModalControls()
+  const {data: invites} = useInviteCodesQuery()
+  const invitesAvailable = invites?.available?.length ?? 0
+  const {_} = useLingui()
 
   const onPress = React.useCallback(() => {
-    store.shell.openModal({name: 'invite-codes'})
-  }, [store])
+    openModal({name: 'invite-codes'})
+  }, [openModal])
+
+  if (!invites) {
+    return null
+  }
+
+  if (invites?.disabled) {
+    return (
+      <View style={[styles.inviteCodes, pal.border]}>
+        <FontAwesomeIcon
+          icon="ticket"
+          style={[styles.inviteCodesIcon, pal.textLight]}
+          size={16}
+        />
+        <Text type="md-medium" style={pal.textLight}>
+          <Trans>
+            Your invite codes are hidden when logged in using an App Password
+          </Trans>
+        </Text>
+      </View>
+    )
+  }
 
   return (
-    <View style={[styles.separator, pal.border]}>
-      {store.me.invitesAvailable === null ? (
-        <View style={[s.p10]}>
-          <LoadingPlaceholder width={186} height={32} style={[styles.br40]} />
-        </View>
-      ) : (
-        <TouchableOpacity
-          style={[styles.inviteCodes]}
-          onPress={onPress}
-          accessibilityRole="button"
-          accessibilityLabel={
-            invitesAvailable === 1
-              ? 'Invite codes: 1 available'
-              : `Invite codes: ${invitesAvailable} available`
-          }
-          accessibilityHint="Opens list of invite codes">
-          <FontAwesomeIcon
-            icon="ticket"
-            style={[
-              styles.inviteCodesIcon,
-              store.me.invitesAvailable > 0 ? pal.link : pal.textLight,
-            ]}
-            size={16}
-          />
-          <Text
-            type="md-medium"
-            style={store.me.invitesAvailable > 0 ? pal.link : pal.textLight}>
-            {formatCount(store.me.invitesAvailable)} invite{' '}
-            {pluralize(store.me.invitesAvailable, 'code')} available
-          </Text>
-        </TouchableOpacity>
+    <TouchableOpacity
+      style={[styles.inviteCodes, pal.border]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={_(
+        plural(invitesAvailable, {
+          one: 'Invite codes: # available',
+          other: 'Invite codes: # available',
+        }),
       )}
-    </View>
+      accessibilityHint={_(msg`Opens list of invite codes`)}>
+      <FontAwesomeIcon
+        icon="ticket"
+        style={[
+          styles.inviteCodesIcon,
+          invitesAvailable > 0 ? pal.link : pal.textLight,
+        ]}
+        size={16}
+      />
+      <Text
+        type="md-medium"
+        style={invitesAvailable > 0 ? pal.link : pal.textLight}>
+        <Plural
+          value={formatCount(invitesAvailable)}
+          one="# invite code available"
+          other="# invite codes available"
+        />
+      </Text>
+    </TouchableOpacity>
   )
-})
+}
 
 const styles = StyleSheet.create({
   rightNav: {
     position: 'absolute',
-    top: 20,
     // @ts-ignore web only
     left: 'calc(50vw + 320px)',
     width: 304,
-    // @ts-ignore web only
-    maxHeight: '90vh',
+    maxHeight: '100%',
+    overflowY: 'auto',
   },
 
   message: {
     paddingVertical: 18,
-    paddingHorizontal: 12,
+    paddingHorizontal: 10,
   },
   messageLine: {
     marginBottom: 10,
   },
 
-  separator: {
-    borderTopWidth: 1,
-  },
-  br40: {borderRadius: 40},
-
   inviteCodes: {
-    paddingHorizontal: 12,
-    paddingVertical: 16,
+    borderTopWidth: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     flexDirection: 'row',
-    alignItems: 'center',
   },
   inviteCodesIcon: {
+    marginTop: 2,
     marginRight: 6,
+    flexShrink: 0,
   },
 })
