@@ -33,7 +33,9 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   const {requestedAccountSwitchTo} = useLoggedOutView()
   const [screenState, setScreenState] = React.useState<ScreenState>(
     requestedAccountSwitchTo
-      ? ScreenState.S_Login
+      ? requestedAccountSwitchTo === 'new'
+        ? ScreenState.S_CreateAccount
+        : ScreenState.S_Login
       : ScreenState.S_LoginOrCreateAccount,
   )
   const {isMobile} = useWebMediaQueries()

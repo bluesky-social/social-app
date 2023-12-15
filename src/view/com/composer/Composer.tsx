@@ -62,6 +62,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useComposerControls} from '#/state/shell/composer'
 import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {logger} from '#/logger'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -228,6 +229,11 @@ export const ComposePost = observer(function ComposePost({
         })
       ).uri
     } catch (e: any) {
+      logger.error(e, {
+        message: `Composer: create post failed`,
+        hasImages: gallery.size > 0,
+      })
+
       if (extLink) {
         setExtLink({
           ...extLink,

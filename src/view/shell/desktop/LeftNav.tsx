@@ -266,6 +266,10 @@ export function DesktopLeftNav() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
 
+  if (!hasSession && !isDesktop) {
+    return null
+  }
+
   return (
     <View
       style={[
@@ -282,59 +286,58 @@ export function DesktopLeftNav() {
         </View>
       ) : null}
 
-      <BackBtn />
-
-      <NavItem
-        href="/"
-        icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
-        iconFilled={
-          <HomeIconSolid
-            strokeWidth={4}
-            size={isDesktop ? 24 : 28}
-            style={pal.text}
-          />
-        }
-        label={_(msg`Home`)}
-      />
-      <NavItem
-        href="/search"
-        icon={
-          <MagnifyingGlassIcon2
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
-          />
-        }
-        iconFilled={
-          <MagnifyingGlassIcon2Solid
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
-          />
-        }
-        label={_(msg`Search`)}
-      />
-      <NavItem
-        href="/feeds"
-        icon={
-          <HashtagIcon
-            strokeWidth={2.25}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
-          />
-        }
-        iconFilled={
-          <HashtagIcon
-            strokeWidth={2.5}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
-          />
-        }
-        label={_(msg`Feeds`)}
-      />
-
       {hasSession && (
         <>
+          <BackBtn />
+
+          <NavItem
+            href="/"
+            icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
+            iconFilled={
+              <HomeIconSolid
+                strokeWidth={4}
+                size={isDesktop ? 24 : 28}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Home`)}
+          />
+          <NavItem
+            href="/search"
+            icon={
+              <MagnifyingGlassIcon2
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <MagnifyingGlassIcon2Solid
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Search`)}
+          />
+          <NavItem
+            href="/feeds"
+            icon={
+              <HashtagIcon
+                strokeWidth={2.25}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            iconFilled={
+              <HashtagIcon
+                strokeWidth={2.5}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            label={_(msg`Feeds`)}
+          />
           <NavItem
             href="/notifications"
             count={numUnread}

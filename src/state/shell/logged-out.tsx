@@ -22,7 +22,7 @@ type Controls = {
     /**
      * The did of the account to populate the login form with.
      */
-    requestedAccount?: string
+    requestedAccount?: string | 'none' | 'new'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is
