@@ -227,14 +227,6 @@ function Player({
     [params.playerUri],
   )
 
-  // TODO: is this needed?
-  const originWhitelist =
-    params.type === 'spotify_album' ||
-    params.type === 'spotify_playlist' ||
-    params.type === 'spotify_song'
-      ? ALL_ORIGINS
-      : undefined
-
   return (
     <View ref={ref} style={{height}}>
       {isNative && params.type === 'youtube_video' ? (
@@ -248,7 +240,6 @@ function Player({
         <WebView
           javaScriptEnabled={true}
           onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          originWhitelist={originWhitelist}
           mediaPlaybackRequiresUserAction={false}
           allowsInlineMediaPlayback
           bounces={false}
