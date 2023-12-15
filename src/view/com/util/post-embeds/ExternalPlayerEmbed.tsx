@@ -246,6 +246,7 @@ function Player({
           allowsFullscreenVideo
           source={{uri: params.playerUri}}
           onLoad={() => setLoading(false)}
+          setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
         />
       )}
       {loading && (
