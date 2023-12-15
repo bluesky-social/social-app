@@ -42,11 +42,7 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {
-  useFeedSourceInfoQuery,
-  FeedSourceFeedInfo,
-  useIsFeedPublicQuery,
-} from '#/state/queries/feed'
+import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {
   UsePreferencesQueryResponse,
@@ -132,10 +128,8 @@ export function ProfileFeedScreen(props: Props) {
 function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   const {data: preferences} = usePreferencesQuery()
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
-  const {isLoading: isPublicStatusLoading, data: isPublicResponse} =
-    useIsFeedPublicQuery({uri: feedUri})
 
-  if (!preferences || !info || isPublicStatusLoading) {
+  if (!preferences || !info) {
     return (
       <CenteredView>
         <View style={s.p20}>
@@ -149,7 +143,6 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
     <ProfileFeedScreenInner
       preferences={preferences}
       feedInfo={info as FeedSourceFeedInfo}
-      isPublicResponse={isPublicResponse}
     />
   )
 }
@@ -157,11 +150,9 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
 export function ProfileFeedScreenInner({
   preferences,
   feedInfo,
-  isPublicResponse,
 }: {
   preferences: UsePreferencesQueryResponse
   feedInfo: FeedSourceFeedInfo
-  isPublicResponse: ReturnType<typeof useIsFeedPublicQuery>['data']
 }) {
   const {_} = useLingui()
   const pal = usePalette('default')
@@ -398,21 +389,15 @@ export function ProfileFeedScreenInner({
         isHeaderReady={true}
         renderHeader={renderHeader}
         onCurrentPageSelected={onCurrentPageSelected}>
-        {({headerHeight, scrollElRef, isFocused}) =>
-          isPublicResponse?.isPublic ? (
-            <FeedSection
-              ref={feedSectionRef}
-              feed={`feedgen|${feedInfo.uri}`}
-              headerHeight={headerHeight}
-              scrollElRef={scrollElRef as ListRef}
-              isFocused={isFocused}
-            />
-          ) : (
-            <CenteredView sideBorders style={[{paddingTop: headerHeight}]}>
-              <NonPublicFeedMessage rawError={isPublicResponse?.error} />
-            </CenteredView>
-          )
-        }
+        {({headerHeight, scrollElRef, isFocused}) => (
+          <FeedSection
+            ref={feedSectionRef}
+            feed={`feedgen|${feedInfo.uri}`}
+            headerHeight={headerHeight}
+            scrollElRef={scrollElRef as ListRef}
+            isFocused={isFocused}
+          />
+        )}
         {({headerHeight, scrollElRef}) => (
           <AboutSection
             feedOwnerDid={feedInfo.creatorDid}
@@ -442,45 +427,6 @@ export function ProfileFeedScreenInner({
           accessibilityHint=""
         />
       )}
-    </View>
-  )
-}
-
-function NonPublicFeedMessage({rawError}: {rawError?: Error}) {
-  const pal = usePalette('default')
-
-  return (
-    <View
-      style={[
-        pal.border,
-        {
-          padding: 18,
-          borderTopWidth: 1,
-          minHeight: Dimensions.get('window').height * 1.5,
-        },
-      ]}>
-      <View
-        style={[
-          pal.viewLight,
-          {
-            padding: 12,
-            borderRadius: 8,
-            gap: 12,
-          },
-        ]}>
-        <Text style={[pal.text]}>
-          <Trans>
-            Looks like this feed is only available to users with a Bluesky
-            account. Please sign up or sign in to view this feed!
-          </Trans>
-        </Text>
-
-        {rawError?.message && (
-          <Text style={pal.textLight}>
-            <Trans>Message from server</Trans>: {rawError.message}
-          </Text>
-        )}
-      </View>
     </View>
   )
 }

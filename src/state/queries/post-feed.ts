@@ -314,6 +314,7 @@ export async function pollLatest(page: FeedPage | undefined) {
     return false
   }
 
+  console.log('fire', new Error().stack)
   logger.debug('usePostFeedQuery: pollLatest')
   const post = await page.api.peekLatest()
   if (post) {
