@@ -125,6 +125,8 @@ function Placeholder({
   params: EmbedPlayerParams
   isLoading: boolean
 }) {
+  const pal = usePalette('default')
+
   return (
     <View>
       {link.thumb ? (
@@ -142,7 +144,7 @@ function Placeholder({
           bottom: 0,
           left: 0,
           width,
-          backgroundColor: '#000c',
+          backgroundColor: (pal.viewLight.backgroundColor as string) + 'F6',
           paddingHorizontal: 20,
           paddingVertical: 18,
           borderBottomLeftRadius: 6,
@@ -155,21 +157,28 @@ function Placeholder({
           {isLoading ? (
             <ActivityIndicator />
           ) : (
-            <FontAwesomeIcon icon="play" size={24} color="white" />
+            <FontAwesomeIcon
+              icon="play"
+              size={24}
+              color={pal.text.color as string}
+            />
           )}
         </View>
         <View style={{flex: 1}}>
-          <Text type="lg-bold" numberOfLines={2} style={{color: '#fff'}}>
+          <Text
+            type="lg-bold"
+            numberOfLines={2}
+            style={{color: pal.text.color}}>
             {link.title || link.uri}
           </Text>
           {params.type.startsWith('youtube') && (
-            <Text style={{color: '#fff'}}>YouTube</Text>
+            <Text style={{color: pal.text.color}}>YouTube</Text>
           )}
           {params.type.startsWith('twitch') && (
-            <Text style={{color: '#fff'}}>Twitch.tv</Text>
+            <Text style={{color: pal.text.color}}>Twitch.tv</Text>
           )}
           {params.type.startsWith('spotify') && (
-            <Text style={{color: '#fff'}}>Spotify</Text>
+            <Text style={{color: pal.text.color}}>Spotify</Text>
           )}
         </View>
       </View>
