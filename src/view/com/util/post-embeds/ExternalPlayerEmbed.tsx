@@ -70,14 +70,6 @@ export function ExternalPlayerEmbed({
     return dim.width
   }, [params.type, dim])
 
-  // HACK
-  if (link.thumb && link.thumb.includes('bsky.public.url')) {
-    link.thumb = link.thumb.replace(
-      'https://bsky.public.url',
-      'http://localhost:56022',
-    )
-  }
-
   if (isPlayerActive) {
     return (
       <View style={[{marginTop: 4}, style]} onLayout={onLayout}>
