@@ -1,7 +1,7 @@
 import React, {useMemo, useCallback} from 'react'
 import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useNavigation} from '@react-navigation/native'
+import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
@@ -161,6 +161,7 @@ export function ProfileFeedScreenInner({
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
   const feedSectionRef = React.useRef<SectionRef>(null)
+  const isScreenFocused = useIsFocused()
 
   const {
     mutateAsync: saveFeed,
@@ -195,6 +196,9 @@ export function ProfileFeedScreenInner({
     (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
 
   useSetTitle(feedInfo?.displayName)
+
+  // event handlers
+  //
 
   const onToggleSaved = React.useCallback(async () => {
     try {
@@ -395,7 +399,7 @@ export function ProfileFeedScreenInner({
             feed={`feedgen|${feedInfo.uri}`}
             headerHeight={headerHeight}
             scrollElRef={scrollElRef as ListRef}
-            isFocused={isFocused}
+            isFocused={isScreenFocused && isFocused}
           />
         )}
         {({headerHeight, scrollElRef}) => (

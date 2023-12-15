@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
 import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -115,6 +115,7 @@ function ProfileListScreenLoaded({
   const aboutSectionRef = React.useRef<SectionRef>(null)
   const {openModal} = useModalControls()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isScreenFocused = useIsFocused()
 
   useSetTitle(list.name)
 
@@ -165,7 +166,7 @@ function ProfileListScreenLoaded({
               feed={`list|${uri}`}
               scrollElRef={scrollElRef as ListRef}
               headerHeight={headerHeight}
-              isFocused={isFocused}
+              isFocused={isScreenFocused && isFocused}
             />
           )}
           {({headerHeight, scrollElRef}) => (
