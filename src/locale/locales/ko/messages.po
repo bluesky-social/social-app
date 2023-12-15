@@ -975,11 +975,11 @@ msgstr "앱 비밀번호입니다."
 
 #: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide"
-msgstr "숨김"
+msgstr "숨기기"
 
 #: src/view/com/notifications/FeedItem.tsx:308
 msgid "Hide user list"
-msgstr "사용자 리스트 숨김"
+msgstr "사용자 리스트 숨기기"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 #~ msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
