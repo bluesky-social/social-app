@@ -103,7 +103,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   })
 
   useEffect(() => {
-    const {isFetching, hasNextPage, data} = query
+    const {isFetching, isFetchingNextPage, hasNextPage, data} = query
 
     let count = 0
     let numEmpties = 0
@@ -116,6 +116,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
 
     if (
       !isFetching &&
+      !isFetchingNextPage &&
       hasNextPage &&
       count < PAGE_SIZE &&
       numEmpties < 3 &&

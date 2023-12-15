@@ -282,7 +282,7 @@ export function usePostFeedQuery(
   })
 
   useEffect(() => {
-    const {isFetching, hasNextPage, data} = query
+    const {isFetching, isFetchingNextPage, hasNextPage, data} = query
 
     let count = 0
     let numEmpties = 0
@@ -297,6 +297,7 @@ export function usePostFeedQuery(
 
     if (
       !isFetching &&
+      !isFetchingNextPage &&
       hasNextPage &&
       count < PAGE_SIZE &&
       numEmpties < 3 &&
@@ -314,7 +315,6 @@ export async function pollLatest(page: FeedPage | undefined) {
     return false
   }
 
-  console.log('fire', new Error().stack)
   logger.debug('usePostFeedQuery: pollLatest')
   const post = await page.api.peekLatest()
   if (post) {
