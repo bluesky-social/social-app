@@ -17,8 +17,8 @@ import {Text} from '../text/Text'
 import {EventStopper} from '../EventStopper'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {isNative} from 'platform/detection'
-
-const ALL_ORIGINS = ['*']
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -197,11 +197,19 @@ function Player({
   params: EmbedPlayerParams
   onLeaveViewport: () => void
 }) {
+  const navigation = useNavigation<NavigationProp>()
   const ref = React.useRef<View>(null)
   const [loading, setLoading] = React.useState(true)
 
   // watch for leaving the viewport due to scrolling
   React.useEffect(() => {
+    // This works for scrolling. However, for twitch embeds, if we navigate away from the screen the webview will
+    // continue playing. We need to watch for the blur event
+    const unsubscribe = navigation.addListener('blur', () => {
+      console.log('blur!')
+      onLeaveViewport()
+    })
+
     const interval = setInterval(() => {
       ref.current?.measure((x, y, width, height, pageX, pageY) => {
         const window = Dimensions.get('window')
@@ -216,9 +224,10 @@ function Player({
       })
     }, 1e3)
     return () => {
+      unsubscribe()
       clearInterval(interval)
     }
-  }, [ref, onLeaveViewport])
+  }, [ref, onLeaveViewport, navigation])
 
   // ensures we only load what's requested
   const onShouldStartLoadWithRequest = React.useCallback(
