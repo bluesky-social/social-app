@@ -1,11 +1,5 @@
 import React, {memo, startTransition} from 'react'
-import {
-  FlatListProps,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {FlatListProps, StyleSheet, View} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -113,18 +107,15 @@ function ListImpl<ItemT>(
       return
     }
     function handleScroll() {
-      // TODO
+      console.log(window.scrollY)
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [isVisible])
 
   return (
-    <Visibility
-      onVisibleChange={newIsVisible => {
-        setIsVisible(newIsVisible)
-      }}>
-      <ScrollView {...props} style={style} ref={nativeRef}>
+    <View style={{paddingTop: 0}}>
+      <View {...props} style={style} ref={nativeRef}>
         <View
           style={[
             styles.contentContainer,
@@ -132,6 +123,13 @@ function ListImpl<ItemT>(
             desktopFixedHeight ? styles.minHeightViewport : null,
             pal.border,
           ]}>
+          <View style={styles.visibilityDetector}>
+            <Visibility
+              onVisibleChange={newIsVisible => {
+                setIsVisible(newIsVisible)
+              }}
+            />
+          </View>
           {header}
           {(data as Array<ItemT>).map((item, index) => (
             <Row<ItemT>
@@ -156,8 +154,8 @@ function ListImpl<ItemT>(
           )}
           {footer}
         </View>
-      </ScrollView>
-    </Visibility>
+      </View>
+    </View>
   )
 }
 
@@ -189,11 +187,9 @@ Row = React.memo(Row)
 let Visibility = ({
   threshold = 0,
   onVisibleChange,
-  children,
 }: {
   threshold?: number | null | undefined
   onVisibleChange: (isVisible: boolean) => void
-  children?: React.ReactNode
 }): React.ReactNode => {
   const tailRef = React.useRef(null)
   const isIntersecting = React.useRef(false)
@@ -220,7 +216,7 @@ let Visibility = ({
     }
   }, [handleIntersection, threshold])
 
-  return <View ref={tailRef}>{children}</View>
+  return <View ref={tailRef} />
 }
 Visibility = React.memo(Visibility)
 
@@ -240,11 +236,15 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   row: {
-    // @ts-ignore web
+    // @ts-ignore web only
     contentVisibility: 'auto',
   },
   minHeightViewport: {
     // @ts-ignore web only
     minHeight: '100vh',
+  },
+  visibilityDetector: {
+    // @ts-ignore web only
+    position: 'fixed',
   },
 })
