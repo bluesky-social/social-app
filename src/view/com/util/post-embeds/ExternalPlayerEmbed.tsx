@@ -141,7 +141,6 @@ function Placeholder({
             height: !isLoading ? 70 : height,
             borderRadius: 6,
             marginTop: 5,
-            bottom: 0,
           }}
         />
       )}
@@ -263,6 +262,7 @@ function Player({
           source={{uri: params.playerUri}}
           onLoad={() => setLoading(false)}
           setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+          style={{backgroundColor: 'transparent'}}
         />
       )}
       {loading && (
