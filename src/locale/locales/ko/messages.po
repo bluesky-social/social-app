@@ -230,11 +230,11 @@ msgstr "이 초안을 삭제하시겠습니까?"
 
 #: src/view/screens/ProfileList.tsx:375
 msgid "Are you sure?"
-msgstr "확실한가요?"
+msgstr "확실합니까?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:188
 msgid "Are you sure? This cannot be undone."
-msgstr "확실한가요? 취소할 수 없습니다."
+msgstr "확실합니까? 취소할 수 없습니다."
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -305,7 +305,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 
 #: src/view/com/post-thread/PostThread.tsx:248
 msgid "Blocked post."
-msgstr "게시물 차단됨."
+msgstr "차단된 게시물."
 
 #: src/view/screens/ProfileList.tsx:332
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
