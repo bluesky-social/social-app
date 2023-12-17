@@ -31,7 +31,7 @@ export const SplashScreen = ({
           </View>
 
           <Text type="lg-medium" style={[pal.textLight]}>
-            <Trans>What's next?</Trans>
+            <Trans>What's up?</Trans>
           </Text>
         </View>
         <View testID="signinOrCreateAccount" style={styles.btns}>
