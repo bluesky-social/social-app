@@ -79,7 +79,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           scale: interpolate(outroApp.value, [0, 1], [1.1, 1], 'clamp'),
         },
       ],
-      opacity: interpolate(outroApp.value, [0, 0.7, 1], [0, 1, 1], 'clamp'),
+      opacity: interpolate(outroApp.value, [0, 0.9, 1], [0, 1, 1], 'clamp'),
     }
   })
 
@@ -92,21 +92,21 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
       intro.value = withTiming(
         1,
-        {duration: 800, easing: Easing.out(Easing.cubic)},
+        {duration: 200, easing: Easing.out(Easing.cubic)},
         async () => {
           // set these values to check animation at specific point
           // outroLogo.value = 0.1
           // outroApp.value = 0.1
           outroLogo.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.in(Easing.cubic)},
+            {duration: 1000, easing: Easing.in(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
           )
           outroApp.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.inOut(Easing.cubic)},
+            {duration: 1000, easing: Easing.inOut(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
