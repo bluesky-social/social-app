@@ -1642,6 +1642,7 @@ msgid "Processing..."
 msgstr "प्रसंस्करण..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
+#: src/view/shell/desktop/LeftNav.tsx:412
 #: src/view/shell/Drawer.tsx:69
 #: src/view/shell/Drawer.tsx:525
 #: src/view/shell/Drawer.tsx:526
