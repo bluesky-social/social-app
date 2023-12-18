@@ -6,7 +6,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
@@ -26,6 +27,12 @@ import {
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
+import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {shareUrl} from 'lib/sharing'
+import {makeProfileLink} from '#/lib/routes/links'
+import {isNative} from '#/platform/detection'
 
 let PostCtrls = ({
   big,
@@ -48,6 +55,14 @@ let PostCtrls = ({
   const postRepostMutation = usePostRepostMutation()
   const postUnrepostMutation = usePostUnrepostMutation()
   const requireAuth = useRequireAuth()
+  const href = React.useMemo(() => {
+    const urip = new AtUri(post.uri)
+    return makeProfileLink(
+      {did: post.author.did, handle: post.author.handle},
+      'post',
+      urip.rkey,
+    )
+  }, [post])
 
   const defaultCtrlColor = React.useMemo(
     () => ({
@@ -128,6 +143,11 @@ let PostCtrls = ({
     closeModal,
   ])
 
+  const onPressShare = useCallback(() => {
+    const url = toShareUrl(href)
+    shareUrl(url)
+  }, [href])
+
   return (
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
@@ -200,6 +220,45 @@ let PostCtrls = ({
           </Text>
         ) : undefined}
       </TouchableOpacity>
+
+      {isNative ? (
+        <TouchableOpacity
+          accessibilityRole="button"
+          style={[styles.ctrl, styles.ctrlPad]}
+          onPress={onPressShare}>
+          <FontAwesomeIcon
+            icon="share"
+            size={big ? 20 : 16}
+            style={[defaultCtrlColor]}
+          />
+        </TouchableOpacity>
+      ) : (
+        <EventStopper>
+          <NativeDropdown
+            items={[
+              {
+                label: 'Copy link to post',
+                onPress: onPressShare,
+                icon: {
+                  ios: {
+                    name: 'doc.on.doc',
+                  },
+                  android: 'ic_menu_edit',
+                  web: ['far', 'paste'],
+                },
+              },
+            ]}>
+            <View style={[styles.ctrl, styles.ctrlPad]}>
+              <FontAwesomeIcon
+                icon="share"
+                size={big ? 20 : 16}
+                style={[defaultCtrlColor]}
+              />
+            </View>
+          </NativeDropdown>
+        </EventStopper>
+      )}
+
       {big ? undefined : (
         <PostDropdownBtn
           testID="postDropdownBtn"
@@ -211,7 +270,6 @@ let PostCtrls = ({
         />
       )}
       {/* used for adding pad to the right side */}
-      <View />
     </View>
   )
 }
