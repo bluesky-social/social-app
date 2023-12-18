@@ -187,6 +187,8 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = 'Reposts of this post'
+  const isSelfLabeledPost =
+    moderation.decisions.post.cause?.source?.type === 'user'
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -351,7 +353,7 @@ let PostThreadItemLoaded = ({
                 includeMute
                 style={styles.alert}
               />
-              {post.author.did === currentAccount?.did ? (
+              {post.author.did === currentAccount?.did && !isSelfLabeledPost ? (
                 <LabelInfo
                   details={{uri: post.uri, cid: post.cid}}
                   labels={post.labels}
