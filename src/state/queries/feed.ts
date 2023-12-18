@@ -249,6 +249,7 @@ export function usePinnedFeedsInfos(): {
               // these requests can fail, need to filter those out
               try {
                 return await queryClient.fetchQuery({
+                  staleTime: STALE.SECONDS.FIFTEEN,
                   queryKey: feedSourceInfoQueryKey({uri}),
                   queryFn: async () => {
                     const type = getFeedTypeFromUri(uri)
