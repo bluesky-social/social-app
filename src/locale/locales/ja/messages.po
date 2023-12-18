@@ -189,8 +189,12 @@ msgid "Appeal content warning"
 msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:65
-msgid "Appeal Decision"
-msgstr "判断に異議"
+msgid "Appeal Content Warning"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Decision"
+#~ msgstr "判断に異議"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
@@ -1518,8 +1522,13 @@ msgstr "パスワードも入力してください："
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
-msgid "Please tell us why you think this decision was incorrect."
-msgstr "この判断が誤っていると考える理由を教えてください。"
+msgid "Please tell us why you think this content warning was incorrectly applied!"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this decision was incorrect."
+#~ msgstr "この判断が誤っていると考える理由を教えてください。"
 
 #: src/view/com/composer/Composer.tsx:337
 #: src/view/com/post-thread/PostThread.tsx:226
@@ -2134,7 +2143,7 @@ msgstr "これはオンラインを維持するためのサービスです。"
 msgid "This link is taking you to the following website:"
 msgstr "このリンクは次のウェブサイトへリンクしています："
 
-#: src/view/com/post-thread/PostThreadItem.tsx:124
+#: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
 msgstr "この投稿は削除されました。"
 
@@ -2159,8 +2168,8 @@ msgstr "ドロップダウンをトグル"
 msgid "Transformations"
 msgstr "変換"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:703
-#: src/view/com/post-thread/PostThreadItem.tsx:705
+#: src/view/com/post-thread/PostThreadItem.tsx:704
+#: src/view/com/post-thread/PostThreadItem.tsx:706
 #: src/view/com/util/forms/PostDropdownBtn.tsx:103
 msgid "Translate"
 msgstr "翻訳"
