@@ -10,8 +10,9 @@
 
 {% block html_head_extra -%}
 {%- if profileView -%}
-  <meta property="og:type" content="website">
   <meta property="og:site_name" content="Bluesky Social">
+  <meta property="og:type" content="profile">
+  <meta property="profile:username" content="{{ profileView.Handle }}">
   {%- if requestURI %}
   <meta property="og:url" content="{{ requestURI }}">
   {% endif -%}
@@ -33,11 +34,11 @@
   {% endif %}
   <meta name="twitter:label1" content="Account DID">
   <meta name="twitter:value1" content="{{ profileView.Did }}">
-  <meta name="twitter:site" content="@bluesky">
 {% endif -%}
 {%- endblock %}
 
 {% block noscript_extra -%}
+{%- if profileView -%}
 <div id="bsky_profile_summary">
   <h3>Profile</h3>
   <p id="bsky_display_name">{{ profileView.DisplayName }}</p>
@@ -45,4 +46,5 @@
   <p id="bsky_did">{{ profileView.Did }}</p>
   <p id="bsky_profile_description">{{ profileView.Description }}</p>
 </div>
+{% endif -%}
 {%- endblock %}
