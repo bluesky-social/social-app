@@ -7,7 +7,7 @@ import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {isPostMediaBlurred} from 'lib/moderation'
 
@@ -95,13 +95,17 @@ export function ContentHider({
         <Text type="md" style={pal.text}>
           {desc.name}
         </Text>
-        {!moderation.noOverride && (
-          <View style={styles.showBtn}>
-            <Text type="lg" style={pal.link}>
-              {override ? 'Hide' : 'Show'}
-            </Text>
-          </View>
-        )}
+        <View style={styles.showBtn}>
+          <Text type="lg" style={pal.link}>
+            {moderation.noOverride ? (
+              <Trans>Learn more</Trans>
+            ) : override ? (
+              <Trans>Hide</Trans>
+            ) : (
+              <Trans>Show</Trans>
+            )}
+          </Text>
+        </View>
       </Pressable>
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>

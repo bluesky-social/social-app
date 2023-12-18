@@ -10,6 +10,7 @@
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
+  - `yarn intl:build` -> you will also need to run this anytime `./src/locale/{locale}/messages.po` change
 - Start the dev servers
   - `git clone git@github.com:bluesky-social/atproto.git`
   - `cd atproto`

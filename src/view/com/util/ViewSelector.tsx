@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {
+  NativeSyntheticEvent,
+  NativeScrollEvent,
   Pressable,
   RefreshControl,
   StyleSheet,
   View,
   ScrollView,
 } from 'react-native'
-import {FlatList} from './Views'
-import {OnScrollCb} from 'lib/hooks/useOnMainScroll'
+import {FlatList_INTERNAL} from './Views'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -38,7 +39,7 @@ export const ViewSelector = React.forwardRef<
       | null
       | undefined
     onSelectView?: (viewIndex: number) => void
-    onScroll?: OnScrollCb
+    onScroll?: (event: NativeSyntheticEvent<NativeScrollEvent>) => void
     onRefresh?: () => void
     onEndReached?: (info: {distanceFromEnd: number}) => void
   }
@@ -59,7 +60,7 @@ export const ViewSelector = React.forwardRef<
 ) {
   const pal = usePalette('default')
   const [selectedIndex, setSelectedIndex] = useState<number>(0)
-  const flatListRef = React.useRef<FlatList>(null)
+  const flatListRef = React.useRef<FlatList_INTERNAL>(null)
 
   // events
   // =
@@ -110,7 +111,7 @@ export const ViewSelector = React.forwardRef<
     [items],
   )
   return (
-    <FlatList
+    <FlatList_INTERNAL
       ref={flatListRef}
       data={data}
       keyExtractor={keyExtractor}

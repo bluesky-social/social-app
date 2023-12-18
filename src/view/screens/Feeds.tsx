@@ -19,7 +19,7 @@ import {
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import debounce from 'lodash.debounce'
 import {Text} from 'view/com/util/text/Text'
-import {FlatList} from 'view/com/util/Views'
+import {List} from 'view/com/util/List'
 import {useFocusEffect} from '@react-navigation/native'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {Trans, msg} from '@lingui/macro'
@@ -481,7 +481,7 @@ export function FeedsScreen(_props: Props) {
 
       {preferences ? <View /> : <ActivityIndicator />}
 
-      <FlatList
+      <List
         style={[!isTabletOrDesktop && s.flex1, styles.list]}
         data={items}
         keyExtractor={item => item.key}

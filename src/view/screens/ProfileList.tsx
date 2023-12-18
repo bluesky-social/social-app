@@ -1,12 +1,6 @@
 import React, {useCallback, useMemo} from 'react'
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -22,6 +16,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import {RichText} from 'view/com/util/text/RichText'
 import {Button} from 'view/com/util/forms/Button'
 import {TextLink} from 'view/com/util/Link'
+import {ListRef} from 'view/com/util/List'
 import * as Toast from 'view/com/util/Toast'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
@@ -31,7 +26,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {OnScrollHandler} from 'lib/hooks/useOnMainScroll'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
@@ -121,6 +115,7 @@ function ProfileListScreenLoaded({
   const aboutSectionRef = React.useRef<SectionRef>(null)
   const {openModal} = useModalControls()
   const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
+  const isScreenFocused = useIsFocused()
 
   useSetTitle(list.name)
 
@@ -165,36 +160,22 @@ function ProfileListScreenLoaded({
           isHeaderReady={true}
           renderHeader={renderHeader}
           onCurrentPageSelected={onCurrentPageSelected}>
-          {({
-            onScroll,
-            headerHeight,
-            isScrolledDown,
-            scrollElRef,
-            isFocused,
-          }) => (
+          {({headerHeight, scrollElRef, isFocused}) => (
             <FeedSection
               ref={feedSectionRef}
               feed={`list|${uri}`}
-              scrollElRef={
-                scrollElRef as React.MutableRefObject<FlatList<any> | null>
-              }
-              onScroll={onScroll}
+              scrollElRef={scrollElRef as ListRef}
               headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
-              isFocused={isFocused}
+              isFocused={isScreenFocused && isFocused}
             />
           )}
-          {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+          {({headerHeight, scrollElRef}) => (
             <AboutSection
               ref={aboutSectionRef}
-              scrollElRef={
-                scrollElRef as React.MutableRefObject<FlatList<any> | null>
-              }
+              scrollElRef={scrollElRef as ListRef}
               list={list}
               onPressAddUser={onPressAddUser}
-              onScroll={onScroll}
               headerHeight={headerHeight}
-              isScrolledDown={isScrolledDown}
             />
           )}
         </PagerWithHeader>
@@ -221,16 +202,12 @@ function ProfileListScreenLoaded({
         items={SECTION_TITLES_MOD}
         isHeaderReady={true}
         renderHeader={renderHeader}>
-        {({onScroll, headerHeight, isScrolledDown, scrollElRef}) => (
+        {({headerHeight, scrollElRef}) => (
           <AboutSection
             list={list}
-            scrollElRef={
-              scrollElRef as React.MutableRefObject<FlatList<any> | null>
-            }
+            scrollElRef={scrollElRef as ListRef}
             onPressAddUser={onPressAddUser}
-            onScroll={onScroll}
             headerHeight={headerHeight}
-            isScrolledDown={isScrolledDown}
           />
         )}
       </PagerWithHeader>
@@ -615,19 +592,15 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
 
 interface FeedSectionProps {
   feed: FeedDescriptor
-  onScroll: OnScrollHandler
   headerHeight: number
-  isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  scrollElRef: ListRef
   isFocused: boolean
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
-  function FeedSectionImpl(
-    {feed, scrollElRef, onScroll, headerHeight, isScrolledDown, isFocused},
-    ref,
-  ) {
+  function FeedSectionImpl({feed, scrollElRef, headerHeight, isFocused}, ref) {
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -651,11 +624,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           testID="listFeed"
           enabled={isFocused}
           feed={feed}
-          pollInterval={30e3}
+          pollInterval={60e3}
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
-          onScroll={onScroll}
-          scrollEventThrottle={1}
+          onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
         />
@@ -674,20 +646,19 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 interface AboutSectionProps {
   list: AppBskyGraphDefs.ListView
   onPressAddUser: () => void
-  onScroll: OnScrollHandler
   headerHeight: number
-  isScrolledDown: boolean
-  scrollElRef: React.MutableRefObject<FlatList<any> | null>
+  scrollElRef: ListRef
 }
 const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
   function AboutSectionImpl(
-    {list, onPressAddUser, onScroll, headerHeight, isScrolledDown, scrollElRef},
+    {list, onPressAddUser, headerHeight, scrollElRef},
     ref,
   ) {
     const pal = usePalette('default')
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
+    const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const isCurateList = list.purpose === 'app.bsky.graph.defs#curatelist'
     const isOwner = list.creator.did === currentAccount?.did
 
@@ -817,8 +788,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           renderHeader={renderHeader}
           renderEmptyState={renderEmptyState}
           headerOffset={headerHeight}
-          onScroll={onScroll}
-          scrollEventThrottle={1}
+          onScrolledDownChange={setIsScrolledDown}
         />
         {isScrolledDown && (
           <LoadLatestBtn

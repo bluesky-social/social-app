@@ -8,7 +8,8 @@ import {
   View,
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {CenteredView, FlatList} from '../util/Views'
+import {CenteredView} from '../util/Views'
+import {List, ListMethods} from '../util/List'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -140,7 +141,7 @@ function PostThreadLoaded({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isTablet, isDesktop} = useWebMediaQueries()
-  const ref = useRef<FlatList>(null)
+  const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
     !isNative || // web always uses scroll adjustment
@@ -156,7 +157,9 @@ function PostThreadLoaded({
   // construct content
   const posts = React.useMemo(() => {
     let arr = [TOP_COMPONENT].concat(
-      Array.from(flattenThreadSkeleton(sortThread(thread, threadViewPrefs))),
+      Array.from(
+        flattenThreadSkeleton(sortThread(thread, threadViewPrefs), hasSession),
+      ),
     )
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
@@ -165,7 +168,7 @@ function PostThreadLoaded({
       arr.push(BOTTOM_COMPONENT)
     }
     return arr
-  }, [thread, maxVisible, threadViewPrefs])
+  }, [thread, maxVisible, threadViewPrefs, hasSession])
 
   /**
    * NOTE
@@ -335,7 +338,7 @@ function PostThreadLoaded({
   )
 
   return (
-    <FlatList
+    <List
       ref={ref}
       data={posts}
       initialNumToRender={!isNative ? posts.length : undefined}
@@ -467,12 +470,16 @@ function isThreadPost(v: unknown): v is ThreadPost {
 
 function* flattenThreadSkeleton(
   node: ThreadNode,
+  hasSession: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
     if (node.parent) {
-      yield* flattenThreadSkeleton(node.parent)
+      yield* flattenThreadSkeleton(node.parent, hasSession)
     } else if (node.ctx.isParentLoading) {
       yield PARENT_SPINNER
+    }
+    if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
+      return
     }
     yield node
     if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
@@ -480,7 +487,7 @@ function* flattenThreadSkeleton(
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply)
+        yield* flattenThreadSkeleton(reply, hasSession)
       }
     } else if (node.ctx.isChildLoading) {
       yield CHILD_SPINNER
@@ -490,6 +497,10 @@ function* flattenThreadSkeleton(
   } else if (node.type === 'blocked') {
     yield BLOCKED
   }
+}
+
+function hasPwiOptOut(node: ThreadPost) {
+  return !!node.post.author.labels?.find(l => l.val === '!no-unauthenticated')
 }
 
 function hasBranchingReplies(node: ThreadNode) {

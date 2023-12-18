@@ -7,6 +7,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -22,11 +24,14 @@ export const SplashScreen = ({
     <CenteredView style={[styles.container, pal.view]}>
       <ErrorBoundary>
         <View style={styles.hero}>
-          <Text style={[styles.title, pal.link]}>
-            <Trans>Bluesky</Trans>
-          </Text>
-          <Text style={[styles.subtitle, pal.textLight]}>
-            <Trans>See what's next</Trans>
+          <Logo width={92} fill="sky" />
+
+          <View style={{paddingTop: 40, paddingBottom: 6}}>
+            <Logotype width={161} fill={pal.text.color} />
+          </View>
+
+          <Text type="lg-medium" style={[pal.textLight]}>
+            <Trans>What's up?</Trans>
           </Text>
         </View>
         <View testID="signinOrCreateAccount" style={styles.btns}>
@@ -65,6 +70,7 @@ const styles = StyleSheet.create({
   hero: {
     flex: 2,
     justifyContent: 'center',
+    alignItems: 'center',
   },
   btns: {
     paddingBottom: 40,

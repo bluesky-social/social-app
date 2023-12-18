@@ -43,7 +43,8 @@ export function LabelInfo({
       ]}>
       <Text type="sm" style={pal.text}>
         <Trans>
-          This {'did' in details ? 'account' : 'post'} has been labeled.
+          A content warning has been applied to this{' '}
+          {'did' in details ? 'account' : 'post'}.
         </Trans>{' '}
       </Text>
       <Pressable
