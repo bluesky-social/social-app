@@ -256,7 +256,7 @@ msgstr ""
 #~ msgid "Ask apps to limit the visibility of my account"
 #~ msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:145
+#: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
 #: src/view/com/auth/login/LoginForm.tsx:249
@@ -553,7 +553,7 @@ msgstr ""
 msgid "Confirmation code"
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:178
+#: src/view/com/auth/create/CreateAccount.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:268
 msgid "Connecting..."
 msgstr ""
@@ -626,7 +626,7 @@ msgstr ""
 msgid "Create a new account"
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:124
+#: src/view/com/auth/create/CreateAccount.tsx:120
 msgid "Create Account"
 msgstr ""
 
@@ -970,8 +970,8 @@ msgstr ""
 msgid "Get Started"
 msgstr ""
 
-#: src/view/com/auth/LoggedOut.tsx:70
-#: src/view/com/auth/LoggedOut.tsx:71
+#: src/view/com/auth/LoggedOut.tsx:81
+#: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
 #: src/view/shell/desktop/LeftNav.tsx:103
 msgid "Go back"
@@ -1397,7 +1397,7 @@ msgstr ""
 msgid "New Post"
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:158
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
 #: src/view/com/auth/login/LoginForm.tsx:281
@@ -1846,8 +1846,8 @@ msgstr ""
 msgid "Resets the preferences state"
 msgstr ""
 
+#: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/create/CreateAccount.tsx:171
 #: src/view/com/auth/login/LoginForm.tsx:258
 #: src/view/com/auth/login/LoginForm.tsx:261
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -1909,6 +1909,11 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:390
 #~ msgid "Search for posts and users."
 #~ msgstr ""
+
+#: src/view/com/auth/LoggedOut.tsx:104
+#: src/view/com/auth/LoggedOut.tsx:105
+msgid "Search for users"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -2423,7 +2428,7 @@ msgstr ""
 msgid "Visit Site"
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:125
+#: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
 msgstr ""
 

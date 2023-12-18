@@ -256,7 +256,7 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 #~ msgid "Ask apps to limit the visibility of my account"
 #~ msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:145
+#: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
 #: src/view/com/auth/login/LoginForm.tsx:249
@@ -549,7 +549,7 @@ msgstr "खाते को हटा दें"
 msgid "Confirmation code"
 msgstr "OTP कोड"
 
-#: src/view/com/auth/create/CreateAccount.tsx:178
+#: src/view/com/auth/create/CreateAccount.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:268
 msgid "Connecting..."
 msgstr "कनेक्टिंग ..।"
@@ -622,7 +622,7 @@ msgstr "सूची लोड नहीं कर सकता"
 msgid "Create a new account"
 msgstr "नया खाता बनाएं"
 
-#: src/view/com/auth/create/CreateAccount.tsx:124
+#: src/view/com/auth/create/CreateAccount.tsx:120
 msgid "Create Account"
 msgstr "खाता बनाएँ"
 
@@ -962,8 +962,8 @@ msgstr "गैलरी"
 msgid "Get Started"
 msgstr "प्रारंभ करें"
 
-#: src/view/com/auth/LoggedOut.tsx:70
-#: src/view/com/auth/LoggedOut.tsx:71
+#: src/view/com/auth/LoggedOut.tsx:81
+#: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
 #: src/view/shell/desktop/LeftNav.tsx:103
 msgid "Go back"
@@ -1389,7 +1389,7 @@ msgstr "नई पोस्ट"
 msgid "New Post"
 msgstr "नई पोस्ट"
 
-#: src/view/com/auth/create/CreateAccount.tsx:158
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
 #: src/view/com/auth/login/LoginForm.tsx:281
@@ -1838,8 +1838,8 @@ msgstr "ऑनबोर्डिंग स्टेट को रीसेट �
 msgid "Resets the preferences state"
 msgstr "प्राथमिकताओं की स्थिति को रीसेट करें"
 
+#: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/create/CreateAccount.tsx:171
 #: src/view/com/auth/login/LoginForm.tsx:258
 #: src/view/com/auth/login/LoginForm.tsx:261
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -1901,6 +1901,11 @@ msgstr "खोज"
 #: src/view/screens/Search/Search.tsx:390
 #~ msgid "Search for posts and users."
 #~ msgstr ""
+
+#: src/view/com/auth/LoggedOut.tsx:104
+#: src/view/com/auth/LoggedOut.tsx:105
+msgid "Search for users"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -2415,7 +2420,7 @@ msgstr "अवतार देखें"
 msgid "Visit Site"
 msgstr "साइट पर जाएं"
 
-#: src/view/com/auth/create/CreateAccount.tsx:125
+#: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
 msgstr "हम आपके हमारी सेवा में शामिल होने को लेकर बहुत उत्साहित हैं!"
 

@@ -228,7 +228,7 @@ msgstr "本当によろしいですか？これは元に戻せません。"
 msgid "Artistic or non-erotic nudity."
 msgstr "芸術的または性的ではないヌード。"
 
-#: src/view/com/auth/create/CreateAccount.tsx:145
+#: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
 #: src/view/com/auth/login/LoginForm.tsx:249
@@ -521,7 +521,7 @@ msgstr "アカウントの削除を確認"
 msgid "Confirmation code"
 msgstr "確認コード"
 
-#: src/view/com/auth/create/CreateAccount.tsx:178
+#: src/view/com/auth/create/CreateAccount.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:268
 msgid "Connecting..."
 msgstr "接続中..."
@@ -594,7 +594,7 @@ msgstr "リストのロードに失敗しました"
 msgid "Create a new account"
 msgstr "新しいアカウントを作成"
 
-#: src/view/com/auth/create/CreateAccount.tsx:124
+#: src/view/com/auth/create/CreateAccount.tsx:120
 msgid "Create Account"
 msgstr "アカウントを作成"
 
@@ -930,8 +930,8 @@ msgstr "ギャラリー"
 msgid "Get Started"
 msgstr "はじめに"
 
-#: src/view/com/auth/LoggedOut.tsx:70
-#: src/view/com/auth/LoggedOut.tsx:71
+#: src/view/com/auth/LoggedOut.tsx:81
+#: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
 #: src/view/shell/desktop/LeftNav.tsx:103
 msgid "Go back"
@@ -1328,7 +1328,7 @@ msgstr "新しい投稿"
 msgid "New Post"
 msgstr "新しい投稿"
 
-#: src/view/com/auth/create/CreateAccount.tsx:158
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
 #: src/view/com/auth/login/LoginForm.tsx:281
@@ -1751,8 +1751,8 @@ msgstr "オンボーディングの状態をリセット"
 msgid "Resets the preferences state"
 msgstr "設定の状態をリセット"
 
+#: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/create/CreateAccount.tsx:171
 #: src/view/com/auth/login/LoginForm.tsx:258
 #: src/view/com/auth/login/LoginForm.tsx:261
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -1806,6 +1806,11 @@ msgstr "検索"
 #: src/view/screens/Search/Search.tsx:390
 #~ msgid "Search for posts and users."
 #~ msgstr "投稿とユーザーを検索します。"
+
+#: src/view/com/auth/LoggedOut.tsx:104
+#: src/view/com/auth/LoggedOut.tsx:105
+msgid "Search for users"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -2308,7 +2313,7 @@ msgstr "アバターを表示"
 msgid "Visit Site"
 msgstr "サイトへアクセス"
 
-#: src/view/com/auth/create/CreateAccount.tsx:125
+#: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
 
