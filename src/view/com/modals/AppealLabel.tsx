@@ -62,17 +62,17 @@ export function Component(props: ReportComponentProps) {
       <Text
         type="2xl-bold"
         style={[pal.text, s.textCenter, {paddingBottom: 8}]}>
-        <Trans>Appeal Decision</Trans>
+        <Trans>Appeal Content Warning</Trans>
       </Text>
       <ScrollView>
         <View style={[pal.btn, styles.detailsInputContainer]}>
           <TextInput
             accessibilityLabel={_(msg`Text input field`)}
             accessibilityHint={_(
-              msg`Please tell us why you think this decision was incorrect.`,
+              msg`Please tell us why you think this content warning was incorrectly applied!`,
             )}
             placeholder={_(
-              msg`Please tell us why you think this decision was incorrect.`,
+              msg`Please tell us why you think this content warning was incorrectly applied!`,
             )}
             placeholderTextColor={pal.textLight.color}
             value={details}

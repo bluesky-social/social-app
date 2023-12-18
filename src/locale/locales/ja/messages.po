@@ -55,6 +55,10 @@ msgstr "<1>おすすめの</1><2>フィード</2><0>を選択</0>"
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
 msgstr "<1>おすすめの</1><2>ユーザー</2><0>をフォロー</0>"
 
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+msgid "A content warning has been applied to this {0}."
+msgstr ""
+
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
 msgstr "新しいバージョンのアプリが利用可能です。継続して使用するためにはアップデートしてください。"
@@ -180,15 +184,23 @@ msgstr "アプリパスワード"
 msgid "App Passwords"
 msgstr "アプリパスワード"
 
-#: src/view/com/modals/AppealLabel.tsx:65
-msgid "Appeal Decision"
-msgstr "判断に異議"
+#: src/view/com/util/forms/PostDropdownBtn.tsx:207
+msgid "Appeal content warning"
+msgstr ""
 
-#: src/view/com/util/moderation/LabelInfo.tsx:51
+#: src/view/com/modals/AppealLabel.tsx:65
+msgid "Appeal Content Warning"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Decision"
+#~ msgstr "判断に異議"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
 msgstr "この判断に異議を申し立てる"
 
-#: src/view/com/util/moderation/LabelInfo.tsx:55
+#: src/view/com/util/moderation/LabelInfo.tsx:56
 msgid "Appeal this decision."
 msgstr "この判断に異議を申し立てる"
 
@@ -208,7 +220,7 @@ msgstr "本当にこの下書きを破棄しますか？"
 msgid "Are you sure?"
 msgstr "本当によろしいですか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:188
+#: src/view/com/util/forms/PostDropdownBtn.tsx:190
 msgid "Are you sure? This cannot be undone."
 msgstr "本当によろしいですか？これは元に戻せません。"
 
@@ -553,7 +565,7 @@ msgstr "コピー"
 msgid "Copy link to list"
 msgstr "リストへのリンクをコピー"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+#: src/view/com/util/forms/PostDropdownBtn.tsx:131
 msgid "Copy link to post"
 msgstr "投稿へのリンクをコピー"
 
@@ -561,7 +573,7 @@ msgstr "投稿へのリンクをコピー"
 msgid "Copy link to profile"
 msgstr "プロフィールへのリンクをコピー"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:115
+#: src/view/com/util/forms/PostDropdownBtn.tsx:117
 msgid "Copy post text"
 msgstr "投稿のテキストをコピー"
 
@@ -630,11 +642,11 @@ msgstr "マイアカウントを削除"
 msgid "Delete my account…"
 msgstr "マイアカウントを削除…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:183
+#: src/view/com/util/forms/PostDropdownBtn.tsx:185
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:189
 msgid "Delete this post?"
 msgstr "この投稿を削除しますか？"
 
@@ -1252,7 +1264,7 @@ msgstr "リストをミュート"
 msgid "Mute these accounts?"
 msgstr "これらのアカウントをミュートしますか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+#: src/view/com/util/forms/PostDropdownBtn.tsx:149
 msgid "Mute thread"
 msgstr "スレッドをミュート"
 
@@ -1510,8 +1522,13 @@ msgstr "パスワードも入力してください："
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
-msgid "Please tell us why you think this decision was incorrect."
-msgstr "この判断が誤っていると考える理由を教えてください。"
+msgid "Please tell us why you think this content warning was incorrectly applied!"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this decision was incorrect."
+#~ msgstr "この判断が誤っていると考える理由を教えてください。"
 
 #: src/view/com/composer/Composer.tsx:337
 #: src/view/com/post-thread/PostThread.tsx:226
@@ -1684,7 +1701,7 @@ msgid "Report List"
 msgstr "リストを報告"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:165
+#: src/view/com/util/forms/PostDropdownBtn.tsx:167
 msgid "Report post"
 msgstr "投稿を報告"
 
@@ -1879,7 +1896,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr "性的行為または性的なヌード。"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+#: src/view/com/util/forms/PostDropdownBtn.tsx:131
 #: src/view/screens/ProfileList.tsx:384
 msgid "Share"
 msgstr "共有"
@@ -2091,8 +2108,8 @@ msgid "There was an unexpected issue in the application. Please let us know if t
 msgstr "アプリケーションに予期しない問題が発生しました。このようなことがありましたらお知らせください！"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
-msgid "This {0} has been labeled."
-msgstr "この{0}にはラベルが貼られています"
+#~ msgid "This {0} has been labeled."
+#~ msgstr "この{0}にはラベルが貼られています"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -2126,7 +2143,7 @@ msgstr "これはオンラインを維持するためのサービスです。"
 msgid "This link is taking you to the following website:"
 msgstr "このリンクは次のウェブサイトへリンクしています："
 
-#: src/view/com/post-thread/PostThreadItem.tsx:124
+#: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
 msgstr "この投稿は削除されました。"
 
@@ -2151,9 +2168,9 @@ msgstr "ドロップダウンをトグル"
 msgid "Transformations"
 msgstr "変換"
 
+#: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/post-thread/PostThreadItem.tsx:708
-#: src/view/com/util/forms/PostDropdownBtn.tsx:101
+#: src/view/com/util/forms/PostDropdownBtn.tsx:103
 msgid "Translate"
 msgstr "翻訳"
 
@@ -2197,7 +2214,7 @@ msgstr "残念ながら、アカウントを作成するための要件を満た
 msgid "Unmute Account"
 msgstr "アカウントのミュートを解除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+#: src/view/com/util/forms/PostDropdownBtn.tsx:149
 msgid "Unmute thread"
 msgstr "スレッドのミュートを解除"
 

@@ -75,6 +75,10 @@ msgstr ""
 #~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
 #~ msgstr ""
 
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+msgid "A content warning has been applied to this {0}."
+msgstr ""
+
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
 msgstr ""
@@ -200,15 +204,23 @@ msgstr ""
 msgid "App Passwords"
 msgstr ""
 
-#: src/view/com/modals/AppealLabel.tsx:65
-msgid "Appeal Decision"
+#: src/view/com/util/forms/PostDropdownBtn.tsx:207
+msgid "Appeal content warning"
 msgstr ""
 
-#: src/view/com/util/moderation/LabelInfo.tsx:51
+#: src/view/com/modals/AppealLabel.tsx:65
+msgid "Appeal Content Warning"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Decision"
+#~ msgstr ""
+
+#: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
 msgstr ""
 
-#: src/view/com/util/moderation/LabelInfo.tsx:55
+#: src/view/com/util/moderation/LabelInfo.tsx:56
 msgid "Appeal this decision."
 msgstr ""
 
@@ -232,7 +244,7 @@ msgstr ""
 msgid "Are you sure?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:188
+#: src/view/com/util/forms/PostDropdownBtn.tsx:190
 msgid "Are you sure? This cannot be undone."
 msgstr ""
 
@@ -585,7 +597,7 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+#: src/view/com/util/forms/PostDropdownBtn.tsx:131
 msgid "Copy link to post"
 msgstr ""
 
@@ -593,7 +605,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:115
+#: src/view/com/util/forms/PostDropdownBtn.tsx:117
 msgid "Copy post text"
 msgstr ""
 
@@ -666,11 +678,11 @@ msgstr ""
 msgid "Delete my account…"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:183
+#: src/view/com/util/forms/PostDropdownBtn.tsx:185
 msgid "Delete post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:189
 msgid "Delete this post?"
 msgstr ""
 
@@ -1317,7 +1329,7 @@ msgstr ""
 msgid "Mute these accounts?"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+#: src/view/com/util/forms/PostDropdownBtn.tsx:149
 msgid "Mute thread"
 msgstr ""
 
@@ -1592,8 +1604,13 @@ msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
-msgid "Please tell us why you think this decision was incorrect."
+msgid "Please tell us why you think this content warning was incorrectly applied!"
 msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this decision was incorrect."
+#~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:337
 #: src/view/com/post-thread/PostThread.tsx:226
@@ -1771,7 +1788,7 @@ msgid "Report List"
 msgstr ""
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:165
+#: src/view/com/util/forms/PostDropdownBtn.tsx:167
 msgid "Report post"
 msgstr ""
 
@@ -1982,7 +1999,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+#: src/view/com/util/forms/PostDropdownBtn.tsx:131
 #: src/view/screens/ProfileList.tsx:384
 msgid "Share"
 msgstr ""
@@ -2202,8 +2219,8 @@ msgid "There was an unexpected issue in the application. Please let us know if t
 msgstr ""
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
-msgid "This {0} has been labeled."
-msgstr ""
+#~ msgid "This {0} has been labeled."
+#~ msgstr ""
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -2237,7 +2254,7 @@ msgstr ""
 msgid "This link is taking you to the following website:"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:124
+#: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
 msgstr ""
 
@@ -2262,9 +2279,9 @@ msgstr ""
 msgid "Transformations"
 msgstr ""
 
+#: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/post-thread/PostThreadItem.tsx:708
-#: src/view/com/util/forms/PostDropdownBtn.tsx:101
+#: src/view/com/util/forms/PostDropdownBtn.tsx:103
 msgid "Translate"
 msgstr ""
 
@@ -2308,7 +2325,7 @@ msgstr ""
 msgid "Unmute Account"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+#: src/view/com/util/forms/PostDropdownBtn.tsx:149
 msgid "Unmute thread"
 msgstr ""
 
