@@ -78,7 +78,7 @@ export async function createServer(
   })
 
   const pic = fs.readFileSync(
-    path.join(__dirname, '..', 'assets', 'default-avatar.jpg'),
+    path.join(__dirname, '..', 'assets', 'default-avatar.png'),
   )
 
   return {
