@@ -188,7 +188,8 @@ let PostThreadItemLoaded = ({
   }, [post.uri, post.author])
   const repostsTitle = 'Reposts of this post'
   const isSelfLabeledPost =
-    moderation.decisions.post.cause?.source?.type === 'user'
+    moderation.decisions.post.cause?.type === 'label' &&
+    moderation.decisions.post.cause.label.src === currentAccount?.did
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
