@@ -58,6 +58,7 @@ function Hooks() {
   })
   const {heading} = useStyles({
     heading: {
+      color: 'l7',
       fontSize: 'l',
       fontWeight: 'bold',
       gtTablet: {
@@ -84,15 +85,57 @@ export function DebugScreen() {
         <Box pa="xl" gap="xxl">
           <ThemeSelector />
 
-          <Box row gap="m">
-            <Box column bg="l0" h={60} />
-            <Box column bg="l1" h={60} />
-            <Box column bg="l2" h={60} />
-            <Box column bg="l3" h={60} />
-            <Box column bg="l4" h={60} />
-            <Box column bg="l5" h={60} />
-            <Box column bg="l6" h={60} />
-            <Box column bg="l7" h={60} />
+          <Box>
+            <H3 pb="s" fontWeight="bold">
+              Colors
+            </H3>
+            <Box row gap="m">
+              <Box column bg="l0" h={60} />
+              <Box column bg="l1" h={60} />
+              <Box column bg="l2" h={60} />
+              <Box column bg="l3" h={60} />
+              <Box column bg="l4" h={60} />
+              <Box column bg="l5" h={60} />
+              <Box column bg="l6" h={60} />
+              <Box column bg="l7" h={60} />
+            </Box>
+          </Box>
+
+          <Box>
+            <H3 pb="s" fontWeight="bold">
+              Spacing
+            </H3>
+
+            <Box gap="m">
+              <Box row alignItems="center">
+                <Text w={80}>xxs (2px)</Text>
+                <Box flex={1} w="100%" pt="xxs" bg="l3" />
+              </Box>
+              <Box row alignItems="center">
+                <Text w={80}>xs (4px)</Text>
+                <Box flex={1} w="100%" pt="xs" bg="l3" />
+              </Box>
+              <Box row alignItems="center">
+                <Text w={80}>s (8px)</Text>
+                <Box flex={1} w="100%" pt="s" bg="l3" />
+              </Box>
+              <Box row alignItems="center">
+                <Text w={80}>m (12px)</Text>
+                <Box flex={1} w="100%" pt="m" bg="l3" />
+              </Box>
+              <Box row alignItems="center">
+                <Text w={80}>l (18px)</Text>
+                <Box flex={1} w="100%" pt="l" bg="l3" />
+              </Box>
+              <Box row alignItems="center">
+                <Text w={80}>xl (24px)</Text>
+                <Box flex={1} w="100%" pt="xl" bg="l3" />
+              </Box>
+              <Box row alignItems="center">
+                <Text w={80}>xxl (32px)</Text>
+                <Box flex={1} w="100%" pt="xxl" bg="l3" />
+              </Box>
+            </Box>
           </Box>
 
           <BreakpointDebugger />

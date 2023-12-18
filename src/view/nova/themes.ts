@@ -119,7 +119,7 @@ export const light = createTheme({
   },
   macros: {
     /** Shorthand for `flexDirection: 'row'` */
-    row: (_: boolean) => ({flexDirection: 'row'}),
+    row: (_: boolean) => ({flexDirection: 'row', flex: 1}),
     /**
      * Shorthand for `flex: 1`.
      *
