@@ -132,7 +132,9 @@ export const light = createTheme({
      *   </Box>
      * </Box>
      */
-    column: (_: boolean) => ({flex: 1}),
+    column: (span: boolean | number) => ({
+      flex: typeof span === 'number' ? span : 1,
+    }),
     /** Shorthand for `position: 'absolute'` */
     abs: (_: boolean) => ({position: 'absolute'}),
     /** Shorthand for `StyleSheet.absoluteFillObject` */

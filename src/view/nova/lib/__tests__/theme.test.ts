@@ -20,6 +20,9 @@ const theme = createTheme({
   },
   macros: {
     caps: (_: boolean) => ({textTransform: 'uppercase'}),
+    column: (span: boolean | number) => ({
+      flex: typeof span === 'number' ? span : 1,
+    }),
   },
   breakpoints: {
     gtPhone: 640,
@@ -138,6 +141,17 @@ describe('macros', () => {
     )
 
     expect(styles).toEqual({})
+  })
+
+  test('custom', () => {
+    const {styles} = theme.style(
+      {
+        column: 2,
+      },
+      [],
+    )
+
+    expect(styles).toEqual({flex: 2})
   })
 })
 

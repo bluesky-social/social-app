@@ -139,7 +139,7 @@ export function DebugScreen() {
 
               <Box row gap="s">
                 <Box column pa="s" bg="l6" debug />
-                <Box column pa="s" bg="l6" debug flex={2} />
+                <Box column={2} pa="s" bg="l6" debug />
                 <Box column pa="s" bg="l6" />
               </Box>
             </Box>

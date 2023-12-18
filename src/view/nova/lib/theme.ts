@@ -344,7 +344,7 @@ export const createTheme = <
         styles = {
           ...styles,
           // @ts-ignore no index sig, it's fine
-          ...(rawProps[prop] === true ? macros[prop](value, tokens) : {}),
+          ...(rawProps[prop] !== false ? macros[prop](value, tokens) : {}),
         }
       } else if (breakpoints[prop]) {
         for (const b of Object.keys(breakpoints)) {
