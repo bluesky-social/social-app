@@ -8,7 +8,7 @@ import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
-import {colors, s} from 'lib/styles'
+import {s} from 'lib/styles'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
@@ -580,7 +580,7 @@ function AboutSection({
             onPress={onToggleLiked}
             style={{paddingHorizontal: 10}}>
             {isLiked ? (
-              <HeartIconSolid size={19} style={styles.liked} />
+              <HeartIconSolid size={19} style={s.likeColor} />
             ) : (
               <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
             )}
@@ -622,9 +622,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 50,
     marginLeft: 6,
-  },
-  liked: {
-    color: colors.red3,
   },
   notFoundContainer: {
     margin: 10,
