@@ -82,7 +82,7 @@ export function ModalsContainer() {
 
   useEffect(() => {
     if (isModalActive) {
-      bottomSheetRef.current?.expand()
+      bottomSheetRef.current?.snapToIndex(0)
     } else {
       bottomSheetRef.current?.close()
     }

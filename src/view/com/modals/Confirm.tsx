@@ -16,7 +16,7 @@ import {msg} from '@lingui/macro'
 import type {ConfirmModal} from '#/state/modals'
 import {useModalControls} from '#/state/modals'
 
-export const snapPoints = ['50%', '50%']
+export const snapPoints = ['50%']
 
 export function Component({
   title,
