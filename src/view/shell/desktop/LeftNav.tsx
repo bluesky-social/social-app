@@ -409,7 +409,7 @@ export function DesktopLeftNav() {
                 style={pal.text}
               />
             }
-            label="Profile"
+            label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
@@ -515,7 +515,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 140,
     borderRadius: 24,
     paddingTop: 10,
     paddingBottom: 12, // visually aligns the text vertically inside the button
