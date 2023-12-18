@@ -63,7 +63,7 @@ export const SplashScreen = ({
             <Logo width={92} fill="sky" />
 
             <View style={{paddingTop: 40, paddingBottom: 20}}>
-              <Logotype width={161} />
+              <Logotype width={161} fill={pal.text.color} />
             </View>
 
             <View testID="signinOrCreateAccount" style={styles.btns}>
