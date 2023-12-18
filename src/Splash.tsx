@@ -49,6 +49,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const intro = useSharedValue(0)
   const outroLogo = useSharedValue(0)
   const outroApp = useSharedValue(0)
+  const outroAppOpacity = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
   const isReady = props.isReady && isImageLoaded
@@ -62,8 +63,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         {
           scale: interpolate(
             outroLogo.value,
-            [0, 0.06, 0.08, 1],
-            [1, 0.8, 0.8, 400],
+            [0, 0.08, 1],
+            [1, 0.8, 400],
             'clamp',
           ),
         },
@@ -79,7 +80,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           scale: interpolate(outroApp.value, [0, 1], [1.1, 1], 'clamp'),
         },
       ],
-      opacity: interpolate(outroApp.value, [0, 0.9, 1], [0, 1, 1], 'clamp'),
+      opacity: interpolate(
+        outroAppOpacity.value,
+        [0, 0.08, 0.15, 1],
+        [0, 0, 1, 1],
+        'clamp',
+      ),
     }
   })
 
@@ -92,29 +98,30 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
       intro.value = withTiming(
         1,
-        {duration: 200, easing: Easing.out(Easing.cubic)},
+        {duration: 400, easing: Easing.out(Easing.cubic)},
         async () => {
           // set these values to check animation at specific point
           // outroLogo.value = 0.1
           // outroApp.value = 0.1
           outroLogo.value = withTiming(
             1,
-            {duration: 1000, easing: Easing.in(Easing.cubic)},
+            {duration: 1200, easing: Easing.in(Easing.cubic)},
             () => {
               runOnJS(onFinish)()
             },
           )
-          outroApp.value = withTiming(
-            1,
-            {duration: 1000, easing: Easing.inOut(Easing.cubic)},
-            () => {
-              runOnJS(onFinish)()
-            },
-          )
+          outroApp.value = withTiming(1, {
+            duration: 1200,
+            easing: Easing.inOut(Easing.cubic),
+          })
+          outroAppOpacity.value = withTiming(1, {
+            duration: 1200,
+            easing: Easing.in(Easing.cubic),
+          })
         },
       )
     }
-  }, [onFinish, intro, outroLogo, outroApp, isReady])
+  }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
 
   const onLoadEnd = useCallback(() => {
     setIsImageLoaded(true)
