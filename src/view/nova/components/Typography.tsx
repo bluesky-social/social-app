@@ -3,7 +3,7 @@ import {styled} from '#/view/nova/system'
 import {web} from '#/view/nova/util/platform'
 
 export const Text = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 's',
 })
 
@@ -12,7 +12,7 @@ export const Text = styled(RNText, {
  * @see https://docs.expo.dev/develop/user-interface/fonts/
  */
 export const H1 = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 'l',
   gtMobile: {
     fontSize: 'xl',
@@ -23,7 +23,7 @@ export const H1 = styled(RNText, {
   }),
 })
 export const H2 = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 'm',
   gtMobile: {
     fontSize: 'l',
@@ -34,7 +34,7 @@ export const H2 = styled(RNText, {
   }),
 })
 export const H3 = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 'm',
   ...web({
     role: 'heading',
@@ -42,7 +42,7 @@ export const H3 = styled(RNText, {
   }),
 })
 export const H4 = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 's',
   ...web({
     role: 'heading',
@@ -50,7 +50,7 @@ export const H4 = styled(RNText, {
   }),
 })
 export const H5 = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 'xs',
   ...web({
     role: 'heading',
@@ -58,7 +58,7 @@ export const H5 = styled(RNText, {
   }),
 })
 export const H6 = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 'xxs',
   ...web({
     role: 'heading',
@@ -66,7 +66,7 @@ export const H6 = styled(RNText, {
   }),
 })
 export const P = styled(RNText, {
-  color: 'l8',
+  color: 'l7',
   fontSize: 's',
   ...web({
     role: 'paragraph',

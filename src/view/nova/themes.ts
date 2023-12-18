@@ -1,15 +1,24 @@
 import {createTheme} from './lib/theme'
 
-const palette = {
+const BLUE_HUE = 210
+const GRAYSCALE_SATURATION = 12
+
+export const palette = {
   white: '#FFFFFF',
-  black: '#0A0B0D',
-  gray1: '#F7F9FC',
-  gray2: '#E4E8EE',
-  gray3: '#CED5DE',
-  gray4: '#828A99',
-  gray5: '#4D5564',
-  gray6: '#1D2126',
-  blue: '#1185FE',
+
+  /**
+   * Mathematical scale of grays, from lightest to darkest, all based on the
+   * primary blue color
+   */
+  gray1: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 95%)`,
+  gray2: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 85%)`,
+  gray3: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 75%)`,
+  gray4: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 30%)`,
+  gray5: `hsl(${BLUE_HUE} ${GRAYSCALE_SATURATION}%, 20%)`,
+  gray6: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 10%)`,
+  black: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 5%)`,
+
+  blue: `hsl(${BLUE_HUE}, 100%, 53%)`,
   green: '#54D469',
   red: '#FB4566',
 }
@@ -27,14 +36,14 @@ export const light = createTheme({
     },
     color: {
       primary: palette.blue,
-      l1: palette.white,
-      l2: palette.gray1,
-      l3: palette.gray2,
-      l4: palette.gray3,
-      l5: palette.gray4,
-      l6: palette.gray5,
-      l7: palette.gray6,
-      l8: palette.black,
+      l0: palette.white,
+      l1: palette.gray1,
+      l2: palette.gray2,
+      l3: palette.gray3,
+      l4: palette.gray4,
+      l5: palette.gray5,
+      l6: palette.gray6,
+      l7: palette.black,
     },
     fontSize: {
       xxs: 10,
@@ -53,6 +62,17 @@ export const light = createTheme({
       l: 18,
       xl: 22,
       xxl: 26,
+    },
+    borderRadius: {
+      s: 8,
+      m: 12,
+      xl: 36,
+      round: 999,
+    },
+    fontWeight: {
+      normal: '400',
+      semi: '700',
+      bold: '900',
     },
   },
   properties: {
@@ -149,14 +169,14 @@ export const dark = createTheme({
     ...light.config.tokens,
     color: {
       ...light.config.tokens.color,
-      l1: palette.black,
-      l2: palette.gray6,
-      l3: palette.gray5,
-      l4: palette.gray4,
-      l5: palette.gray3,
-      l6: palette.gray2,
-      l7: palette.gray1,
-      l8: palette.white,
+      l0: palette.black,
+      l1: palette.gray6,
+      l2: palette.gray5,
+      l3: palette.gray4,
+      l4: palette.gray3,
+      l5: palette.gray2,
+      l6: palette.gray1,
+      l7: palette.white,
     },
   },
 })
