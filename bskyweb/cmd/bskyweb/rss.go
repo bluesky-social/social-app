@@ -10,17 +10,20 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// We don't actually populate the title for "posts".
+// Some background: https://book.micro.blog/rss-for-microblogs/
 type Item struct {
-	Title       string `xml:"title"`
-	Link        string `xml:"link"`
-	Description string `xml:"description"`
-	PubDate     string `xml:"pubDate"`
-	GUID        string `xml:"guid"`
+	Title       string `xml:"title,omitempty"`
+	Link        string `xml:"link,omitempty"`
+	Description string `xml:"description,omitempty"`
+	PubDate     string `xml:"pubDate,omitempty"`
+	Author      string `xml:"author,omitempty"`
+	GUID        string `xml:"guid,omitempty"`
 }
 
 type rss struct {
 	Version     string `xml:"version,attr"`
-	Description string `xml:"channel>description"`
+	Description string `xml:"channel>description,omitempty"`
 	Link        string `xml:"channel>link"`
 	Title       string `xml:"channel>title"`
 
@@ -69,10 +72,10 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 			continue
 		}
 		posts = append(posts, Item{
-			Title:       "@" + pv.Handle + " post",
 			Link:        fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, aturi.RecordKey().String()),
 			Description: rec.Text,
 			PubDate:     rec.CreatedAt,
+			Author:      "@" + pv.Handle,
 			GUID:        aturi.String(),
 		})
 	}
