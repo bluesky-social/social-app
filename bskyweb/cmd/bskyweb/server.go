@@ -15,7 +15,8 @@ import (
 	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
-	cliutil "github.com/bluesky-social/indigo/cmd/gosky/util"
+	"github.com/bluesky-social/indigo/atproto/syntax"
+	"github.com/bluesky-social/indigo/util/cliutil"
 	"github.com/bluesky-social/indigo/xrpc"
 	"github.com/bluesky-social/social-app/bskyweb"
 
@@ -285,73 +286,87 @@ func (srv *Server) WebHome(c echo.Context) error {
 }
 
 func (srv *Server) WebPost(c echo.Context) error {
+	ctx := c.Request().Context()
 	data := pongo2.Context{}
-	handle := c.Param("handle")
-	rkey := c.Param("rkey")
-	// sanity check argument
-	if len(handle) > 4 && len(handle) < 128 && len(rkey) > 0 {
-		ctx := c.Request().Context()
-		// requires two fetches: first fetch profile (!)
-		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
-		if err != nil {
-			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
-		} else {
-			unauthedViewingOkay := true
-			for _, label := range pv.Labels {
-				if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-					unauthedViewingOkay = false
-				}
-			}
 
-			if unauthedViewingOkay {
-				did := pv.Did
-				data["did"] = did
+	// sanity check arguments. don't 4xx, just let app handle if not expected format
+	rkeyParam := c.Param("rkey")
+	rkey, err := syntax.ParseRecordKey(rkeyParam)
+	if err != nil {
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	handleParam := c.Param("handle")
+	handle, err := syntax.ParseHandle(handleParam)
+	if err != nil {
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	handle = handle.Normalize()
 
-				// then fetch the post thread (with extra context)
-				uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
-				tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, uri)
-				if err != nil {
-					log.Warnf("failed to fetch post: %s\t%v", uri, err)
-				} else {
-					req := c.Request()
-					postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
-					data["postView"] = postView
-					data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-					if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
-						data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
-					}
-				}
-			}
+	// requires two fetches: first fetch profile (!)
+	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle.String())
+	if err != nil {
+		log.Warnf("failed to fetch handle: %s\t%v", handle, err)
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	unauthedViewingOkay := true
+	for _, label := range pv.Labels {
+		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+			unauthedViewingOkay = false
 		}
+	}
 
+	if !unauthedViewingOkay {
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	did := pv.Did
+	data["did"] = did
+
+	// then fetch the post thread (with extra context)
+	uri := fmt.Sprintf("at://%s/app.bsky.feed.post/%s", did, rkey)
+	tpv, err := appbsky.FeedGetPostThread(ctx, srv.xrpcc, 1, 0, uri)
+	if err != nil {
+		log.Warnf("failed to fetch post: %s\t%v", uri, err)
+		return c.Render(http.StatusOK, "post.html", data)
+	}
+	req := c.Request()
+	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
+	data["postView"] = postView
+	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+	if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
+		data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
 	}
 	return c.Render(http.StatusOK, "post.html", data)
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {
+	ctx := c.Request().Context()
 	data := pongo2.Context{}
-	handle := c.Param("handle")
-	// sanity check argument
-	if len(handle) > 4 && len(handle) < 128 {
-		ctx := c.Request().Context()
-		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle)
-		if err != nil {
-			log.Warnf("failed to fetch handle: %s\t%v", handle, err)
-		} else {
-			unauthedViewingOkay := true
-			for _, label := range pv.Labels {
-				if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
-					unauthedViewingOkay = false
-				}
-			}
-			if unauthedViewingOkay {
-				req := c.Request()
-				data["profileView"] = pv
-				data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-			}
+
+	// sanity check arguments. don't 4xx, just let app handle if not expected format
+	handleParam := c.Param("handle")
+	handle, err := syntax.ParseHandle(handleParam)
+	if err != nil {
+		return c.Render(http.StatusOK, "profile.html", data)
+	}
+	handle = handle.Normalize()
+
+	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle.String())
+	if err != nil {
+		log.Warnf("failed to fetch handle: %s\t%v", handle, err)
+		return c.Render(http.StatusOK, "profile.html", data)
+	}
+	unauthedViewingOkay := true
+	for _, label := range pv.Labels {
+		if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+			unauthedViewingOkay = false
 		}
 	}
-
+	if !unauthedViewingOkay {
+		return c.Render(http.StatusOK, "profile.html", data)
+	}
+	req := c.Request()
+	data["profileView"] = pv
+	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	return c.Render(http.StatusOK, "profile.html", data)
 }
 
