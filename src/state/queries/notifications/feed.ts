@@ -16,7 +16,7 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -49,6 +49,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const threadMutes = useMutedThreads()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
+  const lastPageCountRef = useRef(0)
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -104,24 +105,26 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
 
   useEffect(() => {
     const {isFetching, hasNextPage, data} = query
-
-    let count = 0
-    let numEmpties = 0
-    for (const page of data?.pages || []) {
-      if (!page.items.length) {
-        numEmpties++
-      }
-      count += page.items.length
+    if (isFetching || !hasNextPage) {
+      return
     }
 
+    // avoid double-fires of fetchNextPage()
     if (
-      !isFetching &&
-      hasNextPage &&
-      count < PAGE_SIZE &&
-      numEmpties < 3 &&
-      (data?.pages.length || 0) < 6
+      lastPageCountRef.current !== 0 &&
+      lastPageCountRef.current === data?.pages?.length
     ) {
+      return
+    }
+
+    // fetch next page if we haven't gotten a full page of content
+    let count = 0
+    for (const page of data?.pages || []) {
+      count += page.items.length
+    }
+    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
       query.fetchNextPage()
+      lastPageCountRef.current = data?.pages?.length || 0
     }
   }, [query])
 

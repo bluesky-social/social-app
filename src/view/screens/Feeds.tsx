@@ -499,6 +499,7 @@ export function FeedsScreen(_props: Props) {
         onEndReached={onEndReached}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
+        scrollIndicatorInsets={{right: 1}}
       />
 
       {hasSession && (

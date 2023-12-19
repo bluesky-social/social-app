@@ -10,6 +10,7 @@ help: ## Print info about all commands
 
 .PHONY: build-web
 build-web: ## Compile web bundle, copy to bskyweb directory
+	yarn intl:build
 	yarn build-web
 
 .PHONY: test

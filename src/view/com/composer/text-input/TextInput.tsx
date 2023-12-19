@@ -215,7 +215,13 @@ export const TextInput = forwardRef(function TextInputImpl(
         autoFocus={true}
         allowFontScaling
         multiline
-        style={[pal.text, styles.textInput, styles.textInputFormatting]}
+        numberOfLines={4}
+        style={[
+          pal.text,
+          styles.textInput,
+          styles.textInputFormatting,
+          {textAlignVertical: 'top'},
+        ]}
         {...props}>
         {textDecorated}
       </PasteInput>
