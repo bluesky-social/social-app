@@ -4,6 +4,7 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 
 import {useSetColorMode} from '#/state/shell'
 import {
+  ThemeProvider as Alf,
   useBreakpoints,
   useStyle,
   useStyles,
@@ -82,7 +83,7 @@ export function DebugScreen() {
   return (
     <ScrollView>
       <CenteredView style={backgroundStyles}>
-        <Box pa="xl" gap="xxl">
+        <Box pa="xl" pb={200} gap="xxl">
           <ThemeSelector />
 
           <Box>
@@ -212,6 +213,25 @@ export function DebugScreen() {
           </Box>
 
           <Hooks />
+
+          <Alf theme="light">
+            <Box bg="l0" pa="m">
+              <H3 pb="s" fontWeight="bold">
+                Nested theme context.
+              </H3>
+              <Text pb="s">This theme is always light.</Text>
+              <Box row gap="m">
+                <Box column bg="l0" h={60} />
+                <Box column bg="l1" h={60} />
+                <Box column bg="l2" h={60} />
+                <Box column bg="l3" h={60} />
+                <Box column bg="l4" h={60} />
+                <Box column bg="l5" h={60} />
+                <Box column bg="l6" h={60} />
+                <Box column bg="l7" h={60} />
+              </Box>
+            </Box>
+          </Alf>
         </Box>
       </CenteredView>
     </ScrollView>
