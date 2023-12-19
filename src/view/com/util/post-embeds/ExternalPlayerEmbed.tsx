@@ -62,7 +62,7 @@ export function ExternalPlayerEmbed({
   )
 }
 
-// This renders the overlay when the player is either inactive or loading
+// This renders the overlay when the player is either inactive or loading as a separate layer
 function PlaceholderOverlay({
   link,
   isLoading,
@@ -84,7 +84,7 @@ function PlaceholderOverlay({
         accessibilityLabel={link.title}
         accessibilityHint=""
         onPress={onPress}
-        style={styles.overlayContainer}>
+        style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
           <FontAwesomeIcon icon="play" size={32} color="white" />
         ) : (
@@ -95,6 +95,7 @@ function PlaceholderOverlay({
   )
 }
 
+// This renders the webview/youtube player as a separate layer
 function Player({
   height,
   params,
@@ -112,10 +113,11 @@ function Player({
     [params.playerUri],
   )
 
+  // Don't show the player until it is active
   if (!isPlayerActive) return null
 
   return (
-    <View style={[styles.layer, styles.playerContainer]}>
+    <View style={[styles.layer, styles.playerLayer]}>
       <EventStopper>
         {isNative && params.type === 'youtube_video' ? (
           <YoutubePlayer
@@ -136,9 +138,7 @@ function Player({
               source={{uri: params.playerUri}}
               onLoad={onLoad}
               setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-              style={{
-                backgroundColor: 'transparent',
-              }}
+              style={[styles.webview, styles.topRadius]}
             />
           </View>
         )}
@@ -147,6 +147,7 @@ function Player({
   )
 }
 
+// This renders the player area and handles the logic for when to show the player and when to show the overlay
 function PlayerView({
   link,
   params,
@@ -220,14 +221,15 @@ function PlayerView({
   }, [params.type, dim])
 
   // measure the layout to set sizing
-  const onLayout = (event: {
-    nativeEvent: {layout: {width: any; height: any}}
-  }) => {
-    setDim({
-      width: event.nativeEvent.layout.width,
-      height: event.nativeEvent.layout.height,
-    })
-  }
+  const onLayout = React.useCallback(
+    (event: {nativeEvent: {layout: {width: any; height: any}}}) => {
+      setDim({
+        width: event.nativeEvent.layout.width,
+        height: event.nativeEvent.layout.height,
+      })
+    },
+    [],
+  )
 
   return (
     <View
@@ -237,12 +239,13 @@ function PlayerView({
       onLayout={onLayout}>
       {link.thumb && (!isPlayerActive || isLoading) && (
         <Image
-          style={{
-            width: dim.width,
-            height,
-            borderTopRightRadius: 6,
-            borderTopLeftRadius: 6,
-          }}
+          style={[
+            {
+              width: dim.width,
+              height,
+            },
+            styles.topRadius,
+          ]}
           source={{uri: link.thumb}}
           accessibilityIgnoresInvertColors
         />
@@ -279,6 +282,10 @@ const styles = StyleSheet.create({
   description: {
     marginTop: 4,
   },
+  topRadius: {
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
   layer: {
     position: 'absolute',
     top: 0,
@@ -286,18 +293,19 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
-  overlayLayer: {
-    zIndex: 2,
-  },
   overlayContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
-    borderTopRightRadius: 6,
-    borderTopLeftRadius: 6,
   },
-  playerContainer: {
+  overlayLayer: {
+    zIndex: 2,
+  },
+  playerLayer: {
     zIndex: 3,
+  },
+  webview: {
+    backgroundColor: 'transparent',
   },
 })
