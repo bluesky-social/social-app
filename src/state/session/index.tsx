@@ -189,6 +189,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
         logger.DebugContext.session,
       )
+      track('Try Create Account')
 
       const agent = new BskyAgent({service})
 
@@ -231,6 +232,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
         logger.DebugContext.session,
       )
+      track('Create Account')
     },
     [upsertAccount, queryClient],
   )

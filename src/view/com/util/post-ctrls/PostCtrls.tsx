@@ -10,7 +10,7 @@ import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {pluralize} from 'lib/strings/helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {RepostButton} from './RepostButton'
@@ -180,7 +180,7 @@ let PostCtrls = ({
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         {post.viewer?.like ? (
-          <HeartIconSolid style={styles.ctrlIconLiked} size={big ? 22 : 16} />
+          <HeartIconSolid style={s.likeColor} size={big ? 22 : 16} />
         ) : (
           <HeartIcon
             style={[defaultCtrlColor, big ? styles.mt1 : undefined]}
@@ -193,7 +193,7 @@ let PostCtrls = ({
             testID="likeCount"
             style={
               post.viewer?.like
-                ? [s.bold, s.red3, s.f15, s.ml5]
+                ? [s.bold, s.likeColor, s.f15, s.ml5]
                 : [defaultCtrlColor, s.f15, s.ml5]
             }>
             {post.likeCount}
@@ -232,9 +232,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 5,
     paddingRight: 5,
-  },
-  ctrlIconLiked: {
-    color: colors.like,
   },
   mt1: {
     marginTop: 1,

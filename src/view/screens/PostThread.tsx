@@ -24,11 +24,13 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {CenteredView} from '../com/util/Views'
 import {useComposerControls} from '#/state/shell/composer'
+import {useSession} from '#/state/session'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {
   const queryClient = useQueryClient()
   const {_} = useLingui()
+  const {hasSession} = useSession()
   const {fabMinimalShellTransform} = useMinimalShellMode()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
@@ -89,7 +91,7 @@ export function PostThreadScreen({route}: Props) {
           />
         )}
       </View>
-      {isMobile && canReply && (
+      {isMobile && canReply && hasSession && (
         <Animated.View
           style={[
             styles.prompt,
