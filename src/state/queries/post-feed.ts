@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -78,6 +78,7 @@ export interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
   feed: AppBskyFeedDefs.FeedViewPost[]
+  fetchedAt: number
 }
 
 export interface FeedPage {
@@ -85,6 +86,7 @@ export interface FeedPage {
   tuner: FeedTuner | NoopFeedTuner
   cursor: string | undefined
   slices: FeedPostSlice[]
+  fetchedAt: number
 }
 
 const PAGE_SIZE = 30
@@ -98,11 +100,12 @@ export function usePostFeedQuery(
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
-  const lastRun = React.useRef<{
+  const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
+  const lastPageCountRef = useRef(0)
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = React.useMemo(
@@ -152,6 +155,7 @@ export function usePostFeedQuery(
         api,
         cursor: res.cursor,
         feed: res.feed,
+        fetchedAt: Date.now(),
       }
     },
     initialPageParam: undefined,
@@ -214,6 +218,7 @@ export function usePostFeedQuery(
               api: page.api,
               tuner,
               cursor: page.cursor,
+              fetchedAt: page.fetchedAt,
               slices: tuner
                 .tune(page.feed)
                 .map(slice => {
@@ -279,26 +284,28 @@ export function usePostFeedQuery(
 
   useEffect(() => {
     const {isFetching, hasNextPage, data} = query
+    if (isFetching || !hasNextPage) {
+      return
+    }
 
+    // avoid double-fires of fetchNextPage()
+    if (
+      lastPageCountRef.current !== 0 &&
+      lastPageCountRef.current === data?.pages?.length
+    ) {
+      return
+    }
+
+    // fetch next page if we haven't gotten a full page of content
     let count = 0
-    let numEmpties = 0
     for (const page of data?.pages || []) {
-      if (page.slices.length === 0) {
-        numEmpties++
-      }
       for (const slice of page.slices) {
         count += slice.items.length
       }
     }
-
-    if (
-      !isFetching &&
-      hasNextPage &&
-      count < PAGE_SIZE &&
-      numEmpties < 3 &&
-      (data?.pages.length || 0) < 6
-    ) {
+    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
       query.fetchNextPage()
+      lastPageCountRef.current = data?.pages?.length || 0
     }
   }, [query])
 

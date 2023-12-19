@@ -27,11 +27,11 @@ export const SplashScreen = ({
           <Logo width={92} fill="sky" />
 
           <View style={{paddingTop: 40, paddingBottom: 6}}>
-            <Logotype width={161} />
+            <Logotype width={161} fill={pal.text.color} />
           </View>
 
           <Text type="lg-medium" style={[pal.textLight]}>
-            <Trans>What's next?</Trans>
+            <Trans>What's up?</Trans>
           </Text>
         </View>
         <View testID="signinOrCreateAccount" style={styles.btns}>
