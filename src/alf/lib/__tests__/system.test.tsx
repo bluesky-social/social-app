@@ -9,7 +9,9 @@ import {createSystem} from '../system'
 jest.mock('react-native', () => ({
   Dimensions: {
     get: () => ({width: 0, height: 0}),
-    addEventListener() {},
+    addEventListener() {
+      return () => {}
+    },
   },
   StyleSheet: {
     create(style: any) {
