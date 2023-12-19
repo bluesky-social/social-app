@@ -39,6 +39,17 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
     ref,
   ) {
     const [currentPage, setCurrentPage] = React.useState(0)
+    const [headerOnlyHeight, setHeaderOnlyHeight] = React.useState(0)
+
+    const onHeaderOnlyLayout = React.useCallback(
+      (evt: LayoutChangeEvent) => {
+        const height = evt.nativeEvent.layout.height
+        if (height > 0) {
+          setHeaderOnlyHeight(Math.round(height))
+        }
+      },
+      [setHeaderOnlyHeight],
+    )
 
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
@@ -48,12 +59,20 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             renderHeader={renderHeader}
             currentPage={currentPage}
             onCurrentPageSelected={onCurrentPageSelected}
+            onHeaderOnlyLayout={onHeaderOnlyLayout}
             onSelect={props.onSelect}
             testID={testID}
           />
         )
       },
-      [items, renderHeader, currentPage, onCurrentPageSelected, testID],
+      [
+        items,
+        renderHeader,
+        currentPage,
+        onCurrentPageSelected,
+        onHeaderOnlyLayout,
+        testID,
+      ],
     )
 
     const onPageSelectedInner = React.useCallback(
@@ -76,6 +95,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         onPageSelected={onPageSelectedInner}
         onPageSelecting={onPageSelecting}
         renderTabBar={renderTabBar}
+        headerOnlyHeight={headerOnlyHeight}
         tabBarPosition="top">
         {toArray(children)
           .filter(Boolean)
@@ -97,6 +117,7 @@ let PagerTabBar = ({
   testID,
   renderHeader,
   onCurrentPageSelected,
+  onHeaderOnlyLayout,
   onSelect,
 }: {
   currentPage: number
@@ -110,7 +131,9 @@ let PagerTabBar = ({
   const {isMobile} = useWebMediaQueries()
   return (
     <>
-      <View style={[!isMobile && styles.headerContainerDesktop, pal.border]}>
+      <View
+        style={[!isMobile && styles.headerContainerDesktop, pal.border]}
+        onLayout={onHeaderOnlyLayout}>
         {renderHeader?.()}
       </View>
       <View
