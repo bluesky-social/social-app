@@ -25,13 +25,13 @@ const colorVariants: {
       bg: 'primary',
     },
     pressableHovered: {
-      bg: 'primaryLight',
+      bg: 'primary',
     },
     pressableFocused: {
-      bg: 'primaryLight',
+      bg: 'primary',
     },
     pressablePressed: {
-      bg: 'primaryLight',
+      bg: 'primary',
     },
     text: {
       color: 'white',

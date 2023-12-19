@@ -18,10 +18,7 @@ export const palette = {
   gray6: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 10%)`,
   black: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 5%)`,
 
-  blueLight: `hsl(${BLUE_HUE}, 100%, 63%)`,
   blue: `hsl(${BLUE_HUE}, 100%, 53%)`,
-  blueDark: `hsl(${BLUE_HUE}, 100%, 43%)`,
-
   green: '#54D469',
   red: '#FB4566',
 }
@@ -38,10 +35,9 @@ export const light = createTheme({
       xxl: 32,
     },
     color: {
-      primaryLight: palette.blueLight,
       primary: palette.blue,
-      primaryDark: palette.blueDark,
-
+      positive: palette.green,
+      negative: palette.red,
       l0: palette.white,
       l1: palette.gray1,
       l2: palette.gray2,
