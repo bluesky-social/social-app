@@ -104,6 +104,7 @@ export function createSystem<
     )
   }
 
+  // TODO we don't get full intellisense from this hook, find out why
   function useStyles<O extends Record<string, ResponsiveStyleProps>>(
     styles: O,
   ): {
