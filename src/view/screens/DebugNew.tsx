@@ -16,7 +16,7 @@ import {
   H4,
   H5,
   H6,
-} from '#/view/nova'
+} from '#/alf'
 
 function ThemeSelector() {
   const setColorMode = useSetColorMode()

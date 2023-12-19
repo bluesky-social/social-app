@@ -7,7 +7,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 
 import 'view/icons'
 
-import {ThemeProvider as Nova} from '#/view/nova'
+import {ThemeProvider as Alf} from '#/alf'
 import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
 import {Shell} from 'view/shell/index'
@@ -29,7 +29,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
-import {useColorModeTheme} from '#/view/nova/util/useColorModeTheme'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
@@ -47,7 +47,7 @@ function InnerApp() {
   if (isInitialLoad) return null
 
   return (
-    <Nova theme={theme}>
+    <Alf theme={theme}>
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
@@ -65,7 +65,7 @@ function InnerApp() {
           </UnreadNotifsProvider>
         </LoggedOutViewProvider>
       </React.Fragment>
-    </Nova>
+    </Alf>
   )
 }
 

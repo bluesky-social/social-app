@@ -1,6 +1,6 @@
 import {Text as RNText} from 'react-native'
-import {styled} from '#/view/nova/system'
-import {web} from '#/view/nova/util/platform'
+import {styled} from '#/alf/system'
+import {web} from '#/alf/util/platform'
 
 export const Text = styled(RNText, {
   color: 'l7',

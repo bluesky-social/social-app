@@ -1,3 +1,3 @@
 import {View} from 'react-native'
-import {styled} from '#/view/nova/system'
+import {styled} from '#/alf/system'
 export const Box = styled(View)
