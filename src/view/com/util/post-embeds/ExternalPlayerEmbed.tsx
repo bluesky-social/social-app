@@ -4,6 +4,7 @@ import {
   Dimensions,
   Pressable,
   StyleProp,
+  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -19,6 +20,7 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {isNative} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {Link} from 'view/com/util/Link'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -34,21 +36,133 @@ export function ExternalPlayerEmbed({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
+  return (
+    <View style={[styles.outer, pal.view, pal.border]}>
+      <Player link={link} params={params} />
+      <Link href={link.uri}>
+        <View style={styles.inner}>
+          {!!link.title && (
+            <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
+              {link.title}
+            </Text>
+          )}
+          <Text type="sm" numberOfLines={1} style={[pal.textLight, styles.uri]}>
+            {link.uri}
+          </Text>
+          {!!link.description && (
+            <Text
+              type="sm"
+              numberOfLines={2}
+              style={[pal.text, styles.description]}>
+              {link.description}
+            </Text>
+          )}
+        </View>
+      </Link>
+    </View>
+  )
+}
+
+function PlaceholderOverlay({
+  height,
+  width,
+  link,
+  isLoading,
+  isPlayerActive,
+  onPress,
+}: {
+  height: number
+  width: number
+  link: AppBskyEmbedExternal.ViewExternal
+  isLoading: boolean
+  isPlayerActive: boolean
+  onPress: () => void
+}) {
+  if (!isLoading && isPlayerActive) return null
+
+  return (
+    <View>
+      {link.thumb && (
+        <Image
+          style={{
+            width,
+            height,
+            borderTopRightRadius: 6,
+            borderTopLeftRadius: 6,
+          }}
+          source={{uri: link.thumb}}
+          accessibilityIgnoresInvertColors
+        />
+      )}
+      <View
+        style={{position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={link.title}
+          accessibilityHint=""
+          onPress={onPress}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0,0,0,0.5)',
+            borderTopRightRadius: 6,
+            borderTopLeftRadius: 6,
+          }}>
+          {!isPlayerActive ? (
+            <FontAwesomeIcon icon="play" size={32} color="white" />
+          ) : (
+            <ActivityIndicator size="large" />
+          )}
+        </Pressable>
+      </View>
+    </View>
+  )
+}
+
+function Player({
+  link,
+  params,
+}: {
+  link: AppBskyEmbedExternal.ViewExternal
+  params: EmbedPlayerParams
+}) {
   const [isPlayerActive, setPlayerActive] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(true)
   const [dim, setDim] = React.useState({
-    width: 0,
-    height: 0,
+    width: 100,
+    height: 100,
   })
 
-  // measure the layout to set sizing
-  const onLayout = (event: {
-    nativeEvent: {layout: {width: any; height: any}}
-  }) => {
-    setDim({
-      width: event.nativeEvent.layout.width,
-      height: event.nativeEvent.layout.height,
+  const navigation = useNavigation<NavigationProp>()
+  const ref = React.useRef<View>(null)
+
+  // watch for leaving the viewport due to scrolling
+  React.useEffect(() => {
+    // This works for scrolling. However, for twitch embeds, if we navigate away from the screen the webview will
+    // continue playing. We need to watch for the blur event
+    const unsubscribe = navigation.addListener('blur', () => {
+      setPlayerActive(false)
     })
-  }
+
+    const interval = setInterval(() => {
+      ref.current?.measure((x, y, w, h, pageX, pageY) => {
+        const window = Dimensions.get('window')
+        const top = pageY
+        const bot = pageY + h
+        const isVisible = isNative
+          ? top >= 0 && bot <= window.height
+          : !(top >= window.height || bot <= 0)
+        if (!isVisible) {
+          setPlayerActive(false)
+        }
+      })
+    }, 1e3)
+    return () => {
+      unsubscribe()
+      clearInterval(interval)
+    }
+  }, [ref, navigation])
 
   // calculate height for the player and the screen size
   const height = React.useMemo(() => {
@@ -70,171 +184,15 @@ export function ExternalPlayerEmbed({
     return dim.width
   }, [params.type, dim])
 
-  if (isPlayerActive) {
-    return (
-      <View style={[{marginTop: 4}, style]} onLayout={onLayout}>
-        <EventStopper>
-          <Player
-            width={dim.width}
-            height={height}
-            link={link}
-            params={params}
-            onLeaveViewport={() => setPlayerActive(false)}
-          />
-        </EventStopper>
-      </View>
-    )
-  }
-
-  return (
-    <Pressable
-      style={[
-        {
-          borderRadius: 8,
-          marginTop: 4,
-        },
-        pal.view,
-        style,
-      ]}
-      onPress={() => setPlayerActive(true)}
-      accessibilityRole="button"
-      accessibilityLabel={link.title}
-      accessibilityHint=""
-      onLayout={onLayout}>
-      <Placeholder
-        width={dim.width}
-        height={height}
-        link={link}
-        params={params}
-        isLoading={false}
-      />
-    </Pressable>
-  )
-}
-
-function Placeholder({
-  width,
-  height,
-  params,
-  link,
-  isLoading,
-}: {
-  width: number
-  height: number
-  link: AppBskyEmbedExternal.ViewExternal
-  params: EmbedPlayerParams
-  isLoading: boolean
-}) {
-  const pal = usePalette('default')
-
-  return (
-    <View>
-      {link.thumb ? (
-        <Image
-          style={{width, height, borderRadius: 6}}
-          source={{uri: link.thumb}}
-          accessibilityIgnoresInvertColors
-        />
-      ) : (
-        <View
-          style={{
-            height: !isLoading ? 70 : height,
-            borderRadius: 6,
-            marginTop: 5,
-          }}
-        />
-      )}
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          width: width === 0 ? '100%' : width,
-          backgroundColor: (pal.viewLight.backgroundColor as string) + 'F6',
-          paddingHorizontal: 20,
-          paddingVertical: 18,
-          borderBottomLeftRadius: 6,
-          borderBottomRightRadius: 6,
-          flexDirection: 'row',
-          gap: 10,
-          borderRadius: link.thumb != null || isLoading ? 0 : 6,
-        }}>
-        <View style={{paddingTop: 6, width: 30}}>
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <FontAwesomeIcon
-              icon="play"
-              size={24}
-              color={pal.text.color as string}
-            />
-          )}
-        </View>
-        <View style={{flex: 1}}>
-          <Text
-            type="lg-bold"
-            numberOfLines={2}
-            style={{color: pal.text.color}}>
-            {link.title || link.uri}
-          </Text>
-          {params.type.startsWith('youtube') && (
-            <Text style={{color: pal.text.color}}>YouTube</Text>
-          )}
-          {params.type.startsWith('twitch') && (
-            <Text style={{color: pal.text.color}}>Twitch.tv</Text>
-          )}
-          {params.type.startsWith('spotify') && (
-            <Text style={{color: pal.text.color}}>Spotify</Text>
-          )}
-        </View>
-      </View>
-    </View>
-  )
-}
-
-function Player({
-  width,
-  height,
-  link,
-  params,
-  onLeaveViewport,
-}: {
-  width: number
-  height: number
-  link: AppBskyEmbedExternal.ViewExternal
-  params: EmbedPlayerParams
-  onLeaveViewport: () => void
-}) {
-  const navigation = useNavigation<NavigationProp>()
-  const ref = React.useRef<View>(null)
-  const [loading, setLoading] = React.useState(true)
-
-  // watch for leaving the viewport due to scrolling
-  React.useEffect(() => {
-    // This works for scrolling. However, for twitch embeds, if we navigate away from the screen the webview will
-    // continue playing. We need to watch for the blur event
-    const unsubscribe = navigation.addListener('blur', () => {
-      onLeaveViewport()
+  // measure the layout to set sizing
+  const onLayout = (event: {
+    nativeEvent: {layout: {width: any; height: any}}
+  }) => {
+    setDim({
+      width: event.nativeEvent.layout.width,
+      height: event.nativeEvent.layout.height,
     })
-
-    const interval = setInterval(() => {
-      ref.current?.measure((x, y, w, h, pageX, pageY) => {
-        const window = Dimensions.get('window')
-        const top = pageY
-        const bot = pageY + h
-        const isVisible = isNative
-          ? top >= 0 && bot <= window.height
-          : !(top >= window.height || bot <= 0)
-        if (!isVisible) {
-          onLeaveViewport()
-        }
-      })
-    }, 1e3)
-    return () => {
-      unsubscribe()
-      clearInterval(interval)
-    }
-  }, [ref, onLeaveViewport, navigation])
+  }
 
   // ensures we only load what's requested
   const onShouldStartLoadWithRequest = React.useCallback(
@@ -243,39 +201,61 @@ function Player({
   )
 
   return (
-    <View ref={ref} style={{height}} collapsable={false}>
-      {isNative && params.type === 'youtube_video' ? (
-        <YoutubePlayer
-          videoId={params.videoId}
-          play
-          height={height}
-          onReady={() => setLoading(false)}
-        />
-      ) : (
-        <WebView
-          javaScriptEnabled={true}
-          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          mediaPlaybackRequiresUserAction={false}
-          allowsInlineMediaPlayback
-          bounces={false}
-          allowsFullscreenVideo
-          source={{uri: params.playerUri}}
-          onLoad={() => setLoading(false)}
-          setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-          style={{backgroundColor: 'transparent'}}
-        />
-      )}
-      {loading && (
-        <View style={{position: 'absolute', left: 0, top: 0}}>
-          <Placeholder
-            width={width}
-            height={height}
-            params={params}
-            link={link}
-            isLoading
-          />
-        </View>
+    <View ref={ref} style={{height}} collapsable={false} onLayout={onLayout}>
+      <PlaceholderOverlay
+        height={height}
+        width={dim.width}
+        link={link}
+        isLoading={isLoading}
+        isPlayerActive={isPlayerActive}
+        onPress={() => setPlayerActive(true)}
+      />
+      {isPlayerActive && (
+        <EventStopper>
+          {isNative && params.type === 'youtube_video' ? (
+            <YoutubePlayer
+              videoId={params.videoId}
+              play
+              height={height}
+              onReady={() => setIsLoading(false)}
+            />
+          ) : (
+            <View style={{height, width: '100%'}}>
+              <WebView
+                javaScriptEnabled={true}
+                onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+                mediaPlaybackRequiresUserAction={false}
+                allowsInlineMediaPlayback
+                bounces={false}
+                allowsFullscreenVideo
+                source={{uri: params.playerUri}}
+                onLoad={() => setIsLoading(false)}
+                setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+                style={{
+                  backgroundColor: 'transparent',
+                }}
+              />
+            </View>
+          )}
+        </EventStopper>
       )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  outer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 4,
+  },
+  inner: {
+    padding: 10,
+  },
+  uri: {
+    marginTop: 2,
+  },
+  description: {
+    marginTop: 4,
+  },
+})
