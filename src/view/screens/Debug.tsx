@@ -1,219 +1,520 @@
 import React from 'react'
-import {View, Text as RNText} from 'react-native'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {ScrollView, View} from 'react-native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
+import {ViewHeader} from '../com/util/ViewHeader'
+import {ThemeProvider, PaletteColorName} from 'lib/ThemeContext'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import * as Toast from 'view/com/util/Toast'
+import {Text} from '../com/util/text/Text'
+import {ViewSelector} from '../com/util/ViewSelector'
+import {EmptyState} from '../com/util/EmptyState'
+import * as LoadingPlaceholder from '../com/util/LoadingPlaceholder'
+import {Button, ButtonType} from '../com/util/forms/Button'
+import {DropdownButton, DropdownItem} from '../com/util/forms/DropdownButton'
+import {ToggleButton} from '../com/util/forms/ToggleButton'
+import {RadioGroup} from '../com/util/forms/RadioGroup'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {ErrorMessage} from '../com/util/error/ErrorMessage'
 
-import {useSetColorMode} from '#/state/shell'
-import {
-  useBreakpoints,
-  useStyle,
-  useStyles,
-  Box,
-  Text,
-  Button,
-  H1,
-  H2,
-  H3,
-  H4,
-  H5,
-  H6,
-} from '#/view/nova'
+const MAIN_VIEWS = ['Base', 'Controls', 'Error', 'Notifs']
 
-function ThemeSelector() {
-  const setColorMode = useSetColorMode()
-
+export const DebugScreen = ({}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'Debug'
+>) => {
+  const [colorScheme, setColorScheme] = React.useState<'light' | 'dark'>(
+    'light',
+  )
+  const onToggleColorScheme = () => {
+    setColorScheme(colorScheme === 'light' ? 'dark' : 'light')
+  }
   return (
-    <Box row gap="s">
-      <Button onPress={() => setColorMode('system')}>
-        <Text>System</Text>
-      </Button>
-      <Button onPress={() => setColorMode('light')}>
-        <Text>Light</Text>
-      </Button>
-      <Button onPress={() => setColorMode('dark')}>
-        <Text>Dark</Text>
-      </Button>
-    </Box>
+    <ThemeProvider theme={colorScheme}>
+      <DebugInner
+        colorScheme={colorScheme}
+        onToggleColorScheme={onToggleColorScheme}
+      />
+    </ThemeProvider>
   )
 }
 
-function BreakpointDebugger() {
-  const breakpoints = useBreakpoints()
+function DebugInner({
+  colorScheme,
+  onToggleColorScheme,
+}: {
+  colorScheme: 'light' | 'dark'
+  onToggleColorScheme: () => void
+}) {
+  const [currentView, setCurrentView] = React.useState<number>(0)
+  const pal = usePalette('default')
+
+  const renderItem = (item: any) => {
+    return (
+      <View key={`view-${item.currentView}`}>
+        <View style={[s.pt10, s.pl10, s.pr10]}>
+          <ToggleButton
+            type="default-light"
+            onPress={onToggleColorScheme}
+            isSelected={colorScheme === 'dark'}
+            label="Dark mode"
+          />
+        </View>
+        {item.currentView === 3 ? (
+          <NotifsView />
+        ) : item.currentView === 2 ? (
+          <ErrorView />
+        ) : item.currentView === 1 ? (
+          <ControlsView />
+        ) : (
+          <BaseView />
+        )}
+      </View>
+    )
+  }
+
+  const items = [{currentView}]
 
   return (
-    <Box>
-      <H3 pb="s" fontWeight="bold">
-        Breakpoint Debugger
-      </H3>
-      <Text pa="m" bg="l1" fontFamily="monospace">
-        {JSON.stringify(breakpoints, null, 2)}
-      </Text>
-    </Box>
-  )
-}
-
-function Hooks() {
-  const outer = useStyle({
-    pa: 'm',
-    bg: 'l1',
-  })
-  const {heading} = useStyles({
-    heading: {
-      color: 'l7',
-      fontSize: 'l',
-      fontWeight: 'bold',
-      gtTablet: {
-        fontSize: 'xl',
-      },
-    },
-  })
-
-  return (
-    <View style={outer}>
-      <RNText style={heading}>Hooks</RNText>
+    <View style={[s.hContentRegion, pal.view]}>
+      <ViewHeader title="Debug panel" />
+      <ViewSelector
+        swipeEnabled
+        sections={MAIN_VIEWS}
+        items={items}
+        renderItem={renderItem}
+        onSelectView={setCurrentView}
+      />
     </View>
   )
 }
 
-export function DebugScreen() {
-  const backgroundStyles = useStyle({
-    bg: 'l0',
-  })
-
+function Heading({label}: {label: string}) {
+  const pal = usePalette('default')
   return (
-    <ScrollView>
-      <CenteredView style={backgroundStyles}>
-        <Box pa="xl" gap="xxl">
-          <ThemeSelector />
+    <View style={[s.pt10, s.pb5]}>
+      <Text type="title-lg" style={pal.text}>
+        {label}
+      </Text>
+    </View>
+  )
+}
 
-          <Box>
-            <H3 pb="s" fontWeight="bold">
-              Colors
-            </H3>
-            <Box row gap="m">
-              <Box column bg="l0" h={60} />
-              <Box column bg="l1" h={60} />
-              <Box column bg="l2" h={60} />
-              <Box column bg="l3" h={60} />
-              <Box column bg="l4" h={60} />
-              <Box column bg="l5" h={60} />
-              <Box column bg="l6" h={60} />
-              <Box column bg="l7" h={60} />
-            </Box>
-          </Box>
+function BaseView() {
+  return (
+    <View style={[s.pl10, s.pr10]}>
+      <Heading label="Typography" />
+      <TypographyView />
+      <Heading label="Palettes" />
+      <PaletteView palette="default" />
+      <PaletteView palette="primary" />
+      <PaletteView palette="secondary" />
+      <PaletteView palette="inverted" />
+      <PaletteView palette="error" />
+      <Heading label="Empty state" />
+      <EmptyStateView />
+      <Heading label="Loading placeholders" />
+      <LoadingPlaceholderView />
+      <View style={s.footerSpacer} />
+    </View>
+  )
+}
 
-          <Box>
-            <H3 pb="s" fontWeight="bold">
-              Spacing
-            </H3>
-
-            <Box gap="m">
-              <Box row alignItems="center">
-                <Text w={80}>xxs (2px)</Text>
-                <Box flex={1} w="100%" pt="xxs" bg="l3" />
-              </Box>
-              <Box row alignItems="center">
-                <Text w={80}>xs (4px)</Text>
-                <Box flex={1} w="100%" pt="xs" bg="l3" />
-              </Box>
-              <Box row alignItems="center">
-                <Text w={80}>s (8px)</Text>
-                <Box flex={1} w="100%" pt="s" bg="l3" />
-              </Box>
-              <Box row alignItems="center">
-                <Text w={80}>m (12px)</Text>
-                <Box flex={1} w="100%" pt="m" bg="l3" />
-              </Box>
-              <Box row alignItems="center">
-                <Text w={80}>l (18px)</Text>
-                <Box flex={1} w="100%" pt="l" bg="l3" />
-              </Box>
-              <Box row alignItems="center">
-                <Text w={80}>xl (24px)</Text>
-                <Box flex={1} w="100%" pt="xl" bg="l3" />
-              </Box>
-              <Box row alignItems="center">
-                <Text w={80}>xxl (32px)</Text>
-                <Box flex={1} w="100%" pt="xxl" bg="l3" />
-              </Box>
-            </Box>
-          </Box>
-
-          <BreakpointDebugger />
-
-          <Box>
-            <H3 pb="s" fontWeight="bold">
-              Typography
-            </H3>
-
-            <Box gap="m" pa="m" bg="l1">
-              <H1>Heading 1</H1>
-              <H2>Heading 2</H2>
-              <H3>Heading 3</H3>
-              <H4>Heading 4</H4>
-              <H5>Heading 5</H5>
-              <H6>Heading 6</H6>
-              <Text fontSize="xl" fontWeight="bold">
-                H1 Size Text
-              </Text>
-              <Text fontSize="l">H2 Size Text</Text>
-              <Text fontSize="m">H3 Size Text</Text>
-              <Text fontSize="s">H4 Size Text</Text>
-              <Text fontSize="xs">H5 Size Text</Text>
-              <Text fontSize="xxs">H6 Size Text</Text>
-            </Box>
-          </Box>
-
-          <Box>
-            <H3 pb="s" fontWeight="bold">
-              Grid
-            </H3>
-            <Box pa="m" gap="m" bg="l1">
-              <Box row gap="s">
-                <Box pa="s" bg="l6" />
-                <Box pa="s" bg="l6" />
-                <Box pa="s" bg="l6" />
-              </Box>
-
-              <Box row gap="s">
-                <Box column pa="s" bg="l6" />
-                <Box column pa="s" bg="l6" />
-                <Box column pa="s" bg="l6" />
-              </Box>
-
-              <Box row gap="s">
-                <Box column pa="s" bg="l6" debug />
-                <Box column={2} pa="s" bg="l6" debug />
-                <Box column pa="s" bg="l6" />
-              </Box>
-            </Box>
-          </Box>
-
-          <Box>
-            <H3 pb="s" fontWeight="bold">
-              Breakpoint styles
-            </H3>
-
-            <Box
-              row
-              justifyContent="center"
-              px="l"
-              py="l"
-              bg="l2"
-              gtMobile={{
-                py: 'xl',
-                bg: 'l4',
-              }}
-              gtTablet={{
-                py: 64,
-                bg: 'l6',
-              }}>
-              <Box w={64} h={64} bg="primary" />
-            </Box>
-          </Box>
-
-          <Hooks />
-        </Box>
-      </CenteredView>
+function ControlsView() {
+  return (
+    <ScrollView style={[s.pl10, s.pr10]}>
+      <Heading label="Buttons" />
+      <ButtonsView />
+      <Heading label="Dropdown Buttons" />
+      <DropdownButtonsView />
+      <Heading label="Toggle Buttons" />
+      <ToggleButtonsView />
+      <Heading label="Radio Buttons" />
+      <RadioButtonsView />
+      <View style={s.footerSpacer} />
     </ScrollView>
+  )
+}
+
+function ErrorView() {
+  return (
+    <View style={s.p10}>
+      <View style={s.mb5}>
+        <ErrorScreen
+          title="Error screen"
+          message="A major error occurred that led the entire screen to fail"
+          details="Here are some details"
+          onPressTryAgain={() => {}}
+        />
+      </View>
+      <View style={s.mb5}>
+        <ErrorMessage message="This is an error that occurred while things were being done" />
+      </View>
+      <View style={s.mb5}>
+        <ErrorMessage
+          message="This is an error that occurred while things were being done"
+          numberOfLines={1}
+        />
+      </View>
+      <View style={s.mb5}>
+        <ErrorMessage
+          message="This is an error that occurred while things were being done"
+          onPressTryAgain={() => {}}
+        />
+      </View>
+      <View style={s.mb5}>
+        <ErrorMessage
+          message="This is an error that occurred while things were being done"
+          onPressTryAgain={() => {}}
+          numberOfLines={1}
+        />
+      </View>
+    </View>
+  )
+}
+
+function NotifsView() {
+  const triggerPush = () => {
+    // TODO: implement local notification for testing
+  }
+  const triggerToast = () => {
+    Toast.show('The task has been completed')
+  }
+  const triggerToast2 = () => {
+    Toast.show('The task has been completed successfully and with no problems')
+  }
+  return (
+    <View style={s.p10}>
+      <View style={s.flexRow}>
+        <Button onPress={triggerPush} label="Trigger Push" />
+        <Button onPress={triggerToast} label="Trigger Toast" />
+        <Button onPress={triggerToast2} label="Trigger Toast 2" />
+      </View>
+    </View>
+  )
+}
+
+function PaletteView({palette}: {palette: PaletteColorName}) {
+  const defaultPal = usePalette('default')
+  const pal = usePalette(palette)
+  return (
+    <View style={[pal.view, pal.border, s.p10, s.mb5, s.border1]}>
+      <Text style={[pal.text]}>{palette} colors</Text>
+      <Text style={[pal.textLight]}>Light text</Text>
+      <Text style={[pal.link]}>Link text</Text>
+      {palette !== 'default' && (
+        <View style={[defaultPal.view]}>
+          <Text style={[pal.textInverted]}>Inverted text</Text>
+        </View>
+      )}
+    </View>
+  )
+}
+
+function TypographyView() {
+  const pal = usePalette('default')
+  return (
+    <View style={[pal.view]}>
+      <Text type="2xl-thin" style={[pal.text]}>
+        '2xl-thin' lorem ipsum dolor
+      </Text>
+      <Text type="2xl" style={[pal.text]}>
+        '2xl' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-medium" style={[pal.text]}>
+        '2xl-medium' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-bold" style={[pal.text]}>
+        '2xl-bold' lorem ipsum dolor
+      </Text>
+      <Text type="2xl-heavy" style={[pal.text]}>
+        '2xl-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="xl-thin" style={[pal.text]}>
+        'xl-thin' lorem ipsum dolor
+      </Text>
+      <Text type="xl" style={[pal.text]}>
+        'xl' lorem ipsum dolor
+      </Text>
+      <Text type="xl-medium" style={[pal.text]}>
+        'xl-medium' lorem ipsum dolor
+      </Text>
+      <Text type="xl-bold" style={[pal.text]}>
+        'xl-bold' lorem ipsum dolor
+      </Text>
+      <Text type="xl-heavy" style={[pal.text]}>
+        'xl-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="lg-thin" style={[pal.text]}>
+        'lg-thin' lorem ipsum dolor
+      </Text>
+      <Text type="lg" style={[pal.text]}>
+        'lg' lorem ipsum dolor
+      </Text>
+      <Text type="lg-medium" style={[pal.text]}>
+        'lg-medium' lorem ipsum dolor
+      </Text>
+      <Text type="lg-bold" style={[pal.text]}>
+        'lg-bold' lorem ipsum dolor
+      </Text>
+      <Text type="lg-heavy" style={[pal.text]}>
+        'lg-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="md-thin" style={[pal.text]}>
+        'md-thin' lorem ipsum dolor
+      </Text>
+      <Text type="md" style={[pal.text]}>
+        'md' lorem ipsum dolor
+      </Text>
+      <Text type="md-medium" style={[pal.text]}>
+        'md-medium' lorem ipsum dolor
+      </Text>
+      <Text type="md-bold" style={[pal.text]}>
+        'md-bold' lorem ipsum dolor
+      </Text>
+      <Text type="md-heavy" style={[pal.text]}>
+        'md-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="sm-thin" style={[pal.text]}>
+        'sm-thin' lorem ipsum dolor
+      </Text>
+      <Text type="sm" style={[pal.text]}>
+        'sm' lorem ipsum dolor
+      </Text>
+      <Text type="sm-medium" style={[pal.text]}>
+        'sm-medium' lorem ipsum dolor
+      </Text>
+      <Text type="sm-bold" style={[pal.text]}>
+        'sm-bold' lorem ipsum dolor
+      </Text>
+      <Text type="sm-heavy" style={[pal.text]}>
+        'sm-heavy' lorem ipsum dolor
+      </Text>
+      <Text type="xs-thin" style={[pal.text]}>
+        'xs-thin' lorem ipsum dolor
+      </Text>
+      <Text type="xs" style={[pal.text]}>
+        'xs' lorem ipsum dolor
+      </Text>
+      <Text type="xs-medium" style={[pal.text]}>
+        'xs-medium' lorem ipsum dolor
+      </Text>
+      <Text type="xs-bold" style={[pal.text]}>
+        'xs-bold' lorem ipsum dolor
+      </Text>
+      <Text type="xs-heavy" style={[pal.text]}>
+        'xs-heavy' lorem ipsum dolor
+      </Text>
+
+      <Text type="title-2xl" style={[pal.text]}>
+        'title-2xl' lorem ipsum dolor
+      </Text>
+      <Text type="title-xl" style={[pal.text]}>
+        'title-xl' lorem ipsum dolor
+      </Text>
+      <Text type="title-lg" style={[pal.text]}>
+        'title-lg' lorem ipsum dolor
+      </Text>
+      <Text type="title" style={[pal.text]}>
+        'title' lorem ipsum dolor
+      </Text>
+      <Text type="button" style={[pal.text]}>
+        Button
+      </Text>
+      <Text type="button-lg" style={[pal.text]}>
+        Button-lg
+      </Text>
+    </View>
+  )
+}
+
+function EmptyStateView() {
+  return <EmptyState icon="bars" message="This is an empty state" />
+}
+
+function LoadingPlaceholderView() {
+  return (
+    <>
+      <LoadingPlaceholder.PostLoadingPlaceholder />
+      <LoadingPlaceholder.NotificationLoadingPlaceholder />
+    </>
+  )
+}
+
+function ButtonsView() {
+  const defaultPal = usePalette('default')
+  const buttonStyles = {marginRight: 5}
+  return (
+    <View style={[defaultPal.view]}>
+      <View style={[s.flexRow, s.mb5]}>
+        <Button type="primary" label="Primary solid" style={buttonStyles} />
+        <Button type="secondary" label="Secondary solid" style={buttonStyles} />
+      </View>
+      <View style={[s.flexRow, s.mb5]}>
+        <Button type="default" label="Default solid" style={buttonStyles} />
+        <Button type="inverted" label="Inverted solid" style={buttonStyles} />
+      </View>
+      <View style={s.flexRow}>
+        <Button
+          type="primary-outline"
+          label="Primary outline"
+          style={buttonStyles}
+        />
+        <Button
+          type="secondary-outline"
+          label="Secondary outline"
+          style={buttonStyles}
+        />
+      </View>
+      <View style={s.flexRow}>
+        <Button
+          type="primary-light"
+          label="Primary light"
+          style={buttonStyles}
+        />
+        <Button
+          type="secondary-light"
+          label="Secondary light"
+          style={buttonStyles}
+        />
+      </View>
+      <View style={s.flexRow}>
+        <Button
+          type="default-light"
+          label="Default light"
+          style={buttonStyles}
+        />
+      </View>
+    </View>
+  )
+}
+
+const DROPDOWN_ITEMS: DropdownItem[] = [
+  {
+    icon: ['far', 'paste'],
+    label: 'Copy post text',
+    onPress() {},
+  },
+  {
+    icon: 'share',
+    label: 'Share...',
+    onPress() {},
+  },
+  {
+    icon: 'circle-exclamation',
+    label: 'Report post',
+    onPress() {},
+  },
+]
+function DropdownButtonsView() {
+  const defaultPal = usePalette('default')
+  return (
+    <View style={[defaultPal.view]}>
+      <View style={s.mb5}>
+        <DropdownButton
+          type="primary"
+          items={DROPDOWN_ITEMS}
+          menuWidth={200}
+          label="Primary button"
+        />
+      </View>
+      <View style={s.mb5}>
+        <DropdownButton type="bare" items={DROPDOWN_ITEMS} menuWidth={200}>
+          <Text>Bare</Text>
+        </DropdownButton>
+      </View>
+    </View>
+  )
+}
+
+function ToggleButtonsView() {
+  const defaultPal = usePalette('default')
+  const buttonStyles = s.mb5
+  const [isSelected, setIsSelected] = React.useState(false)
+  const onToggle = () => setIsSelected(!isSelected)
+  return (
+    <View style={[defaultPal.view]}>
+      <ToggleButton
+        type="primary"
+        label="Primary solid"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="secondary"
+        label="Secondary solid"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="inverted"
+        label="Inverted solid"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="primary-outline"
+        label="Primary outline"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="secondary-outline"
+        label="Secondary outline"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="primary-light"
+        label="Primary light"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="secondary-light"
+        label="Secondary light"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+      <ToggleButton
+        type="default-light"
+        label="Default light"
+        style={buttonStyles}
+        isSelected={isSelected}
+        onPress={onToggle}
+      />
+    </View>
+  )
+}
+
+const RADIO_BUTTON_ITEMS = [
+  {key: 'default-light', label: 'Default Light'},
+  {key: 'primary', label: 'Primary'},
+  {key: 'secondary', label: 'Secondary'},
+  {key: 'inverted', label: 'Inverted'},
+  {key: 'primary-outline', label: 'Primary Outline'},
+  {key: 'secondary-outline', label: 'Secondary Outline'},
+  {key: 'primary-light', label: 'Primary Light'},
+  {key: 'secondary-light', label: 'Secondary Light'},
+]
+function RadioButtonsView() {
+  const defaultPal = usePalette('default')
+  const [rgType, setRgType] = React.useState<ButtonType>('default-light')
+  return (
+    <View style={[defaultPal.view]}>
+      <RadioGroup
+        type={rgType}
+        items={RADIO_BUTTON_ITEMS}
+        initialSelection="default-light"
+        onSelect={v => setRgType(v as ButtonType)}
+      />
+    </View>
   )
 }
