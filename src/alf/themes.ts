@@ -123,7 +123,8 @@ export const light = createTheme({
     /** Shorthand for `flexDirection: 'row'` */
     row: (_: boolean) => ({flexDirection: 'row', flex: 1}),
     /**
-     * Shorthand for `flex: 1`.
+     * Shorthand for `flex: 1`. Optionally pass an integer to specify the
+     * col-span.
      *
      * Semantically this is helpful as a direct child of `<Box row>`
      *
@@ -132,11 +133,20 @@ export const light = createTheme({
      *   <Box column>
      *     <Text>Hello</Text>
      *   </Box>
+     *   <Box column={2}>
+     *     <Text>Hello</Text>
+     *   </Box>
      * </Box>
      */
     column: (span: boolean | number) => ({
       flex: typeof span === 'number' ? span : 1,
     }),
+    /** Shorthand for `alignItems: 'center'` */
+    aic: (_: boolean) => ({alignItems: 'center'}),
+    /** Shorthand for `justifyContent: 'center'` */
+    jcc: (_: boolean) => ({justifyContent: 'center'}),
+    /** Shorthand for `justifyContent: 'space-between'` */
+    jcb: (_: boolean) => ({justifyContent: 'space-between'}),
     /** Shorthand for `position: 'absolute'` */
     abs: (_: boolean) => ({position: 'absolute'}),
     /** Shorthand for `StyleSheet.absoluteFillObject` */
@@ -157,7 +167,6 @@ export const light = createTheme({
         lineHeight: tokens.lineHeight[value],
       }
     },
-    fontFamily: (fontFamily: string) => ({fontFamily}),
   },
   breakpoints: {
     /** Greater than 800 */
