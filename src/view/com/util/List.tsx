@@ -52,6 +52,7 @@ function ListImpl<ItemT>(
   return (
     <FlatList_INTERNAL
       {...props}
+      scrollIndicatorInsets={{right: 1}}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
       ref={ref}
