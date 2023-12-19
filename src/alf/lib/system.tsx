@@ -44,39 +44,21 @@ export function createSystem<
     themes: {
       [key in ThemeName]: SystemTheme
     }
+    breakpoints: ReturnType<SystemTheme['getActiveBreakpoints']>
   }>({
     themeName: Object.keys(themes)[0],
     theme: defaultTheme,
     themes,
+    breakpoints: defaultTheme.getActiveBreakpoints({
+      width: Dimensions.get('window').width,
+    }),
   })
 
   const ThemeProvider = ({
     children,
-    theme,
-  }: React.PropsWithChildren<{theme: ThemeName}>) => (
-    <Context.Provider
-      value={React.useMemo(
-        () => ({
-          themeName: theme,
-          theme: themes[theme],
-          themes,
-        }),
-        [theme],
-      )}>
-      {children}
-    </Context.Provider>
-  )
-
-  function useTheme() {
-    return React.useContext(Context)
-  }
-
-  function useTokens() {
-    return React.useContext(Context).theme.config.tokens
-  }
-
-  function useBreakpoints() {
-    const {theme} = useTheme()
+    theme: themeName,
+  }: React.PropsWithChildren<{theme: ThemeName}>) => {
+    const theme = themes[themeName]
     const [breakpoints, setBreakpoints] = React.useState(() =>
       theme.getActiveBreakpoints({width: Dimensions.get('window').width}),
     )
@@ -87,17 +69,39 @@ export function createSystem<
         if (bp.current !== breakpoints.current) setBreakpoints(bp)
       })
 
-      return () => {
-        listener.remove()
-      }
-    }, [breakpoints, theme])
+      return listener.remove
+    }, [breakpoints, theme, setBreakpoints])
 
-    return breakpoints
+    return (
+      <Context.Provider
+        value={React.useMemo(
+          () => ({
+            themeName: themeName,
+            theme,
+            themes,
+            breakpoints,
+          }),
+          [theme, themeName, breakpoints],
+        )}>
+        {children}
+      </Context.Provider>
+    )
+  }
+
+  function useTheme() {
+    return React.useContext(Context)
+  }
+
+  function useTokens() {
+    return useTheme().theme.config.tokens
+  }
+
+  function useBreakpoints() {
+    return useTheme().breakpoints
   }
 
   function useStyle(props: ResponsiveStyleProps) {
-    const {theme} = useTheme()
-    const breakpoints = useBreakpoints()
+    const {theme, breakpoints} = useTheme()
     return React.useMemo(
       () => theme.style(props as StylesAndProps, breakpoints.active).styles,
       [breakpoints.active, props, theme],
@@ -110,8 +114,7 @@ export function createSystem<
   ): {
     [Name in keyof O]: ReturnType<SystemTheme['style']>['styles']
   } {
-    const {theme} = useTheme()
-    const breakpoints = useBreakpoints()
+    const {theme, breakpoints} = useTheme()
     return React.useMemo(() => {
       const acc = {} as {
         [Name in keyof O]: ReturnType<SystemTheme['style']>['styles']
@@ -136,8 +139,7 @@ export function createSystem<
         ResponsiveStyleProps &
         DebugProps & {children?: React.ReactNode | React.ReactNodeArray}
     >((props, ref) => {
-      const {theme} = useTheme()
-      const breakpoints = useBreakpoints()
+      const {theme, breakpoints} = useTheme()
       const {styles, props: rest} = React.useMemo(
         () =>
           theme.style<Props>(
