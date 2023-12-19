@@ -1,5 +1,5 @@
 import React, {ComponentProps} from 'react'
-import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
+import {TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -7,6 +7,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lib/numbers'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
+
+import {useStyles} from '#/alf'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {
@@ -18,6 +20,26 @@ export function FABInner({testID, icon, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {isMobile, isTablet} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
+  const styles = useStyles(React.useMemo(() => ({
+    sizeRegular: {
+      width: 60,
+      height: 60,
+      radius: 'round',
+    },
+    sizeLarge: {
+      width: 70,
+      height: 70,
+      radius: 'round',
+    },
+    outer: {
+      position: 'absolute',
+      zIndex: 1,
+    },
+    inner: {
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+  }), []))
 
   const size = React.useMemo(() => {
     return isTablet ? styles.sizeLarge : styles.sizeRegular
@@ -51,24 +73,3 @@ export function FABInner({testID, icon, ...props}: FABProps) {
     </TouchableWithoutFeedback>
   )
 }
-
-const styles = StyleSheet.create({
-  sizeRegular: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-  },
-  sizeLarge: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-  },
-  outer: {
-    position: 'absolute',
-    zIndex: 1,
-  },
-  inner: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-})

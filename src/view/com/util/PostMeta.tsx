@@ -1,6 +1,5 @@
 import React, {memo} from 'react'
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from './text/Text'
+import {StyleProp, TextStyle, ViewStyle} from 'react-native'
 import {TextLinkOnWebOnly} from './Link'
 import {niceDate} from 'lib/strings/time'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -11,6 +10,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {Box, Text, android, notAndroid} from '#/alf'
 
 interface PostMetaOpts {
   author: {
@@ -35,17 +35,17 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const handle = opts.author.handle
 
   return (
-    <View style={[styles.container, opts.style]}>
+    <Box row aic pb={2} gap='xs' zIndex={1} style={[opts.style]}>
       {opts.showAvatar && (
-        <View style={styles.avatar}>
+        <Box alignSelf='center'>
           <UserAvatar
             avatar={opts.author.avatar}
             size={opts.avatarSize || 16}
             // TODO moderation
           />
-        </View>
+        </Box>
       )}
-      <View style={styles.maxWidth}>
+      <Box flex={android(1)} maxWidth={notAndroid('80%')}>
         <TextLinkOnWebOnly
           type={opts.displayNameType || 'lg-bold'}
           style={[pal.text, opts.displayNameStyle]}
@@ -55,22 +55,21 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             <>
               {sanitizeDisplayName(displayName)}&nbsp;
               <Text
-                type="md"
-                numberOfLines={1}
-                lineHeight={1.2}
-                style={pal.textLight}>
+                c='l4'
+                fontSize='m'
+                fontWeight='normal'
+                numberOfLines={1}>
                 {sanitizeHandle(handle, '@')}
               </Text>
             </>
           }
           href={makeProfileLink(opts.author)}
         />
-      </View>
+      </Box>
       {!isAndroid && (
         <Text
-          type="md"
+          fontSize='m'
           style={pal.textLight}
-          lineHeight={1.2}
           accessible={false}>
           &middot;
         </Text>
@@ -89,26 +88,8 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           />
         )}
       </TimeElapsed>
-    </View>
+    </Box>
   )
 }
 PostMeta = memo(PostMeta)
 export {PostMeta}
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom: 2,
-    gap: 4,
-    zIndex: 1,
-    flex: 1,
-  },
-  avatar: {
-    alignSelf: 'center',
-  },
-  maxWidth: {
-    flex: isAndroid ? 1 : undefined,
-    maxWidth: !isAndroid ? '80%' : undefined,
-  },
-})

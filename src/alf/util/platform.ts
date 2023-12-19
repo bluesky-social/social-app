@@ -18,6 +18,13 @@ export function android(value: any) {
   })
 }
 
+export function notAndroid(value: any) {
+  return Platform.select({
+    ios: value,
+    web: value,
+  })
+}
+
 export function native(value: any) {
   return Platform.select({
     native: value,

@@ -96,9 +96,9 @@ const sizeVariants: {
 } = {
   small: {
     pressable: {
-      py: 'm',
-      px: 'l',
-      radius: 'm',
+      py: 's',
+      px: 'm',
+      radius: 'round',
     },
     text: {
       fontSize: 'm',

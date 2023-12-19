@@ -13,7 +13,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
 import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
 import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
@@ -34,6 +33,7 @@ import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
+import {Box, Text, useStyle} from '#/alf'
 
 export function FeedItem({
   post,
@@ -130,18 +130,19 @@ let FeedItemInner = ({
     })
   }, [post, record, openComposer])
 
-  const outerStyles = [
-    styles.outer,
-    pal.view,
-    {
-      borderColor: pal.colors.border,
-      paddingBottom:
-        isThreadLastChild || (!isThreadChild && !isThreadParent)
-          ? 6
-          : undefined,
-    },
-    isThreadChild ? styles.outerSmallTop : undefined,
-  ]
+  const outerStyles = useStyle(React.useMemo(() => ({
+    bg: 'l0',
+    borderTopWidth: isThreadChild ? 0 : 1,
+    paddingLeft: 'm',
+    pr: 'l',
+    cursor: 'pointer',
+    overflow: 'hidden',
+    borderColor: 'l2',
+    paddingBottom:
+      isThreadLastChild || (!isThreadChild && !isThreadParent)
+        ? 's'
+        : undefined,
+  }), []))
 
   return (
     <Link
@@ -152,8 +153,8 @@ let FeedItemInner = ({
       accessible={false}>
       <PostSandboxWarning />
 
-      <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
-        <View style={{width: 52}}>
+      <Box row gap='s' pl='s'>
+        <Box width={52}>
           {isThreadChild && (
             <View
               style={[
@@ -166,15 +167,15 @@ let FeedItemInner = ({
               ]}
             />
           )}
-        </View>
+        </Box>
 
-        <View style={{paddingTop: 12, flexShrink: 1}}>
+        <Box pt='m' flexShrink={1}>
           {isReasonFeedSource(reason) ? (
             <Link href={reason.href}>
               <Text
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
+                fontSize='s'
+                fontWeight='bold'
+                c='l5'
                 numberOfLines={1}>
                 From{' '}
                 <FeedNameText
@@ -203,9 +204,9 @@ let FeedItemInner = ({
                 }}
               />
               <Text
-                type="sm-bold"
-                style={pal.textLight}
-                lineHeight={1.2}
+                fontSize='s'
+                fontWeight='bold'
+                c='l5'
                 numberOfLines={1}>
                 Reposted by{' '}
                 <TextLinkOnWebOnly
@@ -221,11 +222,11 @@ let FeedItemInner = ({
               </Text>
             </Link>
           ) : null}
-        </View>
-      </View>
+        </Box>
+      </Box>
 
-      <View style={styles.layout}>
-        <View style={styles.layoutAvi}>
+      <Box row gap='m' mt={1}>
+        <Box pl='s'>
           <PreviewableUserAvatar
             size={52}
             did={post.author.did}
@@ -245,8 +246,8 @@ let FeedItemInner = ({
               ]}
             />
           )}
-        </View>
-        <View style={styles.layoutContent}>
+        </Box>
+        <Box flex={1}>
           <PostMeta
             author={post.author}
             authorHasWarning={!!post.author.labels?.length}
@@ -254,7 +255,7 @@ let FeedItemInner = ({
             postHref={href}
           />
           {!isThreadChild && replyAuthorDid !== '' && (
-            <View style={[s.flexRow, s.mb2, s.alignCenter]}>
+            <Box row aic mb={2}>
               <FontAwesomeIcon
                 icon="reply"
                 size={9}
@@ -264,9 +265,9 @@ let FeedItemInner = ({
                 ]}
               />
               <Text
-                type="md"
-                style={[pal.textLight, s.mr2]}
-                lineHeight={1.2}
+                fontSize='m'
+                c='l4'
+                mr={2}
                 numberOfLines={1}>
                 Reply to{' '}
                 <UserInfoText
@@ -276,7 +277,7 @@ let FeedItemInner = ({
                   style={[pal.textLight, s.ml2]}
                 />
               </Text>
-            </View>
+            </Box>
           )}
           <PostContent
             moderation={moderation}
@@ -285,8 +286,8 @@ let FeedItemInner = ({
             postAuthor={post.author}
           />
           <PostCtrls post={post} record={record} onPressReply={onPressReply} />
-        </View>
-      </View>
+        </Box>
+      </Box>
     </Link>
   )
 }
@@ -320,7 +321,7 @@ let PostContent = ({
       childContainerStyle={styles.contentHiderChild}>
       <PostAlerts moderation={moderation.content} style={styles.alert} />
       {richText.text ? (
-        <View style={styles.postTextContainer}>
+        <Box row aic flexWrap='wrap' pb='xs'>
           <RichText
             testID="postText"
             type="post-text"
@@ -329,7 +330,7 @@ let PostContent = ({
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
             style={s.flex1}
           />
-        </View>
+        </Box>
       ) : undefined}
       {limitLines ? (
         <TextLink

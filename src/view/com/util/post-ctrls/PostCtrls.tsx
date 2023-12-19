@@ -7,7 +7,6 @@ import {
   ViewStyle,
 } from 'react-native'
 import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
-import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s} from 'lib/styles'
@@ -26,6 +25,7 @@ import {
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
+import {Box, Text, Pressable} from '#/alf'
 
 let PostCtrls = ({
   big,
@@ -129,12 +129,12 @@ let PostCtrls = ({
   ])
 
   return (
-    <View style={[styles.ctrls, style]}>
-      <TouchableOpacity
+    <Box row jcb style={[style]}>
+      <Pressable
         testID="replyBtn"
+        row aic
+        pa={!big ? 'xs' : 0}
         style={[
-          styles.ctrl,
-          !big && styles.ctrlPad,
           {paddingLeft: 0},
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
         ]}
@@ -155,11 +155,11 @@ let PostCtrls = ({
           size={big ? 20 : 15}
         />
         {typeof post.replyCount !== 'undefined' ? (
-          <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
+          <Text fontSize='s' ml='xs' c='l4'>
             {post.replyCount}
           </Text>
         ) : undefined}
-      </TouchableOpacity>
+      </Pressable>
       <RepostButton
         big={big}
         isReposted={!!post.viewer?.repost}
@@ -167,9 +167,10 @@ let PostCtrls = ({
         onRepost={onRepost}
         onQuote={onQuote}
       />
-      <TouchableOpacity
+      <Pressable
         testID="likeBtn"
-        style={[styles.ctrl, !big && styles.ctrlPad]}
+        row aic
+        pa={!big ? 'xs' : 0}
         onPress={() => {
           requireAuth(() => onPressToggleLike())
         }}
@@ -190,16 +191,15 @@ let PostCtrls = ({
         )}
         {typeof post.likeCount !== 'undefined' ? (
           <Text
-            testID="likeCount"
-            style={
-              post.viewer?.like
-                ? [s.bold, s.likeColor, s.f15, s.ml5]
-                : [defaultCtrlColor, s.f15, s.ml5]
-            }>
+            fontSize='s'
+            ml='xs'
+            c={post.viewer?.like ? 'red' : 'l4'}
+            fontWeight={post.viewer?.like ? 'semi' : 'normal'}
+            testID="likeCount">
             {post.likeCount}
           </Text>
         ) : undefined}
-      </TouchableOpacity>
+      </Pressable>
       {big ? undefined : (
         <PostDropdownBtn
           testID="postDropdownBtn"
@@ -212,7 +212,7 @@ let PostCtrls = ({
       )}
       {/* used for adding pad to the right side */}
       <View />
-    </View>
+    </Box>
   )
 }
 PostCtrls = memo(PostCtrls)

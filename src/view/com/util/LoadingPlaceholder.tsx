@@ -11,6 +11,7 @@ import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {Box, useTokens} from '#/alf'
 
 export function LoadingPlaceholder({
   width,
@@ -42,58 +43,57 @@ export function PostLoadingPlaceholder({
 }: {
   style?: StyleProp<ViewStyle>
 }) {
-  const theme = useTheme()
-  const pal = usePalette('default')
+  const tokens = useTokens()
   return (
-    <View style={[styles.post, pal.view, style]}>
-      <LoadingPlaceholder
+    <Box bg='l0' row px='m' pt='xl' pb='xs'>
+      <Box
+        bg='l1'
         width={52}
         height={52}
-        style={[
-          styles.avatar,
-          {
-            position: 'relative',
-            top: -6,
-          },
-        ]}
+        radius='round'
+        mr='m'
+        ml='s'
+        top={-6}
       />
-      <View style={[s.flex1]}>
-        <LoadingPlaceholder width={100} height={6} style={{marginBottom: 10}} />
-        <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
-        <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
-        <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 15}} />
-        <View style={s.flexRow}>
-          <View style={s.flex1}>
+      <Box flex={1}>
+        <Box gap='s'>
+          <Box bg='l1' width={100} height={6} radius='s' />
+          <Box bg='l1' width="95%" height={6} radius='s' />
+          <Box bg='l1' width="95%" height={6} radius='s' />
+          <Box bg='l1' width="80%" height={6} radius='s' mb='s' />
+        </Box>
+        <Box row>
+          <Box column>
             <FontAwesomeIcon
-              style={{color: theme.palette.default.icon}}
+              style={{color: tokens.color.l2}}
               icon={['far', 'comment']}
               size={14}
             />
-          </View>
-          <View style={s.flex1}>
+          </Box>
+          <Box column>
             <FontAwesomeIcon
-              style={{color: theme.palette.default.icon}}
+              style={{color: tokens.color.l2}}
               icon="retweet"
               size={18}
             />
-          </View>
-          <View style={s.flex1}>
+          </Box>
+          <Box column>
             <HeartIcon
-              style={{color: theme.palette.default.icon} as ViewStyle}
+              style={{color: tokens.color.l2}}
               size={17}
               strokeWidth={1.7}
             />
-          </View>
-          <View style={s.flex1} />
-        </View>
-      </View>
-    </View>
+          </Box>
+          <Box column />
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
 export function PostFeedLoadingPlaceholder() {
   return (
-    <View>
+    <Box>
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
@@ -102,7 +102,7 @@ export function PostFeedLoadingPlaceholder() {
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
       <PostLoadingPlaceholder />
-    </View>
+    </Box>
   )
 }
 

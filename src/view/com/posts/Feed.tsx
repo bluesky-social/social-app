@@ -30,6 +30,7 @@ import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useSession} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {Box} from '#/alf'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -273,14 +274,14 @@ let Feed = ({
     const offset = Math.max(headerOffset, 32) * (isWeb ? 1 : 2)
 
     return isFetchingNextPage ? (
-      <View style={[styles.feedFooter]}>
+      <Box pt='xl'>
         <ActivityIndicator />
-        <View style={{height: offset}} />
-      </View>
+        <Box h={offset} />
+      </Box>
     ) : shouldRenderEndOfFeed ? (
-      <View style={{minHeight: offset}}>{renderEndOfFeed()}</View>
+      <Box minHeight={offset}>{renderEndOfFeed()}</Box>
     ) : (
-      <View style={{height: offset}} />
+      <Box h={offset} />
     )
   }, [isFetchingNextPage, shouldRenderEndOfFeed, renderEndOfFeed, headerOffset])
 

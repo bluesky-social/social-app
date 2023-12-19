@@ -1,9 +1,8 @@
 import React, {useMemo, useCallback} from 'react'
-import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {Dimensions, View, ActivityIndicator} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CommonNavigatorParams} from 'lib/routes/types'
@@ -15,8 +14,6 @@ import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
 import {TextLink} from 'view/com/util/Link'
 import {ListRef} from 'view/com/util/List'
-import {Button} from 'view/com/util/forms/Button'
-import {Text} from 'view/com/util/text/Text'
 import {RichText} from 'view/com/util/text/RichText'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
@@ -58,6 +55,8 @@ import {useComposerControls} from '#/state/shell/composer'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {isNative} from '#/platform/detection'
 
+import {Box, Text, Button, Pressable, web, native, useTokens} from '#/alf'
+
 const SECTION_TITLES = ['Posts', 'About']
 
 interface SectionRef {
@@ -68,7 +67,6 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileFeed'>
 export function ProfileFeedScreen(props: Props) {
   const {rkey, name: handleOrDid} = props.route.params
 
-  const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
@@ -89,27 +87,26 @@ export function ProfileFeedScreen(props: Props) {
   if (error) {
     return (
       <CenteredView>
-        <View style={[pal.view, pal.border, styles.notFoundContainer]}>
-          <Text type="title-lg" style={[pal.text, s.mb10]}>
+        <Box bg='l0' borderColor='l4' ma='m' px='l' py='m' radius='s'>
+          <Text fontSize='l' mb='m'>
             <Trans>Could not load feed</Trans>
           </Text>
-          <Text type="md" style={[pal.text, s.mb20]}>
+          <Text fontSize='m' mb='xl'>
             {error.toString()}
           </Text>
 
-          <View style={{flexDirection: 'row'}}>
+          <Box row>
             <Button
-              type="default"
               accessibilityLabel={_(msg`Go Back`)}
               accessibilityHint="Return to previous page"
               onPress={onPressBack}
               style={{flexShrink: 1}}>
-              <Text type="button" style={pal.text}>
+              <Text c='l0' fontWeight='bold'>
                 <Trans>Go Back</Trans>
               </Text>
             </Button>
-          </View>
-        </View>
+          </Box>
+        </Box>
       </CenteredView>
     )
   }
@@ -118,9 +115,9 @@ export function ProfileFeedScreen(props: Props) {
     <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
   ) : (
     <CenteredView>
-      <View style={s.p20}>
+      <Box pa='xl'>
         <ActivityIndicator size="large" />
-      </View>
+      </Box>
     </CenteredView>
   )
 }
@@ -132,9 +129,9 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   if (!preferences || !info) {
     return (
       <CenteredView>
-        <View style={s.p20}>
+        <Box pa='xl'>
           <ActivityIndicator size="large" />
-        </View>
+        </Box>
       </CenteredView>
     )
   }
@@ -155,7 +152,7 @@ export function ProfileFeedScreenInner({
   feedInfo: FeedSourceFeedInfo
 }) {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const tokens = useTokens()
   const {hasSession, currentAccount} = useSession()
   const {openModal} = useModalControls()
   const {openComposer} = useComposerControls()
@@ -335,44 +332,47 @@ export function ProfileFeedScreenInner({
             : undefined
         }
         avatarType="algo">
-        {feedInfo && hasSession && (
-          <>
-            <Button
-              disabled={isSavePending || isRemovePending}
-              type="default"
-              label={isSaved ? 'Unsave' : 'Save'}
-              onPress={onToggleSaved}
-              style={styles.btn}
-            />
-            <Button
-              testID={isPinned ? 'unpinBtn' : 'pinBtn'}
-              disabled={isPinPending || isUnpinPending}
-              type={isPinned ? 'default' : 'inverted'}
-              label={isPinned ? 'Unpin' : 'Pin to home'}
-              onPress={onTogglePinned}
-              style={styles.btn}
-            />
-          </>
-        )}
-        <NativeDropdown
-          testID="headerDropdownBtn"
-          items={dropdownItems}
-          accessibilityLabel={_(msg`More options`)}
-          accessibilityHint="">
-          <View style={[pal.viewLight, styles.btn]}>
-            <FontAwesomeIcon
-              icon="ellipsis"
-              size={20}
-              color={pal.colors.text}
-            />
-          </View>
-        </NativeDropdown>
+        <Box row gap='s' jce>
+          {feedInfo && hasSession && (
+            <>
+              <Button
+                size='small'
+                disabled={isSavePending || isRemovePending}
+                type="primary"
+                onPress={onToggleSaved}
+              >{isSaved ? 'Unsave' : 'Save'}
+              </Button>
+              <Button
+                size='small'
+                testID={isPinned ? 'unpinBtn' : 'pinBtn'}
+                disabled={isPinPending || isUnpinPending}
+                type={isPinned ? 'secondary' : 'primary'}
+                onPress={onTogglePinned}
+              >
+                {isPinned ? 'Unpin' : 'Pin to home'}
+              </Button>
+            </>
+          )}
+
+          <NativeDropdown
+            testID="headerDropdownBtn"
+            items={dropdownItems}
+            accessibilityLabel={_(msg`More options`)}
+            accessibilityHint="">
+            <Box bg='l1' py='s' px='m' radius='round'>
+              <FontAwesomeIcon
+                icon="ellipsis"
+                size={20}
+                color={tokens.color.l4}
+              />
+            </Box>
+          </NativeDropdown>
+        </Box>
       </ProfileSubpageHeader>
     )
   }, [
     _,
     hasSession,
-    pal,
     feedInfo,
     isPinned,
     onTogglePinned,
@@ -387,7 +387,7 @@ export function ProfileFeedScreenInner({
   ])
 
   return (
-    <View style={s.hContentRegion}>
+    <Box h={web('100%')} flex={native(1)}>
       <PagerWithHeader
         items={SECTION_TITLES}
         isHeaderReady={true}
@@ -431,7 +431,7 @@ export function ProfileFeedScreenInner({
           accessibilityHint=""
         />
       )}
-    </View>
+    </Box>
   )
 }
 
@@ -503,7 +503,7 @@ function AboutSection({
   scrollElRef: React.MutableRefObject<ScrollView | null>
   isOwner: boolean
 }) {
-  const pal = usePalette('default')
+  const tokens = useTokens()
   const {_} = useLingui()
   const scrollHandlers = useScrollHandlers()
   const onScroll = useAnimatedScrollHandler(scrollHandlers)
@@ -548,52 +548,50 @@ function AboutSection({
         paddingTop: headerHeight,
         minHeight: Dimensions.get('window').height * 1.5,
       }}>
-      <View
-        style={[
-          {
-            borderTopWidth: 1,
-            paddingVertical: 20,
-            paddingHorizontal: 20,
-            gap: 12,
-          },
-          pal.border,
-        ]}>
+      <Box
+        borderColor='l2'
+        borderTopWidth={1}
+        pa='xl'
+        gap='m'
+        >
         {feedInfo.description ? (
           <RichText
             testID="listDescription"
             type="lg"
-            style={pal.text}
+            style={{ color: tokens.color.l7 }}
             richText={feedInfo.description}
           />
         ) : (
-          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+          <Text fontSize='m' c='l5' fontStyle='italic'>
             <Trans>No description</Trans>
           </Text>
         )}
-        <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-          <Button
-            type="default"
+        <Box row aic gap='m'>
+          <Pressable
             testID="toggleLikeBtn"
             accessibilityLabel={_(msg`Like this feed`)}
             accessibilityHint=""
             disabled={!hasSession || isLikePending || isUnlikePending}
             onPress={onToggleLiked}
-            style={{paddingHorizontal: 10}}>
+            bg='l1'
+            pa={10}
+            radius='round'
+          >
             {isLiked ? (
               <HeartIconSolid size={19} style={s.likeColor} />
             ) : (
-              <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
+              <HeartIcon strokeWidth={3} size={19} style={{ color: tokens.color.l4 }} />
             )}
-          </Button>
+          </Pressable>
           {typeof likeCount === 'number' && (
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
               text={`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`}
-              style={[pal.textLight, s.semiBold]}
+              style={[{ color: tokens.color.l4, fontWeight: tokens.fontWeight.semi }]}
             />
           )}
-        </View>
-        <Text type="md" style={[pal.textLight]} numberOfLines={1}>
+        </Box>
+        <Text fontSize='m' c='l5' numberOfLines={1}>
           Created by{' '}
           {isOwner ? (
             'you'
@@ -604,29 +602,11 @@ function AboutSection({
                 did: feedInfo.creatorDid,
                 handle: feedInfo.creatorHandle,
               })}
-              style={pal.textLight}
+              style={{ color: tokens.color.l4 }}
             />
           )}
         </Text>
-      </View>
+      </Box>
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: 50,
-    marginLeft: 6,
-  },
-  notFoundContainer: {
-    margin: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 6,
-  },
-})

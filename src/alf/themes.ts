@@ -147,6 +147,8 @@ export const light = createTheme({
     jcc: (_: boolean) => ({justifyContent: 'center'}),
     /** Shorthand for `justifyContent: 'space-between'` */
     jcb: (_: boolean) => ({justifyContent: 'space-between'}),
+    /** Shorthand for `justifyContent: 'flex-end'` */
+    jce: (_: boolean) => ({justifyContent: 'flex-end'}),
     /** Shorthand for `position: 'absolute'` */
     abs: (_: boolean) => ({position: 'absolute'}),
     /** Shorthand for `StyleSheet.absoluteFillObject` */
