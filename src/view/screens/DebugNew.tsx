@@ -232,6 +232,19 @@ export function DebugScreen() {
               </Box>
             </Box>
           </Alf>
+
+          <Box>
+            <H3 pb="s" fontWeight="bold">
+              Breakpoint styles
+            </H3>
+
+            <Box gap="m">
+              <Button>Primary</Button>
+              <Button type="secondary">Secondary</Button>
+              <Button type="positive">Positive</Button>
+              <Button type="negative">Negative</Button>
+            </Box>
+          </Box>
         </Box>
       </CenteredView>
     </ScrollView>
