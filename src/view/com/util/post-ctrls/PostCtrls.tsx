@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {memo, useCallback} from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -10,7 +10,7 @@ import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
-import {s, colors} from 'lib/styles'
+import {s} from 'lib/styles'
 import {pluralize} from 'lib/strings/helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {RepostButton} from './RepostButton'
@@ -27,7 +27,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 
-export function PostCtrls({
+let PostCtrls = ({
   big,
   post,
   record,
@@ -39,7 +39,7 @@ export function PostCtrls({
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
-}) {
+}): React.ReactNode => {
   const theme = useTheme()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
@@ -71,7 +71,14 @@ export function PostCtrls({
         likeCount: post.likeCount || 0,
       })
     }
-  }, [post, postLikeMutation, postUnlikeMutation])
+  }, [
+    post.viewer?.like,
+    post.uri,
+    post.cid,
+    post.likeCount,
+    postLikeMutation,
+    postUnlikeMutation,
+  ])
 
   const onRepost = useCallback(() => {
     closeModal()
@@ -89,7 +96,15 @@ export function PostCtrls({
         repostCount: post.repostCount || 0,
       })
     }
-  }, [post, closeModal, postRepostMutation, postUnrepostMutation])
+  }, [
+    post.uri,
+    post.cid,
+    post.viewer?.repost,
+    post.repostCount,
+    closeModal,
+    postRepostMutation,
+    postUnrepostMutation,
+  ])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -103,7 +118,16 @@ export function PostCtrls({
       },
     })
     Haptics.default()
-  }, [post, record, openComposer, closeModal])
+  }, [
+    post.uri,
+    post.cid,
+    post.author,
+    post.indexedAt,
+    record.text,
+    openComposer,
+    closeModal,
+  ])
+
   return (
     <View style={[styles.ctrls, style]}>
       <TouchableOpacity
@@ -156,7 +180,7 @@ export function PostCtrls({
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         {post.viewer?.like ? (
-          <HeartIconSolid style={styles.ctrlIconLiked} size={big ? 22 : 16} />
+          <HeartIconSolid style={s.likeColor} size={big ? 22 : 16} />
         ) : (
           <HeartIcon
             style={[defaultCtrlColor, big ? styles.mt1 : undefined]}
@@ -169,7 +193,7 @@ export function PostCtrls({
             testID="likeCount"
             style={
               post.viewer?.like
-                ? [s.bold, s.red3, s.f15, s.ml5]
+                ? [s.bold, s.likeColor, s.f15, s.ml5]
                 : [defaultCtrlColor, s.f15, s.ml5]
             }>
             {post.likeCount}
@@ -179,7 +203,9 @@ export function PostCtrls({
       {big ? undefined : (
         <PostDropdownBtn
           testID="postDropdownBtn"
-          post={post}
+          postAuthor={post.author}
+          postCid={post.cid}
+          postUri={post.uri}
           record={record}
           style={styles.ctrlPad}
         />
@@ -189,6 +215,8 @@ export function PostCtrls({
     </View>
   )
 }
+PostCtrls = memo(PostCtrls)
+export {PostCtrls}
 
 const styles = StyleSheet.create({
   ctrls: {
@@ -204,9 +232,6 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 5,
     paddingRight: 5,
-  },
-  ctrlIconLiked: {
-    color: colors.like,
   },
   mt1: {
     marginTop: 1,

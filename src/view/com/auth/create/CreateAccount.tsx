@@ -30,7 +30,7 @@ import {Step2} from './Step2'
 import {Step3} from './Step3'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
-  const {track, screen} = useAnalytics()
+  const {screen} = useAnalytics()
   const pal = usePalette('default')
   const {_} = useLingui()
   const [uiState, uiDispatch] = useCreateAccount()
@@ -93,21 +93,17 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
           uiDispatch,
           _,
         })
-        track('Create Account')
         setBirthDate({birthDate: uiState.birthDate})
         if (IS_PROD(uiState.serviceUrl)) {
           setSavedFeeds(DEFAULT_PROD_FEEDS)
         }
       } catch {
         // dont need to handle here
-      } finally {
-        track('Try Create Account')
       }
     }
   }, [
     uiState,
     uiDispatch,
-    track,
     onboardingDispatch,
     createAccount,
     setBirthDate,

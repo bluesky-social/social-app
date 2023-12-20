@@ -15,6 +15,7 @@ import {
   AppBskyUnspeccedGetPopularFeedGenerators,
 } from '@atproto/api'
 
+import {logger} from '#/logger'
 import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -160,51 +161,6 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
   })
 }
 
-export const isFeedPublicQueryKey = ({uri}: {uri: string}) => [
-  'isFeedPublic',
-  uri,
-]
-
-export function useIsFeedPublicQuery({uri}: {uri: string}) {
-  return useQuery({
-    queryKey: isFeedPublicQueryKey({uri}),
-    queryFn: async ({queryKey}) => {
-      const [, uri] = queryKey
-      try {
-        const res = await getAgent().app.bsky.feed.getFeed({
-          feed: uri,
-          limit: 1,
-        })
-        return {
-          isPublic: Boolean(res.data.feed),
-          error: undefined,
-        }
-      } catch (e: any) {
-        /**
-         * This should be an `XRPCError`, but I can't safely import from
-         * `@atproto/xrpc` due to a depdency on node's `crypto` module.
-         *
-         * @see https://github.com/bluesky-social/atproto/blob/c17971a2d8e424cc7f10c071d97c07c08aa319cf/packages/xrpc/src/client.ts#L126
-         */
-        if (e?.status === 401) {
-          return {
-            isPublic: false,
-            error: e,
-          }
-        }
-
-        /*
-         * Non-401 response means something else went wrong on the server
-         */
-        return {
-          isPublic: true,
-          error: e,
-        }
-      }
-    },
-  })
-}
-
 export const useGetPopularFeedsQueryKey = ['getPopularFeeds']
 
 export function useGetPopularFeedsQuery() {
@@ -289,30 +245,43 @@ export function usePinnedFeedsInfos(): {
           reqs.push(cached)
         } else {
           reqs.push(
-            queryClient.fetchQuery({
-              queryKey: feedSourceInfoQueryKey({uri}),
-              queryFn: async () => {
-                const type = getFeedTypeFromUri(uri)
+            (async () => {
+              // these requests can fail, need to filter those out
+              try {
+                return await queryClient.fetchQuery({
+                  staleTime: STALE.SECONDS.FIFTEEN,
+                  queryKey: feedSourceInfoQueryKey({uri}),
+                  queryFn: async () => {
+                    const type = getFeedTypeFromUri(uri)
 
-                if (type === 'feed') {
-                  const res = await getAgent().app.bsky.feed.getFeedGenerator({
-                    feed: uri,
-                  })
-                  return hydrateFeedGenerator(res.data.view)
-                } else {
-                  const res = await getAgent().app.bsky.graph.getList({
-                    list: uri,
-                    limit: 1,
-                  })
-                  return hydrateList(res.data.list)
-                }
-              },
-            }),
+                    if (type === 'feed') {
+                      const res =
+                        await getAgent().app.bsky.feed.getFeedGenerator({
+                          feed: uri,
+                        })
+                      return hydrateFeedGenerator(res.data.view)
+                    } else {
+                      const res = await getAgent().app.bsky.graph.getList({
+                        list: uri,
+                        limit: 1,
+                      })
+                      return hydrateList(res.data.list)
+                    }
+                  },
+                })
+              } catch (e) {
+                logger.warn(`usePinnedFeedsInfos: failed to fetch ${uri}`, {
+                  error: e,
+                })
+              }
+            })(),
           )
         }
       }
 
-      const views = await Promise.all(reqs)
+      const views = (await Promise.all(reqs)).filter(
+        Boolean,
+      ) as FeedSourceInfo[]
 
       setTabs([FOLLOWING_FEED_STUB].concat(views))
     }

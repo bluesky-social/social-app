@@ -214,7 +214,7 @@ export function FeedLoadingPlaceholder({
         pal.border,
         style,
       ]}>
-      <View style={[pal.view, {flexDirection: 'row', marginBottom: 10}]}>
+      <View style={[pal.view, {flexDirection: 'row'}]}>
         <LoadingPlaceholder
           width={36}
           height={36}
@@ -226,7 +226,7 @@ export function FeedLoadingPlaceholder({
         </View>
       </View>
       {showLowerPlaceholder && (
-        <View style={{paddingHorizontal: 5}}>
+        <View style={{paddingHorizontal: 5, marginTop: 10}}>
           <LoadingPlaceholder
             width={260}
             height={8}

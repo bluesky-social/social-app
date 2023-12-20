@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react'
+import React, {memo, useCallback} from 'react'
 import {StyleProp, StyleSheet, TouchableOpacity, ViewStyle} from 'react-native'
 import {RepostIcon} from 'lib/icons'
 import {s, colors} from 'lib/styles'
@@ -17,13 +17,13 @@ interface Props {
   onQuote: () => void
 }
 
-export const RepostButton = ({
+let RepostButton = ({
   isReposted,
   repostCount,
   big,
   onRepost,
   onQuote,
-}: Props) => {
+}: Props): React.ReactNode => {
   const theme = useTheme()
   const {openModal} = useModalControls()
   const requireAuth = useRequireAuth()
@@ -80,6 +80,8 @@ export const RepostButton = ({
     </TouchableOpacity>
   )
 }
+RepostButton = memo(RepostButton)
+export {RepostButton}
 
 const styles = StyleSheet.create({
   control: {

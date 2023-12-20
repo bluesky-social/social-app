@@ -5,22 +5,28 @@ import {useLingui} from '@lingui/react'
 
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {DefaultAvatar} from '#/view/com/util/UserAvatar'
 import {Text} from '#/view/com/util/text/Text'
 import {Button} from '#/view/com/util/forms/Button'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {Logo} from '#/view/icons/Logo'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
 
-  const showLoggedOut = React.useCallback(() => {
+  const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
-    setShowLoggedOut(true)
-  }, [setShowLoggedOut, closeAllActiveElements])
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }, [requestSwitchToAccount, closeAllActiveElements])
+
+  const showCreateAccount = React.useCallback(() => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+    // setShowLoggedOut(true)
+  }, [requestSwitchToAccount, closeAllActiveElements])
 
   return (
     <View
@@ -29,17 +35,17 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         paddingTop: 6,
         marginBottom: 24,
       }}>
-      <DefaultAvatar type="user" size={48} />
+      <Logo width={48} />
 
-      <View style={{paddingTop: 12}}>
-        <Text type="md" style={[pal.text, s.bold]}>
+      <View style={{paddingTop: 18}}>
+        <Text type="md-bold" style={[pal.text]}>
           <Trans>Sign up or sign in to join the conversation</Trans>
         </Text>
       </View>
 
       <View style={{flexDirection: 'row', paddingTop: 12, gap: 8}}>
         <Button
-          onPress={showLoggedOut}
+          onPress={showCreateAccount}
           accessibilityHint={_(msg`Sign up`)}
           accessibilityLabel={_(msg`Sign up`)}>
           <Text type="md" style={[{color: 'white'}, s.bold]}>
@@ -48,7 +54,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
         </Button>
         <Button
           type="default"
-          onPress={showLoggedOut}
+          onPress={showSignIn}
           accessibilityHint={_(msg`Sign in`)}
           accessibilityLabel={_(msg`Sign in`)}>
           <Text type="md" style={[pal.text, s.bold]}>

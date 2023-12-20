@@ -46,6 +46,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {isInvalidHandle} from '#/lib/strings/handles'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -221,7 +222,7 @@ function ComposeBtn() {
       if (
         !handle ||
         handle === currentAccount?.handle ||
-        handle === 'handle.invalid'
+        isInvalidHandle(handle)
       )
         return undefined
 
@@ -266,6 +267,10 @@ export function DesktopLeftNav() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const numUnread = useUnreadNotifications()
 
+  if (!hasSession && !isDesktop) {
+    return null
+  }
+
   return (
     <View
       style={[
@@ -282,59 +287,58 @@ export function DesktopLeftNav() {
         </View>
       ) : null}
 
-      <BackBtn />
-
-      <NavItem
-        href="/"
-        icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
-        iconFilled={
-          <HomeIconSolid
-            strokeWidth={4}
-            size={isDesktop ? 24 : 28}
-            style={pal.text}
-          />
-        }
-        label={_(msg`Home`)}
-      />
-      <NavItem
-        href="/search"
-        icon={
-          <MagnifyingGlassIcon2
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
-          />
-        }
-        iconFilled={
-          <MagnifyingGlassIcon2Solid
-            strokeWidth={2}
-            size={isDesktop ? 24 : 26}
-            style={pal.text}
-          />
-        }
-        label={_(msg`Search`)}
-      />
-      <NavItem
-        href="/feeds"
-        icon={
-          <HashtagIcon
-            strokeWidth={2.25}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
-          />
-        }
-        iconFilled={
-          <HashtagIcon
-            strokeWidth={2.5}
-            style={pal.text as FontAwesomeIconStyle}
-            size={isDesktop ? 24 : 28}
-          />
-        }
-        label={_(msg`Feeds`)}
-      />
-
       {hasSession && (
         <>
+          <BackBtn />
+
+          <NavItem
+            href="/"
+            icon={<HomeIcon size={isDesktop ? 24 : 28} style={pal.text} />}
+            iconFilled={
+              <HomeIconSolid
+                strokeWidth={4}
+                size={isDesktop ? 24 : 28}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Home`)}
+          />
+          <NavItem
+            href="/search"
+            icon={
+              <MagnifyingGlassIcon2
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            iconFilled={
+              <MagnifyingGlassIcon2Solid
+                strokeWidth={2}
+                size={isDesktop ? 24 : 26}
+                style={pal.text}
+              />
+            }
+            label={_(msg`Search`)}
+          />
+          <NavItem
+            href="/feeds"
+            icon={
+              <HashtagIcon
+                strokeWidth={2.25}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            iconFilled={
+              <HashtagIcon
+                strokeWidth={2.5}
+                style={pal.text as FontAwesomeIconStyle}
+                size={isDesktop ? 24 : 28}
+              />
+            }
+            label={_(msg`Feeds`)}
+          />
           <NavItem
             href="/notifications"
             count={numUnread}
@@ -406,7 +410,7 @@ export function DesktopLeftNav() {
                 style={pal.text}
               />
             }
-            label="Profile"
+            label={_(msg`Profile`)}
           />
           <NavItem
             href="/settings"
@@ -512,7 +516,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 140,
     borderRadius: 24,
     paddingTop: 10,
     paddingBottom: 12, // visually aligns the text vertically inside the button

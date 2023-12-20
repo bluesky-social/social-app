@@ -49,8 +49,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const threadMutes = useMutedThreads()
   const unreads = useUnreadNotificationsApi()
   const enabled = opts?.enabled !== false
-  // state tracked across page fetches
-  const pageState = useRef({pageNum: 0, hasMarkedRead: false})
+  const lastPageCountRef = useRef(0)
 
   const query = useInfiniteQuery<
     FeedPage,
@@ -66,8 +65,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       if (!pageParam) {
         // for the first page, we check the cached page held by the unread-checker first
         page = unreads.getCachedUnreadPage()
-        // reset the page state
-        pageState.current = {pageNum: 0, hasMarkedRead: false}
       }
       if (!page) {
         page = await fetchPage({
@@ -76,30 +73,13 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
           queryClient,
           moderationOpts,
           threadMutes,
+          fetchAdditionalData: true,
         })
       }
 
-      // NOTE
-      // this section checks to see if we need to mark notifs read
-      // we want to wait until we've seen a read notification because
-      // of a timing challenge; marking read on the first page would
-      // cause subsequent pages of unread notifs to incorrectly come
-      // back as "read". we use page 6 as an abort condition, which means
-      // after ~180 notifs we give up on tracking unread state correctly
-      // -prf
-      if (!pageState.current.hasMarkedRead) {
-        let hasMarkedRead = false
-        if (
-          pageState.current.pageNum > 5 ||
-          page.items.some(item => item.notification.isRead)
-        ) {
-          unreads.markAllRead()
-          hasMarkedRead = true
-        }
-        pageState.current = {
-          pageNum: pageState.current.pageNum + 1,
-          hasMarkedRead,
-        }
+      // if the first page has an unread, mark all read
+      if (!pageParam && page.items[0] && !page.items[0].notification.isRead) {
+        unreads.markAllRead()
       }
 
       return page
@@ -107,22 +87,44 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled,
+    select(data: InfiniteData<FeedPage>) {
+      // override 'isRead' using the first page's returned seenAt
+      // we do this because the `markAllRead()` call above will
+      // mark subsequent pages as read prematurely
+      const seenAt = data.pages[0]?.seenAt || new Date()
+      for (const page of data.pages) {
+        for (const item of page.items) {
+          item.notification.isRead =
+            seenAt > new Date(item.notification.indexedAt)
+        }
+      }
+
+      return data
+    },
   })
 
   useEffect(() => {
     const {isFetching, hasNextPage, data} = query
-
-    let count = 0
-    let numEmpties = 0
-    for (const page of data?.pages || []) {
-      if (!page.items.length) {
-        numEmpties++
-      }
-      count += page.items.length
+    if (isFetching || !hasNextPage) {
+      return
     }
 
-    if (!isFetching && hasNextPage && count < PAGE_SIZE && numEmpties < 3) {
+    // avoid double-fires of fetchNextPage()
+    if (
+      lastPageCountRef.current !== 0 &&
+      lastPageCountRef.current === data?.pages?.length
+    ) {
+      return
+    }
+
+    // fetch next page if we haven't gotten a full page of content
+    let count = 0
+    for (const page of data?.pages || []) {
+      count += page.items.length
+    }
+    if (count < PAGE_SIZE && (data?.pages.length || 0) < 6) {
       query.fetchNextPage()
+      lastPageCountRef.current = data?.pages?.length || 0
     }
   }, [query])
 

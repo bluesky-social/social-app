@@ -14,9 +14,15 @@ export type FeedTunerFn = (
 ) => FeedViewPostsSlice[]
 
 export class FeedViewPostsSlice {
+  _reactKey: string
   isFlattenedReply = false
 
-  constructor(public items: FeedViewPost[], public _reactKey: string) {}
+  constructor(public items: FeedViewPost[]) {
+    const item = items[0]
+    this._reactKey = `slice-${item.post.uri}-${
+      item.reason?.indexedAt || item.post.indexedAt
+    }`
+  }
 
   get uri() {
     if (this.isFlattenedReply) {
@@ -120,9 +126,7 @@ export class NoopFeedTuner {
     feed: FeedViewPost[],
     _opts?: {dryRun: boolean; maintainOrder: boolean},
   ): FeedViewPostsSlice[] {
-    return feed.map(
-      item => new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
-    )
+    return feed.map(item => new FeedViewPostsSlice([item]))
   }
 }
 
@@ -160,9 +164,7 @@ export class FeedTuner {
     })
 
     if (maintainOrder) {
-      slices = feed.map(
-        item => new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
-      )
+      slices = feed.map(item => new FeedViewPostsSlice([item]))
     } else {
       // arrange the posts into thread slices
       for (let i = feed.length - 1; i >= 0; i--) {
@@ -178,9 +180,7 @@ export class FeedTuner {
             continue
           }
         }
-        slices.unshift(
-          new FeedViewPostsSlice([item], `slice-${this.keyCounter++}`),
-        )
+        slices.unshift(new FeedViewPostsSlice([item]))
       }
     }
 

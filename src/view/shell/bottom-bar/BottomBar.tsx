@@ -23,13 +23,19 @@ import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import {Button} from '#/view/com/util/forms/Button'
+import {s} from 'lib/styles'
+import {Logo} from '#/view/icons/Logo'
+import {Logotype} from '#/view/icons/Logotype'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -46,6 +52,19 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const numUnreadNotifications = useUnreadNotifications()
   const {footerMinimalShellTransform} = useMinimalShellMode()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const closeAllActiveElements = useCloseAllActiveElements()
+
+  const showSignIn = React.useCallback(() => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'none'})
+  }, [requestSwitchToAccount, closeAllActiveElements])
+
+  const showCreateAccount = React.useCallback(() => {
+    closeAllActiveElements()
+    requestSwitchToAccount({requestedAccount: 'new'})
+    // setShowLoggedOut(true)
+  }, [requestSwitchToAccount, closeAllActiveElements])
 
   const onPressTab = React.useCallback(
     (tab: TabOptions) => {
@@ -94,75 +113,74 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       onLayout={e => {
         footerHeight.value = e.nativeEvent.layout.height
       }}>
-      <Btn
-        testID="bottomBarHomeBtn"
-        icon={
-          isAtHome ? (
-            <HomeIconSolid
-              strokeWidth={4}
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-            />
-          ) : (
-            <HomeIcon
-              strokeWidth={4}
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-            />
-          )
-        }
-        onPress={onPressHome}
-        accessibilityRole="tab"
-        accessibilityLabel={_(msg`Home`)}
-        accessibilityHint=""
-      />
-      <Btn
-        testID="bottomBarSearchBtn"
-        icon={
-          isAtSearch ? (
-            <MagnifyingGlassIcon2Solid
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
-            />
-          ) : (
-            <MagnifyingGlassIcon2
-              size={25}
-              style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-              strokeWidth={1.8}
-            />
-          )
-        }
-        onPress={onPressSearch}
-        accessibilityRole="search"
-        accessibilityLabel={_(msg`Search`)}
-        accessibilityHint=""
-      />
-      <Btn
-        testID="bottomBarFeedsBtn"
-        icon={
-          isAtFeeds ? (
-            <HashtagIcon
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={4}
-            />
-          ) : (
-            <HashtagIcon
-              size={24}
-              style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-              strokeWidth={2.25}
-            />
-          )
-        }
-        onPress={onPressFeeds}
-        accessibilityRole="tab"
-        accessibilityLabel={_(msg`Feeds`)}
-        accessibilityHint=""
-      />
-
-      {hasSession && (
+      {hasSession ? (
         <>
+          <Btn
+            testID="bottomBarHomeBtn"
+            icon={
+              isAtHome ? (
+                <HomeIconSolid
+                  strokeWidth={4}
+                  size={24}
+                  style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                />
+              ) : (
+                <HomeIcon
+                  strokeWidth={4}
+                  size={24}
+                  style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
+                />
+              )
+            }
+            onPress={onPressHome}
+            accessibilityRole="tab"
+            accessibilityLabel={_(msg`Home`)}
+            accessibilityHint=""
+          />
+          <Btn
+            testID="bottomBarSearchBtn"
+            icon={
+              isAtSearch ? (
+                <MagnifyingGlassIcon2Solid
+                  size={25}
+                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                  strokeWidth={1.8}
+                />
+              ) : (
+                <MagnifyingGlassIcon2
+                  size={25}
+                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
+                  strokeWidth={1.8}
+                />
+              )
+            }
+            onPress={onPressSearch}
+            accessibilityRole="search"
+            accessibilityLabel={_(msg`Search`)}
+            accessibilityHint=""
+          />
+          <Btn
+            testID="bottomBarFeedsBtn"
+            icon={
+              isAtFeeds ? (
+                <HashtagIcon
+                  size={24}
+                  style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  strokeWidth={4}
+                />
+              ) : (
+                <HashtagIcon
+                  size={24}
+                  style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
+                  strokeWidth={2.25}
+                />
+              )
+            }
+            onPress={onPressFeeds}
+            accessibilityRole="tab"
+            accessibilityLabel={_(msg`Feeds`)}
+            accessibilityHint=""
+          />
           <Btn
             testID="bottomBarNotificationsBtn"
             icon={
@@ -229,6 +247,49 @@ export function BottomBar({navigation}: BottomTabBarProps) {
             accessibilityLabel={_(msg`Profile`)}
             accessibilityHint=""
           />
+        </>
+      ) : (
+        <>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingTop: 14,
+              paddingBottom: 2,
+              paddingLeft: 14,
+              paddingRight: 6,
+              gap: 8,
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+              <Logo width={28} />
+              <View style={{paddingTop: 4}}>
+                <Logotype width={80} fill={pal.text.color} />
+              </View>
+            </View>
+
+            <View style={{flexDirection: 'row', alignItems: 'center', gap: 4}}>
+              <Button
+                onPress={showCreateAccount}
+                accessibilityHint={_(msg`Sign up`)}
+                accessibilityLabel={_(msg`Sign up`)}>
+                <Text type="md" style={[{color: 'white'}, s.bold]}>
+                  <Trans>Sign up</Trans>
+                </Text>
+              </Button>
+
+              <Button
+                type="default"
+                onPress={showSignIn}
+                accessibilityHint={_(msg`Sign in`)}
+                accessibilityLabel={_(msg`Sign in`)}>
+                <Text type="md" style={[pal.text, s.bold]}>
+                  <Trans>Sign in</Trans>
+                </Text>
+              </Button>
+            </View>
+          </View>
         </>
       )}
     </Animated.View>

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, StyleProp, ViewStyle} from 'react-native'
 import {Link} from './Link'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {makeProfileLink} from 'lib/routes/links'
 import {useModalControls} from '#/state/modals'
 
@@ -15,7 +15,7 @@ export function UserPreviewLink(
 ) {
   const {openModal} = useModalControls()
 
-  if (isWeb) {
+  if (isWeb || isAndroid) {
     return (
       <Link
         href={makeProfileLink(props)}

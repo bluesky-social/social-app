@@ -42,7 +42,6 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
-import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useSession} from '#/state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 
@@ -187,6 +186,9 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = 'Reposts of this post'
+  const isSelfLabeledPost =
+    moderation.decisions.post.cause?.type === 'label' &&
+    moderation.decisions.post.cause.label.src === currentAccount?.did
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -328,8 +330,13 @@ let PostThreadItemLoaded = ({
             </View>
             <PostDropdownBtn
               testID="postDropdownBtn"
-              post={post}
+              postAuthor={post.author}
+              postCid={post.cid}
+              postUri={post.uri}
               record={record}
+              showAppealLabelItem={
+                post.author.did === currentAccount?.did && !isSelfLabeledPost
+              }
               style={{
                 paddingVertical: 6,
                 paddingHorizontal: 10,
@@ -349,13 +356,6 @@ let PostThreadItemLoaded = ({
                 includeMute
                 style={styles.alert}
               />
-              {post.author.did === currentAccount?.did ? (
-                <LabelInfo
-                  details={{uri: post.uri, cid: post.cid}}
-                  labels={post.labels}
-                  style={{marginBottom: 8}}
-                />
-              ) : null}
               {richText?.text ? (
                 <View
                   style={[

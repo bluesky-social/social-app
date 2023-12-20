@@ -8,7 +8,8 @@ import {
   Pressable,
   Platform,
 } from 'react-native'
-import {FlatList, ScrollView, CenteredView} from '#/view/com/util/Views'
+import {ScrollView, CenteredView} from '#/view/com/util/Views'
+import {List} from '#/view/com/util/List'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -155,7 +156,7 @@ function SearchScreenSuggestedFollows() {
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
 
   return suggestions.length ? (
-    <FlatList
+    <List
       data={suggestions}
       renderItem={({item}) => <ProfileCardWithFollowBtn profile={item} noBg />}
       keyExtractor={item => item.did}
@@ -243,7 +244,7 @@ function SearchScreenPostResults({query}: {query: string}) {
       {isFetched ? (
         <>
           {posts.length ? (
-            <FlatList
+            <List
               data={items}
               renderItem={({item}) => {
                 if (item.type === 'post') {
@@ -284,7 +285,7 @@ function SearchScreenUserResults({query}: {query: string}) {
   return isFetched && results ? (
     <>
       {results.length ? (
-        <FlatList
+        <List
           data={results}
           renderItem={({item}) => (
             <ProfileCardWithFollowBtn profile={item} noBg />
@@ -303,7 +304,8 @@ function SearchScreenUserResults({query}: {query: string}) {
   )
 }
 
-const SECTIONS = ['Posts', 'Users']
+const SECTIONS_LOGGEDOUT = ['Users']
+const SECTIONS_LOGGEDIN = ['Posts', 'Users']
 export function SearchScreenInner({query}: {query?: string}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -319,44 +321,62 @@ export function SearchScreenInner({query}: {query?: string}) {
     [setDrawerSwipeDisabled, setMinimalShellMode],
   )
 
+  if (hasSession) {
+    return query ? (
+      <Pager
+        tabBarPosition="top"
+        onPageSelected={onPageSelected}
+        renderTabBar={props => (
+          <CenteredView sideBorders style={pal.border}>
+            <TabBar items={SECTIONS_LOGGEDIN} {...props} />
+          </CenteredView>
+        )}
+        initialPage={0}>
+        <View>
+          <SearchScreenPostResults query={query} />
+        </View>
+        <View>
+          <SearchScreenUserResults query={query} />
+        </View>
+      </Pager>
+    ) : (
+      <View>
+        <CenteredView sideBorders style={pal.border}>
+          <Text
+            type="title"
+            style={[
+              pal.text,
+              pal.border,
+              {
+                display: 'flex',
+                paddingVertical: 12,
+                paddingHorizontal: 18,
+                fontWeight: 'bold',
+              },
+            ]}>
+            <Trans>Suggested Follows</Trans>
+          </Text>
+        </CenteredView>
+
+        <SearchScreenSuggestedFollows />
+      </View>
+    )
+  }
+
   return query ? (
     <Pager
       tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
         <CenteredView sideBorders style={pal.border}>
-          <TabBar items={SECTIONS} {...props} />
+          <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
         </CenteredView>
       )}
       initialPage={0}>
       <View>
-        <SearchScreenPostResults query={query} />
-      </View>
-      <View>
         <SearchScreenUserResults query={query} />
       </View>
     </Pager>
-  ) : hasSession ? (
-    <View>
-      <CenteredView sideBorders style={pal.border}>
-        <Text
-          type="title"
-          style={[
-            pal.text,
-            pal.border,
-            {
-              display: 'flex',
-              paddingVertical: 12,
-              paddingHorizontal: 18,
-              fontWeight: 'bold',
-            },
-          ]}>
-          <Trans>Suggested Follows</Trans>
-        </Text>
-      </CenteredView>
-
-      <SearchScreenSuggestedFollows />
-    </View>
   ) : (
     <CenteredView sideBorders style={pal.border}>
       <View
@@ -382,13 +402,27 @@ export function SearchScreenInner({query}: {query?: string}) {
           </Text>
         )}
 
-        <Text
-          style={[
-            pal.textLight,
-            {textAlign: 'center', paddingVertical: 12, paddingHorizontal: 18},
-          ]}>
-          <Trans>Search for posts and users.</Trans>
-        </Text>
+        <View
+          style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingVertical: 30,
+            gap: 15,
+          }}>
+          <MagnifyingGlassIcon
+            strokeWidth={3}
+            size={isDesktop ? 60 : 60}
+            style={pal.textLight}
+          />
+          <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
+            {isDesktop ? (
+              <Trans>Find users with the search tool on the right</Trans>
+            ) : (
+              <Trans>Find users on Bluesky</Trans>
+            )}
+          </Text>
+        </View>
       </View>
     </CenteredView>
   )

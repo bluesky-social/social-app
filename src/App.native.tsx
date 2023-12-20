@@ -6,6 +6,10 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {QueryClientProvider} from '@tanstack/react-query'
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from 'react-native-safe-area-context'
 
 import 'view/icons'
 
@@ -34,6 +38,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
+import {Splash} from '#/Splash'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -53,27 +58,28 @@ function InnerApp() {
     resumeSession(account)
   }, [resumeSession])
 
-  // wait for session to resume
-  if (isInitialLoad) return null
-
   return (
-    <React.Fragment
-      // Resets the entire tree below when it changes:
-      key={currentAccount?.did}>
-      <LoggedOutViewProvider>
-        <UnreadNotifsProvider>
-          <ThemeProvider theme={colorMode}>
-            {/* All components should be within this provider */}
-            <RootSiblingParent>
-              <GestureHandlerRootView style={s.h100pct}>
-                <TestCtrls />
-                <Shell />
-              </GestureHandlerRootView>
-            </RootSiblingParent>
-          </ThemeProvider>
-        </UnreadNotifsProvider>
-      </LoggedOutViewProvider>
-    </React.Fragment>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <Splash isReady={!isInitialLoad}>
+        <React.Fragment
+          // Resets the entire tree below when it changes:
+          key={currentAccount?.did}>
+          <LoggedOutViewProvider>
+            <UnreadNotifsProvider>
+              <ThemeProvider theme={colorMode}>
+                {/* All components should be within this provider */}
+                <RootSiblingParent>
+                  <GestureHandlerRootView style={s.h100pct}>
+                    <TestCtrls />
+                    <Shell />
+                  </GestureHandlerRootView>
+                </RootSiblingParent>
+              </ThemeProvider>
+            </UnreadNotifsProvider>
+          </LoggedOutViewProvider>
+        </React.Fragment>
+      </Splash>
+    </SafeAreaProvider>
   )
 }
 

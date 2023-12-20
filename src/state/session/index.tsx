@@ -189,6 +189,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
         logger.DebugContext.session,
       )
+      track('Try Create Account')
 
       const agent = new BskyAgent({service})
 
@@ -231,6 +232,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         },
         logger.DebugContext.session,
       )
+      track('Create Account')
     },
     [upsertAccount, queryClient],
   )
@@ -361,6 +363,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       if (canReusePrevSession) {
+        logger.info(`session: attempting to reuse previous session`)
+
         agent.session = prevSession
         __globalAgent = agent
         queryClient.clear()
@@ -370,6 +374,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         resumeSessionWithFreshAccount()
           .then(freshAccount => {
             if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
+              logger.info(
+                `session: reuse of previous session returned a fresh account, upserting`,
+              )
               upsertAccount(freshAccount)
             }
           })
@@ -385,6 +392,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             __globalAgent = PUBLIC_BSKY_AGENT
           })
       } else {
+        logger.info(`session: attempting to resume using previous session`)
+
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
@@ -404,6 +413,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
+        logger.info(`session: resumeSessionWithFreshAccount`)
+
         await networkRetry(1, () => agent.resumeSession(prevSession))
 
         /*
