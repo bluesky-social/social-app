@@ -284,6 +284,7 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverscroll>
+        {({headerHeight, isFocused, scrollElRef}) => (
           <FeedSection
             ref={postsSectionRef}
             feed={`author|${profile.did}|posts_and_author_threads`}
