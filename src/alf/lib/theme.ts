@@ -341,18 +341,17 @@ export const createTheme = <
       if (properties[prop]) {
         _applyStyleProperty(styles, prop, value)
       } else if (macros[prop]) {
-        styles = {
-          ...styles,
-          // @ts-ignore no index sig, it's fine
-          ...(rawProps[prop] !== false ? macros[prop](value, tokens) : {}),
-        }
+        Object.assign(
+          styles,
+          rawProps[prop] !== false ? macros[prop](value, tokens) : {},
+        )
       } else if (breakpoints[prop]) {
-        for (const b of Object.keys(breakpoints)) {
+        for (const b in breakpoints) {
           if (activeBreakpoints.includes(b)) {
             // @ts-ignore no index sig, it's fine
             const breakpointStyles = rawProps[b] || {}
             const r = style(breakpointStyles, activeBreakpoints)
-            styles = {...styles, ...r.styles}
+            Object.assign(styles, r.styles || {})
           } else {
             // @ts-ignore no index sig, it's fine
             delete rawProps[b]
