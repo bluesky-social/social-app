@@ -94,6 +94,7 @@ function Player({
               allowsInlineMediaPlayback
               bounces={false}
               allowsFullscreenVideo
+              nestedScrollEnabled
               source={{uri: params.playerUri}}
               onLoad={onLoad}
               setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
