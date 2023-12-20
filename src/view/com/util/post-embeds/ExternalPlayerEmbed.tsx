@@ -23,12 +23,10 @@ interface ShouldStartLoadRequest {
 
 // This renders the overlay when the player is either inactive or loading as a separate layer
 function PlaceholderOverlay({
-  link,
   isLoading,
   isPlayerActive,
   onPress,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
   isLoading: boolean
   isPlayerActive: boolean
   onPress: () => void
@@ -40,12 +38,12 @@ function PlaceholderOverlay({
     <View style={[styles.layer, styles.overlayLayer]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={link.title}
+        accessibilityLabel="Play Video"
         accessibilityHint=""
         onPress={onPress}
         style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
-          <FontAwesomeIcon icon="play" size={32} color="white" />
+          <FontAwesomeIcon icon="play" size={42} color="white" />
         ) : (
           <ActivityIndicator size="large" color="white" />
         )}
@@ -84,6 +82,7 @@ function Player({
             play
             height={height}
             onReady={onLoad}
+            webViewStyle={[styles.webview, styles.topRadius]}
           />
         ) : (
           <View style={{height, width: '100%'}}>
@@ -203,7 +202,6 @@ export function ExternalPlayer({
       )}
 
       <PlaceholderOverlay
-        link={link}
         isLoading={isLoading}
         isPlayerActive={isPlayerActive}
         onPress={onPlayPress}
