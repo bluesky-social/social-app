@@ -158,8 +158,8 @@ function PlayerView({
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
   const [dim, setDim] = React.useState({
-    width: 100,
-    height: 100,
+    width: 0,
+    height: 0,
   })
 
   const navigation = useNavigation<NavigationProp>()

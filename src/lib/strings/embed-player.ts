@@ -31,8 +31,6 @@ export function parseEmbedPlayerFromUrl(
     }
   }
   if (urlp.hostname === 'www.youtube.com' || urlp.hostname === 'youtube.com') {
-    console.log(urlp.pathname)
-
     const [_, page, shortVideoId] = urlp.pathname.split('/')
     const videoId =
       page === 'shorts' ? shortVideoId : (urlp.searchParams.get('v') as string)
