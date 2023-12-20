@@ -117,14 +117,12 @@ export function getPlayerHeight({
   type,
   width,
   hasThumb,
-  isPlayerActive,
 }: {
   type: EmbedPlayerParams['type']
   width: number
   hasThumb: boolean
-  isPlayerActive: boolean
 }) {
-  if (!hasThumb && !isPlayerActive) return (width / 16) * 9
+  if (!hasThumb) return (width / 16) * 9
 
   switch (type) {
     case 'youtube_video':

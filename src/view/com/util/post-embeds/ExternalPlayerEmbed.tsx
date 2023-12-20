@@ -159,9 +159,8 @@ export function ExternalPlayer({
         type: params.type,
         width: dim.width,
         hasThumb: !!link.thumb,
-        isPlayerActive,
       }),
-    [params.type, dim.width, link.thumb, isPlayerActive],
+    [params.type, dim.width, link.thumb],
   )
 
   const onLoad = React.useCallback(() => {
