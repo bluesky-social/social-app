@@ -3,63 +3,22 @@ import {
   ActivityIndicator,
   Dimensions,
   Pressable,
-  StyleProp,
   StyleSheet,
   View,
-  ViewStyle,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from '../text/Text'
 import {EventStopper} from '../EventStopper'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {isNative} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
-import {Link} from 'view/com/util/Link'
 
 interface ShouldStartLoadRequest {
   url: string
-}
-
-// This renders the player and the link
-export function ExternalPlayerEmbed({
-  link,
-  params,
-  style,
-}: {
-  link: AppBskyEmbedExternal.ViewExternal
-  params: EmbedPlayerParams
-  style?: StyleProp<ViewStyle>
-}) {
-  const pal = usePalette('default')
-  return (
-    <View style={[styles.extOuter, pal.view, pal.border, style]}>
-      <PlayerView link={link} params={params} />
-      <Link href={link.uri} style={styles.inner}>
-        {!!link.title && (
-          <Text type="sm-bold" numberOfLines={2} style={[pal.text]}>
-            {link.title}
-          </Text>
-        )}
-        <Text type="sm" numberOfLines={1} style={[pal.textLight, styles.uri]}>
-          {link.uri}
-        </Text>
-        {!!link.description && (
-          <Text
-            type="sm"
-            numberOfLines={2}
-            style={[pal.text, styles.description]}>
-            {link.description}
-          </Text>
-        )}
-      </Link>
-    </View>
-  )
 }
 
 // This renders the overlay when the player is either inactive or loading as a separate layer
@@ -148,7 +107,7 @@ function Player({
 }
 
 // This renders the player area and handles the logic for when to show the player and when to show the overlay
-function PlayerView({
+export function ExternalPlayer({
   link,
   params,
 }: {
@@ -192,14 +151,6 @@ function PlayerView({
     }
   }, [viewRef, navigation])
 
-  const onLoad = React.useCallback(() => {
-    setIsLoading(false)
-  }, [])
-
-  const onPlayPress = React.useCallback(() => {
-    setPlayerActive(true)
-  }, [])
-
   // calculate height for the player and the screen size
   const height = React.useMemo(
     () =>
@@ -211,6 +162,14 @@ function PlayerView({
       }),
     [params.type, dim.width, link.thumb, isPlayerActive],
   )
+
+  const onLoad = React.useCallback(() => {
+    setIsLoading(false)
+  }, [])
+
+  const onPlayPress = React.useCallback(() => {
+    setPlayerActive(true)
+  }, [])
 
   // measure the layout to set sizing
   const onLayout = React.useCallback(
@@ -260,20 +219,6 @@ function PlayerView({
 }
 
 const styles = StyleSheet.create({
-  extOuter: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginTop: 4,
-  },
-  inner: {
-    padding: 10,
-  },
-  uri: {
-    marginTop: 2,
-  },
-  description: {
-    marginTop: 4,
-  },
   topRadius: {
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,

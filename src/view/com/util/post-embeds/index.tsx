@@ -24,8 +24,6 @@ import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {ExternalPlayerEmbed} from './ExternalPlayerEmbed'
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ListEmbed} from './ListEmbed'
@@ -168,26 +166,13 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
-    // TODO factor this out!
-    const embedPlayerParams = parseEmbedPlayerFromUrl(link.uri)
-
-    if (embedPlayerParams) {
-      return (
-        <ExternalPlayerEmbed
-          link={link}
-          params={embedPlayerParams}
-          style={style}
-        />
-      )
-    }
 
     return (
-      <Link
-        asAnchor
-        style={[styles.extOuter, pal.view, pal.border, style]}
-        href={link.uri}>
-        <ExternalLinkEmbed link={link} />
-      </Link>
+      <View style={[styles.extOuter, pal.view, pal.border, style]}>
+        <Link asAnchor href={link.uri}>
+          <ExternalLinkEmbed link={link} />
+        </Link>
+      </View>
     )
   }
 
