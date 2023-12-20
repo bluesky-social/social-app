@@ -12,7 +12,7 @@ import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {EmbedPlayerParams} from 'lib/strings/embed-player'
+import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from '../text/Text'
 import {EventStopper} from '../EventStopper'
@@ -201,24 +201,16 @@ function PlayerView({
   }, [])
 
   // calculate height for the player and the screen size
-  const height = React.useMemo(() => {
-    if (params.type === 'youtube_video' || params.type === 'twitch_live') {
-      return (dim.width / 16) * 9
-    }
-    if (params.type === 'spotify_song') {
-      if (dim.width <= 300) {
-        return 180
-      }
-      return 232
-    }
-    if (params.type === 'spotify_playlist') {
-      return 420
-    }
-    if (params.type === 'spotify_album') {
-      return 420
-    }
-    return dim.width
-  }, [params.type, dim])
+  const height = React.useMemo(
+    () =>
+      getPlayerHeight({
+        type: params.type,
+        width: dim.width,
+        hasThumb: !!link.thumb,
+        isPlayerActive,
+      }),
+    [params.type, dim.width, link.thumb, isPlayerActive],
+  )
 
   // measure the layout to set sizing
   const onLayout = React.useCallback(

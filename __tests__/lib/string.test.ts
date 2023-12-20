@@ -410,6 +410,10 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://open.spotify.com/album/albumId',
     'https://open.spotify.com/album/albumId?param=value',
+
+    'https://soundcloud.com/user/track',
+    'https://soundcloud.com/user/sets/set',
+    'https://soundcloud.com/user/',
   ]
 
   const outputs = [
@@ -490,6 +494,20 @@ describe('parseEmbedPlayerFromUrl', () => {
       albumId: 'albumId',
       playerUri: `https://open.spotify.com/embed/album/albumId`,
     },
+
+    {
+      type: 'soundcloud_track',
+      user: 'user',
+      track: 'track',
+      playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/track&auto_play=true&visual=false&hide_related=true`,
+    },
+    {
+      type: 'soundcloud_set',
+      user: 'user',
+      set: 'set',
+      playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/sets/set&auto_play=true&visual=false&hide_related=true`,
+    },
+    undefined,
   ]
 
   it('correctly grabs the correct id from uri', () => {

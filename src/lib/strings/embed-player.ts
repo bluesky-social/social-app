@@ -8,6 +8,8 @@ export type EmbedPlayerParams =
       playerUri: string
     }
   | {type: 'spotify_song'; songId: string; playerUri: string}
+  | {type: 'soundcloud_track'; user: string; track: string; playerUri: string}
+  | {type: 'soundcloud_set'; user: string; set: string; playerUri: string}
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -82,5 +84,66 @@ export function parseEmbedPlayerFromUrl(
         }
       }
     }
+  }
+
+  // soundcloud
+  if (
+    urlp.hostname === 'soundcloud.com' ||
+    urlp.hostname === 'www.soundcloud.com'
+  ) {
+    const [_, user, trackOrSets, set] = urlp.pathname.split('/')
+
+    if (user && trackOrSets) {
+      if (trackOrSets === 'sets' && set) {
+        return {
+          type: 'soundcloud_set',
+          user,
+          set: set,
+          playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
+        }
+      }
+
+      return {
+        type: 'soundcloud_track',
+        user,
+        track: trackOrSets,
+        playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
+      }
+    }
+  }
+}
+
+export function getPlayerHeight({
+  type,
+  width,
+  hasThumb,
+  isPlayerActive,
+}: {
+  type: EmbedPlayerParams['type']
+  width: number
+  hasThumb: boolean
+  isPlayerActive: boolean
+}) {
+  if (!hasThumb && !isPlayerActive) return (width / 16) * 9
+
+  switch (type) {
+    case 'youtube_video':
+    case 'twitch_live':
+      return (width / 16) * 9
+    case 'spotify_album':
+      return 380
+    case 'spotify_playlist':
+      return 360
+    case 'spotify_song':
+      if (width <= 300) {
+        return 180
+      }
+      return 232
+    case 'soundcloud_track':
+      return 165
+    case 'soundcloud_set':
+      return 360
+    default:
+      return width
   }
 }
