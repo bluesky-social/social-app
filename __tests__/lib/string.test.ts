@@ -393,6 +393,11 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://www.youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/watch?v=videoId',
     'https://youtube.com/watch?v=videoId&feature=share',
+    'https://youtube.com/shorts/videoId',
+
+    'https://youtube.com/shorts/',
+    'https://youtube.com/',
+    'https://youtube.com/random',
 
     'https://twitch.tv/channelName',
     'https://www.twitch.tv/channelName',
@@ -433,6 +438,14 @@ describe('parseEmbedPlayerFromUrl', () => {
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId',
     },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId',
+    },
+    undefined,
+    undefined,
+    undefined,
 
     {
       type: 'twitch_live',
