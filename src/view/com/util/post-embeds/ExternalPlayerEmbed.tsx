@@ -2,6 +2,7 @@ import React from 'react'
 import {
   ActivityIndicator,
   Dimensions,
+  GestureResponderEvent,
   Pressable,
   StyleSheet,
   View,
@@ -29,7 +30,7 @@ function PlaceholderOverlay({
 }: {
   isLoading: boolean
   isPlayerActive: boolean
-  onPress: () => void
+  onPress: (event: GestureResponderEvent) => void
 }) {
   // If the player is active and not loading, we don't want to show the overlay.
   if (isPlayerActive && !isLoading) return null
@@ -166,7 +167,10 @@ export function ExternalPlayer({
     setIsLoading(false)
   }, [])
 
-  const onPlayPress = React.useCallback(() => {
+  const onPlayPress = React.useCallback((event: GestureResponderEvent) => {
+    // Prevent this from propagating upward on web
+    event.preventDefault()
+
     setPlayerActive(true)
   }, [])
 
@@ -218,8 +222,8 @@ export function ExternalPlayer({
 
 const styles = StyleSheet.create({
   topRadius: {
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
   },
   layer: {
     position: 'absolute',

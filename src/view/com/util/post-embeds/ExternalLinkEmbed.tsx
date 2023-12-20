@@ -25,7 +25,7 @@ export const ExternalLinkEmbed = ({
   return (
     <View
       style={{
-        flexDirection: isMobile ? 'column' : 'row',
+        flexDirection: !isMobile && !embedPlayerParams ? 'row' : 'column',
       }}>
       {link.thumb && !embedPlayerParams ? (
         <View
