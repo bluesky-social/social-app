@@ -500,6 +500,7 @@ export function FeedsScreen(_props: Props) {
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
         scrollIndicatorInsets={{right: 1}}
+        keyboardShouldPersistTaps="handled"
       />
 
       {hasSession && (

@@ -601,7 +601,9 @@ export function SearchScreenMobile(
           {isFetching ? (
             <Loader />
           ) : (
-            <ScrollView style={{height: '100%'}}>
+            <ScrollView
+              style={{height: '100%'}}
+              keyboardShouldPersistTaps="handled">
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
