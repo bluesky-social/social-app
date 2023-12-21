@@ -420,32 +420,32 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'youtube_video',
       videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
       videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
       videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
       videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
       videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
       videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     undefined,
     undefined,
