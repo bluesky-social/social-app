@@ -590,7 +590,10 @@ export function SearchScreenMobile(
 
         {query || inputIsFocused ? (
           <View style={styles.headerCancelBtn}>
-            <Pressable onPress={onPressCancelSearch} accessibilityRole="button">
+            <Pressable
+              onPress={onPressCancelSearch}
+              accessibilityRole="button"
+              hitSlop={HITSLOP_10}>
               <Text style={[pal.text]}>
                 <Trans>Cancel</Trans>
               </Text>
