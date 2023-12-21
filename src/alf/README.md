@@ -6,7 +6,7 @@ import {atoms, useTheme, useBreakpoints, web} from '#/alf'
 import {H3, Text} from '#/view/com/Typography'
 
 function App() {
-  const theme = useAlf()
+  const theme = useTheme()
   const breakpoints = useBreakpoints()
 
   return (
