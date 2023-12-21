@@ -609,7 +609,8 @@ export function SearchScreenMobile(
           ) : (
             <ScrollView
               style={{height: '100%'}}
-              keyboardShouldPersistTaps="handled">
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag">
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
