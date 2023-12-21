@@ -577,7 +577,8 @@ export function SearchScreenMobile(
               onPress={onPressClearQuery}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint="">
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}>
               <FontAwesomeIcon
                 icon="xmark"
                 size={16}
