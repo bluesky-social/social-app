@@ -375,7 +375,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:285
 #: src/view/com/composer/Composer.tsx:288
-#: src/view/com/modals/AltImage.tsx:127
+#: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/Confirm.tsx:88
@@ -398,7 +398,7 @@ msgstr ""
 msgid "Cancel account deletion"
 msgstr ""
 
-#: src/view/com/modals/AltImage.tsx:122
+#: src/view/com/modals/AltImage.tsx:123
 msgid "Cancel add image alt text"
 msgstr ""
 
@@ -809,7 +809,7 @@ msgstr ""
 msgid "Enable this setting to only see replies between people you follow."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:425
+#: src/view/screens/Profile.tsx:426
 msgid "End of feed"
 msgstr ""
 
@@ -854,7 +854,7 @@ msgstr ""
 msgid "Failed to load recommended feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:559
+#: src/view/screens/Feeds.tsx:560
 msgid "Feed offline"
 msgstr ""
 
@@ -868,9 +868,9 @@ msgid "Feedback"
 msgstr ""
 
 #: src/view/screens/Feeds.tsx:475
-#: src/view/screens/Profile.tsx:164
+#: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:339
+#: src/view/shell/desktop/LeftNav.tsx:340
 #: src/view/shell/Drawer.tsx:455
 #: src/view/shell/Drawer.tsx:456
 msgid "Feeds"
@@ -973,7 +973,7 @@ msgstr ""
 #: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
-#: src/view/shell/desktop/LeftNav.tsx:103
+#: src/view/shell/desktop/LeftNav.tsx:104
 msgid "Go back"
 msgstr ""
 
@@ -1041,7 +1041,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:303
+#: src/view/shell/desktop/LeftNav.tsx:304
 #: src/view/shell/Drawer.tsx:379
 #: src/view/shell/Drawer.tsx:380
 msgid "Home"
@@ -1074,7 +1074,7 @@ msgstr ""
 msgid "If none are selected, suitable for all ages."
 msgstr ""
 
-#: src/view/com/modals/AltImage.tsx:96
+#: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
 msgstr ""
 
@@ -1195,7 +1195,7 @@ msgstr ""
 msgid "Liked by"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:163
+#: src/view/screens/Profile.tsx:164
 msgid "Likes"
 msgstr ""
 
@@ -1215,8 +1215,8 @@ msgstr ""
 msgid "List Name"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:165
-#: src/view/shell/desktop/LeftNav.tsx:376
+#: src/view/screens/Profile.tsx:166
+#: src/view/shell/desktop/LeftNav.tsx:377
 #: src/view/shell/Drawer.tsx:471
 #: src/view/shell/Drawer.tsx:472
 msgid "Lists"
@@ -1263,7 +1263,7 @@ msgstr ""
 msgid "Make sure this is where you intend to go!"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:162
+#: src/view/screens/Profile.tsx:163
 msgid "Media"
 msgstr ""
 
@@ -1285,7 +1285,7 @@ msgstr ""
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
-#: src/view/shell/desktop/LeftNav.tsx:394
+#: src/view/shell/desktop/LeftNav.tsx:395
 #: src/view/shell/Drawer.tsx:490
 #: src/view/shell/Drawer.tsx:491
 msgid "Moderation"
@@ -1361,7 +1361,7 @@ msgstr ""
 msgid "My Feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:64
+#: src/view/shell/desktop/LeftNav.tsx:65
 msgid "My Profile"
 msgstr ""
 
@@ -1384,16 +1384,16 @@ msgid "New"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:510
-#: src/view/screens/Profile.tsx:353
+#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:430
 #: src/view/screens/ProfileList.tsx:193
 #: src/view/screens/ProfileList.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:246
+#: src/view/shell/desktop/LeftNav.tsx:247
 msgid "New post"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:257
 msgid "New Post"
 msgstr ""
 
@@ -1470,7 +1470,7 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:109
 #: src/view/screens/Notifications.tsx:133
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:358
+#: src/view/shell/desktop/LeftNav.tsx:359
 #: src/view/shell/Drawer.tsx:416
 #: src/view/shell/Drawer.tsx:417
 msgid "Notifications"
@@ -1634,7 +1634,7 @@ msgstr ""
 msgid "Post not found"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:160
+#: src/view/screens/Profile.tsx:161
 msgid "Posts"
 msgstr ""
 
@@ -1667,7 +1667,7 @@ msgid "Processing..."
 msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:412
+#: src/view/shell/desktop/LeftNav.tsx:413
 #: src/view/shell/Drawer.tsx:69
 #: src/view/shell/Drawer.tsx:525
 #: src/view/shell/Drawer.tsx:526
@@ -1759,7 +1759,7 @@ msgstr ""
 msgid "Removed from list"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:161
+#: src/view/screens/Profile.tsx:162
 msgid "Replies"
 msgstr ""
 
@@ -1859,7 +1859,7 @@ msgstr ""
 #~ msgid "Retry change handle"
 #~ msgstr ""
 
-#: src/view/com/modals/AltImage.tsx:114
+#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/BirthDateSettings.tsx:93
 #: src/view/com/modals/BirthDateSettings.tsx:96
 #: src/view/com/modals/ChangeHandle.tsx:173
@@ -1869,7 +1869,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: src/view/com/modals/AltImage.tsx:105
+#: src/view/com/modals/AltImage.tsx:106
 msgid "Save alt text"
 msgstr ""
 
@@ -1898,7 +1898,7 @@ msgstr ""
 #: src/view/screens/Search/Search.tsx:401
 #: src/view/screens/Search/Search.tsx:567
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
 #: src/view/shell/Drawer.tsx:343
@@ -1993,7 +1993,7 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr ""
 
 #: src/view/screens/Settings.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:430
+#: src/view/shell/desktop/LeftNav.tsx:431
 #: src/view/shell/Drawer.tsx:546
 #: src/view/shell/Drawer.tsx:547
 msgid "Settings"
