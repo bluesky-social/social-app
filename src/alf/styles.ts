@@ -260,6 +260,9 @@ export const styles = {
     ...fontSize,
     ...fontWeight,
     ...lineHeight,
+    center: {
+      textAlign: 'center',
+    },
   },
   flex: {
     gap,
@@ -280,6 +283,12 @@ export const styles = {
     },
     alignCenter: {
       alignItems: 'center',
+    },
+    alignStart: {
+      alignItems: 'flex-start',
+    },
+    alignEnd: {
+      alignItems: 'flex-end',
     },
     justifyCenter: {
       justifyContent: 'center',

@@ -1,10 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 import {useSetColorMode} from '#/state/shell'
 import {useAlf, ThemeProvider as Alf} from '#/alf'
-import {Button} from '#/view/com/Button'
+import {Button, ButtonText} from '#/view/com/Button'
 import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
 
 function ThemeSelector() {
@@ -13,9 +14,24 @@ function ThemeSelector() {
 
   return (
     <View style={[styles.flex.row, styles.flex.gap.m]}>
-      <Button onPress={() => setColorMode('system')}>System</Button>
-      <Button onPress={() => setColorMode('light')}>Light</Button>
-      <Button onPress={() => setColorMode('dark')}>Dark</Button>
+      <Button
+        type="secondary"
+        size="small"
+        onPress={() => setColorMode('system')}>
+        System
+      </Button>
+      <Button
+        type="secondary"
+        size="small"
+        onPress={() => setColorMode('light')}>
+        Light
+      </Button>
+      <Button
+        type="secondary"
+        size="small"
+        onPress={() => setColorMode('dark')}>
+        Dark
+      </Button>
     </View>
   )
 }
@@ -269,6 +285,56 @@ export function DebugScreen() {
           <Alf theme="light">
             <ThemedSection />
           </Alf>
+
+          <View style={[styles.flex.gap.m, styles.flex.alignStart]}>
+            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Buttons</H3>
+
+            <Button>
+              {({state}) => (
+                <View
+                  style={[
+                    styles.padding.pa.m,
+                    styles.radius.round,
+                    styles.backgroundColor.l2,
+                  ]}>
+                  <Text>Unstyled button, state: {JSON.stringify(state)}</Text>
+                </View>
+              )}
+            </Button>
+
+            <Button type="primary" size="small">
+              Button
+            </Button>
+            <Button type="secondary" size="small">
+              Button
+            </Button>
+
+            <Button type="primary" size="large">
+              Button
+            </Button>
+            <Button type="secondary" size="large">
+              Button
+            </Button>
+
+            <Button type="secondary" size="small">
+              {({type, size}) => (
+                <>
+                  <FontAwesomeIcon icon={['fas', 'plus']} size={12} />
+                  <ButtonText type={type} size={size}>
+                    With an icon
+                  </ButtonText>
+                </>
+              )}
+            </Button>
+            <Button type="primary" size="large">
+              {({state: _state, ...rest}) => (
+                <>
+                  <FontAwesomeIcon icon={['fas', 'plus']} />
+                  <ButtonText {...rest}>With an icon</ButtonText>
+                </>
+              )}
+            </Button>
+          </View>
         </View>
       </CenteredView>
     </ScrollView>
