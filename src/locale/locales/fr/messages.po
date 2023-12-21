@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr "{0, plural, one {# invite code available} autre {# invite codes available}}"
+msgstr "{0, plural, one {# invite code available} other {# invite codes available}}"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -27,7 +27,7 @@ msgstr "{0} {purposeLabel} Liste"
 
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr "{invitesAvailable, plural, one {Invite codes: # available} autre {Invite codes: # available}}"
+msgstr "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:640
@@ -178,11 +178,11 @@ msgstr "Langue de l’application"
 
 #: src/view/screens/Settings.tsx:589
 msgid "App passwords"
-msgstr "Mots de passe des applications"
+msgstr "Mots de passe de l’appli"
 
 #: src/view/screens/AppPasswords.tsx:186
 msgid "App Passwords"
-msgstr "Mots de passe des applications"
+msgstr "Mots de passe de l’appli"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:207
 msgid "Appeal content warning"
@@ -2229,7 +2229,7 @@ msgstr "Télécharger un fichier texte vers :"
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "Utiliser les mots de passe de l’application pour se connecter à d’autres clients Bluesky sans donner un accès complet à votre compte ou à votre mot de passe."
+msgstr "Utiliser les mots de passe de l’appli pour se connecter à d’autres clients Bluesky sans donner un accès complet à votre compte ou à votre mot de passe."
 
 #: src/view/com/modals/ChangeHandle.tsx:513
 msgid "Use default provider"
