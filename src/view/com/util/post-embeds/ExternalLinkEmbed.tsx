@@ -6,22 +6,28 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {toNiceDomain} from 'lib/strings/url-helpers'
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
 
 export const ExternalLinkEmbed = ({
   link,
-  imageChild,
 }: {
   link: AppBskyEmbedExternal.ViewExternal
-  imageChild?: React.ReactNode
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+
+  const embedPlayerParams = React.useMemo(
+    () => parseEmbedPlayerFromUrl(link.uri),
+    [link.uri],
+  )
+
   return (
     <View
       style={{
-        flexDirection: isMobile ? 'column' : 'row',
+        flexDirection: !isMobile && !embedPlayerParams ? 'row' : 'column',
       }}>
-      {link.thumb ? (
+      {link.thumb && !embedPlayerParams ? (
         <View
           style={
             !isMobile
@@ -45,9 +51,11 @@ export const ExternalLinkEmbed = ({
             source={{uri: link.thumb}}
             accessibilityIgnoresInvertColors
           />
-          {imageChild}
         </View>
       ) : undefined}
+      {embedPlayerParams && (
+        <ExternalPlayer link={link} params={embedPlayerParams} />
+      )}
       <View
         style={{
           paddingHorizontal: isMobile ? 10 : 14,
