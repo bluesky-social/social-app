@@ -501,6 +501,7 @@ export function FeedsScreen(_props: Props) {
         desktopFixedHeight
         scrollIndicatorInsets={{right: 1}}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
       />
 
       {hasSession && (
