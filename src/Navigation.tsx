@@ -521,7 +521,10 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
           // TODO: Clean up?
           navigationRef.current?.addListener('__unsafe_action__', e => {
             if (webFocusedScreen) {
-              webScrollPositions.set(webFocusedScreen, window.scrollY)
+              webScrollPositions.set(
+                webFocusedScreen,
+                Math.round(window.scrollY),
+              )
             }
           })
         }

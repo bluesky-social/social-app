@@ -36,7 +36,7 @@ export const Pager = React.forwardRef(function PagerImpl(
 
   const onTabBarSelect = React.useCallback(
     (index: number) => {
-      const scrollY = window.scrollY
+      const scrollY = Math.round(window.scrollY)
       scrollYs.current[selectedPage] = scrollY
       setSelectedPage(index)
       onPageSelected?.(index)
