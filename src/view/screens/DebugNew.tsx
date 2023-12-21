@@ -26,6 +26,11 @@ function BreakpointDebugger() {
   return (
     <View>
       <H3 style={[styles.padding.pb.m]}>Breakpoint Debugger</H3>
+      <Text style={[styles.padding.pb.m]}>
+        Current breakpoint: {!breakpoints.gtMobile && <Text>mobile</Text>}
+        {breakpoints.gtMobile && !breakpoints.gtTablet && <Text>tablet</Text>}
+        {breakpoints.gtTablet && <Text>desktop</Text>}
+      </Text>
       <Text
         style={[
           styles.padding.pa.m,
@@ -255,6 +260,10 @@ export function DebugScreen() {
               <Text style={[styles.font.xs]}>H6 Size Text</Text>
               <Text style={[styles.font.xxs]}>Very Small Size Text</Text>
             </View>
+          </View>
+
+          <View>
+            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Breakpoints</H3>
           </View>
 
           <Alf theme="light">

@@ -23,8 +23,9 @@ function getActiveBreakpoints({width}: {width: number}) {
   )
 
   return {
-    active,
-    current: active[active.length - 1],
+    active: active[active.length - 1],
+    gtMobile: active.includes('gtMobile'),
+    gtTablet: active.includes('gtTablet'),
   }
 }
 
@@ -35,15 +36,17 @@ export const Context = React.createContext<{
   themeName: themes.ThemeName
   styles: themes.Theme
   breakpoints: {
-    current: BreakpointName | undefined
-    active: BreakpointName[]
+    active: BreakpointName | undefined
+    gtMobile: boolean
+    gtTablet: boolean
   }
 }>({
   themeName: 'light',
   styles: themes.light,
   breakpoints: {
-    current: undefined,
-    active: [],
+    active: undefined,
+    gtMobile: false,
+    gtTablet: false,
   },
 })
 
@@ -59,7 +62,7 @@ export function ThemeProvider({
   React.useEffect(() => {
     const listener = Dimensions.addEventListener('change', ({window}) => {
       const bp = getActiveBreakpoints({width: window.width})
-      if (bp.current !== breakpoints.current) setBreakpoints(bp)
+      if (bp.active !== breakpoints.active) setBreakpoints(bp)
     })
 
     return listener.remove
