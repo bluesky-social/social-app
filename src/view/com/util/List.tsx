@@ -1,27 +1,42 @@
 import React, {memo, startTransition} from 'react'
-import {FlatListProps} from 'react-native'
+import {FlatListProps, RefreshControl} from 'react-native'
 import {FlatList_INTERNAL} from './Views'
+import {addStyle} from 'lib/styles'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
+import {usePalette} from '#/lib/hooks/usePalette'
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<
   FlatListProps<ItemT>,
-  'onScroll' // Use ScrollContext instead.
+  | 'onScroll' // Use ScrollContext instead.
+  | 'refreshControl' // Pass refreshing and/or onRefresh instead.
+  | 'contentOffset' // Pass headerOffset instead.
 > & {
   onScrolledDownChange?: (isScrolledDown: boolean) => void
+  headerOffset?: number
+  refreshing?: boolean
+  onRefresh?: () => void
 }
 export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
 
 const SCROLLED_DOWN_LIMIT = 200
 
 function ListImpl<ItemT>(
-  {onScrolledDownChange, ...props}: ListProps<ItemT>,
+  {
+    onScrolledDownChange,
+    refreshing,
+    onRefresh,
+    headerOffset,
+    style,
+    ...props
+  }: ListProps<ItemT>,
   ref: React.Ref<ListMethods>,
 ) {
   const isScrolledDown = useSharedValue(false)
   const contextScrollHandlers = useScrollHandlers()
+  const pal = usePalette('default')
 
   function handleScrolledDownChange(didScrollDown: boolean) {
     startTransition(() => {
@@ -49,12 +64,36 @@ function ListImpl<ItemT>(
     },
   })
 
+  let refreshControl
+  if (refreshing !== undefined || onRefresh !== undefined) {
+    refreshControl = (
+      <RefreshControl
+        refreshing={refreshing ?? false}
+        onRefresh={onRefresh}
+        tintColor={pal.colors.text}
+        titleColor={pal.colors.text}
+        progressViewOffset={headerOffset}
+      />
+    )
+  }
+
+  let contentOffset
+  if (headerOffset != null) {
+    style = addStyle(style, {
+      paddingTop: headerOffset,
+    })
+    contentOffset = {x: 0, y: headerOffset * -1}
+  }
+
   return (
     <FlatList_INTERNAL
       {...props}
       scrollIndicatorInsets={{right: 1}}
+      contentOffset={contentOffset}
+      refreshControl={refreshControl}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
+      style={style}
       ref={ref}
     />
   )

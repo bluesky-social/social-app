@@ -1,18 +1,16 @@
 import React from 'react'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
 import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
 
 export function ProfileFollowers({name}: {name: string}) {
-  const pal = usePalette('default')
   const [isPTRing, setIsPTRing] = React.useState(false)
   const {
     data: resolvedDid,
@@ -90,14 +88,8 @@ export function ProfileFollowers({name}: {name: string}) {
     <List
       data={followers}
       keyExtractor={item => item.did}
-      refreshControl={
-        <RefreshControl
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          tintColor={pal.colors.text}
-          titleColor={pal.colors.text}
-        />
-      }
+      refreshing={isPTRing}
+      onRefresh={onRefresh}
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}
