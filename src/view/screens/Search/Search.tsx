@@ -163,6 +163,8 @@ function SearchScreenSuggestedFollows() {
       // @ts-ignore web only -prf
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 1200}}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
