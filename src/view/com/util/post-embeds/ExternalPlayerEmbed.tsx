@@ -115,6 +115,8 @@ export function ExternalPlayer({
   link: AppBskyEmbedExternal.ViewExternal
   params: EmbedPlayerParams
 }) {
+  const navigation = useNavigation<NavigationProp>()
+
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
   const [dim, setDim] = React.useState({
@@ -122,7 +124,6 @@ export function ExternalPlayer({
     height: 0,
   })
 
-  const navigation = useNavigation<NavigationProp>()
   const viewRef = React.useRef<View>(null)
 
   // watch for leaving the viewport due to scrolling
