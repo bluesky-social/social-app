@@ -11,12 +11,12 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {HITSLOP_10} from 'lib/constants'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {HITSLOP_10} from 'lib/constants'
 
 interface Props {
   query: string
