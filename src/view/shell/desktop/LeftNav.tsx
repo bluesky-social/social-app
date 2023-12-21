@@ -46,6 +46,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {isInvalidHandle} from '#/lib/strings/handles'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -221,7 +222,7 @@ function ComposeBtn() {
       if (
         !handle ||
         handle === currentAccount?.handle ||
-        handle === 'handle.invalid'
+        isInvalidHandle(handle)
       )
         return undefined
 

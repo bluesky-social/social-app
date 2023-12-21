@@ -88,6 +88,7 @@ function ListImpl<ItemT>(
       {...props}
       contentOffset={contentOffset}
       refreshControl={refreshControl}
+      scrollIndicatorInsets={{right: 1}}
       onScroll={scrollHandler}
       scrollEventThrottle={1}
       style={style}

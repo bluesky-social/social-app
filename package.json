@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && yarn intl:compile",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "ios": "expo run:ios",

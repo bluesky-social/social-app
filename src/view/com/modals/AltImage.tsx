@@ -80,6 +80,7 @@ export function Component({image}: Props) {
               source={{
                 uri: image.cropped?.path ?? image.path,
               }}
+              contentFit="contain"
               accessible={true}
               accessibilityIgnoresInvertColors
             />

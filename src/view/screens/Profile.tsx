@@ -39,6 +39,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
+import {isInvalidHandle} from '#/lib/strings/handles'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -231,7 +232,7 @@ function ProfileScreenLoaded({
     track('ProfileScreen:PressCompose')
     const mention =
       profile.handle === currentAccount?.handle ||
-      profile.handle === 'handle.invalid'
+      isInvalidHandle(profile.handle)
         ? undefined
         : profile.handle
     openComposer({mention})
