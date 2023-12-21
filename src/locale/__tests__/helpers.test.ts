@@ -7,6 +7,6 @@ test('sanitizeAppLanguageSetting', () => {
   expect(sanitizeAppLanguageSetting('en')).toBe(AppLanguage.en)
   expect(sanitizeAppLanguageSetting('hi')).toBe(AppLanguage.hi)
   expect(sanitizeAppLanguageSetting('foo')).toBe(AppLanguage.en)
-  expect(sanitizeAppLanguageSetting('en,fr')).toBe(AppLanguage.en)
-  expect(sanitizeAppLanguageSetting('fr,en')).toBe(AppLanguage.en)
+  expect(sanitizeAppLanguageSetting('en,foo')).toBe(AppLanguage.en)
+  expect(sanitizeAppLanguageSetting('foo,en')).toBe(AppLanguage.en)
 })

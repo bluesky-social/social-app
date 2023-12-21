@@ -375,7 +375,7 @@ msgstr "केवल अक्षर, संख्या, रिक्त स्
 
 #: src/view/com/composer/Composer.tsx:285
 #: src/view/com/composer/Composer.tsx:288
-#: src/view/com/modals/AltImage.tsx:127
+#: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/Confirm.tsx:88
@@ -398,7 +398,7 @@ msgstr "कैंसिल"
 msgid "Cancel account deletion"
 msgstr "अकाउंट बंद मत करो"
 
-#: src/view/com/modals/AltImage.tsx:122
+#: src/view/com/modals/AltImage.tsx:123
 msgid "Cancel add image alt text"
 msgstr "ऑल्ट टेक्स्ट मत जोड़ें"
 
@@ -805,7 +805,7 @@ msgstr "ईमेल:"
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "इस सेटिंग को केवल उन लोगों के बीच जवाब देखने में सक्षम करें जिन्हें आप फॉलो करते हैं।।"
 
-#: src/view/screens/Profile.tsx:425
+#: src/view/screens/Profile.tsx:426
 msgid "End of feed"
 msgstr ""
 
@@ -850,7 +850,7 @@ msgstr "ऑल्ट टेक्स्ट"
 msgid "Failed to load recommended feeds"
 msgstr "अनुशंसित फ़ीड लोड करने में विफल"
 
-#: src/view/screens/Feeds.tsx:559
+#: src/view/screens/Feeds.tsx:560
 msgid "Feed offline"
 msgstr "फ़ीड ऑफ़लाइन है"
 
@@ -864,9 +864,9 @@ msgid "Feedback"
 msgstr "प्रतिक्रिया"
 
 #: src/view/screens/Feeds.tsx:475
-#: src/view/screens/Profile.tsx:164
+#: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:339
+#: src/view/shell/desktop/LeftNav.tsx:340
 #: src/view/shell/Drawer.tsx:455
 #: src/view/shell/Drawer.tsx:456
 msgid "Feeds"
@@ -965,7 +965,7 @@ msgstr "प्रारंभ करें"
 #: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
-#: src/view/shell/desktop/LeftNav.tsx:103
+#: src/view/shell/desktop/LeftNav.tsx:104
 msgid "Go back"
 msgstr "वापस जाओ"
 
@@ -1033,7 +1033,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:303
+#: src/view/shell/desktop/LeftNav.tsx:304
 #: src/view/shell/Drawer.tsx:379
 #: src/view/shell/Drawer.tsx:380
 msgid "Home"
@@ -1066,7 +1066,7 @@ msgstr "मेरे पास अपना डोमेन है"
 msgid "If none are selected, suitable for all ages."
 msgstr "यदि किसी को चुना जाता है, तो सभी उम्र के लिए उपयुक्त है।।"
 
-#: src/view/com/modals/AltImage.tsx:96
+#: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
 msgstr "छवि alt पाठ"
 
@@ -1187,7 +1187,7 @@ msgstr "इस फ़ीड को लाइक करो"
 msgid "Liked by"
 msgstr "इन यूजर ने लाइक किया है"
 
-#: src/view/screens/Profile.tsx:163
+#: src/view/screens/Profile.tsx:164
 msgid "Likes"
 msgstr ""
 
@@ -1207,8 +1207,8 @@ msgstr "सूची अवतार"
 msgid "List Name"
 msgstr "सूची का नाम"
 
-#: src/view/screens/Profile.tsx:165
-#: src/view/shell/desktop/LeftNav.tsx:376
+#: src/view/screens/Profile.tsx:166
+#: src/view/shell/desktop/LeftNav.tsx:377
 #: src/view/shell/Drawer.tsx:471
 #: src/view/shell/Drawer.tsx:472
 msgid "Lists"
@@ -1255,7 +1255,7 @@ msgstr "उस खाते में लॉग इन करें जो स�
 msgid "Make sure this is where you intend to go!"
 msgstr "यह सुनिश्चित करने के लिए कि आप कहाँ जाना चाहते हैं!"
 
-#: src/view/screens/Profile.tsx:162
+#: src/view/screens/Profile.tsx:163
 msgid "Media"
 msgstr ""
 
@@ -1277,7 +1277,7 @@ msgstr ""
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
-#: src/view/shell/desktop/LeftNav.tsx:394
+#: src/view/shell/desktop/LeftNav.tsx:395
 #: src/view/shell/Drawer.tsx:490
 #: src/view/shell/Drawer.tsx:491
 msgid "Moderation"
@@ -1353,7 +1353,7 @@ msgstr "जन्मदिन"
 msgid "My Feeds"
 msgstr "मेरी फ़ीड"
 
-#: src/view/shell/desktop/LeftNav.tsx:64
+#: src/view/shell/desktop/LeftNav.tsx:65
 msgid "My Profile"
 msgstr "मेरी प्रोफाइल"
 
@@ -1376,16 +1376,16 @@ msgid "New"
 msgstr "नया"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:510
-#: src/view/screens/Profile.tsx:353
+#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:430
 #: src/view/screens/ProfileList.tsx:193
 #: src/view/screens/ProfileList.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:246
+#: src/view/shell/desktop/LeftNav.tsx:247
 msgid "New post"
 msgstr "नई पोस्ट"
 
-#: src/view/shell/desktop/LeftNav.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:257
 msgid "New Post"
 msgstr "नई पोस्ट"
 
@@ -1462,7 +1462,7 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:109
 #: src/view/screens/Notifications.tsx:133
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:358
+#: src/view/shell/desktop/LeftNav.tsx:359
 #: src/view/shell/Drawer.tsx:416
 #: src/view/shell/Drawer.tsx:417
 msgid "Notifications"
@@ -1626,7 +1626,7 @@ msgstr "पोस्ट भाषा"
 msgid "Post not found"
 msgstr "पोस्ट नहीं मिला"
 
-#: src/view/screens/Profile.tsx:160
+#: src/view/screens/Profile.tsx:161
 msgid "Posts"
 msgstr ""
 
@@ -1659,7 +1659,7 @@ msgid "Processing..."
 msgstr "प्रसंस्करण..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:412
+#: src/view/shell/desktop/LeftNav.tsx:413
 #: src/view/shell/Drawer.tsx:69
 #: src/view/shell/Drawer.tsx:525
 #: src/view/shell/Drawer.tsx:526
@@ -1751,7 +1751,7 @@ msgstr "इस फ़ीड को सहेजे गए फ़ीड से �
 msgid "Removed from list"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:161
+#: src/view/screens/Profile.tsx:162
 msgid "Replies"
 msgstr ""
 
@@ -1851,7 +1851,7 @@ msgstr "फिर से कोशिश करो"
 #~ msgid "Retry change handle"
 #~ msgstr "हैंडल बदलना फिर से कोशिश करो"
 
-#: src/view/com/modals/AltImage.tsx:114
+#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/BirthDateSettings.tsx:93
 #: src/view/com/modals/BirthDateSettings.tsx:96
 #: src/view/com/modals/ChangeHandle.tsx:173
@@ -1861,7 +1861,7 @@ msgstr "फिर से कोशिश करो"
 msgid "Save"
 msgstr "सेव करो"
 
-#: src/view/com/modals/AltImage.tsx:105
+#: src/view/com/modals/AltImage.tsx:106
 msgid "Save alt text"
 msgstr "सेव ऑल्ट टेक्स्ट"
 
@@ -1890,7 +1890,7 @@ msgstr "सहेजे गए फ़ीड"
 #: src/view/screens/Search/Search.tsx:401
 #: src/view/screens/Search/Search.tsx:567
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
 #: src/view/shell/Drawer.tsx:343
@@ -1985,7 +1985,7 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr "इस सेटिंग को अपने निम्नलिखित फ़ीड में अपने सहेजे गए फ़ीड के नमूने दिखाने के लिए \"हाँ\" पर सेट करें। यह एक प्रयोगात्मक विशेषता है।।"
 
 #: src/view/screens/Settings.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:430
+#: src/view/shell/desktop/LeftNav.tsx:431
 #: src/view/shell/Drawer.tsx:546
 #: src/view/shell/Drawer.tsx:547
 msgid "Settings"
