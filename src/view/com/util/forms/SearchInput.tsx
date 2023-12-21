@@ -16,6 +16,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {HITSLOP_10} from 'lib/constants'
 
 interface Props {
   query: string
@@ -71,7 +72,8 @@ export function SearchInput({
           onPress={onPressCancelSearchInner}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Clear search query`)}
-          accessibilityHint="">
+          accessibilityHint=""
+          hitSlop={HITSLOP_10}>
           <FontAwesomeIcon
             icon="xmark"
             size={16}
