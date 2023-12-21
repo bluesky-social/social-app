@@ -1,5 +1,4 @@
 import * as tokens from '#/alf/tokens'
-import {styles as sharedStyles} from '#/alf/styles'
 
 export type ThemeName = 'light' | 'dark'
 export type Theme = typeof light
@@ -47,37 +46,41 @@ export const darkPalette: Palette = {
 } as const
 
 export const light = {
-  ...sharedStyles,
-  color: Object.keys(lightPalette).reduce((acc, key) => {
-    const k = key as keyof Palette
-    acc[k] = {
-      color: lightPalette[k],
-    }
-    return acc
-  }, {} as Record<keyof Palette, {color: string}>),
-  backgroundColor: Object.keys(lightPalette).reduce((acc, key) => {
-    const k = key as keyof Palette
-    acc[k] = {
-      backgroundColor: lightPalette[k],
-    }
-    return acc
-  }, {} as Record<keyof Palette, {backgroundColor: string}>),
+  palette: lightPalette,
+  atoms: {
+    color: Object.keys(lightPalette).reduce((acc, key) => {
+      const k = key as keyof Palette
+      acc[k] = {
+        color: lightPalette[k],
+      }
+      return acc
+    }, {} as Record<keyof Palette, {color: string}>),
+    backgroundColor: Object.keys(lightPalette).reduce((acc, key) => {
+      const k = key as keyof Palette
+      acc[k] = {
+        backgroundColor: lightPalette[k],
+      }
+      return acc
+    }, {} as Record<keyof Palette, {backgroundColor: string}>),
+  },
 } as const
 
-export const dark = {
-  ...sharedStyles,
-  color: Object.keys(darkPalette).reduce((acc, key) => {
-    const k = key as keyof Palette
-    acc[k] = {
-      color: darkPalette[k],
-    }
-    return acc
-  }, {} as Record<keyof Palette, {color: string}>),
-  backgroundColor: Object.keys(darkPalette).reduce((acc, key) => {
-    const k = key as keyof Palette
-    acc[k] = {
-      backgroundColor: darkPalette[k],
-    }
-    return acc
-  }, {} as Record<keyof Palette, {backgroundColor: string}>),
+export const dark: Theme = {
+  palette: darkPalette,
+  atoms: {
+    color: Object.keys(darkPalette).reduce((acc, key) => {
+      const k = key as keyof Palette
+      acc[k] = {
+        color: darkPalette[k],
+      }
+      return acc
+    }, {} as Record<keyof Palette, {color: string}>),
+    backgroundColor: Object.keys(darkPalette).reduce((acc, key) => {
+      const k = key as keyof Palette
+      acc[k] = {
+        backgroundColor: darkPalette[k],
+      }
+      return acc
+    }, {} as Record<keyof Palette, {backgroundColor: string}>),
+  },
 } as const

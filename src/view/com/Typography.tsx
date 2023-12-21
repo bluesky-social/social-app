@@ -1,14 +1,14 @@
 import React from 'react'
 import {Text as RNText, TextProps} from 'react-native'
-import {useAlf, web} from '#/alf'
+import {useTheme, atoms, web} from '#/alf'
 
 export function Text({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
-  return <RNText style={[styles.font.s, styles.color.l7, style]} {...rest} />
+  const t = useTheme()
+  return <RNText style={[atoms.font.s, t.atoms.color.l7, style]} {...rest} />
 }
 
 export function H1({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
+  const t = useTheme()
   const attr =
     web({
       role: 'heading',
@@ -18,13 +18,13 @@ export function H1({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[styles.font.xxl, styles.font.bold, styles.color.l7, style]}
+      style={[atoms.font.xxl, atoms.font.bold, t.atoms.color.l7, style]}
     />
   )
 }
 
 export function H2({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
+  const t = useTheme()
   const attr =
     web({
       role: 'heading',
@@ -34,13 +34,13 @@ export function H2({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[styles.font.l, styles.font.bold, styles.color.l7, style]}
+      style={[atoms.font.l, atoms.font.bold, t.atoms.color.l7, style]}
     />
   )
 }
 
 export function H3({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
+  const t = useTheme()
   const attr =
     web({
       role: 'heading',
@@ -50,13 +50,13 @@ export function H3({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[styles.font.m, styles.font.bold, styles.color.l7, style]}
+      style={[atoms.font.m, atoms.font.bold, t.atoms.color.l7, style]}
     />
   )
 }
 
 export function H4({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
+  const t = useTheme()
   const attr =
     web({
       role: 'heading',
@@ -66,13 +66,13 @@ export function H4({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[styles.font.s, styles.font.bold, styles.color.l7, style]}
+      style={[atoms.font.s, atoms.font.bold, t.atoms.color.l7, style]}
     />
   )
 }
 
 export function H5({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
+  const t = useTheme()
   const attr =
     web({
       role: 'heading',
@@ -82,13 +82,13 @@ export function H5({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[styles.font.xs, styles.font.bold, styles.color.l7, style]}
+      style={[atoms.font.xs, atoms.font.bold, t.atoms.color.l7, style]}
     />
   )
 }
 
 export function H6({style, ...rest}: TextProps) {
-  const {styles} = useAlf()
+  const t = useTheme()
   const attr =
     web({
       role: 'heading',
@@ -98,7 +98,7 @@ export function H6({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[styles.font.xxs, styles.font.bold, styles.color.l7, style]}
+      style={[atoms.font.xxs, atoms.font.bold, t.atoms.color.l7, style]}
     />
   )
 }

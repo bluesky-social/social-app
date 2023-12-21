@@ -2,8 +2,7 @@ import React from 'react'
 import {Dimensions} from 'react-native'
 import * as themes from '#/alf/themes'
 
-export * as tokens from '#/alf/tokens'
-export {styles} from '#/alf/styles'
+export {atoms} from '#/alf/atoms'
 export * from '#/alf/util/platform'
 
 type BreakpointName = keyof typeof breakpoints
@@ -34,7 +33,7 @@ function getActiveBreakpoints({width}: {width: number}) {
  */
 export const Context = React.createContext<{
   themeName: themes.ThemeName
-  styles: themes.Theme
+  theme: themes.Theme
   breakpoints: {
     active: BreakpointName | undefined
     gtMobile: boolean
@@ -42,7 +41,7 @@ export const Context = React.createContext<{
   }
 }>({
   themeName: 'light',
-  styles: themes.light,
+  theme: themes.light,
   breakpoints: {
     active: undefined,
     gtMobile: false,
@@ -73,7 +72,7 @@ export function ThemeProvider({
       value={React.useMemo(
         () => ({
           themeName: themeName,
-          styles: theme,
+          theme: theme,
           breakpoints,
         }),
         [theme, themeName, breakpoints],
@@ -83,8 +82,8 @@ export function ThemeProvider({
   )
 }
 
-export function useAlf() {
-  return React.useContext(Context)
+export function useTheme() {
+  return React.useContext(Context).theme
 }
 
 export function useBreakpoints() {

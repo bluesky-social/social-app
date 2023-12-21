@@ -4,16 +4,15 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 import {useSetColorMode} from '#/state/shell'
-import {useAlf, ThemeProvider as Alf} from '#/alf'
+import {atoms, useTheme, useBreakpoints, ThemeProvider as Alf} from '#/alf'
 import {Button, ButtonText} from '#/view/com/Button'
 import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
 
 function ThemeSelector() {
   const setColorMode = useSetColorMode()
-  const {styles} = useAlf()
 
   return (
-    <View style={[styles.flex.row, styles.flex.gap.m]}>
+    <View style={[atoms.flex.row, atoms.flex.gap.m]}>
       <Button
         type="secondary"
         size="small"
@@ -37,20 +36,21 @@ function ThemeSelector() {
 }
 
 function BreakpointDebugger() {
-  const {styles, breakpoints} = useAlf()
+  const t = useTheme()
+  const breakpoints = useBreakpoints()
 
   return (
     <View>
-      <H3 style={[styles.padding.pb.m]}>Breakpoint Debugger</H3>
-      <Text style={[styles.padding.pb.m]}>
+      <H3 style={[atoms.padding.pb.m]}>Breakpoint Debugger</H3>
+      <Text style={[atoms.padding.pb.m]}>
         Current breakpoint: {!breakpoints.gtMobile && <Text>mobile</Text>}
         {breakpoints.gtMobile && !breakpoints.gtTablet && <Text>tablet</Text>}
         {breakpoints.gtTablet && <Text>desktop</Text>}
       </Text>
       <Text
         style={[
-          styles.padding.pa.m,
-          styles.backgroundColor.l1,
+          atoms.padding.pa.m,
+          t.atoms.backgroundColor.l1,
           {fontFamily: 'monospace'},
         ]}>
         {JSON.stringify(breakpoints, null, 2)}
@@ -60,37 +60,37 @@ function BreakpointDebugger() {
 }
 
 function ThemedSection() {
-  const {styles} = useAlf()
+  const t = useTheme()
 
   return (
-    <View style={[styles.backgroundColor.l0, styles.padding.pa.m]}>
-      <H3 style={[styles.padding.pb.m, styles.font.bold]}>
+    <View style={[t.atoms.backgroundColor.l0, atoms.padding.pa.m]}>
+      <H3 style={[atoms.padding.pb.m, atoms.font.bold]}>
         Colors (this theme is always light)
       </H3>
-      <View style={[styles.flex.row, styles.flex.gap.m]}>
+      <View style={[atoms.flex.row, atoms.flex.gap.m]}>
         <View
-          style={[styles.flex.one, styles.backgroundColor.l0, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l0, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l1, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l1, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l2, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l2, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l3, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l3, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l4, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l4, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l5, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l5, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l6, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l6, {height: 60}]}
         />
         <View
-          style={[styles.flex.one, styles.backgroundColor.l7, {height: 60}]}
+          style={[atoms.flex.one, t.atoms.backgroundColor.l7, {height: 60}]}
         />
       </View>
     </View>
@@ -98,15 +98,15 @@ function ThemedSection() {
 }
 
 export function DebugScreen() {
-  const {styles} = useAlf()
+  const t = useTheme()
 
   return (
     <ScrollView>
-      <CenteredView style={[styles.backgroundColor.l0]}>
+      <CenteredView style={[t.atoms.backgroundColor.l0]}>
         <View
           style={[
-            styles.padding.pa.xl,
-            styles.flex.gap.xxl,
+            atoms.padding.pa.xl,
+            atoms.flex.gap.xxl,
             {paddingBottom: 200},
           ]}>
           <ThemeSelector />
@@ -114,61 +114,61 @@ export function DebugScreen() {
           <BreakpointDebugger />
 
           <View>
-            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Colors</H3>
-            <View style={[styles.flex.row, styles.flex.gap.m]}>
+            <H3 style={[atoms.padding.pb.m, atoms.font.bold]}>Colors</H3>
+            <View style={[atoms.flex.row, atoms.flex.gap.m]}>
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l0,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l0,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l1,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l1,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l2,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l2,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l3,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l3,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l4,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l4,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l5,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l5,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l6,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l6,
                   {height: 60},
                 ]}
               />
               <View
                 style={[
-                  styles.flex.one,
-                  styles.backgroundColor.l7,
+                  atoms.flex.one,
+                  t.atoms.backgroundColor.l7,
                   {height: 60},
                 ]}
               />
@@ -176,76 +176,76 @@ export function DebugScreen() {
           </View>
 
           <View>
-            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Spacing</H3>
+            <H3 style={[atoms.padding.pb.m, atoms.font.bold]}>Spacing</H3>
 
-            <View style={[styles.flex.gap.m]}>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+            <View style={[atoms.flex.gap.m]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>xxs (2px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.xxs,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.xxs,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>xs (4px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.xs,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.xs,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>s (8px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.s,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.s,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>m (12px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.m,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.m,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>l (18px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.l,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.l,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>xl (24px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.xl,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.xl,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
-              <View style={[styles.flex.row, styles.flex.alignCenter]}>
+              <View style={[atoms.flex.row, atoms.flex.alignCenter]}>
                 <Text style={{width: 80}}>xxl (32px)</Text>
                 <View
                   style={[
-                    styles.flex.one,
-                    styles.padding.pt.xxl,
-                    styles.backgroundColor.l3,
+                    atoms.flex.one,
+                    atoms.padding.pt.xxl,
+                    t.atoms.backgroundColor.l3,
                   ]}
                 />
               </View>
@@ -253,13 +253,13 @@ export function DebugScreen() {
           </View>
 
           <View>
-            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Typography</H3>
+            <H3 style={[atoms.padding.pb.m, atoms.font.bold]}>Typography</H3>
 
             <View
               style={[
-                styles.flex.gap.m,
-                styles.padding.pa.m,
-                styles.backgroundColor.l1,
+                atoms.flex.gap.m,
+                atoms.padding.pa.m,
+                t.atoms.backgroundColor.l1,
               ]}>
               <H1>Heading 1</H1>
               <H2>Heading 2</H2>
@@ -268,34 +268,34 @@ export function DebugScreen() {
               <H5>Heading 5</H5>
               <H6>Heading 6</H6>
 
-              <Text style={[styles.font.xxl]}>H1 Size Text</Text>
-              <Text style={[styles.font.xl]}>H2 Size Text</Text>
-              <Text style={[styles.font.l]}>H3 Size Text</Text>
-              <Text style={[styles.font.m]}>H4 Size Text</Text>
-              <Text style={[styles.font.s]}>H5 Size Text</Text>
-              <Text style={[styles.font.xs]}>H6 Size Text</Text>
-              <Text style={[styles.font.xxs]}>Very Small Size Text</Text>
+              <Text style={[atoms.font.xxl]}>H1 Size Text</Text>
+              <Text style={[atoms.font.xl]}>H2 Size Text</Text>
+              <Text style={[atoms.font.l]}>H3 Size Text</Text>
+              <Text style={[atoms.font.m]}>H4 Size Text</Text>
+              <Text style={[atoms.font.s]}>H5 Size Text</Text>
+              <Text style={[atoms.font.xs]}>H6 Size Text</Text>
+              <Text style={[atoms.font.xxs]}>Very Small Size Text</Text>
             </View>
           </View>
 
           <View>
-            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Breakpoints</H3>
+            <H3 style={[atoms.padding.pb.m, atoms.font.bold]}>Breakpoints</H3>
           </View>
 
           <Alf theme="light">
             <ThemedSection />
           </Alf>
 
-          <View style={[styles.flex.gap.m, styles.flex.alignStart]}>
-            <H3 style={[styles.padding.pb.m, styles.font.bold]}>Buttons</H3>
+          <View style={[atoms.flex.gap.m, atoms.flex.alignStart]}>
+            <H3 style={[atoms.padding.pb.m, atoms.font.bold]}>Buttons</H3>
 
             <Button>
               {({state}) => (
                 <View
                   style={[
-                    styles.padding.pa.m,
-                    styles.radius.round,
-                    styles.backgroundColor.l2,
+                    atoms.padding.pa.m,
+                    atoms.radius.round,
+                    t.atoms.backgroundColor.l2,
                   ]}>
                   <Text>Unstyled button, state: {JSON.stringify(state)}</Text>
                 </View>

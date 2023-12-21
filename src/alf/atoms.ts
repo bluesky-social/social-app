@@ -252,7 +252,7 @@ const margin = Object.keys(tokens.space).reduce(
   },
 )
 
-export const styles = {
+export const atoms = {
   radius,
   padding,
   margin,
