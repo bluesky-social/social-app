@@ -20,7 +20,6 @@ export const Pager = React.forwardRef(function PagerImpl(
     children,
     tabBarPosition = 'top',
     initialPage = 0,
-    headerOnlyHeight = 0,
     renderTabBar,
     onPageSelected,
     onPageSelecting,
@@ -41,20 +40,15 @@ export const Pager = React.forwardRef(function PagerImpl(
       setSelectedPage(index)
       onPageSelected?.(index)
       onPageSelecting?.(index)
-      if (scrollY >= headerOnlyHeight) {
-        window.scrollTo(
-          0,
-          Math.max(headerOnlyHeight, scrollYs.current[index] ?? 0),
-        )
-      }
+      // if (scrollY >= headerOnlyHeight) {
+      window.scrollTo(
+        0,
+        scrollYs.current[index] ?? 0,
+        // Math.max(headerOnlyHeight, scrollYs.current[index] ?? 0),
+      )
+      // }
     },
-    [
-      selectedPage,
-      setSelectedPage,
-      onPageSelected,
-      onPageSelecting,
-      headerOnlyHeight,
-    ],
+    [selectedPage, setSelectedPage, onPageSelected, onPageSelecting],
   )
 
   return (
