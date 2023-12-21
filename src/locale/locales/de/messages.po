@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr "{0, plural, one {# invite code available} andere {# invite codes available}}"
+msgstr ""
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -27,7 +27,7 @@ msgstr "{0} {purposeLabel} Liste"
 
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr "{invitesAvailable, plural, one {Invite codes: # available} andere {Invite codes: # available}}"
+msgstr ""
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:640
