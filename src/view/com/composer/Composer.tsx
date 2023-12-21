@@ -452,7 +452,7 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {isDesktop ? <EmojiPickerButton /> : null}
+          {!isMobile ? <EmojiPickerButton /> : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />

@@ -11,6 +11,7 @@ import {
   getModerationOpts,
   useModerationOpts,
 } from './preferences'
+import {isInvalidHandle} from '#/lib/strings/handles'
 
 const DEFAULT_MOD_OPTS = getModerationOpts({
   userDid: '',
@@ -119,7 +120,7 @@ function prefixMatch(
   prefix: string,
   info: AppBskyActorDefs.ProfileViewBasic,
 ): boolean {
-  if (info.handle.includes(prefix)) {
+  if (!isInvalidHandle(info.handle) && info.handle.includes(prefix)) {
     return true
   }
   if (info.displayName?.toLocaleLowerCase().includes(prefix)) {
