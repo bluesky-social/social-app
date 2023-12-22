@@ -34,7 +34,8 @@ function ListImpl<ItemT>(
     onEndReached,
     onEndReachedThreshold = 0,
     onRefresh: _unsupportedOnRefresh,
-    onScrolledDownChange, // TODO
+    onScrolledDownChange,
+    onContentSizeChange,
     renderItem,
     extraData,
     style,
@@ -137,6 +138,9 @@ function ListImpl<ItemT>(
     }
   }
 
+  const containerRef = useRef(null)
+  useResizeObserver(containerRef, onContentSizeChange)
+
   return (
     <View {...props} style={style} ref={nativeRef}>
       <Visibility
@@ -144,6 +148,7 @@ function ListImpl<ItemT>(
         style={styles.parentTreeVisibilityDetector}
       />
       <View
+        ref={containerRef}
         style={[
           styles.contentContainer,
           contentContainerStyle,
@@ -180,6 +185,24 @@ function ListImpl<ItemT>(
       </View>
     </View>
   )
+}
+
+function useResizeObserver(ref, onResize) {
+  const handleResize = useNonReactiveCallback(onResize ?? (() => {}))
+  const isActive = !!onResize
+  React.useEffect(() => {
+    if (!isActive) {
+      return
+    }
+    const resizeObserver = new ResizeObserver(() => {
+      handleResize()
+    })
+    const node = ref.current
+    resizeObserver.observe(node)
+    return () => {
+      resizeObserver.unobserve(node)
+    }
+  }, [handleResize, isActive, ref])
 }
 
 let Row = function RowImpl<ItemT>({
