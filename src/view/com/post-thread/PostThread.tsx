@@ -139,7 +139,7 @@ function PostThreadLoaded({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {isTablet, isDesktop} = useWebMediaQueries()
+  const {isTablet, isDesktop, isTabletOrMobile} = useWebMediaQueries()
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
@@ -198,9 +198,15 @@ function PostThreadLoaded({
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
       function onMeasure(pageY) {
+        let spinnerHeight = 0
+        if (isDesktop) {
+          spinnerHeight = 40
+        } else if (isTabletOrMobile) {
+          spinnerHeight = 82
+        }
         ref.current?.scrollToOffset({
           animated: false,
-          offset: pageY - (isDesktop ? 0 : 50),
+          offset: pageY - spinnerHeight,
         })
       }
       if (isNative) {
@@ -210,13 +216,12 @@ function PostThreadLoaded({
           },
         )
       } else {
-        const pageY =
-          highlightedPostRef.current.getBoundingClientRect().top + scrollY
+        const pageY = highlightedPostRef.current.getBoundingClientRect().top
         onMeasure(pageY)
       }
       needsScrollAdjustment.current = false
     }
-  }, [thread, isDesktop])
+  }, [thread, isDesktop, isTabletOrMobile])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)
