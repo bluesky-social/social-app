@@ -197,14 +197,23 @@ function PostThreadLoaded({
 
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
-      highlightedPostRef.current?.measure(
-        (_x, _y, _width, _height, _pageX, pageY) => {
-          ref.current?.scrollToOffset({
-            animated: false,
-            offset: pageY - (isDesktop ? 0 : 50),
-          })
-        },
-      )
+      function onMeasure(pageY) {
+        ref.current?.scrollToOffset({
+          animated: false,
+          offset: pageY - (isDesktop ? 0 : 50),
+        })
+      }
+      if (isNative) {
+        highlightedPostRef.current?.measure(
+          (_x, _y, _width, _height, _pageX, pageY) => {
+            onMeasure(pageY)
+          },
+        )
+      } else {
+        const pageY =
+          highlightedPostRef.current.getBoundingClientRect().top + scrollY
+        onMeasure(pageY)
+      }
       needsScrollAdjustment.current = false
     }
   }, [thread, isDesktop])
