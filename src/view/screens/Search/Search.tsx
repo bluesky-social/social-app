@@ -518,7 +518,7 @@ export function SearchScreenMobile(
   )
 
   return (
-    <View style={{flex: 1}}>
+    <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
         style={[styles.header, pal.view, styles.container]}
         sideBorders={isTablet}>
