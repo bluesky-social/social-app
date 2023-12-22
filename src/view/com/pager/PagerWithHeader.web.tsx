@@ -6,6 +6,7 @@ import {TabBar} from './TabBar'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ListMethods} from '../util/List'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -49,6 +50,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             currentPage={currentPage}
             onCurrentPageSelected={onCurrentPageSelected}
             onSelect={props.onSelect}
+            tabBarAnchor={props.tabBarAnchor}
             testID={testID}
           />
         )
@@ -98,6 +100,7 @@ let PagerTabBar = ({
   renderHeader,
   onCurrentPageSelected,
   onSelect,
+  tabBarAnchor,
 }: {
   currentPage: number
   items: string[]
@@ -113,6 +116,7 @@ let PagerTabBar = ({
       <View style={[!isMobile && styles.headerContainerDesktop, pal.border]}>
         {renderHeader?.()}
       </View>
+      {tabBarAnchor}
       <View
         style={[
           styles.tabBarContainer,

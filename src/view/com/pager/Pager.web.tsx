@@ -1,4 +1,5 @@
 import React from 'react'
+import {flushSync} from 'react-dom'
 import {View} from 'react-native'
 import {s} from 'lib/styles'
 
@@ -28,6 +29,7 @@ export const Pager = React.forwardRef(function PagerImpl(
 ) {
   const [selectedPage, setSelectedPage] = React.useState(initialPage)
   const scrollYs = React.useRef([])
+  const anchorRef = React.useRef(null)
 
   React.useImperativeHandle(ref, () => ({
     setPage: (index: number) => setSelectedPage(index),
@@ -35,18 +37,28 @@ export const Pager = React.forwardRef(function PagerImpl(
 
   const onTabBarSelect = React.useCallback(
     (index: number) => {
-      const scrollY = Math.round(window.scrollY)
-      scrollYs.current[selectedPage] = scrollY
-      setSelectedPage(index)
-      onPageSelected?.(index)
-      onPageSelecting?.(index)
-      // if (scrollY >= headerOnlyHeight) {
-      window.scrollTo(
-        0,
-        scrollYs.current[index] ?? 0,
-        // Math.max(headerOnlyHeight, scrollYs.current[index] ?? 0),
-      )
-      // }
+      const scrollY = window.scrollY
+      let anchorTop = anchorRef.current
+        ? anchorRef.current.getBoundingClientRect().top
+        : -scrollY
+      const isSticking = anchorTop <= 5
+      if (isSticking) {
+        scrollYs.current[selectedPage] = window.scrollY
+      } else {
+        scrollYs.current[selectedPage] = null
+      }
+      flushSync(() => {
+        setSelectedPage(index)
+        onPageSelected?.(index)
+        onPageSelecting?.(index)
+      })
+      if (isSticking) {
+        if (scrollYs.current[index]) {
+          window.scrollTo(0, scrollYs.current[index])
+        } else {
+          window.scrollTo(0, scrollY + anchorTop)
+        }
+      }
     },
     [selectedPage, setSelectedPage, onPageSelected, onPageSelecting],
   )
@@ -56,6 +68,7 @@ export const Pager = React.forwardRef(function PagerImpl(
       {tabBarPosition === 'top' &&
         renderTabBar({
           selectedPage,
+          tabBarAnchor: <View ref={anchorRef} />,
           onSelect: onTabBarSelect,
         })}
       {React.Children.map(children, (child, i) => (
