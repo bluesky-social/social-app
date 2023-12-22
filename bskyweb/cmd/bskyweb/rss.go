@@ -1,14 +1,22 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
 	"net/http"
+	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 
 	"github.com/labstack/echo/v4"
 )
+
+type ItemGUID struct {
+	XMLName xml.Name `xml:"guid"`
+	Value   string   `xml:",chardata"`
+	IsPerma bool     `xml:"isPermalink,attr"`
+}
 
 // We don't actually populate the title for "posts".
 // Some background: https://book.micro.blog/rss-for-microblogs/
@@ -17,8 +25,7 @@ type Item struct {
 	Link        string `xml:"link,omitempty"`
 	Description string `xml:"description,omitempty"`
 	PubDate     string `xml:"pubDate,omitempty"`
-	Author      string `xml:"author,omitempty"`
-	GUID        string `xml:"guid,omitempty"`
+	GUID        ItemGUID
 }
 
 type rss struct {
@@ -71,12 +78,19 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		if rec.Reply != nil {
 			continue
 		}
+		pubDate := ""
+		createdAt, err := syntax.ParseDatetimeLenient(rec.CreatedAt)
+		if nil == err {
+			pubDate = createdAt.Time().Format(time.RFC822Z)
+		}
 		posts = append(posts, Item{
 			Link:        fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, aturi.RecordKey().String()),
 			Description: rec.Text,
-			PubDate:     rec.CreatedAt,
-			Author:      "@" + pv.Handle,
-			GUID:        aturi.String(),
+			PubDate:     pubDate,
+			GUID: ItemGUID{
+				Value:   aturi.String(),
+				IsPerma: false,
+			},
 		})
 	}
 
