@@ -1,6 +1,5 @@
 import {RichText} from '@atproto/api'
 import {
-  getYoutubeVideoId,
   makeRecordUri,
   toNiceDomain,
   toShortUrl,
@@ -12,6 +11,7 @@ import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
 import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
 import {makeValidHandle, createFullHandle} from '../../src/lib/strings/handles'
 import {cleanError} from '../../src/lib/strings/errors'
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 
 describe('detectLinkables', () => {
   const inputs = [
@@ -335,32 +335,6 @@ describe('toShareUrl', () => {
   })
 })
 
-describe('getYoutubeVideoId', () => {
-  it(' should return undefined for invalid youtube links', () => {
-    expect(getYoutubeVideoId('')).toBeUndefined()
-    expect(getYoutubeVideoId('https://www.google.com')).toBeUndefined()
-    expect(getYoutubeVideoId('https://www.youtube.com')).toBeUndefined()
-    expect(
-      getYoutubeVideoId('https://www.youtube.com/channelName'),
-    ).toBeUndefined()
-    expect(
-      getYoutubeVideoId('https://www.youtube.com/channel/channelName'),
-    ).toBeUndefined()
-  })
-
-  it('getYoutubeVideoId should return video id for valid youtube links', () => {
-    expect(getYoutubeVideoId('https://www.youtube.com/watch?v=videoId')).toBe(
-      'videoId',
-    )
-    expect(
-      getYoutubeVideoId(
-        'https://www.youtube.com/watch?v=videoId&feature=share',
-      ),
-    ).toBe('videoId')
-    expect(getYoutubeVideoId('https://youtu.be/videoId')).toBe('videoId')
-  })
-})
-
 describe('shortenLinks', () => {
   const inputs = [
     'start https://middle.com/foo/bar?baz=bux#hash end',
@@ -396,6 +370,7 @@ describe('shortenLinks', () => {
       ],
     ],
   ]
+
   it('correctly shortens rich text while preserving facet URIs', () => {
     for (let i = 0; i < inputs.length; i++) {
       const input = inputs[i]
@@ -407,6 +382,144 @@ describe('shortenLinks', () => {
       for (let j = 0; j < outputs[i][1].length; j++) {
         expect(outputRT.facets![j].features[0].uri).toEqual(outputs[i][1][j])
       }
+    }
+  })
+})
+
+describe('parseEmbedPlayerFromUrl', () => {
+  const inputs = [
+    'https://youtu.be/videoId',
+    'https://www.youtube.com/watch?v=videoId',
+    'https://www.youtube.com/watch?v=videoId&feature=share',
+    'https://youtube.com/watch?v=videoId',
+    'https://youtube.com/watch?v=videoId&feature=share',
+    'https://youtube.com/shorts/videoId',
+
+    'https://youtube.com/shorts/',
+    'https://youtube.com/',
+    'https://youtube.com/random',
+
+    'https://twitch.tv/channelName',
+    'https://www.twitch.tv/channelName',
+
+    'https://open.spotify.com/playlist/playlistId',
+    'https://open.spotify.com/playlist/playlistId?param=value',
+
+    'https://open.spotify.com/track/songId',
+    'https://open.spotify.com/track/songId?param=value',
+
+    'https://open.spotify.com/album/albumId',
+    'https://open.spotify.com/album/albumId?param=value',
+
+    'https://soundcloud.com/user/track',
+    'https://soundcloud.com/user/sets/set',
+    'https://soundcloud.com/user/',
+  ]
+
+  const outputs = [
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+    undefined,
+    undefined,
+    undefined,
+
+    {
+      type: 'twitch_live',
+      channelId: 'channelName',
+      playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
+    },
+    {
+      type: 'twitch_live',
+      channelId: 'channelName',
+      playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
+    },
+
+    {
+      type: 'spotify_playlist',
+      playlistId: 'playlistId',
+      playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
+    },
+    {
+      type: 'spotify_playlist',
+      playlistId: 'playlistId',
+      playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
+    },
+
+    {
+      type: 'spotify_song',
+      songId: 'songId',
+      playerUri: `https://open.spotify.com/embed/track/songId`,
+    },
+    {
+      type: 'spotify_song',
+      songId: 'songId',
+      playerUri: `https://open.spotify.com/embed/track/songId`,
+    },
+
+    {
+      type: 'spotify_album',
+      albumId: 'albumId',
+      playerUri: `https://open.spotify.com/embed/album/albumId`,
+    },
+    {
+      type: 'spotify_album',
+      albumId: 'albumId',
+      playerUri: `https://open.spotify.com/embed/album/albumId`,
+    },
+
+    {
+      type: 'soundcloud_track',
+      user: 'user',
+      track: 'track',
+      playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/track&auto_play=true&visual=false&hide_related=true`,
+    },
+    {
+      type: 'soundcloud_set',
+      user: 'user',
+      set: 'set',
+      playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/sets/set&auto_play=true&visual=false&hide_related=true`,
+    },
+    undefined,
+  ]
+
+  it('correctly grabs the correct id from uri', () => {
+    for (let i = 0; i < inputs.length; i++) {
+      const input = inputs[i]
+      const output = outputs[i]
+
+      const res = parseEmbedPlayerFromUrl(input)
+
+      console.log(input)
+
+      expect(res).toEqual(output)
     }
   })
 })
