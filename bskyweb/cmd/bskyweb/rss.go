@@ -15,7 +15,7 @@ import (
 type ItemGUID struct {
 	XMLName xml.Name `xml:"guid"`
 	Value   string   `xml:",chardata"`
-	IsPerma bool     `xml:"isPermalink,attr"`
+	IsPerma bool     `xml:"isPermaLink,attr"`
 }
 
 // We don't actually populate the title for "posts".
