@@ -110,27 +110,29 @@ function ListImpl<ItemT>(
   useResizeObserver(containerRef, onContentSizeChange)
 
   // --- onScroll ---
-  const handleScroll = useNonReactiveCallback(() => {
-    contextScrollHandlers.onScroll?.(
-      {
-        contentOffset: {
-          x: window.scrollX,
-          y: window.scrollY,
-        },
-      } as any, // TODO: Better types.
-      null as any,
-    )
+  const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
+  const handleWindowScroll = useNonReactiveCallback(() => {
+    if (isInsideVisibleTree) {
+      contextScrollHandlers.onScroll?.(
+        {
+          contentOffset: {
+            x: window.scrollX,
+            y: window.scrollY,
+          },
+        } as any, // TODO: Better types.
+        null as any,
+      )
+    }
   })
-  const [isParentTreeVisible, setIsParentTreeVisible] = React.useState(false)
   React.useEffect(() => {
-    if (!isParentTreeVisible) {
+    if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
       // Only one list is expected to be firing these at a time.
       return
     }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [isParentTreeVisible, handleScroll])
+    window.addEventListener('scroll', handleWindowScroll)
+    return () => window.removeEventListener('scroll', handleWindowScroll)
+  }, [isInsideVisibleTree, handleWindowScroll])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
@@ -158,8 +160,12 @@ function ListImpl<ItemT>(
   return (
     <View {...props} style={style} ref={nativeRef}>
       <Visibility
-        onVisibleChange={setIsParentTreeVisible}
-        style={styles.parentTreeVisibilityDetector}
+        onVisibleChange={setIsInsideVisibleTree}
+        style={
+          // This has position: fixed, so it should always report as visible
+          // unless we're within a display: none tree (like a hidden tab).
+          styles.parentTreeVisibilityDetector
+        }
       />
       <View
         ref={containerRef}
