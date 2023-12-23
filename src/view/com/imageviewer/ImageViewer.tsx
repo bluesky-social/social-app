@@ -70,7 +70,7 @@ function ImageViewerInner() {
   const {state, dispatch} = useImageViewer()
   const {images, index, measurement, isVisible} = state
 
-  const [accessoriesVisible, setAccessoriesVisible] = React.useState(false)
+  const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
 
   const currentImage = React.useMemo(() => images?.[index], [images, index])
   const viewerDimensions = React.useMemo(
@@ -144,6 +144,7 @@ function ImageViewerInner() {
     const toValue = direction === 'up' ? -SCREEN_HEIGHT : SCREEN_HEIGHT
 
     top.value = withTiming(toValue, {duration: 200})
+    accessoryOpacity.value = withTiming(0, {duration: 200})
     opacity.value = withTiming(0, {duration: 200}, () => {
       runOnJS(dispatch)({
         type: 'setVisible',
@@ -157,6 +158,7 @@ function ImageViewerInner() {
 
     top.value = 0
     opacity.value = 1
+    accessoryOpacity.value = 1
     positionX.value = 0
     positionY.value = 0
   }
@@ -328,6 +330,13 @@ function ImageViewerInner() {
     return (
       <View style={styles.container}>
         <Animated.View
+          style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
+          <ImageViewerHeader
+            closeViewer={closeViewer}
+            visible={accessoriesVisible}
+          />
+        </Animated.View>
+        <Animated.View
           style={[styles.imageContainer, backgroundStyle, containerStyle]}>
           <Animated.View style={positionStyle}>
             <Animated.View style={[scaleStyle, dimensionsStyle]}>
@@ -347,7 +356,10 @@ function ImageViewerInner() {
     <View style={styles.container}>
       <Animated.View
         style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
-        <ImageViewerHeader closeViewer={closeViewer} />
+        <ImageViewerHeader
+          closeViewer={closeViewer}
+          visible={accessoriesVisible}
+        />
       </Animated.View>
       <GestureDetector gesture={allGestures}>
         <Animated.View
@@ -379,16 +391,14 @@ const styles = StyleSheet.create({
   accessory: {
     position: 'absolute',
     zIndex: -1,
+    left: 0,
+    right: 0,
   },
   headerAccessory: {
     top: 0,
-    left: 0,
-    right: 0,
   },
   footerAccessory: {
     bottom: 0,
-    left: 0,
-    right: 0,
   },
 })
 
