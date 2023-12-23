@@ -15,6 +15,7 @@ import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -23,6 +24,7 @@ function ShellInner() {
   const navigator = useNavigation<NavigationProp>()
   const closeAllActiveElements = useCloseAllActiveElements()
 
+  useWebBodyScrollLock(isDrawerOpen)
   useAuxClick()
 
   useEffect(() => {

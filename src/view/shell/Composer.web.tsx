@@ -5,6 +5,7 @@ import {ComposePost} from '../com/composer/Composer'
 import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -12,11 +13,13 @@ export function Composer({}: {winHeight: number}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const state = useComposerState()
+  const isActive = !!state
+  useWebBodyScrollLock(isActive)
 
   // rendering
   // =
 
-  if (!state) {
+  if (!isActive) {
     return <View />
   }
 

@@ -23,6 +23,7 @@ import {
   ImagesLightbox,
   ProfileImageLightbox,
 } from '#/state/lightbox'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 interface Img {
   uri: string
@@ -32,8 +33,10 @@ interface Img {
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
   const {closeLightbox} = useLightboxControls()
+  const isActive = !!activeLightbox
+  useWebBodyScrollLock(isActive)
 
-  if (!activeLightbox) {
+  if (!isActive) {
     return null
   }
 
