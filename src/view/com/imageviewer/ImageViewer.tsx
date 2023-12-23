@@ -17,6 +17,7 @@ import {
 } from 'react-native-gesture-handler'
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
+import {ImageViewerHeader} from 'view/com/imageviewer/ImageViewerHeader'
 
 /**
  * Ground Rules!
@@ -37,8 +38,11 @@ import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 // TODO This will work for now, but expo-image should be updated to ^1.8.1. There are various improvements there as far
 // as performance goes when animating the component
 const AnimatedImage = Animated.createAnimatedComponent(Image)
-const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('screen')
 
+const IS_WEB = Platform.OS === 'web'
+const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get(
+  IS_WEB ? 'window' : 'screen',
+)
 const WITH_TIMING_CONFIG = {
   duration: 300,
 }
@@ -49,7 +53,9 @@ const getViewerDimensions = (image: ViewImage) => {
   const {height, width} = image.aspectRatio! // TODO figure out if this is ever not set (i believe it can be)
   if (height === 0 || width === 0) return {height: 200, width: 200}
 
-  const heightRatio = (SCREEN_HEIGHT * 0.9) / height
+  const heightModifier = !IS_WEB ? 0.9 : 1
+
+  const heightRatio = (SCREEN_HEIGHT * heightModifier) / height
   const widthRatio = SCREEN_WIDTH / width
 
   const ratio = Math.min(widthRatio, heightRatio)
@@ -105,8 +111,11 @@ function ImageViewerInner() {
   React.useEffect(() => {
     'worklet'
 
-    // Do nothing if we are closing the viewer
-    if (!isVisible) return
+    // Reset the viewer when it closes
+    if (!isVisible) {
+      resetViewer()
+      return
+    }
 
     // Reset the opacity
     opacity.value = 1
@@ -119,10 +128,9 @@ function ImageViewerInner() {
     height.value = measurement!.height
     width.value = measurement!.width
 
+    // Now set the new dimensions with timing
     height.value = withTiming(viewerDimensions.height, WITH_TIMING_CONFIG)
     width.value = withTiming(viewerDimensions.width, WITH_TIMING_CONFIG)
-
-    // Now set the new dimensions with timing
 
     // Center the image
     centerImage()
@@ -136,14 +144,21 @@ function ImageViewerInner() {
     const toValue = direction === 'up' ? -SCREEN_HEIGHT : SCREEN_HEIGHT
 
     top.value = withTiming(toValue, {duration: 200})
-    opacity.value = withTiming(0, {duration: 200})
-
-    setTimeout(() => {
+    opacity.value = withTiming(0, {duration: 200}, () => {
       runOnJS(dispatch)({
         type: 'setVisible',
         payload: false,
       })
-    }, 200)
+    })
+  }
+
+  const resetViewer = () => {
+    'worklet'
+
+    top.value = 0
+    opacity.value = 1
+    positionX.value = 0
+    positionY.value = 0
   }
 
   const onDoubleTap = () => {
@@ -215,9 +230,6 @@ function ImageViewerInner() {
 
     const velocity = Math.abs(e.velocityY)
     const translationX = Math.abs(e.translationX)
-
-    console.log(velocity)
-    console.log(translationX)
 
     if (scale.value <= 1 && velocity > 800 && translationX < 100) {
       const direction = e.velocityY > 0 ? 'down' : 'up'
@@ -307,8 +319,36 @@ function ImageViewerInner() {
     opacity: accessoryOpacity.value,
   }))
 
+  // Animated image does not play nice on web. Instead, we have to use an additional animated view to get things right.
+  // Additionally, for zoom/pan animations to properly work, we would need to set `draggable` to false on the image.
+  // I'm actually not actually sure what the best way to do that is, but I suspect the *easiest* might be to just patch
+  // expo-image and add a prop for it. For now I am just removing the gesture detector. The only animation that will
+  // "work" is the measure/scale up animation and the fade out animation when we close the viewer.
+  if (IS_WEB) {
+    return (
+      <View style={styles.container}>
+        <Animated.View
+          style={[styles.imageContainer, backgroundStyle, containerStyle]}>
+          <Animated.View style={positionStyle}>
+            <Animated.View style={[scaleStyle, dimensionsStyle]}>
+              <Image
+                source={{uri: currentImage?.thumb}}
+                style={{height: '100%', width: '100%'}}
+                cachePolicy="memory-disk"
+              />
+            </Animated.View>
+          </Animated.View>
+        </Animated.View>
+      </View>
+    )
+  }
+
   return (
     <View style={styles.container}>
+      <Animated.View
+        style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
+        <ImageViewerHeader closeViewer={closeViewer} />
+      </Animated.View>
       <GestureDetector gesture={allGestures}>
         <Animated.View
           style={[styles.imageContainer, backgroundStyle, containerStyle]}>
@@ -329,12 +369,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   imageContainer: {
     position: 'absolute',
     height: '100%',
     width: '100%',
-    zIndex: -1, // for android >_<
+    zIndex: -2, // for android >_<
+  },
+
+  accessory: {
+    position: 'absolute',
+    zIndex: -1,
+  },
+  headerAccessory: {
+    top: 0,
+    left: 0,
+    right: 0,
+  },
+  footerAccessory: {
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 })
 

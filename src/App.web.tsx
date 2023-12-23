@@ -11,6 +11,7 @@ import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
+import {ImageViewerProvider} from 'view/com/imageviewer'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
@@ -53,7 +54,9 @@ function InnerApp() {
             {/* All components should be within this provider */}
             <RootSiblingParent>
               <SafeAreaProvider>
-                <Shell />
+                <ImageViewerProvider>
+                  <Shell />
+                </ImageViewerProvider>
               </SafeAreaProvider>
             </RootSiblingParent>
             <ToastContainer />
