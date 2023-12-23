@@ -391,6 +391,10 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
       return <EmptyState icon="feed" message="This feed is empty!" />
     }, [])
 
+    const renderProfileEndOfFeed = React.useCallback(() => {
+      return <ProfileEndOfFeed />
+    }, [])
+
     return (
       <View>
         <Feed
@@ -402,7 +406,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
           headerOffset={headerHeight}
-          renderEndOfFeed={ProfileEndOfFeed}
+          renderEndOfFeed={renderProfileEndOfFeed}
           ignoreFilterFor={ignoreFilterFor}
         />
         {(isScrolledDown || hasNew) && (
