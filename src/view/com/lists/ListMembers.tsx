@@ -180,6 +180,7 @@ export function ListMembers({
           profile={(item as AppBskyGraphDefs.ListItemView).subject}
           renderButton={renderMemberButton}
           style={{paddingHorizontal: isMobile ? 8 : 14, paddingVertical: 4}}
+          noModFilter
         />
       )
     },
