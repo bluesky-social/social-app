@@ -1,10 +1,10 @@
 {
   "name": "bsky.app",
-  "version": "1.59.0",
+  "version": "1.60.0",
   "private": true,
   "scripts": {
     "prepare": "is-ci || husky install",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && yarn intl:compile",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -35,7 +35,7 @@
     "intl:compile": "lingui compile"
   },
   "dependencies": {
-    "@atproto/api": "^0.7.3",
+    "@atproto/api": "^0.7.4",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
@@ -54,6 +54,7 @@
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
     "@react-native-community/datetimepicker": "7.2.0",
+    "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-native-menu/menu": "^0.8.0",
     "@react-native-picker/picker": "2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.7",
@@ -136,7 +137,7 @@
     "react-dom": "^18.2.0",
     "react-native": "0.72.5",
     "react-native-appstate-hook": "^1.0.6",
-    "react-native-drawer-layout": "^3.2.0",
+    "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-get-random-values": "^1.8.0",
@@ -159,6 +160,9 @@
     "react-native-version-number": "^0.3.6",
     "react-native-web": "~0.19.6",
     "react-native-web-linear-gradient": "^1.1.2",
+    "react-native-web-webview": "^1.0.2",
+    "react-native-webview": "^13.6.2",
+    "react-native-youtube-iframe": "^2.3.0",
     "react-responsive": "^9.0.2",
     "rn-fetch-blob": "^0.12.0",
     "sentry-expo": "~7.0.1",

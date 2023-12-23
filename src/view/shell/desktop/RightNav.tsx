@@ -52,7 +52,7 @@ export function DesktopRightNav() {
               </Text>
             </View>
           ) : undefined}
-          <View style={[s.flexRow]}>
+          <View style={[{flexWrap: 'wrap'}, s.flexRow]}>
             {hasSession && (
               <>
                 <TextLink

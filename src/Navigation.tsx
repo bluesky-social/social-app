@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {StyleSheet} from 'react-native'
-import * as SplashScreen from 'expo-splash-screen'
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -182,7 +181,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title('Feed')}}
+        options={{title: title('Feed'), requireAuth: true}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
@@ -293,7 +292,11 @@ function HomeTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <HomeTab.Screen name="Home" getComponent={() => HomeScreen} />
+      <HomeTab.Screen
+        name="Home"
+        getComponent={() => HomeScreen}
+        options={{requireAuth: true}}
+      />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
   )
@@ -327,7 +330,11 @@ function FeedsTabNavigator() {
         animationDuration: 250,
         contentStyle,
       }}>
-      <FeedsTab.Screen name="Feeds" getComponent={() => FeedsScreen} />
+      <FeedsTab.Screen
+        name="Feeds"
+        getComponent={() => FeedsScreen}
+        options={{requireAuth: true}}
+      />
       {commonScreens(FeedsTab as typeof HomeTab)}
     </FeedsTab.Navigator>
   )
@@ -399,7 +406,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title('Home')}}
+        options={{title: title('Home'), requireAuth: true}}
       />
       <Flat.Screen
         name="Search"
@@ -409,7 +416,7 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title('Feeds')}}
+        options={{title: title('Feeds'), requireAuth: true}}
       />
       <Flat.Screen
         name="Notifications"
@@ -489,7 +496,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onReady={() => {
-        SplashScreen.hideAsync()
         logModuleInitTime()
         onReady()
       }}>

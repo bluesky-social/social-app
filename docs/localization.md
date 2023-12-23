@@ -32,7 +32,7 @@ import { Text } from "react-native";
 const text = "Hello World";
 <Text accessibilityLabel="Label is here">{text}</Text>
 ```
-In this case, you cannot use the `useLingui()` hook:
+In this case, you can use the `useLingui()` hook:
 ```jsx
 import { msg } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
@@ -111,3 +111,9 @@ export function Welcome() {
   return <div>{welcome}</div>;
 }
 ```
+
+
+### Credits
+Please check each individual `messages.po` file for the credits of the translators. We are very grateful for their help! 
+
+If you would like to translate the Bluesky app into your language, please open a PR or issue on this repo.

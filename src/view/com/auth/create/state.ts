@@ -144,7 +144,7 @@ export async function submit({
 }
 
 export function is13(state: CreateAccountState) {
-  return getAge(state.birthDate) >= 18
+  return getAge(state.birthDate) >= 13
 }
 
 export function is18(state: CreateAccountState) {

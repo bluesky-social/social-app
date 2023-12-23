@@ -31,6 +31,7 @@ let PostDropdownBtn = ({
   postUri,
   record,
   style,
+  showAppealLabelItem,
 }: {
   testID: string
   postAuthor: AppBskyActorDefs.ProfileViewBasic
@@ -38,6 +39,7 @@ let PostDropdownBtn = ({
   postUri: string
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
+  showAppealLabelItem?: boolean
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
@@ -196,6 +198,23 @@ let PostDropdownBtn = ({
         },
         android: 'ic_menu_delete',
         web: ['far', 'trash-can'],
+      },
+    },
+    showAppealLabelItem && {
+      label: 'separator',
+    },
+    showAppealLabelItem && {
+      label: _(msg`Appeal content warning`),
+      onPress() {
+        openModal({name: 'appeal-label', uri: postUri, cid: postCid})
+      },
+      testID: 'postDropdownAppealBtn',
+      icon: {
+        ios: {
+          name: 'exclamationmark.triangle',
+        },
+        android: 'ic_menu_report_image',
+        web: 'circle-exclamation',
       },
     },
   ].filter(Boolean) as NativeDropdownItem[]

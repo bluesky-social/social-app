@@ -35,9 +35,7 @@ export function useProfileQuery({did}: {did: string | undefined}) {
     // if you remove it, the UI infinite-loops
     // -prf
     staleTime: isCurrentAccount ? STALE.SECONDS.THIRTY : STALE.MINUTES.FIVE,
-    refetchInterval: isCurrentAccount
-      ? STALE.SECONDS.THIRTY
-      : STALE.MINUTES.FIVE,
+    refetchInterval: STALE.MINUTES.FIVE,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
       const res = await getAgent().getProfile({actor: did || ''})

@@ -134,7 +134,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
           return true
         }
 
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' || event.key === 'Tab') {
           enterHandler()
           return true
         }
