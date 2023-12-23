@@ -18,6 +18,7 @@ import {
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 import {ImageViewerHeader} from 'view/com/imageviewer/ImageViewerHeader'
+import {ImageViewerFooter} from 'view/com/imageviewer/ImageViewerFooter'
 
 /**
  * Ground Rules!
@@ -138,6 +139,8 @@ function ImageViewerInner() {
     // Fade in the background and show accessories
     backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
     accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
 
   const closeViewer = (direction: 'up' | 'down' = 'down') => {
@@ -272,7 +275,7 @@ function ImageViewerInner() {
       lastScale.value = 1
 
       centerImage()
-    } else if (scale.value > 3) {
+    } else if (scale.value > MAX_SCALE) {
       // Play a haptic
       // runOnJS(Haptics.impact)('impactLight')
 
@@ -326,16 +329,16 @@ function ImageViewerInner() {
   // I'm actually not actually sure what the best way to do that is, but I suspect the *easiest* might be to just patch
   // expo-image and add a prop for it. For now I am just removing the gesture detector. The only animation that will
   // "work" is the measure/scale up animation and the fade out animation when we close the viewer.
-  if (IS_WEB) {
-    return (
-      <View style={styles.container}>
-        <Animated.View
-          style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
-          <ImageViewerHeader
-            closeViewer={closeViewer}
-            visible={accessoriesVisible}
-          />
-        </Animated.View>
+  return (
+    <View style={styles.container}>
+      <Animated.View
+        style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
+        <ImageViewerHeader
+          closeViewer={closeViewer}
+          visible={accessoriesVisible}
+        />
+      </Animated.View>
+      {IS_WEB ? (
         <Animated.View
           style={[styles.imageContainer, backgroundStyle, containerStyle]}>
           <Animated.View style={positionStyle}>
@@ -349,31 +352,25 @@ function ImageViewerInner() {
             </Animated.View>
           </Animated.View>
         </Animated.View>
-      </View>
-    )
-  }
-
-  return (
-    <View style={styles.container}>
-      <Animated.View
-        style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
-        <ImageViewerHeader
-          closeViewer={closeViewer}
-          visible={accessoriesVisible}
-        />
-      </Animated.View>
-      <GestureDetector gesture={allGestures}>
-        <Animated.View
-          style={[styles.imageContainer, backgroundStyle, containerStyle]}>
-          <Animated.View style={positionStyle}>
-            <AnimatedImage
-              source={{uri: currentImage?.thumb}}
-              style={[viewerDimensions, scaleStyle, dimensionsStyle]}
-              cachePolicy="memory-disk"
-            />
+      ) : (
+        <GestureDetector gesture={allGestures}>
+          <Animated.View
+            style={[styles.imageContainer, containerStyle, backgroundStyle]}>
+            <Animated.View style={positionStyle}>
+              <AnimatedImage
+                source={{uri: currentImage?.thumb}}
+                style={[viewerDimensions, scaleStyle, dimensionsStyle]}
+                cachePolicy="memory-disk"
+              />
+            </Animated.View>
           </Animated.View>
-        </Animated.View>
-      </GestureDetector>
+        </GestureDetector>
+      )}
+
+      <Animated.View
+        style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
+        <ImageViewerFooter visible={accessoriesVisible} />
+      </Animated.View>
     </View>
   )
 }
