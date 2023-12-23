@@ -150,6 +150,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
+    // @ts-ignore web only
+    minHeight: '100vh',
   },
   container: {
     width: '100%',
@@ -163,12 +165,8 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
-  row: {
-    // @ts-ignore web
-    contentVisibility: 'auto',
-  },
-  minHeightViewport: {
+  fixedHeight: {
     // @ts-ignore web only
-    minHeight: '100vh',
+    height: '100vh',
   },
 })

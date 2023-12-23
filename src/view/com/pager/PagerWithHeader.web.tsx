@@ -107,7 +107,7 @@ let PagerTabBar = ({
   renderHeader?: () => JSX.Element
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
-  tabBarAnchor?: JSX.Element
+  tabBarAnchor?: JSX.Element | null | undefined
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()

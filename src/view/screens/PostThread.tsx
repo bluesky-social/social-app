@@ -110,6 +110,7 @@ export function PostThreadScreen({route}: Props) {
 
 const styles = StyleSheet.create({
   prompt: {
+    // @ts-ignore web-only
     position: isWeb ? 'fixed' : 'absolute',
     left: 0,
     right: 0,
