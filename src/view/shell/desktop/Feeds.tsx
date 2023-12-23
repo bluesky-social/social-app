@@ -86,6 +86,7 @@ function FeedItem({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // @ts-ignore web only -prf
     overflowY: 'auto',
     width: 300,
     paddingHorizontal: 12,
