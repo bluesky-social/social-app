@@ -463,6 +463,7 @@ export function SearchScreenMobile(
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
   const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
     textInput.current?.blur()
     setQuery('')
     setShowAutocompleteResults(false)
@@ -470,11 +471,13 @@ export function SearchScreenMobile(
       clearTimeout(searchDebounceTimeout.current)
   }, [textInput])
   const onPressClearQuery = React.useCallback(() => {
+    scrollToTopWeb()
     setQuery('')
     setShowAutocompleteResults(false)
   }, [setQuery])
   const onChangeText = React.useCallback(
     async (text: string) => {
+      scrollToTopWeb()
       setQuery(text)
 
       if (text.length > 0) {
@@ -503,10 +506,12 @@ export function SearchScreenMobile(
     [setQuery, search, setSearchResults],
   )
   const onSubmit = React.useCallback(() => {
+    scrollToTopWeb()
     setShowAutocompleteResults(false)
   }, [setShowAutocompleteResults])
 
   const onSoftReset = React.useCallback(() => {
+    scrollToTopWeb()
     onPressCancelSearch()
   }, [onPressCancelSearch])
 
@@ -618,6 +623,12 @@ export function SearchScreenMobile(
       )}
     </View>
   )
+}
+
+function scrollToTopWeb() {
+  if (isWeb) {
+    window.scrollTo(0, 0)
+  }
 }
 
 const styles = StyleSheet.create({
