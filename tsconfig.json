@@ -8,7 +8,8 @@
       "lib/*": ["./src/lib/*"],
       "platform/*": ["./src/platform/*"],
       "state/*": ["./src/state/*"],
-      "view/*": ["./src/view/*"]
+      "view/*": ["./src/view/*"],
+      "crypto": ["./src/platform/crypto.ts"]
     }
   }
 }
