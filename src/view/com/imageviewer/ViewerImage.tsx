@@ -2,39 +2,33 @@ import React from 'react'
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import {Image} from 'expo-image'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
-import {Pressable, StyleSheet, Text, View} from 'react-native'
+import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
 import {Dimensions} from 'lib/media/types'
 import {clamp} from 'lib/numbers'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 interface IProps {
   images: ViewImage[]
   index: number
+  imageStyle?: ViewStyle
 }
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 10 // 10/1
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
-export function ViewerImage({images, index}: IProps) {
+export function ViewerImage({images, index, imageStyle}: IProps) {
+  const {isMobile} = useWebMediaQueries()
   const {dispatch} = useImageViewer()
+
   const ref = React.useRef<View>(null)
 
   const image = React.useMemo(() => images[index], [images, index])
 
+  // TODO shutting this up for now
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [aspectRatio, setAspectRatio] = React.useState<number>(
     image.aspectRatio ? calc(image.aspectRatio) : 1,
   )
-
-  const imageOpacity = useSharedValue(0)
-
-  const imageStyle = useAnimatedStyle(() => ({
-    opacity: imageOpacity.value,
-  }))
 
   const onPress = React.useCallback(() => {
     ref.current?.measure((x, y, width, height, pageX, pageY) => {
@@ -49,27 +43,24 @@ export function ViewerImage({images, index}: IProps) {
           isVisible: true,
         },
       })
-
-      setTimeout(() => {
-        imageOpacity.value = 0
-
-        setTimeout(() => {
-          imageOpacity.value = 1
-        }, 300)
-      }, 50)
     })
-  }, [images, index])
+  }, [dispatch, images, index])
 
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
       ref={ref}
-      style={styles.singleImage}>
-      <AnimatedImage
+      style={[
+        styles.container,
+        isMobile && styles.singleImageMobile,
+        imageStyle,
+      ]}>
+      <Image
         source={{uri: image.thumb}}
         style={[styles.image, {aspectRatio}]}
         cachePolicy="memory-disk"
+        accessibilityIgnoresInvertColors
       />
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
@@ -97,11 +88,17 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
+
   image: {
     width: '100%',
   },
-  singleImage: {
+
+  container: {
+    overflow: 'hidden',
     borderRadius: 8,
+  },
+
+  singleImage: {
     maxHeight: 1000,
   },
   singleImageMobile: {
