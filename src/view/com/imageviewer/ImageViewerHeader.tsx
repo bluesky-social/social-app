@@ -6,11 +6,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {HITSLOP_20} from 'lib/constants'
 
 interface IProps {
-  closeViewer: () => void
+  onCloseViewer: () => void
   visible: boolean
 }
 
-export function ImageViewerHeader({closeViewer, visible}: IProps) {
+export function ImageViewerHeader({onCloseViewer, visible}: IProps) {
   // Best way to handle this is to just get the safe area top
   const {top} = useSafeAreaInsets()
 
@@ -25,7 +25,7 @@ export function ImageViewerHeader({closeViewer, visible}: IProps) {
       style={[styles.container, {top: top + 5}]}>
       <Pressable
         accessibilityRole="button"
-        onPress={closeViewer}
+        onPress={onCloseViewer}
         style={styles.button}
         hitSlop={HITSLOP_20}>
         <FontAwesomeIcon icon="x" color="white" />

@@ -3,25 +3,22 @@ import * as MediaLibrary from 'expo-media-library'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import * as Toast from 'view/com/util/Toast'
 import {saveImageToMediaLibrary, shareImageModal} from 'lib/media/manip'
-import {Platform, Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
 import {colors, s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {isIOS} from 'platform/detection'
-import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
-
-const IS_MOBILE = Platform.OS !== 'web'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 
 interface IProps {
   visible: boolean
+  currentImage: ViewImage
 }
 
-export function ImageViewerFooter({visible}: IProps) {
-  const {state} = useImageViewer()
-  const {images, index} = state
-
-  const currentImage = React.useMemo(() => images?.[index], [images, index])
+export function ImageViewerFooter({visible, currentImage}: IProps) {
+  const {isMobile} = useWebMediaQueries()
 
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
@@ -68,7 +65,7 @@ export function ImageViewerFooter({visible}: IProps) {
           </Text>
         </Pressable>
       ) : null}
-      {IS_MOBILE && (
+      {isMobile && (
         <>
           <View style={styles.footerBtns}>
             <Button

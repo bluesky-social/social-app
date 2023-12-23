@@ -1,8 +1,8 @@
 import React from 'react'
 import {ImageViewerContext} from 'view/com/imageviewer/ImageViewerContext'
 import {Modal, StyleSheet, View} from 'react-native'
-import {ImageViewer} from 'view/com/imageviewer/ImageViewer'
 import {IImageViewerAction, IImageViewerState} from 'view/com/imageviewer/types'
+import {ImageViewer} from 'view/com/imageviewer/ImageViewer'
 
 interface IProps {
   children: React.ReactNode
