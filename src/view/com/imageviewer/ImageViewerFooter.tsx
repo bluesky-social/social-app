@@ -31,10 +31,10 @@ export function ImageViewerFooter({visible}: IProps) {
   }, [])
 
   const onSaveImagePress = React.useCallback(async () => {
-    if (!permissionResponse || permissionResponse.granted === false) {
+    if (!permissionResponse || !permissionResponse.granted) {
       Toast.show('Permission to access camera roll is required.')
       if (permissionResponse?.canAskAgain) {
-        requestPermission()
+        await requestPermission()
       } else {
         Toast.show(
           'Permission to access camera roll was denied. Please enable it in your system settings.',
