@@ -393,8 +393,9 @@ function MyProfileTabNavigator() {
 const FlatNavigator = () => {
   const pal = usePalette('default')
   const numUnread = useUnreadNotifications()
-  const title = (page: string) => bskyTitle(page, numUnread)
   const screenListeners = useWebScrollRestoration()
+  const title = (page: string) => bskyTitle(page, numUnread)
+
   return (
     <Flat.Navigator
       screenListeners={screenListeners}
