@@ -210,7 +210,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handle/feed/:rkey/liked-by", server.WebGeneric)
 
 	// profile RSS feed (DID not handle)
-	e.GET("/profile/:did/rss", server.WebProfileRSS)
+	e.GET("/profile/:ident/rss", server.WebProfileRSS)
 
 	// post endpoints; only first populates info
 	e.GET("/profile/:handle/post/:rkey", server.WebPost)
