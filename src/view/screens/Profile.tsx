@@ -2,6 +2,7 @@ import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import type {SharedValue} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
@@ -255,15 +256,19 @@ function ProfileScreenLoaded({
   // rendering
   // =
 
-  const renderHeader = React.useCallback(() => {
-    return (
-      <ProfileHeader
-        profile={profile}
-        moderation={moderation}
-        hideBackButton={hideBackButton}
-      />
-    )
-  }, [profile, moderation, hideBackButton])
+  const renderHeader = React.useCallback(
+    (scrollY: SharedValue<number>) => {
+      return (
+        <ProfileHeader
+          profile={profile}
+          moderation={moderation}
+          hideBackButton={hideBackButton}
+          scrollY={scrollY}
+        />
+      )
+    },
+    [profile, moderation, hideBackButton],
+  )
 
   return (
     <ScreenHider
@@ -277,7 +282,8 @@ function ProfileScreenLoaded({
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
-        renderHeader={renderHeader}>
+        renderHeader={renderHeader}
+        allowHeaderOverscroll>
         {({headerHeight, isFocused, scrollElRef}) => (
           <FeedSection
             ref={postsSectionRef}

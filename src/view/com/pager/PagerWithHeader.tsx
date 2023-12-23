@@ -36,10 +36,11 @@ export interface PagerWithHeaderProps {
     | ((props: PagerWithHeaderChildParams) => JSX.Element)
   items: string[]
   isHeaderReady: boolean
-  renderHeader?: () => JSX.Element
+  renderHeader?: (scrollY: SharedValue<number>) => JSX.Element
   initialPage?: number
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
+  allowHeaderOverscroll?: boolean
 }
 export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
   function PageWithHeaderImpl(
@@ -52,6 +53,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       initialPage,
       onPageSelected,
       onCurrentPageSelected,
+      allowHeaderOverscroll,
     }: PagerWithHeaderProps,
     ref,
   ) {
@@ -98,6 +100,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
             onSelect={props.onSelect}
             scrollY={scrollY}
             testID={testID}
+            allowHeaderOverscroll={allowHeaderOverscroll}
           />
         )
       },
@@ -112,6 +115,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         onHeaderOnlyLayout,
         scrollY,
         testID,
+        allowHeaderOverscroll,
       ],
     )
 
@@ -222,6 +226,7 @@ let PagerTabBar = ({
   onTabBarLayout,
   onCurrentPageSelected,
   onSelect,
+  allowHeaderOverscroll,
 }: {
   currentPage: number
   headerOnlyHeight: number
@@ -229,17 +234,21 @@ let PagerTabBar = ({
   items: string[]
   testID?: string
   scrollY: SharedValue<number>
-  renderHeader?: () => JSX.Element
+  renderHeader?: (scrollY: SharedValue<number>) => JSX.Element
   onHeaderOnlyLayout: (e: LayoutChangeEvent) => void
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
+  allowHeaderOverscroll?: boolean
 }): React.ReactNode => {
   const {isMobile} = useWebMediaQueries()
   const headerTransform = useAnimatedStyle(() => ({
     transform: [
       {
-        translateY: Math.min(Math.min(scrollY.value, headerOnlyHeight) * -1, 0),
+        translateY: Math.min(
+          Math.min(scrollY.value, headerOnlyHeight) * -1,
+          allowHeaderOverscroll ? Infinity : 0,
+        ),
       },
     ],
   }))
@@ -251,7 +260,7 @@ let PagerTabBar = ({
         headerTransform,
       ]}>
       <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
-        {renderHeader?.()}
+        {renderHeader?.(scrollY)}
       </View>
       <View
         onLayout={onTabBarLayout}

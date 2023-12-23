@@ -151,10 +151,12 @@ export function Component({
           <Trans>Edit my profile</Trans>
         </Text>
         <View style={styles.photos}>
-          <UserBanner
-            banner={userBanner}
-            onSelectNewBanner={onSelectNewBanner}
-          />
+          <View style={styles.banner}>
+            <UserBanner
+              banner={userBanner}
+              onSelectNewBanner={onSelectNewBanner}
+            />
+          </View>
           <View style={[styles.avi, {borderColor: pal.colors.background}]}>
             <EditableUserAvatar
               size={80}
@@ -309,6 +311,10 @@ const styles = StyleSheet.create({
   photos: {
     marginBottom: 36,
     marginHorizontal: -14,
+  },
+  banner: {
+    width: '100%',
+    height: 150,
   },
   errorContainer: {marginTop: 20},
 })
