@@ -26,7 +26,7 @@ import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {buildStateObject} from 'lib/routes/helpers'
 import {State, RouteParams} from 'lib/routes/types'
 import {colors} from 'lib/styles'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -41,6 +41,7 @@ import {
   setEmailConfirmationRequested,
 } from './state/shell/reminders'
 import {init as initAnalytics} from './lib/analytics/analytics'
+import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -385,9 +386,6 @@ function MyProfileTabNavigator() {
   )
 }
 
-const webScrollPositions = new Map()
-let webFocusedScreen = null
-
 /**
  * The FlatNavigator is used by Web to represent the routes
  * in a single ("flat") stack.
@@ -395,24 +393,11 @@ let webFocusedScreen = null
 const FlatNavigator = () => {
   const pal = usePalette('default')
   const numUnread = useUnreadNotifications()
-
   const title = (page: string) => bskyTitle(page, numUnread)
+  const screenListeners = useWebScrollRestoration()
   return (
     <Flat.Navigator
-      screenListeners={{
-        beforeRemove(e) {
-          if (isWeb) {
-            webScrollPositions.delete(e.target)
-          }
-        },
-        focus(e) {
-          if (isWeb) {
-            const scrollY = webScrollPositions.get(e.target) ?? 0
-            window.scrollTo(0, scrollY)
-            webFocusedScreen = e.target
-          }
-        },
-      }}
+      screenListeners={screenListeners}
       screenOptions={{
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
@@ -515,16 +500,6 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       onReady={() => {
         logModuleInitTime()
         onReady()
-
-        if (isWeb) {
-          history.scrollRestoration = 'manual'
-          // TODO: Clean up?
-          navigationRef.current?.addListener('__unsafe_action__', e => {
-            if (webFocusedScreen) {
-              webScrollPositions.set(webFocusedScreen, window.scrollY)
-            }
-          })
-        }
       }}>
       {children}
     </NavigationContainer>
