@@ -8,7 +8,7 @@ import {messages as messagesJa} from '#/locale/locales/ja/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
-import {messages as messagesEs} from '#/locale/locales/pt/messages'
+import {messages as messagesPt} from '#/locale/locales/pt/messages'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
