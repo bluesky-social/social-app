@@ -8,6 +8,7 @@ import {
   InteractionManager,
 } from 'react-native'
 import {Image} from 'expo-image'
+import Animated from 'react-native-reanimated'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
@@ -32,6 +33,9 @@ import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
+import {ViewerImage} from 'view/com/imageviewer'
+
+const AnimatedImage = Animated.createAnimatedComponent(Image)
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -104,6 +108,9 @@ export function PostEmbeds({
   // image embed
   // =
   if (AppBskyEmbedImages.isView(embed)) {
+    // TODO this will need to get factored out later, but lets do some testing with a single image
+    const imageRef = React.useRef<Image>(null)
+
     const {images} = embed
 
     if (images.length > 0) {
@@ -121,28 +128,32 @@ export function PostEmbeds({
         })
       }
 
+      // We don't need to have the separate props here I don't think, plus we don't need to map the images, just pass
+      // the array we already have so ViewerImage can handle opening the modal on its own without all this logic ^
       if (images.length === 1) {
         const {alt, thumb, aspectRatio} = images[0]
         return (
           <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
-              alt={alt}
-              uri={thumb}
-              dimensionsHint={aspectRatio}
-              onPress={() => _openLightbox(0)}
-              onPressIn={() => onPressIn(0)}
-              style={[
-                styles.singleImage,
-                isMobile && styles.singleImageMobile,
-              ]}>
-              {alt === '' ? null : (
-                <View style={styles.altContainer}>
-                  <Text style={styles.alt} accessible={false}>
-                    ALT
-                  </Text>
-                </View>
-              )}
-            </AutoSizedImage>
+            <ViewerImage images={embed.images} index={0} />
+            {/* TODO Remove this */}
+            {/*<AutoSizedImage*/}
+            {/*  alt={alt}*/}
+            {/*  uri={thumb}*/}
+            {/*  dimensionsHint={aspectRatio}*/}
+            {/*  onPress={() => _openLightbox(0)}*/}
+            {/*  onPressIn={() => onPressIn(0)}*/}
+            {/*  style={[*/}
+            {/*    styles.singleImage,*/}
+            {/*    isMobile && styles.singleImageMobile,*/}
+            {/*  ]}>*/}
+            {/*  {alt === '' ? null : (*/}
+            {/*    <View style={styles.altContainer}>*/}
+            {/*      <Text style={styles.alt} accessible={false}>*/}
+            {/*        ALT*/}
+            {/*      </Text>*/}
+            {/*    </View>*/}
+            {/*  )}*/}
+            {/*</AutoSizedImage>*/}
           </View>
         )
       }

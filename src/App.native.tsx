@@ -39,6 +39,7 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Splash} from '#/Splash'
+import {ImageViewerProvider} from 'view/com/imageviewer'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -70,8 +71,10 @@ function InnerApp() {
                 {/* All components should be within this provider */}
                 <RootSiblingParent>
                   <GestureHandlerRootView style={s.h100pct}>
-                    <TestCtrls />
-                    <Shell />
+                    <ImageViewerProvider>
+                      <TestCtrls />
+                      <Shell />
+                    </ImageViewerProvider>
                   </GestureHandlerRootView>
                 </RootSiblingParent>
               </ThemeProvider>
