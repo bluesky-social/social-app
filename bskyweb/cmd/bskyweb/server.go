@@ -370,6 +370,7 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	req := c.Request()
 	data["profileView"] = pv
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
+	data["requestHost"] = req.Host
 	return c.Render(http.StatusOK, "profile.html", data)
 }
 

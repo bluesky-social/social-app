@@ -34,7 +34,9 @@
   {% endif %}
   <meta name="twitter:label1" content="Account DID">
   <meta name="twitter:value1" content="{{ profileView.Did }}">
-  <link rel="alternate" type="application/rss+xml" href="/profile/{{ profileView.Did }}/rss">
+  {%- if requestHost %}
+  <link rel="alternate" type="application/rss+xml" href="https://{{ requestHost }}/profile/{{ profileView.Did }}/rss">
+  {% endif %}
 {% endif -%}
 {%- endblock %}
 

@@ -39,6 +39,7 @@ type rss struct {
 
 func (srv *Server) WebProfileRSS(c echo.Context) error {
 	ctx := c.Request().Context()
+	req := c.Request()
 
 	didParam := c.Param("did")
 	did, err := syntax.ParseDID(didParam)
@@ -84,7 +85,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 			pubDate = createdAt.Time().Format(time.RFC822Z)
 		}
 		posts = append(posts, Item{
-			Link:        fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, aturi.RecordKey().String()),
+			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
 			Description: rec.Text,
 			PubDate:     pubDate,
 			GUID: ItemGUID{
@@ -105,7 +106,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 	feed := &rss{
 		Version:     "2.0",
 		Description: desc,
-		Link:        fmt.Sprintf("https://bsky.app/profile/%s", pv.Handle),
+		Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
 		Title:       title,
 		Item:        posts,
 	}
