@@ -27,6 +27,7 @@ import {useSession} from '#/state/session'
 export function ProfileCard({
   testID,
   profile: profileUnshadowed,
+  noModFilter,
   noBg,
   noBorder,
   followers,
@@ -35,6 +36,7 @@ export function ProfileCard({
 }: {
   testID?: string
   profile: AppBskyActorDefs.ProfileViewBasic
+  noModFilter?: boolean
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
@@ -50,7 +52,11 @@ export function ProfileCard({
     return null
   }
   const moderation = moderateProfile(profile, moderationOpts)
-  if (moderation.account.filter) {
+  if (
+    !noModFilter &&
+    moderation.account.filter &&
+    moderation.account.cause?.type !== 'muted'
+  ) {
     return null
   }
 
