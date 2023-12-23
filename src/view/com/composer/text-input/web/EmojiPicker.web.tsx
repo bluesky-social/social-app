@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   trigger: {
     backgroundColor: 'transparent',
+    // @ts-ignore web only -prf
     border: 'none',
     paddingTop: 4,
     paddingLeft: 12,

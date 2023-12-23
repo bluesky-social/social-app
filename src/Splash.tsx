@@ -40,8 +40,6 @@ type Props = {
   isReady: boolean
 }
 
-SplashScreen.preventAutoHideAsync().catch(() => {})
-
 const AnimatedLogo = Animated.createAnimatedComponent(Logo)
 
 export function Splash(props: React.PropsWithChildren<Props>) {
