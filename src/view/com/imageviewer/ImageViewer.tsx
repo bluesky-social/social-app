@@ -344,6 +344,7 @@ function ImageViewerInner() {
                 source={{uri: currentImage?.thumb}}
                 style={{height: '100%', width: '100%'}}
                 cachePolicy="memory-disk"
+                accessibilityIgnoresInvertColors
               />
             </Animated.View>
           </Animated.View>
