@@ -338,35 +338,29 @@ function ImageViewerInner() {
           visible={accessoriesVisible}
         />
       </Animated.View>
-      {IS_WEB ? (
+      <GestureDetector gesture={IS_WEB ? tapGesture : allGestures}>
         <Animated.View
-          style={[styles.imageContainer, backgroundStyle, containerStyle]}>
+          style={[styles.imageContainer, containerStyle, backgroundStyle]}>
           <Animated.View style={positionStyle}>
-            <Animated.View style={[scaleStyle, dimensionsStyle]}>
-              <Image
-                source={{uri: currentImage?.thumb}}
-                style={{height: '100%', width: '100%'}}
-                cachePolicy="memory-disk"
-                accessibilityIgnoresInvertColors
-              />
-            </Animated.View>
-          </Animated.View>
-        </Animated.View>
-      ) : (
-        <GestureDetector gesture={allGestures}>
-          <Animated.View
-            style={[styles.imageContainer, containerStyle, backgroundStyle]}>
-            <Animated.View style={positionStyle}>
+            {IS_WEB ? (
+              <Animated.View style={[scaleStyle, dimensionsStyle]}>
+                <Image
+                  source={{uri: currentImage?.thumb}}
+                  style={{height: '100%', width: '100%'}}
+                  cachePolicy="memory-disk"
+                  accessibilityIgnoresInvertColors
+                />
+              </Animated.View>
+            ) : (
               <AnimatedImage
                 source={{uri: currentImage?.thumb}}
                 style={[viewerDimensions, scaleStyle, dimensionsStyle]}
                 cachePolicy="memory-disk"
               />
-            </Animated.View>
+            )}
           </Animated.View>
-        </GestureDetector>
-      )}
-
+        </Animated.View>
+      </GestureDetector>
       <Animated.View
         style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
         <ImageViewerFooter visible={accessoriesVisible} />
