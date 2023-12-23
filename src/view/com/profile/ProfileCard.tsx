@@ -52,7 +52,11 @@ export function ProfileCard({
     return null
   }
   const moderation = moderateProfile(profile, moderationOpts)
-  if (!noModFilter && moderation.account.filter) {
+  if (
+    !noModFilter &&
+    moderation.account.filter &&
+    moderation.account.cause?.type !== 'muted'
+  ) {
     return null
   }
 
