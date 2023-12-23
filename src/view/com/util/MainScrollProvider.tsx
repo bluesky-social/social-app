@@ -28,6 +28,21 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     }
   })
 
+  const snapToClosestMode = React.useCallback(
+    (scrollY: number) => {
+      startDragOffset.value = null
+      startMode.value = null
+      if (scrollY < headerHeight.value / 2) {
+        // If we're close to the top, show the shell.
+        setMode(false)
+      } else {
+        // Snap to whichever state is the closest.
+        setMode(Math.round(mode.value) === 1)
+      }
+    },
+    [startDragOffset, startMode, headerHeight, mode, setMode],
+  )
+
   const onBeginDrag = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
@@ -40,17 +55,19 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const onEndDrag = useCallback(
     (e: NativeScrollEvent) => {
       'worklet'
-      startDragOffset.value = null
-      startMode.value = null
-      if (e.contentOffset.y < headerHeight.value / 2) {
-        // If we're close to the top, show the shell.
-        setMode(false)
-      } else {
-        // Snap to whichever state is the closest.
-        setMode(Math.round(mode.value) === 1)
-      }
+      snapToClosestMode(e.contentOffset.y)
     },
-    [startDragOffset, startMode, setMode, mode, headerHeight],
+    [snapToClosestMode],
+  )
+
+  // On the web, we don't get the begin/end drag events,
+  // but we still need to expand or collapse the header.
+  const onScrollEndWeb = useCallback(
+    (e: Pick<NativeScrollEvent, 'contentOffset'>) => {
+      'worklet'
+      snapToClosestMode(e.contentOffset.y)
+    },
+    [snapToClosestMode],
   )
 
   const onScroll = useCallback(
@@ -100,7 +117,8 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
     <ScrollProvider
       onBeginDrag={onBeginDrag}
       onEndDrag={onEndDrag}
-      onScroll={onScroll}>
+      onScroll={onScroll}
+      onScrollEndWeb={onScrollEndWeb}>
       {children}
     </ScrollProvider>
   )
