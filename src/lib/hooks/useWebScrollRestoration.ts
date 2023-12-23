@@ -3,7 +3,7 @@ import {EventArg, useNavigation} from '@react-navigation/core'
 
 if ('scrollRestoration' in history) {
   // Tell the brower not to mess with the scroll.
-  // We're doing that manuall below.
+  // We're doing that manually below.
   history.scrollRestoration = 'manual'
 }
 
