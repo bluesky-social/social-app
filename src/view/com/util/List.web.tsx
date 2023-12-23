@@ -116,8 +116,8 @@ function ListImpl<ItemT>(
       contextScrollHandlers.onScroll?.(
         {
           contentOffset: {
-            x: window.scrollX,
-            y: window.scrollY,
+            x: Math.max(0, window.scrollX),
+            y: Math.max(0, window.scrollY),
           },
         } as any, // TODO: Better types.
         null as any,
@@ -128,8 +128,8 @@ function ListImpl<ItemT>(
     if (isInsideVisibleTree) {
       contextScrollHandlers.onScrollEndWeb?.({
         contentOffset: {
-          x: window.scrollX,
-          y: window.scrollY,
+          x: Math.max(0, window.scrollX),
+          y: Math.max(0, window.scrollY),
         },
       })
     }
