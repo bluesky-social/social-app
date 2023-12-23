@@ -7,7 +7,7 @@ import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {batchedUpdates} from '#/lib/batchedUpdates'
 
-export type ListMethods = FlatList_INTERNAL
+export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<
   FlatListProps<ItemT>,
   | 'onScroll' // Use ScrollContext instead.
@@ -18,8 +18,9 @@ export type ListProps<ItemT> = Omit<
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
+  desktopFixedHeight: any // TODO: Better types.
 }
-export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
+export type ListRef = React.MutableRefObject<any | null> // TODO: Better types.
 
 function ListImpl<ItemT>(
   {
@@ -27,7 +28,7 @@ function ListImpl<ItemT>(
     ListFooterComponent,
     contentContainerStyle,
     data,
-    desktopFixedHeight, // TODO
+    desktopFixedHeight,
     headerOffset,
     keyExtractor,
     refreshing: _unsupportedRefreshing,
@@ -53,7 +54,7 @@ function ListImpl<ItemT>(
     )
   }
 
-  let header: ListProps<ItemT>['ListHeaderComponent'] = null
+  let header: JSX.Element | null = null
   if (ListHeaderComponent != null) {
     if (typeof ListHeaderComponent === 'object') {
       header = ListHeaderComponent
@@ -63,7 +64,7 @@ function ListImpl<ItemT>(
     }
   }
 
-  let footer: ListProps<ItemT>['ListHeaderComponent'] = null
+  let footer: JSX.Element | null = null
   if (ListFooterComponent != null) {
     if (typeof ListFooterComponent === 'object') {
       footer = ListFooterComponent
@@ -100,11 +101,15 @@ function ListImpl<ItemT>(
             behavior: animated ? 'smooth' : 'instant',
           })
         },
-      } as any), // TODO: Types.
+      } as any), // TODO: Better types.
     [],
   )
 
-  const [isVisible, setIsVisible] = React.useState(false)
+  // --- onContentSizeChange ---
+  const containerRef = useRef(null)
+  useResizeObserver(containerRef, onContentSizeChange)
+
+  // --- onScroll ---
   const handleScroll = useNonReactiveCallback(() => {
     contextScrollHandlers.onScroll?.(
       {
@@ -112,21 +117,22 @@ function ListImpl<ItemT>(
           x: window.scrollX,
           y: window.scrollY,
         },
-        // TODO
-      },
-      {
-        /* TODO */
-      },
+      } as any, // TODO: Better types.
+      null as any,
     )
   })
+  const [isParentTreeVisible, setIsParentTreeVisible] = React.useState(false)
   React.useEffect(() => {
-    if (!isVisible) {
+    if (!isParentTreeVisible) {
+      // Prevents hidden tabs from firing scroll events.
+      // Only one list is expected to be firing these at a time.
       return
     }
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [isVisible, handleScroll])
+  }, [isParentTreeVisible, handleScroll])
 
+  // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)
   function handleAboveTheFoldVisibleChange(isAboveTheFold: boolean) {
     const didScrollDown = !isAboveTheFold
@@ -138,13 +144,21 @@ function ListImpl<ItemT>(
     }
   }
 
-  const containerRef = useRef(null)
-  useResizeObserver(containerRef, onContentSizeChange)
+  // --- onEndReached ---
+  const onTailVisibilityChange = useNonReactiveCallback(
+    (isTailVisible: boolean) => {
+      if (isTailVisible) {
+        onEndReached?.({
+          distanceFromEnd: onEndReachedThreshold || 0,
+        })
+      }
+    },
+  )
 
   return (
     <View {...props} style={style} ref={nativeRef}>
       <Visibility
-        onVisibleChange={setIsVisible}
+        onVisibleChange={setIsParentTreeVisible}
         style={styles.parentTreeVisibilityDetector}
       />
       <View
@@ -172,13 +186,7 @@ function ListImpl<ItemT>(
         {onEndReached && (
           <Visibility
             topMargin={(onEndReachedThreshold ?? 0) * 100 + '%'}
-            onVisibleChange={isVisible => {
-              if (isVisible) {
-                onEndReached?.({
-                  distanceFromEnd: onEndReachedThreshold || 0,
-                })
-              }
-            }}
+            onVisibleChange={onTailVisibilityChange}
           />
         )}
         {footer}
@@ -187,17 +195,25 @@ function ListImpl<ItemT>(
   )
 }
 
-function useResizeObserver(ref, onResize) {
+function useResizeObserver(
+  ref: React.RefObject<Element>,
+  onResize: undefined | ((w: number, h: number) => void),
+) {
   const handleResize = useNonReactiveCallback(onResize ?? (() => {}))
   const isActive = !!onResize
   React.useEffect(() => {
     if (!isActive) {
       return
     }
-    const resizeObserver = new ResizeObserver(() => {
-      handleResize()
+    const resizeObserver = new ResizeObserver(entries => {
+      batchedUpdates(() => {
+        for (let entry of entries) {
+          const rect = entry.contentRect
+          handleResize(rect.width, rect.height)
+        }
+      })
     })
-    const node = ref.current
+    const node = ref.current!
     resizeObserver.observe(node)
     return () => {
       resizeObserver.unobserve(node)

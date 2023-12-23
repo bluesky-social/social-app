@@ -6,7 +6,6 @@ import {TabBar} from './TabBar'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ListMethods} from '../util/List'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number
@@ -108,6 +107,7 @@ let PagerTabBar = ({
   renderHeader?: () => JSX.Element
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
+  tabBarAnchor?: JSX.Element
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()

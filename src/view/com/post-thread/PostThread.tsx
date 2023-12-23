@@ -197,7 +197,7 @@ function PostThreadLoaded({
 
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
-      function onMeasure(pageY) {
+      function onMeasure(pageY: number) {
         let spinnerHeight = 0
         if (isDesktop) {
           spinnerHeight = 40
@@ -216,8 +216,12 @@ function PostThreadLoaded({
           },
         )
       } else {
-        const pageY = highlightedPostRef.current.getBoundingClientRect().top
-        onMeasure(pageY)
+        // Measure synchronously to avoid a layout jump.
+        const domNode = highlightedPostRef.current
+        if (domNode) {
+          const pageY = (domNode as any as Element).getBoundingClientRect().top
+          onMeasure(pageY)
+        }
       }
       needsScrollAdjustment.current = false
     }
