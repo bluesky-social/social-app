@@ -1,4 +1,4 @@
-import React, {memo, useRef, startTransition} from 'react'
+import React, {isValidElement, memo, useRef, startTransition} from 'react'
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -56,21 +56,21 @@ function ListImpl<ItemT>(
 
   let header: JSX.Element | null = null
   if (ListHeaderComponent != null) {
-    if (typeof ListHeaderComponent === 'object') {
+    if (isValidElement(ListHeaderComponent)) {
       header = ListHeaderComponent
-    } else if (typeof ListHeaderComponent === 'function') {
-      // @ts-ignore We aren't using classes so it's a render function.
-      header = ListHeaderComponent()
+    } else {
+      // @ts-ignore Nah it's fine.
+      header = <ListHeaderComponent />
     }
   }
 
   let footer: JSX.Element | null = null
   if (ListFooterComponent != null) {
-    if (typeof ListFooterComponent === 'object') {
+    if (isValidElement(ListFooterComponent)) {
       footer = ListFooterComponent
-    } else if (typeof ListFooterComponent === 'function') {
-      // @ts-ignore We aren't using classes so it's a render function.
-      footer = ListFooterComponent()
+    } else {
+      // @ts-ignore Nah it's fine.
+      footer = <ListFooterComponent />
     }
   }
 
