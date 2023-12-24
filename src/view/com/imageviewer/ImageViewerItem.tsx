@@ -52,7 +52,6 @@ function ImageViewerItem({
   initialIndex,
   setIsScaled,
   setAccessoriesVisible,
-  onCloseViewer,
   opacity,
   accessoryOpacity,
   backgroundOpacity,
@@ -201,19 +200,6 @@ function ImageViewerItem({
     .onEnd(onPanEnd)
     .enabled(panGestureEnabled)
 
-  const onCloseGesture = (
-    e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
-  ) => {
-    if (Math.abs(e.velocityY) < 1000 || Math.abs(e.translationX) > 30) return
-    runOnJS(onCloseViewer)()
-  }
-
-  const closeGesture = Gesture.Pan()
-    .onEnd(onCloseGesture)
-    .activeOffsetX([-1000, 1000]) // This keeps the gesture from being recognized when we trying to scroll
-    .activeOffsetY([-50, 50])
-    .enabled(!panGestureEnabled)
-
   const onDoubleTap = () => {
     'worklet'
 
@@ -301,11 +287,7 @@ function ImageViewerItem({
 
   // Combine the gestures
   const tapGestures = Gesture.Simultaneous(tapGesture, doubleTapGesture)
-  const pinchAndPanGestures = Gesture.Simultaneous(
-    pinchGesture,
-    panGesture,
-    closeGesture,
-  )
+  const pinchAndPanGestures = Gesture.Simultaneous(pinchGesture, panGesture)
   const allGestures = Gesture.Simultaneous(tapGestures, pinchAndPanGestures)
 
   // Animated styles
