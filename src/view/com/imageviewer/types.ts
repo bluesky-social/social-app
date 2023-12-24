@@ -8,10 +8,10 @@ export interface IImageViewerContext {
 }
 
 export interface IImageViewerState {
-  images: ViewImage[] | null
+  images: ViewImage[]
   index: number
   isVisible: boolean
-  measurement: MeasuredDimensions | null
+  measurement: MeasuredDimensions | undefined
 }
 
 export type IImageViewerAction =

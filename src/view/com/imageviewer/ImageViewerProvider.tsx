@@ -27,10 +27,10 @@ const reducer = (state: IImageViewerState, action: IImageViewerAction) => {
 
 export function ImageViewerProvider({children}: IProps) {
   const [state, dispatch] = React.useReducer(reducer, {
-    images: null,
+    images: [],
     index: 0,
     isVisible: false,
-    measurement: null,
+    measurement: undefined,
   })
 
   return (

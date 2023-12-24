@@ -19,7 +19,7 @@ function ImageViewerInner() {
 
   const [isScaled, setIsScaled] = React.useState(false)
   const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
-  const [currentImage, setCurrentImage] = React.useState(images![index])
+  const [currentImage, setCurrentImage] = React.useState(images?.[index])
 
   const opacity = useSharedValue(1)
   const backgroundOpacity = useSharedValue(0)
@@ -46,7 +46,7 @@ function ImageViewerInner() {
 
   const onPageSelected = React.useCallback(
     (e: NativeSyntheticEvent<Readonly<{position: number}>>) => {
-      setCurrentImage(images![e.nativeEvent.position])
+      setCurrentImage(images?.[e.nativeEvent.position])
     },
     [images],
   )
@@ -59,6 +59,8 @@ function ImageViewerInner() {
   const accessoryStyle = useAnimatedStyle(() => ({
     opacity: accessoryOpacity.value,
   }))
+
+  if (!currentImage) return null
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -78,7 +80,7 @@ function ImageViewerInner() {
         {images?.map((image, i) => (
           <View style={styles.container} key={i}>
             <ImageViewerItem
-              image={images![i]}
+              image={images[i]}
               index={i}
               initialIndex={index}
               measurement={measurement}
