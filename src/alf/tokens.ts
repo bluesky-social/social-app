@@ -24,9 +24,9 @@ export const color = {
 export const space = {
   xxs: 2,
   xs: 4,
-  s: 8,
-  m: 12,
-  l: 18,
+  sm: 8,
+  md: 12,
+  lg: 18,
   xl: 24,
   xxl: 32,
 } as const
@@ -34,25 +34,24 @@ export const space = {
 export const fontSize = {
   xxs: 10,
   xs: 12,
-  s: 14,
-  m: 16,
-  l: 18,
+  sm: 14,
+  md: 16,
+  lg: 18,
   xl: 22,
   xxl: 26,
 } as const
 
 // TODO test
 export const lineHeight = {
-  tight: '1.0', // default
-  normal: '1.5',
-  relaxed: '1.625',
+  normal: 1.5,
+  relaxed: 1.625,
 } as const
 
 export const borderRadius = {
-  s: 8,
-  m: 12,
+  sm: 8,
+  md: 12,
   xl: 36,
-  round: 999,
+  full: 999,
 } as const
 
 export const fontWeight = {

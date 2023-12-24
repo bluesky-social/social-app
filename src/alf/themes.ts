@@ -48,39 +48,39 @@ export const darkPalette: Palette = {
 export const light = {
   palette: lightPalette,
   atoms: {
-    color: Object.keys(lightPalette).reduce((acc, key) => {
+    ...Object.keys(lightPalette).reduce((acc, key) => {
       const k = key as keyof Palette
-      acc[k] = {
+      acc[`text_${k}`] = {
         color: lightPalette[k],
       }
       return acc
-    }, {} as Record<keyof Palette, {color: string}>),
-    backgroundColor: Object.keys(lightPalette).reduce((acc, key) => {
+    }, {} as Record<`text_${keyof Palette}`, {color: string}>),
+    ...Object.keys(lightPalette).reduce((acc, key) => {
       const k = key as keyof Palette
-      acc[k] = {
+      acc[`bg_${k}`] = {
         backgroundColor: lightPalette[k],
       }
       return acc
-    }, {} as Record<keyof Palette, {backgroundColor: string}>),
+    }, {} as Record<`bg_${keyof Palette}`, {backgroundColor: string}>),
   },
 } as const
 
 export const dark: Theme = {
   palette: darkPalette,
   atoms: {
-    color: Object.keys(darkPalette).reduce((acc, key) => {
+    ...Object.keys(darkPalette).reduce((acc, key) => {
       const k = key as keyof Palette
-      acc[k] = {
+      acc[`text_${k}`] = {
         color: darkPalette[k],
       }
       return acc
-    }, {} as Record<keyof Palette, {color: string}>),
-    backgroundColor: Object.keys(darkPalette).reduce((acc, key) => {
+    }, {} as Record<`text_${keyof Palette}`, {color: string}>),
+    ...Object.keys(darkPalette).reduce((acc, key) => {
       const k = key as keyof Palette
-      acc[k] = {
+      acc[`bg_${k}`] = {
         backgroundColor: darkPalette[k],
       }
       return acc
-    }, {} as Record<keyof Palette, {backgroundColor: string}>),
+    }, {} as Record<`bg_${keyof Palette}`, {backgroundColor: string}>),
   },
 } as const

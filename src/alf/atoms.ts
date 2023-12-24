@@ -3,148 +3,77 @@ import * as tokens from '#/alf/tokens'
 
 const gap = Object.keys(tokens.space).reduce((acc, key) => {
   const k = key as tokens.Space
-  acc[k] = {
+  acc[`gap_${k}`] = {
     gap: tokens.space[k],
   }
   return acc
-}, {} as Record<tokens.Space, {gap: number}>)
+}, {} as Record<`gap_${tokens.Space}`, {gap: number}>)
 
 const fontSize = Object.keys(tokens.fontSize).reduce((acc, key) => {
   const k = key as tokens.FontSize
-  acc[k] = {
+  acc[`text_${k}`] = {
     fontSize: tokens.fontSize[k],
     lineHeight: tokens.fontSize[k],
   }
   return acc
-}, {} as Record<tokens.FontSize, {fontSize: number; lineHeight: number}>)
+}, {} as Record<`text_${tokens.FontSize}`, {fontSize: number; lineHeight: number}>)
 
 const lineHeight = Object.keys(tokens.lineHeight).reduce((acc, key) => {
   const k = key as tokens.LineHeight
-  acc[k] = {
+  acc[`leading_${k}`] = {
     lineHeight: tokens.lineHeight[k],
   }
   return acc
-}, {} as Record<tokens.LineHeight, {lineHeight: string}>)
+}, {} as Record<`leading_${tokens.LineHeight}`, {lineHeight: number}>)
 
 const fontWeight = Object.keys(tokens.fontWeight).reduce((acc, key) => {
   const k = key as tokens.FontWeight
-  acc[k] = {
+  acc[`font_${k}`] = {
     fontWeight: tokens.fontWeight[k],
   }
   return acc
-}, {} as Record<tokens.FontWeight, {fontWeight: TextStyle['fontWeight']}>)
+}, {} as Record<`font_${tokens.FontWeight}`, {fontWeight: TextStyle['fontWeight']}>)
 
 const radius = Object.keys(tokens.borderRadius).reduce((acc, key) => {
   const k = key as tokens.BorderRadius
-  acc[k] = {
+  acc[`rounded_${k}`] = {
     borderRadius: tokens.borderRadius[k],
   }
   return acc
-}, {} as Record<tokens.BorderRadius, {borderRadius: number}>)
+}, {} as Record<`rounded_${tokens.BorderRadius}`, {borderRadius: number}>)
 
 const padding = Object.keys(tokens.space).reduce(
   (acc, key) => {
     const k = key as tokens.Space
     const value = tokens.space[k]
     return {
-      pa: {
-        ...acc.pa,
-        [k]: {
-          paddingTop: value,
-          paddingBottom: value,
-          paddingLeft: value,
-          paddingRight: value,
-        },
+      ...acc,
+      [`p_${k}`]: {
+        padding: value,
       },
-      px: {
-        ...acc.px,
-        [k]: {
-          paddingLeft: value,
-          paddingRight: value,
-        },
+      [`px_${k}`]: {
+        paddingLeft: value,
+        paddingRight: value,
       },
-      py: {
-        ...acc.py,
-        [k]: {
-          paddingTop: value,
-          paddingBottom: value,
-        },
+      [`py_${k}`]: {
+        paddingTop: value,
+        paddingBottom: value,
       },
-      pt: {
-        ...acc.pt,
-        [k]: {
-          paddingTop: value,
-        },
+      [`pt_${k}`]: {
+        paddingTop: value,
       },
-      pb: {
-        ...acc.pb,
-        [k]: {
-          paddingBottom: value,
-        },
+      [`pb_${k}`]: {
+        paddingBottom: value,
       },
-      pl: {
-        ...acc.pl,
-        [k]: {
-          paddingLeft: value,
-        },
+      [`pl_${k}`]: {
+        paddingLeft: value,
       },
-      pr: {
-        ...acc.pr,
-        [k]: {
-          paddingRight: value,
-        },
+      [`pr_${k}`]: {
+        paddingRight: value,
       },
     }
   },
-  {} as {
-    pa: Record<
-      tokens.Space,
-      {
-        paddingTop: number
-        paddingBottom: number
-        paddingLeft: number
-        paddingRight: number
-      }
-    >
-    px: Record<
-      tokens.Space,
-      {
-        paddingLeft: number
-        paddingRight: number
-      }
-    >
-    py: Record<
-      tokens.Space,
-      {
-        paddingTop: number
-        paddingBottom: number
-      }
-    >
-    pt: Record<
-      tokens.Space,
-      {
-        paddingTop: number
-      }
-    >
-    pb: Record<
-      tokens.Space,
-      {
-        paddingBottom: number
-      }
-    >
-    pl: Record<
-      tokens.Space,
-      {
-        paddingLeft: number
-      }
-    >
-    pr: Record<
-      tokens.Space,
-      {
-        paddingRight: number
-      }
-    >
-  },
+  {} as Record<`${'pa' | 'px' | 'py' | 'pt' | 'pb' | 'pl' | 'pr'}_${tokens.Space}`, number>
 )
 
 const margin = Object.keys(tokens.space).reduce(
@@ -152,167 +81,126 @@ const margin = Object.keys(tokens.space).reduce(
     const k = key as tokens.Space
     const value = tokens.space[k]
     return {
-      pa: {
-        ...acc.pa,
-        [k]: {
-          marginTop: value,
-          marginBottom: value,
-          marginLeft: value,
-          marginRight: value,
-        },
+      ...acc,
+      [`m_${k}`]: {
+        margin: value,
       },
-      px: {
-        ...acc.px,
-        [k]: {
-          marginLeft: value,
-          marginRight: value,
-        },
+      [`mx_${k}`]: {
+        margin: value,
+        marginRight: value,
       },
-      py: {
-        ...acc.py,
-        [k]: {
-          marginTop: value,
-          marginBottom: value,
-        },
+      [`my_${k}`]: {
+        marginTop: value,
+        marginBottom: value,
       },
-      pt: {
-        ...acc.pt,
-        [k]: {
-          marginTop: value,
-        },
+      [`mt_${k}`]: {
+        marginTop: value,
       },
-      pb: {
-        ...acc.pb,
-        [k]: {
-          marginBottom: value,
-        },
+      [`mb_${k}`]: {
+        marginBottom: value,
       },
-      pl: {
-        ...acc.pl,
-        [k]: {
-          marginLeft: value,
-        },
+      [`ml_${k}`]: {
+        margin: value,
       },
-      pr: {
-        ...acc.pr,
-        [k]: {
-          marginRight: value,
-        },
+      [`mr_${k}`]: {
+        marginRight: value,
       },
     }
   },
-  {} as {
-    pa: Record<
-      tokens.Space,
-      {
-        marginTop: number
-        marginBottom: number
-        marginLeft: number
-        marginRight: number
-      }
-    >
-    px: Record<
-      tokens.Space,
-      {
-        marginLeft: number
-        marginRight: number
-      }
-    >
-    py: Record<
-      tokens.Space,
-      {
-        marginTop: number
-        marginBottom: number
-      }
-    >
-    pt: Record<
-      tokens.Space,
-      {
-        marginTop: number
-      }
-    >
-    pb: Record<
-      tokens.Space,
-      {
-        marginBottom: number
-      }
-    >
-    pl: Record<
-      tokens.Space,
-      {
-        marginLeft: number
-      }
-    >
-    pr: Record<
-      tokens.Space,
-      {
-        marginRight: number
-      }
-    >
-  },
+  {} as Record<`${'pa' | 'px' | 'py' | 'pt' | 'pb' | 'pl' | 'pr'}_${tokens.Space}`, number>
 )
 
 export const atoms = {
-  radius,
-  padding,
-  margin,
-  font: {
-    ...fontSize,
-    ...fontWeight,
-    ...lineHeight,
-    center: {
-      textAlign: 'center',
-    },
+  /*
+   * Positioning
+   */
+  absolute: {
+    position: 'absolute',
   },
-  flex: {
-    gap,
-    row: {
-      flexDirection: 'row',
-    },
-    wrap: {
-      flexWrap: 'wrap',
-    },
-    one: {
-      flex: 1,
-    },
-    two: {
-      flex: 2,
-    },
-    three: {
-      flex: 3,
-    },
-    alignCenter: {
-      alignItems: 'center',
-    },
-    alignStart: {
-      alignItems: 'flex-start',
-    },
-    alignEnd: {
-      alignItems: 'flex-end',
-    },
-    justifyCenter: {
-      justifyContent: 'center',
-    },
-    justifyBetween: {
-      justifyContent: 'space-between',
-    },
-    justifyEnd: {
-      justifyContent: 'flex-end',
-    },
+  relative: {
+    position: 'relative',
   },
-  pos: {
-    abs: {
-      position: 'absolute',
-    },
-    rel: {
-      position: 'relative',
-    },
-    cover: {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-    },
+  inset_0: {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  z_10: {
+    zIndex: 10,
+  },
+  z_20: {
+    zIndex: 20,
+  },
+  z_30: {
+    zIndex: 30,
+  },
+  z_40: {
+    zIndex: 40,
+  },
+  z_50: {
+    zIndex: 50,
+  },
+
+  ...radius,
+
+  /*
+   * Spacing
+   */
+  ...padding,
+  ...margin,
+
+  /*
+   * Flex
+   */
+  ...gap,
+  flex_row: {
+    flexDirection: 'row',
+  },
+  flex_wrap: {
+    flexWrap: 'wrap',
+  },
+  flex_1: {
+    flex: 1,
+  },
+  justify_center: {
+    justifyContent: 'center',
+  },
+  justify_between: {
+    justifyContent: 'space-between',
+  },
+  justify_end: {
+    justifyContent: 'flex-end',
+  },
+  align_center: {
+    alignItems: 'center',
+  },
+  align_start: {
+    alignItems: 'flex-start',
+  },
+  align_end: {
+    alignItems: 'flex-end',
+  },
+
+  /*
+   * Text
+   */
+  text_center: {
+    textAlign: 'center',
+  },
+  text_right: {
+    textAlign: 'right',
+  },
+  ...fontSize,
+  ...lineHeight,
+  ...fontWeight,
+
+  /*
+   * Border
+   */
+  border: {
+    borderWidth: 1,
   },
 } as const
+
+const s = atoms.gap_md
