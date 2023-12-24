@@ -12,6 +12,7 @@ export interface IImageViewerState {
   index: number
   isVisible: boolean
   measurement: MeasuredDimensions | undefined
+  hideFooter?: boolean
 }
 
 export interface IImageViewerItemProps {

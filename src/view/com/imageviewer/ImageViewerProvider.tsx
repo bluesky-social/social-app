@@ -19,7 +19,7 @@ const reducer = (state: IImageViewerState, action: IImageViewerAction) => {
     case 'setMeasurement':
       return {...state, measurements: action.payload}
     case 'setState':
-      return {...state, ...action.payload}
+      return {...state, hideFooter: false, ...action.payload}
     default:
       return state
   }

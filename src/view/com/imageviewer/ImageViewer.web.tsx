@@ -15,7 +15,7 @@ function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
 
   const {state} = useImageViewer()
-  const {images, index} = state
+  const {images, index, hideFooter} = state
 
   const {
     accessoriesVisible,
@@ -94,13 +94,15 @@ function ImageViewer() {
         )}
       </Pressable>
 
-      <Animated.View
-        style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
-        <ImageViewerFooter
-          currentImage={images[currentIndex]}
-          visible={accessoriesVisible}
-        />
-      </Animated.View>
+      {!hideFooter && (
+        <Animated.View
+          style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
+          <ImageViewerFooter
+            currentImage={images[currentIndex]}
+            visible={accessoriesVisible}
+          />
+        </Animated.View>
+      )}
     </Animated.View>
   )
 }

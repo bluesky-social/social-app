@@ -11,7 +11,7 @@ import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefault
 
 function ImageViewer() {
   const {state} = useImageViewer()
-  const {images, index} = state
+  const {images, index, hideFooter} = state
 
   const {
     accessoriesVisible,
@@ -65,13 +65,15 @@ function ImageViewer() {
           </View>
         ))}
       </PagerView>
-      <Animated.View
-        style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
-        <ImageViewerFooter
-          currentImage={currentImage}
-          visible={accessoriesVisible}
-        />
-      </Animated.View>
+      {!hideFooter && (
+        <Animated.View
+          style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
+          <ImageViewerFooter
+            currentImage={currentImage}
+            visible={accessoriesVisible}
+          />
+        </Animated.View>
+      )}
     </Animated.View>
   )
 }

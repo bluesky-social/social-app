@@ -146,12 +146,12 @@ function ImageViewerItem({
     opacity.value = 1
 
     // Set the initial position of the image in the modal
-    positionX.value = measurement!.pageX
-    positionY.value = measurement!.pageY
+    positionX.value = measurement?.pageX ?? 0
+    positionY.value = measurement?.pageY ?? 0
 
     // Also set the initial height and width
-    height.value = measurement!.height
-    width.value = measurement!.width
+    height.value = measurement?.height ?? viewerDimensions.height
+    width.value = measurement?.width ?? viewerDimensions.width
 
     // Now set the new dimensions with timing
     height.value = withTiming(viewerDimensions!.height, WITH_TIMING_CONFIG)
