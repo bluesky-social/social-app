@@ -6,20 +6,12 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {Dimensions, NativeSyntheticEvent, StyleSheet, View} from 'react-native'
+import {NativeSyntheticEvent, StyleSheet, View} from 'react-native'
 import {ImageViewerHeader} from 'view/com/imageviewer/ImageViewerHeader'
 import {ImageViewerFooter} from 'view/com/imageviewer/ImageViewerFooter'
 import {ImageViewerItem} from 'view/com/imageviewer/ImageViewerItem'
 import PagerView from 'react-native-pager-view'
-import {
-  Gesture,
-  GestureDetector,
-  gestureHandlerRootHOC,
-  GestureUpdateEvent,
-  PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler'
-
-const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window')
+import {gestureHandlerRootHOC} from 'react-native-gesture-handler'
 
 function ImageViewerInner() {
   const {state, dispatch} = useImageViewer()
@@ -32,7 +24,6 @@ function ImageViewerInner() {
   const opacity = useSharedValue(1)
   const backgroundOpacity = useSharedValue(0)
   const accessoryOpacity = useSharedValue(0)
-  const top = useSharedValue(0)
 
   // Reset the viewer whenever it closes
   React.useEffect(() => {
@@ -40,27 +31,18 @@ function ImageViewerInner() {
 
     opacity.value = 1
     backgroundOpacity.value = 0
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
 
-  React.useEffect(() => {
-    console.log(isScaled)
-  }, [isScaled])
-
-  const onCloseViewer = React.useCallback(
-    (direction: 'up' | 'down' = 'down') => {
-      const toValue = direction === 'up' ? -SCREEN_HEIGHT : SCREEN_HEIGHT
-
-      top.value = withTiming(toValue, {duration: 200})
-      accessoryOpacity.value = withTiming(0, {duration: 200})
-      opacity.value = withTiming(0, {duration: 200}, () => {
-        runOnJS(dispatch)({
-          type: 'setVisible',
-          payload: false,
-        })
+  const onCloseViewer = React.useCallback(() => {
+    accessoryOpacity.value = withTiming(0, {duration: 200})
+    opacity.value = withTiming(0, {duration: 200}, () => {
+      runOnJS(dispatch)({
+        type: 'setVisible',
+        payload: false,
       })
-    },
-    [accessoryOpacity, dispatch, opacity, top],
-  )
+    })
+  }, [accessoryOpacity, dispatch, opacity])
 
   const onPageSelected = React.useCallback(
     (e: NativeSyntheticEvent<Readonly<{position: number}>>) => {
@@ -70,7 +52,6 @@ function ImageViewerInner() {
   )
 
   const containerStyle = useAnimatedStyle(() => ({
-    top: top.value,
     opacity: opacity.value,
     backgroundColor: `rgba(0, 0, 0, ${backgroundOpacity.value})`,
   }))
@@ -78,23 +59,6 @@ function ImageViewerInner() {
   const accessoryStyle = useAnimatedStyle(() => ({
     opacity: accessoryOpacity.value,
   }))
-
-  const onPanEnd = (e: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
-    const velocity = Math.abs(e.velocityY)
-    const direction = e.velocityY > 0 ? 'down' : 'up'
-
-    if (velocity > 800) {
-      // Close the viewer
-      runOnJS(onCloseViewer)(direction)
-      return
-    }
-  }
-
-  const panGesture = Gesture.Pan()
-    .activeOffsetX(1000) // Allow horizontal panning
-    .activeOffsetY(50)
-    .onEnd(onPanEnd)
-    .onBegin(() => console.log('start'))
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -105,31 +69,30 @@ function ImageViewerInner() {
           visible={accessoriesVisible}
         />
       </Animated.View>
-      <GestureDetector gesture={panGesture}>
-        <PagerView
-          style={styles.container}
-          initialPage={index}
-          scrollEnabled={!isScaled}
-          overdrag
-          onPageSelected={onPageSelected}>
-          {images?.map((image, i) => (
-            <View style={styles.container} key={i}>
-              <ImageViewerItem
-                image={images![i]}
-                index={i}
-                initialIndex={index}
-                measurement={measurement}
-                isVisible={isVisible}
-                setIsScaled={setIsScaled}
-                setAccessoriesVisible={setAccessoriesVisible}
-                opacity={opacity}
-                accessoryOpacity={accessoryOpacity}
-                backgroundOpacity={backgroundOpacity}
-              />
-            </View>
-          ))}
-        </PagerView>
-      </GestureDetector>
+      <PagerView
+        style={styles.container}
+        initialPage={index}
+        scrollEnabled={!isScaled}
+        overdrag
+        onPageSelected={onPageSelected}>
+        {images?.map((image, i) => (
+          <View style={styles.container} key={i}>
+            <ImageViewerItem
+              image={images![i]}
+              index={i}
+              initialIndex={index}
+              measurement={measurement}
+              isVisible={isVisible}
+              setIsScaled={setIsScaled}
+              setAccessoriesVisible={setAccessoriesVisible}
+              onCloseViewer={onCloseViewer}
+              opacity={opacity}
+              accessoryOpacity={accessoryOpacity}
+              backgroundOpacity={backgroundOpacity}
+            />
+          </View>
+        ))}
+      </PagerView>
       <Animated.View
         style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
         <ImageViewerFooter
