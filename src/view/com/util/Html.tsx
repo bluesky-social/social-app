@@ -30,6 +30,7 @@ export function H1({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-xl']
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH1 style={[typography, pal.text, styles.h1]}>{children}</ExpoH1>
 }
 
@@ -37,6 +38,7 @@ export function H2({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-lg']
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH2 style={[typography, pal.text, styles.h2]}>{children}</ExpoH2>
 }
 
@@ -44,6 +46,7 @@ export function H3({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography.title
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH3 style={[typography, pal.text, styles.h3]}>{children}</ExpoH3>
 }
 
@@ -51,6 +54,7 @@ export function H4({children}: React.PropsWithChildren<{}>) {
   const styles = useStyles()
   const pal = usePalette('default')
   const typography = useTheme().typography['title-sm']
+  // @ts-ignore Expo's TextStyle definition seems to have gotten away from RN's -prf
   return <ExpoH4 style={[typography, pal.text, styles.h4]}>{children}</ExpoH4>
 }
 

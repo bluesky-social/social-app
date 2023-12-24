@@ -287,15 +287,11 @@ export class Logger {
     metadata: Metadata = {},
   ) {
     if (!this.enabled) return
-    if (!enabledLogLevels[this.level].includes(level)) return
 
     const timestamp = Date.now()
     const meta = metadata || {}
 
-    for (const transport of this.transports) {
-      transport(level, message, meta, timestamp)
-    }
-
+    // send every log to syslog
     add({
       id: nanoid(),
       timestamp,
@@ -303,6 +299,12 @@ export class Logger {
       message,
       metadata: meta,
     })
+
+    if (!enabledLogLevels[this.level].includes(level)) return
+
+    for (const transport of this.transports) {
+      transport(level, message, meta, timestamp)
+    }
   }
 }
 

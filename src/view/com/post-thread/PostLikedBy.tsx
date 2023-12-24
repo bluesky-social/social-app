@@ -1,18 +1,16 @@
 import React, {useCallback, useMemo, useState} from 'react'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import {CenteredView} from '../util/Views'
 import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {usePostLikedByQuery} from '#/state/queries/post-liked-by'
 import {cleanError} from '#/lib/strings/errors'
 
 export function PostLikedBy({uri}: {uri: string}) {
-  const pal = usePalette('default')
   const [isPTRing, setIsPTRing] = useState(false)
   const {
     data: resolvedUri,
@@ -88,14 +86,8 @@ export function PostLikedBy({uri}: {uri: string}) {
     <List
       data={likes}
       keyExtractor={item => item.actor.did}
-      refreshControl={
-        <RefreshControl
-          refreshing={isPTRing}
-          onRefresh={onRefresh}
-          tintColor={pal.colors.text}
-          titleColor={pal.colors.text}
-        />
-      }
+      refreshing={isPTRing}
+      onRefresh={onRefresh}
       onEndReached={onEndReached}
       renderItem={renderItem}
       initialNumToRender={15}

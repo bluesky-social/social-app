@@ -92,6 +92,7 @@ export function ModerationBlockedAccounts({}: Props) {
       testID={`blockedAccount-${index}`}
       key={item.did}
       profile={item}
+      noModFilter
     />
   )
   return (
