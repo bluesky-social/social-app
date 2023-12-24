@@ -60,6 +60,7 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
       ref={ref}
       style={[
         styles.imageContainer,
+        styles.singleImage,
         isMobile && styles.singleImageMobile,
         imageStyle,
       ]}>
@@ -67,11 +68,7 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
         <Image
           source={{uri: image.thumb}}
           onLoad={onLoad}
-          style={[
-            styles.singleImage,
-            isMobile && styles.singleImageMobile,
-            {aspectRatio},
-          ]}
+          style={[{aspectRatio}]}
           cachePolicy="memory-disk"
           accessible
           accessibilityLabel={image.alt}
@@ -82,7 +79,7 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
         <Image
           source={{uri: image.thumb}}
           onLoad={onLoad}
-          style={[styles.imageStyle, imageStyle, {aspectRatio}]}
+          style={[styles.imageStyle]}
           cachePolicy="memory-disk"
           accessible
           accessibilityLabel={image.alt}
