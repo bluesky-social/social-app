@@ -6,20 +6,19 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {NativeSyntheticEvent, StyleSheet, View} from 'react-native'
-import PagerView from 'react-native-pager-view'
+import {Pressable, StyleSheet} from 'react-native'
 import ImageViewerFooter from 'view/com/imageviewer/ImageViewerFooter'
 import ImageViewerHeader from 'view/com/imageviewer/ImageViewerHeader'
-import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler'
+import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
+import {SCREEN_WIDTH} from '@gorhom/bottom-sheet'
 
 function ImageViewer() {
   const {state, dispatch} = useImageViewer()
   const {images, index, isVisible} = state
 
-  const [isScaled, setIsScaled] = React.useState(false)
   const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
-  const [currentImage, setCurrentImage] = React.useState(images?.[index])
+  const [currentIndex, setCurrentIndex] = React.useState(index)
 
   const opacity = useSharedValue(1)
   const backgroundOpacity = useSharedValue(0)
@@ -44,13 +43,6 @@ function ImageViewer() {
     })
   }, [accessoryOpacity, dispatch, opacity])
 
-  const onPageSelected = React.useCallback(
-    (e: NativeSyntheticEvent<Readonly<{position: number}>>) => {
-      setCurrentImage(images?.[e.nativeEvent.position])
-    },
-    [images],
-  )
-
   const containerStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
     backgroundColor: `rgba(0, 0, 0, ${backgroundOpacity.value})`,
@@ -59,6 +51,18 @@ function ImageViewer() {
   const accessoryStyle = useAnimatedStyle(() => ({
     opacity: accessoryOpacity.value,
   }))
+
+  const onPrevPress = React.useCallback(() => {
+    if (currentIndex === 0) return
+
+    setCurrentIndex(currentIndex - 1)
+  }, [currentIndex])
+
+  const onNextPress = React.useCallback(() => {
+    if (currentIndex === images.length - 1) return
+
+    setCurrentIndex(currentIndex + 1)
+  }, [currentIndex, images])
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -69,32 +73,34 @@ function ImageViewer() {
           visible={accessoriesVisible}
         />
       </Animated.View>
-      <PagerView
-        style={styles.container}
-        initialPage={index}
-        scrollEnabled={!isScaled}
-        overdrag
-        onPageSelected={onPageSelected}>
-        {images?.map((image, i) => (
-          <View style={styles.container} key={i}>
-            <ImageViewerItem
-              image={images[i]}
-              index={i}
-              initialIndex={index}
-              setIsScaled={setIsScaled}
-              setAccessoriesVisible={setAccessoriesVisible}
-              onCloseViewer={onCloseViewer}
-              opacity={opacity}
-              accessoryOpacity={accessoryOpacity}
-              backgroundOpacity={backgroundOpacity}
-            />
-          </View>
-        ))}
-      </PagerView>
+
+      <Pressable
+        accessibilityRole="button"
+        style={[styles.scrollButton, styles.leftScrollButton]}
+        onPress={onPrevPress}
+      />
+
+      <ImageViewerItem
+        image={images[currentIndex]}
+        initialIndex={index}
+        index={index}
+        setAccessoriesVisible={setAccessoriesVisible}
+        onCloseViewer={onCloseViewer}
+        opacity={opacity}
+        backgroundOpacity={backgroundOpacity}
+        accessoryOpacity={accessoryOpacity}
+      />
+
+      <Pressable
+        accessibilityRole="button"
+        style={[styles.scrollButton, styles.rightScrollButton]}
+        onPress={onNextPress}
+      />
+
       <Animated.View
         style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
         <ImageViewerFooter
-          currentImage={currentImage}
+          currentImage={images[currentIndex]}
           visible={accessoriesVisible}
         />
       </Animated.View>
@@ -105,11 +111,10 @@ function ImageViewer() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: -2, // for android >_<
   },
   accessory: {
     position: 'absolute',
-    zIndex: 1,
+    zIndex: 2,
     left: 0,
     right: 0,
   },
@@ -118,6 +123,18 @@ const styles = StyleSheet.create({
   },
   footerAccessory: {
     bottom: 0,
+  },
+  scrollButton: {
+    position: 'absolute',
+    zIndex: 1,
+    height: '100%',
+    width: SCREEN_WIDTH > 600 ? 150 : 80,
+  },
+  leftScrollButton: {
+    left: 0,
+  },
+  rightScrollButton: {
+    right: 0,
   },
 })
 

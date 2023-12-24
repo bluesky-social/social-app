@@ -1,6 +1,6 @@
 import React from 'react'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
-import {MeasuredDimensions} from 'react-native-reanimated'
+import {MeasuredDimensions, SharedValue} from 'react-native-reanimated'
 
 export interface IImageViewerContext {
   state: IImageViewerState
@@ -12,6 +12,18 @@ export interface IImageViewerState {
   index: number
   isVisible: boolean
   measurement: MeasuredDimensions | undefined
+}
+
+export interface IImageViewerItemProps {
+  image: ViewImage
+  index: number
+  initialIndex: number
+  setIsScaled?: React.Dispatch<React.SetStateAction<boolean>>
+  setAccessoriesVisible: React.Dispatch<React.SetStateAction<boolean>>
+  onCloseViewer: () => void
+  opacity: SharedValue<number>
+  accessoryOpacity: SharedValue<number>
+  backgroundOpacity: SharedValue<number>
 }
 
 export type IImageViewerAction =

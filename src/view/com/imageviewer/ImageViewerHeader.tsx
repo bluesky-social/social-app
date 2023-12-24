@@ -10,7 +10,7 @@ interface IProps {
   visible: boolean
 }
 
-export function ImageViewerHeader({onCloseViewer, visible}: IProps) {
+export default function ImageViewerHeader({onCloseViewer, visible}: IProps) {
   // Best way to handle this is to just get the safe area top
   const {top} = useSafeAreaInsets()
 

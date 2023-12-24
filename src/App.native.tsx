@@ -21,6 +21,7 @@ import {s} from 'lib/styles'
 import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
 import * as Toast from 'view/com/util/Toast'
+import ImageViewerProvider from 'view/com/imageviewer/ImageViewerProvider'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
@@ -39,7 +40,6 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Splash} from '#/Splash'
-import {ImageViewerProvider} from 'view/com/imageviewer'
 
 SplashScreen.preventAutoHideAsync()
 

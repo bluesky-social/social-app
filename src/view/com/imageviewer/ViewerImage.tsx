@@ -2,7 +2,7 @@ import React from 'react'
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import {Image} from 'expo-image'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
-import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
+import {ImageStyle, Pressable, StyleSheet, Text, View} from 'react-native'
 import {Dimensions} from 'lib/media/types'
 import {clamp} from 'lib/numbers'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -10,7 +10,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 interface IProps {
   images: ViewImage[]
   index: number
-  imageStyle?: ViewStyle
+  imageStyle?: ImageStyle
 }
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
@@ -52,16 +52,32 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
       onPress={onPress}
       ref={ref}
       style={[
-        styles.container,
+        styles.imageContainer,
         isMobile && styles.singleImageMobile,
         imageStyle,
       ]}>
-      <Image
-        source={{uri: image.thumb}}
-        style={[styles.image, {aspectRatio}]}
-        cachePolicy="memory-disk"
-        accessibilityIgnoresInvertColors
-      />
+      {images.length === 1 ? (
+        <Image
+          source={{uri: image.thumb}}
+          style={[styles.imageStyle, imageStyle, {aspectRatio}]}
+          cachePolicy="memory-disk"
+          accessible
+          accessibilityLabel={image.alt}
+          accessibilityHint=""
+          accessibilityIgnoresInvertColors
+        />
+      ) : (
+        <Image
+          source={{uri: image.thumb}}
+          style={[styles.imageStyle, imageStyle, {aspectRatio}]}
+          cachePolicy="memory-disk"
+          accessible
+          accessibilityLabel={image.alt}
+          accessibilityHint=""
+          accessibilityIgnoresInvertColors
+        />
+      )}
+
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
           <Text style={styles.alt} accessible={false}>
@@ -88,21 +104,24 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
-
-  image: {
-    width: '100%',
-  },
-
-  container: {
+  imageContainer: {
+    flex: 1,
     overflow: 'hidden',
     borderRadius: 8,
   },
-
+  imageStyle: {
+    flex: 1,
+    borderRadius: 8,
+  },
   singleImage: {
     maxHeight: 1000,
   },
   singleImageMobile: {
     maxHeight: 500,
+  },
+
+  multiImage: {
+    flex: 1,
   },
 })
 

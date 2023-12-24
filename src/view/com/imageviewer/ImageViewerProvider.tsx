@@ -2,7 +2,7 @@ import React from 'react'
 import {ImageViewerContext} from 'view/com/imageviewer/ImageViewerContext'
 import {Modal, StyleSheet, View} from 'react-native'
 import {IImageViewerAction, IImageViewerState} from 'view/com/imageviewer/types'
-import {ImageViewer} from 'view/com/imageviewer/ImageViewer'
+import ImageViewer from 'view/com/imageviewer/ImageViewer'
 
 interface IProps {
   children: React.ReactNode
@@ -25,7 +25,7 @@ const reducer = (state: IImageViewerState, action: IImageViewerAction) => {
   }
 }
 
-export function ImageViewerProvider({children}: IProps) {
+export default function ImageViewerProvider({children}: IProps) {
   const [state, dispatch] = React.useReducer(reducer, {
     images: [],
     index: 0,

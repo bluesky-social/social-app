@@ -17,7 +17,7 @@ interface IProps {
   currentImage: ViewImage
 }
 
-export function ImageViewerFooter({visible, currentImage}: IProps) {
+export default function ImageViewerFooter({visible, currentImage}: IProps) {
   const {isMobile} = useWebMediaQueries()
 
   const [isAltExpanded, setAltExpanded] = React.useState(false)

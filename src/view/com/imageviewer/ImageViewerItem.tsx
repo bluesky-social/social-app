@@ -1,9 +1,7 @@
 import React from 'react'
 import {Dimensions, Platform, StyleSheet} from 'react-native'
 import Animated, {
-  MeasuredDimensions,
   runOnJS,
-  SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
@@ -18,6 +16,8 @@ import {
   PinchGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
+import {IImageViewerItemProps} from 'view/com/imageviewer/types'
+import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 
 /**
  * Ground Rules!
@@ -68,33 +68,20 @@ const getViewerDimensions = (image?: ViewImage) => {
   }
 }
 
-interface IProps {
-  image: ViewImage
-  measurement?: MeasuredDimensions
-  index: number
-  initialIndex: number
-  isVisible: boolean
-  setIsScaled: React.Dispatch<React.SetStateAction<boolean>>
-  setAccessoriesVisible: React.Dispatch<React.SetStateAction<boolean>>
-  onCloseViewer: () => void
-  opacity: SharedValue<number>
-  accessoryOpacity: SharedValue<number>
-  backgroundOpacity: SharedValue<number>
-}
-
-function ImageViewerItemInner({
+function ImageViewerItem({
   image,
-  measurement,
   index,
   initialIndex,
-  isVisible,
   setIsScaled,
   setAccessoriesVisible,
   onCloseViewer,
   opacity,
   accessoryOpacity,
   backgroundOpacity,
-}: IProps) {
+}: IImageViewerItemProps) {
+  const {state} = useImageViewer()
+  const {isVisible, measurement} = state
+
   const viewerDimensions = React.useMemo(
     () => getViewerDimensions(image),
     [image],
@@ -104,6 +91,8 @@ function ImageViewerItemInner({
 
   // Use this to enable/disable the pan gesture
   const [panGestureEnabled, setPanGestureEnabled] = React.useState(false)
+
+  const ranInitialAnimation = React.useRef(false)
 
   const positionX = useSharedValue(0)
   const positionY = useSharedValue(0)
@@ -125,11 +114,13 @@ function ImageViewerItemInner({
   useAnimatedReaction(
     () => scale.value,
     (curr, prev) => {
+      if (IS_WEB) return
+
       if (curr === 1 && prev !== 1) {
-        runOnJS(setIsScaled)(false)
+        runOnJS(setIsScaled!)(false)
         runOnJS(setPanGestureEnabled)(false)
       } else if (curr !== 1 && prev === 1) {
-        runOnJS(setIsScaled)(true)
+        runOnJS(setIsScaled!)(true)
         runOnJS(setPanGestureEnabled)(true)
       }
     },
@@ -144,7 +135,6 @@ function ImageViewerItemInner({
 
   const prefetchAndReplace = () => {
     Image.prefetch(image.fullsize).then(() => {
-      console.log('prefetched')
       setSource(image.fullsize)
     })
   }
@@ -153,17 +143,19 @@ function ImageViewerItemInner({
   React.useEffect(() => {
     'worklet'
 
-    // Reset the viewer when it closes
+    // Do nothing when the viewer closes
     if (!isVisible) return
 
     // For all images that are not the current image, set the dimensions
-    if (index !== initialIndex) {
+    if (index !== initialIndex || ranInitialAnimation.current) {
       height.value = viewerDimensions!.height
       width.value = viewerDimensions!.width
       runOnJS(prefetchAndReplace)()
       centerImage()
       return
     }
+
+    ranInitialAnimation.current = true
 
     // Reset the opacity
     opacity.value = 1
@@ -192,7 +184,7 @@ function ImageViewerItemInner({
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible])
+  }, [image, isVisible])
 
   const onPanUpdate = (
     e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
@@ -243,6 +235,8 @@ function ImageViewerItemInner({
     // Hide accessories when we zoom in
     runOnJS(setAccessoriesVisible)(false)
 
+    console.log('double!')
+
     if (scale.value !== 1) {
       centerImage()
       scale.value = withTiming(1, WITH_TIMING_CONFIG)
@@ -263,6 +257,8 @@ function ImageViewerItemInner({
 
   // This doesn't need to be a worklet since we are just setting state which would run on js anyway
   const onTap = () => {
+    console.log('tap!')
+
     // Do nothing if the scale is not one
     if (scale.value !== 1) return
 
@@ -281,6 +277,8 @@ function ImageViewerItemInner({
 
   const onPinchStart = () => {
     'worklet'
+
+    console.log('pinch!')
 
     runOnJS(setAccessoriesVisible)(false)
   }
@@ -376,4 +374,4 @@ const styles = StyleSheet.create({
 })
 
 // Wrap this in gestureHandlerRootHOC since Android requires it when using gestures in a modal
-export const ImageViewerItem = React.memo(ImageViewerItemInner)
+export default React.memo(ImageViewerItem)
