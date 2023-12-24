@@ -39,7 +39,7 @@ msgstr "{invitesAvailable} Einladungscode verfügbar"
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable} Einladungscodes verfügbar"
 
-#: src/view/screens/Search/Search.tsx:88
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr "{message}"
 
@@ -234,9 +234,9 @@ msgstr "Künstlerische oder nicht-erotische Nacktheit."
 #: src/view/com/auth/login/LoginForm.tsx:249
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:395
-#: src/view/com/post-thread/PostThread.tsx:445
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:438
+#: src/view/com/post-thread/PostThread.tsx:446
 #: src/view/com/profile/ProfileHeader.tsx:672
 msgid "Back"
 msgstr "Zurück"
@@ -275,7 +275,7 @@ msgstr "Diese Kontos sperren?"
 msgid "Blocked accounts"
 msgstr "Gesperrte Konten"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:106
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
 msgid "Blocked Accounts"
 msgstr "Gesperrte Konten"
 
@@ -283,11 +283,11 @@ msgstr "Gesperrte Konten"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Gesperrte Konten können nicht in Ihren Beiträgen antworten, Sie erwähnen oder anderweitig mit Ihnen interagieren."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:114
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Gesperrte Konten können nicht in Ihren Beiträgen antworten, Sie erwähnen oder anderweitig mit Ihnen interagieren. Sie werden ihre Inhalte nicht sehen und sie werden daran gehindert, Ihre zu sehen."
 
-#: src/view/com/post-thread/PostThread.tsx:251
+#: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
 msgstr "Gesperrter Posten."
 
@@ -360,7 +360,7 @@ msgstr "Darf nur Buchstaben, Zahlen, Leerzeichen, Bindestriche und Unterstriche 
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:592
+#: src/view/screens/Search/Search.tsx:584
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -461,7 +461,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "Alle alten Speicherdaten löschen (danach neu starten)"
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:569
 msgid "Clear search query"
 msgstr "Suchanfrage löschen"
 
@@ -650,7 +650,7 @@ msgstr "Posten löschen"
 msgid "Delete this post?"
 msgstr "Diesen Posten löschen?"
 
-#: src/view/com/post-thread/PostThread.tsx:243
+#: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
 msgstr "Posten gelöscht."
 
@@ -801,7 +801,7 @@ msgstr "Geben Sie Ihre E-Mail Adresse ein"
 msgid "Enter your username and password"
 msgstr "Geben Sie Ihren Benutzernamen und Ihr Passwort ein"
 
-#: src/view/screens/Search/Search.tsx:106
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr "Fehler:"
 
@@ -818,7 +818,7 @@ msgstr "Alt-Text erweitern"
 msgid "Failed to load recommended feeds"
 msgstr "Empfohlene Feeds konnten nicht geladen werden"
 
-#: src/view/screens/Feeds.tsx:560
+#: src/view/screens/Feeds.tsx:554
 msgid "Feed offline"
 msgstr "Feed offline"
 
@@ -848,11 +848,11 @@ msgstr "Feeds werden von Nutzern erstellt, um Inhalte zu kuratieren. Wählen Sie
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Feeds sind benutzerdefinierte Algorithmen, die von den Nutzern mit ein wenig Programmierkenntnissen erstellt werden. <0/> für weitere Informationen."
 
-#: src/view/screens/Search/Search.tsx:422
+#: src/view/screens/Search/Search.tsx:414
 msgid "Find users on Bluesky"
 msgstr "Benutzer auf Bluesky finden"
 
-#: src/view/screens/Search/Search.tsx:420
+#: src/view/screens/Search/Search.tsx:412
 msgid "Find users with the search tool on the right"
 msgstr "Benutzer mit der Suchfunktion auf der rechten Seite finden"
 
@@ -1157,8 +1157,8 @@ msgstr "Namen auflisten"
 msgid "Lists"
 msgstr "Listen"
 
-#: src/view/com/post-thread/PostThread.tsx:260
-#: src/view/com/post-thread/PostThread.tsx:268
+#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
 msgstr "Mehr Beiträge laden"
 
@@ -1206,7 +1206,7 @@ msgstr "genannte Nutzer"
 msgid "Mentioned users"
 msgstr "Genannte Nutzer"
 
-#: src/view/screens/Search/Search.tsx:537
+#: src/view/screens/Search/Search.tsx:529
 msgid "Menu"
 msgstr "Menü"
 
@@ -1264,11 +1264,11 @@ msgstr "Thema stummschalten"
 msgid "Muted accounts"
 msgstr "Stumme Kontos"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:106
+#: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "Stumme Kontos"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:114
+#: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "Bei stummgeschalteten Konten werden deren Beiträge aus deinem Feed und deinen Benachrichtigungen entfernt. Stummschaltungen sind vollständig privat."
 
@@ -1307,7 +1307,7 @@ msgid "New"
 msgstr "Neu"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:430
 #: src/view/screens/ProfileList.tsx:193
@@ -1354,9 +1354,9 @@ msgid "No results found for \"{query}\""
 msgstr "Keine Ergebnisse gefunden für \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:271
-#: src/view/screens/Search/Search.tsx:299
-#: src/view/screens/Search/Search.tsx:615
+#: src/view/screens/Search/Search.tsx:263
+#: src/view/screens/Search/Search.tsx:291
+#: src/view/screens/Search/Search.tsx:607
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "Keine Ergebnisse gefunden für {query}"
@@ -1519,12 +1519,12 @@ msgstr ""
 #~ msgstr "Bitte teilen Sie uns mit, warum diese Entscheidung Ihrer Meinung nach falsch war."
 
 #: src/view/com/composer/Composer.tsx:337
-#: src/view/com/post-thread/PostThread.tsx:226
+#: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "Posten "
 
-#: src/view/com/post-thread/PostThread.tsx:385
+#: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
 msgstr "Versteckter Posten"
 
@@ -1536,7 +1536,7 @@ msgstr "Postsprache"
 msgid "Post Languages"
 msgstr "Postsprachen"
 
-#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
 msgstr "Posten nicht gefunden"
 
@@ -1780,8 +1780,8 @@ msgstr "Gespeicherte Feeds"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:401
-#: src/view/screens/Search/Search.tsx:567
+#: src/view/screens/Search/Search.tsx:393
+#: src/view/screens/Search/Search.tsx:559
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
@@ -2030,7 +2030,7 @@ msgstr "Abonnieren"
 msgid "Subscribe to this list"
 msgstr "Abonnieren Sie diese Liste"
 
-#: src/view/screens/Search/Search.tsx:357
+#: src/view/screens/Search/Search.tsx:349
 msgid "Suggested Follows"
 msgstr "Vorgeschlagene Followerliste"
 
@@ -2076,7 +2076,7 @@ msgstr "Die Gemeinschaftsrichtlinien wurden nach <0/> verschoben."
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Die Urheberrechtspolitik wurde nach <0/> verschoben."
 
-#: src/view/com/post-thread/PostThread.tsx:440
+#: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
 msgstr "Der Beitrag kann gelöscht worden sein."
 
@@ -2301,7 +2301,7 @@ msgstr "Seite besuchen"
 msgid "We're so excited to have you join us!"
 msgstr "Wir freuen uns, Sie bei uns begrüßen zu dürfen!"
 
-#: src/view/screens/Search/Search.tsx:238
+#: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Es tut uns leid, aber Ihre Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut."
 
@@ -2381,20 +2381,20 @@ msgstr "Sie haben keine gespeicherte Feeds!"
 msgid "You don't have any saved feeds."
 msgstr "Sie haben keine gespeicherte Feeds."
 
-#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:381
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Sie haben den Verfasser blockiert oder Sie wurden vom Verfasser blockiert."
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:134
 msgid "You have no feeds."
 msgstr "Sie haben keine Feeds."
 
 #: src/view/com/lists/MyLists.tsx:89
-#: src/view/com/lists/ProfileLists.tsx:145
+#: src/view/com/lists/ProfileLists.tsx:138
 msgid "You have no lists."
 msgstr "Sie haben keine Listen."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:131
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "Sie haben noch keine Konten gesperrt. Um ein Konto zu sperren, gehen Sie zu seinem Profil und wählen Sie \"Konto sperren\" aus dem Menü auf seinem Konto."
 
@@ -2402,7 +2402,7 @@ msgstr "Sie haben noch keine Konten gesperrt. Um ein Konto zu sperren, gehen Sie
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "Sie haben noch kein Kennwort für eine Anwendung erstellt. Sie können eines erstellen, indem Sie auf die Schaltfläche unten drücken."
 
-#: src/view/screens/ModerationMutedAccounts.tsx:130
+#: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "Sie haben noch keine Konten stummgeschaltet. Um ein Konto stumm zu schalten, gehen Sie zu seinem Profil und wählen Sie \"Konto stumm schalten\" aus dem Menü auf seinem Konto."
 

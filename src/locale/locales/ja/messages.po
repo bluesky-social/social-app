@@ -39,7 +39,7 @@ msgstr "{invitesAvailable}個の招待コードが利用可能"
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable}個の招待コードが利用可能"
 
-#: src/view/screens/Search/Search.tsx:88
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr "{message}"
 
@@ -234,9 +234,9 @@ msgstr "芸術的または性的ではないヌード。"
 #: src/view/com/auth/login/LoginForm.tsx:249
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:395
-#: src/view/com/post-thread/PostThread.tsx:445
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:438
+#: src/view/com/post-thread/PostThread.tsx:446
 #: src/view/com/profile/ProfileHeader.tsx:672
 msgid "Back"
 msgstr "戻る"
@@ -275,7 +275,7 @@ msgstr "これらのアカウントをブロックしますか？"
 msgid "Blocked accounts"
 msgstr "ブロック中のアカウント"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:106
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
 msgid "Blocked Accounts"
 msgstr "ブロック中のアカウント"
 
@@ -283,11 +283,11 @@ msgstr "ブロック中のアカウント"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:114
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。あなたは相手のコンテンツを見ることができず、相手はあなたのコンテンツを見ることができなくなります。"
 
-#: src/view/com/post-thread/PostThread.tsx:251
+#: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
 msgstr "投稿をブロックしました。"
 
@@ -360,7 +360,7 @@ msgstr "文字、数字、スペース、ハイフン、およびアンダース
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:592
+#: src/view/screens/Search/Search.tsx:584
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "キャンセル"
@@ -461,7 +461,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "すべてのストレージデータをクリア（この後再起動します）"
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:569
 msgid "Clear search query"
 msgstr "検索クエリをクリア"
 
@@ -650,7 +650,7 @@ msgstr "投稿を削除"
 msgid "Delete this post?"
 msgstr "この投稿を削除しますか？"
 
-#: src/view/com/post-thread/PostThread.tsx:243
+#: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
 msgstr "投稿を削除しました。"
 
@@ -801,7 +801,7 @@ msgstr "以下に新しいメールアドレスを入力してください。"
 msgid "Enter your username and password"
 msgstr "ユーザー名とパスワードを入力"
 
-#: src/view/screens/Search/Search.tsx:106
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr "エラー："
 
@@ -818,7 +818,7 @@ msgstr "ALTテキストを展開"
 msgid "Failed to load recommended feeds"
 msgstr "おすすめのフィードのロードに失敗しました"
 
-#: src/view/screens/Feeds.tsx:560
+#: src/view/screens/Feeds.tsx:554
 msgid "Feed offline"
 msgstr "フィードはオフラインです"
 
@@ -848,11 +848,11 @@ msgstr "フィードはコンテンツを整理する為にユーザーによっ
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
 
-#: src/view/screens/Search/Search.tsx:422
+#: src/view/screens/Search/Search.tsx:414
 msgid "Find users on Bluesky"
 msgstr "Blueskyでユーザーを検索"
 
-#: src/view/screens/Search/Search.tsx:420
+#: src/view/screens/Search/Search.tsx:412
 msgid "Find users with the search tool on the right"
 msgstr "右側の検索ツールでユーザーを検索"
 
@@ -1161,8 +1161,8 @@ msgstr "リストの名前"
 msgid "Lists"
 msgstr "リスト"
 
-#: src/view/com/post-thread/PostThread.tsx:260
-#: src/view/com/post-thread/PostThread.tsx:268
+#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
 msgstr "より多くの投稿をロード"
 
@@ -1214,7 +1214,7 @@ msgstr "メンションされたユーザー"
 msgid "Mentioned users"
 msgstr "メンションされたユーザー"
 
-#: src/view/screens/Search/Search.tsx:537
+#: src/view/screens/Search/Search.tsx:529
 msgid "Menu"
 msgstr "メニュー"
 
@@ -1272,11 +1272,11 @@ msgstr "スレッドをミュート"
 msgid "Muted accounts"
 msgstr "ミュートされたアカウント"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:106
+#: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "ミュートされたアカウント"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:114
+#: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "ミュートをされたアカウントは、フィードと通知からの投稿が削除されます。ミュートの設定は完全に非公開です。"
 
@@ -1315,7 +1315,7 @@ msgid "New"
 msgstr "新規"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:430
 #: src/view/screens/ProfileList.tsx:193
@@ -1362,9 +1362,9 @@ msgid "No results found for \"{query}\""
 msgstr "「{query}」の検索結果はありません"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:271
-#: src/view/screens/Search/Search.tsx:299
-#: src/view/screens/Search/Search.tsx:615
+#: src/view/screens/Search/Search.tsx:263
+#: src/view/screens/Search/Search.tsx:291
+#: src/view/screens/Search/Search.tsx:607
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
@@ -1531,12 +1531,12 @@ msgstr ""
 #~ msgstr "この判断が誤っていると考える理由を教えてください。"
 
 #: src/view/com/composer/Composer.tsx:337
-#: src/view/com/post-thread/PostThread.tsx:226
+#: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "投稿"
 
-#: src/view/com/post-thread/PostThread.tsx:385
+#: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
 msgstr "投稿を非表示"
 
@@ -1548,7 +1548,7 @@ msgstr "投稿の言語"
 msgid "Post Languages"
 msgstr "投稿の言語"
 
-#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
 msgstr "投稿が見つかりません"
 
@@ -1792,8 +1792,8 @@ msgstr "保存されたフィード"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:401
-#: src/view/screens/Search/Search.tsx:567
+#: src/view/screens/Search/Search.tsx:393
+#: src/view/screens/Search/Search.tsx:559
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
@@ -2046,7 +2046,7 @@ msgstr "登録"
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
-#: src/view/screens/Search/Search.tsx:357
+#: src/view/screens/Search/Search.tsx:349
 msgid "Suggested Follows"
 msgstr "おすすめのフォロー"
 
@@ -2092,7 +2092,7 @@ msgstr "コミュニティガイドラインは<0/>に移動されました"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "著作権ポリシーが<0/>に移動されました"
 
-#: src/view/com/post-thread/PostThread.tsx:440
+#: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
 msgstr "投稿が削除された可能性があります。"
 
@@ -2317,7 +2317,7 @@ msgstr "サイトへアクセス"
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
 
-#: src/view/screens/Search/Search.tsx:238
+#: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
 
@@ -2393,20 +2393,20 @@ msgstr "保存されたフィードがありません！"
 msgid "You don't have any saved feeds."
 msgstr "保存されたフィードがありません。"
 
-#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:381
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "あなたが著者をブロックしているか、または著者によってあなたはブロックされています。"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:134
 msgid "You have no feeds."
 msgstr "フィードがありません。"
 
 #: src/view/com/lists/MyLists.tsx:89
-#: src/view/com/lists/ProfileLists.tsx:145
+#: src/view/com/lists/ProfileLists.tsx:138
 msgid "You have no lists."
 msgstr "リストがありません。"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:131
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "ブロック中のアカウントはまだありません。アカウントをブロックするには、ユーザーのプロフィールに移動し、アカウントメニューから「アカウントをブロック」を選択します。"
 
@@ -2414,7 +2414,7 @@ msgstr "ブロック中のアカウントはまだありません。アカウン
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "アプリパスワードはまだ作成されていません。下のボタンを押すと作成できます。"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:130
+#: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "ミュートしているアカウントはまだありません。アカウントをミュートするには、プロフィールに移動し、アカウントメニューから「アカウントをミュート」を選択します。"
 

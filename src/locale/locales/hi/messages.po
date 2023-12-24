@@ -47,7 +47,7 @@ msgstr ""
 msgid "{invitesAvailable} invite codes available"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:88
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr ""
 
@@ -262,9 +262,9 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 #: src/view/com/auth/login/LoginForm.tsx:249
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:395
-#: src/view/com/post-thread/PostThread.tsx:445
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:438
+#: src/view/com/post-thread/PostThread.tsx:446
 #: src/view/com/profile/ProfileHeader.tsx:672
 msgid "Back"
 msgstr "वापस"
@@ -303,7 +303,7 @@ msgstr "खाता ब्लॉक करें?"
 msgid "Blocked accounts"
 msgstr "ब्लॉक किए गए खाते"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:106
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
 msgid "Blocked Accounts"
 msgstr "ब्लॉक किए गए खाते"
 
@@ -311,11 +311,11 @@ msgstr "ब्लॉक किए गए खाते"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "अवरुद्ध खाते आपके थ्रेड्स में उत्तर नहीं दे सकते, आपका उल्लेख नहीं कर सकते, या अन्यथा आपके साथ बातचीत नहीं कर सकते।"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:114
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "अवरुद्ध खाते आपके थ्रेड्स में उत्तर नहीं दे सकते, आपका उल्लेख नहीं कर सकते, या अन्यथा आपके साथ बातचीत नहीं कर सकते। आप उनकी सामग्री नहीं देख पाएंगे और उन्हें आपकी सामग्री देखने से रोका जाएगा।"
 
-#: src/view/com/post-thread/PostThread.tsx:251
+#: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
 msgstr "ब्लॉक पोस्ट।"
 
@@ -388,7 +388,7 @@ msgstr "केवल अक्षर, संख्या, रिक्त स्
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:592
+#: src/view/screens/Search/Search.tsx:584
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "कैंसिल"
@@ -489,7 +489,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:569
 msgid "Clear search query"
 msgstr "खोज क्वेरी साफ़ करें"
 
@@ -682,7 +682,7 @@ msgstr "पोस्ट को हटाएं"
 msgid "Delete this post?"
 msgstr "इस पोस्ट को डीलीट करें?"
 
-#: src/view/com/post-thread/PostThread.tsx:243
+#: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
 msgstr "यह पोस्ट मिटाई जा चुकी है"
 
@@ -833,7 +833,7 @@ msgstr "नीचे अपना नया ईमेल पता दर्ज 
 msgid "Enter your username and password"
 msgstr "अपने यूज़रनेम और पासवर्ड दर्ज करें"
 
-#: src/view/screens/Search/Search.tsx:106
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr ""
 
@@ -850,7 +850,7 @@ msgstr "ऑल्ट टेक्स्ट"
 msgid "Failed to load recommended feeds"
 msgstr "अनुशंसित फ़ीड लोड करने में विफल"
 
-#: src/view/screens/Feeds.tsx:560
+#: src/view/screens/Feeds.tsx:554
 msgid "Feed offline"
 msgstr "फ़ीड ऑफ़लाइन है"
 
@@ -880,11 +880,11 @@ msgstr "सामग्री को व्यवस्थित करने �
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "फ़ीड कस्टम एल्गोरिदम हैं जिन्हें उपयोगकर्ता थोड़ी कोडिंग विशेषज्ञता के साथ बनाते हैं। <0/> अधिक जानकारी के लिए."
 
-#: src/view/screens/Search/Search.tsx:422
+#: src/view/screens/Search/Search.tsx:414
 msgid "Find users on Bluesky"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:420
+#: src/view/screens/Search/Search.tsx:412
 msgid "Find users with the search tool on the right"
 msgstr ""
 
@@ -1214,8 +1214,8 @@ msgstr "सूची का नाम"
 msgid "Lists"
 msgstr "सूची"
 
-#: src/view/com/post-thread/PostThread.tsx:260
-#: src/view/com/post-thread/PostThread.tsx:268
+#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
 msgstr "अधिक पोस्ट लोड करें"
 
@@ -1267,7 +1267,7 @@ msgstr ""
 msgid "Mentioned users"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:537
+#: src/view/screens/Search/Search.tsx:529
 msgid "Menu"
 msgstr "मेनू"
 
@@ -1329,11 +1329,11 @@ msgstr "थ्रेड म्यूट करें"
 msgid "Muted accounts"
 msgstr "म्यूट किए गए खाते"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:106
+#: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "म्यूट किए गए खाते"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:114
+#: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "म्यूट किए गए खातों की पोस्ट आपके फ़ीड और आपकी सूचनाओं से हटा दी जाती हैं। म्यूट पूरी तरह से निजी हैं."
 
@@ -1376,7 +1376,7 @@ msgid "New"
 msgstr "नया"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:430
 #: src/view/screens/ProfileList.tsx:193
@@ -1428,9 +1428,9 @@ msgstr "\"{query}\" के लिए कोई परिणाम नहीं �
 #~ msgstr "{0} के लिए कोई परिणाम नहीं मिला"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:271
-#: src/view/screens/Search/Search.tsx:299
-#: src/view/screens/Search/Search.tsx:615
+#: src/view/screens/Search/Search.tsx:263
+#: src/view/screens/Search/Search.tsx:291
+#: src/view/screens/Search/Search.tsx:607
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr ""
@@ -1605,12 +1605,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:337
-#: src/view/com/post-thread/PostThread.tsx:226
+#: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "पोस्ट"
 
-#: src/view/com/post-thread/PostThread.tsx:385
+#: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
 msgstr "छुपा पोस्ट"
 
@@ -1622,7 +1622,7 @@ msgstr "पोस्ट भाषा"
 msgid "Post Languages"
 msgstr "पोस्ट भाषा"
 
-#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
 msgstr "पोस्ट नहीं मिला"
 
@@ -1887,8 +1887,8 @@ msgstr "सहेजे गए फ़ीड"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:401
-#: src/view/screens/Search/Search.tsx:567
+#: src/view/screens/Search/Search.tsx:393
+#: src/view/screens/Search/Search.tsx:559
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
@@ -2145,7 +2145,7 @@ msgstr "सब्सक्राइब"
 msgid "Subscribe to this list"
 msgstr "इस सूची को सब्सक्राइब करें"
 
-#: src/view/screens/Search/Search.tsx:357
+#: src/view/screens/Search/Search.tsx:349
 msgid "Suggested Follows"
 msgstr "अनुशंसित लोग"
 
@@ -2195,7 +2195,7 @@ msgstr "सामुदायिक दिशानिर्देशों क�
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "कॉपीराइट नीति को <0/> पर स्थानांतरित कर दिया गया है"
 
-#: src/view/com/post-thread/PostThread.tsx:440
+#: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
 msgstr "हो सकता है कि यह पोस्ट हटा दी गई हो।"
 
@@ -2432,7 +2432,7 @@ msgstr "हम आपके हमारी सेवा में शामि�
 #~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:238
+#: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr ""
 
@@ -2512,20 +2512,20 @@ msgstr ""
 msgid "You don't have any saved feeds."
 msgstr "आपके पास कोई सहेजी गई फ़ीड नहीं है."
 
-#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:381
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "आपने लेखक को अवरुद्ध किया है या आपने लेखक द्वारा अवरुद्ध किया है।।"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:134
 msgid "You have no feeds."
 msgstr ""
 
 #: src/view/com/lists/MyLists.tsx:89
-#: src/view/com/lists/ProfileLists.tsx:145
+#: src/view/com/lists/ProfileLists.tsx:138
 msgid "You have no lists."
 msgstr "आपके पास कोई सूची नहीं है।।"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:131
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "आपने अभी तक कोई भी अकाउंट ब्लॉक नहीं किया है. किसी खाते को ब्लॉक करने के लिए, उनकी प्रोफ़ाइल पर जाएं और उनके खाते के मेनू से \"खाता ब्लॉक करें\" चुनें।"
 
@@ -2533,7 +2533,7 @@ msgstr "आपने अभी तक कोई भी अकाउंट ब्
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "आपने अभी तक कोई ऐप पासवर्ड नहीं बनाया है। आप नीचे बटन दबाकर एक बना सकते हैं।।"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:130
+#: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "आपने अभी तक कोई खाता म्यूट नहीं किया है. किसी खाते को म्यूट करने के लिए, उनकी प्रोफ़ाइल पर जाएं और उनके खाते के मेनू से \"खाता म्यूट करें\" चुनें।"
 
