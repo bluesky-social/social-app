@@ -20,7 +20,7 @@ import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
-import {Link} from '../com/util/Link'
+import {Link, TextLink} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
@@ -721,7 +721,7 @@ export function SettingsScreen({}: Props) {
             </Text>
           </TouchableOpacity>
           <Text type="sm" style={[pal.textLight]}>
-            &middot; &nbsp;
+            &nbsp; &middot; &nbsp;
           </Text>
           <TouchableOpacity
             accessibilityRole="button"
@@ -730,6 +730,25 @@ export function SettingsScreen({}: Props) {
               <Trans>Status page</Trans>
             </Text>
           </TouchableOpacity>
+        </View>
+
+        <View
+          style={[
+            {flexWrap: 'wrap', gap: 12, paddingHorizontal: 18},
+            s.flexRow,
+          ]}>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="https://blueskyweb.xyz/support/tos"
+            text={_(msg`Terms of Service`)}
+          />
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="https://blueskyweb.xyz/support/privacy-policy"
+            text={_(msg`Privacy Policy`)}
+          />
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
