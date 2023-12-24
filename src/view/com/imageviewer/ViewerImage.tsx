@@ -59,7 +59,11 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
       {images.length === 1 ? (
         <Image
           source={{uri: image.thumb}}
-          style={[styles.imageStyle, imageStyle, {aspectRatio}]}
+          style={[
+            styles.singleImage,
+            isMobile && styles.singleImageMobile,
+            {aspectRatio},
+          ]}
           cachePolicy="memory-disk"
           accessible
           accessibilityLabel={image.alt}
