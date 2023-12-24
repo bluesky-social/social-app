@@ -10,6 +10,7 @@ export type EmbedPlayerParams =
   | {type: 'spotify_song'; songId: string; playerUri: string}
   | {type: 'soundcloud_track'; user: string; track: string; playerUri: string}
   | {type: 'soundcloud_set'; user: string; set: string; playerUri: string}
+  | {type: 'gif'; playerUri: string}
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -109,6 +110,18 @@ export function parseEmbedPlayerFromUrl(
         track: trackOrSets,
         playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
       }
+    }
+  }
+
+  // gifs
+  if (
+    urlp.pathname.endsWith('.gif') ||
+    urlp.pathname.endsWith('.webm') ||
+    urlp.pathname.endsWith('.mp4')
+  ) {
+    return {
+      type: 'gif',
+      playerUri: url,
     }
   }
 }
