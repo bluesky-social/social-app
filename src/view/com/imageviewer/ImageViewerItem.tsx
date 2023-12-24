@@ -41,8 +41,6 @@ import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
  *  Once the animation completes, then we will update the state to set the current image to the next image in the set.
  */
 
-const AnimatedImage = Animated.createAnimatedComponent(Image)
-
 const IS_WEB = Platform.OS === 'web'
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window')
 const WITH_TIMING_CONFIG = {
@@ -102,6 +100,8 @@ function ImageViewerItemInner({
     [image],
   )
 
+  const [source, setSource] = React.useState(image.thumb)
+
   // Use this to enable/disable the pan gesture
   const [panGestureEnabled, setPanGestureEnabled] = React.useState(false)
 
@@ -142,6 +142,13 @@ function ImageViewerItemInner({
     positionY.value = withTiming(centerY)
   }
 
+  const prefetchAndReplace = () => {
+    Image.prefetch(image.fullsize).then(() => {
+      console.log('prefetched')
+      setSource(image.fullsize)
+    })
+  }
+
   // Handle opening the image viewer
   React.useEffect(() => {
     'worklet'
@@ -153,6 +160,7 @@ function ImageViewerItemInner({
     if (index !== initialIndex) {
       height.value = viewerDimensions!.height
       width.value = viewerDimensions!.width
+      runOnJS(prefetchAndReplace)()
       centerImage()
       return
     }
@@ -176,8 +184,12 @@ function ImageViewerItemInner({
     centerImage()
 
     // Fade in the background and show accessories
-    backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
     accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
+
+    // It doesn't matter which one of these we run the prefetch callback on. They all run for the same amount of time
+    backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG, () => {
+      runOnJS(prefetchAndReplace)()
+    })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVisible])
@@ -342,22 +354,14 @@ function ImageViewerItemInner({
     <GestureDetector gesture={IS_WEB ? tapGesture : allGestures}>
       <Animated.View style={[styles.imageContainer]}>
         <Animated.View style={positionStyle}>
-          {IS_WEB ? (
-            <Animated.View style={[scaleStyle, dimensionsStyle]}>
-              <Image
-                source={{uri: image?.thumb}}
-                style={{height: '100%', width: '100%'}}
-                cachePolicy="memory-disk"
-                accessibilityIgnoresInvertColors
-              />
-            </Animated.View>
-          ) : (
-            <AnimatedImage
-              source={{uri: image?.thumb}}
-              style={[viewerDimensions, scaleStyle, dimensionsStyle]}
+          <Animated.View style={[scaleStyle, dimensionsStyle]}>
+            <Image
+              source={{uri: source}}
+              style={{height: '100%', width: '100%'}}
               cachePolicy="memory-disk"
+              accessibilityIgnoresInvertColors
             />
-          )}
+          </Animated.View>
         </Animated.View>
       </Animated.View>
     </GestureDetector>
