@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  Platform,
-  ScaledSize,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native'
+import {Platform, StyleSheet, useWindowDimensions} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -20,7 +15,6 @@ import {
   PanGestureHandlerEventPayload,
   PinchGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
-import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 
@@ -50,27 +44,7 @@ const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
   duration: 300,
 }
-
 const MAX_SCALE = 3
-
-const getViewerDimensions = (image: ViewImage, deviceDims: ScaledSize) => {
-  if (!image) return undefined
-
-  const {height, width} = image.aspectRatio! // TODO figure out if this is ever not set (i believe it can be)
-  if (height === 0 || width === 0) return {height: 200, width: 200}
-
-  const heightModifier = !IS_WEB ? 0.9 : 1
-
-  const heightRatio = (deviceDims.height * heightModifier) / height
-  const widthRatio = deviceDims.width / width
-
-  const ratio = Math.min(widthRatio, heightRatio)
-
-  return {
-    height: Math.round(height * ratio),
-    width: Math.round(width * ratio),
-  }
-}
 
 function ImageViewerItem({
   image,
@@ -89,8 +63,11 @@ function ImageViewerItem({
   const {isVisible, measurement} = state
 
   const viewerDimensions = React.useMemo(
-    () => getViewerDimensions(image, deviceDims),
-    [image, deviceDims],
+    () => ({
+      height: Math.round(deviceDims.height),
+      width: Math.round(deviceDims.width),
+    }),
+    [deviceDims],
   )
 
   const [source, setSource] = React.useState(image.thumb)
@@ -112,10 +89,6 @@ function ImageViewerItem({
   const scale = useSharedValue(1)
   const lastScale = useSharedValue(1)
 
-  // Determine where the center should be
-  const centerX = (deviceDims.width - viewerDimensions!.width) / 2
-  const centerY = (deviceDims.height - viewerDimensions!.height) / 2
-
   // Update isScaled when the scale changes
   useAnimatedReaction(
     () => scale.value,
@@ -136,11 +109,11 @@ function ImageViewerItem({
     'worklet'
 
     if (animated) {
-      positionX.value = withTiming(centerX)
-      positionY.value = withTiming(centerY)
+      positionX.value = withTiming(0.5)
+      positionY.value = withTiming(0.5)
     } else {
-      positionX.value = centerX
-      positionY.value = centerY
+      positionX.value = 0.5
+      positionY.value = 0.5
     }
   }
 
@@ -166,6 +139,7 @@ function ImageViewerItem({
       return
     }
 
+    // Remember that we animated already
     ranInitialAnimation.current = true
 
     // Reset the opacity
@@ -246,8 +220,6 @@ function ImageViewerItem({
     // Hide accessories when we zoom in
     runOnJS(setAccessoriesVisible)(false)
 
-    console.log('double!')
-
     if (scale.value !== 1) {
       centerImage()
       scale.value = withTiming(1, WITH_TIMING_CONFIG)
@@ -268,8 +240,6 @@ function ImageViewerItem({
 
   // This doesn't need to be a worklet since we are just setting state which would run on js anyway
   const onTap = () => {
-    console.log('tap!')
-
     // Do nothing if the scale is not one
     if (scale.value !== 1) return
 
@@ -288,8 +258,6 @@ function ImageViewerItem({
 
   const onPinchStart = () => {
     'worklet'
-
-    console.log('pinch!')
 
     runOnJS(setAccessoriesVisible)(false)
   }
@@ -367,6 +335,7 @@ function ImageViewerItem({
             <Image
               source={{uri: source}}
               style={{height: '100%', width: '100%'}}
+              contentFit="contain"
               cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
