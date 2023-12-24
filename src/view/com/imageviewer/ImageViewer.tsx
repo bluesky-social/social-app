@@ -14,13 +14,14 @@ import PagerView from 'react-native-pager-view'
 import {
   Gesture,
   GestureDetector,
+  gestureHandlerRootHOC,
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
 
 const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window')
 
-export function ImageViewer() {
+function ImageViewerInner() {
   const {state, dispatch} = useImageViewer()
   const {images, index, isVisible, measurement} = state
 
@@ -39,7 +40,11 @@ export function ImageViewer() {
 
     opacity.value = 1
     backgroundOpacity.value = 0
-  })
+  }, [isVisible])
+
+  React.useEffect(() => {
+    console.log(isScaled)
+  }, [isScaled])
 
   const onCloseViewer = React.useCallback(
     (direction: 'up' | 'down' = 'down') => {
@@ -85,7 +90,11 @@ export function ImageViewer() {
     }
   }
 
-  const panGesture = Gesture.Pan().onEnd(onPanEnd).enabled(!isScaled)
+  const panGesture = Gesture.Pan()
+    .activeOffsetX(1000) // Allow horizontal panning
+    .activeOffsetY(50)
+    .onEnd(onPanEnd)
+    .onBegin(() => console.log('start'))
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -135,6 +144,7 @@ export function ImageViewer() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    zIndex: -2, // for android >_<
   },
   accessory: {
     position: 'absolute',
@@ -149,3 +159,5 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 })
+
+export const ImageViewer = gestureHandlerRootHOC(ImageViewerInner)

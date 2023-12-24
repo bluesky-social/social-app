@@ -350,11 +350,8 @@ const styles = StyleSheet.create({
   imageContainer: {
     height: '100%',
     width: '100%',
-    zIndex: -2, // for android >_<
   },
 })
 
 // Wrap this in gestureHandlerRootHOC since Android requires it when using gestures in a modal
-export const ImageViewerItem = React.memo(
-  gestureHandlerRootHOC(ImageViewerItemInner),
-)
+export const ImageViewerItem = React.memo(ImageViewerItemInner)
