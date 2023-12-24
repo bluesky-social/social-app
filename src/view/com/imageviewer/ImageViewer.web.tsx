@@ -6,14 +6,18 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {Pressable, StyleSheet} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import ImageViewerFooter from 'view/com/imageviewer/ImageViewerFooter'
 import ImageViewerHeader from 'view/com/imageviewer/ImageViewerHeader'
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler'
 import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
 import {SCREEN_WIDTH} from '@gorhom/bottom-sheet'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 function ImageViewer() {
+  const {isMobile} = useWebMediaQueries()
+
   const {state, dispatch} = useImageViewer()
   const {images, index, isVisible} = state
 
@@ -77,8 +81,20 @@ function ImageViewer() {
       <Pressable
         accessibilityRole="button"
         style={[styles.scrollButton, styles.leftScrollButton]}
-        onPress={onPrevPress}
-      />
+        onPress={onPrevPress}>
+        {!isMobile && currentIndex !== 0 && (
+          <View style={styles.scrollButtonInner}>
+            <View style={styles.scrollButtonIconContainer}>
+              <FontAwesomeIcon
+                icon="chevron-right"
+                size={30}
+                color="white"
+                style={{transform: [{rotateZ: '180deg'}]}}
+              />
+            </View>
+          </View>
+        )}
+      </Pressable>
 
       <ImageViewerItem
         image={images[currentIndex]}
@@ -94,8 +110,15 @@ function ImageViewer() {
       <Pressable
         accessibilityRole="button"
         style={[styles.scrollButton, styles.rightScrollButton]}
-        onPress={onNextPress}
-      />
+        onPress={onNextPress}>
+        {!isMobile && currentIndex !== images.length - 1 && (
+          <View style={styles.scrollButtonInner}>
+            <View style={styles.scrollButtonIconContainer}>
+              <FontAwesomeIcon icon="chevron-left" size={30} color="white" />
+            </View>
+          </View>
+        )}
+      </Pressable>
 
       <Animated.View
         style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
@@ -130,11 +153,27 @@ const styles = StyleSheet.create({
     height: '100%',
     width: SCREEN_WIDTH > 600 ? 150 : 80,
   },
+  scrollButtonInner: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   leftScrollButton: {
     left: 0,
   },
   rightScrollButton: {
     right: 0,
+  },
+  scrollButtonIconContainer: {
+    padding: 20,
+    borderRadius: 100,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  scrollButtonIcon: {
+    color: 'white',
+  },
+  chevronLeft: {
+    transform: [{rotateZ: '180deg'}], // I promise I'm not crazy...but why is chevron-left not working? TODO
   },
 })
 
