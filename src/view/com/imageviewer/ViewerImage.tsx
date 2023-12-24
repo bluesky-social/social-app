@@ -21,6 +21,7 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
   const {dispatch} = useImageViewer()
 
   const ref = React.useRef<View>(null)
+  const isLoaded = React.useRef(false)
 
   const image = React.useMemo(() => images[index], [images, index])
 
@@ -31,6 +32,8 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
   )
 
   const onPress = React.useCallback(() => {
+    if (!isLoaded.current) return
+
     ref.current?.measure((x, y, width, height, pageX, pageY) => {
       const measurement = {x, y, width, height, pageX, pageY}
 
@@ -46,6 +49,10 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
     })
   }, [dispatch, images, index])
 
+  const onLoad = React.useCallback(() => {
+    isLoaded.current = true
+  }, [])
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -59,6 +66,7 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
       {images.length === 1 ? (
         <Image
           source={{uri: image.thumb}}
+          onLoad={onLoad}
           style={[
             styles.singleImage,
             isMobile && styles.singleImageMobile,
@@ -73,6 +81,7 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
       ) : (
         <Image
           source={{uri: image.thumb}}
+          onLoad={onLoad}
           style={[styles.imageStyle, imageStyle, {aspectRatio}]}
           cachePolicy="memory-disk"
           accessible
