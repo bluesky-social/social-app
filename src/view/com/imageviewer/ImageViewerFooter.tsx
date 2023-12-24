@@ -8,8 +8,7 @@ import {Text} from 'view/com/util/text/Text'
 import {colors, s} from 'lib/styles'
 import {Button} from 'view/com/util/forms/Button'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {isIOS} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isIOS, isWeb} from 'platform/detection'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 
 interface IProps {
@@ -18,8 +17,6 @@ interface IProps {
 }
 
 export default function ImageViewerFooter({visible, currentImage}: IProps) {
-  const {isMobile} = useWebMediaQueries()
-
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
 
@@ -60,12 +57,13 @@ export default function ImageViewerFooter({visible, currentImage}: IProps) {
         <Pressable onPress={onExpandAlt} accessibilityRole="button">
           <Text
             style={[s.gray3, styles.footerText]}
-            numberOfLines={isAltExpanded ? undefined : 3}>
+            numberOfLines={isAltExpanded ? undefined : 3}
+            selectable>
             {currentImage?.alt}
           </Text>
         </Pressable>
       ) : null}
-      {isMobile && (
+      {!isWeb && (
         <>
           <View style={styles.footerBtns}>
             <Button
