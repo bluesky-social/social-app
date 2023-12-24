@@ -42,7 +42,7 @@ import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
-  duration: 300,
+  duration: 200,
 }
 const MAX_SCALE = 3
 
@@ -108,8 +108,8 @@ function ImageViewerItem({
     'worklet'
 
     if (animated) {
-      positionX.value = withTiming(0.5)
-      positionY.value = withTiming(0.5)
+      positionX.value = withTiming(0.5, WITH_TIMING_CONFIG)
+      positionY.value = withTiming(0.5, WITH_TIMING_CONFIG)
     } else {
       positionX.value = 0.5
       positionY.value = 0.5
@@ -288,7 +288,7 @@ function ImageViewerItem({
   // Combine the gestures
   const tapGestures = Gesture.Simultaneous(tapGesture, doubleTapGesture)
   const pinchAndPanGestures = Gesture.Simultaneous(pinchGesture, panGesture)
-  const allGestures = Gesture.Simultaneous(tapGestures, pinchAndPanGestures)
+  const allGestures = Gesture.Race(tapGestures, pinchAndPanGestures)
 
   // Animated styles
   const positionStyle = useAnimatedStyle(() => ({
