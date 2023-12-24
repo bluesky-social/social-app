@@ -1,11 +1,6 @@
 import React from 'react'
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
-import Animated, {
-  runOnJS,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import {Pressable, StyleSheet, View} from 'react-native'
 import ImageViewerFooter from 'view/com/imageviewer/ImageViewerFooter'
 import ImageViewerHeader from 'view/com/imageviewer/ImageViewerHeader'
@@ -14,47 +9,26 @@ import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
 import {SCREEN_WIDTH} from '@gorhom/bottom-sheet'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
 
 function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
 
-  const {state, dispatch} = useImageViewer()
-  const {images, index, isVisible} = state
+  const {state} = useImageViewer()
+  const {images, index} = state
 
-  const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
+  const {
+    accessoriesVisible,
+    setAccessoriesVisible,
+    opacity,
+    backgroundOpacity,
+    accessoryOpacity,
+    onCloseViewer,
+    containerStyle,
+    accessoryStyle,
+  } = useImageViewerDefaults()
+
   const [currentIndex, setCurrentIndex] = React.useState(index)
-
-  const opacity = useSharedValue(1)
-  const backgroundOpacity = useSharedValue(0)
-  const accessoryOpacity = useSharedValue(0)
-
-  // Reset the viewer whenever it closes
-  React.useEffect(() => {
-    if (isVisible) return
-
-    opacity.value = 1
-    backgroundOpacity.value = 0
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible])
-
-  const onCloseViewer = React.useCallback(() => {
-    accessoryOpacity.value = withTiming(0, {duration: 200})
-    opacity.value = withTiming(0, {duration: 200}, () => {
-      runOnJS(dispatch)({
-        type: 'setVisible',
-        payload: false,
-      })
-    })
-  }, [accessoryOpacity, dispatch, opacity])
-
-  const containerStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-    backgroundColor: `rgba(0, 0, 0, ${backgroundOpacity.value})`,
-  }))
-
-  const accessoryStyle = useAnimatedStyle(() => ({
-    opacity: accessoryOpacity.value,
-  }))
 
   const onPrevPress = React.useCallback(() => {
     if (currentIndex === 0) return
