@@ -13,8 +13,6 @@ import {
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {usePalette} from 'lib/hooks/usePalette'
-import {YoutubeEmbed} from './YoutubeEmbed'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {ListEmbed} from './ListEmbed'
