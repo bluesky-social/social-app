@@ -1,5 +1,10 @@
 import React from 'react'
-import {Dimensions, Platform, StyleSheet} from 'react-native'
+import {
+  Platform,
+  ScaledSize,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -42,14 +47,13 @@ import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
  */
 
 const IS_WEB = Platform.OS === 'web'
-const {height: SCREEN_HEIGHT, width: SCREEN_WIDTH} = Dimensions.get('window')
 const WITH_TIMING_CONFIG = {
   duration: 300,
 }
 
 const MAX_SCALE = 3
 
-const getViewerDimensions = (image?: ViewImage) => {
+const getViewerDimensions = (image: ViewImage, deviceDims: ScaledSize) => {
   if (!image) return undefined
 
   const {height, width} = image.aspectRatio! // TODO figure out if this is ever not set (i believe it can be)
@@ -57,8 +61,8 @@ const getViewerDimensions = (image?: ViewImage) => {
 
   const heightModifier = !IS_WEB ? 0.9 : 1
 
-  const heightRatio = (SCREEN_HEIGHT * heightModifier) / height
-  const widthRatio = SCREEN_WIDTH / width
+  const heightRatio = (deviceDims.height * heightModifier) / height
+  const widthRatio = deviceDims.width / width
 
   const ratio = Math.min(widthRatio, heightRatio)
 
@@ -79,12 +83,14 @@ function ImageViewerItem({
   accessoryOpacity,
   backgroundOpacity,
 }: IImageViewerItemProps) {
+  const deviceDims = useWindowDimensions()
+
   const {state} = useImageViewer()
   const {isVisible, measurement} = state
 
   const viewerDimensions = React.useMemo(
-    () => getViewerDimensions(image),
-    [image],
+    () => getViewerDimensions(image, deviceDims),
+    [image, deviceDims],
   )
 
   const [source, setSource] = React.useState(image.thumb)
@@ -107,8 +113,8 @@ function ImageViewerItem({
   const lastScale = useSharedValue(1)
 
   // Determine where the center should be
-  const centerX = (SCREEN_WIDTH - viewerDimensions!.width) / 2
-  const centerY = (SCREEN_HEIGHT - viewerDimensions!.height) / 2
+  const centerX = (deviceDims.width - viewerDimensions!.width) / 2
+  const centerY = (deviceDims.height - viewerDimensions!.height) / 2
 
   // Update isScaled when the scale changes
   useAnimatedReaction(
@@ -153,7 +159,6 @@ function ImageViewerItem({
 
     // For all images that are not the current image, set the dimensions
     if (index !== initialIndex || ranInitialAnimation.current) {
-      console.log('no anim!')
       height.value = viewerDimensions!.height
       width.value = viewerDimensions!.width
       runOnJS(prefetchAndReplace)()
@@ -190,7 +195,7 @@ function ImageViewerItem({
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image, isVisible])
+  }, [viewerDimensions, image, isVisible])
 
   const onPanUpdate = (
     e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
