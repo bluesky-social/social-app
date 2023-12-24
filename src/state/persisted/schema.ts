@@ -37,7 +37,7 @@ export const schema = z.object({
   onboarding: z.object({
     step: z.string(),
   }),
-  hiddenPosts: z.array(z.string()),
+  hiddenPosts: z.array(z.string()).optional(), // should move to server
 })
 export type Schema = z.infer<typeof schema>
 

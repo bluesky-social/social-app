@@ -33,10 +33,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const api = React.useMemo(
     () => ({
       hidePost: ({uri}: {uri: string}) => {
-        setStateWrapped(s => [...s, uri])
+        setStateWrapped(s => [...(s || []), uri])
       },
       unhidePost: ({uri}: {uri: string}) => {
-        setStateWrapped(s => s.filter(u => u !== uri))
+        setStateWrapped(s => (s || []).filter(u => u !== uri))
       },
     }),
     [setStateWrapped],

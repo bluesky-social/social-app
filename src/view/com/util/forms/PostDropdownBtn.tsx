@@ -18,7 +18,7 @@ import {getTranslatorLink} from '#/locale/helpers'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
-import {useHiddenPostsApi} from '#/state/preferences'
+import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -51,10 +51,12 @@ let PostDropdownBtn = ({
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
   const postDeleteMutation = usePostDeleteMutation()
+  const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
+  const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -165,6 +167,27 @@ let PostDropdownBtn = ({
         web: 'comment-slash',
       },
     },
+    hasSession &&
+      !isAuthor &&
+      !isPostHidden && {
+        label: _(msg`Hide post`),
+        onPress() {
+          openModal({
+            name: 'confirm',
+            title: _(msg`Hide this post?`),
+            message: _(msg`This will hide this post from your feeds.`),
+            onPressConfirm: onHidePost,
+          })
+        },
+        testID: 'postDropdownHideBtn',
+        icon: {
+          ios: {
+            name: 'eye.slash',
+          },
+          android: 'ic_menu_delete',
+          web: ['far', 'eye-slash'],
+        },
+      },
     {
       label: 'separator',
     },
@@ -204,30 +227,6 @@ let PostDropdownBtn = ({
         },
         android: 'ic_menu_delete',
         web: ['far', 'trash-can'],
-      },
-    },
-    !isAuthor && {
-      label: 'separator',
-    },
-    !isAuthor && {
-      label: _(msg`Hide post`),
-      onPress() {
-        openModal({
-          name: 'confirm',
-          title: _(msg`Hide this post?`),
-          message: _(
-            msg`This will permanently hide this post from your feeds.`,
-          ),
-          onPressConfirm: onHidePost,
-        })
-      },
-      testID: 'postDropdownHideBtn',
-      icon: {
-        ios: {
-          name: 'eye.slash',
-        },
-        android: 'ic_menu_delete',
-        web: ['far', 'eye-slash'],
       },
     },
     showAppealLabelItem && {

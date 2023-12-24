@@ -60,6 +60,13 @@ export function describeModerationCause(
       }
     }
   }
+  // @ts-ignore Temporary extension to the moderation system -prf
+  if (cause.type === 'post-hidden') {
+    return {
+      name: 'Post Hidden by You',
+      description: 'You have hidden this post',
+    }
+  }
   return cause.labelDef.strings[context].en
 }
 
