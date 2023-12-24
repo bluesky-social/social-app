@@ -3,7 +3,6 @@ import {
   View,
   StyleSheet,
   ActivityIndicator,
-  RefreshControl,
   TextInput,
   Pressable,
   Platform,
@@ -185,7 +184,6 @@ type SearchResultSlice =
 
 function SearchScreenPostResults({query}: {query: string}) {
   const {_} = useLingui()
-  const pal = usePalette('default')
   const [isPTR, setIsPTR] = React.useState(false)
   const {
     isFetched,
@@ -254,14 +252,8 @@ function SearchScreenPostResults({query}: {query: string}) {
                 }
               }}
               keyExtractor={item => item.key}
-              refreshControl={
-                <RefreshControl
-                  refreshing={isPTR}
-                  onRefresh={onPullToRefresh}
-                  tintColor={pal.colors.text}
-                  titleColor={pal.colors.text}
-                />
-              }
+              refreshing={isPTR}
+              onRefresh={onPullToRefresh}
               onEndReached={onEndReached}
               // @ts-ignore web only -prf
               desktopFixedHeight

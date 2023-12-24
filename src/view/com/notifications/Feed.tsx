@@ -1,13 +1,12 @@
 import React from 'react'
 import {CenteredView} from '../util/Views'
-import {ActivityIndicator, RefreshControl, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {FeedItem} from './FeedItem'
 import {NotificationFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {EmptyState} from '../util/EmptyState'
 import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useNotificationFeedQuery} from '#/state/queries/notifications/feed'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {logger} from '#/logger'
@@ -30,7 +29,6 @@ export function Feed({
   onScrolledDownChange: (isScrolledDown: boolean) => void
   ListHeaderComponent?: () => JSX.Element
 }) {
-  const pal = usePalette('default')
   const [isPTRing, setIsPTRing] = React.useState(false)
 
   const moderationOpts = useModerationOpts()
@@ -152,14 +150,8 @@ export function Feed({
         renderItem={renderItem}
         ListHeaderComponent={ListHeaderComponent}
         ListFooterComponent={FeedFooter}
-        refreshControl={
-          <RefreshControl
-            refreshing={isPTRing}
-            onRefresh={onRefresh}
-            tintColor={pal.colors.text}
-            titleColor={pal.colors.text}
-          />
-        }
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
         onEndReached={onEndReached}
         onEndReachedThreshold={0.6}
         onScrolledDownChange={onScrolledDownChange}

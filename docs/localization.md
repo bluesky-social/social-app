@@ -32,7 +32,7 @@ import { Text } from "react-native";
 const text = "Hello World";
 <Text accessibilityLabel="Label is here">{text}</Text>
 ```
-In this case, you cannot use the `useLingui()` hook:
+In this case, you can use the `useLingui()` hook:
 ```jsx
 import { msg } from "@lingui/macro";
 import { useLingui } from "@lingui/react";

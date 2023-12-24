@@ -221,6 +221,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     borderTopWidth: 1,
+    // @ts-ignore web only -prf
     cursor: 'pointer',
   },
   layout: {

@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Platform,
   Pressable,
-  RefreshControl,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -357,14 +356,8 @@ function PostThreadLoaded({
       }
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
-      refreshControl={
-        <RefreshControl
-          refreshing={isPTRing}
-          onRefresh={onPTR}
-          tintColor={pal.colors.text}
-          titleColor={pal.colors.text}
-        />
-      }
+      refreshing={isPTRing}
+      onRefresh={onPTR}
       onContentSizeChange={onContentSizeChange}
       onViewableItemsChanged={
         Platform.OS !== 'web' ? onViewableItemsChanged : undefined

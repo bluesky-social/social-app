@@ -14,5 +14,7 @@ export const isMobileWeb =
   global.window.matchMedia(isMobileWebMediaQuery)?.matches
 
 export const deviceLocales = dedupArray(
-  getLocales?.().map?.(locale => locale.languageCode),
-)
+  getLocales?.()
+    .map?.(locale => locale.languageCode)
+    .filter(code => typeof code === 'string'),
+) as string[]
