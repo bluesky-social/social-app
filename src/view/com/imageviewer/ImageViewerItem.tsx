@@ -1,5 +1,5 @@
 import React from 'react'
-import {Platform, StyleSheet, useWindowDimensions} from 'react-native'
+import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -18,28 +18,6 @@ import {
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
 import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 
-/**
- * Ground Rules!
- *
- * Images in the feed are thumbnails (low quality :( ) so we need to display the *pretty* images in the viewer.
- * To account for that, we will do the following:
- * 1. Image is pressed on feed
- * 2. Full screen preload begins
- * 3. Thumbnail animates to full size
- * 4. Once the animation completes, we either:
- *  a. Display the full size image if it has already loaded (before removing the thumbnail! We don't want a flicker)
- *  b. Continue waiting for the prefetch to complete then display it. We could just display the new image right away,
- *     but that would be an additional request that is pointless.
- *  5. Once we prefetch the first image, the rest of the images in the set (if any) should be prefetched in anticipation
- *  of scrolling
- *
- *  Paging:
- *  We need to have two image components so that we can swipe images in and out of the viewer. All of the gestures will
- *  be ran on the main image.
- *
- *  Once the animation completes, then we will update the state to set the current image to the next image in the set.
- */
-
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
   duration: 200,
@@ -56,18 +34,10 @@ function ImageViewerItem({
   accessoryOpacity,
   backgroundOpacity,
 }: IImageViewerItemProps) {
-  const deviceDims = useWindowDimensions()
+  const {height: screenHeight, width: screenWidth} = useWindowDimensions()
 
   const {state} = useImageViewer()
   const {isVisible, measurement} = state
-
-  const viewerDimensions = React.useMemo(
-    () => ({
-      height: Math.round(deviceDims.height),
-      width: Math.round(deviceDims.width),
-    }),
-    [deviceDims],
-  )
 
   const [source, setSource] = React.useState(image.thumb)
 
@@ -104,6 +74,12 @@ function ImageViewerItem({
     },
   )
 
+  const prefetchAndReplace = () => {
+    Image.prefetch(image.fullsize).then(() => {
+      setSource(image.fullsize)
+    })
+  }
+
   const centerImage = (animated = true) => {
     'worklet'
 
@@ -116,12 +92,6 @@ function ImageViewerItem({
     }
   }
 
-  const prefetchAndReplace = () => {
-    Image.prefetch(image.fullsize).then(() => {
-      setSource(image.fullsize)
-    })
-  }
-
   // Handle opening the image viewer
   React.useEffect(() => {
     'worklet'
@@ -131,8 +101,8 @@ function ImageViewerItem({
 
     // For all images that are not the current image, set the dimensions
     if (index !== initialIndex || ranInitialAnimation.current) {
-      height.value = viewerDimensions!.height
-      width.value = viewerDimensions!.width
+      height.value = screenHeight
+      width.value = screenWidth
       runOnJS(prefetchAndReplace)()
       centerImage(false)
       return
@@ -149,12 +119,12 @@ function ImageViewerItem({
     positionY.value = measurement?.pageY ?? 0
 
     // Also set the initial height and width
-    height.value = measurement?.height ?? viewerDimensions.height
-    width.value = measurement?.width ?? viewerDimensions.width
+    height.value = measurement?.height ?? screenHeight
+    width.value = measurement?.width ?? screenWidth
 
     // Now set the new dimensions with timing
-    height.value = withTiming(viewerDimensions!.height, WITH_TIMING_CONFIG)
-    width.value = withTiming(viewerDimensions!.width, WITH_TIMING_CONFIG)
+    height.value = withTiming(screenHeight, WITH_TIMING_CONFIG)
+    width.value = withTiming(screenWidth, WITH_TIMING_CONFIG)
 
     // Center the image
     centerImage()
@@ -168,7 +138,7 @@ function ImageViewerItem({
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewerDimensions, image, isVisible])
+  }, [image, isVisible, screenHeight, screenWidth])
 
   const onPanUpdate = (
     e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
@@ -189,10 +159,14 @@ function ImageViewerItem({
   const onPanEnd = () => {
     'worklet'
 
+    // Reset the last translation values
     lastTranslateX.value = 0
     lastTranslateY.value = 0
 
-    centerImage()
+    // Center image if the image is not zoomed
+    if (scale.value <= 1) {
+      centerImage()
+    }
   }
 
   const panGesture = Gesture.Pan()
@@ -224,7 +198,6 @@ function ImageViewerItem({
     .maxDistance(25)
     .onEnd(onDoubleTap)
 
-  // This doesn't need to be a worklet since we are just setting state which would run on js anyway
   const onTap = () => {
     // Do nothing if the scale is not one
     if (scale.value !== 1) return
@@ -311,17 +284,17 @@ function ImageViewerItem({
   // "work" is the measure/scale up animation and the fade out animation when we close the viewer.
   return (
     <GestureDetector gesture={IS_WEB ? tapGesture : allGestures}>
-      <Animated.View style={[styles.imageContainer]}>
-        <Animated.View style={positionStyle}>
-          <Animated.View style={[scaleStyle, dimensionsStyle]}>
+      <Animated.View style={positionStyle}>
+        <Animated.View style={[scaleStyle, dimensionsStyle]}>
+          <View style={styles.container}>
             <Image
               source={{uri: source}}
-              style={{height: '100%', width: '100%'}}
+              style={styles.image}
               contentFit="contain"
               cachePolicy="memory-disk"
               accessibilityIgnoresInvertColors
             />
-          </Animated.View>
+          </View>
         </Animated.View>
       </Animated.View>
     </GestureDetector>
@@ -329,8 +302,14 @@ function ImageViewerItem({
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    height: '100%',
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  image: {
+    height: IS_WEB ? '100%' : '90%',
     width: '100%',
   },
 })

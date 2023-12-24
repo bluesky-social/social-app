@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {Lightbox} from '../com/lightbox/Lightbox'
 import {ModalsContainer} from '../com/modals/Modal'
 import {Composer} from './Composer.web'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -41,7 +40,6 @@ function ShellInner() {
       </View>
       <Composer winHeight={0} />
       <ModalsContainer />
-      <Lightbox />
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

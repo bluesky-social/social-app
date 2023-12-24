@@ -33,7 +33,7 @@ function ImageViewer() {
   const [currentImage, setCurrentImage] = React.useState(images?.[index])
 
   const touchPos = useSharedValue({x: 0, y: 0})
-  const time = useSharedValue(0)
+  const touchTime = useSharedValue(0)
 
   const onPageSelected = React.useCallback(
     (e: NativeSyntheticEvent<Readonly<{position: number}>>) => {
@@ -50,7 +50,7 @@ function ImageViewer() {
     if (isScaled) return
 
     touchPos.value = {x: e.nativeEvent.pageX, y: e.nativeEvent.pageY}
-    time.value = e.nativeEvent.timestamp
+    touchTime.value = e.nativeEvent.timestamp
   }
 
   const onTouchEnd = (e: GestureResponderEvent) => {
@@ -58,7 +58,7 @@ function ImageViewer() {
 
     const velocity =
       (e.nativeEvent.pageY - touchPos.value.y) /
-      (e.nativeEvent.timestamp - time.value)
+      (e.nativeEvent.timestamp - touchTime.value)
     const translationX = e.nativeEvent.pageX - touchPos.value.x
 
     if (Math.abs(velocity) > 0.65 && Math.abs(translationX) < 100) {
@@ -116,7 +116,7 @@ function ImageViewer() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    zIndex: -2, // for android >_<
+    zIndex: -2, // android
   },
   accessory: {
     position: 'absolute',

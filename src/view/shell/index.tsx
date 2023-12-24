@@ -11,7 +11,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
 import {ModalsContainer} from 'view/com/modals/Modal'
-import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {DrawerContent} from './Drawer'
 import {Composer} from './Composer'
@@ -94,7 +93,6 @@ function ShellInner() {
       </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
-      <Lightbox />
     </>
   )
 }

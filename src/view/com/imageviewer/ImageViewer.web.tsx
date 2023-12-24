@@ -31,16 +31,20 @@ function ImageViewer() {
   const [currentIndex, setCurrentIndex] = React.useState(index)
 
   const onPrevPress = React.useCallback(() => {
-    if (currentIndex === 0) return
+    setCurrentIndex(prev => {
+      if (prev === 0) return prev
 
-    setCurrentIndex(currentIndex - 1)
-  }, [currentIndex])
+      return prev - 1
+    })
+  }, [])
 
   const onNextPress = React.useCallback(() => {
-    if (currentIndex === images.length - 1) return
+    setCurrentIndex(prev => {
+      if (prev === images.length - 1) return prev
 
-    setCurrentIndex(currentIndex + 1)
-  }, [currentIndex, images])
+      return prev + 1
+    })
+  }, [images])
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>

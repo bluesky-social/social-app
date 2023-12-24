@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   singleImageMobile: {
     maxHeight: 500,
   },
-
   multiImage: {
     flex: 1,
   },

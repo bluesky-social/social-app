@@ -14,11 +14,11 @@ import {makeProfileLink} from 'lib/routes/links'
 import {NavigationProp} from 'lib/routes/types'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
-import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
+import {useImageViewer} from 'view/com/imageviewer'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -47,9 +47,9 @@ export function ProfileSubpageHeader({
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
-  const {openLightbox} = useLightboxControls()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
+  const {dispatch: viewerDispatch} = useImageViewer()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -64,12 +64,25 @@ export function ProfileSubpageHeader({
   }, [setDrawerOpen])
 
   const onPressAvi = React.useCallback(() => {
-    if (
-      avatar // TODO && !(view.moderation.avatar.blur && view.moderation.avatar.noOverride)
-    ) {
-      openLightbox(new ImagesLightbox([{uri: avatar}], 0))
+    if (avatar) {
+      viewerDispatch({
+        type: 'setState',
+        payload: {
+          images: [
+            {
+              thumb: avatar,
+              fullsize: avatar,
+              alt: '',
+            },
+          ],
+          index: 0,
+          measurement: undefined,
+          isVisible: true,
+          hideFooter: true,
+        },
+      })
     }
-  }, [openLightbox, avatar])
+  }, [viewerDispatch, avatar])
 
   return (
     <CenteredView style={pal.view}>

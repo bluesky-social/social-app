@@ -1,45 +1,45 @@
 import {useCallback} from 'react'
-import {useLightboxControls} from './lightbox'
 import {useModalControls} from './modals'
 import {useComposerControls} from './shell/composer'
 import {useSetDrawerOpen} from './shell/drawer-open'
+import {useImageViewer} from 'view/com/imageviewer'
 
 /**
  * returns true if something was closed
  * (used by the android hardware back btn)
  */
 export function useCloseAnyActiveElement() {
-  const {closeLightbox} = useLightboxControls()
   const {closeModal} = useModalControls()
   const {closeComposer} = useComposerControls()
   const setDrawerOpen = useSetDrawerOpen()
+  const {state: viewerState, dispatch: viewerDispatch} = useImageViewer()
   return useCallback(() => {
-    if (closeLightbox()) {
-      return true
-    }
     if (closeModal()) {
       return true
     }
     if (closeComposer()) {
       return true
     }
+    if (viewerState.isVisible) {
+      viewerDispatch({type: 'setVisible', payload: false})
+    }
     setDrawerOpen(false)
     return false
-  }, [closeLightbox, closeModal, closeComposer, setDrawerOpen])
+  }, [closeModal, closeComposer, setDrawerOpen, viewerState, viewerDispatch])
 }
 
 /**
  * used to clear out any modals, eg for a navigation
  */
 export function useCloseAllActiveElements() {
-  const {closeLightbox} = useLightboxControls()
   const {closeAllModals} = useModalControls()
   const {closeComposer} = useComposerControls()
   const setDrawerOpen = useSetDrawerOpen()
+  const {dispatch: viewerDispatch} = useImageViewer()
   return useCallback(() => {
-    closeLightbox()
     closeAllModals()
     closeComposer()
     setDrawerOpen(false)
-  }, [closeLightbox, closeAllModals, closeComposer, setDrawerOpen])
+    viewerDispatch({type: 'setVisible', payload: false})
+  }, [closeAllModals, closeComposer, setDrawerOpen, viewerDispatch])
 }
