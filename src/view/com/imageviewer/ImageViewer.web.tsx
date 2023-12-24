@@ -89,7 +89,7 @@ function ImageViewer() {
                 icon="chevron-right"
                 size={30}
                 color="white"
-                style={{transform: [{rotateZ: '180deg'}]}}
+                style={styles.chevronLeft}
               />
             </View>
           </View>
@@ -114,7 +114,7 @@ function ImageViewer() {
         {!isMobile && currentIndex !== images.length - 1 && (
           <View style={styles.scrollButtonInner}>
             <View style={styles.scrollButtonIconContainer}>
-              <FontAwesomeIcon icon="chevron-left" size={30} color="white" />
+              <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
             </View>
           </View>
         )}

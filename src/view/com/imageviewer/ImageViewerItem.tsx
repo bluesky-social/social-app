@@ -126,11 +126,16 @@ function ImageViewerItem({
     },
   )
 
-  const centerImage = () => {
+  const centerImage = (animated = true) => {
     'worklet'
 
-    positionX.value = withTiming(centerX)
-    positionY.value = withTiming(centerY)
+    if (animated) {
+      positionX.value = withTiming(centerX)
+      positionY.value = withTiming(centerY)
+    } else {
+      positionX.value = centerX
+      positionY.value = centerY
+    }
   }
 
   const prefetchAndReplace = () => {
@@ -148,10 +153,11 @@ function ImageViewerItem({
 
     // For all images that are not the current image, set the dimensions
     if (index !== initialIndex || ranInitialAnimation.current) {
+      console.log('no anim!')
       height.value = viewerDimensions!.height
       width.value = viewerDimensions!.width
       runOnJS(prefetchAndReplace)()
-      centerImage()
+      centerImage(false)
       return
     }
 
