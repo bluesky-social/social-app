@@ -2,12 +2,12 @@ import {
   AppBskyNotificationListNotifications,
   ModerationOpts,
   moderateProfile,
-  moderatePost,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
 } from '@atproto/api'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import chunk from 'lodash.chunk'
 import {QueryClient} from '@tanstack/react-query'
 import {getAgent} from '../../session'
