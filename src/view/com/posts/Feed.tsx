@@ -4,7 +4,6 @@ import {
   AppState,
   Dimensions,
   Platform,
-  RefreshControl,
   StyleProp,
   StyleSheet,
   View,
@@ -17,7 +16,6 @@ import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
 import {usePrefetchListImages} from 'lib/hooks/usePrefetchListImages'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
