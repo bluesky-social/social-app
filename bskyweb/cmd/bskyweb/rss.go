@@ -1,14 +1,23 @@
 package main
 
 import (
+	"encoding/xml"
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 
 	"github.com/labstack/echo/v4"
 )
+
+type ItemGUID struct {
+	XMLName xml.Name `xml:"guid"`
+	Value   string   `xml:",chardata"`
+	IsPerma bool     `xml:"isPermaLink,attr"`
+}
 
 // We don't actually populate the title for "posts".
 // Some background: https://book.micro.blog/rss-for-microblogs/
@@ -17,8 +26,7 @@ type Item struct {
 	Link        string `xml:"link,omitempty"`
 	Description string `xml:"description,omitempty"`
 	PubDate     string `xml:"pubDate,omitempty"`
-	Author      string `xml:"author,omitempty"`
-	GUID        string `xml:"guid,omitempty"`
+	GUID        ItemGUID
 }
 
 type rss struct {
@@ -32,11 +40,33 @@ type rss struct {
 
 func (srv *Server) WebProfileRSS(c echo.Context) error {
 	ctx := c.Request().Context()
+	req := c.Request()
 
-	didParam := c.Param("did")
-	did, err := syntax.ParseDID(didParam)
+	identParam := c.Param("ident")
+
+	// if not a DID, try parsing as a handle and doing a redirect
+	if !strings.HasPrefix(identParam, "did:") {
+		handle, err := syntax.ParseHandle(identParam)
+		if err != nil {
+			return echo.NewHTTPError(400, fmt.Sprintf("not a valid handle: %s", identParam))
+		}
+
+		// check that public view is Ok, and resolve DID
+		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle.String())
+		if err != nil {
+			return echo.NewHTTPError(404, fmt.Sprintf("account not found: %s", handle))
+		}
+		for _, label := range pv.Labels {
+			if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+				return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", handle))
+			}
+		}
+		return c.Redirect(http.StatusFound, fmt.Sprintf("/profile/%s/rss", pv.Did))
+	}
+
+	did, err := syntax.ParseDID(identParam)
 	if err != nil {
-		return echo.NewHTTPError(400, fmt.Sprintf("not a valid DID: %s", didParam))
+		return echo.NewHTTPError(400, fmt.Sprintf("not a valid DID: %s", identParam))
 	}
 
 	// check that public view is Ok
@@ -71,12 +101,19 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		if rec.Reply != nil {
 			continue
 		}
+		pubDate := ""
+		createdAt, err := syntax.ParseDatetimeLenient(rec.CreatedAt)
+		if nil == err {
+			pubDate = createdAt.Time().Format(time.RFC822Z)
+		}
 		posts = append(posts, Item{
-			Link:        fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, aturi.RecordKey().String()),
+			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
 			Description: rec.Text,
-			PubDate:     rec.CreatedAt,
-			Author:      "@" + pv.Handle,
-			GUID:        aturi.String(),
+			PubDate:     pubDate,
+			GUID: ItemGUID{
+				Value:   aturi.String(),
+				IsPerma: false,
+			},
 		})
 	}
 
@@ -91,7 +128,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 	feed := &rss{
 		Version:     "2.0",
 		Description: desc,
-		Link:        fmt.Sprintf("https://bsky.app/profile/%s", pv.Handle),
+		Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
 		Title:       title,
 		Item:        posts,
 	}

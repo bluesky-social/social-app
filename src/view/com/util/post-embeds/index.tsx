@@ -14,8 +14,8 @@ import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {usePalette} from 'lib/hooks/usePalette'
 import {YoutubeEmbed} from './YoutubeEmbed'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
-import {getYoutubeVideoId} from 'lib/strings/url-helpers'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
@@ -115,19 +115,13 @@ export function PostEmbeds({
   // =
   if (AppBskyEmbedExternal.isView(embed)) {
     const link = embed.external
-    const youtubeVideoId = getYoutubeVideoId(link.uri)
-
-    if (youtubeVideoId) {
-      return <YoutubeEmbed link={link} style={style} />
-    }
 
     return (
-      <Link
-        asAnchor
-        style={[styles.extOuter, pal.view, pal.border, style]}
-        href={link.uri}>
-        <ExternalLinkEmbed link={link} />
-      </Link>
+      <View style={[styles.extOuter, pal.view, pal.border, style]}>
+        <Link asAnchor href={link.uri}>
+          <ExternalLinkEmbed link={link} />
+        </Link>
+      </View>
     )
   }
 

@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Dimensions,
-  RefreshControl,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {Dimensions, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import {List, ListRef} from '../util/List'
 import {ListCard} from './ListCard'
@@ -182,22 +175,14 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           data={items}
           keyExtractor={(item: any) => item._reactKey}
           renderItem={renderItemInner}
-          refreshControl={
-            <RefreshControl
-              refreshing={isPTRing}
-              onRefresh={onRefresh}
-              tintColor={pal.colors.text}
-              titleColor={pal.colors.text}
-              progressViewOffset={headerOffset}
-            />
-          }
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          headerOffset={headerOffset}
           contentContainerStyle={{
             minHeight: Dimensions.get('window').height * 1.5,
           }}
-          style={{paddingTop: headerOffset}}
           indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
           removeClippedSubviews={true}
-          contentOffset={{x: 0, y: headerOffset * -1}}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
           onEndReached={onEndReached}
