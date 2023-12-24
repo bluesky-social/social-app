@@ -30,12 +30,12 @@ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite 
 msgstr "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 
 #: src/view/screens/Settings.tsx:407
-#: src/view/shell/Drawer.tsx:640
+#: src/view/shell/Drawer.tsx:659
 msgid "{invitesAvailable} invite code available"
 msgstr "{invitesAvailable} code d’invitation disponible"
 
 #: src/view/screens/Settings.tsx:409
-#: src/view/shell/Drawer.tsx:642
+#: src/view/shell/Drawer.tsx:661
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable} codes d’invitation disponibles"
 
@@ -184,7 +184,7 @@ msgstr "Mots de passe de l’appli"
 msgid "App Passwords"
 msgstr "Mots de passe de l’appli"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:207
+#: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Appeal content warning"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgstr "Êtes-vous sûr de vouloir rejeter ce brouillon ?"
 msgid "Are you sure?"
 msgstr "Vous confirmez ?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:190
+#: src/view/com/util/forms/PostDropdownBtn.tsx:219
 msgid "Are you sure? This cannot be undone."
 msgstr "Vous confirmez ? Cela ne pourra pas être annulé."
 
@@ -565,7 +565,7 @@ msgstr "Copie"
 msgid "Copy link to list"
 msgstr "Copier le lien dans la liste"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:131
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy link to post"
 msgstr "Copier le lien dans la publication"
 
@@ -573,7 +573,7 @@ msgstr "Copier le lien dans la publication"
 msgid "Copy link to profile"
 msgstr "Copier le lien sur le profil"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:117
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Copy post text"
 msgstr "Copier le texte de la publication"
 
@@ -642,11 +642,11 @@ msgstr "Supprimer mon compte"
 msgid "Delete my account…"
 msgstr "Supprimer mon compte..."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:185
+#: src/view/com/util/forms/PostDropdownBtn.tsx:214
 msgid "Delete post"
 msgstr "Supprimer publication"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:189
+#: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "Delete this post?"
 msgstr "Supprimer cette publication ?"
 
@@ -827,7 +827,7 @@ msgid "Feed Preferences"
 msgstr "Préférences en matière de fil d’actu"
 
 #: src/view/shell/desktop/RightNav.tsx:65
-#: src/view/shell/Drawer.tsx:292
+#: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "Feedback"
 
@@ -835,8 +835,8 @@ msgstr "Feedback"
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:340
-#: src/view/shell/Drawer.tsx:455
-#: src/view/shell/Drawer.tsx:456
+#: src/view/shell/Drawer.tsx:474
+#: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
 msgstr "Fil d’actu"
 
@@ -955,7 +955,7 @@ msgid "Handle"
 msgstr "Pseudo"
 
 #: src/view/shell/desktop/RightNav.tsx:94
-#: src/view/shell/Drawer.tsx:302
+#: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "Aide"
 
@@ -967,6 +967,14 @@ msgstr "Voici le mot de passe de votre appli."
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "Masquer"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+msgid "Hide post"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:177
+msgid "Hide this post?"
+msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:308
 msgid "Hide user list"
@@ -994,8 +1002,8 @@ msgstr "Hmm, nous n’arrivons pas à trouver ce fils d’actu. Il a peut-être 
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
 #: src/view/shell/desktop/LeftNav.tsx:304
-#: src/view/shell/Drawer.tsx:379
-#: src/view/shell/Drawer.tsx:380
+#: src/view/shell/Drawer.tsx:398
+#: src/view/shell/Drawer.tsx:399
 msgid "Home"
 msgstr "Accueil"
 
@@ -1056,7 +1064,7 @@ msgstr "Code d’invitation"
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Code d’invitation refusé. Vérifiez que vous l’avez saisi correctement et réessayez."
 
-#: src/view/shell/Drawer.tsx:621
+#: src/view/shell/Drawer.tsx:640
 msgid "Invite codes: {invitesAvailable} available"
 msgstr "Codes d’invitation : {invitesAvailable} disponible"
 
@@ -1152,8 +1160,8 @@ msgstr "Nom de liste"
 
 #: src/view/screens/Profile.tsx:166
 #: src/view/shell/desktop/LeftNav.tsx:377
-#: src/view/shell/Drawer.tsx:471
-#: src/view/shell/Drawer.tsx:472
+#: src/view/shell/Drawer.tsx:490
+#: src/view/shell/Drawer.tsx:491
 msgid "Lists"
 msgstr "Listes"
 
@@ -1217,8 +1225,8 @@ msgstr "Message du serveur"
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
 #: src/view/shell/desktop/LeftNav.tsx:395
-#: src/view/shell/Drawer.tsx:490
-#: src/view/shell/Drawer.tsx:491
+#: src/view/shell/Drawer.tsx:509
+#: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
 msgstr "Modération"
 
@@ -1256,7 +1264,7 @@ msgstr "Mettre en sourdine"
 msgid "Mute these accounts?"
 msgstr "Mettre ces comptes en sourdine ?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:149
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Mute thread"
 msgstr "Mettre fil en sourdine"
 
@@ -1377,8 +1385,8 @@ msgstr "Remarque : Bluesky est un réseau ouvert et public. Ce paramètre limit
 #: src/view/screens/Notifications.tsx:133
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
 #: src/view/shell/desktop/LeftNav.tsx:359
-#: src/view/shell/Drawer.tsx:416
-#: src/view/shell/Drawer.tsx:417
+#: src/view/shell/Drawer.tsx:435
+#: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
 msgstr "Notifications"
 
@@ -1407,7 +1415,7 @@ msgid "Opens configurable language settings"
 msgstr "Ouvre les paramètres linguistiques configurables"
 
 #: src/view/shell/desktop/RightNav.tsx:148
-#: src/view/shell/Drawer.tsx:622
+#: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
 msgstr "Ouvre la liste des codes d’invitation"
 
@@ -1565,6 +1573,8 @@ msgid "Privacy"
 msgstr "Vie privée"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
+#: src/view/screens/Settings.tsx:750
+#: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr "Charte de confidentialité"
 
@@ -1574,13 +1584,13 @@ msgstr "Traitement..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
 #: src/view/shell/desktop/LeftNav.tsx:413
-#: src/view/shell/Drawer.tsx:69
-#: src/view/shell/Drawer.tsx:525
-#: src/view/shell/Drawer.tsx:526
+#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:544
+#: src/view/shell/Drawer.tsx:545
 msgid "Profile"
 msgstr "Profil"
 
-#: src/view/screens/Settings.tsx:789
+#: src/view/screens/Settings.tsx:808
 msgid "Protect your account by verifying your email."
 msgstr "Protégez votre compte en vérifiant votre e-mail."
 
@@ -1689,7 +1699,7 @@ msgid "Report List"
 msgstr "Signaler Liste"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:167
+#: src/view/com/util/forms/PostDropdownBtn.tsx:196
 msgid "Report post"
 msgstr "Signaler publication"
 
@@ -1786,8 +1796,8 @@ msgstr "Fils d’actu enregistrés"
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
-#: src/view/shell/Drawer.tsx:343
-#: src/view/shell/Drawer.tsx:344
+#: src/view/shell/Drawer.tsx:362
+#: src/view/shell/Drawer.tsx:363
 msgid "Search"
 msgstr "Recherche"
 
@@ -1840,8 +1850,8 @@ msgstr "Envoyer e-mail"
 msgid "Send Email"
 msgstr "Envoyer e-mail"
 
-#: src/view/shell/Drawer.tsx:276
-#: src/view/shell/Drawer.tsx:297
+#: src/view/shell/Drawer.tsx:295
+#: src/view/shell/Drawer.tsx:316
 msgid "Send feedback"
 msgstr "Envoyer commentaire"
 
@@ -1875,8 +1885,8 @@ msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’a
 
 #: src/view/screens/Settings.tsx:277
 #: src/view/shell/desktop/LeftNav.tsx:431
-#: src/view/shell/Drawer.tsx:546
-#: src/view/shell/Drawer.tsx:547
+#: src/view/shell/Drawer.tsx:565
+#: src/view/shell/Drawer.tsx:566
 msgid "Settings"
 msgstr "Paramètres"
 
@@ -1885,7 +1895,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr "Activité sexuelle ou nudité érotique."
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:131
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
 #: src/view/screens/ProfileList.tsx:384
 msgid "Share"
 msgstr "Partager"
@@ -2055,7 +2065,9 @@ msgstr "Grand"
 msgid "Terms"
 msgstr "Conditions générales"
 
+#: src/view/screens/Settings.tsx:744
 #: src/view/screens/TermsOfService.tsx:29
+#: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "Conditions d’utilisation"
 
@@ -2140,6 +2152,10 @@ msgstr "Cette publication a été supprimée."
 msgid "This warning is only available for posts with media attached."
 msgstr "Cet avertissement n’est disponible que pour les messages contenant des médias."
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
+msgid "This will hide this post from your feeds."
+msgstr ""
+
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
 msgid "Thread Preferences"
@@ -2159,7 +2175,7 @@ msgstr "Transformations"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/util/forms/PostDropdownBtn.tsx:103
+#: src/view/com/util/forms/PostDropdownBtn.tsx:111
 msgid "Translate"
 msgstr "Traduire"
 
@@ -2203,7 +2219,7 @@ msgstr "Malheureusement, vous ne remplissez pas les conditions requises pour cr�
 msgid "Unmute Account"
 msgstr "Désactiver sourdine sur ce compte"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:149
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Unmute thread"
 msgstr "Désactiver sourdine sur ce fil de discussion"
 
@@ -2268,15 +2284,15 @@ msgstr "utilisateurs suivis par <0/>"
 msgid "Users in \"{0}\""
 msgstr "Utilisateurs dans \"{0}\""
 
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:769
 msgid "Verify email"
 msgstr "Confirmer e-mail"
 
-#: src/view/screens/Settings.tsx:775
+#: src/view/screens/Settings.tsx:794
 msgid "Verify my email"
 msgstr "Confirmer mon e-mail"
 
-#: src/view/screens/Settings.tsx:784
+#: src/view/screens/Settings.tsx:803
 msgid "Verify My Email"
 msgstr "Confirmer mon e-mail"
 
@@ -2445,7 +2461,7 @@ msgstr "Votre fournisseur d’hébergement"
 
 #: src/view/screens/Settings.tsx:402
 #: src/view/shell/desktop/RightNav.tsx:129
-#: src/view/shell/Drawer.tsx:636
+#: src/view/shell/Drawer.tsx:655
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "Vos codes d’invitation sont cachés lorsque vous êtes connecté à l’aide d’un mot de passe d’application."
 
