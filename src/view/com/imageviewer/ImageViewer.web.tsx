@@ -1,5 +1,4 @@
 import React from 'react'
-import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import Animated from 'react-native-reanimated'
 import {Pressable, StyleSheet, View} from 'react-native'
 import ImageViewerFooter from 'view/com/imageviewer/ImageViewerFooter'
@@ -10,12 +9,12 @@ import {SCREEN_WIDTH} from '@gorhom/bottom-sheet'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
+import {useImageViewerState} from 'state/imageViewer.tsx'
 
 function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
 
-  const {state} = useImageViewer()
-  const {images, index, hideFooter} = state
+  const {images, index, hideFooter} = useImageViewerState()
 
   const {
     accessoriesVisible,

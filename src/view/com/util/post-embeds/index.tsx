@@ -19,7 +19,7 @@ import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
-import {ViewerImage} from 'view/com/imageviewer'
+import ViewerImage from 'view/com/imageviewer/ViewerImage.tsx'
 
 type Embed =
   | AppBskyEmbedRecord.View

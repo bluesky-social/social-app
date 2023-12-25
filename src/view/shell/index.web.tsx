@@ -14,6 +14,7 @@ import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
+import ImageViewerModal from 'view/com/imageviewer/ImageViewerModal.tsx'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -40,6 +41,7 @@ function ShellInner() {
       </View>
       <Composer winHeight={0} />
       <ModalsContainer />
+      <ImageViewerModal />
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

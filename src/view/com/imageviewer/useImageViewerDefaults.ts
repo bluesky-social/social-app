@@ -7,7 +7,10 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
+import {
+  useImageViewerControls,
+  useImageViewerState,
+} from 'state/imageViewer.tsx'
 
 interface UseImageViewerDefaults {
   accessoriesVisible: boolean
@@ -21,8 +24,8 @@ interface UseImageViewerDefaults {
 }
 
 export const useImageViewerDefaults = (): UseImageViewerDefaults => {
-  const {state, dispatch} = useImageViewer()
-  const {isVisible} = state
+  const {isVisible} = useImageViewerState()
+  const {setVisible} = useImageViewerControls()
 
   const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
 
@@ -42,12 +45,9 @@ export const useImageViewerDefaults = (): UseImageViewerDefaults => {
   const onCloseViewer = React.useCallback(() => {
     accessoryOpacity.value = withTiming(0, {duration: 200})
     opacity.value = withTiming(0, {duration: 200}, () => {
-      runOnJS(dispatch)({
-        type: 'setVisible',
-        payload: false,
-      })
+      runOnJS(setVisible)(false)
     })
-  }, [accessoryOpacity, dispatch, opacity])
+  }, [accessoryOpacity, opacity, setVisible])
 
   const containerStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,

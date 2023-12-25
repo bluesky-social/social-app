@@ -18,7 +18,7 @@ import {
   PinchGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
-import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
+import {useImageViewerState} from 'state/imageViewer.tsx'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
@@ -42,8 +42,7 @@ function ImageViewerItem({
 }: IImageViewerItemProps) {
   const {height: screenHeight, width: screenWidth} = useWindowDimensions()
 
-  const {state} = useImageViewer()
-  const {isVisible, measurement} = state
+  const {isVisible, measurement} = useImageViewerState()
 
   const [source, setSource] = React.useState(image.thumb)
 

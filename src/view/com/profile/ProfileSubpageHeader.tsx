@@ -18,7 +18,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
-import {useImageViewer} from 'view/com/imageviewer'
+import {useImageViewerControls} from 'state/imageViewer.tsx'
 
 export function ProfileSubpageHeader({
   isLoading,
@@ -49,7 +49,7 @@ export function ProfileSubpageHeader({
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const canGoBack = navigation.canGoBack()
-  const {dispatch: viewerDispatch} = useImageViewer()
+  const {setState: setImageViewerState} = useImageViewerControls()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -65,24 +65,21 @@ export function ProfileSubpageHeader({
 
   const onPressAvi = React.useCallback(() => {
     if (avatar) {
-      viewerDispatch({
-        type: 'setState',
-        payload: {
-          images: [
-            {
-              thumb: avatar,
-              fullsize: avatar,
-              alt: '',
-            },
-          ],
-          index: 0,
-          measurement: undefined,
-          isVisible: true,
-          hideFooter: true,
-        },
+      setImageViewerState({
+        images: [
+          {
+            thumb: avatar,
+            fullsize: avatar,
+            alt: '',
+          },
+        ],
+        index: 0,
+        measurement: undefined,
+        isVisible: true,
+        hideFooter: true,
       })
     }
-  }, [viewerDispatch, avatar])
+  }, [avatar, setImageViewerState])
 
   return (
     <CenteredView style={pal.view}>

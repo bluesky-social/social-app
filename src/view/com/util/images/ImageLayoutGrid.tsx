@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
-import {ViewerImage} from 'view/com/imageviewer'
+import ViewerImage from 'view/com/imageviewer/ViewerImage.tsx'
 
 interface IProps {
   images: AppBskyEmbedImages.ViewImage[]

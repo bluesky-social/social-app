@@ -1,5 +1,4 @@
 import React from 'react'
-import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import Animated, {useSharedValue} from 'react-native-reanimated'
 import {
   GestureResponderEvent,
@@ -13,10 +12,10 @@ import ImageViewerHeader from 'view/com/imageviewer/ImageViewerHeader'
 import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler'
 import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
+import {useImageViewerState} from 'state/imageViewer.tsx'
 
 function ImageViewer() {
-  const {state} = useImageViewer()
-  const {images, index, hideFooter} = state
+  const {images, index, hideFooter} = useImageViewerState()
 
   const {
     accessoriesVisible,

@@ -21,7 +21,6 @@ import {s} from 'lib/styles'
 import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
 import * as Toast from 'view/com/util/Toast'
-import ImageViewerProvider from 'view/com/imageviewer/ImageViewerProvider'
 import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
@@ -30,6 +29,7 @@ import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
+import {Provider as ImageViewerStateProvider} from 'state/imageViewer.tsx'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -70,10 +70,8 @@ function InnerApp() {
                 {/* All components should be within this provider */}
                 <RootSiblingParent>
                   <GestureHandlerRootView style={s.h100pct}>
-                    <ImageViewerProvider>
-                      <TestCtrls />
-                      <Shell />
-                    </ImageViewerProvider>
+                    <TestCtrls />
+                    <Shell />
                   </GestureHandlerRootView>
                 </RootSiblingParent>
               </ThemeProvider>
@@ -108,9 +106,11 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <I18nProvider>
-                    <InnerApp />
-                  </I18nProvider>
+                  <ImageViewerStateProvider>
+                    <I18nProvider>
+                      <InnerApp />
+                    </I18nProvider>
+                  </ImageViewerStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>

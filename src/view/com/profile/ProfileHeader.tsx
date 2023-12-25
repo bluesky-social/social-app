@@ -54,7 +54,7 @@ import {useSession, getAgent} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
-import {useImageViewer} from 'view/com/imageviewer'
+import {useImageViewerControls} from 'state/imageViewer.tsx'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
@@ -130,7 +130,7 @@ let ProfileHeaderLoaded = ({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
-  const {dispatch: viewerDispatch} = useImageViewer()
+  const {setState: setImageViewerState} = useImageViewerControls()
 
   /*
    * BEGIN handle bio facet resolution
@@ -182,24 +182,26 @@ let ProfileHeaderLoaded = ({
       profile.avatar &&
       !(moderation.avatar.blur && moderation.avatar.noOverride)
     ) {
-      viewerDispatch({
-        type: 'setState',
-        payload: {
-          images: [
-            {
-              thumb: profile.avatar,
-              fullsize: profile.avatar,
-              alt: profile.displayName || profile.handle,
-            },
-          ],
-          index: 0,
-          measurement: undefined,
-          isVisible: true,
-          hideFooter: true,
-        },
+      setImageViewerState({
+        images: [
+          {
+            thumb: profile.avatar,
+            fullsize: profile.avatar,
+            alt: '',
+          },
+        ],
+        index: 0,
+        measurement: undefined,
+        isVisible: true,
+        hideFooter: true,
       })
     }
-  }, [viewerDispatch, profile, moderation])
+  }, [
+    profile.avatar,
+    moderation.avatar.blur,
+    moderation.avatar.noOverride,
+    setImageViewerState,
+  ])
 
   const onPressFollow = () => {
     requireAuth(async () => {

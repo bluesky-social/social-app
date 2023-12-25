@@ -11,7 +11,6 @@ import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
-import ImageViewerProvider from 'view/com/imageviewer/ImageViewerProvider'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
@@ -20,6 +19,7 @@ import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
+import {Provider as ImageViewerStateProvider} from 'state/imageViewer.tsx'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -53,9 +53,7 @@ function InnerApp() {
             {/* All components should be within this provider */}
             <RootSiblingParent>
               <SafeAreaProvider>
-                <ImageViewerProvider>
-                  <Shell />
-                </ImageViewerProvider>
+                <Shell />
               </SafeAreaProvider>
             </RootSiblingParent>
             <ToastContainer />
@@ -89,9 +87,11 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <I18nProvider>
-                    <InnerApp />
-                  </I18nProvider>
+                  <ImageViewerStateProvider>
+                    <I18nProvider>
+                      <InnerApp />
+                    </I18nProvider>
+                  </ImageViewerStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>

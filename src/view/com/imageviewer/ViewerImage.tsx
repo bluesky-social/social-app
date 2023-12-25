@@ -1,11 +1,11 @@
 import React from 'react'
-import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 import {Image} from 'expo-image'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 import {ImageStyle, Pressable, StyleSheet, Text, View} from 'react-native'
 import {Dimensions} from 'lib/media/types'
 import {clamp} from 'lib/numbers'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useImageViewerControls} from 'state/imageViewer.tsx'
 
 interface IProps {
   images: ViewImage[]
@@ -16,9 +16,9 @@ interface IProps {
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 10 // 10/1
 
-export function ViewerImage({images, index, imageStyle}: IProps) {
+function ViewerImage({images, index, imageStyle}: IProps) {
   const {isMobile} = useWebMediaQueries()
-  const {dispatch} = useImageViewer()
+  const {setState} = useImageViewerControls()
 
   const ref = React.useRef<View>(null)
   const isLoaded = React.useRef(false)
@@ -37,17 +37,14 @@ export function ViewerImage({images, index, imageStyle}: IProps) {
     ref.current?.measure((x, y, width, height, pageX, pageY) => {
       const measurement = {x, y, width, height, pageX, pageY}
 
-      dispatch({
-        type: 'setState',
-        payload: {
-          images,
-          index,
-          measurement,
-          isVisible: true,
-        },
+      setState({
+        images,
+        index,
+        measurement,
+        isVisible: true,
       })
     })
-  }, [dispatch, images, index])
+  }, [images, index, setState])
 
   const onLoad = React.useCallback(() => {
     isLoaded.current = true
@@ -140,3 +137,5 @@ function calc(dim: Dimensions) {
   }
   return clamp(dim.width / dim.height, MIN_ASPECT_RATIO, MAX_ASPECT_RATIO)
 }
+
+export default React.memo(ViewerImage)

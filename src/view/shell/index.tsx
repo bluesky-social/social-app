@@ -27,6 +27,7 @@ import {isAndroid} from 'platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
+import ImageViewerModal from 'view/com/imageviewer/ImageViewerModal.tsx'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -93,6 +94,7 @@ function ShellInner() {
       </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
+      <ImageViewerModal />
     </>
   )
 }
