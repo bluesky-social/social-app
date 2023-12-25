@@ -20,6 +20,7 @@ import {
 } from 'react-native-gesture-handler'
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
 import {useImageViewerState} from 'state/imageViewer'
+import {useAnimatedScrollHandler} from 'lib/hooks/useAnimatedScrollHandler_FIXED.ts'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
@@ -57,6 +58,8 @@ function ImageViewerItem({
   opacity,
   accessoryOpacity,
   backgroundOpacity,
+  onCloseViewer,
+  isDragging,
 }: IImageViewerItemProps) {
   const {height: screenHeight, width: screenWidth} = useWindowDimensions()
   const {isVisible, measurement, initialDimensions} = useImageViewerState()
@@ -75,15 +78,15 @@ function ImageViewerItem({
   const height = useSharedValue(1) // Initial height/width are 1 so the image loads
   const width = useSharedValue(1)
 
+  const realDimensions = useSharedValue({height: 0, width: 0})
+  const center = useSharedValue({x: 0, y: 0})
+
   const scale = useSharedValue(1)
   const lastScale = useSharedValue(1)
-
-  const center = useSharedValue({x: 0, y: 0})
 
   const centerImage = React.useCallback(
     (animated = true) => {
       'worklet'
-
       const {x, y} = center.value
 
       if (animated) {
@@ -114,9 +117,21 @@ function ImageViewerItem({
         x: (screenWidth - newDims.width) / 2,
         y: (screenHeight - newDims.height) / 2,
       }
+      realDimensions.value = {
+        height: newDims.height,
+        width: newDims.width,
+      }
       runOnUI(centerImage)(false)
     },
-    [height, width, screenHeight, screenWidth, center, centerImage],
+    [
+      height,
+      width,
+      screenHeight,
+      screenWidth,
+      center,
+      realDimensions,
+      centerImage,
+    ],
   )
 
   const prefetchAndReplace = () => {
@@ -144,7 +159,6 @@ function ImageViewerItem({
   // Handle opening the image viewer
   React.useEffect(() => {
     'worklet'
-
     // Do nothing when the viewer closes
     if (!isVisible) return
 
@@ -177,10 +191,14 @@ function ImageViewerItem({
       screenWidth,
     )
 
-    // Set the center coords
+    // Set the center coords and the image dimensions
     center.value = {
       x: (screenWidth - newDims.width) / 2,
       y: (screenHeight - newDims.height) / 2,
+    }
+    realDimensions.value = {
+      height: newDims.height,
+      width: newDims.width,
     }
     runOnUI(centerImage)()
 
@@ -199,11 +217,28 @@ function ImageViewerItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenHeight, screenWidth])
 
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: e => {
+      'worklet'
+      // Update the opacity
+      backgroundOpacity.value =
+        1 - Math.abs(e.contentOffset.y) / 2 / screenHeight
+    },
+    onEndDrag: e => {
+      'worklet'
+      const velocity = Math.abs(e.velocity?.y ?? 0)
+      const distance = Math.abs(e.contentOffset.y)
+
+      if (velocity > 0.7 && distance > 20 && !isDragging?.value) {
+        onCloseViewer()
+      }
+    },
+  })
+
   const onPanUpdate = (
     e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
   ) => {
     'worklet'
-
     if (scale.value === 1) return
 
     // Move the image by the difference in translation
@@ -217,19 +252,15 @@ function ImageViewerItem({
 
   const onPanEnd = (e: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
     'worklet'
-
     // Reset the last translation values
     lastTranslateX.value = 0
     lastTranslateY.value = 0
 
-    // Center image if the image is not zoomed
-    if (scale.value <= 1) {
-      centerImage()
-    }
+    if (scale.value <= 1) return
 
     // Get scaled dimensions
-    const h = screenHeight * scale.value
-    const w = screenWidth * scale.value
+    const h = realDimensions.value.height * scale.value
+    const w = realDimensions.value.width * scale.value
 
     const maxX = ((scale.value - 1) * screenWidth) / 2
     const maxY = ((scale.value - 1) * screenHeight) / 2
@@ -237,7 +268,7 @@ function ImageViewerItem({
     // Deal with the width first.
     if (w < screenWidth) {
       // We can just return the image to the X center if the width is less than the screen width
-      positionX.value = withTiming(0, PAN_WITH_TIMING_CONFIG)
+      positionX.value = withTiming(center.value.x, PAN_WITH_TIMING_CONFIG)
     } else if (Math.abs(positionX.value) > maxX) {
       // If the image is too far outside the x bounds, return it to the max
       positionX.value = withTiming(
@@ -255,10 +286,15 @@ function ImageViewerItem({
       })
     }
 
+    // console.log({
+    //   maxY,
+    //   positionY: positionY.value,
+    // })
+
     // Same for the height
     if (h < screenHeight) {
       // We can just return the image to the X center if the width is less than the screen width
-      positionY.value = withTiming(0, PAN_WITH_TIMING_CONFIG)
+      positionY.value = withTiming(center.value.y, PAN_WITH_TIMING_CONFIG)
     } else if (Math.abs(positionY.value) > maxY) {
       // If the image is too far outside the x bounds, return it to the max
       positionY.value = withTiming(
@@ -280,16 +316,14 @@ function ImageViewerItem({
   const panGesture = Gesture.Pan()
     .onUpdate(onPanUpdate)
     .onEnd(onPanEnd)
-    .enabled(panGestureEnabled)
+    .minPointers(panGestureEnabled ? 1 : 2)
 
   const onDoubleTap = () => {
     'worklet'
-
     // Hide accessories when we zoom in
     runOnJS(setAccessoriesVisible)(false)
 
     if (scale.value !== 1) {
-      console.log(center)
       centerImage()
       scale.value = withTiming(1, WITH_TIMING_CONFIG)
       lastScale.value = 1
@@ -326,7 +360,6 @@ function ImageViewerItem({
 
   const onPinchStart = () => {
     'worklet'
-
     runOnJS(setAccessoriesVisible)(false)
   }
 
@@ -334,13 +367,11 @@ function ImageViewerItem({
     e: GestureUpdateEvent<PinchGestureHandlerEventPayload>,
   ) => {
     'worklet'
-
     scale.value = lastScale.value * e.scale
   }
 
   const onPinchEnd = () => {
     'worklet'
-
     if (scale.value < 1) {
       // Play a haptic
       // runOnJS(Haptics.impact)('impactLight')
@@ -393,17 +424,35 @@ function ImageViewerItem({
   // "work" is the measure/scale up animation and the fade out animation when we close the viewer.
   return (
     <GestureDetector gesture={IS_WEB ? tapGesture : allGestures}>
-      <Animated.View style={positionStyle}>
-        <Animated.View style={[scaleStyle, dimensionsStyle]}>
-          <Image
-            source={{uri: source}}
-            style={styles.image}
-            cachePolicy="memory-disk"
-            onLoad={onLoad}
-            accessibilityIgnoresInvertColors
-          />
+      {IS_WEB ? (
+        <Animated.View style={positionStyle}>
+          <Animated.View style={[scaleStyle, dimensionsStyle]}>
+            <Image
+              source={{uri: source}}
+              style={styles.image}
+              cachePolicy="memory-disk"
+              onLoad={onLoad}
+              accessibilityIgnoresInvertColors
+            />
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
+      ) : (
+        <Animated.ScrollView
+          scrollEnabled={!IS_WEB && !panGestureEnabled}
+          onScroll={!IS_WEB ? onScroll : undefined}>
+          <Animated.View style={positionStyle}>
+            <Animated.View style={[scaleStyle, dimensionsStyle]}>
+              <Image
+                source={{uri: source}}
+                style={styles.image}
+                cachePolicy="memory-disk"
+                onLoad={onLoad}
+                accessibilityIgnoresInvertColors
+              />
+            </Animated.View>
+          </Animated.View>
+        </Animated.ScrollView>
+      )}
     </GestureDetector>
   )
 }

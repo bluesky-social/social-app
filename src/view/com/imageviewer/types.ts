@@ -25,6 +25,7 @@ export interface IImageViewerItemProps {
   opacity: SharedValue<number>
   accessoryOpacity: SharedValue<number>
   backgroundOpacity: SharedValue<number>
+  isDragging?: SharedValue<boolean>
 }
 
 export type IImageViewerAction =

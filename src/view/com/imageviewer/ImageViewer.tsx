@@ -1,11 +1,6 @@
 import React from 'react'
 import Animated, {useSharedValue} from 'react-native-reanimated'
-import {
-  GestureResponderEvent,
-  NativeSyntheticEvent,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {NativeSyntheticEvent, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import ImageViewerFooter from 'view/com/imageviewer/ImageViewerFooter'
 import ImageViewerHeader from 'view/com/imageviewer/ImageViewerHeader'
@@ -31,8 +26,7 @@ function ImageViewer() {
   const [isScaled, setIsScaled] = React.useState(false)
   const [currentImage, setCurrentImage] = React.useState(images?.[initialIndex])
 
-  const touchPos = useSharedValue({x: 0, y: 0})
-  const touchTime = useSharedValue(0)
+  const isDragging = useSharedValue(false)
 
   const onPageSelected = React.useCallback(
     (e: NativeSyntheticEvent<Readonly<{position: number}>>) => {
@@ -41,30 +35,16 @@ function ImageViewer() {
     [images],
   )
 
-  /**
-   * Getting a pan gesture to work nicely with the pager view is a bit tricky. Instead, we will use the touch events
-   * on the PagerView to determine if we need to swipe to close.
-   */
-  const onTouchStart = (e: GestureResponderEvent) => {
-    if (isScaled) return
-
-    touchPos.value = {x: e.nativeEvent.pageX, y: e.nativeEvent.pageY}
-    touchTime.value = e.nativeEvent.timestamp
-  }
-
-  const onTouchEnd = (e: GestureResponderEvent) => {
-    if (isScaled) return
-
-    const velocity =
-      (e.nativeEvent.pageY - touchPos.value.y) /
-      (e.nativeEvent.timestamp - touchTime.value)
-    const translationX = e.nativeEvent.pageX - touchPos.value.x
-
-    if (Math.abs(velocity) > 0.65 && Math.abs(translationX) < 100) {
-      // TODO play with this value
-      onCloseViewer()
-    }
-  }
+  const onPageScrollStateChanged = React.useCallback(
+    (
+      e: NativeSyntheticEvent<
+        Readonly<{pageScrollState: 'idle' | 'dragging' | 'settling'}>
+      >,
+    ) => {
+      isDragging.value = e.nativeEvent.pageScrollState !== 'idle'
+    },
+    [isDragging],
+  )
 
   return (
     <Animated.View style={[styles.container, containerStyle]}>
@@ -81,8 +61,7 @@ function ImageViewer() {
         scrollEnabled={!isScaled}
         overdrag
         onPageSelected={onPageSelected}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}>
+        onPageScrollStateChanged={onPageScrollStateChanged}>
         {images?.map((image, i) => (
           <View style={styles.container} key={i}>
             <ImageViewerItem
@@ -95,6 +74,7 @@ function ImageViewer() {
               opacity={opacity}
               accessoryOpacity={accessoryOpacity}
               backgroundOpacity={backgroundOpacity}
+              isDragging={isDragging}
             />
           </View>
         ))}

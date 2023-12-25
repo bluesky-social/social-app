@@ -40,6 +40,8 @@ export const useImageViewerDefaults = (): UseImageViewerDefaults => {
   }, [isVisible])
 
   const onCloseViewer = React.useCallback(() => {
+    'worklet'
+
     accessoryOpacity.value = withTiming(0, {duration: 200})
     opacity.value = withTiming(0, {duration: 200}, () => {
       runOnJS(setVisible)(false)
