@@ -2,7 +2,7 @@ import {useCallback} from 'react'
 import {useModalControls} from './modals'
 import {useComposerControls} from './shell/composer'
 import {useSetDrawerOpen} from './shell/drawer-open'
-import {useImageViewerControls} from 'state/imageViewer.tsx'
+import {useImageViewerControls} from 'state/imageViewer'
 
 /**
  * returns true if something was closed

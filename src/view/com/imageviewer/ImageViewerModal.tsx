@@ -1,7 +1,7 @@
 import React from 'react'
 import {Modal, StyleSheet, View} from 'react-native'
 import ImageViewer from 'view/com/imageviewer/ImageViewer'
-import {useImageViewerState} from 'state/imageViewer.tsx'
+import {useImageViewerState} from 'state/imageViewer'
 
 export default function ImageViewerModal() {
   const {isVisible} = useImageViewerState()

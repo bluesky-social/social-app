@@ -54,7 +54,7 @@ import {useSession, getAgent} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
-import {useImageViewerControls} from 'state/imageViewer.tsx'
+import {useImageViewerControls} from 'state/imageViewer'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null

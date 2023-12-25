@@ -12,7 +12,7 @@ import ImageViewerHeader from 'view/com/imageviewer/ImageViewerHeader'
 import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
 import {gestureHandlerRootHOC} from 'react-native-gesture-handler'
 import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
-import {useImageViewerState} from 'state/imageViewer.tsx'
+import {useImageViewerState} from 'state/imageViewer'
 
 function ImageViewer() {
   const {images, index, hideFooter} = useImageViewerState()

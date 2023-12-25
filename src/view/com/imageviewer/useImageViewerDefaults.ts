@@ -7,10 +7,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {
-  useImageViewerControls,
-  useImageViewerState,
-} from 'state/imageViewer.tsx'
+import {useImageViewerControls, useImageViewerState} from 'state/imageViewer'
 
 interface UseImageViewerDefaults {
   accessoriesVisible: boolean

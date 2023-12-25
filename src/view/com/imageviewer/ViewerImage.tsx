@@ -5,7 +5,7 @@ import {ImageStyle, Pressable, StyleSheet, Text, View} from 'react-native'
 import {Dimensions} from 'lib/media/types'
 import {clamp} from 'lib/numbers'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useImageViewerControls} from 'state/imageViewer.tsx'
+import {useImageViewerControls} from 'state/imageViewer'
 
 interface IProps {
   images: ViewImage[]

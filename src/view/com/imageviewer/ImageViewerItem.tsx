@@ -18,7 +18,7 @@ import {
   PinchGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
-import {useImageViewerState} from 'state/imageViewer.tsx'
+import {useImageViewerState} from 'state/imageViewer'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {

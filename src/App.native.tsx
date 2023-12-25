@@ -29,7 +29,7 @@ import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
-import {Provider as ImageViewerStateProvider} from 'state/imageViewer.tsx'
+import {Provider as ImageViewerStateProvider} from 'state/imageViewer'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,

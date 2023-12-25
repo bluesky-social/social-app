@@ -18,7 +18,7 @@ import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
-import {useImageViewerControls} from 'state/imageViewer.tsx'
+import {useImageViewerControls} from 'state/imageViewer'
 
 export function ProfileSubpageHeader({
   isLoading,

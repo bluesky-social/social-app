@@ -9,7 +9,7 @@ import {SCREEN_WIDTH} from '@gorhom/bottom-sheet'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
-import {useImageViewerState} from 'state/imageViewer.tsx'
+import {useImageViewerState} from 'state/imageViewer'
 
 function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
