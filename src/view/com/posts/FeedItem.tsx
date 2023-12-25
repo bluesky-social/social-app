@@ -364,6 +364,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
+    // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
   },

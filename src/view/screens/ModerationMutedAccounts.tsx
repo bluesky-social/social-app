@@ -92,6 +92,7 @@ export function ModerationMutedAccounts({}: Props) {
       testID={`mutedAccount-${index}`}
       key={item.did}
       profile={item}
+      noModFilter
     />
   )
   return (

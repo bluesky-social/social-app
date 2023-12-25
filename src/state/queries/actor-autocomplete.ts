@@ -112,7 +112,7 @@ function computeSuggestions(
   }
   return items.filter(profile => {
     const mod = moderateProfile(profile, moderationOpts)
-    return !mod.account.filter
+    return !mod.account.filter && mod.account.cause?.type !== 'muted'
   })
 }
 

@@ -5,9 +5,9 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   RichText as RichTextAPI,
-  moderatePost,
   PostModeration,
 } from '@atproto/api'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link, TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'

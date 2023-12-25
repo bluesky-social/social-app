@@ -95,10 +95,13 @@ let Feed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  const isEmpty = !isFetching && !data?.pages[0]?.slices.length
   if (data?.pages[0]) {
     lastFetchRef.current = data?.pages[0].fetchedAt
   }
+  const isEmpty = React.useMemo(
+    () => !isFetching && !data?.pages?.some(page => page.slices.length),
+    [isFetching, data],
+  )
 
   const checkForNew = React.useCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled) {

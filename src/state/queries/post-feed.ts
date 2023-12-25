@@ -1,10 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  moderatePost,
-  PostModeration,
-} from '@atproto/api'
+import {AppBskyFeedDefs, AppBskyFeedPost, PostModeration} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -12,6 +7,7 @@ import {
   QueryClient,
   useQueryClient,
 } from '@tanstack/react-query'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
 import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
