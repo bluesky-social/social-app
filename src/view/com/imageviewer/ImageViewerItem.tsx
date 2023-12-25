@@ -1,10 +1,12 @@
 import React from 'react'
 import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {
+  Easing,
   runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
+  withDecay,
   withTiming,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
@@ -21,6 +23,10 @@ import {useImageViewer} from 'view/com/imageviewer/ImageViewerContext'
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
   duration: 200,
+}
+const PAN_WITH_TIMING_CONFIG = {
+  duration: 400,
+  easing: Easing.out(Easing.ease),
 }
 const MAX_SCALE = 3
 
@@ -84,11 +90,11 @@ function ImageViewerItem({
     'worklet'
 
     if (animated) {
-      positionX.value = withTiming(0.5, WITH_TIMING_CONFIG)
-      positionY.value = withTiming(0.5, WITH_TIMING_CONFIG)
+      positionX.value = withTiming(0, WITH_TIMING_CONFIG)
+      positionY.value = withTiming(0, WITH_TIMING_CONFIG)
     } else {
-      positionX.value = 0.5
-      positionY.value = 0.5
+      positionX.value = 0
+      positionY.value = 0
     }
   }
 
@@ -156,7 +162,7 @@ function ImageViewerItem({
     lastTranslateY.value = e.translationY
   }
 
-  const onPanEnd = () => {
+  const onPanEnd = (e: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
     'worklet'
 
     // Reset the last translation values
@@ -166,6 +172,55 @@ function ImageViewerItem({
     // Center image if the image is not zoomed
     if (scale.value <= 1) {
       centerImage()
+    }
+
+    // Get scaled dimensions
+    const h = screenHeight * scale.value
+    const w = screenWidth * scale.value
+
+    const maxX = ((scale.value - 1) * screenWidth) / 2
+    const maxY = ((scale.value - 1) * screenHeight) / 2
+
+    // Deal with the width first.
+    if (w < screenWidth) {
+      // We can just return the image to the X center if the width is less than the screen width
+      positionX.value = withTiming(0, PAN_WITH_TIMING_CONFIG)
+    } else if (Math.abs(positionX.value) > maxX) {
+      // If the image is too far outside the x bounds, return it to the max
+      positionX.value = withTiming(
+        Math.sign(positionX.value) === 1 ? maxX : -maxX,
+        PAN_WITH_TIMING_CONFIG,
+      )
+    } else {
+      // We want to decay the velocity of the drag
+      positionX.value = withDecay({
+        clamp: [-maxX, maxX],
+        rubberBandEffect: true,
+        rubberBandFactor: 0.5 * scale.value,
+        velocity: (e.velocityX * 1.5) / scale.value,
+        velocityFactor: 0.5 * scale.value,
+      })
+    }
+
+    // Same for the height
+    if (h < screenHeight) {
+      // We can just return the image to the X center if the width is less than the screen width
+      positionY.value = withTiming(0, PAN_WITH_TIMING_CONFIG)
+    } else if (Math.abs(positionY.value) > maxY) {
+      // If the image is too far outside the x bounds, return it to the max
+      positionY.value = withTiming(
+        Math.sign(positionY.value) === 1 ? maxY : -maxY,
+        PAN_WITH_TIMING_CONFIG,
+      )
+    } else {
+      // We want to decay the velocity of the drag
+      positionY.value = withDecay({
+        clamp: [-maxY, maxY],
+        rubberBandEffect: true,
+        rubberBandFactor: 0.5 * scale.value,
+        velocity: (e.velocityY * 1.5) / scale.value,
+        velocityFactor: 0.5 * scale.value,
+      })
     }
   }
 
