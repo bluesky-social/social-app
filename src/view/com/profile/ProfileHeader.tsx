@@ -190,7 +190,7 @@ let ProfileHeaderLoaded = ({
             alt: '',
           },
         ],
-        index: 0,
+        initialIndex: 0,
         measurement: undefined,
         isVisible: true,
         hideFooter: true,

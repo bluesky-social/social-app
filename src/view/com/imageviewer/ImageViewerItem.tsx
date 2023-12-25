@@ -1,15 +1,16 @@
 import React from 'react'
-import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Platform, StyleSheet, useWindowDimensions} from 'react-native'
 import Animated, {
   Easing,
   runOnJS,
+  runOnUI,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withDecay,
   withTiming,
 } from 'react-native-reanimated'
-import {Image} from 'expo-image'
+import {Image, ImageLoadEventData} from 'expo-image'
 import {
   Gesture,
   GestureDetector,
@@ -30,6 +31,23 @@ const PAN_WITH_TIMING_CONFIG = {
 }
 const MAX_SCALE = 3
 
+const calc = (
+  height: number,
+  width: number,
+  screenHeight: number,
+  screenWidth: number,
+) => {
+  const heightRatio = (screenHeight * (!IS_WEB ? 0.9 : 1)) / height
+  const widthRatio = screenWidth / width
+
+  const ratio = Math.min(widthRatio, heightRatio)
+
+  return {
+    height: height * ratio,
+    width: width * ratio,
+  }
+}
+
 function ImageViewerItem({
   image,
   index,
@@ -41,12 +59,9 @@ function ImageViewerItem({
   backgroundOpacity,
 }: IImageViewerItemProps) {
   const {height: screenHeight, width: screenWidth} = useWindowDimensions()
-
-  const {isVisible, measurement} = useImageViewerState()
+  const {isVisible, measurement, initialDimensions} = useImageViewerState()
 
   const [source, setSource] = React.useState(image.thumb)
-
-  // Use this to enable/disable the pan gesture
   const [panGestureEnabled, setPanGestureEnabled] = React.useState(false)
 
   const ranInitialAnimation = React.useRef(false)
@@ -57,11 +72,58 @@ function ImageViewerItem({
   const lastTranslateX = useSharedValue(0)
   const lastTranslateY = useSharedValue(0)
 
-  const height = useSharedValue(0)
-  const width = useSharedValue(0)
+  const height = useSharedValue(1) // Initial height/width are 1 so the image loads
+  const width = useSharedValue(1)
 
   const scale = useSharedValue(1)
   const lastScale = useSharedValue(1)
+
+  const center = useSharedValue({x: 0, y: 0})
+
+  const centerImage = React.useCallback(
+    (animated = true) => {
+      'worklet'
+
+      const {x, y} = center.value
+
+      if (animated) {
+        positionX.value = withTiming(x, WITH_TIMING_CONFIG)
+        positionY.value = withTiming(y, WITH_TIMING_CONFIG)
+      } else {
+        positionX.value = x
+        positionY.value = y
+      }
+    },
+    [center, positionX, positionY],
+  )
+
+  const onLoad = React.useCallback(
+    (e: ImageLoadEventData) => {
+      // We don't need to change the dims if we have already set them
+      if (height.value !== 1 && width.value !== 1) {
+        return
+      }
+
+      const {height: h, width: w} = e.source
+
+      const newDims = calc(h, w, screenHeight, screenWidth)
+
+      height.value = newDims.height
+      width.value = newDims.width
+      center.value = {
+        x: (screenWidth - newDims.width) / 2,
+        y: (screenHeight - newDims.height) / 2,
+      }
+      runOnUI(centerImage)(false)
+    },
+    [height, width, screenHeight, screenWidth, center, centerImage],
+  )
+
+  const prefetchAndReplace = () => {
+    Image.prefetch(image.fullsize).then(() => {
+      setSource(image.fullsize)
+    })
+  }
 
   // Update isScaled when the scale changes
   useAnimatedReaction(
@@ -79,24 +141,6 @@ function ImageViewerItem({
     },
   )
 
-  const prefetchAndReplace = () => {
-    Image.prefetch(image.fullsize).then(() => {
-      setSource(image.fullsize)
-    })
-  }
-
-  const centerImage = (animated = true) => {
-    'worklet'
-
-    if (animated) {
-      positionX.value = withTiming(0, WITH_TIMING_CONFIG)
-      positionY.value = withTiming(0, WITH_TIMING_CONFIG)
-    } else {
-      positionX.value = 0
-      positionY.value = 0
-    }
-  }
-
   // Handle opening the image viewer
   React.useEffect(() => {
     'worklet'
@@ -106,8 +150,6 @@ function ImageViewerItem({
 
     // For all images that are not the current image, set the dimensions
     if (index !== initialIndex || ranInitialAnimation.current) {
-      height.value = screenHeight
-      width.value = screenWidth
       runOnJS(prefetchAndReplace)()
       centerImage(false)
       return
@@ -127,12 +169,24 @@ function ImageViewerItem({
     height.value = measurement?.height ?? screenHeight
     width.value = measurement?.width ?? screenWidth
 
-    // Now set the new dimensions with timing
-    height.value = withTiming(screenHeight, WITH_TIMING_CONFIG)
-    width.value = withTiming(screenWidth, WITH_TIMING_CONFIG)
+    // Calculate the new dimensions
+    const newDims = calc(
+      initialDimensions.height,
+      initialDimensions.width,
+      screenHeight,
+      screenWidth,
+    )
 
-    // Center the image
-    centerImage()
+    // Set the center coords
+    center.value = {
+      x: (screenWidth - newDims.width) / 2,
+      y: (screenHeight - newDims.height) / 2,
+    }
+    runOnUI(centerImage)()
+
+    // Now set the new dimensions with timing
+    height.value = withTiming(newDims.height, WITH_TIMING_CONFIG)
+    width.value = withTiming(newDims.width, WITH_TIMING_CONFIG)
 
     // Fade in the background and show accessories
     accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
@@ -143,7 +197,7 @@ function ImageViewerItem({
     })
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [image, isVisible, screenHeight, screenWidth])
+  }, [screenHeight, screenWidth])
 
   const onPanUpdate = (
     e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
@@ -235,6 +289,7 @@ function ImageViewerItem({
     runOnJS(setAccessoriesVisible)(false)
 
     if (scale.value !== 1) {
+      console.log(center)
       centerImage()
       scale.value = withTiming(1, WITH_TIMING_CONFIG)
       lastScale.value = 1
@@ -340,15 +395,13 @@ function ImageViewerItem({
     <GestureDetector gesture={IS_WEB ? tapGesture : allGestures}>
       <Animated.View style={positionStyle}>
         <Animated.View style={[scaleStyle, dimensionsStyle]}>
-          <View style={styles.container}>
-            <Image
-              source={{uri: source}}
-              style={styles.image}
-              contentFit="contain"
-              cachePolicy="memory-disk"
-              accessibilityIgnoresInvertColors
-            />
-          </View>
+          <Image
+            source={{uri: source}}
+            style={styles.image}
+            cachePolicy="memory-disk"
+            onLoad={onLoad}
+            accessibilityIgnoresInvertColors
+          />
         </Animated.View>
       </Animated.View>
     </GestureDetector>
@@ -356,15 +409,8 @@ function ImageViewerItem({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   image: {
-    height: IS_WEB ? '100%' : '90%',
-    width: '100%',
+    flex: 1,
   },
 })
 

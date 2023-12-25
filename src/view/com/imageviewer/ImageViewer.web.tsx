@@ -21,7 +21,7 @@ import {useImageViewerState} from 'state/imageViewer'
 function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
 
-  const {images, index, hideFooter} = useImageViewerState()
+  const {images, initialIndex, hideFooter} = useImageViewerState()
   const {height: screenHeight, width: screenWidth} = useWindowDimensions()
 
   const {
@@ -35,7 +35,7 @@ function ImageViewer() {
     accessoryStyle,
   } = useImageViewerDefaults()
 
-  const [currentIndex, setCurrentIndex] = React.useState(index)
+  const [currentIndex, setCurrentIndex] = React.useState(initialIndex)
 
   const scrollViewRef = React.useRef<ScrollView>(null)
   const previousScrollOffset = React.useRef(0)
@@ -55,7 +55,7 @@ function ImageViewer() {
 
   // Set the initial index (no initial index on a scrollview)
   React.useEffect(() => {
-    scrollToImage(index, false)
+    scrollToImage(initialIndex, false)
     // Disabling this warning. We only want this to run whenever the viewer opens. scrollToImage isn't stable and will
     // change whenever the window size changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,28 +90,25 @@ function ImageViewer() {
     <Animated.View style={[styles.container, containerStyle]}>
       <Animated.View
         style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
-        <ImageViewerHeader
-          onCloseViewer={onCloseViewer}
-          visible={accessoriesVisible}
-        />
+        <ImageViewerHeader onCloseViewer={onCloseViewer} visible={true} />
       </Animated.View>
 
       {currentIndex !== 0 && !isMobile && (
-        <Pressable
-          accessibilityRole="button"
-          style={[styles.scrollButton, styles.leftScrollButton]}
-          onPress={onPrevPress}>
-          <View style={styles.scrollButtonInner}>
-            <View style={styles.scrollButtonIconContainer}>
-              <FontAwesomeIcon
-                icon="chevron-right"
-                size={30}
-                color="white"
-                style={styles.chevronLeft}
-              />
-            </View>
-          </View>
-        </Pressable>
+        <View style={[styles.sidebar, styles.leftSidebar]}>
+          <Pressable
+            onPress={onPrevPress}
+            style={styles.scrollButton}
+            accessibilityRole="button"
+            accessibilityLabel="Previous Image"
+            accessibilityHint="Navigates to the previous image">
+            <FontAwesomeIcon
+              icon="chevron-right"
+              size={30}
+              color="white"
+              style={styles.chevronLeft}
+            />
+          </Pressable>
+        </View>
       )}
 
       <ScrollView
@@ -128,7 +125,7 @@ function ImageViewer() {
           <View key={i} style={{height: screenHeight, width: screenWidth}}>
             <ImageViewerItem
               image={image}
-              initialIndex={index}
+              initialIndex={initialIndex}
               index={i}
               setAccessoriesVisible={setAccessoriesVisible}
               onCloseViewer={onCloseViewer}
@@ -141,18 +138,16 @@ function ImageViewer() {
       </ScrollView>
 
       {currentIndex !== images.length - 1 && !isMobile && (
-        <Pressable
-          accessibilityRole="button"
-          style={[styles.scrollButton, styles.rightScrollButton]}
-          onPress={onNextPress}>
-          {!isMobile && (
-            <View style={styles.scrollButtonInner}>
-              <View style={styles.scrollButtonIconContainer}>
-                <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
-              </View>
-            </View>
-          )}
-        </Pressable>
+        <View style={[styles.sidebar, styles.rightSidebar]}>
+          <Pressable
+            onPress={onNextPress}
+            style={styles.scrollButton}
+            accessibilityRole="button"
+            accessibilityLabel="Next Image"
+            accessibilityHint="Navigates to the next image">
+            <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
+          </Pressable>
+        </View>
       )}
 
       {!hideFooter && (
@@ -184,30 +179,24 @@ const styles = StyleSheet.create({
   footerAccessory: {
     bottom: 0,
   },
-  scrollButton: {
+  sidebar: {
     position: 'absolute',
     zIndex: 1,
     height: '100%',
     width: SCREEN_WIDTH > 600 ? 150 : 80,
-  },
-  scrollButtonInner: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  leftScrollButton: {
+  leftSidebar: {
     left: 0,
   },
-  rightScrollButton: {
+  rightSidebar: {
     right: 0,
   },
-  scrollButtonIconContainer: {
+  scrollButton: {
     padding: 20,
     borderRadius: 100,
     backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  scrollButtonIcon: {
-    color: 'white',
   },
   chevronLeft: {
     transform: [{rotateZ: '180deg'}], // I promise I'm not crazy...but why is chevron-left not working? TODO

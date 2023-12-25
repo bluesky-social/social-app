@@ -5,7 +5,8 @@ import {useNonReactiveCallback} from 'lib/hooks/useNonReactiveCallback.ts'
 
 interface ImageViewerState {
   images: ViewImage[]
-  index: number
+  initialIndex: number
+  initialDimensions: {width: number; height: number}
   isVisible: boolean
   measurement: MeasuredDimensions | undefined
   hideFooter?: boolean
@@ -27,7 +28,8 @@ const ImageViewerControlsContext = React.createContext<ImageViewerControls>(
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState<ImageViewerState>({
     images: [],
-    index: 0,
+    initialIndex: 0,
+    initialDimensions: {width: 0, height: 0},
     isVisible: false,
     measurement: undefined,
   })

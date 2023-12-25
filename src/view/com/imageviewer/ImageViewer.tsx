@@ -15,7 +15,7 @@ import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefault
 import {useImageViewerState} from 'state/imageViewer'
 
 function ImageViewer() {
-  const {images, index, hideFooter} = useImageViewerState()
+  const {images, initialIndex, hideFooter} = useImageViewerState()
 
   const {
     accessoriesVisible,
@@ -29,7 +29,7 @@ function ImageViewer() {
   } = useImageViewerDefaults()
 
   const [isScaled, setIsScaled] = React.useState(false)
-  const [currentImage, setCurrentImage] = React.useState(images?.[index])
+  const [currentImage, setCurrentImage] = React.useState(images?.[initialIndex])
 
   const touchPos = useSharedValue({x: 0, y: 0})
   const touchTime = useSharedValue(0)
@@ -77,7 +77,7 @@ function ImageViewer() {
       </Animated.View>
       <PagerView
         style={styles.container}
-        initialPage={index}
+        initialPage={initialIndex}
         scrollEnabled={!isScaled}
         overdrag
         onPageSelected={onPageSelected}
@@ -88,7 +88,7 @@ function ImageViewer() {
             <ImageViewerItem
               image={images[i]}
               index={i}
-              initialIndex={index}
+              initialIndex={initialIndex}
               setIsScaled={setIsScaled}
               setAccessoriesVisible={setAccessoriesVisible}
               onCloseViewer={onCloseViewer}

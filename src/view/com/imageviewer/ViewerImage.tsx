@@ -1,6 +1,9 @@
 import React from 'react'
-import {Image} from 'expo-image'
-import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
+import {Image, ImageLoadEventData} from 'expo-image'
+import {
+  AspectRatio,
+  ViewImage,
+} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 import {ImageStyle, Pressable, StyleSheet, Text, View} from 'react-native'
 import {Dimensions} from 'lib/media/types'
 import {clamp} from 'lib/numbers'
@@ -20,10 +23,11 @@ function ViewerImage({images, index, imageStyle}: IProps) {
   const {isMobile} = useWebMediaQueries()
   const {setState} = useImageViewerControls()
 
-  const ref = React.useRef<View>(null)
-  const isLoaded = React.useRef(false)
-
   const image = React.useMemo(() => images[index], [images, index])
+
+  const viewRef = React.useRef<View>(null)
+  const isLoaded = React.useRef(false)
+  const dims = React.useRef<AspectRatio | undefined>(image.aspectRatio)
 
   // TODO shutting this up for now
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -34,27 +38,32 @@ function ViewerImage({images, index, imageStyle}: IProps) {
   const onPress = React.useCallback(() => {
     if (!isLoaded.current) return
 
-    ref.current?.measure((x, y, width, height, pageX, pageY) => {
+    viewRef.current?.measure((x, y, width, height, pageX, pageY) => {
       const measurement = {x, y, width, height, pageX, pageY}
 
       setState({
         images,
-        index,
+        initialIndex: index,
         measurement,
         isVisible: true,
+        initialDimensions: dims.current,
       })
     })
   }, [images, index, setState])
 
-  const onLoad = React.useCallback(() => {
+  const onLoad = React.useCallback((e: ImageLoadEventData) => {
     isLoaded.current = true
+
+    if (dims.current) return
+
+    dims.current = {width: e.source.width, height: e.source.height}
   }, [])
 
   return (
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      ref={ref}
+      ref={viewRef}
       style={[
         styles.imageContainer,
         styles.singleImage,
