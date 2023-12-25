@@ -926,7 +926,7 @@ msgstr "팔로우한 사용자만"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
-msgstr "팔로어"
+msgstr "팔로워"
 
 #: src/view/com/profile/ProfileHeader.tsx:624
 msgid "following"
@@ -1384,7 +1384,7 @@ msgstr "이름"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "팔로어와 데이터에 대한 접근 권한을 잃지 마세요."
+msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 않습니다."
 
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
@@ -2606,7 +2606,7 @@ msgstr "앱 비밀번호를 사용하여 로그인하면 초대 코드가 숨겨
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "내 게시물, 좋아요, 차단은 공개됩니다. 뮤트 목록은 비공개입니다."
+msgstr "내 게시물, 좋아요, 차단은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
 #: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
