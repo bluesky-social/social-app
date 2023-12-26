@@ -1,5 +1,5 @@
 import React from 'react'
-import {Platform, StyleSheet, useWindowDimensions} from 'react-native'
+import {Platform, StyleSheet, useWindowDimensions, View} from 'react-native'
 import Animated, {
   Easing,
   runOnJS,
@@ -20,7 +20,8 @@ import {
 } from 'react-native-gesture-handler'
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
 import {useImageViewerState} from 'state/imageViewer'
-import {useAnimatedScrollHandler} from 'lib/hooks/useAnimatedScrollHandler_FIXED.ts'
+import {isAndroid} from 'platform/detection.ts'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries.tsx'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
@@ -59,9 +60,9 @@ function ImageViewerItem({
   accessoryOpacity,
   backgroundOpacity,
   onCloseViewer,
-  isDragging,
 }: IImageViewerItemProps) {
   const {height: screenHeight, width: screenWidth} = useWindowDimensions()
+  const {isMobile} = useWebMediaQueries()
   const {isVisible, measurement, initialDimensions} = useImageViewerState()
 
   const [source, setSource] = React.useState(image.thumb)
@@ -75,15 +76,50 @@ function ImageViewerItem({
   const lastTranslateX = useSharedValue(0)
   const lastTranslateY = useSharedValue(0)
 
-  const height = useSharedValue(1) // Initial height/width are 1 so the image loads
+  const height = useSharedValue(1)
   const width = useSharedValue(1)
 
   const realDimensions = useSharedValue({height: 0, width: 0})
+
   const center = useSharedValue({x: 0, y: 0})
 
-  const scale = useSharedValue(1)
-  const lastScale = useSharedValue(1)
+  const scale = useSharedValue<number>(1)
+  const lastScale = useSharedValue<number>(1)
 
+  const getMaxPosition = () => {
+    'worklet'
+    return {
+      x: ((scale.value - 1) * width.value) / 2,
+      y: ((scale.value - 1) * height.value) / 2,
+    }
+  }
+
+  const getScaledDimensions = () => {
+    'worklet'
+
+    return {
+      height: height.value * scale.value,
+      width: width.value * scale.value,
+    }
+  }
+
+  // Update isScaled when the scale changes and show/hide the accessories
+  useAnimatedReaction(
+    () => scale.value,
+    (curr, prev) => {
+      if (curr === 1 && prev !== 1) {
+        runOnJS(setIsScaled)(false)
+        runOnJS(setPanGestureEnabled)(false)
+        runOnJS(setAccessoriesVisible)(true)
+      } else if (curr !== 1 && prev === 1) {
+        runOnJS(setIsScaled)(true)
+        runOnJS(setPanGestureEnabled)(true)
+        runOnJS(setAccessoriesVisible)(false)
+      }
+    },
+  )
+
+  // Helper function for recentering the image
   const centerImage = React.useCallback(
     (animated = true) => {
       'worklet'
@@ -100,19 +136,14 @@ function ImageViewerItem({
     [center, positionX, positionY],
   )
 
-  const onLoad = React.useCallback(
-    (e: ImageLoadEventData) => {
-      // We don't need to change the dims if we have already set them
-      if (height.value !== 1 && width.value !== 1) {
-        return
-      }
-
-      const {height: h, width: w} = e.source
-
+  // Helper function to set the proper image dimensions
+  const setImageDimensions = React.useCallback(
+    (h: number, w: number, animated = false): void => {
+      'worklet'
+      // Calculate the dimensions for the screen
       const newDims = calc(h, w, screenHeight, screenWidth)
 
-      height.value = newDims.height
-      width.value = newDims.width
+      // Set those dimensions
       center.value = {
         x: (screenWidth - newDims.width) / 2,
         y: (screenHeight - newDims.height) / 2,
@@ -121,17 +152,31 @@ function ImageViewerItem({
         height: newDims.height,
         width: newDims.width,
       }
+
+      if (animated) {
+        height.value = withTiming(newDims.height, WITH_TIMING_CONFIG)
+        width.value = withTiming(newDims.width, WITH_TIMING_CONFIG)
+      } else {
+        height.value = newDims.height
+        width.value = newDims.width
+      }
+    },
+    [center, height, width, realDimensions, screenHeight, screenWidth],
+  )
+
+  // Handle the image loading so we can get the dimensions of the images that are not the main image
+  const onLoad = React.useCallback(
+    (e: ImageLoadEventData) => {
+      // We don't need to change the dims if we have already set them
+      if (height.value !== 1 && width.value !== 1) {
+        return
+      }
+
+      setImageDimensions(e.source.height, e.source.width)
+
       runOnUI(centerImage)(false)
     },
-    [
-      height,
-      width,
-      screenHeight,
-      screenWidth,
-      center,
-      realDimensions,
-      centerImage,
-    ],
+    [height, width, centerImage, setImageDimensions],
   )
 
   const prefetchAndReplace = () => {
@@ -139,22 +184,6 @@ function ImageViewerItem({
       setSource(image.fullsize)
     })
   }
-
-  // Update isScaled when the scale changes
-  useAnimatedReaction(
-    () => scale.value,
-    (curr, prev) => {
-      if (IS_WEB) return
-
-      if (curr === 1 && prev !== 1) {
-        runOnJS(setIsScaled!)(false)
-        runOnJS(setPanGestureEnabled)(false)
-      } else if (curr !== 1 && prev === 1) {
-        runOnJS(setIsScaled!)(true)
-        runOnJS(setPanGestureEnabled)(true)
-      }
-    },
-  )
 
   // Handle opening the image viewer
   React.useEffect(() => {
@@ -165,15 +194,21 @@ function ImageViewerItem({
     // For all images that are not the current image, set the dimensions
     if (index !== initialIndex || ranInitialAnimation.current) {
       runOnJS(prefetchAndReplace)()
-      centerImage(false)
       return
     }
 
-    // Remember that we animated already
     ranInitialAnimation.current = true
-
-    // Reset the opacity
     opacity.value = 1
+
+    // Fade in the background and show accessories
+    accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
+    backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
+
+    // If there are no measurements, just prefetch
+    if (!measurement) {
+      runOnJS(prefetchAndReplace)()
+      return
+    }
 
     // Set the initial position of the image in the modal
     positionX.value = measurement?.pageX ?? 0
@@ -183,57 +218,30 @@ function ImageViewerItem({
     height.value = measurement?.height ?? screenHeight
     width.value = measurement?.width ?? screenWidth
 
-    // Calculate the new dimensions
-    const newDims = calc(
-      initialDimensions.height,
-      initialDimensions.width,
-      screenHeight,
-      screenWidth,
+    setImageDimensions(
+      initialDimensions?.height ?? 1,
+      initialDimensions?.width ?? 1,
+      true,
     )
 
-    // Set the center coords and the image dimensions
-    center.value = {
-      x: (screenWidth - newDims.width) / 2,
-      y: (screenHeight - newDims.height) / 2,
-    }
-    realDimensions.value = {
-      height: newDims.height,
-      width: newDims.width,
-    }
     runOnUI(centerImage)()
 
-    // Now set the new dimensions with timing
-    height.value = withTiming(newDims.height, WITH_TIMING_CONFIG)
-    width.value = withTiming(newDims.width, WITH_TIMING_CONFIG)
-
-    // Fade in the background and show accessories
-    accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
-
-    // It doesn't matter which one of these we run the prefetch callback on. They all run for the same amount of time
-    backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG, () => {
+    // Running this on the animation callback doesn't work on web, so we will just use setTimeout. Run after the 200ms
+    // animation
+    setTimeout(() => {
       runOnJS(prefetchAndReplace)()
-    })
+    }, 200)
 
+    // This only needs to re-run whenever the screen height or width changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenHeight, screenWidth])
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: e => {
-      'worklet'
-      // Update the opacity
-      backgroundOpacity.value =
-        1 - Math.abs(e.contentOffset.y) / 2 / screenHeight
-    },
-    onEndDrag: e => {
-      'worklet'
-      const velocity = Math.abs(e.velocity?.y ?? 0)
-      const distance = Math.abs(e.contentOffset.y)
-
-      if (velocity > 0.7 && distance > 20 && !isDragging?.value) {
-        onCloseViewer()
-      }
-    },
-  })
+  // Callback for reseting the last translate
+  const onResetLastTranslate = () => {
+    'worklet'
+    lastTranslateX.value = 0
+    lastTranslateY.value = 0
+  }
 
   const onPanUpdate = (
     e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
@@ -241,7 +249,6 @@ function ImageViewerItem({
     'worklet'
     if (scale.value === 1) return
 
-    // Move the image by the difference in translation
     positionX.value += e.translationX - lastTranslateX.value
     positionY.value += e.translationY - lastTranslateY.value
 
@@ -252,21 +259,11 @@ function ImageViewerItem({
 
   const onPanEnd = (e: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
     'worklet'
-    // Reset the last translation values
-    lastTranslateX.value = 0
-    lastTranslateY.value = 0
-
-    if (scale.value <= 1) return
-
-    // Get scaled dimensions
-    const h = realDimensions.value.height * scale.value
-    const w = realDimensions.value.width * scale.value
-
-    const maxX = ((scale.value - 1) * screenWidth) / 2
-    const maxY = ((scale.value - 1) * screenHeight) / 2
+    const {x: maxX, y: maxY} = getMaxPosition()
+    const scaledDimensions = getScaledDimensions()
 
     // Deal with the width first.
-    if (w < screenWidth) {
+    if (scaledDimensions.width < screenWidth) {
       // We can just return the image to the X center if the width is less than the screen width
       positionX.value = withTiming(center.value.x, PAN_WITH_TIMING_CONFIG)
     } else if (Math.abs(positionX.value) > maxX) {
@@ -276,36 +273,32 @@ function ImageViewerItem({
         PAN_WITH_TIMING_CONFIG,
       )
     } else {
+      if (!isMobile) return
+
       // We want to decay the velocity of the drag
       positionX.value = withDecay({
         clamp: [-maxX, maxX],
-        rubberBandEffect: true,
+        rubberBandEffect: isAndroid,
         rubberBandFactor: 0.5 * scale.value,
         velocity: (e.velocityX * 1.5) / scale.value,
         velocityFactor: 0.5 * scale.value,
       })
     }
 
-    // console.log({
-    //   maxY,
-    //   positionY: positionY.value,
-    // })
-
     // Same for the height
-    if (h < screenHeight) {
-      // We can just return the image to the X center if the width is less than the screen width
+    if (scaledDimensions.height < screenHeight) {
       positionY.value = withTiming(center.value.y, PAN_WITH_TIMING_CONFIG)
     } else if (Math.abs(positionY.value) > maxY) {
-      // If the image is too far outside the x bounds, return it to the max
       positionY.value = withTiming(
         Math.sign(positionY.value) === 1 ? maxY : -maxY,
         PAN_WITH_TIMING_CONFIG,
       )
     } else {
-      // We want to decay the velocity of the drag
+      if (!isMobile) return
+
       positionY.value = withDecay({
         clamp: [-maxY, maxY],
-        rubberBandEffect: true,
+        rubberBandEffect: isAndroid,
         rubberBandFactor: 0.5 * scale.value,
         velocity: (e.velocityY * 1.5) / scale.value,
         velocityFactor: 0.5 * scale.value,
@@ -314,25 +307,23 @@ function ImageViewerItem({
   }
 
   const panGesture = Gesture.Pan()
+    .minPointers(panGestureEnabled ? 1 : 2)
+    .onStart(onResetLastTranslate)
     .onUpdate(onPanUpdate)
     .onEnd(onPanEnd)
-    .minPointers(panGestureEnabled ? 1 : 2)
 
   const onDoubleTap = () => {
     'worklet'
-    // Hide accessories when we zoom in
-    runOnJS(setAccessoriesVisible)(false)
+    console.log('double')
 
     if (scale.value !== 1) {
       centerImage()
       scale.value = withTiming(1, WITH_TIMING_CONFIG)
       lastScale.value = 1
-      return
+    } else {
+      scale.value = withTiming(2, WITH_TIMING_CONFIG)
+      lastScale.value = 2
     }
-
-    // Zoom in to a scale of 2
-    scale.value = withTiming(2, WITH_TIMING_CONFIG)
-    lastScale.value = 2
   }
 
   const doubleTapGesture = Gesture.Tap()
@@ -358,11 +349,6 @@ function ImageViewerItem({
     .maxDeltaX(10)
     .onEnd(onTap)
 
-  const onPinchStart = () => {
-    'worklet'
-    runOnJS(setAccessoriesVisible)(false)
-  }
-
   const onPinchUpdate = (
     e: GestureUpdateEvent<PinchGestureHandlerEventPayload>,
   ) => {
@@ -372,7 +358,7 @@ function ImageViewerItem({
 
   const onPinchEnd = () => {
     'worklet'
-    if (scale.value < 1) {
+    if (scale.value <= 1) {
       // Play a haptic
       // runOnJS(Haptics.impact)('impactLight')
 
@@ -393,39 +379,72 @@ function ImageViewerItem({
     }
   }
 
-  const pinchGesture = Gesture.Pinch()
-    .onStart(onPinchStart)
-    .onUpdate(onPinchUpdate)
-    .onEnd(onPinchEnd)
+  const pinchGesture = Gesture.Pinch().onUpdate(onPinchUpdate).onEnd(onPinchEnd)
+
+  const onCloseGestureUpdate = (
+    e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  ) => {
+    'worklet'
+    positionY.value += e.translationY - lastTranslateY.value
+    backgroundOpacity.value = 1 - Math.abs(e.translationY) / screenHeight
+    lastTranslateY.value = e.translationY
+  }
+
+  const onCloseGestureEnd = (
+    e: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  ) => {
+    'worklet'
+    backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
+
+    if (Math.abs(e.velocityY) < 1000) {
+      centerImage()
+      return
+    }
+
+    positionY.value = withDecay({
+      clamp: [-screenHeight, screenHeight],
+      velocity: e.velocityY,
+    })
+    onCloseViewer()
+  }
+
+  const closeGesture = Gesture.Pan()
+    .enabled(!panGestureEnabled)
+    .activeOffsetY([-10, 10])
+    .failOffsetX([-10, 10])
+    .maxPointers(1)
+    .onStart(onResetLastTranslate)
+    .onUpdate(onCloseGestureUpdate)
+    .onEnd(onCloseGestureEnd)
 
   // Combine the gestures
-  const tapGestures = Gesture.Simultaneous(tapGesture, doubleTapGesture)
+  // Run tap gestures together so we can run tap only when double tap fails
+  const tapGestures = Gesture.Simultaneous(doubleTapGesture, tapGesture)
   const pinchAndPanGestures = Gesture.Simultaneous(pinchGesture, panGesture)
-  const allGestures = Gesture.Race(tapGestures, pinchAndPanGestures)
+  const allGestures = Gesture.Race(
+    closeGesture,
+    tapGestures,
+    IS_WEB ? panGesture : pinchAndPanGestures,
+  ) // Close gesture should have priority over the other gestures, and only one should run at a time
 
   // Animated styles
   const positionStyle = useAnimatedStyle(() => ({
     transform: [{translateX: positionX.value}, {translateY: positionY.value}],
   }))
-
   const scaleStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
   }))
-
   const dimensionsStyle = useAnimatedStyle(() => ({
     height: height.value,
     width: width.value,
   }))
 
   // Animated image does not play nice on web. Instead, we have to use an additional animated view to get things right.
-  // Additionally, for zoom/pan animations to properly work, we would need to set `draggable` to false on the image.
-  // I'm actually not actually sure what the best way to do that is, but I suspect the *easiest* might be to just patch
-  // expo-image and add a prop for it. For now I am just removing the gesture detector. The only animation that will
-  // "work" is the measure/scale up animation and the fade out animation when we close the viewer.
+  // Needs to be wrapped in a flex view so the entire screen detects gestures
   return (
-    <GestureDetector gesture={IS_WEB ? tapGesture : allGestures}>
-      {IS_WEB ? (
-        <Animated.View style={positionStyle}>
+    <GestureDetector gesture={allGestures}>
+      <View style={styles.container}>
+        <Animated.View style={[positionStyle]}>
           <Animated.View style={[scaleStyle, dimensionsStyle]}>
             <Image
               source={{uri: source}}
@@ -436,28 +455,15 @@ function ImageViewerItem({
             />
           </Animated.View>
         </Animated.View>
-      ) : (
-        <Animated.ScrollView
-          scrollEnabled={!IS_WEB && !panGestureEnabled}
-          onScroll={!IS_WEB ? onScroll : undefined}>
-          <Animated.View style={positionStyle}>
-            <Animated.View style={[scaleStyle, dimensionsStyle]}>
-              <Image
-                source={{uri: source}}
-                style={styles.image}
-                cachePolicy="memory-disk"
-                onLoad={onLoad}
-                accessibilityIgnoresInvertColors
-              />
-            </Animated.View>
-          </Animated.View>
-        </Animated.ScrollView>
-      )}
+      </View>
     </GestureDetector>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   image: {
     flex: 1,
   },

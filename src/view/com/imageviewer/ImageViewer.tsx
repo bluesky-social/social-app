@@ -21,9 +21,10 @@ function ImageViewer() {
     onCloseViewer,
     containerStyle,
     accessoryStyle,
+    isScaled,
+    setIsScaled,
   } = useImageViewerDefaults()
 
-  const [isScaled, setIsScaled] = React.useState(false)
   const [currentImage, setCurrentImage] = React.useState(images?.[initialIndex])
 
   const isDragging = useSharedValue(false)

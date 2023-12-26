@@ -74,7 +74,6 @@ export function ProfileSubpageHeader({
           },
         ],
         initialIndex: 0,
-        measurement: undefined,
         isVisible: true,
         hideFooter: true,
       })

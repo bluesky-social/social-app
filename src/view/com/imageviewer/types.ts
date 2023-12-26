@@ -19,7 +19,7 @@ export interface IImageViewerItemProps {
   image: ViewImage
   index: number
   initialIndex: number
-  setIsScaled?: React.Dispatch<React.SetStateAction<boolean>>
+  setIsScaled: React.Dispatch<React.SetStateAction<boolean>>
   setAccessoriesVisible: React.Dispatch<React.SetStateAction<boolean>>
   onCloseViewer: () => void
   opacity: SharedValue<number>

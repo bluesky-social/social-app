@@ -1,5 +1,5 @@
 import React from 'react'
-import Animated from 'react-native-reanimated'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -33,6 +33,7 @@ function ImageViewer() {
     onCloseViewer,
     containerStyle,
     accessoryStyle,
+    setIsScaled,
   } = useImageViewerDefaults()
 
   const [currentIndex, setCurrentIndex] = React.useState(initialIndex)
@@ -42,32 +43,56 @@ function ImageViewer() {
 
   // This is used both when we open the viewer and when we change items on desktop
   const scrollToImage = React.useCallback(
-    (i: number, animated = true) => {
+    (index: number, animated = true) => {
       scrollViewRef.current?.scrollTo({
-        x: i * screenWidth,
+        x: index * screenWidth,
         animated,
       })
 
-      setCurrentIndex(i)
+      setCurrentIndex(index)
     },
     [screenWidth],
   )
 
-  // Set the initial index (no initial index on a scrollview)
+  const onPrevPress = React.useCallback(() => {
+    if (currentIndex === 0) return
+
+    scrollToImage(currentIndex - 1, isMobile)
+  }, [currentIndex, scrollToImage, isMobile])
+
+  const onNextPress = React.useCallback(() => {
+    if (currentIndex === images.length - 1) return
+
+    scrollToImage(currentIndex + 1, isMobile)
+  }, [currentIndex, images, scrollToImage, isMobile])
+
+  const onKeyDown = React.useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCloseViewer()
+      } else if (e.key === 'ArrowLeft') {
+        onPrevPress()
+      } else if (e.key === 'ArrowRight') {
+        onNextPress()
+      }
+    },
+    [onCloseViewer, onPrevPress, onNextPress],
+  )
+
   React.useEffect(() => {
+    // Set the initial index (no initial index on a scrollview)
     scrollToImage(initialIndex, false)
+
     // Disabling this warning. We only want this to run whenever the viewer opens. scrollToImage isn't stable and will
     // change whenever the window size changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const onPrevPress = React.useCallback(() => {
-    scrollToImage(currentIndex - 1)
-  }, [currentIndex, scrollToImage])
-
-  const onNextPress = React.useCallback(() => {
-    scrollToImage(currentIndex + 1)
-  }, [currentIndex, scrollToImage])
+  React.useEffect(() => {
+    // Add keydown listener
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  })
 
   // Fun! This handles the scroll event so that we can update the current index.
   // 1. Get the new offset
@@ -80,86 +105,104 @@ function ImageViewer() {
       if (previousScrollOffset.current === x || x % screenWidth !== 0) return
       previousScrollOffset.current = x
 
-      const newIndex = Math.round(x / screenWidth)
+      const newIndex = x / screenWidth
       setCurrentIndex(newIndex)
     },
     [screenWidth],
   )
 
+  const onDragStart = React.useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      e.preventDefault()
+    },
+    [],
+  )
+
   return (
-    <Animated.View style={[styles.container, containerStyle]}>
-      <Animated.View
-        style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
-        <ImageViewerHeader onCloseViewer={onCloseViewer} visible={true} />
-      </Animated.View>
-
-      {currentIndex !== 0 && !isMobile && (
-        <View style={[styles.sidebar, styles.leftSidebar]}>
-          <Pressable
-            onPress={onPrevPress}
-            style={styles.scrollButton}
-            accessibilityRole="button"
-            accessibilityLabel="Previous Image"
-            accessibilityHint="Navigates to the previous image">
-            <FontAwesomeIcon
-              icon="chevron-right"
-              size={30}
-              color="white"
-              style={styles.chevronLeft}
-            />
-          </Pressable>
-        </View>
-      )}
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        snapToInterval={screenWidth}
-        disableIntervalMomentum
-        ref={scrollViewRef}
-        scrollEnabled={isMobile}
-        scrollEventThrottle={0}
-        onScroll={isMobile ? onScroll : undefined}>
-        {images.map((image, i) => (
-          <View key={i} style={{height: screenHeight, width: screenWidth}}>
-            <ImageViewerItem
-              image={image}
-              initialIndex={initialIndex}
-              index={i}
-              setAccessoriesVisible={setAccessoriesVisible}
-              onCloseViewer={onCloseViewer}
-              opacity={opacity}
-              backgroundOpacity={backgroundOpacity}
-              accessoryOpacity={accessoryOpacity}
-            />
-          </View>
-        ))}
-      </ScrollView>
-
-      {currentIndex !== images.length - 1 && !isMobile && (
-        <View style={[styles.sidebar, styles.rightSidebar]}>
-          <Pressable
-            onPress={onNextPress}
-            style={styles.scrollButton}
-            accessibilityRole="button"
-            accessibilityLabel="Next Image"
-            accessibilityHint="Navigates to the next image">
-            <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
-          </Pressable>
-        </View>
-      )}
-
-      {!hideFooter && (
+    <div draggable={false} onDragStart={onDragStart}>
+      <Animated.View style={[styles.container, containerStyle]}>
         <Animated.View
-          style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
-          <ImageViewerFooter
-            currentImage={images[currentIndex]}
-            visible={accessoriesVisible}
-          />
+          style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
+          <ImageViewerHeader onCloseViewer={onCloseViewer} visible={true} />
         </Animated.View>
-      )}
-    </Animated.View>
+
+        {currentIndex !== 0 && accessoriesVisible && (
+          <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            style={[styles.sidebar, styles.leftSidebar]}>
+            <Pressable
+              onPress={onPrevPress}
+              style={styles.scrollButton}
+              accessibilityRole="button"
+              accessibilityLabel="Previous Image"
+              accessibilityHint="Navigates to the previous image">
+              <FontAwesomeIcon
+                icon="chevron-right"
+                size={30}
+                color="white"
+                style={styles.chevronLeft}
+              />
+            </Pressable>
+          </Animated.View>
+        )}
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          snapToInterval={screenWidth}
+          disableIntervalMomentum
+          ref={scrollViewRef}
+          scrollEnabled={false}
+          scrollEventThrottle={0}
+          onScroll={isMobile ? onScroll : undefined}
+          style={{flex: 1}}
+          contentContainerStyle={{flex: 1}}>
+          {images.map((image, i) => (
+            <View key={i} style={{height: screenHeight, width: screenWidth}}>
+              <ImageViewerItem
+                image={image}
+                initialIndex={initialIndex}
+                index={i}
+                setAccessoriesVisible={setAccessoriesVisible}
+                onCloseViewer={onCloseViewer}
+                opacity={opacity}
+                backgroundOpacity={backgroundOpacity}
+                accessoryOpacity={accessoryOpacity}
+                setIsScaled={setIsScaled}
+              />
+            </View>
+          ))}
+        </ScrollView>
+
+        {currentIndex !== images.length - 1 && accessoriesVisible && (
+          <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            style={[styles.sidebar, styles.rightSidebar]}>
+            <Pressable
+              onPress={onNextPress}
+              style={styles.scrollButton}
+              accessibilityRole="button"
+              accessibilityLabel="Next Image"
+              accessibilityHint="Navigates to the next image">
+              <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
+            </Pressable>
+          </Animated.View>
+        )}
+
+        {!hideFooter && (
+          <Animated.View
+            style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
+            <ImageViewerFooter
+              currentImage={images[currentIndex]}
+              visible={accessoriesVisible}
+            />
+          </Animated.View>
+        )}
+      </Animated.View>
+    </div>
   )
 }
 

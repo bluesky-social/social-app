@@ -36,7 +36,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const setViewerState = useNonReactiveCallback(
     (state: Partial<ImageViewerState>) => {
-      setState(prev => ({...prev, hideFooter: false, ...state}))
+      setState(prev => ({
+        ...prev,
+        hideFooter: false,
+        measurement: undefined,
+        ...state,
+      }))
     },
   )
 

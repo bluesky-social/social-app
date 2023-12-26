@@ -18,12 +18,15 @@ interface UseImageViewerDefaults {
   onCloseViewer: () => void
   containerStyle: AnimatedStyle
   accessoryStyle: AnimatedStyle
+  isScaled: boolean
+  setIsScaled: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export const useImageViewerDefaults = (): UseImageViewerDefaults => {
   const {isVisible} = useImageViewerState()
   const {setVisible} = useImageViewerControls()
 
+  const [isScaled, setIsScaled] = React.useState(false)
   const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
 
   const opacity = useSharedValue(0)
@@ -66,5 +69,7 @@ export const useImageViewerDefaults = (): UseImageViewerDefaults => {
     onCloseViewer,
     containerStyle,
     accessoryStyle,
+    isScaled,
+    setIsScaled,
   }
 }
