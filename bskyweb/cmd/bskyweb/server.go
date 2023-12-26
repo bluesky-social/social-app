@@ -336,7 +336,11 @@ func (srv *Server) WebPost(c echo.Context) error {
 	data["postView"] = postView
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
 	if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
-		data["imgThumbUrl"] = postView.Embed.EmbedImages_View.Images[0].Thumb
+		var thumbUrls []string
+		for i := range postView.Embed.EmbedImages_View.Images {
+			thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
+		}
+		data["imgThumbUrls"] = thumbUrls
 	}
 	return c.Render(http.StatusOK, "post.html", data)
 }

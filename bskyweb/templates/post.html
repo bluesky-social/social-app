@@ -25,8 +25,10 @@
   <meta name="description" content="{{ postView.Record.Val.Text }}">
   <meta property="og:description" content="{{ postView.Record.Val.Text }}">
   {% endif -%}
-  {%- if imgThumbUrl %}
+  {%- if imgThumbUrls %}
+  {% for imgThumbUrl in imgThumbUrls %}
   <meta property="og:image" content="{{ imgThumbUrl }}">
+  {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
   {%- elif postView.Author.Avatar %}
   {# Don't use avatar image in cards; usually looks bad #}
