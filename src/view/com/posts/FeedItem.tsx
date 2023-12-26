@@ -34,6 +34,7 @@ import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
+import {useSession} from '#/state/session'
 
 export function FeedItem({
   post,
@@ -102,10 +103,14 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
+  const {currentAccount} = useSession()
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
+  const isModeratedPost =
+    moderation.decisions.post.cause?.type === 'label' &&
+    moderation.decisions.post.cause.label.src !== currentAccount?.did
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -284,7 +289,14 @@ let FeedItemInner = ({
             postEmbed={post.embed}
             postAuthor={post.author}
           />
-          <PostCtrls post={post} record={record} onPressReply={onPressReply} />
+          <PostCtrls
+            post={post}
+            record={record}
+            onPressReply={onPressReply}
+            showAppealLabelItem={
+              post.author.did === currentAccount?.did && isModeratedPost
+            }
+          />
         </View>
       </View>
     </Link>

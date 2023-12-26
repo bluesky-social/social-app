@@ -31,12 +31,14 @@ let PostCtrls = ({
   big,
   post,
   record,
+  showAppealLabelItem,
   style,
   onPressReply,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
+  showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
 }): React.ReactNode => {
@@ -207,6 +209,7 @@ let PostCtrls = ({
           postCid={post.cid}
           postUri={post.uri}
           record={record}
+          showAppealLabelItem={showAppealLabelItem}
           style={styles.ctrlPad}
         />
       )}
