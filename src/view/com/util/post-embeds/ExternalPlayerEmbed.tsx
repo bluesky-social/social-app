@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
@@ -116,6 +117,7 @@ export function ExternalPlayer({
   params: EmbedPlayerParams
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const insets = useSafeAreaInsets()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -128,6 +130,9 @@ export function ExternalPlayer({
 
   // watch for leaving the viewport due to scrolling
   React.useEffect(() => {
+    // We don't want to do anything if the player isn't active
+    if (!isPlayerActive) return
+
     // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
@@ -136,22 +141,33 @@ export function ExternalPlayer({
 
     const interval = setInterval(() => {
       viewRef.current?.measure((x, y, w, h, pageX, pageY) => {
-        const window = Dimensions.get('window')
+        const {height: screenHeight, width: screenWidth} =
+          Dimensions.get('window')
+
+        // Get the proper screen height depending on what is going on
+        const realScreenHeight = isNative // If it is native, we always want the larger number
+          ? screenHeight > screenWidth
+            ? screenHeight
+            : screenWidth
+          : screenHeight // On web, we always want the actual screen height
+
         const top = pageY
         const bot = pageY + h
-        const isVisible = isNative
-          ? top >= 0 && bot <= window.height
-          : !(top >= window.height || bot <= 0)
+
+        // We can use the same logic on all platforms against the screenHeight that we get above
+        const isVisible =
+          top <= realScreenHeight - insets.bottom && bot >= insets.top
         if (!isVisible) {
           setPlayerActive(false)
         }
       })
     }, 1e3)
+
     return () => {
       unsubscribe()
       clearInterval(interval)
     }
-  }, [viewRef, navigation])
+  }, [viewRef, navigation, isPlayerActive, insets])
 
   // calculate height for the player and the screen size
   const height = React.useMemo(
