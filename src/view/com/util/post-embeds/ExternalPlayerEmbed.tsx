@@ -1,10 +1,10 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  Dimensions,
   GestureResponderEvent,
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native'
 import {Image} from 'expo-image'
@@ -118,6 +118,7 @@ export function ExternalPlayer({
 }) {
   const navigation = useNavigation<NavigationProp>()
   const insets = useSafeAreaInsets()
+  const windowDims = useWindowDimensions()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -141,22 +142,23 @@ export function ExternalPlayer({
 
     const interval = setInterval(() => {
       viewRef.current?.measure((x, y, w, h, pageX, pageY) => {
-        const {height: screenHeight, width: screenWidth} =
-          Dimensions.get('window')
+        const {height: winHeight, width: winWidth} = windowDims
 
         // Get the proper screen height depending on what is going on
-        const realScreenHeight = isNative // If it is native, we always want the larger number
-          ? screenHeight > screenWidth
-            ? screenHeight
-            : screenWidth
-          : screenHeight // On web, we always want the actual screen height
+        const realWinHeight = isNative // If it is native, we always want the larger number
+          ? winHeight > winWidth
+            ? winHeight
+            : winWidth
+          : winHeight // On web, we always want the actual screen height
+
+        console.log(realWinHeight)
 
         const top = pageY
         const bot = pageY + h
 
         // We can use the same logic on all platforms against the screenHeight that we get above
         const isVisible =
-          top <= realScreenHeight - insets.bottom && bot >= insets.top
+          top <= realWinHeight - insets.bottom && bot >= insets.top
         if (!isVisible) {
           setPlayerActive(false)
         }
@@ -167,7 +169,7 @@ export function ExternalPlayer({
       unsubscribe()
       clearInterval(interval)
     }
-  }, [viewRef, navigation, isPlayerActive, insets])
+  }, [viewRef, navigation, isPlayerActive, windowDims, insets])
 
   // calculate height for the player and the screen size
   const height = React.useMemo(
