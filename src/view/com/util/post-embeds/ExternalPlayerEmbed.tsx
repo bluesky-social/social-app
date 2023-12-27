@@ -151,8 +151,6 @@ export function ExternalPlayer({
             : winWidth
           : winHeight // On web, we always want the actual screen height
 
-        console.log(realWinHeight)
-
         const top = pageY
         const bot = pageY + h
 
