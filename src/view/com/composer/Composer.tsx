@@ -207,7 +207,11 @@ export const ComposePost = observer(function ComposePost({
     setError('')
 
     if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
-      setError('Did you want to say anything?')
+      setError(_(msg`Did you want to say anything?`))
+      return
+    }
+    if (extLink?.isLoading) {
+      setError(_(msg`Please wait for your link card to finish loading`))
       return
     }
 
@@ -438,7 +442,7 @@ export const ComposePost = observer(function ComposePost({
                   accessibilityLabel={_(msg`Add link card`)}
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
-                    <Trans>Add link card:</Trans>
+                    <Trans>Add link card:</Trans>{' '}
                     <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
                   </Text>
                 </TouchableOpacity>

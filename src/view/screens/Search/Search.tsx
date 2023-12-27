@@ -212,12 +212,17 @@ function SearchScreenPostResults({query}: {query: string}) {
   const items = React.useMemo(() => {
     let temp: SearchResultSlice[] = []
 
+    const seenUris = new Set()
     for (const post of posts) {
+      if (seenUris.has(post.uri)) {
+        continue
+      }
       temp.push({
         type: 'post',
         key: post.uri,
         post,
       })
+      seenUris.add(post.uri)
     }
 
     if (isFetchingNextPage) {

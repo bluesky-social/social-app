@@ -57,6 +57,7 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {useComposerControls} from '#/state/shell/composer'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {isNative} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -446,6 +447,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
+    const isScreenFocused = useIsFocused()
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -459,6 +461,13 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     React.useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
+
+    React.useEffect(() => {
+      if (!isScreenFocused) {
+        return
+      }
+      return listenSoftReset(onScrollToTop)
+    }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
       return <EmptyState icon="feed" message="This feed is empty!" />

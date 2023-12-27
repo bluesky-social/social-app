@@ -130,11 +130,11 @@ msgstr ""
 msgid "Add details to report"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:438
+#: src/view/com/composer/Composer.tsx:442
 msgid "Add link card"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:441
+#: src/view/com/composer/Composer.tsx:445
 msgid "Add link card:"
 msgstr ""
 
@@ -373,8 +373,8 @@ msgstr ""
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:285
-#: src/view/com/composer/Composer.tsx:288
+#: src/view/com/composer/Composer.tsx:289
+#: src/view/com/composer/Composer.tsx:292
 #: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -703,6 +703,10 @@ msgstr ""
 
 #: src/view/screens/Settings.tsx:637
 msgid "Developer Tools"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:210
+msgid "Did you want to say anything?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:143
@@ -1492,7 +1496,7 @@ msgstr ""
 msgid "Okay"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:354
+#: src/view/com/composer/Composer.tsx:358
 msgid "One or more images is missing alt text."
 msgstr ""
 
@@ -1620,7 +1624,11 @@ msgstr ""
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr ""
 
-#: src/view/com/composer/Composer.tsx:337
+#: src/view/com/composer/Composer.tsx:214
+msgid "Please wait for your link card to finish loading"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
@@ -2497,7 +2505,7 @@ msgstr ""
 msgid "Wide"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:409
+#: src/view/com/composer/Composer.tsx:413
 msgid "Write post"
 msgstr ""
 
