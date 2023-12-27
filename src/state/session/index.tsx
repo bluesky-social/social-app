@@ -12,6 +12,8 @@ import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
+import {fetch as fetchNetworkState} from '@react-native-community/netinfo'
+import * as Toast from 'view/com/util/Toast'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -141,6 +143,9 @@ function createPersistSessionHandler(
      * to persist this data and wipe their tokens, effectively logging them
      * out.
      */
+    // if creation failed, but it is a network error, we want to persist the
+    // data so that the user can try again
+
     persistSessionCallback({
       expired,
       refreshedAccount,
@@ -444,6 +449,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     async account => {
       try {
         if (account) {
+          const currentNetworkState = await fetchNetworkState()
+          if (!currentNetworkState.isConnected) {
+            logger.info(`session: no internet connection, cannot reuse session`)
+            Toast.show('No internet connection. Please try again.')
+            return
+          }
           await initSession(account)
         }
       } catch (e) {
