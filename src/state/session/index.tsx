@@ -14,6 +14,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
 import {fetch as fetchNetworkState} from '@react-native-community/netinfo'
 import * as Toast from 'view/com/util/Toast'
+import {isNative} from '#/platform/detection'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -450,7 +451,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       try {
         if (account) {
           const currentNetworkState = await fetchNetworkState()
-          if (!currentNetworkState.isConnected) {
+          // can be null, so check for being false
+          // only check for internet connection if native as netinfo doesn't work in web
+          if (isNative && currentNetworkState.isConnected === false) {
             logger.info(`session: no internet connection, cannot reuse session`)
             Toast.show('No internet connection. Please try again.')
             return
