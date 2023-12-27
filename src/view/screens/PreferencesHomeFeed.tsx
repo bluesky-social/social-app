@@ -117,7 +117,7 @@ export function PreferencesHomeFeed({navigation}: Props) {
             <ToggleButton
               testID="toggleRepliesBtn"
               type="default-light"
-              label={showReplies ? 'Yes' : 'No'}
+              label={showReplies ? _(msg`Yes`) : _(msg`No`)}
               isSelected={showReplies}
               onPress={() =>
                 setFeedViewPref({
