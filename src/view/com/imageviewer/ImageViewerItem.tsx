@@ -335,8 +335,6 @@ function ImageViewerItem({
     setAccessoriesVisible(prev => !prev)
   }
 
-  // Handle the single tap gesture. Only run this after the double tap gesture fails (more than 300ms has passed since
-  // the first tap). Ensure it isn't a "drag" either by setting max delta.
   const tapGesture = Gesture.Tap()
     .requireExternalGestureToFail(doubleTapGesture)
     .maxDuration(100)
@@ -414,7 +412,6 @@ function ImageViewerItem({
     .onEnd(onCloseGestureEnd)
 
   // Combine the gestures
-  // Run tap gestures together so we can run tap only when double tap fails
   const tapGestures = Gesture.Simultaneous(doubleTapGesture, tapGesture)
   const pinchAndPanGestures = Gesture.Simultaneous(pinchGesture, panGesture)
   const allGestures = Gesture.Race(
@@ -423,7 +420,6 @@ function ImageViewerItem({
     IS_WEB ? panGesture : pinchAndPanGestures,
   ) // Close gesture should have priority over the other gestures, and only one should run at a time
 
-  // Animated styles
   const positionStyle = useAnimatedStyle(() => ({
     transform: [{translateX: positionX.value}, {translateY: positionY.value}],
   }))
@@ -437,8 +433,6 @@ function ImageViewerItem({
     }
   })
 
-  // Animated image does not play nice on web. Instead, we have to use an additional animated view to get things right.
-  // Needs to be wrapped in a flex view so the entire screen detects gestures
   return (
     <GestureDetector gesture={allGestures}>
       <View style={[styles.container]}>
