@@ -207,11 +207,11 @@ export const ComposePost = observer(function ComposePost({
     setError('')
 
     if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
-      setError('Did you want to say anything?')
+      setError(_(msg`Did you want to say anything?`))
       return
     }
     if (extLink?.isLoading) {
-      setError('Please wait for your link card to finish loading')
+      setError(_(msg`Please wait for your link card to finish loading`))
       return
     }
 
