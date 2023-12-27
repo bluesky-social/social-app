@@ -58,6 +58,7 @@
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
     "@react-native-community/datetimepicker": "7.6.1",
+    "@react-native-community/netinfo": "^11.2.1",
     "@react-native-masked-view/masked-view": "0.3.0",
     "@react-native-menu/menu": "^0.8.0",
     "@react-native-picker/picker": "2.5.1",
