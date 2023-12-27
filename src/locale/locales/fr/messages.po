@@ -110,11 +110,11 @@ msgstr "Ajouter des détails"
 msgid "Add details to report"
 msgstr "Ajouter des détails au rapport"
 
-#: src/view/com/composer/Composer.tsx:438
+#: src/view/com/composer/Composer.tsx:442
 msgid "Add link card"
 msgstr "Ajouter une carte link card"
 
-#: src/view/com/composer/Composer.tsx:441
+#: src/view/com/composer/Composer.tsx:445
 msgid "Add link card:"
 msgstr "Ajouter une carte link card :"
 
@@ -345,8 +345,8 @@ msgstr "Caméra"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "Ne peut contenir que des lettres, des chiffres, des espaces, des tirets et des tirets bas. La longueur doit être d’au moins 4 caractères, mais pas plus de 32."
 
-#: src/view/com/composer/Composer.tsx:285
-#: src/view/com/composer/Composer.tsx:288
+#: src/view/com/composer/Composer.tsx:289
+#: src/view/com/composer/Composer.tsx:292
 #: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -668,6 +668,10 @@ msgstr "Serveur de dév"
 #: src/view/screens/Settings.tsx:637
 msgid "Developer Tools"
 msgstr "Outils du dév"
+
+#: src/view/com/composer/Composer.tsx:210
+msgid "Did you want to say anything?"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:143
 msgid "Discard"
@@ -1398,7 +1402,7 @@ msgstr "Oh non !"
 msgid "Okay"
 msgstr "D’accord"
 
-#: src/view/com/composer/Composer.tsx:354
+#: src/view/com/composer/Composer.tsx:358
 msgid "One or more images is missing alt text."
 msgstr "Une ou plusieurs images n’ont pas de texte alt."
 
@@ -1526,7 +1530,11 @@ msgstr ""
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr "Dites-nous pourquoi vous pensez que cette décision était incorrecte."
 
-#: src/view/com/composer/Composer.tsx:337
+#: src/view/com/composer/Composer.tsx:214
+msgid "Please wait for your link card to finish loading"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
@@ -2358,7 +2366,7 @@ msgstr "Qui peut répondre ?"
 msgid "Wide"
 msgstr "Large"
 
-#: src/view/com/composer/Composer.tsx:409
+#: src/view/com/composer/Composer.tsx:413
 msgid "Write post"
 msgstr "Rédiger une publication"
 
