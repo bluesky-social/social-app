@@ -25,7 +25,7 @@ import {isAndroid} from 'platform/detection.ts'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
-  duration: 200,
+  duration: Platform.OS === 'android' ? 350 : 200,
 }
 const PAN_WITH_TIMING_CONFIG = {
   duration: 400,
@@ -52,10 +52,10 @@ function ImageViewerItem({
   const ranInitialAnimation = React.useRef(false)
 
   // Values for animating height and position of the image.
-  const animatedHeight = useSharedValue(1)
-  const animatedWidth = useSharedValue(1)
-  const positionX = useSharedValue(0)
-  const positionY = useSharedValue(0)
+  const animatedHeight = useSharedValue(measurement?.height ?? 1)
+  const animatedWidth = useSharedValue(measurement?.width ?? 1)
+  const positionX = useSharedValue(measurement?.pageX ?? 0)
+  const positionY = useSharedValue(measurement?.pageY ?? 0)
 
   // Values for storing translation info
   const lastTranslateX = useSharedValue(0)
@@ -123,20 +123,11 @@ function ImageViewerItem({
   useAnimatedReaction(
     () => imageDimensions.value,
     () => {
-      if (index === initialIndex) {
-        animatedHeight.value = withTiming(
-          imageDimensions.value.height,
-          WITH_TIMING_CONFIG,
-        )
-        animatedWidth.value = withTiming(
-          imageDimensions.value.width,
-          WITH_TIMING_CONFIG,
-        )
-      } else {
+      if (index !== initialIndex) {
         animatedHeight.value = imageDimensions.value.height
         animatedWidth.value = imageDimensions.value.width
+        centerImage(false)
       }
-      centerImage()
     },
   )
 
@@ -164,12 +155,6 @@ function ImageViewerItem({
 
   const onOpen = React.useCallback(() => {
     'worklet'
-    // For all images that are not the current image, set the dimensions
-    if (index !== initialIndex) {
-      runOnJS(prefetchAndReplace)()
-      return
-    }
-
     // Fade in the background and show accessories
     accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
     backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
@@ -179,12 +164,6 @@ function ImageViewerItem({
       runOnJS(prefetchAndReplace)()
       return
     }
-
-    // Set the initial position of the image in the modal
-    positionX.value = measurement.pageX
-    positionY.value = measurement.pageY
-    animatedHeight.value = measurement.height
-    animatedWidth.value = measurement.width
 
     // Calculate the dimensions to render
     const calculatedDimensions = calculateDimensions(
@@ -198,10 +177,26 @@ function ImageViewerItem({
       height: calculatedDimensions.height,
       width: calculatedDimensions.width,
     }
+    animatedHeight.value = withTiming(
+      calculatedDimensions.height,
+      WITH_TIMING_CONFIG,
+    )
+    animatedWidth.value = withTiming(
+      calculatedDimensions.width,
+      WITH_TIMING_CONFIG,
+    )
+    positionX.value = withTiming(
+      (screenDimensions.width - imageDimensions.value.width) / 2,
+      WITH_TIMING_CONFIG,
+    )
+    positionY.value = withTiming(
+      (screenDimensions.height - imageDimensions.value.height) / 2,
+      WITH_TIMING_CONFIG,
+    )
 
     // All the stable values are removed here, since we were using a lot of shared values
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [index, initialIndex, measurement, screenDimensions])
+  }, [index, initialIndex, measurement])
 
   // Handle opening the image viewer
   React.useEffect(() => {
@@ -209,17 +204,20 @@ function ImageViewerItem({
 
     if (!ranInitialAnimation.current) {
       ranInitialAnimation.current = true
-      runOnUI(onOpen)()
+
+      if (index === initialIndex) {
+        runOnUI(onOpen)()
+      }
       // Running this on the animation callback doesn't work on web, so we will just use setTimeout. Run after the 200ms
       // animation
       setTimeout(
         () => {
           runOnJS(prefetchAndReplace)()
         },
-        Platform.OS === 'android' ? 310 : 210,
+        Platform.OS === 'android' ? 350 : 250,
       )
     }
-  }, [isVisible, onOpen, prefetchAndReplace])
+  }, [index, initialIndex, isVisible, onOpen, prefetchAndReplace])
 
   // Callback for reseting the last translate
   const onResetLastTranslate = () => {
@@ -423,11 +421,9 @@ function ImageViewerItem({
   const positionStyle = useAnimatedStyle(() => ({
     transform: [{translateX: positionX.value}, {translateY: positionY.value}],
   }))
-  const scaleStyle = useAnimatedStyle(() => ({
-    transform: [{scale: scale.value}],
-  }))
-  const dimensionsStyle = useAnimatedStyle(() => {
+  const imageStyle = useAnimatedStyle(() => {
     return {
+      transform: [{scale: scale.value}],
       height: animatedHeight.value,
       width: animatedWidth.value,
     }
@@ -437,7 +433,7 @@ function ImageViewerItem({
     <GestureDetector gesture={allGestures}>
       <View style={[styles.container]}>
         <Animated.View style={[positionStyle]}>
-          <Animated.View style={[dimensionsStyle, scaleStyle]}>
+          <Animated.View style={[imageStyle]}>
             <Image
               source={{uri: source}}
               style={styles.image}

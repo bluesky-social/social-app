@@ -69,7 +69,8 @@ function ViewerImage({images, index, imageStyle}: IProps) {
         isMobile && styles.singleImageMobile,
         imageStyle,
       ]}
-      accessibilityRole="button">
+      accessibilityRole="button"
+      collapsable={false}>
       <Image
         source={{uri: image.thumb}}
         onLoad={onLoad}
