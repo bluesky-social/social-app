@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Hima-Zinn\n"
+"Last-Translator: noritada\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada\n"
 "Plural-Forms: \n"
 
@@ -771,7 +771,7 @@ msgstr "メールアドレス："
 
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "この設定を有効にすると、フォローしているユーザー間の返信だけが表示されます。"
+msgstr "この設定を有効にすると、自分がフォローしているユーザーからの返信だけが表示されます。"
 
 #: src/view/screens/Profile.tsx:426
 msgid "End of feed"
@@ -878,11 +878,11 @@ msgstr "何人かのユーザーをフォローして開始します。興味を
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
-msgstr "フォローしているユーザー"
+msgstr "自分がフォローしているユーザー"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:145
 msgid "Followed users only"
-msgstr "フォローされたユーザーのみ"
+msgstr "自分がフォローしているユーザーのみ"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
@@ -1011,7 +1011,7 @@ msgstr "ホーム"
 #: src/view/screens/PreferencesHomeFeed.tsx:95
 #: src/view/screens/Settings.tsx:481
 msgid "Home Feed Preferences"
-msgstr "ホームフィード設定"
+msgstr "ホームフィードの設定"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:114
 msgid "Hosting provider"
@@ -1144,7 +1144,7 @@ msgstr "このフィードをいいね"
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
-msgstr "いいねした人"
+msgstr "いいねしたユーザー"
 
 #: src/view/screens/Profile.tsx:164
 msgid "Likes"
@@ -1156,7 +1156,7 @@ msgstr "いいね"
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "List Avatar"
-msgstr "リストアバター"
+msgstr "リストのアバター"
 
 #: src/view/com/modals/CreateOrEditList.tsx:199
 msgid "List Name"
@@ -1172,15 +1172,15 @@ msgstr "リスト"
 #: src/view/com/post-thread/PostThread.tsx:259
 #: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
-msgstr "より多くの投稿をロード"
+msgstr "投稿をさらにロード"
 
 #: src/view/screens/Notifications.tsx:144
 msgid "Load new notifications"
-msgstr "新しい通知をロード"
+msgstr "最新の通知をロード"
 
 #: src/view/com/feeds/FeedPage.tsx:189
 msgid "Load new posts"
-msgstr "投稿をロード"
+msgstr "最新の投稿をロード"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
 msgid "Loading..."
@@ -1278,19 +1278,19 @@ msgstr "スレッドをミュート"
 
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
-msgstr "ミュートされたアカウント"
+msgstr "ミュート中のアカウント"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
-msgstr "ミュートされたアカウント"
+msgstr "ミュート中のアカウント"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "ミュートをされたアカウントは、フィードと通知からの投稿が削除されます。ミュートの設定は完全に非公開です。"
+msgstr "ミュート中のアカウントの投稿は、フィードや通知から取り除かれます。ミュートの設定は完全に非公開です。"
 
 #: src/view/screens/ProfileList.tsx:272
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "ミュートは非公開です。ミュートをされたアカウントはあなたと引き続き関わることができますが、そのアカウントの投稿や通知を受信することはできません。"
+msgstr "ミュートの設定は非公開です。ミュート中のアカウントはあなたと引き続き関わることができますが、そのアカウントの投稿や通知を受信することはできません。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -1726,7 +1726,7 @@ msgstr "リポストまたは引用"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted by"
-msgstr "リポストした人"
+msgstr "リポストしたユーザー"
 
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
@@ -1881,15 +1881,15 @@ msgstr "新しいパスワードを設定"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "フィードから全ての引用を非表示にするには、この設定を「いいえ」にします。リポストは引き続き表示されます。"
+msgstr "フィード内の引用をすべて非表示にするには、この設定を「いいえ」にします。リポストは引き続き表示されます。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "フィードから全ての返信を非表示にするには、この設定を「いいえ」にします。"
+msgstr "フィード内の返信をすべて非表示にするには、この設定を「いいえ」にします。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:182
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "フィードから全てのリポストを非表示にするには、この設定を「いいえ」にします。"
+msgstr "フィード内のリポストをすべて非表示にするには、この設定を「いいえ」にします。"
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -1943,7 +1943,7 @@ msgstr "返信を表示"
 
 #: src/view/screens/PreferencesThreads.tsx:94
 msgid "Show replies by people you follow before all other replies."
-msgstr "他のすべての返信の前に、フォローしている人からの返信を表示します。"
+msgstr "自分がフォローしているユーザーからの返信を、他のすべての返信の前に表示します。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:179
 msgid "Show Reposts"
@@ -2364,7 +2364,7 @@ msgstr "アルゴリズムによるフィードにはどの言語を使用しま
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
-msgstr "返信できる人"
+msgstr "返信できるユーザー"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
