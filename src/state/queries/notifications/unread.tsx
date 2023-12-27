@@ -89,6 +89,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
+        if (isNative) {
+          Notifications.setBadgeCountAsync(0)
+        }
       },
 
       async checkUnread({invalidate}: {invalidate?: boolean} = {}) {
