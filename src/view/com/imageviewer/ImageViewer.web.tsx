@@ -18,11 +18,11 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
 import {useImageViewerState} from 'state/imageViewer'
 
-function ImageViewer() {
+export default function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
 
   const {images, initialIndex, hideFooter} = useImageViewerState()
-  const {height: screenHeight, width: screenWidth} = useWindowDimensions()
+  const {width: screenWidth} = useWindowDimensions()
 
   const {
     accessoriesVisible,
@@ -46,25 +46,25 @@ function ImageViewer() {
     (index: number, animated = true) => {
       scrollViewRef.current?.scrollTo({
         x: index * screenWidth,
-        animated,
+        animated: animated && isMobile,
       })
 
       setCurrentIndex(index)
     },
-    [screenWidth],
+    [screenWidth, isMobile],
   )
 
   const onPrevPress = React.useCallback(() => {
     if (currentIndex === 0) return
 
-    scrollToImage(currentIndex - 1, isMobile)
-  }, [currentIndex, scrollToImage, isMobile])
+    scrollToImage(currentIndex - 1)
+  }, [currentIndex, scrollToImage])
 
   const onNextPress = React.useCallback(() => {
     if (currentIndex === images.length - 1) return
 
-    scrollToImage(currentIndex + 1, isMobile)
-  }, [currentIndex, images, scrollToImage, isMobile])
+    scrollToImage(currentIndex + 1)
+  }, [currentIndex, images, scrollToImage])
 
   const onKeyDown = React.useCallback(
     (e: KeyboardEvent) => {
@@ -92,7 +92,7 @@ function ImageViewer() {
     // Add keydown listener
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  })
+  }, [onKeyDown])
 
   // Fun! This handles the scroll event so that we can update the current index.
   // 1. Get the new offset
@@ -136,7 +136,7 @@ function ImageViewer() {
               style={styles.scrollButton}
               accessibilityRole="button"
               accessibilityLabel="Previous Image"
-              accessibilityHint="Navigates to the previous image">
+              accessibilityHint="Navigates to the next image">
               <FontAwesomeIcon
                 icon="chevron-right"
                 size={30}
@@ -157,10 +157,15 @@ function ImageViewer() {
           scrollEnabled={false}
           scrollEventThrottle={0}
           onScroll={isMobile ? onScroll : undefined}
-          style={{flex: 1}}
-          contentContainerStyle={{flex: 1}}>
+          style={styles.container}
+          contentContainerStyle={styles.container}>
           {images.map((image, i) => (
-            <View key={i} style={{height: screenHeight, width: screenWidth}}>
+            <View
+              key={i}
+              style={{
+                height: '100%',
+                width: screenWidth,
+              }}>
               <ImageViewerItem
                 image={image}
                 initialIndex={initialIndex}
@@ -245,5 +250,3 @@ const styles = StyleSheet.create({
     transform: [{rotateZ: '180deg'}], // I promise I'm not crazy...but why is chevron-left not working? TODO
   },
 })
-
-export default ImageViewer

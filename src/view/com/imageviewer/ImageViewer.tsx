@@ -1,5 +1,5 @@
 import React from 'react'
-import Animated, {useSharedValue} from 'react-native-reanimated'
+import Animated from 'react-native-reanimated'
 import {NativeSyntheticEvent, StyleSheet, View} from 'react-native'
 import PagerView from 'react-native-pager-view'
 import ImageViewerFooter from 'view/com/imageviewer/ImageViewerFooter'
@@ -27,24 +27,11 @@ function ImageViewer() {
 
   const [currentImage, setCurrentImage] = React.useState(images?.[initialIndex])
 
-  const isDragging = useSharedValue(false)
-
   const onPageSelected = React.useCallback(
     (e: NativeSyntheticEvent<Readonly<{position: number}>>) => {
       setCurrentImage(images?.[e.nativeEvent.position])
     },
     [images],
-  )
-
-  const onPageScrollStateChanged = React.useCallback(
-    (
-      e: NativeSyntheticEvent<
-        Readonly<{pageScrollState: 'idle' | 'dragging' | 'settling'}>
-      >,
-    ) => {
-      isDragging.value = e.nativeEvent.pageScrollState !== 'idle'
-    },
-    [isDragging],
   )
 
   return (
@@ -61,8 +48,7 @@ function ImageViewer() {
         initialPage={initialIndex}
         scrollEnabled={!isScaled}
         overdrag
-        onPageSelected={onPageSelected}
-        onPageScrollStateChanged={onPageScrollStateChanged}>
+        onPageSelected={onPageSelected}>
         {images?.map((image, i) => (
           <View style={styles.container} key={i}>
             <ImageViewerItem
@@ -75,7 +61,6 @@ function ImageViewer() {
               opacity={opacity}
               accessoryOpacity={accessoryOpacity}
               backgroundOpacity={backgroundOpacity}
-              isDragging={isDragging}
             />
           </View>
         ))}
@@ -100,7 +85,6 @@ const styles = StyleSheet.create({
   },
   accessory: {
     position: 'absolute',
-    zIndex: 1,
     left: 0,
     right: 0,
   },

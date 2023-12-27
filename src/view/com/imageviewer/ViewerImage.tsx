@@ -27,7 +27,9 @@ function ViewerImage({images, index, imageStyle}: IProps) {
 
   const viewRef = React.useRef<View>(null)
   const isLoaded = React.useRef(false)
-  const dims = React.useRef<AspectRatio | undefined>(image.aspectRatio)
+  const imageDimensions = React.useRef<AspectRatio | undefined>(
+    image.aspectRatio,
+  )
 
   // TODO shutting this up for now
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -44,56 +46,40 @@ function ViewerImage({images, index, imageStyle}: IProps) {
       setState({
         images,
         initialIndex: index,
+        initialDimensions: imageDimensions.current,
         measurement,
         isVisible: true,
-        initialDimensions: dims.current,
       })
     })
   }, [images, index, setState])
 
   const onLoad = React.useCallback((e: ImageLoadEventData) => {
     isLoaded.current = true
-
-    if (dims.current) return
-
-    dims.current = {width: e.source.width, height: e.source.height}
+    if (imageDimensions.current) return
+    imageDimensions.current = {width: e.source.width, height: e.source.height}
   }, [])
 
   return (
     <Pressable
-      accessibilityRole="button"
       onPress={onPress}
       ref={viewRef}
       style={[
-        styles.imageContainer,
+        styles.imageStyle,
         styles.singleImage,
         isMobile && styles.singleImageMobile,
         imageStyle,
-      ]}>
-      {images.length === 1 ? (
-        <Image
-          source={{uri: image.thumb}}
-          onLoad={onLoad}
-          style={[{aspectRatio}]}
-          cachePolicy="memory-disk"
-          accessible
-          accessibilityLabel={image.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-        />
-      ) : (
-        <Image
-          source={{uri: image.thumb}}
-          onLoad={onLoad}
-          style={[styles.imageStyle]}
-          cachePolicy="memory-disk"
-          accessible
-          accessibilityLabel={image.alt}
-          accessibilityHint=""
-          accessibilityIgnoresInvertColors
-        />
-      )}
-
+      ]}
+      accessibilityRole="button">
+      <Image
+        source={{uri: image.thumb}}
+        onLoad={onLoad}
+        style={images.length === 1 ? {aspectRatio} : styles.imageStyle}
+        cachePolicy="memory-disk"
+        accessible
+        accessibilityLabel={image.alt}
+        accessibilityHint=""
+        accessibilityIgnoresInvertColors
+      />
       {image.alt === '' ? null : (
         <View style={styles.altContainer}>
           <Text style={styles.alt} accessible={false}>
@@ -120,13 +106,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
-  imageContainer: {
-    flex: 1,
-    overflow: 'hidden',
-    borderRadius: 8,
-  },
   imageStyle: {
     flex: 1,
+    overflow: 'hidden',
     borderRadius: 8,
   },
   singleImage: {
@@ -134,9 +116,6 @@ const styles = StyleSheet.create({
   },
   singleImageMobile: {
     maxHeight: 500,
-  },
-  multiImage: {
-    flex: 1,
   },
 })
 

@@ -6,6 +6,7 @@ import Animated, {
   runOnUI,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDecay,
   withTiming,
@@ -21,7 +22,6 @@ import {
 import {IImageViewerItemProps} from 'view/com/imageviewer/types'
 import {useImageViewerState} from 'state/imageViewer'
 import {isAndroid} from 'platform/detection.ts'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries.tsx'
 
 const IS_WEB = Platform.OS === 'web'
 const WITH_TIMING_CONFIG = {
@@ -32,23 +32,6 @@ const PAN_WITH_TIMING_CONFIG = {
   easing: Easing.out(Easing.ease),
 }
 const MAX_SCALE = 3
-
-const calc = (
-  height: number,
-  width: number,
-  screenHeight: number,
-  screenWidth: number,
-) => {
-  const heightRatio = (screenHeight * (!IS_WEB ? 0.9 : 1)) / height
-  const widthRatio = screenWidth / width
-
-  const ratio = Math.min(widthRatio, heightRatio)
-
-  return {
-    height: height * ratio,
-    width: width * ratio,
-  }
-}
 
 function ImageViewerItem({
   image,
@@ -61,8 +44,7 @@ function ImageViewerItem({
   backgroundOpacity,
   onCloseViewer,
 }: IImageViewerItemProps) {
-  const {height: screenHeight, width: screenWidth} = useWindowDimensions()
-  const {isMobile} = useWebMediaQueries()
+  const screenDimensions = useWindowDimensions()
   const {isVisible, measurement, initialDimensions} = useImageViewerState()
 
   const [source, setSource] = React.useState(image.thumb)
@@ -70,38 +52,41 @@ function ImageViewerItem({
 
   const ranInitialAnimation = React.useRef(false)
 
+  // Values for animating height and position of the image.
+  const animatedHeight = useSharedValue(1)
+  const animatedWidth = useSharedValue(1)
   const positionX = useSharedValue(0)
   const positionY = useSharedValue(0)
 
+  // Values for storing translation info
   const lastTranslateX = useSharedValue(0)
   const lastTranslateY = useSharedValue(0)
 
-  const height = useSharedValue(1)
-  const width = useSharedValue(1)
-
-  const realDimensions = useSharedValue({height: 0, width: 0})
-
-  const center = useSharedValue({x: 0, y: 0})
-
+  // Values for storing the scale of the image
   const scale = useSharedValue<number>(1)
   const lastScale = useSharedValue<number>(1)
 
-  const getMaxPosition = () => {
-    'worklet'
-    return {
-      x: ((scale.value - 1) * width.value) / 2,
-      y: ((scale.value - 1) * height.value) / 2,
-    }
-  }
+  // Value for storing the dimensions of the image as rendered
+  const imageDimensions = useSharedValue({
+    height: 1,
+    width: 1,
+  })
 
-  const getScaledDimensions = () => {
-    'worklet'
-
+  // Value for updating the center position of the image
+  const center = useDerivedValue(() => {
     return {
-      height: height.value * scale.value,
-      width: width.value * scale.value,
+      x: (screenDimensions.width - imageDimensions.value.width) / 2,
+      y: (screenDimensions.height - imageDimensions.value.height) / 2,
     }
-  }
+  })
+
+  const scaledDimensions = useDerivedValue(() => {
+    return calculateDimensions(
+      imageDimensions.value,
+      screenDimensions,
+      scale.value,
+    )
+  })
 
   // Update isScaled when the scale changes and show/hide the accessories
   useAnimatedReaction(
@@ -119,7 +104,7 @@ function ImageViewerItem({
     },
   )
 
-  // Helper function for recentering the image
+  // Helper function for re-centering the image
   const centerImage = React.useCallback(
     (animated = true) => {
       'worklet'
@@ -136,68 +121,56 @@ function ImageViewerItem({
     [center, positionX, positionY],
   )
 
-  // Helper function to set the proper image dimensions
-  const setImageDimensions = React.useCallback(
-    (h: number, w: number, animated = false): void => {
-      'worklet'
-      // Calculate the dimensions for the screen
-      const newDims = calc(h, w, screenHeight, screenWidth)
-
-      // Set those dimensions
-      center.value = {
-        x: (screenWidth - newDims.width) / 2,
-        y: (screenHeight - newDims.height) / 2,
-      }
-      realDimensions.value = {
-        height: newDims.height,
-        width: newDims.width,
-      }
-
-      if (animated) {
-        height.value = withTiming(newDims.height, WITH_TIMING_CONFIG)
-        width.value = withTiming(newDims.width, WITH_TIMING_CONFIG)
+  useAnimatedReaction(
+    () => imageDimensions.value,
+    () => {
+      if (index === initialIndex) {
+        animatedHeight.value = withTiming(
+          imageDimensions.value.height,
+          WITH_TIMING_CONFIG,
+        )
+        animatedWidth.value = withTiming(
+          imageDimensions.value.width,
+          WITH_TIMING_CONFIG,
+        )
       } else {
-        height.value = newDims.height
-        width.value = newDims.width
+        animatedHeight.value = imageDimensions.value.height
+        animatedWidth.value = imageDimensions.value.width
       }
+      centerImage()
     },
-    [center, height, width, realDimensions, screenHeight, screenWidth],
   )
 
-  // Handle the image loading so we can get the dimensions of the images that are not the main image
+  // Handle the image loading so that we can get the dimensions of the images that are not the main image
   const onLoad = React.useCallback(
     (e: ImageLoadEventData) => {
-      // We don't need to change the dims if we have already set them
-      if (height.value !== 1 && width.value !== 1) {
-        return
-      }
+      'worklet'
 
-      setImageDimensions(e.source.height, e.source.width)
+      if (imageDimensions.value.height !== 1) return
 
-      runOnUI(centerImage)(false)
+      imageDimensions.value = calculateDimensions(
+        e.source,
+        screenDimensions,
+        scale.value,
+      )
     },
-    [height, width, centerImage, setImageDimensions],
+    [imageDimensions, scale.value, screenDimensions],
   )
 
-  const prefetchAndReplace = () => {
+  const prefetchAndReplace = React.useCallback(() => {
     Image.prefetch(image.fullsize).then(() => {
       setSource(image.fullsize)
     })
-  }
+  }, [image])
 
-  // Handle opening the image viewer
-  React.useEffect(() => {
+  const onOpen = React.useCallback(() => {
     'worklet'
-    // Do nothing when the viewer closes
-    if (!isVisible) return
-
     // For all images that are not the current image, set the dimensions
-    if (index !== initialIndex || ranInitialAnimation.current) {
+    if (index !== initialIndex) {
       runOnJS(prefetchAndReplace)()
       return
     }
 
-    ranInitialAnimation.current = true
     opacity.value = 1
 
     // Fade in the background and show accessories
@@ -211,30 +184,42 @@ function ImageViewerItem({
     }
 
     // Set the initial position of the image in the modal
-    positionX.value = measurement?.pageX ?? 0
-    positionY.value = measurement?.pageY ?? 0
+    positionX.value = measurement.pageX
+    positionY.value = measurement.pageY
+    animatedHeight.value = measurement.height
+    animatedWidth.value = measurement.width
 
-    // Also set the initial height and width
-    height.value = measurement?.height ?? screenHeight
-    width.value = measurement?.width ?? screenWidth
-
-    setImageDimensions(
-      initialDimensions?.height ?? 1,
-      initialDimensions?.width ?? 1,
-      true,
+    // Calculate the dimensions to render
+    const calculatedDimensions = calculateDimensions(
+      initialDimensions,
+      screenDimensions,
+      scale.value,
     )
 
-    runOnUI(centerImage)()
+    // Set those dimensions
+    imageDimensions.value = {
+      height: calculatedDimensions.height,
+      width: calculatedDimensions.width,
+    }
 
-    // Running this on the animation callback doesn't work on web, so we will just use setTimeout. Run after the 200ms
-    // animation
-    setTimeout(() => {
-      runOnJS(prefetchAndReplace)()
-    }, 200)
-
-    // This only needs to re-run whenever the screen height or width changes
+    // All the stable values are removed here, since we were using a lot of shared values
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [screenHeight, screenWidth])
+  }, [index, initialIndex, measurement, screenDimensions])
+
+  // Handle opening the image viewer
+  React.useEffect(() => {
+    if (!isVisible) return
+
+    if (!ranInitialAnimation.current) {
+      ranInitialAnimation.current = true
+      runOnUI(onOpen)()
+      // Running this on the animation callback doesn't work on web, so we will just use setTimeout. Run after the 200ms
+      // animation
+      setTimeout(() => {
+        runOnJS(prefetchAndReplace)()
+      }, 200)
+    }
+  }, [isVisible, onOpen, prefetchAndReplace])
 
   // Callback for reseting the last translate
   const onResetLastTranslate = () => {
@@ -252,53 +237,65 @@ function ImageViewerItem({
     positionX.value += e.translationX - lastTranslateX.value
     positionY.value += e.translationY - lastTranslateY.value
 
-    // Store the new values
     lastTranslateX.value = e.translationX
     lastTranslateY.value = e.translationY
   }
 
   const onPanEnd = (e: GestureUpdateEvent<PanGestureHandlerEventPayload>) => {
     'worklet'
-    const {x: maxX, y: maxY} = getMaxPosition()
-    const scaledDimensions = getScaledDimensions()
+    // Get the blank space on either the x or y axis
+    const diffX = (screenDimensions.width - imageDimensions.value.width) / 2
+    const diffY = (screenDimensions.height - imageDimensions.value.height) / 2
 
-    // Deal with the width first.
-    if (scaledDimensions.width < screenWidth) {
-      // We can just return the image to the X center if the width is less than the screen width
+    // Get the max and min values for all translations
+    const maxX =
+      (scaledDimensions.value.width - screenDimensions.width) / 2 +
+      (diffX > 0 ? diffX : 0)
+    const minX =
+      diffX > 0
+        ? Math.abs(scaledDimensions.value.width - screenDimensions.width) / 2 -
+          diffX
+        : -maxX
+    const maxY =
+      (scaledDimensions.value.height - screenDimensions.height) / 2 +
+      (diffY > 0 ? diffY : 0)
+    const minY =
+      diffY > 0
+        ? Math.abs(scaledDimensions.value.height - screenDimensions.height) /
+            2 -
+          diffY
+        : -maxY
+
+    if (scaledDimensions.value.width <= screenDimensions.width) {
       positionX.value = withTiming(center.value.x, PAN_WITH_TIMING_CONFIG)
-    } else if (Math.abs(positionX.value) > maxX) {
-      // If the image is too far outside the x bounds, return it to the max
-      positionX.value = withTiming(
-        Math.sign(positionX.value) === 1 ? maxX : -maxX,
-        PAN_WITH_TIMING_CONFIG,
-      )
+    } else if (positionX.value > maxX) {
+      positionX.value = withTiming(maxX, PAN_WITH_TIMING_CONFIG)
+    } else if (diffX <= 0 && positionX.value < minX) {
+      positionX.value = withTiming(minX, PAN_WITH_TIMING_CONFIG)
+    } else if (diffX > 0 && positionX.value * -1 > minX) {
+      positionX.value = withTiming(-minX, PAN_WITH_TIMING_CONFIG)
     } else {
-      if (!isMobile) return
-
-      // We want to decay the velocity of the drag
       positionX.value = withDecay({
-        clamp: [-maxX, maxX],
-        rubberBandEffect: isAndroid,
+        clamp: diffX > 0 ? [-minX, maxX] : [minX, maxX],
+        rubberBandEffect: !isAndroid,
         rubberBandFactor: 0.5 * scale.value,
         velocity: (e.velocityX * 1.5) / scale.value,
         velocityFactor: 0.5 * scale.value,
       })
     }
 
-    // Same for the height
-    if (scaledDimensions.height < screenHeight) {
+    if (scaledDimensions.value.height <= screenDimensions.height) {
       positionY.value = withTiming(center.value.y, PAN_WITH_TIMING_CONFIG)
-    } else if (Math.abs(positionY.value) > maxY) {
-      positionY.value = withTiming(
-        Math.sign(positionY.value) === 1 ? maxY : -maxY,
-        PAN_WITH_TIMING_CONFIG,
-      )
+    } else if (positionY.value > maxY) {
+      positionY.value = withTiming(maxY, PAN_WITH_TIMING_CONFIG)
+    } else if (diffY <= 0 && positionY.value < minY) {
+      positionY.value = withTiming(minY, PAN_WITH_TIMING_CONFIG)
+    } else if (diffY > 0 && positionY.value * -1 > minY) {
+      positionY.value = withTiming(-minY, PAN_WITH_TIMING_CONFIG)
     } else {
-      if (!isMobile) return
-
       positionY.value = withDecay({
-        clamp: [-maxY, maxY],
-        rubberBandEffect: isAndroid,
+        clamp: diffY > 0 ? [-minY, maxY] : [minY, maxY],
+        rubberBandEffect: !isAndroid,
         rubberBandFactor: 0.5 * scale.value,
         velocity: (e.velocityY * 1.5) / scale.value,
         velocityFactor: 0.5 * scale.value,
@@ -314,8 +311,6 @@ function ImageViewerItem({
 
   const onDoubleTap = () => {
     'worklet'
-    console.log('double')
-
     if (scale.value !== 1) {
       centerImage()
       scale.value = withTiming(1, WITH_TIMING_CONFIG)
@@ -386,7 +381,8 @@ function ImageViewerItem({
   ) => {
     'worklet'
     positionY.value += e.translationY - lastTranslateY.value
-    backgroundOpacity.value = 1 - Math.abs(e.translationY) / screenHeight
+    backgroundOpacity.value =
+      1 - Math.abs(e.translationY) / screenDimensions.height
     lastTranslateY.value = e.translationY
   }
 
@@ -402,7 +398,7 @@ function ImageViewerItem({
     }
 
     positionY.value = withDecay({
-      clamp: [-screenHeight, screenHeight],
+      clamp: [-screenDimensions.height, screenDimensions.height],
       velocity: e.velocityY,
     })
     onCloseViewer()
@@ -434,18 +430,20 @@ function ImageViewerItem({
   const scaleStyle = useAnimatedStyle(() => ({
     transform: [{scale: scale.value}],
   }))
-  const dimensionsStyle = useAnimatedStyle(() => ({
-    height: height.value,
-    width: width.value,
-  }))
+  const dimensionsStyle = useAnimatedStyle(() => {
+    return {
+      height: animatedHeight.value,
+      width: animatedWidth.value,
+    }
+  })
 
   // Animated image does not play nice on web. Instead, we have to use an additional animated view to get things right.
   // Needs to be wrapped in a flex view so the entire screen detects gestures
   return (
     <GestureDetector gesture={allGestures}>
-      <View style={styles.container}>
+      <View style={[styles.container]}>
         <Animated.View style={[positionStyle]}>
-          <Animated.View style={[scaleStyle, dimensionsStyle]}>
+          <Animated.View style={[dimensionsStyle, scaleStyle]}>
             <Image
               source={{uri: source}}
               style={styles.image}
@@ -468,6 +466,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
+
+const calculateDimensions = (
+  startDimensions: {height: number; width: number},
+  screenDimensions: {height: number; width: number},
+  scale: number,
+) => {
+  'worklet'
+  const imageAspect = startDimensions.width / startDimensions.height
+  const screenAspect = screenDimensions.width / screenDimensions.height
+  const isLandscape = imageAspect > screenAspect
+  if (isLandscape) {
+    return {
+      width: scale * screenDimensions.width,
+      height: (scale * screenDimensions.width) / imageAspect,
+    }
+  } else {
+    return {
+      width: scale * screenDimensions.height * imageAspect,
+      height: scale * screenDimensions.height,
+    }
+  }
+}
 
 // Wrap this in gestureHandlerRootHOC since Android requires it when using gestures in a modal
 export default React.memo(ImageViewerItem)
