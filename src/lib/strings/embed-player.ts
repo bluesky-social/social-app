@@ -1,3 +1,5 @@
+import {Platform} from 'react-native'
+
 export type EmbedPlayerParams =
   | {type: 'youtube_video'; videoId: string; playerUri: string}
   | {type: 'twitch_live'; channelId: string; playerUri: string}
@@ -48,12 +50,15 @@ export function parseEmbedPlayerFromUrl(
 
   // twitch
   if (urlp.hostname === 'twitch.tv' || urlp.hostname === 'www.twitch.tv') {
+    const parent =
+      Platform.OS === 'web' ? window.location.hostname : 'localhost'
+
     const parts = urlp.pathname.split('/')
     if (parts.length === 2 && parts[1]) {
       return {
         type: 'twitch_live',
         channelId: parts[1],
-        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${parts[1]}&parent=localhost`,
+        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${parts[1]}&parent=${parent}`,
       }
     }
   }

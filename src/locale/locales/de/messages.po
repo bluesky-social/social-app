@@ -30,16 +30,16 @@ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite 
 msgstr ""
 
 #: src/view/screens/Settings.tsx:407
-#: src/view/shell/Drawer.tsx:640
+#: src/view/shell/Drawer.tsx:659
 msgid "{invitesAvailable} invite code available"
 msgstr "{invitesAvailable} Einladungscode verfügbar"
 
 #: src/view/screens/Settings.tsx:409
-#: src/view/shell/Drawer.tsx:642
+#: src/view/shell/Drawer.tsx:661
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable} Einladungscodes verfügbar"
 
-#: src/view/screens/Search/Search.tsx:88
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr "{message}"
 
@@ -184,7 +184,7 @@ msgstr "App-Passwörter"
 msgid "App Passwords"
 msgstr "App-Passwörter"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:207
+#: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Appeal content warning"
 msgstr ""
 
@@ -220,7 +220,7 @@ msgstr "Sind Sie sicher, dass Sie diesen Entwurf verwerfen möchten?"
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:190
+#: src/view/com/util/forms/PostDropdownBtn.tsx:219
 msgid "Are you sure? This cannot be undone."
 msgstr "Sind Sie sicher? Dies kann nicht rückgängig gemacht werden"
 
@@ -234,9 +234,9 @@ msgstr "Künstlerische oder nicht-erotische Nacktheit."
 #: src/view/com/auth/login/LoginForm.tsx:249
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:395
-#: src/view/com/post-thread/PostThread.tsx:445
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:438
+#: src/view/com/post-thread/PostThread.tsx:446
 #: src/view/com/profile/ProfileHeader.tsx:672
 msgid "Back"
 msgstr "Zurück"
@@ -275,7 +275,7 @@ msgstr "Diese Kontos sperren?"
 msgid "Blocked accounts"
 msgstr "Gesperrte Konten"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:106
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
 msgid "Blocked Accounts"
 msgstr "Gesperrte Konten"
 
@@ -283,11 +283,11 @@ msgstr "Gesperrte Konten"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Gesperrte Konten können nicht in Ihren Beiträgen antworten, Sie erwähnen oder anderweitig mit Ihnen interagieren."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:114
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Gesperrte Konten können nicht in Ihren Beiträgen antworten, Sie erwähnen oder anderweitig mit Ihnen interagieren. Sie werden ihre Inhalte nicht sehen und sie werden daran gehindert, Ihre zu sehen."
 
-#: src/view/com/post-thread/PostThread.tsx:251
+#: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
 msgstr "Gesperrter Posten."
 
@@ -360,7 +360,7 @@ msgstr "Darf nur Buchstaben, Zahlen, Leerzeichen, Bindestriche und Unterstriche 
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:592
+#: src/view/screens/Search/Search.tsx:584
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -461,7 +461,7 @@ msgid "Clear all storage data (restart after this)"
 msgstr "Alle alten Speicherdaten löschen (danach neu starten)"
 
 #: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/screens/Search/Search.tsx:569
 msgid "Clear search query"
 msgstr "Suchanfrage löschen"
 
@@ -565,7 +565,7 @@ msgstr "Kopie"
 msgid "Copy link to list"
 msgstr "Link zur Liste kopieren"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:131
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy link to post"
 msgstr "Link zum Posten kopieren"
 
@@ -573,7 +573,7 @@ msgstr "Link zum Posten kopieren"
 msgid "Copy link to profile"
 msgstr "Link zum Profil kopieren"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:117
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Copy post text"
 msgstr "Posten Text kopieren"
 
@@ -642,15 +642,15 @@ msgstr "Mein Konto löschen"
 msgid "Delete my account…"
 msgstr "Mein Konto löschen..."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:185
+#: src/view/com/util/forms/PostDropdownBtn.tsx:214
 msgid "Delete post"
 msgstr "Posten löschen"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:189
+#: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "Delete this post?"
 msgstr "Diesen Posten löschen?"
 
-#: src/view/com/post-thread/PostThread.tsx:243
+#: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
 msgstr "Posten gelöscht."
 
@@ -801,7 +801,7 @@ msgstr "Geben Sie Ihre E-Mail Adresse ein"
 msgid "Enter your username and password"
 msgstr "Geben Sie Ihren Benutzernamen und Ihr Passwort ein"
 
-#: src/view/screens/Search/Search.tsx:106
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr "Fehler:"
 
@@ -818,7 +818,7 @@ msgstr "Alt-Text erweitern"
 msgid "Failed to load recommended feeds"
 msgstr "Empfohlene Feeds konnten nicht geladen werden"
 
-#: src/view/screens/Feeds.tsx:560
+#: src/view/screens/Feeds.tsx:554
 msgid "Feed offline"
 msgstr "Feed offline"
 
@@ -827,7 +827,7 @@ msgid "Feed Preferences"
 msgstr "Feed-Einstellungen"
 
 #: src/view/shell/desktop/RightNav.tsx:65
-#: src/view/shell/Drawer.tsx:292
+#: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "Rückmeldung"
 
@@ -835,8 +835,8 @@ msgstr "Rückmeldung"
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:340
-#: src/view/shell/Drawer.tsx:455
-#: src/view/shell/Drawer.tsx:456
+#: src/view/shell/Drawer.tsx:474
+#: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
 msgstr "Feeds"
 
@@ -848,11 +848,11 @@ msgstr "Feeds werden von Nutzern erstellt, um Inhalte zu kuratieren. Wählen Sie
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Feeds sind benutzerdefinierte Algorithmen, die von den Nutzern mit ein wenig Programmierkenntnissen erstellt werden. <0/> für weitere Informationen."
 
-#: src/view/screens/Search/Search.tsx:422
+#: src/view/screens/Search/Search.tsx:414
 msgid "Find users on Bluesky"
 msgstr "Benutzer auf Bluesky finden"
 
-#: src/view/screens/Search/Search.tsx:420
+#: src/view/screens/Search/Search.tsx:412
 msgid "Find users with the search tool on the right"
 msgstr "Benutzer mit der Suchfunktion auf der rechten Seite finden"
 
@@ -955,7 +955,7 @@ msgid "Handle"
 msgstr "Handgriff"
 
 #: src/view/shell/desktop/RightNav.tsx:94
-#: src/view/shell/Drawer.tsx:302
+#: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "Hilfe"
 
@@ -967,6 +967,14 @@ msgstr "Hier ist Ihr App-Passwort."
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "Ausblenden"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+msgid "Hide post"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:177
+msgid "Hide this post?"
+msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:308
 msgid "Hide user list"
@@ -994,8 +1002,8 @@ msgstr "Hmm, wir haben Probleme, diesen Feed zu finden. Vielleicht wurde er gel�
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
 #: src/view/shell/desktop/LeftNav.tsx:304
-#: src/view/shell/Drawer.tsx:379
-#: src/view/shell/Drawer.tsx:380
+#: src/view/shell/Drawer.tsx:398
+#: src/view/shell/Drawer.tsx:399
 msgid "Home"
 msgstr "Startseite"
 
@@ -1056,7 +1064,7 @@ msgstr "Einladungscode"
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Einladungscode nicht akzeptiert. Überprüfen Sie, ob Sie ihn richtig eingegeben haben und versuchen Sie es erneut."
 
-#: src/view/shell/Drawer.tsx:621
+#: src/view/shell/Drawer.tsx:640
 msgid "Invite codes: {invitesAvailable} available"
 msgstr "Codes einladen: {invitesAvailable} verfügbar"
 
@@ -1152,13 +1160,13 @@ msgstr "Namen auflisten"
 
 #: src/view/screens/Profile.tsx:166
 #: src/view/shell/desktop/LeftNav.tsx:377
-#: src/view/shell/Drawer.tsx:471
-#: src/view/shell/Drawer.tsx:472
+#: src/view/shell/Drawer.tsx:490
+#: src/view/shell/Drawer.tsx:491
 msgid "Lists"
 msgstr "Listen"
 
-#: src/view/com/post-thread/PostThread.tsx:260
-#: src/view/com/post-thread/PostThread.tsx:268
+#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
 msgstr "Mehr Beiträge laden"
 
@@ -1206,7 +1214,7 @@ msgstr "genannte Nutzer"
 msgid "Mentioned users"
 msgstr "Genannte Nutzer"
 
-#: src/view/screens/Search/Search.tsx:537
+#: src/view/screens/Search/Search.tsx:529
 msgid "Menu"
 msgstr "Menü"
 
@@ -1217,8 +1225,8 @@ msgstr "Meldung vom Server"
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
 #: src/view/shell/desktop/LeftNav.tsx:395
-#: src/view/shell/Drawer.tsx:490
-#: src/view/shell/Drawer.tsx:491
+#: src/view/shell/Drawer.tsx:509
+#: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
 msgstr "Moderation"
 
@@ -1256,7 +1264,7 @@ msgstr "Stumme Liste"
 msgid "Mute these accounts?"
 msgstr "Diese Konten stummschalten?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:149
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Mute thread"
 msgstr "Thema stummschalten"
 
@@ -1264,11 +1272,11 @@ msgstr "Thema stummschalten"
 msgid "Muted accounts"
 msgstr "Stumme Kontos"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:106
+#: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "Stumme Kontos"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:114
+#: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "Bei stummgeschalteten Konten werden deren Beiträge aus deinem Feed und deinen Benachrichtigungen entfernt. Stummschaltungen sind vollständig privat."
 
@@ -1307,7 +1315,7 @@ msgid "New"
 msgstr "Neu"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:430
 #: src/view/screens/ProfileList.tsx:193
@@ -1354,9 +1362,9 @@ msgid "No results found for \"{query}\""
 msgstr "Keine Ergebnisse gefunden für \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:271
-#: src/view/screens/Search/Search.tsx:299
-#: src/view/screens/Search/Search.tsx:615
+#: src/view/screens/Search/Search.tsx:263
+#: src/view/screens/Search/Search.tsx:291
+#: src/view/screens/Search/Search.tsx:607
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "Keine Ergebnisse gefunden für {query}"
@@ -1377,8 +1385,8 @@ msgstr "Hinweis: Bluesky ist ein offenes und öffentliches Netzwerk. Diese Einst
 #: src/view/screens/Notifications.tsx:133
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
 #: src/view/shell/desktop/LeftNav.tsx:359
-#: src/view/shell/Drawer.tsx:416
-#: src/view/shell/Drawer.tsx:417
+#: src/view/shell/Drawer.tsx:435
+#: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
 msgstr "Benachrichtigungen "
 
@@ -1407,7 +1415,7 @@ msgid "Opens configurable language settings"
 msgstr "Öffnet die konfigurierbaren Spracheinstellungen"
 
 #: src/view/shell/desktop/RightNav.tsx:148
-#: src/view/shell/Drawer.tsx:622
+#: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
 msgstr "Öffnet die Liste der Einladungscodes"
 
@@ -1519,12 +1527,12 @@ msgstr ""
 #~ msgstr "Bitte teilen Sie uns mit, warum diese Entscheidung Ihrer Meinung nach falsch war."
 
 #: src/view/com/composer/Composer.tsx:337
-#: src/view/com/post-thread/PostThread.tsx:226
+#: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "Posten "
 
-#: src/view/com/post-thread/PostThread.tsx:385
+#: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
 msgstr "Versteckter Posten"
 
@@ -1536,7 +1544,7 @@ msgstr "Postsprache"
 msgid "Post Languages"
 msgstr "Postsprachen"
 
-#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
 msgstr "Posten nicht gefunden"
 
@@ -1565,6 +1573,8 @@ msgid "Privacy"
 msgstr "Privatsphäre"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
+#: src/view/screens/Settings.tsx:750
+#: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr "Datenschutzbestimmungen"
 
@@ -1574,13 +1584,13 @@ msgstr "Verarbeitung..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
 #: src/view/shell/desktop/LeftNav.tsx:413
-#: src/view/shell/Drawer.tsx:69
-#: src/view/shell/Drawer.tsx:525
-#: src/view/shell/Drawer.tsx:526
+#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:544
+#: src/view/shell/Drawer.tsx:545
 msgid "Profile"
 msgstr "Profile"
 
-#: src/view/screens/Settings.tsx:789
+#: src/view/screens/Settings.tsx:808
 msgid "Protect your account by verifying your email."
 msgstr "Schützen Sie Ihr Konto, indem Sie Ihre E-Mail verifizieren."
 
@@ -1689,7 +1699,7 @@ msgid "Report List"
 msgstr "Bericht Liste"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:167
+#: src/view/com/util/forms/PostDropdownBtn.tsx:196
 msgid "Report post"
 msgstr "Beitrag berichten"
 
@@ -1780,14 +1790,14 @@ msgstr "Gespeicherte Feeds"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:401
-#: src/view/screens/Search/Search.tsx:567
+#: src/view/screens/Search/Search.tsx:393
+#: src/view/screens/Search/Search.tsx:559
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
-#: src/view/shell/Drawer.tsx:343
-#: src/view/shell/Drawer.tsx:344
+#: src/view/shell/Drawer.tsx:362
+#: src/view/shell/Drawer.tsx:363
 msgid "Search"
 msgstr "Suche"
 
@@ -1840,8 +1850,8 @@ msgstr "E-Mail senden"
 msgid "Send Email"
 msgstr "E-Mail senden"
 
-#: src/view/shell/Drawer.tsx:276
-#: src/view/shell/Drawer.tsx:297
+#: src/view/shell/Drawer.tsx:295
+#: src/view/shell/Drawer.tsx:316
 msgid "Send feedback"
 msgstr "Rückmeldung senden"
 
@@ -1875,8 +1885,8 @@ msgstr "Setzen Sie diese Einstellung auf \"Ja\", um Beispiele für Ihre gespeich
 
 #: src/view/screens/Settings.tsx:277
 #: src/view/shell/desktop/LeftNav.tsx:431
-#: src/view/shell/Drawer.tsx:546
-#: src/view/shell/Drawer.tsx:547
+#: src/view/shell/Drawer.tsx:565
+#: src/view/shell/Drawer.tsx:566
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -1885,7 +1895,7 @@ msgid "Sexual activity or erotic nudity."
 msgstr "Sexuelle Aktivitäten oder erotische Nacktheit."
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:131
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
 #: src/view/screens/ProfileList.tsx:384
 msgid "Share"
 msgstr "Teilen"
@@ -2030,7 +2040,7 @@ msgstr "Abonnieren"
 msgid "Subscribe to this list"
 msgstr "Abonnieren Sie diese Liste"
 
-#: src/view/screens/Search/Search.tsx:357
+#: src/view/screens/Search/Search.tsx:349
 msgid "Suggested Follows"
 msgstr "Vorgeschlagene Followerliste"
 
@@ -2055,7 +2065,9 @@ msgstr "Groß"
 msgid "Terms"
 msgstr "Bedingungen"
 
+#: src/view/screens/Settings.tsx:744
 #: src/view/screens/TermsOfService.tsx:29
+#: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "Bedingungen der Dienstleistung"
 
@@ -2076,7 +2088,7 @@ msgstr "Die Gemeinschaftsrichtlinien wurden nach <0/> verschoben."
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "Die Urheberrechtspolitik wurde nach <0/> verschoben."
 
-#: src/view/com/post-thread/PostThread.tsx:440
+#: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
 msgstr "Der Beitrag kann gelöscht worden sein."
 
@@ -2140,6 +2152,10 @@ msgstr "Dieser Beitrag wurde gelöscht."
 msgid "This warning is only available for posts with media attached."
 msgstr "Diese Warnung ist nur für Beiträge mit angehängten Medien verfügbar."
 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
+msgid "This will hide this post from your feeds."
+msgstr ""
+
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
 msgid "Thread Preferences"
@@ -2159,7 +2175,7 @@ msgstr "Verwandlungen"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:704
 #: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/util/forms/PostDropdownBtn.tsx:103
+#: src/view/com/util/forms/PostDropdownBtn.tsx:111
 msgid "Translate"
 msgstr "Übersetze"
 
@@ -2203,7 +2219,7 @@ msgstr "Leider erfüllen Sie nicht die Voraussetzungen, um ein Konto zu erstelle
 msgid "Unmute Account"
 msgstr "Konto entstören"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:149
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Unmute thread"
 msgstr "Thema aufheben"
 
@@ -2268,15 +2284,15 @@ msgstr "Benutzer gefolgt von <0/>"
 msgid "Users in \"{0}\""
 msgstr "Benutzer in \"{0}\""
 
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:769
 msgid "Verify email"
 msgstr "E-Mail überprüfen"
 
-#: src/view/screens/Settings.tsx:775
+#: src/view/screens/Settings.tsx:794
 msgid "Verify my email"
 msgstr "E-Mail überprüfen"
 
-#: src/view/screens/Settings.tsx:784
+#: src/view/screens/Settings.tsx:803
 msgid "Verify My Email"
 msgstr "E-Mail überprüfen"
 
@@ -2301,7 +2317,7 @@ msgstr "Seite besuchen"
 msgid "We're so excited to have you join us!"
 msgstr "Wir freuen uns, Sie bei uns begrüßen zu dürfen!"
 
-#: src/view/screens/Search/Search.tsx:238
+#: src/view/screens/Search/Search.tsx:236
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Es tut uns leid, aber Ihre Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut."
 
@@ -2381,20 +2397,20 @@ msgstr "Sie haben keine gespeicherte Feeds!"
 msgid "You don't have any saved feeds."
 msgstr "Sie haben keine gespeicherte Feeds."
 
-#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:381
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Sie haben den Verfasser blockiert oder Sie wurden vom Verfasser blockiert."
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:134
 msgid "You have no feeds."
 msgstr "Sie haben keine Feeds."
 
 #: src/view/com/lists/MyLists.tsx:89
-#: src/view/com/lists/ProfileLists.tsx:145
+#: src/view/com/lists/ProfileLists.tsx:138
 msgid "You have no lists."
 msgstr "Sie haben keine Listen."
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:131
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "Sie haben noch keine Konten gesperrt. Um ein Konto zu sperren, gehen Sie zu seinem Profil und wählen Sie \"Konto sperren\" aus dem Menü auf seinem Konto."
 
@@ -2402,7 +2418,7 @@ msgstr "Sie haben noch keine Konten gesperrt. Um ein Konto zu sperren, gehen Sie
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "Sie haben noch kein Kennwort für eine Anwendung erstellt. Sie können eines erstellen, indem Sie auf die Schaltfläche unten drücken."
 
-#: src/view/screens/ModerationMutedAccounts.tsx:130
+#: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "Sie haben noch keine Konten stummgeschaltet. Um ein Konto stumm zu schalten, gehen Sie zu seinem Profil und wählen Sie \"Konto stumm schalten\" aus dem Menü auf seinem Konto."
 
@@ -2445,7 +2461,7 @@ msgstr "Hosting-Anbieter"
 
 #: src/view/screens/Settings.tsx:402
 #: src/view/shell/desktop/RightNav.tsx:129
-#: src/view/shell/Drawer.tsx:636
+#: src/view/shell/Drawer.tsx:655
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "Ihre Einladungscodes werden ausgeblendet, wenn Sie sich mit einem App-Passwort anmelden."
 
