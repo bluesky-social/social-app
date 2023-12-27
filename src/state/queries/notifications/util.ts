@@ -156,7 +156,7 @@ async function fetchSubjects(
 ): Promise<Map<string, AppBskyFeedDefs.PostView>> {
   const uris = new Set<string>()
   for (const notif of groupedNotifs) {
-    if (notif.subjectUri) {
+    if (notif.subjectUri && !notif.subjectUri.includes('feed.generator')) {
       uris.add(notif.subjectUri)
     }
   }
@@ -216,6 +216,8 @@ function getSubjectUri(
         ? notif.record.subject?.uri
         : undefined
     }
+  } else if (type === 'feedgen-like') {
+    return notif.reasonSubject
   }
 }
 
