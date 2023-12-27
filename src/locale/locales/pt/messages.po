@@ -8,9 +8,9 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-12-23 16:51\n"
+"PO-Revision-Date: 2023-12-27 10:31\n"
 "Last-Translator: Maison\n"
-"Language-Team: Portuguese, Brazilian\n"
+"Language-Team: maisondasilva\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/view/shell/desktop/RightNav.tsx:160
