@@ -39,7 +39,6 @@ function ImageViewerItem({
   initialIndex,
   setIsScaled,
   setAccessoriesVisible,
-  opacity,
   accessoryOpacity,
   backgroundOpacity,
   onCloseViewer,
@@ -88,22 +87,6 @@ function ImageViewerItem({
     )
   })
 
-  // Update isScaled when the scale changes and show/hide the accessories
-  useAnimatedReaction(
-    () => scale.value,
-    (curr, prev) => {
-      if (curr === 1 && prev !== 1) {
-        runOnJS(setIsScaled)(false)
-        runOnJS(setPanGestureEnabled)(false)
-        runOnJS(setAccessoriesVisible)(true)
-      } else if (curr !== 1 && prev === 1) {
-        runOnJS(setIsScaled)(true)
-        runOnJS(setPanGestureEnabled)(true)
-        runOnJS(setAccessoriesVisible)(false)
-      }
-    },
-  )
-
   // Helper function for re-centering the image
   const centerImage = React.useCallback(
     (animated = true) => {
@@ -119,6 +102,22 @@ function ImageViewerItem({
       }
     },
     [center, positionX, positionY],
+  )
+
+  // Update isScaled when the scale changes and show/hide the accessories
+  useAnimatedReaction(
+    () => scale.value,
+    (curr, prev) => {
+      if (curr === 1 && prev !== 1) {
+        runOnJS(setIsScaled)(false)
+        runOnJS(setPanGestureEnabled)(false)
+        runOnJS(setAccessoriesVisible)(true)
+      } else if (curr !== 1 && prev === 1) {
+        runOnJS(setIsScaled)(true)
+        runOnJS(setPanGestureEnabled)(true)
+        runOnJS(setAccessoriesVisible)(false)
+      }
+    },
   )
 
   useAnimatedReaction(
@@ -171,8 +170,6 @@ function ImageViewerItem({
       return
     }
 
-    opacity.value = 1
-
     // Fade in the background and show accessories
     accessoryOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
     backgroundOpacity.value = withTiming(1, WITH_TIMING_CONFIG)
@@ -215,9 +212,12 @@ function ImageViewerItem({
       runOnUI(onOpen)()
       // Running this on the animation callback doesn't work on web, so we will just use setTimeout. Run after the 200ms
       // animation
-      setTimeout(() => {
-        runOnJS(prefetchAndReplace)()
-      }, 200)
+      setTimeout(
+        () => {
+          runOnJS(prefetchAndReplace)()
+        },
+        Platform.OS === 'android' ? 310 : 210,
+      )
     }
   }, [isVisible, onOpen, prefetchAndReplace])
 

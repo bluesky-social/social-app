@@ -7,7 +7,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {useImageViewerControls, useImageViewerState} from 'state/imageViewer'
+import {useImageViewerControls} from 'state/imageViewer'
 
 interface UseImageViewerDefaults {
   accessoriesVisible: boolean
@@ -23,24 +23,14 @@ interface UseImageViewerDefaults {
 }
 
 export const useImageViewerDefaults = (): UseImageViewerDefaults => {
-  const {isVisible} = useImageViewerState()
   const {setVisible} = useImageViewerControls()
 
   const [isScaled, setIsScaled] = React.useState(false)
   const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
 
-  const opacity = useSharedValue(0)
+  const opacity = useSharedValue(1)
   const backgroundOpacity = useSharedValue(0)
   const accessoryOpacity = useSharedValue(0)
-
-  // Reset the viewer whenever it closes
-  React.useEffect(() => {
-    if (isVisible) return
-
-    opacity.value = 1
-    backgroundOpacity.value = 0
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible])
 
   const onCloseViewer = React.useCallback(() => {
     'worklet'
