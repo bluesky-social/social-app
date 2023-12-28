@@ -124,6 +124,7 @@ function NativeStackNavigator({
       },
     }
   }
+
   return (
     <NavigationContent>
       <NativeStackView
@@ -136,7 +137,7 @@ function NativeStackNavigator({
       {isWeb && !isMobile && (
         <>
           <DesktopLeftNav />
-          <DesktopRightNav />
+          <DesktopRightNav routeName={activeRoute.name} />
         </>
       )}
     </NavigationContent>

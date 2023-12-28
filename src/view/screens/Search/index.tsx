@@ -1,3 +1,1 @@
-import {SearchScreenMobile} from '#/view/screens/Search/Search'
-
-export const SearchScreen = SearchScreenMobile
+export {SearchScreen} from '#/view/screens/Search/Search'
