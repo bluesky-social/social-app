@@ -8,7 +8,8 @@ import {messages as messagesJa} from '#/locale/locales/ja/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 // DISABLED until this translation is fixed -prf
 // import {messages as messagesDe} from '#/locale/locales/de/messages'
-import {messages as messagesEs} from '#/locale/locales/es/messages'
+// DISABLED until this translation is more thoroughly reviewed -prf
+// import {messages as messagesEs} from '#/locale/locales/es/messages'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
@@ -35,10 +36,11 @@ export async function dynamicActivate(locale: AppLanguage) {
     //   i18n.loadAndActivate({locale, messages: messagesDe})
     //   break
     // }
-    case AppLanguage.es: {
-      i18n.loadAndActivate({locale, messages: messagesEs})
-      break
-    }
+    // DISABLED until this translation is more thoroughly reviewed -prf
+    // case AppLanguage.es: {
+    //   i18n.loadAndActivate({locale, messages: messagesEs})
+    //   break
+    // }
     default: {
       i18n.loadAndActivate({locale, messages: messagesEn})
       break

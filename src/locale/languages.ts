@@ -11,7 +11,8 @@ export enum AppLanguage {
   fr = 'fr',
   // DISABLED until this translation is fixed -prf
   // de = 'de',
-  es = 'es',
+  // DISABLED until this translation is more thoroughly reviewed -prf
+  // es = 'es',
 }
 
 interface AppLanguageConfig {
