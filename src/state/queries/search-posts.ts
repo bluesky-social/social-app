@@ -1,3 +1,4 @@
+import {useEffect, useRef} from 'react'
 import {AppBskyFeedDefs, AppBskyFeedSearchPosts} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -14,19 +15,22 @@ const searchPostsQueryKey = ({query}: {query: string}) => [
   query,
 ]
 
-export function useSearchPostsQuery({query}: {query: string}) {
-  return useInfiniteQuery<
+const PAGE_SIZE = 30
+
+export function useSearchPostsQuery({query: q}: {query: string}) {
+  const lastPageCountRef = useRef(0)
+  const query = useInfiniteQuery<
     AppBskyFeedSearchPosts.OutputSchema,
     Error,
     InfiniteData<AppBskyFeedSearchPosts.OutputSchema>,
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query}),
+    queryKey: searchPostsQueryKey({query: q}),
     queryFn: async ({pageParam}) => {
       const res = await getAgent().app.bsky.feed.searchPosts({
-        q: query,
-        limit: 25,
+        q,
+        limit: PAGE_SIZE,
         cursor: pageParam,
       })
       return res.data
@@ -34,6 +38,34 @@ export function useSearchPostsQuery({query}: {query: string}) {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
+
+  useEffect(() => {
+    const {isFetching, hasNextPage, data} = query
+    if (isFetching || !hasNextPage) {
+      return
+    }
+
+    // avoid double-fires of fetchNextPage()
+    if (
+      lastPageCountRef.current !== 0 &&
+      lastPageCountRef.current === data?.pages?.length
+    ) {
+      return
+    }
+
+    // fetch next page if we haven't gotten a full page of content
+    let count = 0
+    for (const page of data?.pages || []) {
+      count += page.posts.length
+    }
+
+    if (count < PAGE_SIZE && (data?.pages.length || 0) < 10) {
+      query.fetchNextPage()
+      lastPageCountRef.current = data?.pages?.length || 0
+    }
+  }, [query])
+
+  return query
 }
 
 export function* findAllPostsInQueryData(
