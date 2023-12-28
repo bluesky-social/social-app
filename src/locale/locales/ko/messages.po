@@ -688,7 +688,7 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 
 #: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
-msgstr "게시물 삭제됨."
+msgstr "삭제된 게시물."
 
 #: src/view/com/modals/CreateOrEditList.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:234
