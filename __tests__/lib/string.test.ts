@@ -580,85 +580,85 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     undefined,
     undefined,
 
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     undefined,
     undefined,
 
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
 
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
       type: 'giphy_gif',
-      imageUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-
-    {
-      type: 'tenor_gif',
-      imageUri: 'https://media1.tenor.com/m/gifId/someName.gif',
-    },
-    undefined,
-    undefined,
-
-    {
-      type: 'tenor_gif',
-      imageUri: 'https://tenor.com/view/gifId.gif',
-    },
-    undefined,
-    undefined,
-    {
-      type: 'tenor_gif',
-      imageUri: 'https://tenor.com/view/gifId.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
 
     {
       type: 'tenor_gif',
-      imageUri: 'https://c.tenor.com/gifId/tenor.gif',
+      playerUri: 'https://media1.tenor.com/m/gifId/someName.gif',
+    },
+    undefined,
+    undefined,
+
+    {
+      type: 'tenor_gif',
+      playerUri: 'https://tenor.com/view/gifId.gif',
+    },
+    undefined,
+    undefined,
+    {
+      type: 'tenor_gif',
+      playerUri: 'https://tenor.com/view/gifId.gif',
+    },
+
+    {
+      type: 'tenor_gif',
+      playerUri: 'https://c.tenor.com/gifId/tenor.gif',
     },
     {
       type: 'tenor_gif',
-      imageUri: 'https://c.tenor.com/gifId/tenor.webp',
+      playerUri: 'https://c.tenor.com/gifId/tenor.webp',
     },
     undefined,
   ]

@@ -16,8 +16,8 @@ export type EmbedPlayerParams =
   | {type: 'apple_music_album'; albumId: string; playerUri: string}
   | {type: 'apple_music_song'; songId: string; playerUri: string}
   | {type: 'vimeo_video'; videoId: string; playerUri: string}
-  | {type: 'giphy_gif'; imageUri: string}
-  | {type: 'tenor_gif'; imageUri: string}
+  | {type: 'giphy_gif'; playerUri: string}
+  | {type: 'tenor_gif'; playerUri: string}
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -188,7 +188,7 @@ export function parseEmbedPlayerFromUrl(
       if (id) {
         return {
           type: 'giphy_gif',
-          imageUri: `https://i.giphy.com/media/${id}/giphy.gif`,
+          playerUri: `https://i.giphy.com/media/${id}/giphy.gif`,
         }
       }
     }
@@ -205,12 +205,12 @@ export function parseEmbedPlayerFromUrl(
       if (idOrFilename === 'giphy.gif' || idOrFilename === 'giphy.gif') {
         return {
           type: 'giphy_gif',
-          imageUri: `https://i.giphy.com/media/${trackingOrId}/giphy.gif`,
+          playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.gif`,
         }
       } else if (filename === 'giphy.gif' || filename === 'giphy.gif') {
         return {
           type: 'giphy_gif',
-          imageUri: `https://i.giphy.com/media/${idOrFilename}/giphy.gif`,
+          playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.gif`,
         }
       }
     }
@@ -224,14 +224,14 @@ export function parseEmbedPlayerFromUrl(
     if (mediaOrFilename === 'media' && filename) {
       return {
         type: 'giphy_gif',
-        imageUri: `https://i.giphy.com/media/${
+        playerUri: `https://i.giphy.com/media/${
           filename.split('.')[0]
         }/giphy.gif`,
       }
     } else if (mediaOrFilename) {
       return {
         type: 'giphy_gif',
-        imageUri: `https://i.giphy.com/media/${
+        playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
         }/giphy.gif`,
       }
@@ -245,7 +245,7 @@ export function parseEmbedPlayerFromUrl(
     if (parts.length === 4 && filename?.split('.').pop() === 'gif') {
       return {
         type: 'tenor_gif',
-        imageUri: url,
+        playerUri: url,
       }
     }
   }
@@ -258,7 +258,7 @@ export function parseEmbedPlayerFromUrl(
 
       return {
         type: 'tenor_gif',
-        imageUri: `${url}${!includesExt ? '.gif' : ''}`,
+        playerUri: `${url}${!includesExt ? '.gif' : ''}`,
       }
     }
   }
@@ -272,7 +272,7 @@ export function parseEmbedPlayerFromUrl(
       if (ext === 'gif' || ext === 'webp') {
         return {
           type: 'tenor_gif',
-          imageUri: url,
+          playerUri: url,
         }
       }
     }
