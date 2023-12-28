@@ -414,6 +414,10 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://soundcloud.com/user/track',
     'https://soundcloud.com/user/sets/set',
     'https://soundcloud.com/user/',
+
+    'https://music.apple.com/us/playlist/playlistName/playlistId',
+    'https://music.apple.com/us/album/albumName/albumId',
+    'https://music.apple.com/us/album/albumName/albumId?i=songId',
   ]
 
   const outputs = [
@@ -508,6 +512,24 @@ describe('parseEmbedPlayerFromUrl', () => {
       playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/sets/set&auto_play=true&visual=false&hide_related=true`,
     },
     undefined,
+
+    {
+      type: 'apple_music_playlist',
+      playlistId: 'playlistId',
+      playerUri:
+        'https://embed.music.apple.com/us/playlist/playlistName/playlistId',
+    },
+    {
+      type: 'apple_music_album',
+      albumId: 'albumId',
+      playerUri: 'https://embed.music.apple.com/us/album/albumName/albumId',
+    },
+    {
+      type: 'apple_music_song',
+      songId: 'songId',
+      playerUri:
+        'https://embed.music.apple.com/us/album/albumName/albumId?i=songId',
+    },
   ]
 
   it('correctly grabs the correct id from uri', () => {

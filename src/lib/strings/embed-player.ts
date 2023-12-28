@@ -12,6 +12,9 @@ export type EmbedPlayerParams =
   | {type: 'spotify_song'; songId: string; playerUri: string}
   | {type: 'soundcloud_track'; user: string; track: string; playerUri: string}
   | {type: 'soundcloud_set'; user: string; set: string; playerUri: string}
+  | {type: 'apple_music_playlist'; playlistId: string; playerUri: string}
+  | {type: 'apple_music_album'; albumId: string; playerUri: string}
+  | {type: 'apple_music_song'; songId: string; playerUri: string}
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -116,6 +119,45 @@ export function parseEmbedPlayerFromUrl(
       }
     }
   }
+
+  if (
+    urlp.hostname === 'music.apple.com' ||
+    urlp.hostname === 'music.apple.com'
+  ) {
+    // This should always have: locale, type (playlist or album), name, and id. We won't use spread since we want
+    // to check if the length is correct
+    const pathParams = urlp.pathname.split('/')
+    const type = pathParams[2]
+    const songId = urlp.searchParams.get('i')
+
+    if (pathParams.length === 5 && (type === 'playlist' || type === 'album')) {
+      const embedUri = `https://embed.music.apple.com${urlp.pathname}${
+        urlp.search ? '?i=' + songId : ''
+      }`
+
+      if (type === 'playlist') {
+        return {
+          type: 'apple_music_playlist',
+          playlistId: pathParams[4],
+          playerUri: embedUri,
+        }
+      } else if (type === 'album') {
+        if (songId) {
+          return {
+            type: 'apple_music_song',
+            songId,
+            playerUri: embedUri,
+          }
+        } else {
+          return {
+            type: 'apple_music_album',
+            albumId: pathParams[4],
+            playerUri: embedUri,
+          }
+        }
+      }
+    }
+  }
 }
 
 export function getPlayerHeight({
@@ -146,6 +188,8 @@ export function getPlayerHeight({
       return 165
     case 'soundcloud_set':
       return 360
+    case 'apple_music_song':
+      return 150
     default:
       return width
   }
