@@ -303,7 +303,13 @@ function SearchScreenUserResults({query}: {query: string}) {
 
 const SECTIONS_LOGGEDOUT = ['Users']
 const SECTIONS_LOGGEDIN = ['Posts', 'Users']
-export function SearchScreenInner({query}: {query?: string}) {
+export function SearchScreenInner({
+  query,
+  primarySearch,
+}: {
+  query?: string
+  primarySearch?: boolean
+}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -413,7 +419,7 @@ export function SearchScreenInner({query}: {query?: string}) {
             style={pal.textLight}
           />
           <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            {isDesktop ? (
+            {isDesktop && !primarySearch ? (
               <Trans>Find users with the search tool on the right</Trans>
             ) : (
               <Trans>Find users on Bluesky</Trans>
@@ -425,19 +431,7 @@ export function SearchScreenInner({query}: {query?: string}) {
   )
 }
 
-export function SearchScreenDesktop(
-  props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
-) {
-  const {isDesktop} = useWebMediaQueries()
-
-  return isDesktop ? (
-    <SearchScreenInner query={props.route.params?.q} />
-  ) : (
-    <SearchScreenMobile {...props} />
-  )
-}
-
-export function SearchScreenMobile(
+export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const theme = useTheme()
@@ -449,7 +443,7 @@ export function SearchScreenMobile(
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTablet} = useWebMediaQueries()
+  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -524,17 +518,29 @@ export function SearchScreenMobile(
 
   return (
     <View style={{flex: 1}}>
-      <CenteredView style={[styles.header, pal.border]} sideBorders={isTablet}>
-        <Pressable
-          testID="viewHeaderBackOrMenuBtn"
-          onPress={onPressMenu}
-          hitSlop={HITSLOP_10}
-          style={styles.headerMenuBtn}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Menu`)}
-          accessibilityHint="Access navigation links and settings">
-          <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
-        </Pressable>
+      <CenteredView
+        style={[
+          styles.header,
+          pal.border,
+          isTabletOrDesktop && {paddingTop: 10},
+        ]}
+        sideBorders={isTabletOrDesktop}>
+        {isTabletOrMobile && (
+          <Pressable
+            testID="viewHeaderBackOrMenuBtn"
+            onPress={onPressMenu}
+            hitSlop={HITSLOP_10}
+            style={styles.headerMenuBtn}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Menu`)}
+            accessibilityHint="Access navigation links and settings">
+            <FontAwesomeIcon
+              icon="bars"
+              size={18}
+              color={pal.colors.textLight}
+            />
+          </Pressable>
+        )}
 
         <View
           style={[
@@ -598,7 +604,7 @@ export function SearchScreenMobile(
           {isFetching ? (
             <Loader />
           ) : (
-            <ScrollView style={{height: '100%'}}>
+            <ScrollView style={{height: '100%'}} dataSet={{stableGutters: '1'}}>
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
