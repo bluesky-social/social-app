@@ -54,12 +54,6 @@ type Props = {
   accessibilityHint?: string
 }
 
-/* The `NativeDropdown` function uses native iOS and Android dropdown menus.
- * It also creates a animated custom dropdown for web that uses
- * Radix UI primitives under the hood
- * @prop {DropdownItem[]} items - An array of dropdown items
- * @prop {React.ReactNode} children - A custom dropdown trigger
- */
 export function NativeDropdown({
   items,
   children,
@@ -116,7 +110,7 @@ export function NativeDropdown({
           accessibilityRole="button"
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
-          style={({pressed}) => [{opacity: pressed ? 0.5 : 1}]}
+          style={({pressed}) => ({opacity: pressed ? 0.5 : 1})}
           hitSlop={HITSLOP_10}>
           {children}
         </Pressable>
