@@ -612,6 +612,7 @@ export function SearchScreen(
           ) : (
             <ScrollView
               style={{height: '100%'}}
+              // @ts-ignore web only -prf
               dataSet={{stableGutters: '1'}}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
