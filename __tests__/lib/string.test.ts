@@ -418,6 +418,9 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://music.apple.com/us/playlist/playlistName/playlistId',
     'https://music.apple.com/us/album/albumName/albumId',
     'https://music.apple.com/us/album/albumName/albumId?i=songId',
+
+    'https://vimeo.com/videoId',
+    'https://vimeo.com/videoId?autoplay=0',
   ]
 
   const outputs = [
@@ -529,6 +532,17 @@ describe('parseEmbedPlayerFromUrl', () => {
       songId: 'songId',
       playerUri:
         'https://embed.music.apple.com/us/album/albumName/albumId?i=songId',
+    },
+
+    {
+      type: 'vimeo_video',
+      videoId: 'videoId',
+      playerUri: 'https://player.vimeo.com/video/videoId?autoplay=1',
+    },
+    {
+      type: 'vimeo_video',
+      videoId: 'videoId',
+      playerUri: 'https://player.vimeo.com/video/videoId?autoplay=1',
     },
   ]
 

@@ -15,6 +15,7 @@ export type EmbedPlayerParams =
   | {type: 'apple_music_playlist'; playlistId: string; playerUri: string}
   | {type: 'apple_music_album'; albumId: string; playerUri: string}
   | {type: 'apple_music_song'; songId: string; playerUri: string}
+  | {type: 'vimeo_video'; videoId: string; playerUri: string}
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -158,6 +159,17 @@ export function parseEmbedPlayerFromUrl(
       }
     }
   }
+
+  if (urlp.hostname === 'vimeo.com' || urlp.hostname === 'www.vimeo.com') {
+    const [_, videoId] = urlp.pathname.split('/')
+    if (videoId) {
+      return {
+        type: 'vimeo_video',
+        videoId,
+        playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
+      }
+    }
+  }
 }
 
 export function getPlayerHeight({
@@ -174,6 +186,7 @@ export function getPlayerHeight({
   switch (type) {
     case 'youtube_video':
     case 'twitch_live':
+    case 'vimeo_video':
       return (width / 16) * 9
     case 'spotify_album':
       return 380
