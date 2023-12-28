@@ -401,6 +401,10 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://twitch.tv/channelName',
     'https://www.twitch.tv/channelName',
+    'https://m.twitch.tv/channelName',
+
+    'https://twitch.tv/channelName/clip/clipId',
+    'https://twitch.tv/videos/videoId',
 
     'https://open.spotify.com/playlist/playlistId',
     'https://open.spotify.com/playlist/playlistId?param=value',
@@ -485,14 +489,24 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
 
     {
-      type: 'twitch_live',
-      channelId: 'channelName',
+      type: 'twitch_video',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
     },
     {
-      type: 'twitch_live',
-      channelId: 'channelName',
+      type: 'twitch_video',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
+    },
+    {
+      type: 'twitch_video',
+      playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
+    },
+    {
+      type: 'twitch_video',
+      playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=clipId&parent=localhost`,
+    },
+    {
+      type: 'twitch_video',
+      playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=videoId&parent=localhost`,
     },
 
     {

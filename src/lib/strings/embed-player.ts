@@ -2,7 +2,7 @@ import {Platform} from 'react-native'
 
 export type EmbedPlayerParams =
   | {type: 'youtube_video'; videoId: string; playerUri: string}
-  | {type: 'twitch_live'; channelId: string; playerUri: string}
+  | {type: 'twitch_video'; playerUri: string}
   | {type: 'spotify_album'; albumId: string; playerUri: string}
   | {
       type: 'spotify_playlist'
@@ -58,16 +58,30 @@ export function parseEmbedPlayerFromUrl(
   }
 
   // twitch
-  if (urlp.hostname === 'twitch.tv' || urlp.hostname === 'www.twitch.tv') {
+  if (
+    urlp.hostname === 'twitch.tv' ||
+    urlp.hostname === 'www.twitch.tv' ||
+    urlp.hostname === 'm.twitch.tv'
+  ) {
     const parent =
       Platform.OS === 'web' ? window.location.hostname : 'localhost'
 
-    const parts = urlp.pathname.split('/')
-    if (parts.length === 2 && parts[1]) {
+    const [_, channelOrVideo, clipOrId, id] = urlp.pathname.split('/')
+
+    if (channelOrVideo === 'videos') {
       return {
-        type: 'twitch_live',
-        channelId: parts[1],
-        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${parts[1]}&parent=${parent}`,
+        type: 'twitch_video',
+        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=${clipOrId}&parent=${parent}`,
+      }
+    } else if (clipOrId === 'clip') {
+      return {
+        type: 'twitch_video',
+        playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=${id}&parent=${parent}`,
+      }
+    } else if (channelOrVideo) {
+      return {
+        type: 'twitch_video',
+        playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${channelOrVideo}&parent=${parent}`,
       }
     }
   }
@@ -278,7 +292,7 @@ export function getPlayerHeight({
 
   switch (type) {
     case 'youtube_video':
-    case 'twitch_live':
+    case 'twitch_video':
     case 'vimeo_video':
       return (width / 16) * 9
     case 'spotify_album':
