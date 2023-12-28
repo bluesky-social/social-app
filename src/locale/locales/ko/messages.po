@@ -21,7 +21,7 @@ msgstr ""
 #~ msgid ". This warning is only available for posts with media attached."
 #~ msgstr ". 이 경고는 미디어가 첨부된 게시물에만 사용할 수 있습니다."
 
-#: src/view/shell/desktop/RightNav.tsx:160
+#: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr "{0, plural, one {초대 코드 #개 사용 가능} other {초대 코드 #개 사용 가능}}"
 
@@ -53,7 +53,7 @@ msgstr "{0}개월"
 msgid "{diffSeconds}s"
 msgstr "{diffSeconds}초"
 
-#: src/view/shell/desktop/RightNav.tsx:143
+#: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr "{invitesAvailable, plural, one {초대 코드: #개 사용 가능} other {초대 코드: #개 사용 가능}}"
 
@@ -150,11 +150,11 @@ msgstr "상세 내용 추가"
 msgid "Add details to report"
 msgstr "신고 상세 내용 추가"
 
-#: src/view/com/composer/Composer.tsx:442
+#: src/view/com/composer/Composer.tsx:444
 msgid "Add link card"
 msgstr "링크 카드 추가"
 
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:447
 msgid "Add link card:"
 msgstr "링크 카드 추가:"
 
@@ -293,8 +293,8 @@ msgstr "뒤로"
 msgid "Basics"
 msgstr "기본"
 
-#: src/view/com/auth/create/Step2.tsx:131
-#: src/view/com/modals/BirthDateSettings.tsx:72
+#: src/view/com/auth/create/Step2.tsx:147
+#: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "생년월일"
 
@@ -395,8 +395,8 @@ msgstr "카메라"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
-#: src/view/com/composer/Composer.tsx:289
-#: src/view/com/composer/Composer.tsx:292
+#: src/view/com/composer/Composer.tsx:291
+#: src/view/com/composer/Composer.tsx:294
 #: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -414,7 +414,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/LinkWarning.tsx:87
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:589
+#: src/view/screens/Search/Search.tsx:601
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "취소"
@@ -502,7 +502,7 @@ msgstr "사용자 지정 피드를 통해 사용자 경험을 강화하는 알�
 #~ msgid "Choose your"
 #~ msgstr "Choose your"
 
-#: src/view/com/auth/create/Step2.tsx:106
+#: src/view/com/auth/create/Step2.tsx:121
 msgid "Choose your password"
 msgstr "비밀번호를 입력하세요"
 
@@ -522,8 +522,8 @@ msgstr "모든 스토리지 데이터 지우기"
 msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
-#: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:574
+#: src/view/com/util/forms/SearchInput.tsx:74
+#: src/view/screens/Search/Search.tsx:582
 msgid "Clear search query"
 msgstr "검색어 지우기"
 
@@ -772,7 +772,7 @@ msgstr "표시 이름"
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다!"
 
-#: src/view/com/auth/create/Step2.tsx:65
+#: src/view/com/auth/create/Step2.tsx:80
 msgid "Don't have an invite code?"
 msgstr "초대 코드가 없으십니까?"
 
@@ -831,14 +831,14 @@ msgstr "프로필 편집"
 msgid "Edit Saved Feeds"
 msgstr "저장된 피드 편집"
 
-#: src/view/com/auth/create/Step2.tsx:90
+#: src/view/com/auth/create/Step2.tsx:105
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "이메일"
 
-#: src/view/com/auth/create/Step2.tsx:81
+#: src/view/com/auth/create/Step2.tsx:96
 msgid "Email address"
 msgstr "이메일 주소"
 
@@ -870,7 +870,7 @@ msgstr "사용할 도메인 입력"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "계정을 만들 때 사용한 이메일을 입력합니다. 새 비밀번호를 설정할 수 있도록 \"재설정 코드\"를 보내드립니다."
 
-#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:101
 msgid "Enter your email address"
 msgstr "이메일 주소를 입력하세요"
 
@@ -899,7 +899,7 @@ msgstr "대체 텍스트 확장"
 msgid "Failed to load recommended feeds"
 msgstr "추천 피드를 불러오지 못했습니다"
 
-#: src/view/screens/Feeds.tsx:554
+#: src/view/screens/Feeds.tsx:556
 msgid "Feed offline"
 msgstr "피드 오프라인"
 
@@ -907,7 +907,7 @@ msgstr "피드 오프라인"
 msgid "Feed Preferences"
 msgstr "피드 설정"
 
-#: src/view/shell/desktop/RightNav.tsx:65
+#: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "피드백"
@@ -929,11 +929,11 @@ msgstr "피드는 사용자가 콘텐츠를 큐레이션하기 위해 만듭니�
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "피드는 사용자가 약간의 코딩 전문 지식으로 구축할 수 있는 사용자 지정 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
 
-#: src/view/screens/Search/Search.tsx:419
+#: src/view/screens/Search/Search.tsx:427
 msgid "Find users on Bluesky"
 msgstr "Bluesky에서 사용자 찾기"
 
-#: src/view/screens/Search/Search.tsx:417
+#: src/view/screens/Search/Search.tsx:425
 msgid "Find users with the search tool on the right"
 msgstr "오른쪽의 검색 도구로 사용자 찾기"
 
@@ -1040,7 +1040,7 @@ msgstr "다음"
 msgid "Handle"
 msgstr "핸들"
 
-#: src/view/shell/desktop/RightNav.tsx:94
+#: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "도움말"
@@ -1155,8 +1155,8 @@ msgstr "초대"
 msgid "Invite a Friend"
 msgstr "친구 초대하기"
 
-#: src/view/com/auth/create/Step2.tsx:48
-#: src/view/com/auth/create/Step2.tsx:57
+#: src/view/com/auth/create/Step2.tsx:63
+#: src/view/com/auth/create/Step2.tsx:72
 msgid "Invite code"
 msgstr "초대 코드"
 
@@ -1177,8 +1177,8 @@ msgstr "채용"
 msgid "Join the waitlist"
 msgstr "대기자 명단 등록"
 
-#: src/view/com/auth/create/Step2.tsx:68
-#: src/view/com/auth/create/Step2.tsx:72
+#: src/view/com/auth/create/Step2.tsx:83
+#: src/view/com/auth/create/Step2.tsx:87
 msgid "Join the waitlist."
 msgstr "대기자 명단에 등록하세요."
 
@@ -1336,7 +1336,7 @@ msgstr "멘션한 사용자"
 msgid "Mentioned users"
 msgstr "멘션한 사용자"
 
-#: src/view/screens/Search/Search.tsx:534
+#: src/view/screens/Search/Search.tsx:537
 msgid "Menu"
 msgstr "메뉴"
 
@@ -1445,7 +1445,7 @@ msgid "New"
 msgstr "신규"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:505
+#: src/view/screens/Feeds.tsx:507
 #: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:431
 #: src/view/screens/ProfileList.tsx:194
@@ -1498,9 +1498,9 @@ msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다."
 #~ msgstr "{0}에 대한 결과를 찾을 수 없습니다."
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:268
-#: src/view/screens/Search/Search.tsx:296
-#: src/view/screens/Search/Search.tsx:612
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:628
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다."
@@ -1550,7 +1550,7 @@ msgstr "안 돼!"
 msgid "Okay"
 msgstr "확인"
 
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/com/composer/Composer.tsx:360
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -1566,7 +1566,7 @@ msgstr "내비게이션을 엽니다"
 msgid "Opens configurable language settings"
 msgstr "구성 가능한 언어 설정을 엽니다"
 
-#: src/view/shell/desktop/RightNav.tsx:148
+#: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
 msgstr "초대 코드 목록 열기"
@@ -1628,8 +1628,8 @@ msgstr "기타…"
 msgid "Page not found"
 msgstr "페이지를 찾을 수 없음"
 
-#: src/view/com/auth/create/Step2.tsx:101
-#: src/view/com/auth/create/Step2.tsx:111
+#: src/view/com/auth/create/Step2.tsx:116
+#: src/view/com/auth/create/Step2.tsx:126
 #: src/view/com/auth/login/LoginForm.tsx:216
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
@@ -1700,8 +1700,8 @@ msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요."
 msgid "Post"
 msgstr "게시물"
 
-#: src/view/com/composer/Composer.tsx:334
-#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:336
+#: src/view/com/composer/Composer.tsx:343
 msgid "Post (verb)"
 msgstr "게시하기"
 
@@ -1741,7 +1741,7 @@ msgstr "주 언어"
 msgid "Prioritize Your Follows"
 msgstr "내 팔로우 우선시키기"
 
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "개인정보"
 
@@ -1775,11 +1775,11 @@ msgstr "음소거하거나 일괄 차단할 수 있는 공개적이고 공유할
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유할 수 있는 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:322
+#: src/view/com/composer/Composer.tsx:324
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:322
+#: src/view/com/composer/Composer.tsx:324
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
@@ -1864,7 +1864,7 @@ msgstr "답글"
 msgid "Replies to this thread are disabled"
 msgstr "이 스레드에 대한 답글이 비활성화됩니다."
 
-#: src/view/com/composer/Composer.tsx:334
+#: src/view/com/composer/Composer.tsx:336
 msgid "Reply"
 msgstr "답글"
 
@@ -1906,11 +1906,11 @@ msgstr "재게시 또는 게시물 인용"
 msgid "Reposted by"
 msgstr "재게시한 계정"
 
-#: src/view/com/posts/FeedItem.tsx:202
+#: src/view/com/posts/FeedItem.tsx:203
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:218
+#: src/view/com/posts/FeedItem.tsx:220
 msgid "Reposted by <0/>"
 msgstr "<0/> 님이 재게시함"
 
@@ -1927,7 +1927,7 @@ msgstr "변경 요청"
 #~ msgid "Require alt text before posting"
 #~ msgstr "게시하기 전 대체 텍스트 필수"
 
-#: src/view/com/auth/create/Step2.tsx:53
+#: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
 msgstr "이 제공자에서 필수"
 
@@ -1969,8 +1969,8 @@ msgstr "다시 시도"
 #~ msgstr "핸들 변경 다시 시도"
 
 #: src/view/com/modals/AltImage.tsx:115
-#: src/view/com/modals/BirthDateSettings.tsx:93
-#: src/view/com/modals/BirthDateSettings.tsx:96
+#: src/view/com/modals/BirthDateSettings.tsx:94
+#: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:249
 #: src/view/com/modals/CreateOrEditList.tsx:257
@@ -2004,9 +2004,9 @@ msgid "Saved Feeds"
 msgstr "저장된 피드"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
-#: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:398
-#: src/view/screens/Search/Search.tsx:564
+#: src/view/com/util/forms/SearchInput.tsx:65
+#: src/view/screens/Search/Search.tsx:406
+#: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
@@ -2273,7 +2273,7 @@ msgstr "구독"
 msgid "Subscribe to this list"
 msgstr "이 리스트로 구독"
 
-#: src/view/screens/Search/Search.tsx:354
+#: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
 msgstr "팔로우 추천"
 
@@ -2298,7 +2298,7 @@ msgstr "시스템 로그"
 msgid "Tall"
 msgstr "세로"
 
-#: src/view/shell/desktop/RightNav.tsx:85
+#: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
 msgstr "이용약관"
 
@@ -2588,7 +2588,7 @@ msgstr "당신과 함께하게 되어 정말 기쁘네요!"
 #~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 #~ msgstr "죄송하지만 현재 트래픽이 많아 이 피드를 일시적으로 사용할 수 없습니다. 잠시 후 다시 시도해 주세요."
 
-#: src/view/screens/Search/Search.tsx:241
+#: src/view/screens/Search/Search.tsx:243
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
@@ -2605,7 +2605,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "이 {collectionName}에 어떤 문제가 있습니까?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
-#: src/view/com/composer/Composer.tsx:272
+#: src/view/com/composer/Composer.tsx:274
 msgid "What's up?"
 msgstr "What's up?"
 
@@ -2630,11 +2630,11 @@ msgstr "답글을 달 수 있는 사람"
 msgid "Wide"
 msgstr "가로"
 
-#: src/view/com/composer/Composer.tsx:413
+#: src/view/com/composer/Composer.tsx:415
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:272
+#: src/view/com/composer/Composer.tsx:273
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -2700,11 +2700,11 @@ msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트�
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력합니다."
 
-#: src/view/com/auth/create/Step2.tsx:43
+#: src/view/com/auth/create/Step2.tsx:58
 msgid "Your account"
 msgstr "내 계정"
 
-#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:137
 msgid "Your birth date"
 msgstr "생년월일"
 
@@ -2734,7 +2734,7 @@ msgid "Your hosting provider"
 msgstr "호스팅 제공자"
 
 #: src/view/screens/Settings.tsx:403
-#: src/view/shell/desktop/RightNav.tsx:129
+#: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:655
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "앱 비밀번호를 사용하여 로그인하면 초대 코드가 숨겨집니다"

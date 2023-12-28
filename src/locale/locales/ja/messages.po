@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada\n"
 "Plural-Forms: \n"
 
-#: src/view/shell/desktop/RightNav.tsx:160
+#: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr "{0, plural, other {# 個の招待コードが利用可能}}"
 
@@ -45,7 +45,7 @@ msgstr "{0}ヶ月"
 msgid "{diffSeconds}s"
 msgstr "{diffSeconds}秒"
 
-#: src/view/shell/desktop/RightNav.tsx:143
+#: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr "{invitesAvailable, plural, other {招待コード: # 個利用可能}}"
 
@@ -130,11 +130,11 @@ msgstr "詳細を追加"
 msgid "Add details to report"
 msgstr "レポートに詳細を追加"
 
-#: src/view/com/composer/Composer.tsx:442
+#: src/view/com/composer/Composer.tsx:444
 msgid "Add link card"
 msgstr "リンクカードを追加"
 
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:447
 msgid "Add link card:"
 msgstr "リンクカードを追加："
 
@@ -265,8 +265,8 @@ msgstr "戻る"
 msgid "Basics"
 msgstr "基本"
 
-#: src/view/com/auth/create/Step2.tsx:131
-#: src/view/com/modals/BirthDateSettings.tsx:72
+#: src/view/com/auth/create/Step2.tsx:147
+#: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "誕生日"
 
@@ -367,8 +367,8 @@ msgstr "カメラ"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "文字、数字、スペース、ハイフン、およびアンダースコアのみが使用可能です。長さは4文字以上32文字以下である必要があります。"
 
-#: src/view/com/composer/Composer.tsx:289
-#: src/view/com/composer/Composer.tsx:292
+#: src/view/com/composer/Composer.tsx:291
+#: src/view/com/composer/Composer.tsx:294
 #: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -386,7 +386,7 @@ msgstr "文字、数字、スペース、ハイフン、およびアンダース
 #: src/view/com/modals/LinkWarning.tsx:87
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:589
+#: src/view/screens/Search/Search.tsx:601
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "キャンセル"
@@ -470,7 +470,7 @@ msgstr "サービスを選択"
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "カスタムフィードを使用してあなたの体験を強化するアルゴリズムを選択します。"
 
-#: src/view/com/auth/create/Step2.tsx:106
+#: src/view/com/auth/create/Step2.tsx:121
 msgid "Choose your password"
 msgstr "パスワードを選択"
 
@@ -490,8 +490,8 @@ msgstr "すべてのストレージデータをクリア"
 msgid "Clear all storage data (restart after this)"
 msgstr "すべてのストレージデータをクリア（この後再起動します）"
 
-#: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:574
+#: src/view/com/util/forms/SearchInput.tsx:74
+#: src/view/screens/Search/Search.tsx:582
 msgid "Clear search query"
 msgstr "検索クエリをクリア"
 
@@ -736,7 +736,7 @@ msgstr "表示名"
 msgid "Domain verified!"
 msgstr "ドメインを確認しました！"
 
-#: src/view/com/auth/create/Step2.tsx:65
+#: src/view/com/auth/create/Step2.tsx:80
 msgid "Don't have an invite code?"
 msgstr ""
 
@@ -795,14 +795,14 @@ msgstr "プロフィールを編集"
 msgid "Edit Saved Feeds"
 msgstr "保存されたフィードを編集"
 
-#: src/view/com/auth/create/Step2.tsx:90
+#: src/view/com/auth/create/Step2.tsx:105
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "メールアドレス"
 
-#: src/view/com/auth/create/Step2.tsx:81
+#: src/view/com/auth/create/Step2.tsx:96
 msgid "Email address"
 msgstr "メールアドレス"
 
@@ -834,7 +834,7 @@ msgstr "使用するドメインを入力してください"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "アカウントの作成に使用したメールアドレスを入力します。新しいパスワードを設定できるように、「リセットコード」をお送りします。"
 
-#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:101
 msgid "Enter your email address"
 msgstr "メールアドレスを入力してください"
 
@@ -863,7 +863,7 @@ msgstr "ALTテキストを展開"
 msgid "Failed to load recommended feeds"
 msgstr "おすすめのフィードのロードに失敗しました"
 
-#: src/view/screens/Feeds.tsx:554
+#: src/view/screens/Feeds.tsx:556
 msgid "Feed offline"
 msgstr "フィードはオフラインです"
 
@@ -871,7 +871,7 @@ msgstr "フィードはオフラインです"
 msgid "Feed Preferences"
 msgstr "フィードの設定"
 
-#: src/view/shell/desktop/RightNav.tsx:65
+#: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "フィードバック"
@@ -893,11 +893,11 @@ msgstr "フィードはコンテンツを整理する為にユーザーによっ
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
 
-#: src/view/screens/Search/Search.tsx:419
+#: src/view/screens/Search/Search.tsx:427
 msgid "Find users on Bluesky"
 msgstr "Blueskyでユーザーを検索"
 
-#: src/view/screens/Search/Search.tsx:417
+#: src/view/screens/Search/Search.tsx:425
 msgid "Find users with the search tool on the right"
 msgstr "右側の検索ツールでユーザーを検索"
 
@@ -1000,7 +1000,7 @@ msgstr "次へ"
 msgid "Handle"
 msgstr "ハンドル"
 
-#: src/view/shell/desktop/RightNav.tsx:94
+#: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "ヘルプ"
@@ -1102,8 +1102,8 @@ msgstr "招待"
 msgid "Invite a Friend"
 msgstr "友達を招待"
 
-#: src/view/com/auth/create/Step2.tsx:48
-#: src/view/com/auth/create/Step2.tsx:57
+#: src/view/com/auth/create/Step2.tsx:63
+#: src/view/com/auth/create/Step2.tsx:72
 msgid "Invite code"
 msgstr "招待コード"
 
@@ -1124,8 +1124,8 @@ msgstr "仕事"
 msgid "Join the waitlist"
 msgstr "Waitlistに参加"
 
-#: src/view/com/auth/create/Step2.tsx:68
-#: src/view/com/auth/create/Step2.tsx:72
+#: src/view/com/auth/create/Step2.tsx:83
+#: src/view/com/auth/create/Step2.tsx:87
 msgid "Join the waitlist."
 msgstr "Waitlistに参加します。"
 
@@ -1275,7 +1275,7 @@ msgstr "メンションされたユーザー"
 msgid "Mentioned users"
 msgstr "メンションされたユーザー"
 
-#: src/view/screens/Search/Search.tsx:534
+#: src/view/screens/Search/Search.tsx:537
 msgid "Menu"
 msgstr "メニュー"
 
@@ -1376,7 +1376,7 @@ msgid "New"
 msgstr "新規"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:505
+#: src/view/screens/Feeds.tsx:507
 #: src/view/screens/Profile.tsx:354
 #: src/view/screens/ProfileFeed.tsx:431
 #: src/view/screens/ProfileList.tsx:194
@@ -1424,9 +1424,9 @@ msgid "No results found for \"{query}\""
 msgstr "「{query}」の検索結果はありません"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:268
-#: src/view/screens/Search/Search.tsx:296
-#: src/view/screens/Search/Search.tsx:612
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:628
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
@@ -1468,7 +1468,7 @@ msgstr "ちょっと！"
 msgid "Okay"
 msgstr "OK"
 
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/com/composer/Composer.tsx:360
 msgid "One or more images is missing alt text."
 msgstr "1つもしくは複数の画像にALTテキストがありません。"
 
@@ -1484,7 +1484,7 @@ msgstr "ナビゲーションを開く"
 msgid "Opens configurable language settings"
 msgstr "構成可能な言語設定を開く"
 
-#: src/view/shell/desktop/RightNav.tsx:148
+#: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
 msgstr "招待コードのリストを開く"
@@ -1546,8 +1546,8 @@ msgstr "その他..."
 msgid "Page not found"
 msgstr "ページが見つかりません"
 
-#: src/view/com/auth/create/Step2.tsx:101
-#: src/view/com/auth/create/Step2.tsx:111
+#: src/view/com/auth/create/Step2.tsx:116
+#: src/view/com/auth/create/Step2.tsx:126
 #: src/view/com/auth/login/LoginForm.tsx:216
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
@@ -1618,8 +1618,8 @@ msgstr ""
 msgid "Post"
 msgstr "投稿"
 
-#: src/view/com/composer/Composer.tsx:334
-#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:336
+#: src/view/com/composer/Composer.tsx:343
 msgid "Post (verb)"
 msgstr "投稿する"
 
@@ -1659,7 +1659,7 @@ msgstr "第一言語"
 msgid "Prioritize Your Follows"
 msgstr "あなたのフォローを優先"
 
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "プライバシー"
 
@@ -1693,11 +1693,11 @@ msgstr "ユーザーを一括でミュートまたはブロックする、公開
 msgid "Public, shareable lists which can drive feeds."
 msgstr "フィードとして利用できる、公開された共有可能なリスト。"
 
-#: src/view/com/composer/Composer.tsx:322
+#: src/view/com/composer/Composer.tsx:324
 msgid "Publish post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:322
+#: src/view/com/composer/Composer.tsx:324
 msgid "Publish reply"
 msgstr ""
 
@@ -1777,7 +1777,7 @@ msgstr "返信"
 msgid "Replies to this thread are disabled"
 msgstr "このスレッドへの返信はできません"
 
-#: src/view/com/composer/Composer.tsx:334
+#: src/view/com/composer/Composer.tsx:336
 msgid "Reply"
 msgstr ""
 
@@ -1819,11 +1819,11 @@ msgstr "リポストまたは引用"
 msgid "Reposted by"
 msgstr "リポストしたユーザー"
 
-#: src/view/com/posts/FeedItem.tsx:202
+#: src/view/com/posts/FeedItem.tsx:203
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:218
+#: src/view/com/posts/FeedItem.tsx:220
 msgid "Reposted by <0/>"
 msgstr ""
 
@@ -1832,7 +1832,7 @@ msgstr ""
 msgid "Request Change"
 msgstr "変更を要求"
 
-#: src/view/com/auth/create/Step2.tsx:53
+#: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
 
@@ -1870,8 +1870,8 @@ msgid "Retry"
 msgstr "再試行"
 
 #: src/view/com/modals/AltImage.tsx:115
-#: src/view/com/modals/BirthDateSettings.tsx:93
-#: src/view/com/modals/BirthDateSettings.tsx:96
+#: src/view/com/modals/BirthDateSettings.tsx:94
+#: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:249
 #: src/view/com/modals/CreateOrEditList.tsx:257
@@ -1901,9 +1901,9 @@ msgid "Saved Feeds"
 msgstr "保存されたフィード"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
-#: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:398
-#: src/view/screens/Search/Search.tsx:564
+#: src/view/com/util/forms/SearchInput.tsx:65
+#: src/view/screens/Search/Search.tsx:406
+#: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:322
 #: src/view/shell/desktop/Search.tsx:161
@@ -2166,7 +2166,7 @@ msgstr "登録"
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
-#: src/view/screens/Search/Search.tsx:354
+#: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
 msgstr "おすすめのフォロー"
 
@@ -2187,7 +2187,7 @@ msgstr "システムログ"
 msgid "Tall"
 msgstr "トール"
 
-#: src/view/shell/desktop/RightNav.tsx:85
+#: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
 msgstr "条件"
 
@@ -2465,7 +2465,7 @@ msgstr "サイトへアクセス"
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
 
-#: src/view/screens/Search/Search.tsx:241
+#: src/view/screens/Search/Search.tsx:243
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
 
@@ -2482,7 +2482,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "この{collectionName}の問題は何ですか？"
 
 #: src/view/com/auth/SplashScreen.tsx:34
-#: src/view/com/composer/Composer.tsx:272
+#: src/view/com/composer/Composer.tsx:274
 msgid "What's up?"
 msgstr "最近どう？"
 
@@ -2503,11 +2503,11 @@ msgstr "返信できるユーザー"
 msgid "Wide"
 msgstr "ワイド"
 
-#: src/view/com/composer/Composer.tsx:413
+#: src/view/com/composer/Composer.tsx:415
 msgid "Write post"
 msgstr "投稿を書く"
 
-#: src/view/com/composer/Composer.tsx:272
+#: src/view/com/composer/Composer.tsx:273
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "返信を書く"
@@ -2573,11 +2573,11 @@ msgstr "ミュートしているアカウントはまだありません。アカ
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "「リセットコード」が記載されたメールが届きます。ここにコードを入力し、新しいパスワードを入力します。"
 
-#: src/view/com/auth/create/Step2.tsx:43
+#: src/view/com/auth/create/Step2.tsx:58
 msgid "Your account"
 msgstr "あなたのアカウント"
 
-#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:137
 msgid "Your birth date"
 msgstr "生年月日"
 
@@ -2607,7 +2607,7 @@ msgid "Your hosting provider"
 msgstr "ホスティングプロバイダー"
 
 #: src/view/screens/Settings.tsx:403
-#: src/view/shell/desktop/RightNav.tsx:129
+#: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:655
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "アプリパスワードを使用してログインすると、招待コードは非表示になります。"
