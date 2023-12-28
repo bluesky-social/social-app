@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-12-27 17:25\n"
+"PO-Revision-Date: 2023-12-28 19:00\n"
 "Last-Translator: Maison\n"
 "Language-Team: maisondasilva\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr "{0, plural, one {# invite code available} other {# invite codes available}}"
+msgstr "{0, plural, one {# convite disponível} other {# convites disponíveis}}"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -35,7 +35,7 @@ msgstr "Lista {0} {purposeLabel}"
 
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
+msgstr "{invitesAvailable, plural, one {Códigos de convite: # disponível} other {Códigos de convite: # disponíveis}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:659
