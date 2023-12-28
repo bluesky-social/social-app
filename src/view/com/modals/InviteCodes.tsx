@@ -18,7 +18,8 @@ import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {useInvitesState, useInvitesAPI} from '#/state/invites'
@@ -51,6 +52,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const {_} = useLingui()
 
   const onClose = React.useCallback(() => {
     closeModal()
@@ -75,7 +77,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
           ]}>
           <Button
             type="primary"
-            label="Done"
+            label={_(msg`Done`)}
             style={styles.btn}
             labelStyle={styles.btnLabel}
             onPress={onClose}
@@ -118,7 +120,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
         <Button
           testID="closeBtn"
           type="primary"
-          label="Done"
+          label={_(msg`Done`)}
           style={styles.btn}
           labelStyle={styles.btnLabel}
           onPress={onClose}
