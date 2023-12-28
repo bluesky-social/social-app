@@ -174,19 +174,77 @@ export function parseEmbedPlayerFromUrl(
 
   if (urlp.hostname === 'giphy.com' || urlp.hostname === 'www.giphy.com') {
     const [_, gifs, nameAndId] = urlp.pathname.split('/')
+
     /*
      * nameAndId is a string that consists of the name (dash separated) and the id of the gif (the last part of the name)
      * We want to get the id of the gif, then direct to media.giphy.com/media/{id}/giphy.gif so we can
      * use it in an <Image> component
      */
+
     if (gifs === 'gifs' && nameAndId) {
       const id = nameAndId.split('-').pop()
 
       if (id) {
         return {
           type: 'gif',
-          playerUri: `https://i.giphy.com/media/${id}/giphy.webp`,
+          playerUri: `https://i.giphy.com/media/${id}/giphy.gif`,
         }
+      }
+    }
+  }
+
+  // There are five possible hostnames that also can be giphy urls: media.giphy.com and media0-4.giphy.com
+  // These can include (presumably) a tracking id in the path name, so we have to check for that as well
+  if (/media(?:[0-4]\.giphy\.com|\.giphy\.com)/gm.test(urlp.hostname)) {
+    // We can link directly to the gif, if its a proper link
+    const [_, media, trackingOrId, idOrFilename, filename] =
+      urlp.pathname.split('/')
+
+    if (media === 'media') {
+      if (idOrFilename === 'giphy.gif' || idOrFilename === 'giphy.gif') {
+        return {
+          type: 'gif',
+          playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.gif`,
+        }
+      } else if (filename === 'giphy.gif' || filename === 'giphy.gif') {
+        return {
+          type: 'gif',
+          playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.gif`,
+        }
+      }
+    }
+  }
+
+  // Finally, we should see if it is a link to i.giphy.com. These links don't necessarily end in .gif but can also
+  // be .webp
+  if (urlp.hostname === 'i.giphy.com' || urlp.hostname === 'www.i.giphy.com') {
+    const [_, mediaOrFilename, filename] = urlp.pathname.split('/')
+
+    if (mediaOrFilename === 'media' && filename) {
+      return {
+        type: 'gif',
+        playerUri: `https://i.giphy.com/media/${
+          filename.split('.')[0]
+        }/giphy.gif`,
+      }
+    } else if (mediaOrFilename) {
+      return {
+        type: 'gif',
+        playerUri: `https://i.giphy.com/media/${
+          mediaOrFilename.split('.')[0]
+        }/giphy.gif`,
+      }
+    }
+  }
+
+  if (urlp.hostname === 'media1.tenor.com') {
+    const parts = urlp.pathname.split('/')
+    const filename = parts[3]
+
+    if (parts.length === 4 && filename?.split('.').pop() === 'gif') {
+      return {
+        type: 'gif',
+        playerUri: url,
       }
     }
   }
@@ -200,6 +258,21 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'gif',
         playerUri: `${url}${!includesExt ? '.gif' : ''}`,
+      }
+    }
+  }
+
+  if (urlp.host === 'c.tenor.com') {
+    const [_, id, filename] = urlp.pathname.split('/')
+
+    if (id && filename) {
+      const ext = filename.split('.').pop()
+
+      if (ext === 'gif' || ext === 'webp') {
+        return {
+          type: 'gif',
+          playerUri: url,
+        }
       }
     }
   }
