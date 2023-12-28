@@ -130,11 +130,11 @@ msgstr "상세 내용 추가"
 msgid "Add details to report"
 msgstr "신고 상세 내용 추가"
 
-#: src/view/com/composer/Composer.tsx:438
+#: src/view/com/composer/Composer.tsx:442
 msgid "Add link card"
 msgstr "링크 카드 추가"
 
-#: src/view/com/composer/Composer.tsx:441
+#: src/view/com/composer/Composer.tsx:445
 msgid "Add link card:"
 msgstr "링크 카드 추가:"
 
@@ -373,8 +373,8 @@ msgstr "카메라"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. 길이는 4자 이상이어야 하고 32자를 넘지 않아야 합니다."
 
-#: src/view/com/composer/Composer.tsx:285
-#: src/view/com/composer/Composer.tsx:288
+#: src/view/com/composer/Composer.tsx:289
+#: src/view/com/composer/Composer.tsx:292
 #: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
@@ -704,6 +704,10 @@ msgstr "개발 서버"
 #: src/view/screens/Settings.tsx:637
 msgid "Developer Tools"
 msgstr "개발자 도구"
+
+#: src/view/com/composer/Composer.tsx:210
+msgid "Did you want to say anything?"
+msgstr "하고 싶은 말이 있나요?"
 
 #: src/view/com/composer/Composer.tsx:143
 msgid "Discard"
@@ -1492,7 +1496,7 @@ msgstr "안 돼!"
 msgid "Okay"
 msgstr "확인"
 
-#: src/view/com/composer/Composer.tsx:354
+#: src/view/com/composer/Composer.tsx:358
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -1620,7 +1624,11 @@ msgstr "이 콘텐츠 경고가 잘못 적용되었다고 생각하는 이유를
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr ""
 
-#: src/view/com/composer/Composer.tsx:337
+#: src/view/com/composer/Composer.tsx:214
+msgid "Please wait for your link card to finish loading"
+msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
+
+#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
@@ -2497,7 +2505,7 @@ msgstr "답글을 달 수 있는 사람"
 msgid "Wide"
 msgstr "가로"
 
-#: src/view/com/composer/Composer.tsx:409
+#: src/view/com/composer/Composer.tsx:413
 msgid "Write post"
 msgstr "게시물 작성"
 
