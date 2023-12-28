@@ -27,7 +27,8 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.fr, name: 'Français'},
   // DISABLED until this translation is fixed -prf
   // {code2: AppLanguage.de, name: 'Deutsch'},
-  {code2: AppLanguage.es, name: 'Español'},
+  // DISABLED until this translation is more thoroughly reviewed -prf
+  // {code2: AppLanguage.es, name: 'Español'},
 ]
 
 export const LANGUAGES: Language[] = [
