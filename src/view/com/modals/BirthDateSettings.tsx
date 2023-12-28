@@ -63,6 +63,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
 
       <View>
         <DateInput
+          handleAsUTC
           testID="birthdayInput"
           value={date}
           onChange={setDate}

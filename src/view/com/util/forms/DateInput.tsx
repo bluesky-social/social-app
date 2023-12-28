@@ -25,6 +25,7 @@ interface Props {
   accessibilityLabel: string
   accessibilityHint: string
   accessibilityLabelledBy?: string
+  handleAsUTC?: boolean
 }
 
 export function DateInput(props: Props) {
@@ -64,7 +65,9 @@ export function DateInput(props: Props) {
             <Text
               type={props.buttonLabelType}
               style={[pal.text, props.buttonLabelStyle]}>
-              {props.value.toLocaleDateString()}
+              {props.handleAsUTC
+                ? props.value.toLocaleDateString('en-US', {timeZone: 'Etc/UTC'})
+                : props.value.toLocaleDateString()}
             </Text>
           </View>
         </Button>
@@ -73,6 +76,7 @@ export function DateInput(props: Props) {
         <DateTimePicker
           testID={props.testID ? `${props.testID}-datepicker` : undefined}
           mode="date"
+          timeZoneName={props.handleAsUTC ? 'Etc/UTC' : undefined}
           display="spinner"
           // @ts-ignore applies in iOS only -prf
           themeVariant={theme.colorScheme}

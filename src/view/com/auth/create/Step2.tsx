@@ -122,6 +122,7 @@ export function Step2({
               <Trans>Your birth date</Trans>
             </Text>
             <DateInput
+              handleAsUTC
               testID="birthdayInput"
               value={uiState.birthDate}
               onChange={value => uiDispatch({type: 'set-birth-date', value})}
