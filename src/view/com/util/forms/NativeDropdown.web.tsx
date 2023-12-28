@@ -64,7 +64,7 @@ export function NativeDropdown({
   const pal = usePalette('default')
   const theme = useTheme()
   const dropDownBackgroundColor =
-    theme.colorScheme === 'dark' ? pal.btn : pal.viewLight
+    theme.colorScheme === 'dark' ? pal.btn : pal.view
   const [open, setOpen] = React.useState(false)
   const buttonRef = React.useRef<HTMLButtonElement>(null)
   const menuRef = React.useRef<HTMLDivElement>(null)
@@ -164,7 +164,7 @@ export function NativeDropdown({
                       <FontAwesomeIcon
                         icon={item.icon.web}
                         size={20}
-                        style={[pal.text]}
+                        color={pal.colors.textLight}
                       />
                     )}
                   </DropdownMenuItem>
@@ -182,7 +182,7 @@ export function NativeDropdown({
                   <FontAwesomeIcon
                     icon={item.icon.web}
                     size={20}
-                    style={[pal.text]}
+                    color={pal.colors.textLight}
                   />
                 )}
               </DropdownMenuItem>
@@ -215,6 +215,7 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     marginTop: 6,
+    boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
   },
   item: {
     display: 'flex',
@@ -231,6 +232,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   itemTitle: {
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: '500',
+    paddingRight: 10,
   },
 })
