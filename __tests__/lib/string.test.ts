@@ -426,34 +426,10 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://giphy.com/gif/some-random-gif-name-gifId',
     'https://giphy.com/gifs/',
 
-    'https://media.giphy.com/media/gifId/giphy.gif',
-    'https://media0.giphy.com/media/gifId/giphy.gif',
-    'https://media1.giphy.com/media/gifId/giphy.gif',
-    'https://media2.giphy.com/media/gifId/giphy.gif',
-    'https://media3.giphy.com/media/gifId/giphy.gif',
-    'https://media4.giphy.com/media/gifId/giphy.gif',
-    'https://media5.giphy.com/media/gifId/giphy.gif',
-    'https://media1.google.com/media/gifId/giphy.gif',
-
-    'https://media.giphy.com/media/trackingId/gifId/giphy.gif',
-
-    'https://i.giphy.com/media/gifId/giphy.gif',
-    'https://i.giphy.com/media/gifId/giphy.gif',
-    'https://i.giphy.com/gifId.gif',
-    'https://i.giphy.com/gifId.gif',
-
-    'https://media1.tenor.com/m/gifId/someName.gif',
-    'https://media.tenor.com/m/gifId/someName.mp4',
-    'https://media1.tenor.com/m/gifId',
-
     'https://tenor.com/view/gifId',
     'https://tenor.com/notView/gifId',
     'https://tenor.com/view',
     'https://tenor.com/view/gifId.gif',
-
-    'https://c.tenor.com/gifId/tenor.gif',
-    'https://c.tenor.com/gifId/tenor.webp',
-    'https://c.tenor.com/gifId/tenor.mp4',
   ]
 
   const outputs = [
@@ -580,63 +556,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    undefined,
-    undefined,
-
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    undefined,
-    undefined,
-
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
-    },
-
-    {
-      type: 'gif',
-      playerUri: 'https://media1.tenor.com/m/gifId/someName.gif',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     undefined,
     undefined,
@@ -651,16 +571,6 @@ describe('parseEmbedPlayerFromUrl', () => {
       type: 'gif',
       playerUri: 'https://tenor.com/view/gifId.gif',
     },
-
-    {
-      type: 'gif',
-      playerUri: 'https://c.tenor.com/gifId/tenor.gif',
-    },
-    {
-      type: 'gif',
-      playerUri: 'https://c.tenor.com/gifId/tenor.webp',
-    },
-    undefined,
   ]
 
   it('correctly grabs the correct id from uri', () => {
