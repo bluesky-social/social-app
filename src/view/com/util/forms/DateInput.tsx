@@ -13,6 +13,9 @@ import {Text} from '../text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {getLocales} from 'expo-localization'
+
+const LOCALE = getLocales()[0]
 
 interface Props {
   testID?: string
@@ -33,6 +36,12 @@ export function DateInput(props: Props) {
   const theme = useTheme()
   const pal = usePalette('default')
 
+  const formatter = React.useMemo(() => {
+    return new Intl.DateTimeFormat(LOCALE.languageTag, {
+      timeZone: props.handleAsUTC ? 'UTC' : undefined,
+    })
+  }, [props.handleAsUTC])
+
   const onChangeInternal = useCallback(
     (event: DateTimePickerEvent, date: Date | undefined) => {
       setShow(false)
@@ -46,6 +55,8 @@ export function DateInput(props: Props) {
   const onPress = useCallback(() => {
     setShow(true)
   }, [setShow])
+
+  console.log('DateInput', LOCALE.languageTag, formatter.format(props.value))
 
   return (
     <View>
@@ -65,9 +76,7 @@ export function DateInput(props: Props) {
             <Text
               type={props.buttonLabelType}
               style={[pal.text, props.buttonLabelStyle]}>
-              {props.handleAsUTC
-                ? props.value.toLocaleDateString('en-US', {timeZone: 'Etc/UTC'})
-                : props.value.toLocaleDateString()}
+              {formatter.format(props.value)}
             </Text>
           </View>
         </Button>
