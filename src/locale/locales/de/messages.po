@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/view/shell/desktop/RightNav.tsx:160
+#: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} Liste"
 
-#: src/view/shell/desktop/RightNav.tsx:143
+#: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr ""
 
@@ -79,7 +79,7 @@ msgstr "Konto Optionen"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
-#: src/view/screens/ProfileList.tsx:754
+#: src/view/screens/ProfileList.tsx:763
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -87,7 +87,7 @@ msgstr "Hinzufügen"
 msgid "Add a content warning"
 msgstr "Eine Inhaltswarnung hinzufügen"
 
-#: src/view/screens/ProfileList.tsx:744
+#: src/view/screens/ProfileList.tsx:753
 msgid "Add a user to this list"
 msgstr "Einen Benutzer zu dieser Liste hinzufügen"
 
@@ -126,7 +126,7 @@ msgstr "Fügen Sie den folgenden DNS-Eintrag zu Ihrem Domainnamen hinzu:"
 msgid "Add to Lists"
 msgstr "Den Listen hinzufügen"
 
-#: src/view/screens/ProfileFeed.tsx:270
+#: src/view/screens/ProfileFeed.tsx:271
 msgid "Add to my feeds"
 msgstr "Zu meinen Feeds hinzufügen"
 
@@ -167,7 +167,7 @@ msgstr "Es wurde eine E-Mail an {0} gesendet. Sie enthält einen Bestätigungsco
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "Es wurde eine E-Mail an Ihre frühere Adresse {0} gesendet. Sie enthält einen Bestätigungscode, den Sie unten eingeben können."
 
-#: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/notifications/FeedItem.tsx:237
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "und"
@@ -216,7 +216,7 @@ msgstr "Sind Sie sicher, dass Sie das App-Passwort \"{name}\" löschen möchten?
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Sind Sie sicher, dass Sie diesen Entwurf verwerfen möchten?"
 
-#: src/view/screens/ProfileList.tsx:352
+#: src/view/screens/ProfileList.tsx:353
 msgid "Are you sure?"
 msgstr "Sind Sie sicher?"
 
@@ -231,9 +231,9 @@ msgstr "Künstlerische oder nicht-erotische Nacktheit."
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:249
+#: src/view/com/auth/login/LoginForm.tsx:250
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
-#: src/view/com/modals/report/InputIssueDetails.tsx:45
+#: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
 #: src/view/com/post-thread/PostThread.tsx:438
 #: src/view/com/post-thread/PostThread.tsx:446
@@ -245,8 +245,8 @@ msgstr "Zurück"
 msgid "Basics"
 msgstr "Grundlagen"
 
-#: src/view/com/auth/create/Step2.tsx:131
-#: src/view/com/modals/BirthDateSettings.tsx:72
+#: src/view/com/auth/create/Step2.tsx:156
+#: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "Geburtstag"
 
@@ -259,15 +259,15 @@ msgstr "Geburtstag:"
 msgid "Block Account"
 msgstr "Konto sperren"
 
-#: src/view/screens/ProfileList.tsx:522
+#: src/view/screens/ProfileList.tsx:523
 msgid "Block accounts"
 msgstr "Kontos sperren"
 
-#: src/view/screens/ProfileList.tsx:472
+#: src/view/screens/ProfileList.tsx:473
 msgid "Block list"
 msgstr " Liste sperren"
 
-#: src/view/screens/ProfileList.tsx:307
+#: src/view/screens/ProfileList.tsx:308
 msgid "Block these accounts?"
 msgstr "Diese Kontos sperren?"
 
@@ -291,7 +291,7 @@ msgstr "Gesperrte Konten können nicht in Ihren Beiträgen antworten, Sie erwäh
 msgid "Blocked post."
 msgstr "Gesperrter Posten."
 
-#: src/view/screens/ProfileList.tsx:309
+#: src/view/screens/ProfileList.tsx:310
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "Die Sperrung ist öffentlich. Gesperrte Konten können nicht in Ihren Beiträgen antworten, Sie erwähnen oder anderweitig mit Ihnen interagieren."
 
@@ -360,7 +360,7 @@ msgstr "Darf nur Buchstaben, Zahlen, Leerzeichen, Bindestriche und Unterstriche 
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:584
+#: src/view/screens/Search/Search.tsx:601
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -432,6 +432,10 @@ msgstr "Sehen Sie sich einige empfohlene Benutzer an. Folgen Sie ihnen, um ähnl
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Prüfen Sie Ihren Posteingang auf eine E-Mail mit dem Bestätigungscode, den Sie unten eingeben müssen:"
 
+#: src/view/com/modals/Threadgate.tsx:72
+msgid "Choose \"Everybody\" or \"Nobody\""
+msgstr ""
+
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
 msgstr "Service auswählen"
@@ -440,7 +444,7 @@ msgstr "Service auswählen"
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "Wählen Sie die Algorithmen, die Ihr Erlebnis mit benutzerdefinierten Feeds unterstützen."
 
-#: src/view/com/auth/create/Step2.tsx:106
+#: src/view/com/auth/create/Step2.tsx:127
 msgid "Choose your password"
 msgstr "Wählen Sie Ihr Passwort"
 
@@ -460,8 +464,8 @@ msgstr "Alle alten Speicherdaten löschen"
 msgid "Clear all storage data (restart after this)"
 msgstr "Alle alten Speicherdaten löschen (danach neu starten)"
 
-#: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:569
+#: src/view/com/util/forms/SearchInput.tsx:74
+#: src/view/screens/Search/Search.tsx:582
 msgid "Clear search query"
 msgstr "Suchanfrage löschen"
 
@@ -522,7 +526,7 @@ msgid "Confirmation code"
 msgstr "Bestätigungscode"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:268
+#: src/view/com/auth/login/LoginForm.tsx:269
 msgid "Connecting..."
 msgstr "Verbinden..."
 
@@ -561,7 +565,7 @@ msgstr "Kopiert"
 msgid "Copy"
 msgstr "Kopie"
 
-#: src/view/screens/ProfileList.tsx:384
+#: src/view/screens/ProfileList.tsx:385
 msgid "Copy link to list"
 msgstr "Link zur Liste kopieren"
 
@@ -581,11 +585,11 @@ msgstr "Posten Text kopieren"
 msgid "Copyright Policy"
 msgstr "Urheberrechtspolitik"
 
-#: src/view/screens/ProfileFeed.tsx:94
+#: src/view/screens/ProfileFeed.tsx:95
 msgid "Could not load feed"
 msgstr "Feed konnte nicht geladen werden"
 
-#: src/view/screens/ProfileList.tsx:830
+#: src/view/screens/ProfileList.tsx:839
 msgid "Could not load list"
 msgstr "Liste konnte nicht geladen werden"
 
@@ -629,8 +633,8 @@ msgstr "Konto löschen"
 msgid "Delete app password"
 msgstr "App-Passwort löschen"
 
-#: src/view/screens/ProfileList.tsx:351
-#: src/view/screens/ProfileList.tsx:411
+#: src/view/screens/ProfileList.tsx:352
+#: src/view/screens/ProfileList.tsx:412
 msgid "Delete List"
 msgstr "Liste löschen"
 
@@ -729,7 +733,7 @@ msgstr "Jeder Code funktioniert einmal. Sie werden regelmäßig weitere Einladun
 msgid "Edit image"
 msgstr "Bild bearbeiten"
 
-#: src/view/screens/ProfileList.tsx:399
+#: src/view/screens/ProfileList.tsx:400
 msgid "Edit list details"
 msgstr "Listendetails bearbeiten"
 
@@ -754,14 +758,14 @@ msgstr "Profil bearbeiten"
 msgid "Edit Saved Feeds"
 msgstr "Gespeicherte Feeds bearbeiten"
 
-#: src/view/com/auth/create/Step2.tsx:90
+#: src/view/com/auth/create/Step2.tsx:108
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "E-Mail"
 
-#: src/view/com/auth/create/Step2.tsx:81
+#: src/view/com/auth/create/Step2.tsx:99
 msgid "Email address"
 msgstr "E-Mail Adresse"
 
@@ -793,7 +797,7 @@ msgstr "Geben Sie die zu verwendende Domain ein"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Geben Sie die E-Mail-Adresse ein, die Sie zur Erstellung Ihres Kontos verwendet haben. Wir senden Ihnen einen \"Reset-Code\" zu, mit dem Sie ein neues Passwort festlegen können."
 
-#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
 msgstr "Geben Sie Ihre E-Mail Adresse ein"
 
@@ -822,7 +826,7 @@ msgstr "Alt-Text erweitern"
 msgid "Failed to load recommended feeds"
 msgstr "Empfohlene Feeds konnten nicht geladen werden"
 
-#: src/view/screens/Feeds.tsx:554
+#: src/view/screens/Feeds.tsx:556
 msgid "Feed offline"
 msgstr "Feed offline"
 
@@ -830,7 +834,7 @@ msgstr "Feed offline"
 msgid "Feed Preferences"
 msgstr "Feed-Einstellungen"
 
-#: src/view/shell/desktop/RightNav.tsx:65
+#: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "Rückmeldung"
@@ -838,7 +842,7 @@ msgstr "Rückmeldung"
 #: src/view/screens/Feeds.tsx:475
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:340
+#: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:474
 #: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
@@ -852,11 +856,11 @@ msgstr "Feeds werden von Nutzern erstellt, um Inhalte zu kuratieren. Wählen Sie
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Feeds sind benutzerdefinierte Algorithmen, die von den Nutzern mit ein wenig Programmierkenntnissen erstellt werden. <0/> für weitere Informationen."
 
-#: src/view/screens/Search/Search.tsx:414
+#: src/view/screens/Search/Search.tsx:427
 msgid "Find users on Bluesky"
 msgstr "Benutzer auf Bluesky finden"
 
-#: src/view/screens/Search/Search.tsx:412
+#: src/view/screens/Search/Search.tsx:425
 msgid "Find users with the search tool on the right"
 msgstr "Benutzer mit der Suchfunktion auf der rechten Seite finden"
 
@@ -913,11 +917,11 @@ msgstr "Aus Sicherheitsgründen müssen wir Ihnen einen Bestätigungscode an Ihr
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Aus Sicherheitsgründen können Sie es nicht mehr einsehen. Wenn Sie dieses Passwort verlieren, müssen Sie ein neues generieren."
 
-#: src/view/com/auth/login/LoginForm.tsx:231
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Forgot"
 msgstr "Vergessen"
 
-#: src/view/com/auth/login/LoginForm.tsx:228
+#: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Forgot password"
 msgstr "Passwort vergessen"
 
@@ -941,15 +945,15 @@ msgstr "Anfangen"
 msgid "Go back"
 msgstr "Zurückgehen"
 
-#: src/view/screens/ProfileFeed.tsx:103
-#: src/view/screens/ProfileFeed.tsx:108
-#: src/view/screens/ProfileList.tsx:839
-#: src/view/screens/ProfileList.tsx:844
+#: src/view/screens/ProfileFeed.tsx:104
+#: src/view/screens/ProfileFeed.tsx:109
+#: src/view/screens/ProfileList.tsx:848
+#: src/view/screens/ProfileList.tsx:853
 msgid "Go Back"
 msgstr "Zurückgehen"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:279
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "Weiter zum nächsten"
@@ -958,7 +962,7 @@ msgstr "Weiter zum nächsten"
 msgid "Handle"
 msgstr "Handgriff"
 
-#: src/view/shell/desktop/RightNav.tsx:94
+#: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "Hilfe"
@@ -967,7 +971,7 @@ msgstr "Hilfe"
 msgid "Here is your app password."
 msgstr "Hier ist Ihr App-Passwort."
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:324
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "Ausblenden"
@@ -980,7 +984,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:308
+#: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide user list"
 msgstr "Benutzerliste ausblenden"
 
@@ -1005,7 +1009,7 @@ msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "Hmm, wir haben Probleme, diesen Feed zu finden. Vielleicht wurde er gelöscht."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:304
+#: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:398
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
@@ -1060,7 +1064,7 @@ msgstr "Einladung"
 msgid "Invite a Friend"
 msgstr "Einen Freund einladen"
 
-#: src/view/com/auth/create/Step2.tsx:57
+#: src/view/com/auth/create/Step2.tsx:72
 msgid "Invite code"
 msgstr "Einladungscode"
 
@@ -1080,8 +1084,8 @@ msgstr "Arbeitsplätze"
 msgid "Join the waitlist"
 msgstr "Auf die Warteliste setzen"
 
-#: src/view/com/auth/create/Step2.tsx:68
-#: src/view/com/auth/create/Step2.tsx:72
+#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:90
 msgid "Join the waitlist."
 msgstr "Auf die Warteliste setzen"
 
@@ -1141,7 +1145,7 @@ msgstr "Lassen Sie Ihr Passwort zurücksetzen!"
 msgid "Library"
 msgstr "Bibliothek"
 
-#: src/view/screens/ProfileFeed.tsx:577
+#: src/view/screens/ProfileFeed.tsx:586
 msgid "Like this feed"
 msgstr "Dieser Feed gefallen"
 
@@ -1163,7 +1167,7 @@ msgid "List Name"
 msgstr "Namen auflisten"
 
 #: src/view/screens/Profile.tsx:166
-#: src/view/shell/desktop/LeftNav.tsx:377
+#: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:490
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
@@ -1174,7 +1178,7 @@ msgstr "Listen"
 msgid "Load more posts"
 msgstr "Mehr Beiträge laden"
 
-#: src/view/screens/Notifications.tsx:144
+#: src/view/screens/Notifications.tsx:148
 msgid "Load new notifications"
 msgstr "Neue Benachrichtigungen laden"
 
@@ -1218,7 +1222,7 @@ msgstr "genannte Nutzer"
 msgid "Mentioned users"
 msgstr "Genannte Nutzer"
 
-#: src/view/screens/Search/Search.tsx:529
+#: src/view/screens/Search/Search.tsx:537
 msgid "Menu"
 msgstr "Menü"
 
@@ -1228,7 +1232,7 @@ msgstr "Meldung vom Server"
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
-#: src/view/shell/desktop/LeftNav.tsx:395
+#: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:509
 #: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
@@ -1247,8 +1251,8 @@ msgid "More feeds"
 msgstr "Mehr Feeds "
 
 #: src/view/com/profile/ProfileHeader.tsx:548
-#: src/view/screens/ProfileFeed.tsx:360
-#: src/view/screens/ProfileList.tsx:583
+#: src/view/screens/ProfileFeed.tsx:361
+#: src/view/screens/ProfileList.tsx:584
 msgid "More options"
 msgstr "Mehr Optionen"
 
@@ -1256,15 +1260,15 @@ msgstr "Mehr Optionen"
 msgid "Mute Account"
 msgstr "Stummes Konto"
 
-#: src/view/screens/ProfileList.tsx:510
+#: src/view/screens/ProfileList.tsx:511
 msgid "Mute accounts"
 msgstr "Stummes Konto"
 
-#: src/view/screens/ProfileList.tsx:457
+#: src/view/screens/ProfileList.tsx:458
 msgid "Mute list"
 msgstr "Stumme Liste"
 
-#: src/view/screens/ProfileList.tsx:270
+#: src/view/screens/ProfileList.tsx:271
 msgid "Mute these accounts?"
 msgstr "Diese Konten stummschalten?"
 
@@ -1284,7 +1288,7 @@ msgstr "Stumme Kontos"
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "Bei stummgeschalteten Konten werden deren Beiträge aus deinem Feed und deinen Benachrichtigungen entfernt. Stummschaltungen sind vollständig privat."
 
-#: src/view/screens/ProfileList.tsx:272
+#: src/view/screens/ProfileList.tsx:273
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
 msgstr "Stummschalten ist privat. Stummgeschaltete Konten können mit Ihnen interagieren, aber Sie sehen ihre Beiträge nicht und erhalten keine Benachrichtigungen von ihnen."
 
@@ -1319,23 +1323,23 @@ msgid "New"
 msgstr "Neu"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:505
+#: src/view/screens/Feeds.tsx:507
 #: src/view/screens/Profile.tsx:354
-#: src/view/screens/ProfileFeed.tsx:430
-#: src/view/screens/ProfileList.tsx:193
-#: src/view/screens/ProfileList.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:247
+#: src/view/screens/ProfileFeed.tsx:431
+#: src/view/screens/ProfileList.tsx:194
+#: src/view/screens/ProfileList.tsx:222
+#: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
 msgstr "Neuer Posten "
 
-#: src/view/shell/desktop/LeftNav.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:258
 msgid "New Post"
 msgstr "Neuer Posten "
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:281
+#: src/view/com/auth/login/LoginForm.tsx:282
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1346,14 +1350,15 @@ msgstr "Nächster"
 msgid "Next image"
 msgstr "Nächstes Bild "
 
+#: src/view/screens/PreferencesHomeFeed.tsx:120
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
 msgstr "Nein"
 
-#: src/view/screens/ProfileFeed.tsx:570
-#: src/view/screens/ProfileList.tsx:711
+#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileList.tsx:720
 msgid "No description"
 msgstr "Ohne Beschreibung"
 
@@ -1366,9 +1371,9 @@ msgid "No results found for \"{query}\""
 msgstr "Keine Ergebnisse gefunden für \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:263
-#: src/view/screens/Search/Search.tsx:291
-#: src/view/screens/Search/Search.tsx:607
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:629
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "Keine Ergebnisse gefunden für {query}"
@@ -1385,10 +1390,10 @@ msgstr "Nicht anwendbar."
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Hinweis: Bluesky ist ein offenes und öffentliches Netzwerk. Diese Einstellung schränkt nur die Sichtbarkeit Ihrer Inhalte auf der Bluesky-App und -Website ein, und andere Apps respektieren diese Einstellung möglicherweise nicht. Deine Inhalte können für abgemeldete Benutzer von anderen Apps und Websites weiterhin angezeigt werden."
 
-#: src/view/screens/Notifications.tsx:109
-#: src/view/screens/Notifications.tsx:133
+#: src/view/screens/Notifications.tsx:113
+#: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:359
+#: src/view/shell/desktop/LeftNav.tsx:361
 #: src/view/shell/Drawer.tsx:435
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
@@ -1418,7 +1423,7 @@ msgstr "Offene Navigation"
 msgid "Opens configurable language settings"
 msgstr "Öffnet die konfigurierbaren Spracheinstellungen"
 
-#: src/view/shell/desktop/RightNav.tsx:148
+#: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
 msgstr "Öffnet die Liste der Einladungscodes"
@@ -1455,6 +1460,10 @@ msgstr "Öffnet die Systemprotokollseite"
 msgid "Opens the threads preferences"
 msgstr "Öffnet die Thread-Einstellungen"
 
+#: src/view/com/modals/Threadgate.tsx:89
+msgid "Or combine these options:"
+msgstr ""
+
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "Anderes Konto "
@@ -1472,9 +1481,9 @@ msgstr "Andere..."
 msgid "Page not found"
 msgstr "Seite nicht gefunden"
 
-#: src/view/com/auth/create/Step2.tsx:101
-#: src/view/com/auth/create/Step2.tsx:111
-#: src/view/com/auth/login/LoginForm.tsx:216
+#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:217
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1576,7 +1585,7 @@ msgstr "Primäre Sprache"
 msgid "Prioritize Your Follows"
 msgstr "Priorisieren Sie Ihre Anhängerschaft"
 
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "Privatsphäre"
 
@@ -1591,7 +1600,7 @@ msgid "Processing..."
 msgstr "Verarbeitung..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:413
+#: src/view/shell/desktop/LeftNav.tsx:415
 #: src/view/shell/Drawer.tsx:70
 #: src/view/shell/Drawer.tsx:544
 #: src/view/shell/Drawer.tsx:545
@@ -1653,7 +1662,7 @@ msgstr "Feed entfernen"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:105
 #: src/view/com/feeds/FeedSourceCard.tsx:172
-#: src/view/screens/ProfileFeed.tsx:270
+#: src/view/screens/ProfileFeed.tsx:271
 msgid "Remove from my feeds"
 msgstr "Aus meinen Feeds entfernen"
 
@@ -1698,11 +1707,11 @@ msgstr "Bericht {Sammlungsname}"
 msgid "Report Account"
 msgstr "Bericht Konto"
 
-#: src/view/screens/ProfileFeed.tsx:290
+#: src/view/screens/ProfileFeed.tsx:291
 msgid "Report feed"
 msgstr "Bericht Feed"
 
-#: src/view/screens/ProfileList.tsx:425
+#: src/view/screens/ProfileList.tsx:426
 msgid "Report List"
 msgstr "Bericht Liste"
 
@@ -1729,7 +1738,7 @@ msgstr "Nachgetragen von"
 msgid "Request Change"
 msgstr "Änderung beantragen"
 
-#: src/view/com/auth/create/Step2.tsx:53
+#: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
 msgstr "Für diesen Anbieter erforderlich"
 
@@ -1759,16 +1768,16 @@ msgstr "Setzt den Zustand der Einstellungen zurück"
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:258
-#: src/view/com/auth/login/LoginForm.tsx:261
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
 msgstr "Wiederholung"
 
 #: src/view/com/modals/AltImage.tsx:115
-#: src/view/com/modals/BirthDateSettings.tsx:93
-#: src/view/com/modals/BirthDateSettings.tsx:96
+#: src/view/com/modals/BirthDateSettings.tsx:94
+#: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:249
 #: src/view/com/modals/CreateOrEditList.tsx:257
@@ -1797,11 +1806,11 @@ msgid "Saved Feeds"
 msgstr "Gespeicherte Feeds"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
-#: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:393
-#: src/view/screens/Search/Search.tsx:559
+#: src/view/com/util/forms/SearchInput.tsx:65
+#: src/view/screens/Search/Search.tsx:406
+#: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:322
+#: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
 #: src/view/shell/Drawer.tsx:362
@@ -1892,7 +1901,7 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr "Setzen Sie diese Einstellung auf \"Ja\", um Beispiele für Ihre gespeicherten Feeds in Ihrem folgenden Feed anzuzeigen. Dies ist eine experimentelle Funktion."
 
 #: src/view/screens/Settings.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:431
+#: src/view/shell/desktop/LeftNav.tsx:433
 #: src/view/shell/Drawer.tsx:565
 #: src/view/shell/Drawer.tsx:566
 msgid "Settings"
@@ -1904,11 +1913,11 @@ msgstr "Sexuelle Aktivitäten oder erotische Nacktheit."
 
 #: src/view/com/profile/ProfileHeader.tsx:338
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
-#: src/view/screens/ProfileList.tsx:384
+#: src/view/screens/ProfileList.tsx:385
 msgid "Share"
 msgstr "Teilen"
 
-#: src/view/screens/ProfileFeed.tsx:302
+#: src/view/screens/ProfileFeed.tsx:303
 msgid "Share feed"
 msgstr "Feeds teilen"
 
@@ -1941,7 +1950,7 @@ msgstr "Antworten von Personen, denen Sie folgen, vor allen anderen Antworten an
 msgid "Show Reposts"
 msgstr "Wiederholungen anzeigen"
 
-#: src/view/com/notifications/FeedItem.tsx:337
+#: src/view/com/notifications/FeedItem.tsx:345
 msgid "Show users"
 msgstr "Benutzer zeigen"
 
@@ -2040,15 +2049,15 @@ msgstr "Märchenbuch"
 msgid "Submit"
 msgstr "Einreichen"
 
-#: src/view/screens/ProfileList.tsx:574
+#: src/view/screens/ProfileList.tsx:575
 msgid "Subscribe"
 msgstr "Abonnieren"
 
-#: src/view/screens/ProfileList.tsx:570
+#: src/view/screens/ProfileList.tsx:571
 msgid "Subscribe to this list"
 msgstr "Abonnieren Sie diese Liste"
 
-#: src/view/screens/Search/Search.tsx:349
+#: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
 msgstr "Vorgeschlagene Followerliste"
 
@@ -2069,7 +2078,7 @@ msgstr "System-Protokoll"
 msgid "Tall"
 msgstr "Groß"
 
-#: src/view/shell/desktop/RightNav.tsx:85
+#: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
 msgstr "Bedingungen"
 
@@ -2080,7 +2089,7 @@ msgid "Terms of Service"
 msgstr "Bedingungen der Dienstleistung"
 
 #: src/view/com/modals/AppealLabel.tsx:70
-#: src/view/com/modals/report/InputIssueDetails.tsx:50
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "Text-Eingabefeld"
 
@@ -2181,8 +2190,8 @@ msgstr "Dropdown umschalten"
 msgid "Transformations"
 msgstr "Verwandlungen"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:704
-#: src/view/com/post-thread/PostThreadItem.tsx:706
+#: src/view/com/post-thread/PostThreadItem.tsx:705
+#: src/view/com/post-thread/PostThreadItem.tsx:707
 #: src/view/com/util/forms/PostDropdownBtn.tsx:111
 msgid "Translate"
 msgstr "Übersetze"
@@ -2191,11 +2200,11 @@ msgstr "Übersetze"
 msgid "Try again"
 msgstr "Nochmals versuchen"
 
-#: src/view/screens/ProfileList.tsx:472
+#: src/view/screens/ProfileList.tsx:473
 msgid "Un-block list"
 msgstr "Liste freigeben"
 
-#: src/view/screens/ProfileList.tsx:457
+#: src/view/screens/ProfileList.tsx:458
 msgid "Un-mute list"
 msgstr "Stummschaltliste aufheben"
 
@@ -2231,7 +2240,7 @@ msgstr "Konto entstören"
 msgid "Unmute thread"
 msgstr "Thema aufheben"
 
-#: src/view/screens/ProfileList.tsx:440
+#: src/view/screens/ProfileList.tsx:441
 msgid "Unpin moderation list"
 msgstr "Moderation Liste"
 
@@ -2276,11 +2285,11 @@ msgid "User Lists"
 msgstr "Benutzer Liste"
 
 #: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:187
+#: src/view/com/auth/login/LoginForm.tsx:188
 msgid "Username or email address"
 msgstr "Benutzername oder E-Mail Adresse"
 
-#: src/view/screens/ProfileList.tsx:738
+#: src/view/screens/ProfileList.tsx:747
 msgid "Users"
 msgstr "Benutzer"
 
@@ -2325,7 +2334,7 @@ msgstr "Seite besuchen"
 msgid "We're so excited to have you join us!"
 msgstr "Wir freuen uns, Sie bei uns begrüßen zu dürfen!"
 
-#: src/view/screens/Search/Search.tsx:236
+#: src/view/screens/Search/Search.tsx:243
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Es tut uns leid, aber Ihre Suche konnte nicht abgeschlossen werden. Bitte versuchen Sie es in ein paar Minuten erneut."
 
@@ -2374,6 +2383,7 @@ msgstr "Posten schreiben"
 msgid "Write your reply"
 msgstr "Schreiben Sie Ihre Antwort"
 
+#: src/view/screens/PreferencesHomeFeed.tsx:120
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
@@ -2434,11 +2444,11 @@ msgstr "Sie haben noch keine Konten stummgeschaltet. Um ein Konto stumm zu schal
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Sie erhalten eine E-Mail mit einem \"Reset-Code\". Geben Sie diesen Code hier ein und geben Sie dann Ihr neues Passwort ein."
 
-#: src/view/com/auth/create/Step2.tsx:43
+#: src/view/com/auth/create/Step2.tsx:58
 msgid "Your account"
 msgstr "Ihr Konto"
 
-#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
 msgstr "Ihr Geburtsdatum"
 
@@ -2468,7 +2478,7 @@ msgid "Your hosting provider"
 msgstr "Hosting-Anbieter"
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:129
+#: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:655
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "Ihre Einladungscodes werden ausgeblendet, wenn Sie sich mit einem App-Passwort anmelden."
