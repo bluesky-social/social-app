@@ -394,6 +394,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://youtube.com/watch?v=videoId',
     'https://youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/shorts/videoId',
+    'https://m.youtube.com/watch?v=videoId',
 
     'https://youtube.com/shorts/',
     'https://youtube.com/',
@@ -484,6 +485,12 @@ describe('parseEmbedPlayerFromUrl', () => {
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
+    {
+      type: 'youtube_video',
+      videoId: 'videoId',
+      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+    },
+
     undefined,
     undefined,
     undefined,
