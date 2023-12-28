@@ -20,6 +20,7 @@ export type EmbedPlayerParams =
   | {type: 'tenor_gif'; playerUri: string}
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
+const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -206,14 +207,14 @@ export function parseEmbedPlayerFromUrl(
       urlp.pathname.split('/')
 
     if (media === 'media') {
-      if (idOrFilename === 'giphy.gif' || idOrFilename === 'giphy.gif') {
+      if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
         return {
           type: 'giphy_gif',
           gifId: trackingOrId,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
           playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
         }
-      } else if (filename === 'giphy.gif' || filename === 'giphy.gif') {
+      } else if (idOrFilename && gifFilenameRegex.test(filename)) {
         return {
           type: 'giphy_gif',
           gifId: idOrFilename,
