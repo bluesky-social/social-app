@@ -72,7 +72,7 @@ export function NativeDropdown({
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   React.useEffect(() => {
-    const handler = (e: MouseEvent) => {
+    function clickHandler(e: MouseEvent) {
       const t = e.target
 
       if (!open) return
@@ -95,9 +95,17 @@ export function NativeDropdown({
       }
     }
 
-    document.addEventListener('click', handler, true)
+    function keydownHandler(e: KeyboardEvent) {
+      if (e.key === 'Escape' && open) {
+        setOpen(false)
+      }
+    }
+
+    document.addEventListener('click', clickHandler, true)
+    window.addEventListener('keydown', keydownHandler, true)
     return () => {
-      document.removeEventListener('click', handler, true)
+      document.removeEventListener('click', clickHandler, true)
+      window.removeEventListener('keydown', keydownHandler, true)
     }
   }, [open, setOpen])
 
