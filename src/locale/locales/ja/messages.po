@@ -25,6 +25,26 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} リスト"
 
+#: src/lib/strings/time.ts:28
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:26
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:24
+msgid "{0}m"
+msgstr ""
+
+#: src/lib/strings/time.ts:30
+msgid "{0}mo"
+msgstr ""
+
+#: src/lib/strings/time.ts:22
+msgid "{diffSeconds}s"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr "{invitesAvailable, plural, other {招待コード: # 個利用可能}}"
@@ -354,6 +374,7 @@ msgstr "文字、数字、スペース、ハイフン、およびアンダース
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangeHandle.tsx:153
 #: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
 #: src/view/com/modals/CreateOrEditList.tsx:267
 #: src/view/com/modals/CreateOrEditList.tsx:272
 #: src/view/com/modals/crop-image/CropImage.web.tsx:137
@@ -1434,6 +1455,10 @@ msgstr "注記：Blueskyはオープンでパブリックなネットワーク�
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
 msgstr "通知"
+
+#: src/lib/strings/time.ts:20
+msgid "now"
+msgstr ""
 
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"

@@ -88,7 +88,7 @@ export function Component({
           accessibilityLabel={_(msg`Cancel`)}
           accessibilityHint="">
           <Text type="button-lg" style={pal.textLight}>
-            {cancelBtnText ?? 'Cancel'}
+            {cancelBtnText ?? _(msg`Cancel`)}
           </Text>
         </TouchableOpacity>
       )}

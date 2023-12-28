@@ -33,6 +33,26 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{purposeLabel} 리스트 {0}"
 
+#: src/lib/strings/time.ts:28
+msgid "{0}d"
+msgstr "{0}일"
+
+#: src/lib/strings/time.ts:26
+msgid "{0}h"
+msgstr "{0}시간"
+
+#: src/lib/strings/time.ts:24
+msgid "{0}m"
+msgstr "{0}분"
+
+#: src/lib/strings/time.ts:30
+msgid "{0}mo"
+msgstr "{0}개월"
+
+#: src/lib/strings/time.ts:22
+msgid "{diffSeconds}s"
+msgstr "{diffSeconds}초"
+
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr "{invitesAvailable, plural, one {초대 코드: #개 사용 가능} other {초대 코드: #개 사용 가능}}"
@@ -382,6 +402,7 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangeHandle.tsx:153
 #: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
 #: src/view/com/modals/CreateOrEditList.tsx:267
 #: src/view/com/modals/CreateOrEditList.tsx:272
 #: src/view/com/modals/crop-image/CropImage.web.tsx:137
@@ -1516,6 +1537,10 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
 msgstr "알림"
+
+#: src/lib/strings/time.ts:20
+msgid "now"
+msgstr "지금"
 
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"
