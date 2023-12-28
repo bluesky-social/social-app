@@ -199,9 +199,11 @@ let FeedItemInner = ({
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
-              title={_(msg`Reposted by ${sanitizeDisplayName(
-                reason.by.displayName || reason.by.handle,
-              )}`)}>
+              title={_(
+                msg`Reposted by ${sanitizeDisplayName(
+                  reason.by.displayName || reason.by.handle,
+                )}`
+              )}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{
@@ -215,7 +217,8 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>Reposted by{' '}
+                <Trans>
+                  Reposted by{' '}
                   <TextLinkOnWebOnly
                     type="sm-bold"
                     style={pal.textLight}

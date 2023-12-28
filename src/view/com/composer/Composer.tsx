@@ -269,7 +269,9 @@ export const ComposePost = observer(function ComposePost({
       (!requireAltTextEnabled || !gallery.needsAltText),
     [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
-  const selectTextInputPlaceholder = replyTo ? _(msg`Write your reply`) : _(msg`What's up?`)
+  const selectTextInputPlaceholder = replyTo
+    ? _(msg`Write your reply`)
+    : _(msg`What's up?`)
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
