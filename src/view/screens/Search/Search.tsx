@@ -519,7 +519,11 @@ export function SearchScreen(
   return (
     <View style={{flex: 1}}>
       <CenteredView
-        style={[styles.header, pal.border]}
+        style={[
+          styles.header,
+          pal.border,
+          isTabletOrDesktop && {paddingTop: 10},
+        ]}
         sideBorders={isTabletOrDesktop}>
         {isTabletOrMobile && (
           <Pressable
@@ -600,7 +604,7 @@ export function SearchScreen(
           {isFetching ? (
             <Loader />
           ) : (
-            <ScrollView style={{height: '100%'}}>
+            <ScrollView style={{height: '100%'}} dataSet={{stableGutters: '1'}}>
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
