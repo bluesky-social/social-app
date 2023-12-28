@@ -201,9 +201,7 @@ export function ExternalPlayer({
             },
             styles.topRadius,
           ]}
-          source={{
-            uri: link.thumb,
-          }}
+          source={{uri: link.thumb}}
           accessibilityIgnoresInvertColors
         />
       )}
@@ -239,10 +237,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  imageContainer: {
-    width: '100%',
-    overflow: 'hidden',
   },
   overlayLayer: {
     zIndex: 2,

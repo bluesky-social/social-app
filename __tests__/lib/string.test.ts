@@ -579,85 +579,85 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
 
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     undefined,
     undefined,
 
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     undefined,
     undefined,
 
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
 
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
     {
-      type: 'giphy_gif',
+      type: 'gif',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.gif',
     },
 
     {
-      type: 'tenor_gif',
+      type: 'gif',
       playerUri: 'https://media1.tenor.com/m/gifId/someName.gif',
     },
     undefined,
     undefined,
 
     {
-      type: 'tenor_gif',
+      type: 'gif',
       playerUri: 'https://tenor.com/view/gifId.gif',
     },
     undefined,
     undefined,
     {
-      type: 'tenor_gif',
+      type: 'gif',
       playerUri: 'https://tenor.com/view/gifId.gif',
     },
 
     {
-      type: 'tenor_gif',
+      type: 'gif',
       playerUri: 'https://c.tenor.com/gifId/tenor.gif',
     },
     {
-      type: 'tenor_gif',
+      type: 'gif',
       playerUri: 'https://c.tenor.com/gifId/tenor.webp',
     },
     undefined,
