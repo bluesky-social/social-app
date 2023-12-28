@@ -1628,7 +1628,7 @@ msgstr "게시물"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
-msgstr "게시물 숨겨짐"
+msgstr "게시물 숨김"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:87
 msgid "Post language"
