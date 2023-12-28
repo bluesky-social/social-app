@@ -56,8 +56,6 @@ export function DateInput(props: Props) {
     setShow(true)
   }, [setShow])
 
-  console.log('DateInput', LOCALE.languageTag, formatter.format(props.value))
-
   return (
     <View>
       {isAndroid && (
