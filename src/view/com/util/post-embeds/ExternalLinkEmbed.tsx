@@ -8,6 +8,7 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed.tsx'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -53,9 +54,12 @@ export const ExternalLinkEmbed = ({
           />
         </View>
       ) : undefined}
-      {embedPlayerParams && (
+      {(embedPlayerParams && embedPlayerParams.type !== 'gif' && (
         <ExternalPlayer link={link} params={embedPlayerParams} />
-      )}
+      )) ||
+        (embedPlayerParams && embedPlayerParams.type === 'gif' && (
+          <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
+        ))}
       <View
         style={{
           paddingHorizontal: isMobile ? 10 : 14,

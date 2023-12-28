@@ -202,12 +202,11 @@ export function ExternalPlayer({
             styles.topRadius,
           ]}
           source={{
-            uri: 'https://media1.tenor.com/m/UNTqMDwqh1gAAAAC/hello-hi.gif',
+            uri: link.thumb,
           }}
           accessibilityIgnoresInvertColors
         />
       )}
-
       <PlaceholderOverlay
         isLoading={isLoading}
         isPlayerActive={isPlayerActive}
@@ -240,6 +239,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  imageContainer: {
+    width: '100%',
+    overflow: 'hidden',
   },
   overlayLayer: {
     zIndex: 2,
