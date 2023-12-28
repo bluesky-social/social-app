@@ -201,7 +201,9 @@ export function ExternalPlayer({
             },
             styles.topRadius,
           ]}
-          source={{uri: link.thumb}}
+          source={{
+            uri: 'https://media1.tenor.com/m/UNTqMDwqh1gAAAAC/hello-hi.gif',
+          }}
           accessibilityIgnoresInvertColors
         />
       )}
