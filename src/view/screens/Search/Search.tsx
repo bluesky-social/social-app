@@ -162,6 +162,8 @@ function SearchScreenSuggestedFollows() {
       // @ts-ignore web only -prf
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 1200}}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
@@ -572,7 +574,8 @@ export function SearchScreenMobile(
               onPress={onPressClearQuery}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint="">
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}>
               <FontAwesomeIcon
                 icon="xmark"
                 size={16}
@@ -584,7 +587,10 @@ export function SearchScreenMobile(
 
         {query || inputIsFocused ? (
           <View style={styles.headerCancelBtn}>
-            <Pressable onPress={onPressCancelSearch} accessibilityRole="button">
+            <Pressable
+              onPress={onPressCancelSearch}
+              accessibilityRole="button"
+              hitSlop={HITSLOP_10}>
               <Text style={[pal.text]}>
                 <Trans>Cancel</Trans>
               </Text>
@@ -598,7 +604,10 @@ export function SearchScreenMobile(
           {isFetching ? (
             <Loader />
           ) : (
-            <ScrollView style={{height: '100%'}}>
+            <ScrollView
+              style={{height: '100%'}}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag">
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
