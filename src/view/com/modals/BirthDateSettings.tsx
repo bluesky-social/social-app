@@ -23,7 +23,7 @@ import {
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 
-export const snapPoints = ['50%']
+export const snapPoints = ['50%', '90%']
 
 function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const pal = usePalette('default')
