@@ -1210,6 +1210,7 @@ msgid "Load new notifications"
 msgstr "最新の通知をロード"
 
 #: src/view/com/feeds/FeedPage.tsx:189
+#: src/view/screens/ProfileList.tsx:647
 msgid "Load new posts"
 msgstr "最新の投稿をロード"
 
@@ -1587,11 +1588,15 @@ msgstr ""
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "投稿"
+
+#: src/view/com/composer/Composer.tsx:334
+#: src/view/com/composer/Composer.tsx:341
+msgid "Post (verb)"
+msgstr "投稿する"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
@@ -1662,6 +1667,14 @@ msgstr "ユーザーを一括でミュートまたはブロックする、公開
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
 msgstr "フィードとして利用できる、公開された共有可能なリスト。"
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish post"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish reply"
+msgstr ""
 
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
@@ -1738,6 +1751,10 @@ msgstr "返信"
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
 msgstr "このスレッドへの返信はできません"
+
+#: src/view/com/composer/Composer.tsx:334
+msgid "Reply"
+msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
 msgid "Reply Filters"
@@ -2440,6 +2457,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "この{collectionName}の問題は何ですか？"
 
 #: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/composer/Composer.tsx:272
 msgid "What's up?"
 msgstr "最近どう？"
 
@@ -2464,6 +2482,7 @@ msgstr "ワイド"
 msgid "Write post"
 msgstr "投稿を書く"
 
+#: src/view/com/composer/Composer.tsx:272
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "返信を書く"

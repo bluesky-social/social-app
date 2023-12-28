@@ -1263,6 +1263,7 @@ msgid "Load new notifications"
 msgstr "नई सूचनाएं लोड करें"
 
 #: src/view/com/feeds/FeedPage.tsx:189
+#: src/view/screens/ProfileList.tsx:647
 msgid "Load new posts"
 msgstr "नई पोस्ट लोड करें"
 
@@ -1661,10 +1662,14 @@ msgstr ""
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
+msgstr "पोस्ट"
+
+#: src/view/com/composer/Composer.tsx:334
+#: src/view/com/composer/Composer.tsx:341
+msgid "Post (verb)"
 msgstr "पोस्ट"
 
 #: src/view/com/post-thread/PostThread.tsx:378
@@ -1736,6 +1741,14 @@ msgstr ""
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
 msgstr "सार्वजनिक, साझा करने योग्य सूचियाँ जो फ़ीड चला सकती हैं।"
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish post"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish reply"
+msgstr ""
 
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
@@ -1816,6 +1829,10 @@ msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:334
+msgid "Reply"
 msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
@@ -2555,6 +2572,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "इस {collectionName} के साथ क्या मुद्दा है?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/composer/Composer.tsx:272
 msgid "What's up?"
 msgstr ""
 
@@ -2583,6 +2601,7 @@ msgstr "चौड़ा"
 msgid "Write post"
 msgstr "पोस्ट लिखो"
 
+#: src/view/com/composer/Composer.tsx:272
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "अपना जवाब दें"

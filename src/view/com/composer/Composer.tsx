@@ -269,7 +269,7 @@ export const ComposePost = observer(function ComposePost({
       (!requireAltTextEnabled || !gallery.needsAltText),
     [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
+  const selectTextInputPlaceholder = replyTo ? _(msg`Write your reply`) : _(msg`What's up?`)
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
@@ -319,7 +319,7 @@ export const ComposePost = observer(function ComposePost({
                   onPress={onPressPublish}
                   accessibilityRole="button"
                   accessibilityLabel={
-                    replyTo ? 'Publish reply' : 'Publish post'
+                    replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
                   }
                   accessibilityHint="">
                   <LinearGradient
@@ -331,14 +331,14 @@ export const ComposePost = observer(function ComposePost({
                     end={{x: 1, y: 1}}
                     style={styles.postBtn}>
                     <Text style={[s.white, s.f16, s.bold]}>
-                      {replyTo ? 'Reply' : 'Post'}
+                      {replyTo ? _(msg`Reply`) : _(msg`Post (verb)`)}
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
                   <Text style={[pal.textLight, s.f16, s.bold]}>
-                    <Trans>Post</Trans>
+                    <Trans>Post (verb)</Trans>
                   </Text>
                 </View>
               )}

@@ -532,7 +532,7 @@ msgstr "커뮤니티 가이드라인"
 
 #: src/view/com/composer/Prompt.tsx:24
 msgid "Compose reply"
-msgstr "답글 작성"
+msgstr "답글 작성하기"
 
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/Confirm.tsx:75
@@ -1271,6 +1271,7 @@ msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
 #: src/view/com/feeds/FeedPage.tsx:189
+#: src/view/screens/ProfileList.tsx:647
 msgid "Load new posts"
 msgstr "새 게시물 불러오기"
 
@@ -1669,11 +1670,15 @@ msgstr "이 콘텐츠 경고가 잘못 적용되었다고 생각하는 이유를
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요."
 
-#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "게시물"
+
+#: src/view/com/composer/Composer.tsx:334
+#: src/view/com/composer/Composer.tsx:341
+msgid "Post (verb)"
+msgstr "게시하기"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
@@ -1744,6 +1749,14 @@ msgstr "음소거하거나 일괄 차단할 수 있는 공개적이고 공유할
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유할 수 있는 목록입니다."
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish post"
+msgstr "게시물 게시하기"
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish reply"
+msgstr "답글 게시하기"
 
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
@@ -1825,6 +1838,10 @@ msgstr "답글"
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
 msgstr "이 스레드에 대한 답글이 비활성화됩니다."
+
+#: src/view/com/composer/Composer.tsx:334
+msgid "Reply"
+msgstr "답글"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
 msgid "Reply Filters"
@@ -2563,6 +2580,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "이 {collectionName}에 어떤 문제가 있습니까?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/composer/Composer.tsx:272
 msgid "What's up?"
 msgstr "What's up?"
 
@@ -2591,9 +2609,10 @@ msgstr "가로"
 msgid "Write post"
 msgstr "게시물 작성"
 
+#: src/view/com/composer/Composer.tsx:272
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
-msgstr "답글 작성"
+msgstr "답글 작성하기"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:120
 #: src/view/screens/PreferencesHomeFeed.tsx:192

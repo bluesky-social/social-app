@@ -1271,6 +1271,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/view/com/feeds/FeedPage.tsx:189
+#: src/view/screens/ProfileList.tsx:647
 msgid "Load new posts"
 msgstr ""
 
@@ -1669,11 +1670,15 @@ msgstr ""
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr ""
+
+#: src/view/com/composer/Composer.tsx:334
+#: src/view/com/composer/Composer.tsx:341
+msgid "Post (verb)"
+msgstr "Post"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
@@ -1743,6 +1748,14 @@ msgstr ""
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish post"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:322
+msgid "Publish reply"
 msgstr ""
 
 #: src/view/com/modals/Repost.tsx:52
@@ -1824,6 +1837,10 @@ msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:334
+msgid "Reply"
 msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
@@ -2563,6 +2580,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/composer/Composer.tsx:272
 msgid "What's up?"
 msgstr ""
 
@@ -2591,6 +2609,7 @@ msgstr ""
 msgid "Write post"
 msgstr ""
 
+#: src/view/com/composer/Composer.tsx:272
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr ""

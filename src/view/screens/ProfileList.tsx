@@ -644,7 +644,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
-            label="Load new posts"
+            label={_(msg`Load new posts`)}
             showIndicator={hasNew}
           />
         )}
