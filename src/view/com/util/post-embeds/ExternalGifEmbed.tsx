@@ -89,6 +89,7 @@ export function ExternalGifEmbed({
         style={{flex: 1}}
         ref={imageRef}
         onLoad={onLoad}
+        autoplay={isAnimating}
         contentFit="contain"
         accessibilityIgnoresInvertColors
       />

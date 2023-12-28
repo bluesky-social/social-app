@@ -54,11 +54,13 @@ export const ExternalLinkEmbed = ({
           />
         </View>
       ) : undefined}
-      {(embedPlayerParams && embedPlayerParams.type !== 'gif' && (
-        <ExternalPlayer link={link} params={embedPlayerParams} />
-      )) ||
-        (embedPlayerParams && embedPlayerParams.type === 'gif' && (
+      {(embedPlayerParams &&
+        (embedPlayerParams.type === 'giphy_gif' ||
+          embedPlayerParams.type === 'tenor_gif') && (
           <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
+        )) ||
+        (embedPlayerParams && (
+          <ExternalPlayer link={link} params={embedPlayerParams} />
         ))}
       <View
         style={{
