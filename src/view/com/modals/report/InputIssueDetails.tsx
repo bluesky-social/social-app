@@ -63,7 +63,7 @@ export function InputIssueDetails({
         />
         <View style={styles.detailsInputBottomBar}>
           <View style={styles.charCounter}>
-            <CharProgress key={details} count={details?.length || 0} />
+            <CharProgress count={details?.length || 0} />
           </View>
         </View>
       </View>
