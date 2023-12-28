@@ -2128,7 +2128,7 @@ msgstr "로그인 필요"
 
 #: src/view/screens/Settings.tsx:327
 msgid "Signed in as"
-msgstr "로그인된 계정"
+msgstr "로그인한 계정"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
 msgid "Skip"
