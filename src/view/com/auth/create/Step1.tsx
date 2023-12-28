@@ -58,13 +58,13 @@ export function Step1({
         testID="blueskyServerBtn"
         isSelected={isDefaultSelected}
         label="Bluesky"
-        help="&nbsp;(default)"
+        help={' (' + _(msg`default`) + ')'}
         onPress={onPressDefault}
       />
       <Option
         testID="otherServerBtn"
         isSelected={!isDefaultSelected}
-        label="Other"
+        label={_(msg`Other`)}
         onPress={onPressOther}>
         <View style={styles.otherForm}>
           <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>

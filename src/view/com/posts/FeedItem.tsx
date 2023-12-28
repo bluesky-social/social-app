@@ -35,6 +35,8 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function FeedItem({
   post,
@@ -103,6 +105,7 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -196,9 +199,9 @@ let FeedItemInner = ({
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
-              title={`Reposted by ${sanitizeDisplayName(
+              title={_(msg`Reposted by ${sanitizeDisplayName(
                 reason.by.displayName || reason.by.handle,
-              )}`}>
+              )}`)}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{
@@ -212,17 +215,18 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reposted by{' '}
-                <TextLinkOnWebOnly
-                  type="sm-bold"
-                  style={pal.textLight}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  text={sanitizeDisplayName(
-                    reason.by.displayName || sanitizeHandle(reason.by.handle),
-                  )}
-                  href={makeProfileLink(reason.by)}
-                />
+                <Trans>Reposted by{' '}
+                  <TextLinkOnWebOnly
+                    type="sm-bold"
+                    style={pal.textLight}
+                    lineHeight={1.2}
+                    numberOfLines={1}
+                    text={sanitizeDisplayName(
+                      reason.by.displayName || sanitizeHandle(reason.by.handle),
+                    )}
+                    href={makeProfileLink(reason.by)}
+                  />
+                </Trans>
               </Text>
             </Link>
           ) : null}

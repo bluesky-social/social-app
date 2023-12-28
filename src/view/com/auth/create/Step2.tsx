@@ -45,7 +45,7 @@ export function Step2({
       {uiState.isInviteCodeRequired && (
         <View style={s.pb20}>
           <Text type="md-medium" style={[pal.text, s.mb2]}>
-            Invite code
+            <Trans>Invite code</Trans>
           </Text>
           <TextInput
             testID="inviteCodeInput"
@@ -62,7 +62,7 @@ export function Step2({
 
       {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
         <Text style={[s.alignBaseline, pal.text]}>
-          Don't have an invite code?{' '}
+          <Trans>Don't have an invite code?</Trans>{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
             accessibilityLabel={_(msg`Join the waitlist.`)}

@@ -150,7 +150,7 @@ export function Inner({
             accessibilityHint="Exits handle change process"
             onAccessibilityEscape={onPressCancel}>
             <Text type="lg" style={pal.textLight}>
-              Cancel
+              <Trans>Cancel</Trans>
             </Text>
           </TouchableOpacity>
         </View>

@@ -341,7 +341,7 @@ export function ProfileFeedScreenInner({
             <Button
               disabled={isSavePending || isRemovePending}
               type="default"
-              label={isSaved ? 'Unsave' : 'Save'}
+              label={isSaved ? _(msg`Unsave`) : _(msg`Save`)}
               onPress={onToggleSaved}
               style={styles.btn}
             />
@@ -349,7 +349,7 @@ export function ProfileFeedScreenInner({
               testID={isPinned ? 'unpinBtn' : 'pinBtn'}
               disabled={isPinPending || isUnpinPending}
               type={isPinned ? 'default' : 'inverted'}
-              label={isPinned ? 'Unpin' : 'Pin to home'}
+              label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
               onPress={onTogglePinned}
               style={styles.btn}
             />

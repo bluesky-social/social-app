@@ -141,7 +141,7 @@ export function Component({
             }}
             accessibilityLabel={_(msg`Done`)}
             accessibilityHint=""
-            label="Done"
+            label={_(msg`Done`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

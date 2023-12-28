@@ -73,6 +73,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isSwitchingAccounts, currentAccount} = useSession()
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
@@ -98,10 +99,10 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
           testID="signOutBtn"
           onPress={logout}
           accessibilityRole="button"
-          accessibilityLabel="Sign out"
+          accessibilityLabel={_(msg`Sign out`)}
           accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
           <Text type="lg" style={pal.link}>
-            Sign out
+            <Trans>Sign out</Trans>
           </Text>
         </TouchableOpacity>
       ) : (

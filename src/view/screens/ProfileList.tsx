@@ -545,7 +545,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
           type={isPinned ? 'default' : 'inverted'}
-          label={isPinned ? 'Unpin' : 'Pin to home'}
+          label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
           onPress={onTogglePinned}
           disabled={isPending}
         />
@@ -554,14 +554,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           <Button
             testID="unblockBtn"
             type="default"
-            label="Unblock"
+            label={_(msg`Unblock`)}
             onPress={onUnsubscribeBlock}
           />
         ) : isMuting ? (
           <Button
             testID="unmuteBtn"
             type="default"
-            label="Unmute"
+            label={_(msg`Unmute`)}
             onPress={onUnsubscribeMute}
           />
         ) : (
@@ -603,6 +603,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const isScreenFocused = useIsFocused()
+    const {_} = useLingui()
 
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -624,7 +625,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message="This feed is empty!" />
+      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
     }, [])
 
     return (

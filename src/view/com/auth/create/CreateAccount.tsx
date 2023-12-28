@@ -116,7 +116,7 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
 
   return (
     <LoggedOutLayout
-      leadin={`Step ${uiState.step}`}
+      leadin={_(msg`Step ${uiState.step}`)}
       title={_(msg`Create Account`)}
       description={_(msg`We're so excited to have you join us!`)}>
       <ScrollView testID="createAccount" style={pal.view}>

@@ -9,7 +9,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 
@@ -74,7 +75,7 @@ export const SplashScreen = ({
                 // TODO: web accessibility
                 accessibilityRole="button">
                 <Text style={[s.white, styles.btnLabel]}>
-                  Create a new account
+                  <Trans>Create a new account</Trans>
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -98,22 +99,23 @@ export const SplashScreen = ({
 
 function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
         href="https://blueskyweb.xyz"
-        text="Business"
+        text={_(msg`Business`)}
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
         href="https://blueskyweb.xyz/blog"
-        text="Blog"
+        text={_(msg`Blog`)}
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
         href="https://blueskyweb.xyz/join"
-        text="Jobs"
+        text={_(msg`Jobs`)}
         style={[styles.footerLink, pal.link]}
       />
     </View>
