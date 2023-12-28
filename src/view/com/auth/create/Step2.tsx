@@ -17,7 +17,7 @@ import {logger} from '#/logger'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
-    logger.error(`Create account step 2: received invalid date`, {
+    logger.error(`Create account: handled invalid date for birthDate`, {
       hasDate: !!date,
     })
     return new Date()
