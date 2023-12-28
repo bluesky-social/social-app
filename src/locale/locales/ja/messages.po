@@ -27,23 +27,23 @@ msgstr "{0} {purposeLabel} リスト"
 
 #: src/lib/strings/time.ts:28
 msgid "{0}d"
-msgstr ""
+msgstr "{0}日"
 
 #: src/lib/strings/time.ts:26
 msgid "{0}h"
-msgstr ""
+msgstr "{0}時間"
 
 #: src/lib/strings/time.ts:24
 msgid "{0}m"
-msgstr ""
+msgstr "{0}分"
 
 #: src/lib/strings/time.ts:30
 msgid "{0}mo"
-msgstr ""
+msgstr "{0}ヶ月"
 
 #: src/lib/strings/time.ts:22
 msgid "{diffSeconds}s"
-msgstr ""
+msgstr "{diffSeconds}秒"
 
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
@@ -1458,7 +1458,7 @@ msgstr "通知"
 
 #: src/lib/strings/time.ts:20
 msgid "now"
-msgstr ""
+msgstr "今"
 
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"
