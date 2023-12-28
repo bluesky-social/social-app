@@ -9,13 +9,13 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"Last-Translator: danninov\n"
+"Language-Team: danninov\n"
 "Plural-Forms: \n"
 
 #: src/view/shell/desktop/RightNav.tsx:160
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr ""
+msgstr "{0, plural, one {# kode undangan tersedia} other {# kode undangan tersedia}}"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -27,7 +27,7 @@ msgstr "Daftar {purposeLabel} {0}"
 
 #: src/view/shell/desktop/RightNav.tsx:143
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr ""
+msgstr "{invitesAvailable, plural, one {Kode undangan: # tersedia} other {Kode undangan: # tersedia}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:659
@@ -2467,7 +2467,7 @@ msgstr "Kode undangan Anda disembunyikan saat masuk menggunakan Kata Sandi Aplik
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Post, Suka, dan blokir Anda bersifat publik. Bisukan bersifat pribadi."
+msgstr "Post, suka, dan blokir Anda bersifat publik. Bisukan bersifat pribadi."
 
 #: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
