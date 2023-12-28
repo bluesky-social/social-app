@@ -90,7 +90,7 @@ export function Component({image}: Props) {
           style={[styles.textArea, pal.border, pal.text]}
           keyboardAppearance={theme.colorScheme}
           multiline
-          placeholder="Add alt text"
+          placeholder={_(msg`Add alt text`)}
           placeholderTextColor={pal.colors.textLight}
           value={altText}
           onChangeText={onUpdate}
@@ -104,7 +104,7 @@ export function Component({image}: Props) {
             testID="altTextImageSaveBtn"
             onPress={onPressSave}
             accessibilityLabel={_(msg`Save alt text`)}
-            accessibilityHint={`Saves alt text, which reads: ${altText}`}
+            accessibilityHint=""
             accessibilityRole="button">
             <LinearGradient
               colors={[gradients.blueLight.start, gradients.blueLight.end]}
