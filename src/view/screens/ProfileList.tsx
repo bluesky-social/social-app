@@ -626,7 +626,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
 
     const renderPostsEmpty = useCallback(() => {
       return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
-    }, [msg])
+    }, [_])
 
     return (
       <View>
