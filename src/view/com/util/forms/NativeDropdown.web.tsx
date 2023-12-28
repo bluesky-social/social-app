@@ -215,6 +215,8 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
     marginTop: 6,
+
+    // @ts-ignore web only -prf
     boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
   },
   item: {
