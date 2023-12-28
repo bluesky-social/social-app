@@ -41,7 +41,7 @@ export function IS_LOCAL_DEV(url: string) {
 }
 
 export function IS_STAGING(url: string) {
-  return url.startsWith('https://staging.bsky.app')
+  return url.startsWith('https://staging.bsky.dev')
 }
 
 export function IS_PROD(url: string) {
