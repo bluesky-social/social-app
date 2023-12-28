@@ -111,13 +111,14 @@ export function NativeDropdown({
 
   return (
     <DropdownMenuRoot open={open} onOpenChange={o => setOpen(o)}>
-      <DropdownMenu.Trigger asChild>
+      <DropdownMenu.Trigger asChild onPointerDown={e => e.preventDefault()}>
         <Pressable
           ref={buttonRef as unknown as React.Ref<View>}
           testID={testID}
           accessibilityRole="button"
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
+          onPress={() => setOpen(o => !o)}
           hitSlop={HITSLOP_10}>
           {children}
         </Pressable>
