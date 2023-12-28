@@ -2614,7 +2614,7 @@ msgstr "앱 비밀번호를 사용하여 로그인하면 초대 코드가 숨겨
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "내 게시물, 좋아요, 차단은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
+msgstr "내 게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
 #: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
