@@ -110,7 +110,6 @@ export function NativeDropdown({
           accessibilityRole="button"
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
-          style={({pressed}) => ({opacity: pressed ? 0.5 : 1})}
           hitSlop={HITSLOP_10}>
           {children}
         </Pressable>
