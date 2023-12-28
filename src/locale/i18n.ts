@@ -8,6 +8,7 @@ import {messages as messagesJa} from '#/locale/locales/ja/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
+import {messages as messagesId} from '#/locale/locales/id/messages'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
@@ -35,6 +36,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
+      break
+    }
+    case AppLanguage.id: {
+      i18n.loadAndActivate({locale, messages: messagesId})
       break
     }
     default: {

@@ -120,6 +120,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.de
       case 'es':
         return AppLanguage.es
+      case 'id':
+        return AppLanguage.id
       default:
         continue
     }
