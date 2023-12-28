@@ -2173,7 +2173,7 @@ msgstr "이 리스트로 구독"
 
 #: src/view/screens/Search/Search.tsx:349
 msgid "Suggested Follows"
-msgstr "추천 팔로우"
+msgstr "팔로우 추천"
 
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
