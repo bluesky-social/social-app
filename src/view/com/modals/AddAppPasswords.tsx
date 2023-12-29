@@ -72,7 +72,7 @@ export function Component({}: {}) {
   const onCopy = React.useCallback(() => {
     if (appPassword) {
       Clipboard.setString(appPassword)
-      Toast.show('Copied to clipboard')
+      Toast.show(_(msg`Copied to clipboard`))
       setWasCopied(true)
     }
   }, [appPassword])

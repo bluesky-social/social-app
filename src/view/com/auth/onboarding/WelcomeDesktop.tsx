@@ -7,6 +7,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Button} from 'view/com/util/forms/Button'
+import {Trans} from '@lingui/macro'
 
 type Props = {
   next: () => void
@@ -18,28 +19,30 @@ export function WelcomeDesktop({next}: Props) {
   const horizontal = useMediaQuery({minWidth: 1300})
   const title = (
     <>
-      <Text
-        style={[
-          pal.textLight,
-          {
-            fontSize: 36,
-            fontWeight: '800',
-            textAlign: horizontal ? 'right' : 'left',
-          },
-        ]}>
-        Welcome to
-      </Text>
-      <Text
-        style={[
-          pal.link,
-          {
-            fontSize: 72,
-            fontWeight: '800',
-            textAlign: horizontal ? 'right' : 'left',
-          },
-        ]}>
-        Bluesky
-      </Text>
+      <Trans>
+        <Text
+          style={[
+            pal.textLight,
+            {
+              fontSize: 36,
+              fontWeight: '800',
+              textAlign: horizontal ? 'right' : 'left',
+            },
+          ]}>
+          Welcome to
+        </Text>
+        <Text
+          style={[
+            pal.link,
+            {
+              fontSize: 72,
+              fontWeight: '800',
+              textAlign: horizontal ? 'right' : 'left',
+            },
+          ]}>
+          Bluesky
+        </Text>
+      </Trans>
     </>
   )
   return (
@@ -52,10 +55,12 @@ export function WelcomeDesktop({next}: Props) {
         <FontAwesomeIcon icon={'globe'} size={36} color={pal.colors.link} />
         <View style={[styles.rowText]}>
           <Text type="xl-bold" style={[pal.text]}>
-            Bluesky is public.
+            <Trans>Bluesky is public.</Trans>
           </Text>
           <Text type="xl" style={[pal.text, s.pt2]}>
-            Your posts, likes, and blocks are public. Mutes are private.
+            <Trans>
+              Your posts, likes, and blocks are public. Mutes are private.
+            </Trans>
           </Text>
         </View>
       </View>
@@ -63,10 +68,10 @@ export function WelcomeDesktop({next}: Props) {
         <FontAwesomeIcon icon={'at'} size={36} color={pal.colors.link} />
         <View style={[styles.rowText]}>
           <Text type="xl-bold" style={[pal.text]}>
-            Bluesky is open.
+            <Trans>Bluesky is open.</Trans>
           </Text>
           <Text type="xl" style={[pal.text, s.pt2]}>
-            Never lose access to your followers and data.
+            <Trans>Never lose access to your followers and data.</Trans>
           </Text>
         </View>
       </View>
@@ -74,10 +79,13 @@ export function WelcomeDesktop({next}: Props) {
         <FontAwesomeIcon icon={'gear'} size={36} color={pal.colors.link} />
         <View style={[styles.rowText]}>
           <Text type="xl-bold" style={[pal.text]}>
-            Bluesky is flexible.
+            <Trans>Bluesky is flexible.</Trans>
           </Text>
           <Text type="xl" style={[pal.text, s.pt2]}>
-            Choose the algorithms that power your experience with custom feeds.
+            <Trans>
+              Choose the algorithms that power your experience with custom
+              feeds.
+            </Trans>
           </Text>
         </View>
       </View>
@@ -94,7 +102,7 @@ export function WelcomeDesktop({next}: Props) {
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              Next
+              <Trans>Next</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>

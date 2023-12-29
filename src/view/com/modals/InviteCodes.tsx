@@ -142,13 +142,14 @@ function InviteCode({
   invites: InviteCodesQueryResponse
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const invitesState = useInvitesState()
   const {setInviteCopied} = useInvitesAPI()
   const uses = invite.uses
 
   const onPress = React.useCallback(() => {
     Clipboard.setString(invite.code)
-    Toast.show('Copied to clipboard')
+    Toast.show(_(msg`Copied to clipboard`))
     setInviteCopied(invite.code)
   }, [setInviteCopied, invite])
 

@@ -71,9 +71,17 @@ msgstr "<0/> membres"
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
 msgstr "<0>Choisissez vos</0><1>fils d’actualité</1><2>recommandés</2>"
 
+#: src/view/com/modals/DeleteAccount.tsx:82
+msgid "<0>Delete Account </0><1><2>\"</2><3>{0}</3><4>\"</4></1>"
+msgstr ""
+
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
 msgstr "<0>Suivre certains</0><1>utilisateurs</1><2>recommandés</2>"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:22
+msgid "<0>Welcome to</0><1>Bluesky</1>"
+msgstr ""
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -101,6 +109,7 @@ msgstr "Options de compte"
 msgid "Accounts falsely claiming to be people or orgs"
 msgstr ""
 
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:148
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/screens/ProfileList.tsx:764
@@ -154,12 +163,16 @@ msgstr "Ajouter aux listes"
 msgid "Add to my feeds"
 msgstr "Ajouter à mes fils d’actu"
 
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:137
+msgid "Added"
+msgstr ""
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:128
 msgid "Added to list"
 msgstr "Ajouté à la liste"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:164
+#: src/view/screens/PreferencesHomeFeed.tsx:167
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
 msgstr "Définissez le nombre de likes qu’une réponse doit avoir pour être affichée dans votre fil d’actualité."
 
@@ -191,6 +204,7 @@ msgstr "Un e-mail a été envoyé à {0}. Il comprend un code de confirmation qu
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "Un courriel a été envoyé à votre ancienne adresse, {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
 
+#: src/view/com/auth/create/Policies.tsx:78
 #: src/view/com/notifications/FeedItem.tsx:240
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
@@ -328,14 +342,17 @@ msgstr "Blog"
 msgid "Bluesky"
 msgstr "Bluesky"
 
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:82
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
 msgid "Bluesky is flexible."
 msgstr "Bluesky est adaptable."
 
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:71
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:69
 msgid "Bluesky is open."
 msgstr "Bluesky est ouvert."
 
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:58
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
 msgid "Bluesky is public."
 msgstr "Bluesky est public."
@@ -361,6 +378,10 @@ msgstr "Version Build {0} {1}"
 msgid "Business"
 msgstr "Affaires"
 
+#: src/view/com/auth/create/Policies.tsx:85
+msgid "By creating an account you agree to the {els}."
+msgstr ""
+
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
 #: src/view/com/util/UserAvatar.tsx:221
 #: src/view/com/util/UserBanner.tsx:38
@@ -382,8 +403,8 @@ msgstr "Ne peut contenir que des lettres, des chiffres, des espaces, des tirets 
 #: src/view/com/modals/CreateOrEditList.tsx:267
 #: src/view/com/modals/CreateOrEditList.tsx:272
 #: src/view/com/modals/crop-image/CropImage.web.tsx:137
-#: src/view/com/modals/DeleteAccount.tsx:150
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:225
 #: src/view/com/modals/EditImage.tsx:323
 #: src/view/com/modals/EditProfile.tsx:248
 #: src/view/com/modals/LinkWarning.tsx:85
@@ -395,8 +416,8 @@ msgstr "Ne peut contenir que des lettres, des chiffres, des espaces, des tirets 
 msgid "Cancel"
 msgstr "Annuler"
 
-#: src/view/com/modals/DeleteAccount.tsx:146
-#: src/view/com/modals/DeleteAccount.tsx:219
+#: src/view/com/modals/DeleteAccount.tsx:148
+#: src/view/com/modals/DeleteAccount.tsx:221
 msgid "Cancel account deletion"
 msgstr "Annuler suppression de compte"
 
@@ -458,7 +479,7 @@ msgstr "Consultez quelques fils d’actu recommandés. Appuyez sur + pour les aj
 msgid "Check out some recommended users. Follow them to see similar users."
 msgstr "Consultez quelques utilisateurs recommandés. Suivez-les pour voir des utilisateurs similaires."
 
-#: src/view/com/modals/DeleteAccount.tsx:163
+#: src/view/com/modals/DeleteAccount.tsx:165
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail contenant un code de confirmation à saisir ci-dessous :"
 
@@ -470,6 +491,7 @@ msgstr ""
 msgid "Choose Service"
 msgstr "Choisir un service"
 
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:85
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "Choisissez les algorithmes qui alimentent votre expérience avec des fils d’actualité personnalisés."
@@ -531,7 +553,7 @@ msgstr "Rédiger une réponse"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
-#: src/view/screens/PreferencesHomeFeed.tsx:299
+#: src/view/screens/PreferencesHomeFeed.tsx:302
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Confirmer"
@@ -545,12 +567,12 @@ msgstr "Confirmer le changement"
 msgid "Confirm content language settings"
 msgstr "Confirmer les paramètres de langue"
 
-#: src/view/com/modals/DeleteAccount.tsx:209
+#: src/view/com/modals/DeleteAccount.tsx:211
 msgid "Confirm delete account"
 msgstr "Confirmer la suppression du compte"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
-#: src/view/com/modals/DeleteAccount.tsx:176
+#: src/view/com/modals/DeleteAccount.tsx:178
 #: src/view/com/modals/VerifyEmail.tsx:159
 msgid "Confirmation code"
 msgstr "Code de confirmation"
@@ -587,13 +609,25 @@ msgid "Continue"
 msgstr "Continuer"
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
-#: src/view/com/modals/InviteCodes.tsx:181
+#: src/view/com/modals/InviteCodes.tsx:182
 msgid "Copied"
 msgstr "Copié"
+
+#: src/lib/sharing.ts:25
+#: src/view/com/modals/AddAppPasswords.tsx:75
+#: src/view/com/modals/ChangeHandle.tsx:325
+#: src/view/com/modals/InviteCodes.tsx:152
+#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+msgid "Copied to clipboard"
+msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:186
 msgid "Copy"
 msgstr "Copie"
+
+#: src/view/com/modals/ChangeHandle.tsx:479
+msgid "Copy {0}"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:385
 msgid "Copy link to list"
@@ -664,8 +698,8 @@ msgid "Delete account"
 msgstr "Supprimer compte"
 
 #: src/view/com/modals/DeleteAccount.tsx:83
-msgid "Delete Account"
-msgstr "Supprimer compte"
+#~ msgid "Delete Account"
+#~ msgstr "Supprimer compte"
 
 #: src/view/screens/AppPasswords.tsx:221
 #: src/view/screens/AppPasswords.tsx:241
@@ -677,7 +711,7 @@ msgstr "Supprimer le mot de passe de l’appli"
 msgid "Delete List"
 msgstr "Supprimer la liste"
 
-#: src/view/com/modals/DeleteAccount.tsx:212
+#: src/view/com/modals/DeleteAccount.tsx:214
 msgid "Delete my account"
 msgstr "Supprimer mon compte"
 
@@ -728,6 +762,10 @@ msgstr "Ignorer brouillon"
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Empêcher les appli de montrer mon compte aux utilisateurs déconnectés"
 
+#: src/view/com/posts/FollowingEmptyState.tsx:74
+msgid "Discover new custom feeds"
+msgstr ""
+
 #: src/view/screens/Feeds.tsx:405
 msgid "Discover new feeds"
 msgstr "Découvrir de nouveaux fils d’actu"
@@ -740,11 +778,19 @@ msgstr "Afficher nom"
 msgid "Display Name"
 msgstr "Afficher nom"
 
+#: src/view/com/modals/ChangeHandle.tsx:396
+msgid "DNS Panel"
+msgstr ""
+
 #: src/state/queries/preferences/moderation.ts:108
 msgid "Does not include nudity"
 msgstr ""
 
-#: src/view/com/modals/ChangeHandle.tsx:485
+#: src/view/com/modals/ChangeHandle.tsx:480
+msgid "Domain Value"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:487
 msgid "Domain verified!"
 msgstr "Domaine vérifié !"
 
@@ -766,7 +812,7 @@ msgstr ""
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-#: src/view/screens/PreferencesHomeFeed.tsx:302
+#: src/view/screens/PreferencesHomeFeed.tsx:305
 #: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Terminé"
@@ -836,7 +882,7 @@ msgstr "E-mail :"
 msgid "Enable Adult Content"
 msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:138
+#: src/view/screens/PreferencesHomeFeed.tsx:141
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Activez ce paramètre pour ne voir que les réponses des personnes que vous suivez."
 
@@ -923,6 +969,14 @@ msgstr "Les fils d’actu sont créés par les utilisateurs pour rassembler du c
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "Les fils d’actu sont des algorithmes personnalisés que les utilisateurs construisent avec un peu d’expertise en codage. <0/> pour obtenir de plus amples informations."
 
+#: src/view/com/modals/ChangeHandle.tsx:480
+msgid "File Contents"
+msgstr ""
+
+#: src/view/com/posts/FollowingEmptyState.tsx:57
+msgid "Find accounts to follow"
+msgstr ""
+
 #: src/view/screens/Search/Search.tsx:427
 msgid "Find users on Bluesky"
 msgstr "Trouver des utilisateurs sur Bluesky"
@@ -931,11 +985,11 @@ msgstr "Trouver des utilisateurs sur Bluesky"
 msgid "Find users with the search tool on the right"
 msgstr "Trouvez des utilisateurs à l’aide de l’outil de recherche, à droite."
 
-#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:152
 msgid "Finding similar accounts..."
 msgstr "Recherche de comptes similaires..."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:102
+#: src/view/screens/PreferencesHomeFeed.tsx:105
 msgid "Fine-tune the content you see on your home screen."
 msgstr "Affinez le contenu de votre écran d’accueil."
 
@@ -943,6 +997,7 @@ msgstr "Affinez le contenu de votre écran d’accueil."
 msgid "Fine-tune the discussion threads."
 msgstr "Affiner les fils de discussion."
 
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:64
 #: src/view/com/profile/ProfileHeader.tsx:538
 msgid "Follow"
@@ -956,7 +1011,7 @@ msgstr "Suivez quelques utilisateurs pour commencer. Nous pouvons vous recommand
 msgid "Followed users"
 msgstr "Utilisateurs suivis"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:145
+#: src/view/screens/PreferencesHomeFeed.tsx:148
 msgid "Followed users only"
 msgstr "Utilisateurs suivis uniquement"
 
@@ -981,7 +1036,7 @@ msgstr "Suivi"
 msgid "Follows you"
 msgstr "Vous suit"
 
-#: src/view/com/modals/DeleteAccount.tsx:107
+#: src/view/com/modals/DeleteAccount.tsx:109
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "Pour des raisons de sécurité, nous devrons envoyer un code de confirmation à votre e-mail."
 
@@ -1098,10 +1153,14 @@ msgid "Home"
 msgstr "Accueil"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:96
-#: src/view/screens/PreferencesHomeFeed.tsx:95
+#: src/view/screens/PreferencesHomeFeed.tsx:98
 #: src/view/screens/Settings.tsx:482
 msgid "Home Feed Preferences"
 msgstr "Préférences de fils d’actu de l’accueil"
+
+#: src/view/com/modals/ChangeHandle.tsx:419
+msgid "Host"
+msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:114
 msgid "Hosting provider"
@@ -1127,6 +1186,10 @@ msgstr ""
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
 msgstr "Si rien n’est sélectionné, il n’y a pas de restriction d’âge."
+
+#: src/view/com/auth/create/Policies.tsx:89
+msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
+msgstr ""
 
 #: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
@@ -1435,9 +1498,14 @@ msgstr "Mes fils d’actu enregistrés"
 msgid "Name"
 msgstr "Nom"
 
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:74
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "Ne perdez jamais l’accès à vos followers et à vos données."
+
+#: src/view/com/modals/ChangeHandle.tsx:518
+msgid "Nevermind, create a handle for me"
+msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:177
 #: src/view/screens/Lists.tsx:76
@@ -1470,6 +1538,7 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:105
 msgid "Next"
 msgstr "Suivant"
 
@@ -1477,10 +1546,10 @@ msgstr "Suivant"
 msgid "Next image"
 msgstr "Image suivante"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:191
-#: src/view/screens/PreferencesHomeFeed.tsx:226
-#: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesHomeFeed.tsx:123
+#: src/view/screens/PreferencesHomeFeed.tsx:194
+#: src/view/screens/PreferencesHomeFeed.tsx:229
+#: src/view/screens/PreferencesHomeFeed.tsx:266
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
@@ -1490,6 +1559,10 @@ msgstr "Non"
 #: src/view/screens/ProfileList.tsx:721
 msgid "No description"
 msgstr "Aucune description"
+
+#: src/view/com/modals/ChangeHandle.tsx:404
+msgid "No DNS Panel"
+msgstr ""
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
 msgid "No result"
@@ -1630,7 +1703,7 @@ msgstr "Page introuvable"
 #: src/view/com/auth/create/Step2.tsx:132
 #: src/view/com/auth/login/LoginForm.tsx:217
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
-#: src/view/com/modals/DeleteAccount.tsx:191
+#: src/view/com/modals/DeleteAccount.tsx:193
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -1675,7 +1748,7 @@ msgstr "Veuillez saisir un nom unique pour le mot de passe de l’application ou
 msgid "Please enter your email."
 msgstr "Veuillez entrer votre e-mail."
 
-#: src/view/com/modals/DeleteAccount.tsx:180
+#: src/view/com/modals/DeleteAccount.tsx:182
 msgid "Please enter your password as well:"
 msgstr "Veuillez également entrer votre mot de passe :"
 
@@ -1743,6 +1816,7 @@ msgstr "Définissez des priorités de vos suivis"
 msgid "Privacy"
 msgstr "Vie privée"
 
+#: src/view/com/auth/create/Policies.tsx:67
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings.tsx:751
 #: src/view/shell/Drawer.tsx:262
@@ -1865,7 +1939,7 @@ msgstr "Les réponses à ce fil de discussion sont désactivées"
 msgid "Reply"
 msgstr ""
 
-#: src/view/screens/PreferencesHomeFeed.tsx:135
+#: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Reply Filters"
 msgstr "Filtres de réponse"
 
@@ -2053,11 +2127,11 @@ msgstr "Sélectionnez votre langue préférée pour traduire votre fils d’actu
 msgid "Send Confirmation Email"
 msgstr "Envoyer un e-mail de confirmation"
 
-#: src/view/com/modals/DeleteAccount.tsx:127
+#: src/view/com/modals/DeleteAccount.tsx:129
 msgid "Send email"
 msgstr "Envoyer e-mail"
 
-#: src/view/com/modals/DeleteAccount.tsx:138
+#: src/view/com/modals/DeleteAccount.tsx:140
 msgid "Send Email"
 msgstr "Envoyer e-mail"
 
@@ -2074,15 +2148,15 @@ msgstr "Envoyer rapport"
 msgid "Set new password"
 msgstr "Définir un nouveau mot de passe"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:216
+#: src/view/screens/PreferencesHomeFeed.tsx:219
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "Choisissez « Non » pour masquer toutes les citations sur votre fils d’actu. Les republications seront toujours visibles."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:113
+#: src/view/screens/PreferencesHomeFeed.tsx:116
 msgid "Set this setting to \"No\" to hide all replies from your feed."
 msgstr "Choisissez « Non » pour masquer toutes les réponses dans votre fils d’actu."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:182
+#: src/view/screens/PreferencesHomeFeed.tsx:185
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Choisissez « Non » pour masquer toutes les republications de votre fils d’actu."
 
@@ -2090,7 +2164,7 @@ msgstr "Choisissez « Non » pour masquer toutes les republications de votre f
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Choisissez « Oui » pour afficher les réponses dans un fil de discussion. C’est une fonctionnalité expérimentale."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:252
+#: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’actu enregistrés dans votre fils d’actu suivant. C’est une fonctionnalité expérimentale."
 
@@ -2125,19 +2199,23 @@ msgstr "Partager fils d’actu"
 msgid "Show"
 msgstr "Afficher"
 
+#: src/view/screens/PreferencesHomeFeed.tsx:62
+msgid "Show all replies"
+msgstr ""
+
 #: src/view/com/util/moderation/ScreenHider.tsx:132
 msgid "Show anyway"
 msgstr "Afficher quand même"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:249
+#: src/view/screens/PreferencesHomeFeed.tsx:252
 msgid "Show Posts from My Feeds"
 msgstr "Afficher les Publications de Mes fils d’actu"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:213
+#: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Show Quote Posts"
 msgstr "Afficher les Publications de citation"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:110
+#: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Show Replies"
 msgstr "Afficher réponses"
 
@@ -2145,7 +2223,11 @@ msgstr "Afficher réponses"
 msgid "Show replies by people you follow before all other replies."
 msgstr "Afficher les réponses des personnes que vous suivez avant toutes les autres réponses."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:179
+#: src/view/screens/PreferencesHomeFeed.tsx:64
+msgid "Show replies with at least {value} {0}"
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:182
 msgid "Show Reposts"
 msgstr "Afficher les republications"
 
@@ -2300,6 +2382,7 @@ msgstr "Grand"
 msgid "Terms"
 msgstr "Conditions générales"
 
+#: src/view/com/auth/create/Policies.tsx:57
 #: src/view/screens/Settings.tsx:745
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:256
@@ -2310,6 +2393,10 @@ msgstr "Conditions d’utilisation"
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "Champ de saisie de texte"
+
+#: src/view/com/modals/ChangeHandle.tsx:464
+msgid "That contains the following:"
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:306
 msgid "The account will be able to interact with you after unblocking."
@@ -2393,6 +2480,14 @@ msgstr ""
 msgid "This post has been deleted."
 msgstr "Cette publication a été supprimée."
 
+#: src/view/com/auth/create/Policies.tsx:46
+msgid "This service has not provided terms of service or a privacy policy."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:444
+msgid "This should create a domain record at:"
+msgstr ""
+
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
 msgstr "Cet avertissement n’est disponible que pour les messages contenant des médias."
@@ -2428,6 +2523,10 @@ msgstr "Traduire"
 msgid "Try again"
 msgstr "Réessayer"
 
+#: src/view/com/modals/ChangeHandle.tsx:427
+msgid "Type"
+msgstr ""
+
 #: src/view/screens/ProfileList.tsx:473
 msgid "Un-block list"
 msgstr "Débloquer liste"
@@ -2457,6 +2556,7 @@ msgstr "Débloquer compte"
 msgid "Undo repost"
 msgstr "Annuler transfert"
 
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:55
 msgid "Unfollow"
 msgstr ""
@@ -2498,6 +2598,10 @@ msgstr "Mise à jour de {displayName} dans les listes"
 msgid "Update Available"
 msgstr "Mise à jour disponible"
 
+#: src/view/com/modals/ChangeHandle.tsx:507
+msgid "Update to {handle}"
+msgstr ""
+
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:172
 msgid "Updating..."
 msgstr "Mise à jour..."
@@ -2510,7 +2614,7 @@ msgstr "Télécharger un fichier texte vers :"
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "Utiliser les mots de passe de l’appli pour se connecter à d’autres clients Bluesky sans donner un accès complet à votre compte ou à votre mot de passe."
 
-#: src/view/com/modals/ChangeHandle.tsx:513
+#: src/view/com/modals/ChangeHandle.tsx:515
 msgid "Use default provider"
 msgstr "Utiliser le fournisseur par défaut"
 
@@ -2518,7 +2622,7 @@ msgstr "Utiliser le fournisseur par défaut"
 msgid "Use this to sign into the other app along with your handle."
 msgstr "Utilisez-le pour vous connecter à l’autre application avec votre identifiant."
 
-#: src/view/com/modals/InviteCodes.tsx:199
+#: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
 msgstr "Utilisé par :"
 
@@ -2550,6 +2654,14 @@ msgstr "utilisateurs suivis par <0/>"
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
 msgstr "Utilisateurs dans \"{0}\""
+
+#: src/view/com/modals/ChangeHandle.tsx:435
+msgid "Value"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:508
+msgid "Verify {0}"
+msgstr ""
 
 #: src/view/screens/Settings.tsx:770
 msgid "Verify email"
@@ -2647,14 +2759,18 @@ msgstr "Rédiger une publication"
 msgid "Write your reply"
 msgstr "Rédigez votre réponse"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:192
-#: src/view/screens/PreferencesHomeFeed.tsx:227
-#: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesHomeFeed.tsx:123
+#: src/view/screens/PreferencesHomeFeed.tsx:195
+#: src/view/screens/PreferencesHomeFeed.tsx:230
+#: src/view/screens/PreferencesHomeFeed.tsx:265
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "Oui"
+
+#: src/view/com/posts/FollowingEmptyState.tsx:67
+msgid "You can also discover new Custom Feeds to follow."
+msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:106
 msgid "You can change hosting providers at any time."
@@ -2738,6 +2854,10 @@ msgstr "Votre e-mail a été mis à jour, mais n’a pas été vérifié. L’é
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Votre e-mail n’a pas encore été vérifié. Il s’agit d’une mesure de sécurité importante que nous recommandons."
 
+#: src/view/com/posts/FollowingEmptyState.tsx:47
+msgid "Your following feed is empty! Follow more users to see what's happening."
+msgstr ""
+
 #: src/view/com/auth/create/Step3.tsx:42
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be"
@@ -2753,6 +2873,7 @@ msgstr "Votre fournisseur d’hébergement"
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "Vos codes d’invitation sont cachés lorsque vous êtes connecté à l’aide d’un mot de passe d’application."
 
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:61
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Vos publications, les mentions « J’aime » et les blocages sont publics. Les sourdines sont privées."

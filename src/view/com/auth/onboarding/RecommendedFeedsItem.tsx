@@ -18,6 +18,7 @@ import {
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {Trans} from '@lingui/macro'
 
 export function RecommendedFeedsItem({
   item,
@@ -133,7 +134,7 @@ export function RecommendedFeedsItem({
                       color={pal.colors.textInverted}
                     />
                     <Text type="lg-medium" style={pal.textInverted}>
-                      Added
+                      <Trans>Added</Trans>
                     </Text>
                   </>
                 ) : (
@@ -144,7 +145,7 @@ export function RecommendedFeedsItem({
                       color={pal.colors.textInverted}
                     />
                     <Text type="lg-medium" style={pal.textInverted}>
-                      Add
+                      <Trans>Add</Trans>
                     </Text>
                   </>
                 )}
