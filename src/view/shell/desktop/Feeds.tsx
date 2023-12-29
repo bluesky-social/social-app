@@ -21,7 +21,7 @@ export function DesktopFeeds() {
   })
 
   return (
-    <View style={[styles.container, pal.view, pal.border]}>
+    <View style={[styles.container, pal.view]}>
       <FeedItem href="/" title="Following" current={route.name === 'Home'} />
       {feeds
         .filter(f => f.displayName !== 'Following')
@@ -91,7 +91,5 @@ const styles = StyleSheet.create({
     width: 300,
     paddingHorizontal: 12,
     paddingVertical: 18,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
   },
 })
