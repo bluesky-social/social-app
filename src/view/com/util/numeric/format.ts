@@ -1,7 +1,7 @@
 import {useLanguagePrefs} from '#/state/preferences'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
-export function formatCount(num: number) {
+export const formatCount = (num: number) => {
   const {appLanguage} = useLanguagePrefs()
   return Intl.NumberFormat(sanitizeAppLanguageSetting(appLanguage), {
     notation: 'compact',
