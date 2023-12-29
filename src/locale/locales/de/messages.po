@@ -598,7 +598,7 @@ msgstr "Liste konnte nicht geladen werden"
 msgid "Create a new account"
 msgstr "Ein neues Konto erstellen"
 
-#: src/view/com/auth/create/CreateAccount.tsx:120
+#: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "Create Account"
 msgstr "Neues Konto erstellen"
 
@@ -2208,7 +2208,7 @@ msgstr "Liste freigeben"
 msgid "Un-mute list"
 msgstr "Stummschaltliste aufheben"
 
-#: src/view/com/auth/create/CreateAccount.tsx:64
+#: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -2330,7 +2330,7 @@ msgstr "Avatar sehen"
 msgid "Visit Site"
 msgstr "Seite besuchen"
 
-#: src/view/com/auth/create/CreateAccount.tsx:121
+#: src/view/com/auth/create/CreateAccount.tsx:122
 msgid "We're so excited to have you join us!"
 msgstr "Wir freuen uns, Sie bei uns begrüßen zu dürfen!"
 

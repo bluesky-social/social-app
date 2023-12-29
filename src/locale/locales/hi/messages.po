@@ -626,7 +626,7 @@ msgstr "सूची लोड नहीं कर सकता"
 msgid "Create a new account"
 msgstr "नया खाता बनाएं"
 
-#: src/view/com/auth/create/CreateAccount.tsx:120
+#: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "Create Account"
 msgstr "खाता बनाएँ"
 
@@ -2327,7 +2327,7 @@ msgstr ""
 msgid "Un-mute list"
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:64
+#: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -2453,7 +2453,7 @@ msgstr "अवतार देखें"
 msgid "Visit Site"
 msgstr "साइट पर जाएं"
 
-#: src/view/com/auth/create/CreateAccount.tsx:121
+#: src/view/com/auth/create/CreateAccount.tsx:122
 msgid "We're so excited to have you join us!"
 msgstr "हम आपके हमारी सेवा में शामिल होने को लेकर बहुत उत्साहित हैं!"
 
