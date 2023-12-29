@@ -420,7 +420,7 @@ export function SettingsScreen({}: Props) {
         <View style={[pal.view, styles.toggleCard]}>
           <ToggleButton
             type="default-light"
-            label="Require alt text before posting"
+            label={_(msg`Require alt text before posting`)}
             labelType="lg"
             isSelected={requireAltTextEnabled}
             onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
@@ -436,20 +436,20 @@ export function SettingsScreen({}: Props) {
           <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
             <SelectableBtn
               selected={colorMode === 'system'}
-              label="System"
+              label={_(msg`System`)}
               left
               onSelect={() => setColorMode('system')}
               accessibilityHint="Set color theme to system setting"
             />
             <SelectableBtn
               selected={colorMode === 'light'}
-              label="Light"
+              label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
               accessibilityHint="Set color theme to light"
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
-              label="Dark"
+              label={_(msg`Dark`)}
               right
               onSelect={() => setColorMode('dark')}
               accessibilityHint="Set color theme to dark"

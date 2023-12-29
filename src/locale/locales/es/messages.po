@@ -187,7 +187,7 @@ msgstr "Se ha enviado un correo electrónico a {0}. Incluye un código de confir
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "Se ha enviado un correo electrónico a tu dirección previa, {0}. Incluye un código de confirmación que puedes introducir a continuación."
 
-#: src/view/com/notifications/FeedItem.tsx:237
+#: src/view/com/notifications/FeedItem.tsx:238
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "y"
@@ -647,6 +647,10 @@ msgstr "Dominio personalizado"
 msgid "Danger Zone"
 msgstr "Zona de peligro"
 
+#: src/view/screens/Settings.tsx:452
+msgid "Dark"
+msgstr ""
+
 #: src/view/com/auth/create/Step1.tsx:61
 msgid "default"
 msgstr ""
@@ -932,6 +936,10 @@ msgstr "Usuarios seguidos"
 msgid "Followed users only"
 msgstr "Solo usuarios seguidos"
 
+#: src/view/com/notifications/FeedItem.tsx:166
+msgid "followed you"
+msgstr ""
+
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "Seguidores"
@@ -1011,7 +1019,7 @@ msgstr "Ayuda"
 msgid "Here is your app password."
 msgstr "Aquí tienes tu contraseña de la app."
 
-#: src/view/com/notifications/FeedItem.tsx:324
+#: src/view/com/notifications/FeedItem.tsx:325
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "Ocultar"
@@ -1024,7 +1032,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:317
 msgid "Hide user list"
 msgstr "Ocultar la lista de usuarios"
 
@@ -1191,6 +1199,10 @@ msgstr "¡Vamos a restablecer tu contraseña!"
 msgid "Library"
 msgstr "Librería"
 
+#: src/view/screens/Settings.tsx:446
+msgid "Light"
+msgstr ""
+
 #: src/view/screens/ProfileFeed.tsx:586
 msgid "Like this feed"
 msgstr "Dar «me gusta» a esta noticia"
@@ -1199,6 +1211,14 @@ msgstr "Dar «me gusta» a esta noticia"
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
 msgstr "Le ha gustado a"
+
+#: src/view/com/notifications/FeedItem.tsx:170
+msgid "liked your custom feed{0}"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:155
+msgid "liked your post"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:164
 msgid "Likes"
@@ -1303,6 +1323,10 @@ msgstr "Más canales de noticias"
 msgid "More options"
 msgstr "Más opciones"
 
+#: src/view/screens/PreferencesThreads.tsx:80
+msgid "Most-liked replies first"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
 msgstr "Silenciar la cuenta"
@@ -1383,6 +1407,10 @@ msgstr "Publicación nueva"
 msgid "New Post"
 msgstr "Publicación nueva"
 
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
@@ -1401,6 +1429,8 @@ msgstr "Imagen nueva"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesThreads.tsx:100
+#: src/view/screens/PreferencesThreads.tsx:123
 msgid "No"
 msgstr "No"
 
@@ -1457,6 +1487,10 @@ msgstr "¡Qué problema!"
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
 msgstr "Está bien"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:360
 msgid "One or more images is missing alt text."
@@ -1700,6 +1734,10 @@ msgstr "Citar una publicación"
 msgid "Quote Post"
 msgstr "Citar una publicación"
 
+#: src/view/screens/PreferencesThreads.tsx:81
+msgid "Random (aka \"Poster\\'s Roulette\")"
+msgstr ""
+
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
 msgstr "Proporciones"
@@ -1817,10 +1855,18 @@ msgstr ""
 msgid "Reposted by <0/>"
 msgstr ""
 
+#: src/view/com/notifications/FeedItem.tsx:162
+msgid "reposted your post"
+msgstr ""
+
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
 msgstr "Solicitar un cambio"
+
+#: src/view/screens/Settings.tsx:423
+msgid "Require alt text before posting"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
@@ -1891,6 +1937,7 @@ msgid "Saved Feeds"
 msgstr "Guardar canales de noticias"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
+#: src/view/com/util/forms/SearchInput.tsx:53
 #: src/view/com/util/forms/SearchInput.tsx:65
 #: src/view/screens/Search/Search.tsx:406
 #: src/view/screens/Search/Search.tsx:572
@@ -1905,6 +1952,7 @@ msgstr "Buscar"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
+#: src/view/com/modals/ListAddRemoveUsers.tsx:70
 msgid "Search for users"
 msgstr ""
 
@@ -2035,7 +2083,7 @@ msgstr "Mostrar las respuestas de las personas a quienes sigues antes que el res
 msgid "Show Reposts"
 msgstr "Mostrar publicaciones que se han publicado nuevamente"
 
-#: src/view/com/notifications/FeedItem.tsx:345
+#: src/view/com/notifications/FeedItem.tsx:346
 msgid "Show users"
 msgstr "Mostrar usuarios"
 
@@ -2050,6 +2098,7 @@ msgstr "Mostrar usuarios"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:180
 #: src/view/shell/NavSignupCard.tsx:58
 #: src/view/shell/NavSignupCard.tsx:59
+#: src/view/shell/NavSignupCard.tsx:61
 msgid "Sign in"
 msgstr "Iniciar sesión"
 
@@ -2164,6 +2213,10 @@ msgstr "Soporte"
 #: src/view/com/modals/SwitchAccount.tsx:115
 msgid "Switch Account"
 msgstr "Cambiar a otra cuenta"
+
+#: src/view/screens/Settings.tsx:439
+msgid "System"
+msgstr ""
 
 #: src/view/screens/Settings.tsx:647
 msgid "System log"
@@ -2506,6 +2559,8 @@ msgstr "Redactar tu respuesta"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesThreads.tsx:100
+#: src/view/screens/PreferencesThreads.tsx:123
 msgid "Yes"
 msgstr "Sí"
 

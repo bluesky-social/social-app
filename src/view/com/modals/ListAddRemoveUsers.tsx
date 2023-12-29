@@ -67,7 +67,7 @@ export function Component({
           <TextInput
             testID="searchInput"
             style={[styles.searchInput, pal.border, pal.text]}
-            placeholder="Search for users"
+            placeholder={_(msg`Search for users`)}
             placeholderTextColor={pal.colors.textLight}
             value={query}
             onChangeText={setQuery}

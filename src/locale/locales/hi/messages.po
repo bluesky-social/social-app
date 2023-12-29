@@ -207,7 +207,7 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
-#: src/view/com/notifications/FeedItem.tsx:237
+#: src/view/com/notifications/FeedItem.tsx:238
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "और"
@@ -675,9 +675,9 @@ msgstr "कस्टम डोमेन"
 msgid "Danger Zone"
 msgstr "खतरा क्षेत्र"
 
-#: src/view/screens/Settings.tsx:411
-#~ msgid "Dark"
-#~ msgstr "डार्क मोड"
+#: src/view/screens/Settings.tsx:452
+msgid "Dark"
+msgstr "डार्क मोड"
 
 #: src/view/com/auth/create/Step1.tsx:61
 msgid "default"
@@ -964,6 +964,10 @@ msgstr ""
 msgid "Followed users only"
 msgstr "केवल वे यूजर को फ़ॉलो किया गया"
 
+#: src/view/com/notifications/FeedItem.tsx:166
+msgid "followed you"
+msgstr ""
+
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "यह यूजर आपका फ़ोलो करता है"
@@ -1043,7 +1047,7 @@ msgstr "सहायता"
 msgid "Here is your app password."
 msgstr "यहां आपका ऐप पासवर्ड है."
 
-#: src/view/com/notifications/FeedItem.tsx:324
+#: src/view/com/notifications/FeedItem.tsx:325
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "इसे छिपाएं"
@@ -1056,7 +1060,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:317
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
@@ -1236,9 +1240,9 @@ msgstr "चलो अपना पासवर्ड रीसेट करे�
 msgid "Library"
 msgstr "चित्र पुस्तकालय"
 
-#: src/view/screens/Settings.tsx:405
-#~ msgid "Light"
-#~ msgstr "लाइट मोड"
+#: src/view/screens/Settings.tsx:446
+msgid "Light"
+msgstr "लाइट मोड"
 
 #: src/view/screens/ProfileFeed.tsx:586
 msgid "Like this feed"
@@ -1248,6 +1252,14 @@ msgstr "इस फ़ीड को लाइक करो"
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
 msgstr "इन यूजर ने लाइक किया है"
+
+#: src/view/com/notifications/FeedItem.tsx:170
+msgid "liked your custom feed{0}"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:155
+msgid "liked your post"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:164
 msgid "Likes"
@@ -1368,6 +1380,10 @@ msgstr "अधिक विकल्प"
 #~ msgid "More post options"
 #~ msgstr "पोस्ट विकल्प"
 
+#: src/view/screens/PreferencesThreads.tsx:80
+msgid "Most-liked replies first"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
 msgstr "खाता म्यूट करें"
@@ -1452,6 +1468,10 @@ msgstr "नई पोस्ट"
 msgid "New Post"
 msgstr "नई पोस्ट"
 
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
@@ -1470,6 +1490,8 @@ msgstr "अगली फोटो"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesThreads.tsx:100
+#: src/view/screens/PreferencesThreads.tsx:123
 msgid "No"
 msgstr "नहीं"
 
@@ -1543,6 +1565,10 @@ msgstr "अरे नहीं!"
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
 msgstr "ठीक है"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:360
 msgid "One or more images is missing alt text."
@@ -1786,6 +1812,10 @@ msgstr "कोटे पोस्ट"
 msgid "Quote Post"
 msgstr "कोटे पोस्ट"
 
+#: src/view/screens/PreferencesThreads.tsx:81
+msgid "Random (aka \"Poster\\'s Roulette\")"
+msgstr ""
+
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
 msgstr "अनुपात"
@@ -1908,6 +1938,10 @@ msgstr ""
 msgid "Reposted by <0/>"
 msgstr ""
 
+#: src/view/com/notifications/FeedItem.tsx:162
+msgid "reposted your post"
+msgstr ""
+
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
@@ -1917,9 +1951,9 @@ msgstr "अनुरोध बदलें"
 #~ msgid "Request to limit the visibility of my account"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:382
-#~ msgid "Require alt text before posting"
-#~ msgstr "पोस्ट करने से पहले वैकल्पिक टेक्स्ट की आवश्यकता है"
+#: src/view/screens/Settings.tsx:423
+msgid "Require alt text before posting"
+msgstr "पोस्ट करने से पहले वैकल्पिक टेक्स्ट की आवश्यकता है"
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
@@ -1998,6 +2032,7 @@ msgid "Saved Feeds"
 msgstr "सहेजे गए फ़ीड"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
+#: src/view/com/util/forms/SearchInput.tsx:53
 #: src/view/com/util/forms/SearchInput.tsx:65
 #: src/view/screens/Search/Search.tsx:406
 #: src/view/screens/Search/Search.tsx:572
@@ -2016,6 +2051,7 @@ msgstr "खोज"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
+#: src/view/com/modals/ListAddRemoveUsers.tsx:70
 msgid "Search for users"
 msgstr ""
 
@@ -2150,7 +2186,7 @@ msgstr "अन्य सभी उत्तरों से पहले उन 
 msgid "Show Reposts"
 msgstr "रीपोस्ट दिखाएँ"
 
-#: src/view/com/notifications/FeedItem.tsx:345
+#: src/view/com/notifications/FeedItem.tsx:346
 msgid "Show users"
 msgstr "लोग दिखाएँ"
 
@@ -2165,6 +2201,7 @@ msgstr "लोग दिखाएँ"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:180
 #: src/view/shell/NavSignupCard.tsx:58
 #: src/view/shell/NavSignupCard.tsx:59
+#: src/view/shell/NavSignupCard.tsx:61
 msgid "Sign in"
 msgstr "साइन इन करें"
 
@@ -2280,9 +2317,9 @@ msgstr "सहायता"
 msgid "Switch Account"
 msgstr "खाते बदलें"
 
-#: src/view/screens/Settings.tsx:398
-#~ msgid "System"
-#~ msgstr "प्रणाली"
+#: src/view/screens/Settings.tsx:439
+msgid "System"
+msgstr "प्रणाली"
 
 #: src/view/screens/Settings.tsx:647
 msgid "System log"
@@ -2637,6 +2674,8 @@ msgstr "अपना जवाब दें"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesThreads.tsx:100
+#: src/view/screens/PreferencesThreads.tsx:123
 msgid "Yes"
 msgstr "हाँ"
 

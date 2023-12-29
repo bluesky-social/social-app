@@ -65,6 +65,7 @@ let FeedItem = ({
   moderationOpts: ModerationOpts
 }): React.ReactNode => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [isAuthorsExpanded, setAuthorsExpanded] = useState<boolean>(false)
   const itemHref = useMemo(() => {
     if (item.type === 'post-like' || item.type === 'repost') {
@@ -151,24 +152,24 @@ let FeedItem = ({
   let icon: Props['icon'] | 'HeartIconSolid'
   let iconStyle: Props['style'] = []
   if (item.type === 'post-like') {
-    action = 'liked your post'
+    action = _(msg`liked your post`)
     icon = 'HeartIconSolid'
     iconStyle = [
       s.likeColor as FontAwesomeIconStyle,
       {position: 'relative', top: -4},
     ]
   } else if (item.type === 'repost') {
-    action = 'reposted your post'
+    action = _(msg`reposted your post`)
     icon = 'retweet'
     iconStyle = [s.green3 as FontAwesomeIconStyle]
   } else if (item.type === 'follow') {
-    action = 'followed you'
+    action = _(msg`followed you`)
     icon = 'user-plus'
     iconStyle = [s.blue3 as FontAwesomeIconStyle]
   } else if (item.type === 'feedgen-like') {
-    action = `liked your custom feed${
+    action = _(msg`liked your custom feed${
       item.subjectUri ? ` '${new AtUri(item.subjectUri).rkey}'` : ''
-    }`
+    }`)
     icon = 'HeartIconSolid'
     iconStyle = [
       s.likeColor as FontAwesomeIconStyle,

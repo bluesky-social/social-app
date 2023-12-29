@@ -187,7 +187,7 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
-#: src/view/com/notifications/FeedItem.tsx:237
+#: src/view/com/notifications/FeedItem.tsx:238
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "および"
@@ -647,6 +647,10 @@ msgstr "カスタムドメイン"
 msgid "Danger Zone"
 msgstr "危険地帯"
 
+#: src/view/screens/Settings.tsx:452
+msgid "Dark"
+msgstr ""
+
 #: src/view/com/auth/create/Step1.tsx:61
 msgid "default"
 msgstr ""
@@ -932,6 +936,10 @@ msgstr "自分がフォローしているユーザー"
 msgid "Followed users only"
 msgstr "自分がフォローしているユーザーのみ"
 
+#: src/view/com/notifications/FeedItem.tsx:166
+msgid "followed you"
+msgstr ""
+
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "フォロワー"
@@ -1011,7 +1019,7 @@ msgstr "ヘルプ"
 msgid "Here is your app password."
 msgstr "アプリパスワードをお知らせします。"
 
-#: src/view/com/notifications/FeedItem.tsx:324
+#: src/view/com/notifications/FeedItem.tsx:325
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "非表示"
@@ -1024,7 +1032,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:317
 msgid "Hide user list"
 msgstr "ユーザーリストを非表示"
 
@@ -1191,6 +1199,10 @@ msgstr "パスワードをリセットしましょう！"
 msgid "Library"
 msgstr "ライブラリー"
 
+#: src/view/screens/Settings.tsx:446
+msgid "Light"
+msgstr ""
+
 #: src/view/screens/ProfileFeed.tsx:586
 msgid "Like this feed"
 msgstr "このフィードをいいね"
@@ -1199,6 +1211,14 @@ msgstr "このフィードをいいね"
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
 msgstr "いいねしたユーザー"
+
+#: src/view/com/notifications/FeedItem.tsx:170
+msgid "liked your custom feed{0}"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:155
+msgid "liked your post"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:164
 msgid "Likes"
@@ -1311,6 +1331,10 @@ msgstr "その他のフィード"
 msgid "More options"
 msgstr "その他のオプション"
 
+#: src/view/screens/PreferencesThreads.tsx:80
+msgid "Most-liked replies first"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
 msgstr "アカウントをミュート"
@@ -1391,6 +1415,10 @@ msgstr "新しい投稿"
 msgid "New Post"
 msgstr "新しい投稿"
 
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
@@ -1409,6 +1437,8 @@ msgstr "次の画像"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesThreads.tsx:100
+#: src/view/screens/PreferencesThreads.tsx:123
 msgid "No"
 msgstr "いいえ"
 
@@ -1469,6 +1499,10 @@ msgstr "ちょっと！"
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
 msgstr "OK"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:360
 msgid "One or more images is missing alt text."
@@ -1712,6 +1746,10 @@ msgstr "引用"
 msgid "Quote Post"
 msgstr "引用"
 
+#: src/view/screens/PreferencesThreads.tsx:81
+msgid "Random (aka \"Poster\\'s Roulette\")"
+msgstr ""
+
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
 msgstr "比率"
@@ -1829,10 +1867,18 @@ msgstr ""
 msgid "Reposted by <0/>"
 msgstr ""
 
+#: src/view/com/notifications/FeedItem.tsx:162
+msgid "reposted your post"
+msgstr ""
+
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
 msgstr "変更を要求"
+
+#: src/view/screens/Settings.tsx:423
+msgid "Require alt text before posting"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
@@ -1903,6 +1949,7 @@ msgid "Saved Feeds"
 msgstr "保存されたフィード"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
+#: src/view/com/util/forms/SearchInput.tsx:53
 #: src/view/com/util/forms/SearchInput.tsx:65
 #: src/view/screens/Search/Search.tsx:406
 #: src/view/screens/Search/Search.tsx:572
@@ -1921,6 +1968,7 @@ msgstr "検索"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
+#: src/view/com/modals/ListAddRemoveUsers.tsx:70
 msgid "Search for users"
 msgstr ""
 
@@ -2051,7 +2099,7 @@ msgstr "自分がフォローしているユーザーからの返信を、他の
 msgid "Show Reposts"
 msgstr "リポストを表示"
 
-#: src/view/com/notifications/FeedItem.tsx:345
+#: src/view/com/notifications/FeedItem.tsx:346
 msgid "Show users"
 msgstr "ユーザーを表示"
 
@@ -2066,6 +2114,7 @@ msgstr "ユーザーを表示"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:180
 #: src/view/shell/NavSignupCard.tsx:58
 #: src/view/shell/NavSignupCard.tsx:59
+#: src/view/shell/NavSignupCard.tsx:61
 msgid "Sign in"
 msgstr "サインイン"
 
@@ -2180,6 +2229,10 @@ msgstr "サポート"
 #: src/view/com/modals/SwitchAccount.tsx:115
 msgid "Switch Account"
 msgstr "アカウントを切り替える"
+
+#: src/view/screens/Settings.tsx:439
+msgid "System"
+msgstr ""
 
 #: src/view/screens/Settings.tsx:647
 msgid "System log"
@@ -2518,6 +2571,8 @@ msgstr "返信を書く"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesThreads.tsx:100
+#: src/view/screens/PreferencesThreads.tsx:123
 msgid "Yes"
 msgstr "はい"
 
