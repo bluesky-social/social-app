@@ -117,6 +117,10 @@ msgstr "계정"
 msgid "Account options"
 msgstr "계정 옵션"
 
+#: src/state/queries/preferences/moderation.ts:138
+msgid "Accounts falsely claiming to be people or orgs"
+msgstr "사람 또는 조직을 사칭하는 계정"
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/screens/ProfileList.tsx:764
@@ -181,7 +185,7 @@ msgstr "답글이 피드에 표시되기 위해 필요한 좋아요 표시 수�
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
-msgstr "성인용 콘텐츠"
+msgstr "성인 콘텐츠"
 
 #: src/view/screens/Settings.tsx:570
 msgid "Advanced"
@@ -768,6 +772,10 @@ msgstr "표시 이름"
 msgid "Display Name"
 msgstr "표시 이름"
 
+#: src/state/queries/preferences/moderation.ts:108
+msgid "Does not include nudity"
+msgstr "신체 노출 미포함"
+
 #: src/view/com/modals/ChangeHandle.tsx:485
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다!"
@@ -852,6 +860,10 @@ msgstr "이메일 변경됨"
 msgid "Email:"
 msgstr "이메일:"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:154
+msgid "Enable Adult Content"
+msgstr "성인 콘텐츠 활성화"
+
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
@@ -892,9 +904,17 @@ msgstr "오류:"
 msgid "Everybody"
 msgstr "모두"
 
+#: src/state/queries/preferences/moderation.ts:131
+msgid "Excessive unwanted interactions"
+msgstr "원치 않는 과도한 상호작용"
+
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "대체 텍스트 확장"
+
+#: src/state/queries/preferences/moderation.ts:91
+msgid "Explicit Sexual Images"
+msgstr "노골적인 성적 이미지"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1042,9 +1062,17 @@ msgstr "뒤로"
 msgid "Go to next"
 msgstr "다음"
 
+#: src/state/queries/preferences/moderation.ts:116
+msgid "Gore, self-harm, torture"
+msgstr "고어, 자해, 고문"
+
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "핸들"
+
+#: src/state/queries/preferences/moderation.ts:123
+msgid "Hate Group Iconography"
+msgstr "증오 단체 도상학"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
@@ -1055,6 +1083,8 @@ msgstr "도움말"
 msgid "Here is your app password."
 msgstr "앱 비밀번호입니다."
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:207
+#: src/view/com/modals/ContentFilteringSettings.tsx:234
 #: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
@@ -1130,9 +1160,13 @@ msgstr "코드가 있습니다"
 msgid "I have my own domain"
 msgstr "내 도메인을 가지고 있습니다"
 
+#: src/state/queries/preferences/moderation.ts:92
+msgid "i.e. pornography"
+msgstr "예: 포르노그래피"
+
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
-msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 것입니다."
+msgstr "아무것도 선택하지 않으면 모든 연령대에 적합하다는 뜻입니다."
 
 #: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
@@ -1143,10 +1177,22 @@ msgstr "이미지 대체 텍스트"
 msgid "Image options"
 msgstr "이미지 옵션"
 
+#: src/state/queries/preferences/moderation.ts:124
+msgid "Images of terror groups, articles covering events, etc."
+msgstr "테러 단체의 이미지, 사건 관련 기사 등"
+
+#: src/state/queries/preferences/moderation.ts:137
+msgid "Impersonation"
+msgstr "사칭"
+
 #: src/view/com/search/Suggestions.tsx:104
 #: src/view/com/search/Suggestions.tsx:115
 #~ msgid "In Your Network"
 #~ msgstr "내 네트워크"
+
+#: src/state/queries/preferences/moderation.ts:100
+msgid "Including non-sexual and artistic"
+msgstr "선정적이지 않거나 예술적 콘텐츠 포함"
 
 #: src/view/com/auth/login/LoginForm.tsx:113
 msgid "Invalid username or password"
@@ -1368,11 +1414,11 @@ msgstr "검토"
 
 #: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
-msgstr "검토 목록"
+msgstr "검토 리스트"
 
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
-msgstr "검토 목록"
+msgstr "검토 리스트"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
@@ -1642,6 +1688,10 @@ msgstr "기타"
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "다른 계정"
+
+#: src/state/queries/preferences/moderation.ts:99
+msgid "Other Nudity"
+msgstr "기타 신체 노출"
 
 #: src/view/com/modals/ServerInput.tsx:88
 msgid "Other service"
@@ -2067,6 +2117,10 @@ msgstr "사용자 검색하기"
 msgid "Security Step Required"
 msgstr "보안 단계 필요"
 
+#: src/view/screens/SavedFeeds.tsx:163
+msgid "See this guide"
+msgstr "이 가이드"
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:39
 msgid "See what's next"
 msgstr "See what's next"
@@ -2151,6 +2205,10 @@ msgstr "설정"
 msgid "Sexual activity or erotic nudity."
 msgstr "성행위 또는 선정적인 노출."
 
+#: src/state/queries/preferences/moderation.ts:107
+msgid "Sexually Suggestive"
+msgstr "성적 암시"
+
 #: src/view/com/profile/ProfileHeader.tsx:338
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 #: src/view/screens/ProfileList.tsx:385
@@ -2165,6 +2223,7 @@ msgstr "피드 공유"
 #~ msgid "Share link"
 #~ msgstr "링크 공유"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:249
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/screens/Settings.tsx:317
 msgid "Show"
@@ -2274,6 +2333,10 @@ msgstr "답글 정렬"
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
 msgstr "동일한 게시물에 대한 답글을 정렬하는 기준입니다."
+
+#: src/state/queries/preferences/moderation.ts:130
+msgid "Spam"
+msgstr "스팸"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2611,9 +2674,17 @@ msgstr "디버그 항목 보기"
 msgid "View the avatar"
 msgstr "아바타 보기"
 
+#: src/state/queries/preferences/moderation.ts:115
+msgid "Violent / Bloody"
+msgstr "폭력 및 유혈"
+
 #: src/view/com/modals/LinkWarning.tsx:73
 msgid "Visit Site"
 msgstr "사이트 방문"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:242
+msgid "Warn"
+msgstr "경고"
 
 #: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
@@ -2736,6 +2807,10 @@ msgstr "아직 앱 비밀번호를 생성하지 않았습니다. 아래 버튼�
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 뮤트\"를 선택하세요."
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:162
+msgid "You must be 18 or older to enable adult content."
+msgstr "성인 콘텐츠를 활성화하려면 18세 이상이어야 합니다."
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."

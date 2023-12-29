@@ -104,6 +104,7 @@ export function Component({}: {}) {
 
 function AdultContentEnabledPref() {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetAdultContentMutation()
   const {openModal} = useModalControls()
@@ -150,7 +151,7 @@ function AdultContentEnabledPref() {
       ) : (preferences.userAge || 0) >= 18 ? (
         <ToggleButton
           type="default-light"
-          label="Enable Adult Content"
+          label={_(msg`Enable Adult Content`)}
           isSelected={variables?.enabled ?? preferences?.adultContentEnabled}
           onPress={onToggleAdultContent}
           style={styles.toggleBtn}
@@ -158,7 +159,7 @@ function AdultContentEnabledPref() {
       ) : (
         <View style={[pal.viewLight, styles.agePrompt]}>
           <Text type="md" style={[pal.text, {flex: 1}]}>
-            You must be 18 or older to enable adult content.
+            <Trans>You must be 18 or older to enable adult content.</Trans>
           </Text>
           <Button type="primary" label="Set Age" onPress={onSetAge} />
         </View>
@@ -203,7 +204,7 @@ function ContentLabelPref({
 
       {disabled || !visibility ? (
         <Text type="sm-bold" style={pal.textLight}>
-          Hide
+          <Trans>Hide</Trans>
         </Text>
       ) : (
         <SelectGroup
@@ -223,12 +224,14 @@ interface SelectGroupProps {
 }
 
 function SelectGroup({current, onChange, labelGroup}: SelectGroupProps) {
+  const {_} = useLingui()
+
   return (
     <View style={styles.selectableBtns}>
       <SelectableBtn
         current={current}
         value="hide"
-        label="Hide"
+        label={_(msg`Hide`)}
         left
         onChange={onChange}
         labelGroup={labelGroup}
@@ -236,14 +239,14 @@ function SelectGroup({current, onChange, labelGroup}: SelectGroupProps) {
       <SelectableBtn
         current={current}
         value="warn"
-        label="Warn"
+        label={_(msg`Warn`)}
         onChange={onChange}
         labelGroup={labelGroup}
       />
       <SelectableBtn
         current={current}
         value="ignore"
-        label="Show"
+        label={_(msg`Show`)}
         right
         onChange={onChange}
         labelGroup={labelGroup}

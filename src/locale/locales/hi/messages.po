@@ -117,6 +117,10 @@ msgstr "अकाउंट"
 msgid "Account options"
 msgstr "अकाउंट के विकल्प"
 
+#: src/state/queries/preferences/moderation.ts:138
+msgid "Accounts falsely claiming to be people or orgs"
+msgstr ""
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/screens/ProfileList.tsx:764
@@ -764,6 +768,10 @@ msgstr "नाम"
 msgid "Display Name"
 msgstr "प्रदर्शन का नाम"
 
+#: src/state/queries/preferences/moderation.ts:108
+msgid "Does not include nudity"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:485
 msgid "Domain verified!"
 msgstr "डोमेन सत्यापित!"
@@ -848,6 +856,10 @@ msgstr "ईमेल अपडेट किया गया"
 msgid "Email:"
 msgstr "ईमेल:"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:154
+msgid "Enable Adult Content"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "इस सेटिंग को केवल उन लोगों के बीच जवाब देखने में सक्षम करें जिन्हें आप फॉलो करते हैं।।"
@@ -888,9 +900,17 @@ msgstr ""
 msgid "Everybody"
 msgstr ""
 
+#: src/state/queries/preferences/moderation.ts:131
+msgid "Excessive unwanted interactions"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "ऑल्ट टेक्स्ट"
+
+#: src/state/queries/preferences/moderation.ts:91
+msgid "Explicit Sexual Images"
+msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1034,9 +1054,17 @@ msgstr "वापस जाओ"
 msgid "Go to next"
 msgstr "अगला"
 
+#: src/state/queries/preferences/moderation.ts:116
+msgid "Gore, self-harm, torture"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "हैंडल"
+
+#: src/state/queries/preferences/moderation.ts:123
+msgid "Hate Group Iconography"
+msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
@@ -1047,6 +1075,8 @@ msgstr "सहायता"
 msgid "Here is your app password."
 msgstr "यहां आपका ऐप पासवर्ड है."
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:207
+#: src/view/com/modals/ContentFilteringSettings.tsx:234
 #: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
@@ -1122,6 +1152,10 @@ msgstr "मेरे पास एक OTP कोड है"
 msgid "I have my own domain"
 msgstr "मेरे पास अपना डोमेन है"
 
+#: src/state/queries/preferences/moderation.ts:92
+msgid "i.e. pornography"
+msgstr ""
+
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
 msgstr "यदि किसी को चुना जाता है, तो सभी उम्र के लिए उपयुक्त है।।"
@@ -1135,10 +1169,22 @@ msgstr "छवि alt पाठ"
 msgid "Image options"
 msgstr "छवि विकल्प"
 
+#: src/state/queries/preferences/moderation.ts:124
+msgid "Images of terror groups, articles covering events, etc."
+msgstr ""
+
+#: src/state/queries/preferences/moderation.ts:137
+msgid "Impersonation"
+msgstr ""
+
 #: src/view/com/search/Suggestions.tsx:104
 #: src/view/com/search/Suggestions.tsx:115
 #~ msgid "In Your Network"
 #~ msgstr "आपके नेटवर्क में"
+
+#: src/state/queries/preferences/moderation.ts:100
+msgid "Including non-sexual and artistic"
+msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:113
 msgid "Invalid username or password"
@@ -1635,6 +1681,10 @@ msgstr ""
 msgid "Other account"
 msgstr "अन्य खाता"
 
+#: src/state/queries/preferences/moderation.ts:99
+msgid "Other Nudity"
+msgstr ""
+
 #: src/view/com/modals/ServerInput.tsx:88
 msgid "Other service"
 msgstr "अन्य सेवा"
@@ -2059,6 +2109,10 @@ msgstr ""
 msgid "Security Step Required"
 msgstr "सुरक्षा चरण आवश्यक"
 
+#: src/view/screens/SavedFeeds.tsx:163
+msgid "See this guide"
+msgstr ""
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:39
 msgid "See what's next"
 msgstr "आगे क्या है"
@@ -2143,6 +2197,10 @@ msgstr "सेटिंग्स"
 msgid "Sexual activity or erotic nudity."
 msgstr "यौन गतिविधि या कामुक नग्नता।।"
 
+#: src/state/queries/preferences/moderation.ts:107
+msgid "Sexually Suggestive"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:338
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 #: src/view/screens/ProfileList.tsx:385
@@ -2157,6 +2215,7 @@ msgstr ""
 #~ msgid "Share link"
 #~ msgstr "लिंक शेयर करें"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:249
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/screens/Settings.tsx:317
 msgid "Show"
@@ -2266,6 +2325,10 @@ msgstr "उत्तर क्रमबद्ध करें"
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
 msgstr "उसी पोस्ट के उत्तरों को इस प्रकार क्रमबद्ध करें:"
+
+#: src/state/queries/preferences/moderation.ts:130
+msgid "Spam"
+msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2603,9 +2666,17 @@ msgstr "डीबग प्रविष्टि देखें"
 msgid "View the avatar"
 msgstr "अवतार देखें"
 
+#: src/state/queries/preferences/moderation.ts:115
+msgid "Violent / Bloody"
+msgstr ""
+
 #: src/view/com/modals/LinkWarning.tsx:73
 msgid "Visit Site"
 msgstr "साइट पर जाएं"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:242
+msgid "Warn"
+msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
@@ -2728,6 +2799,10 @@ msgstr "आपने अभी तक कोई ऐप पासवर्ड न
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "आपने अभी तक कोई खाता म्यूट नहीं किया है. किसी खाते को म्यूट करने के लिए, उनकी प्रोफ़ाइल पर जाएं और उनके खाते के मेनू से \"खाता म्यूट करें\" चुनें।"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:162
+msgid "You must be 18 or older to enable adult content."
+msgstr ""
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."

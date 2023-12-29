@@ -160,7 +160,7 @@ export function SavedFeeds({}: Props) {
                 type="sm"
                 style={pal.link}
                 href="https://github.com/bluesky-social/feed-generator"
-                text="See this guide"
+                text={_(msg`See this guide`)}
               />{' '}
               for more information.
             </Trans>

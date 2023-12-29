@@ -97,6 +97,10 @@ msgstr "Compte"
 msgid "Account options"
 msgstr "Options de compte"
 
+#: src/state/queries/preferences/moderation.ts:138
+msgid "Accounts falsely claiming to be people or orgs"
+msgstr ""
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/screens/ProfileList.tsx:764
@@ -736,6 +740,10 @@ msgstr "Afficher nom"
 msgid "Display Name"
 msgstr "Afficher nom"
 
+#: src/state/queries/preferences/moderation.ts:108
+msgid "Does not include nudity"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:485
 msgid "Domain verified!"
 msgstr "Domaine vérifié !"
@@ -820,6 +828,10 @@ msgstr "E-mail mis à jour"
 msgid "Email:"
 msgstr "E-mail :"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:154
+msgid "Enable Adult Content"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Activez ce paramètre pour ne voir que les réponses des personnes que vous suivez."
@@ -860,9 +872,17 @@ msgstr "Erreur :"
 msgid "Everybody"
 msgstr "Tout le monde"
 
+#: src/state/queries/preferences/moderation.ts:131
+msgid "Excessive unwanted interactions"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "Développer le texte alt"
+
+#: src/state/queries/preferences/moderation.ts:91
+msgid "Explicit Sexual Images"
+msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1006,9 +1026,17 @@ msgstr "Retour"
 msgid "Go to next"
 msgstr "Aller à la suite"
 
+#: src/state/queries/preferences/moderation.ts:116
+msgid "Gore, self-harm, torture"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "Pseudo"
+
+#: src/state/queries/preferences/moderation.ts:123
+msgid "Hate Group Iconography"
+msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
@@ -1019,6 +1047,8 @@ msgstr "Aide"
 msgid "Here is your app password."
 msgstr "Voici le mot de passe de votre appli."
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:207
+#: src/view/com/modals/ContentFilteringSettings.tsx:234
 #: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
@@ -1086,6 +1116,10 @@ msgstr "J’ai un code"
 msgid "I have my own domain"
 msgstr "J’ai mon propre domaine"
 
+#: src/state/queries/preferences/moderation.ts:92
+msgid "i.e. pornography"
+msgstr ""
+
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
 msgstr "Si rien n’est sélectionné, il n’y a pas de restriction d’âge."
@@ -1098,6 +1132,18 @@ msgstr "Texte alt de l’image"
 #: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
 msgstr "Options d’images"
+
+#: src/state/queries/preferences/moderation.ts:124
+msgid "Images of terror groups, articles covering events, etc."
+msgstr ""
+
+#: src/state/queries/preferences/moderation.ts:137
+msgid "Impersonation"
+msgstr ""
+
+#: src/state/queries/preferences/moderation.ts:100
+msgid "Including non-sexual and artistic"
+msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:113
 msgid "Invalid username or password"
@@ -1557,6 +1603,10 @@ msgstr ""
 msgid "Other account"
 msgstr "Autre compte"
 
+#: src/state/queries/preferences/moderation.ts:99
+msgid "Other Nudity"
+msgstr ""
+
 #: src/view/com/modals/ServerInput.tsx:88
 msgid "Other service"
 msgstr "Autre service"
@@ -1960,6 +2010,10 @@ msgstr ""
 msgid "Security Step Required"
 msgstr "Étape de sécurité requise"
 
+#: src/view/screens/SavedFeeds.tsx:163
+msgid "See this guide"
+msgstr ""
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:39
 msgid "See what's next"
 msgstr "Voir la suite"
@@ -2044,6 +2098,10 @@ msgstr "Paramètres"
 msgid "Sexual activity or erotic nudity."
 msgstr "Activité sexuelle ou nudité érotique."
 
+#: src/state/queries/preferences/moderation.ts:107
+msgid "Sexually Suggestive"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:338
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 #: src/view/screens/ProfileList.tsx:385
@@ -2054,6 +2112,7 @@ msgstr "Partager"
 msgid "Share feed"
 msgstr "Partager fils d’actu"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:249
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/screens/Settings.tsx:317
 msgid "Show"
@@ -2163,6 +2222,10 @@ msgstr "Trier réponses"
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
 msgstr "Trier les réponses à la même publication par :"
+
+#: src/state/queries/preferences/moderation.ts:130
+msgid "Spam"
+msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2496,9 +2559,17 @@ msgstr "Afficher l’entrée de débogage"
 msgid "View the avatar"
 msgstr "Afficher avatar"
 
+#: src/state/queries/preferences/moderation.ts:115
+msgid "Violent / Bloody"
+msgstr ""
+
 #: src/view/com/modals/LinkWarning.tsx:73
 msgid "Visit Site"
 msgstr "Visiter le site"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:242
+msgid "Warn"
+msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
@@ -2613,6 +2684,10 @@ msgstr "Vous n’avez encore créé aucun mot de passe pour l’appli. Vous pouv
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "Vous n’avez encore mis aucun compte en sourdine. Pour désactiver un compte, allez sur son profil et sélectionnez « Désactiver compte » dans le menu de son compte."
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:162
+msgid "You must be 18 or older to enable adult content."
+msgstr ""
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."

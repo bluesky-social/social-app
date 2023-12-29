@@ -97,6 +97,10 @@ msgstr "アカウント"
 msgid "Account options"
 msgstr "アカウントオプション"
 
+#: src/state/queries/preferences/moderation.ts:138
+msgid "Accounts falsely claiming to be people or orgs"
+msgstr ""
+
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
 #: src/view/screens/ProfileList.tsx:764
@@ -736,6 +740,10 @@ msgstr "表示名"
 msgid "Display Name"
 msgstr "表示名"
 
+#: src/state/queries/preferences/moderation.ts:108
+msgid "Does not include nudity"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:485
 msgid "Domain verified!"
 msgstr "ドメインを確認しました！"
@@ -820,6 +828,10 @@ msgstr "メールアドレスを更新"
 msgid "Email:"
 msgstr "メールアドレス："
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:154
+msgid "Enable Adult Content"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "この設定を有効にすると、自分がフォローしているユーザーからの返信だけが表示されます。"
@@ -860,9 +872,17 @@ msgstr "エラー："
 msgid "Everybody"
 msgstr "全員"
 
+#: src/state/queries/preferences/moderation.ts:131
+msgid "Excessive unwanted interactions"
+msgstr ""
+
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "ALTテキストを展開"
+
+#: src/state/queries/preferences/moderation.ts:91
+msgid "Explicit Sexual Images"
+msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1006,9 +1026,17 @@ msgstr "戻る"
 msgid "Go to next"
 msgstr "次へ"
 
+#: src/state/queries/preferences/moderation.ts:116
+msgid "Gore, self-harm, torture"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "ハンドル"
+
+#: src/state/queries/preferences/moderation.ts:123
+msgid "Hate Group Iconography"
+msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:321
@@ -1019,6 +1047,8 @@ msgstr "ヘルプ"
 msgid "Here is your app password."
 msgstr "アプリパスワードをお知らせします。"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:207
+#: src/view/com/modals/ContentFilteringSettings.tsx:234
 #: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
@@ -1086,6 +1116,10 @@ msgstr "コードを持っています"
 msgid "I have my own domain"
 msgstr "自分のドメインを持っています"
 
+#: src/state/queries/preferences/moderation.ts:92
+msgid "i.e. pornography"
+msgstr ""
+
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
 msgstr "選択されていない場合は、すべての年齢に適しています。"
@@ -1098,6 +1132,18 @@ msgstr "画像のALTテキスト"
 #: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
 msgstr "画像のオプション"
+
+#: src/state/queries/preferences/moderation.ts:124
+msgid "Images of terror groups, articles covering events, etc."
+msgstr ""
+
+#: src/state/queries/preferences/moderation.ts:137
+msgid "Impersonation"
+msgstr ""
+
+#: src/state/queries/preferences/moderation.ts:100
+msgid "Including non-sexual and artistic"
+msgstr ""
 
 #: src/view/com/auth/login/LoginForm.tsx:113
 msgid "Invalid username or password"
@@ -1569,6 +1615,10 @@ msgstr ""
 msgid "Other account"
 msgstr "その他のアカウント"
 
+#: src/state/queries/preferences/moderation.ts:99
+msgid "Other Nudity"
+msgstr ""
+
 #: src/view/com/modals/ServerInput.tsx:88
 msgid "Other service"
 msgstr "その他のサービス"
@@ -1976,6 +2026,10 @@ msgstr ""
 msgid "Security Step Required"
 msgstr "必要なセキュリティの手順"
 
+#: src/view/screens/SavedFeeds.tsx:163
+msgid "See this guide"
+msgstr ""
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:39
 msgid "See what's next"
 msgstr "次を見る"
@@ -2060,6 +2114,10 @@ msgstr "設定"
 msgid "Sexual activity or erotic nudity."
 msgstr "性的行為または性的なヌード。"
 
+#: src/state/queries/preferences/moderation.ts:107
+msgid "Sexually Suggestive"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:338
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 #: src/view/screens/ProfileList.tsx:385
@@ -2070,6 +2128,7 @@ msgstr "共有"
 msgid "Share feed"
 msgstr "フィードを共有"
 
+#: src/view/com/modals/ContentFilteringSettings.tsx:249
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/screens/Settings.tsx:317
 msgid "Show"
@@ -2179,6 +2238,10 @@ msgstr "返信を並び替える"
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
 msgstr "次の方法で同じ投稿への返信を並び替えます。"
+
+#: src/state/queries/preferences/moderation.ts:130
+msgid "Spam"
+msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2512,9 +2575,17 @@ msgstr "欠陥事項を表示"
 msgid "View the avatar"
 msgstr "アバターを表示"
 
+#: src/state/queries/preferences/moderation.ts:115
+msgid "Violent / Bloody"
+msgstr ""
+
 #: src/view/com/modals/LinkWarning.tsx:73
 msgid "Visit Site"
 msgstr "サイトへアクセス"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:242
+msgid "Warn"
+msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "We're so excited to have you join us!"
@@ -2625,6 +2696,10 @@ msgstr "アプリパスワードはまだ作成されていません。下のボ
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "ミュートしているアカウントはまだありません。アカウントをミュートするには、プロフィールに移動し、アカウントメニューから「アカウントをミュート」を選択します。"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:162
+msgid "You must be 18 or older to enable adult content."
+msgstr ""
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."

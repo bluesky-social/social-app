@@ -10,6 +10,8 @@ import {
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 
+import {t} from '@lingui/macro'
+
 export type Label = ComAtprotoLabelDefs.Label
 
 export type LabelGroupConfig = {
@@ -86,54 +88,54 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
 > = {
   nsfw: {
     id: 'nsfw',
-    title: 'Explicit Sexual Images',
-    subtitle: 'i.e. pornography',
+    title: t`Explicit Sexual Images`,
+    subtitle: t`i.e. pornography`,
     warning: 'Sexually Explicit',
     values: ['porn', 'nsfl'],
     isAdultImagery: true,
   },
   nudity: {
     id: 'nudity',
-    title: 'Other Nudity',
-    subtitle: 'Including non-sexual and artistic',
+    title: t`Other Nudity`,
+    subtitle: t`Including non-sexual and artistic`,
     warning: 'Nudity',
     values: ['nudity'],
     isAdultImagery: true,
   },
   suggestive: {
     id: 'suggestive',
-    title: 'Sexually Suggestive',
-    subtitle: 'Does not include nudity',
+    title: t`Sexually Suggestive`,
+    subtitle: t`Does not include nudity`,
     warning: 'Sexually Suggestive',
     values: ['sexual'],
     isAdultImagery: true,
   },
   gore: {
     id: 'gore',
-    title: 'Violent / Bloody',
-    subtitle: 'Gore, self-harm, torture',
+    title: t`Violent / Bloody`,
+    subtitle: t`Gore, self-harm, torture`,
     warning: 'Violence',
     values: ['gore', 'self-harm', 'torture', 'nsfl', 'corpse'],
     isAdultImagery: true,
   },
   hate: {
     id: 'hate',
-    title: 'Hate Group Iconography',
-    subtitle: 'Images of terror groups, articles covering events, etc.',
+    title: t`Hate Group Iconography`,
+    subtitle: t`Images of terror groups, articles covering events, etc.`,
     warning: 'Hate Groups',
     values: ['icon-kkk', 'icon-nazi', 'icon-intolerant', 'behavior-intolerant'],
   },
   spam: {
     id: 'spam',
-    title: 'Spam',
-    subtitle: 'Excessive unwanted interactions',
+    title: t`Spam`,
+    subtitle: t`Excessive unwanted interactions`,
     warning: 'Spam',
     values: ['spam'],
   },
   impersonation: {
     id: 'impersonation',
-    title: 'Impersonation',
-    subtitle: 'Accounts falsely claiming to be people or orgs',
+    title: t`Impersonation`,
+    subtitle: t`Accounts falsely claiming to be people or orgs`,
     warning: 'Impersonation',
     values: ['impersonation'],
   },
