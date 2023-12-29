@@ -23,7 +23,7 @@ module.exports = function withAndroidManifestPlugin(appConfig) {
     decoratedAppConfig.modResults.contents = `${str.slice(
       0,
       index,
-    )}\nresConfigs "en", "hi", "ja", "fr", "de", "es"\n${str.slice(index)}`
+    )}\nresConfigs "en", "hi", "ja", "fr"\n${str.slice(index)}`
     return decoratedAppConfig
   })
 
