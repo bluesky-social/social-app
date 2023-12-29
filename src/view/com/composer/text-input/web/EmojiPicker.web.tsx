@@ -50,9 +50,9 @@ export function EmojiPicker({close}: {close: () => void}) {
     textInputWebEmitter.emit('emoji-inserted', emoji)
     close()
   }
-  const reducedMargin = useMediaQuery({query: '(max-height: 750px)'})
-  const noMargin = useMediaQuery({query: '(max-height: 550px)'})
-  const noPicker = useMediaQuery({query: '(max-height: 350px)'})
+  const screenMedium = useMediaQuery({query: '(max-height: 750px)'})
+  const screenShort = useMediaQuery({query: '(max-height: 550px)'})
+  const screenTiny = useMediaQuery({query: '(max-height: 350px)'})
 
   return (
     // eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors
@@ -67,8 +67,11 @@ export function EmojiPicker({close}: {close: () => void}) {
             style={[
               styles.picker,
               {
-                marginTop: noMargin ? 0 : reducedMargin ? 150 : 325,
-                display: noPicker ? 'none' : 'flex',
+                transform: [
+                  {translateX: -25},
+                  {translateY: screenShort ? 0 : screenMedium ? 150 : 325},
+                ],
+                display: screenTiny ? 'none' : 'flex',
               },
             ]}>
             <Picker
@@ -105,6 +108,5 @@ const styles = StyleSheet.create({
   },
   picker: {
     marginHorizontal: 'auto',
-    paddingRight: 50,
   },
 })
