@@ -37,7 +37,9 @@ export function Component({
   }, [closeModal, setExternalEmbedPref, source])
 
   return (
-    <View testID="repostModal" style={[s.flex1, pal.view, styles.container]}>
+    <View
+      testID="embedConsentModal"
+      style={[s.flex1, pal.view, styles.container]}>
       <Text style={[pal.text, styles.title]}>
         <Trans>{externalEmbedLabels[source]} Embeds</Trans>
       </Text>
