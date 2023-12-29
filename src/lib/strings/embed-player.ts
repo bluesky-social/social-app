@@ -155,6 +155,7 @@ export function parseEmbedPlayerFromUrl(
     const songId = urlp.searchParams.get('i')
 
     if (pathParams.length === 5 && (type === 'playlist' || type === 'album')) {
+      // We want to append the songId to the end of the url if it exists
       const embedUri = `https://embed.music.apple.com${urlp.pathname}${
         urlp.search ? '?i=' + songId : ''
       }`
@@ -232,7 +233,7 @@ export function parseEmbedPlayerFromUrl(
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
           playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
         }
-      } else if (idOrFilename && gifFilenameRegex.test(filename)) {
+      } else if (filename && gifFilenameRegex.test(filename)) {
         return {
           type: 'giphy_gif',
           gifId: idOrFilename,
