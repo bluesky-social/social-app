@@ -1,4 +1,4 @@
-import {EmbedPlayerParams, getGifHeight} from 'lib/strings/embed-player.ts'
+import {EmbedPlayerParams, getGifDims} from 'lib/strings/embed-player.ts'
 import React from 'react'
 import {Image, ImageLoadEventData} from 'expo-image'
 import {
@@ -71,16 +71,15 @@ export function ExternalGifEmbed({
   const onLoad = React.useCallback((e: ImageLoadEventData) => {
     // We only want to load the thumbnail's dims and then the gif's dims. We shouldn't keep resetting dimensions
     // to prevent unnecessary prop changes!
-    if (loadCount.current >= 2) return
+    if (
+      (isNative && loadCount.current >= 1) ||
+      (isWeb && loadCount.current >= 2)
+    ) {
+      return
+    }
 
-    // Scale the height of the gif to fit the width of the container
-    const scaledHeight = getGifHeight(
-      e.source.height,
-      e.source.width,
-      viewWidth.current,
-    )
     // Store those dims and update the ref
-    setImageDims({height: scaledHeight, width: viewWidth.current})
+    setImageDims(getGifDims(e.source.height, e.source.width, viewWidth.current))
     loadCount.current++
   }, [])
 
@@ -90,29 +89,26 @@ export function ExternalGifEmbed({
 
   return (
     <Pressable
-      accessibilityRole="button"
       style={[
         {height: imageDims.height},
         styles.topRadius,
         styles.gifContainer,
       ]}
       onPress={onPlayPress}
-      onLayout={onLayout}>
+      onLayout={onLayout}
+      accessibilityRole="button"
+      accessibilityHint="Play GIF"
+      accessibilityLabel="Play GIF">
       {(!isLoaded || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
         <View style={[styles.layer, styles.overlayLayer]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Play GIF"
-            accessibilityHint=""
-            onPress={onPlayPress}
-            style={[styles.overlayContainer, styles.topRadius]}>
+          <View style={[styles.overlayContainer, styles.topRadius]}>
             {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
               <FontAwesomeIcon icon="play" size={42} color="white" />
             ) : (
               // Activity indicator while gif loads
               <ActivityIndicator size="large" color="white" />
             )}
-          </Pressable>
+          </View>
         </View>
       )}
       {isWeb &&

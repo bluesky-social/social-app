@@ -1,4 +1,5 @@
 import React from 'react'
+import {StyleSheet, View} from 'react-native'
 
 export function WebGifStill({
   source,
@@ -17,9 +18,24 @@ export function WebGifStill({
         ?.drawImage(img, 0, 0, imageDims.width, imageDims.height)
     }
     img.src = source
+    console.log(imageDims)
   }, [source, imageDims])
 
   return (
-    <canvas ref={canvasRef} height={imageDims.height} width={imageDims.width} />
+    <View style={[styles.container]}>
+      <canvas
+        ref={canvasRef}
+        height={imageDims.height}
+        width={imageDims.width}
+      />
+    </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+})

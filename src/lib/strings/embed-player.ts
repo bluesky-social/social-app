@@ -320,12 +320,17 @@ export function getPlayerHeight({
   }
 }
 
-export function getGifHeight(
+export function getGifDims(
   originalHeight: number,
   originalWidth: number,
   viewWidth: number,
 ) {
-  return (originalHeight / originalWidth) * viewWidth
+  const scaledHeight = (originalHeight / originalWidth) * viewWidth
+
+  return {
+    height: scaledHeight > 200 ? 200 : scaledHeight,
+    width: (200 / scaledHeight) * viewWidth,
+  }
 }
 
 export function getGiphyMetaUri(url: URL) {

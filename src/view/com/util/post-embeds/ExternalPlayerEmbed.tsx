@@ -40,7 +40,7 @@ function PlaceholderOverlay({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Play Video"
-        accessibilityHint=""
+        accessibilityHint="Play Video"
         onPress={onPress}
         style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
