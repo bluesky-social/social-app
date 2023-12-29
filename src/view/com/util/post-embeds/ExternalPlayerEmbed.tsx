@@ -3,23 +3,18 @@ import {
   ActivityIndicator,
   Dimensions,
   GestureResponderEvent,
-  LayoutChangeEvent,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native'
-import {Image, ImageLoadEventData} from 'expo-image'
+import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {
-  EmbedPlayerParams,
-  getGifHeight,
-  getPlayerHeight,
-} from 'lib/strings/embed-player'
+import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {isIOS, isNative, isWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 
@@ -222,112 +217,6 @@ export function ExternalPlayer({
         onLoad={onLoad}
       />
     </View>
-  )
-}
-
-export function ExternalGifEmbed({
-  thumb,
-  params,
-}: {
-  thumb?: string
-  params: EmbedPlayerParams
-}) {
-  const isThumbLoaded = React.useRef(false)
-  const viewWidth = React.useRef(0)
-
-  // Tracking if the placer has been activated
-  const [isPlayerActive, setIsPlayerActive] = React.useState(false)
-  // Tracking whether the gif has been loaded yet
-  const [isLoaded, setIsLoaded] = React.useState(false)
-  // Tracking whether the image is animating
-  const [isAnimating, setIsAnimating] = React.useState(true)
-  const [height, setHeight] = React.useState(100)
-
-  // Used for controlling animation
-  const imageRef = React.useRef<Image>(null)
-
-  const onPlayPress = React.useCallback(
-    (event: GestureResponderEvent) => {
-      // Don't propagate on web
-      event.preventDefault()
-
-      // If the player isn't active, we want to activate it and prefetch the gif
-      if (!isPlayerActive) {
-        setIsPlayerActive(true)
-
-        Image.prefetch(params.playerUri).then(() => {
-          // Replace the image once it's fetched
-          setIsLoaded(true)
-        })
-        return
-      }
-
-      if (isWeb) return
-
-      // Control animation on native
-      setIsAnimating(prev => {
-        console.log(prev)
-        if (prev) {
-          imageRef.current?.stopAnimating()
-          return false
-        } else {
-          imageRef.current?.startAnimating()
-          return true
-        }
-      })
-    },
-    [isPlayerActive, params.playerUri],
-  )
-
-  const onLoad = React.useCallback((e: ImageLoadEventData) => {
-    if (isThumbLoaded.current) return
-
-    const scaledHeight = getGifHeight(
-      e.source.height,
-      e.source.width,
-      viewWidth.current,
-    )
-    setHeight(scaledHeight > 300 ? 300 : scaledHeight)
-  }, [])
-
-  const onLayout = React.useCallback((e: LayoutChangeEvent) => {
-    viewWidth.current = e.nativeEvent.layout.width
-  }, [])
-
-  return (
-    <Pressable
-      accessibilityRole="button"
-      style={[{height}, styles.topRadius, styles.gifContainer]}
-      onPress={onPlayPress}
-      onLayout={onLayout}>
-      {(!isLoaded || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
-        <View style={[styles.layer, styles.overlayLayer]}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Play GIF"
-            accessibilityHint=""
-            onPress={onPlayPress}
-            style={[styles.overlayContainer, styles.topRadius]}>
-            {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-              <FontAwesomeIcon icon="play" size={42} color="white" />
-            ) : (
-              // Activity indicator while gif loads
-              <ActivityIndicator size="large" color="white" />
-            )}
-          </Pressable>
-        </View>
-      )}
-      <Image
-        source={{uri: !isLoaded ? thumb : params.playerUri}}
-        style={{flex: 1}}
-        ref={imageRef}
-        onLoad={onLoad}
-        autoplay={isAnimating}
-        contentFit="contain"
-        accessibilityIgnoresInvertColors
-        cachePolicy={isIOS ? 'disk' : 'memory-disk'}
-      />
-    </Pressable>
   )
 }
 

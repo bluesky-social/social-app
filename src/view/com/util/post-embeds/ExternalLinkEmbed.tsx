@@ -7,10 +7,8 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {AppBskyEmbedExternal} from '@atproto/api'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
-import {
-  ExternalGifEmbed,
-  ExternalPlayer,
-} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
 
 export const ExternalLinkEmbed = ({
   link,
