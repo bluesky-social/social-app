@@ -695,7 +695,7 @@ msgstr "Nama Tampilan"
 
 #: src/view/com/modals/ChangeHandle.tsx:485
 msgid "Domain verified!"
-msgstr "Domain diverifikasi!"
+msgstr "Domain terverifikasi!"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
@@ -1609,7 +1609,7 @@ msgstr "Kutip post"
 
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
-msgstr "Citar una publicación"
+msgstr "Kutip Post"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1719,7 +1719,7 @@ msgstr "Diposting ulang oleh"
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
-msgstr "Minta Perubahan"
+msgstr "Ajukan Perubahan"
 
 #: src/view/com/auth/create/Step2.tsx:53
 msgid "Required for this provider"
@@ -2106,7 +2106,7 @@ msgstr "Ketentuan Layanan telah dipindahkan ke"
 
 #: src/view/com/util/ErrorBoundary.tsx:35
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
-msgstr "Sepertinya ada masalah di aplikasi. Beri tahu kami jika Anda mengalaminya!"
+msgstr "Sepertinya ada masalah pada aplikasi. Harap beri tahu kami jika Anda mengalaminya!"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 #~ msgid "This {0} has been labeled."
