@@ -1,58 +1,75 @@
 import {Platform} from 'react-native'
+import {ExternalSourceType} from 'state/preferences/external-sources.tsx'
+
+interface EmbedPlayerParamDefaults {
+  isGif?: boolean
+  source: ExternalSourceType
+}
 
 export type EmbedPlayerParams =
-  | {type: 'youtube_video'; isGif?: boolean; videoId: string; playerUri: string}
-  | {type: 'twitch_video'; isGif?: boolean; playerUri: string}
-  | {type: 'spotify_album'; isGif?: boolean; albumId: string; playerUri: string}
-  | {
-      type: 'spotify_playlist'
-      isGif?: boolean
-
-      playlistId: string
+  | ({
+      type: 'youtube_video'
+      videoId: string
       playerUri: string
-    }
-  | {type: 'spotify_song'; isGif?: boolean; songId: string; playerUri: string}
-  | {
-      type: 'soundcloud_track'
-      isGif?: boolean
-      user: string
-      track: string
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'twitch_video'
       playerUri: string
-    }
-  | {
-      type: 'soundcloud_set'
-      isGif?: boolean
-      user: string
-      set: string
-      playerUri: string
-    }
-  | {
-      type: 'apple_music_playlist'
-      isGif?: boolean
-      playlistId: string
-      playerUri: string
-    }
-  | {
-      type: 'apple_music_album'
-      isGif?: boolean
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'spotify_album'
       albumId: string
       playerUri: string
-    }
-  | {
-      type: 'apple_music_song'
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'spotify_playlist'
+      playlistId: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'spotify_song'
       isGif?: boolean
       songId: string
       playerUri: string
-    }
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'soundcloud_track'
+      user: string
+      track: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'soundcloud_set'
+      user: string
+      set: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'apple_music_playlist'
+      playlistId: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'apple_music_album'
+      albumId: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'apple_music_song'
+      songId: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
   | {type: 'vimeo_video'; isGif?: boolean; videoId: string; playerUri: string}
-  | {
+  | ({
       type: 'giphy_gif'
-      isGif?: boolean
       gifId: string
       metaUri: string
       playerUri: string
-    }
-  | {type: 'tenor_gif'; isGif?: boolean; playerUri: string}
+    } & EmbedPlayerParamDefaults)
+  | ({
+      type: 'tenor_gif'
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
 const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
@@ -73,6 +90,7 @@ export function parseEmbedPlayerFromUrl(
     if (videoId) {
       return {
         type: 'youtube_video',
+        source: 'youtube',
         videoId,
         playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
       }
@@ -90,6 +108,7 @@ export function parseEmbedPlayerFromUrl(
     if (videoId) {
       return {
         type: 'youtube_video',
+        source: 'youtube',
         videoId,
         playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
       }
@@ -110,16 +129,19 @@ export function parseEmbedPlayerFromUrl(
     if (channelOrVideo === 'videos') {
       return {
         type: 'twitch_video',
+        source: 'twitch',
         playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=${clipOrId}&parent=${parent}`,
       }
     } else if (clipOrId === 'clip') {
       return {
         type: 'twitch_video',
+        source: 'twitch',
         playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=${id}&parent=${parent}`,
       }
     } else if (channelOrVideo) {
       return {
         type: 'twitch_video',
+        source: 'twitch',
         playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=${channelOrVideo}&parent=${parent}`,
       }
     }
@@ -132,6 +154,7 @@ export function parseEmbedPlayerFromUrl(
       if (type === 'playlist') {
         return {
           type: 'spotify_playlist',
+          source: 'spotify',
           playlistId: id,
           playerUri: `https://open.spotify.com/embed/playlist/${id}`,
         }
@@ -139,6 +162,7 @@ export function parseEmbedPlayerFromUrl(
       if (type === 'album') {
         return {
           type: 'spotify_album',
+          source: 'spotify',
           albumId: id,
           playerUri: `https://open.spotify.com/embed/album/${id}`,
         }
@@ -146,6 +170,7 @@ export function parseEmbedPlayerFromUrl(
       if (type === 'track') {
         return {
           type: 'spotify_song',
+          source: 'spotify',
           songId: id,
           playerUri: `https://open.spotify.com/embed/track/${id}`,
         }
@@ -164,6 +189,7 @@ export function parseEmbedPlayerFromUrl(
       if (trackOrSets === 'sets' && set) {
         return {
           type: 'soundcloud_set',
+          source: 'soundcloud',
           user,
           set: set,
           playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
@@ -172,6 +198,7 @@ export function parseEmbedPlayerFromUrl(
 
       return {
         type: 'soundcloud_track',
+        source: 'soundcloud',
         user,
         track: trackOrSets,
         playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
@@ -198,6 +225,7 @@ export function parseEmbedPlayerFromUrl(
       if (type === 'playlist') {
         return {
           type: 'apple_music_playlist',
+          source: 'appleMusic',
           playlistId: pathParams[4],
           playerUri: embedUri,
         }
@@ -205,12 +233,14 @@ export function parseEmbedPlayerFromUrl(
         if (songId) {
           return {
             type: 'apple_music_song',
+            source: 'appleMusic',
             songId,
             playerUri: embedUri,
           }
         } else {
           return {
             type: 'apple_music_album',
+            source: 'appleMusic',
             albumId: pathParams[4],
             playerUri: embedUri,
           }
@@ -245,6 +275,7 @@ export function parseEmbedPlayerFromUrl(
       if (gifId) {
         return {
           type: 'giphy_gif',
+          source: 'giphy',
           isGif: true,
           gifId,
           metaUri: `https://giphy.com/gifs/${gifId}`,
@@ -265,6 +296,7 @@ export function parseEmbedPlayerFromUrl(
       if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
         return {
           type: 'giphy_gif',
+          source: 'giphy',
           isGif: true,
           gifId: trackingOrId,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
@@ -273,6 +305,7 @@ export function parseEmbedPlayerFromUrl(
       } else if (filename && gifFilenameRegex.test(filename)) {
         return {
           type: 'giphy_gif',
+          source: 'giphy',
           isGif: true,
           gifId: idOrFilename,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
@@ -291,6 +324,7 @@ export function parseEmbedPlayerFromUrl(
       const gifId = filename.split('.')[0]
       return {
         type: 'giphy_gif',
+        source: 'giphy',
         isGif: true,
         gifId,
         metaUri: `https://giphy.com/gifs/${gifId}`,
@@ -300,6 +334,7 @@ export function parseEmbedPlayerFromUrl(
       const gifId = mediaOrFilename.split('.')[0]
       return {
         type: 'giphy_gif',
+        source: 'giphy',
         isGif: true,
         gifId,
         metaUri: `https://giphy.com/gifs/${gifId}`,
@@ -318,6 +353,7 @@ export function parseEmbedPlayerFromUrl(
 
       return {
         type: 'tenor_gif',
+        source: 'tenor',
         isGif: true,
         playerUri: `${url}${!includesExt ? '.gif' : ''}`,
       }
