@@ -26,7 +26,7 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
-import {formatCount} from '../util/numeric/format'
+import {FormatCount} from '../util/numeric/format'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
@@ -433,8 +433,8 @@ let ProfileHeaderLoaded = ({
 
   const blockHide =
     !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
-  const following = formatCount(profile.followsCount || 0)
-  const followers = formatCount(profile.followersCount || 0)
+  const following = FormatCount(profile.followsCount || 0)
+  const followers = FormatCount(profile.followersCount || 0)
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
@@ -625,7 +625,7 @@ let ProfileHeaderLoaded = ({
                 </Text>
               </Link>
               <Text type="md" style={[s.bold, pal.text]}>
-                {formatCount(profile.postsCount || 0)}{' '}
+                {FormatCount(profile.postsCount || 0)}{' '}
                 <Text type="md" style={[pal.textLight]}>
                   {pluralize(profile.postsCount || 0, 'post')}
                 </Text>

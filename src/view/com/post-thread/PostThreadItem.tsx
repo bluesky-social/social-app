@@ -30,7 +30,7 @@ import {PostAlerts} from '../util/moderation/PostAlerts'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
-import {formatCount} from '../util/numeric/format'
+import {FormatCount} from '../util/numeric/format'
 import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -402,7 +402,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.repostCount)}
+                        {FormatCount(post.repostCount)}
                       </Text>{' '}
                       {pluralize(post.repostCount, 'repost')}
                     </Text>
@@ -420,7 +420,7 @@ let PostThreadItemLoaded = ({
                       type="lg"
                       style={pal.textLight}>
                       <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
+                        {FormatCount(post.likeCount)}
                       </Text>{' '}
                       {pluralize(post.likeCount, 'like')}
                     </Text>
