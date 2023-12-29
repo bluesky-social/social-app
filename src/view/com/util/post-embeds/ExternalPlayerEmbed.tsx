@@ -324,6 +324,7 @@ export function ExternalGifEmbed({
         autoplay={isAnimating}
         contentFit="contain"
         accessibilityIgnoresInvertColors
+        cachePolicy="memory-disk"
       />
     </Pressable>
   )
