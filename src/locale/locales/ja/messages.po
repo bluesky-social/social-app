@@ -434,7 +434,7 @@ msgstr "入力したメールアドレスの受信トレイを確認して、以
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
-msgstr ""
+msgstr "「全員」と「返信不可」のどちらかを選択"
 
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
@@ -978,11 +978,11 @@ msgstr "非表示"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "Hide post"
-msgstr ""
+msgstr "投稿を非表示にする"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:177
 msgid "Hide this post?"
-msgstr ""
+msgstr "この投稿を非表示にしますか？"
 
 #: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide user list"
@@ -1204,7 +1204,7 @@ msgstr "ローカル開発者サーバー"
 
 #: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
-msgstr "ログアウトした状態の可視性"
+msgstr "ログアウトしたユーザーからの可視性"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
@@ -1474,7 +1474,7 @@ msgstr "スレッドの設定を開く"
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
-msgstr ""
+msgstr "または以下のオプションを組み合わせてください："
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -1553,7 +1553,7 @@ msgstr ""
 
 #: src/view/com/composer/Composer.tsx:214
 msgid "Please wait for your link card to finish loading"
-msgstr ""
+msgstr "リンクカードがロードされるまでお待ちください"
 
 #: src/view/com/composer/Composer.tsx:341
 #: src/view/com/post-thread/PostThread.tsx:225
@@ -1837,7 +1837,7 @@ msgstr "検索"
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
 msgid "Search for users"
-msgstr ""
+msgstr "ユーザーを検索"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -1914,7 +1914,7 @@ msgstr "スレッド表示で返信を表示するには、この設定を「は
 
 #: src/view/screens/PreferencesHomeFeed.tsx:252
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "保存されたフィードのサンプルを次のフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
+msgstr "保存されたフィードから投稿を抽出して「Following」フィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
 #: src/view/screens/Settings.tsx:277
 #: src/view/shell/desktop/LeftNav.tsx:433
@@ -2187,7 +2187,7 @@ msgstr "この警告は、メディアが接続されている投稿にのみ使
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "This will hide this post from your feeds."
-msgstr ""
+msgstr "この投稿をあなたのフィードにおいて非表示にします。"
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
