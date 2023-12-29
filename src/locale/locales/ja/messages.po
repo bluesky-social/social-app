@@ -187,7 +187,7 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:240
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "および"
@@ -528,7 +528,7 @@ msgstr "返信を作成"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "確認"
 
@@ -759,7 +759,7 @@ msgstr ""
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 #: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "完了"
 
@@ -1019,7 +1019,7 @@ msgstr "ヘルプ"
 msgid "Here is your app password."
 msgstr "アプリパスワードをお知らせします。"
 
-#: src/view/com/notifications/FeedItem.tsx:325
+#: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "非表示"
@@ -1032,7 +1032,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:317
+#: src/view/com/notifications/FeedItem.tsx:319
 msgid "Hide user list"
 msgstr "ユーザーリストを非表示"
 
@@ -1212,7 +1212,7 @@ msgstr "このフィードをいいね"
 msgid "Liked by"
 msgstr "いいねしたユーザー"
 
-#: src/view/com/notifications/FeedItem.tsx:170
+#: src/view/com/notifications/FeedItem.tsx:171
 msgid "liked your custom feed{0}"
 msgstr ""
 
@@ -1331,7 +1331,7 @@ msgstr "その他のフィード"
 msgid "More options"
 msgstr "その他のオプション"
 
-#: src/view/screens/PreferencesThreads.tsx:80
+#: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr ""
 
@@ -1437,8 +1437,8 @@ msgstr "次の画像"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "いいえ"
 
@@ -1691,7 +1691,7 @@ msgstr "前の画像"
 msgid "Primary Language"
 msgstr "第一言語"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "あなたのフォローを優先"
 
@@ -1746,7 +1746,7 @@ msgstr "引用"
 msgid "Quote Post"
 msgstr "引用"
 
-#: src/view/screens/PreferencesThreads.tsx:81
+#: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster\\'s Roulette\")"
 msgstr ""
 
@@ -2041,7 +2041,7 @@ msgstr "フィード内の返信をすべて非表示にするには、この設
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "フィード内のリポストをすべて非表示にするには、この設定を「いいえ」にします。"
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "スレッド表示で返信を表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
@@ -2091,7 +2091,7 @@ msgstr "引用を表示"
 msgid "Show Replies"
 msgstr "返信を表示"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "自分がフォローしているユーザーからの返信を、他のすべての返信の前に表示します。"
 
@@ -2099,7 +2099,7 @@ msgstr "自分がフォローしているユーザーからの返信を、他の
 msgid "Show Reposts"
 msgstr "リポストを表示"
 
-#: src/view/com/notifications/FeedItem.tsx:346
+#: src/view/com/notifications/FeedItem.tsx:348
 msgid "Show users"
 msgstr "ユーザーを表示"
 
@@ -2346,7 +2346,7 @@ msgstr ""
 msgid "Thread Preferences"
 msgstr "スレッドの設定"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "スレッドモード"
 
@@ -2571,8 +2571,8 @@ msgstr "返信を書く"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "はい"
 

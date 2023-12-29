@@ -187,7 +187,7 @@ msgstr "Es wurde eine E-Mail an {0} gesendet. Sie enthält einen Bestätigungsco
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "Es wurde eine E-Mail an Ihre frühere Adresse {0} gesendet. Sie enthält einen Bestätigungscode, den Sie unten eingeben können."
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:240
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "und"
@@ -528,7 +528,7 @@ msgstr "Antwort zusammenstellen"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Bestätigen"
 
@@ -759,7 +759,7 @@ msgstr ""
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 #: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Erledigt"
 
@@ -1019,7 +1019,7 @@ msgstr "Hilfe"
 msgid "Here is your app password."
 msgstr "Hier ist Ihr App-Passwort."
 
-#: src/view/com/notifications/FeedItem.tsx:325
+#: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "Ausblenden"
@@ -1032,7 +1032,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:317
+#: src/view/com/notifications/FeedItem.tsx:319
 msgid "Hide user list"
 msgstr "Benutzerliste ausblenden"
 
@@ -1212,7 +1212,7 @@ msgstr "Dieser Feed gefallen"
 msgid "Liked by"
 msgstr "Gefallen bei"
 
-#: src/view/com/notifications/FeedItem.tsx:170
+#: src/view/com/notifications/FeedItem.tsx:171
 msgid "liked your custom feed{0}"
 msgstr ""
 
@@ -1323,7 +1323,7 @@ msgstr "Mehr Feeds "
 msgid "More options"
 msgstr "Mehr Optionen"
 
-#: src/view/screens/PreferencesThreads.tsx:80
+#: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr ""
 
@@ -1429,8 +1429,8 @@ msgstr "Nächstes Bild "
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "Nein"
 
@@ -1679,7 +1679,7 @@ msgstr "Vorheriges Bild"
 msgid "Primary Language"
 msgstr "Primäre Sprache"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "Priorisieren Sie Ihre Anhängerschaft"
 
@@ -1734,7 +1734,7 @@ msgstr "Angebotsposten"
 msgid "Quote Post"
 msgstr "Angebotsposten"
 
-#: src/view/screens/PreferencesThreads.tsx:81
+#: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster\\'s Roulette\")"
 msgstr ""
 
@@ -2025,7 +2025,7 @@ msgstr "Setzen Sie diese Einstellung auf \"Nein\", um alle Antworten aus Ihrem F
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Setzen Sie diese Einstellung auf \"Nein\", um alle wieder geposteten Beiträge aus Ihrem Feed auszublenden."
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Setzen Sie diese Einstellung auf \"Ja\", um Antworten in einer Thread-Ansicht anzuzeigen. Dies ist eine experimentelle Funktion."
 
@@ -2075,7 +2075,7 @@ msgstr "Angebotsposten zeigen"
 msgid "Show Replies"
 msgstr "Antworten zeigen"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "Antworten von Personen, denen Sie folgen, vor allen anderen Antworten anzeigen."
 
@@ -2083,7 +2083,7 @@ msgstr "Antworten von Personen, denen Sie folgen, vor allen anderen Antworten an
 msgid "Show Reposts"
 msgstr "Wiederholungen anzeigen"
 
-#: src/view/com/notifications/FeedItem.tsx:346
+#: src/view/com/notifications/FeedItem.tsx:348
 msgid "Show users"
 msgstr "Benutzer zeigen"
 
@@ -2330,7 +2330,7 @@ msgstr ""
 msgid "Thread Preferences"
 msgstr "Einstellungen zum Thema"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "Gewindemodus"
 
@@ -2559,8 +2559,8 @@ msgstr "Schreiben Sie Ihre Antwort"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "Ja"
 

@@ -207,7 +207,7 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:240
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "और"
@@ -556,7 +556,7 @@ msgstr "जवाब लिखो"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "हो गया"
 
@@ -787,7 +787,7 @@ msgstr ""
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 #: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "खत्म"
 
@@ -1047,7 +1047,7 @@ msgstr "सहायता"
 msgid "Here is your app password."
 msgstr "यहां आपका ऐप पासवर्ड है."
 
-#: src/view/com/notifications/FeedItem.tsx:325
+#: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "इसे छिपाएं"
@@ -1060,7 +1060,7 @@ msgstr ""
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:317
+#: src/view/com/notifications/FeedItem.tsx:319
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
@@ -1253,7 +1253,7 @@ msgstr "इस फ़ीड को लाइक करो"
 msgid "Liked by"
 msgstr "इन यूजर ने लाइक किया है"
 
-#: src/view/com/notifications/FeedItem.tsx:170
+#: src/view/com/notifications/FeedItem.tsx:171
 msgid "liked your custom feed{0}"
 msgstr ""
 
@@ -1380,7 +1380,7 @@ msgstr "अधिक विकल्प"
 #~ msgid "More post options"
 #~ msgstr "पोस्ट विकल्प"
 
-#: src/view/screens/PreferencesThreads.tsx:80
+#: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr ""
 
@@ -1490,8 +1490,8 @@ msgstr "अगली फोटो"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "नहीं"
 
@@ -1757,7 +1757,7 @@ msgstr "पिछली छवि"
 msgid "Primary Language"
 msgstr "प्राथमिक भाषा"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "अपने फ़ॉलोअर्स को प्राथमिकता दें"
 
@@ -1812,7 +1812,7 @@ msgstr "कोटे पोस्ट"
 msgid "Quote Post"
 msgstr "कोटे पोस्ट"
 
-#: src/view/screens/PreferencesThreads.tsx:81
+#: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster\\'s Roulette\")"
 msgstr ""
 
@@ -2124,7 +2124,7 @@ msgstr "इस सेटिंग को अपने फ़ीड से सभ
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "इस सेटिंग को अपने फ़ीड से सभी पोस्ट छिपाने के लिए \"नहीं\" करने के लिए सेट करें।।"
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "इस सेटिंग को \"हाँ\" में सेट करने के लिए एक थ्रेडेड व्यू में जवाब दिखाने के लिए। यह एक प्रयोगात्मक विशेषता है।।"
 
@@ -2178,7 +2178,7 @@ msgstr "उद्धरण पोस्ट दिखाओ"
 msgid "Show Replies"
 msgstr "उत्तर दिखाएँ"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "अन्य सभी उत्तरों से पहले उन लोगों के उत्तर दिखाएं जिन्हें आप फ़ॉलो करते हैं।"
 
@@ -2186,7 +2186,7 @@ msgstr "अन्य सभी उत्तरों से पहले उन 
 msgid "Show Reposts"
 msgstr "रीपोस्ट दिखाएँ"
 
-#: src/view/com/notifications/FeedItem.tsx:346
+#: src/view/com/notifications/FeedItem.tsx:348
 msgid "Show users"
 msgstr "लोग दिखाएँ"
 
@@ -2433,7 +2433,7 @@ msgstr ""
 msgid "Thread Preferences"
 msgstr "थ्रेड प्राथमिकता"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "थ्रेड मोड"
 
@@ -2674,8 +2674,8 @@ msgstr "अपना जवाब दें"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "हाँ"
 

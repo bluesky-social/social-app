@@ -207,7 +207,7 @@ msgstr "{0}(으)로 이메일을 전송했습니다. 이 이메일에는 아래�
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "이전 주소인 {0}(으)로 이메일을 전송했습니다. 이 이메일에는 아래에 입력하는 확인 코드가 포함되어 있습니다."
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:240
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "및"
@@ -560,7 +560,7 @@ msgstr "답글 작성하기"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "확인"
 
@@ -791,7 +791,7 @@ msgstr "초대 코드가 없으십니까?"
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
 #: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "완료"
 
@@ -1055,7 +1055,7 @@ msgstr "도움말"
 msgid "Here is your app password."
 msgstr "앱 비밀번호입니다."
 
-#: src/view/com/notifications/FeedItem.tsx:325
+#: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "숨기기"
@@ -1068,7 +1068,7 @@ msgstr "게시물 숨기기"
 msgid "Hide this post?"
 msgstr "이 게시물을 숨기시겠습니까?"
 
-#: src/view/com/notifications/FeedItem.tsx:317
+#: src/view/com/notifications/FeedItem.tsx:319
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
 
@@ -1261,7 +1261,7 @@ msgstr "이 피드"
 msgid "Liked by"
 msgstr "좋아요 표시한 계정"
 
-#: src/view/com/notifications/FeedItem.tsx:170
+#: src/view/com/notifications/FeedItem.tsx:171
 msgid "liked your custom feed{0}"
 msgstr "님이 내 사용자 지정 피드{0}을(를) 좋아합니다"
 
@@ -1388,7 +1388,7 @@ msgstr "옵션 더 보기"
 #~ msgid "More post options"
 #~ msgstr "게시물 옵션 더 보기"
 
-#: src/view/screens/PreferencesThreads.tsx:80
+#: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr "좋아요 많은 순"
 
@@ -1498,8 +1498,8 @@ msgstr "다음 이미지"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "아니요"
 
@@ -1765,7 +1765,7 @@ msgstr "이전 이미지"
 msgid "Primary Language"
 msgstr "주 언어"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "내 팔로우 우선시키기"
 
@@ -1820,7 +1820,7 @@ msgstr "게시물 인용"
 msgid "Quote Post"
 msgstr "게시물 인용"
 
-#: src/view/screens/PreferencesThreads.tsx:81
+#: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster\\'s Roulette\")"
 msgstr "무작위"
 
@@ -2132,7 +2132,7 @@ msgstr "피드에서 모든 답글을 숨기려면 이 설정을 \"아니요\"�
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "피드에서 모든 재게시를 숨기려면 이 설정을 \"아니요\"로 설정합니다."
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "스레드 보기에 답글을 표시하려면 이 설정을 \"예\"로 설정합니다. 이는 실험적인 기능입니다."
 
@@ -2186,7 +2186,7 @@ msgstr "인용 게시물 표시"
 msgid "Show Replies"
 msgstr "답글 표시"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시합니다."
 
@@ -2194,7 +2194,7 @@ msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다
 msgid "Show Reposts"
 msgstr "재게시 표시"
 
-#: src/view/com/notifications/FeedItem.tsx:346
+#: src/view/com/notifications/FeedItem.tsx:348
 msgid "Show users"
 msgstr "사용자 표시"
 
@@ -2441,7 +2441,7 @@ msgstr "피드에서 이 게시물을 숨깁니다."
 msgid "Thread Preferences"
 msgstr "스레드 설정"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "스레드 모드"
 
@@ -2682,8 +2682,8 @@ msgstr "답글 작성하기"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
-#: src/view/screens/PreferencesThreads.tsx:100
-#: src/view/screens/PreferencesThreads.tsx:123
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "예"
 
