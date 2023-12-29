@@ -109,15 +109,15 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
       step: legacy.onboarding?.step || defaults.onboarding.step,
     },
     hiddenPosts: defaults.hiddenPosts,
-    externalSources: {
-      giphy: defaults.externalSources.giphy,
-      tenor: defaults.externalSources.tenor,
-      youtube: defaults.externalSources.youtube,
-      twitch: defaults.externalSources.twitch,
-      vimeo: defaults.externalSources.vimeo,
-      spotify: defaults.externalSources.spotify,
-      appleMusic: defaults.externalSources.appleMusic,
-      soundcloud: defaults.externalSources.soundcloud,
+    externalEmbeds: {
+      giphy: defaults.externalEmbeds.giphy,
+      tenor: defaults.externalEmbeds.tenor,
+      youtube: defaults.externalEmbeds.youtube,
+      twitch: defaults.externalEmbeds.twitch,
+      vimeo: defaults.externalEmbeds.vimeo,
+      spotify: defaults.externalEmbeds.spotify,
+      appleMusic: defaults.externalEmbeds.appleMusic,
+      soundcloud: defaults.externalEmbeds.soundcloud,
     },
   }
 }

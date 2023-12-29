@@ -17,6 +17,7 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {isNative} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {useExternalEmbedsPrefs} from 'state/preferences'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -116,6 +117,7 @@ export function ExternalPlayer({
   params: EmbedPlayerParams
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const externalSourcesPrefs = useExternalEmbedsPrefs()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -168,12 +170,19 @@ export function ExternalPlayer({
     setIsLoading(false)
   }, [])
 
-  const onPlayPress = React.useCallback((event: GestureResponderEvent) => {
-    // Prevent this from propagating upward on web
-    event.preventDefault()
+  const onPlayPress = React.useCallback(
+    (event: GestureResponderEvent) => {
+      // Prevent this from propagating upward on web
+      event.preventDefault()
 
-    setPlayerActive(true)
-  }, [])
+      if (externalSourcesPrefs[params.source] === 'ask') {
+        return
+      }
+
+      setPlayerActive(true)
+    },
+    [externalSourcesPrefs, params.source],
+  )
 
   // measure the layout to set sizing
   const onLayout = React.useCallback(

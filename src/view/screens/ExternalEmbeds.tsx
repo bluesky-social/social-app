@@ -13,11 +13,18 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ScrollView} from '../com/util/Views'
-import {useExternalSources, useSetExternalSource} from 'state/preferences'
-import {SelectableBtn} from 'view/com/util/forms/SelectableBtn.tsx'
+import {
+  useExternalEmbedsPrefs,
+  useSetExternalEmbedPref,
+} from 'state/preferences'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton.tsx'
+import {
+  externalEmbedLabels,
+  ExternalEmbedType,
+} from 'state/preferences/external-embeds-prefs.tsx'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ExternalSources'>
-export function ExternalSources({}: Props) {
+type Props = NativeStackScreenProps<CommonNavigatorParams, 'ExternalEmbeds'>
+export function ExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -26,7 +33,7 @@ export function ExternalSources({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('ExternalSources')
+      screen('ExternalEmbeds')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )
@@ -38,35 +45,43 @@ export function ExternalSources({}: Props) {
         pal.border,
         isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
       ]}
-      testID="externalSourcesScreen">
-      <ViewHeader title={_(msg`External Sources`)} showOnDesktop />
+      testID="externalEmbedsScreen">
+      <ViewHeader title={_(msg`External Embeds`)} showOnDesktop />
       <ScrollView>
         <View style={styles.spacer} />
         <View style={[pal.view]}>
           <View style={styles.infoCard}>
             <Text style={pal.text}>
               <Trans>
-                Some posts on Bluesky may include media from an external source
-                which you may choose to load. If you allow this media, your IP
-                may be shown to the external source.
+                Some posts on Bluesky may include media embeds from an external
+                source that you can load. Embeds may allow the external source
+                to collect information about you and your device. You may choose
+                to remove these embeds by source.
+              </Trans>
+            </Text>
+            <Text style={[pal.textLight, {fontWeight: '500', marginTop: 15}]}>
+              <Trans>
+                Note: Embeds are not loaded until you choose to load an embed.
+                No information is sent to or requested from the external source
+                until you load the embed.
               </Trans>
             </Text>
           </View>
         </View>
-        <ExternalSourceSelector name="youtube" label="YouTube" />
-        <ExternalSourceSelector name="vimeo" label="Vimeo" />
-        <ExternalSourceSelector name="twitch" label="Twitch" />
-        <ExternalSourceSelector name="giphy" label="GIPHY" />
-        <ExternalSourceSelector name="tenor" label="Tenor" />
-        <ExternalSourceSelector name="spotify" label="Spotify" />
-        <ExternalSourceSelector name="appleMusic" label="Apple Music" />
-        <ExternalSourceSelector name="soundcloud" label="SoundCloud" />
+        <View style={styles.spacer} />
+        {Object.entries(externalEmbedLabels).map(([key, label]) => (
+          <PrefSelector
+            name={key as ExternalEmbedType}
+            label={label}
+            key={key}
+          />
+        ))}
       </ScrollView>
     </CenteredView>
   )
 }
 
-function ExternalSourceSelector({
+function PrefSelector({
   name,
   label,
 }: {
@@ -82,35 +97,23 @@ function ExternalSourceSelector({
   label: string
 }) {
   const pal = usePalette('default')
-  const setExternalSource = useSetExternalSource()
-  const sources = useExternalSources()
+  const setExternalEmbedPref = useSetExternalEmbedPref()
+  const sources = useExternalEmbedsPrefs()
 
   return (
     <View>
-      <View style={styles.spacer} />
-      <Text type="xl-bold" style={[pal.text, styles.heading]}>
-        <Trans>{label}</Trans>
-      </Text>
-      <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-        <SelectableBtn
-          selected={sources[name] === 'never'}
-          label="Never"
-          left
-          onSelect={() => setExternalSource(name, 'never')}
-          accessibilityHint={`Set ${label} to never load`}
-        />
-        <SelectableBtn
-          selected={sources[name] === 'ask'}
-          label="Ask"
-          onSelect={() => setExternalSource(name, 'ask')}
-          accessibilityHint={`Set ${label} to ask before loading`}
-        />
-        <SelectableBtn
-          selected={sources[name] === 'always'}
-          label="Always"
-          right
-          onSelect={() => setExternalSource(name, 'always')}
-          accessibilityHint={`Set ${label} to always load`}
+      <View style={[pal.view, styles.toggleCard]}>
+        <ToggleButton
+          type="default-light"
+          label={label}
+          labelType="lg"
+          isSelected={sources[name] === 'show'}
+          onPress={() =>
+            setExternalEmbedPref(
+              name,
+              sources[name] === 'show' ? 'hide' : 'show',
+            )
+          }
         />
       </View>
     </View>
@@ -151,5 +154,10 @@ const styles = StyleSheet.create({
   },
   selectableBtns: {
     flexDirection: 'row',
+  },
+  toggleCard: {
+    paddingVertical: 8,
+    paddingHorizontal: 6,
+    marginBottom: 1,
   },
 })

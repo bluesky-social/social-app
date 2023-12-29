@@ -564,7 +564,7 @@ export function SettingsScreen({}: Props) {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          testID="externalSourcesBtn"
+          testID="externalEmbedsBtn"
           style={[
             styles.linkCard,
             pal.view,
@@ -573,11 +573,11 @@ export function SettingsScreen({}: Props) {
           onPress={
             isSwitchingAccounts
               ? undefined
-              : () => navigation.navigate('ExternalSources')
+              : () => navigation.navigate('ExternalEmbeds')
           }
           accessibilityRole="button"
           accessibilityHint=""
-          accessibilityLabel={_(msg`Opens external sources settings`)}>
+          accessibilityLabel={_(msg`Opens external embeds settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="arrow-up-right-from-square"
@@ -585,7 +585,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={pal.text}>
-            <Trans>External Sources</Trans>
+            <Trans>External Embeds</Trans>
           </Text>
         </TouchableOpacity>
         <View style={styles.spacer20} />

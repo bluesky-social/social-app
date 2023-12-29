@@ -74,7 +74,7 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
-import {ExternalSources} from 'view/screens/ExternalSources'
+import {ExternalEmbeds} from 'view/screens/ExternalEmbeds.tsx'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -128,8 +128,8 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title('Blocked Accounts'), requireAuth: true}}
       />
       <Stack.Screen
-        name="ExternalSources"
-        getComponent={() => ExternalSources}
+        name="ExternalEmbeds"
+        getComponent={() => ExternalEmbeds}
         options={{title: title('External Sources'), requireAuth: true}}
       />
       <Stack.Screen

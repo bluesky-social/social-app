@@ -1,7 +1,7 @@
 import {z} from 'zod'
 import {deviceLocales} from '#/platform/detection'
 
-const externalSourceOptions = ['ask', 'always', 'never'] as const
+const externalEmbedOptions = ['ask', 'show', 'hide'] as const
 
 // only data needed for rendering account page
 const accountSchema = z.object({
@@ -32,15 +32,15 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
-  externalSources: z.object({
-    giphy: z.enum(externalSourceOptions),
-    tenor: z.enum(externalSourceOptions),
-    youtube: z.enum(externalSourceOptions),
-    twitch: z.enum(externalSourceOptions),
-    vimeo: z.enum(externalSourceOptions),
-    spotify: z.enum(externalSourceOptions),
-    appleMusic: z.enum(externalSourceOptions),
-    soundcloud: z.enum(externalSourceOptions),
+  externalEmbeds: z.object({
+    giphy: z.enum(externalEmbedOptions),
+    tenor: z.enum(externalEmbedOptions),
+    youtube: z.enum(externalEmbedOptions),
+    twitch: z.enum(externalEmbedOptions),
+    vimeo: z.enum(externalEmbedOptions),
+    spotify: z.enum(externalEmbedOptions),
+    appleMusic: z.enum(externalEmbedOptions),
+    soundcloud: z.enum(externalEmbedOptions),
   }),
   mutedThreads: z.array(z.string()), // should move to server
   invites: z.object({
@@ -72,7 +72,7 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
-  externalSources: {
+  externalEmbeds: {
     giphy: 'ask',
     tenor: 'ask',
     youtube: 'ask',

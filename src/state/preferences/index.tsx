@@ -2,23 +2,26 @@ import React from 'react'
 import {Provider as LanguagesProvider} from './languages'
 import {Provider as AltTextRequiredProvider} from '../preferences/alt-text-required'
 import {Provider as HiddenPostsProvider} from '../preferences/hidden-posts'
-import {Provider as ExternalSourcesProvider} from '../preferences/external-sources'
+import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs.tsx'
 
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 export {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from './alt-text-required'
-export {useExternalSources, useSetExternalSource} from './external-sources'
+export {
+  useExternalEmbedsPrefs,
+  useSetExternalEmbedPref,
+} from './external-embeds-prefs.tsx'
 export * from './hidden-posts'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <LanguagesProvider>
       <AltTextRequiredProvider>
-        <ExternalSourcesProvider>
+        <ExternalEmbedsProvider>
           <HiddenPostsProvider>{children}</HiddenPostsProvider>
-        </ExternalSourcesProvider>
+        </ExternalEmbedsProvider>
       </AltTextRequiredProvider>
     </LanguagesProvider>
   )

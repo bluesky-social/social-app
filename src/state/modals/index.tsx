@@ -7,6 +7,7 @@ import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ThreadgateSetting} from '../queries/threadgate'
+import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs.tsx'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -180,6 +181,12 @@ export interface LinkWarningModal {
   href: string
 }
 
+export interface ExternalSourceModal {
+  name: 'load-external-source'
+  source: ExternalEmbedType
+  onAccept: () => void
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -223,6 +230,7 @@ export type Modal =
   // Generic
   | ConfirmModal
   | LinkWarningModal
+  | ExternalSourceModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean

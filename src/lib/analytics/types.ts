@@ -147,7 +147,7 @@ interface ScreenPropertiesMap {
   Settings: {}
   AppPasswords: {}
   Moderation: {}
-  ExternalSources: {}
+  ExternalEmbeds: {}
   BlockedAccounts: {}
   MutedAccounts: {}
   SavedFeeds: {}

@@ -1,28 +1,38 @@
 import React from 'react'
 import * as persisted from '#/state/persisted'
 
-type StateContext = persisted.Schema['externalSources']
+type StateContext = persisted.Schema['externalEmbeds']
 type SetContext = (
-  source: keyof persisted.Schema['externalSources'],
-  value: 'ask' | 'always' | 'never' | 'unknown',
+  source: keyof persisted.Schema['externalEmbeds'],
+  value: 'ask' | 'show' | 'hide',
 ) => void
-export type ExternalSourceType = keyof persisted.Schema['externalSources']
+export type ExternalEmbedType = keyof persisted.Schema['externalEmbeds']
+export const externalEmbedLabels: Record<ExternalEmbedType, string> = {
+  youtube: 'YouTube',
+  vimeo: 'Vimeo',
+  twitch: 'Twitch',
+  giphy: 'GIPHY',
+  tenor: 'Tenor',
+  spotify: 'Spotify',
+  appleMusic: 'Apple Music',
+  soundcloud: 'SoundCloud',
+}
 
 const stateContext = React.createContext<StateContext>(
-  persisted.defaults.externalSources,
+  persisted.defaults.externalEmbeds,
 )
 const setContext = React.createContext<SetContext>({} as SetContext)
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('externalSources'))
+  const [state, setState] = React.useState(persisted.get('externalEmbeds'))
 
   const setStateWrapped = React.useCallback(
     (
-      source: keyof persisted.Schema['externalSources'],
-      value: 'ask' | 'always' | 'never' | 'unknown',
+      source: keyof persisted.Schema['externalEmbeds'],
+      value: 'ask' | 'show' | 'hide',
     ) => {
       setState(prev => {
-        persisted.write('externalSources', {
+        persisted.write('externalEmbeds', {
           ...prev,
           [source]: value,
         })
@@ -38,7 +48,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      setState(persisted.get('externalSources'))
+      setState(persisted.get('externalEmbeds'))
     })
   }, [setStateWrapped])
 
@@ -51,10 +61,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function useExternalSources() {
+export function useExternalEmbedsPrefs() {
   return React.useContext(stateContext)
 }
 
-export function useSetExternalSource() {
+export function useSetExternalEmbedPref() {
   return React.useContext(setContext)
 }

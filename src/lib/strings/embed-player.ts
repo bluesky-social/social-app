@@ -1,9 +1,9 @@
 import {Platform} from 'react-native'
-import {ExternalSourceType} from 'state/preferences/external-sources.tsx'
+import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs.tsx'
 
 interface EmbedPlayerParamDefaults {
   isGif?: boolean
-  source: ExternalSourceType
+  source: ExternalEmbedType
 }
 
 export type EmbedPlayerParams =
