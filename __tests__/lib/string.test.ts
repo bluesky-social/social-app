@@ -594,6 +594,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
@@ -603,36 +604,42 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
@@ -643,6 +650,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
@@ -650,24 +658,28 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
     },
     {
       type: 'giphy_gif',
+      isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
       playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
@@ -675,12 +687,14 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'tenor_gif',
+      isGif: true,
       playerUri: 'https://tenor.com/view/gifId.gif',
     },
     undefined,
     undefined,
     {
       type: 'tenor_gif',
+      isGif: true,
       playerUri: 'https://tenor.com/view/gifId.gif',
     },
   ]

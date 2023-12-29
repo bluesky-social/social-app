@@ -54,11 +54,9 @@ export const ExternalLinkEmbed = ({
           />
         </View>
       ) : undefined}
-      {(embedPlayerParams &&
-        (embedPlayerParams.type === 'giphy_gif' ||
-          embedPlayerParams.type === 'tenor_gif') && (
-          <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
-        )) ||
+      {(embedPlayerParams?.isGif && (
+        <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
+      )) ||
         (embedPlayerParams && (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ))}
@@ -81,7 +79,7 @@ export const ExternalLinkEmbed = ({
           style={[pal.text]}>
           {link.title || link.uri}
         </Text>
-        {link.description ? (
+        {!embedPlayerParams?.isGif && link.description ? (
           <Text
             type="md"
             numberOfLines={isMobile ? 4 : 2}

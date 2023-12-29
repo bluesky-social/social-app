@@ -1,23 +1,58 @@
 import {Platform} from 'react-native'
 
 export type EmbedPlayerParams =
-  | {type: 'youtube_video'; videoId: string; playerUri: string}
-  | {type: 'twitch_video'; playerUri: string}
-  | {type: 'spotify_album'; albumId: string; playerUri: string}
+  | {type: 'youtube_video'; isGif?: boolean; videoId: string; playerUri: string}
+  | {type: 'twitch_video'; isGif?: boolean; playerUri: string}
+  | {type: 'spotify_album'; isGif?: boolean; albumId: string; playerUri: string}
   | {
       type: 'spotify_playlist'
+      isGif?: boolean
+
       playlistId: string
       playerUri: string
     }
-  | {type: 'spotify_song'; songId: string; playerUri: string}
-  | {type: 'soundcloud_track'; user: string; track: string; playerUri: string}
-  | {type: 'soundcloud_set'; user: string; set: string; playerUri: string}
-  | {type: 'apple_music_playlist'; playlistId: string; playerUri: string}
-  | {type: 'apple_music_album'; albumId: string; playerUri: string}
-  | {type: 'apple_music_song'; songId: string; playerUri: string}
-  | {type: 'vimeo_video'; videoId: string; playerUri: string}
-  | {type: 'giphy_gif'; gifId: string; metaUri: string; playerUri: string}
-  | {type: 'tenor_gif'; playerUri: string}
+  | {type: 'spotify_song'; isGif?: boolean; songId: string; playerUri: string}
+  | {
+      type: 'soundcloud_track'
+      isGif?: boolean
+      user: string
+      track: string
+      playerUri: string
+    }
+  | {
+      type: 'soundcloud_set'
+      isGif?: boolean
+      user: string
+      set: string
+      playerUri: string
+    }
+  | {
+      type: 'apple_music_playlist'
+      isGif?: boolean
+      playlistId: string
+      playerUri: string
+    }
+  | {
+      type: 'apple_music_album'
+      isGif?: boolean
+      albumId: string
+      playerUri: string
+    }
+  | {
+      type: 'apple_music_song'
+      isGif?: boolean
+      songId: string
+      playerUri: string
+    }
+  | {type: 'vimeo_video'; isGif?: boolean; videoId: string; playerUri: string}
+  | {
+      type: 'giphy_gif'
+      isGif?: boolean
+      gifId: string
+      metaUri: string
+      playerUri: string
+    }
+  | {type: 'tenor_gif'; isGif?: boolean; playerUri: string}
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
 const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
@@ -210,6 +245,7 @@ export function parseEmbedPlayerFromUrl(
       if (gifId) {
         return {
           type: 'giphy_gif',
+          isGif: true,
           gifId,
           metaUri: `https://giphy.com/gifs/${gifId}`,
           playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
@@ -229,6 +265,7 @@ export function parseEmbedPlayerFromUrl(
       if (idOrFilename && gifFilenameRegex.test(idOrFilename)) {
         return {
           type: 'giphy_gif',
+          isGif: true,
           gifId: trackingOrId,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
           playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
@@ -236,6 +273,7 @@ export function parseEmbedPlayerFromUrl(
       } else if (filename && gifFilenameRegex.test(filename)) {
         return {
           type: 'giphy_gif',
+          isGif: true,
           gifId: idOrFilename,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
           playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.webp`,
@@ -253,6 +291,7 @@ export function parseEmbedPlayerFromUrl(
       const gifId = filename.split('.')[0]
       return {
         type: 'giphy_gif',
+        isGif: true,
         gifId,
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
@@ -261,6 +300,7 @@ export function parseEmbedPlayerFromUrl(
       const gifId = mediaOrFilename.split('.')[0]
       return {
         type: 'giphy_gif',
+        isGif: true,
         gifId,
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
@@ -278,6 +318,7 @@ export function parseEmbedPlayerFromUrl(
 
       return {
         type: 'tenor_gif',
+        isGif: true,
         playerUri: `${url}${!includesExt ? '.gif' : ''}`,
       }
     }
@@ -328,8 +369,8 @@ export function getGifDims(
   const scaledHeight = (originalHeight / originalWidth) * viewWidth
 
   return {
-    height: scaledHeight > 200 ? 200 : scaledHeight,
-    width: (200 / scaledHeight) * viewWidth,
+    height: scaledHeight > 250 ? 250 : scaledHeight,
+    width: (250 / scaledHeight) * viewWidth,
   }
 }
 
