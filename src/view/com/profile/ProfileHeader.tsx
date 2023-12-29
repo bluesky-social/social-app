@@ -264,7 +264,7 @@ let ProfileHeaderLoaded = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
-  }, [track, queueMute])
+  }, [track, queueMute, _])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
@@ -277,7 +277,7 @@ let ProfileHeaderLoaded = ({
         Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
-  }, [track, queueUnmute])
+  }, [track, queueUnmute, _])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')

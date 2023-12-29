@@ -209,7 +209,7 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
-  }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState])
+  }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState, _])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
@@ -231,7 +231,7 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {error: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
+  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
@@ -252,7 +252,7 @@ function ListItem({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {error: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
+  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
 
   return (
     <Pressable

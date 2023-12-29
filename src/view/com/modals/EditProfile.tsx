@@ -142,6 +142,7 @@ export function Component({
     newUserAvatar,
     newUserBanner,
     setImageError,
+    _,
   ])
 
   return (

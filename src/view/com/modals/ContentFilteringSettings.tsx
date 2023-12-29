@@ -122,23 +122,27 @@ function AdultContentEnabledPref() {
         enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
       })
     } catch (e) {
-      Toast.show(_(msg`There was an issue syncing your preferences with the server`))
+      Toast.show(
+        _(msg`There was an issue syncing your preferences with the server`),
+      )
       logger.error('Failed to update preferences with server', {error: e})
     }
-  }, [variables, preferences, mutate])
+  }, [variables, preferences, mutate, _])
 
   return (
     <View style={s.mb10}>
       {isIOS ? (
         preferences?.adultContentEnabled ? null : (
           <Text type="md" style={pal.textLight}>
-            Adult content can only be enabled via the Web at{' '}
-            <TextLink
-              style={pal.link}
-              href="https://bsky.app"
-              text="bsky.app"
-            />
-            .
+            <Trans>
+              Adult content can only be enabled via the Web at{' '}
+              <TextLink
+                style={pal.link}
+                href="https://bsky.app"
+                text="bsky.app"
+              />
+              .
+            </Trans>
           </Text>
         )
       ) : typeof preferences?.birthDate === 'undefined' ? (

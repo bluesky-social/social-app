@@ -59,7 +59,7 @@ function InnerApp() {
 
     const account = persisted.get('session').currentAccount
     resumeSession(account)
-  }, [resumeSession])
+  }, [resumeSession, _])
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>

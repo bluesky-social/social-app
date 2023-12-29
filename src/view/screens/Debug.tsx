@@ -184,7 +184,9 @@ function NotifsView() {
     Toast.show(_(msg`The task has been completed`))
   }
   const triggerToast2 = () => {
-    Toast.show(_(msg`The task has been completed successfully and with no problems`))
+    Toast.show(
+      _(msg`The task has been completed successfully and with no problems`),
+    )
   }
   return (
     <View style={s.p10}>

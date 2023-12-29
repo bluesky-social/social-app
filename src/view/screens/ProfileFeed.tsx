@@ -220,7 +220,7 @@ export function ProfileFeedScreenInner({
       )
       logger.error('Failed up update feeds', {error: err})
     }
-  }, [feedInfo, isSaved, saveFeed, removeFeed, resetSaveFeed, resetRemoveFeed])
+  }, [feedInfo, isSaved, saveFeed, removeFeed, resetSaveFeed, resetRemoveFeed, _])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
@@ -237,7 +237,7 @@ export function ProfileFeedScreenInner({
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
-  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed])
+  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
@@ -551,7 +551,7 @@ function AboutSection({
       )
       logger.error('Failed up toggle like', {error: err})
     }
-  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track])
+  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
 
   return (
     <ScrollView

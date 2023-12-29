@@ -29,7 +29,7 @@ msgstr "{0, plural, one {초대 코드 #개 사용 가능} other {초대 코드 
 msgid "{0}"
 msgstr "{0}"
 
-#: src/view/com/modals/CreateOrEditList.tsx:176
+#: src/view/com/modals/CreateOrEditList.tsx:177
 msgid "{0} {purposeLabel} List"
 msgstr "{purposeLabel} 리스트 {0}"
 
@@ -183,11 +183,11 @@ msgid "Add alt text"
 msgstr "대체 텍스트 추가"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
-#: src/view/com/modals/report/Modal.tsx:192
+#: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details"
 msgstr "상세 내용 추가"
 
-#: src/view/com/modals/report/Modal.tsx:195
+#: src/view/com/modals/report/Modal.tsx:197
 msgid "Add details to report"
 msgstr "신고 상세 내용 추가"
 
@@ -231,6 +231,10 @@ msgstr "답글이 피드에 표시되기 위해 필요한 좋아요 표시 수�
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
 msgstr "성인 콘텐츠"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:137
+msgid "Adult content can only be enabled via the Web at <0/>."
+msgstr "성인 콘텐츠는 <0/>에서 웹을 통해서만 활성화할 수 있습니다."
 
 #: src/view/screens/Settings.tsx:570
 msgid "Advanced"
@@ -297,7 +301,7 @@ msgstr "앱 비밀번호"
 msgid "App Passwords"
 msgstr "앱 비밀번호"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:236
+#: src/view/com/util/forms/PostDropdownBtn.tsx:238
 msgid "Appeal content warning"
 msgstr "콘텐츠 경고 이의신청"
 
@@ -337,7 +341,7 @@ msgstr "이 초안을 삭제하시겠습니까?"
 msgid "Are you sure?"
 msgstr "확실합니까?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:219
+#: src/view/com/util/forms/PostDropdownBtn.tsx:221
 msgid "Are you sure? This cannot be undone."
 msgstr "확실합니까? 취소할 수 없습니다."
 
@@ -483,13 +487,13 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/view/com/modals/ChangeHandle.tsx:153
 #: src/view/com/modals/Confirm.tsx:88
 #: src/view/com/modals/Confirm.tsx:91
-#: src/view/com/modals/CreateOrEditList.tsx:267
-#: src/view/com/modals/CreateOrEditList.tsx:272
+#: src/view/com/modals/CreateOrEditList.tsx:268
+#: src/view/com/modals/CreateOrEditList.tsx:273
 #: src/view/com/modals/crop-image/CropImage.web.tsx:137
 #: src/view/com/modals/DeleteAccount.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:225
 #: src/view/com/modals/EditImage.tsx:323
-#: src/view/com/modals/EditProfile.tsx:248
+#: src/view/com/modals/EditProfile.tsx:249
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/LinkWarning.tsx:87
 #: src/view/com/modals/Repost.tsx:73
@@ -516,7 +520,7 @@ msgstr "핸들 변경 취소"
 msgid "Cancel image crop"
 msgstr "이미지 자르기 취소"
 
-#: src/view/com/modals/EditProfile.tsx:243
+#: src/view/com/modals/EditProfile.tsx:244
 msgid "Cancel profile editing"
 msgstr "프로필 편집 취소"
 
@@ -710,7 +714,7 @@ msgstr "빌드 버전 클립보드에 복사됨"
 #: src/view/com/modals/AddAppPasswords.tsx:75
 #: src/view/com/modals/ChangeHandle.tsx:325
 #: src/view/com/modals/InviteCodes.tsx:152
-#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+#: src/view/com/util/forms/PostDropdownBtn.tsx:100
 msgid "Copied to clipboard"
 msgstr "클립보드에 복사됨"
 
@@ -726,7 +730,7 @@ msgstr "{0} 복사"
 msgid "Copy link to list"
 msgstr "리스트 링크 복사"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+#: src/view/com/util/forms/PostDropdownBtn.tsx:141
 msgid "Copy link to post"
 msgstr "게시물 링크 복사"
 
@@ -734,7 +738,7 @@ msgstr "게시물 링크 복사"
 msgid "Copy link to profile"
 msgstr "프로필 링크 복사"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:125
+#: src/view/com/util/forms/PostDropdownBtn.tsx:127
 msgid "Copy post text"
 msgstr "게시물 텍스트 복사"
 
@@ -812,11 +816,11 @@ msgstr "내 계정 삭제"
 msgid "Delete my account…"
 msgstr "내 계정 삭제…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:214
+#: src/view/com/util/forms/PostDropdownBtn.tsx:216
 msgid "Delete post"
 msgstr "게시물 삭제"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:218
+#: src/view/com/util/forms/PostDropdownBtn.tsx:220
 msgid "Delete this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
@@ -824,10 +828,10 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 msgid "Deleted post."
 msgstr "삭제된 게시물."
 
-#: src/view/com/modals/CreateOrEditList.tsx:218
-#: src/view/com/modals/CreateOrEditList.tsx:234
-#: src/view/com/modals/EditProfile.tsx:197
-#: src/view/com/modals/EditProfile.tsx:209
+#: src/view/com/modals/CreateOrEditList.tsx:219
+#: src/view/com/modals/CreateOrEditList.tsx:235
+#: src/view/com/modals/EditProfile.tsx:198
+#: src/view/com/modals/EditProfile.tsx:210
 msgid "Description"
 msgstr "설명"
 
@@ -863,11 +867,11 @@ msgstr "새로운 맞춤 피드 찾아보기"
 msgid "Discover new feeds"
 msgstr "새 피드 발견하기"
 
-#: src/view/com/modals/EditProfile.tsx:191
+#: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
 msgstr "표시 이름"
 
-#: src/view/com/modals/EditProfile.tsx:179
+#: src/view/com/modals/EditProfile.tsx:180
 msgid "Display Name"
 msgstr "표시 이름"
 
@@ -918,7 +922,7 @@ msgstr "완료{extraText}"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
 
-#: src/view/com/modals/CreateOrEditList.tsx:177
+#: src/view/com/modals/CreateOrEditList.tsx:178
 msgid "Edit"
 msgstr "편집"
 
@@ -936,7 +940,7 @@ msgstr "리스트 상세 편집"
 msgid "Edit My Feeds"
 msgstr "내 피드 편집"
 
-#: src/view/com/modals/EditProfile.tsx:151
+#: src/view/com/modals/EditProfile.tsx:152
 msgid "Edit my profile"
 msgstr "내 프로필 편집"
 
@@ -980,7 +984,7 @@ msgstr "이메일 확인됨"
 msgid "Email:"
 msgstr "이메일:"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:154
+#: src/view/com/modals/ContentFilteringSettings.tsx:158
 msgid "Enable Adult Content"
 msgstr "성인 콘텐츠 활성화"
 
@@ -1229,18 +1233,18 @@ msgstr "도움말"
 msgid "Here is your app password."
 msgstr "앱 비밀번호입니다."
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:207
-#: src/view/com/modals/ContentFilteringSettings.tsx:234
+#: src/view/com/modals/ContentFilteringSettings.tsx:211
+#: src/view/com/modals/ContentFilteringSettings.tsx:238
 #: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "숨기기"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+#: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "Hide post"
 msgstr "게시물 숨기기"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:177
+#: src/view/com/util/forms/PostDropdownBtn.tsx:179
 msgid "Hide this post?"
 msgstr "이 게시물을 숨기시겠습니까?"
 
@@ -1485,7 +1489,7 @@ msgstr "좋아요"
 #~ msgid "Limit the visibility of my account to logged-out users"
 #~ msgstr "내 계정의 공개 범위를 로그아웃한 사용자로 제한"
 
-#: src/view/com/modals/CreateOrEditList.tsx:186
+#: src/view/com/modals/CreateOrEditList.tsx:187
 msgid "List Avatar"
 msgstr "리스트 아바타"
 
@@ -1501,7 +1505,7 @@ msgstr "리스트 삭제됨"
 msgid "List muted"
 msgstr "리스트 뮤트됨"
 
-#: src/view/com/modals/CreateOrEditList.tsx:199
+#: src/view/com/modals/CreateOrEditList.tsx:200
 msgid "List Name"
 msgstr "리스트 이름"
 
@@ -1633,7 +1637,7 @@ msgstr "리스트 뮤트"
 msgid "Mute these accounts?"
 msgstr "이 계정들을 뮤트하시겠습니까?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:157
+#: src/view/com/util/forms/PostDropdownBtn.tsx:159
 msgid "Mute thread"
 msgstr "스레드 뮤트"
 
@@ -1674,7 +1678,7 @@ msgid "My Saved Feeds"
 msgstr "내 저장된 피드"
 
 #: src/view/com/modals/AddAppPasswords.tsx:181
-#: src/view/com/modals/CreateOrEditList.tsx:211
+#: src/view/com/modals/CreateOrEditList.tsx:212
 msgid "Name"
 msgstr "이름"
 
@@ -1687,7 +1691,7 @@ msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 않습니다."
 msgid "Nevermind, create a handle for me"
 msgstr "취소하고 나만의 핸들 만들기"
 
-#: src/view/com/modals/CreateOrEditList.tsx:177
+#: src/view/com/modals/CreateOrEditList.tsx:178
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -2182,7 +2186,7 @@ msgstr "답글"
 msgid "Reply Filters"
 msgstr "답글 필터"
 
-#: src/view/com/modals/report/Modal.tsx:167
+#: src/view/com/modals/report/Modal.tsx:169
 msgid "Report {collectionName}"
 msgstr "{collectionName} 신고"
 
@@ -2199,7 +2203,7 @@ msgid "Report List"
 msgstr "리스트 신고"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:196
+#: src/view/com/util/forms/PostDropdownBtn.tsx:198
 msgid "Report post"
 msgstr "포스트 신고"
 
@@ -2286,9 +2290,9 @@ msgstr "다시 시도"
 #: src/view/com/modals/BirthDateSettings.tsx:94
 #: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
-#: src/view/com/modals/CreateOrEditList.tsx:249
-#: src/view/com/modals/CreateOrEditList.tsx:257
-#: src/view/com/modals/EditProfile.tsx:223
+#: src/view/com/modals/CreateOrEditList.tsx:250
+#: src/view/com/modals/CreateOrEditList.tsx:258
+#: src/view/com/modals/EditProfile.tsx:224
 #: src/view/screens/ProfileFeed.tsx:346
 msgid "Save"
 msgstr "저장"
@@ -2301,7 +2305,7 @@ msgstr "대체 텍스트 저장"
 #~ msgid "Save changes"
 #~ msgstr "변경 사항 저장"
 
-#: src/view/com/modals/EditProfile.tsx:231
+#: src/view/com/modals/EditProfile.tsx:232
 msgid "Save Changes"
 msgstr "변경 사항 저장"
 
@@ -2443,7 +2447,7 @@ msgid "Sexually Suggestive"
 msgstr "성적 암시"
 
 #: src/view/com/profile/ProfileHeader.tsx:342
-#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+#: src/view/com/util/forms/PostDropdownBtn.tsx:141
 #: src/view/screens/ProfileList.tsx:393
 msgid "Share"
 msgstr "공유"
@@ -2456,7 +2460,7 @@ msgstr "피드 공유"
 #~ msgid "Share link"
 #~ msgstr "링크 공유"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:249
+#: src/view/com/modals/ContentFilteringSettings.tsx:253
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/screens/Settings.tsx:317
 msgid "Show"
@@ -2674,7 +2678,7 @@ msgstr "서비스 이용약관"
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
 
-#: src/view/com/modals/report/Modal.tsx:81
+#: src/view/com/modals/report/Modal.tsx:82
 msgid "Thank you for your report! We'll look into it promptly."
 msgstr "신고해 주셔서 감사합니다! 즉시 검토하겠습니다."
 
@@ -2710,7 +2714,7 @@ msgstr "지원 양식이 이동되었습니다. 도움이 필요하다면 {HELP_
 msgid "The task has been completed"
 msgstr "작업을 완료했습니다."
 
-#: src/view/screens/Debug.tsx:187
+#: src/view/screens/Debug.tsx:188
 msgid "The task has been completed successfully and with no problems"
 msgstr "작업을 문제 없이 성공적으로 완료했습니다."
 
@@ -2738,11 +2742,11 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다."
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:67
 #: src/view/com/feeds/FeedSourceCard.tsx:113
 #: src/view/com/feeds/FeedSourceCard.tsx:127
-#: src/view/com/feeds/FeedSourceCard.tsx:180
+#: src/view/com/feeds/FeedSourceCard.tsx:181
 msgid "There was an issue contacting your server"
 msgstr "서버에 연결하는 동안 문제가 발생했습니다."
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:125
+#: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
 msgstr "설정을 서버와 동기화하는 동안 문제가 발생했습니다."
 
@@ -2832,7 +2836,7 @@ msgstr "이 도메인에 레코드가 추가됩니다:"
 msgid "This warning is only available for posts with media attached."
 msgstr "이 경고는 미디어가 첨부된 게시물에만 사용할 수 있습니다."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:178
+#: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "This will hide this post from your feeds."
 msgstr "피드에서 이 게시물을 숨깁니다."
 
@@ -2855,7 +2859,7 @@ msgstr "변형"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:705
 #: src/view/com/post-thread/PostThreadItem.tsx:707
-#: src/view/com/util/forms/PostDropdownBtn.tsx:111
+#: src/view/com/util/forms/PostDropdownBtn.tsx:113
 msgid "Translate"
 msgstr "번역"
 
@@ -2913,7 +2917,7 @@ msgstr "언뮤트"
 msgid "Unmute Account"
 msgstr "계정 언뮤트"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:157
+#: src/view/com/util/forms/PostDropdownBtn.tsx:159
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
@@ -3044,7 +3048,7 @@ msgstr "폭력 및 유혈"
 msgid "Visit Site"
 msgstr "사이트 방문"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:242
+#: src/view/com/modals/ContentFilteringSettings.tsx:246
 msgid "Warn"
 msgstr "경고"
 
@@ -3076,7 +3080,7 @@ msgstr "죄송합니다! 페이지를 찾을 수 없습니다."
 msgid "Welcome to <0>Bluesky</0>"
 msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
 
-#: src/view/com/modals/report/Modal.tsx:170
+#: src/view/com/modals/report/Modal.tsx:172
 msgid "What is the issue with this {collectionName}?"
 msgstr "이 {collectionName}에 어떤 문제가 있습니까?"
 
@@ -3178,15 +3182,15 @@ msgstr "아직 앱 비밀번호를 생성하지 않았습니다. 아래 버튼�
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트하려면 해당 계정의 프로필로 이동하여 계정 메뉴에서 \"계정 뮤트\"를 선택하세요."
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:162
+#: src/view/com/modals/ContentFilteringSettings.tsx:166
 msgid "You must be 18 or older to enable adult content."
 msgstr "성인 콘텐츠를 활성화하려면 18세 이상이어야 합니다."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:87
+#: src/view/com/util/forms/PostDropdownBtn.tsx:88
 msgid "You will no longer receive notifications for this thread"
 msgstr "이 스레드에 대한 알림을 더 이상 받지 않습니다."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:89
+#: src/view/com/util/forms/PostDropdownBtn.tsx:91
 msgid "You will now receive notifications for this thread"
 msgstr "이제 이 스레드에 대한 알림을 받습니다."
 

@@ -83,7 +83,7 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
         Toast.show(_(msg`Failed to save image: ${String(e)}`))
       }
     },
-    [permissionResponse, requestPermission],
+    [permissionResponse, requestPermission, _],
   )
 
   const lightbox = activeLightbox

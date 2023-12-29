@@ -21,7 +21,7 @@ msgstr "{0, plural, other {# 個の招待コードが利用可能}}"
 msgid "{0}"
 msgstr "{0}"
 
-#: src/view/com/modals/CreateOrEditList.tsx:176
+#: src/view/com/modals/CreateOrEditList.tsx:177
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} リスト"
 
@@ -163,11 +163,11 @@ msgid "Add alt text"
 msgstr "ALTテキストを追加"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
-#: src/view/com/modals/report/Modal.tsx:192
+#: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details"
 msgstr "詳細を追加"
 
-#: src/view/com/modals/report/Modal.tsx:195
+#: src/view/com/modals/report/Modal.tsx:197
 msgid "Add details to report"
 msgstr "レポートに詳細を追加"
 
@@ -211,6 +211,10 @@ msgstr "返信がフィードに表示されるために必要な「いいね」
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
 msgstr "成人向けコンテンツ"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:137
+msgid "Adult content can only be enabled via the Web at <0/>."
+msgstr ""
 
 #: src/view/screens/Settings.tsx:570
 msgid "Advanced"
@@ -277,7 +281,7 @@ msgstr "アプリパスワード"
 msgid "App Passwords"
 msgstr "アプリパスワード"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:236
+#: src/view/com/util/forms/PostDropdownBtn.tsx:238
 msgid "Appeal content warning"
 msgstr ""
 
@@ -313,7 +317,7 @@ msgstr "本当にこの下書きを破棄しますか？"
 msgid "Are you sure?"
 msgstr "本当によろしいですか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:219
+#: src/view/com/util/forms/PostDropdownBtn.tsx:221
 msgid "Are you sure? This cannot be undone."
 msgstr "本当によろしいですか？これは元に戻せません。"
 
@@ -455,13 +459,13 @@ msgstr "文字、数字、スペース、ハイフン、およびアンダース
 #: src/view/com/modals/ChangeHandle.tsx:153
 #: src/view/com/modals/Confirm.tsx:88
 #: src/view/com/modals/Confirm.tsx:91
-#: src/view/com/modals/CreateOrEditList.tsx:267
-#: src/view/com/modals/CreateOrEditList.tsx:272
+#: src/view/com/modals/CreateOrEditList.tsx:268
+#: src/view/com/modals/CreateOrEditList.tsx:273
 #: src/view/com/modals/crop-image/CropImage.web.tsx:137
 #: src/view/com/modals/DeleteAccount.tsx:152
 #: src/view/com/modals/DeleteAccount.tsx:225
 #: src/view/com/modals/EditImage.tsx:323
-#: src/view/com/modals/EditProfile.tsx:248
+#: src/view/com/modals/EditProfile.tsx:249
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/LinkWarning.tsx:87
 #: src/view/com/modals/Repost.tsx:73
@@ -488,7 +492,7 @@ msgstr "ハンドルの変更をキャンセル"
 msgid "Cancel image crop"
 msgstr "画像の切り抜きをキャンセル"
 
-#: src/view/com/modals/EditProfile.tsx:243
+#: src/view/com/modals/EditProfile.tsx:244
 msgid "Cancel profile editing"
 msgstr "プロフィールの編集をキャンセル"
 
@@ -678,7 +682,7 @@ msgstr ""
 #: src/view/com/modals/AddAppPasswords.tsx:75
 #: src/view/com/modals/ChangeHandle.tsx:325
 #: src/view/com/modals/InviteCodes.tsx:152
-#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+#: src/view/com/util/forms/PostDropdownBtn.tsx:100
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -694,7 +698,7 @@ msgstr ""
 msgid "Copy link to list"
 msgstr "リストへのリンクをコピー"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+#: src/view/com/util/forms/PostDropdownBtn.tsx:141
 msgid "Copy link to post"
 msgstr "投稿へのリンクをコピー"
 
@@ -702,7 +706,7 @@ msgstr "投稿へのリンクをコピー"
 msgid "Copy link to profile"
 msgstr "プロフィールへのリンクをコピー"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:125
+#: src/view/com/util/forms/PostDropdownBtn.tsx:127
 msgid "Copy post text"
 msgstr "投稿のテキストをコピー"
 
@@ -780,11 +784,11 @@ msgstr "マイアカウントを削除"
 msgid "Delete my account…"
 msgstr "マイアカウントを削除…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:214
+#: src/view/com/util/forms/PostDropdownBtn.tsx:216
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:218
+#: src/view/com/util/forms/PostDropdownBtn.tsx:220
 msgid "Delete this post?"
 msgstr "この投稿を削除しますか？"
 
@@ -792,10 +796,10 @@ msgstr "この投稿を削除しますか？"
 msgid "Deleted post."
 msgstr "投稿を削除しました。"
 
-#: src/view/com/modals/CreateOrEditList.tsx:218
-#: src/view/com/modals/CreateOrEditList.tsx:234
-#: src/view/com/modals/EditProfile.tsx:197
-#: src/view/com/modals/EditProfile.tsx:209
+#: src/view/com/modals/CreateOrEditList.tsx:219
+#: src/view/com/modals/CreateOrEditList.tsx:235
+#: src/view/com/modals/EditProfile.tsx:198
+#: src/view/com/modals/EditProfile.tsx:210
 msgid "Description"
 msgstr "説明"
 
@@ -831,11 +835,11 @@ msgstr ""
 msgid "Discover new feeds"
 msgstr "新しいフィードを見つける"
 
-#: src/view/com/modals/EditProfile.tsx:191
+#: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
 msgstr "表示名"
 
-#: src/view/com/modals/EditProfile.tsx:179
+#: src/view/com/modals/EditProfile.tsx:180
 msgid "Display Name"
 msgstr "表示名"
 
@@ -886,7 +890,7 @@ msgstr "完了{extraText}"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一度ずつ動作します。定期的に招待コードをお送りします。"
 
-#: src/view/com/modals/CreateOrEditList.tsx:177
+#: src/view/com/modals/CreateOrEditList.tsx:178
 msgid "Edit"
 msgstr ""
 
@@ -904,7 +908,7 @@ msgstr "リストの詳細を編集"
 msgid "Edit My Feeds"
 msgstr "マイフィードを編集"
 
-#: src/view/com/modals/EditProfile.tsx:151
+#: src/view/com/modals/EditProfile.tsx:152
 msgid "Edit my profile"
 msgstr "マイプロフィールを編集"
 
@@ -948,7 +952,7 @@ msgstr ""
 msgid "Email:"
 msgstr "メールアドレス："
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:154
+#: src/view/com/modals/ContentFilteringSettings.tsx:158
 msgid "Enable Adult Content"
 msgstr ""
 
@@ -1193,18 +1197,18 @@ msgstr "ヘルプ"
 msgid "Here is your app password."
 msgstr "アプリパスワードをお知らせします。"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:207
-#: src/view/com/modals/ContentFilteringSettings.tsx:234
+#: src/view/com/modals/ContentFilteringSettings.tsx:211
+#: src/view/com/modals/ContentFilteringSettings.tsx:238
 #: src/view/com/notifications/FeedItem.tsx:327
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "非表示"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+#: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "Hide post"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:177
+#: src/view/com/util/forms/PostDropdownBtn.tsx:179
 msgid "Hide this post?"
 msgstr ""
 
@@ -1432,7 +1436,7 @@ msgstr "いいね"
 #~ msgid "Limit the visibility of my account to logged-out users"
 #~ msgstr "ログアウトしたユーザーに対して私のアカウントの閲覧を制限"
 
-#: src/view/com/modals/CreateOrEditList.tsx:186
+#: src/view/com/modals/CreateOrEditList.tsx:187
 msgid "List Avatar"
 msgstr "リストのアバター"
 
@@ -1448,7 +1452,7 @@ msgstr ""
 msgid "List muted"
 msgstr ""
 
-#: src/view/com/modals/CreateOrEditList.tsx:199
+#: src/view/com/modals/CreateOrEditList.tsx:200
 msgid "List Name"
 msgstr "リストの名前"
 
@@ -1576,7 +1580,7 @@ msgstr "リストをミュート"
 msgid "Mute these accounts?"
 msgstr "これらのアカウントをミュートしますか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:157
+#: src/view/com/util/forms/PostDropdownBtn.tsx:159
 msgid "Mute thread"
 msgstr "スレッドをミュート"
 
@@ -1613,7 +1617,7 @@ msgid "My Saved Feeds"
 msgstr "保存されたフィード"
 
 #: src/view/com/modals/AddAppPasswords.tsx:181
-#: src/view/com/modals/CreateOrEditList.tsx:211
+#: src/view/com/modals/CreateOrEditList.tsx:212
 msgid "Name"
 msgstr "名前"
 
@@ -1626,7 +1630,7 @@ msgstr "フォロワーやデータへのアクセスを失うことはありま
 msgid "Nevermind, create a handle for me"
 msgstr ""
 
-#: src/view/com/modals/CreateOrEditList.tsx:177
+#: src/view/com/modals/CreateOrEditList.tsx:178
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -2103,7 +2107,7 @@ msgstr ""
 msgid "Reply Filters"
 msgstr "返信のフィルター"
 
-#: src/view/com/modals/report/Modal.tsx:167
+#: src/view/com/modals/report/Modal.tsx:169
 msgid "Report {collectionName}"
 msgstr "{collectionName}を報告"
 
@@ -2120,7 +2124,7 @@ msgid "Report List"
 msgstr "リストを報告"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:196
+#: src/view/com/util/forms/PostDropdownBtn.tsx:198
 msgid "Report post"
 msgstr "投稿を報告"
 
@@ -2199,9 +2203,9 @@ msgstr "再試行"
 #: src/view/com/modals/BirthDateSettings.tsx:94
 #: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
-#: src/view/com/modals/CreateOrEditList.tsx:249
-#: src/view/com/modals/CreateOrEditList.tsx:257
-#: src/view/com/modals/EditProfile.tsx:223
+#: src/view/com/modals/CreateOrEditList.tsx:250
+#: src/view/com/modals/CreateOrEditList.tsx:258
+#: src/view/com/modals/EditProfile.tsx:224
 #: src/view/screens/ProfileFeed.tsx:346
 msgid "Save"
 msgstr "保存"
@@ -2210,7 +2214,7 @@ msgstr "保存"
 msgid "Save alt text"
 msgstr "ALTテキストを保存"
 
-#: src/view/com/modals/EditProfile.tsx:231
+#: src/view/com/modals/EditProfile.tsx:232
 msgid "Save Changes"
 msgstr "変更を保存"
 
@@ -2352,7 +2356,7 @@ msgid "Sexually Suggestive"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:342
-#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+#: src/view/com/util/forms/PostDropdownBtn.tsx:141
 #: src/view/screens/ProfileList.tsx:393
 msgid "Share"
 msgstr "共有"
@@ -2361,7 +2365,7 @@ msgstr "共有"
 msgid "Share feed"
 msgstr "フィードを共有"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:249
+#: src/view/com/modals/ContentFilteringSettings.tsx:253
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/screens/Settings.tsx:317
 msgid "Show"
@@ -2579,7 +2583,7 @@ msgstr "利用規約"
 msgid "Text input field"
 msgstr "テキストの入力フィールド"
 
-#: src/view/com/modals/report/Modal.tsx:81
+#: src/view/com/modals/report/Modal.tsx:82
 msgid "Thank you for your report! We'll look into it promptly."
 msgstr ""
 
@@ -2615,7 +2619,7 @@ msgstr "サポートフォームが移動しました。サポートが必要な
 msgid "The task has been completed"
 msgstr ""
 
-#: src/view/screens/Debug.tsx:187
+#: src/view/screens/Debug.tsx:188
 msgid "The task has been completed successfully and with no problems"
 msgstr ""
 
@@ -2643,11 +2647,11 @@ msgstr ""
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:67
 #: src/view/com/feeds/FeedSourceCard.tsx:113
 #: src/view/com/feeds/FeedSourceCard.tsx:127
-#: src/view/com/feeds/FeedSourceCard.tsx:180
+#: src/view/com/feeds/FeedSourceCard.tsx:181
 msgid "There was an issue contacting your server"
 msgstr ""
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:125
+#: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
 msgstr ""
 
@@ -2737,7 +2741,7 @@ msgstr ""
 msgid "This warning is only available for posts with media attached."
 msgstr "この警告は、メディアが接続されている投稿にのみ使用できます。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:178
+#: src/view/com/util/forms/PostDropdownBtn.tsx:180
 msgid "This will hide this post from your feeds."
 msgstr ""
 
@@ -2760,7 +2764,7 @@ msgstr "変換"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:705
 #: src/view/com/post-thread/PostThreadItem.tsx:707
-#: src/view/com/util/forms/PostDropdownBtn.tsx:111
+#: src/view/com/util/forms/PostDropdownBtn.tsx:113
 msgid "Translate"
 msgstr "翻訳"
 
@@ -2818,7 +2822,7 @@ msgstr ""
 msgid "Unmute Account"
 msgstr "アカウントのミュートを解除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:157
+#: src/view/com/util/forms/PostDropdownBtn.tsx:159
 msgid "Unmute thread"
 msgstr "スレッドのミュートを解除"
 
@@ -2945,7 +2949,7 @@ msgstr ""
 msgid "Visit Site"
 msgstr "サイトへアクセス"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:242
+#: src/view/com/modals/ContentFilteringSettings.tsx:246
 msgid "Warn"
 msgstr ""
 
@@ -2969,7 +2973,7 @@ msgstr "大変申し訳ありません！お探しのページが見つかりま
 msgid "Welcome to <0>Bluesky</0>"
 msgstr "<0>Bluesky</0>へようこそ"
 
-#: src/view/com/modals/report/Modal.tsx:170
+#: src/view/com/modals/report/Modal.tsx:172
 msgid "What is the issue with this {collectionName}?"
 msgstr "この{collectionName}の問題は何ですか？"
 
@@ -3067,15 +3071,15 @@ msgstr "アプリパスワードはまだ作成されていません。下のボ
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "ミュートしているアカウントはまだありません。アカウントをミュートするには、プロフィールに移動し、アカウントメニューから「アカウントをミュート」を選択します。"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:162
+#: src/view/com/modals/ContentFilteringSettings.tsx:166
 msgid "You must be 18 or older to enable adult content."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:87
+#: src/view/com/util/forms/PostDropdownBtn.tsx:88
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:89
+#: src/view/com/util/forms/PostDropdownBtn.tsx:91
 msgid "You will now receive notifications for this thread"
 msgstr ""
 

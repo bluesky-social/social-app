@@ -183,7 +183,7 @@ function SuggestedFollow({
         Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
-  }, [queueFollow, track])
+  }, [queueFollow, track, _])
 
   const onPressUnfollow = React.useCallback(async () => {
     try {
@@ -193,7 +193,7 @@ function SuggestedFollow({
         Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
-  }, [queueUnfollow])
+  }, [queueUnfollow, _])
 
   if (!moderationOpts) {
     return null

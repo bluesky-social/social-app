@@ -160,6 +160,7 @@ export function Component({
     list,
     listMetadataMutation,
     listCreateMutation,
+    _,
   ])
 
   return (

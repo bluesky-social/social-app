@@ -78,20 +78,22 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
-  }, [postUri, postDeleteMutation])
+  }, [postUri, postDeleteMutation, _])
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
       const muted = toggleThreadMute(rootUri)
       if (muted) {
-        Toast.show(_(msg`You will no longer receive notifications for this thread`))
+        Toast.show(
+          _(msg`You will no longer receive notifications for this thread`),
+        )
       } else {
         Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [rootUri, toggleThreadMute])
+  }, [rootUri, toggleThreadMute, _])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')

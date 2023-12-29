@@ -107,7 +107,7 @@ export const ChooseAccountForm = ({
         onSelectAccount(account)
       }
     },
-    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut],
+    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut, _],
   )
 
   return (

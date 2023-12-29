@@ -263,7 +263,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
-  }, [list.uri, isPinned, pinFeed, unpinFeed])
+  }, [list.uri, isPinned, pinFeed, unpinFeed, _])
 
   const onSubscribeMute = useCallback(() => {
     openModal({
@@ -304,7 +304,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         ),
       )
     }
-  }, [list, listMuteMutation, track])
+  }, [list, listMuteMutation, track, _])
 
   const onSubscribeBlock = useCallback(() => {
     openModal({
@@ -345,7 +345,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         ),
       )
     }
-  }, [list, listBlockMutation, track])
+  }, [list, listBlockMutation, track, _])
 
   const onPressEdit = useCallback(() => {
     openModal({

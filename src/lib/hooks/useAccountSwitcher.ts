@@ -54,6 +54,7 @@ export function useAccountSwitcher() {
       selectAccount,
       closeAllActiveElements,
       requestSwitchToAccount,
+      _,
     ],
   )
 

@@ -177,7 +177,9 @@ export function FeedSourceCardLoaded({
                     // await item.unsave()
                     Toast.show(_(msg`Removed from my feeds`))
                   } catch (e) {
-                    Toast.show(_(msg`There was an issue contacting your server`))
+                    Toast.show(
+                      _(msg`There was an issue contacting your server`),
+                    )
                     logger.error('Failed to unsave feed', {error: e})
                   }
                 },

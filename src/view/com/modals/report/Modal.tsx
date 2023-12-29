@@ -78,7 +78,9 @@ export function Component(content: ReportComponentProps) {
         },
         reason: details,
       })
-      Toast.show(_(msg`Thank you for your report! We'll look into it promptly.`))
+      Toast.show(
+        _(msg`Thank you for your report! We'll look into it promptly.`),
+      )
 
       closeModal()
       return

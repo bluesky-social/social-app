@@ -227,14 +227,14 @@ export function SettingsScreen({}: Props) {
   const onPressResetOnboarding = React.useCallback(async () => {
     onboardingDispatch({type: 'start'})
     Toast.show(_(msg`Onboarding reset`))
-  }, [onboardingDispatch])
+  }, [onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
     Clipboard.setString(
       `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
-  }, [])
+  }, [_])
 
   const openHomeFeedPreferences = React.useCallback(() => {
     navigation.navigate('PreferencesHomeFeed')
@@ -267,11 +267,11 @@ export function SettingsScreen({}: Props) {
   const clearAllStorage = React.useCallback(async () => {
     await clearStorage()
     Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
-  }, [])
+  }, [_])
   const clearAllLegacyStorage = React.useCallback(async () => {
     await clearLegacyStorage()
     Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
-  }, [])
+  }, [_])
 
   return (
     <View style={[s.hContentRegion]} testID="settingsScreen">
