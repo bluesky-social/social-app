@@ -50,8 +50,8 @@ export function EmojiPicker({close}: {close: () => void}) {
     textInputWebEmitter.emit('emoji-inserted', emoji)
     close()
   }
-  const reducedPadding = useMediaQuery({query: '(max-height: 750px)'})
-  const noPadding = useMediaQuery({query: '(max-height: 550px)'})
+  const reducedMargin = useMediaQuery({query: '(max-height: 750px)'})
+  const noMargin = useMediaQuery({query: '(max-height: 550px)'})
   const noPicker = useMediaQuery({query: '(max-height: 350px)'})
 
   return (
@@ -67,7 +67,7 @@ export function EmojiPicker({close}: {close: () => void}) {
             style={[
               styles.picker,
               {
-                paddingTop: noPadding ? 0 : reducedPadding ? 150 : 325,
+                marginTop: noMargin ? 0 : reducedMargin ? 150 : 325,
                 display: noPicker ? 'none' : 'flex',
               },
             ]}>
