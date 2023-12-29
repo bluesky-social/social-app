@@ -234,7 +234,7 @@ let ProfileHeaderLoaded = ({
 
   const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
-    shareUrl(toShareUrl(makeProfileLink(profile)))
+    ShareUrl(toShareUrl(makeProfileLink(profile)))
   }, [track, profile])
 
   const onPressAddRemoveLists = React.useCallback(() => {

@@ -139,7 +139,7 @@ let PostDropdownBtn = ({
       label: isWeb ? _(msg`Copy link to post`) : _(msg`Share`),
       onPress() {
         const url = toShareUrl(href)
-        shareUrl(url)
+        ShareUrl(url)
       },
       testID: 'postDropdownShareBtn',
       icon: {

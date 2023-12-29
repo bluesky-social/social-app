@@ -374,7 +374,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
 
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
-    shareUrl(url)
+    ShareUrl(url)
     track('Lists:Share')
   }, [list, rkey, track])
 

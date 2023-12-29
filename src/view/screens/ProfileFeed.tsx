@@ -239,7 +239,7 @@ export function ProfileFeedScreenInner({
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
-    shareUrl(url)
+    ShareUrl(url)
     track('CustomFeed:Share')
   }, [feedInfo, track])
 

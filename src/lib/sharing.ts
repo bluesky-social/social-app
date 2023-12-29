@@ -12,7 +12,7 @@ import {msg} from '@lingui/macro'
  * @param {string} url - A string representing the URL that needs to be shared or copied to the
  * clipboard.
  */
-export async function shareUrl(url: string) {
+export async function ShareUrl(url: string) {
   const {_} = useLingui()
   if (isAndroid) {
     Share.share({message: url})
