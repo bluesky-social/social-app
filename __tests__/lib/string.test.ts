@@ -457,36 +457,43 @@ describe('parseEmbedPlayerFromUrl', () => {
   const outputs = [
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
     {
       type: 'youtube_video',
+      source: 'youtube',
       videoId: 'videoId',
       playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
     },
@@ -497,66 +504,79 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
     },
     {
       type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
     },
     {
       type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
     },
     {
       type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=clipId&parent=localhost`,
     },
     {
       type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=videoId&parent=localhost`,
     },
 
     {
       type: 'spotify_playlist',
+      source: 'spotify',
       playlistId: 'playlistId',
       playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
     },
     {
       type: 'spotify_playlist',
+      source: 'spotify',
       playlistId: 'playlistId',
       playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
     },
 
     {
       type: 'spotify_song',
+      source: 'spotify',
       songId: 'songId',
       playerUri: `https://open.spotify.com/embed/track/songId`,
     },
     {
       type: 'spotify_song',
+      source: 'spotify',
       songId: 'songId',
       playerUri: `https://open.spotify.com/embed/track/songId`,
     },
 
     {
       type: 'spotify_album',
+      source: 'spotify',
       albumId: 'albumId',
       playerUri: `https://open.spotify.com/embed/album/albumId`,
     },
     {
       type: 'spotify_album',
+      source: 'spotify',
       albumId: 'albumId',
       playerUri: `https://open.spotify.com/embed/album/albumId`,
     },
 
     {
       type: 'soundcloud_track',
+      source: 'soundcloud',
       user: 'user',
       track: 'track',
       playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/track&auto_play=true&visual=false&hide_related=true`,
     },
     {
       type: 'soundcloud_set',
+      source: 'soundcloud',
       user: 'user',
       set: 'set',
       playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/sets/set&auto_play=true&visual=false&hide_related=true`,
@@ -565,17 +585,20 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'apple_music_playlist',
+      source: 'appleMusic',
       playlistId: 'playlistId',
       playerUri:
         'https://embed.music.apple.com/us/playlist/playlistName/playlistId',
     },
     {
       type: 'apple_music_album',
+      source: 'appleMusic',
       albumId: 'albumId',
       playerUri: 'https://embed.music.apple.com/us/album/albumName/albumId',
     },
     {
       type: 'apple_music_song',
+      source: 'appleMusic',
       songId: 'songId',
       playerUri:
         'https://embed.music.apple.com/us/album/albumName/albumId?i=songId',
@@ -583,17 +606,20 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'vimeo_video',
+      source: 'vimeo',
       videoId: 'videoId',
       playerUri: 'https://player.vimeo.com/video/videoId?autoplay=1',
     },
     {
       type: 'vimeo_video',
+      source: 'vimeo',
       videoId: 'videoId',
       playerUri: 'https://player.vimeo.com/video/videoId?autoplay=1',
     },
 
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -604,6 +630,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -611,6 +638,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -618,6 +646,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -625,6 +654,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -632,6 +662,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -639,6 +670,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -650,6 +682,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -658,6 +691,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -665,6 +699,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -672,6 +707,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -679,6 +715,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'giphy_gif',
+      source: 'giphy',
       isGif: true,
       gifId: 'gifId',
       metaUri: 'https://giphy.com/gifs/gifId',
@@ -687,6 +724,7 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     {
       type: 'tenor_gif',
+      source: 'tenor',
       isGif: true,
       playerUri: 'https://tenor.com/view/gifId.gif',
     },
@@ -694,6 +732,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     undefined,
     {
       type: 'tenor_gif',
+      source: 'tenor',
       isGif: true,
       playerUri: 'https://tenor.com/view/gifId.gif',
     },

@@ -59,7 +59,12 @@ export type EmbedPlayerParams =
       songId: string
       playerUri: string
     } & EmbedPlayerParamDefaults)
-  | {type: 'vimeo_video'; isGif?: boolean; videoId: string; playerUri: string}
+  | ({
+      type: 'vimeo_video'
+      isGif?: boolean
+      videoId: string
+      playerUri: string
+    } & EmbedPlayerParamDefaults)
   | ({
       type: 'giphy_gif'
       gifId: string
@@ -254,6 +259,7 @@ export function parseEmbedPlayerFromUrl(
     if (videoId) {
       return {
         type: 'vimeo_video',
+        source: 'vimeo',
         videoId,
         playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
       }
