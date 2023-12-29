@@ -279,9 +279,9 @@ msgstr "कलात्मक या गैर-कामुक नग्नत�
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:249
+#: src/view/com/auth/login/LoginForm.tsx:250
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
-#: src/view/com/modals/report/InputIssueDetails.tsx:45
+#: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
 #: src/view/com/post-thread/PostThread.tsx:438
 #: src/view/com/post-thread/PostThread.tsx:446
@@ -293,7 +293,7 @@ msgstr "वापस"
 msgid "Basics"
 msgstr "मूल बातें"
 
-#: src/view/com/auth/create/Step2.tsx:147
+#: src/view/com/auth/create/Step2.tsx:156
 #: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "जन्मदिन"
@@ -498,7 +498,7 @@ msgstr "सेवा चुनें"
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "उन एल्गोरिदम का चयन करें जो कस्टम फीड्स के साथ अपने अनुभव को शक्ति देते हैं।।"
 
-#: src/view/com/auth/create/Step2.tsx:121
+#: src/view/com/auth/create/Step2.tsx:127
 msgid "Choose your password"
 msgstr "अपना पासवर्ड चुनें"
 
@@ -580,7 +580,7 @@ msgid "Confirmation code"
 msgstr "OTP कोड"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:268
+#: src/view/com/auth/login/LoginForm.tsx:269
 msgid "Connecting..."
 msgstr "कनेक्टिंग ..।"
 
@@ -768,7 +768,7 @@ msgstr "प्रदर्शन का नाम"
 msgid "Domain verified!"
 msgstr "डोमेन सत्यापित!"
 
-#: src/view/com/auth/create/Step2.tsx:80
+#: src/view/com/auth/create/Step2.tsx:83
 msgid "Don't have an invite code?"
 msgstr ""
 
@@ -829,14 +829,14 @@ msgstr "मेरी प्रोफ़ाइल संपादित करे
 msgid "Edit Saved Feeds"
 msgstr "एडिट सेव्ड फीड"
 
-#: src/view/com/auth/create/Step2.tsx:105
+#: src/view/com/auth/create/Step2.tsx:108
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "ईमेल"
 
-#: src/view/com/auth/create/Step2.tsx:96
+#: src/view/com/auth/create/Step2.tsx:99
 msgid "Email address"
 msgstr "ईमेल"
 
@@ -868,7 +868,7 @@ msgstr "आप जिस डोमेन का उपयोग करना च
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "वह ईमेल दर्ज करें जिसका उपयोग आपने अपना खाता बनाने के लिए किया था। हम आपको एक \"reset code\" भेजेंगे ताकि आप एक नया पासवर्ड सेट कर सकें।"
 
-#: src/view/com/auth/create/Step2.tsx:101
+#: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
 msgstr "अपना ईमेल पता दर्ज करें"
 
@@ -913,7 +913,7 @@ msgstr "प्रतिक्रिया"
 #: src/view/screens/Feeds.tsx:475
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:340
+#: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:474
 #: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
@@ -989,11 +989,11 @@ msgstr "सुरक्षा कारणों के लिए, हमें 
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "सुरक्षा कारणों के लिए, आप इसे फिर से देखने में सक्षम नहीं होंगे। यदि आप इस पासवर्ड को खो देते हैं, तो आपको एक नया उत्पन्न करना होगा।।"
 
-#: src/view/com/auth/login/LoginForm.tsx:231
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Forgot"
 msgstr "भूल"
 
-#: src/view/com/auth/login/LoginForm.tsx:228
+#: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Forgot password"
 msgstr "पासवर्ड भूल गए"
 
@@ -1025,7 +1025,7 @@ msgid "Go Back"
 msgstr "वापस जाओ"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:279
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "अगला"
@@ -1089,7 +1089,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:304
+#: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:398
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
@@ -1171,8 +1171,8 @@ msgstr ""
 msgid "Join the waitlist"
 msgstr "प्रतीक्षा सूची में शामिल हों"
 
-#: src/view/com/auth/create/Step2.tsx:83
-#: src/view/com/auth/create/Step2.tsx:87
+#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:90
 msgid "Join the waitlist."
 msgstr "प्रतीक्षा सूची में शामिल हों।।"
 
@@ -1270,7 +1270,7 @@ msgid "List Name"
 msgstr "सूची का नाम"
 
 #: src/view/screens/Profile.tsx:166
-#: src/view/shell/desktop/LeftNav.tsx:377
+#: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:490
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
@@ -1340,7 +1340,7 @@ msgstr ""
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:395
+#: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:509
 #: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
@@ -1444,18 +1444,18 @@ msgstr "नया"
 #: src/view/screens/ProfileFeed.tsx:431
 #: src/view/screens/ProfileList.tsx:194
 #: src/view/screens/ProfileList.tsx:222
-#: src/view/shell/desktop/LeftNav.tsx:247
+#: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
 msgstr "नई पोस्ट"
 
-#: src/view/shell/desktop/LeftNav.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:258
 msgid "New Post"
 msgstr "नई पोस्ट"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:281
+#: src/view/com/auth/login/LoginForm.tsx:282
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1494,7 +1494,7 @@ msgstr "\"{query}\" के लिए कोई परिणाम नहीं �
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:270
 #: src/view/screens/Search/Search.tsx:298
-#: src/view/screens/Search/Search.tsx:628
+#: src/view/screens/Search/Search.tsx:629
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr ""
@@ -1526,7 +1526,7 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:113
 #: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:359
+#: src/view/shell/desktop/LeftNav.tsx:361
 #: src/view/shell/Drawer.tsx:435
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
@@ -1622,9 +1622,9 @@ msgstr "अन्य..।"
 msgid "Page not found"
 msgstr "पृष्ठ नहीं मिला"
 
-#: src/view/com/auth/create/Step2.tsx:116
-#: src/view/com/auth/create/Step2.tsx:126
-#: src/view/com/auth/login/LoginForm.tsx:216
+#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:217
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1750,7 +1750,7 @@ msgid "Processing..."
 msgstr "प्रसंस्करण..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:413
+#: src/view/shell/desktop/LeftNav.tsx:415
 #: src/view/shell/Drawer.tsx:70
 #: src/view/shell/Drawer.tsx:544
 #: src/view/shell/Drawer.tsx:545
@@ -1951,8 +1951,8 @@ msgstr "प्राथमिकताओं की स्थिति को �
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:258
-#: src/view/com/auth/login/LoginForm.tsx:261
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
@@ -2002,7 +2002,7 @@ msgstr "सहेजे गए फ़ीड"
 #: src/view/screens/Search/Search.tsx:406
 #: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:322
+#: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
 #: src/view/shell/Drawer.tsx:362
@@ -2097,7 +2097,7 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr "इस सेटिंग को अपने निम्नलिखित फ़ीड में अपने सहेजे गए फ़ीड के नमूने दिखाने के लिए \"हाँ\" पर सेट करें। यह एक प्रयोगात्मक विशेषता है।।"
 
 #: src/view/screens/Settings.tsx:278
-#: src/view/shell/desktop/LeftNav.tsx:431
+#: src/view/shell/desktop/LeftNav.tsx:433
 #: src/view/shell/Drawer.tsx:565
 #: src/view/shell/Drawer.tsx:566
 msgid "Settings"
@@ -2303,7 +2303,7 @@ msgid "Terms of Service"
 msgstr "सेवा की शर्तें"
 
 #: src/view/com/modals/AppealLabel.tsx:70
-#: src/view/com/modals/report/InputIssueDetails.tsx:50
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "पाठ इनपुट फ़ील्ड"
 
@@ -2521,7 +2521,7 @@ msgid "User Lists"
 msgstr "लोग सूचियाँ"
 
 #: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:187
+#: src/view/com/auth/login/LoginForm.tsx:188
 msgid "Username or email address"
 msgstr "यूजर नाम या ईमेल पता"
 
@@ -2698,7 +2698,7 @@ msgstr "आपको \"reset code\" के साथ एक ईमेल प्�
 msgid "Your account"
 msgstr "आपका खाता"
 
-#: src/view/com/auth/create/Step2.tsx:137
+#: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
 msgstr "जन्म तिथि"
 

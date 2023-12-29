@@ -279,9 +279,9 @@ msgstr "선정적이지 않거나 예술적인 노출."
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:249
+#: src/view/com/auth/login/LoginForm.tsx:250
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
-#: src/view/com/modals/report/InputIssueDetails.tsx:45
+#: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
 #: src/view/com/post-thread/PostThread.tsx:438
 #: src/view/com/post-thread/PostThread.tsx:446
@@ -293,7 +293,7 @@ msgstr "뒤로"
 msgid "Basics"
 msgstr "기본"
 
-#: src/view/com/auth/create/Step2.tsx:147
+#: src/view/com/auth/create/Step2.tsx:156
 #: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "생년월일"
@@ -502,7 +502,7 @@ msgstr "사용자 지정 피드를 통해 사용자 경험을 강화하는 알�
 #~ msgid "Choose your"
 #~ msgstr "Choose your"
 
-#: src/view/com/auth/create/Step2.tsx:121
+#: src/view/com/auth/create/Step2.tsx:127
 msgid "Choose your password"
 msgstr "비밀번호를 입력하세요"
 
@@ -584,7 +584,7 @@ msgid "Confirmation code"
 msgstr "확인 코드"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:268
+#: src/view/com/auth/login/LoginForm.tsx:269
 msgid "Connecting..."
 msgstr "연결 중…"
 
@@ -772,7 +772,7 @@ msgstr "표시 이름"
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다!"
 
-#: src/view/com/auth/create/Step2.tsx:80
+#: src/view/com/auth/create/Step2.tsx:83
 msgid "Don't have an invite code?"
 msgstr "초대 코드가 없으십니까?"
 
@@ -833,14 +833,14 @@ msgstr "프로필 편집"
 msgid "Edit Saved Feeds"
 msgstr "저장된 피드 편집"
 
-#: src/view/com/auth/create/Step2.tsx:105
+#: src/view/com/auth/create/Step2.tsx:108
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "이메일"
 
-#: src/view/com/auth/create/Step2.tsx:96
+#: src/view/com/auth/create/Step2.tsx:99
 msgid "Email address"
 msgstr "이메일 주소"
 
@@ -872,7 +872,7 @@ msgstr "사용할 도메인 입력"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "계정을 만들 때 사용한 이메일을 입력합니다. 새 비밀번호를 설정할 수 있도록 \"재설정 코드\"를 보내드립니다."
 
-#: src/view/com/auth/create/Step2.tsx:101
+#: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
 msgstr "이메일 주소를 입력하세요"
 
@@ -917,7 +917,7 @@ msgstr "피드백"
 #: src/view/screens/Feeds.tsx:475
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:340
+#: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:474
 #: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
@@ -997,11 +997,11 @@ msgstr "보안상의 이유로 이메일 주소로 확인 코드를 보내야 �
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "보안상의 이유로 이 비밀번호는 다시 볼 수 없습니다. 이 비밀번호를 분실한 경우 새 비밀번호를 생성해야 합니다."
 
-#: src/view/com/auth/login/LoginForm.tsx:231
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Forgot"
 msgstr "분실"
 
-#: src/view/com/auth/login/LoginForm.tsx:228
+#: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Forgot password"
 msgstr "비밀번호 분실"
 
@@ -1033,7 +1033,7 @@ msgid "Go Back"
 msgstr "뒤로"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:279
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "다음"
@@ -1097,7 +1097,7 @@ msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었�
 #~ msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:304
+#: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:398
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
@@ -1179,8 +1179,8 @@ msgstr "채용"
 msgid "Join the waitlist"
 msgstr "대기자 명단 등록"
 
-#: src/view/com/auth/create/Step2.tsx:83
-#: src/view/com/auth/create/Step2.tsx:87
+#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:90
 msgid "Join the waitlist."
 msgstr "대기자 명단에 등록하세요."
 
@@ -1278,7 +1278,7 @@ msgid "List Name"
 msgstr "리스트 이름"
 
 #: src/view/screens/Profile.tsx:166
-#: src/view/shell/desktop/LeftNav.tsx:377
+#: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:490
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
@@ -1348,7 +1348,7 @@ msgstr "서버에서 보낸 메시지"
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:395
+#: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:509
 #: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
@@ -1452,18 +1452,18 @@ msgstr "신규"
 #: src/view/screens/ProfileFeed.tsx:431
 #: src/view/screens/ProfileList.tsx:194
 #: src/view/screens/ProfileList.tsx:222
-#: src/view/shell/desktop/LeftNav.tsx:247
+#: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
 msgstr "새 게시물"
 
-#: src/view/shell/desktop/LeftNav.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:258
 msgid "New Post"
 msgstr "새 게시물"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:281
+#: src/view/com/auth/login/LoginForm.tsx:282
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1502,7 +1502,7 @@ msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다."
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:270
 #: src/view/screens/Search/Search.tsx:298
-#: src/view/screens/Search/Search.tsx:628
+#: src/view/screens/Search/Search.tsx:629
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다."
@@ -1534,7 +1534,7 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 #: src/view/screens/Notifications.tsx:113
 #: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:359
+#: src/view/shell/desktop/LeftNav.tsx:361
 #: src/view/shell/Drawer.tsx:435
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
@@ -1630,9 +1630,9 @@ msgstr "기타…"
 msgid "Page not found"
 msgstr "페이지를 찾을 수 없음"
 
-#: src/view/com/auth/create/Step2.tsx:116
-#: src/view/com/auth/create/Step2.tsx:126
-#: src/view/com/auth/login/LoginForm.tsx:216
+#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:217
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1758,7 +1758,7 @@ msgid "Processing..."
 msgstr "처리 중…"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:413
+#: src/view/shell/desktop/LeftNav.tsx:415
 #: src/view/shell/Drawer.tsx:70
 #: src/view/shell/Drawer.tsx:544
 #: src/view/shell/Drawer.tsx:545
@@ -1959,8 +1959,8 @@ msgstr "설정 상태 재설정"
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:258
-#: src/view/com/auth/login/LoginForm.tsx:261
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
@@ -2010,7 +2010,7 @@ msgstr "저장된 피드"
 #: src/view/screens/Search/Search.tsx:406
 #: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:322
+#: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
 #: src/view/shell/Drawer.tsx:362
@@ -2105,7 +2105,7 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr "팔로우한 피드에 저장된 피드 샘플을 표시하려면 이 설정을 \"예\"로 설정합니다. 이는 실험적인 기능입니다."
 
 #: src/view/screens/Settings.tsx:278
-#: src/view/shell/desktop/LeftNav.tsx:431
+#: src/view/shell/desktop/LeftNav.tsx:433
 #: src/view/shell/Drawer.tsx:565
 #: src/view/shell/Drawer.tsx:566
 msgid "Settings"
@@ -2311,7 +2311,7 @@ msgid "Terms of Service"
 msgstr "서비스 이용약관"
 
 #: src/view/com/modals/AppealLabel.tsx:70
-#: src/view/com/modals/report/InputIssueDetails.tsx:50
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
 
@@ -2529,7 +2529,7 @@ msgid "User Lists"
 msgstr "사용자 리스트"
 
 #: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:187
+#: src/view/com/auth/login/LoginForm.tsx:188
 msgid "Username or email address"
 msgstr "사용자 이름 또는 이메일 주소"
 
@@ -2706,7 +2706,7 @@ msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 �
 msgid "Your account"
 msgstr "내 계정"
 
-#: src/view/com/auth/create/Step2.tsx:137
+#: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
 msgstr "생년월일"
 

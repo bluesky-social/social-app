@@ -251,9 +251,9 @@ msgstr "芸術的または性的ではないヌード。"
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:249
+#: src/view/com/auth/login/LoginForm.tsx:250
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
-#: src/view/com/modals/report/InputIssueDetails.tsx:45
+#: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
 #: src/view/com/post-thread/PostThread.tsx:438
 #: src/view/com/post-thread/PostThread.tsx:446
@@ -265,7 +265,7 @@ msgstr "戻る"
 msgid "Basics"
 msgstr "基本"
 
-#: src/view/com/auth/create/Step2.tsx:147
+#: src/view/com/auth/create/Step2.tsx:156
 #: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "誕生日"
@@ -470,7 +470,7 @@ msgstr "サービスを選択"
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "カスタムフィードを使用してあなたの体験を強化するアルゴリズムを選択します。"
 
-#: src/view/com/auth/create/Step2.tsx:121
+#: src/view/com/auth/create/Step2.tsx:127
 msgid "Choose your password"
 msgstr "パスワードを選択"
 
@@ -552,7 +552,7 @@ msgid "Confirmation code"
 msgstr "確認コード"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:268
+#: src/view/com/auth/login/LoginForm.tsx:269
 msgid "Connecting..."
 msgstr "接続中..."
 
@@ -736,7 +736,7 @@ msgstr "表示名"
 msgid "Domain verified!"
 msgstr "ドメインを確認しました！"
 
-#: src/view/com/auth/create/Step2.tsx:80
+#: src/view/com/auth/create/Step2.tsx:83
 msgid "Don't have an invite code?"
 msgstr ""
 
@@ -797,14 +797,14 @@ msgstr "プロフィールを編集"
 msgid "Edit Saved Feeds"
 msgstr "保存されたフィードを編集"
 
-#: src/view/com/auth/create/Step2.tsx:105
+#: src/view/com/auth/create/Step2.tsx:108
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "メールアドレス"
 
-#: src/view/com/auth/create/Step2.tsx:96
+#: src/view/com/auth/create/Step2.tsx:99
 msgid "Email address"
 msgstr "メールアドレス"
 
@@ -836,7 +836,7 @@ msgstr "使用するドメインを入力してください"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "アカウントの作成に使用したメールアドレスを入力します。新しいパスワードを設定できるように、「リセットコード」をお送りします。"
 
-#: src/view/com/auth/create/Step2.tsx:101
+#: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
 msgstr "メールアドレスを入力してください"
 
@@ -881,7 +881,7 @@ msgstr "フィードバック"
 #: src/view/screens/Feeds.tsx:475
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:340
+#: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:474
 #: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
@@ -957,11 +957,11 @@ msgstr "セキュリティ上の理由から、メールアドレスに確認コ
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "セキュリティ上の理由から、これを再度表示することはできません。このパスワードを紛失した場合は、新しいパスワードを生成する必要があります。"
 
-#: src/view/com/auth/login/LoginForm.tsx:231
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Forgot"
 msgstr "忘れた"
 
-#: src/view/com/auth/login/LoginForm.tsx:228
+#: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Forgot password"
 msgstr "パスワードを忘れた"
 
@@ -993,7 +993,7 @@ msgid "Go Back"
 msgstr "戻る"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:279
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "次へ"
@@ -1049,7 +1049,7 @@ msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "このフィードが見つからないようです。もしかしたら削除されたのかもしれません。"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:304
+#: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:398
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
@@ -1126,8 +1126,8 @@ msgstr "仕事"
 msgid "Join the waitlist"
 msgstr "Waitlistに参加"
 
-#: src/view/com/auth/create/Step2.tsx:83
-#: src/view/com/auth/create/Step2.tsx:87
+#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:90
 msgid "Join the waitlist."
 msgstr "Waitlistに参加します。"
 
@@ -1217,7 +1217,7 @@ msgid "List Name"
 msgstr "リストの名前"
 
 #: src/view/screens/Profile.tsx:166
-#: src/view/shell/desktop/LeftNav.tsx:377
+#: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:490
 #: src/view/shell/Drawer.tsx:491
 msgid "Lists"
@@ -1287,7 +1287,7 @@ msgstr "サーバーからのメッセージ"
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
-#: src/view/shell/desktop/LeftNav.tsx:395
+#: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:509
 #: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
@@ -1383,18 +1383,18 @@ msgstr "新規"
 #: src/view/screens/ProfileFeed.tsx:431
 #: src/view/screens/ProfileList.tsx:194
 #: src/view/screens/ProfileList.tsx:222
-#: src/view/shell/desktop/LeftNav.tsx:247
+#: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
 msgstr "新しい投稿"
 
-#: src/view/shell/desktop/LeftNav.tsx:257
+#: src/view/shell/desktop/LeftNav.tsx:258
 msgid "New Post"
 msgstr "新しい投稿"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:281
+#: src/view/com/auth/login/LoginForm.tsx:282
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1428,7 +1428,7 @@ msgstr "「{query}」の検索結果はありません"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:270
 #: src/view/screens/Search/Search.tsx:298
-#: src/view/screens/Search/Search.tsx:628
+#: src/view/screens/Search/Search.tsx:629
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
@@ -1452,7 +1452,7 @@ msgstr "注記：Blueskyはオープンでパブリックなネットワーク�
 #: src/view/screens/Notifications.tsx:113
 #: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:359
+#: src/view/shell/desktop/LeftNav.tsx:361
 #: src/view/shell/Drawer.tsx:435
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
@@ -1548,9 +1548,9 @@ msgstr "その他..."
 msgid "Page not found"
 msgstr "ページが見つかりません"
 
-#: src/view/com/auth/create/Step2.tsx:116
-#: src/view/com/auth/create/Step2.tsx:126
-#: src/view/com/auth/login/LoginForm.tsx:216
+#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:217
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1676,7 +1676,7 @@ msgid "Processing..."
 msgstr "処理中..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:413
+#: src/view/shell/desktop/LeftNav.tsx:415
 #: src/view/shell/Drawer.tsx:70
 #: src/view/shell/Drawer.tsx:544
 #: src/view/shell/Drawer.tsx:545
@@ -1864,8 +1864,8 @@ msgstr "設定の状態をリセット"
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:258
-#: src/view/com/auth/login/LoginForm.tsx:261
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
@@ -1907,7 +1907,7 @@ msgstr "保存されたフィード"
 #: src/view/screens/Search/Search.tsx:406
 #: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:322
+#: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
 #: src/view/shell/Drawer.tsx:362
@@ -2002,7 +2002,7 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr "保存されたフィードのサンプルを次のフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
 #: src/view/screens/Settings.tsx:278
-#: src/view/shell/desktop/LeftNav.tsx:431
+#: src/view/shell/desktop/LeftNav.tsx:433
 #: src/view/shell/Drawer.tsx:565
 #: src/view/shell/Drawer.tsx:566
 msgid "Settings"
@@ -2200,7 +2200,7 @@ msgid "Terms of Service"
 msgstr "利用規約"
 
 #: src/view/com/modals/AppealLabel.tsx:70
-#: src/view/com/modals/report/InputIssueDetails.tsx:50
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "テキストの入力フィールド"
 
@@ -2418,7 +2418,7 @@ msgid "User Lists"
 msgstr "ユーザーリスト"
 
 #: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:187
+#: src/view/com/auth/login/LoginForm.tsx:188
 msgid "Username or email address"
 msgstr "ユーザー名またはメールアドレス"
 
@@ -2579,7 +2579,7 @@ msgstr "「リセットコード」が記載されたメールが届きます。
 msgid "Your account"
 msgstr "あなたのアカウント"
 
-#: src/view/com/auth/create/Step2.tsx:137
+#: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
 msgstr "生年月日"
 
