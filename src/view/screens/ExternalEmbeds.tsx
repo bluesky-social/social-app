@@ -54,9 +54,9 @@ export function ExternalEmbeds({}: Props) {
             <Text style={pal.text}>
               <Trans>
                 Some posts on Bluesky may include media embeds from an external
-                source that you can load. Embeds may allow the external source
-                to collect information about you and your device. You may choose
-                to remove these embeds by source.
+                source. Embeds may allow the external source to collect
+                information about you and your device. You may choose to remove
+                these embeds by source.
               </Trans>
             </Text>
             <Text style={[pal.textLight, {fontWeight: '500', marginTop: 15}]}>

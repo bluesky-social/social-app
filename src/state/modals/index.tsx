@@ -181,8 +181,8 @@ export interface LinkWarningModal {
   href: string
 }
 
-export interface ExternalSourceModal {
-  name: 'load-external-source'
+export interface EmbedConsentModal {
+  name: 'embed-consent'
   source: ExternalEmbedType
   onAccept: () => void
 }
@@ -230,7 +230,7 @@ export type Modal =
   // Generic
   | ConfirmModal
   | LinkWarningModal
-  | ExternalSourceModal
+  | EmbedConsentModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean

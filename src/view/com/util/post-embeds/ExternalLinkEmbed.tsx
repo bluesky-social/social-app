@@ -9,6 +9,7 @@ import {toNiceDomain} from 'lib/strings/url-helpers'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {useExternalEmbedsPrefs} from 'state/preferences'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -17,18 +18,29 @@ export const ExternalLinkEmbed = ({
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const externalEmbedPrefs = useExternalEmbedsPrefs()
 
   const embedPlayerParams = React.useMemo(
     () => parseEmbedPlayerFromUrl(link.uri),
     [link.uri],
   )
 
+  const hidePlayerEmbed = React.useMemo(
+    () =>
+      !embedPlayerParams ||
+      externalEmbedPrefs[embedPlayerParams.source] === 'hide',
+    [embedPlayerParams, externalEmbedPrefs],
+  )
+
   return (
     <View
       style={{
-        flexDirection: !isMobile && !embedPlayerParams ? 'row' : 'column',
+        flexDirection:
+          !isMobile && (!embedPlayerParams || hidePlayerEmbed)
+            ? 'row'
+            : 'column',
       }}>
-      {link.thumb && !embedPlayerParams ? (
+      {link.thumb && (!embedPlayerParams || hidePlayerEmbed) ? (
         <View
           style={
             !isMobile
@@ -54,10 +66,10 @@ export const ExternalLinkEmbed = ({
           />
         </View>
       ) : undefined}
-      {(embedPlayerParams?.isGif && (
+      {(embedPlayerParams?.isGif && !hidePlayerEmbed && (
         <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
       )) ||
-        (embedPlayerParams && (
+        (embedPlayerParams && !hidePlayerEmbed && (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ))}
       <View
@@ -79,7 +91,7 @@ export const ExternalLinkEmbed = ({
           style={[pal.text]}>
           {link.title || link.uri}
         </Text>
-        {!embedPlayerParams?.isGif && link.description ? (
+        {(!embedPlayerParams?.isGif || hidePlayerEmbed) && link.description ? (
           <Text
             type="md"
             numberOfLines={isMobile ? 4 : 2}

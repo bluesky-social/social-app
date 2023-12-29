@@ -12,6 +12,8 @@ import {
 import {isIOS, isNative, isWeb} from 'platform/detection.ts'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {WebGifStill} from 'view/com/util/post-embeds/WebGifStill.tsx'
+import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useModalControls} from 'state/modals'
 
 export function ExternalGifEmbed({
   thumb,
@@ -20,6 +22,9 @@ export function ExternalGifEmbed({
   thumb?: string
   params: EmbedPlayerParams
 }) {
+  const externalEmbedsPrefs = useExternalEmbedsPrefs()
+  const {openModal} = useModalControls()
+
   const loadCount = React.useRef(0)
   const viewWidth = React.useRef(0)
 
@@ -34,19 +39,32 @@ export function ExternalGifEmbed({
   // Used for controlling animation
   const imageRef = React.useRef<Image>(null)
 
+  const load = React.useCallback(() => {
+    setIsPlayerActive(true)
+    Image.prefetch(params.playerUri).then(() => {
+      // Replace the image once it's fetched
+      setIsLoaded(true)
+    })
+  }, [params.playerUri])
+
   const onPlayPress = React.useCallback(
     (event: GestureResponderEvent) => {
       // Don't propagate on web
       event.preventDefault()
 
+      // Show consent if this is the first load
+      if (externalEmbedsPrefs[params.source] === 'ask') {
+        openModal({
+          name: 'embed-consent',
+          source: params.source,
+          onAccept: load,
+        })
+        return
+      }
+
       // If the player isn't active, we want to activate it and prefetch the gif
       if (!isPlayerActive) {
-        setIsPlayerActive(true)
-
-        Image.prefetch(params.playerUri).then(() => {
-          // Replace the image once it's fetched
-          setIsLoaded(true)
-        })
+        load()
         return
       }
 
@@ -65,7 +83,7 @@ export function ExternalGifEmbed({
         }
       })
     },
-    [isPlayerActive, params.playerUri],
+    [externalEmbedsPrefs, isPlayerActive, load, openModal, params.source],
   )
 
   const onLoad = React.useCallback((e: ImageLoadEventData) => {

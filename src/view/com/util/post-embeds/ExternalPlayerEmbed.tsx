@@ -18,6 +18,7 @@ import {isNative} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useModalControls} from 'state/modals'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -117,7 +118,8 @@ export function ExternalPlayer({
   params: EmbedPlayerParams
 }) {
   const navigation = useNavigation<NavigationProp>()
-  const externalSourcesPrefs = useExternalEmbedsPrefs()
+  const externalEmbedsPrefs = useExternalEmbedsPrefs()
+  const {openModal} = useModalControls()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -175,13 +177,20 @@ export function ExternalPlayer({
       // Prevent this from propagating upward on web
       event.preventDefault()
 
-      if (externalSourcesPrefs[params.source] === 'ask') {
+      if (externalEmbedsPrefs[params.source] === 'ask') {
+        openModal({
+          name: 'embed-consent',
+          source: params.source,
+          onAccept: () => {
+            setPlayerActive(true)
+          },
+        })
         return
       }
 
       setPlayerActive(true)
     },
-    [externalSourcesPrefs, params.source],
+    [externalEmbedsPrefs, openModal, params.source],
   )
 
   // measure the layout to set sizing
