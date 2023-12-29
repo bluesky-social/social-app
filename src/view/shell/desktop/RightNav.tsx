@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
 
   message: {
     paddingVertical: 18,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
   },
   messageLine: {
     marginBottom: 10,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 
   inviteCodes: {
     borderTopWidth: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 12,
     flexDirection: 'row',
   },

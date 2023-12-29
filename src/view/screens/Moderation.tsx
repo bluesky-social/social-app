@@ -62,7 +62,7 @@ export function ModerationScreen({}: Props) {
       ]}
       testID="moderationScreen">
       <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-      <ScrollView>
+      <ScrollView contentContainerStyle={[styles.noBorder]}>
         <View style={styles.spacer} />
         <TouchableOpacity
           testID="contentFilteringBtn"
@@ -274,5 +274,11 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 30,
     marginRight: 12,
+  },
+  noBorder: {
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
   },
 })
