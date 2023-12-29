@@ -7,6 +7,12 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native'
+import Animated, {
+  measure,
+  runOnJS,
+  useAnimatedRef,
+  useFrameCallback,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -127,7 +133,31 @@ export function ExternalPlayer({
     height: 0,
   })
 
-  const viewRef = React.useRef<View>(null)
+  const viewRef = useAnimatedRef()
+
+  const frameCallback = useFrameCallback(() => {
+    const measurement = measure(viewRef)
+    if (!measurement) return
+
+    const {height: winHeight, width: winWidth} = windowDims
+
+    // Get the proper screen height depending on what is going on
+    const realWinHeight = isNative // If it is native, we always want the larger number
+      ? winHeight > winWidth
+        ? winHeight
+        : winWidth
+      : winHeight // On web, we always want the actual screen height
+
+    const top = measurement.pageY
+    const bot = measurement.pageY + measurement.height
+
+    // We can use the same logic on all platforms against the screenHeight that we get above
+    const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
+
+    if (!isVisible) {
+      runOnJS(setPlayerActive)(false)
+    }
+  }, false) // False here disables autostarting the callback
 
   // watch for leaving the viewport due to scrolling
   React.useEffect(() => {
@@ -140,34 +170,14 @@ export function ExternalPlayer({
       setPlayerActive(false)
     })
 
-    const interval = setInterval(() => {
-      viewRef.current?.measure((x, y, w, h, pageX, pageY) => {
-        const {height: winHeight, width: winWidth} = windowDims
-
-        // Get the proper screen height depending on what is going on
-        const realWinHeight = isNative // If it is native, we always want the larger number
-          ? winHeight > winWidth
-            ? winHeight
-            : winWidth
-          : winHeight // On web, we always want the actual screen height
-
-        const top = pageY
-        const bot = pageY + h
-
-        // We can use the same logic on all platforms against the screenHeight that we get above
-        const isVisible =
-          top <= realWinHeight - insets.bottom && bot >= insets.top
-        if (!isVisible) {
-          setPlayerActive(false)
-        }
-      })
-    }, 1e3)
+    // Start watching for changes
+    frameCallback.setActive(true)
 
     return () => {
       unsubscribe()
-      clearInterval(interval)
+      frameCallback.setActive(false)
     }
-  }, [viewRef, navigation, isPlayerActive, windowDims, insets])
+  }, [navigation, isPlayerActive, frameCallback])
 
   // calculate height for the player and the screen size
   const height = React.useMemo(
@@ -203,7 +213,7 @@ export function ExternalPlayer({
   )
 
   return (
-    <View
+    <Animated.View
       ref={viewRef}
       style={{height}}
       collapsable={false}
@@ -233,7 +243,7 @@ export function ExternalPlayer({
         height={height}
         onLoad={onLoad}
       />
-    </View>
+    </Animated.View>
   )
 }
 
