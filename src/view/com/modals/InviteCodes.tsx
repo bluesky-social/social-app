@@ -151,7 +151,7 @@ function InviteCode({
     Clipboard.setString(invite.code)
     Toast.show(_(msg`Copied to clipboard`))
     setInviteCopied(invite.code)
-  }, [setInviteCopied, invite])
+  }, [setInviteCopied, invite, _])
 
   return (
     <View

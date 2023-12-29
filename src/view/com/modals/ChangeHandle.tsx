@@ -323,7 +323,7 @@ function CustomHandleForm({
       isDNSForm ? `did=${currentAccount.did}` : currentAccount.did,
     )
     Toast.show(_(msg`Copied to clipboard`))
-  }, [currentAccount, isDNSForm])
+  }, [currentAccount, isDNSForm, _])
   const onChangeHandle = React.useCallback(
     (v: string) => {
       setHandle(v)

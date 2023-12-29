@@ -75,7 +75,7 @@ export function Component({}: {}) {
       Toast.show(_(msg`Copied to clipboard`))
       setWasCopied(true)
     }
-  }, [appPassword])
+  }, [appPassword, _])
 
   const onDone = React.useCallback(() => {
     closeModal()

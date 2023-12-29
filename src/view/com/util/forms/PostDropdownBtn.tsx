@@ -96,7 +96,7 @@ let PostDropdownBtn = ({
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
     Toast.show(_(msg`Copied to clipboard`))
-  }, [record])
+  }, [record, _])
 
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(translatorUrl)
