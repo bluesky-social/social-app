@@ -301,18 +301,18 @@ export function getPlayerHeight({
     case 'vimeo_video':
       return (width / 16) * 9
     case 'spotify_album':
-      return 380
+    case 'apple_music_album':
+    case 'apple_music_playlist':
     case 'spotify_playlist':
-      return 360
+    case 'soundcloud_set':
+      return 380
     case 'spotify_song':
       if (width <= 300) {
-        return 180
+        return 155
       }
       return 232
     case 'soundcloud_track':
       return 165
-    case 'soundcloud_set':
-      return 360
     case 'apple_music_song':
       return 150
     default:
