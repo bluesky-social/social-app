@@ -192,14 +192,16 @@ let ProfileHeaderLoaded = ({
         track('ProfileHeader:FollowButtonClicked')
         await queueFollow()
         Toast.show(
-          `Following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-          )}`,
+          _(
+            msg`Following ${sanitizeDisplayName(
+              profile.displayName || profile.handle,
+            )}`,
+          ),
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {error: String(e)})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          Toast.show(_(msg`There was an issue! ${e.toString()}`))
         }
       }
     })
@@ -211,14 +213,16 @@ let ProfileHeaderLoaded = ({
         track('ProfileHeader:UnfollowButtonClicked')
         await queueUnfollow()
         Toast.show(
-          `No longer following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-          )}`,
+          _(
+            msg`No longer following ${sanitizeDisplayName(
+              profile.displayName || profile.handle,
+            )}`,
+          ),
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {error: String(e)})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          Toast.show(_(msg`There was an issue! ${e.toString()}`))
         }
       }
     })
@@ -253,11 +257,11 @@ let ProfileHeaderLoaded = ({
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
       await queueMute()
-      Toast.show('Account muted')
+      Toast.show(_(msg`Account muted`))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to mute account', {error: e})
-        Toast.show(`There was an issue! ${e.toString()}`)
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
   }, [track, queueMute])
@@ -266,11 +270,11 @@ let ProfileHeaderLoaded = ({
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
       await queueUnmute()
-      Toast.show('Account unmuted')
+      Toast.show(_(msg`Account unmuted`))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unmute account', {error: e})
-        Toast.show(`There was an issue! ${e.toString()}`)
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
   }, [track, queueUnmute])
@@ -286,11 +290,11 @@ let ProfileHeaderLoaded = ({
       onPressConfirm: async () => {
         try {
           await queueBlock()
-          Toast.show('Account blocked')
+          Toast.show(_(msg`Account blocked`))
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to block account', {error: e})
-            Toast.show(`There was an issue! ${e.toString()}`)
+            Toast.show(_(msg`There was an issue! ${e.toString()}`))
           }
         }
       },
@@ -308,11 +312,11 @@ let ProfileHeaderLoaded = ({
       onPressConfirm: async () => {
         try {
           await queueUnblock()
-          Toast.show('Account unblocked')
+          Toast.show(_(msg`Account unblocked`))
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to unblock account', {error: e})
-            Toast.show(`There was an issue! ${e.toString()}`)
+            Toast.show(_(msg`There was an issue! ${e.toString()}`))
           }
         }
       },

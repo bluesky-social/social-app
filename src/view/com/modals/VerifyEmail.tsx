@@ -75,7 +75,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
         token: confirmationCode.trim(),
       })
       updateCurrentAccount({emailConfirmed: true})
-      Toast.show('Email verified')
+      Toast.show(_(msg`Email verified`))
       closeModal()
     } catch (e) {
       setError(cleanError(String(e)))
@@ -224,7 +224,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                   onPress={onConfirm}
                   accessibilityLabel={_(msg`Confirm`)}
                   accessibilityHint=""
-                  label="Confirm"
+                  label={_(msg`Confirm`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />

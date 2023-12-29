@@ -260,7 +260,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         await pinFeed({uri: list.uri})
       }
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
   }, [list.uri, isPinned, pinFeed, unpinFeed])
@@ -276,11 +276,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       async onPressConfirm() {
         try {
           await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
-          Toast.show('List muted')
+          Toast.show(_(msg`List muted`))
           track('Lists:Mute')
         } catch {
           Toast.show(
-            'There was an issue. Please check your internet connection and try again.',
+            _(
+              msg`There was an issue. Please check your internet connection and try again.`,
+            ),
           )
         }
       },
@@ -293,11 +295,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onUnsubscribeMute = useCallback(async () => {
     try {
       await listMuteMutation.mutateAsync({uri: list.uri, mute: false})
-      Toast.show('List unmuted')
+      Toast.show(_(msg`List unmuted`))
       track('Lists:Unmute')
     } catch {
       Toast.show(
-        'There was an issue. Please check your internet connection and try again.',
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
       )
     }
   }, [list, listMuteMutation, track])
@@ -313,11 +317,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       async onPressConfirm() {
         try {
           await listBlockMutation.mutateAsync({uri: list.uri, block: true})
-          Toast.show('List blocked')
+          Toast.show(_(msg`List blocked`))
           track('Lists:Block')
         } catch {
           Toast.show(
-            'There was an issue. Please check your internet connection and try again.',
+            _(
+              msg`There was an issue. Please check your internet connection and try again.`,
+            ),
           )
         }
       },
@@ -330,11 +336,13 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const onUnsubscribeBlock = useCallback(async () => {
     try {
       await listBlockMutation.mutateAsync({uri: list.uri, block: false})
-      Toast.show('List unblocked')
+      Toast.show(_(msg`List unblocked`))
       track('Lists:Unblock')
     } catch {
       Toast.show(
-        'There was an issue. Please check your internet connection and try again.',
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
       )
     }
   }, [list, listBlockMutation, track])
@@ -353,7 +361,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       message: _(msg`Are you sure?`),
       async onPressConfirm() {
         await listDeleteMutation.mutateAsync({uri: list.uri})
-        Toast.show('List deleted')
+        Toast.show(_(msg`List deleted`))
         track('Lists:Delete')
         if (navigation.canGoBack()) {
           navigation.goBack()

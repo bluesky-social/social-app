@@ -260,7 +260,7 @@ export const ComposePost = observer(function ComposePost({
     setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
-    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
+    Toast.show(_(msg`Your ${replyTo ? 'reply' : 'post'} has been published`))
   }
 
   const canPost = useMemo(

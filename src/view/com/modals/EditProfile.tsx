@@ -125,7 +125,7 @@ export function Component({
         newUserAvatar,
         newUserBanner,
       })
-      Toast.show('Profile updated')
+      Toast.show(_(msg`Profile updated`))
       onUpdate?.()
       closeModal()
     } catch (e: any) {

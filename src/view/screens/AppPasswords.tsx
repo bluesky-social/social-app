@@ -224,7 +224,7 @@ function AppPassword({
       ),
       async onPressConfirm() {
         await deleteMutation.mutateAsync({name})
-        Toast.show('App password deleted')
+        Toast.show(_(msg`App password deleted`))
       },
     })
   }, [deleteMutation, openModal, name, _])

@@ -8,6 +8,8 @@ import {Text} from '../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {Button} from '../util/forms/Button'
 import {isIOS} from 'platform/detection'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import * as MediaLibrary from 'expo-media-library'
 import {
   useLightbox,
@@ -53,6 +55,7 @@ export function Lightbox() {
 }
 
 function LightboxFooter({imageIndex}: {imageIndex: number}) {
+  const {_} = useLingui()
   const {activeLightbox} = useLightbox()
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
@@ -60,12 +63,14 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
   const saveImageToAlbumWithToasts = React.useCallback(
     async (uri: string) => {
       if (!permissionResponse || permissionResponse.granted === false) {
-        Toast.show('Permission to access camera roll is required.')
+        Toast.show(_(msg`Permission to access camera roll is required.`))
         if (permissionResponse?.canAskAgain) {
           requestPermission()
         } else {
           Toast.show(
-            'Permission to access camera roll was denied. Please enable it in your system settings.',
+            _(
+              msg`Permission to access camera roll was denied. Please enable it in your system settings.`,
+            ),
           )
         }
         return
@@ -73,9 +78,9 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
 
       try {
         await saveImageToMediaLibrary({uri})
-        Toast.show('Saved to your camera roll.')
+        Toast.show(_(msg`Saved to your camera roll.`))
       } catch (e: any) {
-        Toast.show(`Failed to save image: ${String(e)}`)
+        Toast.show(_(msg`Failed to save image: ${String(e)}`))
       }
     },
     [permissionResponse, requestPermission],

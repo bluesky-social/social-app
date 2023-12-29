@@ -108,9 +108,9 @@ export function FeedSourceCardLoaded({
           try {
             await removeFeed({uri: feed.uri})
             // await item.unsave()
-            Toast.show('Removed from my feeds')
+            Toast.show(_(msg`Removed from my feeds`))
           } catch (e) {
-            Toast.show('There was an issue contacting your server')
+            Toast.show(_(msg`There was an issue contacting your server`))
             logger.error('Failed to unsave feed', {error: e})
           }
         },
@@ -122,9 +122,9 @@ export function FeedSourceCardLoaded({
         } else {
           await saveFeed({uri: feed.uri})
         }
-        Toast.show('Added to my feeds')
+        Toast.show(_(msg`Added to my feeds`))
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
+        Toast.show(_(msg`There was an issue contacting your server`))
         logger.error('Failed to save feed', {error: e})
       }
     }
@@ -175,9 +175,9 @@ export function FeedSourceCardLoaded({
                   try {
                     await removeFeed({uri: feedUri})
                     // await item.unsave()
-                    Toast.show('Removed from my feeds')
+                    Toast.show(_(msg`Removed from my feeds`))
                   } catch (e) {
-                    Toast.show('There was an issue contacting your server')
+                    Toast.show(_(msg`There was an issue contacting your server`))
                     logger.error('Failed to unsave feed', {error: e})
                   }
                 },

@@ -85,7 +85,9 @@ export function Component({}: {}) {
     // if name is all whitespace, we don't allow it
     if (!name || !name.trim()) {
       Toast.show(
-        'Please enter a name for your app password. All spaces is not allowed.',
+        _(
+          msg`Please enter a name for your app password. All spaces is not allowed.`,
+        ),
         'times',
       )
       return
@@ -93,14 +95,14 @@ export function Component({}: {}) {
     // if name is too short (under 4 chars), we don't allow it
     if (name.length < 4) {
       Toast.show(
-        'App Password names must be at least 4 characters long.',
+        _(msg`App Password names must be at least 4 characters long.`),
         'times',
       )
       return
     }
 
     if (passwords?.find(p => p.name === name)) {
-      Toast.show('This name is already in use', 'times')
+      Toast.show(_(msg`This name is already in use`), 'times')
       return
     }
 
@@ -109,11 +111,11 @@ export function Component({}: {}) {
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
-        Toast.show('Failed to create app password.', 'times')
+        Toast.show(_(msg`Failed to create app password.`), 'times')
         // TODO: better error handling (?)
       }
     } catch (e) {
-      Toast.show('Failed to create app password.', 'times')
+      Toast.show(_(msg`Failed to create app password.`), 'times')
       logger.error('Failed to create app password', {error: e})
     }
   }
@@ -127,7 +129,9 @@ export function Component({}: {}) {
       setName(text)
     } else {
       Toast.show(
-        'App Password names can only contain letters, numbers, spaces, dashes, and underscores.',
+        _(
+          msg`App Password names can only contain letters, numbers, spaces, dashes, and underscores.`,
+        ),
       )
     }
   }

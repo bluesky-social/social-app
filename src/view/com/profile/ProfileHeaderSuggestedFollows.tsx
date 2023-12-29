@@ -21,6 +21,8 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -167,6 +169,7 @@ function SuggestedFollow({
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const profile = useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
@@ -177,7 +180,7 @@ function SuggestedFollow({
       await queueFollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show('An issue occurred, please try again.')
+        Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
   }, [queueFollow, track])
@@ -187,7 +190,7 @@ function SuggestedFollow({
       await queueUnfollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show('An issue occurred, please try again.')
+        Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
   }, [queueUnfollow])

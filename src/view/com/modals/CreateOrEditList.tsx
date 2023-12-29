@@ -121,7 +121,7 @@ export function Component({
           description: description.trim(),
           avatar: newAvatar,
         })
-        Toast.show(`${purposeLabel} list updated`)
+        Toast.show(_(msg`${purposeLabel} list updated`))
         onSave?.(list.uri)
       } else {
         const res = await listCreateMutation.mutateAsync({
@@ -130,7 +130,7 @@ export function Component({
           description,
           avatar: newAvatar,
         })
-        Toast.show(`${purposeLabel} list created`)
+        Toast.show(_(msg`${purposeLabel} list created`))
         onSave?.(res.uri)
       }
       closeModal()

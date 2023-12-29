@@ -95,12 +95,12 @@ export const ChooseAccountForm = ({
       if (account.accessJwt) {
         if (account.did === currentAccount?.did) {
           setShowLoggedOut(false)
-          Toast.show(`Already signed in as @${account.handle}`)
+          Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
           await initSession(account)
           track('Sign In', {resumedSession: true})
           setTimeout(() => {
-            Toast.show(`Signed in as @${account.handle}`)
+            Toast.show(_(msg`Signed in as @${account.handle}`))
           }, 100)
         }
       } else {

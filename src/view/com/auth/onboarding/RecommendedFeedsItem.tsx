@@ -19,6 +19,8 @@ import {
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function RecommendedFeedsItem({
   item,
@@ -27,6 +29,7 @@ export function RecommendedFeedsItem({
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {
     mutateAsync: pinFeed,
@@ -52,7 +55,7 @@ export function RecommendedFeedsItem({
         await removeFeed({uri: item.uri})
         resetRemoveFeed()
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
+        Toast.show(_(msg`There was an issue contacting your server`))
         logger.error('Failed to unsave feed', {error: e})
       }
     } else {
@@ -61,7 +64,7 @@ export function RecommendedFeedsItem({
         resetPinFeed()
         track('Onboarding:CustomFeedAdded')
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
+        Toast.show(_(msg`There was an issue contacting your server`))
         logger.error('Failed to pin feed', {error: e})
       }
     }

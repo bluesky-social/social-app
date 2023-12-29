@@ -188,6 +188,7 @@ function ListItem({
   >['reset']
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
@@ -205,7 +206,7 @@ function ListItem({
         await pinFeed({uri: feedUri})
       }
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
   }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState])
@@ -227,7 +228,7 @@ function ListItem({
         index: pinned.indexOf(feedUri),
       })
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {error: e})
     }
   }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
@@ -248,7 +249,7 @@ function ListItem({
         index: pinned.indexOf(feedUri),
       })
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {error: e})
     }
   }, [feedUri, isPinned, setSavedFeeds, currentFeeds])

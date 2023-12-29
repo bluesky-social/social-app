@@ -75,7 +75,7 @@ export function Component({
           accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
-            {confirmBtnText ?? 'Confirm'}
+            {confirmBtnText ?? _(msg`Confirm`)}
           </Text>
         </TouchableOpacity>
       )}

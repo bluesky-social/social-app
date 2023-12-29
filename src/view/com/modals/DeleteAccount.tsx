@@ -62,7 +62,7 @@ export function Component({}: {}) {
         password,
         token,
       })
-      Toast.show('Your account has been deleted')
+      Toast.show(_(msg`Your account has been deleted`))
       resetToTab('HomeTab')
       removeAccount(currentAccount)
       clearCurrentAccount()

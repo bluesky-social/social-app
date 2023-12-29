@@ -53,7 +53,7 @@ export function Component() {
           email: email.trim(),
           emailConfirmed: false,
         })
-        Toast.show('Email updated')
+        Toast.show(_(msg`Email updated`))
         setStage(Stages.Done)
       }
     } catch (e) {
@@ -85,7 +85,7 @@ export function Component() {
         email: email.trim(),
         emailConfirmed: false,
       })
-      Toast.show('Email updated')
+      Toast.show(_(msg`Email updated`))
       setStage(Stages.Done)
     } catch (e) {
       setError(cleanError(String(e)))

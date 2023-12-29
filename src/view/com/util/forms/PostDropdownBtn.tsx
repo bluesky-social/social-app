@@ -71,11 +71,11 @@ let PostDropdownBtn = ({
   const onDeletePost = React.useCallback(() => {
     postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
-        Toast.show('Post deleted')
+        Toast.show(_(msg`Post deleted`))
       },
       e => {
         logger.error('Failed to delete post', {error: e})
-        Toast.show('Failed to delete post, please try again')
+        Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
   }, [postUri, postDeleteMutation])
@@ -84,9 +84,9 @@ let PostDropdownBtn = ({
     try {
       const muted = toggleThreadMute(rootUri)
       if (muted) {
-        Toast.show('You will no longer receive notifications for this thread')
+        Toast.show(_(msg`You will no longer receive notifications for this thread`))
       } else {
-        Toast.show('You will now receive notifications for this thread')
+        Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})

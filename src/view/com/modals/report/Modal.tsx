@@ -41,6 +41,7 @@ type ReportComponentProps =
 export function Component(content: ReportComponentProps) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
   const [showDetailsInput, setShowDetailsInput] = useState(false)
@@ -77,7 +78,7 @@ export function Component(content: ReportComponentProps) {
         },
         reason: details,
       })
-      Toast.show("Thank you for your report! We'll look into it promptly.")
+      Toast.show(_(msg`Thank you for your report! We'll look into it promptly.`))
 
       closeModal()
       return
