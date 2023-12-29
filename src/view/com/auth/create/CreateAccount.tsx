@@ -27,6 +27,7 @@ import {IS_PROD} from '#/lib/constants'
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
@@ -37,6 +38,7 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {createAccount} = useSessionApi()
   const {mutate: setBirthDate} = usePreferencesSetBirthDateMutation()
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
   React.useEffect(() => {
     screen('CreateAccount')
@@ -174,7 +176,7 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
             </>
           ) : undefined}
         </View>
-        <View style={{height: 400}} />
+        <View style={{height: isTabletOrDesktop ? 50 : 400}} />
       </ScrollView>
     </LoggedOutLayout>
   )
