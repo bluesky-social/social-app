@@ -20,7 +20,7 @@ export function ExternalGifEmbed({
   thumb?: string
   params: EmbedPlayerParams
 }) {
-  const isThumbLoaded = React.useRef(false)
+  const loadCount = React.useRef(0)
   const viewWidth = React.useRef(0)
 
   // Tracking if the placer has been activated
@@ -69,8 +69,9 @@ export function ExternalGifEmbed({
   )
 
   const onLoad = React.useCallback((e: ImageLoadEventData) => {
-    // Do nothing if we have already loaded the thumbnail. We don't need any more dimensions
-    if (isThumbLoaded.current) return
+    // We only want to load the thumbnail's dims and then the gif's dims. We shouldn't keep resetting dimensions
+    // to prevent unnecessary prop changes!
+    if (loadCount.current >= 2) return
 
     // Scale the height of the gif to fit the width of the container
     const scaledHeight = getGifHeight(
@@ -80,7 +81,7 @@ export function ExternalGifEmbed({
     )
     // Store those dims and update the ref
     setImageDims({height: scaledHeight, width: viewWidth.current})
-    isThumbLoaded.current = true
+    loadCount.current++
   }, [])
 
   const onLayout = React.useCallback((e: LayoutChangeEvent) => {
