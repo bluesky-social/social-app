@@ -2349,7 +2349,7 @@ msgstr "स्टेजिंग"
 msgid "Status page"
 msgstr "स्थिति पृष्ठ"
 
-#: src/view/com/auth/create/CreateAccount.tsx:119
+#: src/view/com/auth/create/CreateAccount.tsx:120
 msgid "Step {0}"
 msgstr ""
 

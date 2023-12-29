@@ -2246,7 +2246,7 @@ msgstr "Mise en scène"
 msgid "Status page"
 msgstr "Page de statut"
 
-#: src/view/com/auth/create/CreateAccount.tsx:119
+#: src/view/com/auth/create/CreateAccount.tsx:120
 msgid "Step {0}"
 msgstr ""
 
