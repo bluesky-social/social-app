@@ -611,7 +611,7 @@ msgid "Continue"
 msgstr "आगे बढ़ें"
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
-#: src/view/com/modals/InviteCodes.tsx:179
+#: src/view/com/modals/InviteCodes.tsx:181
 msgid "Copied"
 msgstr "कॉपी कर ली"
 
@@ -777,6 +777,8 @@ msgstr ""
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
 #: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/InviteCodes.tsx:80
+#: src/view/com/modals/InviteCodes.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
 #: src/view/com/modals/SelfLabel.tsx:157
@@ -793,7 +795,7 @@ msgstr "खत्म"
 msgid "Done{extraText}"
 msgstr "खत्म {extraText}"
 
-#: src/view/com/modals/InviteCodes.tsx:94
+#: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "प्रत्येक कोड एक बार काम करता है। आपको समय-समय पर अधिक आमंत्रण कोड प्राप्त होंगे।"
 
@@ -1142,7 +1144,7 @@ msgstr "अवैध उपयोगकर्ता नाम या पास�
 msgid "Invite"
 msgstr "आमंत्रण भेजो"
 
-#: src/view/com/modals/InviteCodes.tsx:91
+#: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:372
 msgid "Invite a Friend"
 msgstr "एक दोस्त को आमंत्रित करें"
@@ -2506,7 +2508,7 @@ msgstr "डिफ़ॉल्ट प्रदाता का उपयोग �
 msgid "Use this to sign into the other app along with your handle."
 msgstr "अपने हैंडल के साथ दूसरे ऐप में साइन इन करने के लिए इसका उपयोग करें।"
 
-#: src/view/com/modals/InviteCodes.tsx:197
+#: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "के द्वारा उपयोग:"
 
@@ -2647,7 +2649,7 @@ msgstr "आप किसी भी समय होस्टिंग प्र�
 msgid "You can now sign in with your new password."
 msgstr "अब आप अपने नए पासवर्ड के साथ साइन इन कर सकते हैं।।"
 
-#: src/view/com/modals/InviteCodes.tsx:64
+#: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "आपके पास अभी तक कोई आमंत्रण कोड नहीं है! जब आप कुछ अधिक समय के लिए Bluesky पर रहेंगे तो हम आपको कुछ भेजेंगे।"
 

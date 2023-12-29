@@ -583,7 +583,7 @@ msgid "Continue"
 msgstr "Continuar"
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
-#: src/view/com/modals/InviteCodes.tsx:179
+#: src/view/com/modals/InviteCodes.tsx:181
 msgid "Copied"
 msgstr "Copiado"
 
@@ -745,6 +745,8 @@ msgstr ""
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
 #: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/InviteCodes.tsx:80
+#: src/view/com/modals/InviteCodes.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
 #: src/view/com/modals/SelfLabel.tsx:157
@@ -761,7 +763,7 @@ msgstr "Listo"
 msgid "Done{extraText}"
 msgstr "Listo{extraText}"
 
-#: src/view/com/modals/InviteCodes.tsx:94
+#: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Cada código funciona una vez. Recibirás más códigos de invitación periódicamente."
 
@@ -1097,7 +1099,7 @@ msgstr "Nombre de usuario o contraseña no válidos"
 msgid "Invite"
 msgstr "Invitar"
 
-#: src/view/com/modals/InviteCodes.tsx:91
+#: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:372
 msgid "Invite a Friend"
 msgstr "Invitar a un amigo"
@@ -2387,7 +2389,7 @@ msgstr "Utiliza un proveedor predeterminado"
 msgid "Use this to sign into the other app along with your handle."
 msgstr "Utilízalo para iniciar sesión en la otra aplicación junto con tu identificador."
 
-#: src/view/com/modals/InviteCodes.tsx:197
+#: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "Usado por:"
 
@@ -2516,7 +2518,7 @@ msgstr "Puedes cambiar de proveedor de alojamiento en cualquier momento."
 msgid "You can now sign in with your new password."
 msgstr "Ahora puedes iniciar sesión con tu nueva contraseña."
 
-#: src/view/com/modals/InviteCodes.tsx:64
+#: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "¡Aún no tienes códigos de invitación! Te enviaremos algunos cuando lleves un poco más de tiempo en Bluesky."
 

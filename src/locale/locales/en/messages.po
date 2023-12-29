@@ -615,7 +615,7 @@ msgid "Continue"
 msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
-#: src/view/com/modals/InviteCodes.tsx:179
+#: src/view/com/modals/InviteCodes.tsx:181
 msgid "Copied"
 msgstr ""
 
@@ -781,6 +781,8 @@ msgstr ""
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
 #: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/InviteCodes.tsx:80
+#: src/view/com/modals/InviteCodes.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
 #: src/view/com/modals/SelfLabel.tsx:157
@@ -797,7 +799,7 @@ msgstr ""
 msgid "Done{extraText}"
 msgstr ""
 
-#: src/view/com/modals/InviteCodes.tsx:94
+#: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr ""
 
@@ -1150,7 +1152,7 @@ msgstr ""
 msgid "Invite"
 msgstr ""
 
-#: src/view/com/modals/InviteCodes.tsx:91
+#: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:372
 msgid "Invite a Friend"
 msgstr ""
@@ -2514,7 +2516,7 @@ msgstr ""
 msgid "Use this to sign into the other app along with your handle."
 msgstr ""
 
-#: src/view/com/modals/InviteCodes.tsx:197
+#: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr ""
 
@@ -2655,7 +2657,7 @@ msgstr ""
 msgid "You can now sign in with your new password."
 msgstr ""
 
-#: src/view/com/modals/InviteCodes.tsx:64
+#: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr ""
 

@@ -615,7 +615,7 @@ msgid "Continue"
 msgstr "계속"
 
 #: src/view/com/modals/AddAppPasswords.tsx:193
-#: src/view/com/modals/InviteCodes.tsx:179
+#: src/view/com/modals/InviteCodes.tsx:181
 msgid "Copied"
 msgstr "복사됨"
 
@@ -781,6 +781,8 @@ msgstr "초대 코드가 없으십니까?"
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
 #: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/InviteCodes.tsx:80
+#: src/view/com/modals/InviteCodes.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
 #: src/view/com/modals/SelfLabel.tsx:157
@@ -797,7 +799,7 @@ msgstr "완료"
 msgid "Done{extraText}"
 msgstr "완료{extraText}"
 
-#: src/view/com/modals/InviteCodes.tsx:94
+#: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
 
@@ -1150,7 +1152,7 @@ msgstr "잘못된 사용자 이름 또는 비밀번호"
 msgid "Invite"
 msgstr "초대"
 
-#: src/view/com/modals/InviteCodes.tsx:91
+#: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:372
 msgid "Invite a Friend"
 msgstr "친구 초대하기"
@@ -2514,7 +2516,7 @@ msgstr "기본 제공자 사용"
 msgid "Use this to sign into the other app along with your handle."
 msgstr "이 비밀번호와 핸들을 사용하여 다른 앱에 로그인하세요."
 
-#: src/view/com/modals/InviteCodes.tsx:197
+#: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "사용 계정:"
 
@@ -2655,7 +2657,7 @@ msgstr "언제든지 호스팅 제공자를 변경할 수 있습니다."
 msgid "You can now sign in with your new password."
 msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 
-#: src/view/com/modals/InviteCodes.tsx:64
+#: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
 msgstr "아직 초대 코드가 없습니다! Bluesky를 좀 더 오래 사용하신 후에 보내드리겠습니다."
 
