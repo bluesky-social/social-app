@@ -4,8 +4,6 @@ import {logger} from '#/logger'
 import {defaults, Schema, schema} from '#/state/persisted/schema'
 import {write, read} from '#/state/persisted/store'
 
-type ExternalSourceOption = 'ask' | 'always' | 'never'
-
 /**
  * The shape of the serialized data from our legacy Mobx store.
  */
@@ -64,16 +62,6 @@ export type LegacySchema = {
   }
   mutedThreads: {uris: string[]}
   reminders: {lastEmailConfirm?: string}
-  externalSources: {
-    giphy: ExternalSourceOption
-    tenor: ExternalSourceOption
-    youtube: ExternalSourceOption
-    twitch: ExternalSourceOption
-    vimeo: ExternalSourceOption
-    spotify: ExternalSourceOption
-    appleMusic: ExternalSourceOption
-    soundcloud: ExternalSourceOption
-  }
 }
 
 const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
@@ -122,20 +110,14 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     },
     hiddenPosts: defaults.hiddenPosts,
     externalSources: {
-      giphy: legacy.externalSources?.giphy || defaults.externalSources.giphy,
-      tenor: legacy.externalSources?.tenor || defaults.externalSources.tenor,
-      youtube:
-        legacy.externalSources?.youtube || defaults.externalSources.youtube,
-      twitch: legacy.externalSources?.twitch || defaults.externalSources.twitch,
-      vimeo: legacy.externalSources?.vimeo || defaults.externalSources.vimeo,
-      spotify:
-        legacy.externalSources?.spotify || defaults.externalSources.spotify,
-      appleMusic:
-        legacy.externalSources?.appleMusic ||
-        defaults.externalSources.appleMusic,
-      soundcloud:
-        legacy.externalSources?.soundcloud ||
-        defaults.externalSources.soundcloud,
+      giphy: defaults.externalSources.giphy,
+      tenor: defaults.externalSources.tenor,
+      youtube: defaults.externalSources.youtube,
+      twitch: defaults.externalSources.twitch,
+      vimeo: defaults.externalSources.vimeo,
+      spotify: defaults.externalSources.spotify,
+      appleMusic: defaults.externalSources.appleMusic,
+      soundcloud: defaults.externalSources.soundcloud,
     },
   }
 }
