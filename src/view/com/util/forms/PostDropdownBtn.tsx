@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
-import {shareUrl} from 'lib/sharing'
+import {ShareUrl} from 'lib/sharing'
 import {
   NativeDropdown,
   DropdownItem as NativeDropdownItem,
