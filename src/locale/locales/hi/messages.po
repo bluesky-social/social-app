@@ -2679,6 +2679,10 @@ msgstr "नया ईमेल सत्यापित करें"
 msgid "View debug entry"
 msgstr "डीबग प्रविष्टि देखें"
 
+#: src/view/com/posts/FeedSlice.tsx:103
+msgid "View full thread"
+msgstr ""
+
 #: src/view/com/profile/ProfileSubpageHeader.tsx:128
 msgid "View the avatar"
 msgstr "अवतार देखें"

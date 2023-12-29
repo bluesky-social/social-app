@@ -2588,6 +2588,10 @@ msgstr "新しいメールアドレスを確認"
 msgid "View debug entry"
 msgstr "欠陥事項を表示"
 
+#: src/view/com/posts/FeedSlice.tsx:103
+msgid "View full thread"
+msgstr ""
+
 #: src/view/com/profile/ProfileSubpageHeader.tsx:128
 msgid "View the avatar"
 msgstr "アバターを表示"

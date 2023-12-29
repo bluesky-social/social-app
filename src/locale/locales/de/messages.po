@@ -2572,6 +2572,10 @@ msgstr "Neuer E-Mail überprüfen"
 msgid "View debug entry"
 msgstr "Debug-Eintrag anzeigen"
 
+#: src/view/com/posts/FeedSlice.tsx:103
+msgid "View full thread"
+msgstr ""
+
 #: src/view/com/profile/ProfileSubpageHeader.tsx:128
 msgid "View the avatar"
 msgstr "Avatar sehen"

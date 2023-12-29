@@ -2687,6 +2687,10 @@ msgstr "새 이메일 확인"
 msgid "View debug entry"
 msgstr "디버그 항목 보기"
 
+#: src/view/com/posts/FeedSlice.tsx:103
+msgid "View full thread"
+msgstr "전체 스레드 보기"
+
 #: src/view/com/profile/ProfileSubpageHeader.tsx:128
 msgid "View the avatar"
 msgstr "아바타 보기"
