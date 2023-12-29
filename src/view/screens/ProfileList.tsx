@@ -783,7 +783,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
       return (
         <EmptyState
           icon="users-slash"
-          message="This list is empty!"
+          message={_(msg`This list is empty!`)}
           style={{paddingTop: 40}}
         />
       )

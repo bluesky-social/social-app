@@ -374,6 +374,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
+    const {_} = useLingui()
 
     const onScrollToTop = React.useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -388,8 +389,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }))
 
     const renderPostsEmpty = React.useCallback(() => {
-      return <EmptyState icon="feed" message="This feed is empty!" />
-    }, [])
+      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    }, [_])
 
     return (
       <View>

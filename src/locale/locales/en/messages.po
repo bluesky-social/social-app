@@ -811,6 +811,10 @@ msgstr ""
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr ""
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
+msgid "Edit"
+msgstr ""
+
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
 msgid "Edit image"
@@ -868,7 +872,7 @@ msgstr ""
 msgid "Enable this setting to only see replies between people you follow."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:426
+#: src/view/screens/Profile.tsx:427
 msgid "End of feed"
 msgstr ""
 
@@ -1298,7 +1302,7 @@ msgstr ""
 msgid "Light"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:586
+#: src/view/screens/ProfileFeed.tsx:587
 msgid "Like this feed"
 msgstr ""
 
@@ -1404,6 +1408,7 @@ msgstr ""
 msgid "Message from server"
 msgstr ""
 
+#: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
 #: src/view/shell/desktop/LeftNav.tsx:397
@@ -1503,6 +1508,7 @@ msgstr ""
 msgid "Never lose access to your followers and data."
 msgstr ""
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -1549,7 +1555,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileFeed.tsx:580
 #: src/view/screens/ProfileList.tsx:721
 msgid "No description"
 msgstr ""
@@ -2467,6 +2473,8 @@ msgstr ""
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
+#: src/view/screens/Profile.tsx:392
+#: src/view/screens/ProfileFeed.tsx:474
 #: src/view/screens/ProfileList.tsx:628
 msgid "This feed is empty!"
 msgstr ""
@@ -2485,6 +2493,10 @@ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:786
+msgid "This list is empty!"
 msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
@@ -2618,6 +2630,10 @@ msgstr ""
 
 #: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:68
+msgid "User"
 msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:38

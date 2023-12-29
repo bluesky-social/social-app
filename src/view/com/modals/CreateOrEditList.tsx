@@ -65,7 +65,7 @@ export function Component({
     return 'app.bsky.graph.defs#curatelist'
   }, [list, purpose])
   const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
-  const purposeLabel = isCurateList ? 'User' : 'Moderation'
+  const purposeLabel = isCurateList ? _(msg`User`) : _(msg`Moderation`)
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')
@@ -174,7 +174,7 @@ export function Component({
         testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
           <Trans>
-            {list ? 'Edit' : 'New'} {purposeLabel} List
+            {list ? _(msg`Edit`) : _(msg`New`)} {purposeLabel} List
           </Trans>
         </Text>
         {error !== '' && (

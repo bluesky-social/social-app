@@ -811,6 +811,10 @@ msgstr "완료{extraText}"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
+msgid "Edit"
+msgstr "편집"
+
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
 msgid "Edit image"
@@ -868,7 +872,7 @@ msgstr "성인 콘텐츠 활성화"
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
 
-#: src/view/screens/Profile.tsx:426
+#: src/view/screens/Profile.tsx:427
 msgid "End of feed"
 msgstr "피드 끝"
 
@@ -1298,7 +1302,7 @@ msgstr "라이브러리"
 msgid "Light"
 msgstr "밝음"
 
-#: src/view/screens/ProfileFeed.tsx:586
+#: src/view/screens/ProfileFeed.tsx:587
 msgid "Like this feed"
 msgstr "이 피드"
 
@@ -1404,6 +1408,7 @@ msgstr "메뉴"
 msgid "Message from server"
 msgstr "서버에서 보낸 메시지"
 
+#: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
 #: src/view/shell/desktop/LeftNav.tsx:397
@@ -1503,6 +1508,7 @@ msgstr "이름"
 msgid "Never lose access to your followers and data."
 msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 않습니다."
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -1549,7 +1555,7 @@ msgstr "다음 이미지"
 msgid "No"
 msgstr "아니요"
 
-#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileFeed.tsx:580
 #: src/view/screens/ProfileList.tsx:721
 msgid "No description"
 msgstr "설명 없음"
@@ -2467,6 +2473,8 @@ msgstr "이 콘텐츠는 Bluesky 계정이 없으면 볼 수 없습니다."
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "이 피드는 현재 트래픽이 많아 일시적으로 사용할 수 없습니다. 나중에 다시 시도해 주세요."
 
+#: src/view/screens/Profile.tsx:392
+#: src/view/screens/ProfileFeed.tsx:474
 #: src/view/screens/ProfileList.tsx:628
 msgid "This feed is empty!"
 msgstr "이 피드는 비어 있습니다."
@@ -2486,6 +2494,10 @@ msgstr "온라인 상태를 유지할 수 있게 하는 서비스입니다."
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
 msgstr "이 링크를 클릭하면 다음 웹사이트로 이동합니다:"
+
+#: src/view/screens/ProfileList.tsx:786
+msgid "This list is empty!"
+msgstr "이 리스트는 비어 있습니다."
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
@@ -2619,6 +2631,10 @@ msgstr "이 비밀번호와 핸들을 사용하여 다른 앱에 로그인하세
 #: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "사용 계정:"
+
+#: src/view/com/modals/CreateOrEditList.tsx:68
+msgid "User"
+msgstr "사용자"
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"

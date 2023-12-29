@@ -779,6 +779,10 @@ msgstr "Erledigt{extraText}"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Jeder Code funktioniert einmal. Sie werden regelmäßig weitere Einladungscodes erhalten."
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
+msgid "Edit"
+msgstr ""
+
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
 msgid "Edit image"
@@ -836,7 +840,7 @@ msgstr ""
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Aktivieren Sie diese Einstellung, um nur Antworten zwischen Personen zu sehen, denen Sie folgen."
 
-#: src/view/screens/Profile.tsx:426
+#: src/view/screens/Profile.tsx:427
 msgid "End of feed"
 msgstr "Ende des Feeds"
 
@@ -1249,7 +1253,7 @@ msgstr "Bibliothek"
 msgid "Light"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:586
+#: src/view/screens/ProfileFeed.tsx:587
 msgid "Like this feed"
 msgstr "Dieser Feed gefallen"
 
@@ -1343,6 +1347,7 @@ msgstr "Menü"
 msgid "Message from server"
 msgstr "Meldung vom Server"
 
+#: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
 #: src/view/shell/desktop/LeftNav.tsx:397
@@ -1434,6 +1439,7 @@ msgstr "Namen"
 msgid "Never lose access to your followers and data."
 msgstr "Verlieren Sie nie den Zugriff auf Ihre Follower und Daten."
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -1480,7 +1486,7 @@ msgstr "Nächstes Bild "
 msgid "No"
 msgstr "Nein"
 
-#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileFeed.tsx:580
 #: src/view/screens/ProfileList.tsx:721
 msgid "No description"
 msgstr "Ohne Beschreibung"
@@ -2356,6 +2362,8 @@ msgstr "Dieser Inhalt kann ohne Bluesky-Konto nicht angezeigt werden."
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Dieser Feed wird derzeit stark frequentiert und ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut."
 
+#: src/view/screens/Profile.tsx:392
+#: src/view/screens/ProfileFeed.tsx:474
 #: src/view/screens/ProfileList.tsx:628
 msgid "This feed is empty!"
 msgstr ""
@@ -2375,6 +2383,10 @@ msgstr "Das ist der Dienst, der Sie online hält."
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
 msgstr "Dieser Link führt Sie auf die folgende Website:"
+
+#: src/view/screens/ProfileList.tsx:786
+msgid "This list is empty!"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
@@ -2508,6 +2520,10 @@ msgstr "Verwenden Sie dies, um sich mit Ihrem Handle bei der anderen App anzumel
 #: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "Verwendet von:"
+
+#: src/view/com/modals/CreateOrEditList.tsx:68
+msgid "User"
+msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"

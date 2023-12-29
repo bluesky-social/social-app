@@ -779,6 +779,10 @@ msgstr "Listo{extraText}"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Cada código funciona una vez. Recibirás más códigos de invitación periódicamente."
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
+msgid "Edit"
+msgstr ""
+
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
 msgid "Edit image"
@@ -836,7 +840,7 @@ msgstr ""
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Activa esta opción para ver sólo las respuestas de las personas a las que sigues."
 
-#: src/view/screens/Profile.tsx:426
+#: src/view/screens/Profile.tsx:427
 msgid "End of feed"
 msgstr "Fin de noticias"
 
@@ -1249,7 +1253,7 @@ msgstr "Librería"
 msgid "Light"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:586
+#: src/view/screens/ProfileFeed.tsx:587
 msgid "Like this feed"
 msgstr "Dar «me gusta» a esta noticia"
 
@@ -1343,6 +1347,7 @@ msgstr "Menú"
 msgid "Message from server"
 msgstr "Mensaje del servidor"
 
+#: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
 #: src/view/shell/desktop/LeftNav.tsx:397
@@ -1434,6 +1439,7 @@ msgstr "Nombre"
 msgid "Never lose access to your followers and data."
 msgstr "No pierdas nunca el acceso a tus seguidores y datos."
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -1480,7 +1486,7 @@ msgstr "Imagen nueva"
 msgid "No"
 msgstr "No"
 
-#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileFeed.tsx:580
 #: src/view/screens/ProfileList.tsx:721
 msgid "No description"
 msgstr "Sin descripción"
@@ -2356,6 +2362,8 @@ msgstr "Este contenido no se puede ver sin una cuenta Bluesky."
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "Este canal de noticias está recibiendo mucho tráfico y no está disponible temporalmente. Vuelve a intentarlo más tarde."
 
+#: src/view/screens/Profile.tsx:392
+#: src/view/screens/ProfileFeed.tsx:474
 #: src/view/screens/ProfileList.tsx:628
 msgid "This feed is empty!"
 msgstr ""
@@ -2375,6 +2383,10 @@ msgstr "Es el servicio que te mantiene en línea."
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
 msgstr "Este enlace te lleva al siguiente sitio web:"
+
+#: src/view/screens/ProfileList.tsx:786
+msgid "This list is empty!"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
@@ -2508,6 +2520,10 @@ msgstr "Utilízalo para iniciar sesión en la otra aplicación junto con tu iden
 #: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "Usado por:"
+
+#: src/view/com/modals/CreateOrEditList.tsx:68
+msgid "User"
+msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"

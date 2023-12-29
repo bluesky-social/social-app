@@ -779,6 +779,10 @@ msgstr "完了{extraText}"
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一度ずつ動作します。定期的に招待コードをお送りします。"
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
+msgid "Edit"
+msgstr ""
+
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
 msgid "Edit image"
@@ -836,7 +840,7 @@ msgstr ""
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "この設定を有効にすると、自分がフォローしているユーザーからの返信だけが表示されます。"
 
-#: src/view/screens/Profile.tsx:426
+#: src/view/screens/Profile.tsx:427
 msgid "End of feed"
 msgstr "フィードの終わり"
 
@@ -1249,7 +1253,7 @@ msgstr "ライブラリー"
 msgid "Light"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:586
+#: src/view/screens/ProfileFeed.tsx:587
 msgid "Like this feed"
 msgstr "このフィードをいいね"
 
@@ -1351,6 +1355,7 @@ msgstr "メニュー"
 msgid "Message from server"
 msgstr "サーバーからのメッセージ"
 
+#: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
 #: src/view/shell/desktop/LeftNav.tsx:397
@@ -1442,6 +1447,7 @@ msgstr "名前"
 msgid "Never lose access to your followers and data."
 msgstr "フォロワーやデータへのアクセスを失うことはありません。"
 
+#: src/view/com/modals/CreateOrEditList.tsx:177
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
@@ -1488,7 +1494,7 @@ msgstr "次の画像"
 msgid "No"
 msgstr "いいえ"
 
-#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileFeed.tsx:580
 #: src/view/screens/ProfileList.tsx:721
 msgid "No description"
 msgstr "説明はありません"
@@ -2372,6 +2378,8 @@ msgstr "このコンテンツはBlueskyのアカウントがないと閲覧で�
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr "現在このフィードにはアクセスが集中しており、一時的にご利用いただけません。時間をおいてもう一度お試しください。"
 
+#: src/view/screens/Profile.tsx:392
+#: src/view/screens/ProfileFeed.tsx:474
 #: src/view/screens/ProfileList.tsx:628
 msgid "This feed is empty!"
 msgstr ""
@@ -2391,6 +2399,10 @@ msgstr "これはオンラインを維持するためのサービスです。"
 #: src/view/com/modals/LinkWarning.tsx:56
 msgid "This link is taking you to the following website:"
 msgstr "このリンクは次のウェブサイトへリンクしています："
+
+#: src/view/screens/ProfileList.tsx:786
+msgid "This list is empty!"
+msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
@@ -2524,6 +2536,10 @@ msgstr "これとハンドルを使って他のアプリにサインインしま
 #: src/view/com/modals/InviteCodes.tsx:199
 msgid "Used by:"
 msgstr "使用者："
+
+#: src/view/com/modals/CreateOrEditList.tsx:68
+msgid "User"
+msgstr ""
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"
