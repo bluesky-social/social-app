@@ -220,7 +220,15 @@ export function ProfileFeedScreenInner({
       )
       logger.error('Failed up update feeds', {error: err})
     }
-  }, [feedInfo, isSaved, saveFeed, removeFeed, resetSaveFeed, resetRemoveFeed, _])
+  }, [
+    feedInfo,
+    isSaved,
+    saveFeed,
+    removeFeed,
+    resetSaveFeed,
+    resetRemoveFeed,
+    _,
+  ])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
