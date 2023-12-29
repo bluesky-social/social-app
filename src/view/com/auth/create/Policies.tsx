@@ -43,7 +43,9 @@ export const Policies = ({
           />
         </View>
         <Text style={[pal.textLight, s.pl5, s.flex1]}>
-          <Trans>This service has not provided terms of service or a privacy policy.</Trans>
+          <Trans>
+            This service has not provided terms of service or a privacy policy.
+          </Trans>
         </Text>
       </View>
     )
