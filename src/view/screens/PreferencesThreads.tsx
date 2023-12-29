@@ -79,11 +79,11 @@ export function PreferencesThreads({navigation}: Props) {
                     {key: 'newest', label: _(msg`Newest replies first`)},
                     {
                       key: 'most-likes',
-                      label: _(msg`Most-liked replies first`)
+                      label: _(msg`Most-liked replies first`),
                     },
                     {
                       key: 'random',
-                      label: _(msg`Random (aka "Poster\'s Roulette")`)
+                      label: _(msg`Random (aka "Poster\'s Roulette")`),
                     },
                   ]}
                   onSelect={key => setThreadViewPrefs({sort: key})}
