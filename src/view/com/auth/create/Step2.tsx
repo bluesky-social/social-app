@@ -71,6 +71,9 @@ export function Step2({
             onChange={value => uiDispatch({type: 'set-invite-code', value})}
             accessibilityLabel={_(msg`Invite code`)}
             accessibilityHint="Input invite code to proceed"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
           />
         </View>
       )}
@@ -105,6 +108,9 @@ export function Step2({
               accessibilityLabel={_(msg`Email`)}
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           </View>
 
@@ -126,6 +132,9 @@ export function Step2({
               accessibilityLabel={_(msg`Password`)}
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           </View>
 

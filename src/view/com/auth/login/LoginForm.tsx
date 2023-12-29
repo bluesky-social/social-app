@@ -174,6 +174,7 @@ export const LoginForm = ({
             autoCorrect={false}
             autoComplete="username"
             returnKeyType="next"
+            textContentType="username"
             onSubmitEditing={() => {
               passwordInputRef.current?.focus()
             }}
