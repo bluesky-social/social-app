@@ -556,7 +556,7 @@ export function SearchScreen(
           <TextInput
             testID="searchTextInput"
             ref={textInput}
-            placeholder="Search"
+            placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus
             returnKeyType="search"
