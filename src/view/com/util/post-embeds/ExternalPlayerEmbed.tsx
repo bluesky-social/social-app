@@ -19,7 +19,7 @@ import {
 } from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {isNative, isWeb} from 'platform/detection'
+import {isIOS, isNative, isWeb} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 
@@ -266,6 +266,7 @@ export function ExternalGifEmbed({
 
       // Control animation on native
       setIsAnimating(prev => {
+        console.log(prev)
         if (prev) {
           imageRef.current?.stopAnimating()
           return false
@@ -324,7 +325,7 @@ export function ExternalGifEmbed({
         autoplay={isAnimating}
         contentFit="contain"
         accessibilityIgnoresInvertColors
-        cachePolicy="memory-disk"
+        cachePolicy={isIOS ? 'disk' : 'memory-disk'}
       />
     </Pressable>
   )
