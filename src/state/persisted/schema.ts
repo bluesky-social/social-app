@@ -1,6 +1,8 @@
 import {z} from 'zod'
 import {deviceLocales} from '#/platform/detection'
 
+const externalSourceOptions = ['ask', 'always', 'never'] as const
+
 // only data needed for rendering account page
 const accountSchema = z.object({
   service: z.string(),
@@ -30,6 +32,16 @@ export const schema = z.object({
     appLanguage: z.string(),
   }),
   requireAltTextEnabled: z.boolean(), // should move to server
+  externalSources: z.object({
+    giphy: z.enum(externalSourceOptions),
+    tenor: z.enum(externalSourceOptions),
+    youtube: z.enum(externalSourceOptions),
+    twitch: z.enum(externalSourceOptions),
+    vimeo: z.enum(externalSourceOptions),
+    spotify: z.enum(externalSourceOptions),
+    appleMusic: z.enum(externalSourceOptions),
+    soundcloud: z.enum(externalSourceOptions),
+  }),
   mutedThreads: z.array(z.string()), // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
@@ -60,6 +72,16 @@ export const defaults: Schema = {
     appLanguage: deviceLocales[0] || 'en',
   },
   requireAltTextEnabled: false,
+  externalSources: {
+    giphy: 'ask',
+    tenor: 'ask',
+    youtube: 'ask',
+    twitch: 'ask',
+    vimeo: 'ask',
+    spotify: 'ask',
+    appleMusic: 'ask',
+    soundcloud: 'ask',
+  },
   mutedThreads: [],
   invites: {
     copiedInvites: [],
