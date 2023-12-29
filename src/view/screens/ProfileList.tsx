@@ -787,7 +787,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
           style={{paddingTop: 40}}
         />
       )
-    }, [])
+    }, [_])
 
     return (
       <View>
