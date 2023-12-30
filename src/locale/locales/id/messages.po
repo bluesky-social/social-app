@@ -430,7 +430,7 @@ msgstr "Lihat beberapa rekomendasi pengguna. Ikuti mereka untuk melihat pengguna
 
 #: src/view/com/modals/DeleteAccount.tsx:163
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Periksa inbox email Anda untuk kode konfirmasi dan masukkan di bawah ini:"
+msgstr "Periksa kotak masuk email Anda untuk kode konfirmasi dan masukkan di bawah ini:"
 
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
@@ -471,7 +471,7 @@ msgstr "Tutup peringatan"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
 msgid "Close bottom drawer"
-msgstr "Tutup laci bawah"
+msgstr "Tutup kotak bawah"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:26
 msgid "Close image"
@@ -978,7 +978,7 @@ msgstr "Sembunyikan post ini?"
 
 #: src/view/com/notifications/FeedItem.tsx:308
 msgid "Hide user list"
-msgstr "Ocultar la lista de usuarios"
+msgstr "Sembunyikan daftar pengguna"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:110
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -1232,7 +1232,7 @@ msgstr "Moderasi"
 
 #: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
-msgstr "Listas de moderación"
+msgstr "Daftar moderasi"
 
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
@@ -1286,7 +1286,7 @@ msgstr "Pembisuan akun bersifat pribadi. Akun yang dibisukan tetap dapat berinte
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
-msgstr "Ulang Tahun Saya"
+msgstr "Tanggal Lahir Saya"
 
 #: src/view/screens/Feeds.tsx:363
 msgid "My Feeds"
