@@ -187,7 +187,7 @@ msgstr "Fügen Sie den folgenden DNS-Eintrag zu Ihrem Domainnamen hinzu:"
 msgid "Add to Lists"
 msgstr "Den Listen hinzufügen"
 
-#: src/view/screens/ProfileFeed.tsx:273
+#: src/view/screens/ProfileFeed.tsx:281
 msgid "Add to my feeds"
 msgstr "Zu meinen Feeds hinzufügen"
 
@@ -1411,7 +1411,7 @@ msgstr "Bibliothek"
 msgid "Light"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:591
+#: src/view/screens/ProfileFeed.tsx:599
 msgid "Like this feed"
 msgstr "Dieser Feed gefallen"
 
@@ -1547,7 +1547,7 @@ msgid "More feeds"
 msgstr "Mehr Feeds "
 
 #: src/view/com/profile/ProfileHeader.tsx:552
-#: src/view/screens/ProfileFeed.tsx:363
+#: src/view/screens/ProfileFeed.tsx:371
 #: src/view/screens/ProfileList.tsx:592
 msgid "More options"
 msgstr "Mehr Optionen"
@@ -1631,7 +1631,7 @@ msgstr "Neu"
 #: src/view/com/feeds/FeedPage.tsx:200
 #: src/view/screens/Feeds.tsx:507
 #: src/view/screens/Profile.tsx:354
-#: src/view/screens/ProfileFeed.tsx:433
+#: src/view/screens/ProfileFeed.tsx:441
 #: src/view/screens/ProfileList.tsx:194
 #: src/view/screens/ProfileList.tsx:222
 #: src/view/shell/desktop/LeftNav.tsx:248
@@ -1670,7 +1670,7 @@ msgstr "Nächstes Bild "
 msgid "No"
 msgstr "Nein"
 
-#: src/view/screens/ProfileFeed.tsx:584
+#: src/view/screens/ProfileFeed.tsx:592
 #: src/view/screens/ProfileList.tsx:729
 msgid "No description"
 msgstr "Ohne Beschreibung"
@@ -1850,7 +1850,7 @@ msgstr ""
 msgid "Pictures meant for adults."
 msgstr "Bilder, die für Erwachsene gedacht sind."
 
-#: src/view/screens/ProfileFeed.tsx:354
+#: src/view/screens/ProfileFeed.tsx:362
 #: src/view/screens/ProfileList.tsx:556
 msgid "Pin to home"
 msgstr ""
@@ -2049,7 +2049,7 @@ msgstr "Feed entfernen"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:105
 #: src/view/com/feeds/FeedSourceCard.tsx:172
-#: src/view/screens/ProfileFeed.tsx:273
+#: src/view/screens/ProfileFeed.tsx:281
 msgid "Remove from my feeds"
 msgstr "Aus meinen Feeds entfernen"
 
@@ -2103,7 +2103,7 @@ msgstr "Bericht {Sammlungsname}"
 msgid "Report Account"
 msgstr "Bericht Konto"
 
-#: src/view/screens/ProfileFeed.tsx:293
+#: src/view/screens/ProfileFeed.tsx:301
 msgid "Report feed"
 msgstr "Bericht Feed"
 
@@ -2194,7 +2194,7 @@ msgstr "Wiederholung"
 #: src/view/com/modals/CreateOrEditList.tsx:250
 #: src/view/com/modals/CreateOrEditList.tsx:258
 #: src/view/com/modals/EditProfile.tsx:224
-#: src/view/screens/ProfileFeed.tsx:346
+#: src/view/screens/ProfileFeed.tsx:354
 msgid "Save"
 msgstr "Speichern"
 
@@ -2345,7 +2345,7 @@ msgstr ""
 msgid "Share"
 msgstr "Teilen"
 
-#: src/view/screens/ProfileFeed.tsx:305
+#: src/view/screens/ProfileFeed.tsx:313
 msgid "Share feed"
 msgstr "Feeds teilen"
 
@@ -2470,8 +2470,8 @@ msgid "Sorry! We need you to enter your password."
 msgstr ""
 
 #: src/App.native.tsx:57
-msgid "Sorry! Your session expired. Please log in again."
-msgstr ""
+#~ msgid "Sorry! Your session expired. Please log in again."
+#~ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
@@ -2611,7 +2611,7 @@ msgstr ""
 msgid "The Terms of Service have been moved to"
 msgstr "Die Allgemeinen Geschäftsbedingungen wurden verschoben nach"
 
-#: src/view/screens/ProfileFeed.tsx:549
+#: src/view/screens/ProfileFeed.tsx:557
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
@@ -2619,7 +2619,7 @@ msgstr ""
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:237
+#: src/view/screens/ProfileFeed.tsx:245
 #: src/view/screens/ProfileList.tsx:263
 #: src/view/screens/SavedFeeds.tsx:209
 #: src/view/screens/SavedFeeds.tsx:231
@@ -2680,7 +2680,7 @@ msgid "This feed is currently receiving high traffic and is temporarily unavaila
 msgstr "Dieser Feed wird derzeit stark frequentiert und ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut."
 
 #: src/view/screens/Profile.tsx:392
-#: src/view/screens/ProfileFeed.tsx:476
+#: src/view/screens/ProfileFeed.tsx:484
 #: src/view/screens/ProfileList.tsx:636
 msgid "This feed is empty!"
 msgstr ""
@@ -2810,7 +2810,7 @@ msgstr "Konto entstören"
 msgid "Unmute thread"
 msgstr "Thema aufheben"
 
-#: src/view/screens/ProfileFeed.tsx:354
+#: src/view/screens/ProfileFeed.tsx:362
 #: src/view/screens/ProfileList.tsx:556
 msgid "Unpin"
 msgstr ""
@@ -2819,7 +2819,7 @@ msgstr ""
 msgid "Unpin moderation list"
 msgstr "Moderation Liste"
 
-#: src/view/screens/ProfileFeed.tsx:346
+#: src/view/screens/ProfileFeed.tsx:354
 msgid "Unsave"
 msgstr ""
 

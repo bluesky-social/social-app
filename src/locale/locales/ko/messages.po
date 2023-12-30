@@ -207,7 +207,7 @@ msgstr "도메인에 다음 DNS 레코드를 추가하세요:"
 msgid "Add to Lists"
 msgstr "리스트에 추가"
 
-#: src/view/screens/ProfileFeed.tsx:273
+#: src/view/screens/ProfileFeed.tsx:281
 msgid "Add to my feeds"
 msgstr "내 피드에 추가"
 
@@ -1460,7 +1460,7 @@ msgstr "라이브러리"
 msgid "Light"
 msgstr "밝음"
 
-#: src/view/screens/ProfileFeed.tsx:591
+#: src/view/screens/ProfileFeed.tsx:599
 msgid "Like this feed"
 msgstr "이 피드"
 
@@ -1608,7 +1608,7 @@ msgid "More feeds"
 msgstr "피드 더 보기"
 
 #: src/view/com/profile/ProfileHeader.tsx:552
-#: src/view/screens/ProfileFeed.tsx:363
+#: src/view/screens/ProfileFeed.tsx:371
 #: src/view/screens/ProfileList.tsx:592
 msgid "More options"
 msgstr "옵션 더 보기"
@@ -1700,7 +1700,7 @@ msgstr "신규"
 #: src/view/com/feeds/FeedPage.tsx:200
 #: src/view/screens/Feeds.tsx:507
 #: src/view/screens/Profile.tsx:354
-#: src/view/screens/ProfileFeed.tsx:433
+#: src/view/screens/ProfileFeed.tsx:441
 #: src/view/screens/ProfileList.tsx:194
 #: src/view/screens/ProfileList.tsx:222
 #: src/view/shell/desktop/LeftNav.tsx:248
@@ -1739,7 +1739,7 @@ msgstr "다음 이미지"
 msgid "No"
 msgstr "아니요"
 
-#: src/view/screens/ProfileFeed.tsx:584
+#: src/view/screens/ProfileFeed.tsx:592
 #: src/view/screens/ProfileList.tsx:729
 msgid "No description"
 msgstr "설명 없음"
@@ -1936,7 +1936,7 @@ msgstr "앨범에 접근할 수 있는 권한이 거부되었습니다. 시스�
 msgid "Pictures meant for adults."
 msgstr "성인용 사진."
 
-#: src/view/screens/ProfileFeed.tsx:354
+#: src/view/screens/ProfileFeed.tsx:362
 #: src/view/screens/ProfileList.tsx:556
 msgid "Pin to home"
 msgstr "홈에 고정"
@@ -2140,7 +2140,7 @@ msgstr "피드 제거"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:105
 #: src/view/com/feeds/FeedSourceCard.tsx:172
-#: src/view/screens/ProfileFeed.tsx:273
+#: src/view/screens/ProfileFeed.tsx:281
 msgid "Remove from my feeds"
 msgstr "내 피드에서 제거"
 
@@ -2194,7 +2194,7 @@ msgstr "{collectionName} 신고"
 msgid "Report Account"
 msgstr "계정 신고"
 
-#: src/view/screens/ProfileFeed.tsx:293
+#: src/view/screens/ProfileFeed.tsx:301
 msgid "Report feed"
 msgstr "피드 신고"
 
@@ -2293,7 +2293,7 @@ msgstr "다시 시도"
 #: src/view/com/modals/CreateOrEditList.tsx:250
 #: src/view/com/modals/CreateOrEditList.tsx:258
 #: src/view/com/modals/EditProfile.tsx:224
-#: src/view/screens/ProfileFeed.tsx:346
+#: src/view/screens/ProfileFeed.tsx:354
 msgid "Save"
 msgstr "저장"
 
@@ -2452,7 +2452,7 @@ msgstr "성적 암시"
 msgid "Share"
 msgstr "공유"
 
-#: src/view/screens/ProfileFeed.tsx:305
+#: src/view/screens/ProfileFeed.tsx:313
 msgid "Share feed"
 msgstr "피드 공유"
 
@@ -2581,8 +2581,8 @@ msgid "Sorry! We need you to enter your password."
 msgstr "죄송합니다. 비밀번호를 입력해 주세요."
 
 #: src/App.native.tsx:57
-msgid "Sorry! Your session expired. Please log in again."
-msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
+#~ msgid "Sorry! Your session expired. Please log in again."
+#~ msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
@@ -2722,7 +2722,7 @@ msgstr "작업을 문제 없이 성공적으로 완료했습니다."
 msgid "The Terms of Service have been moved to"
 msgstr "서비스 이용약관이 다음으로 이동되었습니다:"
 
-#: src/view/screens/ProfileFeed.tsx:549
+#: src/view/screens/ProfileFeed.tsx:557
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
@@ -2730,7 +2730,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 �
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
 msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
-#: src/view/screens/ProfileFeed.tsx:237
+#: src/view/screens/ProfileFeed.tsx:245
 #: src/view/screens/ProfileList.tsx:263
 #: src/view/screens/SavedFeeds.tsx:209
 #: src/view/screens/SavedFeeds.tsx:231
@@ -2791,7 +2791,7 @@ msgid "This feed is currently receiving high traffic and is temporarily unavaila
 msgstr "이 피드는 현재 트래픽이 많아 일시적으로 사용할 수 없습니다. 나중에 다시 시도해 주세요."
 
 #: src/view/screens/Profile.tsx:392
-#: src/view/screens/ProfileFeed.tsx:476
+#: src/view/screens/ProfileFeed.tsx:484
 #: src/view/screens/ProfileList.tsx:636
 msgid "This feed is empty!"
 msgstr "이 피드는 비어 있습니다."
@@ -2921,7 +2921,7 @@ msgstr "계정 언뮤트"
 msgid "Unmute thread"
 msgstr "스레드 언뮤트"
 
-#: src/view/screens/ProfileFeed.tsx:354
+#: src/view/screens/ProfileFeed.tsx:362
 #: src/view/screens/ProfileList.tsx:556
 msgid "Unpin"
 msgstr "고정 해제"
@@ -2930,7 +2930,7 @@ msgstr "고정 해제"
 msgid "Unpin moderation list"
 msgstr "검토 리스트 고정 해제"
 
-#: src/view/screens/ProfileFeed.tsx:346
+#: src/view/screens/ProfileFeed.tsx:354
 msgid "Unsave"
 msgstr "저장 해제"
 

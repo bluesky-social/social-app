@@ -39,13 +39,10 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Splash} from '#/Splash'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
-  const {_} = useLingui()
   const colorMode = useColorMode()
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
@@ -54,12 +51,12 @@ function InnerApp() {
   useEffect(() => {
     notifications.init(queryClient)
     listenSessionDropped(() => {
-      Toast.show(_(msg`Sorry! Your session expired. Please log in again.`))
+      Toast.show('Sorry! Your session expired. Please log in again.')
     })
 
     const account = persisted.get('session').currentAccount
     resumeSession(account)
-  }, [resumeSession, _])
+  }, [resumeSession])
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
