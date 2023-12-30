@@ -1,5 +1,5 @@
 import {Platform} from 'react-native'
-import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs.tsx'
+import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs'
 
 interface EmbedPlayerParamDefaults {
   isGif?: boolean

@@ -4,13 +4,14 @@ import LinearGradient from 'react-native-linear-gradient'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {
   ExternalEmbedType,
   externalEmbedLabels,
   useSetExternalEmbedPref,
-} from 'state/preferences/external-embeds-prefs.tsx'
+} from 'state/preferences/external-embeds-prefs'
 
 export const snapPoints = [500]
 
@@ -23,6 +24,7 @@ export function Component({
 }) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
+  const {_} = useLingui()
   const setExternalEmbedPref = useSetExternalEmbedPref()
 
   const onShowPress = React.useCallback(() => {
@@ -64,7 +66,9 @@ export function Component({
         testID="cancelBtn"
         onPress={onHidePress}
         accessibilityRole="button"
-        accessibilityLabel={`Never load media from ${externalEmbedLabels[source]}`}
+        accessibilityLabel={_(
+          msg`Never load embeds from ${externalEmbedLabels[source]}`,
+        )}
         accessibilityHint=""
         onAccessibilityEscape={closeModal}>
         <View style={[styles.btn, pal.btn]}>
@@ -78,7 +82,9 @@ export function Component({
         testID="cancelBtn"
         onPress={onShowPress}
         accessibilityRole="button"
-        accessibilityLabel={`Show ${externalEmbedLabels[source]} embeds`}
+        accessibilityLabel={_(
+          msg`Show embeds from ${externalEmbedLabels[source]}`,
+        )}
         accessibilityHint=""
         onAccessibilityEscape={closeModal}>
         <LinearGradient

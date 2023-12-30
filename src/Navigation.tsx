@@ -74,7 +74,7 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
-import {ExternalEmbeds} from 'view/screens/ExternalEmbeds.tsx'
+import {ExternalEmbeds} from 'view/screens/ExternalEmbeds'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()

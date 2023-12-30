@@ -38,7 +38,7 @@ import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as SwitchAccountModal from './SwitchAccount'
 import * as LinkWarningModal from './LinkWarning'
-import * as EmbedConsentModal from './EmbedConsent.tsx'
+import * as EmbedConsentModal from './EmbedConsent'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24

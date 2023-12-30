@@ -17,11 +17,11 @@ import {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
 } from 'state/preferences'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton.tsx'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {
   externalEmbedLabels,
   ExternalEmbedType,
-} from 'state/preferences/external-embeds-prefs.tsx'
+} from 'state/preferences/external-embeds-prefs'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ExternalEmbeds'>
 export function ExternalEmbeds({}: Props) {

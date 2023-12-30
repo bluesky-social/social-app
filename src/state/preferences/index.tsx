@@ -2,7 +2,7 @@ import React from 'react'
 import {Provider as LanguagesProvider} from './languages'
 import {Provider as AltTextRequiredProvider} from '../preferences/alt-text-required'
 import {Provider as HiddenPostsProvider} from '../preferences/hidden-posts'
-import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs.tsx'
+import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 export {
@@ -12,7 +12,7 @@ export {
 export {
   useExternalEmbedsPrefs,
   useSetExternalEmbedPref,
-} from './external-embeds-prefs.tsx'
+} from './external-embeds-prefs'
 export * from './hidden-posts'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {

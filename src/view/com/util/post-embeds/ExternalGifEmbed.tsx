@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import {isIOS, isNative, isWeb} from 'platform/detection.ts'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {WebGifStill} from 'view/com/util/post-embeds/WebGifStill.tsx'
+import {WebGifStill} from 'view/com/util/post-embeds/WebGifStill'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
 
