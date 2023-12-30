@@ -83,7 +83,7 @@ export function PreferencesThreads({navigation}: Props) {
                     },
                     {
                       key: 'random',
-                      label: _(msg`Random (aka "Poster\'s Roulette")`),
+                      label: _(msg`Random (aka "Poster's Roulette")`),
                     },
                   ]}
                   onSelect={key => setThreadViewPrefs({sort: key})}
