@@ -10,7 +10,11 @@ export function StepHeader({step, title}: {step: string; title: string}) {
   return (
     <View style={styles.container}>
       <Text type="lg" style={[pal.textLight]}>
-        {step === '3' ? <Trans>Last step!</Trans> : <Trans>Step {step} of 3</Trans>}
+        {step === '3' ? (
+          <Trans>Last step!</Trans>
+        ) : (
+          <Trans>Step {step} of 3</Trans>
+        )}
       </Text>
       <Text style={[pal.text]} type="title-xl">
         {title}
