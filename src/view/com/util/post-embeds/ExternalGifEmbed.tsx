@@ -11,9 +11,10 @@ import {
 } from 'react-native'
 import {isIOS, isNative, isWeb} from 'platform/detection.ts'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {WebGifStill} from 'view/com/util/post-embeds/WebGifStill'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function ExternalGifEmbed({
   thumb,
@@ -24,14 +25,15 @@ export function ExternalGifEmbed({
 }) {
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const {openModal} = useModalControls()
+  const {_} = useLingui()
 
-  const loadCount = React.useRef(0)
+  const thumbHasLoaded = React.useRef(false)
   const viewWidth = React.useRef(0)
 
   // Tracking if the placer has been activated
   const [isPlayerActive, setIsPlayerActive] = React.useState(false)
   // Tracking whether the gif has been loaded yet
-  const [isLoaded, setIsLoaded] = React.useState(false)
+  const [isPrefetched, setIsPrefetched] = React.useState(false)
   // Tracking whether the image is animating
   const [isAnimating, setIsAnimating] = React.useState(true)
   const [imageDims, setImageDims] = React.useState({height: 100, width: 1})
@@ -43,7 +45,7 @@ export function ExternalGifEmbed({
     setIsPlayerActive(true)
     Image.prefetch(params.playerUri).then(() => {
       // Replace the image once it's fetched
-      setIsLoaded(true)
+      setIsPrefetched(true)
     })
   }, [params.playerUri])
 
@@ -61,13 +63,11 @@ export function ExternalGifEmbed({
         })
         return
       }
-
       // If the player isn't active, we want to activate it and prefetch the gif
       if (!isPlayerActive) {
         load()
         return
       }
-
       // Control animation on native
       setIsAnimating(prev => {
         if (prev) {
@@ -87,18 +87,9 @@ export function ExternalGifEmbed({
   )
 
   const onLoad = React.useCallback((e: ImageLoadEventData) => {
-    // We only want to load the thumbnail's dims and then the gif's dims. We shouldn't keep resetting dimensions
-    // to prevent unnecessary prop changes!
-    if (
-      (isNative && loadCount.current >= 1) ||
-      (isWeb && loadCount.current >= 2)
-    ) {
-      return
-    }
-
-    // Store those dims and update the ref
+    if (thumbHasLoaded.current) return
     setImageDims(getGifDims(e.source.height, e.source.width, viewWidth.current))
-    loadCount.current++
+    thumbHasLoaded.current = true
   }, [])
 
   const onLayout = React.useCallback((e: LayoutChangeEvent) => {
@@ -115,9 +106,9 @@ export function ExternalGifEmbed({
       onPress={onPlayPress}
       onLayout={onLayout}
       accessibilityRole="button"
-      accessibilityHint="Play GIF"
-      accessibilityLabel="Play GIF">
-      {(!isLoaded || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
+      accessibilityHint={_(msg`Play GIF`)}
+      accessibilityLabel={_(msg`Play GIF`)}>
+      {(!isPrefetched || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
         <View style={[styles.layer, styles.overlayLayer]}>
           <View style={[styles.overlayContainer, styles.topRadius]}>
             {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
@@ -129,15 +120,9 @@ export function ExternalGifEmbed({
           </View>
         </View>
       )}
-      {isWeb &&
-        isPlayerActive && ( // We display the still on web when the player is active
-          <View style={{position: 'absolute', height: '100%', width: '100%'}}>
-            <WebGifStill source={params.playerUri} imageDims={imageDims} />
-          </View>
-        )}
       <ConditionalImage
         isAnimating={isAnimating}
-        isLoaded={isLoaded}
+        isLoaded={isPrefetched}
         isPlayerActive={isPlayerActive}
         thumb={thumb}
         source={params.playerUri}
@@ -151,7 +136,6 @@ export function ExternalGifEmbed({
 function ConditionalImage({
   isAnimating,
   isLoaded,
-  isPlayerActive,
   thumb,
   source,
   imageRef,
@@ -165,35 +149,18 @@ function ConditionalImage({
   imageRef: React.RefObject<Image>
   onLoad: (e: ImageLoadEventData) => void
 }) {
-  // We always display the image on native since we can control animation
-  if (!isWeb) {
-    return (
-      <Image
-        source={{uri: !isLoaded ? thumb : source}}
-        style={{flex: 1}}
-        ref={imageRef}
-        onLoad={onLoad}
-        autoplay={isAnimating}
-        contentFit="contain"
-        accessibilityIgnoresInvertColors
-        cachePolicy={isIOS ? 'disk' : 'memory-disk'}
-      />
-    )
-  }
-
-  // Only show the image if either the player is not active (showing the thumbnail) or we are animating (showing the gif)
-  if (!isPlayerActive || isAnimating) {
-    return (
-      <Image
-        source={{uri: !isLoaded ? thumb : source}}
-        style={{flex: 1}}
-        onLoad={onLoad}
-        contentFit="contain"
-        accessibilityIgnoresInvertColors
-        cachePolicy="memory-disk"
-      />
-    )
-  }
+  return (
+    <Image
+      source={{uri: !isLoaded || (isWeb && !isAnimating) ? thumb : source}} // Web uses the thumb to control playback
+      style={{flex: 1}}
+      ref={imageRef}
+      onLoad={onLoad}
+      autoplay={isAnimating}
+      contentFit="contain"
+      accessibilityIgnoresInvertColors
+      cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+    />
+  )
 }
 
 const styles = StyleSheet.create({
