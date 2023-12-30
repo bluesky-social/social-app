@@ -147,7 +147,7 @@ export function SettingsScreen({}: Props) {
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
@@ -273,11 +273,17 @@ export function SettingsScreen({}: Props) {
   }, [])
 
   return (
-    <View style={[s.hContentRegion]} testID="settingsScreen">
-      <ViewHeader title={_(msg`Settings`)} />
+    <CenteredView
+      style={[
+        s.hContentRegion,
+        pal.border,
+        isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
+      ]}
+      testID="settingsScreen">
+      <ViewHeader title={_(msg`Settings`)} showOnDesktop />
       <ScrollView
         style={[s.hContentRegion]}
-        contentContainerStyle={isMobile && pal.viewLight}
+        contentContainerStyle={[isMobile && pal.viewLight, styles.noBorder]}
         scrollIndicatorInsets={{right: 1}}>
         <View style={styles.spacer20} />
         {currentAccount ? (
@@ -752,7 +758,7 @@ export function SettingsScreen({}: Props) {
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
-    </View>
+    </CenteredView>
   )
 }
 
@@ -896,5 +902,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 18,
+  },
+  desktopContainer: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+  },
+  noBorder: {
+    borderBottomWidth: 0,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
   },
 })
