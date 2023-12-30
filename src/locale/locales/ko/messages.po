@@ -1408,7 +1408,7 @@ msgstr "언어 설정"
 msgid "Languages"
 msgstr "언어"
 
-#: src/view/com/auth/create/StepHeader.tsx:13
+#: src/view/com/auth/create/StepHeader.tsx:14
 msgid "Last step!"
 msgstr "마지막 단계예요!"
 
@@ -2098,7 +2098,7 @@ msgid "Quote Post"
 msgstr "게시물 인용"
 
 #: src/view/screens/PreferencesThreads.tsx:86
-msgid "Random (aka \"Poster\\'s Roulette\")"
+msgid "Random (aka \"Poster's Roulette\")"
 msgstr "무작위"
 
 #: src/view/com/modals/EditImage.tsx:236
@@ -2613,7 +2613,7 @@ msgstr "상태 페이지"
 msgid "Step {0}"
 msgstr "{0}단계"
 
-#: src/view/com/auth/create/StepHeader.tsx:13
+#: src/view/com/auth/create/StepHeader.tsx:16
 msgid "Step {step} of 3"
 msgstr "3단계 중 {step}단계"
 

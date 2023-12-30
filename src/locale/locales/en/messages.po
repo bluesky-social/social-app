@@ -1408,7 +1408,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: src/view/com/auth/create/StepHeader.tsx:13
+#: src/view/com/auth/create/StepHeader.tsx:14
 msgid "Last step!"
 msgstr ""
 
@@ -2098,7 +2098,7 @@ msgid "Quote Post"
 msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:86
-msgid "Random (aka \"Poster\\'s Roulette\")"
+msgid "Random (aka \"Poster's Roulette\")"
 msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
@@ -2613,7 +2613,7 @@ msgstr ""
 msgid "Step {0}"
 msgstr ""
 
-#: src/view/com/auth/create/StepHeader.tsx:13
+#: src/view/com/auth/create/StepHeader.tsx:16
 msgid "Step {step} of 3"
 msgstr ""
 
