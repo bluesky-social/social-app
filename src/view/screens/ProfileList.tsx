@@ -28,7 +28,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {NavigationProp} from 'lib/routes/types'
 import {toShareUrl} from 'lib/strings/url-helpers'
-import {ShareUrl} from 'lib/sharing'
+import {shareUrl} from 'lib/sharing'
 import {s} from 'lib/styles'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink, makeListLink} from 'lib/routes/links'
@@ -382,7 +382,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
 
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
-    ShareUrl(url)
+    shareUrl(url)
     track('Lists:Share')
   }, [list, rkey, track])
 

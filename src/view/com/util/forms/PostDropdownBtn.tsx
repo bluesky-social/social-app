@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
-import {ShareUrl} from 'lib/sharing'
+import {shareUrl} from 'lib/sharing'
 import {
   NativeDropdown,
   DropdownItem as NativeDropdownItem,
@@ -141,7 +141,7 @@ let PostDropdownBtn = ({
       label: isWeb ? _(msg`Copy link to post`) : _(msg`Share`),
       onPress() {
         const url = toShareUrl(href)
-        ShareUrl(url)
+        shareUrl(url)
       },
       testID: 'postDropdownShareBtn',
       icon: {

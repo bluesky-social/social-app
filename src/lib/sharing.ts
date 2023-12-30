@@ -4,7 +4,7 @@ import Clipboard from '@react-native-clipboard/clipboard'
 import * as Toast from '../view/com/util/Toast'
 import {Share} from 'react-native'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 /**
  * This function shares a URL using the native Share API if available, or copies it to the clipboard
@@ -12,8 +12,7 @@ import {msg} from '@lingui/macro'
  * @param {string} url - A string representing the URL that needs to be shared or copied to the
  * clipboard.
  */
-export async function ShareUrl(url: string) {
-  const {_} = useLingui()
+export async function shareUrl(url: string) {
   if (isAndroid) {
     Share.share({message: url})
   } else if (isIOS) {
@@ -22,6 +21,6 @@ export async function ShareUrl(url: string) {
     // React Native Share is not supported by web. Web Share API
     // has increasing but not full support, so default to clipboard
     Clipboard.setString(url)
-    Toast.show(_(msg`Copied to clipboard`))
+    Toast.show(t`Copied to clipboard`)
   }
 }

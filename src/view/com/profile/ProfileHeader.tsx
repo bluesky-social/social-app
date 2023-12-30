@@ -48,7 +48,7 @@ import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {ShareUrl} from 'lib/sharing'
+import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
 import {useSession, getAgent} from '#/state/session'
@@ -238,7 +238,7 @@ let ProfileHeaderLoaded = ({
 
   const onPressShare = React.useCallback(() => {
     track('ProfileHeader:ShareButtonClicked')
-    ShareUrl(toShareUrl(makeProfileLink(profile)))
+    shareUrl(toShareUrl(makeProfileLink(profile)))
   }, [track, profile])
 
   const onPressAddRemoveLists = React.useCallback(() => {

@@ -24,7 +24,7 @@ import {EmptyState} from 'view/com/util/EmptyState'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {ShareUrl} from 'lib/sharing'
+import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -249,7 +249,7 @@ export function ProfileFeedScreenInner({
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
-    ShareUrl(url)
+    shareUrl(url)
     track('CustomFeed:Share')
   }, [feedInfo, track])
 
