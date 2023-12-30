@@ -13,7 +13,7 @@ import {
   useSetExternalEmbedPref,
 } from 'state/preferences/external-embeds-prefs'
 
-export const snapPoints = [500]
+export const snapPoints = [450]
 
 export function Component({
   onAccept,
