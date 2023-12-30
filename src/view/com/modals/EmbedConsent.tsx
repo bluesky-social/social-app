@@ -4,14 +4,14 @@ import LinearGradient from 'react-native-linear-gradient'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {
+  EmbedPlayerSource,
+  externalEmbedLabels,
+} from '#/lib/strings/embed-player'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {
-  ExternalEmbedType,
-  externalEmbedLabels,
-  useSetExternalEmbedPref,
-} from 'state/preferences/external-embeds-prefs'
+import {useSetExternalEmbedPref} from '#/state/preferences/external-embeds-prefs'
 
 export const snapPoints = [450]
 
@@ -20,7 +20,7 @@ export function Component({
   source,
 }: {
   onAccept: () => void
-  source: ExternalEmbedType
+  source: EmbedPlayerSource
 }) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()

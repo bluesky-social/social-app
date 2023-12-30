@@ -6,8 +6,8 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {EmbedPlayerSource} from '#/lib/strings/embed-player.ts'
 import {ThreadgateSetting} from '../queries/threadgate'
-import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs.tsx'
 
 export interface ConfirmModal {
   name: 'confirm'
@@ -183,7 +183,7 @@ export interface LinkWarningModal {
 
 export interface EmbedConsentModal {
   name: 'embed-consent'
-  source: ExternalEmbedType
+  source: EmbedPlayerSource
   onAccept: () => void
 }
 

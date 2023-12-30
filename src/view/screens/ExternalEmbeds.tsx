@@ -9,6 +9,10 @@ import {Text} from '../com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {
+  EmbedPlayerSource,
+  externalEmbedLabels,
+} from '#/lib/strings/embed-player.ts'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -18,10 +22,6 @@ import {
   useSetExternalEmbedPref,
 } from 'state/preferences'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {
-  externalEmbedLabels,
-  ExternalEmbedType,
-} from 'state/preferences/external-embeds-prefs'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ExternalEmbeds'>
 export function ExternalEmbeds({}: Props) {
@@ -71,7 +71,7 @@ export function ExternalEmbeds({}: Props) {
         <View style={styles.spacer} />
         {Object.entries(externalEmbedLabels).map(([key, label]) => (
           <PrefSelector
-            name={key as ExternalEmbedType}
+            source={key as EmbedPlayerSource}
             label={label}
             key={key}
           />
@@ -82,18 +82,10 @@ export function ExternalEmbeds({}: Props) {
 }
 
 function PrefSelector({
-  name,
+  source,
   label,
 }: {
-  name:
-    | 'giphy'
-    | 'tenor'
-    | 'youtube'
-    | 'twitch'
-    | 'vimeo'
-    | 'spotify'
-    | 'appleMusic'
-    | 'soundcloud'
+  source: EmbedPlayerSource
   label: string
 }) {
   const pal = usePalette('default')
@@ -107,11 +99,11 @@ function PrefSelector({
           type="default-light"
           label={label}
           labelType="lg"
-          isSelected={sources[name] === 'show'}
+          isSelected={sources[source] === 'show'}
           onPress={() =>
             setExternalEmbedPref(
-              name,
-              sources[name] === 'show' ? 'hide' : 'show',
+              source,
+              sources[source] === 'show' ? 'hide' : 'show',
             )
           }
         />

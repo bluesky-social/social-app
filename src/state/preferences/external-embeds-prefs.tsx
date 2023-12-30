@@ -6,17 +6,6 @@ type SetContext = (
   source: keyof persisted.Schema['externalEmbeds'],
   value: 'ask' | 'show' | 'hide',
 ) => void
-export type ExternalEmbedType = keyof persisted.Schema['externalEmbeds']
-export const externalEmbedLabels: Record<ExternalEmbedType, string> = {
-  youtube: 'YouTube',
-  vimeo: 'Vimeo',
-  twitch: 'Twitch',
-  giphy: 'GIPHY',
-  tenor: 'Tenor',
-  spotify: 'Spotify',
-  appleMusic: 'Apple Music',
-  soundcloud: 'SoundCloud',
-}
 
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.externalEmbeds,

@@ -1,5 +1,17 @@
 import {Platform} from 'react-native'
-import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs'
+
+export const embedPlayerSources = [
+  'youtube',
+  'twitch',
+  'spotify',
+  'soundcloud',
+  'appleMusic',
+  'vimeo',
+  'giphy',
+  'tenor',
+] as const
+
+export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
 
 export type EmbedPlayerType =
   | 'youtube_video'
@@ -16,11 +28,22 @@ export type EmbedPlayerType =
   | 'giphy_gif'
   | 'tenor_gif'
 
+export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
+  youtube: 'YouTube',
+  vimeo: 'Vimeo',
+  twitch: 'Twitch',
+  giphy: 'GIPHY',
+  tenor: 'Tenor',
+  spotify: 'Spotify',
+  appleMusic: 'Apple Music',
+  soundcloud: 'SoundCloud',
+}
+
 export interface EmbedPlayerParams {
   type: EmbedPlayerType
   playerUri: string
   isGif?: boolean
-  source: ExternalEmbedType
+  source: EmbedPlayerSource
   metaUri?: string
 }
 

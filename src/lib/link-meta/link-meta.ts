@@ -2,7 +2,7 @@ import {BskyAgent} from '@atproto/api'
 import {isBskyAppUrl} from '../strings/url-helpers'
 import {extractBskyMeta} from './bsky'
 import {LINK_META_PROXY} from 'lib/constants'
-import {getGiphyMetaUri} from 'lib/strings/embed-player.ts'
+import {getGiphyMetaUri} from 'lib/strings/embed-player'
 
 export enum LikelyType {
   HTML,

@@ -1,4 +1,4 @@
-import {EmbedPlayerParams, getGifDims} from 'lib/strings/embed-player.ts'
+import {EmbedPlayerParams, getGifDims} from 'lib/strings/embed-player'
 import React from 'react'
 import {Image, ImageLoadEventData} from 'expo-image'
 import {
@@ -9,7 +9,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {isIOS, isNative, isWeb} from 'platform/detection.ts'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
