@@ -1,80 +1,28 @@
 import {Platform} from 'react-native'
 import {ExternalEmbedType} from 'state/preferences/external-embeds-prefs'
 
-interface EmbedPlayerParamDefaults {
+export type EmbedPlayerType =
+  | 'youtube_video'
+  | 'twitch_video'
+  | 'spotify_album'
+  | 'spotify_playlist'
+  | 'spotify_song'
+  | 'soundcloud_track'
+  | 'soundcloud_set'
+  | 'apple_music_playlist'
+  | 'apple_music_album'
+  | 'apple_music_song'
+  | 'vimeo_video'
+  | 'giphy_gif'
+  | 'tenor_gif'
+
+export interface EmbedPlayerParams {
+  type: EmbedPlayerType
+  playerUri: string
   isGif?: boolean
   source: ExternalEmbedType
+  metaUri?: string
 }
-
-export type EmbedPlayerParams =
-  | ({
-      type: 'youtube_video'
-      videoId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'twitch_video'
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'spotify_album'
-      albumId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'spotify_playlist'
-      playlistId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'spotify_song'
-      isGif?: boolean
-      songId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'soundcloud_track'
-      user: string
-      track: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'soundcloud_set'
-      user: string
-      set: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'apple_music_playlist'
-      playlistId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'apple_music_album'
-      albumId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'apple_music_song'
-      songId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'vimeo_video'
-      isGif?: boolean
-      videoId: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'giphy_gif'
-      gifId: string
-      metaUri: string
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
-  | ({
-      type: 'tenor_gif'
-      playerUri: string
-    } & EmbedPlayerParamDefaults)
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
 const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
@@ -96,7 +44,6 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'youtube_video',
         source: 'youtube',
-        videoId,
         playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
       }
     }
@@ -114,7 +61,6 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'youtube_video',
         source: 'youtube',
-        videoId,
         playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
       }
     }
@@ -160,7 +106,6 @@ export function parseEmbedPlayerFromUrl(
         return {
           type: 'spotify_playlist',
           source: 'spotify',
-          playlistId: id,
           playerUri: `https://open.spotify.com/embed/playlist/${id}`,
         }
       }
@@ -168,7 +113,6 @@ export function parseEmbedPlayerFromUrl(
         return {
           type: 'spotify_album',
           source: 'spotify',
-          albumId: id,
           playerUri: `https://open.spotify.com/embed/album/${id}`,
         }
       }
@@ -176,7 +120,6 @@ export function parseEmbedPlayerFromUrl(
         return {
           type: 'spotify_song',
           source: 'spotify',
-          songId: id,
           playerUri: `https://open.spotify.com/embed/track/${id}`,
         }
       }
@@ -195,8 +138,6 @@ export function parseEmbedPlayerFromUrl(
         return {
           type: 'soundcloud_set',
           source: 'soundcloud',
-          user,
-          set: set,
           playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
         }
       }
@@ -204,8 +145,6 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'soundcloud_track',
         source: 'soundcloud',
-        user,
-        track: trackOrSets,
         playerUri: `https://w.soundcloud.com/player/?url=${url}&auto_play=true&visual=false&hide_related=true`,
       }
     }
@@ -231,7 +170,6 @@ export function parseEmbedPlayerFromUrl(
         return {
           type: 'apple_music_playlist',
           source: 'appleMusic',
-          playlistId: pathParams[4],
           playerUri: embedUri,
         }
       } else if (type === 'album') {
@@ -239,14 +177,12 @@ export function parseEmbedPlayerFromUrl(
           return {
             type: 'apple_music_song',
             source: 'appleMusic',
-            songId,
             playerUri: embedUri,
           }
         } else {
           return {
             type: 'apple_music_album',
             source: 'appleMusic',
-            albumId: pathParams[4],
             playerUri: embedUri,
           }
         }
@@ -260,7 +196,6 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'vimeo_video',
         source: 'vimeo',
-        videoId,
         playerUri: `https://player.vimeo.com/video/${videoId}?autoplay=1`,
       }
     }
@@ -283,7 +218,6 @@ export function parseEmbedPlayerFromUrl(
           type: 'giphy_gif',
           source: 'giphy',
           isGif: true,
-          gifId,
           metaUri: `https://giphy.com/gifs/${gifId}`,
           playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
         }
@@ -304,7 +238,6 @@ export function parseEmbedPlayerFromUrl(
           type: 'giphy_gif',
           source: 'giphy',
           isGif: true,
-          gifId: trackingOrId,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
           playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
         }
@@ -313,7 +246,6 @@ export function parseEmbedPlayerFromUrl(
           type: 'giphy_gif',
           source: 'giphy',
           isGif: true,
-          gifId: idOrFilename,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
           playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.webp`,
         }
@@ -332,7 +264,6 @@ export function parseEmbedPlayerFromUrl(
         type: 'giphy_gif',
         source: 'giphy',
         isGif: true,
-        gifId,
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
       }
@@ -342,7 +273,6 @@ export function parseEmbedPlayerFromUrl(
         type: 'giphy_gif',
         source: 'giphy',
         isGif: true,
-        gifId,
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
