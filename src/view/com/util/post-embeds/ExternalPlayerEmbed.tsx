@@ -10,11 +10,13 @@ import {
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
-import {AppBskyEmbedExternal} from '@atproto/api'
 import {isNative} from 'platform/detection'
-import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
@@ -33,6 +35,8 @@ function PlaceholderOverlay({
   isPlayerActive: boolean
   onPress: (event: GestureResponderEvent) => void
 }) {
+  const {_} = useLingui()
+
   // If the player is active and not loading, we don't want to show the overlay.
   if (isPlayerActive && !isLoading) return null
 
@@ -40,8 +44,8 @@ function PlaceholderOverlay({
     <View style={[styles.layer, styles.overlayLayer]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Play Video"
-        accessibilityHint="Play Video"
+        accessibilityLabel={_(msg`Play Video`)}
+        accessibilityHint={_(msg`Play Video`)}
         onPress={onPress}
         style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
