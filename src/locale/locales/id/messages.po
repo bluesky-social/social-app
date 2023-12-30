@@ -120,7 +120,7 @@ msgstr "Tambahkan kartu tautan:"
 
 #: src/view/com/modals/ChangeHandle.tsx:415
 msgid "Add the following DNS record to your domain:"
-msgstr "Tambahkan catatan DNS berikut ke domain Anda:"
+msgstr "Tambahkan DNS record berikut ke domain Anda:"
 
 #: src/view/com/profile/ProfileHeader.tsx:353
 msgid "Add to Lists"
@@ -289,7 +289,7 @@ msgstr "Akun yang diblokir tidak dapat membalas utasan Anda, menyebutkan Anda, d
 
 #: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
-msgstr "Post yang diblokir."
+msgstr "Postingan yang diblokir."
 
 #: src/view/screens/ProfileList.tsx:309
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -321,7 +321,7 @@ msgstr "Bluesky menggunakan undangan untuk membangun komunitas yang sehat. Jika 
 
 #: src/view/screens/Moderation.tsx:225
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "Bluesky tidak akan menampilkan profil dan post Anda ke pengguna yang tidak login. Aplikasi lain mungkin tidak menghormati permintaan ini. Ini tidak membuat akun Anda menjadi pribadi."
+msgstr "Bluesky tidak akan menampilkan profil dan postingan Anda ke pengguna yang tidak login. Aplikasi lain mungkin tidak menghormati permintaan ini. Ini tidak membuat akun Anda menjadi privat."
 
 #: src/view/com/modals/ServerInput.tsx:78
 msgid "Bluesky.Social"
@@ -388,7 +388,7 @@ msgstr "Batal mengedit profil"
 
 #: src/view/com/modals/Repost.tsx:64
 msgid "Cancel quote post"
-msgstr "Batal mengutip post"
+msgstr "Batal mengutip postingan"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:178
@@ -567,7 +567,7 @@ msgstr "Salin tautan ke daftar"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy link to post"
-msgstr "Salin tautan ke post"
+msgstr "Salin tautan ke postingan"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
 msgid "Copy link to profile"
@@ -575,7 +575,7 @@ msgstr "Salin tautan ke profil"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Copy post text"
-msgstr "Salin teks post"
+msgstr "Salin teks postingan"
 
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
@@ -644,15 +644,15 @@ msgstr "Menghapus akun saya..."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:214
 msgid "Delete post"
-msgstr "Hapus post"
+msgstr "Hapus postingan"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "Delete this post?"
-msgstr "Hapus post ini?"
+msgstr "Hapus postingan ini?"
 
 #: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
-msgstr "Post dihapus."
+msgstr "Postingan dihapus."
 
 #: src/view/com/modals/CreateOrEditList.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:234
@@ -970,11 +970,11 @@ msgstr "Sembunyikan"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "Hide post"
-msgstr "Sembunyikan post"
+msgstr "Sembunyikan postingan"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:177
 msgid "Hide this post?"
-msgstr "Sembunyikan post ini?"
+msgstr "Sembunyikan postingan ini?"
 
 #: src/view/com/notifications/FeedItem.tsx:308
 msgid "Hide user list"
@@ -1168,7 +1168,7 @@ msgstr "Daftar"
 #: src/view/com/post-thread/PostThread.tsx:259
 #: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
-msgstr "Muat post lainnya"
+msgstr "Muat postingan lainnya"
 
 #: src/view/screens/Notifications.tsx:144
 msgid "Load new notifications"
@@ -1176,7 +1176,7 @@ msgstr "Muat notifikasi baru"
 
 #: src/view/com/feeds/FeedPage.tsx:189
 msgid "Load new posts"
-msgstr "Muat post baru"
+msgstr "Muat postingan baru"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
 msgid "Loading..."
@@ -1278,11 +1278,11 @@ msgstr "Akun yang Dibisukan"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Post dari akun yang dibisukan akan dihilangkan dari feed dan notifikasi Anda. Pembisuan ini bersifat pribadi."
+msgstr "Postingan dari akun yang dibisukan akan dihilangkan dari feed dan notifikasi Anda. Pembisuan ini bersifat privat."
 
 #: src/view/screens/ProfileList.tsx:272
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "Pembisuan akun bersifat pribadi. Akun yang dibisukan tetap dapat berinteraksi dengan Anda, namun Anda tidak akan melihat post atau notifikasi dari mereka."
+msgstr "Pembisuan akun bersifat privat. Akun yang dibisukan tetap dapat berinteraksi dengan Anda, namun Anda tidak akan melihat postingan atau notifikasi dari mereka."
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -1322,11 +1322,11 @@ msgstr "Baru"
 #: src/view/screens/ProfileList.tsx:221
 #: src/view/shell/desktop/LeftNav.tsx:247
 msgid "New post"
-msgstr "Post baru"
+msgstr "Postingan baru"
 
 #: src/view/shell/desktop/LeftNav.tsx:257
 msgid "New Post"
-msgstr "Post Baru"
+msgstr "Postingan Baru"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
@@ -1534,23 +1534,23 @@ msgstr "Posting"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
-msgstr "Post disembunyikan"
+msgstr "Postingan disembunyikan"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:87
 msgid "Post language"
-msgstr "Bahasa post"
+msgstr "Bahasa postingan"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
 msgid "Post Languages"
-msgstr "Bahasa Post"
+msgstr "Bahasa Postingan"
 
 #: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
-msgstr "Post tidak ditemukan"
+msgstr "Postingan tidak ditemukan"
 
 #: src/view/screens/Profile.tsx:161
 msgid "Posts"
-msgstr "Posting"
+msgstr "Postingan"
 
 #: src/view/com/modals/LinkWarning.tsx:44
 msgid "Potentially Misleading Link"
@@ -1605,11 +1605,11 @@ msgstr "Publik, daftar yang dapat dibagikan dan dapat berimbas ke feed."
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
-msgstr "Kutip post"
+msgstr "Kutip postingan"
 
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
-msgstr "Kutip Post"
+msgstr "Kutip Postingan"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1701,7 +1701,7 @@ msgstr "Laporkan Daftar"
 #: src/view/com/modals/report/SendReportButton.tsx:37
 #: src/view/com/util/forms/PostDropdownBtn.tsx:196
 msgid "Report post"
-msgstr "Laporkan post"
+msgstr "Laporkan postingan"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
@@ -1710,7 +1710,7 @@ msgstr "Posting ulang"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
-msgstr "Posting ulang atau kutip post"
+msgstr "Posting ulang atau kutip postingan"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted by"
@@ -1865,7 +1865,7 @@ msgstr "Buat kata sandi baru"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Pilih \"Tidak\" untuk menyembunyikan semua kutipan post dari feed Anda. Posting ulang tetap akan terlihat."
+msgstr "Pilih \"Tidak\" untuk menyembunyikan semua kutipan postingan dari feed Anda. Posting ulang tetap akan terlihat."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -1915,11 +1915,11 @@ msgstr "Tetap tampilkan"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:249
 msgid "Show Posts from My Feeds"
-msgstr "Tampilkan Post dari Feed Saya"
+msgstr "Tampilkan Postingan dari Feed Saya"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:213
 msgid "Show Quote Posts"
-msgstr "Tampilkan Kutipan Post"
+msgstr "Tampilkan Kutipan Postingan"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:110
 msgid "Show Replies"
@@ -2009,7 +2009,7 @@ msgstr "Urutkan Balasan"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr Urutkan balasan ke posting yang sama berdasarkan:"
+msgstr Urutkan balasan ke postingan yang sama berdasarkan:"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2090,7 +2090,7 @@ msgstr "Kebijakan Hak Cipta telah dipindahkan ke <0/>"
 
 #: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
-msgstr "Post mungkin telah dihapus."
+msgstr "Postingan mungkin telah dihapus."
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
@@ -2146,15 +2146,15 @@ msgstr "Tautan ini akan membawa Anda ke website:"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
-msgstr "Post ini telah dihapus."
+msgstr "Postingan ini telah dihapus."
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
-msgstr "Peringatan ini hanya tersedia untuk post dengan lampiran media."
+msgstr "Peringatan ini hanya tersedia untuk postingan dengan lampiran media."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "This will hide this post from your feeds."
-msgstr "Ini akan menyembunyikan post ini dari feed Anda."
+msgstr "Ini akan menyembunyikan postingan ini dari feed Anda."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
@@ -2343,7 +2343,7 @@ msgstr "Apa kabar?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr "Bahasa apa yang digunakan di post ini?"
+msgstr "Bahasa apa yang digunakan di postingan ini?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -2360,7 +2360,7 @@ msgstr "Lebar"
 
 #: src/view/com/composer/Composer.tsx:409
 msgid "Write post"
-msgstr "Tulis post"
+msgstr "Tulis postingan"
 
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
@@ -2444,11 +2444,11 @@ msgstr "Email Anda telah disimpan. Kami akan segera menghubungi Anda."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Email Anda telah diperbarui namun belum diverifikasi. Silakan verifikasi email baru Anda."
+msgstr "Alamat email Anda telah diperbarui namun belum diverifikasi. Silakan verifikasi alamat email baru Anda."
 
 #: src/view/com/modals/VerifyEmail.tsx:108
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr "Email Anda belum diverifikasi. Ini merupakan langkah keamanan penting yang kami rekomendasikan."
+msgstr "Alamat email Anda belum diverifikasi. Ini merupakan langkah keamanan penting yang kami rekomendasikan."
 
 #: src/view/com/auth/create/Step3.tsx:42
 #: src/view/com/modals/ChangeHandle.tsx:270
@@ -2467,7 +2467,7 @@ msgstr "Kode undangan Anda disembunyikan saat masuk menggunakan Kata Sandi Aplik
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Post, suka, dan blokir Anda bersifat publik. Bisukan bersifat pribadi."
+msgstr "Postingan, suka, dan blokir Anda bersifat publik. Bisukan bersifat privat."
 
 #: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
