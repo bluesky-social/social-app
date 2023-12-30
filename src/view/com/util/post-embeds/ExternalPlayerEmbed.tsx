@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
-import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
@@ -79,31 +78,21 @@ function Player({
   return (
     <View style={[styles.layer, styles.playerLayer]}>
       <EventStopper>
-        {isNative && params.type === 'youtube_video' ? (
-          <YoutubePlayer
-            videoId={params.videoId}
-            play
-            height={height}
-            onReady={onLoad}
-            webViewStyle={[styles.webview, styles.topRadius]}
+        <View style={{height, width: '100%'}}>
+          <WebView
+            javaScriptEnabled={true}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+            mediaPlaybackRequiresUserAction={false}
+            allowsInlineMediaPlayback
+            bounces={false}
+            allowsFullscreenVideo
+            nestedScrollEnabled
+            source={{uri: params.playerUri}}
+            onLoad={onLoad}
+            setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+            style={[styles.webview, styles.topRadius]}
           />
-        ) : (
-          <View style={{height, width: '100%'}}>
-            <WebView
-              javaScriptEnabled={true}
-              onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-              mediaPlaybackRequiresUserAction={false}
-              allowsInlineMediaPlayback
-              bounces={false}
-              allowsFullscreenVideo
-              nestedScrollEnabled
-              source={{uri: params.playerUri}}
-              onLoad={onLoad}
-              setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-              style={[styles.webview, styles.topRadius]}
-            />
-          </View>
-        )}
+        </View>
       </EventStopper>
     </View>
   )

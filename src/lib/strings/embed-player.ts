@@ -44,7 +44,7 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'youtube_video',
         source: 'youtube',
-        playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
+        playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`,
       }
     }
   }
@@ -61,7 +61,7 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'youtube_video',
         source: 'youtube',
-        playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1`,
+        playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`,
       }
     }
   }
