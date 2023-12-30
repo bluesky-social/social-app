@@ -133,7 +133,7 @@ msgstr "Tambakan ke feed saya"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:128
 msgid "Added to list"
-msgstr "Tambahkan ke daftar"
+msgstr "Telah ditambahkan ke daftar"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:164
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
@@ -2339,7 +2339,7 @@ msgstr "Apa yang bermasalah dengan {collectionName}?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
 msgid "What's up?"
-msgstr "Apa kabar"
+msgstr "Apa kabar?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
@@ -2424,7 +2424,7 @@ msgstr "Anda belum membisukan akun lain. Untuk membisukan akun, kunjungi profil 
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Anda akan menerima email dengan \"kode reset\". Masukkan kode tersebut di sini, lalu masukkan kata sandi baru."
+msgstr "Anda akan menerima email berisikan \"kode reset\". Masukkan kode tersebut di sini, lalu masukkan kata sandi baru."
 
 #: src/view/com/auth/create/Step2.tsx:43
 msgid "Your account"
