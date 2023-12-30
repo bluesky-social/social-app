@@ -46,9 +46,35 @@ export function EmojiPickerButton() {
 }
 
 export function EmojiPicker({close}: {close: () => void}) {
+  const isShiftDown = React.useRef(false)
+
+  React.useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        isShiftDown.current = true
+      }
+    }
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        isShiftDown.current = false
+      }
+    }
+
+    window.addEventListener('keydown', onKeyDown, true)
+    window.addEventListener('keyup', onKeyUp, true)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown, true)
+      window.removeEventListener('keyup', onKeyUp, true)
+    }
+  }, [])
+
   const onInsert = (emoji: Emoji) => {
     textInputWebEmitter.emit('emoji-inserted', emoji)
-    close()
+
+    if (!isShiftDown.current) {
+      close()
+    }
   }
   const reducedPadding = useMediaQuery({query: '(max-height: 750px)'})
   const noPadding = useMediaQuery({query: '(max-height: 550px)'})
