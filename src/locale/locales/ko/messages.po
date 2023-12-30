@@ -710,7 +710,7 @@ msgstr "복사됨"
 msgid "Copied build version to clipboard"
 msgstr "빌드 버전 클립보드에 복사됨"
 
-#: src/lib/sharing.ts:25
+#: src/lib/sharing.ts:23
 #: src/view/com/modals/AddAppPasswords.tsx:75
 #: src/view/com/modals/ChangeHandle.tsx:325
 #: src/view/com/modals/InviteCodes.tsx:152
@@ -1408,7 +1408,7 @@ msgstr "언어 설정"
 msgid "Languages"
 msgstr "언어"
 
-#: src/view/com/auth/create/StepHeader.tsx:15
+#: src/view/com/auth/create/StepHeader.tsx:13
 msgid "Last step!"
 msgstr "마지막 단계예요!"
 
@@ -2613,7 +2613,7 @@ msgstr "상태 페이지"
 msgid "Step {0}"
 msgstr "{0}단계"
 
-#: src/view/com/auth/create/StepHeader.tsx:15
+#: src/view/com/auth/create/StepHeader.tsx:13
 msgid "Step {step} of 3"
 msgstr "3단계 중 {step}단계"
 

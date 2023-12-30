@@ -706,7 +706,7 @@ msgstr "कॉपी कर ली"
 msgid "Copied build version to clipboard"
 msgstr ""
 
-#: src/lib/sharing.ts:25
+#: src/lib/sharing.ts:23
 #: src/view/com/modals/AddAppPasswords.tsx:75
 #: src/view/com/modals/ChangeHandle.tsx:325
 #: src/view/com/modals/InviteCodes.tsx:152
@@ -1400,7 +1400,7 @@ msgstr "भाषा सेटिंग्स"
 msgid "Languages"
 msgstr "भाषा"
 
-#: src/view/com/auth/create/StepHeader.tsx:15
+#: src/view/com/auth/create/StepHeader.tsx:13
 msgid "Last step!"
 msgstr ""
 
@@ -2605,7 +2605,7 @@ msgstr "स्थिति पृष्ठ"
 msgid "Step {0}"
 msgstr ""
 
-#: src/view/com/auth/create/StepHeader.tsx:15
+#: src/view/com/auth/create/StepHeader.tsx:13
 msgid "Step {step} of 3"
 msgstr ""
 
