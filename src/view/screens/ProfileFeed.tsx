@@ -32,14 +32,13 @@ import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {makeCustomFeedLink} from 'lib/routes/links'
-import {pluralize} from 'lib/strings/helpers'
 import {CenteredView, ScrollView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {ComposeIcon2} from 'lib/icons'
 import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
@@ -597,7 +596,10 @@ function AboutSection({
           {typeof likeCount === 'number' && (
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-              text={`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`}
+              text={plural(likeCount, {
+                one: 'Liked by # user',
+                other: 'Liked by # users',
+              })}
               style={[pal.textLight, s.semiBold]}
             />
           )}

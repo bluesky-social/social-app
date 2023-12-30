@@ -13,7 +13,7 @@ import {
   ProfileModeration,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {Plural, Trans, msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
 import {isNative, isWeb} from 'platform/detection'
@@ -44,7 +44,6 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
@@ -435,7 +434,6 @@ let ProfileHeaderLoaded = ({
     !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
   const following = formatCount(profile.followsCount || 0)
   const followers = formatCount(profile.followersCount || 0)
-  const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
     <View style={pal.view} pointerEvents="box-none">
@@ -596,13 +594,16 @@ let ProfileHeaderLoaded = ({
                   })
                 }
                 asAnchor
-                accessibilityLabel={`${followers} ${pluralizedFollowers}`}
+                accessibilityLabel={plural(followers, {
+                  one: '# follower',
+                  other: '# followers',
+                })}
                 accessibilityHint={'Opens followers list'}>
                 <Text type="md" style={[s.bold, pal.text]}>
                   {followers}{' '}
                 </Text>
                 <Text type="md" style={[pal.textLight]}>
-                  {pluralizedFollowers}
+                  <Plural value={followers} one="follower" other="followers" />
                 </Text>
               </Link>
               <Link
@@ -627,7 +628,11 @@ let ProfileHeaderLoaded = ({
               <Text type="md" style={[s.bold, pal.text]}>
                 {formatCount(profile.postsCount || 0)}{' '}
                 <Text type="md" style={[pal.textLight]}>
-                  {pluralize(profile.postsCount || 0, 'post')}
+                  <Plural
+                    value={profile.postsCount || 0}
+                    one="post"
+                    other="posts"
+                  />
                 </Text>
               </Text>
             </View>

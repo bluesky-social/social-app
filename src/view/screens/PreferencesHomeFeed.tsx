@@ -12,7 +12,7 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import debounce from 'lodash.debounce'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   usePreferencesQuery,
@@ -57,11 +57,12 @@ function RepliesThresholdInput({
         thumbTintColor={colors.blue3}
       />
       <Text type="xs" style={pal.text}>
-        {value === 0
-          ? `Show all replies`
-          : `Show replies with at least ${value} ${
-              value > 1 ? `likes` : `like`
-            }`}
+        <Plural
+          value={value}
+          _0="Show all replies"
+          one="Show replies with at least 1 like"
+          other="Show replies with at least # likes"
+        />
       </Text>
     </View>
   )

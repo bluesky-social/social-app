@@ -26,7 +26,6 @@ import {s, colors} from 'lib/styles'
 import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {pluralize} from 'lib/strings/helpers'
 import {HeartIconSolid} from 'lib/icons'
 import {Text} from '../util/text/Text'
 import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
@@ -40,7 +39,7 @@ import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {isWeb} from 'platform/detection'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 
@@ -238,7 +237,11 @@ let FeedItem = ({
                 </Text>
                 <Text style={[pal.text, s.bold]}>
                   {formatCount(authors.length - 1)}{' '}
-                  {pluralize(authors.length - 1, 'other')}
+                  <Plural
+                    value={authors.length - 1}
+                    one="other"
+                    other="others"
+                  />
                 </Text>
               </>
             ) : undefined}

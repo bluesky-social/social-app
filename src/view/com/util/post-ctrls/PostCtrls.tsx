@@ -11,7 +11,6 @@ import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s} from 'lib/styles'
-import {pluralize} from 'lib/strings/helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
@@ -26,6 +25,7 @@ import {
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
+import {plural} from '@lingui/macro'
 
 let PostCtrls = ({
   big,
@@ -176,9 +176,17 @@ let PostCtrls = ({
           requireAuth(() => onPressToggleLike())
         }}
         accessibilityRole="button"
-        accessibilityLabel={`${post.viewer?.like ? 'Unlike' : 'Like'} (${
-          post.likeCount
-        } ${pluralize(post.likeCount || 0, 'like')})`}
+        accessibilityLabel={
+          post.viewer?.like
+            ? plural(post.likeCount || 0, {
+                one: 'Unlike (# like)',
+                other: 'Unlike (# likes)',
+              })
+            : plural(post.likeCount || 0, {
+                one: 'Like (# like)',
+                other: 'Like (# likes)',
+              })
+        }
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         {post.viewer?.like ? (

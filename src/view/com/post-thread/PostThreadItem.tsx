@@ -17,7 +17,7 @@ import {s} from 'lib/styles'
 import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {countLines, pluralize} from 'lib/strings/helpers'
+import {countLines} from 'lib/strings/helpers'
 import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {PostMeta} from '../util/PostMeta'
@@ -35,7 +35,7 @@ import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useComposerControls} from '#/state/shell/composer'
@@ -404,7 +404,11 @@ let PostThreadItemLoaded = ({
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.repostCount)}
                       </Text>{' '}
-                      {pluralize(post.repostCount, 'repost')}
+                      <Plural
+                        value={post.repostCount}
+                        one="repost"
+                        other="reposts"
+                      />
                     </Text>
                   </Link>
                 ) : (
@@ -422,7 +426,7 @@ let PostThreadItemLoaded = ({
                       <Text type="xl-bold" style={pal.text}>
                         {formatCount(post.likeCount)}
                       </Text>{' '}
-                      {pluralize(post.likeCount, 'like')}
+                      <Plural value={post.likeCount} one="like" other="likes" />
                     </Text>
                   </Link>
                 ) : (
