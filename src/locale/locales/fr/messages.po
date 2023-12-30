@@ -1087,6 +1087,7 @@ msgstr "Affiner les fils de discussion."
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:64
 #: src/view/com/profile/ProfileHeader.tsx:542
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Follow"
 msgstr "Suivre"
 
@@ -2530,6 +2531,10 @@ msgstr "S’abonner à cette liste"
 msgid "Suggested Follows"
 msgstr "Suivis suggérés"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
+msgid "Suggested for you"
+msgstr ""
+
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -2791,6 +2796,7 @@ msgstr "Annuler transfert"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:55
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Unfollow"
 msgstr ""
 

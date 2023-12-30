@@ -1119,6 +1119,7 @@ msgstr "토론 스레드를 미세 조정합니다."
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:64
 #: src/view/com/profile/ProfileHeader.tsx:542
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Follow"
 msgstr "팔로우"
 
@@ -2641,6 +2642,10 @@ msgstr "이 리스트로 구독"
 msgid "Suggested Follows"
 msgstr "팔로우 추천"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
+msgid "Suggested for you"
+msgstr "나를 위한 추천"
+
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -2902,6 +2907,7 @@ msgstr "재게시 취소"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:55
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Unfollow"
 msgstr "언팔로우"
 

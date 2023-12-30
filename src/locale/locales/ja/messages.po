@@ -1087,6 +1087,7 @@ msgstr "ディスカッションスレッドを微調整します。"
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:64
 #: src/view/com/profile/ProfileHeader.tsx:542
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Follow"
 msgstr "フォロー"
 
@@ -2546,6 +2547,10 @@ msgstr "このリストに登録"
 msgid "Suggested Follows"
 msgstr "おすすめのフォロー"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
+msgid "Suggested for you"
+msgstr ""
+
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -2807,6 +2812,7 @@ msgstr "リポストを元に戻す"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:55
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Unfollow"
 msgstr ""
 

@@ -1087,6 +1087,7 @@ msgstr "Ajusta los hilos de discusión."
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:64
 #: src/view/com/profile/ProfileHeader.tsx:542
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Follow"
 msgstr "Seguir"
 
@@ -2530,6 +2531,10 @@ msgstr "Suscribirse a esta lista"
 msgid "Suggested Follows"
 msgstr "Usuarios sugeridos a seguir"
 
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
+msgid "Suggested for you"
+msgstr ""
+
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -2791,6 +2796,7 @@ msgstr "Deshacer esta publicación"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:138
 #: src/view/com/profile/FollowButton.tsx:55
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:241
 msgid "Unfollow"
 msgstr ""
 

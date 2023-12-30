@@ -22,7 +22,7 @@ import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -62,7 +62,7 @@ export function ProfileHeaderSuggestedFollows({
             paddingRight: INNER_PADDING / 2,
           }}>
           <Text type="sm-bold" style={[pal.textLight]}>
-            Suggested for you
+            <Trans>Suggested for you</Trans>
           </Text>
 
           <Pressable
@@ -238,7 +238,7 @@ function SuggestedFollow({
         </View>
 
         <Button
-          label={following ? 'Unfollow' : 'Follow'}
+          label={following ? _(msg`Unfollow`) : _(msg`Follow`)}
           type="inverted"
           labelStyle={{textAlign: 'center'}}
           onPress={following ? onPressUnfollow : onPressFollow}
