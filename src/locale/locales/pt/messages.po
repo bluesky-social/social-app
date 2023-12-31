@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2023-12-31 00:34\n"
-"Last-Translator: Maison\n"
+"Last-Translator: Maison da Silva\n"
 "Language-Team: maisondasilva\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
