@@ -462,7 +462,11 @@ export const ComposePost = observer(function ComposePost({
             </>
           ) : null}
           {!isMobile ? (
-            <Pressable accessibilityRole="button" onPress={onEmojiButtonPress}>
+            <Pressable
+              onPress={onEmojiButtonPress}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open emoji picker`)}
+              accessibilityHint={_(msg`Open emoji picker`)}>
               <FontAwesomeIcon
                 icon={['far', 'face-smile']}
                 color={pal.colors.link}
