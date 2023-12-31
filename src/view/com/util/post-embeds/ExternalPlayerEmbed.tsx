@@ -170,7 +170,7 @@ export function ExternalPlayer({
       // Prevent this from propagating upward on web
       event.preventDefault()
 
-      if (externalEmbedsPrefs[params.source] === 'ask') {
+      if (externalEmbedsPrefs?.[params.source] === undefined) {
         openModal({
           name: 'embed-consent',
           source: params.source,

@@ -1,11 +1,9 @@
 import React from 'react'
 import * as persisted from '#/state/persisted'
+import {EmbedPlayerSource} from 'lib/strings/embed-player.ts'
 
 type StateContext = persisted.Schema['externalEmbeds']
-type SetContext = (
-  source: keyof persisted.Schema['externalEmbeds'],
-  value: 'ask' | 'show' | 'hide',
-) => void
+type SetContext = (source: EmbedPlayerSource, value: 'show' | 'hide') => void
 
 const stateContext = React.createContext<StateContext>(
   persisted.defaults.externalEmbeds,
@@ -16,10 +14,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const [state, setState] = React.useState(persisted.get('externalEmbeds'))
 
   const setStateWrapped = React.useCallback(
-    (
-      source: keyof persisted.Schema['externalEmbeds'],
-      value: 'ask' | 'show' | 'hide',
-    ) => {
+    (source: EmbedPlayerSource, value: 'show' | 'hide') => {
       setState(prev => {
         persisted.write('externalEmbeds', {
           ...prev,

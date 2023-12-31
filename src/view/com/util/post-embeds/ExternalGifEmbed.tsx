@@ -55,7 +55,7 @@ export function ExternalGifEmbed({
       event.preventDefault()
 
       // Show consent if this is the first load
-      if (externalEmbedsPrefs[params.source] === 'ask') {
+      if (externalEmbedsPrefs?.[params.source] === undefined) {
         openModal({
           name: 'embed-consent',
           source: params.source,

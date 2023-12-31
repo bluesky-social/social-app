@@ -23,7 +23,7 @@ export const ExternalLinkEmbed = ({
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
 
-    if (params && externalEmbedPrefs[params.source] === 'show') {
+    if (params && externalEmbedPrefs?.[params.source] !== 'hide') {
       return params
     }
   }, [link.uri, externalEmbedPrefs])

@@ -99,11 +99,11 @@ function PrefSelector({
           type="default-light"
           label={label}
           labelType="lg"
-          isSelected={sources[source] === 'show'}
+          isSelected={sources?.[source] === 'show'}
           onPress={() =>
             setExternalEmbedPref(
               source,
-              sources[source] === 'show' ? 'hide' : 'show',
+              sources?.[source] === 'show' ? 'hide' : 'show',
             )
           }
         />
