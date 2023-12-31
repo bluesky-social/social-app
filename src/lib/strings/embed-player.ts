@@ -1,4 +1,5 @@
-import {Platform} from 'react-native'
+import {Dimensions, Platform} from 'react-native'
+const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 export const embedPlayerSources = [
   'youtube',
@@ -15,6 +16,7 @@ export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
 
 export type EmbedPlayerType =
   | 'youtube_video'
+  | 'youtube_short'
   | 'twitch_video'
   | 'spotify_album'
   | 'spotify_playlist'
@@ -45,6 +47,7 @@ export interface EmbedPlayerParams {
   isGif?: boolean
   source: EmbedPlayerSource
   metaUri?: string
+  hideDetails?: boolean
 }
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
@@ -82,8 +85,9 @@ export function parseEmbedPlayerFromUrl(
 
     if (videoId) {
       return {
-        type: 'youtube_video',
+        type: page === 'shorts' ? 'youtube_short' : 'youtube_video',
         source: 'youtube',
+        hideDetails: page === 'shorts' ? true : undefined,
         playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`,
       }
     }
@@ -336,6 +340,12 @@ export function getPlayerHeight({
     case 'twitch_video':
     case 'vimeo_video':
       return (width / 16) * 9
+    case 'youtube_short':
+      if (SCREEN_HEIGHT < 600) {
+        return ((width / 9) * 16) / 1.75
+      } else {
+        return ((width / 9) * 16) / 1.5
+      }
     case 'spotify_album':
     case 'apple_music_album':
     case 'apple_music_playlist':

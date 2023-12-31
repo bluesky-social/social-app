@@ -84,7 +84,7 @@ export const ExternalLinkEmbed = ({
           style={[pal.text]}>
           {link.title || link.uri}
         </Text>
-        {!embedPlayerParams?.isGif && link.description ? (
+        {link.description && !embedPlayerParams?.hideDetails ? (
           <Text
             type="md"
             numberOfLines={isMobile ? 4 : 2}
