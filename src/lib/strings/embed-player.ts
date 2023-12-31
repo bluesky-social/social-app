@@ -3,6 +3,7 @@ const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 export const embedPlayerSources = [
   'youtube',
+  'youtubeShorts',
   'twitch',
   'spotify',
   'soundcloud',
@@ -32,6 +33,7 @@ export type EmbedPlayerType =
 
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
+  youtubeShorts: 'YouTube Shorts',
   vimeo: 'Vimeo',
   twitch: 'Twitch',
   giphy: 'GIPHY',

@@ -118,6 +118,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
       spotify: defaults.externalEmbeds.spotify,
       appleMusic: defaults.externalEmbeds.appleMusic,
       soundcloud: defaults.externalEmbeds.soundcloud,
+      youtubeShorts: defaults.externalEmbeds.youtubeShorts,
     },
   }
 }
