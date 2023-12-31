@@ -19,14 +19,14 @@ export function Composer({}: {winHeight: number}) {
 
   const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
     isOpen: false,
-    top: 0,
+    pos: {top: 0, left: 0, right: 0, bottom: 0},
   })
 
   const onOpenPicker = React.useCallback((pos: DOMRect | undefined) => {
     if (!pos) return
     setPickerState({
       isOpen: true,
-      top: pos.top + 40,
+      pos,
     })
   }, [])
 

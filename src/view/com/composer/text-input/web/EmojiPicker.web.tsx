@@ -1,7 +1,17 @@
 import React from 'react'
 import Picker from '@emoji-mart/react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {textInputWebEmitter} from '../TextInput.web'
+
+const HEIGHT_OFFSET = 40
+const WIDTH_OFFSET = 100
+const PICKER_HEIGHT = 435 + HEIGHT_OFFSET
+const PICKER_WIDTH = 350 + WIDTH_OFFSET
 
 export type Emoji = {
   aliases?: string[]
@@ -16,7 +26,7 @@ export type Emoji = {
 
 export interface EmojiPickerState {
   isOpen: boolean
-  top: number
+  pos: {top: number; left: number; right: number; bottom: number}
 }
 
 interface IProps {
@@ -25,7 +35,34 @@ interface IProps {
 }
 
 export function EmojiPicker({state, close}: IProps) {
+  const {height, width} = useWindowDimensions()
+
   const isShiftDown = React.useRef(false)
+
+  const position = React.useMemo(() => {
+    const fitsBelow = state.pos.top + PICKER_HEIGHT < height
+    const fitsAbove = PICKER_HEIGHT < state.pos.top
+    const placeOnLeft = state.pos.left > width / 2
+    const screenYMiddle = height / 2 - PICKER_HEIGHT / 2
+
+    if (fitsBelow) {
+      return {
+        top: state.pos.top + HEIGHT_OFFSET,
+      }
+    } else if (fitsAbove) {
+      return {
+        bottom: height - state.pos.bottom + HEIGHT_OFFSET,
+      }
+    } else {
+      return {
+        top: screenYMiddle,
+        left: placeOnLeft ? state.pos.left - PICKER_WIDTH : undefined,
+        right: !placeOnLeft
+          ? width - state.pos.right - PICKER_WIDTH
+          : undefined,
+      }
+    }
+  }, [state.pos, height, width])
 
   React.useEffect(() => {
     if (!state.isOpen) return
@@ -68,7 +105,7 @@ export function EmojiPicker({state, close}: IProps) {
         <TouchableWithoutFeedback
           accessibilityRole="button"
           onPress={e => e.stopPropagation()}>
-          <View style={[{position: 'absolute', top: state.top}]}>
+          <View style={[{position: 'absolute'}, position]}>
             <Picker
               data={async () => {
                 return (await import('./EmojiPickerData.json')).default
