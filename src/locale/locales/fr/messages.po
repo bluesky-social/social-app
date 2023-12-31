@@ -502,7 +502,7 @@ msgstr "Rédiger une réponse"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -716,7 +716,7 @@ msgstr "Domaine vérifié !"
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Terminé"
 
@@ -1256,6 +1256,10 @@ msgstr "Plus de fils d’actu"
 msgid "More options"
 msgstr "Plus d’options"
 
+#: src/view/screens/PreferencesThreads.tsx:82
+msgid "Most-liked replies first"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
 msgstr "Compte en sourdine"
@@ -1336,6 +1340,10 @@ msgstr "Nouvelle publication"
 msgid "New Post"
 msgstr "Nouvelle publication"
 
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
@@ -1354,6 +1362,8 @@ msgstr "Image suivante"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "Non"
 
@@ -1406,6 +1416,10 @@ msgstr "Oh non !"
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
 msgstr "D’accord"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:358
 msgid "One or more images is missing alt text."
@@ -1581,7 +1595,7 @@ msgstr "Image précédente"
 msgid "Primary Language"
 msgstr "Langue principale"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "Définissez des priorités de vos suivis"
 
@@ -1627,6 +1641,10 @@ msgstr "Citer une publication"
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
 msgstr "Citer une publication"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1892,7 +1910,7 @@ msgstr "Choisissez « Non » pour masquer toutes les réponses dans votre fils
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Choisissez « Non » pour masquer toutes les republications de votre fils d’actu."
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Choisissez « Oui » pour afficher les réponses dans un fil de discussion. C’est une fonctionnalité expérimentale."
 
@@ -1942,7 +1960,7 @@ msgstr "Afficher les Publications de citation"
 msgid "Show Replies"
 msgstr "Afficher réponses"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "Afficher les réponses des personnes que vous suivez avant toutes les autres réponses."
 
@@ -2178,7 +2196,7 @@ msgstr ""
 msgid "Thread Preferences"
 msgstr "Préférences des fils de discussion"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "Mode arborescent"
 
@@ -2387,6 +2405,8 @@ msgstr "Rédigez votre réponse"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "Oui"
 
