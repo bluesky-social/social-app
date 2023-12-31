@@ -42,7 +42,7 @@ export function EmojiPicker({state, close}: IProps) {
   const position = React.useMemo(() => {
     const fitsBelow = state.pos.top + PICKER_HEIGHT < height
     const fitsAbove = PICKER_HEIGHT < state.pos.top
-    const placeOnLeft = state.pos.left > width / 2
+    const placeOnLeft = PICKER_WIDTH < state.pos.left
     const screenYMiddle = height / 2 - PICKER_HEIGHT / 2
 
     if (fitsBelow) {
