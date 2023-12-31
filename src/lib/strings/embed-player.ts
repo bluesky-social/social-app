@@ -247,6 +247,7 @@ export function parseEmbedPlayerFromUrl(
           type: 'giphy_gif',
           source: 'giphy',
           isGif: true,
+          hideDetails: true,
           metaUri: `https://giphy.com/gifs/${gifId}`,
           playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
         }
@@ -267,6 +268,7 @@ export function parseEmbedPlayerFromUrl(
           type: 'giphy_gif',
           source: 'giphy',
           isGif: true,
+          hideDetails: true,
           metaUri: `https://giphy.com/gifs/${trackingOrId}`,
           playerUri: `https://i.giphy.com/media/${trackingOrId}/giphy.webp`,
         }
@@ -275,6 +277,7 @@ export function parseEmbedPlayerFromUrl(
           type: 'giphy_gif',
           source: 'giphy',
           isGif: true,
+          hideDetails: true,
           metaUri: `https://giphy.com/gifs/${idOrFilename}`,
           playerUri: `https://i.giphy.com/media/${idOrFilename}/giphy.webp`,
         }
@@ -293,6 +296,7 @@ export function parseEmbedPlayerFromUrl(
         type: 'giphy_gif',
         source: 'giphy',
         isGif: true,
+        hideDetails: true,
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${gifId}/giphy.webp`,
       }
@@ -302,6 +306,7 @@ export function parseEmbedPlayerFromUrl(
         type: 'giphy_gif',
         source: 'giphy',
         isGif: true,
+        hideDetails: true,
         metaUri: `https://giphy.com/gifs/${gifId}`,
         playerUri: `https://i.giphy.com/media/${
           mediaOrFilename.split('.')[0]
@@ -320,6 +325,7 @@ export function parseEmbedPlayerFromUrl(
         type: 'tenor_gif',
         source: 'tenor',
         isGif: true,
+        hideDetails: true,
         playerUri: `${url}${!includesExt ? '.gif' : ''}`,
       }
     }
