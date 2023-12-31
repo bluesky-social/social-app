@@ -60,7 +60,7 @@ export const ExternalLinkEmbed = ({
         </View>
       ) : undefined}
       {(embedPlayerParams?.isGif && (
-        <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
+        <ExternalGifEmbed link={link} params={embedPlayerParams} />
       )) ||
         (embedPlayerParams && (
           <ExternalPlayer link={link} params={embedPlayerParams} />
@@ -78,12 +78,14 @@ export const ExternalLinkEmbed = ({
           style={[pal.textLight, styles.extUri]}>
           {toNiceDomain(link.uri)}
         </Text>
-        <Text
-          type="lg-bold"
-          numberOfLines={isMobile ? 4 : 2}
-          style={[pal.text]}>
-          {link.title || link.uri}
-        </Text>
+        {!embedPlayerParams?.isGif && (
+          <Text
+            type="lg-bold"
+            numberOfLines={isMobile ? 4 : 2}
+            style={[pal.text]}>
+            {link.title || link.uri}
+          </Text>
+        )}
         {link.description && !embedPlayerParams?.hideDetails ? (
           <Text
             type="md"
