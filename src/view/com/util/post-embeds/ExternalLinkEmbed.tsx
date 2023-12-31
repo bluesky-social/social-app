@@ -20,27 +20,20 @@ export const ExternalLinkEmbed = ({
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
 
-  const embedPlayerParams = React.useMemo(
-    () => parseEmbedPlayerFromUrl(link.uri),
-    [link.uri],
-  )
+  const embedPlayerParams = React.useMemo(() => {
+    const params = parseEmbedPlayerFromUrl(link.uri)
 
-  const hidePlayerEmbed = React.useMemo(
-    () =>
-      !embedPlayerParams ||
-      externalEmbedPrefs[embedPlayerParams.source] === 'hide',
-    [embedPlayerParams, externalEmbedPrefs],
-  )
+    if (params && externalEmbedPrefs[params.source] === 'show') {
+      return params
+    }
+  }, [link.uri, externalEmbedPrefs])
 
   return (
     <View
       style={{
-        flexDirection:
-          !isMobile && (!embedPlayerParams || hidePlayerEmbed)
-            ? 'row'
-            : 'column',
+        flexDirection: !isMobile && !embedPlayerParams ? 'row' : 'column',
       }}>
-      {link.thumb && (!embedPlayerParams || hidePlayerEmbed) ? (
+      {link.thumb && !embedPlayerParams ? (
         <View
           style={
             !isMobile
@@ -66,10 +59,10 @@ export const ExternalLinkEmbed = ({
           />
         </View>
       ) : undefined}
-      {(embedPlayerParams?.isGif && !hidePlayerEmbed && (
+      {(embedPlayerParams?.isGif && (
         <ExternalGifEmbed params={embedPlayerParams} thumb={link.thumb} />
       )) ||
-        (embedPlayerParams && !hidePlayerEmbed && (
+        (embedPlayerParams && (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ))}
       <View
@@ -91,7 +84,7 @@ export const ExternalLinkEmbed = ({
           style={[pal.text]}>
           {link.title || link.uri}
         </Text>
-        {(!embedPlayerParams?.isGif || hidePlayerEmbed) && link.description ? (
+        {!embedPlayerParams?.isGif && link.description ? (
           <Text
             type="md"
             numberOfLines={isMobile ? 4 : 2}
