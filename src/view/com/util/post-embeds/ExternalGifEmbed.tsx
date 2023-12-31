@@ -120,46 +120,20 @@ export function ExternalGifEmbed({
           </View>
         </View>
       )}
-      <ConditionalImage
-        isAnimating={isAnimating}
-        isLoaded={isPrefetched}
-        isPlayerActive={isPlayerActive}
-        thumb={thumb}
-        source={params.playerUri}
-        imageRef={imageRef}
+      <Image
+        source={{
+          uri:
+            !isPrefetched || (isWeb && !isAnimating) ? thumb : params.playerUri,
+        }} // Web uses the thumb to control playback
+        style={{flex: 1}}
+        ref={imageRef}
         onLoad={onLoad}
+        autoplay={isAnimating}
+        contentFit="contain"
+        accessibilityIgnoresInvertColors
+        cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
       />
     </Pressable>
-  )
-}
-
-function ConditionalImage({
-  isAnimating,
-  isLoaded,
-  thumb,
-  source,
-  imageRef,
-  onLoad,
-}: {
-  isAnimating: boolean
-  isLoaded: boolean
-  isPlayerActive: boolean
-  thumb?: string
-  source: string
-  imageRef: React.RefObject<Image>
-  onLoad: (e: ImageLoadEventData) => void
-}) {
-  return (
-    <Image
-      source={{uri: !isLoaded || (isWeb && !isAnimating) ? thumb : source}} // Web uses the thumb to control playback
-      style={{flex: 1}}
-      ref={imageRef}
-      onLoad={onLoad}
-      autoplay={isAnimating}
-      contentFit="contain"
-      accessibilityIgnoresInvertColors
-      cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
-    />
   )
 }
 
