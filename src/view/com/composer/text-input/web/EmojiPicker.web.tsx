@@ -58,6 +58,11 @@ export function EmojiPicker({close}: {close: () => void}) {
       if (e.key === 'Shift') {
         isShiftDown.current = false
       }
+
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        close()
+      }
     }
 
     window.addEventListener('keydown', onKeyDown, true)
@@ -67,7 +72,7 @@ export function EmojiPicker({close}: {close: () => void}) {
       window.removeEventListener('keydown', onKeyDown, true)
       window.removeEventListener('keyup', onKeyUp, true)
     }
-  }, [])
+  }, [close])
 
   const onInsert = (emoji: Emoji) => {
     textInputWebEmitter.emit('emoji-inserted', emoji)
