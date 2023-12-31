@@ -102,9 +102,8 @@ export function EmojiPicker({state, close}: IProps) {
       onPress={close}
       accessibilityViewIsModal>
       <View style={styles.mask}>
-        <TouchableWithoutFeedback
-          accessibilityRole="button"
-          onPress={e => e.stopPropagation()}>
+        {/* eslint-disable-next-line react-native-a11y/has-valid-accessibility-descriptors */}
+        <TouchableWithoutFeedback onPress={e => e.stopPropagation()}>
           <View style={[{position: 'absolute'}, position]}>
             <Picker
               data={async () => {
