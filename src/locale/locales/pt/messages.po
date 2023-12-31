@@ -458,7 +458,7 @@ msgstr "Confira alguns usuários recomendados. Siga-os para ver usuários semelh
 
 #: src/view/com/modals/DeleteAccount.tsx:163
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Verifique sua caixa de entrada para um e-mail com o código de confirmação abaixo:"
+msgstr "Verifique sua caixa de entrada para um email com o código de confirmação abaixo:"
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
@@ -831,7 +831,7 @@ msgstr "Digite o domínio que você deseja usar"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:101
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Digite o e-mail que você usou para criar a sua conta. Nós lhe enviaremos um \"código de redefinição\" para que você possa definir uma nova senha."
+msgstr "Digite o email que você usou para criar a sua conta. Nós lhe enviaremos um \"código de redefinição\" para que você possa definir uma nova senha."
 
 #: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
@@ -839,7 +839,7 @@ msgstr "Digite seu endereço de email"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
-msgstr "Digite seu novo endereço de e-mail abaixo."
+msgstr "Digite seu novo endereço de email abaixo."
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
@@ -1609,7 +1609,7 @@ msgstr "Por favor, escolha sua senha."
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "Por favor, confirme seu e-mail antes de alterá-lo. Este é um requisito temporário enquanto ferramentas de atualização de e-mail são adicionadas, e em breve serão removidos."
+msgstr "Por favor, confirme seu email antes de alterá-lo. Este é um requisito temporário enquanto ferramentas de atualização de email são adicionadas, e em breve serão removidos."
 
 #: src/view/com/modals/AddAppPasswords.tsx:140
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
@@ -1617,7 +1617,7 @@ msgstr "Por favor, insira um nome único para esta Senha do Aplicativo ou use no
 
 #: src/view/com/auth/create/state.ts:95
 msgid "Please enter your email."
-msgstr "Por favor, digite o seu e-mail."
+msgstr "Por favor, digite o seu email."
 
 #: src/view/com/modals/DeleteAccount.tsx:180
 msgid "Please enter your password as well:"
@@ -1703,7 +1703,7 @@ msgstr "Perfil"
 
 #: src/view/screens/Settings.tsx:808
 msgid "Protect your account by verifying your email."
-msgstr "Proteja a sua conta verificando o seu e-mail."
+msgstr "Proteja a sua conta verificando o seu email."
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -2278,7 +2278,7 @@ msgstr "Esta informação não é compartilhada com outros usuários."
 
 #: src/view/com/modals/VerifyEmail.tsx:113
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "Isso é importante caso você precise alterar seu e-mail ou redefinir sua senha."
+msgstr "Isso é importante caso você precise alterar seu email ou redefinir sua senha."
 
 #: src/view/com/auth/create/Step1.tsx:55
 msgid "This is the service that keeps you online."
@@ -2442,7 +2442,7 @@ msgstr "Verificar meu email"
 
 #: src/view/screens/Settings.tsx:803
 msgid "Verify My Email"
-msgstr "Verificar Meu E-mail"
+msgstr "Verificar Meu Email"
 
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
@@ -2601,7 +2601,7 @@ msgstr "Seu email foi salvo! Entraremos em contato em breve."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Seu e-mail foi atualizado mas não foi verificado. Como próximo passo, por favor verifique seu novo email."
+msgstr "Seu email foi atualizado mas não foi verificado. Como próximo passo, por favor verifique seu novo email."
 
 #: src/view/com/modals/VerifyEmail.tsx:108
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
