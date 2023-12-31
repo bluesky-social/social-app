@@ -320,6 +320,7 @@ const ImageItem = ({
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           onLoad={() => setIsLoaded(true)}
+          cachePolicy="memory"
         />
       </GestureDetector>
     </Animated.View>

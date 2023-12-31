@@ -13,6 +13,9 @@ import {Text} from '../text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {getLocales} from 'expo-localization'
+
+const LOCALE = getLocales()[0]
 
 interface Props {
   testID?: string
@@ -25,12 +28,19 @@ interface Props {
   accessibilityLabel: string
   accessibilityHint: string
   accessibilityLabelledBy?: string
+  handleAsUTC?: boolean
 }
 
 export function DateInput(props: Props) {
   const [show, setShow] = useState(false)
   const theme = useTheme()
   const pal = usePalette('default')
+
+  const formatter = React.useMemo(() => {
+    return new Intl.DateTimeFormat(LOCALE.languageTag, {
+      timeZone: props.handleAsUTC ? 'UTC' : undefined,
+    })
+  }, [props.handleAsUTC])
 
   const onChangeInternal = useCallback(
     (event: DateTimePickerEvent, date: Date | undefined) => {
@@ -64,7 +74,7 @@ export function DateInput(props: Props) {
             <Text
               type={props.buttonLabelType}
               style={[pal.text, props.buttonLabelStyle]}>
-              {props.value.toLocaleDateString()}
+              {formatter.format(props.value)}
             </Text>
           </View>
         </Button>
@@ -73,6 +83,7 @@ export function DateInput(props: Props) {
         <DateTimePicker
           testID={props.testID ? `${props.testID}-datepicker` : undefined}
           mode="date"
+          timeZoneName={props.handleAsUTC ? 'Etc/UTC' : undefined}
           display="spinner"
           // @ts-ignore applies in iOS only -prf
           themeVariant={theme.colorScheme}
