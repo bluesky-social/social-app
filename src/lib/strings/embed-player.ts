@@ -129,27 +129,30 @@ export function parseEmbedPlayerFromUrl(
 
   // spotify
   if (urlp.hostname === 'open.spotify.com') {
-    const [_, type, id] = urlp.pathname.split('/')
-    if (type && id) {
-      if (type === 'playlist') {
+    const [_, typeOrLocale, idOrType, id] = urlp.pathname.split('/')
+
+    if (idOrType) {
+      if (typeOrLocale === 'playlist' || idOrType === 'playlist') {
         return {
           type: 'spotify_playlist',
           source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/playlist/${id}`,
+          playerUri: `https://open.spotify.com/embed/playlist/${
+            id ?? idOrType
+          }`,
         }
       }
-      if (type === 'album') {
+      if (typeOrLocale === 'album' || idOrType === 'album') {
         return {
           type: 'spotify_album',
           source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/album/${id}`,
+          playerUri: `https://open.spotify.com/embed/album/${id ?? idOrType}`,
         }
       }
-      if (type === 'track') {
+      if (typeOrLocale === 'track' || idOrType === 'track') {
         return {
           type: 'spotify_song',
           source: 'spotify',
-          playerUri: `https://open.spotify.com/embed/track/${id}`,
+          playerUri: `https://open.spotify.com/embed/track/${id ?? idOrType}`,
         }
       }
     }

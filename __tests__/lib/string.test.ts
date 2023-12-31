@@ -409,12 +409,15 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://open.spotify.com/playlist/playlistId',
     'https://open.spotify.com/playlist/playlistId?param=value',
+    'https://open.spotify.com/locale/playlist/playlistId',
 
     'https://open.spotify.com/track/songId',
     'https://open.spotify.com/track/songId?param=value',
+    'https://open.spotify.com/locale/track/songId',
 
     'https://open.spotify.com/album/albumId',
     'https://open.spotify.com/album/albumId?param=value',
+    'https://open.spotify.com/locale/album/albumId',
 
     'https://soundcloud.com/user/track',
     'https://soundcloud.com/user/sets/set',
@@ -539,6 +542,11 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'spotify',
       playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
     },
+    {
+      type: 'spotify_playlist',
+      source: 'spotify',
+      playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
+    },
 
     {
       type: 'spotify_song',
@@ -550,7 +558,17 @@ describe('parseEmbedPlayerFromUrl', () => {
       source: 'spotify',
       playerUri: `https://open.spotify.com/embed/track/songId`,
     },
+    {
+      type: 'spotify_song',
+      source: 'spotify',
+      playerUri: `https://open.spotify.com/embed/track/songId`,
+    },
 
+    {
+      type: 'spotify_album',
+      source: 'spotify',
+      playerUri: `https://open.spotify.com/embed/album/albumId`,
+    },
     {
       type: 'spotify_album',
       source: 'spotify',
