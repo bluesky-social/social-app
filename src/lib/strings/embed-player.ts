@@ -88,7 +88,7 @@ export function parseEmbedPlayerFromUrl(
     if (videoId) {
       return {
         type: page === 'shorts' ? 'youtube_short' : 'youtube_video',
-        source: 'youtube',
+        source: page === 'shorts' ? 'youtubeShorts' : 'youtube',
         hideDetails: page === 'shorts' ? true : undefined,
         playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1`,
       }

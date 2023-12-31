@@ -487,7 +487,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     },
     {
       type: 'youtube_short',
-      source: 'youtube',
+      source: 'youtubeShorts',
       hideDetails: true,
       playerUri:
         'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
