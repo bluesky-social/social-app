@@ -181,11 +181,11 @@ msgstr "O texto alternativo descreve imagens para usuários cegos e com baixa vi
 
 #: src/view/com/modals/VerifyEmail.tsx:118
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "Um e-mail foi enviado para {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
+msgstr "Um email foi enviado para {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Um e-mail foi enviado para seu endereço anterior, {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
+msgstr "Um email foi enviado para seu endereço anterior, {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
 
 #: src/view/com/notifications/FeedItem.tsx:236
 #: src/view/com/threadgate/WhoCanReply.tsx:178
@@ -442,7 +442,7 @@ msgstr "Alterar Identificador"
 
 #: src/view/com/modals/VerifyEmail.tsx:141
 msgid "Change my email"
-msgstr "Alterar meu e-mail"
+msgstr "Alterar meu email"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
