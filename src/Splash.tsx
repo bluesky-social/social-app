@@ -137,7 +137,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         />
       )}
 
-      {platformApiLevel && platformApiLevel <= 27 ? (
+      {platformApiLevel && platformApiLevel <= 25 ? (
         <>
           {!isAnimationComplete && (
             <View
