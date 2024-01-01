@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, Text, PressableProps, TextProps} from 'react-native'
 import * as tokens from '#/alf/tokens'
-import {useTheme, atoms} from '#/alf'
+import {atoms} from '#/alf'
 
 export type ButtonType =
   | 'primary'
@@ -34,18 +34,23 @@ export type ButtonProps = Omit<PressableProps, 'children'> &
 export type ButtonTextProps = TextProps & VariantProps
 
 export function Button({children, style, type, size, ...rest}: ButtonProps) {
-  const t = useTheme()
   const {baseStyles, hoverStyles} = React.useMemo(() => {
     const baseStyles = []
     const hoverStyles = []
 
     switch (type) {
       case 'primary':
-        baseStyles.push(t.atoms.backgroundColor.primary)
+        baseStyles.push({
+          backgroundColor: tokens.color.blue_500,
+        })
         break
       case 'secondary':
-        baseStyles.push(t.atoms.backgroundColor.l2)
-        hoverStyles.push(t.atoms.backgroundColor.l1)
+        baseStyles.push({
+          backgroundColor: tokens.color.gray_200,
+        })
+        hoverStyles.push({
+          backgroundColor: tokens.color.gray_100,
+        })
         break
       default:
     }
@@ -53,18 +58,18 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
     switch (size) {
       case 'large':
         baseStyles.push(
-          atoms.padding.py.m,
-          atoms.padding.px.xl,
-          atoms.radius.m,
-          atoms.flex.gap.s,
+          atoms.py_md,
+          atoms.px_xl,
+          atoms.rounded_md,
+          atoms.gap_sm,
         )
         break
       case 'small':
         baseStyles.push(
-          atoms.padding.py.s,
-          atoms.padding.px.m,
-          atoms.radius.s,
-          atoms.flex.gap.xs,
+          atoms.py_sm,
+          atoms.px_md,
+          atoms.rounded_sm,
+          atoms.gap_xs,
         )
         break
       default:
@@ -74,7 +79,7 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
       baseStyles,
       hoverStyles,
     }
-  }, [type, size, t])
+  }, [type, size])
 
   const [state, setState] = React.useState({
     pressed: false,
@@ -123,8 +128,8 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
     <Pressable
       {...rest}
       style={state => [
-        atoms.flex.row,
-        atoms.flex.alignCenter,
+        atoms.flex_row,
+        atoms.align_center,
         ...baseStyles,
         ...(state.hovered ? hoverStyles : []),
         typeof style === 'function' ? style(state) : style,
@@ -155,7 +160,6 @@ export function ButtonText({
   size,
   ...rest
 }: ButtonTextProps) {
-  const t = useTheme()
   const textStyles = React.useMemo(() => {
     const base = []
 
@@ -164,31 +168,33 @@ export function ButtonText({
         base.push({color: tokens.color.white})
         break
       case 'secondary':
-        base.push(t.atoms.color.l5)
+        base.push({
+          color: tokens.color.gray_700,
+        })
         break
       default:
     }
 
     switch (size) {
       case 'small':
-        base.push(atoms.font.s, {paddingBottom: 1})
+        base.push(atoms.text_sm, {paddingBottom: 1})
         break
       case 'large':
-        base.push(atoms.font.m, {paddingBottom: 1})
+        base.push(atoms.text_md, {paddingBottom: 1})
         break
       default:
     }
 
     return base
-  }, [type, size, t])
+  }, [type, size])
 
   return (
     <Text
       {...rest}
       style={[
-        atoms.flex.one,
-        atoms.font.semi,
-        atoms.font.center,
+        atoms.flex_1,
+        atoms.font_semibold,
+        atoms.text_center,
         ...textStyles,
         style,
       ]}>

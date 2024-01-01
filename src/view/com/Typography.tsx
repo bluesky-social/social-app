@@ -4,7 +4,7 @@ import {useTheme, atoms, web} from '#/alf'
 
 export function Text({style, ...rest}: TextProps) {
   const t = useTheme()
-  return <RNText style={[atoms.font.s, t.atoms.color.l7, style]} {...rest} />
+  return <RNText style={[atoms.text_sm, t.atoms.text, style]} {...rest} />
 }
 
 export function H1({style, ...rest}: TextProps) {
@@ -18,7 +18,7 @@ export function H1({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.font.xxl, atoms.font.bold, t.atoms.color.l7, style]}
+      style={[atoms.text_xl, atoms.font_bold, t.atoms.text, style]}
     />
   )
 }
@@ -34,7 +34,7 @@ export function H2({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.font.l, atoms.font.bold, t.atoms.color.l7, style]}
+      style={[atoms.text_lg, atoms.font_bold, t.atoms.text, style]}
     />
   )
 }
@@ -50,7 +50,7 @@ export function H3({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.font.m, atoms.font.bold, t.atoms.color.l7, style]}
+      style={[atoms.text_md, atoms.font_bold, t.atoms.text, style]}
     />
   )
 }
@@ -66,7 +66,7 @@ export function H4({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.font.s, atoms.font.bold, t.atoms.color.l7, style]}
+      style={[atoms.text_sm, atoms.font_bold, t.atoms.text, style]}
     />
   )
 }
@@ -82,7 +82,7 @@ export function H5({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.font.xs, atoms.font.bold, t.atoms.color.l7, style]}
+      style={[atoms.text_xs, atoms.font_bold, t.atoms.text, style]}
     />
   )
 }
@@ -98,7 +98,7 @@ export function H6({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.font.xxs, atoms.font.bold, t.atoms.color.l7, style]}
+      style={[atoms.text_xxs, atoms.font_bold, t.atoms.text, style]}
     />
   )
 }
