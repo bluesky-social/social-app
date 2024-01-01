@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   AppState,
   Dimensions,
-  RefreshControl,
   StyleProp,
   StyleSheet,
   View,
@@ -16,7 +15,6 @@ import {FeedErrorMessage} from './FeedErrorMessage'
 import {FeedSlice} from './FeedSlice'
 import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {logger} from '#/logger'
 import {
@@ -74,7 +72,6 @@ let Feed = ({
   ListHeaderComponent?: () => JSX.Element
   extraData?: any
 }): React.ReactNode => {
-  const pal = usePalette('default')
   const theme = useTheme()
   const {track} = useAnalytics()
   const queryClient = useQueryClient()
@@ -98,10 +95,13 @@ let Feed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  const isEmpty = !isFetching && !data?.pages[0]?.slices.length
   if (data?.pages[0]) {
     lastFetchRef.current = data?.pages[0].fetchedAt
   }
+  const isEmpty = React.useMemo(
+    () => !isFetching && !data?.pages?.some(page => page.slices.length),
+    [isFetching, data],
+  )
 
   const checkForNew = React.useCallback(async () => {
     if (!data?.pages[0] || isFetching || !onHasNew || !enabled) {
@@ -294,25 +294,17 @@ let Feed = ({
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}
         ListHeaderComponent={ListHeaderComponent}
-        refreshControl={
-          <RefreshControl
-            refreshing={isPTRing}
-            onRefresh={onRefresh}
-            tintColor={pal.colors.text}
-            titleColor={pal.colors.text}
-            progressViewOffset={headerOffset}
-          />
-        }
+        refreshing={isPTRing}
+        onRefresh={onRefresh}
+        headerOffset={headerOffset}
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}
-        style={{paddingTop: headerOffset}}
         onScrolledDownChange={onScrolledDownChange}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         onEndReached={onEndReached}
         onEndReachedThreshold={2} // number of posts left to trigger load more
         removeClippedSubviews={true}
-        contentOffset={{x: 0, y: headerOffset * -1}}
         extraData={extraData}
         // @ts-ignore our .web version only -prf
         desktopFixedHeight={

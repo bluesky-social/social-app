@@ -42,6 +42,7 @@ module.exports = function (api) {
             platform: './src/platform',
             state: './src/state',
             view: './src/view',
+            crypto: './src/platform/crypto.ts',
           },
         },
       ],

@@ -9,12 +9,12 @@ module.exports = function () {
   /**
    * iOS build number. Must be incremented for each TestFlight version.
    */
-  const IOS_BUILD_NUMBER = '4'
+  const IOS_BUILD_NUMBER = '2'
 
   /**
    * Android build number. Must be incremented for each release.
    */
-  const ANDROID_VERSION_CODE = 50
+  const ANDROID_VERSION_CODE = 53
 
   /**
    * Uses built-in Expo env vars
@@ -110,6 +110,9 @@ module.exports = function () {
         [
           'expo-build-properties',
           {
+            ios: {
+              deploymentTarget: '13.4',
+            },
             android: {
               compileSdkVersion: 34,
               targetSdkVersion: 34,

@@ -3,8 +3,9 @@ import {View, Pressable} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useNavigation} from '@react-navigation/native'
 
-import {isIOS} from 'platform/detection'
+import {isIOS, isNative} from 'platform/detection'
 import {Login} from 'view/com/auth/login/Login'
 import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
@@ -18,6 +19,9 @@ import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
+import {useSession} from '#/state/session'
+import {Text} from '#/view/com/util/text/Text'
+import {NavigationProp} from 'lib/routes/types'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -26,6 +30,7 @@ enum ScreenState {
 }
 
 export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
+  const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -40,6 +45,8 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   )
   const {isMobile} = useWebMediaQueries()
   const {clearRequestedAccount} = useLoggedOutViewControls()
+  const navigation = useNavigation<NavigationProp>()
+  const isFirstScreen = screenState === ScreenState.S_LoginOrCreateAccount
 
   React.useEffect(() => {
     screen('Login')
@@ -53,6 +60,10 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
     clearRequestedAccount()
   }, [clearRequestedAccount, onDismiss])
 
+  const onPressSearch = React.useCallback(() => {
+    navigation.navigate(`SearchTab`)
+  }, [navigation])
+
   return (
     <View
       testID="noSessionView"
@@ -65,7 +76,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
         },
       ]}>
       <ErrorBoundary>
-        {onDismiss && (
+        {onDismiss ? (
           <Pressable
             accessibilityHint={_(msg`Go back`)}
             accessibilityLabel={_(msg`Go back`)}
@@ -88,7 +99,37 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
               }}
             />
           </Pressable>
-        )}
+        ) : isNative && !hasSession && isFirstScreen ? (
+          <Pressable
+            accessibilityHint={_(msg`Search for users`)}
+            accessibilityLabel={_(msg`Search for users`)}
+            accessibilityRole="button"
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 4,
+              position: 'absolute',
+              top: 20,
+              right: 20,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              zIndex: 100,
+              backgroundColor: pal.btn.backgroundColor,
+              borderRadius: 100,
+            }}
+            onPress={onPressSearch}>
+            <Text type="lg-bold" style={[pal.text]}>
+              Search{' '}
+            </Text>
+            <FontAwesomeIcon
+              icon="search"
+              size={16}
+              style={{
+                color: String(pal.text.color),
+              }}
+            />
+          </Pressable>
+        ) : null}
 
         {screenState === ScreenState.S_LoginOrCreateAccount ? (
           <SplashScreen

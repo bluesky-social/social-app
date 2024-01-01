@@ -218,11 +218,13 @@ const FOLLOWING_FEED_STUB: FeedSourceInfo = {
 export function usePinnedFeedsInfos(): {
   feeds: FeedSourceInfo[]
   hasPinnedCustom: boolean
+  isLoading: boolean
 } {
   const queryClient = useQueryClient()
   const [tabs, setTabs] = React.useState<FeedSourceInfo[]>([
     FOLLOWING_FEED_STUB,
   ])
+  const [isLoading, setLoading] = React.useState(true)
   const {data: preferences} = usePreferencesQuery()
 
   const hasPinnedCustom = React.useMemo<boolean>(() => {
@@ -249,6 +251,7 @@ export function usePinnedFeedsInfos(): {
               // these requests can fail, need to filter those out
               try {
                 return await queryClient.fetchQuery({
+                  staleTime: STALE.SECONDS.FIFTEEN,
                   queryKey: feedSourceInfoQueryKey({uri}),
                   queryFn: async () => {
                     const type = getFeedTypeFromUri(uri)
@@ -283,10 +286,11 @@ export function usePinnedFeedsInfos(): {
       ) as FeedSourceInfo[]
 
       setTabs([FOLLOWING_FEED_STUB].concat(views))
+      setLoading(false)
     }
 
     fetchFeedInfo()
   }, [queryClient, setTabs, preferences?.feeds?.pinned])
 
-  return {feeds: tabs, hasPinnedCustom}
+  return {feeds: tabs, hasPinnedCustom, isLoading}
 }

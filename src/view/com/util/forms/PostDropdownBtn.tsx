@@ -18,6 +18,7 @@ import {getTranslatorLink} from '#/locale/helpers'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
+import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -31,6 +32,7 @@ let PostDropdownBtn = ({
   postUri,
   record,
   style,
+  showAppealLabelItem,
 }: {
   testID: string
   postAuthor: AppBskyActorDefs.ProfileViewBasic
@@ -38,6 +40,7 @@ let PostDropdownBtn = ({
   postUri: string
   record: AppBskyFeedPost.Record
   style?: StyleProp<ViewStyle>
+  showAppealLabelItem?: boolean
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
@@ -48,9 +51,12 @@ let PostDropdownBtn = ({
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
   const postDeleteMutation = usePostDeleteMutation()
+  const hiddenPosts = useHiddenPosts()
+  const {hidePost} = useHiddenPostsApi()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
+  const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -95,6 +101,10 @@ let PostDropdownBtn = ({
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(translatorUrl)
   }, [translatorUrl])
+
+  const onHidePost = React.useCallback(() => {
+    hidePost({uri: postUri})
+  }, [postUri, hidePost])
 
   const dropdownItems: NativeDropdownItem[] = [
     {
@@ -157,6 +167,27 @@ let PostDropdownBtn = ({
         web: 'comment-slash',
       },
     },
+    hasSession &&
+      !isAuthor &&
+      !isPostHidden && {
+        label: _(msg`Hide post`),
+        onPress() {
+          openModal({
+            name: 'confirm',
+            title: _(msg`Hide this post?`),
+            message: _(msg`This will hide this post from your feeds.`),
+            onPressConfirm: onHidePost,
+          })
+        },
+        testID: 'postDropdownHideBtn',
+        icon: {
+          ios: {
+            name: 'eye.slash',
+          },
+          android: 'ic_menu_delete',
+          web: ['far', 'eye-slash'],
+        },
+      },
     {
       label: 'separator',
     },
@@ -196,6 +227,23 @@ let PostDropdownBtn = ({
         },
         android: 'ic_menu_delete',
         web: ['far', 'trash-can'],
+      },
+    },
+    showAppealLabelItem && {
+      label: 'separator',
+    },
+    showAppealLabelItem && {
+      label: _(msg`Appeal content warning`),
+      onPress() {
+        openModal({name: 'appeal-label', uri: postUri, cid: postCid})
+      },
+      testID: 'postDropdownAppealBtn',
+      icon: {
+        ios: {
+          name: 'exclamationmark.triangle',
+        },
+        android: 'ic_menu_report_image',
+        web: 'circle-exclamation',
       },
     },
   ].filter(Boolean) as NativeDropdownItem[]

@@ -9,11 +9,11 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Hima-Zinn\n"
+"Last-Translator: noritada\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada\n"
 "Plural-Forms: \n"
 
-#: src/view/shell/desktop/RightNav.tsx:160
+#: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr "{0, plural, other {# 個の招待コードが利用可能}}"
 
@@ -25,21 +25,21 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} リスト"
 
-#: src/view/shell/desktop/RightNav.tsx:143
+#: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 msgstr "{invitesAvailable, plural, other {招待コード: # 個利用可能}}"
 
 #: src/view/screens/Settings.tsx:407
-#: src/view/shell/Drawer.tsx:640
+#: src/view/shell/Drawer.tsx:659
 msgid "{invitesAvailable} invite code available"
 msgstr "{invitesAvailable}個の招待コードが利用可能"
 
 #: src/view/screens/Settings.tsx:409
-#: src/view/shell/Drawer.tsx:642
+#: src/view/shell/Drawer.tsx:661
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable}個の招待コードが利用可能"
 
-#: src/view/screens/Search/Search.tsx:88
+#: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
 msgstr "{message}"
 
@@ -54,6 +54,10 @@ msgstr "<1>おすすめの</1><2>フィード</2><0>を選択</0>"
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
 msgstr "<1>おすすめの</1><2>ユーザー</2><0>をフォロー</0>"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+msgid "A content warning has been applied to this {0}."
+msgstr ""
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -75,7 +79,7 @@ msgstr "アカウントオプション"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
-#: src/view/screens/ProfileList.tsx:754
+#: src/view/screens/ProfileList.tsx:763
 msgid "Add"
 msgstr "追加"
 
@@ -83,7 +87,7 @@ msgstr "追加"
 msgid "Add a content warning"
 msgstr "コンテンツの警告を追加"
 
-#: src/view/screens/ProfileList.tsx:744
+#: src/view/screens/ProfileList.tsx:753
 msgid "Add a user to this list"
 msgstr "リストにユーザーを追加"
 
@@ -106,11 +110,11 @@ msgstr "詳細を追加"
 msgid "Add details to report"
 msgstr "レポートに詳細を追加"
 
-#: src/view/com/composer/Composer.tsx:438
+#: src/view/com/composer/Composer.tsx:442
 msgid "Add link card"
 msgstr "リンクカードを追加"
 
-#: src/view/com/composer/Composer.tsx:441
+#: src/view/com/composer/Composer.tsx:445
 msgid "Add link card:"
 msgstr "リンクカードを追加："
 
@@ -122,7 +126,7 @@ msgstr "次のDNSレコードをドメインに追加してください："
 msgid "Add to Lists"
 msgstr "リストに追加"
 
-#: src/view/screens/ProfileFeed.tsx:270
+#: src/view/screens/ProfileFeed.tsx:271
 msgid "Add to my feeds"
 msgstr "マイフィードに追加"
 
@@ -163,7 +167,7 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
-#: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/notifications/FeedItem.tsx:237
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "および"
@@ -180,15 +184,23 @@ msgstr "アプリパスワード"
 msgid "App Passwords"
 msgstr "アプリパスワード"
 
-#: src/view/com/modals/AppealLabel.tsx:65
-msgid "Appeal Decision"
-msgstr "判断に異議"
+#: src/view/com/util/forms/PostDropdownBtn.tsx:236
+msgid "Appeal content warning"
+msgstr ""
 
-#: src/view/com/util/moderation/LabelInfo.tsx:51
+#: src/view/com/modals/AppealLabel.tsx:65
+msgid "Appeal Content Warning"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Decision"
+#~ msgstr "判断に異議"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
 msgstr "この判断に異議を申し立てる"
 
-#: src/view/com/util/moderation/LabelInfo.tsx:55
+#: src/view/com/util/moderation/LabelInfo.tsx:56
 msgid "Appeal this decision."
 msgstr "この判断に異議を申し立てる"
 
@@ -204,11 +216,11 @@ msgstr "本当にアプリパスワード「{name}」を削除しますか？"
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "本当にこの下書きを破棄しますか？"
 
-#: src/view/screens/ProfileList.tsx:352
+#: src/view/screens/ProfileList.tsx:353
 msgid "Are you sure?"
 msgstr "本当によろしいですか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:188
+#: src/view/com/util/forms/PostDropdownBtn.tsx:219
 msgid "Are you sure? This cannot be undone."
 msgstr "本当によろしいですか？これは元に戻せません。"
 
@@ -216,15 +228,15 @@ msgstr "本当によろしいですか？これは元に戻せません。"
 msgid "Artistic or non-erotic nudity."
 msgstr "芸術的または性的ではないヌード。"
 
-#: src/view/com/auth/create/CreateAccount.tsx:145
+#: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:249
+#: src/view/com/auth/login/LoginForm.tsx:250
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
-#: src/view/com/modals/report/InputIssueDetails.tsx:45
-#: src/view/com/post-thread/PostThread.tsx:395
-#: src/view/com/post-thread/PostThread.tsx:445
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/modals/report/InputIssueDetails.tsx:46
+#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:438
+#: src/view/com/post-thread/PostThread.tsx:446
 #: src/view/com/profile/ProfileHeader.tsx:672
 msgid "Back"
 msgstr "戻る"
@@ -233,8 +245,8 @@ msgstr "戻る"
 msgid "Basics"
 msgstr "基本"
 
-#: src/view/com/auth/create/Step2.tsx:131
-#: src/view/com/modals/BirthDateSettings.tsx:72
+#: src/view/com/auth/create/Step2.tsx:156
+#: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "誕生日"
 
@@ -247,15 +259,15 @@ msgstr "誕生日："
 msgid "Block Account"
 msgstr "アカウントをブロック"
 
-#: src/view/screens/ProfileList.tsx:522
+#: src/view/screens/ProfileList.tsx:523
 msgid "Block accounts"
 msgstr "アカウントをブロック"
 
-#: src/view/screens/ProfileList.tsx:472
+#: src/view/screens/ProfileList.tsx:473
 msgid "Block list"
 msgstr "リストをブロック"
 
-#: src/view/screens/ProfileList.tsx:307
+#: src/view/screens/ProfileList.tsx:308
 msgid "Block these accounts?"
 msgstr "これらのアカウントをブロックしますか？"
 
@@ -263,7 +275,7 @@ msgstr "これらのアカウントをブロックしますか？"
 msgid "Blocked accounts"
 msgstr "ブロック中のアカウント"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:106
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
 msgid "Blocked Accounts"
 msgstr "ブロック中のアカウント"
 
@@ -271,15 +283,15 @@ msgstr "ブロック中のアカウント"
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:114
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。あなたは相手のコンテンツを見ることができず、相手はあなたのコンテンツを見ることができなくなります。"
 
-#: src/view/com/post-thread/PostThread.tsx:251
+#: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
 msgstr "投稿をブロックしました。"
 
-#: src/view/screens/ProfileList.tsx:309
+#: src/view/screens/ProfileList.tsx:310
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
 msgstr "ブロックしたことは公開されます。ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。"
 
@@ -333,9 +345,9 @@ msgstr "カメラ"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "文字、数字、スペース、ハイフン、およびアンダースコアのみが使用可能です。長さは4文字以上32文字以下である必要があります。"
 
-#: src/view/com/composer/Composer.tsx:285
-#: src/view/com/composer/Composer.tsx:288
-#: src/view/com/modals/AltImage.tsx:127
+#: src/view/com/composer/Composer.tsx:289
+#: src/view/com/composer/Composer.tsx:292
+#: src/view/com/modals/AltImage.tsx:128
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/Confirm.tsx:88
@@ -348,7 +360,7 @@ msgstr "文字、数字、スペース、ハイフン、およびアンダース
 #: src/view/com/modals/LinkWarning.tsx:85
 #: src/view/com/modals/Repost.tsx:73
 #: src/view/com/modals/Waitlist.tsx:136
-#: src/view/screens/Search/Search.tsx:592
+#: src/view/screens/Search/Search.tsx:601
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Cancel"
 msgstr "キャンセル"
@@ -358,7 +370,7 @@ msgstr "キャンセル"
 msgid "Cancel account deletion"
 msgstr "アカウントの削除をキャンセル"
 
-#: src/view/com/modals/AltImage.tsx:122
+#: src/view/com/modals/AltImage.tsx:123
 msgid "Cancel add image alt text"
 msgstr "画像のALTテキストの追加をキャンセル"
 
@@ -420,6 +432,10 @@ msgstr "おすすめのユーザーを確認してください。フォローす
 msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "入力したメールアドレスの受信トレイを確認して、以下に入力するための確認コードが記載されたメールが届いていないか確認してください："
 
+#: src/view/com/modals/Threadgate.tsx:72
+msgid "Choose \"Everybody\" or \"Nobody\""
+msgstr ""
+
 #: src/view/com/modals/ServerInput.tsx:38
 msgid "Choose Service"
 msgstr "サービスを選択"
@@ -428,7 +444,7 @@ msgstr "サービスを選択"
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "カスタムフィードを使用してあなたの体験を強化するアルゴリズムを選択します。"
 
-#: src/view/com/auth/create/Step2.tsx:106
+#: src/view/com/auth/create/Step2.tsx:127
 msgid "Choose your password"
 msgstr "パスワードを選択"
 
@@ -448,8 +464,8 @@ msgstr "すべてのストレージデータをクリア"
 msgid "Clear all storage data (restart after this)"
 msgstr "すべてのストレージデータをクリア（この後再起動します）"
 
-#: src/view/com/util/forms/SearchInput.tsx:73
-#: src/view/screens/Search/Search.tsx:577
+#: src/view/com/util/forms/SearchInput.tsx:74
+#: src/view/screens/Search/Search.tsx:582
 msgid "Clear search query"
 msgstr "検索クエリをクリア"
 
@@ -509,8 +525,8 @@ msgstr "アカウントの削除を確認"
 msgid "Confirmation code"
 msgstr "確認コード"
 
-#: src/view/com/auth/create/CreateAccount.tsx:178
-#: src/view/com/auth/login/LoginForm.tsx:268
+#: src/view/com/auth/create/CreateAccount.tsx:174
+#: src/view/com/auth/login/LoginForm.tsx:269
 msgid "Connecting..."
 msgstr "接続中..."
 
@@ -549,11 +565,11 @@ msgstr "コピーしました"
 msgid "Copy"
 msgstr "コピー"
 
-#: src/view/screens/ProfileList.tsx:384
+#: src/view/screens/ProfileList.tsx:385
 msgid "Copy link to list"
 msgstr "リストへのリンクをコピー"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:129
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy link to post"
 msgstr "投稿へのリンクをコピー"
 
@@ -561,7 +577,7 @@ msgstr "投稿へのリンクをコピー"
 msgid "Copy link to profile"
 msgstr "プロフィールへのリンクをコピー"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:115
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Copy post text"
 msgstr "投稿のテキストをコピー"
 
@@ -569,11 +585,11 @@ msgstr "投稿のテキストをコピー"
 msgid "Copyright Policy"
 msgstr "著作権ポリシー"
 
-#: src/view/screens/ProfileFeed.tsx:94
+#: src/view/screens/ProfileFeed.tsx:95
 msgid "Could not load feed"
 msgstr "フィードのロードに失敗しました"
 
-#: src/view/screens/ProfileList.tsx:830
+#: src/view/screens/ProfileList.tsx:839
 msgid "Could not load list"
 msgstr "リストのロードに失敗しました"
 
@@ -582,7 +598,7 @@ msgstr "リストのロードに失敗しました"
 msgid "Create a new account"
 msgstr "新しいアカウントを作成"
 
-#: src/view/com/auth/create/CreateAccount.tsx:124
+#: src/view/com/auth/create/CreateAccount.tsx:121
 msgid "Create Account"
 msgstr "アカウントを作成"
 
@@ -617,8 +633,8 @@ msgstr "アカウントを削除"
 msgid "Delete app password"
 msgstr "アプリパスワードを削除"
 
-#: src/view/screens/ProfileList.tsx:351
-#: src/view/screens/ProfileList.tsx:411
+#: src/view/screens/ProfileList.tsx:352
+#: src/view/screens/ProfileList.tsx:412
 msgid "Delete List"
 msgstr "リストを削除"
 
@@ -630,15 +646,15 @@ msgstr "マイアカウントを削除"
 msgid "Delete my account…"
 msgstr "マイアカウントを削除…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:183
+#: src/view/com/util/forms/PostDropdownBtn.tsx:214
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+#: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "Delete this post?"
 msgstr "この投稿を削除しますか？"
 
-#: src/view/com/post-thread/PostThread.tsx:243
+#: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
 msgstr "投稿を削除しました。"
 
@@ -656,6 +672,10 @@ msgstr "開発者サーバー"
 #: src/view/screens/Settings.tsx:637
 msgid "Developer Tools"
 msgstr "開発者ツール"
+
+#: src/view/com/composer/Composer.tsx:210
+msgid "Did you want to say anything?"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:143
 msgid "Discard"
@@ -713,7 +733,7 @@ msgstr "それぞれのコードは一度ずつ動作します。定期的に招
 msgid "Edit image"
 msgstr "画像を編集"
 
-#: src/view/screens/ProfileList.tsx:399
+#: src/view/screens/ProfileList.tsx:400
 msgid "Edit list details"
 msgstr "リストの詳細を編集"
 
@@ -738,14 +758,14 @@ msgstr "プロフィールを編集"
 msgid "Edit Saved Feeds"
 msgstr "保存されたフィードを編集"
 
-#: src/view/com/auth/create/Step2.tsx:90
+#: src/view/com/auth/create/Step2.tsx:108
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:148
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "メールアドレス"
 
-#: src/view/com/auth/create/Step2.tsx:81
+#: src/view/com/auth/create/Step2.tsx:99
 msgid "Email address"
 msgstr "メールアドレス"
 
@@ -759,9 +779,9 @@ msgstr "メールアドレス："
 
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "この設定を有効にすると、フォローしているユーザー間の返信だけが表示されます。"
+msgstr "この設定を有効にすると、自分がフォローしているユーザーからの返信だけが表示されます。"
 
-#: src/view/screens/Profile.tsx:425
+#: src/view/screens/Profile.tsx:426
 msgid "End of feed"
 msgstr "フィードの終わり"
 
@@ -777,7 +797,7 @@ msgstr "使用するドメインを入力してください"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "アカウントの作成に使用したメールアドレスを入力します。新しいパスワードを設定できるように、「リセットコード」をお送りします。"
 
-#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
 msgstr "メールアドレスを入力してください"
 
@@ -789,7 +809,7 @@ msgstr "以下に新しいメールアドレスを入力してください。"
 msgid "Enter your username and password"
 msgstr "ユーザー名とパスワードを入力"
 
-#: src/view/screens/Search/Search.tsx:106
+#: src/view/screens/Search/Search.tsx:105
 msgid "Error:"
 msgstr "エラー："
 
@@ -806,7 +826,7 @@ msgstr "ALTテキストを展開"
 msgid "Failed to load recommended feeds"
 msgstr "おすすめのフィードのロードに失敗しました"
 
-#: src/view/screens/Feeds.tsx:559
+#: src/view/screens/Feeds.tsx:556
 msgid "Feed offline"
 msgstr "フィードはオフラインです"
 
@@ -814,17 +834,17 @@ msgstr "フィードはオフラインです"
 msgid "Feed Preferences"
 msgstr "フィードの設定"
 
-#: src/view/shell/desktop/RightNav.tsx:65
-#: src/view/shell/Drawer.tsx:292
+#: src/view/shell/desktop/RightNav.tsx:73
+#: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "フィードバック"
 
 #: src/view/screens/Feeds.tsx:475
-#: src/view/screens/Profile.tsx:164
+#: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
-#: src/view/shell/desktop/LeftNav.tsx:339
-#: src/view/shell/Drawer.tsx:455
-#: src/view/shell/Drawer.tsx:456
+#: src/view/shell/desktop/LeftNav.tsx:342
+#: src/view/shell/Drawer.tsx:474
+#: src/view/shell/Drawer.tsx:475
 msgid "Feeds"
 msgstr "フィード"
 
@@ -836,11 +856,11 @@ msgstr "フィードはコンテンツを整理する為にユーザーによっ
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "フィードはユーザーがプログラミングの専門知識を持って構築するカスタムアルゴリズムです。詳細については、<0/>を参照してください。"
 
-#: src/view/screens/Search/Search.tsx:422
+#: src/view/screens/Search/Search.tsx:427
 msgid "Find users on Bluesky"
 msgstr "Blueskyでユーザーを検索"
 
-#: src/view/screens/Search/Search.tsx:420
+#: src/view/screens/Search/Search.tsx:425
 msgid "Find users with the search tool on the right"
 msgstr "右側の検索ツールでユーザーを検索"
 
@@ -866,11 +886,11 @@ msgstr "何人かのユーザーをフォローして開始します。興味を
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
-msgstr "フォローしているユーザー"
+msgstr "自分がフォローしているユーザー"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:145
 msgid "Followed users only"
-msgstr "フォローされたユーザーのみ"
+msgstr "自分がフォローしているユーザーのみ"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
@@ -897,11 +917,11 @@ msgstr "セキュリティ上の理由から、メールアドレスに確認コ
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "セキュリティ上の理由から、これを再度表示することはできません。このパスワードを紛失した場合は、新しいパスワードを生成する必要があります。"
 
-#: src/view/com/auth/login/LoginForm.tsx:231
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Forgot"
 msgstr "忘れた"
 
-#: src/view/com/auth/login/LoginForm.tsx:228
+#: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Forgot password"
 msgstr "パスワードを忘れた"
 
@@ -918,22 +938,22 @@ msgstr "ギャラリー"
 msgid "Get Started"
 msgstr "はじめに"
 
-#: src/view/com/auth/LoggedOut.tsx:70
-#: src/view/com/auth/LoggedOut.tsx:71
+#: src/view/com/auth/LoggedOut.tsx:81
+#: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
-#: src/view/shell/desktop/LeftNav.tsx:103
+#: src/view/shell/desktop/LeftNav.tsx:104
 msgid "Go back"
 msgstr "戻る"
 
-#: src/view/screens/ProfileFeed.tsx:103
-#: src/view/screens/ProfileFeed.tsx:108
-#: src/view/screens/ProfileList.tsx:839
-#: src/view/screens/ProfileList.tsx:844
+#: src/view/screens/ProfileFeed.tsx:104
+#: src/view/screens/ProfileFeed.tsx:109
+#: src/view/screens/ProfileList.tsx:848
+#: src/view/screens/ProfileList.tsx:853
 msgid "Go Back"
 msgstr "戻る"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:279
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "次へ"
@@ -942,8 +962,8 @@ msgstr "次へ"
 msgid "Handle"
 msgstr "ハンドル"
 
-#: src/view/shell/desktop/RightNav.tsx:94
-#: src/view/shell/Drawer.tsx:302
+#: src/view/shell/desktop/RightNav.tsx:102
+#: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "ヘルプ"
 
@@ -951,12 +971,20 @@ msgstr "ヘルプ"
 msgid "Here is your app password."
 msgstr "アプリパスワードをお知らせします。"
 
-#: src/view/com/notifications/FeedItem.tsx:316
+#: src/view/com/notifications/FeedItem.tsx:324
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
 msgstr "非表示"
 
-#: src/view/com/notifications/FeedItem.tsx:308
+#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+msgid "Hide post"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:177
+msgid "Hide this post?"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide user list"
 msgstr "ユーザーリストを非表示"
 
@@ -981,9 +1009,9 @@ msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "このフィードが見つからないようです。もしかしたら削除されたのかもしれません。"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:303
-#: src/view/shell/Drawer.tsx:379
-#: src/view/shell/Drawer.tsx:380
+#: src/view/shell/desktop/LeftNav.tsx:306
+#: src/view/shell/Drawer.tsx:398
+#: src/view/shell/Drawer.tsx:399
 msgid "Home"
 msgstr "ホーム"
 
@@ -991,7 +1019,7 @@ msgstr "ホーム"
 #: src/view/screens/PreferencesHomeFeed.tsx:95
 #: src/view/screens/Settings.tsx:481
 msgid "Home Feed Preferences"
-msgstr "ホームフィード設定"
+msgstr "ホームフィードの設定"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:114
 msgid "Hosting provider"
@@ -1014,7 +1042,7 @@ msgstr "自分のドメインを持っています"
 msgid "If none are selected, suitable for all ages."
 msgstr "選択されていない場合は、すべての年齢に適しています。"
 
-#: src/view/com/modals/AltImage.tsx:96
+#: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
 msgstr "画像のALTテキスト"
 
@@ -1036,7 +1064,7 @@ msgstr "招待"
 msgid "Invite a Friend"
 msgstr "友達を招待"
 
-#: src/view/com/auth/create/Step2.tsx:57
+#: src/view/com/auth/create/Step2.tsx:72
 msgid "Invite code"
 msgstr "招待コード"
 
@@ -1044,7 +1072,7 @@ msgstr "招待コード"
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "招待コードが確認できません。正しく入力されていることを確認し、もう一度実行してください。"
 
-#: src/view/shell/Drawer.tsx:621
+#: src/view/shell/Drawer.tsx:640
 msgid "Invite codes: {invitesAvailable} available"
 msgstr "使用可能な招待コード： {invitesAvailable} 個"
 
@@ -1056,8 +1084,8 @@ msgstr "仕事"
 msgid "Join the waitlist"
 msgstr "Waitlistに参加"
 
-#: src/view/com/auth/create/Step2.tsx:68
-#: src/view/com/auth/create/Step2.tsx:72
+#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:90
 msgid "Join the waitlist."
 msgstr "Waitlistに参加します。"
 
@@ -1117,16 +1145,16 @@ msgstr "パスワードをリセットしましょう！"
 msgid "Library"
 msgstr "ライブラリー"
 
-#: src/view/screens/ProfileFeed.tsx:577
+#: src/view/screens/ProfileFeed.tsx:586
 msgid "Like this feed"
 msgstr "このフィードをいいね"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
-msgstr "いいねした人"
+msgstr "いいねしたユーザー"
 
-#: src/view/screens/Profile.tsx:163
+#: src/view/screens/Profile.tsx:164
 msgid "Likes"
 msgstr "いいね"
 
@@ -1136,31 +1164,31 @@ msgstr "いいね"
 
 #: src/view/com/modals/CreateOrEditList.tsx:186
 msgid "List Avatar"
-msgstr "リストアバター"
+msgstr "リストのアバター"
 
 #: src/view/com/modals/CreateOrEditList.tsx:199
 msgid "List Name"
 msgstr "リストの名前"
 
-#: src/view/screens/Profile.tsx:165
-#: src/view/shell/desktop/LeftNav.tsx:376
-#: src/view/shell/Drawer.tsx:471
-#: src/view/shell/Drawer.tsx:472
+#: src/view/screens/Profile.tsx:166
+#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/Drawer.tsx:490
+#: src/view/shell/Drawer.tsx:491
 msgid "Lists"
 msgstr "リスト"
 
-#: src/view/com/post-thread/PostThread.tsx:260
-#: src/view/com/post-thread/PostThread.tsx:268
+#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:267
 msgid "Load more posts"
-msgstr "より多くの投稿をロード"
+msgstr "投稿をさらにロード"
 
-#: src/view/screens/Notifications.tsx:144
+#: src/view/screens/Notifications.tsx:148
 msgid "Load new notifications"
-msgstr "新しい通知をロード"
+msgstr "最新の通知をロード"
 
 #: src/view/com/feeds/FeedPage.tsx:189
 msgid "Load new posts"
-msgstr "投稿をロード"
+msgstr "最新の投稿をロード"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
 msgid "Loading..."
@@ -1190,7 +1218,7 @@ msgstr "リストにないアカウントにログイン"
 msgid "Make sure this is where you intend to go!"
 msgstr "意図した場所であることを確認してください！"
 
-#: src/view/screens/Profile.tsx:162
+#: src/view/screens/Profile.tsx:163
 msgid "Media"
 msgstr "メディア"
 
@@ -1212,9 +1240,9 @@ msgstr "サーバーからのメッセージ"
 
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:563
-#: src/view/shell/desktop/LeftNav.tsx:394
-#: src/view/shell/Drawer.tsx:490
-#: src/view/shell/Drawer.tsx:491
+#: src/view/shell/desktop/LeftNav.tsx:397
+#: src/view/shell/Drawer.tsx:509
+#: src/view/shell/Drawer.tsx:510
 msgid "Moderation"
 msgstr "モデレーション"
 
@@ -1231,8 +1259,8 @@ msgid "More feeds"
 msgstr "その他のフィード"
 
 #: src/view/com/profile/ProfileHeader.tsx:548
-#: src/view/screens/ProfileFeed.tsx:360
-#: src/view/screens/ProfileList.tsx:583
+#: src/view/screens/ProfileFeed.tsx:361
+#: src/view/screens/ProfileList.tsx:584
 msgid "More options"
 msgstr "その他のオプション"
 
@@ -1240,37 +1268,37 @@ msgstr "その他のオプション"
 msgid "Mute Account"
 msgstr "アカウントをミュート"
 
-#: src/view/screens/ProfileList.tsx:510
+#: src/view/screens/ProfileList.tsx:511
 msgid "Mute accounts"
 msgstr "アカウントをミュート"
 
-#: src/view/screens/ProfileList.tsx:457
+#: src/view/screens/ProfileList.tsx:458
 msgid "Mute list"
 msgstr "リストをミュート"
 
-#: src/view/screens/ProfileList.tsx:270
+#: src/view/screens/ProfileList.tsx:271
 msgid "Mute these accounts?"
 msgstr "これらのアカウントをミュートしますか？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Mute thread"
 msgstr "スレッドをミュート"
 
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
-msgstr "ミュートされたアカウント"
+msgstr "ミュート中のアカウント"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:106
+#: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
-msgstr "ミュートされたアカウント"
+msgstr "ミュート中のアカウント"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:114
+#: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "ミュートをされたアカウントは、フィードと通知からの投稿が削除されます。ミュートの設定は完全に非公開です。"
+msgstr "ミュート中のアカウントの投稿は、フィードや通知から取り除かれます。ミュートの設定は完全に非公開です。"
 
-#: src/view/screens/ProfileList.tsx:272
+#: src/view/screens/ProfileList.tsx:273
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "ミュートは非公開です。ミュートをされたアカウントはあなたと引き続き関わることができますが、そのアカウントの投稿や通知を受信することはできません。"
+msgstr "ミュートの設定は非公開です。ミュート中のアカウントはあなたと引き続き関わることができますが、そのアカウントの投稿や通知を受信することはできません。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -1280,7 +1308,7 @@ msgstr "誕生日"
 msgid "My Feeds"
 msgstr "マイフィード"
 
-#: src/view/shell/desktop/LeftNav.tsx:64
+#: src/view/shell/desktop/LeftNav.tsx:65
 msgid "My Profile"
 msgstr "マイプロフィール"
 
@@ -1303,23 +1331,23 @@ msgid "New"
 msgstr "新規"
 
 #: src/view/com/feeds/FeedPage.tsx:200
-#: src/view/screens/Feeds.tsx:510
-#: src/view/screens/Profile.tsx:353
-#: src/view/screens/ProfileFeed.tsx:430
-#: src/view/screens/ProfileList.tsx:193
-#: src/view/screens/ProfileList.tsx:221
-#: src/view/shell/desktop/LeftNav.tsx:246
+#: src/view/screens/Feeds.tsx:507
+#: src/view/screens/Profile.tsx:354
+#: src/view/screens/ProfileFeed.tsx:431
+#: src/view/screens/ProfileList.tsx:194
+#: src/view/screens/ProfileList.tsx:222
+#: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
 msgstr "新しい投稿"
 
-#: src/view/shell/desktop/LeftNav.tsx:256
+#: src/view/shell/desktop/LeftNav.tsx:258
 msgid "New Post"
 msgstr "新しい投稿"
 
-#: src/view/com/auth/create/CreateAccount.tsx:158
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:281
+#: src/view/com/auth/login/LoginForm.tsx:282
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1330,14 +1358,15 @@ msgstr "次へ"
 msgid "Next image"
 msgstr "次の画像"
 
+#: src/view/screens/PreferencesHomeFeed.tsx:120
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
 msgid "No"
 msgstr "いいえ"
 
-#: src/view/screens/ProfileFeed.tsx:570
-#: src/view/screens/ProfileList.tsx:711
+#: src/view/screens/ProfileFeed.tsx:579
+#: src/view/screens/ProfileList.tsx:720
 msgid "No description"
 msgstr "説明はありません"
 
@@ -1350,9 +1379,9 @@ msgid "No results found for \"{query}\""
 msgstr "「{query}」の検索結果はありません"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:271
-#: src/view/screens/Search/Search.tsx:299
-#: src/view/screens/Search/Search.tsx:615
+#: src/view/screens/Search/Search.tsx:270
+#: src/view/screens/Search/Search.tsx:298
+#: src/view/screens/Search/Search.tsx:629
 #: src/view/shell/desktop/Search.tsx:210
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
@@ -1373,12 +1402,12 @@ msgstr "該当なし。"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "注記：Blueskyはオープンでパブリックなネットワークです。この設定はBlueskyのアプリおよびウェブサイト上のみでのあなたのコンテンツの可視性を制限するものであり、他のアプリではこの設定を尊重しない場合があります。他のアプリやウェブサイトでは、ログアウトしたユーザーにあなたのコンテンツが表示される場合があります。"
 
-#: src/view/screens/Notifications.tsx:109
-#: src/view/screens/Notifications.tsx:133
+#: src/view/screens/Notifications.tsx:113
+#: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:358
-#: src/view/shell/Drawer.tsx:416
-#: src/view/shell/Drawer.tsx:417
+#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/Drawer.tsx:435
+#: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
 msgstr "通知"
 
@@ -1390,7 +1419,7 @@ msgstr "ちょっと！"
 msgid "Okay"
 msgstr "OK"
 
-#: src/view/com/composer/Composer.tsx:354
+#: src/view/com/composer/Composer.tsx:358
 msgid "One or more images is missing alt text."
 msgstr "1つもしくは複数の画像にALTテキストがありません。"
 
@@ -1406,8 +1435,8 @@ msgstr "ナビゲーションを開く"
 msgid "Opens configurable language settings"
 msgstr "構成可能な言語設定を開く"
 
-#: src/view/shell/desktop/RightNav.tsx:148
-#: src/view/shell/Drawer.tsx:622
+#: src/view/shell/desktop/RightNav.tsx:156
+#: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
 msgstr "招待コードのリストを開く"
 
@@ -1443,6 +1472,10 @@ msgstr "システムログのページを開く"
 msgid "Opens the threads preferences"
 msgstr "スレッドの設定を開く"
 
+#: src/view/com/modals/Threadgate.tsx:89
+msgid "Or combine these options:"
+msgstr ""
+
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "その他のアカウント"
@@ -1460,9 +1493,9 @@ msgstr "その他..."
 msgid "Page not found"
 msgstr "ページが見つかりません"
 
-#: src/view/com/auth/create/Step2.tsx:101
-#: src/view/com/auth/create/Step2.tsx:111
-#: src/view/com/auth/login/LoginForm.tsx:216
+#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:217
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1510,16 +1543,25 @@ msgstr "パスワードも入力してください："
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
-msgid "Please tell us why you think this decision was incorrect."
-msgstr "この判断が誤っていると考える理由を教えてください。"
+msgid "Please tell us why you think this content warning was incorrectly applied!"
+msgstr ""
 
-#: src/view/com/composer/Composer.tsx:337
-#: src/view/com/post-thread/PostThread.tsx:226
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this decision was incorrect."
+#~ msgstr "この判断が誤っていると考える理由を教えてください。"
+
+#: src/view/com/composer/Composer.tsx:214
+msgid "Please wait for your link card to finish loading"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
 msgstr "投稿"
 
-#: src/view/com/post-thread/PostThread.tsx:385
+#: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
 msgstr "投稿を非表示"
 
@@ -1531,11 +1573,11 @@ msgstr "投稿の言語"
 msgid "Post Languages"
 msgstr "投稿の言語"
 
-#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
 msgstr "投稿が見つかりません"
 
-#: src/view/screens/Profile.tsx:160
+#: src/view/screens/Profile.tsx:161
 msgid "Posts"
 msgstr "投稿"
 
@@ -1555,11 +1597,13 @@ msgstr "第一言語"
 msgid "Prioritize Your Follows"
 msgstr "あなたのフォローを優先"
 
-#: src/view/shell/desktop/RightNav.tsx:76
+#: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "プライバシー"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
+#: src/view/screens/Settings.tsx:750
+#: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
@@ -1568,14 +1612,14 @@ msgid "Processing..."
 msgstr "処理中..."
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
-#: src/view/shell/desktop/LeftNav.tsx:412
-#: src/view/shell/Drawer.tsx:69
-#: src/view/shell/Drawer.tsx:525
-#: src/view/shell/Drawer.tsx:526
+#: src/view/shell/desktop/LeftNav.tsx:415
+#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:544
+#: src/view/shell/Drawer.tsx:545
 msgid "Profile"
 msgstr "プロフィール"
 
-#: src/view/screens/Settings.tsx:789
+#: src/view/screens/Settings.tsx:808
 msgid "Protect your account by verifying your email."
 msgstr "メールアドレスを確認してアカウントを保護します。"
 
@@ -1630,7 +1674,7 @@ msgstr "フィードを削除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:105
 #: src/view/com/feeds/FeedSourceCard.tsx:172
-#: src/view/screens/ProfileFeed.tsx:270
+#: src/view/screens/ProfileFeed.tsx:271
 msgid "Remove from my feeds"
 msgstr "マイフィードから削除"
 
@@ -1655,7 +1699,7 @@ msgstr "保存したフィードからこのフィードを削除しますか？
 msgid "Removed from list"
 msgstr "リストから削除されました"
 
-#: src/view/screens/Profile.tsx:161
+#: src/view/screens/Profile.tsx:162
 msgid "Replies"
 msgstr "返信"
 
@@ -1675,16 +1719,16 @@ msgstr "{collectionName}を報告"
 msgid "Report Account"
 msgstr "アカウントを報告"
 
-#: src/view/screens/ProfileFeed.tsx:290
+#: src/view/screens/ProfileFeed.tsx:291
 msgid "Report feed"
 msgstr "フィードを報告"
 
-#: src/view/screens/ProfileList.tsx:425
+#: src/view/screens/ProfileList.tsx:426
 msgid "Report List"
 msgstr "リストを報告"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:165
+#: src/view/com/util/forms/PostDropdownBtn.tsx:196
 msgid "Report post"
 msgstr "投稿を報告"
 
@@ -1699,14 +1743,14 @@ msgstr "リポストまたは引用"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted by"
-msgstr "リポストした人"
+msgstr "リポストしたユーザー"
 
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
 msgid "Request Change"
 msgstr "変更を要求"
 
-#: src/view/com/auth/create/Step2.tsx:53
+#: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
 msgstr "このプロバイダーに必要"
 
@@ -1734,18 +1778,18 @@ msgstr "オンボーディングの状態をリセット"
 msgid "Resets the preferences state"
 msgstr "設定の状態をリセット"
 
+#: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/create/CreateAccount.tsx:171
-#: src/view/com/auth/login/LoginForm.tsx:258
-#: src/view/com/auth/login/LoginForm.tsx:261
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
 msgstr "再試行"
 
-#: src/view/com/modals/AltImage.tsx:114
-#: src/view/com/modals/BirthDateSettings.tsx:93
-#: src/view/com/modals/BirthDateSettings.tsx:96
+#: src/view/com/modals/AltImage.tsx:115
+#: src/view/com/modals/BirthDateSettings.tsx:94
+#: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:249
 #: src/view/com/modals/CreateOrEditList.tsx:257
@@ -1753,7 +1797,7 @@ msgstr "再試行"
 msgid "Save"
 msgstr "保存"
 
-#: src/view/com/modals/AltImage.tsx:105
+#: src/view/com/modals/AltImage.tsx:106
 msgid "Save alt text"
 msgstr "ALTテキストを保存"
 
@@ -1774,21 +1818,26 @@ msgid "Saved Feeds"
 msgstr "保存されたフィード"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
-#: src/view/com/util/forms/SearchInput.tsx:64
-#: src/view/screens/Search/Search.tsx:401
-#: src/view/screens/Search/Search.tsx:567
+#: src/view/com/util/forms/SearchInput.tsx:65
+#: src/view/screens/Search/Search.tsx:406
+#: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:321
+#: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:161
 #: src/view/shell/desktop/Search.tsx:170
-#: src/view/shell/Drawer.tsx:343
-#: src/view/shell/Drawer.tsx:344
+#: src/view/shell/Drawer.tsx:362
+#: src/view/shell/Drawer.tsx:363
 msgid "Search"
 msgstr "検索"
 
 #: src/view/screens/Search/Search.tsx:390
 #~ msgid "Search for posts and users."
 #~ msgstr "投稿とユーザーを検索します。"
+
+#: src/view/com/auth/LoggedOut.tsx:104
+#: src/view/com/auth/LoggedOut.tsx:105
+msgid "Search for users"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -1834,8 +1883,8 @@ msgstr "メールを送信"
 msgid "Send Email"
 msgstr "メールを送信"
 
-#: src/view/shell/Drawer.tsx:276
-#: src/view/shell/Drawer.tsx:297
+#: src/view/shell/Drawer.tsx:295
+#: src/view/shell/Drawer.tsx:316
 msgid "Send feedback"
 msgstr "フィードバックを送信"
 
@@ -1849,15 +1898,15 @@ msgstr "新しいパスワードを設定"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "フィードから全ての引用を非表示にするには、この設定を「いいえ」にします。リポストは引き続き表示されます。"
+msgstr "フィード内の引用をすべて非表示にするには、この設定を「いいえ」にします。リポストは引き続き表示されます。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "フィードから全ての返信を非表示にするには、この設定を「いいえ」にします。"
+msgstr "フィード内の返信をすべて非表示にするには、この設定を「いいえ」にします。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:182
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "フィードから全てのリポストを非表示にするには、この設定を「いいえ」にします。"
+msgstr "フィード内のリポストをすべて非表示にするには、この設定を「いいえ」にします。"
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -1868,9 +1917,9 @@ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your f
 msgstr "保存されたフィードのサンプルを次のフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
 #: src/view/screens/Settings.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:430
-#: src/view/shell/Drawer.tsx:546
-#: src/view/shell/Drawer.tsx:547
+#: src/view/shell/desktop/LeftNav.tsx:433
+#: src/view/shell/Drawer.tsx:565
+#: src/view/shell/Drawer.tsx:566
 msgid "Settings"
 msgstr "設定"
 
@@ -1879,12 +1928,12 @@ msgid "Sexual activity or erotic nudity."
 msgstr "性的行為または性的なヌード。"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
-#: src/view/com/util/forms/PostDropdownBtn.tsx:129
-#: src/view/screens/ProfileList.tsx:384
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+#: src/view/screens/ProfileList.tsx:385
 msgid "Share"
 msgstr "共有"
 
-#: src/view/screens/ProfileFeed.tsx:302
+#: src/view/screens/ProfileFeed.tsx:303
 msgid "Share feed"
 msgstr "フィードを共有"
 
@@ -1911,13 +1960,13 @@ msgstr "返信を表示"
 
 #: src/view/screens/PreferencesThreads.tsx:94
 msgid "Show replies by people you follow before all other replies."
-msgstr "他のすべての返信の前に、フォローしている人からの返信を表示します。"
+msgstr "自分がフォローしているユーザーからの返信を、他のすべての返信の前に表示します。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:179
 msgid "Show Reposts"
 msgstr "リポストを表示"
 
-#: src/view/com/notifications/FeedItem.tsx:337
+#: src/view/com/notifications/FeedItem.tsx:345
 msgid "Show users"
 msgstr "ユーザーを表示"
 
@@ -2016,15 +2065,15 @@ msgstr "ストーリーブック"
 msgid "Submit"
 msgstr "送信"
 
-#: src/view/screens/ProfileList.tsx:574
+#: src/view/screens/ProfileList.tsx:575
 msgid "Subscribe"
 msgstr "登録"
 
-#: src/view/screens/ProfileList.tsx:570
+#: src/view/screens/ProfileList.tsx:571
 msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
-#: src/view/screens/Search/Search.tsx:357
+#: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
 msgstr "おすすめのフォロー"
 
@@ -2045,16 +2094,18 @@ msgstr "システムログ"
 msgid "Tall"
 msgstr "トール"
 
-#: src/view/shell/desktop/RightNav.tsx:85
+#: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
 msgstr "条件"
 
+#: src/view/screens/Settings.tsx:744
 #: src/view/screens/TermsOfService.tsx:29
+#: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "利用規約"
 
 #: src/view/com/modals/AppealLabel.tsx:70
-#: src/view/com/modals/report/InputIssueDetails.tsx:50
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "テキストの入力フィールド"
 
@@ -2070,7 +2121,7 @@ msgstr "コミュニティガイドラインは<0/>に移動されました"
 msgid "The Copyright Policy has been moved to <0/>"
 msgstr "著作権ポリシーが<0/>に移動されました"
 
-#: src/view/com/post-thread/PostThread.tsx:440
+#: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
 msgstr "投稿が削除された可能性があります。"
 
@@ -2091,8 +2142,8 @@ msgid "There was an unexpected issue in the application. Please let us know if t
 msgstr "アプリケーションに予期しない問題が発生しました。このようなことがありましたらお知らせください！"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
-msgid "This {0} has been labeled."
-msgstr "この{0}にはラベルが貼られています"
+#~ msgid "This {0} has been labeled."
+#~ msgstr "この{0}にはラベルが貼られています"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -2126,13 +2177,17 @@ msgstr "これはオンラインを維持するためのサービスです。"
 msgid "This link is taking you to the following website:"
 msgstr "このリンクは次のウェブサイトへリンクしています："
 
-#: src/view/com/post-thread/PostThreadItem.tsx:124
+#: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
 msgstr "この投稿は削除されました。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
 msgstr "この警告は、メディアが接続されている投稿にのみ使用できます。"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
+msgid "This will hide this post from your feeds."
+msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
@@ -2151,9 +2206,9 @@ msgstr "ドロップダウンをトグル"
 msgid "Transformations"
 msgstr "変換"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:706
-#: src/view/com/post-thread/PostThreadItem.tsx:708
-#: src/view/com/util/forms/PostDropdownBtn.tsx:101
+#: src/view/com/post-thread/PostThreadItem.tsx:705
+#: src/view/com/post-thread/PostThreadItem.tsx:707
+#: src/view/com/util/forms/PostDropdownBtn.tsx:111
 msgid "Translate"
 msgstr "翻訳"
 
@@ -2161,15 +2216,15 @@ msgstr "翻訳"
 msgid "Try again"
 msgstr "再試行"
 
-#: src/view/screens/ProfileList.tsx:472
+#: src/view/screens/ProfileList.tsx:473
 msgid "Un-block list"
 msgstr "リストでのブロックを解除"
 
-#: src/view/screens/ProfileList.tsx:457
+#: src/view/screens/ProfileList.tsx:458
 msgid "Un-mute list"
 msgstr "リストでのミュートを解除"
 
-#: src/view/com/auth/create/CreateAccount.tsx:64
+#: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:117
 msgid "Unable to contact your service. Please check your Internet connection."
@@ -2197,11 +2252,11 @@ msgstr "残念ながら、アカウントを作成するための要件を満た
 msgid "Unmute Account"
 msgstr "アカウントのミュートを解除"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Unmute thread"
 msgstr "スレッドのミュートを解除"
 
-#: src/view/screens/ProfileList.tsx:440
+#: src/view/screens/ProfileList.tsx:441
 msgid "Unpin moderation list"
 msgstr "モデレーションリストのピン留めを解除"
 
@@ -2246,11 +2301,11 @@ msgid "User Lists"
 msgstr "ユーザーリスト"
 
 #: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:187
+#: src/view/com/auth/login/LoginForm.tsx:188
 msgid "Username or email address"
 msgstr "ユーザー名またはメールアドレス"
 
-#: src/view/screens/ProfileList.tsx:738
+#: src/view/screens/ProfileList.tsx:747
 msgid "Users"
 msgstr "ユーザー"
 
@@ -2262,15 +2317,15 @@ msgstr "<0/>にフォローされているユーザー"
 msgid "Users in \"{0}\""
 msgstr "{0}のユーザー"
 
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:769
 msgid "Verify email"
 msgstr "メールアドレスを確認"
 
-#: src/view/screens/Settings.tsx:775
+#: src/view/screens/Settings.tsx:794
 msgid "Verify my email"
 msgstr "メールアドレスを確認"
 
-#: src/view/screens/Settings.tsx:784
+#: src/view/screens/Settings.tsx:803
 msgid "Verify My Email"
 msgstr "メールアドレスを確認"
 
@@ -2291,11 +2346,11 @@ msgstr "アバターを表示"
 msgid "Visit Site"
 msgstr "サイトへアクセス"
 
-#: src/view/com/auth/create/CreateAccount.tsx:125
+#: src/view/com/auth/create/CreateAccount.tsx:122
 msgid "We're so excited to have you join us!"
 msgstr "私たちはあなたが参加してくれることをとても楽しみにしています！"
 
-#: src/view/screens/Search/Search.tsx:238
+#: src/view/screens/Search/Search.tsx:243
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
 
@@ -2326,13 +2381,13 @@ msgstr "アルゴリズムによるフィードにはどの言語を使用しま
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
-msgstr "返信できる人"
+msgstr "返信できるユーザー"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
 msgstr "ワイド"
 
-#: src/view/com/composer/Composer.tsx:409
+#: src/view/com/composer/Composer.tsx:413
 msgid "Write post"
 msgstr "投稿を書く"
 
@@ -2340,6 +2395,7 @@ msgstr "投稿を書く"
 msgid "Write your reply"
 msgstr "返信を書く"
 
+#: src/view/screens/PreferencesHomeFeed.tsx:120
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
@@ -2371,20 +2427,20 @@ msgstr "保存されたフィードがありません！"
 msgid "You don't have any saved feeds."
 msgstr "保存されたフィードがありません。"
 
-#: src/view/com/post-thread/PostThread.tsx:388
+#: src/view/com/post-thread/PostThread.tsx:381
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "あなたが著者をブロックしているか、または著者によってあなたはブロックされています。"
 
-#: src/view/com/feeds/ProfileFeedgens.tsx:141
+#: src/view/com/feeds/ProfileFeedgens.tsx:134
 msgid "You have no feeds."
 msgstr "フィードがありません。"
 
 #: src/view/com/lists/MyLists.tsx:89
-#: src/view/com/lists/ProfileLists.tsx:145
+#: src/view/com/lists/ProfileLists.tsx:138
 msgid "You have no lists."
 msgstr "リストがありません。"
 
-#: src/view/screens/ModerationBlockedAccounts.tsx:131
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "ブロック中のアカウントはまだありません。アカウントをブロックするには、ユーザーのプロフィールに移動し、アカウントメニューから「アカウントをブロック」を選択します。"
 
@@ -2392,7 +2448,7 @@ msgstr "ブロック中のアカウントはまだありません。アカウン
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "アプリパスワードはまだ作成されていません。下のボタンを押すと作成できます。"
 
-#: src/view/screens/ModerationMutedAccounts.tsx:130
+#: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "ミュートしているアカウントはまだありません。アカウントをミュートするには、プロフィールに移動し、アカウントメニューから「アカウントをミュート」を選択します。"
 
@@ -2400,11 +2456,11 @@ msgstr "ミュートしているアカウントはまだありません。アカ
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "「リセットコード」が記載されたメールが届きます。ここにコードを入力し、新しいパスワードを入力します。"
 
-#: src/view/com/auth/create/Step2.tsx:43
+#: src/view/com/auth/create/Step2.tsx:58
 msgid "Your account"
 msgstr "あなたのアカウント"
 
-#: src/view/com/auth/create/Step2.tsx:122
+#: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
 msgstr "生年月日"
 
@@ -2434,8 +2490,8 @@ msgid "Your hosting provider"
 msgstr "ホスティングプロバイダー"
 
 #: src/view/screens/Settings.tsx:402
-#: src/view/shell/desktop/RightNav.tsx:129
-#: src/view/shell/Drawer.tsx:636
+#: src/view/shell/desktop/RightNav.tsx:137
+#: src/view/shell/Drawer.tsx:655
 msgid "Your invite codes are hidden when logged in using an App Password"
 msgstr "アプリパスワードを使用してログインすると、招待コードは非表示になります。"
 

@@ -46,6 +46,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useFetchHandle} from '#/state/queries/handle'
 import {emitSoftReset} from '#/state/events'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {isInvalidHandle} from '#/lib/strings/handles'
 
 function ProfileCard() {
   const {currentAccount} = useSession()
@@ -221,7 +222,7 @@ function ComposeBtn() {
       if (
         !handle ||
         handle === currentAccount?.handle ||
-        handle === 'handle.invalid'
+        isInvalidHandle(handle)
       )
         return undefined
 
@@ -238,24 +239,26 @@ function ComposeBtn() {
     return null
   }
   return (
-    <TouchableOpacity
-      disabled={isFetchingHandle}
-      style={[styles.newPostBtn]}
-      onPress={onPressCompose}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`New post`)}
-      accessibilityHint="">
-      <View style={styles.newPostBtnIconWrapper}>
-        <ComposeIcon2
-          size={19}
-          strokeWidth={2}
-          style={styles.newPostBtnLabel}
-        />
-      </View>
-      <Text type="button" style={styles.newPostBtnLabel}>
-        <Trans>New Post</Trans>
-      </Text>
-    </TouchableOpacity>
+    <View style={styles.newPostBtnContainer}>
+      <TouchableOpacity
+        disabled={isFetchingHandle}
+        style={styles.newPostBtn}
+        onPress={onPressCompose}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint="">
+        <View style={styles.newPostBtnIconWrapper}>
+          <ComposeIcon2
+            size={19}
+            strokeWidth={2}
+            style={styles.newPostBtnLabel}
+          />
+        </View>
+        <Text type="button" style={styles.newPostBtnLabel}>
+          <Trans>New Post</Trans>
+        </Text>
+      </TouchableOpacity>
+    </View>
   )
 }
 
@@ -511,6 +514,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
 
+  newPostBtnContainer: {
+    flexDirection: 'row',
+  },
   newPostBtn: {
     flexDirection: 'row',
     alignItems: 'center',

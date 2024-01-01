@@ -114,6 +114,14 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.hi
       case 'ja':
         return AppLanguage.ja
+      case 'fr':
+        return AppLanguage.fr
+      // DISABLED until this translation is fixed -prf
+      // case 'de':
+      //   return AppLanguage.de
+      // DISABLED until this translation is more thoroughly reviewed -prf
+      // case 'es':
+      //   return AppLanguage.es
       default:
         continue
     }

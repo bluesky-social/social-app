@@ -1,7 +1,11 @@
 import React, {ReactNode, createContext, useContext} from 'react'
-import {TextStyle, ViewStyle, ColorSchemeName} from 'react-native'
+import {
+  TextStyle,
+  useColorScheme,
+  ViewStyle,
+  ColorSchemeName,
+} from 'react-native'
 import {darkTheme, defaultTheme} from './themes'
-import {useColorScheme_FIXED} from '#/lib/hooks/useColorScheme_FIXED'
 
 export type ColorScheme = 'light' | 'dark'
 
@@ -95,7 +99,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
-  const colorScheme = useColorScheme_FIXED()
+  const colorScheme = useColorScheme()
   const themeValue = getTheme(theme === 'system' ? colorScheme : theme)
 
   return (

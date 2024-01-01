@@ -76,7 +76,7 @@ export function EmojiPicker({close}: {close: () => void}) {
                 return (await import('./EmojiPickerData.json')).default
               }}
               onEmojiSelect={onInsert}
-              autoFocus={false}
+              autoFocus={true}
             />
           </View>
         </TouchableWithoutFeedback>
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   trigger: {
     backgroundColor: 'transparent',
+    // @ts-ignore web only -prf
     border: 'none',
     paddingTop: 4,
     paddingLeft: 12,

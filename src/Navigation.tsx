@@ -26,7 +26,7 @@ import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {buildStateObject} from 'lib/routes/helpers'
 import {State, RouteParams} from 'lib/routes/types'
 import {colors} from 'lib/styles'
-import {isNative} from 'platform/detection'
+import {isAndroid, isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -286,6 +286,7 @@ function HomeTabNavigator() {
   return (
     <HomeTab.Navigator
       screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -307,6 +308,7 @@ function SearchTabNavigator() {
   return (
     <SearchTab.Navigator
       screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -324,6 +326,7 @@ function FeedsTabNavigator() {
   return (
     <FeedsTab.Navigator
       screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -345,6 +348,7 @@ function NotificationsTabNavigator() {
   return (
     <NotificationsTab.Navigator
       screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,
@@ -366,6 +370,7 @@ function MyProfileTabNavigator() {
   return (
     <MyProfileTab.Navigator
       screenOptions={{
+        animation: isAndroid ? 'none' : undefined,
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
         headerShown: false,

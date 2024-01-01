@@ -1,9 +1,10 @@
+import {useColorScheme} from 'react-native'
+
 import * as persisted from '#/state/persisted'
-import {useColorScheme_FIXED} from '#/lib/hooks/useColorScheme_FIXED'
 
 export function useColorModeTheme(
   theme: persisted.Schema['colorMode'],
 ): 'light' | 'dark' {
-  const colorScheme = useColorScheme_FIXED()
+  const colorScheme = useColorScheme()
   return (theme === 'system' ? colorScheme : theme) || 'light'
 }
