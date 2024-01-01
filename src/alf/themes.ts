@@ -7,80 +7,88 @@ export type Palette = {
   primary: string
   positive: string
   negative: string
-  l0: string
-  l1: string
-  l2: string
-  l3: string
-  l4: string
-  l5: string
-  l6: string
-  l7: string
 }
 
 export const lightPalette: Palette = {
-  primary: tokens.color.blue,
-  positive: tokens.color.green,
-  negative: tokens.color.red,
-  l0: tokens.color.white,
-  l1: tokens.color.gray1,
-  l2: tokens.color.gray2,
-  l3: tokens.color.gray3,
-  l4: tokens.color.gray4,
-  l5: tokens.color.gray5,
-  l6: tokens.color.gray6,
-  l7: tokens.color.black,
+  primary: tokens.color.blue_500,
+  positive: tokens.color.green_500,
+  negative: tokens.color.red_500,
 } as const
 
 export const darkPalette: Palette = {
-  primary: tokens.color.blue,
-  positive: tokens.color.green,
-  negative: tokens.color.red,
-  l0: tokens.color.black,
-  l1: tokens.color.gray6,
-  l2: tokens.color.gray5,
-  l3: tokens.color.gray4,
-  l4: tokens.color.gray3,
-  l5: tokens.color.gray2,
-  l6: tokens.color.gray1,
-  l7: tokens.color.white,
+  primary: tokens.color.blue_500,
+  positive: tokens.color.green_400,
+  negative: tokens.color.red_400,
 } as const
 
 export const light = {
   palette: lightPalette,
   atoms: {
-    ...Object.keys(lightPalette).reduce((acc, key) => {
-      const k = key as keyof Palette
-      acc[`text_${k}`] = {
-        color: lightPalette[k],
-      }
-      return acc
-    }, {} as Record<`text_${keyof Palette}`, {color: string}>),
-    ...Object.keys(lightPalette).reduce((acc, key) => {
-      const k = key as keyof Palette
-      acc[`bg_${k}`] = {
-        backgroundColor: lightPalette[k],
-      }
-      return acc
-    }, {} as Record<`bg_${keyof Palette}`, {backgroundColor: string}>),
+    text: {
+      color: tokens.color.gray_950,
+    },
+    text_contrast_700: {
+      color: tokens.color.gray_600,
+    },
+    text_contrast_500: {
+      color: tokens.color.gray_400,
+    },
+    text_inverted: {
+      color: tokens.color.white,
+    },
+    bg: {
+      backgroundColor: tokens.color.white,
+    },
+    bg_contrast_100: {
+      backgroundColor: tokens.color.gray_50,
+    },
+    bg_contrast_200: {
+      backgroundColor: tokens.color.gray_100,
+    },
+    bg_contrast_300: {
+      backgroundColor: tokens.color.gray_200,
+    },
+    border: {
+      borderColor: tokens.color.gray_100,
+    },
+    border_contrast_500: {
+      borderColor: tokens.color.gray_400,
+    },
   },
-} as const
+}
 
 export const dark: Theme = {
   palette: darkPalette,
   atoms: {
-    ...Object.keys(darkPalette).reduce((acc, key) => {
-      const k = key as keyof Palette
-      acc[`text_${k}`] = {
-        color: darkPalette[k],
-      }
-      return acc
-    }, {} as Record<`text_${keyof Palette}`, {color: string}>),
-    ...Object.keys(darkPalette).reduce((acc, key) => {
-      const k = key as keyof Palette
-      acc[`bg_${k}`] = {
-        backgroundColor: darkPalette[k],
-      }
-      return acc
-    }, {} as Record<`bg_${keyof Palette}`, {backgroundColor: string}>),
+    text: {
+      color: tokens.color.white,
+    },
+    text_contrast_700: {
+      color: tokens.color.gray_300,
+    },
+    text_contrast_500: {
+      color: tokens.color.gray_500,
+    },
+    text_inverted: {
+      color: tokens.color.gray_950,
+    },
+    bg: {
+      backgroundColor: tokens.color.gray_950,
+    },
+    bg_contrast_100: {
+      backgroundColor: tokens.color.gray_900,
+    },
+    bg_contrast_200: {
+      backgroundColor: tokens.color.gray_800,
+    },
+    bg_contrast_300: {
+      backgroundColor: tokens.color.gray_700,
+    },
+    border: {
+      borderColor: tokens.color.gray_800,
+    },
+    border_contrast_500: {
+      borderColor: tokens.color.gray_500,
+    },
   },
-} as const
+}

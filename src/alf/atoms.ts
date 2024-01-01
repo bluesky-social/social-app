@@ -29,7 +29,7 @@ const lineHeight = Object.keys(tokens.lineHeight).reduce((acc, key) => {
 const fontWeight = Object.keys(tokens.fontWeight).reduce((acc, key) => {
   const k = key as tokens.FontWeight
   acc[`font_${k}`] = {
-    fontWeight: tokens.fontWeight[k],
+    fontWeight: tokens.fontWeight[k] as TextStyle['fontWeight'],
   }
   return acc
 }, {} as Record<`font_${tokens.FontWeight}`, {fontWeight: TextStyle['fontWeight']}>)
@@ -73,7 +73,16 @@ const padding = Object.keys(tokens.space).reduce(
       },
     }
   },
-  {} as Record<`${'pa' | 'px' | 'py' | 'pt' | 'pb' | 'pl' | 'pr'}_${tokens.Space}`, number>
+  {} as Record<
+    `${'p' | 'px' | 'py' | 'pt' | 'pb' | 'pl' | 'pr'}_${tokens.Space}`,
+    {
+      padding?: number
+      paddingLeft?: number
+      paddingRight?: number
+      paddingTop?: number
+      paddingBottom?: number
+    }
+  >,
 )
 
 const margin = Object.keys(tokens.space).reduce(
@@ -107,7 +116,16 @@ const margin = Object.keys(tokens.space).reduce(
       },
     }
   },
-  {} as Record<`${'pa' | 'px' | 'py' | 'pt' | 'pb' | 'pl' | 'pr'}_${tokens.Space}`, number>
+  {} as Record<
+    `${'m' | 'mx' | 'my' | 'mt' | 'mb' | 'ml' | 'mr'}_${tokens.Space}`,
+    {
+      margin?: number
+      marginLeft?: number
+      marginRight?: number
+      marginTop?: number
+      marginBottom?: number
+    }
+  >,
 )
 
 export const atoms = {
@@ -154,6 +172,9 @@ export const atoms = {
    * Flex
    */
   ...gap,
+  flex: {
+    display: 'flex',
+  },
   flex_row: {
     flexDirection: 'row',
   },
@@ -162,6 +183,12 @@ export const atoms = {
   },
   flex_1: {
     flex: 1,
+  },
+  flex_grow: {
+    flexGrow: 1,
+  },
+  flex_shrink: {
+    flexShrink: 1,
   },
   justify_center: {
     justifyContent: 'center',
@@ -201,6 +228,20 @@ export const atoms = {
   border: {
     borderWidth: 1,
   },
-} as const
+  border_t: {
+    borderTopWidth: 1,
+  },
+  border_b: {
+    borderBottomWidth: 1,
+  },
 
-const s = atoms.gap_md
+  /*
+   * Width
+   */
+  w_full: {
+    width: '100%',
+  },
+  h_full: {
+    height: '100%',
+  },
+} as const
