@@ -9,7 +9,7 @@ import {TextLink} from 'view/com/util/Link'
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {FormatCount} from 'view/com/util/numeric/format'
+import {formatCount} from 'view/com/util/numeric/format'
 import {useModalControls} from '#/state/modals'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans, msg, plural} from '@lingui/macro'
@@ -166,7 +166,7 @@ function InviteCodes() {
         type="md-medium"
         style={invitesAvailable > 0 ? pal.link : pal.textLight}>
         <Plural
-          value={FormatCount(invitesAvailable)}
+          value={formatCount(invitesAvailable)}
           one="# invite code available"
           other="# invite codes available"
         />

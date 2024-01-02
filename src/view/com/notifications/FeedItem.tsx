@@ -36,7 +36,7 @@ import {Post} from '../post/Post'
 import {Link, TextLink} from '../util/Link'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {FormatCount} from '../util/numeric/format'
+import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {isWeb} from 'platform/detection'
@@ -240,7 +240,7 @@ let FeedItem = ({
                   <Trans>and</Trans>{' '}
                 </Text>
                 <Text style={[pal.text, s.bold]}>
-                  {FormatCount(authors.length - 1)}{' '}
+                  {formatCount(authors.length - 1)}{' '}
                   {pluralize(authors.length - 1, 'other')}
                 </Text>
               </>
