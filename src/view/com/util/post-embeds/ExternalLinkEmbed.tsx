@@ -90,8 +90,7 @@ export const ExternalLinkEmbed = ({
 
 const styles = StyleSheet.create({
   extImage: {
-    width: '100%',
-    height: 200,
+    flex: 1,
   },
   extUri: {
     marginTop: 2,
