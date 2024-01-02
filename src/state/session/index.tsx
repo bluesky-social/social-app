@@ -104,7 +104,7 @@ function createPersistSessionHandler(
   }) => void,
 ): AtpPersistSessionHandler {
   return function persistSession(event, session) {
-    const expired = event === 'expired'
+    const expired = event === 'expired' || event === 'create-failed'
 
     if (event === 'unknown') {
       logger.warn(`session: persistSessionHandler received unknown error event`)
