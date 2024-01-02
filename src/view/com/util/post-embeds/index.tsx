@@ -168,7 +168,7 @@ export function PostEmbeds({
     const link = embed.external
 
     return (
-      <View style={[styles.extOuter, pal.view, pal.border, style]}>
+      <View style={[styles.extOuter, pal.view, pal.borderDark, style]}>
         <Link asAnchor href={link.uri}>
           <ExternalLinkEmbed link={link} />
         </Link>
