@@ -1,6 +1,5 @@
 import React from 'react'
 import * as MediaLibrary from 'expo-media-library'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import * as Toast from 'view/com/util/Toast'
 import {saveImageToMediaLibrary, shareImageModal} from 'lib/media/manip'
 import {Pressable, StyleSheet, View} from 'react-native'
@@ -12,11 +11,10 @@ import {isIOS, isWeb} from 'platform/detection'
 import {ViewImage} from '@atproto/api/dist/client/types/app/bsky/embed/images'
 
 interface IProps {
-  visible: boolean
   currentImage: ViewImage
 }
 
-export default function ImageViewerFooter({visible, currentImage}: IProps) {
+export default function ImageViewerFooter({currentImage}: IProps) {
   const [isAltExpanded, setAltExpanded] = React.useState(false)
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions()
 
@@ -49,10 +47,8 @@ export default function ImageViewerFooter({visible, currentImage}: IProps) {
     shareImageModal({uri: currentImage!.fullsize})
   }, [currentImage])
 
-  if (!visible) return null
-
   return (
-    <Animated.View style={[styles.footer]} entering={FadeIn} exiting={FadeOut}>
+    <View style={[styles.footer]}>
       {currentImage?.alt ? (
         <Pressable onPress={onExpandAlt} accessibilityRole="button">
           <Text
@@ -87,7 +83,7 @@ export default function ImageViewerFooter({visible, currentImage}: IProps) {
           </View>
         </>
       )}
-    </Animated.View>
+    </View>
   )
 }
 

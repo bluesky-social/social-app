@@ -1,5 +1,4 @@
 import React from 'react'
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -15,31 +14,24 @@ import ImageViewerItem from 'view/com/imageviewer/ImageViewerItem'
 import {SCREEN_WIDTH} from '@gorhom/bottom-sheet'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useImageViewerDefaults} from 'view/com/imageviewer/useImageViewerDefaults'
-import {useImageViewerState} from 'state/imageViewer'
+import {useImageViewerControls, useImageViewerState} from 'state/imageViewer'
 
 export default function ImageViewer() {
   const {isMobile} = useWebMediaQueries()
 
+  const {setVisible} = useImageViewerControls()
   const {images, initialIndex, hideFooter} = useImageViewerState()
   const {width: screenWidth} = useWindowDimensions()
 
-  const {
-    accessoriesVisible,
-    setAccessoriesVisible,
-    opacity,
-    backgroundOpacity,
-    accessoryOpacity,
-    onCloseViewer,
-    containerStyle,
-    accessoryStyle,
-    setIsScaled,
-  } = useImageViewerDefaults()
-
+  const [accessoriesVisible, setAccessoriesVisible] = React.useState(true)
   const [currentIndex, setCurrentIndex] = React.useState(initialIndex)
 
   const scrollViewRef = React.useRef<ScrollView>(null)
   const previousScrollOffset = React.useRef(0)
+
+  const onCloseViewer = React.useCallback(() => {
+    setVisible(false)
+  }, [setVisible])
 
   // This is used both when we open the viewer and when we change items on desktop
   const scrollToImage = React.useCallback(
@@ -83,6 +75,21 @@ export default function ImageViewer() {
     // Set the initial index (no initial index on a scrollview)
     scrollToImage(initialIndex, false)
 
+    const onClick = (e: MouseEvent) => {
+      if (e.button !== 0) return
+
+      const target = e.target as HTMLElement
+      if (target.tagName === 'IMG') {
+        setAccessoriesVisible(prev => !prev)
+      } else {
+        onCloseViewer()
+      }
+    }
+
+    window.addEventListener('click', onClick)
+    return () => {
+      window.removeEventListener('click', onClick)
+    }
     // Disabling this warning. We only want this to run whenever the viewer opens. scrollToImage isn't stable and will
     // change whenever the window size changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -111,109 +118,83 @@ export default function ImageViewer() {
     [screenWidth],
   )
 
-  const onDragStart = React.useCallback(
-    (e: React.DragEvent<HTMLDivElement>) => {
-      e.preventDefault()
-    },
-    [],
-  )
-
   return (
-    <div draggable={false} onDragStart={onDragStart}>
-      <Animated.View style={[styles.container, containerStyle]}>
-        <Animated.View
-          style={[styles.accessory, styles.headerAccessory, accessoryStyle]}>
-          <ImageViewerHeader onCloseViewer={onCloseViewer} visible={true} />
-        </Animated.View>
+    <View style={[styles.container]}>
+      {accessoriesVisible && (
+        <View style={[styles.accessory, styles.headerAccessory]}>
+          <ImageViewerHeader onCloseViewer={onCloseViewer} />
+        </View>
+      )}
 
-        {currentIndex !== 0 && accessoriesVisible && (
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={[styles.sidebar, styles.leftSidebar]}>
-            <Pressable
-              onPress={onPrevPress}
-              style={styles.scrollButton}
-              accessibilityRole="button"
-              accessibilityLabel="Previous Image"
-              accessibilityHint="Navigates to the next image">
-              <FontAwesomeIcon
-                icon="chevron-right"
-                size={30}
-                color="white"
-                style={styles.chevronLeft}
-              />
-            </Pressable>
-          </Animated.View>
-        )}
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          pagingEnabled
-          snapToInterval={screenWidth}
-          disableIntervalMomentum
-          ref={scrollViewRef}
-          scrollEnabled={false}
-          scrollEventThrottle={0}
-          onScroll={isMobile ? onScroll : undefined}
-          style={styles.container}
-          contentContainerStyle={styles.container}>
-          {images.map((image, i) => (
-            <View
-              key={i}
-              style={{
-                height: '100%',
-                width: screenWidth,
-              }}>
-              <ImageViewerItem
-                image={image}
-                initialIndex={initialIndex}
-                index={i}
-                setAccessoriesVisible={setAccessoriesVisible}
-                onCloseViewer={onCloseViewer}
-                opacity={opacity}
-                backgroundOpacity={backgroundOpacity}
-                accessoryOpacity={accessoryOpacity}
-                setIsScaled={setIsScaled}
-              />
-            </View>
-          ))}
-        </ScrollView>
-
-        {currentIndex !== images.length - 1 && accessoriesVisible && (
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={[styles.sidebar, styles.rightSidebar]}>
-            <Pressable
-              onPress={onNextPress}
-              style={styles.scrollButton}
-              accessibilityRole="button"
-              accessibilityLabel="Next Image"
-              accessibilityHint="Navigates to the next image">
-              <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
-            </Pressable>
-          </Animated.View>
-        )}
-
-        {!hideFooter && (
-          <Animated.View
-            style={[styles.accessory, styles.footerAccessory, accessoryStyle]}>
-            <ImageViewerFooter
-              currentImage={images[currentIndex]}
-              visible={accessoriesVisible}
+      {currentIndex !== 0 && accessoriesVisible && (
+        <View style={[styles.sidebar, styles.leftSidebar]}>
+          <Pressable
+            onPress={onPrevPress}
+            style={styles.scrollButton}
+            accessibilityRole="button"
+            accessibilityLabel="Previous Image"
+            accessibilityHint="Navigates to the next image">
+            <FontAwesomeIcon
+              icon="chevron-right"
+              size={30}
+              color="white"
+              style={styles.chevronLeft}
             />
-          </Animated.View>
-        )}
-      </Animated.View>
-    </div>
+          </Pressable>
+        </View>
+      )}
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        snapToInterval={screenWidth}
+        disableIntervalMomentum
+        ref={scrollViewRef}
+        scrollEnabled={false}
+        scrollEventThrottle={0}
+        onScroll={isMobile ? onScroll : undefined}
+        style={styles.container}
+        contentContainerStyle={styles.container}>
+        {images.map((image, i) => (
+          <View
+            key={i}
+            style={{
+              height: '100%',
+              width: screenWidth,
+            }}>
+            {/* @ts-expect-error No other props are required on web */}
+            <ImageViewerItem image={image} />
+          </View>
+        ))}
+      </ScrollView>
+
+      {currentIndex !== images.length - 1 && accessoriesVisible && (
+        <View style={[styles.sidebar, styles.rightSidebar]}>
+          <Pressable
+            onPress={onNextPress}
+            style={styles.scrollButton}
+            accessibilityRole="button"
+            accessibilityLabel="Next Image"
+            accessibilityHint="Navigates to the next image">
+            <FontAwesomeIcon icon="chevron-right" size={30} color="white" />
+          </Pressable>
+        </View>
+      )}
+
+      {!hideFooter && accessoriesVisible && (
+        <View style={[styles.accessory, styles.footerAccessory]}>
+          <ImageViewerFooter currentImage={images[currentIndex]} />
+        </View>
+      )}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   accessory: {
     position: 'absolute',
