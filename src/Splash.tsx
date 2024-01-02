@@ -138,6 +138,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
       )}
 
       {platformApiLevel && platformApiLevel <= 25 ? (
+        // Use a simple fade on older versions of android (work around a bug)
         <>
           {!isAnimationComplete && (
             <View
