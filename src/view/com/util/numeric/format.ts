@@ -1,11 +1,14 @@
-import {useLanguagePrefs} from '#/state/preferences'
+import * as persisted from '#/state/persisted'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
 export const formatCount = (num: number) => {
-  return Intl.NumberFormat(sanitizeAppLanguageSetting(useLanguagePrefs()['appLanguage']), {
-    notation: 'compact',
-    maximumFractionDigits: 1,
-  }).format(num)
+  return Intl.NumberFormat(
+    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
+    {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    },
+  ).format(num)
 }
 
 export function formatCountShortOnly(num: number): string {
