@@ -1,7 +1,9 @@
 const BLUE_HUE = 211
 const GRAYSCALE_SATURATION = 22
 
-export const color = {
+export const color: {
+  [key: string]: string
+} = {
   white: '#FFFFFF',
 
   gray_0: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 100%)`,
@@ -52,6 +54,25 @@ export const color = {
   red_900: `hsl(349, 96%, 15%)`,
   red_1000: `hsl(349, 96%, 5%)`,
 }
+
+function bezier(time: number, start: number, end: number, duration: number) {
+  if ((time /= duration / 2) < 1) return (end / 2) * time * time + start
+  return (-end / 2) * (--time * (time - 2) - 1) + start
+}
+
+for (let i = 0; i < 11; i++) {
+  const slope = bezier((i / 11) * 89, 0, 100, 100)
+  const percent = Math.ceil(100 - slope)
+
+  color[
+    `gray_${i * 100}`
+  ] = `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, ${percent}%)`
+  color[`blue_${i * 100}`] = `hsl(${BLUE_HUE}, 99%, ${percent}%)`
+  color[`green_${i * 100}`] = `hsl(130, 60%, ${percent}%)`
+  color[`red_${i * 100}`] = `hsl(349, 90%, ${percent}%)`
+}
+
+console.log(color)
 
 export const space = {
   xxs: 2,

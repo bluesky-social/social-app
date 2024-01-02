@@ -61,15 +61,13 @@ function ThemedSection() {
 
   return (
     <View style={[t.atoms.bg, a.gap_md, a.p_xl]}>
-      <H3 style={[a.font_bold]}>theme.atoms.text</H3>
+      <H3 style={[]}>theme.atoms.text</H3>
       <View style={[a.flex_1, t.atoms.border, a.border_t]} />
-      <H3 style={[a.font_bold, t.atoms.text_contrast_700]}>
-        theme.atoms.text_contrast_700
-      </H3>
+      <H3 style={[t.atoms.text_contrast_700]}>theme.atoms.text_contrast_700</H3>
       <View style={[a.flex_1, t.atoms.border, a.border_t]} />
-      <H3 style={[a.font_bold, t.atoms.text_contrast_500]}>
-        theme.atoms.text_contrast_500
-      </H3>
+      <H3 style={[t.atoms.text_contrast_600]}>theme.atoms.text_contrast_600</H3>
+      <View style={[a.flex_1, t.atoms.border, a.border_t]} />
+      <H3 style={[t.atoms.text_contrast_500]}>theme.atoms.text_contrast_500</H3>
       <View style={[a.flex_1, t.atoms.border_contrast_500, a.border_t]} />
 
       <View style={[a.flex_row, a.gap_md]}>

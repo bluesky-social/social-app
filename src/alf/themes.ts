@@ -10,15 +10,15 @@ export type Palette = {
 }
 
 export const lightPalette: Palette = {
-  primary: tokens.color.blue_500,
-  positive: tokens.color.green_500,
-  negative: tokens.color.red_500,
+  primary: tokens.color.blue_600,
+  positive: tokens.color.green_600,
+  negative: tokens.color.red_600,
 } as const
 
 export const darkPalette: Palette = {
-  primary: tokens.color.blue_500,
-  positive: tokens.color.green_400,
-  negative: tokens.color.red_400,
+  primary: tokens.color.blue_600,
+  positive: tokens.color.green_600,
+  negative: tokens.color.red_600,
 } as const
 
 export const light = {
@@ -29,6 +29,9 @@ export const light = {
     },
     text_contrast_700: {
       color: tokens.color.gray_700,
+    },
+    text_contrast_600: {
+      color: tokens.color.gray_600,
     },
     text_contrast_500: {
       color: tokens.color.gray_500,
@@ -49,13 +52,13 @@ export const light = {
       backgroundColor: tokens.color.gray_300,
     },
     bg_positive: {
-      backgroundColor: tokens.color.green_500,
+      backgroundColor: lightPalette.positive,
     },
     bg_negative: {
-      backgroundColor: tokens.color.red_400,
+      backgroundColor: lightPalette.negative,
     },
     border: {
-      borderColor: tokens.color.gray_200,
+      borderColor: tokens.color.gray_300,
     },
     border_contrast_500: {
       borderColor: tokens.color.gray_500,
@@ -71,6 +74,9 @@ export const dark: Theme = {
     },
     text_contrast_700: {
       color: tokens.color.gray_300,
+    },
+    text_contrast_600: {
+      color: tokens.color.gray_400,
     },
     text_contrast_500: {
       color: tokens.color.gray_500,
@@ -91,10 +97,10 @@ export const dark: Theme = {
       backgroundColor: tokens.color.gray_700,
     },
     bg_positive: {
-      backgroundColor: tokens.color.green_400,
+      backgroundColor: darkPalette.positive,
     },
     bg_negative: {
-      backgroundColor: tokens.color.red_400,
+      backgroundColor: darkPalette.negative,
     },
     border: {
       borderColor: tokens.color.gray_800,
