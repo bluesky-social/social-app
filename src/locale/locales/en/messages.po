@@ -124,7 +124,7 @@ msgstr ""
 msgid "Accessibility"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:159
+#: src/view/com/auth/login/LoginForm.tsx:163
 #: src/view/screens/Settings.tsx:287
 msgid "Account"
 msgstr ""
@@ -179,6 +179,7 @@ msgstr ""
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
+#: src/view/com/modals/AltImage.tsx:93
 msgid "Add alt text"
 msgstr ""
 
@@ -191,11 +192,11 @@ msgstr ""
 msgid "Add details to report"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:444
+#: src/view/com/composer/Composer.tsx:449
 msgid "Add link card"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:447
+#: src/view/com/composer/Composer.tsx:452
 msgid "Add link card:"
 msgstr ""
 
@@ -333,7 +334,7 @@ msgstr ""
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:142
+#: src/view/com/composer/Composer.tsx:143
 msgid "Are you sure you'd like to discard this draft?"
 msgstr ""
 
@@ -356,7 +357,7 @@ msgstr ""
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:250
+#: src/view/com/auth/login/LoginForm.tsx:254
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
@@ -479,9 +480,8 @@ msgstr ""
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:291
-#: src/view/com/composer/Composer.tsx:294
-#: src/view/com/modals/AltImage.tsx:128
+#: src/view/com/composer/Composer.tsx:296
+#: src/view/com/composer/Composer.tsx:299
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangeHandle.tsx:153
@@ -509,8 +509,8 @@ msgid "Cancel account deletion"
 msgstr ""
 
 #: src/view/com/modals/AltImage.tsx:123
-msgid "Cancel add image alt text"
-msgstr ""
+#~ msgid "Cancel add image alt text"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
@@ -671,7 +671,7 @@ msgid "Confirmation code"
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:269
+#: src/view/com/auth/login/LoginForm.tsx:273
 msgid "Connecting..."
 msgstr ""
 
@@ -843,15 +843,15 @@ msgstr ""
 msgid "Developer Tools"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:210
+#: src/view/com/composer/Composer.tsx:211
 msgid "Did you want to say anything?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:143
+#: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:137
+#: src/view/com/composer/Composer.tsx:138
 msgid "Discard draft"
 msgstr ""
 
@@ -896,6 +896,7 @@ msgid "Don't have an invite code?"
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
@@ -1172,11 +1173,11 @@ msgstr ""
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:232
+#: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Forgot"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:229
+#: src/view/com/auth/login/LoginForm.tsx:233
 msgid "Forgot password"
 msgstr ""
 
@@ -1208,7 +1209,7 @@ msgid "Go Back"
 msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:279
+#: src/view/com/auth/login/LoginForm.tsx:283
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr ""
@@ -1353,7 +1354,7 @@ msgstr ""
 msgid "Including non-sexual and artistic"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:113
+#: src/view/com/auth/login/LoginForm.tsx:115
 msgid "Invalid username or password"
 msgstr ""
 
@@ -1719,7 +1720,7 @@ msgstr ""
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:282
+#: src/view/com/auth/login/LoginForm.tsx:286
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1827,12 +1828,17 @@ msgstr ""
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:360
+#: src/view/com/composer/Composer.tsx:365
 msgid "One or more images is missing alt text."
 msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:471
+msgid "Open emoji picker"
 msgstr ""
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
@@ -1911,7 +1917,7 @@ msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:122
 #: src/view/com/auth/create/Step2.tsx:132
-#: src/view/com/auth/login/LoginForm.tsx:217
+#: src/view/com/auth/login/LoginForm.tsx:221
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:193
 msgid "Password"
@@ -1988,7 +1994,7 @@ msgstr ""
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr ""
 
-#: src/view/com/composer/Composer.tsx:214
+#: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
@@ -1997,8 +2003,8 @@ msgstr ""
 msgid "Post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:336
-#: src/view/com/composer/Composer.tsx:343
+#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:348
 msgid "Post (verb)"
 msgstr "Post"
 
@@ -2081,11 +2087,11 @@ msgstr ""
 msgid "Public, shareable lists which can drive feeds."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:324
+#: src/view/com/composer/Composer.tsx:329
 msgid "Publish post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:324
+#: src/view/com/composer/Composer.tsx:329
 msgid "Publish reply"
 msgstr ""
 
@@ -2179,7 +2185,7 @@ msgstr ""
 msgid "Replies to this thread are disabled"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:336
+#: src/view/com/composer/Composer.tsx:341
 msgid "Reply"
 msgstr ""
 
@@ -2276,8 +2282,8 @@ msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:259
-#: src/view/com/auth/login/LoginForm.tsx:262
+#: src/view/com/auth/login/LoginForm.tsx:263
+#: src/view/com/auth/login/LoginForm.tsx:266
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
@@ -2287,7 +2293,6 @@ msgstr ""
 #~ msgid "Retry change handle"
 #~ msgstr ""
 
-#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/BirthDateSettings.tsx:94
 #: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
@@ -2371,7 +2376,7 @@ msgstr ""
 msgid "Select from an existing account"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:143
+#: src/view/com/auth/login/LoginForm.tsx:147
 msgid "Select service"
 msgstr ""
 
@@ -2533,7 +2538,7 @@ msgstr ""
 msgid "Sign in as..."
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:130
+#: src/view/com/auth/login/LoginForm.tsx:134
 msgid "Sign into"
 msgstr ""
 
@@ -2886,7 +2891,7 @@ msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/Login.tsx:76
-#: src/view/com/auth/login/LoginForm.tsx:117
+#: src/view/com/auth/login/LoginForm.tsx:120
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
@@ -2911,7 +2916,7 @@ msgstr ""
 msgid "Unfollow"
 msgstr ""
 
-#: src/view/com/auth/create/state.ts:210
+#: src/view/com/auth/create/state.ts:216
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr ""
 
@@ -2988,8 +2993,8 @@ msgstr ""
 msgid "User Lists"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:188
+#: src/view/com/auth/login/LoginForm.tsx:174
+#: src/view/com/auth/login/LoginForm.tsx:192
 msgid "Username or email address"
 msgstr ""
 
@@ -3091,7 +3096,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr ""
 
 #: src/view/com/auth/SplashScreen.tsx:34
-#: src/view/com/composer/Composer.tsx:274
+#: src/view/com/composer/Composer.tsx:275
 msgid "What's up?"
 msgstr ""
 
@@ -3116,11 +3121,11 @@ msgstr ""
 msgid "Wide"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:415
+#: src/view/com/composer/Composer.tsx:420
 msgid "Write post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:273
+#: src/view/com/composer/Composer.tsx:274
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr ""
@@ -3204,7 +3209,7 @@ msgstr ""
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:263
+#: src/view/com/composer/Composer.tsx:264
 msgid "Your {0} has been published"
 msgstr ""
 
