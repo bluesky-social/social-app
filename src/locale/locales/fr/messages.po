@@ -2186,7 +2186,7 @@ msgstr "Cet avertissement n’est disponible que pour les messages contenant des
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "This will hide this post from your feeds."
-msgstr "Cette opération permet de cacher cet article dans vos fils d'actualité."
+msgstr "Ceci cachera cet article dans vos fils d'actualité."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
