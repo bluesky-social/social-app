@@ -29,6 +29,7 @@ function RepliesThresholdInput({
   const pal = usePalette('default')
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
+  const preValue = React.useRef(initialValue)
   const save = React.useMemo(
     () =>
       debounce(
@@ -46,7 +47,12 @@ function RepliesThresholdInput({
       <Slider
         value={value}
         onValueChange={(v: number | number[]) => {
-          const threshold = Math.floor(Array.isArray(v) ? v[0] : v)
+          let threshold = Array.isArray(v) ? v[0] : v
+          if (threshold > preValue.current) threshold = Math.floor(threshold)
+          else threshold = Math.ceil(threshold)
+
+          preValue.current = threshold
+
           setValue(threshold)
           save(threshold)
         }}

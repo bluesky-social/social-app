@@ -68,7 +68,7 @@ msgstr "Eine neue Version der App ist verfügbar. Bitte aktualisieren Sie die Ap
 msgid "Accessibility"
 msgstr "Zugänglichkeit"
 
-#: src/view/com/auth/login/LoginForm.tsx:159
+#: src/view/com/auth/login/LoginForm.tsx:163
 #: src/view/screens/Settings.tsx:286
 msgid "Account"
 msgstr "Konto"
@@ -98,6 +98,7 @@ msgstr "Konto hinzufügen"
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
+#: src/view/com/modals/AltImage.tsx:93
 msgid "Add alt text"
 msgstr "Alt Text hinzufügen"
 
@@ -110,11 +111,11 @@ msgstr "Einzelheiten hinzufügen"
 msgid "Add details to report"
 msgstr "Einzelheiten zum Bericht hinzufügen"
 
-#: src/view/com/composer/Composer.tsx:442
+#: src/view/com/composer/Composer.tsx:447
 msgid "Add link card"
 msgstr "Link Karte hinzufügen"
 
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:450
 msgid "Add link card:"
 msgstr "Link Karte hinzufügen:"
 
@@ -135,7 +136,7 @@ msgstr "Zu meinen Feeds hinzufügen"
 msgid "Added to list"
 msgstr "Den Listen hinzufügen"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:164
+#: src/view/screens/PreferencesHomeFeed.tsx:170
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
 msgstr "Passen Sie die Anzahl der Likes an, die eine Antwort haben muss, um in Ihrem Feed angezeigt zu werden."
 
@@ -212,7 +213,7 @@ msgstr "Aussehen"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "Sind Sie sicher, dass Sie das App-Passwort \"{name}\" löschen möchten?"
 
-#: src/view/com/composer/Composer.tsx:142
+#: src/view/com/composer/Composer.tsx:143
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Sind Sie sicher, dass Sie diesen Entwurf verwerfen möchten?"
 
@@ -231,7 +232,7 @@ msgstr "Künstlerische oder nicht-erotische Nacktheit."
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:250
+#: src/view/com/auth/login/LoginForm.tsx:254
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
@@ -345,9 +346,8 @@ msgstr "Kamera"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "Darf nur Buchstaben, Zahlen, Leerzeichen, Bindestriche und Unterstriche enthalten. Muss mindestens 4 Zeichen lang sein, darf aber nicht länger als 32 Zeichen sein."
 
-#: src/view/com/composer/Composer.tsx:289
-#: src/view/com/composer/Composer.tsx:292
-#: src/view/com/modals/AltImage.tsx:128
+#: src/view/com/composer/Composer.tsx:294
+#: src/view/com/composer/Composer.tsx:297
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/Confirm.tsx:88
@@ -371,8 +371,8 @@ msgid "Cancel account deletion"
 msgstr "Kontolöschung abbrechen"
 
 #: src/view/com/modals/AltImage.tsx:123
-msgid "Cancel add image alt text"
-msgstr "Abbrechen Bild-Alt-Text hinzufügen"
+#~ msgid "Cancel add image alt text"
+#~ msgstr "Abbrechen Bild-Alt-Text hinzufügen"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
@@ -501,8 +501,8 @@ msgstr "Antwort zusammenstellen"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
-#: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesHomeFeed.tsx:305
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Bestätigen"
 
@@ -526,7 +526,7 @@ msgid "Confirmation code"
 msgstr "Bestätigungscode"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:269
+#: src/view/com/auth/login/LoginForm.tsx:273
 msgid "Connecting..."
 msgstr "Verbinden..."
 
@@ -673,15 +673,15 @@ msgstr "Entwicklungs-Server"
 msgid "Developer Tools"
 msgstr "Werkzeuge für Entwickler"
 
-#: src/view/com/composer/Composer.tsx:210
+#: src/view/com/composer/Composer.tsx:211
 msgid "Did you want to say anything?"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:143
+#: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
 msgstr "Verwerfen"
 
-#: src/view/com/composer/Composer.tsx:137
+#: src/view/com/composer/Composer.tsx:138
 msgid "Discard draft"
 msgstr "Verwerfen"
 
@@ -706,6 +706,7 @@ msgid "Domain verified!"
 msgstr "Domain geprüft!"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
@@ -715,8 +716,8 @@ msgstr "Domain geprüft!"
 #: src/view/com/modals/Threadgate.tsx:129
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
-#: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesHomeFeed.tsx:308
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Erledigt"
 
@@ -777,7 +778,7 @@ msgstr "Email aktualiziert"
 msgid "Email:"
 msgstr "E-Mail:"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:138
+#: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Aktivieren Sie diese Einstellung, um nur Antworten zwischen Personen zu sehen, denen Sie folgen."
 
@@ -868,7 +869,7 @@ msgstr "Benutzer mit der Suchfunktion auf der rechten Seite finden"
 msgid "Finding similar accounts..."
 msgstr "Suche nach ähnlichen Konten..."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:102
+#: src/view/screens/PreferencesHomeFeed.tsx:108
 msgid "Fine-tune the content you see on your home screen."
 msgstr "Optimieren Sie die Inhalte, die Sie auf Ihrem Startbildschirm sehen."
 
@@ -888,7 +889,7 @@ msgstr "Folgen Sie einigen Nutzern, um loszulegen. Wir können Ihnen weitere Nut
 msgid "Followed users"
 msgstr "Verfolgte Benutzer"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:145
+#: src/view/screens/PreferencesHomeFeed.tsx:151
 msgid "Followed users only"
 msgstr "Nur verfolgte Benutzer"
 
@@ -917,11 +918,11 @@ msgstr "Aus Sicherheitsgründen müssen wir Ihnen einen Bestätigungscode an Ihr
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Aus Sicherheitsgründen können Sie es nicht mehr einsehen. Wenn Sie dieses Passwort verlieren, müssen Sie ein neues generieren."
 
-#: src/view/com/auth/login/LoginForm.tsx:232
+#: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Forgot"
 msgstr "Vergessen"
 
-#: src/view/com/auth/login/LoginForm.tsx:229
+#: src/view/com/auth/login/LoginForm.tsx:233
 msgid "Forgot password"
 msgstr "Passwort vergessen"
 
@@ -953,7 +954,7 @@ msgid "Go Back"
 msgstr "Zurückgehen"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:279
+#: src/view/com/auth/login/LoginForm.tsx:283
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "Weiter zum nächsten"
@@ -1016,7 +1017,7 @@ msgid "Home"
 msgstr "Startseite"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:96
-#: src/view/screens/PreferencesHomeFeed.tsx:95
+#: src/view/screens/PreferencesHomeFeed.tsx:101
 #: src/view/screens/Settings.tsx:481
 msgid "Home Feed Preferences"
 msgstr "Startseite Feed-Einstellungen"
@@ -1051,7 +1052,7 @@ msgstr "Bild-Alt-Text"
 msgid "Image options"
 msgstr "Bild-Optionen"
 
-#: src/view/com/auth/login/LoginForm.tsx:113
+#: src/view/com/auth/login/LoginForm.tsx:115
 msgid "Invalid username or password"
 msgstr "Ungültiger Benutzername oder Passwort"
 
@@ -1256,6 +1257,10 @@ msgstr "Mehr Feeds "
 msgid "More options"
 msgstr "Mehr Optionen"
 
+#: src/view/screens/PreferencesThreads.tsx:82
+msgid "Most-liked replies first"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
 msgstr "Stummes Konto"
@@ -1336,10 +1341,14 @@ msgstr "Neuer Posten "
 msgid "New Post"
 msgstr "Neuer Posten "
 
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:282
+#: src/view/com/auth/login/LoginForm.tsx:286
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1350,10 +1359,12 @@ msgstr "Nächster"
 msgid "Next image"
 msgstr "Nächstes Bild "
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:191
-#: src/view/screens/PreferencesHomeFeed.tsx:226
-#: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesHomeFeed.tsx:126
+#: src/view/screens/PreferencesHomeFeed.tsx:197
+#: src/view/screens/PreferencesHomeFeed.tsx:232
+#: src/view/screens/PreferencesHomeFeed.tsx:269
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "Nein"
 
@@ -1407,13 +1418,22 @@ msgstr "Ach nein!"
 msgid "Okay"
 msgstr "Okay"
 
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:363
 msgid "One or more images is missing alt text."
 msgstr "Bei einem oder mehreren Bildern fehlt der Alt-Text."
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
 msgstr "Nur {0} kann antworten."
+
+#: src/view/com/composer/Composer.tsx:468
+#: src/view/com/composer/Composer.tsx:469
+msgid "Open emoji picker"
+msgstr ""
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1483,7 +1503,7 @@ msgstr "Seite nicht gefunden"
 
 #: src/view/com/auth/create/Step2.tsx:122
 #: src/view/com/auth/create/Step2.tsx:132
-#: src/view/com/auth/login/LoginForm.tsx:217
+#: src/view/com/auth/login/LoginForm.tsx:221
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1539,11 +1559,11 @@ msgstr ""
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr "Bitte teilen Sie uns mit, warum diese Entscheidung Ihrer Meinung nach falsch war."
 
-#: src/view/com/composer/Composer.tsx:214
+#: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:346
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
@@ -1581,7 +1601,7 @@ msgstr "Vorheriges Bild"
 msgid "Primary Language"
 msgstr "Primäre Sprache"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "Priorisieren Sie Ihre Anhängerschaft"
 
@@ -1627,6 +1647,10 @@ msgstr "Angebotsposten"
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
 msgstr "Angebotsposten"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1695,7 +1719,7 @@ msgstr "Antworten"
 msgid "Replies to this thread are disabled"
 msgstr "Antworten auf diesen Thread sind deaktiviert"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:135
+#: src/view/screens/PreferencesHomeFeed.tsx:141
 msgid "Reply Filters"
 msgstr "Antwort-Filter"
 
@@ -1738,6 +1762,10 @@ msgstr "Nachgetragen von"
 msgid "Request Change"
 msgstr "Änderung beantragen"
 
+#: src/view/screens/Settings.tsx:422
+msgid "Require alt text before posting"
+msgstr ""
+
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
 msgstr "Für diesen Anbieter erforderlich"
@@ -1768,14 +1796,13 @@ msgstr "Setzt den Zustand der Einstellungen zurück"
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:259
-#: src/view/com/auth/login/LoginForm.tsx:262
+#: src/view/com/auth/login/LoginForm.tsx:263
+#: src/view/com/auth/login/LoginForm.tsx:266
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
 msgstr "Wiederholung"
 
-#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/BirthDateSettings.tsx:94
 #: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
@@ -1839,7 +1866,7 @@ msgstr "Wählen Sie Bluesky Social"
 msgid "Select from an existing account"
 msgstr "Aus einem bestehenden Konto auswählen"
 
-#: src/view/com/auth/login/LoginForm.tsx:143
+#: src/view/com/auth/login/LoginForm.tsx:147
 msgid "Select service"
 msgstr "Dienst auswählen"
 
@@ -1880,23 +1907,23 @@ msgstr "Bericht senden"
 msgid "Set new password"
 msgstr "Neues Passwort festlegen"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:216
+#: src/view/screens/PreferencesHomeFeed.tsx:222
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "Setzen Sie diese Einstellung auf \"Nein\", um alle zitierten Beiträge aus Ihrem Feed auszublenden. Neu eingestellte Beiträge sind weiterhin sichtbar."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:113
+#: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Set this setting to \"No\" to hide all replies from your feed."
 msgstr "Setzen Sie diese Einstellung auf \"Nein\", um alle Antworten aus Ihrem Feed auszublenden."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:182
+#: src/view/screens/PreferencesHomeFeed.tsx:188
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Setzen Sie diese Einstellung auf \"Nein\", um alle wieder geposteten Beiträge aus Ihrem Feed auszublenden."
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Setzen Sie diese Einstellung auf \"Ja\", um Antworten in einer Thread-Ansicht anzuzeigen. Dies ist eine experimentelle Funktion."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:252
+#: src/view/screens/PreferencesHomeFeed.tsx:258
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr "Setzen Sie diese Einstellung auf \"Ja\", um Beispiele für Ihre gespeicherten Feeds in Ihrem folgenden Feed anzuzeigen. Dies ist eine experimentelle Funktion."
 
@@ -1930,23 +1957,23 @@ msgstr "Zeigen"
 msgid "Show anyway"
 msgstr "Trotzdem anzeigen"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:249
+#: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr "Beiträge von My Feeds anzeigen"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:213
+#: src/view/screens/PreferencesHomeFeed.tsx:219
 msgid "Show Quote Posts"
 msgstr "Angebotsposten zeigen"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:110
+#: src/view/screens/PreferencesHomeFeed.tsx:116
 msgid "Show Replies"
 msgstr "Antworten zeigen"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "Antworten von Personen, denen Sie folgen, vor allen anderen Antworten anzeigen."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:179
+#: src/view/screens/PreferencesHomeFeed.tsx:185
 msgid "Show Reposts"
 msgstr "Wiederholungen anzeigen"
 
@@ -1983,7 +2010,7 @@ msgstr "Eintragen als {0}"
 msgid "Sign in as..."
 msgstr "Eintragen als..."
 
-#: src/view/com/auth/login/LoginForm.tsx:130
+#: src/view/com/auth/login/LoginForm.tsx:134
 msgid "Sign into"
 msgstr "Anmelden"
 
@@ -2178,7 +2205,7 @@ msgstr ""
 msgid "Thread Preferences"
 msgstr "Einstellungen zum Thema"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "Gewindemodus"
 
@@ -2210,7 +2237,7 @@ msgstr "Stummschaltliste aufheben"
 
 #: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/Login.tsx:76
-#: src/view/com/auth/login/LoginForm.tsx:117
+#: src/view/com/auth/login/LoginForm.tsx:120
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Sie können Ihren Dienst nicht kontaktieren. Bitte überprüfen Sie Ihre Internetverbindung."
 
@@ -2228,7 +2255,7 @@ msgstr "Konto freischalten"
 msgid "Undo repost"
 msgstr "Umbuchung rückgängig machen"
 
-#: src/view/com/auth/create/state.ts:210
+#: src/view/com/auth/create/state.ts:216
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr "Leider erfüllen Sie nicht die Voraussetzungen, um ein Konto zu erstellen."
 
@@ -2284,8 +2311,8 @@ msgstr "Benutzerhandgriff"
 msgid "User Lists"
 msgstr "Benutzer Liste"
 
-#: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:188
+#: src/view/com/auth/login/LoginForm.tsx:174
+#: src/view/com/auth/login/LoginForm.tsx:192
 msgid "Username or email address"
 msgstr "Benutzername oder E-Mail Adresse"
 
@@ -2375,7 +2402,7 @@ msgstr "Wer kann antworten."
 msgid "Wide"
 msgstr "Breit"
 
-#: src/view/com/composer/Composer.tsx:413
+#: src/view/com/composer/Composer.tsx:418
 msgid "Write post"
 msgstr "Posten schreiben"
 
@@ -2383,10 +2410,12 @@ msgstr "Posten schreiben"
 msgid "Write your reply"
 msgstr "Schreiben Sie Ihre Antwort"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:192
-#: src/view/screens/PreferencesHomeFeed.tsx:227
-#: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesHomeFeed.tsx:126
+#: src/view/screens/PreferencesHomeFeed.tsx:198
+#: src/view/screens/PreferencesHomeFeed.tsx:233
+#: src/view/screens/PreferencesHomeFeed.tsx:268
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "Ja"
 

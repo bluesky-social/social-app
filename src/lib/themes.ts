@@ -25,6 +25,7 @@ export const defaultTheme: Theme = {
       postCtrl: '#71768A',
       brandText: '#0066FF',
       emptyStateIcon: '#B6B6C9',
+      borderLinkHover: '#cac1c1',
     },
     primary: {
       background: colors.blue3,
@@ -310,6 +311,7 @@ export const darkTheme: Theme = {
       postCtrl: '#707489',
       brandText: '#0085ff',
       emptyStateIcon: colors.gray4,
+      borderLinkHover: colors.gray5,
     },
     primary: {
       ...defaultTheme.palette.primary,
