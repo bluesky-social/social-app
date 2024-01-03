@@ -1,14 +1,21 @@
 import React from 'react'
 import {
   ActivityIndicator,
-  Dimensions,
   GestureResponderEvent,
   Pressable,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from 'react-native'
+import Animated, {
+  measure,
+  runOnJS,
+  useAnimatedRef,
+  useFrameCallback,
+} from 'react-native-reanimated'
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
@@ -116,6 +123,8 @@ export function ExternalPlayer({
   params: EmbedPlayerParams
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const insets = useSafeAreaInsets()
+  const windowDims = useWindowDimensions()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -124,34 +133,51 @@ export function ExternalPlayer({
     height: 0,
   })
 
-  const viewRef = React.useRef<View>(null)
+  const viewRef = useAnimatedRef()
+
+  const frameCallback = useFrameCallback(() => {
+    const measurement = measure(viewRef)
+    if (!measurement) return
+
+    const {height: winHeight, width: winWidth} = windowDims
+
+    // Get the proper screen height depending on what is going on
+    const realWinHeight = isNative // If it is native, we always want the larger number
+      ? winHeight > winWidth
+        ? winHeight
+        : winWidth
+      : winHeight // On web, we always want the actual screen height
+
+    const top = measurement.pageY
+    const bot = measurement.pageY + measurement.height
+
+    // We can use the same logic on all platforms against the screenHeight that we get above
+    const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
+
+    if (!isVisible) {
+      runOnJS(setPlayerActive)(false)
+    }
+  }, false) // False here disables autostarting the callback
 
   // watch for leaving the viewport due to scrolling
   React.useEffect(() => {
+    // We don't want to do anything if the player isn't active
+    if (!isPlayerActive) return
+
     // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
     // continue playing. We need to watch for the blur event
     const unsubscribe = navigation.addListener('blur', () => {
       setPlayerActive(false)
     })
 
-    const interval = setInterval(() => {
-      viewRef.current?.measure((x, y, w, h, pageX, pageY) => {
-        const window = Dimensions.get('window')
-        const top = pageY
-        const bot = pageY + h
-        const isVisible = isNative
-          ? top >= 0 && bot <= window.height
-          : !(top >= window.height || bot <= 0)
-        if (!isVisible) {
-          setPlayerActive(false)
-        }
-      })
-    }, 1e3)
+    // Start watching for changes
+    frameCallback.setActive(true)
+
     return () => {
       unsubscribe()
-      clearInterval(interval)
+      frameCallback.setActive(false)
     }
-  }, [viewRef, navigation])
+  }, [navigation, isPlayerActive, frameCallback])
 
   // calculate height for the player and the screen size
   const height = React.useMemo(
@@ -187,7 +213,7 @@ export function ExternalPlayer({
   )
 
   return (
-    <View
+    <Animated.View
       ref={viewRef}
       style={{height}}
       collapsable={false}
@@ -217,7 +243,7 @@ export function ExternalPlayer({
         height={height}
         onLoad={onLoad}
       />
-    </View>
+    </Animated.View>
   )
 }
 
