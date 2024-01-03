@@ -181,14 +181,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({service, email, password, handle, inviteCode}: any) => {
-      logger.debug(
-        `session: creating account`,
-        {
-          service,
-          handle,
-        },
-        logger.DebugContext.session,
-      )
+      logger.info(`session: creating account`, {
+        service,
+        handle,
+      })
       track('Try Create Account')
 
       const agent = new BskyAgent({service})

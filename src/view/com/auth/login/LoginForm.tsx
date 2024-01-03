@@ -107,17 +107,21 @@ export const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
-      logger.warn('Failed to login', {error: e})
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
+        logger.info('Failed to login due to invalid credentials', {
+          error: errMsg,
+        })
         setError(_(msg`Invalid username or password`))
       } else if (isNetworkError(e)) {
+        logger.warn('Failed to login due to network error', {error: errMsg})
         setError(
           _(
             msg`Unable to contact your service. Please check your Internet connection.`,
           ),
         )
       } else {
+        logger.warn('Failed to login', {error: errMsg})
         setError(cleanError(errMsg))
       }
     }
