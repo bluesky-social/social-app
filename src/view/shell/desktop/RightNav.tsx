@@ -180,14 +180,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     // @ts-ignore web only
     left: 'calc(50vw + 320px)',
-    width: 304,
+    width: 300,
     maxHeight: '100%',
     overflowY: 'auto',
   },
 
   message: {
     paddingVertical: 18,
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
   },
   messageLine: {
     marginBottom: 10,
@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
 
   inviteCodes: {
     borderTopWidth: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 12,
     flexDirection: 'row',
   },
