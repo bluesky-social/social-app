@@ -136,7 +136,7 @@ msgstr "Ajouter à mes fils d’actu"
 msgid "Added to list"
 msgstr "Ajouté à la liste"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:164
+#: src/view/screens/PreferencesHomeFeed.tsx:170
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
 msgstr "Définissez le nombre de likes qu’une réponse doit avoir pour être affichée dans votre fil d’actualité."
 
@@ -500,7 +500,7 @@ msgstr "Rédiger une réponse"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
-#: src/view/screens/PreferencesHomeFeed.tsx:299
+#: src/view/screens/PreferencesHomeFeed.tsx:305
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Confirmer"
@@ -715,7 +715,7 @@ msgstr "Domaine vérifié !"
 #: src/view/com/modals/Threadgate.tsx:129
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
-#: src/view/screens/PreferencesHomeFeed.tsx:302
+#: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Terminé"
@@ -777,7 +777,7 @@ msgstr "E-mail mis à jour"
 msgid "Email:"
 msgstr "E-mail :"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:138
+#: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Activez ce paramètre pour ne voir que les réponses des personnes que vous suivez."
 
@@ -868,7 +868,7 @@ msgstr "Trouvez des utilisateurs à l’aide de l’outil de recherche, à droit
 msgid "Finding similar accounts..."
 msgstr "Recherche de comptes similaires…"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:102
+#: src/view/screens/PreferencesHomeFeed.tsx:108
 msgid "Fine-tune the content you see on your home screen."
 msgstr "Affinez le contenu de votre écran d’accueil."
 
@@ -888,7 +888,7 @@ msgstr "Suivez quelques utilisateurs pour commencer. Nous pouvons vous recommand
 msgid "Followed users"
 msgstr "Utilisateurs suivis"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:145
+#: src/view/screens/PreferencesHomeFeed.tsx:151
 msgid "Followed users only"
 msgstr "Utilisateurs suivis uniquement"
 
@@ -1016,7 +1016,7 @@ msgid "Home"
 msgstr "Accueil"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:96
-#: src/view/screens/PreferencesHomeFeed.tsx:95
+#: src/view/screens/PreferencesHomeFeed.tsx:101
 #: src/view/screens/Settings.tsx:481
 msgid "Home Feed Preferences"
 msgstr "Préférences de fils d’actu de l’accueil"
@@ -1338,10 +1338,6 @@ msgstr "Nouveau post"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
-msgstr "Réponses les plus récentes en premier"
-
-#: src/view/screens/PreferencesThreads.tsx:79
-msgid "Newest replies first"
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
@@ -1358,10 +1354,10 @@ msgstr "Suivant"
 msgid "Next image"
 msgstr "Image suivante"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:191
-#: src/view/screens/PreferencesHomeFeed.tsx:226
-#: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesHomeFeed.tsx:126
+#: src/view/screens/PreferencesHomeFeed.tsx:197
+#: src/view/screens/PreferencesHomeFeed.tsx:232
+#: src/view/screens/PreferencesHomeFeed.tsx:269
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
@@ -1647,10 +1643,6 @@ msgstr "Citer un post"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr "Aléatoire"
-
-#: src/view/screens/PreferencesThreads.tsx:86
-msgid "Random (aka \"Poster's Roulette\")"
 msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
@@ -1720,7 +1712,7 @@ msgstr "Réponses"
 msgid "Replies to this thread are disabled"
 msgstr "Les réponses à ce fil de discussion sont désactivées"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:135
+#: src/view/screens/PreferencesHomeFeed.tsx:141
 msgid "Reply Filters"
 msgstr "Filtres de réponse"
 
@@ -1908,15 +1900,15 @@ msgstr "Envoyer le rapport"
 msgid "Set new password"
 msgstr "Définir un nouveau mot de passe"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:216
+#: src/view/screens/PreferencesHomeFeed.tsx:222
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "Choisissez « Non » pour cacher toutes les citations sur votre fils d’actu. Les reposts seront toujours visibles."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:113
+#: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Set this setting to \"No\" to hide all replies from your feed."
 msgstr "Choisissez « Non » pour cacher toutes les réponses dans votre fils d’actu."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:182
+#: src/view/screens/PreferencesHomeFeed.tsx:188
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Choisissez « Non » pour cacher toutes les reposts de votre fils d’actu."
 
@@ -1924,7 +1916,7 @@ msgstr "Choisissez « Non » pour cacher toutes les reposts de votre fils d’
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Choisissez « Oui » pour afficher les réponses dans un fil de discussion. C’est une fonctionnalité expérimentale."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:252
+#: src/view/screens/PreferencesHomeFeed.tsx:258
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’actu enregistrés dans votre fils d’actu suivant. C’est une fonctionnalité expérimentale."
 
@@ -1958,15 +1950,15 @@ msgstr "Afficher"
 msgid "Show anyway"
 msgstr "Afficher quand même"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:249
+#: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr "Afficher les posts de mes fils d’actu"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:213
+#: src/view/screens/PreferencesHomeFeed.tsx:219
 msgid "Show Quote Posts"
 msgstr "Afficher les posts de citation"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:110
+#: src/view/screens/PreferencesHomeFeed.tsx:116
 msgid "Show Replies"
 msgstr "Afficher les réponses"
 
@@ -1974,7 +1966,7 @@ msgstr "Afficher les réponses"
 msgid "Show replies by people you follow before all other replies."
 msgstr "Afficher les réponses des personnes que vous suivez avant toutes les autres réponses."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:179
+#: src/view/screens/PreferencesHomeFeed.tsx:185
 msgid "Show Reposts"
 msgstr "Afficher les reposts"
 
@@ -2406,10 +2398,10 @@ msgstr "Rédiger un post"
 msgid "Write your reply"
 msgstr "Rédigez votre réponse"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:192
-#: src/view/screens/PreferencesHomeFeed.tsx:227
-#: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesHomeFeed.tsx:126
+#: src/view/screens/PreferencesHomeFeed.tsx:198
+#: src/view/screens/PreferencesHomeFeed.tsx:233
+#: src/view/screens/PreferencesHomeFeed.tsx:268
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
