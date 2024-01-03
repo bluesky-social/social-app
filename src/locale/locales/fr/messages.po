@@ -49,7 +49,7 @@ msgstr "<0/> membres"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>Choisissez vos</0><1>recommandés</1><2>fils</2>"
+msgstr "<0>Choisissez vos</0><1>fils d’actualité</1><2>recommandés</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
@@ -191,7 +191,7 @@ msgstr "Avertissement sur le contenu de l'appel"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Content Warning"
-msgstr "Avertissement sur le Contenu de L'appel"
+msgstr "Avertissement sur le contenu de l'appel"
 
 #~ msgid "Appeal Decision"
 #~ msgstr "Appel de la décision"
@@ -1554,7 +1554,7 @@ msgstr "Dites-nous pourquoi vous pensez que cet avertissement de contenu a été
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
-msgstr "Attendez la fin du chargement de votre carte de liaison"
+msgstr "Attendez la fin du chargement de votre aperçu de lien"
 
 #: src/view/com/composer/Composer.tsx:346
 #: src/view/com/post-thread/PostThread.tsx:225
@@ -2367,7 +2367,7 @@ msgstr "Quel est le problème avec cette {collectionName} ?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
 msgid "What's up?"
-msgstr "Qu'est-ce qui se passe ?"
+msgstr "Quoi de neuf ?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
