@@ -138,9 +138,9 @@ export async function submit({
     }
 
     if ([400, 429].includes(e.status)) {
-      logger.error('Failed to create account', {error: e})
+      logger.warn('Failed to create account', {error: e})
     } else {
-      logger.error(`Failed to create account (${e.status} status)`, {error: e})
+      logger.warn(`Failed to create account (${e.status} status)`, {error: e})
     }
 
     uiDispatch({type: 'set-processing', value: false})
