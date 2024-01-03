@@ -125,7 +125,7 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
       case 'ko':
         return AppLanguage.ko
       case 'pt':
-        return AppLanguage.pt        
+        return AppLanguage.pt
       default:
         continue
     }
