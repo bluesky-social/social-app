@@ -15,7 +15,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr ""
+msgstr "{0, plural, uno {# invite code available} otro {# invite codes available}}"
 
 #: src/view/com/modals/Repost.tsx:44
 msgid "{0}"
@@ -27,7 +27,7 @@ msgstr "Lista {purposeLabel} {0}"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr ""
+msgstr "{invitesAvailable, plural, uno {Invite codes: # available} otro {Invite codes: # available}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:659
@@ -57,7 +57,7 @@ msgstr "<0>Sigue a algunos</0><1>usuarios</1><2>recomendados</2>"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
-msgstr ""
+msgstr "Se ha aplicado una advertencia de contenido a este {0}."
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -68,7 +68,7 @@ msgstr "Ya está disponible una nueva versión de la aplicación. Actualízala p
 msgid "Accessibility"
 msgstr "Accesibilidad"
 
-#: src/view/com/auth/login/LoginForm.tsx:159
+#: src/view/com/auth/login/LoginForm.tsx:163
 #: src/view/screens/Settings.tsx:286
 msgid "Account"
 msgstr "Cuenta"
@@ -98,6 +98,7 @@ msgstr "Agregar una cuenta"
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
+#: src/view/com/modals/AltImage.tsx:93
 msgid "Add alt text"
 msgstr "Agregar texto alt"
 
@@ -110,11 +111,11 @@ msgstr "Agregar detalles"
 msgid "Add details to report"
 msgstr "Agregar detalles al informe"
 
-#: src/view/com/composer/Composer.tsx:442
+#: src/view/com/composer/Composer.tsx:447
 msgid "Add link card"
 msgstr "Agregar una tarjeta de enlace"
 
-#: src/view/com/composer/Composer.tsx:445
+#: src/view/com/composer/Composer.tsx:450
 msgid "Add link card:"
 msgstr "Agregar una tarjeta de enlace:"
 
@@ -186,15 +187,11 @@ msgstr "Contraseñas de la app"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Appeal content warning"
-msgstr ""
+msgstr "Aviso sobre el contenido del recurso"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Content Warning"
-msgstr ""
-
-#: src/view/com/modals/AppealLabel.tsx:65
-#~ msgid "Appeal Decision"
-#~ msgstr "Decisión de apelación"
+msgstr "Aviso sobre el Contenido del Recurso"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
@@ -212,7 +209,7 @@ msgstr "Aspecto exterior"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "¿Estás seguro de que quieres eliminar la contraseña de la app \"{name}\"?"
 
-#: src/view/com/composer/Composer.tsx:142
+#: src/view/com/composer/Composer.tsx:143
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "¿Estás seguro de que quieres descartar este borrador?"
 
@@ -222,7 +219,7 @@ msgstr "¿Estás seguro?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:219
 msgid "Are you sure? This cannot be undone."
-msgstr "¿Estás seguro? Esto no puede deshacerse,"
+msgstr "¿Estás seguro? Esto no puede deshacerse."
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -231,7 +228,7 @@ msgstr "Desnudez artística o no erótica."
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:166
-#: src/view/com/auth/login/LoginForm.tsx:250
+#: src/view/com/auth/login/LoginForm.tsx:254
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:148
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
 #: src/view/com/post-thread/PostThread.tsx:388
@@ -289,7 +286,7 @@ msgstr "Las cuentas bloqueadas no pueden responder en tus hilos, mencionarte ni 
 
 #: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
-msgstr "Publicación bloqueada"
+msgstr "Publicación bloqueada."
 
 #: src/view/screens/ProfileList.tsx:310
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -345,9 +342,8 @@ msgstr "Cámara"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "Sólo puede contener letras, números, espacios, guiones y guiones bajos. Debe tener al menos 4 caracteres, pero no más de 32."
 
-#: src/view/com/composer/Composer.tsx:289
-#: src/view/com/composer/Composer.tsx:292
-#: src/view/com/modals/AltImage.tsx:128
+#: src/view/com/composer/Composer.tsx:294
+#: src/view/com/composer/Composer.tsx:297
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/Confirm.tsx:88
@@ -371,8 +367,8 @@ msgid "Cancel account deletion"
 msgstr "Cancelar la eliminación de la cuenta"
 
 #: src/view/com/modals/AltImage.tsx:123
-msgid "Cancel add image alt text"
-msgstr "Cancelar añadir texto alternativo a la imagen"
+#~ msgid "Cancel add image alt text"
+#~ msgstr "Cancelar añadir texto alternativo a la imagen"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
@@ -502,7 +498,7 @@ msgstr "Redactar la respuesta"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/screens/PreferencesHomeFeed.tsx:299
-#: src/view/screens/PreferencesThreads.tsx:153
+#: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -526,7 +522,7 @@ msgid "Confirmation code"
 msgstr "Código de confirmación"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:269
+#: src/view/com/auth/login/LoginForm.tsx:273
 msgid "Connecting..."
 msgstr "Conectando..."
 
@@ -673,15 +669,15 @@ msgstr "Servidor de desarrollo"
 msgid "Developer Tools"
 msgstr "Herramientas de desarrollador"
 
-#: src/view/com/composer/Composer.tsx:210
+#: src/view/com/composer/Composer.tsx:211
 msgid "Did you want to say anything?"
-msgstr ""
+msgstr "¿Quieres decir algo?"
 
-#: src/view/com/composer/Composer.tsx:143
+#: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
 msgstr "Descartar"
 
-#: src/view/com/composer/Composer.tsx:137
+#: src/view/com/composer/Composer.tsx:138
 msgid "Discard draft"
 msgstr "Descartar el borrador"
 
@@ -706,6 +702,7 @@ msgid "Domain verified!"
 msgstr "¡Dominio verificado!"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
@@ -716,7 +713,7 @@ msgstr "¡Dominio verificado!"
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/screens/PreferencesHomeFeed.tsx:302
-#: src/view/screens/PreferencesThreads.tsx:156
+#: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Listo"
 
@@ -917,11 +914,11 @@ msgstr "Por razones de seguridad, tendremos que enviarte un código de confirmac
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Por razones de seguridad, no podrás volver a verla. Si pierdes esta contraseña, tendrás que generar una nueva."
 
-#: src/view/com/auth/login/LoginForm.tsx:232
+#: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Forgot"
 msgstr "Lo olvidé"
 
-#: src/view/com/auth/login/LoginForm.tsx:229
+#: src/view/com/auth/login/LoginForm.tsx:233
 msgid "Forgot password"
 msgstr "Olvidé mi contraseña"
 
@@ -953,7 +950,7 @@ msgid "Go Back"
 msgstr "Regresar"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
-#: src/view/com/auth/login/LoginForm.tsx:279
+#: src/view/com/auth/login/LoginForm.tsx:283
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
 msgstr "Ir al siguiente"
@@ -978,11 +975,11 @@ msgstr "Ocultar"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "Hide post"
-msgstr ""
+msgstr "Ocultar publicación"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:177
 msgid "Hide this post?"
-msgstr ""
+msgstr "¿Ocultar esta publicación?"
 
 #: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide user list"
@@ -1051,7 +1048,7 @@ msgstr "Texto alt de la imagen"
 msgid "Image options"
 msgstr "Opciones de la imagen"
 
-#: src/view/com/auth/login/LoginForm.tsx:113
+#: src/view/com/auth/login/LoginForm.tsx:115
 msgid "Invalid username or password"
 msgstr "Nombre de usuario o contraseña no válidos"
 
@@ -1202,10 +1199,6 @@ msgstr "Visibilidad de desconexión"
 msgid "Login to account that is not listed"
 msgstr "Acceder a una cuenta que no está en la lista"
 
-#: src/view/screens/ProfileFeed.tsx:472
-#~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
-#~ msgstr "Parece que este canal de noticias sólo está disponible para usuarios con una cuenta Bluesky. Por favor, ¡regístrate o inicia sesión para ver este canal!"
-
 #: src/view/com/modals/LinkWarning.tsx:63
 msgid "Make sure this is where you intend to go!"
 msgstr "¡Asegúrate de que es aquí a donde pretendes ir!"
@@ -1255,6 +1248,10 @@ msgstr "Más canales de noticias"
 #: src/view/screens/ProfileList.tsx:584
 msgid "More options"
 msgstr "Más opciones"
+
+#: src/view/screens/PreferencesThreads.tsx:82
+msgid "Most-liked replies first"
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
@@ -1336,10 +1333,14 @@ msgstr "Publicación nueva"
 msgid "New Post"
 msgstr "Publicación nueva"
 
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
+
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:184
-#: src/view/com/auth/login/LoginForm.tsx:282
+#: src/view/com/auth/login/LoginForm.tsx:286
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:156
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:166
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -1354,6 +1355,8 @@ msgstr "Imagen nueva"
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 #: src/view/screens/PreferencesHomeFeed.tsx:226
 #: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
 msgstr "No"
 
@@ -1407,13 +1410,22 @@ msgstr "¡Qué problema!"
 msgid "Okay"
 msgstr "Está bien"
 
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:363
 msgid "One or more images is missing alt text."
 msgstr "Falta el texto alternativo en una o varias imágenes."
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
 msgstr "Solo {0} puede responder."
+
+#: src/view/com/composer/Composer.tsx:468
+#: src/view/com/composer/Composer.tsx:469
+msgid "Open emoji picker"
+msgstr ""
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1483,7 +1495,7 @@ msgstr "Página no encontrada"
 
 #: src/view/com/auth/create/Step2.tsx:122
 #: src/view/com/auth/create/Step2.tsx:132
-#: src/view/com/auth/login/LoginForm.tsx:217
+#: src/view/com/auth/login/LoginForm.tsx:221
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Password"
@@ -1532,18 +1544,13 @@ msgstr "Introduce tu contraseña, también:"
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
 msgid "Please tell us why you think this content warning was incorrectly applied!"
-msgstr ""
+msgstr "Por favor, dinos por qué crees que esta advertencia de contenido se ha aplicado incorrectamente!"
 
-#: src/view/com/modals/AppealLabel.tsx:72
-#: src/view/com/modals/AppealLabel.tsx:75
-#~ msgid "Please tell us why you think this decision was incorrect."
-#~ msgstr "Por favor, dinos por qué crees que esta decisión fue incorrecta."
-
-#: src/view/com/composer/Composer.tsx:214
+#: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
-msgstr ""
+msgstr "Por favor, espera a que tu tarjeta de enlace termine de cargarse"
 
-#: src/view/com/composer/Composer.tsx:341
+#: src/view/com/composer/Composer.tsx:346
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
@@ -1581,7 +1588,7 @@ msgstr "Imagen previa"
 msgid "Primary Language"
 msgstr "Lenguajes primarios"
 
-#: src/view/screens/PreferencesThreads.tsx:91
+#: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
 msgstr "Priorizar los usuarios a los que sigue"
 
@@ -1627,6 +1634,10 @@ msgstr "Citar una publicación"
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
 msgstr "Citar una publicación"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1768,14 +1779,13 @@ msgstr "Restablecer el estado de preferencias"
 
 #: src/view/com/auth/create/CreateAccount.tsx:163
 #: src/view/com/auth/create/CreateAccount.tsx:167
-#: src/view/com/auth/login/LoginForm.tsx:259
-#: src/view/com/auth/login/LoginForm.tsx:262
+#: src/view/com/auth/login/LoginForm.tsx:263
+#: src/view/com/auth/login/LoginForm.tsx:266
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:65
 msgid "Retry"
 msgstr "Volver a intentar"
 
-#: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/BirthDateSettings.tsx:94
 #: src/view/com/modals/BirthDateSettings.tsx:97
 #: src/view/com/modals/ChangeHandle.tsx:173
@@ -1821,7 +1831,7 @@ msgstr "Buscar"
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
 msgid "Search for users"
-msgstr ""
+msgstr "Buscar usuarios"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -1839,7 +1849,7 @@ msgstr "Seleccionar Bluesky Social"
 msgid "Select from an existing account"
 msgstr "Selecciona de una cuenta existente"
 
-#: src/view/com/auth/login/LoginForm.tsx:143
+#: src/view/com/auth/login/LoginForm.tsx:147
 msgid "Select service"
 msgstr "Selecciona el servicio"
 
@@ -1892,7 +1902,7 @@ msgstr "Establece este ajuste en \"No\" para ocultar todas las respuestas de tus
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Establece este ajuste en \"No\" para ocultar todas las veces que se han vuelto a publicar desde tus noticias."
 
-#: src/view/screens/PreferencesThreads.tsx:116
+#: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Establece este ajuste en \"Sí\" para mostrar las respuestas en una vista de hilos. Se trata de una función experimental."
 
@@ -1942,7 +1952,7 @@ msgstr "Mostrar publicaciones de citas"
 msgid "Show Replies"
 msgstr "Mostrar respuestas"
 
-#: src/view/screens/PreferencesThreads.tsx:94
+#: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
 msgstr "Mostrar las respuestas de las personas a quienes sigues antes que el resto de respuestas."
 
@@ -1983,7 +1993,7 @@ msgstr "Iniciar sesión como {0}"
 msgid "Sign in as..."
 msgstr "Iniciar sesión como ..."
 
-#: src/view/com/auth/login/LoginForm.tsx:130
+#: src/view/com/auth/login/LoginForm.tsx:134
 msgid "Sign into"
 msgstr "Iniciar sesión en"
 
@@ -2125,10 +2135,6 @@ msgstr "Las condiciones de servicio se han trasladado a"
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "Se ha producido un problema inesperado en la aplicación. Por favor, ¡avísanos si te ha ocurrido esto!"
 
-#: src/view/com/util/moderation/LabelInfo.tsx:45
-#~ msgid "This {0} has been labeled."
-#~ msgstr "Este {0} ha sido etiquetado."
-
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
 msgstr "Esta {screenDescription} ha sido marcada:"
@@ -2171,14 +2177,14 @@ msgstr "Esta advertencia sólo está disponible para las publicaciones con medio
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "This will hide this post from your feeds."
-msgstr ""
+msgstr "Esto ocultará esta entrada de tus contenidos."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
 msgid "Thread Preferences"
 msgstr "Preferencias de hilos"
 
-#: src/view/screens/PreferencesThreads.tsx:113
+#: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
 msgstr "Modo con hilos"
 
@@ -2210,7 +2216,7 @@ msgstr "Desactivar la opción de silenciar la lista"
 
 #: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/Login.tsx:76
-#: src/view/com/auth/login/LoginForm.tsx:117
+#: src/view/com/auth/login/LoginForm.tsx:120
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "No se puede contactar con tu servicio. Comprueba tu conexión a Internet."
 
@@ -2228,7 +2234,7 @@ msgstr "Desbloquear una cuenta"
 msgid "Undo repost"
 msgstr "Deshacer esta publicación"
 
-#: src/view/com/auth/create/state.ts:210
+#: src/view/com/auth/create/state.ts:216
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr "Lamentablemente, no cumples los requisitos para crear una cuenta."
 
@@ -2284,8 +2290,8 @@ msgstr "Identificador del usuario"
 msgid "User Lists"
 msgstr "Listas de usuarios"
 
-#: src/view/com/auth/login/LoginForm.tsx:170
-#: src/view/com/auth/login/LoginForm.tsx:188
+#: src/view/com/auth/login/LoginForm.tsx:174
+#: src/view/com/auth/login/LoginForm.tsx:192
 msgid "Username or email address"
 msgstr "Nombre de usuario o dirección de correo electrónico"
 
@@ -2351,12 +2357,8 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "¿Cuál es el problema con esta {collectionName}?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
-#~ msgid "What's next?"
-#~ msgstr "¿Qué sigue?"
-
-#: src/view/com/auth/SplashScreen.tsx:34
 msgid "What's up?"
-msgstr ""
+msgstr "¿Qué hay de nuevo?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
@@ -2375,7 +2377,7 @@ msgstr "Quién puede responder"
 msgid "Wide"
 msgstr "Ancho"
 
-#: src/view/com/composer/Composer.tsx:413
+#: src/view/com/composer/Composer.tsx:418
 msgid "Write post"
 msgstr "Redactar una publicación"
 
@@ -2387,6 +2389,8 @@ msgstr "Redactar tu respuesta"
 #: src/view/screens/PreferencesHomeFeed.tsx:192
 #: src/view/screens/PreferencesHomeFeed.tsx:227
 #: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "Sí"
 
