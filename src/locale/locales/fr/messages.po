@@ -193,7 +193,6 @@ msgstr "Faire appel de l’avertissement sur le contenu"
 msgid "Appeal Content Warning"
 msgstr "Appel de l’avertissement sur le contenu"
 
-#: src/view/com/modals/AppealLabel.tsx:65
 #~ msgid "Appeal Decision"
 #~ msgstr "Appel de la décision"
 
@@ -975,7 +974,7 @@ msgstr "Voici le mot de passe de votre appli."
 #: src/view/com/notifications/FeedItem.tsx:324
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Hide"
-msgstr "Masquer"
+msgstr "Cacher"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "Hide post"
@@ -1203,10 +1202,6 @@ msgstr "Visibilité déconnectée"
 msgid "Login to account that is not listed"
 msgstr "Se connecter à un compte qui n’est pas listé"
 
-#: src/view/screens/ProfileFeed.tsx:472
-#~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
-#~ msgstr "On dirait que ce fils d’actu n’est disponible que pour les utilisateurs disposant d’un compte Bluesky. Veuillez vous inscrire ou vous connecter pour voir ce fils d’actu !"
-
 #: src/view/com/modals/LinkWarning.tsx:63
 msgid "Make sure this is where you intend to go!"
 msgstr "Assurez-vous que c’est bien là que vous avez l’intention d’aller !"
@@ -1344,6 +1339,10 @@ msgstr "Nouveau post"
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
 msgstr "Réponses les plus récentes en premier"
+
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
@@ -1554,8 +1553,6 @@ msgstr "Veuillez également entrer votre mot de passe :"
 msgid "Please tell us why you think this content warning was incorrectly applied!"
 msgstr "Dites-nous donc pourquoi vous pensez que cet avertissement de contenu a été appliqué à tort !"
 
-#: src/view/com/modals/AppealLabel.tsx:72
-#: src/view/com/modals/AppealLabel.tsx:75
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr "Dites-nous pourquoi vous pensez que cette décision était incorrecte."
 
@@ -1651,6 +1648,10 @@ msgstr "Citer un post"
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
 msgstr "Aléatoire"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr ""
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -2152,7 +2153,6 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "Un problème inattendu s’est produit dans l’application. N’hésitez pas à nous faire savoir si cela vous est arrivé !"
 
-#: src/view/com/util/moderation/LabelInfo.tsx:45
 #~ msgid "This {0} has been labeled."
 #~ msgstr "Ce {0} a été classé."
 
@@ -2376,10 +2376,6 @@ msgstr "Bienvenue sur <0>Bluesky</0>"
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
 msgstr "Quel est le problème avec cette {collectionName} ?"
-
-#: src/view/com/auth/SplashScreen.tsx:34
-#~ msgid "What's next?"
-#~ msgstr "Et après ?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
 msgid "What's up?"
