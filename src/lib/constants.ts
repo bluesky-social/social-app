@@ -45,7 +45,15 @@ export function IS_STAGING(url: string) {
 }
 
 export function IS_PROD(url: string) {
-  return !IS_LOCAL_DEV(url) && !IS_STAGING(url)
+  // NOTE
+  // until open federation, "production" is defined as the main server
+  // this definition will not work once federation is enabled!
+  // -prf
+  return (
+    url.startsWith('https://bsky.social') ||
+    url.startsWith('https://api.bsky.app') ||
+    /bsky\.network\/?$/.test(url)
+  )
 }
 
 export const PROD_TEAM_HANDLES = [
