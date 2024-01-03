@@ -290,7 +290,7 @@ msgstr "Les comptes bloqués ne peuvent pas répondre à vos discussions, vous m
 
 #: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
-msgstr "Publication bloquée."
+msgstr "Post bloqué."
 
 #: src/view/screens/ProfileList.tsx:310
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -571,7 +571,7 @@ msgstr "Copier le lien dans la liste"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy link to post"
-msgstr "Copier le lien dans la publication"
+msgstr "Copier le lien vers le post"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
 msgid "Copy link to profile"
@@ -579,7 +579,7 @@ msgstr "Copier le lien sur le profil"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Copy post text"
-msgstr "Copier le texte de la publication"
+msgstr "Copier le texte du post"
 
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
@@ -648,15 +648,15 @@ msgstr "Supprimer mon compte…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:214
 msgid "Delete post"
-msgstr "Supprimer la publication"
+msgstr "Supprimer le post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:218
 msgid "Delete this post?"
-msgstr "Supprimer cette publication ?"
+msgstr "Supprimer ce post ?"
 
 #: src/view/com/post-thread/PostThread.tsx:242
 msgid "Deleted post."
-msgstr "Publication supprimée."
+msgstr "Post supprimé."
 
 #: src/view/com/modals/CreateOrEditList.tsx:218
 #: src/view/com/modals/CreateOrEditList.tsx:234
@@ -979,11 +979,11 @@ msgstr "Masquer"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:173
 msgid "Hide post"
-msgstr "Cacher cette publication"
+msgstr "Cacher ce post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:177
 msgid "Hide this post?"
-msgstr "Cacher cette publication ?"
+msgstr "Cacher ce post ?"
 
 #: src/view/com/notifications/FeedItem.tsx:316
 msgid "Hide user list"
@@ -1291,11 +1291,11 @@ msgstr "Comptes masqués"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Les comptes masqués voient leurs publications supprimées de votre fil d’actualité et de vos notifications. Cette option est totalement privée."
+msgstr "Les comptes masqués voient leurs posts supprimés de votre fil d’actualité et de vos notifications. Cette option est totalement privée."
 
 #: src/view/screens/ProfileList.tsx:273
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "Ce que vous masquez reste privé. Les comptes masqués peuvent interagir avec vous, mais vous ne verrez pas leurs publications et ne recevrez pas de notifications de leur part."
+msgstr "Ce que vous masquez reste privé. Les comptes masqués peuvent interagir avec vous, mais vous ne verrez pas leurs posts et ne recevrez pas de notifications de leur part."
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -1335,11 +1335,11 @@ msgstr "Nouveau"
 #: src/view/screens/ProfileList.tsx:222
 #: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
-msgstr "Nouvelle publication"
+msgstr "Nouveau post"
 
 #: src/view/shell/desktop/LeftNav.tsx:258
 msgid "New Post"
-msgstr "Nouv. publication"
+msgstr "Nouveau post"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
@@ -1567,27 +1567,27 @@ msgstr "Veuillez patienter le temps que votre carte de lien soit chargée"
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
-msgstr "Publication"
+msgstr "Post"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
-msgstr "Publications cachées"
+msgstr "Posts cachés"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:87
 msgid "Post language"
-msgstr "Langue de publication"
+msgstr "Langue du post"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
 msgid "Post Languages"
-msgstr "Langues de publication"
+msgstr "Langues du post"
 
 #: src/view/com/post-thread/PostThread.tsx:430
 msgid "Post not found"
-msgstr "Publication introuvable"
+msgstr "Post introuvable"
 
 #: src/view/screens/Profile.tsx:161
 msgid "Posts"
-msgstr "Publications"
+msgstr "Posts"
 
 #: src/view/com/modals/LinkWarning.tsx:44
 msgid "Potentially Misleading Link"
@@ -1642,11 +1642,11 @@ msgstr "Les listes publiques et partageables qui peuvent alimenter les fils d’
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
-msgstr "Citer une publication"
+msgstr "Citer le post"
 
 #: src/view/com/modals/Repost.tsx:56
 msgid "Quote Post"
-msgstr "Citer une publication"
+msgstr "Citer un post"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -1742,7 +1742,7 @@ msgstr "Signaler la liste"
 #: src/view/com/modals/report/SendReportButton.tsx:37
 #: src/view/com/util/forms/PostDropdownBtn.tsx:196
 msgid "Report post"
-msgstr "Signaler la publication"
+msgstr "Signaler le post"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
@@ -1909,7 +1909,7 @@ msgstr "Définir un nouveau mot de passe"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:216
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Choisissez « Non » pour cacher toutes les citations sur votre fils d’actu. Les republications seront toujours visibles."
+msgstr "Choisissez « Non » pour cacher toutes les citations sur votre fils d’actu. Les reposts seront toujours visibles."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:113
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -1917,7 +1917,7 @@ msgstr "Choisissez « Non » pour cacher toutes les réponses dans votre fils 
 
 #: src/view/screens/PreferencesHomeFeed.tsx:182
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "Choisissez « Non » pour cacher toutes les republications de votre fils d’actu."
+msgstr "Choisissez « Non » pour cacher toutes les reposts de votre fils d’actu."
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -1959,11 +1959,11 @@ msgstr "Afficher quand même"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:249
 msgid "Show Posts from My Feeds"
-msgstr "Afficher les publications de mes fils d’actu"
+msgstr "Afficher les posts de mes fils d’actu"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:213
 msgid "Show Quote Posts"
-msgstr "Afficher les publications de citation"
+msgstr "Afficher les posts de citation"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:110
 msgid "Show Replies"
@@ -1975,7 +1975,7 @@ msgstr "Afficher les réponses des personnes que vous suivez avant toutes les au
 
 #: src/view/screens/PreferencesHomeFeed.tsx:179
 msgid "Show Reposts"
-msgstr "Afficher les republications"
+msgstr "Afficher les reposts"
 
 #: src/view/com/notifications/FeedItem.tsx:345
 msgid "Show users"
@@ -2053,7 +2053,7 @@ msgstr "Trier les réponses"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr "Trier les réponses à la même publication par :"
+msgstr "Trier les réponses au même post par :"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2134,7 +2134,7 @@ msgstr "Notre politique de droits d’auteur a été déplacée vers <0/>"
 
 #: src/view/com/post-thread/PostThread.tsx:433
 msgid "The post may have been deleted."
-msgstr "Cette publication a peut-être été supprimée."
+msgstr "Ce post a peut-être été supprimé."
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
@@ -2190,7 +2190,7 @@ msgstr "Ce lien vous conduit au site Web suivant :"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
-msgstr "Cette publication a été supprimée."
+msgstr "Ce post a été supprimé."
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -2198,7 +2198,7 @@ msgstr "Cet avertissement n’est disponible que pour les messages contenant des
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "This will hide this post from your feeds."
-msgstr "Cela va masquer cette publication de vos fils d’actu."
+msgstr "Cela va masquer ce post de vos fils d’actu."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
@@ -2253,7 +2253,7 @@ msgstr "Débloquer le compte"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Undo repost"
-msgstr "Annuler la republication"
+msgstr "Annuler le repost"
 
 #: src/view/com/auth/create/state.ts:216
 msgid "Unfortunately, you do not meet the requirements to create an account."
@@ -2387,7 +2387,7 @@ msgstr "Quoi de neuf ?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr "Quelles sont les langues utilisées dans cette publication ?"
+msgstr "Quelles sont les langues utilisées dans ce post ?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -2404,7 +2404,7 @@ msgstr "Large"
 
 #: src/view/com/composer/Composer.tsx:418
 msgid "Write post"
-msgstr "Rédiger une publication"
+msgstr "Rédiger un post"
 
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
@@ -2514,7 +2514,7 @@ msgstr "Vos codes d’invitation sont cachés lorsque vous êtes connecté à l�
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Vos publications, les mentions « J’aime » et les blocages sont publics. Les silences (comptes masqués) sont privés."
+msgstr "Vos posts, les mentions « J’aime » et les blocages sont publics. Les silences (comptes masqués) sont privés."
 
 #: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
