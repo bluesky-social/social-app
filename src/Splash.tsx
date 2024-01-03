@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react'
 import {View, StyleSheet, Image as RNImage} from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import {Image} from 'expo-image'
-import {platformApiLevel} from 'expo-device'
 import Animated, {
   interpolate,
   runOnJS,
@@ -11,7 +10,6 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated'
-import MaskedView from '@react-native-masked-view/masked-view'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
@@ -53,7 +51,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
   const isReady = props.isReady && isImageLoaded
 
-  const logoAnimations = useAnimatedStyle(() => {
+  const logoAnimation = useAnimatedStyle(() => {
     return {
       transform: [
         {
@@ -69,6 +67,17 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         },
       ],
       opacity: interpolate(intro.value, [0, 1], [0, 1], 'clamp'),
+    }
+  })
+
+  const logoWrapperAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        outroAppOpacity.value,
+        [0, 0.15, 0.2, 1],
+        [1, 1, 0, 0],
+        'clamp',
+      ),
     }
   })
 
@@ -137,51 +146,24 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         />
       )}
 
-      {platformApiLevel && platformApiLevel <= 25 ? (
-        // Use a simple fade on older versions of android (work around a bug)
-        <>
-          {!isAnimationComplete && (
-            <View
-              style={[
-                StyleSheet.absoluteFillObject,
-                {backgroundColor: 'white'},
-              ]}
-            />
-          )}
-          <Animated.View style={[{flex: 1}, appAnimation]}>
-            {props.children}
-          </Animated.View>
-        </>
-      ) : (
-        <MaskedView
-          style={[StyleSheet.absoluteFillObject]}
-          maskElement={
-            <Animated.View
-              style={[
-                {
-                  // Transparent background because mask is based off alpha channel.
-                  backgroundColor: 'transparent',
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
-                },
-              ]}>
-              <AnimatedLogo style={[logoAnimations]} />
-            </Animated.View>
-          }>
-          {!isAnimationComplete && (
-            <View
-              style={[
-                StyleSheet.absoluteFillObject,
-                {backgroundColor: 'white'},
-              ]}
-            />
-          )}
-          <Animated.View style={[{flex: 1}, appAnimation]}>
-            {props.children}
-          </Animated.View>
-        </MaskedView>
+      <Animated.View style={[{flex: 1}, appAnimation]}>
+        {props.children}
+      </Animated.View>
+
+      {!isAnimationComplete && (
+        <Animated.View
+          style={[
+            StyleSheet.absoluteFillObject,
+            logoWrapperAnimation,
+            {
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
+            },
+          ]}>
+          <AnimatedLogo style={[logoAnimation]} />
+        </Animated.View>
       )}
     </View>
   )
