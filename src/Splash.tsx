@@ -2,6 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {View, StyleSheet, Image as RNImage} from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import {Image} from 'expo-image'
+import {platformApiLevel} from 'expo-device'
 import Animated, {
   interpolate,
   runOnJS,
@@ -136,34 +137,52 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         />
       )}
 
-      <MaskedView
-        style={[StyleSheet.absoluteFillObject]}
-        maskElement={
-          <Animated.View
-            style={[
-              StyleSheet.absoluteFillObject,
-              {
-                // Transparent background because mask is based off alpha channel.
-                backgroundColor: 'transparent',
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
-              },
-            ]}>
-            <AnimatedLogo style={[logoAnimations]} />
+      {platformApiLevel && platformApiLevel <= 25 ? (
+        // Use a simple fade on older versions of android (work around a bug)
+        <>
+          {!isAnimationComplete && (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                {backgroundColor: 'white'},
+              ]}
+            />
+          )}
+          <Animated.View style={[{flex: 1}, appAnimation]}>
+            {props.children}
           </Animated.View>
-        }>
-        {!isAnimationComplete && (
-          <View
-            style={[StyleSheet.absoluteFillObject, {backgroundColor: 'white'}]}
-          />
-        )}
-
-        <Animated.View style={[{flex: 1}, appAnimation]}>
-          {props.children}
-        </Animated.View>
-      </MaskedView>
+        </>
+      ) : (
+        <MaskedView
+          style={[StyleSheet.absoluteFillObject]}
+          maskElement={
+            <Animated.View
+              style={[
+                {
+                  // Transparent background because mask is based off alpha channel.
+                  backgroundColor: 'transparent',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
+                },
+              ]}>
+              <AnimatedLogo style={[logoAnimations]} />
+            </Animated.View>
+          }>
+          {!isAnimationComplete && (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                {backgroundColor: 'white'},
+              ]}
+            />
+          )}
+          <Animated.View style={[{flex: 1}, appAnimation]}>
+            {props.children}
+          </Animated.View>
+        </MaskedView>
+      )}
     </View>
   )
 }
