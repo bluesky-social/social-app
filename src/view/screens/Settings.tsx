@@ -419,7 +419,7 @@ export function SettingsScreen({}: Props) {
         <View style={[pal.view, styles.toggleCard]}>
           <ToggleButton
             type="default-light"
-            label="Require alt text before posting"
+            label={_(msg`Require alt text before posting`)}
             labelType="lg"
             isSelected={requireAltTextEnabled}
             onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
