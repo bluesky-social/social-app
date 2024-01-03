@@ -82,7 +82,7 @@ export function SavedFeeds({}: Props) {
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
-      <ScrollView style={s.flex1}>
+      <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
             <Trans>Pinned Feeds</Trans>
@@ -288,7 +288,7 @@ function ListItem({
       <FeedSourceCard
         key={feedUri}
         feedUri={feedUri}
-        style={styles.noBorder}
+        style={styles.noTopBorder}
         showSaveBtn
         showMinimalPlaceholder
       />
@@ -344,12 +344,18 @@ const styles = StyleSheet.create({
   webArrowUpButton: {
     marginBottom: 10,
   },
-  noBorder: {
+  noTopBorder: {
     borderTopWidth: 0,
   },
   footerText: {
     paddingHorizontal: 26,
     paddingTop: 22,
     paddingBottom: 100,
+  },
+  noBorder: {
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
   },
 })
