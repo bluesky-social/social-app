@@ -10,6 +10,7 @@ import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesHi} from '#/locale/locales/hi/messages'
 import {messages as messagesJa} from '#/locale/locales/ja/messages'
 import {messages as messagesKo} from '#/locale/locales/ko/messages'
+import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
@@ -42,6 +43,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.ko: {
       i18n.loadAndActivate({locale, messages: messagesKo})
+      break
+    }
+    case AppLanguage.pt_BR: {
+      i18n.loadAndActivate({locale, messages: messagesPt_BR})
       break
     }
     default: {
