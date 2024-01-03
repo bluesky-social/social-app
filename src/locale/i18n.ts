@@ -33,6 +33,8 @@ export async function dynamicActivate(locale: AppLanguage) {
     // }
     case AppLanguage.id: {
       i18n.loadAndActivate({locale, messages: messagesId})
+      break
+    }
     case AppLanguage.fr: {
       i18n.loadAndActivate({locale, messages: messagesFr})
       break
