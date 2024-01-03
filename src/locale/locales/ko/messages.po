@@ -181,7 +181,7 @@ msgstr "계정 추가"
 #: src/view/com/composer/photos/Gallery.tsx:180
 #: src/view/com/modals/AltImage.tsx:93
 msgid "Add alt text"
-msgstr "대체 텍스트 추가"
+msgstr "대체 텍스트 추가하기"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:194
@@ -340,11 +340,11 @@ msgstr "이 초안을 삭제하시겠습니까?"
 
 #: src/view/screens/ProfileList.tsx:361
 msgid "Are you sure?"
-msgstr "확실합니까?"
+msgstr "정말인가요?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:221
 msgid "Are you sure? This cannot be undone."
-msgstr "확실합니까? 취소할 수 없습니다."
+msgstr "정말인가요? 되돌릴 수 없습니다."
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -2028,6 +2028,10 @@ msgstr "게시물 언어"
 msgid "Post not found"
 msgstr "게시물을 찾을 수 없음"
 
+#: src/lib/api/index.ts:242
+msgid "Posting..."
+msgstr "게시하는 중…"
+
 #: src/view/screens/Profile.tsx:161
 msgid "Posts"
 msgstr "게시물"
@@ -2059,6 +2063,7 @@ msgstr "개인정보"
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
 
+#: src/lib/api/index.ts:80
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 msgid "Processing..."
 msgstr "처리 중…"
@@ -2964,6 +2969,14 @@ msgstr "업데이트 중…"
 #: src/view/com/modals/ChangeHandle.tsx:453
 msgid "Upload a text file to:"
 msgstr "텍스트 파일 업로드 경로:"
+
+#: src/lib/api/index.ts:114
+msgid "Uploading image #{0}..."
+msgstr "{0}번째 이미지 업로드 중…"
+
+#: src/lib/api/index.ts:152
+msgid "Uploading link thumbnail..."
+msgstr "링크 미리보기 이미지 업로드 중…"
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."

@@ -1954,6 +1954,10 @@ msgstr "投稿の言語"
 msgid "Post not found"
 msgstr "投稿が見つかりません"
 
+#: src/lib/api/index.ts:242
+msgid "Posting..."
+msgstr ""
+
 #: src/view/screens/Profile.tsx:161
 msgid "Posts"
 msgstr "投稿"
@@ -1985,6 +1989,7 @@ msgstr "プライバシー"
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
 
+#: src/lib/api/index.ts:80
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 msgid "Processing..."
 msgstr "処理中..."
@@ -2869,6 +2874,14 @@ msgstr "更新中…"
 #: src/view/com/modals/ChangeHandle.tsx:453
 msgid "Upload a text file to:"
 msgstr "テキストファイルのアップロード先："
+
+#: src/lib/api/index.ts:114
+msgid "Uploading image #{0}..."
+msgstr ""
+
+#: src/lib/api/index.ts:152
+msgid "Uploading link thumbnail..."
+msgstr ""
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."

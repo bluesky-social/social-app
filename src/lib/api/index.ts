@@ -18,6 +18,7 @@ import {ImageModel} from 'state/models/media/image'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {t} from '@lingui/macro'
 
 export interface ExternalEmbedDraft {
   uri: string
@@ -76,7 +77,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
     },
   )
 
-  opts.onStateChange?.('Processing...')
+  opts.onStateChange?.(t`Processing...`)
   await rt.detectFacets(agent)
   rt = shortenLinks(rt)
 
@@ -110,7 +111,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
-      opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
+      opts.onStateChange?.(t`Uploading image #${images.length + 1}...`)
       logger.info(`Compressing image`)
       await image.compress()
       const path = image.compressed?.path ?? image.path
@@ -148,7 +149,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
     } else {
       let thumb
       if (opts.extLink.localThumb) {
-        opts.onStateChange?.('Uploading link thumbnail...')
+        opts.onStateChange?.(t`Uploading link thumbnail...`)
         let encoding
         if (opts.extLink.localThumb.mime) {
           encoding = opts.extLink.localThumb.mime
@@ -238,7 +239,7 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   let res
   try {
-    opts.onStateChange?.('Posting...')
+    opts.onStateChange?.(t`Posting...`)
     res = await agent.post({
       text: rt.text,
       facets: rt.facets,

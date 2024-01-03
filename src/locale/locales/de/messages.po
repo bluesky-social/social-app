@@ -1942,6 +1942,10 @@ msgstr "Postsprachen"
 msgid "Post not found"
 msgstr "Posten nicht gefunden"
 
+#: src/lib/api/index.ts:242
+msgid "Posting..."
+msgstr ""
+
 #: src/view/screens/Profile.tsx:161
 msgid "Posts"
 msgstr "Posten "
@@ -1973,6 +1977,7 @@ msgstr "Privatsphäre"
 msgid "Privacy Policy"
 msgstr "Datenschutzbestimmungen"
 
+#: src/lib/api/index.ts:80
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 msgid "Processing..."
 msgstr "Verarbeitung..."
@@ -2853,6 +2858,14 @@ msgstr "Aktualisieren..."
 #: src/view/com/modals/ChangeHandle.tsx:453
 msgid "Upload a text file to:"
 msgstr "Laden Sie eine Textdatei hoch:"
+
+#: src/lib/api/index.ts:114
+msgid "Uploading image #{0}..."
+msgstr ""
+
+#: src/lib/api/index.ts:152
+msgid "Uploading link thumbnail..."
+msgstr ""
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
