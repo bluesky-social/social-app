@@ -51,7 +51,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroAppOpacity = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
-  const isReady = props.isReady && isImageLoaded
+  const [isLayoutReady, setIsLayoutReady] = React.useState(false)
+  const isReady = props.isReady && isImageLoaded && isLayoutReady
 
   const logoAnimations = useAnimatedStyle(() => {
     return {
@@ -89,45 +90,44 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   })
 
   const onFinish = useCallback(() => setIsAnimationComplete(true), [])
+  const onLayout = useCallback(() => setIsLayoutReady(true), [])
+  const onLoadEnd = useCallback(() => setIsImageLoaded(true), [])
 
   useEffect(() => {
     if (isReady) {
-      // hide on mount
-      SplashScreen.hideAsync().catch(() => {})
-
-      intro.value = withTiming(
-        1,
-        {duration: 400, easing: Easing.out(Easing.cubic)},
-        async () => {
-          // set these values to check animation at specific point
-          // outroLogo.value = 0.1
-          // outroApp.value = 0.1
-          outroLogo.value = withTiming(
+      SplashScreen.hideAsync()
+        .then(() => {
+          intro.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.in(Easing.cubic)},
-            () => {
-              runOnJS(onFinish)()
+            {duration: 400, easing: Easing.out(Easing.cubic)},
+            async () => {
+              // set these values to check animation at specific point
+              // outroLogo.value = 0.1
+              // outroApp.value = 0.1
+              outroLogo.value = withTiming(
+                1,
+                {duration: 1200, easing: Easing.in(Easing.cubic)},
+                () => {
+                  runOnJS(onFinish)()
+                },
+              )
+              outroApp.value = withTiming(1, {
+                duration: 1200,
+                easing: Easing.inOut(Easing.cubic),
+              })
+              outroAppOpacity.value = withTiming(1, {
+                duration: 1200,
+                easing: Easing.in(Easing.cubic),
+              })
             },
           )
-          outroApp.value = withTiming(1, {
-            duration: 1200,
-            easing: Easing.inOut(Easing.cubic),
-          })
-          outroAppOpacity.value = withTiming(1, {
-            duration: 1200,
-            easing: Easing.in(Easing.cubic),
-          })
-        },
-      )
+        })
+        .catch(() => {})
     }
   }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
 
-  const onLoadEnd = useCallback(() => {
-    setIsImageLoaded(true)
-  }, [setIsImageLoaded])
-
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
         <Image
           accessibilityIgnoresInvertColors
