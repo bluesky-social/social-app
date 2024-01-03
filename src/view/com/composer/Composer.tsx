@@ -5,7 +5,9 @@ import {
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
+  LayoutAnimation,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -109,6 +111,7 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
+  const [showFullReplyTo, setShowFullReplyTo] = useState(false)
   const gallery = useMemo(() => new GalleryModel(), [])
   const onClose = useCallback(() => {
     closeComposer()
@@ -263,6 +266,15 @@ export const ComposePost = observer(function ComposePost({
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
   }
 
+  const onReplyToPress = useCallback(() => {
+    LayoutAnimation.configureNext({
+      ...LayoutAnimation.Presets.spring,
+      duration: 350,
+      update: {type: 'spring', springDamping: 0.7},
+    })
+    setShowFullReplyTo(prev => !prev)
+  }, [])
+
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
@@ -375,7 +387,16 @@ export const ComposePost = observer(function ComposePost({
           style={styles.scrollView}
           keyboardShouldPersistTaps="always">
           {replyTo ? (
-            <View style={[pal.border, styles.replyToLayout]}>
+            <Pressable
+              style={[pal.border, styles.replyToLayout]}
+              onPress={onReplyToPress}
+              accessibilityRole="button"
+              accessibilityLabel={_(
+                msg`Expand or collapse the full post you are replying to`,
+              )}
+              accessibilityHint={_(
+                msg`Expand or collapse the full post you are replying to`,
+              )}>
               <UserAvatar avatar={replyTo.author.avatar} size={50} />
               <View style={styles.replyToPost}>
                 <Text type="xl-medium" style={[pal.text]}>
@@ -384,11 +405,14 @@ export const ComposePost = observer(function ComposePost({
                       sanitizeHandle(replyTo.author.handle),
                   )}
                 </Text>
-                <Text type="post-text" style={pal.text} numberOfLines={6}>
+                <Text
+                  type="post-text"
+                  style={pal.text}
+                  numberOfLines={!showFullReplyTo ? 6 : undefined}>
                   {replyTo.text}
                 </Text>
               </View>
-            </View>
+            </Pressable>
           ) : undefined}
 
           <View
