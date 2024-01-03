@@ -156,7 +156,7 @@ msgstr "Adicionar aos meus feeds"
 msgid "Added to list"
 msgstr "Adicionado à lista"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:164
+#: src/view/screens/PreferencesHomeFeed.tsx:170
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
 msgstr "Ajuste o número de curtidas que uma resposta deve ser mostrada no seu feed."
 
@@ -533,7 +533,7 @@ msgstr "Escrever resposta"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
-#: src/view/screens/PreferencesHomeFeed.tsx:299
+#: src/view/screens/PreferencesHomeFeed.tsx:305
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Confirme"
@@ -752,7 +752,7 @@ msgstr "Domínio verificado!"
 #: src/view/com/modals/Threadgate.tsx:129
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
-#: src/view/screens/PreferencesHomeFeed.tsx:302
+#: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "Feito"
@@ -814,7 +814,7 @@ msgstr "Email Atualizado"
 msgid "Email:"
 msgstr "Email:"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:138
+#: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Ative esta configuração para ver apenas as respostas entre as pessoas que você segue."
 
@@ -905,7 +905,7 @@ msgstr "Encontre usuários com a ferramenta de busca à direita"
 msgid "Finding similar accounts..."
 msgstr "Procurando contas semelhantes..."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:102
+#: src/view/screens/PreferencesHomeFeed.tsx:108
 msgid "Fine-tune the content you see on your home screen."
 msgstr "Ajuste o conteúdo que você vê na sua tela inicial."
 
@@ -929,7 +929,7 @@ msgstr "Seguir alguns usuários para começar. Nós podemos recomendar mais usu�
 msgid "Followed users"
 msgstr "Usuários seguidos"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:145
+#: src/view/screens/PreferencesHomeFeed.tsx:151
 msgid "Followed users only"
 msgstr "Somente usuários seguidos"
 
@@ -1065,7 +1065,7 @@ msgid "Home"
 msgstr "Página Inicial"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:96
-#: src/view/screens/PreferencesHomeFeed.tsx:95
+#: src/view/screens/PreferencesHomeFeed.tsx:101
 #: src/view/screens/Settings.tsx:481
 msgid "Home Feed Preferences"
 msgstr "Preferências do Feed Inicial"
@@ -1332,7 +1332,7 @@ msgstr "Mais opções"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
-msgstr ""
+msgstr "Respostas mais curtidas primeiro"
 
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
@@ -1420,7 +1420,7 @@ msgstr "Novo Post"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
-msgstr ""
+msgstr "Respostas mais recentes primeiro"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
@@ -1436,10 +1436,10 @@ msgstr "Próximo"
 msgid "Next image"
 msgstr "Próxima imagem"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:191
-#: src/view/screens/PreferencesHomeFeed.tsx:226
-#: src/view/screens/PreferencesHomeFeed.tsx:263
+#: src/view/screens/PreferencesHomeFeed.tsx:126
+#: src/view/screens/PreferencesHomeFeed.tsx:197
+#: src/view/screens/PreferencesHomeFeed.tsx:232
+#: src/view/screens/PreferencesHomeFeed.tsx:269
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
@@ -1514,7 +1514,7 @@ msgstr "Ok"
 
 #: src/view/screens/PreferencesThreads.tsx:78
 msgid "Oldest replies first"
-msgstr ""
+msgstr "Respostas mais antigas primeiro"
 
 #: src/view/com/composer/Composer.tsx:363
 msgid "One or more images is missing alt text."
@@ -1527,7 +1527,7 @@ msgstr "Apenas {0} pode responder."
 #: src/view/com/composer/Composer.tsx:468
 #: src/view/com/composer/Composer.tsx:469
 msgid "Open emoji picker"
-msgstr ""
+msgstr "Abrir seletor de emojis"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1744,7 +1744,7 @@ msgstr "Citar Post"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr ""
+msgstr "Aleatório (também conhecido como \"Poster's Roulette\")"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1818,7 +1818,7 @@ msgstr "Respostas"
 msgid "Replies to this thread are disabled"
 msgstr "Respostas para este tópico estão desativadas"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:135
+#: src/view/screens/PreferencesHomeFeed.tsx:141
 msgid "Reply Filters"
 msgstr "Filtros de Resposta"
 
@@ -1867,7 +1867,7 @@ msgstr "Solicitar Alteração"
 
 #: src/view/screens/Settings.tsx:422
 msgid "Require alt text before posting"
-msgstr ""
+msgstr "Exigir texto alternativo antes de postar"
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
@@ -2022,15 +2022,15 @@ msgstr "Enviar um Relatório"
 msgid "Set new password"
 msgstr "Defina uma nova senha"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:216
+#: src/view/screens/PreferencesHomeFeed.tsx:222
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "Defina esta configuração como \"Não\" para ocultar todos os posts citados do seu feed. Repostagens ainda serão visíveis."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:113
+#: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Set this setting to \"No\" to hide all replies from your feed."
 msgstr "Defina essa configuração como \"Não\" para ocultar todas as respostas do seu feed."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:182
+#: src/view/screens/PreferencesHomeFeed.tsx:188
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "Defina essa configuração como \"Não\" para ocultar todas as repostagens do seu feed."
 
@@ -2038,7 +2038,7 @@ msgstr "Defina essa configuração como \"Não\" para ocultar todas as repostage
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Defina esta configuração como \"Sim\" para mostrar respostas em uma visualização thread. Este é um recurso experimental."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:252
+#: src/view/screens/PreferencesHomeFeed.tsx:258
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr "Defina essa configuração como \"Sim\" para mostrar amostras de seus feeds salvos no seu seguinte feed. Este é um recurso experimental."
 
@@ -2076,15 +2076,15 @@ msgstr "Mostrar"
 msgid "Show anyway"
 msgstr "Mostrar mesmo assim"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:249
+#: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr "Mostrar Posts dos meus Feeds"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:213
+#: src/view/screens/PreferencesHomeFeed.tsx:219
 msgid "Show Quote Posts"
 msgstr "Mostrar Posts de Citações"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:110
+#: src/view/screens/PreferencesHomeFeed.tsx:116
 msgid "Show Replies"
 msgstr "Mostrar Respostas"
 
@@ -2092,7 +2092,7 @@ msgstr "Mostrar Respostas"
 msgid "Show replies by people you follow before all other replies."
 msgstr "Mostrar as respostas de pessoas que você segue antes de todas as outras respostas."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:179
+#: src/view/screens/PreferencesHomeFeed.tsx:185
 msgid "Show Reposts"
 msgstr "Mostrar Repostagens"
 
@@ -2545,10 +2545,10 @@ msgstr "Escrever post"
 msgid "Write your reply"
 msgstr "Escreva sua resposta"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:120
-#: src/view/screens/PreferencesHomeFeed.tsx:192
-#: src/view/screens/PreferencesHomeFeed.tsx:227
-#: src/view/screens/PreferencesHomeFeed.tsx:262
+#: src/view/screens/PreferencesHomeFeed.tsx:126
+#: src/view/screens/PreferencesHomeFeed.tsx:198
+#: src/view/screens/PreferencesHomeFeed.tsx:233
+#: src/view/screens/PreferencesHomeFeed.tsx:268
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
