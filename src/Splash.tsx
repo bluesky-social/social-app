@@ -2,6 +2,7 @@ import React, {useCallback, useEffect} from 'react'
 import {View, StyleSheet, Image as RNImage} from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import {Image} from 'expo-image'
+import {platformApiLevel} from 'expo-device'
 import Animated, {
   interpolate,
   runOnJS,
@@ -50,7 +51,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const outroAppOpacity = useSharedValue(0)
   const [isAnimationComplete, setIsAnimationComplete] = React.useState(false)
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
-  const isReady = props.isReady && isImageLoaded
+  const [isLayoutReady, setIsLayoutReady] = React.useState(false)
+  const isReady = props.isReady && isImageLoaded && isLayoutReady
 
   const logoAnimations = useAnimatedStyle(() => {
     return {
@@ -88,45 +90,44 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   })
 
   const onFinish = useCallback(() => setIsAnimationComplete(true), [])
+  const onLayout = useCallback(() => setIsLayoutReady(true), [])
+  const onLoadEnd = useCallback(() => setIsImageLoaded(true), [])
 
   useEffect(() => {
     if (isReady) {
-      // hide on mount
-      SplashScreen.hideAsync().catch(() => {})
-
-      intro.value = withTiming(
-        1,
-        {duration: 400, easing: Easing.out(Easing.cubic)},
-        async () => {
-          // set these values to check animation at specific point
-          // outroLogo.value = 0.1
-          // outroApp.value = 0.1
-          outroLogo.value = withTiming(
+      SplashScreen.hideAsync()
+        .then(() => {
+          intro.value = withTiming(
             1,
-            {duration: 1200, easing: Easing.in(Easing.cubic)},
-            () => {
-              runOnJS(onFinish)()
+            {duration: 400, easing: Easing.out(Easing.cubic)},
+            async () => {
+              // set these values to check animation at specific point
+              // outroLogo.value = 0.1
+              // outroApp.value = 0.1
+              outroLogo.value = withTiming(
+                1,
+                {duration: 1200, easing: Easing.in(Easing.cubic)},
+                () => {
+                  runOnJS(onFinish)()
+                },
+              )
+              outroApp.value = withTiming(1, {
+                duration: 1200,
+                easing: Easing.inOut(Easing.cubic),
+              })
+              outroAppOpacity.value = withTiming(1, {
+                duration: 1200,
+                easing: Easing.in(Easing.cubic),
+              })
             },
           )
-          outroApp.value = withTiming(1, {
-            duration: 1200,
-            easing: Easing.inOut(Easing.cubic),
-          })
-          outroAppOpacity.value = withTiming(1, {
-            duration: 1200,
-            easing: Easing.in(Easing.cubic),
-          })
-        },
-      )
+        })
+        .catch(() => {})
     }
   }, [onFinish, intro, outroLogo, outroApp, outroAppOpacity, isReady])
 
-  const onLoadEnd = useCallback(() => {
-    setIsImageLoaded(true)
-  }, [setIsImageLoaded])
-
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
         <Image
           accessibilityIgnoresInvertColors
@@ -136,34 +137,52 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         />
       )}
 
-      <MaskedView
-        style={[StyleSheet.absoluteFillObject]}
-        maskElement={
-          <Animated.View
-            style={[
-              StyleSheet.absoluteFillObject,
-              {
-                // Transparent background because mask is based off alpha channel.
-                backgroundColor: 'transparent',
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
-              },
-            ]}>
-            <AnimatedLogo style={[logoAnimations]} />
+      {platformApiLevel && platformApiLevel <= 25 ? (
+        // Use a simple fade on older versions of android (work around a bug)
+        <>
+          {!isAnimationComplete && (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                {backgroundColor: 'white'},
+              ]}
+            />
+          )}
+          <Animated.View style={[{flex: 1}, appAnimation]}>
+            {props.children}
           </Animated.View>
-        }>
-        {!isAnimationComplete && (
-          <View
-            style={[StyleSheet.absoluteFillObject, {backgroundColor: 'white'}]}
-          />
-        )}
-
-        <Animated.View style={[{flex: 1}, appAnimation]}>
-          {props.children}
-        </Animated.View>
-      </MaskedView>
+        </>
+      ) : (
+        <MaskedView
+          style={[StyleSheet.absoluteFillObject]}
+          maskElement={
+            <Animated.View
+              style={[
+                {
+                  // Transparent background because mask is based off alpha channel.
+                  backgroundColor: 'transparent',
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
+                },
+              ]}>
+              <AnimatedLogo style={[logoAnimations]} />
+            </Animated.View>
+          }>
+          {!isAnimationComplete && (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                {backgroundColor: 'white'},
+              ]}
+            />
+          )}
+          <Animated.View style={[{flex: 1}, appAnimation]}>
+            {props.children}
+          </Animated.View>
+        </MaskedView>
+      )}
     </View>
   )
 }

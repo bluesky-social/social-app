@@ -22,6 +22,7 @@ import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 export interface TextInputRef {
   focus: () => void
   blur: () => void
+  getCursorPosition: () => DOMRect | undefined
 }
 
 interface TextInputProps {
@@ -169,6 +170,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   React.useImperativeHandle(ref, () => ({
     focus: () => {}, // TODO
     blur: () => {}, // TODO
+    getCursorPosition: () => {
+      const pos = editor?.state.selection.$anchor.pos
+      return pos ? editor?.view.coordsAtPos(pos) : undefined
+    },
   }))
 
   return (
