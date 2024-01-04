@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: danninov\n"
-"Language-Team: danninov\n"
+"Language-Team: danninov, Thinkbyte1024, mary-ext\n"
 "Plural-Forms: \n"
 
 #: src/view/shell/desktop/RightNav.tsx:160
