@@ -75,7 +75,7 @@ msgstr "Akun"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
-msgstr "Pilihan akun"
+msgstr "Preferensi akun"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
@@ -1125,7 +1125,7 @@ msgstr "Biarkan semua tidak tercentang untuk melihat bahasa apa pun."
 
 #: src/view/com/modals/LinkWarning.tsx:49
 msgid "Leaving Bluesky"
-msgstr "Tinggalkan Bluesky"
+msgstr "Meninggalkan Bluesky"
 
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
