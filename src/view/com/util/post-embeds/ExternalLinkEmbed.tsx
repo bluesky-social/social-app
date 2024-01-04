@@ -8,6 +8,8 @@ import {AppBskyEmbedExternal} from '@atproto/api'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {useExternalEmbedsPrefs} from 'state/preferences'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -16,11 +18,15 @@ export const ExternalLinkEmbed = ({
 }) => {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
+  const externalEmbedPrefs = useExternalEmbedsPrefs()
 
-  const embedPlayerParams = React.useMemo(
-    () => parseEmbedPlayerFromUrl(link.uri),
-    [link.uri],
-  )
+  const embedPlayerParams = React.useMemo(() => {
+    const params = parseEmbedPlayerFromUrl(link.uri)
+
+    if (params && externalEmbedPrefs?.[params.source] !== 'hide') {
+      return params
+    }
+  }, [link.uri, externalEmbedPrefs])
 
   return (
     <View style={{flexDirection: 'column'}}>
@@ -40,9 +46,12 @@ export const ExternalLinkEmbed = ({
           />
         </View>
       ) : undefined}
-      {embedPlayerParams && (
-        <ExternalPlayer link={link} params={embedPlayerParams} />
-      )}
+      {(embedPlayerParams?.isGif && (
+        <ExternalGifEmbed link={link} params={embedPlayerParams} />
+      )) ||
+        (embedPlayerParams && (
+          <ExternalPlayer link={link} params={embedPlayerParams} />
+        ))}
       <View
         style={{
           paddingHorizontal: isMobile ? 10 : 14,
@@ -55,10 +64,12 @@ export const ExternalLinkEmbed = ({
           style={[pal.textLight, styles.extUri]}>
           {toNiceDomain(link.uri)}
         </Text>
-        <Text type="lg-bold" numberOfLines={4} style={[pal.text]}>
-          {link.title || link.uri}
-        </Text>
-        {link.description ? (
+        {!embedPlayerParams?.isGif && (
+          <Text type="lg-bold" numberOfLines={4} style={[pal.text]}>
+            {link.title || link.uri}
+          </Text>
+        )}
+        {link.description && !embedPlayerParams?.hideDetails ? (
           <Text
             type="md"
             numberOfLines={4}
