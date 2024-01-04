@@ -23,8 +23,11 @@ import {
 } from 'state/preferences'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ExternalEmbeds'>
-export function ExternalEmbeds({}: Props) {
+type Props = NativeStackScreenProps<
+  CommonNavigatorParams,
+  'PreferencesExternalEmbeds'
+>
+export function PreferencesExternalEmbeds({}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -33,7 +36,7 @@ export function ExternalEmbeds({}: Props) {
 
   useFocusEffect(
     React.useCallback(() => {
-      screen('ExternalEmbeds')
+      screen('PreferencesExternalEmbeds')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )

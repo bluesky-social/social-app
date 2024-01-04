@@ -10,7 +10,6 @@ export type CommonNavigatorParams = {
   ModerationModlists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
-  ExternalEmbeds: undefined
   Settings: undefined
   LanguageSettings: undefined
   Profile: {name: string; hideBackButton?: boolean}
@@ -33,6 +32,7 @@ export type CommonNavigatorParams = {
   SavedFeeds: undefined
   PreferencesHomeFeed: undefined
   PreferencesThreads: undefined
+  PreferencesExternalEmbeds: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

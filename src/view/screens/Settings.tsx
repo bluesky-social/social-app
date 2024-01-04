@@ -573,7 +573,7 @@ export function SettingsScreen({}: Props) {
           onPress={
             isSwitchingAccounts
               ? undefined
-              : () => navigation.navigate('ExternalEmbeds')
+              : () => navigation.navigate('PreferencesExternalEmbeds')
           }
           accessibilityRole="button"
           accessibilityHint=""
