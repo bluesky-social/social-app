@@ -563,6 +563,13 @@ export function SettingsScreen({}: Props) {
             <Trans>Moderation</Trans>
           </Text>
         </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Privacy</Trans>
+        </Text>
+
         <TouchableOpacity
           testID="externalEmbedsBtn"
           style={[
@@ -580,14 +587,15 @@ export function SettingsScreen({}: Props) {
           accessibilityLabel={_(msg`Opens external embeds settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
-              icon="arrow-up-right-from-square"
+              icon={['far', 'circle-play']}
               style={pal.text as FontAwesomeIconStyle}
             />
           </View>
           <Text type="lg" style={pal.text}>
-            <Trans>External Embeds</Trans>
+            <Trans>External Media Preferences</Trans>
           </Text>
         </TouchableOpacity>
+
         <View style={styles.spacer20} />
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>

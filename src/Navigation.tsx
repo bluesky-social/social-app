@@ -248,7 +248,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PreferencesExternalEmbeds"
         getComponent={() => PreferencesExternalEmbeds}
         options={{
-          title: title('External Embeds Preferences'),
+          title: title('External Media Preferences'),
           requireAuth: true,
         }}
       />
