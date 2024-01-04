@@ -231,7 +231,7 @@ export function FeedSourceCardLoaded({
         </View>
 
         {showSaveBtn && feed.type === 'feed' && (
-          <View>
+          <View style={[s.justifyCenter]}>
             <Pressable
               testID={`feed-${feed.displayName}-toggleSave`}
               disabled={isSavePending || isPinPending || isRemovePending}

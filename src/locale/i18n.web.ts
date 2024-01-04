@@ -17,11 +17,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     //   mod = await import(`./locales/de/messages`)
     //   break
     // }
-    // DISABLED until this translation is more thoroughly reviewed -prf
-    // case AppLanguage.es: {
-    //   mod = await import(`./locales/es/messages`)
-    //   break
-    // }
+    case AppLanguage.es: {
+      mod = await import(`./locales/es/messages`)
+      break
+    }
     case AppLanguage.fr: {
       mod = await import(`./locales/fr/messages`)
       break
@@ -36,6 +35,14 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.ko: {
       mod = await import(`./locales/ko/messages`)
+      break
+    }
+    case AppLanguage.pt_BR: {
+      mod = await import(`./locales/pt-BR/messages`)
+      break
+    }
+    case AppLanguage.uk: {
+      mod = await import(`./locales/uk/messages`)
       break
     }
     default: {

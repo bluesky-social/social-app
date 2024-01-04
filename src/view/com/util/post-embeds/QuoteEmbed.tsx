@@ -98,6 +98,7 @@ export function QuoteEmbed({
   return (
     <Link
       style={[styles.container, pal.borderDark, style]}
+      hoverStyle={{borderColor: pal.colors.borderLinkHover}}
       href={itemHref}
       title={itemTitle}>
       <PostMeta
