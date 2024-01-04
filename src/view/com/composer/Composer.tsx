@@ -48,7 +48,6 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -72,6 +71,7 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   quote: initQuote,
   mention: initMention,
+  openPicker,
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -286,6 +286,10 @@ export const ComposePost = observer(function ComposePost({
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
 
+  const onEmojiButtonPress = useCallback(() => {
+    openPicker?.(textInput.current?.getCursorPosition())
+  }, [openPicker])
+
   return (
     <KeyboardAvoidingView
       testID="composePostView"
@@ -480,7 +484,19 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {!isMobile ? <EmojiPickerButton /> : null}
+          {!isMobile ? (
+            <Pressable
+              onPress={onEmojiButtonPress}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open emoji picker`)}
+              accessibilityHint={_(msg`Open emoji picker`)}>
+              <FontAwesomeIcon
+                icon={['far', 'face-smile']}
+                color={pal.colors.link}
+                size={22}
+              />
+            </Pressable>
+          ) : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
