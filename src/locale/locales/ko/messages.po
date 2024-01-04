@@ -225,7 +225,7 @@ msgstr "리스트에 추가됨"
 msgid "Added to my feeds"
 msgstr "내 피드에 추가됨"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:167
+#: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
 msgstr "답글이 피드에 표시되기 위해 필요한 좋아요 표시 수를 조정합니다."
 
@@ -646,7 +646,7 @@ msgstr "답글 작성하기"
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/com/modals/VerifyEmail.tsx:227
-#: src/view/screens/PreferencesHomeFeed.tsx:302
+#: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "확인"
@@ -910,7 +910,7 @@ msgstr "초대 코드가 없으십니까?"
 #: src/view/com/modals/Threadgate.tsx:132
 #: src/view/com/modals/UserAddRemoveLists.tsx:79
 #: src/view/com/modals/UserAddRemoveLists.tsx:82
-#: src/view/screens/PreferencesHomeFeed.tsx:305
+#: src/view/screens/PreferencesHomeFeed.tsx:311
 #: src/view/screens/PreferencesThreads.tsx:162
 msgid "Done"
 msgstr "완료"
@@ -989,7 +989,7 @@ msgstr "이메일:"
 msgid "Enable Adult Content"
 msgstr "성인 콘텐츠 활성화"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:141
+#: src/view/screens/PreferencesHomeFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "내가 팔로우하는 사람들 간의 답글만 표시합니다."
 
@@ -1109,7 +1109,7 @@ msgstr "오른쪽의 검색 도구로 사용자 찾기"
 msgid "Finding similar accounts..."
 msgstr "유사한 계정을 찾는 중…"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:105
+#: src/view/screens/PreferencesHomeFeed.tsx:111
 msgid "Fine-tune the content you see on your home screen."
 msgstr "홈 화면에 표시되는 콘텐츠를 미세 조정합니다."
 
@@ -1136,7 +1136,7 @@ msgstr "일부 사용자를 팔로우하여 시작하세요. 관심 있는 사�
 msgid "Followed users"
 msgstr "팔로우한 사용자"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:148
+#: src/view/screens/PreferencesHomeFeed.tsx:154
 msgid "Followed users only"
 msgstr "팔로우한 사용자만"
 
@@ -1290,7 +1290,7 @@ msgid "Home"
 msgstr "홈"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:96
-#: src/view/screens/PreferencesHomeFeed.tsx:98
+#: src/view/screens/PreferencesHomeFeed.tsx:104
 #: src/view/screens/Settings.tsx:482
 msgid "Home Feed Preferences"
 msgstr "홈 피드 설정"
@@ -1732,10 +1732,10 @@ msgstr "다음"
 msgid "Next image"
 msgstr "다음 이미지"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:123
-#: src/view/screens/PreferencesHomeFeed.tsx:194
-#: src/view/screens/PreferencesHomeFeed.tsx:229
-#: src/view/screens/PreferencesHomeFeed.tsx:266
+#: src/view/screens/PreferencesHomeFeed.tsx:129
+#: src/view/screens/PreferencesHomeFeed.tsx:200
+#: src/view/screens/PreferencesHomeFeed.tsx:235
+#: src/view/screens/PreferencesHomeFeed.tsx:272
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
@@ -2194,7 +2194,7 @@ msgstr "이 스레드에 대한 답글이 비활성화됩니다."
 msgid "Reply"
 msgstr "답글"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:138
+#: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Reply Filters"
 msgstr "답글 필터"
 
@@ -2422,15 +2422,15 @@ msgstr "신고 전송"
 msgid "Set new password"
 msgstr "새 비밀번호 설정"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:219
+#: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
 msgstr "피드에서 모든 인용 게시물을 숨기려면 이 설정을 \"아니요\"로 설정합니다. 재게시는 계속 표시됩니다."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:116
+#: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
 msgstr "피드에서 모든 답글을 숨기려면 이 설정을 \"아니요\"로 설정합니다."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:185
+#: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
 msgstr "피드에서 모든 재게시를 숨기려면 이 설정을 \"아니요\"로 설정합니다."
 
@@ -2438,7 +2438,7 @@ msgstr "피드에서 모든 재게시를 숨기려면 이 설정을 \"아니요\
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "스레드 보기에 답글을 표시하려면 이 설정을 \"예\"로 설정합니다. 이는 실험적인 기능입니다."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:255
+#: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
 msgstr "팔로우한 피드에 저장된 피드 샘플을 표시하려면 이 설정을 \"예\"로 설정합니다. 이는 실험적인 기능입니다."
 
@@ -2477,7 +2477,7 @@ msgstr "피드 공유"
 msgid "Show"
 msgstr "표시"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:62
+#: src/view/screens/PreferencesHomeFeed.tsx:68
 msgid "Show all replies"
 msgstr "모든 답글 표시"
 
@@ -2485,15 +2485,15 @@ msgstr "모든 답글 표시"
 msgid "Show anyway"
 msgstr "무시하고 표시"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:252
+#: src/view/screens/PreferencesHomeFeed.tsx:258
 msgid "Show Posts from My Feeds"
 msgstr "내 피드에서 게시물 표시"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:216
+#: src/view/screens/PreferencesHomeFeed.tsx:222
 msgid "Show Quote Posts"
 msgstr "인용 게시물 표시"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:113
+#: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
 msgstr "답글 표시"
 
@@ -2501,11 +2501,11 @@ msgstr "답글 표시"
 msgid "Show replies by people you follow before all other replies."
 msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다 먼저 표시합니다."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:64
+#: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
 msgstr "좋아요가 {value}개 이상인 답글 표시"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:182
+#: src/view/screens/PreferencesHomeFeed.tsx:188
 msgid "Show Reposts"
 msgstr "재게시 표시"
 
@@ -3143,10 +3143,10 @@ msgstr "게시물 작성"
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
-#: src/view/screens/PreferencesHomeFeed.tsx:123
-#: src/view/screens/PreferencesHomeFeed.tsx:195
-#: src/view/screens/PreferencesHomeFeed.tsx:230
-#: src/view/screens/PreferencesHomeFeed.tsx:265
+#: src/view/screens/PreferencesHomeFeed.tsx:129
+#: src/view/screens/PreferencesHomeFeed.tsx:201
+#: src/view/screens/PreferencesHomeFeed.tsx:236
+#: src/view/screens/PreferencesHomeFeed.tsx:271
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
