@@ -51,7 +51,7 @@ export const color = {
   red_800: `hsl(349, 96%, 25%)`,
   red_900: `hsl(349, 96%, 15%)`,
   red_1000: `hsl(349, 96%, 5%)`,
-}
+} as const
 
 export const space = {
   xxs: 2,
@@ -61,7 +61,7 @@ export const space = {
   lg: 18,
   xl: 24,
   xxl: 32,
-}
+} as const
 
 export const fontSize = {
   xxs: 10,
@@ -71,27 +71,26 @@ export const fontSize = {
   lg: 18,
   xl: 22,
   xxl: 26,
-}
+} as const
 
 // TODO test
 export const lineHeight = {
   none: 1,
   normal: 1.5,
   relaxed: 1.625,
-}
+} as const
 
 export const borderRadius = {
   sm: 8,
   md: 12,
-  xl: 36,
   full: 999,
-}
+} as const
 
 export const fontWeight = {
   normal: '400',
   semibold: '600',
   bold: '900',
-}
+} as const
 
 export type Color = keyof typeof color
 export type Space = keyof typeof space

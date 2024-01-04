@@ -1,7 +1,9 @@
 import * as tokens from '#/alf/tokens'
+import type {Mutable} from '#/alf/types'
 
 export type ThemeName = 'light' | 'dark'
-export type Theme = typeof light
+export type ReadonlyTheme = typeof light
+export type Theme = Mutable<ReadonlyTheme>
 
 export type Palette = {
   primary: string
