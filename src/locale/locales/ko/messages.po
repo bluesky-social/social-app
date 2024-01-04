@@ -1810,7 +1810,7 @@ msgstr "취소하고 나만의 핸들 만들기"
 #: src/view/screens/Lists.tsx:76
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
-msgstr "신규"
+msgstr "새로 만들기"
 
 #: src/view/com/feeds/FeedPage.tsx:200
 #: src/view/screens/Feeds.tsx:507

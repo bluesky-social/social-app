@@ -203,7 +203,9 @@ export function Component({
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
               placeholder={
-                isCurateList ? _(msg`e.g. Great Posters`) : _(msg`e.g. Spammers`)
+                isCurateList
+                  ? _(msg`e.g. Great Posters`)
+                  : _(msg`e.g. Spammers`)
               }
               placeholderTextColor={colors.gray4}
               value={name}
