@@ -3,15 +3,18 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {
   EmbedPlayerSource,
+  embedPlayerSources,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useSetExternalEmbedPref} from '#/state/preferences/external-embeds-prefs'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 export const snapPoints = [450]
 
@@ -26,6 +29,15 @@ export function Component({
   const {closeModal} = useModalControls()
   const {_} = useLingui()
   const setExternalEmbedPref = useSetExternalEmbedPref()
+  const {isMobile} = useWebMediaQueries()
+
+  const onShowAllPress = React.useCallback(() => {
+    for (const key of embedPlayerSources) {
+      setExternalEmbedPref(key, 'show')
+    }
+    onAccept()
+    closeModal()
+  }, [closeModal, onAccept, setExternalEmbedPref])
 
   const onShowPress = React.useCallback(() => {
     setExternalEmbedPref(source, 'show')
@@ -39,48 +51,37 @@ export function Component({
   }, [closeModal, setExternalEmbedPref, source])
 
   return (
-    <View
+    <ScrollView
       testID="embedConsentModal"
-      style={[s.flex1, pal.view, styles.container]}>
+      style={[
+        s.flex1,
+        pal.view,
+        isMobile
+          ? {paddingHorizontal: 20, paddingTop: 10}
+          : {paddingHorizontal: 30},
+      ]}>
       <Text style={[pal.text, styles.title]}>
-        <Trans>{externalEmbedLabels[source]} Embeds</Trans>
+        <Trans>External Media</Trans>
       </Text>
 
       <Text style={pal.text}>
         <Trans>
-          Some posts on Bluesky may include media embeds from an external
-          source. Embeds may allow the external source to collect information
-          about you and your device. You may choose to remove these embeds by
-          source.
+          This content is hosted by {externalEmbedLabels[source]}. Do you want
+          to enable external media?
         </Trans>
       </Text>
-      <Text style={[pal.textLight, {fontWeight: '500', marginTop: 15}]}>
+      <View style={[s.mt10]} />
+      <Text style={pal.textLight}>
         <Trans>
-          Note: Embeds are not loaded until you choose to load an embed. No
-          information is sent to or requested from the external source until you
-          load the embed.
+          External media may allow websites to collect information about you and
+          your device. No information is sent or requested until you press the
+          "play" button.
         </Trans>
       </Text>
       <View style={[s.mt20]} />
       <TouchableOpacity
-        testID="cancelBtn"
-        onPress={onHidePress}
-        accessibilityRole="button"
-        accessibilityLabel={_(
-          msg`Never load embeds from ${externalEmbedLabels[source]}`,
-        )}
-        accessibilityHint=""
-        onAccessibilityEscape={closeModal}>
-        <View style={[styles.btn, pal.btn]}>
-          <Text style={[pal.text, s.bold, s.f18]}>
-            <Trans>Hide {externalEmbedLabels[source]} embeds</Trans>
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <View style={[s.mt20]} />
-      <TouchableOpacity
-        testID="cancelBtn"
-        onPress={onShowPress}
+        testID="enableAllBtn"
+        onPress={onShowAllPress}
         accessibilityRole="button"
         accessibilityLabel={_(
           msg`Show embeds from ${externalEmbedLabels[source]}`,
@@ -93,18 +94,47 @@ export function Component({
           end={{x: 1, y: 1}}
           style={[styles.btn]}>
           <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Show {externalEmbedLabels[source]} embeds</Trans>
+            <Trans>Enable External Media</Trans>
           </Text>
         </LinearGradient>
       </TouchableOpacity>
-    </View>
+      <View style={[s.mt10]} />
+      <TouchableOpacity
+        testID="enableSourceBtn"
+        onPress={onShowPress}
+        accessibilityRole="button"
+        accessibilityLabel={_(
+          msg`Never load embeds from ${externalEmbedLabels[source]}`,
+        )}
+        accessibilityHint=""
+        onAccessibilityEscape={closeModal}>
+        <View style={[styles.btn, pal.btn]}>
+          <Text style={[pal.text, s.bold, s.f18]}>
+            <Trans>Enable {externalEmbedLabels[source]} only</Trans>
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <View style={[s.mt10]} />
+      <TouchableOpacity
+        testID="disableSourceBtn"
+        onPress={onHidePress}
+        accessibilityRole="button"
+        accessibilityLabel={_(
+          msg`Never load embeds from ${externalEmbedLabels[source]}`,
+        )}
+        accessibilityHint=""
+        onAccessibilityEscape={closeModal}>
+        <View style={[styles.btn, pal.btn]}>
+          <Text style={[pal.text, s.bold, s.f18]}>
+            <Trans>No thanks</Trans>
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 30,
-  },
   title: {
     textAlign: 'center',
     fontWeight: 'bold',

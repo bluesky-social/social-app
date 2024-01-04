@@ -10,7 +10,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
-} from '#/lib/strings/embed-player.ts'
+} from '#/lib/strings/embed-player'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {Trans} from '@lingui/macro'
 import {ScrollView} from '../com/util/Views'
@@ -39,7 +39,7 @@ export function PreferencesExternalEmbeds({}: Props) {
   )
 
   return (
-    <View style={s.hContentRegion} testID="listsScreen">
+    <View style={s.hContentRegion} testID="preferencesExternalEmbedsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
         style={[
