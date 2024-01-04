@@ -18,7 +18,7 @@ import {
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
-import {ScrollView} from '../com/util/Views'
+import {CenteredView, ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link, TextLink} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
