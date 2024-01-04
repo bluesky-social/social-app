@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, Text, PressableProps, TextProps} from 'react-native'
 import * as tokens from '#/alf/tokens'
-import {useTheme, atoms} from '#/alf'
+import {atoms} from '#/alf'
 
 export type ButtonType =
   | 'primary'
@@ -34,7 +34,6 @@ export type ButtonProps = Omit<PressableProps, 'children'> &
 export type ButtonTextProps = TextProps & VariantProps
 
 export function Button({children, style, type, size, ...rest}: ButtonProps) {
-  const t = useTheme()
   const {baseStyles, hoverStyles} = React.useMemo(() => {
     const baseStyles = []
     const hoverStyles = []
@@ -42,18 +41,15 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
     switch (type) {
       case 'primary':
         baseStyles.push({
-          backgroundColor: t.palette.primary,
-        })
-        hoverStyles.push({
           backgroundColor: tokens.color.blue_500,
         })
         break
       case 'secondary':
         baseStyles.push({
-          backgroundColor: tokens.color.gray_300,
+          backgroundColor: tokens.color.gray_200,
         })
         hoverStyles.push({
-          backgroundColor: tokens.color.gray_200,
+          backgroundColor: tokens.color.gray_100,
         })
         break
       default:
@@ -83,7 +79,7 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
       baseStyles,
       hoverStyles,
     }
-  }, [type, size, t])
+  }, [type, size])
 
   const [state, setState] = React.useState({
     pressed: false,

@@ -15,7 +15,11 @@ export function H1({style, ...rest}: TextProps) {
       'aria-level': 1,
     }) || {}
   return (
-    <RNText {...attr} {...rest} style={[atoms.text_xl, t.atoms.text, style]} />
+    <RNText
+      {...attr}
+      {...rest}
+      style={[atoms.text_xl, atoms.font_bold, t.atoms.text, style]}
+    />
   )
 }
 
@@ -27,7 +31,11 @@ export function H2({style, ...rest}: TextProps) {
       'aria-level': 2,
     }) || {}
   return (
-    <RNText {...attr} {...rest} style={[atoms.text_lg, t.atoms.text, style]} />
+    <RNText
+      {...attr}
+      {...rest}
+      style={[atoms.text_lg, atoms.font_bold, t.atoms.text, style]}
+    />
   )
 }
 
@@ -39,7 +47,11 @@ export function H3({style, ...rest}: TextProps) {
       'aria-level': 3,
     }) || {}
   return (
-    <RNText {...attr} {...rest} style={[atoms.text_md, t.atoms.text, style]} />
+    <RNText
+      {...attr}
+      {...rest}
+      style={[atoms.text_md, atoms.font_bold, t.atoms.text, style]}
+    />
   )
 }
 
@@ -51,7 +63,11 @@ export function H4({style, ...rest}: TextProps) {
       'aria-level': 4,
     }) || {}
   return (
-    <RNText {...attr} {...rest} style={[atoms.text_sm, t.atoms.text, style]} />
+    <RNText
+      {...attr}
+      {...rest}
+      style={[atoms.text_sm, atoms.font_bold, t.atoms.text, style]}
+    />
   )
 }
 
@@ -63,7 +79,11 @@ export function H5({style, ...rest}: TextProps) {
       'aria-level': 5,
     }) || {}
   return (
-    <RNText {...attr} {...rest} style={[atoms.text_xs, t.atoms.text, style]} />
+    <RNText
+      {...attr}
+      {...rest}
+      style={[atoms.text_xs, atoms.font_bold, t.atoms.text, style]}
+    />
   )
 }
 
@@ -75,6 +95,10 @@ export function H6({style, ...rest}: TextProps) {
       'aria-level': 6,
     }) || {}
   return (
-    <RNText {...attr} {...rest} style={[atoms.text_xxs, t.atoms.text, style]} />
+    <RNText
+      {...attr}
+      {...rest}
+      style={[atoms.text_xxs, atoms.font_bold, t.atoms.text, style]}
+    />
   )
 }
