@@ -183,6 +183,12 @@ msgstr "अकाउंट जोड़ें"
 msgid "Add alt text"
 msgstr "इस फ़ोटो में विवरण जोड़ें"
 
+#: src/view/screens/AppPasswords.tsx:102
+#: src/view/screens/AppPasswords.tsx:143
+#: src/view/screens/AppPasswords.tsx:156
+msgid "Add App Password"
+msgstr ""
+
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details"
@@ -265,6 +271,10 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:23
+msgid "An issue not included in these options"
+msgstr ""
+
 #: src/view/com/profile/FollowButton.tsx:30
 #: src/view/com/profile/FollowButton.tsx:40
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:183
@@ -278,11 +288,15 @@ msgstr ""
 msgid "and"
 msgstr "और"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:14
+msgid "Anti-Social Behavior"
+msgstr ""
+
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
 msgstr "ऐप भाषा"
 
-#: src/view/screens/AppPasswords.tsx:227
+#: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
 msgstr ""
 
@@ -298,7 +312,7 @@ msgstr ""
 msgid "App passwords"
 msgstr "ऐप पासवर्ड"
 
-#: src/view/screens/AppPasswords.tsx:186
+#: src/view/screens/AppPasswords.tsx:187
 msgid "App Passwords"
 msgstr "ऐप पासवर्ड"
 
@@ -330,7 +344,7 @@ msgstr "दिखावट"
 #~ msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
 #~ msgstr ""
 
-#: src/view/screens/AppPasswords.tsx:223
+#: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "क्या आप वाकई ऐप पासवर्ड \"{name}\" हटाना चाहते हैं?"
 
@@ -671,6 +685,10 @@ msgstr "OTP कोड"
 msgid "Connecting..."
 msgstr "कनेक्टिंग ..।"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:38
+msgid "Contains copyrighted material"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
 msgstr "सामग्री फ़िल्टरिंग"
@@ -742,6 +760,10 @@ msgstr "पोस्ट टेक्स्ट कॉपी करें"
 msgid "Copyright Policy"
 msgstr "कॉपीराइट नीति"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:37
+msgid "Copyright Violation"
+msgstr ""
+
 #: src/view/screens/ProfileFeed.tsx:95
 msgid "Could not load feed"
 msgstr "फ़ीड लोड नहीं कर सकता"
@@ -760,12 +782,16 @@ msgstr "नया खाता बनाएं"
 msgid "Create Account"
 msgstr "खाता बनाएँ"
 
+#: src/view/com/modals/AddAppPasswords.tsx:228
+msgid "Create App Password"
+msgstr ""
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
 #: src/view/com/auth/SplashScreen.tsx:43
 msgid "Create new account"
 msgstr "नया खाता बनाएं"
 
-#: src/view/screens/AppPasswords.tsx:248
+#: src/view/screens/AppPasswords.tsx:249
 msgid "Created {0}"
 msgstr "बनाया गया {0}"
 
@@ -794,8 +820,8 @@ msgstr "खाता हटाएं"
 #~ msgid "Delete Account"
 #~ msgstr "खाता हटाएं"
 
-#: src/view/screens/AppPasswords.tsx:221
-#: src/view/screens/AppPasswords.tsx:241
+#: src/view/screens/AppPasswords.tsx:222
+#: src/view/screens/AppPasswords.tsx:242
 msgid "Delete app password"
 msgstr "अप्प पासवर्ड हटाएं"
 
@@ -892,6 +918,7 @@ msgid "Don't have an invite code?"
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/AddAppPasswords.tsx:228
 #: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
@@ -993,6 +1020,18 @@ msgstr "इस सेटिंग को केवल उन लोगों क
 msgid "End of feed"
 msgstr ""
 
+#: src/view/com/modals/AddAppPasswords.tsx:165
+msgid "Enter a name for this App Password"
+msgstr ""
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:53
+msgid "Enter a reason or any other details here."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:101
+msgid "Enter Confirmation Code"
+msgstr ""
+
 #: src/view/com/auth/create/Step1.tsx:71
 msgid "Enter the address of your provider:"
 msgstr "अपने प्रदाता का पता दर्ज करें:"
@@ -1004,6 +1043,10 @@ msgstr "आप जिस डोमेन का उपयोग करना च
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:101
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "वह ईमेल दर्ज करें जिसका उपयोग आपने अपना खाता बनाने के लिए किया था। हम आपको एक \"reset code\" भेजेंगे ताकि आप एक नया पासवर्ड सेट कर सकें।"
+
+#: src/view/com/modals/Waitlist.tsx:78
+msgid "Enter your email"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
@@ -1023,6 +1066,10 @@ msgstr ""
 
 #: src/view/com/modals/Threadgate.tsx:76
 msgid "Everybody"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:30
+msgid "Excessive mentions or replies"
 msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:131
@@ -1178,6 +1225,10 @@ msgstr "पासवर्ड भूल गए"
 msgid "Forgot Password"
 msgstr "पासवर्ड भूल गए"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:56
+msgid "Frequently Posts Unwanted Content"
+msgstr ""
+
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
 msgid "Gallery"
 msgstr "गैलरी"
@@ -1185,6 +1236,10 @@ msgstr "गैलरी"
 #: src/view/com/modals/VerifyEmail.tsx:183
 msgid "Get Started"
 msgstr "प्रारंभ करें"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:19
+msgid "Glaring violations of law or terms of service"
+msgstr ""
 
 #: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/com/auth/LoggedOut.tsx:82
@@ -1213,6 +1268,10 @@ msgstr ""
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "हैंडल"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:15
+msgid "Harassment, trolling, or intolerance"
+msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:123
 msgid "Hate Group Iconography"
@@ -1320,6 +1379,10 @@ msgstr "यदि किसी को चुना जाता है, तो �
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:18
+msgid "Illegal and Urgent"
+msgstr ""
+
 #: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
 msgstr "छवि alt पाठ"
@@ -1335,6 +1398,10 @@ msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:137
 msgid "Impersonation"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:53
+msgid "Impersonation or false claims about identity or affiliation"
 msgstr ""
 
 #: src/view/com/search/Suggestions.tsx:104
@@ -1580,6 +1647,10 @@ msgstr "मेनू"
 msgid "Message from server"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:52
+msgid "Misleading Account"
+msgstr ""
+
 #: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
@@ -1675,6 +1746,11 @@ msgstr "मेरी फ़ीड"
 #: src/view/com/modals/CreateOrEditList.tsx:212
 msgid "Name"
 msgstr "नाम"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:45
+#: src/view/com/modals/report/ReasonOptions.tsx:60
+msgid "Name or Description Violates Community Standards"
+msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:74
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
@@ -1804,6 +1880,10 @@ msgstr "सूचनाएं"
 msgid "now"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:34
+msgid "Nudity or pornography not labeled as such"
+msgstr ""
+
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"
 msgstr "अरे नहीं!"
@@ -1883,6 +1963,7 @@ msgid "Or combine these options:"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:67
+#: src/view/com/modals/report/ReasonOptions.tsx:22
 msgid "Other"
 msgstr ""
 
@@ -1985,6 +2066,10 @@ msgstr ""
 #: src/view/com/modals/AppealLabel.tsx:75
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:100
+msgid "Please Verify Your Email"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -2592,7 +2677,12 @@ msgid "Sort replies to the same post by:"
 msgstr "उसी पोस्ट के उत्तरों को इस प्रकार क्रमबद्ध करें:"
 
 #: src/state/queries/preferences/moderation.ts:130
+#: src/view/com/modals/report/ReasonOptions.tsx:29
 msgid "Spam"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:57
+msgid "Spam; excessive mentions or replies"
 msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
@@ -2675,6 +2765,11 @@ msgstr "शर्तें"
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "सेवा की शर्तें"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:46
+#: src/view/com/modals/report/ReasonOptions.tsx:61
+msgid "Terms used violate community standards"
+msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
@@ -2938,6 +3033,10 @@ msgstr ""
 msgid "Unsave"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:33
+msgid "Unwanted Sexual Content"
+msgstr ""
+
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
 msgstr "सूची में {displayName} अद्यतन करें"
@@ -2966,7 +3065,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/screens/AppPasswords.tsx:194
+#: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "अपने खाते या पासवर्ड को पूर्ण एक्सेस देने के बिना अन्य ब्लूस्की ग्राहकों को लॉगिन करने के लिए ऐप पासवर्ड का उपयोग करें।।"
 
@@ -3039,6 +3138,10 @@ msgstr "मेरी ईमेल सत्यापित करें"
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
 msgstr "नया ईमेल सत्यापित करें"
+
+#: src/view/com/modals/VerifyEmail.tsx:102
+msgid "Verify Your Email"
+msgstr ""
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
@@ -3186,7 +3289,7 @@ msgstr "आपके पास कोई सूची नहीं है।।"
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "आपने अभी तक कोई भी अकाउंट ब्लॉक नहीं किया है. किसी खाते को ब्लॉक करने के लिए, उनकी प्रोफ़ाइल पर जाएं और उनके खाते के मेनू से \"खाता ब्लॉक करें\" चुनें।"
 
-#: src/view/screens/AppPasswords.tsx:86
+#: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "आपने अभी तक कोई ऐप पासवर्ड नहीं बनाया है। आप नीचे बटन दबाकर एक बना सकते हैं।।"
 

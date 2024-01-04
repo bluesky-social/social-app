@@ -162,7 +162,7 @@ export function Component({}: {}) {
               style={[styles.input, pal.text]}
               onChangeText={_onChangeText}
               value={name}
-              placeholder="Enter a name for this App Password"
+              placeholder={_(msg`Enter a name for this App Password`)}
               placeholderTextColor={pal.colors.textLight}
               autoCorrect={false}
               autoComplete="off"
@@ -225,7 +225,7 @@ export function Component({}: {}) {
       <View style={styles.btnContainer}>
         <Button
           type="primary"
-          label={!appPassword ? 'Create App Password' : 'Done'}
+          label={!appPassword ? _(msg`Create App Password`) : _(msg`Done`)}
           style={styles.btn}
           labelStyle={styles.btnLabel}
           onPress={!appPassword ? createAppPassword : onDone}

@@ -97,9 +97,9 @@ export function Component({showReminder}: {showReminder?: boolean}) {
         {stage === Stages.Reminder && <ReminderIllustration />}
         <View style={styles.titleSection}>
           <Text type="title-lg" style={[pal.text, styles.title]}>
-            {stage === Stages.Reminder ? 'Please Verify Your Email' : ''}
-            {stage === Stages.ConfirmCode ? 'Enter Confirmation Code' : ''}
-            {stage === Stages.Email ? 'Verify Your Email' : ''}
+            {stage === Stages.Reminder ? _(msg`Please Verify Your Email`) : ''}
+            {stage === Stages.ConfirmCode ? _(msg`Enter Confirmation Code`) : ''}
+            {stage === Stages.Email ? _(msg`Verify Your Email`) : ''}
           </Text>
         </View>
 

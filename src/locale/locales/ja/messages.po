@@ -163,6 +163,12 @@ msgstr "アカウントを追加"
 msgid "Add alt text"
 msgstr "ALTテキストを追加"
 
+#: src/view/screens/AppPasswords.tsx:102
+#: src/view/screens/AppPasswords.tsx:143
+#: src/view/screens/AppPasswords.tsx:156
+msgid "Add App Password"
+msgstr ""
+
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details"
@@ -245,6 +251,10 @@ msgstr "メールが{0}に送信されました。以下に入力できる確認
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "以前のメールアドレス{0}にメールが送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:23
+msgid "An issue not included in these options"
+msgstr ""
+
 #: src/view/com/profile/FollowButton.tsx:30
 #: src/view/com/profile/FollowButton.tsx:40
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:183
@@ -258,11 +268,15 @@ msgstr ""
 msgid "and"
 msgstr "および"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:14
+msgid "Anti-Social Behavior"
+msgstr ""
+
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
 msgstr "アプリの言語"
 
-#: src/view/screens/AppPasswords.tsx:227
+#: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
 msgstr ""
 
@@ -278,7 +292,7 @@ msgstr ""
 msgid "App passwords"
 msgstr "アプリパスワード"
 
-#: src/view/screens/AppPasswords.tsx:186
+#: src/view/screens/AppPasswords.tsx:187
 msgid "App Passwords"
 msgstr "アプリパスワード"
 
@@ -306,7 +320,7 @@ msgstr "この判断に異議を申し立てる"
 msgid "Appearance"
 msgstr "外観"
 
-#: src/view/screens/AppPasswords.tsx:223
+#: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "本当にアプリパスワード「{name}」を削除しますか？"
 
@@ -643,6 +657,10 @@ msgstr "確認コード"
 msgid "Connecting..."
 msgstr "接続中..."
 
+#: src/view/com/modals/report/ReasonOptions.tsx:38
+msgid "Contains copyrighted material"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
 msgstr "コンテンツのフィルタリング"
@@ -714,6 +732,10 @@ msgstr "投稿のテキストをコピー"
 msgid "Copyright Policy"
 msgstr "著作権ポリシー"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:37
+msgid "Copyright Violation"
+msgstr ""
+
 #: src/view/screens/ProfileFeed.tsx:95
 msgid "Could not load feed"
 msgstr "フィードのロードに失敗しました"
@@ -732,12 +754,16 @@ msgstr "新しいアカウントを作成"
 msgid "Create Account"
 msgstr "アカウントを作成"
 
+#: src/view/com/modals/AddAppPasswords.tsx:228
+msgid "Create App Password"
+msgstr ""
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
 #: src/view/com/auth/SplashScreen.tsx:43
 msgid "Create new account"
 msgstr "新しいアカウントを作成"
 
-#: src/view/screens/AppPasswords.tsx:248
+#: src/view/screens/AppPasswords.tsx:249
 msgid "Created {0}"
 msgstr "作成済み {0}"
 
@@ -766,8 +792,8 @@ msgstr "アカウントを削除"
 #~ msgid "Delete Account"
 #~ msgstr "アカウントを削除"
 
-#: src/view/screens/AppPasswords.tsx:221
-#: src/view/screens/AppPasswords.tsx:241
+#: src/view/screens/AppPasswords.tsx:222
+#: src/view/screens/AppPasswords.tsx:242
 msgid "Delete app password"
 msgstr "アプリパスワードを削除"
 
@@ -864,6 +890,7 @@ msgid "Don't have an invite code?"
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/AddAppPasswords.tsx:228
 #: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
@@ -965,6 +992,18 @@ msgstr "この設定を有効にすると、自分がフォローしているユ
 msgid "End of feed"
 msgstr "フィードの終わり"
 
+#: src/view/com/modals/AddAppPasswords.tsx:165
+msgid "Enter a name for this App Password"
+msgstr ""
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:53
+msgid "Enter a reason or any other details here."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:101
+msgid "Enter Confirmation Code"
+msgstr ""
+
 #: src/view/com/auth/create/Step1.tsx:71
 msgid "Enter the address of your provider:"
 msgstr "プロバイダーのアドレスを入力してください："
@@ -976,6 +1015,10 @@ msgstr "使用するドメインを入力してください"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:101
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "アカウントの作成に使用したメールアドレスを入力します。新しいパスワードを設定できるように、「リセットコード」をお送りします。"
+
+#: src/view/com/modals/Waitlist.tsx:78
+msgid "Enter your email"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
@@ -996,6 +1039,10 @@ msgstr "エラー："
 #: src/view/com/modals/Threadgate.tsx:76
 msgid "Everybody"
 msgstr "全員"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:30
+msgid "Excessive mentions or replies"
+msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:131
 msgid "Excessive unwanted interactions"
@@ -1150,6 +1197,10 @@ msgstr "パスワードを忘れた"
 msgid "Forgot Password"
 msgstr "パスワードを忘れた"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:56
+msgid "Frequently Posts Unwanted Content"
+msgstr ""
+
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
 msgid "Gallery"
 msgstr "ギャラリー"
@@ -1157,6 +1208,10 @@ msgstr "ギャラリー"
 #: src/view/com/modals/VerifyEmail.tsx:183
 msgid "Get Started"
 msgstr "はじめに"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:19
+msgid "Glaring violations of law or terms of service"
+msgstr ""
 
 #: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/com/auth/LoggedOut.tsx:82
@@ -1185,6 +1240,10 @@ msgstr ""
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "ハンドル"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:15
+msgid "Harassment, trolling, or intolerance"
+msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:123
 msgid "Hate Group Iconography"
@@ -1284,6 +1343,10 @@ msgstr "選択されていない場合は、すべての年齢に適していま
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:18
+msgid "Illegal and Urgent"
+msgstr ""
+
 #: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
 msgstr "画像のALTテキスト"
@@ -1299,6 +1362,10 @@ msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:137
 msgid "Impersonation"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:53
+msgid "Impersonation or false claims about identity or affiliation"
 msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:100
@@ -1535,6 +1602,10 @@ msgstr "メニュー"
 msgid "Message from server"
 msgstr "サーバーからのメッセージ"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:52
+msgid "Misleading Account"
+msgstr ""
+
 #: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
@@ -1622,6 +1693,11 @@ msgstr "保存されたフィード"
 #: src/view/com/modals/CreateOrEditList.tsx:212
 msgid "Name"
 msgstr "名前"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:45
+#: src/view/com/modals/report/ReasonOptions.tsx:60
+msgid "Name or Description Violates Community Standards"
+msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:74
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
@@ -1738,6 +1814,10 @@ msgstr "通知"
 msgid "now"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:34
+msgid "Nudity or pornography not labeled as such"
+msgstr ""
+
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"
 msgstr "ちょっと！"
@@ -1817,6 +1897,7 @@ msgid "Or combine these options:"
 msgstr "または以下のオプションを組み合わせてください："
 
 #: src/view/com/auth/create/Step1.tsx:67
+#: src/view/com/modals/report/ReasonOptions.tsx:22
 msgid "Other"
 msgstr ""
 
@@ -1919,6 +2000,10 @@ msgstr ""
 #: src/view/com/modals/AppealLabel.tsx:75
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr "この判断が誤っていると考える理由を教えてください。"
+
+#: src/view/com/modals/VerifyEmail.tsx:100
+msgid "Please Verify Your Email"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -2505,7 +2590,12 @@ msgid "Sort replies to the same post by:"
 msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
 #: src/state/queries/preferences/moderation.ts:130
+#: src/view/com/modals/report/ReasonOptions.tsx:29
 msgid "Spam"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:57
+msgid "Spam; excessive mentions or replies"
 msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
@@ -2588,6 +2678,11 @@ msgstr "条件"
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "利用規約"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:46
+#: src/view/com/modals/report/ReasonOptions.tsx:61
+msgid "Terms used violate community standards"
+msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
@@ -2851,6 +2946,10 @@ msgstr "モデレーションリストのピン留めを解除"
 msgid "Unsave"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:33
+msgid "Unwanted Sexual Content"
+msgstr ""
+
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
 msgstr "リストの{displayName}を更新"
@@ -2879,7 +2978,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/screens/AppPasswords.tsx:194
+#: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "他のBlueskyクライアントにアカウントやパスワードにフルアクセスする権限を与えずに、アプリパスワードを使ってログインします。"
 
@@ -2948,6 +3047,10 @@ msgstr "メールアドレスを確認"
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
 msgstr "新しいメールアドレスを確認"
+
+#: src/view/com/modals/VerifyEmail.tsx:102
+msgid "Verify Your Email"
+msgstr ""
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
@@ -3083,7 +3186,7 @@ msgstr "リストがありません。"
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "ブロック中のアカウントはまだありません。アカウントをブロックするには、ユーザーのプロフィールに移動し、アカウントメニューから「アカウントをブロック」を選択します。"
 
-#: src/view/screens/AppPasswords.tsx:86
+#: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "アプリパスワードはまだ作成されていません。下のボタンを押すと作成できます。"
 

@@ -163,6 +163,12 @@ msgstr "Ajouter un compte"
 msgid "Add alt text"
 msgstr "Ajouter un texte alt"
 
+#: src/view/screens/AppPasswords.tsx:102
+#: src/view/screens/AppPasswords.tsx:143
+#: src/view/screens/AppPasswords.tsx:156
+msgid "Add App Password"
+msgstr ""
+
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details"
@@ -245,6 +251,10 @@ msgstr "Un e-mail a été envoyé à {0}. Il comprend un code de confirmation qu
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
 msgstr "Un courriel a été envoyé à votre ancienne adresse, {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
 
+#: src/view/com/modals/report/ReasonOptions.tsx:23
+msgid "An issue not included in these options"
+msgstr ""
+
 #: src/view/com/profile/FollowButton.tsx:30
 #: src/view/com/profile/FollowButton.tsx:40
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:183
@@ -258,11 +268,15 @@ msgstr ""
 msgid "and"
 msgstr "et"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:14
+msgid "Anti-Social Behavior"
+msgstr ""
+
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
 msgstr "Langue de l’application"
 
-#: src/view/screens/AppPasswords.tsx:227
+#: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
 msgstr ""
 
@@ -278,7 +292,7 @@ msgstr ""
 msgid "App passwords"
 msgstr "Mots de passe d’application"
 
-#: src/view/screens/AppPasswords.tsx:186
+#: src/view/screens/AppPasswords.tsx:187
 msgid "App Passwords"
 msgstr "Mots de passe d’application"
 
@@ -305,7 +319,7 @@ msgstr "Faire appel de cette décision."
 msgid "Appearance"
 msgstr "Affichage"
 
-#: src/view/screens/AppPasswords.tsx:223
+#: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer le mot de passe de l’application « {name} » ?"
 
@@ -642,6 +656,10 @@ msgstr "Code de confirmation"
 msgid "Connecting..."
 msgstr "Connexion…"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:38
+msgid "Contains copyrighted material"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
 msgstr "Filtrage du contenu"
@@ -713,6 +731,10 @@ msgstr "Copier le texte du post"
 msgid "Copyright Policy"
 msgstr "Politique sur les droits d’auteur"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:37
+msgid "Copyright Violation"
+msgstr ""
+
 #: src/view/screens/ProfileFeed.tsx:95
 msgid "Could not load feed"
 msgstr "Impossible de charger le fil d’actu"
@@ -731,12 +753,16 @@ msgstr "Créer un nouveau compte"
 msgid "Create Account"
 msgstr "Créer un compte"
 
+#: src/view/com/modals/AddAppPasswords.tsx:228
+msgid "Create App Password"
+msgstr ""
+
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
 #: src/view/com/auth/SplashScreen.tsx:43
 msgid "Create new account"
 msgstr "Créer un nouveau compte"
 
-#: src/view/screens/AppPasswords.tsx:248
+#: src/view/screens/AppPasswords.tsx:249
 msgid "Created {0}"
 msgstr "{0} créé"
 
@@ -765,8 +791,8 @@ msgstr "Supprimer le compte"
 #~ msgid "Delete Account"
 #~ msgstr "Supprimer le compte"
 
-#: src/view/screens/AppPasswords.tsx:221
-#: src/view/screens/AppPasswords.tsx:241
+#: src/view/screens/AppPasswords.tsx:222
+#: src/view/screens/AppPasswords.tsx:242
 msgid "Delete app password"
 msgstr "Supprimer le mot de passe de l’appli"
 
@@ -863,6 +889,7 @@ msgid "Don't have an invite code?"
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/AddAppPasswords.tsx:228
 #: src/view/com/modals/AltImage.tsx:115
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
@@ -964,6 +991,18 @@ msgstr "Activez ce paramètre pour ne voir que les réponses des personnes que v
 msgid "End of feed"
 msgstr "Fin du fil d’actu"
 
+#: src/view/com/modals/AddAppPasswords.tsx:165
+msgid "Enter a name for this App Password"
+msgstr ""
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:53
+msgid "Enter a reason or any other details here."
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:101
+msgid "Enter Confirmation Code"
+msgstr ""
+
 #: src/view/com/auth/create/Step1.tsx:71
 msgid "Enter the address of your provider:"
 msgstr "Saisissez l’adresse de votre fournisseur :"
@@ -975,6 +1014,10 @@ msgstr "Entrez le domaine que vous voulez utiliser"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:101
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » afin changer votre mot de passe."
+
+#: src/view/com/modals/Waitlist.tsx:78
+msgid "Enter your email"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
@@ -995,6 +1038,10 @@ msgstr "Erreur :"
 #: src/view/com/modals/Threadgate.tsx:76
 msgid "Everybody"
 msgstr "Tout le monde"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:30
+msgid "Excessive mentions or replies"
+msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:131
 msgid "Excessive unwanted interactions"
@@ -1149,6 +1196,10 @@ msgstr "Mot de passe oublié"
 msgid "Forgot Password"
 msgstr "Mot de passe oublié"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:56
+msgid "Frequently Posts Unwanted Content"
+msgstr ""
+
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
 msgid "Gallery"
 msgstr "Galerie"
@@ -1156,6 +1207,10 @@ msgstr "Galerie"
 #: src/view/com/modals/VerifyEmail.tsx:183
 msgid "Get Started"
 msgstr "C’est parti"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:19
+msgid "Glaring violations of law or terms of service"
+msgstr ""
 
 #: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/com/auth/LoggedOut.tsx:82
@@ -1184,6 +1239,10 @@ msgstr ""
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "Pseudo"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:15
+msgid "Harassment, trolling, or intolerance"
+msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:123
 msgid "Hate Group Iconography"
@@ -1283,6 +1342,10 @@ msgstr "Si rien n’est sélectionné, il n’y a pas de restriction d’âge."
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:18
+msgid "Illegal and Urgent"
+msgstr ""
+
 #: src/view/com/modals/AltImage.tsx:97
 msgid "Image alt text"
 msgstr "Texte alt de l’image"
@@ -1298,6 +1361,10 @@ msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:137
 msgid "Impersonation"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:53
+msgid "Impersonation or false claims about identity or affiliation"
 msgstr ""
 
 #: src/state/queries/preferences/moderation.ts:100
@@ -1522,6 +1589,10 @@ msgstr "Menu"
 msgid "Message from server"
 msgstr "Message du serveur"
 
+#: src/view/com/modals/report/ReasonOptions.tsx:52
+msgid "Misleading Account"
+msgstr ""
+
 #: src/view/com/modals/CreateOrEditList.tsx:68
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:564
@@ -1609,6 +1680,11 @@ msgstr "Mes fils d’actu enregistrés"
 #: src/view/com/modals/CreateOrEditList.tsx:212
 msgid "Name"
 msgstr "Nom"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:45
+#: src/view/com/modals/report/ReasonOptions.tsx:60
+msgid "Name or Description Violates Community Standards"
+msgstr ""
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:74
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
@@ -1721,6 +1797,10 @@ msgstr "Notifications"
 msgid "now"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:34
+msgid "Nudity or pornography not labeled as such"
+msgstr ""
+
 #: src/view/com/util/ErrorBoundary.tsx:34
 msgid "Oh no!"
 msgstr "Oh non !"
@@ -1800,6 +1880,7 @@ msgid "Or combine these options:"
 msgstr "Ou une combinaison de ces options :"
 
 #: src/view/com/auth/create/Step1.tsx:67
+#: src/view/com/modals/report/ReasonOptions.tsx:22
 msgid "Other"
 msgstr ""
 
@@ -1900,6 +1981,10 @@ msgstr "Dites-nous donc pourquoi vous pensez que cet avertissement de contenu a 
 
 #~ msgid "Please tell us why you think this decision was incorrect."
 #~ msgstr "Dites-nous pourquoi vous pensez que cette décision était incorrecte."
+
+#: src/view/com/modals/VerifyEmail.tsx:100
+msgid "Please Verify Your Email"
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -2482,7 +2567,12 @@ msgid "Sort replies to the same post by:"
 msgstr "Trier les réponses au même post par :"
 
 #: src/state/queries/preferences/moderation.ts:130
+#: src/view/com/modals/report/ReasonOptions.tsx:29
 msgid "Spam"
+msgstr ""
+
+#: src/view/com/modals/report/ReasonOptions.tsx:57
+msgid "Spam; excessive mentions or replies"
 msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
@@ -2565,6 +2655,11 @@ msgstr "Conditions générales"
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "Conditions d’utilisation"
+
+#: src/view/com/modals/report/ReasonOptions.tsx:46
+#: src/view/com/modals/report/ReasonOptions.tsx:61
+msgid "Terms used violate community standards"
+msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
@@ -2827,6 +2922,10 @@ msgstr "Supprimer la liste de modération"
 msgid "Unsave"
 msgstr ""
 
+#: src/view/com/modals/report/ReasonOptions.tsx:33
+msgid "Unwanted Sexual Content"
+msgstr ""
+
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
 msgstr "Mise à jour de {displayName} dans les listes"
@@ -2855,7 +2954,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/screens/AppPasswords.tsx:194
+#: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
 msgstr "Utiliser les mots de passe de l’appli pour se connecter à d’autres clients Bluesky sans donner un accès complet à votre compte ou à votre mot de passe."
 
@@ -2924,6 +3023,10 @@ msgstr "Confirmer mon e-mail"
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
 msgstr "Confirmer le nouvel e-mail"
+
+#: src/view/com/modals/VerifyEmail.tsx:102
+msgid "Verify Your Email"
+msgstr ""
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
@@ -3059,7 +3162,7 @@ msgstr "Vous n’avez aucune liste."
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
 msgstr "Vous n’avez pas encore bloqué de comptes. Pour bloquer un compte, accédez à son profil et sélectionnez « Bloquer le compte » dans le menu de son compte."
 
-#: src/view/screens/AppPasswords.tsx:86
+#: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
 msgstr "Vous n’avez encore créé aucun mot de passe pour l’appli. Vous pouvez en créer un en cliquant sur le bouton suivant."
 

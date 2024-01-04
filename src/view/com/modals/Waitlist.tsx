@@ -75,7 +75,7 @@ export function Component({}: {}) {
         </Text>
         <TextInput
           style={[styles.textInput, pal.borderDark, pal.text, s.mb10, s.mt10]}
-          placeholder="Enter your email"
+          placeholder={_(msg`Enter your email`)}
           placeholderTextColor={pal.textLight.color}
           autoCapitalize="none"
           autoCorrect={false}

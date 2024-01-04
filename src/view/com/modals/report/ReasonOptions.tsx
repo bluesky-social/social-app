@@ -6,58 +6,59 @@ import {Text} from '../../util/text/Text'
 import {UsePaletteValue, usePalette} from 'lib/hooks/usePalette'
 import {RadioGroup, RadioGroupItem} from 'view/com/util/forms/RadioGroup'
 import {CollectionId} from './types'
+import {t} from '@lingui/macro'
 
 type ReasonMap = Record<string, {title: string; description: string}>
 const CommonReasons = {
   [ComAtprotoModerationDefs.REASONRUDE]: {
-    title: 'Anti-Social Behavior',
-    description: 'Harassment, trolling, or intolerance',
+    title: t`Anti-Social Behavior`,
+    description: t`Harassment, trolling, or intolerance`,
   },
   [ComAtprotoModerationDefs.REASONVIOLATION]: {
-    title: 'Illegal and Urgent',
-    description: 'Glaring violations of law or terms of service',
+    title: t`Illegal and Urgent`,
+    description: t`Glaring violations of law or terms of service`,
   },
   [ComAtprotoModerationDefs.REASONOTHER]: {
-    title: 'Other',
-    description: 'An issue not included in these options',
+    title: t`Other`,
+    description: t`An issue not included in these options`,
   },
 }
 const CollectionToReasonsMap: Record<string, ReasonMap> = {
   [CollectionId.Post]: {
     [ComAtprotoModerationDefs.REASONSPAM]: {
-      title: 'Spam',
-      description: 'Excessive mentions or replies',
+      title: t`Spam`,
+      description: t`Excessive mentions or replies`,
     },
     [ComAtprotoModerationDefs.REASONSEXUAL]: {
-      title: 'Unwanted Sexual Content',
-      description: 'Nudity or pornography not labeled as such',
+      title: t`Unwanted Sexual Content`,
+      description: t`Nudity or pornography not labeled as such`,
     },
     __copyright__: {
-      title: 'Copyright Violation',
-      description: 'Contains copyrighted material',
+      title: t`Copyright Violation`,
+      description: t`Contains copyrighted material`,
     },
     ...CommonReasons,
   },
   [CollectionId.List]: {
     ...CommonReasons,
     [ComAtprotoModerationDefs.REASONVIOLATION]: {
-      title: 'Name or Description Violates Community Standards',
-      description: 'Terms used violate community standards',
+      title: t`Name or Description Violates Community Standards`,
+      description: t`Terms used violate community standards`,
     },
   },
 }
 const AccountReportReasons = {
   [ComAtprotoModerationDefs.REASONMISLEADING]: {
-    title: 'Misleading Account',
-    description: 'Impersonation or false claims about identity or affiliation',
+    title: t`Misleading Account`,
+    description: t`Impersonation or false claims about identity or affiliation`,
   },
   [ComAtprotoModerationDefs.REASONSPAM]: {
-    title: 'Frequently Posts Unwanted Content',
-    description: 'Spam; excessive mentions or replies',
+    title: t`Frequently Posts Unwanted Content`,
+    description: t`Spam; excessive mentions or replies`,
   },
   [ComAtprotoModerationDefs.REASONVIOLATION]: {
-    title: 'Name or Description Violates Community Standards',
-    description: 'Terms used violate community standards',
+    title: t`Name or Description Violates Community Standards`,
+    description: t`Terms used violate community standards`,
   },
 }
 
