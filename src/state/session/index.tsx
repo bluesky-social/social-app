@@ -106,8 +106,8 @@ function createPersistSessionHandler(
   return function persistSession(event, session) {
     const expired = event === 'expired' || event === 'create-failed'
 
-    if (event === 'unknown') {
-      logger.warn(`session: persistSessionHandler received unknown error event`)
+    if (event === 'network-error') {
+      logger.warn(`session: persistSessionHandler received network-error event`)
       return
     }
 
