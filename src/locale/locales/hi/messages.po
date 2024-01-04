@@ -263,7 +263,7 @@ msgstr "वैकल्पिक पाठ"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ऑल्ट टेक्स्ट अंधा और कम दृश्य लोगों के लिए छवियों का वर्णन करता है, और हर किसी को संदर्भ देने में मदद करता है।।"
 
-#: src/view/com/modals/VerifyEmail.tsx:118
+#: src/view/com/modals/VerifyEmail.tsx:120
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "{0} को ईमेल भेजा गया है। इसमें एक OTP कोड शामिल है जिसे आप नीचे दर्ज कर सकते हैं।।"
 
@@ -564,7 +564,7 @@ msgstr "हैंडल बदलें"
 msgid "Change Handle"
 msgstr "हैंडल बदलें"
 
-#: src/view/com/modals/VerifyEmail.tsx:141
+#: src/view/com/modals/VerifyEmail.tsx:143
 msgid "Change my email"
 msgstr "मेरा ईमेल बदलें"
 
@@ -654,8 +654,8 @@ msgstr "जवाब लिखो"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/Confirm.tsx:78
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/com/modals/VerifyEmail.tsx:227
+#: src/view/com/modals/VerifyEmail.tsx:229
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
@@ -676,7 +676,7 @@ msgstr "खाते को हटा दें"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:178
-#: src/view/com/modals/VerifyEmail.tsx:159
+#: src/view/com/modals/VerifyEmail.tsx:161
 msgid "Confirmation code"
 msgstr "OTP कोड"
 
@@ -942,6 +942,43 @@ msgstr "खत्म"
 msgid "Done{extraText}"
 msgstr "खत्म {extraText}"
 
+#: src/view/com/auth/create/Step3.tsx:33
+#: src/view/com/modals/ChangeHandle.tsx:257
+msgid "e.g. alice"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:185
+msgid "e.g. Alice Roberts"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:379
+msgid "e.g. alice.com"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:203
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Great Posters"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:94
+msgid "e.g. https://bsky.app"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Spammers"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:226
+msgid "e.g. The posters who never miss."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:227
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr ""
+
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "प्रत्येक कोड एक बार काम करता है। आपको समय-समय पर अधिक आमंत्रण कोड प्राप्त होंगे।"
@@ -1028,7 +1065,7 @@ msgstr ""
 msgid "Enter a reason or any other details here."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:101
+#: src/view/com/modals/VerifyEmail.tsx:102
 msgid "Enter Confirmation Code"
 msgstr ""
 
@@ -1233,7 +1270,7 @@ msgstr ""
 msgid "Gallery"
 msgstr "गैलरी"
 
-#: src/view/com/modals/VerifyEmail.tsx:183
+#: src/view/com/modals/VerifyEmail.tsx:185
 msgid "Get Started"
 msgstr "प्रारंभ करें"
 
@@ -1359,7 +1396,7 @@ msgstr "होस्टिंग प्रदाता"
 msgid "Hosting provider address"
 msgstr "होस्टिंग प्रदाता पता"
 
-#: src/view/com/modals/VerifyEmail.tsx:208
+#: src/view/com/modals/VerifyEmail.tsx:210
 msgid "I have a code"
 msgstr "मेरे पास एक OTP कोड है"
 
@@ -2474,7 +2511,7 @@ msgstr "ऐप में प्रदर्शित होने वाले �
 msgid "Select your preferred language for translations in your feed."
 msgstr "अपने फ़ीड में अनुवाद के लिए अपनी पसंदीदा भाषा चुनें।"
 
-#: src/view/com/modals/VerifyEmail.tsx:196
+#: src/view/com/modals/VerifyEmail.tsx:198
 msgid "Send Confirmation Email"
 msgstr "पुष्टिकरण ईमेल भेजें"
 
@@ -2898,7 +2935,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr "यह जानकारी अन्य उपयोगकर्ताओं के साथ साझा नहीं की जाती है।।"
 
-#: src/view/com/modals/VerifyEmail.tsx:113
+#: src/view/com/modals/VerifyEmail.tsx:115
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "अगर आपको कभी अपना ईमेल बदलने या पासवर्ड रीसेट करने की आवश्यकता है तो यह महत्वपूर्ण है।।"
 
@@ -3139,7 +3176,7 @@ msgstr "मेरी ईमेल सत्यापित करें"
 msgid "Verify New Email"
 msgstr "नया ईमेल सत्यापित करें"
 
-#: src/view/com/modals/VerifyEmail.tsx:102
+#: src/view/com/modals/VerifyEmail.tsx:104
 msgid "Verify Your Email"
 msgstr ""
 
@@ -3341,7 +3378,7 @@ msgstr "आपका ईमेल बचाया गया है! हम ज�
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "आपका ईमेल अद्यतन किया गया है लेकिन सत्यापित नहीं किया गया है। अगले चरण के रूप में, कृपया अपना नया ईमेल सत्यापित करें।।"
 
-#: src/view/com/modals/VerifyEmail.tsx:108
+#: src/view/com/modals/VerifyEmail.tsx:110
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "आपका ईमेल अभी तक सत्यापित नहीं हुआ है। यह एक महत्वपूर्ण सुरक्षा कदम है जिसे हम अनुशंसा करते हैं।।"
 

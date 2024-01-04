@@ -91,7 +91,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             <TextInput
               testID="customServerTextInput"
               style={[pal.borderDark, pal.text, styles.textInput]}
-              placeholder="e.g. https://bsky.app"
+              placeholder={_(msg`e.g. https://bsky.app`)}
               placeholderTextColor={colors.gray4}
               autoCapitalize="none"
               autoComplete="off"

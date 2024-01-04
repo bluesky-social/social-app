@@ -243,7 +243,7 @@ msgstr "ALTテキスト"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "ALTテキストは、すべての人が文脈を理解できるようにするために、視覚障害者や低視力者向けに提供する画像の説明文です。"
 
-#: src/view/com/modals/VerifyEmail.tsx:118
+#: src/view/com/modals/VerifyEmail.tsx:120
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "メールが{0}に送信されました。以下に入力できる確認コードがそのメールに記載されています。"
 
@@ -536,7 +536,7 @@ msgstr "ハンドルを変更"
 msgid "Change Handle"
 msgstr "ハンドルを変更"
 
-#: src/view/com/modals/VerifyEmail.tsx:141
+#: src/view/com/modals/VerifyEmail.tsx:143
 msgid "Change my email"
 msgstr "メールアドレスを変更"
 
@@ -626,8 +626,8 @@ msgstr "返信を作成"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/Confirm.tsx:78
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/com/modals/VerifyEmail.tsx:227
+#: src/view/com/modals/VerifyEmail.tsx:229
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
@@ -648,7 +648,7 @@ msgstr "アカウントの削除を確認"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:178
-#: src/view/com/modals/VerifyEmail.tsx:159
+#: src/view/com/modals/VerifyEmail.tsx:161
 msgid "Confirmation code"
 msgstr "確認コード"
 
@@ -914,6 +914,43 @@ msgstr "完了"
 msgid "Done{extraText}"
 msgstr "完了{extraText}"
 
+#: src/view/com/auth/create/Step3.tsx:33
+#: src/view/com/modals/ChangeHandle.tsx:257
+msgid "e.g. alice"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:185
+msgid "e.g. Alice Roberts"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:379
+msgid "e.g. alice.com"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:203
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Great Posters"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:94
+msgid "e.g. https://bsky.app"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Spammers"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:226
+msgid "e.g. The posters who never miss."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:227
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr ""
+
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "それぞれのコードは一度ずつ動作します。定期的に招待コードをお送りします。"
@@ -1000,7 +1037,7 @@ msgstr ""
 msgid "Enter a reason or any other details here."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:101
+#: src/view/com/modals/VerifyEmail.tsx:102
 msgid "Enter Confirmation Code"
 msgstr ""
 
@@ -1205,7 +1242,7 @@ msgstr ""
 msgid "Gallery"
 msgstr "ギャラリー"
 
-#: src/view/com/modals/VerifyEmail.tsx:183
+#: src/view/com/modals/VerifyEmail.tsx:185
 msgid "Get Started"
 msgstr "はじめに"
 
@@ -1323,7 +1360,7 @@ msgstr "ホスティングプロバイダー"
 msgid "Hosting provider address"
 msgstr "ホスティングプロバイダーのアドレス"
 
-#: src/view/com/modals/VerifyEmail.tsx:208
+#: src/view/com/modals/VerifyEmail.tsx:210
 msgid "I have a code"
 msgstr "コードを持っています"
 
@@ -2391,7 +2428,7 @@ msgstr "アプリに表示されるデフォルトのテキストの言語を選
 msgid "Select your preferred language for translations in your feed."
 msgstr "フィード内の翻訳に使用する言語を選択します。"
 
-#: src/view/com/modals/VerifyEmail.tsx:196
+#: src/view/com/modals/VerifyEmail.tsx:198
 msgid "Send Confirmation Email"
 msgstr "確認のメールを送信"
 
@@ -2811,7 +2848,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr "この情報は他のユーザーと共有されません。"
 
-#: src/view/com/modals/VerifyEmail.tsx:113
+#: src/view/com/modals/VerifyEmail.tsx:115
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "これは、メールアドレスの変更やパスワードのリセットが必要な場合に重要です。"
 
@@ -3048,7 +3085,7 @@ msgstr "メールアドレスを確認"
 msgid "Verify New Email"
 msgstr "新しいメールアドレスを確認"
 
-#: src/view/com/modals/VerifyEmail.tsx:102
+#: src/view/com/modals/VerifyEmail.tsx:104
 msgid "Verify Your Email"
 msgstr ""
 
@@ -3238,7 +3275,7 @@ msgstr "メールアドレスが保存されました！すぐにご連絡いた
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "メールアドレスは更新されましたが、確認されていません。次のステップとして、新しいEメールを確認してください。"
 
-#: src/view/com/modals/VerifyEmail.tsx:108
+#: src/view/com/modals/VerifyEmail.tsx:110
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "メールアドレスはまだ確認されていません。これは、当社が推奨する重要なセキュリティステップです。"
 

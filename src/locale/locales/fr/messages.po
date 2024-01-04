@@ -243,7 +243,7 @@ msgstr "Texte Alt"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "Le texte Alt décrit les images pour les utilisateurs aveugles et malvoyants, et aide à donner un contexte à tout le monde."
 
-#: src/view/com/modals/VerifyEmail.tsx:118
+#: src/view/com/modals/VerifyEmail.tsx:120
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Un e-mail a été envoyé à {0}. Il comprend un code de confirmation que vous pouvez saisir ici."
 
@@ -535,7 +535,7 @@ msgstr "Changer le pseudo"
 msgid "Change Handle"
 msgstr "Changer le pseudo"
 
-#: src/view/com/modals/VerifyEmail.tsx:141
+#: src/view/com/modals/VerifyEmail.tsx:143
 msgid "Change my email"
 msgstr "Modifier mon e-mail"
 
@@ -625,8 +625,8 @@ msgstr "Rédiger une réponse"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/Confirm.tsx:78
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/com/modals/VerifyEmail.tsx:227
+#: src/view/com/modals/VerifyEmail.tsx:229
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
@@ -647,7 +647,7 @@ msgstr "Confirmer la suppression du compte"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:178
-#: src/view/com/modals/VerifyEmail.tsx:159
+#: src/view/com/modals/VerifyEmail.tsx:161
 msgid "Confirmation code"
 msgstr "Code de confirmation"
 
@@ -913,6 +913,43 @@ msgstr "Terminé"
 msgid "Done{extraText}"
 msgstr "Terminé{extraText}"
 
+#: src/view/com/auth/create/Step3.tsx:33
+#: src/view/com/modals/ChangeHandle.tsx:257
+msgid "e.g. alice"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:185
+msgid "e.g. Alice Roberts"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:379
+msgid "e.g. alice.com"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:203
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Great Posters"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:94
+msgid "e.g. https://bsky.app"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Spammers"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:226
+msgid "e.g. The posters who never miss."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:227
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr ""
+
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Chaque code ne fonctionne qu’une seule fois. Vous recevrez régulièrement d’autres codes d’invitation."
@@ -999,7 +1036,7 @@ msgstr ""
 msgid "Enter a reason or any other details here."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:101
+#: src/view/com/modals/VerifyEmail.tsx:102
 msgid "Enter Confirmation Code"
 msgstr ""
 
@@ -1204,7 +1241,7 @@ msgstr ""
 msgid "Gallery"
 msgstr "Galerie"
 
-#: src/view/com/modals/VerifyEmail.tsx:183
+#: src/view/com/modals/VerifyEmail.tsx:185
 msgid "Get Started"
 msgstr "C’est parti"
 
@@ -1322,7 +1359,7 @@ msgstr "Fournisseur d’hébergement"
 msgid "Hosting provider address"
 msgstr "Adresse de l’hébergeur"
 
-#: src/view/com/modals/VerifyEmail.tsx:208
+#: src/view/com/modals/VerifyEmail.tsx:210
 msgid "I have a code"
 msgstr "J’ai un code"
 
@@ -2368,7 +2405,7 @@ msgstr "Sélectionnez la langue de votre application à afficher par défaut"
 msgid "Select your preferred language for translations in your feed."
 msgstr "Sélectionnez votre langue préférée pour traduire votre fils d’actu."
 
-#: src/view/com/modals/VerifyEmail.tsx:196
+#: src/view/com/modals/VerifyEmail.tsx:198
 msgid "Send Confirmation Email"
 msgstr "Envoyer un e-mail de confirmation"
 
@@ -2787,7 +2824,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr "Ces informations ne sont pas partagées avec d’autres utilisateurs."
 
-#: src/view/com/modals/VerifyEmail.tsx:113
+#: src/view/com/modals/VerifyEmail.tsx:115
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Ceci est important au cas où vous auriez besoin de changer d’e-mail ou de réinitialiser votre mot de passe."
 
@@ -3024,7 +3061,7 @@ msgstr "Confirmer mon e-mail"
 msgid "Verify New Email"
 msgstr "Confirmer le nouvel e-mail"
 
-#: src/view/com/modals/VerifyEmail.tsx:102
+#: src/view/com/modals/VerifyEmail.tsx:104
 msgid "Verify Your Email"
 msgstr ""
 
@@ -3214,7 +3251,7 @@ msgstr "Votre e-mail a été enregistré ! Nous vous contacterons bientôt."
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "Votre e-mail a été mis à jour, mais n’a pas été vérifié. L’étape suivante consiste à vérifier votre nouvel e-mail."
 
-#: src/view/com/modals/VerifyEmail.tsx:108
+#: src/view/com/modals/VerifyEmail.tsx:110
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Votre e-mail n’a pas encore été vérifié. Il s’agit d’une mesure de sécurité importante que nous recommandons."
 

@@ -263,7 +263,7 @@ msgstr "대체 텍스트"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "대체 텍스트는 시각장애인과 저시력 사용자를 위해 이미지를 설명하며 모든 사용자의 이해를 돕습니다."
 
-#: src/view/com/modals/VerifyEmail.tsx:118
+#: src/view/com/modals/VerifyEmail.tsx:120
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "{0}(으)로 이메일을 전송했습니다. 이 이메일에는 아래에 입력하는 확인 코드가 포함되어 있습니다."
 
@@ -564,7 +564,7 @@ msgstr "핸들 변경"
 msgid "Change Handle"
 msgstr "핸들 변경"
 
-#: src/view/com/modals/VerifyEmail.tsx:141
+#: src/view/com/modals/VerifyEmail.tsx:143
 msgid "Change my email"
 msgstr "내 이메일 변경"
 
@@ -658,8 +658,8 @@ msgstr "답글 작성하기"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/Confirm.tsx:78
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/com/modals/VerifyEmail.tsx:227
+#: src/view/com/modals/VerifyEmail.tsx:229
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
@@ -680,7 +680,7 @@ msgstr "계정 삭제 확인"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:178
-#: src/view/com/modals/VerifyEmail.tsx:159
+#: src/view/com/modals/VerifyEmail.tsx:161
 msgid "Confirmation code"
 msgstr "확인 코드"
 
@@ -946,6 +946,43 @@ msgstr "완료"
 msgid "Done{extraText}"
 msgstr "완료{extraText}"
 
+#: src/view/com/auth/create/Step3.tsx:33
+#: src/view/com/modals/ChangeHandle.tsx:257
+msgid "e.g. alice"
+msgstr "예: alice"
+
+#: src/view/com/modals/EditProfile.tsx:185
+msgid "e.g. Alice Roberts"
+msgstr "예: 앨리스 로버츠"
+
+#: src/view/com/modals/ChangeHandle.tsx:379
+msgid "e.g. alice.com"
+msgstr "예: alice.com"
+
+#: src/view/com/modals/EditProfile.tsx:203
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr "예: 예술가, 개 애호가, 독서광."
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Great Posters"
+msgstr "예: 멋진 포스터"
+
+#: src/view/com/modals/ServerInput.tsx:94
+msgid "e.g. https://bsky.app"
+msgstr "예: https://bsky.app"
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Spammers"
+msgstr "예: 스팸 계정"
+
+#: src/view/com/modals/CreateOrEditList.tsx:226
+msgid "e.g. The posters who never miss."
+msgstr "예: 놓칠 수 없는 포스터들."
+
+#: src/view/com/modals/CreateOrEditList.tsx:227
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr "예: 반복적으로 광고 답글을 다는 계정."
+
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "각 코드는 한 번만 사용할 수 있습니다. 주기적으로 더 많은 초대 코드를 받게 됩니다."
@@ -1032,7 +1069,7 @@ msgstr "이 앱 비밀번호의 이름을 입력하세요"
 msgid "Enter a reason or any other details here."
 msgstr "여기에 이유 또는 기타 세부 정보를 입력하세요"
 
-#: src/view/com/modals/VerifyEmail.tsx:101
+#: src/view/com/modals/VerifyEmail.tsx:102
 msgid "Enter Confirmation Code"
 msgstr "확인 코드 입력"
 
@@ -1241,7 +1278,7 @@ msgstr "원치 않는 콘텐츠를 지속적으로 게시함"
 msgid "Gallery"
 msgstr "갤러리"
 
-#: src/view/com/modals/VerifyEmail.tsx:183
+#: src/view/com/modals/VerifyEmail.tsx:185
 msgid "Get Started"
 msgstr "시작하기"
 
@@ -1367,7 +1404,7 @@ msgstr "호스팅 제공자"
 msgid "Hosting provider address"
 msgstr "호스팅 제공자 주소"
 
-#: src/view/com/modals/VerifyEmail.tsx:208
+#: src/view/com/modals/VerifyEmail.tsx:210
 msgid "I have a code"
 msgstr "코드가 있습니다"
 
@@ -2482,7 +2519,7 @@ msgstr "앱에 표시되는 기본 텍스트 언어를 선택합니다."
 msgid "Select your preferred language for translations in your feed."
 msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 
-#: src/view/com/modals/VerifyEmail.tsx:196
+#: src/view/com/modals/VerifyEmail.tsx:198
 msgid "Send Confirmation Email"
 msgstr "확인 이메일 전송"
 
@@ -2910,7 +2947,7 @@ msgstr "이 피드는 비어 있습니다."
 msgid "This information is not shared with other users."
 msgstr "이 정보는 다른 사용자와 공유되지 않습니다."
 
-#: src/view/com/modals/VerifyEmail.tsx:113
+#: src/view/com/modals/VerifyEmail.tsx:115
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "이는 이메일을 변경하거나 비밀번호를 재설정해야 할 때 중요한 정보입니다."
 
@@ -3151,7 +3188,7 @@ msgstr "내 이메일 확인"
 msgid "Verify New Email"
 msgstr "새 이메일 확인"
 
-#: src/view/com/modals/VerifyEmail.tsx:102
+#: src/view/com/modals/VerifyEmail.tsx:104
 msgid "Verify Your Email"
 msgstr "이메일 확인하기"
 
@@ -3353,7 +3390,7 @@ msgstr "이메일이 저장되었습니다! 가까운 시일 내에 연락드리
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "이메일이 변경되었지만 인증되지 않았습니다. 다음 단계로 새 이메일을 인증해 주세요."
 
-#: src/view/com/modals/VerifyEmail.tsx:108
+#: src/view/com/modals/VerifyEmail.tsx:110
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보안 단계이므로 권장하는 사항입니다."
 

@@ -182,7 +182,7 @@ export function Component({
             <TextInput
               testID="editProfileDisplayNameInput"
               style={[styles.textInput, pal.border, pal.text]}
-              placeholder="e.g. Alice Roberts"
+              placeholder={_(msg`e.g. Alice Roberts`)}
               placeholderTextColor={colors.gray4}
               value={displayName}
               onChangeText={v =>
@@ -200,7 +200,7 @@ export function Component({
             <TextInput
               testID="editProfileDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder="e.g. Artist, dog-lover, and avid reader."
+              placeholder={_(msg`e.g. Artist, dog-lover, and avid reader.`)}
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline

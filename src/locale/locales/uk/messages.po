@@ -268,7 +268,7 @@ msgstr "Альтернативний текст"
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
 msgstr "Альтернативний текст описує зображення для незрячих та користувачів із вадами зору, та надає додатковий контекст для всіх."
 
-#: src/view/com/modals/VerifyEmail.tsx:118
+#: src/view/com/modals/VerifyEmail.tsx:120
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
 msgstr "Було надіслано лист на адресу {0}. Він містить код підтвердження, який можна ввести нижче."
 
@@ -569,7 +569,7 @@ msgstr "Змінити псевдонім"
 msgid "Change Handle"
 msgstr "Змінити псевдонім"
 
-#: src/view/com/modals/VerifyEmail.tsx:141
+#: src/view/com/modals/VerifyEmail.tsx:143
 msgid "Change my email"
 msgstr "Змінити адресу електронної пошти"
 
@@ -663,8 +663,8 @@ msgstr "Відповісти"
 #: src/view/com/modals/Confirm.tsx:75
 #: src/view/com/modals/Confirm.tsx:78
 #: src/view/com/modals/SelfLabel.tsx:154
-#: src/view/com/modals/VerifyEmail.tsx:225
 #: src/view/com/modals/VerifyEmail.tsx:227
+#: src/view/com/modals/VerifyEmail.tsx:229
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
@@ -685,7 +685,7 @@ msgstr "Підтвердити видалення облікового запи�
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:178
-#: src/view/com/modals/VerifyEmail.tsx:159
+#: src/view/com/modals/VerifyEmail.tsx:161
 msgid "Confirmation code"
 msgstr "Код підтвердження"
 
@@ -951,6 +951,43 @@ msgstr "Готово"
 msgid "Done{extraText}"
 msgstr "Готово{extraText}"
 
+#: src/view/com/auth/create/Step3.tsx:33
+#: src/view/com/modals/ChangeHandle.tsx:257
+msgid "e.g. alice"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:185
+msgid "e.g. Alice Roberts"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:379
+msgid "e.g. alice.com"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:203
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Great Posters"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:94
+msgid "e.g. https://bsky.app"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "e.g. Spammers"
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:226
+msgid "e.g. The posters who never miss."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:227
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr ""
+
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
 msgstr "Кожен код запрошення працює лише один раз. Час від часу ви будете отримувати нові коди."
@@ -1037,7 +1074,7 @@ msgstr ""
 msgid "Enter a reason or any other details here."
 msgstr ""
 
-#: src/view/com/modals/VerifyEmail.tsx:101
+#: src/view/com/modals/VerifyEmail.tsx:102
 msgid "Enter Confirmation Code"
 msgstr ""
 
@@ -1246,7 +1283,7 @@ msgstr ""
 msgid "Gallery"
 msgstr "Галерея"
 
-#: src/view/com/modals/VerifyEmail.tsx:183
+#: src/view/com/modals/VerifyEmail.tsx:185
 msgid "Get Started"
 msgstr "Почати"
 
@@ -1372,7 +1409,7 @@ msgstr "Хостинг-провайдер"
 msgid "Hosting provider address"
 msgstr "Адреса хостинг-провайдера"
 
-#: src/view/com/modals/VerifyEmail.tsx:208
+#: src/view/com/modals/VerifyEmail.tsx:210
 msgid "I have a code"
 msgstr "У мене є код"
 
@@ -2487,7 +2524,7 @@ msgstr "Оберіть мову інтерфейсу"
 msgid "Select your preferred language for translations in your feed."
 msgstr "Оберіть бажану мову для перекладів у вашій стрічці."
 
-#: src/view/com/modals/VerifyEmail.tsx:196
+#: src/view/com/modals/VerifyEmail.tsx:198
 msgid "Send Confirmation Email"
 msgstr "Надіслати лист із кодом підтвердження"
 
@@ -2911,7 +2948,7 @@ msgstr ""
 msgid "This information is not shared with other users."
 msgstr "Ця інформація не розкривається іншим користувачам."
 
-#: src/view/com/modals/VerifyEmail.tsx:113
+#: src/view/com/modals/VerifyEmail.tsx:115
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Це важливо для випадку, якщо вам коли-небудь потрібно буде змінити адресу електронної пошти або відновити пароль."
 
@@ -3152,7 +3189,7 @@ msgstr "Підтвердити мою електронну адресу"
 msgid "Verify New Email"
 msgstr "Підтвердити нову адресу електронної пошти"
 
-#: src/view/com/modals/VerifyEmail.tsx:102
+#: src/view/com/modals/VerifyEmail.tsx:104
 msgid "Verify Your Email"
 msgstr ""
 
@@ -3354,7 +3391,7 @@ msgstr "Вашу електронну адресу збережено! Ми ск
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "Вашу адресу електронної пошти було змінено, але ще не підтверджено. Для підтвердження, будь ласка, перевірте вашу поштову скриньку за новою адресою."
 
-#: src/view/com/modals/VerifyEmail.tsx:108
+#: src/view/com/modals/VerifyEmail.tsx:110
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
 msgstr "Ваша електронна пошта ще не підтверджена. Це важливий крок для безпеки вашого облікового запису, який ми рекомендуємо вам зробити."
 

@@ -203,7 +203,7 @@ export function Component({
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
               placeholder={
-                isCurateList ? 'e.g. Great Posters' : 'e.g. Spammers'
+                isCurateList ? _(msg`e.g. Great Posters`) : _(msg`e.g. Spammers`)
               }
               placeholderTextColor={colors.gray4}
               value={name}
@@ -223,8 +223,8 @@ export function Component({
               style={[styles.textArea, pal.border, pal.text]}
               placeholder={
                 isCurateList
-                  ? 'e.g. The posters who never miss.'
-                  : 'e.g. Users that repeatedly reply with ads.'
+                  ? _(msg`e.g. The posters who never miss.`)
+                  : _(msg`e.g. Users that repeatedly reply with ads.`)
               }
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}

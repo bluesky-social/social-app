@@ -254,7 +254,7 @@ function ProvidedHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder="e.g. alice"
+          placeholder={_(msg`e.g. alice`)}
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
@@ -376,7 +376,7 @@ function CustomHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder="e.g. alice.com"
+          placeholder={_(msg`e.g. alice.com`)}
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
