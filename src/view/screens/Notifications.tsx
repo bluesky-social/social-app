@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {
   NativeStackScreenProps,
@@ -46,6 +46,7 @@ export function NotificationsScreen({}: Props) {
   const unreadNotifs = useUnreadNotifications()
   const unreadApi = useUnreadNotificationsApi()
   const hasNew = !!unreadNotifs
+  const isScreenFocused = useIsFocused()
 
   // event handlers
   // =
@@ -83,8 +84,11 @@ export function NotificationsScreen({}: Props) {
     }, [screen, setMinimalShellMode]),
   )
   React.useEffect(() => {
+    if (!isScreenFocused) {
+      return
+    }
     return listenSoftReset(onPressLoadLatest)
-  }, [onPressLoadLatest])
+  }, [onPressLoadLatest, isScreenFocused])
 
   const ListHeaderComponent = React.useCallback(() => {
     if (isDesktop) {

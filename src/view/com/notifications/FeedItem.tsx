@@ -42,6 +42,7 @@ import {TimeElapsed} from '../util/TimeElapsed'
 import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {FeedSourceCard} from '../feeds/FeedSourceCard'
 
 const MAX_AUTHORS = 5
 
@@ -112,7 +113,7 @@ let FeedItem = ({
     ]
   }, [item, moderationOpts])
 
-  if (item.subjectUri && !item.subject) {
+  if (item.subjectUri && !item.subject && item.type !== 'feedgen-like') {
     // don't render anything if the target post was deleted or unfindable
     return <View />
   }
@@ -166,7 +167,7 @@ let FeedItem = ({
     iconStyle = [s.blue3 as FontAwesomeIconStyle]
   } else if (item.type === 'feedgen-like') {
     action = `liked your custom feed${
-      item.subjectUri ? ` '${new AtUri(item.subjectUri).rkey}}'` : ''
+      item.subjectUri ? ` '${new AtUri(item.subjectUri).rkey}'` : ''
     }`
     icon = 'HeartIconSolid'
     iconStyle = [
@@ -255,6 +256,13 @@ let FeedItem = ({
         </ExpandListPressable>
         {item.type === 'post-like' || item.type === 'repost' ? (
           <AdditionalPostText post={item.subject} />
+        ) : null}
+        {item.type === 'feedgen-like' && item.subjectUri ? (
+          <FeedSourceCard
+            feedUri={item.subjectUri}
+            style={[pal.view, pal.border, styles.feedcard]}
+            showLikes
+          />
         ) : null}
       </View>
     </Link>
@@ -495,6 +503,12 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginLeft: 2,
     opacity: 0.8,
+  },
+  feedcard: {
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    marginTop: 6,
   },
 
   addedContainer: {

@@ -6,6 +6,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -46,7 +47,6 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -70,6 +70,7 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   quote: initQuote,
   mention: initMention,
+  openPicker,
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -207,7 +208,11 @@ export const ComposePost = observer(function ComposePost({
     setError('')
 
     if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
-      setError('Did you want to say anything?')
+      setError(_(msg`Did you want to say anything?`))
+      return
+    }
+    if (extLink?.isLoading) {
+      setError(_(msg`Please wait for your link card to finish loading`))
       return
     }
 
@@ -269,6 +274,10 @@ export const ComposePost = observer(function ComposePost({
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
+
+  const onEmojiButtonPress = useCallback(() => {
+    openPicker?.(textInput.current?.getCursorPosition())
+  }, [openPicker])
 
   return (
     <KeyboardAvoidingView
@@ -438,7 +447,7 @@ export const ComposePost = observer(function ComposePost({
                   accessibilityLabel={_(msg`Add link card`)}
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
-                    <Trans>Add link card:</Trans>
+                    <Trans>Add link card:</Trans>{' '}
                     <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
                   </Text>
                 </TouchableOpacity>
@@ -452,7 +461,19 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {!isMobile ? <EmojiPickerButton /> : null}
+          {!isMobile ? (
+            <Pressable
+              onPress={onEmojiButtonPress}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open emoji picker`)}
+              accessibilityHint={_(msg`Open emoji picker`)}>
+              <FontAwesomeIcon
+                icon={['far', 'face-smile']}
+                color={pal.colors.link}
+                size={22}
+              />
+            </Pressable>
+          ) : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />

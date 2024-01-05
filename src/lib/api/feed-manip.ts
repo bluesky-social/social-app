@@ -117,11 +117,7 @@ export class FeedViewPostsSlice {
 }
 
 export class NoopFeedTuner {
-  private keyCounter = 0
-
-  reset() {
-    this.keyCounter = 0
-  }
+  reset() {}
   tune(
     feed: FeedViewPost[],
     _opts?: {dryRun: boolean; maintainOrder: boolean},
@@ -131,13 +127,13 @@ export class NoopFeedTuner {
 }
 
 export class FeedTuner {
-  private keyCounter = 0
+  seenKeys: Set<string> = new Set()
   seenUris: Set<string> = new Set()
 
   constructor(public tunerFns: FeedTunerFn[]) {}
 
   reset() {
-    this.keyCounter = 0
+    this.seenKeys.clear()
     this.seenUris.clear()
   }
 
@@ -218,11 +214,16 @@ export class FeedTuner {
     }
 
     if (!dryRun) {
-      for (const slice of slices) {
+      slices = slices.filter(slice => {
+        if (this.seenKeys.has(slice._reactKey)) {
+          return false
+        }
         for (const item of slice.items) {
           this.seenUris.add(item.post.uri)
         }
-      }
+        this.seenKeys.add(slice._reactKey)
+        return true
+      })
     }
 
     return slices

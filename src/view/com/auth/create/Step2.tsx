@@ -13,6 +13,17 @@ import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {logger} from '#/logger'
+
+function sanitizeDate(date: Date): Date {
+  if (!date || date.toString() === 'Invalid Date') {
+    logger.error(`Create account: handled invalid date for birthDate`, {
+      hasDate: !!date,
+    })
+    return new Date()
+  }
+  return date
+}
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -38,6 +49,10 @@ export function Step2({
     openModal({name: 'waitlist'})
   }, [openModal])
 
+  const birthDate = React.useMemo(() => {
+    return sanitizeDate(uiState.birthDate)
+  }, [uiState.birthDate])
+
   return (
     <View>
       <StepHeader step="2" title={_(msg`Your account`)} />
@@ -56,6 +71,9 @@ export function Step2({
             onChange={value => uiDispatch({type: 'set-invite-code', value})}
             accessibilityLabel={_(msg`Invite code`)}
             accessibilityHint="Input invite code to proceed"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
           />
         </View>
       )}
@@ -90,6 +108,9 @@ export function Step2({
               accessibilityLabel={_(msg`Email`)}
               accessibilityHint="Input email for Bluesky waitlist"
               accessibilityLabelledBy="email"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           </View>
 
@@ -111,6 +132,9 @@ export function Step2({
               accessibilityLabel={_(msg`Password`)}
               accessibilityHint="Set password"
               accessibilityLabelledBy="password"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           </View>
 
@@ -122,8 +146,9 @@ export function Step2({
               <Trans>Your birth date</Trans>
             </Text>
             <DateInput
+              handleAsUTC
               testID="birthdayInput"
-              value={uiState.birthDate}
+              value={birthDate}
               onChange={value => uiDispatch({type: 'set-birth-date', value})}
               buttonType="default-light"
               buttonStyle={[pal.border, styles.dateInputButton]}

@@ -162,6 +162,8 @@ function SearchScreenSuggestedFollows() {
       // @ts-ignore web only -prf
       desktopFixedHeight
       contentContainerStyle={{paddingBottom: 1200}}
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
     />
   ) : (
     <CenteredView sideBorders style={[pal.border, s.hContentRegion]}>
@@ -212,12 +214,17 @@ function SearchScreenPostResults({query}: {query: string}) {
   const items = React.useMemo(() => {
     let temp: SearchResultSlice[] = []
 
+    const seenUris = new Set()
     for (const post of posts) {
+      if (seenUris.has(post.uri)) {
+        continue
+      }
       temp.push({
         type: 'post',
         key: post.uri,
         post,
       })
+      seenUris.add(post.uri)
     }
 
     if (isFetchingNextPage) {
@@ -298,7 +305,13 @@ function SearchScreenUserResults({query}: {query: string}) {
 
 const SECTIONS_LOGGEDOUT = ['Users']
 const SECTIONS_LOGGEDIN = ['Posts', 'Users']
-export function SearchScreenInner({query}: {query?: string}) {
+export function SearchScreenInner({
+  query,
+  primarySearch,
+}: {
+  query?: string
+  primarySearch?: boolean
+}) {
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -408,7 +421,7 @@ export function SearchScreenInner({query}: {query?: string}) {
             style={pal.textLight}
           />
           <Text type="xl" style={[pal.textLight, {paddingHorizontal: 18}]}>
-            {isDesktop ? (
+            {isDesktop && !primarySearch ? (
               <Trans>Find users with the search tool on the right</Trans>
             ) : (
               <Trans>Find users on Bluesky</Trans>
@@ -420,19 +433,7 @@ export function SearchScreenInner({query}: {query?: string}) {
   )
 }
 
-export function SearchScreenDesktop(
-  props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
-) {
-  const {isDesktop} = useWebMediaQueries()
-
-  return isDesktop ? (
-    <SearchScreenInner query={props.route.params?.q} />
-  ) : (
-    <SearchScreenMobile {...props} />
-  )
-}
-
-export function SearchScreenMobile(
+export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
   const theme = useTheme()
@@ -444,7 +445,7 @@ export function SearchScreenMobile(
   const moderationOpts = useModerationOpts()
   const search = useActorAutocompleteFn()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {isTablet} = useWebMediaQueries()
+  const {isTabletOrDesktop, isTabletOrMobile} = useWebMediaQueries()
 
   const searchDebounceTimeout = React.useRef<NodeJS.Timeout | undefined>(
     undefined,
@@ -519,17 +520,29 @@ export function SearchScreenMobile(
 
   return (
     <View style={{flex: 1}}>
-      <CenteredView style={[styles.header, pal.border]} sideBorders={isTablet}>
-        <Pressable
-          testID="viewHeaderBackOrMenuBtn"
-          onPress={onPressMenu}
-          hitSlop={HITSLOP_10}
-          style={styles.headerMenuBtn}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Menu`)}
-          accessibilityHint="Access navigation links and settings">
-          <FontAwesomeIcon icon="bars" size={18} color={pal.colors.textLight} />
-        </Pressable>
+      <CenteredView
+        style={[
+          styles.header,
+          pal.border,
+          isTabletOrDesktop && {paddingTop: 10},
+        ]}
+        sideBorders={isTabletOrDesktop}>
+        {isTabletOrMobile && (
+          <Pressable
+            testID="viewHeaderBackOrMenuBtn"
+            onPress={onPressMenu}
+            hitSlop={HITSLOP_10}
+            style={styles.headerMenuBtn}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Menu`)}
+            accessibilityHint="Access navigation links and settings">
+            <FontAwesomeIcon
+              icon="bars"
+              size={18}
+              color={pal.colors.textLight}
+            />
+          </Pressable>
+        )}
 
         <View
           style={[
@@ -567,7 +580,8 @@ export function SearchScreenMobile(
               onPress={onPressClearQuery}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear search query`)}
-              accessibilityHint="">
+              accessibilityHint=""
+              hitSlop={HITSLOP_10}>
               <FontAwesomeIcon
                 icon="xmark"
                 size={16}
@@ -579,7 +593,10 @@ export function SearchScreenMobile(
 
         {query || inputIsFocused ? (
           <View style={styles.headerCancelBtn}>
-            <Pressable onPress={onPressCancelSearch} accessibilityRole="button">
+            <Pressable
+              onPress={onPressCancelSearch}
+              accessibilityRole="button"
+              hitSlop={HITSLOP_10}>
               <Text style={[pal.text]}>
                 <Trans>Cancel</Trans>
               </Text>
@@ -593,7 +610,12 @@ export function SearchScreenMobile(
           {isFetching ? (
             <Loader />
           ) : (
-            <ScrollView style={{height: '100%'}}>
+            <ScrollView
+              style={{height: '100%'}}
+              // @ts-ignore web only -prf
+              dataSet={{stableGutters: '1'}}
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag">
               {searchResults.length ? (
                 searchResults.map((item, i) => (
                   <SearchResultCard
