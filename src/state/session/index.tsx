@@ -102,12 +102,18 @@ function createPersistSessionHandler(
     expired: boolean
     refreshedAccount: SessionAccount
   }) => void,
+  {
+    unstable_networkErrorCallback,
+  }: {
+    unstable_networkErrorCallback?: () => void
+  } = {},
 ): AtpPersistSessionHandler {
   return function persistSession(event, session) {
     const expired = event === 'expired' || event === 'create-failed'
 
     if (event === 'network-error') {
       logger.warn(`session: persistSessionHandler received network-error event`)
+      unstable_networkErrorCallback?.()
       return
     }
 
@@ -184,6 +190,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [setStateAndPersist],
   )
 
+  const clearCurrentAccount = React.useCallback(() => {
+    logger.debug(
+      `session: clear current account`,
+      {},
+      logger.DebugContext.session,
+    )
+    __globalAgent = PUBLIC_BSKY_AGENT
+    queryClient.clear()
+    setStateAndPersist(s => ({
+      ...s,
+      currentAccount: undefined,
+    }))
+  }, [setStateAndPersist, queryClient])
+
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({service, email, password, handle, inviteCode}: any) => {
       logger.info(`session: creating account`, {
@@ -216,9 +236,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       agent.setPersistSessionHandler(
-        createPersistSessionHandler(account, ({expired, refreshedAccount}) => {
-          upsertAccount(refreshedAccount, expired)
-        }),
+        createPersistSessionHandler(
+          account,
+          ({expired, refreshedAccount}) => {
+            upsertAccount(refreshedAccount, expired)
+          },
+          {unstable_networkErrorCallback: clearCurrentAccount},
+        ),
       )
 
       __globalAgent = agent
@@ -235,7 +259,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
       track('Create Account')
     },
-    [upsertAccount, queryClient],
+    [upsertAccount, queryClient, clearCurrentAccount],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -268,9 +292,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       agent.setPersistSessionHandler(
-        createPersistSessionHandler(account, ({expired, refreshedAccount}) => {
-          upsertAccount(refreshedAccount, expired)
-        }),
+        createPersistSessionHandler(
+          account,
+          ({expired, refreshedAccount}) => {
+            upsertAccount(refreshedAccount, expired)
+          },
+          {unstable_networkErrorCallback: clearCurrentAccount},
+        ),
       )
 
       __globalAgent = agent
@@ -288,22 +316,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       track('Sign In', {resumedSession: false})
     },
-    [upsertAccount, queryClient],
+    [upsertAccount, queryClient, clearCurrentAccount],
   )
-
-  const clearCurrentAccount = React.useCallback(() => {
-    logger.debug(
-      `session: clear current account`,
-      {},
-      logger.DebugContext.session,
-    )
-    __globalAgent = PUBLIC_BSKY_AGENT
-    queryClient.clear()
-    setStateAndPersist(s => ({
-      ...s,
-      currentAccount: undefined,
-    }))
-  }, [setStateAndPersist, queryClient])
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
     clearCurrentAccount()
@@ -338,6 +352,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
+          {unstable_networkErrorCallback: clearCurrentAccount},
         ),
       })
 
@@ -438,7 +453,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     },
-    [upsertAccount, queryClient],
+    [upsertAccount, queryClient, clearCurrentAccount],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
