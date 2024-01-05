@@ -103,9 +103,9 @@ function createPersistSessionHandler(
     refreshedAccount: SessionAccount
   }) => void,
   {
-    unstable_networkErrorCallback,
+    networkErrorCallback,
   }: {
-    unstable_networkErrorCallback?: () => void
+    networkErrorCallback?: () => void
   } = {},
 ): AtpPersistSessionHandler {
   return function persistSession(event, session) {
@@ -113,7 +113,7 @@ function createPersistSessionHandler(
 
     if (event === 'network-error') {
       logger.warn(`session: persistSessionHandler received network-error event`)
-      unstable_networkErrorCallback?.()
+      networkErrorCallback?.()
       return
     }
 
@@ -241,7 +241,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
-          {unstable_networkErrorCallback: clearCurrentAccount},
+          {networkErrorCallback: clearCurrentAccount},
         ),
       )
 
@@ -297,7 +297,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
-          {unstable_networkErrorCallback: clearCurrentAccount},
+          {networkErrorCallback: clearCurrentAccount},
         ),
       )
 
@@ -352,7 +352,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ({expired, refreshedAccount}) => {
             upsertAccount(refreshedAccount, expired)
           },
-          {unstable_networkErrorCallback: clearCurrentAccount},
+          {networkErrorCallback: clearCurrentAccount},
         ),
       })
 
