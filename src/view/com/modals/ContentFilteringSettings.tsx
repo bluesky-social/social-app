@@ -104,6 +104,7 @@ export function Component({}: {}) {
 
 function AdultContentEnabledPref() {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetAdultContentMutation()
   const {openModal} = useModalControls()
@@ -121,23 +122,27 @@ function AdultContentEnabledPref() {
         enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
       })
     } catch (e) {
-      Toast.show('There was an issue syncing your preferences with the server')
+      Toast.show(
+        _(msg`There was an issue syncing your preferences with the server`),
+      )
       logger.error('Failed to update preferences with server', {error: e})
     }
-  }, [variables, preferences, mutate])
+  }, [variables, preferences, mutate, _])
 
   return (
     <View style={s.mb10}>
       {isIOS ? (
         preferences?.adultContentEnabled ? null : (
           <Text type="md" style={pal.textLight}>
-            Adult content can only be enabled via the Web at{' '}
-            <TextLink
-              style={pal.link}
-              href="https://bsky.app"
-              text="bsky.app"
-            />
-            .
+            <Trans>
+              Adult content can only be enabled via the Web at{' '}
+              <TextLink
+                style={pal.link}
+                href="https://bsky.app"
+                text="bsky.app"
+              />
+              .
+            </Trans>
           </Text>
         )
       ) : typeof preferences?.birthDate === 'undefined' ? (
@@ -150,7 +155,7 @@ function AdultContentEnabledPref() {
       ) : (preferences.userAge || 0) >= 18 ? (
         <ToggleButton
           type="default-light"
-          label="Enable Adult Content"
+          label={_(msg`Enable Adult Content`)}
           isSelected={variables?.enabled ?? preferences?.adultContentEnabled}
           onPress={onToggleAdultContent}
           style={styles.toggleBtn}
@@ -158,7 +163,7 @@ function AdultContentEnabledPref() {
       ) : (
         <View style={[pal.viewLight, styles.agePrompt]}>
           <Text type="md" style={[pal.text, {flex: 1}]}>
-            You must be 18 or older to enable adult content.
+            <Trans>You must be 18 or older to enable adult content.</Trans>
           </Text>
           <Button type="primary" label="Set Age" onPress={onSetAge} />
         </View>
@@ -203,7 +208,7 @@ function ContentLabelPref({
 
       {disabled || !visibility ? (
         <Text type="sm-bold" style={pal.textLight}>
-          Hide
+          <Trans>Hide</Trans>
         </Text>
       ) : (
         <SelectGroup
@@ -223,12 +228,13 @@ interface SelectGroupProps {
 }
 
 function SelectGroup({current, onChange, labelGroup}: SelectGroupProps) {
+  const {_} = useLingui()
   return (
     <View style={styles.selectableBtns}>
       <SelectableBtn
         current={current}
         value="hide"
-        label="Hide"
+        label={_(msg`Hide`)}
         left
         onChange={onChange}
         labelGroup={labelGroup}
@@ -236,14 +242,14 @@ function SelectGroup({current, onChange, labelGroup}: SelectGroupProps) {
       <SelectableBtn
         current={current}
         value="warn"
-        label="Warn"
+        label={_(msg`Warn`)}
         onChange={onChange}
         labelGroup={labelGroup}
       />
       <SelectableBtn
         current={current}
         value="ignore"
-        label="Show"
+        label={_(msg`Show`)}
         right
         onChange={onChange}
         labelGroup={labelGroup}
