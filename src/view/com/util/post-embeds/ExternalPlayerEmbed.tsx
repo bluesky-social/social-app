@@ -16,14 +16,17 @@ import Animated, {
 import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import YoutubePlayer from 'react-native-youtube-iframe'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
-import {AppBskyEmbedExternal} from '@atproto/api'
 import {isNative} from 'platform/detection'
-import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
+import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useModalControls} from 'state/modals'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -39,6 +42,8 @@ function PlaceholderOverlay({
   isPlayerActive: boolean
   onPress: (event: GestureResponderEvent) => void
 }) {
+  const {_} = useLingui()
+
   // If the player is active and not loading, we don't want to show the overlay.
   if (isPlayerActive && !isLoading) return null
 
@@ -46,8 +51,8 @@ function PlaceholderOverlay({
     <View style={[styles.layer, styles.overlayLayer]}>
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Play Video"
-        accessibilityHint=""
+        accessibilityLabel={_(msg`Play Video`)}
+        accessibilityHint={_(msg`Play Video`)}
         onPress={onPress}
         style={[styles.overlayContainer, styles.topRadius]}>
         {!isPlayerActive ? (
@@ -84,31 +89,21 @@ function Player({
   return (
     <View style={[styles.layer, styles.playerLayer]}>
       <EventStopper>
-        {isNative && params.type === 'youtube_video' ? (
-          <YoutubePlayer
-            videoId={params.videoId}
-            play
-            height={height}
-            onReady={onLoad}
-            webViewStyle={[styles.webview, styles.topRadius]}
+        <View style={{height, width: '100%'}}>
+          <WebView
+            javaScriptEnabled={true}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+            mediaPlaybackRequiresUserAction={false}
+            allowsInlineMediaPlayback
+            bounces={false}
+            allowsFullscreenVideo
+            nestedScrollEnabled
+            source={{uri: params.playerUri}}
+            onLoad={onLoad}
+            setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+            style={[styles.webview, styles.topRadius]}
           />
-        ) : (
-          <View style={{height, width: '100%'}}>
-            <WebView
-              javaScriptEnabled={true}
-              onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-              mediaPlaybackRequiresUserAction={false}
-              allowsInlineMediaPlayback
-              bounces={false}
-              allowsFullscreenVideo
-              nestedScrollEnabled
-              source={{uri: params.playerUri}}
-              onLoad={onLoad}
-              setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-              style={[styles.webview, styles.topRadius]}
-            />
-          </View>
-        )}
+        </View>
       </EventStopper>
     </View>
   )
@@ -125,6 +120,8 @@ export function ExternalPlayer({
   const navigation = useNavigation<NavigationProp>()
   const insets = useSafeAreaInsets()
   const windowDims = useWindowDimensions()
+  const externalEmbedsPrefs = useExternalEmbedsPrefs()
+  const {openModal} = useModalControls()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -194,12 +191,26 @@ export function ExternalPlayer({
     setIsLoading(false)
   }, [])
 
-  const onPlayPress = React.useCallback((event: GestureResponderEvent) => {
-    // Prevent this from propagating upward on web
-    event.preventDefault()
+  const onPlayPress = React.useCallback(
+    (event: GestureResponderEvent) => {
+      // Prevent this from propagating upward on web
+      event.preventDefault()
 
-    setPlayerActive(true)
-  }, [])
+      if (externalEmbedsPrefs?.[params.source] === undefined) {
+        openModal({
+          name: 'embed-consent',
+          source: params.source,
+          onAccept: () => {
+            setPlayerActive(true)
+          },
+        })
+        return
+      }
+
+      setPlayerActive(true)
+    },
+    [externalEmbedsPrefs, openModal, params.source],
+  )
 
   // measure the layout to set sizing
   const onLayout = React.useCallback(
@@ -231,7 +242,6 @@ export function ExternalPlayer({
           accessibilityIgnoresInvertColors
         />
       )}
-
       <PlaceholderOverlay
         isLoading={isLoading}
         isPlayerActive={isPlayerActive}
@@ -273,5 +283,9 @@ const styles = StyleSheet.create({
   },
   webview: {
     backgroundColor: 'transparent',
+  },
+  gifContainer: {
+    width: '100%',
+    overflow: 'hidden',
   },
 })

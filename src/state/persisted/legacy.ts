@@ -109,6 +109,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
       step: legacy.onboarding?.step || defaults.onboarding.step,
     },
     hiddenPosts: defaults.hiddenPosts,
+    externalEmbeds: defaults.externalEmbeds,
   }
 }
 

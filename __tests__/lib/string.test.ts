@@ -394,6 +394,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://youtube.com/watch?v=videoId',
     'https://youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/shorts/videoId',
+    'https://m.youtube.com/watch?v=videoId',
 
     'https://youtube.com/shorts/',
     'https://youtube.com/',
@@ -401,113 +402,346 @@ describe('parseEmbedPlayerFromUrl', () => {
 
     'https://twitch.tv/channelName',
     'https://www.twitch.tv/channelName',
+    'https://m.twitch.tv/channelName',
+
+    'https://twitch.tv/channelName/clip/clipId',
+    'https://twitch.tv/videos/videoId',
 
     'https://open.spotify.com/playlist/playlistId',
     'https://open.spotify.com/playlist/playlistId?param=value',
+    'https://open.spotify.com/locale/playlist/playlistId',
 
     'https://open.spotify.com/track/songId',
     'https://open.spotify.com/track/songId?param=value',
+    'https://open.spotify.com/locale/track/songId',
 
     'https://open.spotify.com/album/albumId',
     'https://open.spotify.com/album/albumId?param=value',
+    'https://open.spotify.com/locale/album/albumId',
 
     'https://soundcloud.com/user/track',
     'https://soundcloud.com/user/sets/set',
     'https://soundcloud.com/user/',
+
+    'https://music.apple.com/us/playlist/playlistName/playlistId',
+    'https://music.apple.com/us/album/albumName/albumId',
+    'https://music.apple.com/us/album/albumName/albumId?i=songId',
+
+    'https://vimeo.com/videoId',
+    'https://vimeo.com/videoId?autoplay=0',
+
+    'https://giphy.com/gifs/some-random-gif-name-gifId',
+    'https://giphy.com/gif/some-random-gif-name-gifId',
+    'https://giphy.com/gifs/',
+
+    'https://media.giphy.com/media/gifId/giphy.webp',
+    'https://media0.giphy.com/media/gifId/giphy.webp',
+    'https://media1.giphy.com/media/gifId/giphy.gif',
+    'https://media2.giphy.com/media/gifId/giphy.webp',
+    'https://media3.giphy.com/media/gifId/giphy.mp4',
+    'https://media4.giphy.com/media/gifId/giphy.webp',
+    'https://media5.giphy.com/media/gifId/giphy.mp4',
+    'https://media0.giphy.com/media/gifId/giphy.mp3',
+    'https://media1.google.com/media/gifId/giphy.webp',
+
+    'https://media.giphy.com/media/trackingId/gifId/giphy.webp',
+
+    'https://i.giphy.com/media/gifId/giphy.webp',
+    'https://i.giphy.com/media/gifId/giphy.webp',
+    'https://i.giphy.com/gifId.gif',
+    'https://i.giphy.com/gifId.gif',
+
+    'https://tenor.com/view/gifId',
+    'https://tenor.com/notView/gifId',
+    'https://tenor.com/view',
+    'https://tenor.com/view/gifId.gif',
   ]
 
   const outputs = [
     {
       type: 'youtube_video',
-      videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+      source: 'youtube',
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
     },
     {
       type: 'youtube_video',
-      videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+      source: 'youtube',
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
     },
     {
       type: 'youtube_video',
-      videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+      source: 'youtube',
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
     },
     {
       type: 'youtube_video',
-      videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+      source: 'youtube',
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
     },
     {
       type: 'youtube_video',
-      videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+      source: 'youtube',
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+    },
+    {
+      type: 'youtube_short',
+      source: 'youtubeShorts',
+      hideDetails: true,
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
     },
     {
       type: 'youtube_video',
-      videoId: 'videoId',
-      playerUri: 'https://www.youtube.com/embed/videoId?autoplay=1',
+      source: 'youtube',
+      playerUri:
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
     },
+
     undefined,
     undefined,
     undefined,
 
     {
-      type: 'twitch_live',
-      channelId: 'channelName',
+      type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
     },
     {
-      type: 'twitch_live',
-      channelId: 'channelName',
+      type: 'twitch_video',
+      source: 'twitch',
       playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
+    },
+    {
+      type: 'twitch_video',
+      source: 'twitch',
+      playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&channel=channelName&parent=localhost`,
+    },
+    {
+      type: 'twitch_video',
+      source: 'twitch',
+      playerUri: `https://clips.twitch.tv/embed?volume=0.5&autoplay=true&clip=clipId&parent=localhost`,
+    },
+    {
+      type: 'twitch_video',
+      source: 'twitch',
+      playerUri: `https://player.twitch.tv/?volume=0.5&!muted&autoplay&video=videoId&parent=localhost`,
     },
 
     {
       type: 'spotify_playlist',
-      playlistId: 'playlistId',
+      source: 'spotify',
       playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
     },
     {
       type: 'spotify_playlist',
-      playlistId: 'playlistId',
+      source: 'spotify',
+      playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
+    },
+    {
+      type: 'spotify_playlist',
+      source: 'spotify',
       playerUri: `https://open.spotify.com/embed/playlist/playlistId`,
     },
 
     {
       type: 'spotify_song',
-      songId: 'songId',
+      source: 'spotify',
       playerUri: `https://open.spotify.com/embed/track/songId`,
     },
     {
       type: 'spotify_song',
-      songId: 'songId',
+      source: 'spotify',
+      playerUri: `https://open.spotify.com/embed/track/songId`,
+    },
+    {
+      type: 'spotify_song',
+      source: 'spotify',
       playerUri: `https://open.spotify.com/embed/track/songId`,
     },
 
     {
       type: 'spotify_album',
-      albumId: 'albumId',
+      source: 'spotify',
       playerUri: `https://open.spotify.com/embed/album/albumId`,
     },
     {
       type: 'spotify_album',
-      albumId: 'albumId',
+      source: 'spotify',
+      playerUri: `https://open.spotify.com/embed/album/albumId`,
+    },
+    {
+      type: 'spotify_album',
+      source: 'spotify',
       playerUri: `https://open.spotify.com/embed/album/albumId`,
     },
 
     {
       type: 'soundcloud_track',
-      user: 'user',
-      track: 'track',
+      source: 'soundcloud',
       playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/track&auto_play=true&visual=false&hide_related=true`,
     },
     {
       type: 'soundcloud_set',
-      user: 'user',
-      set: 'set',
+      source: 'soundcloud',
       playerUri: `https://w.soundcloud.com/player/?url=https://soundcloud.com/user/sets/set&auto_play=true&visual=false&hide_related=true`,
     },
     undefined,
+
+    {
+      type: 'apple_music_playlist',
+      source: 'appleMusic',
+      playerUri:
+        'https://embed.music.apple.com/us/playlist/playlistName/playlistId',
+    },
+    {
+      type: 'apple_music_album',
+      source: 'appleMusic',
+      playerUri: 'https://embed.music.apple.com/us/album/albumName/albumId',
+    },
+    {
+      type: 'apple_music_song',
+      source: 'appleMusic',
+      playerUri:
+        'https://embed.music.apple.com/us/album/albumName/albumId?i=songId',
+    },
+
+    {
+      type: 'vimeo_video',
+      source: 'vimeo',
+      playerUri: 'https://player.vimeo.com/video/videoId?autoplay=1',
+    },
+    {
+      type: 'vimeo_video',
+      source: 'vimeo',
+      playerUri: 'https://player.vimeo.com/video/videoId?autoplay=1',
+    },
+
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    undefined,
+    undefined,
+
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    undefined,
+    undefined,
+    undefined,
+
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+    {
+      type: 'giphy_gif',
+      source: 'giphy',
+      isGif: true,
+      hideDetails: true,
+      metaUri: 'https://giphy.com/gifs/gifId',
+      playerUri: 'https://i.giphy.com/media/gifId/giphy.webp',
+    },
+
+    {
+      type: 'tenor_gif',
+      source: 'tenor',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://tenor.com/view/gifId.gif',
+    },
+    undefined,
+    undefined,
+    {
+      type: 'tenor_gif',
+      source: 'tenor',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://tenor.com/view/gifId.gif',
+    },
   ]
 
   it('correctly grabs the correct id from uri', () => {
