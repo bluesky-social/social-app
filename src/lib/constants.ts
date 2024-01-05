@@ -117,8 +117,8 @@ export async function DEFAULT_FEEDS(
   } else {
     // production
     return {
-      pinned: [],
-      saved: [],
+      pinned: [PROD_DEFAULT_FEED('whats-hot')],
+      saved: [PROD_DEFAULT_FEED('whats-hot')],
     }
   }
 }
