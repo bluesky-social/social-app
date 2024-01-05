@@ -144,7 +144,7 @@ msgstr "返信がフィードに表示されるために必要な「いいね」
 msgid "Adult Content"
 msgstr "成人向けコンテンツ"
 
-#: src/view/screens/Settings.tsx:569
+#: src/view/screens/Settings.tsx:602
 msgid "Advanced"
 msgstr "高度な設定"
 
@@ -177,7 +177,7 @@ msgstr "および"
 msgid "App Language"
 msgstr "アプリの言語"
 
-#: src/view/screens/Settings.tsx:589
+#: src/view/screens/Settings.tsx:622
 msgid "App passwords"
 msgstr "アプリパスワード"
 
@@ -328,7 +328,7 @@ msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィ�
 msgid "Bluesky.Social"
 msgstr "Bluesky.Social"
 
-#: src/view/screens/Settings.tsx:718
+#: src/view/screens/Settings.tsx:751
 msgid "Build version {0} {1}"
 msgstr "ビルドバージョン {0} {1}"
 
@@ -403,8 +403,8 @@ msgstr "Waitlistの登録をキャンセル"
 msgid "Change"
 msgstr "変更"
 
-#: src/view/screens/Settings.tsx:601
-#: src/view/screens/Settings.tsx:610
+#: src/view/screens/Settings.tsx:634
+#: src/view/screens/Settings.tsx:643
 msgid "Change handle"
 msgstr "ハンドルを変更"
 
@@ -448,19 +448,19 @@ msgstr "カスタムフィードを使用してあなたの体験を強化する
 msgid "Choose your password"
 msgstr "パスワードを選択"
 
-#: src/view/screens/Settings.tsx:694
+#: src/view/screens/Settings.tsx:727
 msgid "Clear all legacy storage data"
 msgstr "レガシーストレージデータをすべてクリア"
 
-#: src/view/screens/Settings.tsx:696
+#: src/view/screens/Settings.tsx:729
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "すべてのレガシーストレージデータをクリア（この後再起動します）"
 
-#: src/view/screens/Settings.tsx:706
+#: src/view/screens/Settings.tsx:739
 msgid "Clear all storage data"
 msgstr "すべてのストレージデータをクリア"
 
-#: src/view/screens/Settings.tsx:708
+#: src/view/screens/Settings.tsx:741
 msgid "Clear all storage data (restart after this)"
 msgstr "すべてのストレージデータをクリア（この後再起動します）"
 
@@ -616,11 +616,15 @@ msgstr "作成済み {0}"
 msgid "Custom domain"
 msgstr "カスタムドメイン"
 
-#: src/view/screens/Settings.tsx:615
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr ""
+
+#: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
 msgstr "危険地帯"
 
-#: src/view/screens/Settings.tsx:622
+#: src/view/screens/Settings.tsx:655
 msgid "Delete account"
 msgstr "アカウントを削除"
 
@@ -642,7 +646,7 @@ msgstr "リストを削除"
 msgid "Delete my account"
 msgstr "マイアカウントを削除"
 
-#: src/view/screens/Settings.tsx:632
+#: src/view/screens/Settings.tsx:665
 msgid "Delete my account…"
 msgstr "マイアカウントを削除…"
 
@@ -669,7 +673,7 @@ msgstr "説明"
 msgid "Dev Server"
 msgstr "開発者サーバー"
 
-#: src/view/screens/Settings.tsx:637
+#: src/view/screens/Settings.tsx:670
 msgid "Developer Tools"
 msgstr "開発者ツール"
 
@@ -778,6 +782,14 @@ msgstr "メールアドレスを更新"
 msgid "Email:"
 msgstr "メールアドレス："
 
+#: src/view/com/modals/EmbedConsent.tsx:113
+msgid "Enable {0} only"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+msgid "Enable External Media"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "この設定を有効にすると、自分がフォローしているユーザーからの返信だけが表示されます。"
@@ -821,6 +833,20 @@ msgstr "全員"
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "ALTテキストを展開"
+
+#: src/view/com/modals/EmbedConsent.tsx:64
+msgid "External Media"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:75
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
+msgstr ""
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52
+#: src/view/screens/Settings.tsx:595
+msgid "External Media Preferences"
+msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1326,6 +1352,11 @@ msgstr "保存されたフィード"
 msgid "Name"
 msgstr "名前"
 
+#: src/view/com/modals/EmbedConsent.tsx:107
+#: src/view/com/modals/EmbedConsent.tsx:123
+msgid "Never load embeds from {0}"
+msgstr ""
+
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "フォロワーやデータへのアクセスを失うことはありません。"
@@ -1397,6 +1428,10 @@ msgstr "「{query}」の検索結果はありません"
 msgid "No results found for {query}"
 msgstr "「{query}」の検索結果はありません"
 
+#: src/view/com/modals/EmbedConsent.tsx:129
+msgid "No thanks"
+msgstr ""
+
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
 msgstr "返信不可"
@@ -1455,6 +1490,10 @@ msgstr "ナビゲーションを開く"
 msgid "Opens configurable language settings"
 msgstr "構成可能な言語設定を開く"
 
+#: src/view/screens/Settings.tsx:587
+msgid "Opens external embeds settings"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
@@ -1472,7 +1511,7 @@ msgstr "モデレーションの設定を開く"
 msgid "Opens screen with all saved feeds"
 msgstr "保存されたすべてのフィードで画面を開く"
 
-#: src/view/screens/Settings.tsx:581
+#: src/view/screens/Settings.tsx:614
 msgid "Opens the app password settings page"
 msgstr "アプリパスワード設定ページを開く"
 
@@ -1480,11 +1519,11 @@ msgstr "アプリパスワード設定ページを開く"
 msgid "Opens the home feed preferences"
 msgstr "ホームフィードの設定を開く"
 
-#: src/view/screens/Settings.tsx:664
+#: src/view/screens/Settings.tsx:697
 msgid "Opens the storybook page"
 msgstr "ストーリーブックのページを開く"
 
-#: src/view/screens/Settings.tsx:644
+#: src/view/screens/Settings.tsx:677
 msgid "Opens the system log page"
 msgstr "システムログのページを開く"
 
@@ -1536,6 +1575,19 @@ msgstr "成人向けの写真です。"
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
 msgstr "ピン留めされたフィード"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
+msgid "Play {0}"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
+msgid "Play Video"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
+msgid "Plays the GIF"
+msgstr ""
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
@@ -1617,12 +1669,13 @@ msgstr "第一言語"
 msgid "Prioritize Your Follows"
 msgstr "あなたのフォローを優先"
 
+#: src/view/screens/Settings.tsx:570
 #: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "プライバシー"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:783
 #: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr "プライバシーポリシー"
@@ -1639,7 +1692,7 @@ msgstr "処理中..."
 msgid "Profile"
 msgstr "プロフィール"
 
-#: src/view/screens/Settings.tsx:808
+#: src/view/screens/Settings.tsx:841
 msgid "Protect your account by verifying your email."
 msgstr "メールアドレスを確認してアカウントを保護します。"
 
@@ -1786,7 +1839,7 @@ msgstr "このプロバイダーに必要"
 msgid "Reset code"
 msgstr "コードをリセット"
 
-#: src/view/screens/Settings.tsx:686
+#: src/view/screens/Settings.tsx:719
 msgid "Reset onboarding state"
 msgstr "オンボーディングの状態をリセット"
 
@@ -1794,15 +1847,15 @@ msgstr "オンボーディングの状態をリセット"
 msgid "Reset password"
 msgstr "パスワードをリセット"
 
-#: src/view/screens/Settings.tsx:676
+#: src/view/screens/Settings.tsx:709
 msgid "Reset preferences state"
 msgstr "設定をリセット"
 
-#: src/view/screens/Settings.tsx:684
+#: src/view/screens/Settings.tsx:717
 msgid "Resets the onboarding state"
 msgstr "オンボーディングの状態をリセット"
 
-#: src/view/screens/Settings.tsx:674
+#: src/view/screens/Settings.tsx:707
 msgid "Resets the preferences state"
 msgstr "設定の状態をリセット"
 
@@ -1973,6 +2026,10 @@ msgstr "表示"
 msgid "Show anyway"
 msgstr "とにかく表示"
 
+#: src/view/com/modals/EmbedConsent.tsx:87
+msgid "Show embeds from {0}"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr "マイフィードからの投稿を表示"
@@ -2080,11 +2137,11 @@ msgstr "正方形"
 msgid "Staging"
 msgstr "ステージング"
 
-#: src/view/screens/Settings.tsx:730
+#: src/view/screens/Settings.tsx:763
 msgid "Status page"
 msgstr "ステータスページ"
 
-#: src/view/screens/Settings.tsx:666
+#: src/view/screens/Settings.tsx:699
 msgid "Storybook"
 msgstr "ストーリーブック"
 
@@ -2113,7 +2170,7 @@ msgstr "サポート"
 msgid "Switch Account"
 msgstr "アカウントを切り替える"
 
-#: src/view/screens/Settings.tsx:646
+#: src/view/screens/Settings.tsx:679
 msgid "System log"
 msgstr "システムログ"
 
@@ -2125,7 +2182,7 @@ msgstr "トール"
 msgid "Terms"
 msgstr "条件"
 
-#: src/view/screens/Settings.tsx:744
+#: src/view/screens/Settings.tsx:777
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
@@ -2179,6 +2236,10 @@ msgstr "この{screenDescription}にはフラグが設定されています："
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
 msgstr "このアカウントを閲覧するためにはサインインが必要です。"
+
+#: src/view/com/modals/EmbedConsent.tsx:68
+msgid "This content is hosted by {0}. Do you want to enable external media?"
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
 msgid "This content is not viewable without a Bluesky account."
@@ -2344,15 +2405,15 @@ msgstr "<0/>にフォローされているユーザー"
 msgid "Users in \"{0}\""
 msgstr "{0}のユーザー"
 
-#: src/view/screens/Settings.tsx:769
+#: src/view/screens/Settings.tsx:802
 msgid "Verify email"
 msgstr "メールアドレスを確認"
 
-#: src/view/screens/Settings.tsx:794
+#: src/view/screens/Settings.tsx:827
 msgid "Verify my email"
 msgstr "メールアドレスを確認"
 
-#: src/view/screens/Settings.tsx:803
+#: src/view/screens/Settings.tsx:836
 msgid "Verify My Email"
 msgstr "メールアドレスを確認"
 

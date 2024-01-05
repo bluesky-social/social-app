@@ -164,7 +164,7 @@ msgstr ""
 msgid "Adult Content"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:569
+#: src/view/screens/Settings.tsx:602
 msgid "Advanced"
 msgstr ""
 
@@ -197,7 +197,7 @@ msgstr ""
 msgid "App Language"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:589
+#: src/view/screens/Settings.tsx:622
 msgid "App passwords"
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 msgid "Bluesky.Social"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:718
+#: src/view/screens/Settings.tsx:751
 msgid "Build version {0} {1}"
 msgstr ""
 
@@ -431,8 +431,8 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:601
-#: src/view/screens/Settings.tsx:610
+#: src/view/screens/Settings.tsx:634
+#: src/view/screens/Settings.tsx:643
 msgid "Change handle"
 msgstr ""
 
@@ -480,19 +480,19 @@ msgstr ""
 msgid "Choose your password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:694
+#: src/view/screens/Settings.tsx:727
 msgid "Clear all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:696
+#: src/view/screens/Settings.tsx:729
 msgid "Clear all legacy storage data (restart after this)"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:706
+#: src/view/screens/Settings.tsx:739
 msgid "Clear all storage data"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:708
+#: src/view/screens/Settings.tsx:741
 msgid "Clear all storage data (restart after this)"
 msgstr ""
 
@@ -648,7 +648,11 @@ msgstr ""
 msgid "Custom domain"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:615
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr ""
+
+#: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
 msgstr ""
 
@@ -656,7 +660,7 @@ msgstr ""
 #~ msgid "Dark"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:622
+#: src/view/screens/Settings.tsx:655
 msgid "Delete account"
 msgstr ""
 
@@ -678,7 +682,7 @@ msgstr ""
 msgid "Delete my account"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:632
+#: src/view/screens/Settings.tsx:665
 msgid "Delete my account…"
 msgstr ""
 
@@ -705,7 +709,7 @@ msgstr ""
 msgid "Dev Server"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:637
+#: src/view/screens/Settings.tsx:670
 msgid "Developer Tools"
 msgstr ""
 
@@ -814,6 +818,14 @@ msgstr ""
 msgid "Email:"
 msgstr ""
 
+#: src/view/com/modals/EmbedConsent.tsx:113
+msgid "Enable {0} only"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+msgid "Enable External Media"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
 msgstr ""
@@ -856,6 +868,20 @@ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:64
+msgid "External Media"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:75
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
+msgstr ""
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52
+#: src/view/screens/Settings.tsx:595
+msgid "External Media Preferences"
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
@@ -1395,6 +1421,11 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
+#: src/view/com/modals/EmbedConsent.tsx:107
+#: src/view/com/modals/EmbedConsent.tsx:123
+msgid "Never load embeds from {0}"
+msgstr ""
+
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr ""
@@ -1471,6 +1502,10 @@ msgstr ""
 msgid "No results found for {query}"
 msgstr ""
 
+#: src/view/com/modals/EmbedConsent.tsx:129
+msgid "No thanks"
+msgstr ""
+
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
 msgstr ""
@@ -1537,6 +1572,10 @@ msgstr ""
 msgid "Opens configurable language settings"
 msgstr ""
 
+#: src/view/screens/Settings.tsx:587
+msgid "Opens external embeds settings"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
@@ -1554,7 +1593,7 @@ msgstr ""
 msgid "Opens screen with all saved feeds"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:581
+#: src/view/screens/Settings.tsx:614
 msgid "Opens the app password settings page"
 msgstr ""
 
@@ -1562,11 +1601,11 @@ msgstr ""
 msgid "Opens the home feed preferences"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:664
+#: src/view/screens/Settings.tsx:697
 msgid "Opens the storybook page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:644
+#: src/view/screens/Settings.tsx:677
 msgid "Opens the system log page"
 msgstr ""
 
@@ -1617,6 +1656,19 @@ msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
+msgid "Play {0}"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
+msgid "Play Video"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
+msgid "Plays the GIF"
 msgstr ""
 
 #: src/view/com/auth/create/state.ts:116
@@ -1699,12 +1751,13 @@ msgstr ""
 msgid "Prioritize Your Follows"
 msgstr ""
 
+#: src/view/screens/Settings.tsx:570
 #: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr ""
 
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:783
 #: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr ""
@@ -1721,7 +1774,7 @@ msgstr ""
 msgid "Profile"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:808
+#: src/view/screens/Settings.tsx:841
 msgid "Protect your account by verifying your email."
 msgstr ""
 
@@ -1877,7 +1930,7 @@ msgstr ""
 msgid "Reset code"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:686
+#: src/view/screens/Settings.tsx:719
 msgid "Reset onboarding state"
 msgstr ""
 
@@ -1885,15 +1938,15 @@ msgstr ""
 msgid "Reset password"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:676
+#: src/view/screens/Settings.tsx:709
 msgid "Reset preferences state"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:684
+#: src/view/screens/Settings.tsx:717
 msgid "Resets the onboarding state"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:674
+#: src/view/screens/Settings.tsx:707
 msgid "Resets the preferences state"
 msgstr ""
 
@@ -2076,6 +2129,10 @@ msgstr ""
 msgid "Show anyway"
 msgstr ""
 
+#: src/view/com/modals/EmbedConsent.tsx:87
+msgid "Show embeds from {0}"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr ""
@@ -2183,11 +2240,11 @@ msgstr ""
 msgid "Staging"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:730
+#: src/view/screens/Settings.tsx:763
 msgid "Status page"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:666
+#: src/view/screens/Settings.tsx:699
 msgid "Storybook"
 msgstr ""
 
@@ -2220,7 +2277,7 @@ msgstr ""
 #~ msgid "System"
 #~ msgstr ""
 
-#: src/view/screens/Settings.tsx:646
+#: src/view/screens/Settings.tsx:679
 msgid "System log"
 msgstr ""
 
@@ -2232,7 +2289,7 @@ msgstr ""
 msgid "Terms"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:744
+#: src/view/screens/Settings.tsx:777
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
@@ -2285,6 +2342,10 @@ msgstr ""
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:68
+msgid "This content is hosted by {0}. Do you want to enable external media?"
 msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
@@ -2455,15 +2516,15 @@ msgstr ""
 msgid "Users in \"{0}\""
 msgstr ""
 
-#: src/view/screens/Settings.tsx:769
+#: src/view/screens/Settings.tsx:802
 msgid "Verify email"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:794
+#: src/view/screens/Settings.tsx:827
 msgid "Verify my email"
 msgstr ""
 
-#: src/view/screens/Settings.tsx:803
+#: src/view/screens/Settings.tsx:836
 msgid "Verify My Email"
 msgstr ""
 
