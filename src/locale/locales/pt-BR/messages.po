@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-12-31 00:34\n"
+"PO-Revision-Date: 2024-01-05 17:00\n"
 "Last-Translator: Maison da Silva\n"
 "Language-Team: maisondasilva\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -650,7 +650,7 @@ msgstr "Domínio personalizado"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
-msgstr ""
+msgstr "Personalize a mídia de sites externos."
 
 #: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
@@ -820,11 +820,11 @@ msgstr "Email:"
 
 #: src/view/com/modals/EmbedConsent.tsx:113
 msgid "Enable {0} only"
-msgstr ""
+msgstr "Ativar {0} somente"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
-msgstr ""
+msgstr "Ativar Mídia Externa"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
@@ -872,17 +872,17 @@ msgstr "Expandir texto alternativo"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
-msgstr ""
+msgstr "Mídia Externa"
 
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr ""
+msgstr "A mídia externa pode permitir que os sites coletem informações sobre você e seu dispositivo. Nenhuma informação é enviada ou solicitada até que você pressione o botão \"play\"."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
 #: src/view/screens/Settings.tsx:595
 msgid "External Media Preferences"
-msgstr ""
+msgstr "Preferências de Mídia Externa"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1424,7 +1424,7 @@ msgstr "Nome"
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
 msgid "Never load embeds from {0}"
-msgstr ""
+msgstr "Nunca carregue incorporações de {0}"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
@@ -1504,7 +1504,7 @@ msgstr "Nenhum resultado encontrado para {query}"
 
 #: src/view/com/modals/EmbedConsent.tsx:129
 msgid "No thanks"
-msgstr ""
+msgstr "Não, obrigado"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -1574,7 +1574,7 @@ msgstr "Abre definições de idioma configuráveis"
 
 #: src/view/screens/Settings.tsx:587
 msgid "Opens external embeds settings"
-msgstr ""
+msgstr "Abre as configurações de incorporações externas"
 
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
@@ -1660,16 +1660,16 @@ msgstr "Feeds Fixados"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
 msgid "Play {0}"
-msgstr ""
+msgstr "Reproduzir {0}"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
 msgid "Play Video"
-msgstr ""
+msgstr "Reproduzir Vídeo"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
 msgid "Plays the GIF"
-msgstr ""
+msgstr "Reproduz o GIF"
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
@@ -2131,7 +2131,7 @@ msgstr "Mostrar mesmo assim"
 
 #: src/view/com/modals/EmbedConsent.tsx:87
 msgid "Show embeds from {0}"
-msgstr ""
+msgstr "Mostrar incorporações de {0}"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
@@ -2346,7 +2346,7 @@ msgstr "Esta conta solicitou que os usuários fizessem login para visualizar seu
 
 #: src/view/com/modals/EmbedConsent.tsx:68
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr ""
+msgstr "Este conteúdo é hospedado por {0}. Deseja ativar a mídia externa?"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
 msgid "This content is not viewable without a Bluesky account."
