@@ -38,6 +38,7 @@ import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as SwitchAccountModal from './SwitchAccount'
 import * as LinkWarningModal from './LinkWarning'
+import * as EmbedConsentModal from './EmbedConsent'
 
 const DEFAULT_SNAPPOINTS = ['90%']
 const HANDLE_HEIGHT = 24
@@ -176,6 +177,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'link-warning') {
     snapPoints = LinkWarningModal.snapPoints
     element = <LinkWarningModal.Component {...activeModal} />
+  } else if (activeModal?.name === 'embed-consent') {
+    snapPoints = EmbedConsentModal.snapPoints
+    element = <EmbedConsentModal.Component {...activeModal} />
   } else {
     return null
   }
