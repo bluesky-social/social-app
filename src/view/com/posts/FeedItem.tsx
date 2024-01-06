@@ -184,15 +184,17 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                From{' '}
-                <FeedNameText
-                  type="sm-bold"
-                  uri={reason.uri}
-                  href={reason.href}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  style={pal.textLight}
-                />
+                <Trans>
+                  From{' '}
+                  <FeedNameText
+                    type="sm-bold"
+                    uri={reason.uri}
+                    href={reason.href}
+                    lineHeight={1.2}
+                    numberOfLines={1}
+                    style={pal.textLight}
+                  />
+                </Trans>
               </Text>
             </Link>
           ) : AppBskyFeedDefs.isReasonRepost(reason) ? (

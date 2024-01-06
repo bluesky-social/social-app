@@ -890,6 +890,7 @@ msgid "Discourage apps from showing my account to logged-out users"
 msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
+#: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
 msgstr ""
 
@@ -1208,6 +1209,7 @@ msgid "File Contents"
 msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:57
+#: src/view/com/posts/FollowingEndOfFeed.tsx:58
 msgid "Find accounts to follow"
 msgstr ""
 
@@ -1298,6 +1300,10 @@ msgstr "पासवर्ड भूल गए"
 
 #: src/view/com/modals/report/ReasonOptions.tsx:56
 msgid "Frequently Posts Unwanted Content"
+msgstr ""
+
+#: src/view/com/posts/FeedItem.tsx:187
+msgid "From <0/>"
 msgstr ""
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
@@ -2407,11 +2413,11 @@ msgstr "पोस्ट दोबारा पोस्ट करें या �
 msgid "Reposted by"
 msgstr "द्वारा दोबारा पोस्ट किया गया"
 
-#: src/view/com/posts/FeedItem.tsx:203
+#: src/view/com/posts/FeedItem.tsx:205
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:220
+#: src/view/com/posts/FeedItem.tsx:222
 msgid "Reposted by <0/>"
 msgstr ""
 
@@ -3350,6 +3356,7 @@ msgid "Yes"
 msgstr "हाँ"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
+#: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
@@ -3418,6 +3425,10 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "आपको \"reset code\" के साथ एक ईमेल प्राप्त होगा। उस कोड को यहाँ दर्ज करें, फिर अपना नया पासवर्ड दर्ज करें।।"
+
+#: src/view/com/posts/FollowingEndOfFeed.tsx:48
+msgid "You've reached the end of your feed! Find some more accounts to follow."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:264
 msgid "Your {0} has been published"

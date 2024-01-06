@@ -899,6 +899,7 @@ msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Попросити застосунки не показувати мій обліковий запис без входу"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
+#: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
 msgstr ""
 
@@ -1217,6 +1218,7 @@ msgid "File Contents"
 msgstr ""
 
 #: src/view/com/posts/FollowingEmptyState.tsx:57
+#: src/view/com/posts/FollowingEndOfFeed.tsx:58
 msgid "Find accounts to follow"
 msgstr ""
 
@@ -1311,6 +1313,10 @@ msgstr "Забули пароль"
 
 #: src/view/com/modals/report/ReasonOptions.tsx:56
 msgid "Frequently Posts Unwanted Content"
+msgstr ""
+
+#: src/view/com/posts/FeedItem.tsx:187
+msgid "From <0/>"
 msgstr ""
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
@@ -2420,11 +2426,11 @@ msgstr "Репостити або цитувати"
 msgid "Reposted by"
 msgstr "Репост"
 
-#: src/view/com/posts/FeedItem.tsx:203
+#: src/view/com/posts/FeedItem.tsx:205
 msgid "Reposted by {0}"
 msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:220
+#: src/view/com/posts/FeedItem.tsx:222
 msgid "Reposted by <0/>"
 msgstr ""
 
@@ -3363,6 +3369,7 @@ msgid "Yes"
 msgstr "Так"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
+#: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
@@ -3431,6 +3438,10 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Ви отримаєте електронний лист із кодом підтвердження. Введіть цей код тут, а потім введіть новий пароль."
+
+#: src/view/com/posts/FollowingEndOfFeed.tsx:48
+msgid "You've reached the end of your feed! Find some more accounts to follow."
+msgstr ""
 
 #: src/view/com/composer/Composer.tsx:264
 msgid "Your {0} has been published"
