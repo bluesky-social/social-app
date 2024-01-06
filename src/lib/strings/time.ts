@@ -1,4 +1,6 @@
 import {t} from '@lingui/macro'
+import * as persisted from '#/state/persisted'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
 const NOW = 5
 const MINUTE = 60
@@ -35,14 +37,20 @@ export function ago(date: number | string | Date): string {
 
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)
-  return `${d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })} at ${d.toLocaleTimeString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-  })}`
+  return t`${d.toLocaleDateString(
+    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
+    {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    },
+  )} at ${d.toLocaleTimeString(
+    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
+    {
+      hour: 'numeric',
+      minute: '2-digit',
+    },
+  )}`
 }
 
 export function getAge(birthDate: Date): number {

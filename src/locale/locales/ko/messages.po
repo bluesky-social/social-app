@@ -33,23 +33,27 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{purposeLabel} 리스트 {0}"
 
-#: src/lib/strings/time.ts:28
+#: src/lib/strings/time.ts:40
+msgid "{0} at {1}"
+msgstr "{0} {1}"
+
+#: src/lib/strings/time.ts:30
 msgid "{0}d"
 msgstr "{0}일"
 
-#: src/lib/strings/time.ts:26
+#: src/lib/strings/time.ts:28
 msgid "{0}h"
 msgstr "{0}시간"
 
-#: src/lib/strings/time.ts:24
+#: src/lib/strings/time.ts:26
 msgid "{0}m"
 msgstr "{0}분"
 
-#: src/lib/strings/time.ts:30
+#: src/lib/strings/time.ts:32
 msgid "{0}mo"
 msgstr "{0}개월"
 
-#: src/lib/strings/time.ts:22
+#: src/lib/strings/time.ts:24
 msgid "{diffSeconds}s"
 msgstr "{diffSeconds}초"
 
@@ -1960,7 +1964,7 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 msgid "Notifications"
 msgstr "알림"
 
-#: src/lib/strings/time.ts:20
+#: src/lib/strings/time.ts:22
 msgid "now"
 msgstr "지금"
 

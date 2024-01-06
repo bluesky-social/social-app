@@ -25,23 +25,27 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{0} {purposeLabel} Liste"
 
-#: src/lib/strings/time.ts:28
-msgid "{0}d"
-msgstr ""
-
-#: src/lib/strings/time.ts:26
-msgid "{0}h"
-msgstr ""
-
-#: src/lib/strings/time.ts:24
-msgid "{0}m"
+#: src/lib/strings/time.ts:40
+msgid "{0} at {1}"
 msgstr ""
 
 #: src/lib/strings/time.ts:30
+msgid "{0}d"
+msgstr ""
+
+#: src/lib/strings/time.ts:28
+msgid "{0}h"
+msgstr ""
+
+#: src/lib/strings/time.ts:26
+msgid "{0}m"
+msgstr ""
+
+#: src/lib/strings/time.ts:32
 msgid "{0}mo"
 msgstr ""
 
-#: src/lib/strings/time.ts:22
+#: src/lib/strings/time.ts:24
 msgid "{diffSeconds}s"
 msgstr ""
 
@@ -1874,7 +1878,7 @@ msgstr "Hinweis: Bluesky ist ein offenes und öffentliches Netzwerk. Diese Einst
 msgid "Notifications"
 msgstr "Benachrichtigungen "
 
-#: src/lib/strings/time.ts:20
+#: src/lib/strings/time.ts:22
 msgid "now"
 msgstr ""
 
