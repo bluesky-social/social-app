@@ -33,23 +33,27 @@ msgstr "{0}"
 msgid "{0} {purposeLabel} List"
 msgstr "{purposeLabel} 리스트 {0}"
 
-#: src/lib/strings/time.ts:28
+#: src/lib/strings/time.ts:40
+msgid "{0} at {1}"
+msgstr "{0} {1}"
+
+#: src/lib/strings/time.ts:30
 msgid "{0}d"
 msgstr "{0}일"
 
-#: src/lib/strings/time.ts:26
+#: src/lib/strings/time.ts:28
 msgid "{0}h"
 msgstr "{0}시간"
 
-#: src/lib/strings/time.ts:24
+#: src/lib/strings/time.ts:26
 msgid "{0}m"
 msgstr "{0}분"
 
-#: src/lib/strings/time.ts:30
+#: src/lib/strings/time.ts:32
 msgid "{0}mo"
 msgstr "{0}개월"
 
-#: src/lib/strings/time.ts:22
+#: src/lib/strings/time.ts:24
 msgid "{diffSeconds}s"
 msgstr "{diffSeconds}초"
 
@@ -890,6 +894,7 @@ msgid "Discourage apps from showing my account to logged-out users"
 msgstr "앱이 로그아웃한 사용자에게 내 계정을 표시하지 않도록 설정하기"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
+#: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
 msgstr "새로운 맞춤 피드 찾아보기"
 
@@ -1208,6 +1213,7 @@ msgid "File Contents"
 msgstr "파일 내용"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:57
+#: src/view/com/posts/FollowingEndOfFeed.tsx:58
 msgid "Find accounts to follow"
 msgstr "팔로우할 계정 찾아보기"
 
@@ -1303,6 +1309,10 @@ msgstr "비밀번호 분실"
 #: src/view/com/modals/report/ReasonOptions.tsx:56
 msgid "Frequently Posts Unwanted Content"
 msgstr "원치 않는 콘텐츠를 지속적으로 게시함"
+
+#: src/view/com/posts/FeedItem.tsx:187
+msgid "From <0/>"
+msgstr "<0/>에서"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
 msgid "Gallery"
@@ -1960,7 +1970,7 @@ msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은
 msgid "Notifications"
 msgstr "알림"
 
-#: src/lib/strings/time.ts:20
+#: src/lib/strings/time.ts:22
 msgid "now"
 msgstr "지금"
 
@@ -2411,11 +2421,11 @@ msgstr "재게시 또는 게시물 인용"
 msgid "Reposted by"
 msgstr "재게시한 계정"
 
-#: src/view/com/posts/FeedItem.tsx:203
+#: src/view/com/posts/FeedItem.tsx:205
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:220
+#: src/view/com/posts/FeedItem.tsx:222
 msgid "Reposted by <0/>"
 msgstr "<0/> 님이 재게시함"
 
@@ -3358,6 +3368,7 @@ msgid "Yes"
 msgstr "예"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
+#: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "팔로우할 새로운 맞춤 피드를 찾을 수도 있습니다."
 
@@ -3426,6 +3437,10 @@ msgstr "이제 이 스레드에 대한 알림을 받습니다."
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 해당 코드를 입력한 다음 새 비밀번호를 입력합니다."
+
+#: src/view/com/posts/FollowingEndOfFeed.tsx:48
+msgid "You've reached the end of your feed! Find some more accounts to follow."
+msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보세요."
 
 #: src/view/com/composer/Composer.tsx:264
 msgid "Your {0} has been published"
