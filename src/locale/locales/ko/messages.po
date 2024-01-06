@@ -1274,6 +1274,7 @@ msgstr "팔로우 중"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 #: src/view/screens/ProfileFollows.tsx:25
+#: src/view/shell/desktop/Feeds.tsx:25
 msgid "Following"
 msgstr "팔로우 중"
 
