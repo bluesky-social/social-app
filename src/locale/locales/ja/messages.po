@@ -5,7 +5,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
-"Language: jp\n"
+"Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
@@ -1293,7 +1293,7 @@ msgstr "その他のオプション"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
-msgstr ""
+msgstr "いいねの数が多い順に返信を表示"
 
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
@@ -1382,7 +1382,7 @@ msgstr "新しい投稿"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
-msgstr ""
+msgstr "新しい順に返信を表示"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
@@ -1467,7 +1467,7 @@ msgstr "OK"
 
 #: src/view/screens/PreferencesThreads.tsx:78
 msgid "Oldest replies first"
-msgstr ""
+msgstr "古い順に返信を表示"
 
 #: src/view/com/composer/Composer.tsx:363
 msgid "One or more images is missing alt text."
@@ -1480,7 +1480,7 @@ msgstr "{0}のみ返信可能"
 #: src/view/com/composer/Composer.tsx:468
 #: src/view/com/composer/Composer.tsx:469
 msgid "Open emoji picker"
-msgstr ""
+msgstr "絵文字を入力"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1715,7 +1715,7 @@ msgstr "引用"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr ""
+msgstr "ランダムな順番で表示（別名「投稿者のルーレット」）"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1829,7 +1829,7 @@ msgstr "変更を要求"
 
 #: src/view/screens/Settings.tsx:422
 msgid "Require alt text before posting"
-msgstr ""
+msgstr "画像投稿時にALTテキストを必須とする"
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"

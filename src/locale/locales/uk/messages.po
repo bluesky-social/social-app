@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: bsky-app-ua\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-03 20:21\n"
+"PO-Revision-Date: 2024-01-04 14:24\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -1363,7 +1363,7 @@ msgstr "Додаткові опції"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
-msgstr ""
+msgstr "Кількістю вподобань"
 
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
@@ -1456,7 +1456,7 @@ msgstr "Новий пост"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
-msgstr ""
+msgstr "Спочатку найновіші"
 
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
@@ -1554,7 +1554,7 @@ msgstr "Добре"
 
 #: src/view/screens/PreferencesThreads.tsx:78
 msgid "Oldest replies first"
-msgstr ""
+msgstr "Спочатку найдавніші"
 
 #: src/view/com/composer/Composer.tsx:363
 msgid "One or more images is missing alt text."
@@ -1567,7 +1567,7 @@ msgstr "Тільки {0} можуть відповідати."
 #: src/view/com/composer/Composer.tsx:468
 #: src/view/com/composer/Composer.tsx:469
 msgid "Open emoji picker"
-msgstr ""
+msgstr "Емодзі"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1802,7 +1802,7 @@ msgstr "Цитувати пост"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr ""
+msgstr "У випадковому порядку"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -1925,7 +1925,7 @@ msgstr "Змінити"
 
 #: src/view/screens/Settings.tsx:422
 msgid "Require alt text before posting"
-msgstr ""
+msgstr "Вимагати додавання альтернативного тексту перед тим як постити зображення"
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
