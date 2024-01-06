@@ -2,7 +2,7 @@ import React from 'react'
 import {View, Pressable} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {isIOS, isNative} from 'platform/detection'
@@ -119,7 +119,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
             }}
             onPress={onPressSearch}>
             <Text type="lg-bold" style={[pal.text]}>
-              Search{' '}
+              <Trans>Search</Trans>{' '}
             </Text>
             <FontAwesomeIcon
               icon="search"

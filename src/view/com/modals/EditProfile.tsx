@@ -125,7 +125,7 @@ export function Component({
         newUserAvatar,
         newUserBanner,
       })
-      Toast.show('Profile updated')
+      Toast.show(_(msg`Profile updated`))
       onUpdate?.()
       closeModal()
     } catch (e: any) {
@@ -142,6 +142,7 @@ export function Component({
     newUserAvatar,
     newUserBanner,
     setImageError,
+    _,
   ])
 
   return (
@@ -181,7 +182,7 @@ export function Component({
             <TextInput
               testID="editProfileDisplayNameInput"
               style={[styles.textInput, pal.border, pal.text]}
-              placeholder="e.g. Alice Roberts"
+              placeholder={_(msg`e.g. Alice Roberts`)}
               placeholderTextColor={colors.gray4}
               value={displayName}
               onChangeText={v =>
@@ -189,7 +190,7 @@ export function Component({
               }
               accessible={true}
               accessibilityLabel={_(msg`Display name`)}
-              accessibilityHint="Edit your display name"
+              accessibilityHint={_(msg`Edit your display name`)}
             />
           </View>
           <View style={s.pb10}>
@@ -199,7 +200,7 @@ export function Component({
             <TextInput
               testID="editProfileDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
-              placeholder="e.g. Artist, dog-lover, and avid reader."
+              placeholder={_(msg`e.g. Artist, dog-lover, and avid reader.`)}
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline
@@ -207,7 +208,7 @@ export function Component({
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
               accessibilityLabel={_(msg`Description`)}
-              accessibilityHint="Edit your profile description"
+              accessibilityHint={_(msg`Edit your profile description`)}
             />
           </View>
           {updateMutation.isPending ? (
@@ -221,7 +222,7 @@ export function Component({
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Save`)}
-              accessibilityHint="Saves any changes to your profile">
+              accessibilityHint={_(msg`Saves any changes to your profile`)}>
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}

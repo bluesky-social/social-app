@@ -42,7 +42,7 @@ function AccountItem({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Sign in as ${account.handle}`)}
-      accessibilityHint="Double tap to sign in">
+      accessibilityHint={_(msg`Double tap to sign in`)}>
       <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
         <View style={s.p10}>
           <UserAvatar avatar={profile?.avatar} size={30} />
@@ -95,19 +95,19 @@ export const ChooseAccountForm = ({
       if (account.accessJwt) {
         if (account.did === currentAccount?.did) {
           setShowLoggedOut(false)
-          Toast.show(`Already signed in as @${account.handle}`)
+          Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
           await initSession(account)
           track('Sign In', {resumedSession: true})
           setTimeout(() => {
-            Toast.show(`Signed in as @${account.handle}`)
+            Toast.show(_(msg`Signed in as @${account.handle}`))
           }, 100)
         }
       } else {
         onSelectAccount(account)
       }
     },
-    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut],
+    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut, _],
   )
 
   return (

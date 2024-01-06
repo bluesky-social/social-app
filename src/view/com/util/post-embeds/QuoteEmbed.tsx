@@ -17,6 +17,7 @@ import {PostEmbeds} from '.'
 import {PostAlerts} from '../moderation/PostAlerts'
 import {makeProfileLink} from 'lib/routes/links'
 import {InfoCircleIcon} from 'lib/icons'
+import {Trans} from '@lingui/macro'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -52,7 +53,7 @@ export function MaybeQuoteEmbed({
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          Blocked
+          <Trans>Blocked</Trans>
         </Text>
       </View>
     )
@@ -61,7 +62,7 @@ export function MaybeQuoteEmbed({
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          Deleted
+          <Trans>Deleted</Trans>
         </Text>
       </View>
     )

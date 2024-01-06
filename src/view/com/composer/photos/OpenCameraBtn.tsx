@@ -58,7 +58,7 @@ export function OpenCameraBtn({gallery}: Props) {
       hitSlop={HITSLOP_10}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Camera`)}
-      accessibilityHint="Opens camera on device">
+      accessibilityHint={_(msg`Opens camera on device`)}>
       <FontAwesomeIcon
         icon="camera"
         style={pal.link as FontAwesomeIconStyle}

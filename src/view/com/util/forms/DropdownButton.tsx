@@ -75,6 +75,8 @@ export function DropdownButton({
   bottomOffset = 0,
   accessibilityLabel,
 }: PropsWithChildren<DropdownButtonProps>) {
+  const {_} = useLingui()
+
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
 
@@ -141,7 +143,9 @@ export function DropdownButton({
         hitSlop={HITSLOP_10}
         ref={ref1}
         accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel || `Opens ${numItems} options`}
+        accessibilityLabel={
+          accessibilityLabel || _(msg`Opens ${numItems} options`)
+        }
         accessibilityHint="">
         {children}
       </TouchableOpacity>
@@ -247,7 +251,7 @@ const DropdownItems = ({
                 onPress={() => onPressItem(index)}
                 accessibilityRole="button"
                 accessibilityLabel={item.label}
-                accessibilityHint={`Option ${index + 1} of ${numItems}`}>
+                accessibilityHint={_(msg`Option ${index + 1} of ${numItems}`)}>
                 {item.icon && (
                   <FontAwesomeIcon
                     style={styles.icon}

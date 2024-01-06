@@ -11,6 +11,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {Trans} from '@lingui/macro'
 
 export function FollowingEndOfFeed() {
   const pal = usePalette('default')
@@ -44,15 +45,17 @@ export function FollowingEndOfFeed() {
       ]}>
       <View style={styles.inner}>
         <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-          You've reached the end of your feed! Find some more accounts to
-          follow.
+          <Trans>
+            You've reached the end of your feed! Find some more accounts to
+            follow.
+          </Trans>
         </Text>
         <Button
           type="inverted"
           style={styles.emptyBtn}
           onPress={onPressFindAccounts}>
           <Text type="lg-medium" style={palInverted.text}>
-            Find accounts to follow
+            <Trans>Find accounts to follow</Trans>
           </Text>
           <FontAwesomeIcon
             icon="angle-right"
@@ -62,14 +65,14 @@ export function FollowingEndOfFeed() {
         </Button>
 
         <Text type="xl-medium" style={[s.textCenter, pal.text, s.mt20]}>
-          You can also discover new Custom Feeds to follow.
+          <Trans>You can also discover new Custom Feeds to follow.</Trans>
         </Text>
         <Button
           type="inverted"
           style={[styles.emptyBtn, s.mt10]}
           onPress={onPressDiscoverFeeds}>
           <Text type="lg-medium" style={palInverted.text}>
-            Discover new custom feeds
+            <Trans>Discover new custom feeds</Trans>
           </Text>
           <FontAwesomeIcon
             icon="angle-right"

@@ -328,7 +328,7 @@ export function FeedsScreen(_props: Props) {
         hitSlop={10}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Edit Saved Feeds`)}
-        accessibilityHint="Opens screen to edit Saved Feeds">
+        accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
         <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
       </Link>
     )

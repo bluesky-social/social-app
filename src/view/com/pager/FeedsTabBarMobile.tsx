@@ -74,7 +74,9 @@ export function FeedsTabBar(
             onPress={onPressAvi}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Open navigation`)}
-            accessibilityHint="Access profile and other navigation links"
+            accessibilityHint={_(
+              msg`Access profile and other navigation links`,
+            )}
             hitSlop={HITSLOP_10}>
             <FontAwesomeIcon
               icon="bars"

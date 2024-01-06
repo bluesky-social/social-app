@@ -535,7 +535,7 @@ export function SearchScreen(
             style={styles.headerMenuBtn}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Menu`)}
-            accessibilityHint="Access navigation links and settings">
+            accessibilityHint={_(msg`Access navigation links and settings`)}>
             <FontAwesomeIcon
               icon="bars"
               size={18}
@@ -556,7 +556,7 @@ export function SearchScreen(
           <TextInput
             testID="searchTextInput"
             ref={textInput}
-            placeholder="Search"
+            placeholder={_(msg`Search`)}
             placeholderTextColor={pal.colors.textLight}
             selectTextOnFocus
             returnKeyType="search"
