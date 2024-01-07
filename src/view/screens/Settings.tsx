@@ -18,7 +18,7 @@ import {
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
-import {CenteredView, ScrollView} from '../com/util/Views'
+import {ScrollView} from '../com/util/Views'
 import {ViewHeader} from '../com/util/ViewHeader'
 import {Link, TextLink} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
@@ -147,7 +147,7 @@ export function SettingsScreen({}: Props) {
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
-  const {isMobile, isTabletOrDesktop} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
