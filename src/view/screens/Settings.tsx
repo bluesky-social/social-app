@@ -290,7 +290,7 @@ export function SettingsScreen({}: Props) {
       </SimpleViewHeader>
       <ScrollView
         style={[s.hContentRegion]}
-        contentContainerStyle={[isMobile && pal.viewLight]}
+        contentContainerStyle={isMobile && pal.viewLight}
         scrollIndicatorInsets={{right: 1}}>
         <View style={styles.spacer20} />
         {currentAccount ? (
@@ -909,15 +909,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: 18,
-  },
-  desktopContainer: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-  },
-  noBorder: {
-    borderBottomWidth: 0,
-    borderTopWidth: 0,
-    borderRightWidth: 0,
-    borderLeftWidth: 0,
   },
 })
