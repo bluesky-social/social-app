@@ -15,6 +15,7 @@ import {useMutedThreads} from '#/state/muted-threads'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {logger} from '#/logger'
 import {truncateAndInvalidate} from '../util'
+import {AppState} from 'react-native'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -97,6 +98,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       async checkUnread({invalidate}: {invalidate?: boolean} = {}) {
         try {
           if (!getAgent().session) return
+          if (AppState.currentState !== 'active') {
+            return
+          }
 
           // count
           const page = await fetchPage({

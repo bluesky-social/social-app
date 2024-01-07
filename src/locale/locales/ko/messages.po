@@ -236,7 +236,7 @@ msgstr "성인 콘텐츠"
 #~ msgid "Adult content can only be enabled via the Web at <0/>."
 #~ msgstr "성인 콘텐츠는 <0/>에서 웹을 통해서만 활성화할 수 있습니다."
 
-#: src/view/screens/Settings.tsx:569
+#: src/view/screens/Settings.tsx:602
 msgid "Advanced"
 msgstr "고급"
 
@@ -292,7 +292,7 @@ msgstr "앱 언어"
 #~ msgid "App Password names must be at least 4 characters long."
 #~ msgstr "앱 비밀번호 이름은 4자 이상이어야 합니다."
 
-#: src/view/screens/Settings.tsx:589
+#: src/view/screens/Settings.tsx:622
 msgid "App passwords"
 msgstr "앱 비밀번호"
 
@@ -451,7 +451,7 @@ msgstr "Bluesky는 로그아웃한 사용자에게 내 프로필과 게시물을
 msgid "Bluesky.Social"
 msgstr "Bluesky.Social"
 
-#: src/view/screens/Settings.tsx:718
+#: src/view/screens/Settings.tsx:751
 msgid "Build version {0} {1}"
 msgstr "빌드 버전 {0} {1}"
 
@@ -530,8 +530,8 @@ msgstr "대기자 명단 등록 취소"
 msgid "Change"
 msgstr "변경"
 
-#: src/view/screens/Settings.tsx:601
-#: src/view/screens/Settings.tsx:610
+#: src/view/screens/Settings.tsx:634
+#: src/view/screens/Settings.tsx:643
 msgid "Change handle"
 msgstr "핸들 변경"
 
@@ -579,19 +579,19 @@ msgstr "맞춤 피드를 통해 사용자 경험을 강화하는 알고리즘을
 msgid "Choose your password"
 msgstr "비밀번호를 입력하세요"
 
-#: src/view/screens/Settings.tsx:694
+#: src/view/screens/Settings.tsx:727
 msgid "Clear all legacy storage data"
 msgstr "모든 레거시 스토리지 데이터 지우기"
 
-#: src/view/screens/Settings.tsx:696
+#: src/view/screens/Settings.tsx:729
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "모든 레거시 스토리지 데이터 지우기 (이후 다시 시작)"
 
-#: src/view/screens/Settings.tsx:706
+#: src/view/screens/Settings.tsx:739
 msgid "Clear all storage data"
 msgstr "모든 스토리지 데이터 지우기"
 
-#: src/view/screens/Settings.tsx:708
+#: src/view/screens/Settings.tsx:741
 msgid "Clear all storage data (restart after this)"
 msgstr "모든 스토리지 데이터 지우기 (이후 다시 시작)"
 
@@ -763,7 +763,11 @@ msgstr "{0} 생성됨"
 msgid "Custom domain"
 msgstr "사용자 지정 도메인"
 
-#: src/view/screens/Settings.tsx:615
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr ""
+
+#: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
 msgstr "위험 구역"
 
@@ -775,7 +779,7 @@ msgstr "위험 구역"
 #~ msgid "default"
 #~ msgstr "기본"
 
-#: src/view/screens/Settings.tsx:622
+#: src/view/screens/Settings.tsx:655
 msgid "Delete account"
 msgstr "계정 삭제"
 
@@ -797,7 +801,7 @@ msgstr "리스트 삭제"
 msgid "Delete my account"
 msgstr "내 계정 삭제"
 
-#: src/view/screens/Settings.tsx:632
+#: src/view/screens/Settings.tsx:665
 msgid "Delete my account…"
 msgstr "내 계정 삭제…"
 
@@ -824,7 +828,7 @@ msgstr "설명"
 msgid "Dev Server"
 msgstr "개발 서버"
 
-#: src/view/screens/Settings.tsx:637
+#: src/view/screens/Settings.tsx:670
 msgid "Developer Tools"
 msgstr "개발자 도구"
 
@@ -966,9 +970,17 @@ msgstr "이메일 변경됨"
 msgid "Email:"
 msgstr "이메일:"
 
+#: src/view/com/modals/EmbedConsent.tsx:113
+msgid "Enable {0} only"
+msgstr ""
+
 #: src/view/com/modals/ContentFilteringSettings.tsx:158
 #~ msgid "Enable Adult Content"
 #~ msgstr "성인 콘텐츠 활성화"
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+msgid "Enable External Media"
+msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
@@ -1021,6 +1033,20 @@ msgstr "대체 텍스트 확장"
 #: src/state/queries/preferences/moderation.ts:91
 #~ msgid "Explicit Sexual Images"
 #~ msgstr "노골적인 성적 이미지"
+
+#: src/view/com/modals/EmbedConsent.tsx:64
+msgid "External Media"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:75
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
+msgstr ""
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52
+#: src/view/screens/Settings.tsx:595
+msgid "External Media Preferences"
+msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:114
 #: src/view/com/modals/AddAppPasswords.tsx:118
@@ -1656,6 +1682,11 @@ msgstr "내 저장된 피드"
 msgid "Name"
 msgstr "이름"
 
+#: src/view/com/modals/EmbedConsent.tsx:107
+#: src/view/com/modals/EmbedConsent.tsx:123
+msgid "Never load embeds from {0}"
+msgstr ""
+
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 않습니다."
@@ -1744,6 +1775,10 @@ msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다."
 msgid "No results found for {query}"
 msgstr "{query}에 대한 결과를 찾을 수 없습니다."
 
+#: src/view/com/modals/EmbedConsent.tsx:129
+msgid "No thanks"
+msgstr ""
+
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
 msgstr "없음"
@@ -1818,6 +1853,10 @@ msgstr "내비게이션을 엽니다"
 msgid "Opens configurable language settings"
 msgstr "구성 가능한 언어 설정을 엽니다"
 
+#: src/view/screens/Settings.tsx:587
+msgid "Opens external embeds settings"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
@@ -1835,7 +1874,7 @@ msgstr "검토 설정을 엽니다"
 msgid "Opens screen with all saved feeds"
 msgstr "모든 저장된 피드 화면을 엽니다"
 
-#: src/view/screens/Settings.tsx:581
+#: src/view/screens/Settings.tsx:614
 msgid "Opens the app password settings page"
 msgstr "비밀번호 설정 페이지를 엽니다"
 
@@ -1843,11 +1882,11 @@ msgstr "비밀번호 설정 페이지를 엽니다"
 msgid "Opens the home feed preferences"
 msgstr "홈 피드 설정을 엽니다"
 
-#: src/view/screens/Settings.tsx:664
+#: src/view/screens/Settings.tsx:697
 msgid "Opens the storybook page"
 msgstr "스토리북 페이지를 엽니다"
 
-#: src/view/screens/Settings.tsx:644
+#: src/view/screens/Settings.tsx:677
 msgid "Opens the system log page"
 msgstr "시스템 로그 페이지를 엽니다"
 
@@ -1920,6 +1959,19 @@ msgstr "성인용 사진."
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
 msgstr "고정된 피드"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
+msgid "Play {0}"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
+msgid "Play Video"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
+msgid "Plays the GIF"
+msgstr ""
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
@@ -2018,12 +2070,13 @@ msgstr "주 언어"
 msgid "Prioritize Your Follows"
 msgstr "내 팔로우 우선시키기"
 
+#: src/view/screens/Settings.tsx:570
 #: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "개인정보"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:783
 #: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr "개인정보 처리방침"
@@ -2044,7 +2097,7 @@ msgstr "프로필"
 #~ msgid "Profile updated"
 #~ msgstr "프로필 업데이트됨"
 
-#: src/view/screens/Settings.tsx:808
+#: src/view/screens/Settings.tsx:841
 msgid "Protect your account by verifying your email."
 msgstr "이메일을 인증하여 계정을 보호하세요."
 
@@ -2229,7 +2282,7 @@ msgstr "이 제공자에서 필수"
 msgid "Reset code"
 msgstr "코드 재설정"
 
-#: src/view/screens/Settings.tsx:686
+#: src/view/screens/Settings.tsx:719
 msgid "Reset onboarding state"
 msgstr "온보딩 상태 재설정"
 
@@ -2237,15 +2290,15 @@ msgstr "온보딩 상태 재설정"
 msgid "Reset password"
 msgstr "비밀번호 재설정"
 
-#: src/view/screens/Settings.tsx:676
+#: src/view/screens/Settings.tsx:709
 msgid "Reset preferences state"
 msgstr "설정 상태 재설정"
 
-#: src/view/screens/Settings.tsx:684
+#: src/view/screens/Settings.tsx:717
 msgid "Resets the onboarding state"
 msgstr "온보딩 상태 재설정"
 
-#: src/view/screens/Settings.tsx:674
+#: src/view/screens/Settings.tsx:707
 msgid "Resets the preferences state"
 msgstr "설정 상태 재설정"
 
@@ -2444,6 +2497,10 @@ msgstr "표시"
 msgid "Show anyway"
 msgstr "무시하고 표시"
 
+#: src/view/com/modals/EmbedConsent.tsx:87
+msgid "Show embeds from {0}"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr "내 피드에서 게시물 표시"
@@ -2572,7 +2629,7 @@ msgstr "정사각형"
 msgid "Staging"
 msgstr "스테이징"
 
-#: src/view/screens/Settings.tsx:730
+#: src/view/screens/Settings.tsx:763
 msgid "Status page"
 msgstr "상태 페이지"
 
@@ -2588,7 +2645,7 @@ msgstr "상태 페이지"
 #~ msgid "Storage cleared, you need to restart the app now."
 #~ msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니다."
 
-#: src/view/screens/Settings.tsx:666
+#: src/view/screens/Settings.tsx:699
 msgid "Storybook"
 msgstr "스토리북"
 
@@ -2625,7 +2682,7 @@ msgstr "계정 전환"
 #~ msgid "System"
 #~ msgstr "시스템"
 
-#: src/view/screens/Settings.tsx:646
+#: src/view/screens/Settings.tsx:679
 msgid "System log"
 msgstr "시스템 로그"
 
@@ -2637,7 +2694,7 @@ msgstr "세로"
 msgid "Terms"
 msgstr "이용약관"
 
-#: src/view/screens/Settings.tsx:744
+#: src/view/screens/Settings.tsx:777
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
@@ -2751,6 +2808,10 @@ msgstr "이 {screenDescription}에 플래그가 지정되었습니다:"
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
 msgstr "이 계정의 프로필을 보려면 로그인해야 합니다."
+
+#: src/view/com/modals/EmbedConsent.tsx:68
+msgid "This content is hosted by {0}. Do you want to enable external media?"
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
 msgid "This content is not viewable without a Bluesky account."
@@ -2981,15 +3042,15 @@ msgstr "\"{0}\"에 있는 사용자"
 #~ msgid "Verify {0}"
 #~ msgstr "{0} 확인"
 
-#: src/view/screens/Settings.tsx:769
+#: src/view/screens/Settings.tsx:802
 msgid "Verify email"
 msgstr "이메일 확인"
 
-#: src/view/screens/Settings.tsx:794
+#: src/view/screens/Settings.tsx:827
 msgid "Verify my email"
 msgstr "내 이메일 확인"
 
-#: src/view/screens/Settings.tsx:803
+#: src/view/screens/Settings.tsx:836
 msgid "Verify My Email"
 msgstr "내 이메일 확인"
 

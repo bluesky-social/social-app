@@ -19,6 +19,7 @@ import {useSession} from '#/state/session'
 import {loadString, saveString} from '#/lib/storage'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -109,7 +110,9 @@ function HomeScreenReady({
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
-      mergeFeedSources: preferences.feeds.saved,
+      mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
+        ? preferences.feeds.saved
+        : [PROD_DEFAULT_FEED('whats-hot')],
     }
   }, [preferences])
 

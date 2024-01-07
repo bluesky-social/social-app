@@ -140,20 +140,13 @@ export function Splash(props: React.PropsWithChildren<Props>) {
       {platformApiLevel && platformApiLevel <= 25 ? (
         // Use a simple fade on older versions of android (work around a bug)
         <>
-          {!isAnimationComplete && (
-            <View
-              style={[
-                StyleSheet.absoluteFillObject,
-                {backgroundColor: 'white'},
-              ]}
-            />
-          )}
           <Animated.View style={[{flex: 1}, appAnimation]}>
             {props.children}
           </Animated.View>
         </>
       ) : (
         <MaskedView
+          androidRenderingMode="software"
           style={[StyleSheet.absoluteFillObject]}
           maskElement={
             <Animated.View

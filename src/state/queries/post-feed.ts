@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useRef} from 'react'
+import {AppState} from 'react-native'
 import {AppBskyFeedDefs, AppBskyFeedPost, PostModeration} from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -311,6 +312,9 @@ export function usePostFeedQuery(
 export async function pollLatest(page: FeedPage | undefined) {
   if (!page) {
     return false
+  }
+  if (AppState.currentState !== 'active') {
+    return
   }
 
   logger.debug('usePostFeedQuery: pollLatest')

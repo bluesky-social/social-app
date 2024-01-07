@@ -2,6 +2,7 @@ import {BskyAgent} from '@atproto/api'
 import {isBskyAppUrl} from '../strings/url-helpers'
 import {extractBskyMeta} from './bsky'
 import {LINK_META_PROXY} from 'lib/constants'
+import {getGiphyMetaUri} from 'lib/strings/embed-player'
 
 export enum LikelyType {
   HTML,
@@ -34,6 +35,13 @@ export async function getLinkMeta(
   let urlp
   try {
     urlp = new URL(url)
+
+    // Get Giphy meta uri if this is any form of giphy link
+    const giphyMetaUri = getGiphyMetaUri(urlp)
+    if (giphyMetaUri) {
+      url = giphyMetaUri
+      urlp = new URL(url)
+    }
   } catch (e) {
     return {
       error: 'Invalid URL',

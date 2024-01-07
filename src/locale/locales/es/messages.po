@@ -144,7 +144,7 @@ msgstr "Ajusta el número de Me gusta que debe tener una respuesta para que se m
 msgid "Adult Content"
 msgstr "Contenido para adultos"
 
-#: src/view/screens/Settings.tsx:569
+#: src/view/screens/Settings.tsx:602
 msgid "Advanced"
 msgstr "Avanzado"
 
@@ -177,7 +177,7 @@ msgstr "y"
 msgid "App Language"
 msgstr "Lenguaje de app"
 
-#: src/view/screens/Settings.tsx:589
+#: src/view/screens/Settings.tsx:622
 msgid "App passwords"
 msgstr "Contraseñas de la app"
 
@@ -324,7 +324,7 @@ msgstr "Bluesky no mostrará tu perfil ni tus publicaciones a los usuarios que h
 msgid "Bluesky.Social"
 msgstr "Bluesky.Social"
 
-#: src/view/screens/Settings.tsx:718
+#: src/view/screens/Settings.tsx:751
 msgid "Build version {0} {1}"
 msgstr "Versión {0} {1}"
 
@@ -399,8 +399,8 @@ msgstr "Cancelar la inscripción en la lista de espera"
 msgid "Change"
 msgstr "Cambiar"
 
-#: src/view/screens/Settings.tsx:601
-#: src/view/screens/Settings.tsx:610
+#: src/view/screens/Settings.tsx:634
+#: src/view/screens/Settings.tsx:643
 msgid "Change handle"
 msgstr "Cambiar el identificador"
 
@@ -444,19 +444,19 @@ msgstr "Elige los algoritmos que potencian tu experiencia con publicaciones pers
 msgid "Choose your password"
 msgstr "Elige tu contraseña"
 
-#: src/view/screens/Settings.tsx:694
+#: src/view/screens/Settings.tsx:727
 msgid "Clear all legacy storage data"
 msgstr "Borrar todos los datos de almacenamiento heredados"
 
-#: src/view/screens/Settings.tsx:696
+#: src/view/screens/Settings.tsx:729
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "Borrar todos los datos de almacenamiento heredados (reiniciar después de esto)"
 
-#: src/view/screens/Settings.tsx:706
+#: src/view/screens/Settings.tsx:739
 msgid "Clear all storage data"
 msgstr "Borrar todos los datos de almacenamiento"
 
-#: src/view/screens/Settings.tsx:708
+#: src/view/screens/Settings.tsx:741
 msgid "Clear all storage data (restart after this)"
 msgstr "Borrar todos los datos de almacenamiento (reiniciar después de esto)"
 
@@ -612,11 +612,15 @@ msgstr "Creado {0}"
 msgid "Custom domain"
 msgstr "Dominio personalizado"
 
-#: src/view/screens/Settings.tsx:615
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr ""
+
+#: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
 msgstr "Zona de peligro"
 
-#: src/view/screens/Settings.tsx:622
+#: src/view/screens/Settings.tsx:655
 msgid "Delete account"
 msgstr "Borrar la cuenta"
 
@@ -638,7 +642,7 @@ msgstr "Borrar la lista"
 msgid "Delete my account"
 msgstr "Borrar mi cuenta"
 
-#: src/view/screens/Settings.tsx:632
+#: src/view/screens/Settings.tsx:665
 msgid "Delete my account…"
 msgstr "Borrar mi cuenta..."
 
@@ -665,7 +669,7 @@ msgstr "Descripción"
 msgid "Dev Server"
 msgstr "Servidor de desarrollo"
 
-#: src/view/screens/Settings.tsx:637
+#: src/view/screens/Settings.tsx:670
 msgid "Developer Tools"
 msgstr "Herramientas de desarrollador"
 
@@ -774,6 +778,14 @@ msgstr "Correo electrónico actualizado"
 msgid "Email:"
 msgstr "Correo electrónico:"
 
+#: src/view/com/modals/EmbedConsent.tsx:113
+msgid "Enable {0} only"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+msgid "Enable External Media"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "Activa esta opción para ver sólo las respuestas de las personas a las que sigues."
@@ -817,6 +829,20 @@ msgstr "Todos"
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
 msgstr "Expandir el texto alt"
+
+#: src/view/com/modals/EmbedConsent.tsx:64
+msgid "External Media"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:75
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
+msgstr ""
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52
+#: src/view/screens/Settings.tsx:595
+msgid "External Media Preferences"
+msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1310,6 +1336,11 @@ msgstr "Mis canales de noticias guardados"
 msgid "Name"
 msgstr "Nombre"
 
+#: src/view/com/modals/EmbedConsent.tsx:107
+#: src/view/com/modals/EmbedConsent.tsx:123
+msgid "Never load embeds from {0}"
+msgstr ""
+
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "No pierdas nunca el acceso a tus seguidores y datos."
@@ -1381,6 +1412,10 @@ msgstr "No se han encontrado resultados para \"{query}\""
 msgid "No results found for {query}"
 msgstr "No se han encontrado resultados para {query}"
 
+#: src/view/com/modals/EmbedConsent.tsx:129
+msgid "No thanks"
+msgstr ""
+
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
 msgstr "Nadie"
@@ -1435,6 +1470,10 @@ msgstr "Abrir navegación"
 msgid "Opens configurable language settings"
 msgstr "Abrir la configuración del idioma que se puede ajustar"
 
+#: src/view/screens/Settings.tsx:587
+msgid "Opens external embeds settings"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
 msgid "Opens list of invite codes"
@@ -1452,7 +1491,7 @@ msgstr "Abre la configuración de moderación"
 msgid "Opens screen with all saved feeds"
 msgstr "Abre la pantalla con todas las noticias guardadas"
 
-#: src/view/screens/Settings.tsx:581
+#: src/view/screens/Settings.tsx:614
 msgid "Opens the app password settings page"
 msgstr "Abre la página de configuración de la contraseña de la app"
 
@@ -1460,11 +1499,11 @@ msgstr "Abre la página de configuración de la contraseña de la app"
 msgid "Opens the home feed preferences"
 msgstr "Abre las preferencias de noticias de la página inicial"
 
-#: src/view/screens/Settings.tsx:664
+#: src/view/screens/Settings.tsx:697
 msgid "Opens the storybook page"
 msgstr "Abre la página del libro de cuentos"
 
-#: src/view/screens/Settings.tsx:644
+#: src/view/screens/Settings.tsx:677
 msgid "Opens the system log page"
 msgstr "Abre la página de la bitácora del sistema"
 
@@ -1516,6 +1555,19 @@ msgstr "Imágenes destinadas a adultos."
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
 msgstr "Canales de noticias anclados"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
+msgid "Play {0}"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
+msgid "Play Video"
+msgstr ""
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
+msgid "Plays the GIF"
+msgstr ""
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
@@ -1592,12 +1644,13 @@ msgstr "Lenguajes primarios"
 msgid "Prioritize Your Follows"
 msgstr "Priorizar los usuarios a los que sigue"
 
+#: src/view/screens/Settings.tsx:570
 #: src/view/shell/desktop/RightNav.tsx:84
 msgid "Privacy"
 msgstr "Privacidad"
 
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings.tsx:750
+#: src/view/screens/Settings.tsx:783
 #: src/view/shell/Drawer.tsx:262
 msgid "Privacy Policy"
 msgstr "Política de privacidad"
@@ -1614,7 +1667,7 @@ msgstr "Procesando..."
 msgid "Profile"
 msgstr "Perfil"
 
-#: src/view/screens/Settings.tsx:808
+#: src/view/screens/Settings.tsx:841
 msgid "Protect your account by verifying your email."
 msgstr "Protege tu cuenta verificando tu correo electrónico."
 
@@ -1761,7 +1814,7 @@ msgstr "Requerido para este proveedor"
 msgid "Reset code"
 msgstr "Restablecer el código"
 
-#: src/view/screens/Settings.tsx:686
+#: src/view/screens/Settings.tsx:719
 msgid "Reset onboarding state"
 msgstr "Restablecer el estado de incorporación"
 
@@ -1769,15 +1822,15 @@ msgstr "Restablecer el estado de incorporación"
 msgid "Reset password"
 msgstr "Restablecer la contraseña"
 
-#: src/view/screens/Settings.tsx:676
+#: src/view/screens/Settings.tsx:709
 msgid "Reset preferences state"
 msgstr "Restablecer el estado de preferencias"
 
-#: src/view/screens/Settings.tsx:684
+#: src/view/screens/Settings.tsx:717
 msgid "Resets the onboarding state"
 msgstr "Restablece el estado de incorporación"
 
-#: src/view/screens/Settings.tsx:674
+#: src/view/screens/Settings.tsx:707
 msgid "Resets the preferences state"
 msgstr "Restablecer el estado de preferencias"
 
@@ -1944,6 +1997,10 @@ msgstr "Mostrar"
 msgid "Show anyway"
 msgstr "Mostrar de todas maneras"
 
+#: src/view/com/modals/EmbedConsent.tsx:87
+msgid "Show embeds from {0}"
+msgstr ""
+
 #: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
 msgstr "Mostrar publicaciones de mis noticias"
@@ -2051,11 +2108,11 @@ msgstr "Cuadrado"
 msgid "Staging"
 msgstr "Puesta en escena"
 
-#: src/view/screens/Settings.tsx:730
+#: src/view/screens/Settings.tsx:763
 msgid "Status page"
 msgstr "Página de estado"
 
-#: src/view/screens/Settings.tsx:666
+#: src/view/screens/Settings.tsx:699
 msgid "Storybook"
 msgstr "Libro de cuentos"
 
@@ -2084,7 +2141,7 @@ msgstr "Soporte"
 msgid "Switch Account"
 msgstr "Cambiar a otra cuenta"
 
-#: src/view/screens/Settings.tsx:646
+#: src/view/screens/Settings.tsx:679
 msgid "System log"
 msgstr "Bitácora del sistema"
 
@@ -2096,7 +2153,7 @@ msgstr "Alto"
 msgid "Terms"
 msgstr "Condiciones"
 
-#: src/view/screens/Settings.tsx:744
+#: src/view/screens/Settings.tsx:777
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
@@ -2146,6 +2203,10 @@ msgstr "Esta {screenDescription} ha sido marcada:"
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
 msgstr "Esta cuenta ha solicitado que los usuarios inicien sesión para ver su perfil."
+
+#: src/view/com/modals/EmbedConsent.tsx:68
+msgid "This content is hosted by {0}. Do you want to enable external media?"
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
 msgid "This content is not viewable without a Bluesky account."
@@ -2311,15 +2372,15 @@ msgstr "usuarios seguidos por <0/>"
 msgid "Users in \"{0}\""
 msgstr "Usuarios en «{0}»"
 
-#: src/view/screens/Settings.tsx:769
+#: src/view/screens/Settings.tsx:802
 msgid "Verify email"
 msgstr "Verificar el correo electrónico"
 
-#: src/view/screens/Settings.tsx:794
+#: src/view/screens/Settings.tsx:827
 msgid "Verify my email"
 msgstr "Verificar mi correo electrónico"
 
-#: src/view/screens/Settings.tsx:803
+#: src/view/screens/Settings.tsx:836
 msgid "Verify My Email"
 msgstr "Verificar mi correo electrónico"
 

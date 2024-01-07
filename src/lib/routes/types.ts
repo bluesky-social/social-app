@@ -32,6 +32,7 @@ export type CommonNavigatorParams = {
   SavedFeeds: undefined
   PreferencesHomeFeed: undefined
   PreferencesThreads: undefined
+  PreferencesExternalEmbeds: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
