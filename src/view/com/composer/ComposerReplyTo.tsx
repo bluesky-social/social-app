@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
   },
   replyToBody: {
     flexDirection: 'row',
-    gap: 4,
+    gap: 10,
   },
   replyToText: {
     flex: 1,
