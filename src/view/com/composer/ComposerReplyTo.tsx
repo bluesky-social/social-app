@@ -91,19 +91,19 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
           )}
         </Text>
         <View style={styles.replyToBody}>
-          <View style={styles.flex}>
+          <View style={styles.replyToText}>
             <Text
               type="post-text"
               style={pal.text}
               numberOfLines={!showFull ? 6 : undefined}>
               {replyTo.text}
             </Text>
-            {showFull && quote && <QuoteEmbed quote={quote} />}
           </View>
           {images && (
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>
+        {showFull && quote && <QuoteEmbed quote={quote} />}
       </View>
     </Pressable>
   )
@@ -209,10 +209,6 @@ function ComposerReplyToImages({
 }
 
 const styles = StyleSheet.create({
-  flex: {
-    flex: 1,
-    flexGrow: 1,
-  },
   replyToLayout: {
     flexDirection: 'row',
     borderTopWidth: 1,
@@ -227,6 +223,10 @@ const styles = StyleSheet.create({
   replyToBody: {
     flexDirection: 'row',
     gap: 4,
+  },
+  replyToText: {
+    flex: 1,
+    flexGrow: 1,
   },
   imagesContainer: {
     borderRadius: 6,
