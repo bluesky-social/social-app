@@ -6,6 +6,7 @@ import {LayoutAnimation, Pressable, StyleSheet, View} from 'react-native'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedPost,
 } from '@atproto/api'
 import {msg} from '@lingui/macro'
@@ -45,13 +46,29 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         indexedAt: embed.record.indexedAt,
         text: embed.record.value.text,
       }
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(embed) &&
+      AppBskyEmbedRecord.isViewRecord(embed.record.record) &&
+      AppBskyFeedPost.isRecord(embed.record.record.value)
+    ) {
+      return {
+        author: embed.record.record.author,
+        cid: embed.record.record.cid,
+        uri: embed.record.record.uri,
+        indexedAt: embed.record.record.indexedAt,
+        text: embed.record.record.value.text,
+      }
     }
   }, [embed])
 
   const images = React.useMemo(() => {
     if (AppBskyEmbedImages.isView(embed)) {
-      console.log(embed.images)
       return embed.images
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(embed) &&
+      AppBskyEmbedImages.isView(embed.media)
+    ) {
+      return embed.media.images
     }
   }, [embed])
 
@@ -83,7 +100,6 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
             </Text>
             {showFull && quote && <QuoteEmbed quote={quote} />}
           </View>
-
           {images && (
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
@@ -99,8 +115,6 @@ function ComposerReplyToImages({
   images: AppBskyEmbedImages.ViewImage[]
   showFull: boolean
 }) {
-  images = images.slice(0, 4)
-
   return (
     <View
       style={{
@@ -195,6 +209,10 @@ function ComposerReplyToImages({
 }
 
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+    flexGrow: 1,
+  },
   replyToLayout: {
     flexDirection: 'row',
     borderTopWidth: 1,
@@ -211,18 +229,15 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   imagesContainer: {
-    flexWrap: 'wrap',
     borderRadius: 6,
     overflow: 'hidden',
+    marginTop: 2,
   },
   imagesInner: {
     gap: 2,
   },
   imagesRow: {
     flexDirection: 'row',
-  },
-  flex: {
-    flex: 1,
   },
   singleImage: {
     width: 65,
