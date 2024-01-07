@@ -276,7 +276,6 @@ export function SettingsScreen({}: Props) {
     <View style={s.hContentRegion} testID="settingsScreen">
       <SimpleViewHeader
         showBackButton={isMobile}
-        showOnDesktop
         style={[
           pal.border,
           {borderBottomWidth: 1},
