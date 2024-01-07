@@ -273,17 +273,24 @@ export function SettingsScreen({}: Props) {
   }, [])
 
   return (
-    <CenteredView
-      style={[
-        s.hContentRegion,
-        pal.border,
-        isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
-      ]}
-      testID="settingsScreen">
-      <ViewHeader title={_(msg`Settings`)} showOnDesktop />
+    <View style={s.hContentRegion} testID="settingsScreen">
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        showOnDesktop
+        style={[
+          pal.border,
+          {borderBottomWidth: 1},
+          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
+        ]}>
+        <View style={{flex: 1}}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Trans>{_(msg`Settings`)}</Trans>
+          </Text>
+        </View>
+      </SimpleViewHeader>
       <ScrollView
         style={[s.hContentRegion]}
-        contentContainerStyle={[isMobile && pal.viewLight, styles.noBorder]}
+        contentContainerStyle={[isMobile && pal.viewLight]}
         scrollIndicatorInsets={{right: 1}}>
         <View style={styles.spacer20} />
         {currentAccount ? (
@@ -758,7 +765,7 @@ export function SettingsScreen({}: Props) {
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>
-    </CenteredView>
+    </View>
   )
 }
 
