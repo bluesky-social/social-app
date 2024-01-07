@@ -1274,6 +1274,7 @@ msgstr "팔로우 중"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 #: src/view/screens/ProfileFollows.tsx:25
+#: src/view/shell/desktop/Feeds.tsx:27
 msgid "Following"
 msgstr "팔로우 중"
 
@@ -1753,7 +1754,7 @@ msgstr "검토 리스트"
 msgid "Moderation Lists"
 msgstr "검토 리스트"
 
-#: src/view/shell/desktop/Feeds.tsx:53
+#: src/view/shell/desktop/Feeds.tsx:57
 msgid "More feeds"
 msgstr "피드 더 보기"
 
@@ -2180,7 +2181,7 @@ msgstr "이 콘텐츠 경고가 잘못 적용되었다고 생각하는 이유를
 
 #: src/view/com/modals/VerifyEmail.tsx:100
 msgid "Please Verify Your Email"
-msgstr "이메일 확인하기"
+msgstr "이메일 인증하기"
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -3248,24 +3249,24 @@ msgstr "{0} 확인"
 
 #: src/view/screens/Settings.tsx:803
 msgid "Verify email"
-msgstr "이메일 확인"
+msgstr "이메일 인증"
 
 #: src/view/screens/Settings.tsx:828
 msgid "Verify my email"
-msgstr "내 이메일 확인"
+msgstr "내 이메일 인증"
 
 #: src/view/screens/Settings.tsx:837
 msgid "Verify My Email"
-msgstr "내 이메일 확인"
+msgstr "내 이메일 인증"
 
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
-msgstr "새 이메일 확인"
+msgstr "새 이메일 인증"
 
 #: src/view/com/modals/VerifyEmail.tsx:104
 msgid "Verify Your Email"
-msgstr "이메일 확인하기"
+msgstr "이메일 인증하기"
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
