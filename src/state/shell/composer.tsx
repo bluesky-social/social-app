@@ -11,6 +11,7 @@ export interface ComposerOptsPostRef {
     displayName?: string
     avatar?: string
   }
+  embed?: AppBskyEmbedRecord.ViewRecord['embed']
 }
 export interface ComposerOptsQuote {
   uri: string

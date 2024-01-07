@@ -5,7 +5,6 @@ import {
   BackHandler,
   Keyboard,
   KeyboardAvoidingView,
-  LayoutAnimation,
   Platform,
   Pressable,
   ScrollView,
@@ -30,8 +29,6 @@ import {UserAvatar} from '../util/UserAvatar'
 import * as apilib from 'lib/api/index'
 import {ComposerOpts} from 'state/shell/composer'
 import {s, colors, gradients} from 'lib/styles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {toShortUrl} from 'lib/strings/url-helpers'
@@ -64,6 +61,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
+import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -111,7 +109,6 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const [showFullReplyTo, setShowFullReplyTo] = useState(false)
   const gallery = useMemo(() => new GalleryModel(), [])
   const onClose = useCallback(() => {
     closeComposer()
@@ -266,15 +263,6 @@ export const ComposePost = observer(function ComposePost({
     Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
   }
 
-  const onReplyToPress = useCallback(() => {
-    LayoutAnimation.configureNext({
-      ...LayoutAnimation.Presets.spring,
-      duration: 350,
-      update: {type: 'spring', springDamping: 0.7},
-    })
-    setShowFullReplyTo(prev => !prev)
-  }, [])
-
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
@@ -390,34 +378,7 @@ export const ComposePost = observer(function ComposePost({
         <ScrollView
           style={styles.scrollView}
           keyboardShouldPersistTaps="always">
-          {replyTo ? (
-            <Pressable
-              style={[pal.border, styles.replyToLayout]}
-              onPress={onReplyToPress}
-              accessibilityRole="button"
-              accessibilityLabel={_(
-                msg`Expand or collapse the full post you are replying to`,
-              )}
-              accessibilityHint={_(
-                msg`Expand or collapse the full post you are replying to`,
-              )}>
-              <UserAvatar avatar={replyTo.author.avatar} size={50} />
-              <View style={styles.replyToPost}>
-                <Text type="xl-medium" style={[pal.text]}>
-                  {sanitizeDisplayName(
-                    replyTo.author.displayName ||
-                      sanitizeHandle(replyTo.author.handle),
-                  )}
-                </Text>
-                <Text
-                  type="post-text"
-                  style={pal.text}
-                  numberOfLines={!showFullReplyTo ? 6 : undefined}>
-                  {replyTo.text}
-                </Text>
-              </View>
-            </Pressable>
-          ) : undefined}
+          {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
           <View
             style={[
@@ -571,17 +532,6 @@ const styles = StyleSheet.create({
   },
   textInputLayoutMobile: {
     flex: 1,
-  },
-  replyToLayout: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  replyToPost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
   },
   addExtLinkBtn: {
     borderWidth: 1,
