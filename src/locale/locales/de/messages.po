@@ -1238,7 +1238,7 @@ msgstr "folgende"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 #: src/view/screens/ProfileFollows.tsx:25
-#: src/view/shell/desktop/Feeds.tsx:25
+#: src/view/shell/desktop/Feeds.tsx:27
 msgid "Following"
 msgstr "Folgende"
 
@@ -1693,7 +1693,7 @@ msgstr "Moderation Liste"
 msgid "Moderation Lists"
 msgstr "Moderation Liste"
 
-#: src/view/shell/desktop/Feeds.tsx:53
+#: src/view/shell/desktop/Feeds.tsx:57
 msgid "More feeds"
 msgstr "Mehr Feeds "
 

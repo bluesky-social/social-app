@@ -1238,7 +1238,7 @@ msgstr "フォロー中"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 #: src/view/screens/ProfileFollows.tsx:25
-#: src/view/shell/desktop/Feeds.tsx:25
+#: src/view/shell/desktop/Feeds.tsx:27
 msgid "Following"
 msgstr "フォロー中"
 
@@ -1701,7 +1701,7 @@ msgstr "モデレーションリスト"
 msgid "Moderation Lists"
 msgstr "モデレーションリスト"
 
-#: src/view/shell/desktop/Feeds.tsx:53
+#: src/view/shell/desktop/Feeds.tsx:57
 msgid "More feeds"
 msgstr "その他のフィード"
 

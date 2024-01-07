@@ -1266,7 +1266,7 @@ msgstr "फोल्लोविंग"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 #: src/view/screens/ProfileFollows.tsx:25
-#: src/view/shell/desktop/Feeds.tsx:25
+#: src/view/shell/desktop/Feeds.tsx:27
 msgid "Following"
 msgstr "फोल्लोविंग"
 
@@ -1746,7 +1746,7 @@ msgstr "मॉडरेशन सूचियाँ"
 msgid "Moderation Lists"
 msgstr ""
 
-#: src/view/shell/desktop/Feeds.tsx:53
+#: src/view/shell/desktop/Feeds.tsx:57
 msgid "More feeds"
 msgstr "अधिक फ़ीड"
 
