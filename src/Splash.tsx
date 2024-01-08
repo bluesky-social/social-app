@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Image as RNImage,
   AccessibilityInfo,
+  useColorScheme,
 } from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import {Image} from 'expo-image'
@@ -20,10 +21,17 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
 import {isAndroid} from '#/platform/detection'
+import {useColorMode} from 'state/shell'
+import {colors} from '#/lib/styles'
 
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
+// @ts-ignore
+import darkSplashImagePointer from '../assets/splash-dark.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
+const darkSplashImageUri = RNImage.resolveAssetSource(
+  darkSplashImagePointer,
+).uri
 
 export const Logo = React.forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
@@ -66,6 +74,11 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     isImageLoaded &&
     isLayoutReady &&
     reduceMotion !== undefined
+
+  const colorMode = useColorMode()
+  const colorScheme = useColorScheme()
+  const themeName = colorMode === 'system' ? colorScheme : colorMode
+  const isDarkMode = themeName === 'dark'
 
   const logoAnimation = useAnimatedStyle(() => {
     return {
@@ -173,7 +186,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         <Image
           accessibilityIgnoresInvertColors
           onLoadEnd={onLoadEnd}
-          source={{uri: splashImageUri}}
+          source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
           style={StyleSheet.absoluteFillObject}
         />
       )}
@@ -198,7 +211,10 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                     transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
                   },
                 ]}>
-                <AnimatedLogo style={[{opacity: 0}, logoAnimations]} />
+                <AnimatedLogo
+                  fill={isDarkMode ? colors.blue3 : '#fff'}
+                  style={[{opacity: 0}, logoAnimations]}
+                />
               </Animated.View>
             )}
           </>
@@ -217,14 +233,17 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                     transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
                   },
                 ]}>
-                <AnimatedLogo style={[logoAnimations]} />
+                <AnimatedLogo
+                  fill={isDarkMode ? colors.blue3 : '#fff'}
+                  style={[logoAnimations]}
+                />
               </Animated.View>
             }>
             {!isAnimationComplete && (
               <View
                 style={[
                   StyleSheet.absoluteFillObject,
-                  {backgroundColor: 'white'},
+                  {backgroundColor: isDarkMode ? colors.blue3 : '#fff'},
                 ]}
               />
             )}
