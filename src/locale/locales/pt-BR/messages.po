@@ -1713,7 +1713,7 @@ msgstr "Aguarde até que o cartão de link termine de carregar"
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
-msgstr "Post"
+msgstr "Postar"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
