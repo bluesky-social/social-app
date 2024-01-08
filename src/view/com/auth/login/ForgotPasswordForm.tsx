@@ -136,7 +136,7 @@ export const ForgotPasswordForm = ({
             <TextInput
               testID="forgotPasswordEmail"
               style={[pal.text, styles.textInput]}
-              placeholder="Email address"
+              placeholder={_(msg`Email address`)}
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoFocus

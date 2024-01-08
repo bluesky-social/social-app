@@ -1002,6 +1002,7 @@ msgid "Email"
 msgstr "Correo electrónico"
 
 #: src/view/com/auth/create/Step2.tsx:99
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:139
 msgid "Email address"
 msgstr "Dirección de correo electrónico"
 
@@ -1995,8 +1996,10 @@ msgstr "Página no encontrada"
 
 #: src/view/com/auth/create/Step2.tsx:122
 #: src/view/com/auth/create/Step2.tsx:132
+#: src/view/com/auth/login/LoginForm.tsx:205
 #: src/view/com/auth/login/LoginForm.tsx:221
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:130
+#: src/view/com/modals/DeleteAccount.tsx:186
 #: src/view/com/modals/DeleteAccount.tsx:193
 msgid "Password"
 msgstr "Contraseña"

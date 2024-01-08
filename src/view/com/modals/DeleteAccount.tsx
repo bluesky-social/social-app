@@ -183,7 +183,7 @@ export function Component({}: {}) {
             </Text>
             <TextInput
               style={[styles.textInput, pal.borderDark, pal.text]}
-              placeholder="Password"
+              placeholder={_(msg`Password`)}
               placeholderTextColor={pal.textLight.color}
               keyboardAppearance={theme.colorScheme}
               secureTextEntry
