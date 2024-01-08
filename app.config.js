@@ -104,6 +104,7 @@ module.exports = function () {
         splash: {
           image: './assets/splash.png',
           backgroundColor: '#ffffff',
+          resizeMode: 'cover',
           dark: {
             image: './assets/splash-dark.png',
             backgroundColor: '#001429',
