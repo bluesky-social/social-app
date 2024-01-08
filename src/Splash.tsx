@@ -2,7 +2,6 @@ import React, {useCallback, useEffect} from 'react'
 import {View, StyleSheet, Image as RNImage} from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import {Image} from 'expo-image'
-import {platformApiLevel} from 'expo-device'
 import Animated, {
   interpolate,
   runOnJS,
@@ -55,7 +54,6 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
   const [isLayoutReady, setIsLayoutReady] = React.useState(false)
   const isReady = props.isReady && isImageLoaded && isLayoutReady
-  const isOldAndroid = platformApiLevel && platformApiLevel <= 25
 
   const logoAnimation = useAnimatedStyle(() => {
     return {
@@ -150,7 +148,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         />
       )}
 
-      {isAndroid || isOldAndroid ? (
+      {isAndroid ? (
         // Use a simple fade on older versions of android (work around a bug)
         <>
           <Animated.View style={[{flex: 1}, appAnimation]}>
