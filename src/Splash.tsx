@@ -15,6 +15,8 @@ import MaskedView from '@react-native-masked-view/masked-view'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
+import {isAndroid} from '#/platform/detection'
+
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
@@ -53,8 +55,9 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
   const [isLayoutReady, setIsLayoutReady] = React.useState(false)
   const isReady = props.isReady && isImageLoaded && isLayoutReady
+  const isOldAndroid = platformApiLevel && platformApiLevel <= 25
 
-  const logoAnimations = useAnimatedStyle(() => {
+  const logoAnimation = useAnimatedStyle(() => {
     return {
       transform: [
         {
@@ -64,12 +67,22 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           scale: interpolate(
             outroLogo.value,
             [0, 0.08, 1],
-            [1, 0.8, 400],
+            [1, 0.8, 500],
             'clamp',
           ),
         },
       ],
       opacity: interpolate(intro.value, [0, 1], [0, 1], 'clamp'),
+    }
+  })
+  const logoWrapperAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        outroAppOpacity.value,
+        [0, 0.1, 0.2, 1],
+        [1, 1, 0, 0],
+        'clamp',
+      ),
     }
   })
 
@@ -82,7 +95,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
       ],
       opacity: interpolate(
         outroAppOpacity.value,
-        [0, 0.08, 0.15, 1],
+        [0, 0.1, 0.2, 1],
         [0, 0, 1, 1],
         'clamp',
       ),
@@ -137,16 +150,31 @@ export function Splash(props: React.PropsWithChildren<Props>) {
         />
       )}
 
-      {platformApiLevel && platformApiLevel <= 25 ? (
+      {isAndroid || isOldAndroid ? (
         // Use a simple fade on older versions of android (work around a bug)
         <>
           <Animated.View style={[{flex: 1}, appAnimation]}>
             {props.children}
           </Animated.View>
+
+          {!isAnimationComplete && (
+            <Animated.View
+              style={[
+                StyleSheet.absoluteFillObject,
+                logoWrapperAnimation,
+                {
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
+                },
+              ]}>
+              <AnimatedLogo style={[{opacity: 0}, logoAnimation]} />
+            </Animated.View>
+          )}
         </>
       ) : (
         <MaskedView
-          androidRenderingMode="software"
           style={[StyleSheet.absoluteFillObject]}
           maskElement={
             <Animated.View
@@ -160,7 +188,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                   transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
                 },
               ]}>
-              <AnimatedLogo style={[logoAnimations]} />
+              <AnimatedLogo style={[logoAnimation]} />
             </Animated.View>
           }>
           {!isAnimationComplete && (
