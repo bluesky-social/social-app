@@ -14,7 +14,7 @@ module.exports = function () {
   /**
    * Android build number. Must be incremented for each release.
    */
-  const ANDROID_VERSION_CODE = 55
+  const ANDROID_VERSION_CODE = 54
 
   /**
    * Uses built-in Expo env vars
@@ -66,6 +66,12 @@ module.exports = function () {
             'Used for profile pictures, posts, and other kinds of content',
         },
         associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        splash: {
+          dark: {
+            image: './assets/splash-dark.png',
+            backgroundColor: '#001429',
+          },
+        },
       },
       androidStatusBar: {
         barStyle: 'dark-content',
@@ -95,6 +101,12 @@ module.exports = function () {
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
+        splash: {
+          dark: {
+            image: './assets/splash-dark.png',
+            backgroundColor: '#001429',
+          },
+        },
       },
       web: {
         favicon: './assets/favicon.png',
