@@ -136,7 +136,13 @@ export async function submit({
         msg`Invite code not accepted. Check that you input it correctly and try again.`,
       )
     }
-    logger.error('Failed to create account', {error: e})
+
+    if ([400, 429].includes(e.status)) {
+      logger.warn('Failed to create account', {error: e})
+    } else {
+      logger.error(`Failed to create account (${e.status} status)`, {error: e})
+    }
+
     uiDispatch({type: 'set-processing', value: false})
     uiDispatch({type: 'set-error', value: cleanError(errMsg)})
     throw e

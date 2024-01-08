@@ -30,6 +30,7 @@ export interface ComposerOpts {
   onPost?: () => void
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
+  openPicker?: (pos: DOMRect | undefined) => void
 }
 
 type StateContext = ComposerOpts | undefined

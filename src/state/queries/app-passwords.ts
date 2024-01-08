@@ -9,7 +9,6 @@ export const RQKEY = () => ['app-passwords']
 export function useAppPasswordsQuery() {
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
-    refetchInterval: STALE.MINUTES.ONE,
     queryKey: RQKEY(),
     queryFn: async () => {
       const res = await getAgent().com.atproto.server.listAppPasswords({})

@@ -74,6 +74,7 @@ import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
 import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
+import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -242,6 +243,14 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="PreferencesThreads"
         getComponent={() => PreferencesThreads}
         options={{title: title('Threads Preferences'), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="PreferencesExternalEmbeds"
+        getComponent={() => PreferencesExternalEmbeds}
+        options={{
+          title: title('External Media Preferences'),
+          requireAuth: true,
+        }}
       />
     </>
   )

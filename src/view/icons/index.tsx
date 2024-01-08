@@ -29,9 +29,10 @@ import {faChevronRight} from '@fortawesome/free-solid-svg-icons/faChevronRight'
 import {faCircle} from '@fortawesome/free-regular-svg-icons/faCircle'
 import {faCircleCheck as farCircleCheck} from '@fortawesome/free-regular-svg-icons/faCircleCheck'
 import {faCircleCheck} from '@fortawesome/free-solid-svg-icons/faCircleCheck'
-import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons/faCircleExclamation'
-import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faCircleDot} from '@fortawesome/free-solid-svg-icons/faCircleDot'
+import {faCircleExclamation} from '@fortawesome/free-solid-svg-icons/faCircleExclamation'
+import {faCirclePlay} from '@fortawesome/free-regular-svg-icons/faCirclePlay'
+import {faCircleUser} from '@fortawesome/free-regular-svg-icons/faCircleUser'
 import {faClone} from '@fortawesome/free-solid-svg-icons/faClone'
 import {faClone as farClone} from '@fortawesome/free-regular-svg-icons/faClone'
 import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
@@ -129,9 +130,10 @@ library.add(
   faCircle,
   faCircleCheck,
   farCircleCheck,
-  faCircleExclamation,
-  faCircleUser,
   faCircleDot,
+  faCircleExclamation,
+  faCirclePlay,
+  faCircleUser,
   faClone,
   farClone,
   faComment,
