@@ -282,13 +282,15 @@ let FeedItemInner = ({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reply to{' '}
-                <UserInfoText
-                  type="md"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight, s.ml2]}
-                />
+                <Trans>
+                  Reply to{' '}
+                  <UserInfoText
+                    type="md"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight, s.ml2]}
+                  />
+                </Trans>
               </Text>
             </View>
           )}
@@ -325,6 +327,7 @@ let PostContent = ({
   postAuthor: AppBskyFeedDefs.PostView['author']
 }): React.ReactNode => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -354,7 +357,7 @@ let PostContent = ({
       ) : undefined}
       {limitLines ? (
         <TextLink
-          text="Show More"
+          text={_(msg`Show More`)}
           style={pal.link}
           onPress={onPressShowMore}
           href="#"

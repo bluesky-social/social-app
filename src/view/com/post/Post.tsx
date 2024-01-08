@@ -27,6 +27,8 @@ import {countLines} from 'lib/strings/helpers'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function Post({
   post,
@@ -95,6 +97,7 @@ function PostInner({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
@@ -158,13 +161,15 @@ function PostInner({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reply to{' '}
-                <UserInfoText
-                  type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
+                <Trans>
+                  Reply to{' '}
+                  <UserInfoText
+                    type="sm"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight]}
+                  />
+                </Trans>
               </Text>
             </View>
           )}
@@ -187,7 +192,7 @@ function PostInner({
             ) : undefined}
             {limitLines ? (
               <TextLink
-                text="Show More"
+                text={_(msg`Show More`)}
                 style={pal.link}
                 onPress={onPressShowMore}
                 href="#"

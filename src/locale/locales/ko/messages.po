@@ -2388,6 +2388,11 @@ msgstr "답글"
 msgid "Reply Filters"
 msgstr "답글 필터"
 
+#: src/view/com/post/Post.tsx:164
+#: src/view/com/posts/FeedItem.tsx:285
+msgid "Reply to <0/>"
+msgstr "<0/> 님에게 보내는 답글"
+
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "Report {collectionName}"
 msgstr "{collectionName} 신고"
@@ -2678,6 +2683,11 @@ msgstr "무시하고 표시"
 #: src/view/com/modals/EmbedConsent.tsx:87
 msgid "Show embeds from {0}"
 msgstr "{0} 임베드 표시"
+
+#: src/view/com/post/Post.tsx:195
+#: src/view/com/posts/FeedItem.tsx:360
+msgid "Show More"
+msgstr "더 보기"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:258
 msgid "Show Posts from My Feeds"

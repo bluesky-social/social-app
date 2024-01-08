@@ -2290,6 +2290,11 @@ msgstr ""
 msgid "Reply Filters"
 msgstr "Filtres de réponse"
 
+#: src/view/com/post/Post.tsx:164
+#: src/view/com/posts/FeedItem.tsx:285
+msgid "Reply to <0/>"
+msgstr ""
+
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "Report {collectionName}"
 msgstr "Signaler {collectionName}"
@@ -2559,6 +2564,11 @@ msgstr "Afficher quand même"
 
 #: src/view/com/modals/EmbedConsent.tsx:87
 msgid "Show embeds from {0}"
+msgstr ""
+
+#: src/view/com/post/Post.tsx:195
+#: src/view/com/posts/FeedItem.tsx:360
+msgid "Show More"
 msgstr ""
 
 #: src/view/screens/PreferencesHomeFeed.tsx:258
