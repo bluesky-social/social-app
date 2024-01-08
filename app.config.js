@@ -1,5 +1,16 @@
 const pkg = require('./package.json')
 
+const SPLASH_CONFIG = {
+  backgroundColor: '#ffffff',
+  image: './assets/splash.png',
+  resizeMode: 'cover',
+}
+const DARK_SPLASH_CONFIG = {
+  backgroundColor: '#001429',
+  image: './assets/splash-dark.png',
+  resizeMode: 'cover',
+}
+
 module.exports = function () {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -42,11 +53,7 @@ module.exports = function () {
       orientation: 'portrait',
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: 'cover',
-        backgroundColor: '#ffffff',
-      },
+      splash: SPLASH_CONFIG,
       ios: {
         buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
@@ -67,10 +74,8 @@ module.exports = function () {
         },
         associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
         splash: {
-          dark: {
-            image: './assets/splash-dark.png',
-            backgroundColor: '#001429',
-          },
+          ...SPLASH_CONFIG,
+          dark: DARK_SPLASH_CONFIG,
         },
       },
       androidStatusBar: {
@@ -102,10 +107,8 @@ module.exports = function () {
           },
         ],
         splash: {
-          dark: {
-            image: './assets/splash-dark.png',
-            backgroundColor: '#001429',
-          },
+          ...SPLASH_CONFIG,
+          dark: DARK_SPLASH_CONFIG,
         },
       },
       web: {
