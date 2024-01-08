@@ -455,6 +455,7 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://tenor.com/notView/gifId',
     'https://tenor.com/view',
     'https://tenor.com/view/gifId.gif',
+    'https://tenor.com/intl/view/gifId.gif',
   ]
 
   const outputs = [
@@ -741,6 +742,13 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       playerUri: 'https://tenor.com/view/gifId.gif',
+    },
+    {
+      type: 'tenor_gif',
+      source: 'tenor',
+      isGif: true,
+      hideDetails: true,
+      playerUri: 'https://tenor.com/intl/view/gifId.gif',
     },
   ]
 

@@ -319,9 +319,12 @@ export function parseEmbedPlayerFromUrl(
   }
 
   if (urlp.hostname === 'tenor.com' || urlp.hostname === 'www.tenor.com') {
-    const [_, path, filename] = urlp.pathname.split('/')
+    const [_, pathOrIntl, pathOrFilename, intlFilename] =
+      urlp.pathname.split('/')
+    const isIntl = pathOrFilename === 'view'
+    const filename = isIntl ? intlFilename : pathOrFilename
 
-    if (path === 'view' && filename) {
+    if ((pathOrIntl === 'view' || pathOrFilename === 'view') && filename) {
       const includesExt = filename.split('.').pop() === 'gif'
 
       return {
