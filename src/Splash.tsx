@@ -54,6 +54,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   const [isImageLoaded, setIsImageLoaded] = React.useState(false)
   const [isLayoutReady, setIsLayoutReady] = React.useState(false)
   const isReady = props.isReady && isImageLoaded && isLayoutReady
+  const isOldAndroid = platformApiLevel && platformApiLevel <= 25
 
   const logoAnimation = useAnimatedStyle(() => {
     return {
