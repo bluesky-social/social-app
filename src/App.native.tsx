@@ -13,6 +13,8 @@ import {
 
 import 'view/icons'
 
+import {ThemeProvider as Alf} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {init as initPersistedState} from '#/state/persisted'
 import {listenSessionDropped} from './state/events'
 import {useColorMode} from 'state/shell'
@@ -46,6 +48,7 @@ function InnerApp() {
   const colorMode = useColorMode()
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
+  const theme = useColorModeTheme(colorMode)
 
   // init
   useEffect(() => {
@@ -60,25 +63,27 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <Splash isReady={!isInitialLoad}>
-        <React.Fragment
-          // Resets the entire tree below when it changes:
-          key={currentAccount?.did}>
-          <LoggedOutViewProvider>
-            <UnreadNotifsProvider>
-              <ThemeProvider theme={colorMode}>
-                {/* All components should be within this provider */}
-                <RootSiblingParent>
-                  <GestureHandlerRootView style={s.h100pct}>
-                    <TestCtrls />
-                    <Shell />
-                  </GestureHandlerRootView>
-                </RootSiblingParent>
-              </ThemeProvider>
-            </UnreadNotifsProvider>
-          </LoggedOutViewProvider>
-        </React.Fragment>
-      </Splash>
+      <Alf theme={theme}>
+        <Splash isReady={!isInitialLoad}>
+          <React.Fragment
+            // Resets the entire tree below when it changes:
+            key={currentAccount?.did}>
+            <LoggedOutViewProvider>
+              <UnreadNotifsProvider>
+                <ThemeProvider theme={colorMode}>
+                  {/* All components should be within this provider */}
+                  <RootSiblingParent>
+                    <GestureHandlerRootView style={s.h100pct}>
+                      <TestCtrls />
+                      <Shell />
+                    </GestureHandlerRootView>
+                  </RootSiblingParent>
+                </ThemeProvider>
+              </UnreadNotifsProvider>
+            </LoggedOutViewProvider>
+          </React.Fragment>
+        </Splash>
+      </Alf>
     </SafeAreaProvider>
   )
 }

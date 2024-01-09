@@ -8,6 +8,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import 'view/icons'
 
 import {ThemeProvider as Alf} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
 import {Shell} from 'view/shell/index'
@@ -29,7 +30,6 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
-import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
