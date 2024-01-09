@@ -153,26 +153,11 @@ export const atoms = {
     fontSize: tokens.fontSize.xxl,
     lineHeight: tokens.fontSize.xxl,
   },
-  leading_xxs: {
-    lineHeight: tokens.fontSize.xxs,
+  leading_tight: {
+    lineHeight: 1.25,
   },
-  leading_xs: {
-    lineHeight: tokens.fontSize.xs,
-  },
-  leading_sm: {
-    lineHeight: tokens.fontSize.sm,
-  },
-  leading_md: {
-    lineHeight: tokens.fontSize.md,
-  },
-  leading_lg: {
-    lineHeight: tokens.fontSize.lg,
-  },
-  leading_xl: {
-    lineHeight: tokens.fontSize.xl,
-  },
-  leading_xxl: {
-    lineHeight: tokens.fontSize.xxl,
+  leading_normal: {
+    lineHeight: 1.5,
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
