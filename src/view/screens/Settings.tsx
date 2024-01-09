@@ -290,7 +290,9 @@ export function SettingsScreen({}: Props) {
       <ScrollView
         style={[s.hContentRegion]}
         contentContainerStyle={isMobile && pal.viewLight}
-        scrollIndicatorInsets={{right: 1}}>
+        scrollIndicatorInsets={{right: 1}}
+        // @ts-ignore web only -prf
+        dataSet={{'stable-gutters': 1}}>
         <View style={styles.spacer20} />
         {currentAccount ? (
           <>
