@@ -139,6 +139,7 @@ function createPersistSessionHandler(
     })
 
     if (expired) {
+      logger.warn(`session: expired`)
       emitSessionDropped()
     }
 
