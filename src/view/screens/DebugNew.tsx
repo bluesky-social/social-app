@@ -9,6 +9,8 @@ import {atoms as a, useTheme, useBreakpoints, ThemeProvider as Alf} from '#/alf'
 import {Button, ButtonText} from '#/view/com/Button'
 import {Link} from '#/view/com/Link'
 import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
+import {InputText} from '#/view/com/forms/InputText'
+import {Logo} from '#/view/icons/Logo'
 
 function ThemeSelector() {
   const setColorMode = useSetColorMode()
@@ -212,6 +214,16 @@ export function Buttons() {
   )
 }
 
+function Forms() {
+  return (
+    <View style={[a.gap_md, a.align_start]}>
+      <InputText placeholder="Type here" />
+      <InputText placeholder="Type here" icon={Logo} />
+      <InputText hasError placeholder="Type here" icon={Logo} />
+    </View>
+  )
+}
+
 export function DebugScreen() {
   const t = useTheme()
 
@@ -221,6 +233,7 @@ export function DebugScreen() {
         <View style={[a.p_xl, a.gap_xxl, {paddingBottom: 200}]}>
           <ThemeSelector />
 
+          <Forms />
           <Buttons />
 
           <Alf theme="light">

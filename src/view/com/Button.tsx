@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native'
 
-import {atoms, tokens, web, native} from '#/alf'
+import {useTheme, atoms, tokens, web, native} from '#/alf'
 
 export type ButtonType = 'primary' | 'secondary' | 'negative'
 export type ButtonSize = 'small' | 'large'
@@ -217,6 +217,8 @@ export function ButtonText({
   disabled,
   ...rest
 }: ButtonTextProps) {
+  const t = useTheme()
+
   const textStyles = React.useMemo(() => {
     const baseStyles = []
 
@@ -244,6 +246,7 @@ export function ButtonText({
         break
       }
       default:
+        baseStyles.push(t.atoms.text)
     }
 
     switch (size) {
@@ -267,7 +270,7 @@ export function ButtonText({
     }
 
     return baseStyles
-  }, [type, size, disabled])
+  }, [t, type, size, disabled])
 
   return (
     <Text

@@ -4,14 +4,10 @@ import type {Mutable} from '#/alf/types'
 export type ThemeName = 'light' | 'dark'
 export type ReadonlyTheme = typeof light
 export type Theme = Mutable<ReadonlyTheme>
+export type ReadonlyPalette = typeof lightPalette
+export type Palette = Mutable<ReadonlyPalette>
 
-export type Palette = {
-  primary: string
-  positive: string
-  negative: string
-}
-
-export const lightPalette: Palette = {
+export const lightPalette = {
   primary: tokens.color.blue_500,
   positive: tokens.color.green_500,
   negative: tokens.color.red_500,
@@ -24,6 +20,7 @@ export const darkPalette: Palette = {
 } as const
 
 export const light = {
+  name: 'light',
   palette: lightPalette,
   atoms: {
     text: {
@@ -66,6 +63,7 @@ export const light = {
 }
 
 export const dark: Theme = {
+  name: 'dark',
   palette: darkPalette,
   atoms: {
     text: {
