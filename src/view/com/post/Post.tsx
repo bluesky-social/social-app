@@ -118,6 +118,7 @@ function PostInner({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
     })
   }, [openComposer, post, record])
