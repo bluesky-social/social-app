@@ -50,6 +50,7 @@ export function Component() {
 
 export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
@@ -76,7 +77,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
           ]}>
           <Button
             type="primary"
-            label="Done"
+            label={_(msg`Done`)}
             style={styles.btn}
             labelStyle={styles.btnLabel}
             onPress={onClose}
@@ -119,7 +120,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
         <Button
           testID="closeBtn"
           type="primary"
-          label="Done"
+          label={_(msg`Done`)}
           style={styles.btn}
           labelStyle={styles.btnLabel}
           onPress={onClose}

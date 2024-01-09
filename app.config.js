@@ -1,5 +1,16 @@
 const pkg = require('./package.json')
 
+const SPLASH_CONFIG = {
+  backgroundColor: '#ffffff',
+  image: './assets/splash.png',
+  resizeMode: 'cover',
+}
+const DARK_SPLASH_CONFIG = {
+  backgroundColor: '#001429',
+  image: './assets/splash-dark.png',
+  resizeMode: 'cover',
+}
+
 module.exports = function () {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -14,7 +25,7 @@ module.exports = function () {
   /**
    * Android build number. Must be incremented for each release.
    */
-  const ANDROID_VERSION_CODE = 54
+  const ANDROID_VERSION_CODE = 55
 
   /**
    * Uses built-in Expo env vars
@@ -42,11 +53,7 @@ module.exports = function () {
       orientation: 'portrait',
       icon: './assets/icon.png',
       userInterfaceStyle: 'automatic',
-      splash: {
-        image: './assets/splash.png',
-        resizeMode: 'cover',
-        backgroundColor: '#ffffff',
-      },
+      splash: SPLASH_CONFIG,
       ios: {
         buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
@@ -66,6 +73,10 @@ module.exports = function () {
             'Used for profile pictures, posts, and other kinds of content',
         },
         associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
+        splash: {
+          ...SPLASH_CONFIG,
+          dark: DARK_SPLASH_CONFIG,
+        },
       },
       androidStatusBar: {
         barStyle: 'dark-content',
@@ -95,6 +106,10 @@ module.exports = function () {
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
+        splash: {
+          ...SPLASH_CONFIG,
+          dark: DARK_SPLASH_CONFIG,
+        },
       },
       web: {
         favicon: './assets/favicon.png',

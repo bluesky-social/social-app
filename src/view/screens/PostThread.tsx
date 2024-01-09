@@ -67,6 +67,7 @@ export function PostThreadScreen({route}: Props) {
           displayName: thread.post.author.displayName,
           avatar: thread.post.author.avatar,
         },
+        embed: thread.post.embed,
       },
       onPost: () =>
         queryClient.invalidateQueries({

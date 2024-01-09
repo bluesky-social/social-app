@@ -24,6 +24,8 @@ export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()
   const moderationOpts = useModerationOpts()
 
+  prefix = prefix.toLowerCase()
+
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(prefix || ''),

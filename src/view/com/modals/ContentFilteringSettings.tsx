@@ -122,10 +122,12 @@ function AdultContentEnabledPref() {
         enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
       })
     } catch (e) {
-      Toast.show('There was an issue syncing your preferences with the server')
+      Toast.show(
+        _(msg`There was an issue syncing your preferences with the server`),
+      )
       logger.error('Failed to update preferences with server', {error: e})
     }
-  }, [variables, preferences, mutate])
+  }, [variables, preferences, mutate, _])
 
   return (
     <View style={s.mb10}>

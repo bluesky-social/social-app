@@ -215,6 +215,7 @@ let PostThreadItemLoaded = ({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
       onPost: onPostReply,
     })
