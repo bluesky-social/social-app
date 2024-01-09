@@ -8,6 +8,7 @@ import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
 import {FeedParams} from '#/state/queries/post-feed'
 import {FeedTunerFn} from '../feed-manip'
 import {getAgent} from '#/state/session'
+import {getContentLanguages} from '#/state/preferences/languages'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours
@@ -231,11 +232,15 @@ class MergeFeedSource_Custom extends MergeFeedSource {
     limit: number,
   ): Promise<AppBskyFeedGetTimeline.Response> {
     try {
-      const res = await getAgent().app.bsky.feed.getFeed({
-        cursor,
-        limit,
-        feed: this.feedUri,
-      })
+      const contentLangs = getContentLanguages().join(',')
+      const res = await getAgent().app.bsky.feed.getFeed(
+        {
+          cursor,
+          limit,
+          feed: this.feedUri,
+        },
+        {headers: {'Accept-Language': contentLangs}},
+      )
       // NOTE
       // some custom feeds fail to enforce the pagination limit
       // so we manually truncate here
