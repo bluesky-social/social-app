@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: bsky-app-ua\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-04 14:24\n"
+"PO-Revision-Date: 2024-01-06 10:39\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -655,7 +655,7 @@ msgstr "Власний домен"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
-msgstr ""
+msgstr "Налаштування медіа зі сторонніх сайтів."
 
 #: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
@@ -825,11 +825,11 @@ msgstr "Email:"
 
 #: src/view/com/modals/EmbedConsent.tsx:113
 msgid "Enable {0} only"
-msgstr ""
+msgstr "Увімкнути лише {0}"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
-msgstr ""
+msgstr "Увімкнути зовнішні медіа"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Enable this setting to only see replies between people you follow."
@@ -877,17 +877,17 @@ msgstr "Розгорнути альтернативний текст"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
-msgstr ""
+msgstr "Зовнішні медіа"
 
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr ""
+msgstr "Зовнішні медіа можуть дозволяти вебсайтам збирати інформацію про вас та ваш пристрій. Інформація не надсилається та не запитується, допоки не натиснуто кнопку «Відтворити»."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
 #: src/view/screens/Settings.tsx:595
 msgid "External Media Preferences"
-msgstr ""
+msgstr "Налаштування зовнішніх медіа"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -979,7 +979,7 @@ msgstr "Підписані"
 
 #: src/view/com/profile/ProfileHeader.tsx:571
 msgid "Follows you"
-msgstr "Підписаний на вас"
+msgstr "Підписаний(-на) на вас"
 
 #: src/view/com/modals/DeleteAccount.tsx:107
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -1429,7 +1429,7 @@ msgstr "Ім'я"
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
 msgid "Never load embeds from {0}"
-msgstr ""
+msgstr "Не завантажувати вбудування з {0}"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
@@ -1509,7 +1509,7 @@ msgstr "Нічого не знайдено за запитом «{query}»"
 
 #: src/view/com/modals/EmbedConsent.tsx:129
 msgid "No thanks"
-msgstr ""
+msgstr "Ні, дякую"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
@@ -1567,7 +1567,7 @@ msgstr "Тільки {0} можуть відповідати."
 #: src/view/com/composer/Composer.tsx:468
 #: src/view/com/composer/Composer.tsx:469
 msgid "Open emoji picker"
-msgstr "Емодзі"
+msgstr "Емоджі"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1579,7 +1579,7 @@ msgstr "Відкриває налаштування мов"
 
 #: src/view/screens/Settings.tsx:587
 msgid "Opens external embeds settings"
-msgstr ""
+msgstr "Відкрити налаштування зовнішніх вбудувань"
 
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
@@ -1665,16 +1665,16 @@ msgstr "Закріплені стрічки"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
 msgid "Play {0}"
-msgstr ""
+msgstr "Відтворити {0}"
 
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
 #: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
 msgid "Play Video"
-msgstr ""
+msgstr "Відтворити відео"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
 msgid "Plays the GIF"
-msgstr ""
+msgstr "Відтворити GIF"
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
@@ -1903,7 +1903,7 @@ msgstr "Поскаржитись на пост"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
-msgstr "Репост"
+msgstr "Репостити"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
@@ -2136,7 +2136,7 @@ msgstr "Всеодно показати"
 
 #: src/view/com/modals/EmbedConsent.tsx:87
 msgid "Show embeds from {0}"
-msgstr ""
+msgstr "Показати вбудування з {0}"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:255
 msgid "Show Posts from My Feeds"
@@ -2351,7 +2351,7 @@ msgstr "Цей користувач вказав, що не хоче, аби й�
 
 #: src/view/com/modals/EmbedConsent.tsx:68
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr ""
+msgstr "Цей вміст розміщено {0}. Увімкнути зовнішні медіа?"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:107
 msgid "This content is not viewable without a Bluesky account."
@@ -2736,3 +2736,4 @@ msgstr "Ваш профіль"
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
 msgstr "Ваш псевдонім"
+
