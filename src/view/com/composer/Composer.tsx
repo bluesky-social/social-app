@@ -342,7 +342,7 @@ export const ComposePost = observer(function ComposePost({
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
                   <Text style={[pal.textLight, s.f16, s.bold]}>
-                    <Trans>Post</Trans>
+                    <Trans context="action">Post</Trans>
                   </Text>
                 </View>
               )}
