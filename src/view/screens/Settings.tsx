@@ -117,7 +117,7 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
         did: currentAccount?.did,
         handle: currentAccount?.handle,
       })}
-      title="Your profile"
+      title={_(msg`Your profile`)}
       noFeedback>
       {contents}
     </Link>
@@ -129,8 +129,8 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
         isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
       }
       accessibilityRole="button"
-      accessibilityLabel={`Switch to ${account.handle}`}
-      accessibilityHint="Switches the account you are logged in to">
+      accessibilityLabel={_(msg`Switch to ${account.handle}`)}
+      accessibilityHint={_(msg`Switches the account you are logged in to`)}>
       {contents}
     </TouchableOpacity>
   )
@@ -318,7 +318,7 @@ export function SettingsScreen({}: Props) {
               </Text>
               <Link onPress={() => openModal({name: 'change-email'})}>
                 <Text type="lg" style={pal.link}>
-                  <Trans>Change</Trans>
+                  <Trans context="action">Change</Trans>
                 </Text>
               </Link>
             </View>
@@ -368,7 +368,7 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressAddAccount}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Add account`)}
-          accessibilityHint="Create a new Bluesky account">
+          accessibilityHint={_(msg`Create a new Bluesky account`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="plus"
@@ -396,7 +396,7 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Invite`)}
-          accessibilityHint="Opens invite code list"
+          accessibilityHint={_(msg`Opens invite code list`)}
           disabled={invites?.disabled}>
           <View
             style={[
@@ -453,20 +453,20 @@ export function SettingsScreen({}: Props) {
               label={_(msg`System`)}
               left
               onSelect={() => setColorMode('system')}
-              accessibilityHint="Set color theme to system setting"
+              accessibilityHint={_(msg`Set color theme to system setting`)}
             />
             <SelectableBtn
               selected={colorMode === 'light'}
               label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
-              accessibilityHint="Set color theme to light"
+              accessibilityHint={_(msg`Set color theme to light`)}
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
               label={_(msg`Dark`)}
               right
               onSelect={() => setColorMode('dark')}
-              accessibilityHint="Set color theme to dark"
+              accessibilityHint={_(msg`Set color theme to dark`)}
             />
           </View>
         </View>
@@ -544,8 +544,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={isSwitchingAccounts ? undefined : onPressLanguageSettings}
           accessibilityRole="button"
-          accessibilityHint="Language settings"
-          accessibilityLabel={_(msg`Opens configurable language settings`)}>
+          accessibilityLabel={_(msg`Language settings`)}
+          accessibilityHint={_(msg`Opens configurable language settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="language"
@@ -569,8 +569,8 @@ export function SettingsScreen({}: Props) {
               : () => navigation.navigate('Moderation')
           }
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens moderation settings`)}>
+          accessibilityLabel={_(msg`Moderation settings`)}
+          accessibilityHint={_(msg`Opens moderation settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <HandIcon style={pal.text} size={18} strokeWidth={6} />
           </View>
@@ -598,8 +598,8 @@ export function SettingsScreen({}: Props) {
               : () => navigation.navigate('PreferencesExternalEmbeds')
           }
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens external embeds settings`)}>
+          accessibilityLabel={_(msg`External media settings`)}
+          accessibilityHint={_(msg`Opens external embeds settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'circle-play']}
@@ -625,8 +625,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={onPressAppPasswords}
           accessibilityRole="button"
-          accessibilityHint="Open app password settings"
-          accessibilityLabel={_(msg`Opens the app password settings page`)}>
+          accessibilityLabel={_(msg`App password settings`)}
+          accessibilityHint={_(msg`Opens the app password settings page`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
@@ -647,7 +647,7 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
-          accessibilityHint="Choose a new Bluesky username or create">
+          accessibilityHint={_(msg`Choose a new Bluesky username or create`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
@@ -668,7 +668,9 @@ export function SettingsScreen({}: Props) {
           accessible={true}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Delete account`)}
-          accessibilityHint="Opens modal for account deletion confirmation. Requires email code.">
+          accessibilityHint={_(
+            msg`Opens modal for account deletion confirmation. Requires email code.`,
+          )}>
           <View style={[styles.iconContainer, dangerBg]}>
             <FontAwesomeIcon
               icon={['far', 'trash-can']}
@@ -708,8 +710,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressStorybook}
               accessibilityRole="button"
-              accessibilityHint="Open storybook page"
-              accessibilityLabel={_(msg`Opens the storybook page`)}>
+              accessibilityLabel={_(msg`Open storybook page`)}
+              accessibilityHint={_(msg`Opens the storybook page`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Storybook</Trans>
               </Text>
@@ -718,8 +720,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetPreferences}
               accessibilityRole="button"
-              accessibilityHint="Reset preferences"
-              accessibilityLabel={_(msg`Resets the preferences state`)}>
+              accessibilityLabel={_(msg`Reset preferences`)}
+              accessibilityHint={_(msg`Resets the preferences state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset preferences state</Trans>
               </Text>
@@ -728,8 +730,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
-              accessibilityHint="Reset onboarding"
-              accessibilityLabel={_(msg`Resets the onboarding state`)}>
+              accessibilityLabel={_(msg`Reset onboarding`)}
+              accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
               </Text>
@@ -738,8 +740,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={clearAllLegacyStorage}
               accessibilityRole="button"
-              accessibilityHint="Clear all legacy storage data"
-              accessibilityLabel={_(msg`Clear all legacy storage data`)}>
+              accessibilityLabel={_(msg`Clear all legacy storage data`)}
+              accessibilityHint={_(msg`Clear all legacy storage data`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>
                   Clear all legacy storage data (restart after this)
@@ -750,8 +752,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={clearAllStorage}
               accessibilityRole="button"
-              accessibilityHint="Clear all storage data"
-              accessibilityLabel={_(msg`Clear all storage data`)}>
+              accessibilityLabel={_(msg`Clear all storage data`)}
+              accessibilityHint={_(msg`Clear all storage data`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Clear all storage data (restart after this)</Trans>
               </Text>

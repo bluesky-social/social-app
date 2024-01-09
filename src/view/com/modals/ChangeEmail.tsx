@@ -38,7 +38,7 @@ export function Component() {
 
   const onRequestChange = async () => {
     if (email === currentAccount?.email) {
-      setError('Enter your new email above')
+      setError(_(msg`Enter your new email above`))
       return
     }
     setError('')
@@ -53,7 +53,7 @@ export function Component() {
           email: email.trim(),
           emailConfirmed: false,
         })
-        Toast.show('Email updated')
+        Toast.show(_(msg`Email updated`))
         setStage(Stages.Done)
       }
     } catch (e) {
@@ -85,7 +85,7 @@ export function Component() {
         email: email.trim(),
         emailConfirmed: false,
       })
-      Toast.show('Email updated')
+      Toast.show(_(msg`Email updated`))
       setStage(Stages.Done)
     } catch (e) {
       setError(cleanError(String(e)))

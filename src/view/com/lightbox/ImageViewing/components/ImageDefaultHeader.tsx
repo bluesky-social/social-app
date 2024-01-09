@@ -24,7 +24,7 @@ const ImageDefaultHeader = ({onRequestClose}: Props) => (
       hitSlop={HIT_SLOP}
       accessibilityRole="button"
       accessibilityLabel={t`Close image`}
-      accessibilityHint="Closes viewer for header image"
+      accessibilityHint={t`Closes viewer for header image`}
       onAccessibilityEscape={onRequestClose}>
       <Text style={styles.closeText}>✕</Text>
     </TouchableOpacity>

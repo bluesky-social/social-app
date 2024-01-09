@@ -214,11 +214,21 @@ export function ProfileFeedScreenInner({
       }
     } catch (err) {
       Toast.show(
-        'There was an an issue updating your feeds, please check your internet connection and try again.',
+        _(
+          msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
+        ),
       )
       logger.error('Failed up update feeds', {error: err})
     }
-  }, [feedInfo, isSaved, saveFeed, removeFeed, resetSaveFeed, resetRemoveFeed])
+  }, [
+    feedInfo,
+    isSaved,
+    saveFeed,
+    removeFeed,
+    resetSaveFeed,
+    resetRemoveFeed,
+    _,
+  ])
 
   const onTogglePinned = React.useCallback(async () => {
     try {
@@ -232,10 +242,10 @@ export function ProfileFeedScreenInner({
         resetPinFeed()
       }
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
-  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed])
+  }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
 
   const onPressShare = React.useCallback(() => {
     const url = toShareUrl(feedInfo.route.href)
@@ -341,7 +351,7 @@ export function ProfileFeedScreenInner({
             <Button
               disabled={isSavePending || isRemovePending}
               type="default"
-              label={isSaved ? 'Unsave' : 'Save'}
+              label={isSaved ? _(msg`Unsave`) : _(msg`Save`)}
               onPress={onToggleSaved}
               style={styles.btn}
             />
@@ -349,7 +359,7 @@ export function ProfileFeedScreenInner({
               testID={isPinned ? 'unpinBtn' : 'pinBtn'}
               disabled={isPinPending || isUnpinPending}
               type={isPinned ? 'default' : 'inverted'}
-              label={isPinned ? 'Unpin' : 'Pin to home'}
+              label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
               onPress={onTogglePinned}
               style={styles.btn}
             />
@@ -444,6 +454,7 @@ interface FeedSectionProps {
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl({feed, headerHeight, scrollElRef, isFocused}, ref) {
+    const {_} = useLingui()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
@@ -470,8 +481,8 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [onScrollToTop, isScreenFocused])
 
     const renderPostsEmpty = useCallback(() => {
-      return <EmptyState icon="feed" message="This feed is empty!" />
-    }, [])
+      return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
+    }, [_])
 
     return (
       <View>
@@ -488,7 +499,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
-            label="Load new posts"
+            label={_(msg`Load new posts`)}
             showIndicator={hasNew}
           />
         )}
@@ -542,11 +553,13 @@ function AboutSection({
       }
     } catch (err) {
       Toast.show(
-        'There was an an issue contacting the server, please check your internet connection and try again.',
+        _(
+          msg`There was an an issue contacting the server, please check your internet connection and try again.`,
+        ),
       )
       logger.error('Failed up toggle like', {error: err})
     }
-  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track])
+  }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
 
   return (
     <ScrollView
@@ -597,24 +610,28 @@ function AboutSection({
           {typeof likeCount === 'number' && (
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-              text={`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`}
+              text={_(
+                msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`,
+              )}
               style={[pal.textLight, s.semiBold]}
             />
           )}
         </View>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          Created by{' '}
           {isOwner ? (
-            'you'
+            <Trans>Created by you</Trans>
           ) : (
-            <TextLink
-              text={sanitizeHandle(feedInfo.creatorHandle, '@')}
-              href={makeProfileLink({
-                did: feedInfo.creatorDid,
-                handle: feedInfo.creatorHandle,
-              })}
-              style={pal.textLight}
-            />
+            <Trans>
+              Created by{' '}
+              <TextLink
+                text={sanitizeHandle(feedInfo.creatorHandle, '@')}
+                href={makeProfileLink({
+                  did: feedInfo.creatorDid,
+                  handle: feedInfo.creatorHandle,
+                })}
+                style={pal.textLight}
+              />
+            </Trans>
           )}
         </Text>
       </View>

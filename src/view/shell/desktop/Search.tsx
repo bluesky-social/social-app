@@ -176,7 +176,7 @@ export function DesktopSearch() {
                 onPress={onPressCancelSearch}
                 accessibilityRole="button"
                 accessibilityLabel={_(msg`Cancel search`)}
-                accessibilityHint="Exits inputting search query"
+                accessibilityHint={_(msg`Exits inputting search query`)}
                 onAccessibilityEscape={onPressCancelSearch}>
                 <Text type="lg" style={[pal.link]}>
                   <Trans>Cancel</Trans>

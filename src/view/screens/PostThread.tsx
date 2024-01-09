@@ -78,7 +78,9 @@ export function PostThreadScreen({route}: Props) {
 
   return (
     <View style={s.hContentRegion}>
-      {isMobile && <ViewHeader title={_(msg`Post`)} />}
+      {isMobile && (
+        <ViewHeader title={_(msg({message: 'Post', context: 'description'}))} />
+      )}
       <View style={s.flex1}>
         {uriError ? (
           <CenteredView>

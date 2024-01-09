@@ -63,14 +63,16 @@ export function ErrorScreen({
             style={[styles.btn]}
             onPress={onPressTryAgain}
             accessibilityLabel={_(msg`Retry`)}
-            accessibilityHint="Retries the last action, which errored out">
+            accessibilityHint={_(
+              msg`Retries the last action, which errored out`,
+            )}>
             <FontAwesomeIcon
               icon="arrows-rotate"
               style={pal.link as FontAwesomeIconStyle}
               size={16}
             />
             <Text type="button" style={[styles.btnText, pal.link]}>
-              <Trans>Try again</Trans>
+              <Trans context="action">Try again</Trans>
             </Text>
           </Button>
         </View>

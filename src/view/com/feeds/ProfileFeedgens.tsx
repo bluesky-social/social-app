@@ -9,13 +9,14 @@ import {Text} from '../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useProfileFeedgensQuery, RQKEY} from '#/state/queries/profile-feedgens'
 import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {hydrateFeedGenerator} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {isNative} from '#/platform/detection'
+import {useLingui} from '@lingui/react'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -43,6 +44,7 @@ export const ProfileFeedgens = React.forwardRef<
   ref,
 ) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const theme = useTheme()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const opts = React.useMemo(() => ({enabled}), [enabled])
@@ -142,7 +144,9 @@ export const ProfileFeedgens = React.forwardRef<
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label="There was an issue fetching your lists. Tap here to try again."
+            label={_(
+              msg`There was an issue fetching your lists. Tap here to try again.`,
+            )}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -162,7 +166,7 @@ export const ProfileFeedgens = React.forwardRef<
       }
       return null
     },
-    [error, refetch, onPressRetryLoadMore, pal, preferences],
+    [error, refetch, onPressRetryLoadMore, pal, preferences, _],
   )
 
   return (

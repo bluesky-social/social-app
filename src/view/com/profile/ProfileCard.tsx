@@ -23,6 +23,7 @@ import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
+import {Trans} from '@lingui/macro'
 
 export function ProfileCard({
   testID,
@@ -137,7 +138,7 @@ function ProfileCardPills({
       {followedBy && (
         <View style={[s.mt5, pal.btn, styles.pill]}>
           <Text type="xs" style={pal.text}>
-            Follows You
+            <Trans>Follows You</Trans>
           </Text>
         </View>
       )}
@@ -190,8 +191,10 @@ function FollowersList({
         style={[styles.followsByDesc, pal.textLight]}
         numberOfLines={2}
         lineHeight={1.2}>
-        Followed by{' '}
-        {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
+        <Trans>
+          Followed by{' '}
+          {followersWithMods.map(({f}) => f.displayName || f.handle).join(', ')}
+        </Trans>
       </Text>
       {followersWithMods.slice(0, 3).map(({f, mod}) => (
         <View key={f.did} style={styles.followedByAviContainer}>

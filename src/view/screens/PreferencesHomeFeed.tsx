@@ -27,6 +27,7 @@ function RepliesThresholdInput({
   initialValue: number
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const preValue = React.useRef(initialValue)
@@ -64,10 +65,12 @@ function RepliesThresholdInput({
       />
       <Text type="xs" style={pal.text}>
         {value === 0
-          ? `Show all replies`
-          : `Show replies with at least ${value} ${
-              value > 1 ? `likes` : `like`
-            }`}
+          ? _(msg`Show all replies`)
+          : _(
+              msg`Show replies with at least ${value} ${
+                value > 1 ? `likes` : `like`
+              }`,
+            )}
       </Text>
     </View>
   )

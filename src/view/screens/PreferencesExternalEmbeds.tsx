@@ -72,7 +72,7 @@ export function PreferencesExternalEmbeds({}: Props) {
           </View>
         </View>
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          Enable media players for
+          <Trans>Enable media players for</Trans>
         </Text>
         {Object.entries(externalEmbedLabels).map(([key, label]) => (
           <PrefSelector

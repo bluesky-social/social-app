@@ -45,7 +45,7 @@ export function Component(props: ReportComponentProps) {
         },
         reason: details,
       })
-      Toast.show("We'll look into your appeal promptly.")
+      Toast.show(_(msg`We'll look into your appeal promptly.`))
     } finally {
       closeModal()
     }

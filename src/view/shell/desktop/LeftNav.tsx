@@ -255,7 +255,7 @@ function ComposeBtn() {
           />
         </View>
         <Text type="button" style={styles.newPostBtnLabel}>
-          <Trans>New Post</Trans>
+          <Trans context="action">New Post</Trans>
         </Text>
       </TouchableOpacity>
     </View>

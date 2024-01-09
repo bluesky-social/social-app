@@ -8,6 +8,7 @@ import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeProfileLink} from 'lib/routes/links'
+import {Trans} from '@lingui/macro'
 
 let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {
@@ -99,7 +100,7 @@ function ViewFullThread({slice}: {slice: FeedPostSlice}) {
       </View>
 
       <Text type="md" style={[pal.link, {paddingTop: 18, paddingBottom: 4}]}>
-        View full thread
+        <Trans>View full thread</Trans>
       </Text>
     </Link>
   )

@@ -35,6 +35,8 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function FeedItem({
   post,
@@ -103,6 +105,7 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -182,24 +185,28 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                From{' '}
-                <FeedNameText
-                  type="sm-bold"
-                  uri={reason.uri}
-                  href={reason.href}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  style={pal.textLight}
-                />
+                <Trans context="from-feed">
+                  From{' '}
+                  <FeedNameText
+                    type="sm-bold"
+                    uri={reason.uri}
+                    href={reason.href}
+                    lineHeight={1.2}
+                    numberOfLines={1}
+                    style={pal.textLight}
+                  />
+                </Trans>
               </Text>
             </Link>
           ) : AppBskyFeedDefs.isReasonRepost(reason) ? (
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
-              title={`Reposted by ${sanitizeDisplayName(
-                reason.by.displayName || reason.by.handle,
-              )}`}>
+              title={_(
+                msg`Reposted by ${sanitizeDisplayName(
+                  reason.by.displayName || reason.by.handle,
+                )})`,
+              )}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{
@@ -213,17 +220,19 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reposted by{' '}
-                <TextLinkOnWebOnly
-                  type="sm-bold"
-                  style={pal.textLight}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  text={sanitizeDisplayName(
-                    reason.by.displayName || sanitizeHandle(reason.by.handle),
-                  )}
-                  href={makeProfileLink(reason.by)}
-                />
+                <Trans>
+                  Reposted by{' '}
+                  <TextLinkOnWebOnly
+                    type="sm-bold"
+                    style={pal.textLight}
+                    lineHeight={1.2}
+                    numberOfLines={1}
+                    text={sanitizeDisplayName(
+                      reason.by.displayName || sanitizeHandle(reason.by.handle),
+                    )}
+                    href={makeProfileLink(reason.by)}
+                  />
+                </Trans>
               </Text>
             </Link>
           ) : null}
@@ -274,13 +283,15 @@ let FeedItemInner = ({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reply to{' '}
-                <UserInfoText
-                  type="md"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight, s.ml2]}
-                />
+                <Trans context="description">
+                  Reply to{' '}
+                  <UserInfoText
+                    type="md"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight, s.ml2]}
+                  />
+                </Trans>
               </Text>
             </View>
           )}
@@ -317,6 +328,7 @@ let PostContent = ({
   postAuthor: AppBskyFeedDefs.PostView['author']
 }): React.ReactNode => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -346,7 +358,7 @@ let PostContent = ({
       ) : undefined}
       {limitLines ? (
         <TextLink
-          text="Show More"
+          text={_(msg`Show More`)}
           style={pal.link}
           onPress={onPressShowMore}
           href="#"

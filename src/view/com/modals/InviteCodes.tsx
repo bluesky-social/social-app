@@ -19,7 +19,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {cleanError} from 'lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {useInvitesState, useInvitesAPI} from '#/state/invites'
@@ -31,6 +30,7 @@ import {
   useInviteCodesQuery,
   InviteCodesQueryResponse,
 } from '#/state/queries/invites'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['70%']
 
@@ -166,10 +166,10 @@ function InviteCode({
         accessibilityRole="button"
         accessibilityLabel={
           invites.available.length === 1
-            ? 'Invite codes: 1 available'
-            : `Invite codes: ${invites.available.length} available`
+            ? _(msg`Invite codes: 1 available`)
+            : _(msg`Invite codes: ${invites.available.length} available`)
         }
-        accessibilityHint="Opens list of invite codes">
+        accessibilityHint={_(msg`Opens list of invite codes`)}>
         <Text
           testID={`${testID}-code`}
           type={used ? 'md' : 'md-bold'}

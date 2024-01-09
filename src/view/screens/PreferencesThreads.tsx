@@ -159,7 +159,7 @@ export function PreferencesThreads({navigation}: Props) {
           accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Done</Trans>
+            <Trans context="action">Done</Trans>
           </Text>
         </TouchableOpacity>
       </View>
