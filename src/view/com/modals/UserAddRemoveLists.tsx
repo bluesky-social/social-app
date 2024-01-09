@@ -79,7 +79,7 @@ export function Component({
           accessibilityLabel={_(msg`Done`)}
           accessibilityHint=""
           onAccessibilityEscape={onPressDone}
-          label="Done"
+          label={_(msg`Done`)}
         />
       </View>
     </View>

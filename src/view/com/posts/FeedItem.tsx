@@ -131,6 +131,7 @@ let FeedItemInner = ({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
     })
   }, [post, record, openComposer])
