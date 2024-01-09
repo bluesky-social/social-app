@@ -83,7 +83,7 @@ export function RecommendedFollows({next}: Props) {
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              <Trans>Done</Trans>
+              <Trans context="action">Done</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>

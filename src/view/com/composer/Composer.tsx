@@ -260,7 +260,11 @@ export const ComposePost = observer(function ComposePost({
     setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
-    Toast.show(_(msg`Your ${replyTo ? 'reply' : 'post'} has been published`))
+    Toast.show(
+      replyTo
+        ? _(msg`Your reply has been published`)
+        : _(msg`Your post has been published`),
+    )
   }
 
   const canPost = useMemo(
@@ -293,7 +297,9 @@ export const ComposePost = observer(function ComposePost({
             onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Cancel`)}
-            accessibilityHint="Closes post composer and discards post draft">
+            accessibilityHint={_(
+              msg`Closes post composer and discards post draft`,
+            )}>
             <Text style={[pal.link, s.f18]}>
               <Trans>Cancel</Trans>
             </Text>
@@ -337,14 +343,18 @@ export const ComposePost = observer(function ComposePost({
                     end={{x: 1, y: 1}}
                     style={styles.postBtn}>
                     <Text style={[s.white, s.f16, s.bold]}>
-                      {replyTo ? _(msg`Reply`) : _(msg`Post (verb)`)}
+                      {replyTo ? (
+                        <Trans context="action">Reply</Trans>
+                      ) : (
+                        <Trans context="action">Post</Trans>
+                      )}
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
                   <Text style={[pal.textLight, s.f16, s.bold]}>
-                    <Trans>Post (verb)</Trans>
+                    <Trans context="action">Post</Trans>
                   </Text>
                 </View>
               )}
@@ -402,7 +412,9 @@ export const ComposePost = observer(function ComposePost({
               onError={setError}
               accessible={true}
               accessibilityLabel={_(msg`Write post`)}
-              accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
+              accessibilityHint={_(
+                msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+              )}
             />
           </View>
 
@@ -431,7 +443,9 @@ export const ComposePost = observer(function ComposePost({
                   onPress={() => onPressAddLinkCard(url)}
                   accessibilityRole="button"
                   accessibilityLabel={_(msg`Add link card`)}
-                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
+                  accessibilityHint={_(
+                    msg`Creates a card with a thumbnail. The card links to ${url}`,
+                  )}>
                   <Text style={pal.text}>
                     <Trans>Add link card:</Trans>{' '}
                     <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>

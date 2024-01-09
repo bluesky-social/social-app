@@ -371,6 +371,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     {feed, headerHeight, isFocused, scrollElRef, ignoreFilterFor},
     ref,
   ) {
+    const {_} = useLingui()
     const queryClient = useQueryClient()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
@@ -409,7 +410,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
-            label="Load new posts"
+            label={_(msg`Load new posts`)}
             showIndicator={hasNew}
           />
         )}

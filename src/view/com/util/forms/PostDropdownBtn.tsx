@@ -255,7 +255,7 @@ let PostDropdownBtn = ({
       <NativeDropdown
         testID={testID}
         items={dropdownItems}
-        accessibilityLabel="More post options"
+        accessibilityLabel={_(msg`More post options`)}
         accessibilityHint="">
         <View style={style}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />

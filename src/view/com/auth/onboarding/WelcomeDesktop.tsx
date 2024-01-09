@@ -18,32 +18,30 @@ export function WelcomeDesktop({next}: Props) {
   const pal = usePalette('default')
   const horizontal = useMediaQuery({minWidth: 1300})
   const title = (
-    <>
-      <Trans>
-        <Text
-          style={[
-            pal.textLight,
-            {
-              fontSize: 36,
-              fontWeight: '800',
-              textAlign: horizontal ? 'right' : 'left',
-            },
-          ]}>
-          Welcome to
-        </Text>
-        <Text
-          style={[
-            pal.link,
-            {
-              fontSize: 72,
-              fontWeight: '800',
-              textAlign: horizontal ? 'right' : 'left',
-            },
-          ]}>
-          Bluesky
-        </Text>
-      </Trans>
-    </>
+    <Trans>
+      <Text
+        style={[
+          pal.textLight,
+          {
+            fontSize: 36,
+            fontWeight: '800',
+            textAlign: horizontal ? 'right' : 'left',
+          },
+        ]}>
+        Welcome to
+      </Text>
+      <Text
+        style={[
+          pal.link,
+          {
+            fontSize: 72,
+            fontWeight: '800',
+            textAlign: horizontal ? 'right' : 'left',
+          },
+        ]}>
+        Bluesky
+      </Text>
+    </Trans>
   )
   return (
     <TitleColumnLayout
@@ -102,7 +100,7 @@ export function WelcomeDesktop({next}: Props) {
             <Text
               type="2xl-medium"
               style={{color: '#fff', position: 'relative', top: -1}}>
-              <Trans>Next</Trans>
+              <Trans context="action">Next</Trans>
             </Text>
             <FontAwesomeIcon icon="angle-right" color="#fff" size={14} />
           </View>

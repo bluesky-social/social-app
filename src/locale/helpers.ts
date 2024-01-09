@@ -113,7 +113,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
       // DISABLED until this translation is fixed -prf
       // case 'de':
       //   return AppLanguage.de
-      // DISABLED until this translation is more thoroughly reviewed -prf
+      case 'id':
+        return AppLanguage.id
       case 'es':
         return AppLanguage.es
       case 'fr':
@@ -132,6 +133,5 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         continue
     }
   }
-
   return AppLanguage.en
 }

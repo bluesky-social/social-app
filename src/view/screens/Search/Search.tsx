@@ -535,7 +535,7 @@ export function SearchScreen(
             style={styles.headerMenuBtn}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Menu`)}
-            accessibilityHint="Access navigation links and settings">
+            accessibilityHint={_(msg`Access navigation links and settings`)}>
             <FontAwesomeIcon
               icon="bars"
               size={18}

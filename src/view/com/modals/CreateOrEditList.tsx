@@ -65,7 +65,6 @@ export function Component({
     return 'app.bsky.graph.defs#curatelist'
   }, [list, purpose])
   const isCurateList = activePurpose === 'app.bsky.graph.defs#curatelist'
-  const purposeLabel = isCurateList ? _(msg`User`) : _(msg`Moderation`)
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')
@@ -106,7 +105,7 @@ export function Component({
     }
     const nameTrimmed = name.trim()
     if (!nameTrimmed) {
-      setError('Name is required')
+      setError(_(msg`Name is required`))
       return
     }
     setProcessing(true)
@@ -121,7 +120,11 @@ export function Component({
           description: description.trim(),
           avatar: newAvatar,
         })
-        Toast.show(_(msg`${purposeLabel} list updated`))
+        Toast.show(
+          isCurateList
+            ? _(msg`User list updated`)
+            : _(msg`Moderation list updated`),
+        )
         onSave?.(list.uri)
       } else {
         const res = await listCreateMutation.mutateAsync({
@@ -130,14 +133,20 @@ export function Component({
           description,
           avatar: newAvatar,
         })
-        Toast.show(_(msg`${purposeLabel} list created`))
+        Toast.show(
+          isCurateList
+            ? _(msg`User list created`)
+            : _(msg`Moderation list created`),
+        )
         onSave?.(res.uri)
       }
       closeModal()
     } catch (e: any) {
       if (isNetworkError(e)) {
         setError(
-          'Failed to create the list. Check your internet connection and try again.',
+          _(
+            msg`Failed to create the list. Check your internet connection and try again.`,
+          ),
         )
       } else {
         setError(cleanError(e))
@@ -153,7 +162,6 @@ export function Component({
     closeModal,
     activePurpose,
     isCurateList,
-    purposeLabel,
     name,
     description,
     newAvatar,
@@ -175,7 +183,17 @@ export function Component({
         testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
           <Trans>
-            {list ? _(msg`Edit`) : _(msg`New`)} {purposeLabel} List
+            {isCurateList ? (
+              list ? (
+                <Trans>Edit User List</Trans>
+              ) : (
+                <Trans>New User List</Trans>
+              )
+            ) : list ? (
+              <Trans>Edit Moderation List</Trans>
+            ) : (
+              <Trans>New Moderation List</Trans>
+            )}
           </Trans>
         </Text>
         {error !== '' && (
@@ -257,7 +275,7 @@ export function Component({
                 end={{x: 1, y: 1}}
                 style={[styles.btn]}>
                 <Text style={[s.white, s.bold]}>
-                  <Trans>Save</Trans>
+                  <Trans context="action">Save</Trans>
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -272,7 +290,7 @@ export function Component({
             onAccessibilityEscape={onPressCancel}>
             <View style={[styles.btn]}>
               <Text style={[s.black, s.bold, pal.text]}>
-                <Trans>Cancel</Trans>
+                <Trans context="action">Cancel</Trans>
               </Text>
             </View>
           </TouchableOpacity>

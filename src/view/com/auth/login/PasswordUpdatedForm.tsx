@@ -36,7 +36,7 @@ export const PasswordUpdatedForm = ({
             onPress={onPressNext}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Close alert`)}
-            accessibilityHint="Closes password update alert">
+            accessibilityHint={_(msg`Closes password update alert`)}>
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               <Trans>Okay</Trans>
             </Text>

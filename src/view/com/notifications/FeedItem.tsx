@@ -317,14 +317,16 @@ function CondensedAuthorsList({
           onPress={onToggleAuthorsExpanded}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Hide user list`)}
-          accessibilityHint="Collapses list of users for a given notification">
+          accessibilityHint={_(
+            msg`Collapses list of users for a given notification`,
+          )}>
           <FontAwesomeIcon
             icon="angle-up"
             size={18}
             style={[styles.expandedAuthorsCloseBtnIcon, pal.text]}
           />
           <Text type="sm-medium" style={pal.text}>
-            <Trans>Hide</Trans>
+            <Trans context="action">Hide</Trans>
           </Text>
         </TouchableOpacity>
       </View>
@@ -346,7 +348,9 @@ function CondensedAuthorsList({
   return (
     <TouchableOpacity
       accessibilityLabel={_(msg`Show users`)}
-      accessibilityHint="Opens an expanded list of users in this notification"
+      accessibilityHint={_(
+        msg`Opens an expanded list of users in this notification`,
+      )}
       onPress={onToggleAuthorsExpanded}>
       <View style={styles.avis}>
         {authors.slice(0, MAX_AUTHORS).map(author => (

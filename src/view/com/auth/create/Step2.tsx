@@ -70,7 +70,7 @@ export function Step2({
             editable
             onChange={value => uiDispatch({type: 'set-invite-code', value})}
             accessibilityLabel={_(msg`Invite code`)}
-            accessibilityHint="Input invite code to proceed"
+            accessibilityHint={_(msg`Input invite code to proceed`)}
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect={false}
@@ -106,7 +106,7 @@ export function Step2({
               editable
               onChange={value => uiDispatch({type: 'set-email', value})}
               accessibilityLabel={_(msg`Email`)}
-              accessibilityHint="Input email for Bluesky waitlist"
+              accessibilityHint={_(msg`Input email for Bluesky waitlist`)}
               accessibilityLabelledBy="email"
               autoCapitalize="none"
               autoComplete="off"
@@ -130,7 +130,7 @@ export function Step2({
               secureTextEntry
               onChange={value => uiDispatch({type: 'set-password', value})}
               accessibilityLabel={_(msg`Password`)}
-              accessibilityHint="Set password"
+              accessibilityHint={_(msg`Set password`)}
               accessibilityLabelledBy="password"
               autoCapitalize="none"
               autoComplete="off"
@@ -154,7 +154,7 @@ export function Step2({
               buttonStyle={[pal.border, styles.dateInputButton]}
               buttonLabelType="lg"
               accessibilityLabel={_(msg`Birthday`)}
-              accessibilityHint="Enter your birth date"
+              accessibilityHint={_(msg`Enter your birth date`)}
               accessibilityLabelledBy="birthDate"
             />
           </View>

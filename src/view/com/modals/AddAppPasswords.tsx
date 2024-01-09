@@ -179,7 +179,7 @@ export function Component({}: {}) {
               onEndEditing={createAppPassword}
               accessible={true}
               accessibilityLabel={_(msg`Name`)}
-              accessibilityHint="Input name for app password"
+              accessibilityHint={_(msg`Input name for app password`)}
             />
           </View>
         ) : (
@@ -188,7 +188,7 @@ export function Component({}: {}) {
             onPress={onCopy}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Copy`)}
-            accessibilityHint="Copies app password">
+            accessibilityHint={_(msg`Copies app password`)}>
             <Text type="2xl-bold" style={[pal.text]}>
               {appPassword}
             </Text>

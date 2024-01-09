@@ -5,8 +5,8 @@ import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {Shadow} from '#/state/cache/types'
-import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function FollowButton({
   unfollowedType = 'inverted',
@@ -52,7 +52,7 @@ export function FollowButton({
         type={followedType}
         labelStyle={labelStyle}
         onPress={onPressUnfollow}
-        label={_(msg`Unfollow`)}
+        label={_(msg({message: 'Unfollow', context: 'action'}))}
       />
     )
   } else {
@@ -61,7 +61,7 @@ export function FollowButton({
         type={unfollowedType}
         labelStyle={labelStyle}
         onPress={onPressFollow}
-        label={_(msg`Follow`)}
+        label={_(msg({message: 'Follow', context: 'action'}))}
       />
     )
   }

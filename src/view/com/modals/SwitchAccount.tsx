@@ -62,7 +62,9 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
           onPress={isSwitchingAccounts ? undefined : onPressSignout}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
-          accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
+          accessibilityHint={_(
+            msg`Signs ${profile?.displayName} out of Bluesky`,
+          )}>
           <Text type="lg" style={pal.link}>
             <Trans>Sign out</Trans>
           </Text>
@@ -92,8 +94,8 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
         isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
       }
       accessibilityRole="button"
-      accessibilityLabel={`Switch to ${account.handle}`}
-      accessibilityHint="Switches the account you are logged in to">
+      accessibilityLabel={_(msg`Switch to ${account.handle}`)}
+      accessibilityHint={_(msg`Switches the account you are logged in to`)}>
       {contents}
     </TouchableOpacity>
   )

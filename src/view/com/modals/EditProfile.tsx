@@ -190,7 +190,7 @@ export function Component({
               }
               accessible={true}
               accessibilityLabel={_(msg`Display name`)}
-              accessibilityHint="Edit your display name"
+              accessibilityHint={_(msg`Edit your display name`)}
             />
           </View>
           <View style={s.pb10}>
@@ -208,7 +208,7 @@ export function Component({
               onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
               accessible={true}
               accessibilityLabel={_(msg`Description`)}
-              accessibilityHint="Edit your profile description"
+              accessibilityHint={_(msg`Edit your profile description`)}
             />
           </View>
           {updateMutation.isPending ? (
@@ -222,7 +222,7 @@ export function Component({
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Save`)}
-              accessibilityHint="Saves any changes to your profile">
+              accessibilityHint={_(msg`Saves any changes to your profile`)}>
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}

@@ -28,6 +28,8 @@ import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
 import {useSession} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -74,6 +76,7 @@ let Feed = ({
 }): React.ReactNode => {
   const theme = useTheme()
   const {track} = useAnalytics()
+  const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
   const [isPTRing, setIsPTRing] = React.useState(false)
@@ -250,7 +253,9 @@ let Feed = ({
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label="There was an issue fetching posts. Tap here to try again."
+            label={_(
+              msg`There was an issue fetching posts. Tap here to try again.`,
+            )}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -259,7 +264,7 @@ let Feed = ({
       }
       return <FeedSlice slice={item} />
     },
-    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState],
+    [feed, error, onPressTryAgain, onPressRetryLoadMore, renderEmptyState, _],
   )
 
   const shouldRenderEndOfFeed =

@@ -42,7 +42,7 @@ function AccountItem({
       onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Sign in as ${account.handle}`)}
-      accessibilityHint="Double tap to sign in">
+      accessibilityHint={_(msg`Double tap to sign in`)}>
       <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
         <View style={s.p10}>
           <UserAvatar avatar={profile?.avatar} size={30} />

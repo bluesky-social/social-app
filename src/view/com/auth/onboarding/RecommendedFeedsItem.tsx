@@ -18,9 +18,8 @@ import {
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 export function RecommendedFeedsItem({
   item,
@@ -98,7 +97,7 @@ export function RecommendedFeedsItem({
           </Text>
 
           <Text style={[pal.textLight, {marginBottom: 8}]} numberOfLines={1}>
-            by {sanitizeHandle(item.creator.handle, '@')}
+            <Trans>by {sanitizeHandle(item.creator.handle, '@')}</Trans>
           </Text>
 
           {item.description ? (

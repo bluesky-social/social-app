@@ -56,7 +56,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           {isSandbox ? (
             <View style={[palError.view, styles.messageLine, s.p10]}>
               <Text type="md" style={[palError.text, s.bold]}>
-                SANDBOX. Posts and accounts are not permanent.
+                <Trans>SANDBOX. Posts and accounts are not permanent.</Trans>
               </Text>
             </View>
           ) : undefined}

@@ -77,7 +77,7 @@ export function Step1({
             value={uiState.serviceUrl}
             editable
             onChange={onChangeServiceUrl}
-            accessibilityHint="Input hosting provider address"
+            accessibilityHint={_(msg`Input hosting provider address`)}
             accessibilityLabel={_(msg`Hosting provider address`)}
             accessibilityLabelledBy="addressProvider"
           />
@@ -125,6 +125,7 @@ function Option({
 }>) {
   const theme = useTheme()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const circleFillStyle = React.useMemo(
     () => ({
       backgroundColor: theme.palette.primary.background,
@@ -139,7 +140,7 @@ function Option({
         testID={testID}
         accessibilityRole="button"
         accessibilityLabel={label}
-        accessibilityHint={`Sets hosting provider to ${label}`}>
+        accessibilityHint={_(msg`Sets hosting provider to ${label}`)}>
         <View style={styles.optionHeading}>
           <View style={[styles.circle, pal.border]}>
             {isSelected ? (

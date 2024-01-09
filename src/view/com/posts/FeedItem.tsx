@@ -185,7 +185,7 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>
+                <Trans context="from-feed">
                   From{' '}
                   <FeedNameText
                     type="sm-bold"
@@ -205,7 +205,7 @@ let FeedItemInner = ({
               title={_(
                 msg`Reposted by ${sanitizeDisplayName(
                   reason.by.displayName || reason.by.handle,
-                )}`,
+                )})`,
               )}>
               <FontAwesomeIcon
                 icon="retweet"
@@ -283,7 +283,7 @@ let FeedItemInner = ({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>
+                <Trans context="description">
                   Reply to{' '}
                   <UserInfoText
                     type="md"

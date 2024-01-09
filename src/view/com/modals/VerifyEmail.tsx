@@ -97,11 +97,15 @@ export function Component({showReminder}: {showReminder?: boolean}) {
         {stage === Stages.Reminder && <ReminderIllustration />}
         <View style={styles.titleSection}>
           <Text type="title-lg" style={[pal.text, styles.title]}>
-            {stage === Stages.Reminder ? _(msg`Please Verify Your Email`) : ''}
-            {stage === Stages.ConfirmCode
-              ? _(msg`Enter Confirmation Code`)
-              : ''}
-            {stage === Stages.Email ? _(msg`Verify Your Email`) : ''}
+            {stage === Stages.Reminder ? (
+              <Trans>Please Verify Your Email</Trans>
+            ) : stage === Stages.Email ? (
+              <Trans>Verify Your Email</Trans>
+            ) : stage === Stages.ConfirmCode ? (
+              <Trans>Enter Confirmation Code</Trans>
+            ) : (
+              ''
+            )}
           </Text>
         </View>
 
@@ -135,7 +139,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                 size={16}
               />
               <Text type="xl-medium" style={[pal.text, s.flex1, {minWidth: 0}]}>
-                {currentAccount?.email || '(no email)'}
+                {currentAccount?.email || _(msg`(no email)`)}
               </Text>
             </View>
             <Pressable
@@ -184,7 +188,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                   onPress={() => setStage(Stages.Email)}
                   accessibilityLabel={_(msg`Get Started`)}
                   accessibilityHint=""
-                  label="Get Started"
+                  label={_(msg`Get Started`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
@@ -197,7 +201,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                     onPress={onSendEmail}
                     accessibilityLabel={_(msg`Send Confirmation Email`)}
                     accessibilityHint=""
-                    label="Send Confirmation Email"
+                    label={_(msg`Send Confirmation Email`)}
                     labelContainerStyle={{
                       justifyContent: 'center',
                       padding: 4,
@@ -209,7 +213,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                     type="default"
                     accessibilityLabel={_(msg`I have a code`)}
                     accessibilityHint=""
-                    label="I have a confirmation code"
+                    label={_(msg`I have a confirmation code`)}
                     labelContainerStyle={{
                       justifyContent: 'center',
                       padding: 4,
@@ -238,10 +242,16 @@ export function Component({showReminder}: {showReminder?: boolean}) {
                   closeModal()
                 }}
                 accessibilityLabel={
-                  stage === Stages.Reminder ? 'Not right now' : 'Cancel'
+                  stage === Stages.Reminder
+                    ? _(msg`Not right now`)
+                    : _(msg`Cancel`)
                 }
                 accessibilityHint=""
-                label={stage === Stages.Reminder ? 'Not right now' : 'Cancel'}
+                label={
+                  stage === Stages.Reminder
+                    ? _(msg`Not right now`)
+                    : _(msg`Cancel`)
+                }
                 labelContainerStyle={{justifyContent: 'center', padding: 4}}
                 labelStyle={[s.f18]}
               />

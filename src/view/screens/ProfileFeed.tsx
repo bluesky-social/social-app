@@ -454,6 +454,7 @@ interface FeedSectionProps {
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl({feed, headerHeight, scrollElRef, isFocused}, ref) {
+    const {_} = useLingui()
     const [hasNew, setHasNew] = React.useState(false)
     const [isScrolledDown, setIsScrolledDown] = React.useState(false)
     const queryClient = useQueryClient()
@@ -499,7 +500,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
         {(isScrolledDown || hasNew) && (
           <LoadLatestBtn
             onPress={onScrollToTop}
-            label="Load new posts"
+            label={_(msg`Load new posts`)}
             showIndicator={hasNew}
           />
         )}
@@ -610,24 +611,28 @@ function AboutSection({
           {typeof likeCount === 'number' && (
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-              text={`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`}
+              text={_(
+                msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`,
+              )}
               style={[pal.textLight, s.semiBold]}
             />
           )}
         </View>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          Created by{' '}
           {isOwner ? (
-            'you'
+            <Trans>Created by you</Trans>
           ) : (
-            <TextLink
-              text={sanitizeHandle(feedInfo.creatorHandle, '@')}
-              href={makeProfileLink({
-                did: feedInfo.creatorDid,
-                handle: feedInfo.creatorHandle,
-              })}
-              style={pal.textLight}
-            />
+            <Trans>
+              Created by{' '}
+              <TextLink
+                text={sanitizeHandle(feedInfo.creatorHandle, '@')}
+                href={makeProfileLink({
+                  did: feedInfo.creatorDid,
+                  handle: feedInfo.creatorHandle,
+                })}
+                style={pal.textLight}
+              />
+            </Trans>
           )}
         </Text>
       </View>

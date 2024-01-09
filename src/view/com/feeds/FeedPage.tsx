@@ -197,7 +197,7 @@ export function FeedPage({
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""
         />
       )}

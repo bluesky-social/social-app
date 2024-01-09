@@ -85,7 +85,7 @@ export function Component({
               onPress={onPressCancelSearch}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Cancel search`)}
-              accessibilityHint="Exits inputting search query"
+              accessibilityHint={_(msg`Exits inputting search query`)}
               onAccessibilityEscape={onPressCancelSearch}
               hitSlop={HITSLOP_20}>
               <FontAwesomeIcon
@@ -141,7 +141,7 @@ export function Component({
             }}
             accessibilityLabel={_(msg`Done`)}
             accessibilityHint=""
-            label={_(msg`Done`)}
+            label={_(msg({message: 'Done', context: 'action'}))}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

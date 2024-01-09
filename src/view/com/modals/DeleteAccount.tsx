@@ -127,7 +127,9 @@ export function Component({}: {}) {
                   onPress={onPressSendEmail}
                   accessibilityRole="button"
                   accessibilityLabel={_(msg`Send email`)}
-                  accessibilityHint="Sends email with confirmation code for account deletion">
+                  accessibilityHint={_(
+                    msg`Sends email with confirmation code for account deletion`,
+                  )}>
                   <LinearGradient
                     colors={[
                       gradients.blueLight.start,
@@ -137,7 +139,7 @@ export function Component({}: {}) {
                     end={{x: 1, y: 1}}
                     style={[styles.btn]}>
                     <Text type="button-lg" style={[s.white, s.bold]}>
-                      <Trans>Send Email</Trans>
+                      <Trans context="action">Send Email</Trans>
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
@@ -149,7 +151,7 @@ export function Component({}: {}) {
                   accessibilityHint=""
                   onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
-                    <Trans>Cancel</Trans>
+                    <Trans context="action">Cancel</Trans>
                   </Text>
                 </TouchableOpacity>
               </>
@@ -176,7 +178,9 @@ export function Component({}: {}) {
               onChangeText={setConfirmCode}
               accessibilityLabelledBy="confirmationCode"
               accessibilityLabel={_(msg`Confirmation code`)}
-              accessibilityHint="Input confirmation code for account deletion"
+              accessibilityHint={_(
+                msg`Input confirmation code for account deletion`,
+              )}
             />
             <Text type="lg" style={styles.description} nativeID="password">
               <Trans>Please enter your password as well:</Trans>
@@ -191,7 +195,7 @@ export function Component({}: {}) {
               onChangeText={setPassword}
               accessibilityLabelledBy="password"
               accessibilityLabel={_(msg`Password`)}
-              accessibilityHint="Input password for account deletion"
+              accessibilityHint={_(msg`Input password for account deletion`)}
             />
             {error ? (
               <View style={styles.mt20}>
@@ -222,7 +226,7 @@ export function Component({}: {}) {
                   accessibilityHint="Exits account deletion process"
                   onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
-                    <Trans>Cancel</Trans>
+                    <Trans context="action">Cancel</Trans>
                   </Text>
                 </TouchableOpacity>
               </>

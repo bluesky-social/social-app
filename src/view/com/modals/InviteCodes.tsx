@@ -18,7 +18,6 @@ import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
 import {useModalControls} from '#/state/modals'
@@ -31,6 +30,7 @@ import {
   useInviteCodesQuery,
   InviteCodesQueryResponse,
 } from '#/state/queries/invites'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['70%']
 
@@ -50,6 +50,7 @@ export function Component() {
 
 export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {_} = useLingui()
@@ -166,10 +167,10 @@ function InviteCode({
         accessibilityRole="button"
         accessibilityLabel={
           invites.available.length === 1
-            ? 'Invite codes: 1 available'
-            : `Invite codes: ${invites.available.length} available`
+            ? _(msg`Invite codes: 1 available`)
+            : _(msg`Invite codes: ${invites.available.length} available`)
         }
-        accessibilityHint="Opens list of invite codes">
+        accessibilityHint={_(msg`Opens list of invite codes`)}>
         <Text
           testID={`${testID}-code`}
           type={used ? 'md' : 'md-bold'}

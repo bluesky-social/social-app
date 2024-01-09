@@ -17,6 +17,8 @@ import {
   ProfileImageLightbox,
   ImagesLightbox,
 } from '#/state/lightbox'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
@@ -122,7 +124,7 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
           onPress={() => saveImageToAlbumWithToasts(uri)}>
           <FontAwesomeIcon icon={['far', 'floppy-disk']} style={s.white} />
           <Text type="xl" style={s.white}>
-            Save
+            <Trans context="action">Save</Trans>
           </Text>
         </Button>
         <Button
@@ -131,7 +133,7 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
           onPress={() => shareImageModal({uri})}>
           <FontAwesomeIcon icon="arrow-up-from-bracket" style={s.white} />
           <Text type="xl" style={s.white}>
-            Share
+            <Trans context="action">Share</Trans>
           </Text>
         </Button>
       </View>

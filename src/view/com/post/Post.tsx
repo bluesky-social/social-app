@@ -27,7 +27,7 @@ import {countLines} from 'lib/strings/helpers'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {msg, Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 export function Post({
@@ -162,7 +162,7 @@ function PostInner({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                <Trans>
+                <Trans context="description">
                   Reply to{' '}
                   <UserInfoText
                     type="sm"

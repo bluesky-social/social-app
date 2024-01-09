@@ -5,6 +5,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {messages as messagesEn} from '#/locale/locales/en/messages'
 // DISABLED until this translation is fixed -prf
 // import {messages as messagesDe} from '#/locale/locales/de/messages'
+import {messages as messagesId} from '#/locale/locales/id/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesHi} from '#/locale/locales/hi/messages'
@@ -26,6 +27,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     //   i18n.loadAndActivate({locale, messages: messagesDe})
     //   break
     // }
+    case AppLanguage.id: {
+      i18n.loadAndActivate({locale, messages: messagesId})
+      break
+    }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
       break

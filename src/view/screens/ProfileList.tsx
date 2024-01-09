@@ -68,6 +68,7 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileList'>
 export function ProfileListScreen(props: Props) {
+  const {_} = useLingui()
   const {name: handleOrDid, rkey} = props.route.params
   const {data: resolvedUri, error: resolveError} = useResolveUriQuery(
     AtUri.make(handleOrDid, 'app.bsky.graph.list', rkey).toString(),
@@ -78,7 +79,9 @@ export function ProfileListScreen(props: Props) {
     return (
       <CenteredView>
         <ErrorScreen
-          error={`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`}
+          error={_(
+            msg`We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @${handleOrDid}.`,
+          )}
         />
       </CenteredView>
     )
@@ -272,7 +275,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       message: _(
         msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
       ),
-      confirmBtnText: 'Mute this List',
+      confirmBtnText: _(msg`Mute this List`),
       async onPressConfirm() {
         try {
           await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
@@ -313,7 +316,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       message: _(
         msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
       ),
-      confirmBtnText: 'Block this List',
+      confirmBtnText: _(msg`Block this List`),
       async onPressConfirm() {
         try {
           await listBlockMutation.mutateAsync({uri: list.uri, block: true})
@@ -730,15 +733,30 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
               </Text>
             )}
             <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-              {isCurateList ? 'User list' : 'Moderation list'} by{' '}
-              {isOwner ? (
-                'you'
+              {isCurateList ? (
+                isOwner ? (
+                  <Trans>User list by you</Trans>
+                ) : (
+                  <Trans>
+                    User list by{' '}
+                    <TextLink
+                      text={sanitizeHandle(list.creator.handle || '', '@')}
+                      href={makeProfileLink(list.creator)}
+                      style={pal.textLight}
+                    />
+                  </Trans>
+                )
+              ) : isOwner ? (
+                <Trans>Moderation list by you</Trans>
               ) : (
-                <TextLink
-                  text={sanitizeHandle(list.creator.handle || '', '@')}
-                  href={makeProfileLink(list.creator)}
-                  style={pal.textLight}
-                />
+                <Trans>
+                  Moderation list by{' '}
+                  <TextLink
+                    text={sanitizeHandle(list.creator.handle || '', '@')}
+                    href={makeProfileLink(list.creator)}
+                    style={pal.textLight}
+                  />
+                </Trans>
               )}
             </Text>
           </View>
@@ -811,7 +829,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
         {isScrolledDown && (
           <LoadLatestBtn
             onPress={onScrollToTop}
-            label="Scroll to top"
+            label={_(msg`Scroll to top`)}
             showIndicator={false}
           />
         )}
@@ -855,7 +873,7 @@ function ErrorScreen({error}: {error: string}) {
         <Button
           type="default"
           accessibilityLabel={_(msg`Go Back`)}
-          accessibilityHint="Return to previous page"
+          accessibilityHint={_(msg`Return to previous page`)}
           onPress={onPressBack}
           style={{flexShrink: 1}}>
           <Text type="button" style={pal.text}>

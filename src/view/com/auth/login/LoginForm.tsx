@@ -145,7 +145,7 @@ export const LoginForm = ({
             onPress={onPressSelectService}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Select service`)}
-            accessibilityHint="Sets server for the Bluesky client">
+            accessibilityHint={_(msg`Sets server for the Bluesky client`)}>
             <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
               {toNiceDomain(serviceUrl)}
             </Text>
@@ -190,7 +190,9 @@ export const LoginForm = ({
             }
             editable={!isProcessing}
             accessibilityLabel={_(msg`Username or email address`)}
-            accessibilityHint="Input the username or email address you used at signup"
+            accessibilityHint={_(
+              msg`Input the username or email address you used at signup`,
+            )}
           />
         </View>
         <View style={[pal.borderDark, styles.groupContent]}>
@@ -221,8 +223,8 @@ export const LoginForm = ({
             accessibilityLabel={_(msg`Password`)}
             accessibilityHint={
               identifier === ''
-                ? 'Input your password'
-                : `Input the password tied to ${identifier}`
+                ? _(msg`Input your password`)
+                : _(msg`Input the password tied to ${identifier}`)
             }
           />
           <TouchableOpacity
@@ -231,7 +233,7 @@ export const LoginForm = ({
             onPress={onPressForgotPassword}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Forgot password`)}
-            accessibilityHint="Opens password reset form">
+            accessibilityHint={_(msg`Opens password reset form`)}>
             <Text style={pal.link}>
               <Trans>Forgot</Trans>
             </Text>
@@ -261,7 +263,7 @@ export const LoginForm = ({
             onPress={onPressRetryConnect}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Retry`)}
-            accessibilityHint="Retries login">
+            accessibilityHint={_(msg`Retries login`)}>
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               <Trans>Retry</Trans>
             </Text>
@@ -281,7 +283,7 @@ export const LoginForm = ({
             onPress={onPressNext}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Go to next`)}
-            accessibilityHint="Navigates to the next screen">
+            accessibilityHint={_(msg`Navigates to the next screen`)}>
             <Text type="xl-bold" style={[pal.link, s.pr5]}>
               <Trans>Next</Trans>
             </Text>

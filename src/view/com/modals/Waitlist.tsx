@@ -48,7 +48,7 @@ export function Component({}: {}) {
       } else {
         setError(
           resBody.error ||
-            'Something went wrong. Check your email and try again.',
+            _(msg`Something went wrong. Check your email and try again.`),
         )
       }
     } catch (e: any) {
@@ -86,7 +86,9 @@ export function Component({}: {}) {
           enterKeyHint="done"
           accessible={true}
           accessibilityLabel={_(msg`Email`)}
-          accessibilityHint="Input your email to get on the Bluesky waitlist"
+          accessibilityHint={_(
+            msg`Input your email to get on the Bluesky waitlist`,
+          )}
         />
         {error ? (
           <View style={s.mt10}>
@@ -114,7 +116,9 @@ export function Component({}: {}) {
             <TouchableOpacity
               onPress={onPressSignup}
               accessibilityRole="button"
-              accessibilityHint={`Confirms signing up ${email} to the waitlist`}>
+              accessibilityHint={_(
+                msg`Confirms signing up ${email} to the waitlist`,
+              )}>
               <LinearGradient
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
@@ -130,7 +134,9 @@ export function Component({}: {}) {
               onPress={onCancel}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Cancel waitlist signup`)}
-              accessibilityHint={`Exits signing up for waitlist with ${email}`}
+              accessibilityHint={_(
+                msg`Exits signing up for waitlist with ${email}`,
+              )}
               onAccessibilityEscape={onCancel}>
               <Text type="button-lg" style={pal.textLight}>
                 <Trans>Cancel</Trans>

@@ -38,7 +38,7 @@ export function Component() {
 
   const onRequestChange = async () => {
     if (email === currentAccount?.email) {
-      setError('Enter your new email above')
+      setError(_(msg`Enter your new email above`))
       return
     }
     setError('')

@@ -101,7 +101,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               onChangeText={setCustomUrl}
               accessibilityLabel={_(msg`Custom domain`)}
               // TODO: Simplify this wording further to be understandable by everyone
-              accessibilityHint="Use your domain as your Bluesky client service provider"
+              accessibilityHint={_(
+                msg`Use your domain as your Bluesky client service provider`,
+              )}
             />
             <TouchableOpacity
               testID="customServerSelectBtn"
@@ -110,7 +112,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
               accessibilityRole="button"
               accessibilityLabel={`Confirm service. ${
                 customUrl === ''
-                  ? 'Button disabled. Input custom domain to proceed.'
+                  ? _(msg`Button disabled. Input custom domain to proceed.`)
                   : ''
               }`}
               accessibilityHint=""
