@@ -1,86 +1,47 @@
 import React from 'react'
-import {Pressable, Text, PressableProps, TextProps} from 'react-native'
-import * as tokens from '#/alf/tokens'
-import {atoms} from '#/alf'
+import {
+  Pressable,
+  Text,
+  PressableProps,
+  TextProps,
+  ViewStyle,
+} from 'react-native'
 
-export type ButtonType =
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'positive'
-  | 'negative'
+import {atoms, tokens, web, native} from '#/alf'
+
+export type ButtonType = 'primary' | 'secondary' | 'negative'
 export type ButtonSize = 'small' | 'large'
 
 export type VariantProps = {
   type?: ButtonType
   size?: ButtonSize
 }
-type ButtonState = {
-  pressed: boolean
-  hovered: boolean
-  focused: boolean
-}
 export type ButtonProps = Omit<PressableProps, 'children'> &
   VariantProps & {
     children:
       | ((props: {
-          state: ButtonState
-          type?: ButtonType
-          size?: ButtonSize
+          state: {
+            pressed: boolean
+            hovered: boolean
+            focused: boolean
+          }
+          props: VariantProps & {
+            disabled?: boolean
+          }
         }) => React.ReactNode)
       | React.ReactNode
       | string
   }
-export type ButtonTextProps = TextProps & VariantProps
+export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
-export function Button({children, style, type, size, ...rest}: ButtonProps) {
-  const {baseStyles, hoverStyles} = React.useMemo(() => {
-    const baseStyles = []
-    const hoverStyles = []
-
-    switch (type) {
-      case 'primary':
-        baseStyles.push({
-          backgroundColor: tokens.color.blue_500,
-        })
-        break
-      case 'secondary':
-        baseStyles.push({
-          backgroundColor: tokens.color.gray_200,
-        })
-        hoverStyles.push({
-          backgroundColor: tokens.color.gray_100,
-        })
-        break
-      default:
-    }
-
-    switch (size) {
-      case 'large':
-        baseStyles.push(
-          atoms.py_md,
-          atoms.px_xl,
-          atoms.rounded_md,
-          atoms.gap_sm,
-        )
-        break
-      case 'small':
-        baseStyles.push(
-          atoms.py_sm,
-          atoms.px_md,
-          atoms.rounded_sm,
-          atoms.gap_xs,
-        )
-        break
-      default:
-    }
-
-    return {
-      baseStyles,
-      hoverStyles,
-    }
-  }, [type, size])
-
+export function Button({
+  children,
+  style,
+  type,
+  size,
+  disabled = false,
+  ...rest
+}: ButtonProps) {
   const [state, setState] = React.useState({
     pressed: false,
     hovered: false,
@@ -124,10 +85,99 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
     }))
   }, [setState])
 
+  const {baseStyles, hoverStyles} = React.useMemo(() => {
+    const baseStyles: ViewStyle[] = []
+    const hoverStyles: ViewStyle[] = []
+
+    switch (type) {
+      case 'primary': {
+        if (disabled) {
+          baseStyles.push({
+            backgroundColor: tokens.color.blue_300,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: tokens.color.blue_500,
+          })
+        }
+        break
+      }
+      case 'secondary': {
+        if (disabled) {
+          baseStyles.push({
+            backgroundColor: tokens.color.gray_100,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: tokens.color.gray_200,
+          })
+        }
+        break
+      }
+      case 'negative': {
+        if (disabled) {
+          baseStyles.push({
+            backgroundColor: tokens.color.red_400,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: tokens.color.red_500,
+          })
+        }
+        break
+      }
+      default:
+    }
+
+    switch (size) {
+      case 'large': {
+        baseStyles.push(
+          atoms.py_md,
+          atoms.px_xl,
+          atoms.rounded_md,
+          atoms.gap_sm,
+        )
+        break
+      }
+      case 'small': {
+        baseStyles.push(
+          atoms.py_sm,
+          atoms.px_md,
+          atoms.rounded_sm,
+          atoms.gap_xs,
+        )
+        break
+      }
+      default:
+    }
+
+    return {
+      baseStyles,
+      hoverStyles,
+    }
+  }, [type, size, disabled])
+
+  const childProps = React.useMemo(
+    () => ({
+      state,
+      props: {
+        type,
+        size,
+        disabled: disabled || false,
+      },
+    }),
+    [state, type, size, disabled],
+  )
+
   return (
     <Pressable
+      role="button"
       {...rest}
-      style={state => [
+      disabled={disabled || false}
+      accessibilityState={{
+        disabled: disabled || false,
+      }}
+      style={[
         atoms.flex_row,
         atoms.align_center,
         ...baseStyles,
@@ -141,11 +191,11 @@ export function Button({children, style, type, size, ...rest}: ButtonProps) {
       onFocus={onFocus}
       onBlur={onBlur}>
       {typeof children === 'string' ? (
-        <ButtonText type={type} size={size}>
+        <ButtonText type={type} size={size} disabled={disabled || false}>
           {children}
         </ButtonText>
       ) : typeof children === 'function' ? (
-        children({state, type, size})
+        children(childProps)
       ) : (
         children
       )}
@@ -158,35 +208,60 @@ export function ButtonText({
   style,
   type,
   size,
+  disabled,
   ...rest
 }: ButtonTextProps) {
   const textStyles = React.useMemo(() => {
-    const base = []
+    const baseStyles = []
 
     switch (type) {
-      case 'primary':
-        base.push({color: tokens.color.white})
+      case 'primary': {
+        baseStyles.push({color: tokens.color.white})
         break
-      case 'secondary':
-        base.push({
-          color: tokens.color.gray_700,
+      }
+      case 'secondary': {
+        if (disabled) {
+          baseStyles.push({
+            color: tokens.color.gray_500,
+          })
+        } else {
+          baseStyles.push({
+            color: tokens.color.gray_700,
+          })
+        }
+        break
+      }
+      case 'negative': {
+        baseStyles.push({
+          color: tokens.color.white,
         })
         break
+      }
       default:
     }
 
     switch (size) {
-      case 'small':
-        base.push(atoms.text_sm, {paddingBottom: 1})
+      case 'small': {
+        baseStyles.push(
+          atoms.text_sm,
+          web({paddingBottom: 1}),
+          native({marginTop: 2}),
+        )
         break
-      case 'large':
-        base.push(atoms.text_md, {paddingBottom: 1})
+      }
+      case 'large': {
+        baseStyles.push(
+          atoms.text_md,
+          web({paddingBottom: 1}),
+          native({marginTop: 2}),
+        )
         break
+      }
       default:
     }
 
-    return base
-  }, [type, size])
+    return baseStyles
+  }, [type, size, disabled])
 
   return (
     <Text

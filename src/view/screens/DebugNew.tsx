@@ -7,6 +7,7 @@ import {useSetColorMode} from '#/state/shell'
 import * as tokens from '#/alf/tokens'
 import {atoms as a, useTheme, useBreakpoints, ThemeProvider as Alf} from '#/alf'
 import {Button, ButtonText} from '#/view/com/Button'
+import {Link} from '#/view/com/Link'
 import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
 
 function ThemeSelector() {
@@ -142,6 +143,75 @@ function ThemedSection() {
   )
 }
 
+export function Buttons() {
+  const t = useTheme()
+
+  return (
+    <View style={[a.gap_md, a.align_start]}>
+      <Button>Unstyled button</Button>
+
+      <Button>
+        {({state}) => (
+          <View style={[a.p_md, a.rounded_full, t.atoms.bg_contrast_300]}>
+            <Text>Entirely custom button, state: {JSON.stringify(state)}</Text>
+          </View>
+        )}
+      </Button>
+
+      <Button type="primary" size="large">
+        Default button
+      </Button>
+
+      <Button type="primary" size="large" disabled>
+        Default button (disabled)
+      </Button>
+
+      <Button type="primary" size="large">
+        {({props}) => (
+          <>
+            <FontAwesomeIcon icon={['fas', 'plus']} size={12} />
+            <ButtonText {...props}>Default with an icon</ButtonText>
+          </>
+        )}
+      </Button>
+
+      <Button type="secondary" size="small">
+        Small button
+      </Button>
+
+      <Button type="secondary" size="small" disabled>
+        Small button (disabled)
+      </Button>
+
+      <Link
+        to="https://blueskyweb.xyz"
+        warnOnMismatchingLabel
+        style={[a.text_md]}>
+        External
+      </Link>
+      <Link to="https://blueskyweb.xyz" style={[a.text_md]}>
+        <H3>External with custom children</H3>
+      </Link>
+      <Link
+        to="https://blueskyweb.xyz"
+        warnOnMismatchingLabel
+        style={[a.text_md]}>
+        https://blueskyweb.xyz
+      </Link>
+      <Link
+        to="https://bsky.app/profile/bsky.app"
+        warnOnMismatchingLabel
+        style={[a.text_md]}>
+        Internal
+      </Link>
+
+      <Link type="primary" size="large" to="https://bsky.app/profile/bsky.app">
+        {({props}) => <ButtonText {...props}>Link as a button</ButtonText>}
+      </Link>
+    </View>
+  )
+}
+
 export function DebugScreen() {
   const t = useTheme()
 
@@ -150,6 +220,8 @@ export function DebugScreen() {
       <CenteredView style={[t.atoms.bg]}>
         <View style={[a.p_xl, a.gap_xxl, {paddingBottom: 200}]}>
           <ThemeSelector />
+
+          <Buttons />
 
           <Alf theme="light">
             <ThemedSection />
@@ -172,49 +244,6 @@ export function DebugScreen() {
           <Text style={[a.text_sm]}>atoms.text_sm</Text>
           <Text style={[a.text_xs]}>atoms.text_xs</Text>
           <Text style={[a.text_xxs]}>atoms.text_xxs</Text>
-
-          <View style={[a.gap_md, a.align_start]}>
-            <Button>
-              {({state}) => (
-                <View style={[a.p_md, a.rounded_full, t.atoms.bg_contrast_300]}>
-                  <Text>Unstyled button, state: {JSON.stringify(state)}</Text>
-                </View>
-              )}
-            </Button>
-
-            <Button type="primary" size="small">
-              Button
-            </Button>
-            <Button type="secondary" size="small">
-              Button
-            </Button>
-
-            <Button type="primary" size="large">
-              Button
-            </Button>
-            <Button type="secondary" size="large">
-              Button
-            </Button>
-
-            <Button type="secondary" size="small">
-              {({type, size}) => (
-                <>
-                  <FontAwesomeIcon icon={['fas', 'plus']} size={12} />
-                  <ButtonText type={type} size={size}>
-                    With an icon
-                  </ButtonText>
-                </>
-              )}
-            </Button>
-            <Button type="primary" size="large">
-              {({state: _state, ...rest}) => (
-                <>
-                  <FontAwesomeIcon icon={['fas', 'plus']} />
-                  <ButtonText {...rest}>With an icon</ButtonText>
-                </>
-              )}
-            </Button>
-          </View>
 
           <View style={[a.gap_md]}>
             <View style={[a.flex_row, a.gap_md]}>
