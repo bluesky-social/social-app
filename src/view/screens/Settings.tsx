@@ -19,7 +19,6 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
-import {ViewHeader} from '../com/util/ViewHeader'
 import {Link, TextLink} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
@@ -36,6 +35,7 @@ import {HandIcon, HashtagIcon} from 'lib/icons'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
 import {
@@ -273,8 +273,20 @@ export function SettingsScreen({}: Props) {
   }, [])
 
   return (
-    <View style={[s.hContentRegion]} testID="settingsScreen">
-      <ViewHeader title={_(msg`Settings`)} />
+    <View style={s.hContentRegion} testID="settingsScreen">
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        style={[
+          pal.border,
+          {borderBottomWidth: 1},
+          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
+        ]}>
+        <View style={{flex: 1}}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Trans>{_(msg`Settings`)}</Trans>
+          </Text>
+        </View>
+      </SimpleViewHeader>
       <ScrollView
         style={[s.hContentRegion]}
         contentContainerStyle={isMobile && pal.viewLight}
