@@ -185,7 +185,7 @@ export function Buttons() {
 
       <Link
         to="https://blueskyweb.xyz"
-        warnOnMismatchingLabel
+        warnOnMismatchingTextChild
         style={[a.text_md]}>
         External
       </Link>
@@ -194,13 +194,13 @@ export function Buttons() {
       </Link>
       <Link
         to="https://blueskyweb.xyz"
-        warnOnMismatchingLabel
+        warnOnMismatchingTextChild
         style={[a.text_md]}>
         https://blueskyweb.xyz
       </Link>
       <Link
         to="https://bsky.app/profile/bsky.app"
-        warnOnMismatchingLabel
+        warnOnMismatchingTextChild
         style={[a.text_md]}>
         Internal
       </Link>
