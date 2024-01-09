@@ -73,6 +73,7 @@ import {useCloseAllActiveElements} from '#/state/util'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isSwitchingAccounts, currentAccount} = useSession()
   const {logout} = useSessionApi()
   const {data: profile} = useProfileQuery({did: account.did})
@@ -98,10 +99,10 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
           testID="signOutBtn"
           onPress={logout}
           accessibilityRole="button"
-          accessibilityLabel="Sign out"
+          accessibilityLabel={_(msg`Sign out`)}
           accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
           <Text type="lg" style={pal.link}>
-            Sign out
+            <Trans>Sign out</Trans>
           </Text>
         </TouchableOpacity>
       ) : (
@@ -225,15 +226,15 @@ export function SettingsScreen({}: Props) {
 
   const onPressResetOnboarding = React.useCallback(async () => {
     onboardingDispatch({type: 'start'})
-    Toast.show('Onboarding reset')
-  }, [onboardingDispatch])
+    Toast.show(_(msg`Onboarding reset`))
+  }, [onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
     Clipboard.setString(
       `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
     )
-    Toast.show('Copied build version to clipboard')
-  }, [])
+    Toast.show(_(msg`Copied build version to clipboard`))
+  }, [_])
 
   const openHomeFeedPreferences = React.useCallback(() => {
     navigation.navigate('PreferencesHomeFeed')
@@ -265,12 +266,12 @@ export function SettingsScreen({}: Props) {
 
   const clearAllStorage = React.useCallback(async () => {
     await clearStorage()
-    Toast.show(`Storage cleared, you need to restart the app now.`)
-  }, [])
+    Toast.show(_(msg`Storage cleared, you need to restart the app now.`))
+  }, [_])
   const clearAllLegacyStorage = React.useCallback(async () => {
     await clearLegacyStorage()
-    Toast.show(`Legacy storage cleared, you need to restart the app now.`)
-  }, [])
+    Toast.show(_(msg`Legacy storage cleared, you need to restart the app now.`))
+  }, [_])
 
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
@@ -449,20 +450,20 @@ export function SettingsScreen({}: Props) {
           <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
             <SelectableBtn
               selected={colorMode === 'system'}
-              label="System"
+              label={_(msg`System`)}
               left
               onSelect={() => setColorMode('system')}
               accessibilityHint="Set color theme to system setting"
             />
             <SelectableBtn
               selected={colorMode === 'light'}
-              label="Light"
+              label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
               accessibilityHint="Set color theme to light"
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
-              label="Dark"
+              label={_(msg`Dark`)}
               right
               onSelect={() => setColorMode('dark')}
               accessibilityHint="Set color theme to dark"
