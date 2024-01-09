@@ -2,14 +2,17 @@ import React from 'react'
 import {View, TextInput, TextInputProps, TextStyle} from 'react-native'
 
 import {useTheme, atoms, web, tokens} from '#/alf'
+import {Text} from '#/view/com/Typography'
 
 type Props = Omit<TextInputProps, 'placeholder'> & {
+  label?: string
   placeholder: string
   hasError?: boolean
   icon?: React.FunctionComponent<any>
 }
 
-export function InputText({hasError, icon: Icon, ...props}: Props) {
+export function InputText({label, hasError, icon: Icon, ...props}: Props) {
+  const labelId = React.useId()
   const t = useTheme()
   const [state, setState] = React.useState({
     hovered: false,
@@ -77,7 +80,23 @@ export function InputText({hasError, icon: Icon, ...props}: Props) {
 
   return (
     <View style={[atoms.relative, atoms.w_full]}>
+      {label && (
+        <Text
+          nativeID={labelId}
+          style={[
+            atoms.text_sm,
+            atoms.font_semibold,
+            t.atoms.text_contrast_700,
+            atoms.mb_sm,
+          ]}>
+          {label}
+        </Text>
+      )}
+
       <TextInput
+        aria-labelledby={labelId}
+        aria-label={label}
+        placeholderTextColor={t.atoms.text_contrast_500.color}
         {...props}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -85,13 +104,13 @@ export function InputText({hasError, icon: Icon, ...props}: Props) {
           onMouseEnter: onHoverIn,
           onMouseLeave: onHoverOut,
         })}
-        placeholderTextColor={t.atoms.text_contrast_500.color}
         style={[
           t.name === 'dark' ? t.atoms.bg_contrast_100 : t.atoms.bg,
           atoms.w_full,
           atoms.px_lg,
           atoms.py_md,
           atoms.rounded_sm,
+          atoms.text_md,
           t.atoms.border,
           t.atoms.text,
           {borderWidth: 2},

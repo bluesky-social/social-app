@@ -217,7 +217,7 @@ export function Buttons() {
 function Forms() {
   return (
     <View style={[a.gap_md, a.align_start]}>
-      <InputText placeholder="Type here" />
+      <InputText label="Name" placeholder="Type here" />
       <InputText placeholder="Type here" icon={Logo} />
       <InputText hasError placeholder="Type here" icon={Logo} />
     </View>
