@@ -1,13 +1,5 @@
 import React from 'react'
-import {
-  StyleSheet,
-  StyleProp,
-  View,
-  ViewStyle,
-  Text,
-  InteractionManager,
-} from 'react-native'
-import {Image} from 'expo-image'
+import {StyleSheet, StyleProp, View, ViewStyle} from 'react-native'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
@@ -20,16 +12,14 @@ import {
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
-import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
-import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
+import ViewerImage from 'view/com/imageviewer/ViewerImage.tsx'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -50,8 +40,6 @@ export function PostEmbeds({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
-  const {openLightbox} = useLightboxControls()
-  const {isMobile} = useWebMediaQueries()
 
   // quote post with media
   // =
@@ -102,61 +90,20 @@ export function PostEmbeds({
   // image embed
   // =
   if (AppBskyEmbedImages.isView(embed)) {
+    // TODO this will need to get factored out later, but lets do some testing with a single image
+
     const {images} = embed
 
     if (images.length > 0) {
-      const items = embed.images.map(img => ({
-        uri: img.fullsize,
-        alt: img.alt,
-        aspectRatio: img.aspectRatio,
-      }))
-      const _openLightbox = (index: number) => {
-        openLightbox(new ImagesLightbox(items, index))
-      }
-      const onPressIn = (_: number) => {
-        InteractionManager.runAfterInteractions(() => {
-          Image.prefetch(items.map(i => i.uri))
-        })
-      }
-
-      if (images.length === 1) {
-        const {alt, thumb, aspectRatio} = images[0]
-        return (
-          <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
-              alt={alt}
-              uri={thumb}
-              dimensionsHint={aspectRatio}
-              onPress={() => _openLightbox(0)}
-              onPressIn={() => onPressIn(0)}
-              style={[
-                styles.singleImage,
-                isMobile && styles.singleImageMobile,
-              ]}>
-              {alt === '' ? null : (
-                <View style={styles.altContainer}>
-                  <Text style={styles.alt} accessible={false}>
-                    ALT
-                  </Text>
-                </View>
-              )}
-            </AutoSizedImage>
-          </View>
-        )
-      }
-
+      // We don't need to have the separate props here I don't think, plus we don't need to map the images, just pass
+      // the array we already have so ViewerImage can handle opening the modal on its own without all this logic ^
       return (
         <View style={[styles.imagesContainer, style]}>
-          <ImageLayoutGrid
-            images={embed.images}
-            onPress={_openLightbox}
-            onPressIn={onPressIn}
-            style={
-              embed.images.length === 1
-                ? [styles.singleImage, isMobile && styles.singleImageMobile]
-                : undefined
-            }
-          />
+          {images.length === 1 ? (
+            <ViewerImage images={embed.images} index={0} />
+          ) : (
+            <ImageLayoutGrid images={embed.images} />
+          )}
         </View>
       )
     }

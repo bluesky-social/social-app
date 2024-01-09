@@ -16,11 +16,11 @@ import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
-import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
+import {Provider as ImageViewerStateProvider} from 'state/imageViewer'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -92,11 +92,11 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <LightboxStateProvider>
+                  <ImageViewerStateProvider>
                     <I18nProvider>
                       <InnerApp />
                     </I18nProvider>
-                  </LightboxStateProvider>
+                  </ImageViewerStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>

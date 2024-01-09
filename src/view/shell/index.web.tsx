@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react'
 import {View, StyleSheet, TouchableOpacity} from 'react-native'
 import {ErrorBoundary} from '../com/util/ErrorBoundary'
-import {Lightbox} from '../com/lightbox/Lightbox'
 import {ModalsContainer} from '../com/modals/Modal'
 import {Composer} from './Composer.web'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -15,6 +14,7 @@ import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
+import ImageViewerModal from 'view/com/imageviewer/ImageViewerModal.tsx'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -41,7 +41,7 @@ function ShellInner() {
       </View>
       <Composer winHeight={0} />
       <ModalsContainer />
-      <Lightbox />
+      <ImageViewerModal />
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

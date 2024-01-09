@@ -31,7 +31,6 @@ import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
-import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
   RQKEY as profileQueryKey,
   useProfileMuteMutationQueue,
@@ -55,6 +54,7 @@ import {useSession, getAgent} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
+import {useImageViewerControls} from 'state/imageViewer'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
@@ -121,7 +121,6 @@ let ProfileHeaderLoaded = ({
   const requireAuth = useRequireAuth()
   const {_} = useLingui()
   const {openModal} = useModalControls()
-  const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const invalidHandle = isInvalidHandle(profile.handle)
@@ -131,6 +130,7 @@ let ProfileHeaderLoaded = ({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
+  const {setState: setImageViewerState} = useImageViewerControls()
 
   /*
    * BEGIN handle bio facet resolution
@@ -182,9 +182,25 @@ let ProfileHeaderLoaded = ({
       profile.avatar &&
       !(moderation.avatar.blur && moderation.avatar.noOverride)
     ) {
-      openLightbox(new ProfileImageLightbox(profile))
+      setImageViewerState({
+        images: [
+          {
+            thumb: profile.avatar,
+            fullsize: profile.avatar,
+            alt: '',
+          },
+        ],
+        initialIndex: 0,
+        isVisible: true,
+        hideFooter: true,
+      })
     }
-  }, [openLightbox, profile, moderation])
+  }, [
+    profile.avatar,
+    moderation.avatar.blur,
+    moderation.avatar.noOverride,
+    setImageViewerState,
+  ])
 
   const onPressFollow = () => {
     requireAuth(async () => {

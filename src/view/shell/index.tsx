@@ -11,7 +11,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Drawer} from 'react-native-drawer-layout'
 import {useNavigationState} from '@react-navigation/native'
 import {ModalsContainer} from 'view/com/modals/Modal'
-import {Lightbox} from 'view/com/lightbox/Lightbox'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {DrawerContent} from './Drawer'
 import {Composer} from './Composer'
@@ -28,6 +27,7 @@ import {isAndroid} from 'platform/detection'
 import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
+import ImageViewerModal from 'view/com/imageviewer/ImageViewerModal.tsx'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -94,7 +94,7 @@ function ShellInner() {
       </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
-      <Lightbox />
+      <ImageViewerModal />
     </>
   )
 }
