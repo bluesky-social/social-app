@@ -26,9 +26,19 @@ import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
 
 export type LinkProps = Omit<ButtonProps, 'style' | 'onPress' | 'disabled'> & {
-  style?: StyleProp<TextStyle> // only accept text styles on element itself
-  warnOnMismatchingLabel?: boolean
+  /**
+   * `TextStyle` to apply to the anchor element itself. Does not apply to any children.
+   */
+  style?: StyleProp<TextStyle>
+  /**
+   * The React Navigation `StackAction` to perform when the link is pressed.
+   */
   action?: 'push' | 'replace' | 'navigate'
+  /**
+   * If true, will warn the user if the link text does not match the href. Only
+   * works for Links with children that are strings i.e. text links.
+   */
+  warnOnMismatchingTextChild?: boolean
 } & Pick<Parameters<typeof useLinkProps<AllNavigatorParams>>[0], 'to'>
 
 /**
@@ -44,7 +54,7 @@ export function Link({
   to,
   style,
   action = 'push',
-  warnOnMismatchingLabel,
+  warnOnMismatchingTextChild,
   ...rest
 }: LinkProps) {
   const t = useTheme()
@@ -59,7 +69,7 @@ export function Link({
     (e: GestureResponderEvent) => {
       const label = typeof children === 'string' ? children : ''
       const requiresWarning = Boolean(
-        warnOnMismatchingLabel &&
+        warnOnMismatchingTextChild &&
           label &&
           isExternal &&
           linkRequiresWarning(href, label),
@@ -118,7 +128,7 @@ export function Link({
     [
       href,
       isExternal,
-      warnOnMismatchingLabel,
+      warnOnMismatchingTextChild,
       navigation,
       action,
       children,

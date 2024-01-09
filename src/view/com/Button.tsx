@@ -11,11 +11,17 @@ import {atoms, tokens, web, native} from '#/alf'
 
 export type ButtonType = 'primary' | 'secondary' | 'negative'
 export type ButtonSize = 'small' | 'large'
-
 export type VariantProps = {
+  /**
+   * The presentation styles of the button
+   */
   type?: ButtonType
+  /**
+   * The size of the button
+   */
   size?: ButtonSize
 }
+
 export type ButtonProps = Omit<PressableProps, 'children'> &
   VariantProps & {
     children:
