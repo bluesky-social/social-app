@@ -19,8 +19,7 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import * as AppInfo from 'lib/app-info'
 import {s, colors} from 'lib/styles'
 import {ScrollView} from '../com/util/Views'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Link} from '../com/util/Link'
+import {Link, TextLink} from '../com/util/Link'
 import {Text} from '../com/util/text/Text'
 import * as Toast from '../com/util/Toast'
 import {UserAvatar} from '../com/util/UserAvatar'
@@ -36,6 +35,7 @@ import {HandIcon, HashtagIcon} from 'lib/icons'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
 import {
@@ -273,12 +273,26 @@ export function SettingsScreen({}: Props) {
   }, [])
 
   return (
-    <View style={[s.hContentRegion]} testID="settingsScreen">
-      <ViewHeader title={_(msg`Settings`)} />
+    <View style={s.hContentRegion} testID="settingsScreen">
+      <SimpleViewHeader
+        showBackButton={isMobile}
+        style={[
+          pal.border,
+          {borderBottomWidth: 1},
+          !isMobile && {borderLeftWidth: 1, borderRightWidth: 1},
+        ]}>
+        <View style={{flex: 1}}>
+          <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
+            <Trans>{_(msg`Settings`)}</Trans>
+          </Text>
+        </View>
+      </SimpleViewHeader>
       <ScrollView
         style={[s.hContentRegion]}
         contentContainerStyle={isMobile && pal.viewLight}
-        scrollIndicatorInsets={{right: 1}}>
+        scrollIndicatorInsets={{right: 1}}
+        // @ts-ignore web only -prf
+        dataSet={{'stable-gutters': 1}}>
         <View style={styles.spacer20} />
         {currentAccount ? (
           <>
@@ -419,7 +433,7 @@ export function SettingsScreen({}: Props) {
         <View style={[pal.view, styles.toggleCard]}>
           <ToggleButton
             type="default-light"
-            label="Require alt text before posting"
+            label={_(msg`Require alt text before posting`)}
             labelType="lg"
             isSelected={requireAltTextEnabled}
             onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
@@ -563,6 +577,39 @@ export function SettingsScreen({}: Props) {
             <Trans>Moderation</Trans>
           </Text>
         </TouchableOpacity>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Privacy</Trans>
+        </Text>
+
+        <TouchableOpacity
+          testID="externalEmbedsBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={
+            isSwitchingAccounts
+              ? undefined
+              : () => navigation.navigate('PreferencesExternalEmbeds')
+          }
+          accessibilityRole="button"
+          accessibilityHint=""
+          accessibilityLabel={_(msg`Opens external embeds settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon={['far', 'circle-play']}
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>External Media Preferences</Trans>
+          </Text>
+        </TouchableOpacity>
+
         <View style={styles.spacer20} />
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
@@ -721,7 +768,7 @@ export function SettingsScreen({}: Props) {
             </Text>
           </TouchableOpacity>
           <Text type="sm" style={[pal.textLight]}>
-            &middot; &nbsp;
+            &nbsp; &middot; &nbsp;
           </Text>
           <TouchableOpacity
             accessibilityRole="button"
@@ -730,6 +777,25 @@ export function SettingsScreen({}: Props) {
               <Trans>Status page</Trans>
             </Text>
           </TouchableOpacity>
+        </View>
+
+        <View
+          style={[
+            {flexWrap: 'wrap', gap: 12, paddingHorizontal: 18},
+            s.flexRow,
+          ]}>
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="https://blueskyweb.xyz/support/tos"
+            text={_(msg`Terms of Service`)}
+          />
+          <TextLink
+            type="md"
+            style={pal.link}
+            href="https://blueskyweb.xyz/support/privacy-policy"
+            text={_(msg`Privacy Policy`)}
+          />
         </View>
         <View style={s.footerSpacer} />
       </ScrollView>

@@ -42,7 +42,8 @@ export function InputIssueDetails({
         accessibilityHint="Add more details to your report">
         <FontAwesomeIcon size={18} icon="angle-left" style={[pal.link]} />
         <Text style={[pal.text, s.f18, pal.link]}>
-          <Trans> Back</Trans>
+          {' '}
+          <Trans>Back</Trans>
         </Text>
       </TouchableOpacity>
       <View style={[pal.btn, styles.detailsInputContainer]}>

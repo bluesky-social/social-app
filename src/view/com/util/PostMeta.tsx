@@ -11,6 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
+import {ModerationUI} from '@atproto/api'
 
 interface PostMetaOpts {
   author: {
@@ -23,6 +24,7 @@ interface PostMetaOpts {
   postHref: string
   timestamp: string
   showAvatar?: boolean
+  avatarModeration?: ModerationUI
   avatarSize?: number
   displayNameType?: TypographyVariant
   displayNameStyle?: StyleProp<TextStyle>
@@ -41,7 +43,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           <UserAvatar
             avatar={opts.author.avatar}
             size={opts.avatarSize || 16}
-            // TODO moderation
+            moderation={opts.avatarModeration}
           />
         </View>
       )}

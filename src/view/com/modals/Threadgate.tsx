@@ -69,7 +69,7 @@ export function Component({
 
       <ScrollView>
         <Text style={[pal.text, styles.description]}>
-          Choose "Everybody" or "Nobody"
+          <Trans>Choose "Everybody" or "Nobody"</Trans>
         </Text>
         <View style={{flexDirection: 'row', gap: 6, paddingHorizontal: 6}}>
           <Selectable
@@ -86,7 +86,7 @@ export function Component({
           />
         </View>
         <Text style={[pal.text, styles.description]}>
-          Or combine these options:
+          <Trans>Or combine these options:</Trans>
         </Text>
         <View style={{flexDirection: 'column', gap: 4, paddingHorizontal: 6}}>
           <Selectable

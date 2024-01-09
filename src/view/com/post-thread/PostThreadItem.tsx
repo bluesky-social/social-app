@@ -5,9 +5,9 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   RichText as RichTextAPI,
-  moderatePost,
   PostModeration,
 } from '@atproto/api'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link, TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
@@ -186,9 +186,9 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = 'Reposts of this post'
-  const isSelfLabeledPost =
+  const isModeratedPost =
     moderation.decisions.post.cause?.type === 'label' &&
-    moderation.decisions.post.cause.label.src === currentAccount?.did
+    moderation.decisions.post.cause.label.src !== currentAccount?.did
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -214,6 +214,7 @@ let PostThreadItemLoaded = ({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
       onPost: onPostReply,
     })
@@ -335,7 +336,7 @@ let PostThreadItemLoaded = ({
               postUri={post.uri}
               record={record}
               showAppealLabelItem={
-                post.author.did === currentAccount?.did && !isSelfLabeledPost
+                post.author.did === currentAccount?.did && isModeratedPost
               }
               style={{
                 paddingVertical: 6,
@@ -539,6 +540,7 @@ let PostThreadItemLoaded = ({
                   timestamp={post.indexedAt}
                   postHref={postHref}
                   showAvatar={isThreadedChild}
+                  avatarModeration={moderation.avatar}
                   avatarSize={28}
                   displayNameType="md-bold"
                   displayNameStyle={isThreadedChild && s.ml2}

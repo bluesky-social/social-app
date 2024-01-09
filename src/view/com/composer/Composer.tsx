@@ -6,6 +6,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -28,8 +29,6 @@ import {UserAvatar} from '../util/UserAvatar'
 import * as apilib from 'lib/api/index'
 import {ComposerOpts} from 'state/shell/composer'
 import {s, colors, gradients} from 'lib/styles'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {cleanError} from 'lib/strings/errors'
 import {shortenLinks} from 'lib/strings/rich-text-manip'
 import {toShortUrl} from 'lib/strings/url-helpers'
@@ -46,7 +45,6 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {EmojiPickerButton} from './text-input/web/EmojiPicker.web'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -63,6 +61,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
+import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -70,6 +69,7 @@ export const ComposePost = observer(function ComposePost({
   onPost,
   quote: initQuote,
   mention: initMention,
+  openPicker,
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -207,7 +207,11 @@ export const ComposePost = observer(function ComposePost({
     setError('')
 
     if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
-      setError('Did you want to say anything?')
+      setError(_(msg`Did you want to say anything?`))
+      return
+    }
+    if (extLink?.isLoading) {
+      setError(_(msg`Please wait for your link card to finish loading`))
       return
     }
 
@@ -269,6 +273,10 @@ export const ComposePost = observer(function ComposePost({
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
+
+  const onEmojiButtonPress = useCallback(() => {
+    openPicker?.(textInput.current?.getCursorPosition())
+  }, [openPicker])
 
   return (
     <KeyboardAvoidingView
@@ -370,22 +378,7 @@ export const ComposePost = observer(function ComposePost({
         <ScrollView
           style={styles.scrollView}
           keyboardShouldPersistTaps="always">
-          {replyTo ? (
-            <View style={[pal.border, styles.replyToLayout]}>
-              <UserAvatar avatar={replyTo.author.avatar} size={50} />
-              <View style={styles.replyToPost}>
-                <Text type="xl-medium" style={[pal.text]}>
-                  {sanitizeDisplayName(
-                    replyTo.author.displayName ||
-                      sanitizeHandle(replyTo.author.handle),
-                  )}
-                </Text>
-                <Text type="post-text" style={pal.text} numberOfLines={6}>
-                  {replyTo.text}
-                </Text>
-              </View>
-            </View>
-          ) : undefined}
+          {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
 
           <View
             style={[
@@ -438,7 +431,7 @@ export const ComposePost = observer(function ComposePost({
                   accessibilityLabel={_(msg`Add link card`)}
                   accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
                   <Text style={pal.text}>
-                    <Trans>Add link card:</Trans>
+                    <Trans>Add link card:</Trans>{' '}
                     <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
                   </Text>
                 </TouchableOpacity>
@@ -452,7 +445,19 @@ export const ComposePost = observer(function ComposePost({
               <OpenCameraBtn gallery={gallery} />
             </>
           ) : null}
-          {isDesktop ? <EmojiPickerButton /> : null}
+          {!isMobile ? (
+            <Pressable
+              onPress={onEmojiButtonPress}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open emoji picker`)}
+              accessibilityHint={_(msg`Open emoji picker`)}>
+              <FontAwesomeIcon
+                icon={['far', 'face-smile']}
+                color={pal.colors.link}
+                size={22}
+              />
+            </Pressable>
+          ) : null}
           <View style={s.flex1} />
           <SelectLangBtn />
           <CharProgress count={graphemeLength} />
@@ -527,17 +532,6 @@ const styles = StyleSheet.create({
   },
   textInputLayoutMobile: {
     flex: 1,
-  },
-  replyToLayout: {
-    flexDirection: 'row',
-    borderTopWidth: 1,
-    paddingTop: 16,
-    paddingBottom: 16,
-  },
-  replyToPost: {
-    flex: 1,
-    paddingLeft: 13,
-    paddingRight: 8,
   },
   addExtLinkBtn: {
     borderWidth: 1,

@@ -4,10 +4,10 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  moderatePost,
   PostModeration,
   RichText as RichTextAPI,
 } from '@atproto/api'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link, TextLink} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
@@ -118,6 +118,7 @@ function PostInner({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
     })
   }, [openComposer, post, record])
@@ -221,6 +222,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     borderTopWidth: 1,
+    // @ts-ignore web only -prf
     cursor: 'pointer',
   },
   layout: {

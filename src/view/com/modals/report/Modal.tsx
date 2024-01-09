@@ -44,9 +44,9 @@ export function Component(content: ReportComponentProps) {
   const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
   const [showDetailsInput, setShowDetailsInput] = useState(false)
-  const [error, setError] = useState<string>()
-  const [issue, setIssue] = useState<string>()
-  const [details, setDetails] = useState<string>()
+  const [error, setError] = useState<string>('')
+  const [issue, setIssue] = useState<string>('')
+  const [details, setDetails] = useState<string>('')
   const isAccountReport = 'did' in content
   const subjectKey = isAccountReport ? content.did : content.uri
   const atUri = useMemo(
