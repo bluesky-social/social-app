@@ -170,17 +170,23 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="PostThread"
         getComponent={() => PostThreadScreen}
-        options={({route}) => ({title: title(_(msg`Post by @${route.params.name}`))})}
+        options={({route}) => ({
+          title: title(_(msg`Post by @${route.params.name}`)),
+        })}
       />
       <Stack.Screen
         name="PostLikedBy"
         getComponent={() => PostLikedByScreen}
-        options={({route}) => ({title: title(_(msg`Post by @${route.params.name}`))})}
+        options={({route}) => ({
+          title: title(_(msg`Post by @${route.params.name}`)),
+        })}
       />
       <Stack.Screen
         name="PostRepostedBy"
         getComponent={() => PostRepostedByScreen}
-        options={({route}) => ({title: title(_(msg`Post by @${route.params.name}`))})}
+        options={({route}) => ({
+          title: title(_(msg`Post by @${route.params.name}`)),
+        })}
       />
       <Stack.Screen
         name="ProfileFeed"
@@ -240,7 +246,10 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="PreferencesHomeFeed"
         getComponent={() => PreferencesHomeFeed}
-        options={{title: title(_(msg`Home Feed Preferences`)), requireAuth: true}}
+        options={{
+          title: title(_(msg`Home Feed Preferences`)),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesThreads"
