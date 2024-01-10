@@ -70,6 +70,10 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {
+  useInAppBrowser,
+  useSetInAppBrowser,
+} from '#/state/preferences/in-app-browser'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -146,6 +150,8 @@ export function SettingsScreen({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
+  const inAppBrowserPref = useInAppBrowser()
+  const setUseInAppBrowser = useSetInAppBrowser()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -610,6 +616,15 @@ export function SettingsScreen({}: Props) {
             <Trans>External Media Preferences</Trans>
           </Text>
         </TouchableOpacity>
+        <View style={[pal.view, styles.toggleCard]}>
+          <ToggleButton
+            type="default-light"
+            label={_(msg`Use in-app browser`)}
+            labelType="lg"
+            isSelected={inAppBrowserPref ?? false}
+            onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
+          />
+        </View>
 
         <View style={styles.spacer20} />
 
