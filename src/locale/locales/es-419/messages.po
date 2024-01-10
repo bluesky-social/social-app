@@ -1,0 +1,2769 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 16:01-0800\n"
+"PO-Revision-Date: 2024-01-10 14:18+0000\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Loco-Source-Locale: es_AR\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Parser: loco_parse_po"
+
+#: src/view/screens/Profile.tsx:214 src/view/com/modals/SelfLabel.tsx:138 
+#: src/view/shell/desktop/RightNav.tsx:168
+msgid ""
+"{0, plural, one {# invite code available} other {# invite codes available}}"
+msgstr ""
+"{0, plural, one {# código de invitación disponible} other {# códigos de "
+"invitación disponibles}}"
+
+#: src/view/com/modals/Repost.tsx:44
+msgid "{0}"
+msgstr "{0}"
+
+#: src/view/com/modals/CreateOrEditList.tsx:176
+msgid "{0} {purposeLabel} List"
+msgstr "Lista {purposeLabel} {0}"
+
+#: src/view/shell/desktop/RightNav.tsx:151
+msgid ""
+"{invitesAvailable, plural, one {Invite codes: # available} other {Invite "
+"codes: # available}}"
+msgstr ""
+"{invitesAvailable, plural, one {Códigos de invitación: # disponible} other "
+"{Códigos de invitación: # disponibles}}"
+
+#: src/view/screens/Settings.tsx:407 src/view/shell/Drawer.tsx:659
+msgid "{invitesAvailable} invite code available"
+msgstr "{invitesAvailable} código de invitación disponible"
+
+#: src/view/screens/Settings.tsx:409 src/view/shell/Drawer.tsx:661
+msgid "{invitesAvailable} invite codes available"
+msgstr "{invitesAvailable} códigos de invitación disponibles"
+
+#: src/view/screens/Search/Search.tsx:87
+msgid "{message}"
+msgstr "{message}"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:158
+msgid "<0/> members"
+msgstr "<0/> miembros"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
+msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
+msgstr "<0>Escoge</0><1>muros</1><2>recomendados</2>"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
+msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
+msgstr "<0>Sigue algunas</0><1>cuentas</1><2>recomendadas</2>"
+
+#: src/view/com/modals/AddAppPasswords.tsx:132 
+#: src/view/screens/Moderation.tsx:212 src/view/screens/Moderation.tsx:212 
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+msgid "A content warning has been applied to this {0}."
+msgstr "Se ha aplicado una advertencia de contenido a este {0}."
+
+#: src/lib/hooks/useOTAUpdate.ts:16
+msgid ""
+"A new version of the app is available. Please update to continue using the "
+"app."
+msgstr ""
+"Para continuar usando la aplicación, debes actualizarla a la versión más "
+"reciente."
+
+#: src/view/com/modals/EditImage.tsx:299 src/view/screens/Settings.tsx:417
+msgid "Accessibility"
+msgstr "Accesibilidad"
+
+#: src/view/com/auth/login/LoginForm.tsx:163 src/view/screens/Settings.tsx:286
+msgid "Account"
+msgstr "Cuenta"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:41
+msgid "Account options"
+msgstr "Ajustes de la cuenta"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:264 
+#: src/view/com/modals/UserAddRemoveLists.tsx:193 
+#: src/view/screens/ProfileList.tsx:763
+msgid "Add"
+msgstr "Añadir"
+
+#: src/view/com/modals/SelfLabel.tsx:56
+msgid "Add a content warning"
+msgstr "Añadir una advertencia de contenido"
+
+#: src/view/screens/ProfileList.tsx:753
+msgid "Add a user to this list"
+msgstr "Añadir un usuario a esta lista"
+
+#: src/view/screens/Settings.tsx:355 src/view/screens/Settings.tsx:364
+msgid "Add account"
+msgstr "Añadir una cuenta"
+
+#: src/view/com/composer/photos/Gallery.tsx:119 
+#: src/view/com/composer/photos/Gallery.tsx:180 
+#: src/view/com/modals/AltImage.tsx:93
+msgid "Add alt text"
+msgstr "Añadir un texto alternativo"
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:41 
+#: src/view/com/modals/report/Modal.tsx:191
+msgid "Add details"
+msgstr "Añadir detalles"
+
+#: src/view/com/modals/report/Modal.tsx:194
+msgid "Add details to report"
+msgstr "Añadir detalles a la denuncia"
+
+#: src/view/com/composer/Composer.tsx:447
+msgid "Add link card"
+msgstr "Añadir una ficha de enlace"
+
+#: src/view/com/composer/Composer.tsx:450
+msgid "Add link card:"
+msgstr "Añadir una ficha de enlace:"
+
+#: src/view/com/modals/ChangeHandle.tsx:415
+msgid "Add the following DNS record to your domain:"
+msgstr "Añade el siguiente registro DNS a tu dominio:"
+
+#: src/view/com/profile/ProfileHeader.tsx:353
+msgid "Add to Lists"
+msgstr "Añadir a listas"
+
+#: src/view/screens/ProfileFeed.tsx:271
+msgid "Add to my feeds"
+msgstr "Añadir a mis muros"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:191 
+#: src/view/com/modals/UserAddRemoveLists.tsx:128
+msgid "Added to list"
+msgstr "Añadido a la lista"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:170
+msgid "Adjust the number of likes a reply must have to be shown in your feed."
+msgstr ""
+"Ajusta la cantidad de 'me gusta' que debe tener una respuesta para mostrarse "
+"en tu muro."
+
+#: src/view/com/modals/SelfLabel.tsx:75
+msgid "Adult Content"
+msgstr "Contenido para adultos"
+
+#: src/view/screens/Settings.tsx:602
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: src/view/com/composer/photos/Gallery.tsx:130
+msgid "ALT"
+msgstr "ALT"
+
+#: src/view/com/modals/EditImage.tsx:315
+msgid "Alt text"
+msgstr "Texto alternativo"
+
+#: src/view/com/composer/photos/Gallery.tsx:209
+msgid ""
+"Alt text describes images for blind and low-vision users, and helps give "
+"context to everyone."
+msgstr ""
+"El texto alternativo describe las imágenes para personas ciegas o con visión "
+"reducida, y ayuda a brindar contexto para todos."
+
+#: src/view/com/modals/VerifyEmail.tsx:118
+msgid ""
+"An email has been sent to {0}. It includes a confirmation code which you can "
+"enter below."
+msgstr ""
+"Se ha enviado un correo electrónico a {0}. Incluye un código de confirmación "
+"que puedes introducir a continuación."
+
+#: src/view/com/modals/ChangeEmail.tsx:119
+msgid ""
+"An email has been sent to your previous address, {0}. It includes a "
+"confirmation code which you can enter below."
+msgstr ""
+"Se ha enviado un correo electrónico a tu dirección anterior, {0}. Incluye un "
+"código de confirmación que puedes introducir a continuación."
+
+#: src/view/com/notifications/FeedItem.tsx:237 
+#: src/view/com/threadgate/WhoCanReply.tsx:178
+msgid "and"
+msgstr "y"
+
+#: src/view/screens/LanguageSettings.tsx:95
+msgid "App Language"
+msgstr "Idioma de la aplicación"
+
+#: src/view/screens/Settings.tsx:622
+msgid "App passwords"
+msgstr "Contraseñas de aplicación"
+
+#: src/view/screens/AppPasswords.tsx:186
+msgid "App Passwords"
+msgstr "Contraseñas de aplicación"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:236
+msgid "Appeal content warning"
+msgstr "Apelar advertencia de contenido"
+
+#: src/view/com/modals/AppealLabel.tsx:65
+msgid "Appeal Content Warning"
+msgstr "Apelar advertencia de contenido"
+
+#: src/view/com/modals/AppealLabel.tsx:65 
+#: src/view/com/util/moderation/LabelInfo.tsx:52
+msgid "Appeal this decision"
+msgstr "Apelar esta decisión"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:56
+msgid "Appeal this decision."
+msgstr "Apelar esta decisión."
+
+#: src/view/screens/Settings.tsx:432
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: src/view/screens/Moderation.tsx:206 src/view/screens/AppPasswords.tsx:223
+msgid "Are you sure you want to delete the app password \"{name}\"?"
+msgstr ""
+"¿Estás seguro de que quieres eliminar la contraseña de aplicación «{name}»?"
+
+#: src/view/com/composer/Composer.tsx:143
+msgid "Are you sure you'd like to discard this draft?"
+msgstr "¿Estás seguro de que quieres descartar este borrador?"
+
+#: src/view/screens/ProfileList.tsx:353
+msgid "Are you sure?"
+msgstr "¿Estás seguro?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:219
+msgid "Are you sure? This cannot be undone."
+msgstr "¿Estás seguro? Esto no se puede deshacer."
+
+#: src/view/com/modals/SelfLabel.tsx:123
+msgid "Artistic or non-erotic nudity."
+msgstr "Desnudez artística o no erótica"
+
+#: src/view/screens/Moderation.tsx:189 
+#: src/view/com/auth/create/CreateAccount.tsx:141 
+#: src/view/com/auth/login/ChooseAccountForm.tsx:151 
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:166 
+#: src/view/com/auth/login/LoginForm.tsx:254 
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:148 
+#: src/view/com/modals/report/InputIssueDetails.tsx:46 
+#: src/view/com/post-thread/PostThread.tsx:388 
+#: src/view/com/post-thread/PostThread.tsx:438 
+#: src/view/com/post-thread/PostThread.tsx:446 
+#: src/view/com/profile/ProfileHeader.tsx:672
+msgid "Back"
+msgstr "Regresar"
+
+#: src/view/screens/Settings.tsx:461
+msgid "Basics"
+msgstr "Conceptos básicos"
+
+#: src/view/com/auth/create/Step2.tsx:156 
+#: src/view/com/modals/BirthDateSettings.tsx:73
+msgid "Birthday"
+msgstr "Cumpleaños"
+
+#: src/view/screens/Settings.tsx:312
+msgid "Birthday:"
+msgstr "Cumpleaños:"
+
+#: src/view/com/profile/ProfileHeader.tsx:282 
+#: src/view/com/profile/ProfileHeader.tsx:389
+msgid "Block Account"
+msgstr "Bloquear cuenta"
+
+#: src/view/screens/ProfileList.tsx:523
+msgid "Block accounts"
+msgstr "Bloquear cuentas"
+
+#: src/view/screens/ProfileList.tsx:473
+msgid "Block list"
+msgstr "Bloquear lista"
+
+#: src/view/screens/ProfileList.tsx:308
+msgid "Block these accounts?"
+msgstr "¿Bloquear estas cuentas?"
+
+#: src/view/screens/Moderation.tsx:123
+msgid "Blocked accounts"
+msgstr "Cuentas bloqueadas"
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
+msgid "Blocked Accounts"
+msgstr "Cuentas bloqueadas"
+
+#: src/view/com/profile/ProfileHeader.tsx:284
+msgid ""
+"Blocked accounts cannot reply in your threads, mention you, or otherwise "
+"interact with you."
+msgstr ""
+"Las cuentas bloqueadas no pueden responder en tus hilos, mencionarte ni "
+"interactuar contigo de ninguna otra manera."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
+msgid ""
+"Blocked accounts cannot reply in your threads, mention you, or otherwise "
+"interact with you. You will not see their content and they will be prevented "
+"from seeing yours."
+msgstr ""
+"Las cuentas bloqueadas no pueden responder en tus hilos, mencionarte ni "
+"interactuar contigo de ninguna otra manera. No verás su contenido y se les "
+"impedirá ver el tuyo."
+
+#: src/view/com/post-thread/PostThread.tsx:250
+msgid "Blocked post."
+msgstr "Publicación bloqueada."
+
+#: src/view/screens/ProfileList.tsx:310
+msgid ""
+"Blocking is public. Blocked accounts cannot reply in your threads, mention "
+"you, or otherwise interact with you."
+msgstr ""
+"El bloqueo es público. Las cuentas bloqueadas no pueden responder en tus "
+"hilos, mencionarte ni interactuar contigo de ninguna otra manera."
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+msgid "Blog"
+msgstr "Blog"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:31
+msgid "Bluesky"
+msgstr "Bluesky"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
+msgid "Bluesky is flexible."
+msgstr "Bluesky es flexible."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:69
+msgid "Bluesky is open."
+msgstr "Bluesky es abierto."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
+msgid "Bluesky is public."
+msgstr "Bluesky es público."
+
+#: src/view/com/modals/Waitlist.tsx:70
+msgid ""
+"Bluesky uses invites to build a healthier community. If you don't know "
+"anybody with an invite, you can sign up for the waitlist and we'll send one "
+"soon."
+msgstr ""
+"Bluesky utiliza invitaciones para construir una comunidad más saludable. Si "
+"no conoces a nadie con una invitación, puedes inscribirte en la lista de "
+"espera y te enviaremos una pronto."
+
+#: src/view/screens/Moderation.tsx:225
+msgid ""
+"Bluesky will not show your profile and posts to logged-out users. Other apps "
+"may not honor this request. This does not make your account private."
+msgstr ""
+"Bluesky no mostrará tu perfil y publicaciones a usuarios que no han iniciado "
+"sesión. Otras aplicaciones pueden no aceptar esta solicitud. Esto no "
+"convierte tu cuenta en privada."
+
+#: src/view/com/modals/ServerInput.tsx:78
+msgid "Bluesky.Social"
+msgstr "Bluesky.Social"
+
+#: src/view/screens/Settings.tsx:751
+msgid "Build version {0} {1}"
+msgstr "Build version {0} {1}"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+msgid "Business"
+msgstr "Negocios"
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:60 
+#: src/view/com/util/UserAvatar.tsx:221 src/view/com/util/UserBanner.tsx:38
+msgid "Camera"
+msgstr "Cámara"
+
+#: src/view/com/modals/AddAppPasswords.tsx:214
+msgid ""
+"Can only contain letters, numbers, spaces, dashes, and underscores. Must be "
+"at least 4 characters long, but no more than 32 characters long."
+msgstr ""
+"Solamente puede contener letras, números, espacios, guiones y guiones bajos. "
+"Debe tener al menos 4 caracteres de longitud, pero no más de 32."
+
+#: src/view/com/composer/Composer.tsx:294 
+#: src/view/com/composer/Composer.tsx:297 
+#: src/view/com/modals/ChangeEmail.tsx:218 
+#: src/view/com/modals/ChangeEmail.tsx:220 src/view/com/modals/Confirm.tsx:88 
+#: src/view/com/modals/CreateOrEditList.tsx:267 
+#: src/view/com/modals/CreateOrEditList.tsx:272 
+#: src/view/com/modals/DeleteAccount.tsx:150 
+#: src/view/com/modals/DeleteAccount.tsx:223 
+#: src/view/com/modals/EditImage.tsx:323 
+#: src/view/com/modals/EditProfile.tsx:248 
+#: src/view/com/modals/LinkWarning.tsx:85 src/view/com/modals/Repost.tsx:73 
+#: src/view/com/modals/Waitlist.tsx:136 src/view/screens/Search/Search.tsx:601 
+#: src/view/shell/desktop/Search.tsx:182
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/view/com/modals/DeleteAccount.tsx:146 
+#: src/view/com/modals/DeleteAccount.tsx:219
+msgid "Cancel account deletion"
+msgstr "Cancelar eliminación de cuenta"
+
+#: src/view/com/modals/AltImage.tsx:123 
+#: src/view/com/modals/ChangeHandle.tsx:149
+msgid "Cancel change handle"
+msgstr "Cancelar cambio de identificador."
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:134
+msgid "Cancel image crop"
+msgstr "Cancelar recorte de imagen"
+
+#: src/view/com/modals/EditProfile.tsx:243
+msgid "Cancel profile editing"
+msgstr "Cancelar edición de perfil"
+
+#: src/view/com/modals/Repost.tsx:64
+msgid "Cancel quote post"
+msgstr "Cancelar cita."
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:87 
+#: src/view/shell/desktop/Search.tsx:178
+msgid "Cancel search"
+msgstr "Cancelar búsqueda"
+
+#: src/view/com/modals/Waitlist.tsx:132
+msgid "Cancel waitlist signup"
+msgstr "Cancelar registro en lista de espera"
+
+#: src/view/screens/Settings.tsx:306
+msgid "Change"
+msgstr "Cambiar"
+
+#: src/view/screens/Settings.tsx:634 src/view/screens/Settings.tsx:643
+msgid "Change handle"
+msgstr "Cambiar identificador"
+
+#: src/view/com/modals/ChangeHandle.tsx:161
+msgid "Change Handle"
+msgstr "Cambiar identificador"
+
+#: src/view/com/modals/VerifyEmail.tsx:141
+msgid "Change my email"
+msgstr "Cambiar mi correo electrónico"
+
+#: src/view/com/modals/ChangeEmail.tsx:109
+msgid "Change Your Email"
+msgstr "Cambiar tu correo electrónico"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
+msgid ""
+"Check out some recommended feeds. Tap + to add them to your list of pinned "
+"feeds."
+msgstr ""
+"Revisa algunos muros recomendados. Toca + para agregarlos a tu lista de "
+"muros fijados."
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
+msgid "Check out some recommended users. Follow them to see similar users."
+msgstr ""
+"Revisa algunas cuentas recomendadas. Síguelas para ver cuentas similares."
+
+#: src/view/com/modals/DeleteAccount.tsx:163
+msgid ""
+"Check your inbox for an email with the confirmation code to enter below:"
+msgstr ""
+"Busca en tu bandeja de entrada un correo electrónico con el código de "
+"confirmación que debes ingresar a continuación:"
+
+#: src/view/com/modals/Threadgate.tsx:72
+msgid "Choose \"Everybody\" or \"Nobody\""
+msgstr "Escoge 'Todos' o 'Nadie'."
+
+#: src/view/com/modals/ServerInput.tsx:38
+msgid "Choose Service"
+msgstr "Escoge un servicio"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
+msgid "Choose the algorithms that power your experience with custom feeds."
+msgstr ""
+"Escoge los algoritmos que impulsan tu experiencia con muros personalizados."
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65 
+#: src/view/com/auth/create/Step2.tsx:127
+msgid "Choose your password"
+msgstr "Escoge tu contraseña"
+
+#: src/view/screens/Settings.tsx:727
+msgid "Clear all legacy storage data"
+msgstr "Eliminar todos los datos de almacenamiento antiguos"
+
+#: src/view/screens/Settings.tsx:729
+msgid "Clear all legacy storage data (restart after this)"
+msgstr ""
+"Eliminar todos los datos de almacenamiento antiguos (reiniciar después de "
+"esto)"
+
+#: src/view/screens/Settings.tsx:739
+msgid "Clear all storage data"
+msgstr "Eliminar todos los datos de almacenamiento"
+
+#: src/view/screens/Settings.tsx:741
+msgid "Clear all storage data (restart after this)"
+msgstr "Eliminar todos los datos de almacenamiento (reiniciar después de esto)"
+
+#: src/view/com/util/forms/SearchInput.tsx:74 
+#: src/view/screens/Search/Search.tsx:582
+msgid "Clear search query"
+msgstr "Eliminar consulta de búsqueda"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
+msgid "Close alert"
+msgstr "Cerrar alerta"
+
+#: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
+msgid "Close bottom drawer"
+msgstr "Cerrar el cajón de abajo"
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:26
+msgid "Close image"
+msgstr "Cerrar imagen"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:112
+msgid "Close image viewer"
+msgstr "Cerrar visor de imágenes"
+
+#: src/view/shell/index.web.tsx:49
+msgid "Close navigation footer"
+msgstr "Cerrar el pie de navegación"
+
+#: src/view/screens/CommunityGuidelines.tsx:32
+msgid "Community Guidelines"
+msgstr "Normas de la Comunidad"
+
+#: src/view/com/composer/Prompt.tsx:24
+msgid "Compose reply"
+msgstr "Redactar respuesta"
+
+#: src/view/com/modals/AppealLabel.tsx:98 src/view/com/modals/Confirm.tsx:75 
+#: src/view/com/modals/SelfLabel.tsx:154 
+#: src/view/com/modals/VerifyEmail.tsx:225 
+#: src/view/screens/PreferencesHomeFeed.tsx:305 
+#: src/view/screens/PreferencesThreads.tsx:159
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: src/view/com/modals/ChangeEmail.tsx:193 
+#: src/view/com/modals/ChangeEmail.tsx:195
+msgid "Confirm Change"
+msgstr "Confirmar cambio"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
+msgid "Confirm content language settings"
+msgstr "Confirmar ajustes de idioma del contenido"
+
+#: src/view/com/modals/DeleteAccount.tsx:209
+msgid "Confirm delete account"
+msgstr "Confirmar eliminación de cuenta"
+
+#: src/view/com/modals/ChangeEmail.tsx:157 
+#: src/view/com/modals/DeleteAccount.tsx:176 
+#: src/view/com/modals/VerifyEmail.tsx:159
+msgid "Confirmation code"
+msgstr "Código de confirmación"
+
+#: src/view/com/auth/create/CreateAccount.tsx:174 
+#: src/view/com/auth/login/LoginForm.tsx:273
+msgid "Connecting..."
+msgstr "Conectando..."
+
+#: src/view/screens/Moderation.tsx:81
+msgid "Content filtering"
+msgstr "Filtro de contenido"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:44
+msgid "Content Filtering"
+msgstr "Filtro de contenido"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74 
+#: src/view/screens/LanguageSettings.tsx:278
+msgid "Content Languages"
+msgstr "Idiomas del contenido"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:78
+msgid "Content Warning"
+msgstr "Advertencia de contenido"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:31
+msgid "Content warnings"
+msgstr "Advertencias de contenido"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
+msgid "Continue"
+msgstr "Continuar"
+
+#: src/view/com/modals/AddAppPasswords.tsx:193 
+#: src/view/com/modals/InviteCodes.tsx:179
+msgid "Copied"
+msgstr "Copiado"
+
+#: src/view/com/modals/AddAppPasswords.tsx:186
+msgid "Copy"
+msgstr "Copiar"
+
+#: src/view/screens/ProfileList.tsx:385
+msgid "Copy link to list"
+msgstr "Copiar enlace a lista"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+msgid "Copy link to post"
+msgstr "Copiar enlace a la publicación"
+
+#: src/view/com/profile/ProfileHeader.tsx:338
+msgid "Copy link to profile"
+msgstr "Copiar enlace al perfil"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
+msgid "Copy post text"
+msgstr "Copiar enlace a la publicación"
+
+#: src/view/screens/CopyrightPolicy.tsx:29
+msgid "Copyright Policy"
+msgstr "Política de Derechos de Autor"
+
+#: src/view/screens/ProfileFeed.tsx:95
+msgid "Could not load feed"
+msgstr "No se ha podido cargar el muro"
+
+#: src/view/screens/ProfileList.tsx:839
+msgid "Could not load list"
+msgstr "No se ha podido cargar la lista"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:62 
+#: src/view/com/auth/SplashScreen.tsx:46
+msgid "Create a new account"
+msgstr "Crear una cuenta nueva"
+
+#: src/view/com/auth/create/CreateAccount.tsx:121
+msgid "Create Account"
+msgstr "Crear cuenta"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:54 
+#: src/view/com/auth/SplashScreen.tsx:43
+msgid "Create new account"
+msgstr "Crear cuenta nueva"
+
+#: src/view/screens/AppPasswords.tsx:248
+msgid "Created {0}"
+msgstr "{0} creado"
+
+#: src/view/com/modals/ChangeHandle.tsx:387 
+#: src/view/com/modals/ServerInput.tsx:102
+msgid "Custom domain"
+msgstr "Dominio personalizado"
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr "Personalizar medios de sitios externos."
+
+#: src/view/screens/Settings.tsx:648
+msgid "Danger Zone"
+msgstr "Zona de peligro"
+
+#: src/view/screens/Settings.tsx:411 src/view/screens/Settings.tsx:655
+msgid "Delete account"
+msgstr "Eliminar cuenta"
+
+#: src/view/com/modals/DeleteAccount.tsx:83
+msgid "Delete Account"
+msgstr "Eliminar cuenta"
+
+#: src/view/screens/AppPasswords.tsx:221 src/view/screens/AppPasswords.tsx:241
+msgid "Delete app password"
+msgstr "Eliminar contraseña de aplicación"
+
+#: src/view/screens/ProfileList.tsx:352 src/view/screens/ProfileList.tsx:412
+msgid "Delete List"
+msgstr "Eliminar lista"
+
+#: src/view/com/modals/DeleteAccount.tsx:212
+msgid "Delete my account"
+msgstr "Eliminar mi cuenta"
+
+#: src/view/screens/Settings.tsx:665
+msgid "Delete my account…"
+msgstr "Eliminar mi cuenta..."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:214
+msgid "Delete post"
+msgstr "Eliminar publicación"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:218
+msgid "Delete this post?"
+msgstr "¿Estás seguro de que quieres eliminar esta publicación?"
+
+#: src/view/com/post-thread/PostThread.tsx:242
+msgid "Deleted post."
+msgstr "Se ha eliminado la publicación."
+
+#: src/view/com/modals/CreateOrEditList.tsx:218 
+#: src/view/com/modals/CreateOrEditList.tsx:234 
+#: src/view/com/modals/EditProfile.tsx:197 
+#: src/view/com/modals/EditProfile.tsx:209
+msgid "Description"
+msgstr "Descripción"
+
+#: src/view/com/auth/create/Step1.tsx:96
+msgid "Dev Server"
+msgstr "Servidor de desarrollo"
+
+#: src/view/screens/Settings.tsx:670
+msgid "Developer Tools"
+msgstr "Herramientas de desarrollador"
+
+#: src/view/com/composer/Composer.tsx:211
+msgid "Did you want to say anything?"
+msgstr "¿Quieres decir algo?"
+
+#: src/view/com/composer/Composer.tsx:144
+msgid "Discard"
+msgstr "Descartar"
+
+#: src/view/com/composer/Composer.tsx:138
+msgid "Discard draft"
+msgstr "Descartar el borrador"
+
+#: src/view/screens/Moderation.tsx:207
+msgid "Discourage apps from showing my account to logged-out users"
+msgstr ""
+"Evitar que las aplicaciones muestren mi cuenta a usuarios que no han "
+"iniciado sesión"
+
+#: src/view/screens/Feeds.tsx:405
+msgid "Discover new feeds"
+msgstr "Descubrir nuevos muros"
+
+#: src/view/com/modals/EditProfile.tsx:191
+msgid "Display name"
+msgstr "Nombre visible"
+
+#: src/view/com/modals/EditProfile.tsx:179
+msgid "Display Name"
+msgstr "Nombre visible"
+
+#: src/view/com/modals/ChangeHandle.tsx:485
+msgid "Domain verified!"
+msgstr "¡Dominio verificado!"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86 
+#: src/view/com/modals/AltImage.tsx:115 
+#: src/view/com/modals/ContentFilteringSettings.tsx:88 
+#: src/view/com/modals/ContentFilteringSettings.tsx:96 
+#: src/view/com/modals/crop-image/CropImage.web.tsx:152 
+#: src/view/com/modals/EditImage.tsx:333 
+#: src/view/com/modals/ListAddRemoveUsers.tsx:142 
+#: src/view/com/modals/SelfLabel.tsx:157 
+#: src/view/com/modals/Threadgate.tsx:129 
+#: src/view/com/modals/Threadgate.tsx:132 
+#: src/view/com/modals/UserAddRemoveLists.tsx:79 
+#: src/view/screens/PreferencesHomeFeed.tsx:308 
+#: src/view/screens/PreferencesThreads.tsx:162
+msgid "Done"
+msgstr "Hecho"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
+msgid "Done{extraText}"
+msgstr "Hecho{extraText}"
+
+#: src/view/com/modals/InviteCodes.tsx:94
+msgid "Each code works once. You'll receive more invite codes periodically."
+msgstr ""
+"Cada código funciona una vez. Recibirás más códigos de invitación "
+"periódicamente."
+
+#: src/view/com/composer/photos/Gallery.tsx:144 
+#: src/view/com/modals/EditImage.tsx:207
+msgid "Edit image"
+msgstr "Editar imagen"
+
+#: src/view/screens/ProfileList.tsx:400
+msgid "Edit list details"
+msgstr "Editar detalles de la lista"
+
+#: src/view/screens/Feeds.tsx:367 src/view/screens/SavedFeeds.tsx:84
+msgid "Edit My Feeds"
+msgstr "Editar mis muros"
+
+#: src/view/com/modals/EditProfile.tsx:151
+msgid "Edit my profile"
+msgstr "Editar mi perfil"
+
+#: src/view/com/profile/ProfileHeader.tsx:453
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: src/view/com/profile/ProfileHeader.tsx:456
+msgid "Edit Profile"
+msgstr "Editar perfil"
+
+#: src/view/screens/Feeds.tsx:330
+msgid "Edit Saved Feeds"
+msgstr "Editar muros guardados"
+
+#: src/view/com/auth/create/Step2.tsx:108 
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:148 
+#: src/view/com/modals/ChangeEmail.tsx:141 src/view/com/modals/Waitlist.tsx:88
+msgid "Email"
+msgstr "Correo electrónico"
+
+#: src/view/com/auth/create/Step2.tsx:99
+msgid "Email address"
+msgstr "Dirección de correo electrónico"
+
+#: src/view/com/modals/ChangeEmail.tsx:111
+msgid "Email Updated"
+msgstr "Correo electrónico actualizado"
+
+#: src/view/screens/Settings.tsx:290
+msgid "Email:"
+msgstr "Correo electrónico:"
+
+#: src/view/com/modals/EmbedConsent.tsx:113
+msgid "Enable {0} only"
+msgstr "Activar solo {0}"
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+msgid "Enable External Media"
+msgstr "Activar medios externos"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:144
+msgid "Enable this setting to only see replies between people you follow."
+msgstr ""
+"Activa este ajuste para ver únicamente respuestas entre personas a las que "
+"sigues."
+
+#: src/view/screens/Profile.tsx:426
+msgid "End of feed"
+msgstr "Fin del muro"
+
+#: src/view/com/auth/create/Step1.tsx:71
+msgid "Enter the address of your provider:"
+msgstr "Introduce la dirección de tu proveedor:"
+
+#: src/view/com/modals/ChangeHandle.tsx:369
+msgid "Enter the domain you want to use"
+msgstr "Introduce el dominio que deseas usar."
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:101
+msgid ""
+"Enter the email you used to create your account. We'll send you a \"reset "
+"code\" so you can set a new password."
+msgstr ""
+"Introduce el correo electrónico que usaste para crear tu cuenta. Te "
+"enviaremos un 'código de restablecimiento' para que puedas establecer una "
+"nueva contraseña."
+
+#: src/view/com/auth/create/Step2.tsx:104
+msgid "Enter your email address"
+msgstr "Introduce tu dirección de correo electrónico"
+
+#: src/view/com/modals/ChangeEmail.tsx:117
+msgid "Enter your new email address below."
+msgstr "Introduce tu nueva dirección de correo electrónico a continuación."
+
+#: src/view/com/auth/login/Login.tsx:99
+msgid "Enter your username and password"
+msgstr "Introduce tu nombre de usuario y contraseña"
+
+#: src/view/screens/Search/Search.tsx:105
+msgid "Error:"
+msgstr "Error:"
+
+#: src/view/com/modals/Threadgate.tsx:76
+msgid "Everybody"
+msgstr "Todos"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:156
+msgid "Expand alt text"
+msgstr "Expandir texto alternativo"
+
+#: src/view/com/modals/EmbedConsent.tsx:64
+msgid "External Media"
+msgstr "Medios externos"
+
+#: src/view/com/modals/EmbedConsent.tsx:75 
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid ""
+"External media may allow websites to collect information about you and your "
+"device. No information is sent or requested until you press the \"play\" "
+"button."
+msgstr ""
+"Los medios externos pueden permitir que los sitios web recopilen información "
+"sobre ti y tu dispositivo. No se envía ni se solicita información hasta que "
+"pulses el botón 'reproducir'"
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52 
+#: src/view/screens/Settings.tsx:595
+msgid "External Media Preferences"
+msgstr "Preferencias de medios externos"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
+msgid "Failed to load recommended feeds"
+msgstr "No se han podido cargar los muros recomendados"
+
+#: src/view/screens/Feeds.tsx:556
+msgid "Feed offline"
+msgstr "El muro está fuera de línea"
+
+#: src/view/com/feeds/FeedPage.tsx:143
+msgid "Feed Preferences"
+msgstr "Preferencias de muro"
+
+#: src/view/shell/desktop/RightNav.tsx:73 src/view/shell/Drawer.tsx:311
+msgid "Feedback"
+msgstr "Opiniones"
+
+#: src/view/screens/Feeds.tsx:475 src/view/screens/Profile.tsx:165 
+#: src/view/shell/bottom-bar/BottomBar.tsx:181 
+#: src/view/shell/desktop/LeftNav.tsx:342 src/view/shell/Drawer.tsx:474 
+#: src/view/shell/Drawer.tsx:475
+msgid "Feeds"
+msgstr "Muros"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
+msgid ""
+"Feeds are created by users to curate content. Choose some feeds that you "
+"find interesting."
+msgstr ""
+"Los muros son creados por usuarios para organizar contenido. Escoge algunos "
+"muros que te resulten interesantes."
+
+#: src/view/screens/SavedFeeds.tsx:156
+msgid ""
+"Feeds are custom algorithms that users build with a little coding expertise. "
+"<0/> for more information."
+msgstr ""
+"Los muros son algoritmos personalizados que los usuarios construyen con un "
+"poco de experiencia en programación. <0/> para más información."
+
+#: src/view/screens/Search/Search.tsx:427
+msgid "Find users on Bluesky"
+msgstr "Encontrar usuarios en Bluesky"
+
+#: src/view/screens/Search/Search.tsx:425
+msgid "Find users with the search tool on the right"
+msgstr "Encuentra usuarios con la herramienta de búsqueda a la derecha"
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
+msgid "Finding similar accounts..."
+msgstr "Encontrar cuentas similares..."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:108
+msgid "Fine-tune the content you see on your home screen."
+msgstr "Ajusta el contenido que ves en tu pantalla de inicio."
+
+#: src/view/screens/PreferencesThreads.tsx:60
+msgid "Fine-tune the discussion threads."
+msgstr "Ajusta los hilos de discusión."
+
+#: src/view/com/profile/ProfileHeader.tsx:538
+msgid "Follow"
+msgstr "Seguir"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:42 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
+msgid ""
+"Follow some users to get started. We can recommend you more users based on "
+"who you find interesting."
+msgstr ""
+"Sigue a algunos usuarios para empezar. Así podremos sugerirte otras cuentas "
+"similares que puedan interesarte."
+
+#: src/view/com/modals/Threadgate.tsx:98
+msgid "Followed users"
+msgstr "Usuarios seguidos"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:151
+msgid "Followed users only"
+msgstr "Solo usuarios seguidos"
+
+#: src/view/screens/ProfileFollowers.tsx:25
+msgid "Followers"
+msgstr "Seguidores"
+
+#: src/view/com/profile/ProfileHeader.tsx:624
+msgid "following"
+msgstr "siguiendo"
+
+#: src/view/com/profile/ProfileHeader.tsx:522 
+#: src/view/screens/ProfileFollows.tsx:25
+msgid "Following"
+msgstr "Siguiendo"
+
+#: src/view/com/profile/ProfileHeader.tsx:571
+msgid "Follows you"
+msgstr "Te siguen"
+
+#: src/view/com/modals/DeleteAccount.tsx:107
+msgid ""
+"For security reasons, we'll need to send a confirmation code to your email "
+"address."
+msgstr ""
+"Por razones de seguridad, necesitaremos enviar un código de confirmación a "
+"tu correo electrónico."
+
+#: src/view/com/modals/AddAppPasswords.tsx:207
+msgid ""
+"For security reasons, you won't be able to view this again. If you lose this "
+"password, you'll need to generate a new one."
+msgstr ""
+"Por razones de seguridad, no podrás ver esto nuevamente. Si pierdes esta "
+"contraseña, deberás generar una nueva."
+
+#: src/view/com/auth/login/LoginForm.tsx:236
+msgid "Forgot"
+msgstr "La olvidé"
+
+#: src/view/com/auth/login/LoginForm.tsx:233
+msgid "Forgot password"
+msgstr "Olvidé mi contraseña"
+
+#: src/view/com/auth/login/Login.tsx:127 src/view/com/auth/login/Login.tsx:143
+msgid "Forgot Password"
+msgstr "Olvidé mi contraseña"
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
+msgid "Gallery"
+msgstr "Galería"
+
+#: src/view/com/modals/VerifyEmail.tsx:183
+msgid "Get Started"
+msgstr "Comenzar"
+
+#: src/view/com/auth/LoggedOut.tsx:81 src/view/com/auth/LoggedOut.tsx:82 
+#: src/view/com/util/moderation/ScreenHider.tsx:123 
+#: src/view/shell/desktop/LeftNav.tsx:104
+msgid "Go back"
+msgstr "Regresar"
+
+#: src/view/screens/ProfileFeed.tsx:104 src/view/screens/ProfileFeed.tsx:109 
+#: src/view/screens/ProfileList.tsx:848 src/view/screens/ProfileList.tsx:853
+msgid "Go Back"
+msgstr "Regresar"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:181 
+#: src/view/com/auth/login/LoginForm.tsx:283 
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:163
+msgid "Go to next"
+msgstr "Continuar"
+
+#: src/view/com/modals/ChangeHandle.tsx:265
+msgid "Handle"
+msgstr "Identificador"
+
+#: src/view/shell/desktop/RightNav.tsx:102 src/view/shell/Drawer.tsx:321
+msgid "Help"
+msgstr "Ayuda"
+
+#: src/view/com/modals/AddAppPasswords.tsx:148
+msgid "Here is your app password."
+msgstr "Aquí tienes tu contraseña de aplicación."
+
+#: src/view/com/notifications/FeedItem.tsx:324 
+#: src/view/com/util/moderation/ContentHider.tsx:103
+msgid "Hide"
+msgstr "Ocultar"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:173
+msgid "Hide post"
+msgstr "Ocultar publicación"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:177
+msgid "Hide this post?"
+msgstr "¿Estás seguro de que quieres ocultar esta publicación?"
+
+#: src/view/com/notifications/FeedItem.tsx:316
+msgid "Hide user list"
+msgstr "Ocultar lista de usuarios"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:102 
+#: src/view/com/posts/FeedErrorMessage.tsx:110
+msgid ""
+"Hmm, some kind of issue occurred when contacting the feed server. Please let "
+"the feed owner know about this issue."
+msgstr ""
+"Parece que ocurrió algún problema al contactar con el servidor de muros. Por "
+"favor, informa al dueño del muro sobre este problema."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:98
+msgid ""
+"Hmm, the feed server appears to be misconfigured. Please let the feed owner "
+"know about this issue."
+msgstr ""
+"Parece que el servidor de muros está mal configurado. Por favor, informa al "
+"dueño del muro sobre este problema."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:104
+msgid ""
+"Hmm, the feed server appears to be offline. Please let the feed owner know "
+"about this issue."
+msgstr ""
+"Parece que el servidor de muros está fuera de línea. Por favor, informa al "
+"dueño del muro sobre este problema."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:101
+msgid ""
+"Hmm, the feed server gave a bad response. Please let the feed owner know "
+"about this issue."
+msgstr ""
+"Parece que el servidor de muros ha dado una respuesta incorrecta. Por favor, "
+"informa al dueño del muro sobre este problema."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:95
+msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
+msgstr ""
+"Parece que tenemos problemas para encontrar este muro. Puede que haya sido "
+"eliminado."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:87 
+#: src/view/shell/bottom-bar/BottomBar.tsx:137 
+#: src/view/shell/desktop/LeftNav.tsx:306 src/view/shell/Drawer.tsx:398 
+#: src/view/shell/Drawer.tsx:399
+msgid "Home"
+msgstr "Inicio"
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:96 
+#: src/view/screens/PreferencesHomeFeed.tsx:101 
+#: src/view/screens/Settings.tsx:481
+msgid "Home Feed Preferences"
+msgstr "Preferencias de muros de la página de inicio"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:114
+msgid "Hosting provider"
+msgstr "Proveedor de alojamiento"
+
+#: src/view/com/auth/create/Step1.tsx:76 src/view/com/auth/create/Step1.tsx:81
+msgid "Hosting provider address"
+msgstr "Dirección del proveedor de alojamiento"
+
+#: src/view/com/modals/VerifyEmail.tsx:208
+msgid "I have a code"
+msgstr "Tengo un código"
+
+#: src/view/com/modals/ChangeHandle.tsx:281
+msgid "I have my own domain"
+msgstr "Tengo mi propio dominio"
+
+#: src/view/com/modals/SelfLabel.tsx:127
+msgid "If none are selected, suitable for all ages."
+msgstr "Si no se selecciona ninguno, será apto para todas las edades."
+
+#: src/view/com/modals/AltImage.tsx:97
+msgid "Image alt text"
+msgstr "Texto alternativo de la imagen"
+
+#: src/view/com/util/UserAvatar.tsx:308 src/view/com/util/UserBanner.tsx:116
+msgid "Image options"
+msgstr "Ajustes de la imagen"
+
+#: src/view/com/search/Suggestions.tsx:104 
+#: src/view/com/search/Suggestions.tsx:115 
+#: src/view/com/auth/login/LoginForm.tsx:115
+msgid "Invalid username or password"
+msgstr "Nombre de usuario o contraseña inválidos"
+
+#: src/view/screens/Settings.tsx:383
+msgid "Invite"
+msgstr "Invitar"
+
+#: src/view/com/modals/InviteCodes.tsx:91 src/view/screens/Settings.tsx:371
+msgid "Invite a Friend"
+msgstr "Invitar a un amigo"
+
+#: src/view/com/auth/create/Step2.tsx:72
+msgid "Invite code"
+msgstr "Código de invitación"
+
+#: src/view/com/auth/create/state.ts:136
+msgid ""
+"Invite code not accepted. Check that you input it correctly and try again."
+msgstr ""
+"El código de invitación no ha sido aceptado. Comprueba que lo has "
+"introducido correctamente e inténtalo de nuevo."
+
+#: src/view/shell/Drawer.tsx:640
+msgid "Invite codes: {invitesAvailable} available"
+msgstr "Códigos de invitación: {invitesAvailable} disponibles"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+msgid "Jobs"
+msgstr "Empleos"
+
+#: src/view/com/modals/Waitlist.tsx:67
+msgid "Join the waitlist"
+msgstr "Unirse a la lista de espera"
+
+#: src/view/com/auth/create/Step2.tsx:86 src/view/com/auth/create/Step2.tsx:90
+msgid "Join the waitlist."
+msgstr "Unirse a la lista de espera."
+
+#: src/view/com/modals/Waitlist.tsx:124
+msgid "Join Waitlist"
+msgstr "Unirse a la lista de espera"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:104
+msgid "Language selection"
+msgstr "Selección de idioma"
+
+#: src/view/screens/LanguageSettings.tsx:89
+msgid "Language Settings"
+msgstr "Ajustes del idioma"
+
+#: src/view/screens/Settings.tsx:541
+msgid "Languages"
+msgstr "Idiomas"
+
+#: src/view/com/util/moderation/ContentHider.tsx:101
+msgid "Learn more"
+msgstr "Saber más"
+
+#: src/view/com/util/moderation/PostAlerts.tsx:47 
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:65 
+#: src/view/com/util/moderation/ScreenHider.tsx:104
+msgid "Learn More"
+msgstr "Saber más"
+
+#: src/view/com/util/moderation/ContentHider.tsx:83 
+#: src/view/com/util/moderation/PostAlerts.tsx:40 
+#: src/view/com/util/moderation/PostHider.tsx:76 
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:49 
+#: src/view/com/util/moderation/ScreenHider.tsx:101
+msgid "Learn more about this warning"
+msgstr "Saber más sobre esta advertencia"
+
+#: src/view/screens/Moderation.tsx:242
+msgid "Learn more about what is public on Bluesky."
+msgstr "Aprender más sobre lo que es público en Bluesky."
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
+msgid "Leave them all unchecked to see any language."
+msgstr "Deja todos sin marcar para ver cualquier idioma."
+
+#: src/view/com/modals/LinkWarning.tsx:49
+msgid "Leaving Bluesky"
+msgstr "Saliendo de Bluesky"
+
+#: src/view/com/auth/login/Login.tsx:128 src/view/com/auth/login/Login.tsx:144
+msgid "Let's get your password reset!"
+msgstr "¡Vamos a restablecer tu contraseña!"
+
+#: src/view/com/util/UserAvatar.tsx:245 src/view/com/util/UserBanner.tsx:60
+msgid "Library"
+msgstr "Galería"
+
+#: src/view/screens/Settings.tsx:405 src/view/screens/ProfileFeed.tsx:586
+msgid "Like this feed"
+msgstr "Dar 'me gusta' a este muro"
+
+#: src/view/screens/PostLikedBy.tsx:27 
+#: src/view/screens/ProfileFeedLikedBy.tsx:27
+msgid "Liked by"
+msgstr "Le ha gustado a"
+
+#: src/view/screens/Profile.tsx:164
+msgid "Likes"
+msgstr "Me gusta"
+
+#: src/view/screens/Moderation.tsx:203 src/view/screens/Moderation.tsx:203 
+#: src/view/com/modals/CreateOrEditList.tsx:186
+msgid "List Avatar"
+msgstr "Imagen de lista"
+
+#: src/view/com/modals/CreateOrEditList.tsx:199
+msgid "List Name"
+msgstr "Nombre de lista"
+
+#: src/view/screens/Profile.tsx:166 src/view/shell/desktop/LeftNav.tsx:379 
+#: src/view/shell/Drawer.tsx:490 src/view/shell/Drawer.tsx:491
+msgid "Lists"
+msgstr "Listas"
+
+#: src/view/com/post-thread/PostThread.tsx:259 
+#: src/view/com/post-thread/PostThread.tsx:267
+msgid "Load more posts"
+msgstr "Cargar más publicaciones"
+
+#: src/view/screens/Notifications.tsx:148
+msgid "Load new notifications"
+msgstr "Cargar nuevas notificaciones"
+
+#: src/view/com/feeds/FeedPage.tsx:189
+msgid "Load new posts"
+msgstr "Cargar nuevas publicaciones"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
+msgid "Loading..."
+msgstr "Cargando..."
+
+#: src/view/com/modals/ServerInput.tsx:50
+msgid "Local dev server"
+msgstr "Servidor de desarrollo local"
+
+#: src/view/screens/Moderation.tsx:134 src/view/screens/Moderation.tsx:136
+msgid "Logged-out visibility"
+msgstr "Visibilidad sin sesión iniciada"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:133
+msgid "Login to account that is not listed"
+msgstr "Iniciar sesión en una cuenta que no está en la lista"
+
+#: src/view/screens/ProfileFeed.tsx:472 src/view/com/modals/LinkWarning.tsx:63
+msgid "Make sure this is where you intend to go!"
+msgstr "¡Asegúrate de que este es el lugar al que quieres ir!"
+
+#: src/view/screens/Profile.tsx:163
+msgid "Media"
+msgstr "Multimedia"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:139
+msgid "mentioned users"
+msgstr "usuarios mencionados"
+
+#: src/view/com/modals/Threadgate.tsx:93
+msgid "Mentioned users"
+msgstr "Usuarios mencionados"
+
+#: src/view/screens/Search/Search.tsx:537
+msgid "Menu"
+msgstr "Menú"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:194
+msgid "Message from server"
+msgstr "Mensaje del servidor"
+
+#: src/view/screens/Moderation.tsx:64 src/view/screens/Settings.tsx:563 
+#: src/view/shell/desktop/LeftNav.tsx:397 src/view/shell/Drawer.tsx:509 
+#: src/view/shell/Drawer.tsx:510
+msgid "Moderation"
+msgstr "Moderación"
+
+#: src/view/screens/Moderation.tsx:95
+msgid "Moderation lists"
+msgstr "Listas de moderación"
+
+#: src/view/screens/ModerationModlists.tsx:58
+msgid "Moderation Lists"
+msgstr "Listas de moderación"
+
+#: src/view/shell/desktop/Feeds.tsx:53
+msgid "More feeds"
+msgstr "Más muros"
+
+#: src/view/com/profile/ProfileHeader.tsx:548 
+#: src/view/screens/ProfileFeed.tsx:361 src/view/screens/ProfileList.tsx:584
+msgid "More options"
+msgstr "Más opciones"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:158 
+#: src/view/screens/PreferencesThreads.tsx:82
+msgid "Most-liked replies first"
+msgstr "Respuestas más gustadas primero"
+
+#: src/view/com/profile/ProfileHeader.tsx:370
+msgid "Mute Account"
+msgstr "Silenciar cuenta"
+
+#: src/view/screens/ProfileList.tsx:511
+msgid "Mute accounts"
+msgstr "Silenciar cuentas"
+
+#: src/view/screens/ProfileList.tsx:458
+msgid "Mute list"
+msgstr "Silenciar lista"
+
+#: src/view/screens/ProfileList.tsx:271
+msgid "Mute these accounts?"
+msgstr "¿Silenciar estas cuentas?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
+msgid "Mute thread"
+msgstr "Silenciar hilo"
+
+#: src/view/screens/Moderation.tsx:109
+msgid "Muted accounts"
+msgstr "Cuentas silenciadas"
+
+#: src/view/screens/ModerationMutedAccounts.tsx:107
+msgid "Muted Accounts"
+msgstr "Cuentas silenciadas"
+
+#: src/view/screens/ModerationMutedAccounts.tsx:115
+msgid ""
+"Muted accounts have their posts removed from your feed and from your "
+"notifications. Mutes are completely private."
+msgstr ""
+"Las cuentas que has silenciado no mostrarán sus publicaciones en tu muro ni "
+"recibirás notificaciones de ellas. El silencio es completamente privado."
+
+#: src/view/screens/ProfileList.tsx:273
+msgid ""
+"Muting is private. Muted accounts can interact with you, but you will not "
+"see their posts or receive notifications from them."
+msgstr ""
+"Silenciar es privado. Las cuentas silenciadas pueden interactuar contigo, "
+"pero no verás sus publicaciones ni recibirás notificaciones de ellas."
+
+#: src/view/screens/Moderation.tsx:134 
+#: src/view/com/modals/BirthDateSettings.tsx:56
+msgid "My Birthday"
+msgstr "Mi cumpleaños"
+
+#: src/view/screens/Feeds.tsx:363
+msgid "My Feeds"
+msgstr "Mis muros"
+
+#: src/view/shell/desktop/LeftNav.tsx:65
+msgid "My Profile"
+msgstr "Mi perfil"
+
+#: src/view/screens/Settings.tsx:520
+msgid "My Saved Feeds"
+msgstr "Mis muros guardados"
+
+#: src/view/com/modals/AddAppPasswords.tsx:177 
+#: src/view/com/modals/CreateOrEditList.tsx:211
+msgid "Name"
+msgstr "Nombre"
+
+#: src/view/com/modals/EmbedConsent.tsx:107 
+#: src/view/com/modals/EmbedConsent.tsx:123
+msgid "Never load embeds from {0}"
+msgstr "Nunca cargar incrustaciones de {0}"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
+msgid "Never lose access to your followers and data."
+msgstr "No pierdas nunca el acceso a tus seguidores y datos."
+
+#: src/view/screens/Lists.tsx:76 src/view/screens/ModerationModlists.tsx:78
+msgid "New"
+msgstr "Nuevo"
+
+#: src/view/com/feeds/FeedPage.tsx:200 src/view/screens/Feeds.tsx:507 
+#: src/view/screens/Profile.tsx:354 src/view/screens/ProfileFeed.tsx:431 
+#: src/view/screens/ProfileList.tsx:194 src/view/screens/ProfileList.tsx:222 
+#: src/view/shell/desktop/LeftNav.tsx:248
+msgid "New post"
+msgstr "Publicación nueva"
+
+#: src/view/shell/desktop/LeftNav.tsx:258
+msgid "New Post"
+msgstr "Publicación nueva"
+
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr "Respuestas más recientes primero"
+
+#: src/view/com/auth/create/CreateAccount.tsx:154 
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:174 
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:184 
+#: src/view/com/auth/login/LoginForm.tsx:286 
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:156 
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:166 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+msgid "Next"
+msgstr "Continuar"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:142
+msgid "Next image"
+msgstr "Imagen siguiente"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:126 
+#: src/view/screens/PreferencesHomeFeed.tsx:197 
+#: src/view/screens/PreferencesHomeFeed.tsx:232 
+#: src/view/screens/PreferencesHomeFeed.tsx:269 
+#: src/view/screens/PreferencesThreads.tsx:106 
+#: src/view/screens/PreferencesThreads.tsx:129
+msgid "No"
+msgstr "No"
+
+#: src/view/screens/ProfileFeed.tsx:579 src/view/screens/ProfileList.tsx:720
+msgid "No description"
+msgstr "Sin descripción"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
+msgid "No result"
+msgstr "Sin resultados"
+
+#: src/view/screens/Feeds.tsx:452
+msgid "No results found for \"{query}\""
+msgstr "No se han encontrado resultados para «{query}»."
+
+#: src/view/com/modals/ListAddUser.tsx:142 
+#: src/view/shell/desktop/Search.tsx:112 
+#: src/view/com/modals/ListAddRemoveUsers.tsx:127 
+#: src/view/screens/Search/Search.tsx:270 
+#: src/view/screens/Search/Search.tsx:298 
+#: src/view/screens/Search/Search.tsx:629 src/view/shell/desktop/Search.tsx:210
+msgid "No results found for {query}"
+msgstr "No se han encontrasdo resultados para {query}."
+
+#: src/view/com/modals/EmbedConsent.tsx:129
+msgid "No thanks"
+msgstr "No, gracias"
+
+#: src/view/com/modals/Threadgate.tsx:82
+msgid "Nobody"
+msgstr "Nadie"
+
+#: src/view/com/modals/SelfLabel.tsx:136 src/view/com/modals/SelfLabel.tsx:135
+msgid "Not Applicable."
+msgstr "No aplicable."
+
+#: src/view/screens/Moderation.tsx:227 src/view/screens/Moderation.tsx:232
+msgid ""
+"Note: Bluesky is an open and public network. This setting only limits the "
+"visibility of your content on the Bluesky app and website, and other apps "
+"may not respect this setting. Your content may still be shown to logged-out "
+"users by other apps and websites."
+msgstr ""
+"Aviso: Bluesky es una red abierta y pública. Este ajuste solo limita la "
+"visibilidad de tu contenido en la aplicación y sitio web de Bluesky, y es "
+"posible que otras aplicaciones no acepten dicho ajuste. Tu contenido aún "
+"puede mostrarse a usuarios que no han iniciado sesión en otras aplicaciones "
+"y sitios web."
+
+#: src/view/screens/Moderation.tsx:227 src/view/screens/Notifications.tsx:113 
+#: src/view/screens/Notifications.tsx:137 
+#: src/view/shell/bottom-bar/BottomBar.tsx:205 
+#: src/view/shell/desktop/LeftNav.tsx:361 src/view/shell/Drawer.tsx:435 
+#: src/view/shell/Drawer.tsx:436
+msgid "Notifications"
+msgstr "Notificaciones"
+
+#: src/view/com/util/ErrorBoundary.tsx:34
+msgid "Oh no!"
+msgstr "¡Vaya! Parece que algo salió mal."
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
+msgid "Okay"
+msgstr "OK"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr "Respuestas más antiguas primero"
+
+#: src/view/com/composer/Composer.tsx:363
+msgid "One or more images is missing alt text."
+msgstr "\"Falta texto alternativo en una o más imágenes."
+
+#: src/view/com/threadgate/WhoCanReply.tsx:100
+msgid "Only {0} can reply."
+msgstr "Solo {0} puede responder."
+
+#: src/view/com/composer/Composer.tsx:468 
+#: src/view/com/composer/Composer.tsx:469
+msgid "Open emoji picker"
+msgstr "Abrir el selector de emojis"
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:76
+msgid "Open navigation"
+msgstr "Abrir navegación"
+
+#: src/view/screens/Settings.tsx:533
+msgid "Opens configurable language settings"
+msgstr "Abre ajustes de idioma"
+
+#: src/view/screens/Settings.tsx:587
+msgid "Opens external embeds settings"
+msgstr "Abre ajustes de incrustaciones externas"
+
+#: src/view/shell/desktop/RightNav.tsx:156 src/view/shell/Drawer.tsx:641
+msgid "Opens list of invite codes"
+msgstr "Abre la lista de códigos de invitación"
+
+#: src/view/com/modals/ChangeHandle.tsx:279
+msgid "Opens modal for using custom domain"
+msgstr "Abre el modal para usar un dominio personalizado"
+
+#: src/view/screens/Settings.tsx:558
+msgid "Opens moderation settings"
+msgstr "Abre ajustes de moderación"
+
+#: src/view/screens/Settings.tsx:514
+msgid "Opens screen with all saved feeds"
+msgstr "Abre la pantalla con todos los muros guardados"
+
+#: src/view/screens/Settings.tsx:614
+msgid "Opens the app password settings page"
+msgstr "Abre ajustes de contraseñas de aplicación"
+
+#: src/view/screens/Settings.tsx:473
+msgid "Opens the home feed preferences"
+msgstr "Abre las preferencias de muros de la página de inicio"
+
+#: src/view/screens/Settings.tsx:697
+msgid "Opens the storybook page"
+msgstr "Abre la página del storybook"
+
+#: src/view/screens/Settings.tsx:677
+msgid "Opens the system log page"
+msgstr "Abre la página de registro del sistema"
+
+#: src/view/screens/Settings.tsx:494
+msgid "Opens the threads preferences"
+msgstr "Abre las preferencias de los hilos"
+
+#: src/view/com/modals/Threadgate.tsx:89
+msgid "Or combine these options:"
+msgstr "O combina estas opciones:"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:138
+msgid "Other account"
+msgstr "Otra cuenta"
+
+#: src/view/com/modals/ServerInput.tsx:88
+msgid "Other service"
+msgstr "Otro servicio"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:91
+msgid "Other..."
+msgstr "Otro..."
+
+#: src/view/screens/NotFound.tsx:42 src/view/screens/NotFound.tsx:45
+msgid "Page not found"
+msgstr "No se ha encontrado la página"
+
+#: src/view/com/auth/create/Step2.tsx:122 
+#: src/view/com/auth/create/Step2.tsx:132 
+#: src/view/com/auth/login/LoginForm.tsx:221 
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:130 
+#: src/view/com/modals/DeleteAccount.tsx:191
+msgid "Password"
+msgstr "Contraseña"
+
+#: src/view/com/auth/login/Login.tsx:157
+msgid "Password updated"
+msgstr "Se ha actualizado la contraseña"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
+msgid "Password updated!"
+msgstr "¡Se ha actualizado la contraseña!"
+
+#: src/view/com/modals/SelfLabel.tsx:121
+msgid "Pictures meant for adults."
+msgstr "Imágenes con contenido para adultos."
+
+#: src/view/screens/SavedFeeds.tsx:88
+msgid "Pinned Feeds"
+msgstr "Muros fijados"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
+msgid "Play {0}"
+msgstr "Reproducir {0}"
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54 
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
+msgid "Play Video"
+msgstr "Reproducir video"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
+msgid "Plays the GIF"
+msgstr "Reproduce el GIF"
+
+#: src/view/com/auth/create/state.ts:116
+msgid "Please choose your handle."
+msgstr "Escoge tu identificador."
+
+#: src/view/com/auth/create/state.ts:109
+msgid "Please choose your password."
+msgstr "Escoge tu contraseña."
+
+#: src/view/com/modals/ChangeEmail.tsx:67
+msgid ""
+"Please confirm your email before changing it. This is a temporary "
+"requirement while email-updating tools are added, and it will soon be "
+"removed."
+msgstr ""
+"Por favor, confirma tu correo electrónico antes de cambiarlo. Este es un "
+"requisito temporal mientras se añaden herramientas para actualizar el correo "
+"electrónico, y pronto será eliminado."
+
+#: src/view/com/modals/AddAppPasswords.tsx:140
+msgid ""
+"Please enter a unique name for this App Password or use our randomly "
+"generated one."
+msgstr ""
+"Introduce un nombre único para esta contraseña de aplicación o utiliza la "
+"que generamos aleatoriamente."
+
+#: src/view/com/auth/create/state.ts:95
+msgid "Please enter your email."
+msgstr "Introduce tu correo electrónico"
+
+#: src/view/com/modals/DeleteAccount.tsx:180
+msgid "Please enter your password as well:"
+msgstr "Introduce también tu contraseña:"
+
+#: src/view/com/modals/AppealLabel.tsx:72 
+#: src/view/com/modals/AppealLabel.tsx:75
+msgid ""
+"Please tell us why you think this content warning was incorrectly applied!"
+msgstr ""
+"Por favor, dinos por qué crees que esta advertencia de contenido se aplicó "
+"incorrectamente."
+
+#: src/view/com/modals/AppealLabel.tsx:72 
+#: src/view/com/modals/AppealLabel.tsx:75 
+#: src/view/com/composer/Composer.tsx:215
+msgid "Please wait for your link card to finish loading"
+msgstr "Por favor, espera a que tu ficha de enlace termine de cargar."
+
+#: src/view/com/composer/Composer.tsx:346 
+#: src/view/com/post-thread/PostThread.tsx:225 
+#: src/view/screens/PostThread.tsx:80
+msgid "Post"
+msgstr "Publicación"
+
+#: src/view/com/post-thread/PostThread.tsx:378
+msgid "Post hidden"
+msgstr "Publicación oculta"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:87
+msgid "Post language"
+msgstr "Idioma de la publicación"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
+msgid "Post Languages"
+msgstr "Idiomas de la publicación"
+
+#: src/view/com/post-thread/PostThread.tsx:430
+msgid "Post not found"
+msgstr "No se ha encontrado la publicación"
+
+#: src/view/screens/Profile.tsx:161
+msgid "Posts"
+msgstr "Publicaciones"
+
+#: src/view/com/modals/LinkWarning.tsx:44
+msgid "Potentially Misleading Link"
+msgstr "Enlace potencialmente engañoso"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:128
+msgid "Previous image"
+msgstr "Imagen anterior"
+
+#: src/view/screens/LanguageSettings.tsx:187
+msgid "Primary Language"
+msgstr "Idioma principal"
+
+#: src/view/screens/PreferencesThreads.tsx:97
+msgid "Prioritize Your Follows"
+msgstr "Priorizar tus seguidos"
+
+#: src/view/screens/Settings.tsx:570 src/view/shell/desktop/RightNav.tsx:84
+msgid "Privacy"
+msgstr "Privacidad"
+
+#: src/view/screens/PrivacyPolicy.tsx:29 src/view/screens/Settings.tsx:783 
+#: src/view/shell/Drawer.tsx:262
+msgid "Privacy Policy"
+msgstr "Política de Privacidad"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:190
+msgid "Processing..."
+msgstr "Procesando..."
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:247 
+#: src/view/shell/desktop/LeftNav.tsx:415 src/view/shell/Drawer.tsx:70 
+#: src/view/shell/Drawer.tsx:544 src/view/shell/Drawer.tsx:545
+msgid "Profile"
+msgstr "Perfil"
+
+#: src/view/screens/Settings.tsx:841
+msgid "Protect your account by verifying your email."
+msgstr "Protege tu cuenta verificando tu correo electrónico."
+
+#: src/view/screens/ModerationModlists.tsx:61
+msgid "Public, shareable lists of users to mute or block in bulk."
+msgstr ""
+"Listas públicas y compartibles de usuarios para silenciar o bloquear en masa."
+
+#: src/view/screens/Lists.tsx:61
+msgid "Public, shareable lists which can drive feeds."
+msgstr "Listas públicas y compartibles que pueden influir en los muros."
+
+#: src/view/com/modals/Repost.tsx:52 
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
+msgid "Quote post"
+msgstr "Citar publicación"
+
+#: src/view/com/modals/Repost.tsx:56
+msgid "Quote Post"
+msgstr "Citar publicación"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr "Aleatorio"
+
+#: src/view/com/modals/EditImage.tsx:236
+msgid "Ratios"
+msgstr "Proporciones"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:50 
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
+msgid "Recommended Feeds"
+msgstr "Muros recomendados"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:180
+msgid "Recommended Users"
+msgstr "Cuentas recomendadas"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:264 
+#: src/view/com/modals/SelfLabel.tsx:83 
+#: src/view/com/modals/UserAddRemoveLists.tsx:193 
+#: src/view/com/util/UserAvatar.tsx:282 src/view/com/util/UserBanner.tsx:89
+msgid "Remove"
+msgstr "Eliminar"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:106
+msgid "Remove {0} from my feeds?"
+msgstr "¿Eliminar {0} de mis muros?"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:22
+msgid "Remove account"
+msgstr "Eliminar cuenta"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:130
+msgid "Remove feed"
+msgstr "Eliminar muro"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:105 
+#: src/view/com/feeds/FeedSourceCard.tsx:172 
+#: src/view/screens/ProfileFeed.tsx:271
+msgid "Remove from my feeds"
+msgstr "Eliminar de mis muros"
+
+#: src/view/com/composer/photos/Gallery.tsx:167
+msgid "Remove image"
+msgstr "Eliminar imagen"
+
+#: src/view/com/composer/ExternalEmbed.tsx:70
+msgid "Remove image preview"
+msgstr "Eliminar previsualización de imagen"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+msgid "Remove this feed from my feeds?"
+msgstr "¿Eliminar este muro de mis muros?"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:131
+msgid "Remove this feed from your saved feeds?"
+msgstr "¿Eliminar este muro de mis muros guardados?"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:199 
+#: src/view/com/modals/UserAddRemoveLists.tsx:136
+msgid "Removed from list"
+msgstr "Se ha eliminado de la lista"
+
+#: src/view/screens/Profile.tsx:162
+msgid "Replies"
+msgstr "Respuestas"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:98
+msgid "Replies to this thread are disabled"
+msgstr "Las respuestas a este hilo están desactivadas"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:141
+msgid "Reply Filters"
+msgstr "Filtros de respuestas"
+
+#: src/view/com/modals/report/Modal.tsx:166
+msgid "Report {collectionName}"
+msgstr "Denunciar {collectionName}"
+
+#: src/view/com/profile/ProfileHeader.tsx:404
+msgid "Report Account"
+msgstr "Denunciar cuenta"
+
+#: src/view/screens/ProfileFeed.tsx:291
+msgid "Report feed"
+msgstr "Denunciar muro"
+
+#: src/view/screens/ProfileList.tsx:426
+msgid "Report List"
+msgstr "Denunciar lista"
+
+#: src/view/com/modals/report/SendReportButton.tsx:37 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:196
+msgid "Report post"
+msgstr "Denunciar publicación"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Repost"
+msgstr "Republicar"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:94 
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
+msgid "Repost or quote post"
+msgstr "Republicar o citar publicación"
+
+#: src/view/screens/PostRepostedBy.tsx:27
+msgid "Reposted by"
+msgstr "Republicado por"
+
+#: src/view/com/modals/ChangeEmail.tsx:181 
+#: src/view/com/modals/ChangeEmail.tsx:183
+msgid "Request Change"
+msgstr "Solicitar cambio"
+
+#: src/view/screens/Moderation.tsx:188 src/view/screens/Settings.tsx:422
+msgid "Require alt text before posting"
+msgstr "Requerir texto alternativo antes de publicar"
+
+#: src/view/com/auth/create/Step2.tsx:68
+msgid "Required for this provider"
+msgstr "Requerido para este proveedor"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:108
+msgid "Reset code"
+msgstr "Restablecer código"
+
+#: src/view/screens/Settings.tsx:719
+msgid "Reset onboarding state"
+msgstr "Restablecer estado de incorporación"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:98
+msgid "Reset password"
+msgstr "Restablecer contraseña"
+
+#: src/view/screens/Settings.tsx:709
+msgid "Reset preferences state"
+msgstr "Restablecer estado de preferencias"
+
+#: src/view/screens/Settings.tsx:717
+msgid "Resets the onboarding state"
+msgstr "Restablece el estado de incorporación"
+
+#: src/view/screens/Settings.tsx:707
+msgid "Resets the preferences state"
+msgstr "Restablece el estado de preferencias"
+
+#: src/view/com/auth/create/CreateAccount.tsx:163 
+#: src/view/com/auth/create/CreateAccount.tsx:167 
+#: src/view/com/auth/login/LoginForm.tsx:263 
+#: src/view/com/auth/login/LoginForm.tsx:266 
+#: src/view/com/util/error/ErrorMessage.tsx:55 
+#: src/view/com/util/error/ErrorScreen.tsx:65
+msgid "Retry"
+msgstr "Reintentar"
+
+#: src/view/com/modals/ChangeHandle.tsx:169 
+#: src/view/com/modals/BirthDateSettings.tsx:94 
+#: src/view/com/modals/BirthDateSettings.tsx:97 
+#: src/view/com/modals/ChangeHandle.tsx:173 
+#: src/view/com/modals/CreateOrEditList.tsx:249 
+#: src/view/com/modals/CreateOrEditList.tsx:257 
+#: src/view/com/modals/EditProfile.tsx:223
+msgid "Save"
+msgstr "Guardar"
+
+#: src/view/com/modals/AltImage.tsx:106
+msgid "Save alt text"
+msgstr "Guardar texto alternativo"
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:212 
+#: src/view/com/modals/EditProfile.tsx:231
+msgid "Save Changes"
+msgstr "Guardar cambios"
+
+#: src/view/com/modals/ChangeHandle.tsx:170
+msgid "Save handle change"
+msgstr "Guardar cambio de identificador"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:144
+msgid "Save image crop"
+msgstr "Guardar recorte de imagen"
+
+#: src/view/screens/SavedFeeds.tsx:122
+msgid "Saved Feeds"
+msgstr "Muros guardados"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:75 
+#: src/view/com/util/forms/SearchInput.tsx:65 
+#: src/view/screens/Search/Search.tsx:406 
+#: src/view/screens/Search/Search.tsx:572 
+#: src/view/shell/bottom-bar/BottomBar.tsx:159 
+#: src/view/shell/desktop/LeftNav.tsx:324 
+#: src/view/shell/desktop/Search.tsx:161 src/view/shell/desktop/Search.tsx:170 
+#: src/view/shell/Drawer.tsx:362 src/view/shell/Drawer.tsx:363
+msgid "Search"
+msgstr "Buscar"
+
+#: src/view/screens/Search/Search.tsx:390 src/view/com/auth/LoggedOut.tsx:104 
+#: src/view/com/auth/LoggedOut.tsx:105
+msgid "Search for users"
+msgstr "Buscar usuarios"
+
+#: src/view/com/modals/ChangeEmail.tsx:110
+msgid "Security Step Required"
+msgstr "Se requiere un paso de seguridad"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:39
+msgid "See what's next"
+msgstr "Ver lo que sigue"
+
+#: src/view/com/modals/ServerInput.tsx:75
+msgid "Select Bluesky Social"
+msgstr "Seleccionar Bluesky Social"
+
+#: src/view/com/auth/login/Login.tsx:117
+msgid "Select from an existing account"
+msgstr "Selecciona una cuenta existente"
+
+#: src/view/com/auth/login/LoginForm.tsx:147
+msgid "Select service"
+msgstr "Selecciona servicio"
+
+#: src/view/screens/LanguageSettings.tsx:281
+msgid ""
+"Select which languages you want your subscribed feeds to include. If none "
+"are selected, all languages will be shown."
+msgstr ""
+"Selecciona los idiomas que deseas incluir en los muros a los que estás "
+"suscrito. Si no seleccionas ninguno, se mostrarán todos los idiomas."
+
+#: src/view/screens/LanguageSettings.tsx:98
+msgid "Select your app language for the default text to display in the app"
+msgstr ""
+"Selecciona un idioma que se usará en encabezados, botones y demás apartados "
+"de la aplicación"
+
+#: src/view/screens/LanguageSettings.tsx:190
+msgid "Select your preferred language for translations in your feed."
+msgstr "Selecciona tu idioma preferido para las traducciones en tu muro."
+
+#: src/view/com/modals/VerifyEmail.tsx:196
+msgid "Send Confirmation Email"
+msgstr "Enviar correo de confirmación"
+
+#: src/view/com/modals/DeleteAccount.tsx:127
+msgid "Send email"
+msgstr "Enviar correo"
+
+#: src/view/com/modals/DeleteAccount.tsx:138
+msgid "Send Email"
+msgstr "Enviar correo"
+
+#: src/view/shell/Drawer.tsx:295 src/view/shell/Drawer.tsx:316
+msgid "Send feedback"
+msgstr "Enviar opiniones"
+
+#: src/view/com/modals/report/SendReportButton.tsx:45
+msgid "Send Report"
+msgstr "Enviar denuncia"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:78
+msgid "Set new password"
+msgstr "Establecer nueva contraseña"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:222
+msgid ""
+"Set this setting to \"No\" to hide all quote posts from your feed. Reposts "
+"will still be visible."
+msgstr ""
+"Establece este ajuste en 'No' para ocultar todas las publicaciones citadas "
+"de tu muro. Las republicaciones seguirán siendo visibles."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:119
+msgid "Set this setting to \"No\" to hide all replies from your feed."
+msgstr ""
+"Establece este ajuste en 'No' para ocultar todas las respuestas de tu muro."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:188
+msgid "Set this setting to \"No\" to hide all reposts from your feed."
+msgstr ""
+"Establece este ajuste en 'No' para ocultar todas las republicaciones de tu "
+"muro."
+
+#: src/view/screens/PreferencesThreads.tsx:122
+msgid ""
+"Set this setting to \"Yes\" to show replies in a threaded view. This is an "
+"experimental feature."
+msgstr ""
+"Establece este ajuste en 'Sí' para mostrar respuestas en hilos. Esta es una "
+"función experimental."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:258
+msgid ""
+"Set this setting to \"Yes\" to show samples of your saved feeds in your "
+"following feed. This is an experimental feature."
+msgstr ""
+"Establece este ajuste en 'Sí' para mostrar publicaciones de tus muros "
+"guardados en tu muro de seguidos. Esta es una función experimental."
+
+#: src/view/screens/Settings.tsx:277 src/view/shell/desktop/LeftNav.tsx:433 
+#: src/view/shell/Drawer.tsx:565 src/view/shell/Drawer.tsx:566
+msgid "Settings"
+msgstr "Ajustes"
+
+#: src/view/com/modals/SelfLabel.tsx:125
+msgid "Sexual activity or erotic nudity."
+msgstr "Actividad sexual o desnudez erótica."
+
+#: src/view/com/profile/ProfileHeader.tsx:338 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139 
+#: src/view/screens/ProfileList.tsx:385
+msgid "Share"
+msgstr "Compartir"
+
+#: src/view/screens/ProfileFeed.tsx:303
+msgid "Share feed"
+msgstr "Compartir muro"
+
+#: src/view/screens/ProfileFeed.tsx:276 
+#: src/view/com/util/moderation/ContentHider.tsx:105 
+#: src/view/screens/Settings.tsx:316
+msgid "Show"
+msgstr "Mostrar"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:132
+msgid "Show anyway"
+msgstr "Mostrar de todos modos"
+
+#: src/view/com/modals/EmbedConsent.tsx:87
+msgid "Show embeds from {0}"
+msgstr "Mostrar incrustaciones de {0}"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:255
+msgid "Show Posts from My Feeds"
+msgstr "Mostrar publicaciones de mis muros"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:219
+msgid "Show Quote Posts"
+msgstr "Mostrar citas de publicaciones"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:116
+msgid "Show Replies"
+msgstr "Mostrar respuestas"
+
+#: src/view/screens/PreferencesThreads.tsx:100
+msgid "Show replies by people you follow before all other replies."
+msgstr ""
+"Mostrar respuestas de personas a las que sigues antes que otras respuestas."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:185
+msgid "Show Reposts"
+msgstr "Mostrar republicaciones"
+
+#: src/view/com/notifications/FeedItem.tsx:345
+msgid "Show users"
+msgstr "Mostrar usuarios"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:70 
+#: src/view/com/auth/login/Login.tsx:98 src/view/com/auth/SplashScreen.tsx:54 
+#: src/view/shell/bottom-bar/BottomBar.tsx:285 
+#: src/view/shell/bottom-bar/BottomBar.tsx:286 
+#: src/view/shell/bottom-bar/BottomBar.tsx:288 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:177 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:178 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:180 
+#: src/view/shell/NavSignupCard.tsx:58 src/view/shell/NavSignupCard.tsx:59
+msgid "Sign in"
+msgstr "Iniciar sesión"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:78 
+#: src/view/com/auth/SplashScreen.tsx:57 
+#: src/view/com/auth/SplashScreen.web.tsx:87
+msgid "Sign In"
+msgstr "Iniciar sesión"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:44
+msgid "Sign in as {0}"
+msgstr "Iniciar sesión como {0}"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:118 
+#: src/view/com/auth/login/Login.tsx:116
+msgid "Sign in as..."
+msgstr "Iniciar sesión como..."
+
+#: src/view/com/auth/login/LoginForm.tsx:134
+msgid "Sign into"
+msgstr "Iniciar sesión en"
+
+#: src/view/com/modals/SwitchAccount.tsx:64 
+#: src/view/com/modals/SwitchAccount.tsx:67
+msgid "Sign out"
+msgstr "Cerrar sesión"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:275 
+#: src/view/shell/bottom-bar/BottomBar.tsx:276 
+#: src/view/shell/bottom-bar/BottomBar.tsx:278 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:167 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:168 
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:170 
+#: src/view/shell/NavSignupCard.tsx:49 src/view/shell/NavSignupCard.tsx:50 
+#: src/view/shell/NavSignupCard.tsx:52
+msgid "Sign up"
+msgstr "Registrarse"
+
+#: src/view/shell/NavSignupCard.tsx:42
+msgid "Sign up or sign in to join the conversation"
+msgstr "Regístrate o inicia sesión para unirte a la conversación"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:76
+msgid "Sign-in Required"
+msgstr "Se requiere iniciar sesión"
+
+#: src/view/screens/Settings.tsx:327
+msgid "Signed in as"
+msgstr "Iniciaste sesión como"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
+msgid "Skip"
+msgstr "Saltarse este paso"
+
+#: src/view/screens/PreferencesThreads.tsx:69
+msgid "Sort Replies"
+msgstr "Ordenar respuestas"
+
+#: src/view/screens/PreferencesThreads.tsx:72
+msgid "Sort replies to the same post by:"
+msgstr "Ordenar respuestas a la misma publicación por:"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:122
+msgid "Square"
+msgstr "Cuadrado"
+
+#: src/view/com/auth/create/Step1.tsx:90 src/view/com/modals/ServerInput.tsx:62
+msgid "Staging"
+msgstr "Entorno de pruebas"
+
+#: src/view/screens/Settings.tsx:763
+msgid "Status page"
+msgstr "Página de estado"
+
+#: src/view/screens/Settings.tsx:699
+msgid "Storybook"
+msgstr "Storybook"
+
+#: src/view/com/modals/AppealLabel.tsx:101
+msgid "Submit"
+msgstr "Submit"
+
+#: src/view/screens/ProfileList.tsx:575
+msgid "Subscribe"
+msgstr "Suscribirse"
+
+#: src/view/screens/ProfileList.tsx:571
+msgid "Subscribe to this list"
+msgstr "Subscribirse a esta lista"
+
+#: src/view/screens/Search/Search.tsx:362
+msgid "Suggested Follows"
+msgstr "Usuarios sugeridos para seguir"
+
+#: src/view/screens/Support.tsx:30 src/view/screens/Support.tsx:33
+msgid "Support"
+msgstr "Ayuda"
+
+#: src/view/com/modals/SwitchAccount.tsx:115
+msgid "Switch Account"
+msgstr "Cambiar cuenta"
+
+#: src/view/screens/Settings.tsx:398 src/view/screens/Settings.tsx:679
+msgid "System log"
+msgstr "Registro del sistema"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:112
+msgid "Tall"
+msgstr "Altura"
+
+#: src/view/shell/desktop/RightNav.tsx:93
+msgid "Terms"
+msgstr "Términos"
+
+#: src/view/screens/Settings.tsx:777 src/view/screens/TermsOfService.tsx:29 
+#: src/view/shell/Drawer.tsx:256
+msgid "Terms of Service"
+msgstr "Términos de Servicio"
+
+#: src/view/com/modals/AppealLabel.tsx:70 
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
+msgid "Text input field"
+msgstr "Campo de entrada de texto"
+
+#: src/view/com/profile/ProfileHeader.tsx:306
+msgid "The account will be able to interact with you after unblocking."
+msgstr "La cuenta podrá interactuar contigo después del desbloqueo."
+
+#: src/view/screens/CommunityGuidelines.tsx:36
+msgid "The Community Guidelines have been moved to <0/>"
+msgstr "Las Normas de la Comunidad se han movido a <0/>"
+
+#: src/view/screens/CopyrightPolicy.tsx:33
+msgid "The Copyright Policy has been moved to <0/>"
+msgstr "La Política de Derechos de Autor se ha movido a <0/>"
+
+#: src/view/com/post-thread/PostThread.tsx:433
+msgid "The post may have been deleted."
+msgstr "Es posible que se haya borrado la publicación."
+
+#: src/view/screens/PrivacyPolicy.tsx:33
+msgid "The Privacy Policy has been moved to <0/>"
+msgstr "La Política de Privacidad se ha movido a <0/>"
+
+#: src/view/screens/Support.tsx:36
+msgid ""
+"The support form has been moved. If you need help, please<0/> or visit "
+"{HELP_DESK_URL} to get in touch with us."
+msgstr ""
+"El formulario de ayuda se ha movido. Si necesitas ayuda, por favor<0/> o "
+"visita {HELP_DESK_URL} para contactarnos"
+
+#: src/view/screens/TermsOfService.tsx:33
+msgid "The Terms of Service have been moved to"
+msgstr "Los Términos de Servicio se han movido a"
+
+#: src/view/com/util/ErrorBoundary.tsx:35
+msgid ""
+"There was an unexpected issue in the application. Please let us know if this "
+"happened to you!"
+msgstr ""
+"Se ha producido un problema inesperado en la aplicación. ¡Por favor, "
+"avísanos si esto te sucedió!"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45 
+#: src/view/com/util/moderation/ScreenHider.tsx:88
+msgid "This {screenDescription} has been flagged:"
+msgstr "Se ha marcado esta {screenDescription}:"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:83
+msgid "This account has requested that users sign in to view their profile."
+msgstr ""
+"Esta cuenta ha solicitado que los usuarios inicien sesión para ver su perfil."
+
+#: src/view/com/modals/EmbedConsent.tsx:68
+msgid "This content is hosted by {0}. Do you want to enable external media?"
+msgstr "Este contenido está alojado por {0}. ¿Quieres activar medios externos?"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:107
+msgid "This content is not viewable without a Bluesky account."
+msgstr "Este contenido no es visible sin una cuenta de Bluesky."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:113
+msgid ""
+"This feed is currently receiving high traffic and is temporarily unavailable."
+" Please try again later."
+msgstr ""
+"Este muro está recibiendo mucho tráfico y no está disponible temporalmente. "
+"Vuelve a intentarlo más tarde."
+
+#: src/view/com/modals/BirthDateSettings.tsx:61
+msgid "This information is not shared with other users."
+msgstr "Esta información no se comparte con otros usuarios."
+
+#: src/view/com/modals/VerifyEmail.tsx:113
+msgid ""
+"This is important in case you ever need to change your email or reset your "
+"password."
+msgstr ""
+"Esto es importante en caso de que necesites cambiar tu correo electrónico o "
+"restablecer tu contraseña en el futuro"
+
+#: src/view/com/auth/create/Step1.tsx:55
+msgid "This is the service that keeps you online."
+msgstr "Este es el servicio que te mantiene en línea."
+
+#: src/view/com/modals/LinkWarning.tsx:56
+msgid "This link is taking you to the following website:"
+msgstr "Este enlace te lleva al siguiente sitio web:"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:123
+msgid "This post has been deleted."
+msgstr "Esta publicación ha sido eliminada."
+
+#: src/view/com/modals/SelfLabel.tsx:137
+msgid "This warning is only available for posts with media attached."
+msgstr ""
+"Esta advertencia solo está disponible para publicaciones con contenido "
+"multimedia."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:178
+msgid "This will hide this post from your feeds."
+msgstr "Esto ocultará esta publicación de tus muros."
+
+#: src/view/screens/PreferencesThreads.tsx:53 src/view/screens/Settings.tsx:503
+msgid "Thread Preferences"
+msgstr "Preferencias de hilos"
+
+#: src/view/screens/PreferencesThreads.tsx:119
+msgid "Threaded Mode"
+msgstr "Modo de hilos"
+
+#: src/view/com/util/forms/DropdownButton.tsx:230
+msgid "Toggle dropdown"
+msgstr "Alternar desplegable"
+
+#: src/view/com/modals/EditImage.tsx:271
+msgid "Transformations"
+msgstr "Transformaciones"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:705 
+#: src/view/com/post-thread/PostThreadItem.tsx:707 
+#: src/view/com/util/forms/PostDropdownBtn.tsx:111
+msgid "Translate"
+msgstr "Traducir"
+
+#: src/view/com/util/error/ErrorScreen.tsx:73
+msgid "Try again"
+msgstr "Intentar de nuevo"
+
+#: src/view/screens/ProfileList.tsx:473
+msgid "Un-block list"
+msgstr "Desbloquear lista"
+
+#: src/view/screens/ProfileList.tsx:458
+msgid "Un-mute list"
+msgstr "Quitar silencio"
+
+#: src/view/com/auth/create/CreateAccount.tsx:65 
+#: src/view/com/auth/login/Login.tsx:76 
+#: src/view/com/auth/login/LoginForm.tsx:120
+msgid "Unable to contact your service. Please check your Internet connection."
+msgstr ""
+"No es posible contactar con tu servicio. Comprueba tu conexión a Internet."
+
+#: src/view/com/profile/ProfileHeader.tsx:466 
+#: src/view/com/profile/ProfileHeader.tsx:469
+msgid "Unblock"
+msgstr "Desbloquear"
+
+#: src/view/com/profile/ProfileHeader.tsx:304 
+#: src/view/com/profile/ProfileHeader.tsx:388
+msgid "Unblock Account"
+msgstr "Desbloquear cuenta"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Undo repost"
+msgstr "Deshacer republicación"
+
+#: src/view/com/auth/create/state.ts:216
+msgid "Unfortunately, you do not meet the requirements to create an account."
+msgstr "Lamentablemente, no cumples con los requisitos para crear una cuenta."
+
+#: src/view/com/profile/ProfileHeader.tsx:369
+msgid "Unmute Account"
+msgstr "Quitar silencio"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:157
+msgid "Unmute thread"
+msgstr "Quitar silencio"
+
+#: src/view/screens/ProfileList.tsx:441
+msgid "Unpin moderation list"
+msgstr "Desfijar lista de moderación"
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:54
+msgid "Update {displayName} in Lists"
+msgstr "Actualizar {displayName} en listas"
+
+#: src/lib/hooks/useOTAUpdate.ts:15
+msgid "Update Available"
+msgstr "Actualización disponible"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:172
+msgid "Updating..."
+msgstr "Actualizando..."
+
+#: src/view/com/modals/ChangeHandle.tsx:453
+msgid "Upload a text file to:"
+msgstr "Subir un archivo de texto a:"
+
+#: src/view/screens/AppPasswords.tsx:194
+msgid ""
+"Use app passwords to login to other Bluesky clients without giving full "
+"access to your account or password."
+msgstr ""
+"Usa contraseñas de aplicación para iniciar sesión en otros clientes de "
+"Bluesky sin dar acceso completo a tu cuenta o contraseña."
+
+#: src/view/com/modals/ChangeHandle.tsx:513
+msgid "Use default provider"
+msgstr "Usar proveedor predeterminado"
+
+#: src/view/com/modals/AddAppPasswords.tsx:150
+msgid "Use this to sign into the other app along with your handle."
+msgstr ""
+"Usa esto para iniciar sesión en la otra aplicación junto con tu "
+"identificador."
+
+#: src/view/com/modals/InviteCodes.tsx:197
+msgid "Used by:"
+msgstr "Usado por:"
+
+#: src/view/com/auth/create/Step3.tsx:38
+msgid "User handle"
+msgstr "Identificador de usuario"
+
+#: src/view/screens/Lists.tsx:58
+msgid "User Lists"
+msgstr "Listas de usuario"
+
+#: src/view/com/auth/login/LoginForm.tsx:174 
+#: src/view/com/auth/login/LoginForm.tsx:192
+msgid "Username or email address"
+msgstr "Nombre de usuario o dirección de correo electrónico"
+
+#: src/view/screens/ProfileList.tsx:747
+msgid "Users"
+msgstr "Usuarios"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:143
+msgid "users followed by <0/>"
+msgstr "Usuarios seguidos por <0/>"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:115 
+#: src/view/com/modals/Threadgate.tsx:106
+msgid "Users in \"{0}\""
+msgstr "Usuarios en «{0}»"
+
+#: src/view/screens/Settings.tsx:802
+msgid "Verify email"
+msgstr "Verificar correo electrónico"
+
+#: src/view/screens/Settings.tsx:827
+msgid "Verify my email"
+msgstr "Verificar mi correo electrónico"
+
+#: src/view/screens/Settings.tsx:836
+msgid "Verify My Email"
+msgstr "Verificar mi correo electrónico"
+
+#: src/view/com/modals/ChangeEmail.tsx:205 
+#: src/view/com/modals/ChangeEmail.tsx:207
+msgid "Verify New Email"
+msgstr "Verificar nuevo correo electrónico"
+
+#: src/view/screens/Log.tsx:52
+msgid "View debug entry"
+msgstr "Ver entrada de depuración"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:128
+msgid "View the avatar"
+msgstr "Ver el avatar"
+
+#: src/view/com/modals/LinkWarning.tsx:73
+msgid "Visit Site"
+msgstr "Visitar sitio"
+
+#: src/view/com/auth/create/CreateAccount.tsx:122
+msgid "We're so excited to have you join us!"
+msgstr "¡Estamos emocionados de tenerte con nosotros!"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:99 
+#: src/view/com/posts/FeedErrorMessage.tsx:105 
+#: src/view/screens/Search/Search.tsx:243
+msgid ""
+"We're sorry, but your search could not be completed. Please try again in a "
+"few minutes."
+msgstr ""
+"Lo sentimos, pero no se ha podido completar tu búsqueda. Por favor, "
+"inténtalo de nuevo en unos minutos."
+
+#: src/view/screens/NotFound.tsx:48
+msgid "We're sorry! We can't find the page you were looking for."
+msgstr "¡Lo sentimos! No encontramos la página que estabas buscando."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
+msgid "Welcome to <0>Bluesky</0>"
+msgstr "Te damos la bienvenida a <0>Bluesky</0>"
+
+#: src/view/com/modals/report/Modal.tsx:169
+msgid "What is the issue with this {collectionName}?"
+msgstr "¿Cuál es el problema con este contenido: {collectionName}?"
+
+#: src/view/com/auth/SplashScreen.tsx:34
+msgid "What's up?"
+msgstr "¿Qué sucede?"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
+msgid "Which languages are used in this post?"
+msgstr "¿Qué idiomas se usan en esta publicación?"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
+msgid "Which languages would you like to see in your algorithmic feeds?"
+msgstr "¿Qué idiomas te gustaría ver en tus muros algorítmicos?"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47 
+#: src/view/com/modals/Threadgate.tsx:66
+msgid "Who can reply"
+msgstr "Quién puede responder"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:79 
+#: src/view/com/modals/crop-image/CropImage.web.tsx:102
+msgid "Wide"
+msgstr "Anchura"
+
+#: src/view/com/composer/Composer.tsx:418
+msgid "Write post"
+msgstr "Redactar publicación"
+
+#: src/view/com/composer/Prompt.tsx:33
+msgid "Write your reply"
+msgstr "Redacta tu respuesta"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:126 
+#: src/view/screens/PreferencesHomeFeed.tsx:198 
+#: src/view/screens/PreferencesHomeFeed.tsx:233 
+#: src/view/screens/PreferencesHomeFeed.tsx:268 
+#: src/view/screens/PreferencesThreads.tsx:106 
+#: src/view/screens/PreferencesThreads.tsx:129
+msgid "Yes"
+msgstr "Sí"
+
+#: src/view/com/auth/create/Step1.tsx:106
+msgid "You can change hosting providers at any time."
+msgstr "Puedes cambiar de proveedor de alojamiento en cualquier momento."
+
+#: src/view/com/auth/login/Login.tsx:158 
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
+msgid "You can now sign in with your new password."
+msgstr "Ya puedes iniciar sesión con tu nueva contraseña."
+
+#: src/view/com/modals/InviteCodes.tsx:64
+msgid ""
+"You don't have any invite codes yet! We'll send you some when you've been on "
+"Bluesky for a little longer."
+msgstr ""
+"¡Aún no tienes ningún código de invitación! Te enviaremos algunos cuando "
+"hayas estado en Bluesky por un poco más de tiempo."
+
+#: src/view/screens/SavedFeeds.tsx:102
+msgid "You don't have any pinned feeds."
+msgstr "No tienes ningún muro fijado."
+
+#: src/view/screens/Feeds.tsx:383
+msgid "You don't have any saved feeds!"
+msgstr "¡No tienes ningún muro guardado!"
+
+#: src/view/screens/SavedFeeds.tsx:135
+msgid "You don't have any saved feeds."
+msgstr "No tienes ningún muro guardado."
+
+#: src/view/com/post-thread/PostThread.tsx:381
+msgid "You have blocked the author or you have been blocked by the author."
+msgstr "Has bloqueado al autor o has sido bloqueado por el autor."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:134
+msgid "You have no feeds."
+msgstr "No tienes ningún muro."
+
+#: src/view/com/lists/MyLists.tsx:89 src/view/com/lists/ProfileLists.tsx:138
+msgid "You have no lists."
+msgstr "No tienes ninguna lista."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
+msgid ""
+"You have not blocked any accounts yet. To block an account, go to their "
+"profile and selected \"Block account\" from the menu on their account."
+msgstr ""
+"Aún no has bloqueado ninguna cuenta. Para bloquear una cuenta, ve a su "
+"perfil y selecciona «bloquear cuenta» en el menú de su cuenta."
+
+#: src/view/screens/AppPasswords.tsx:86
+msgid ""
+"You have not created any app passwords yet. You can create one by pressing "
+"the button below."
+msgstr ""
+"Aún no has creado ninguna contraseña de aplicación. Puedes crear una "
+"pulsando el botón de abajo."
+
+#: src/view/screens/ModerationMutedAccounts.tsx:131
+msgid ""
+"You have not muted any accounts yet. To mute an account, go to their profile "
+"and selected \"Mute account\" from the menu on their account."
+msgstr ""
+"Aún no has silenciado ninguna cuenta. Para silenciar una cuenta, ve a su "
+"perfil y selecciona «silenciar cuenta» en el menú de su cuenta."
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:81
+msgid ""
+"You will receive an email with a \"reset code.\" Enter that code here, then "
+"enter your new password."
+msgstr ""
+"Recibirás un correo electrónico con un 'código de restablecimiento'. "
+"Introduce ese código aquí, luego introduce tu nueva contraseña."
+
+#: src/view/com/auth/create/Step2.tsx:58
+msgid "Your account"
+msgstr "Tu cuenta"
+
+#: src/view/com/auth/create/Step2.tsx:146
+msgid "Your birth date"
+msgstr "Tu fecha de nacimiento"
+
+#: src/view/com/auth/create/state.ts:102
+msgid "Your email appears to be invalid."
+msgstr "Tu correo electrónico parece ser inválido."
+
+#: src/view/com/modals/Waitlist.tsx:107
+msgid "Your email has been saved! We'll be in touch soon."
+msgstr "¡Tu correo electrónico ha sido guardado! Te contactaremos pronto."
+
+#: src/view/com/modals/ChangeEmail.tsx:125
+msgid ""
+"Your email has been updated but not verified. As a next step, please verify "
+"your new email."
+msgstr ""
+"Tu correo electrónico ha sido actualizado pero no verificado. Como siguiente "
+"paso, verifica tu nuevo correo electrónico."
+
+#: src/view/com/modals/VerifyEmail.tsx:108
+msgid ""
+"Your email has not yet been verified. This is an important security step "
+"which we recommend."
+msgstr ""
+"Tu correo electrónico aún no ha sido verificado. Este es un paso de "
+"seguridad importante que te recomendamos."
+
+#: src/view/com/auth/create/Step3.tsx:42 
+#: src/view/com/modals/ChangeHandle.tsx:270
+msgid "Your full handle will be"
+msgstr "Tu identificador completo será"
+
+#: src/view/com/auth/create/Step1.tsx:53
+msgid "Your hosting provider"
+msgstr "Tu proveedor de alojamiento"
+
+#: src/view/screens/Settings.tsx:402 src/view/shell/desktop/RightNav.tsx:137 
+#: src/view/shell/Drawer.tsx:655
+msgid "Your invite codes are hidden when logged in using an App Password"
+msgstr ""
+"Tus códigos de invitación están ocultos cuando inicias sesión usando una "
+"contraseña de aplicación"
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
+msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr ""
+"Tus publicaciones, me gusta y bloqueos son públicos. Los silencios son "
+"privados."
+
+#: src/view/com/modals/SwitchAccount.tsx:82
+msgid "Your profile"
+msgstr "Tu perfil"
+
+#: src/view/screens/Moderation.tsx:205 src/view/screens/Moderation.tsx:220 
+#: src/view/screens/Moderation.tsx:220 src/view/com/auth/create/Step3.tsx:28
+msgid "Your user handle"
+msgstr "Tu identificador de usuario"
