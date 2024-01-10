@@ -35,5 +35,5 @@ export interface CachedFeedPage {
   usableInFeed: boolean
   syncedAt: Date
   data: FeedPage | undefined
-  hasUnread: 'no' | 'yes' | 'max' // max means "30+", dont poll anymore
+  unreadCount: number
 }

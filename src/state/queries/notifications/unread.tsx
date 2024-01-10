@@ -53,7 +53,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     usableInFeed: false,
     syncedAt: new Date(),
     data: undefined,
-    hasUnread: false,
+    unreadCount: 0,
   })
 
   // periodic sync
@@ -76,7 +76,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         usableInFeed: false,
         syncedAt: new Date(),
         data: undefined,
-        hasUnread: data.event !== '' ? 'yes' : 'no',
+        unreadCount:
+          data.event === '30+'
+            ? 30
+            : data.event === ''
+            ? 0
+            : parseInt(data.event, 10) || 1,
       }
       setNumUnread(data.event)
     }
@@ -114,9 +119,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
 
           // reduce polling if unread count is set
-          if (isPoll && cacheRef.current?.hasUnread !== 'no') {
+          if (isPoll && cacheRef.current?.unreadCount !== 0) {
             // if hit 30+ then don't poll, otherwise reduce polling by 50%
-            if (cacheRef.current?.hasUnread === 'max' || Math.random() >= 0.5) {
+            if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
               return
             }
           }
@@ -152,8 +157,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             usableInFeed: !!invalidate, // will be used immediately
             data: page,
             syncedAt: !lastIndexed || now > lastIndexed ? now : lastIndexed,
-            hasUnread:
-              unreadCount >= 30 ? 'max' : unreadCount > 0 ? 'yes' : 'no',
+            unreadCount,
           }
 
           // update & broadcast
