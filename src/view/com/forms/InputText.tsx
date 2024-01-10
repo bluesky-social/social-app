@@ -1,5 +1,11 @@
 import React from 'react'
-import {View, TextInput, TextInputProps, TextStyle} from 'react-native'
+import {
+  View,
+  TextInput,
+  TextInputProps,
+  TextStyle,
+  LayoutChangeEvent,
+} from 'react-native'
 
 import {useTheme, atoms, web, tokens} from '#/alf'
 import {Text} from '#/view/com/Typography'
@@ -9,15 +15,23 @@ type Props = Omit<TextInputProps, 'placeholder'> & {
   placeholder: string
   hasError?: boolean
   icon?: React.FunctionComponent<any>
+  suffix?: React.FunctionComponent<any>
 }
 
-export function InputText({label, hasError, icon: Icon, ...props}: Props) {
+export function InputText({
+  label,
+  hasError,
+  icon: Icon,
+  suffix: Suffix,
+  ...props
+}: Props) {
   const labelId = React.useId()
   const t = useTheme()
   const [state, setState] = React.useState({
     hovered: false,
     focused: false,
   })
+  const [suffixPadding, setSuffixPadding] = React.useState(0)
 
   const onHoverIn = React.useCallback(() => {
     setState(s => ({
@@ -43,6 +57,12 @@ export function InputText({label, hasError, icon: Icon, ...props}: Props) {
       focused: false,
     }))
   }, [setState])
+  const handleSuffixLayout = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      setSuffixPadding(e.nativeEvent.layout.width + 16)
+    },
+    [setSuffixPadding],
+  )
 
   const {inputStyles, iconStyles} = React.useMemo(() => {
     const input: TextStyle[] = []
@@ -113,31 +133,52 @@ export function InputText({label, hasError, icon: Icon, ...props}: Props) {
           atoms.text_md,
           t.atoms.border,
           t.atoms.text,
-          {borderWidth: 2},
           web({
             paddingTop: atoms.pt_md.paddingTop - 1,
           }),
+          {paddingRight: suffixPadding},
+          {borderWidth: 2, lineHeight: atoms.text_md.lineHeight * 1.1875},
           ...inputStyles,
           ...(Array.isArray(props.style) ? props.style : [props.style]),
         ]}
       />
 
       {Icon && (
-        <Icon
+        <View
           style={[
             atoms.absolute,
             atoms.inset_0,
-            {color: t.atoms.border_contrast_500.borderColor},
-            {
-              left: atoms.px_md.paddingLeft,
-              right: 'auto',
-              width: 20,
-              marginVertical: 'auto',
-              pointerEvents: 'none',
-            },
-            ...iconStyles,
-          ]}
-        />
+            atoms.align_center,
+            atoms.justify_center,
+            atoms.pl_md,
+            {right: 'auto'},
+          ]}>
+          <Icon
+            style={[
+              {color: t.atoms.border_contrast_500.borderColor},
+              {
+                width: 20,
+                pointerEvents: 'none',
+              },
+              ...iconStyles,
+            ]}
+          />
+        </View>
+      )}
+
+      {Suffix && (
+        <View
+          onLayout={handleSuffixLayout}
+          style={[
+            atoms.absolute,
+            atoms.inset_0,
+            atoms.align_center,
+            atoms.justify_center,
+            atoms.pr_lg,
+            {left: 'auto'},
+          ]}>
+          <Suffix />
+        </View>
       )}
     </View>
   )

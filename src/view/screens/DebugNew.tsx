@@ -220,6 +220,12 @@ function Forms() {
       <InputText label="Name" placeholder="Type here" />
       <InputText placeholder="Type here" icon={Logo} />
       <InputText hasError placeholder="Type here" icon={Logo} />
+
+      <InputText
+        placeholder="Type here"
+        icon={Logo}
+        suffix={() => <Text>.bksy.social</Text>}
+      />
     </View>
   )
 }
