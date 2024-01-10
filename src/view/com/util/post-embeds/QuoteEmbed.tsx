@@ -6,6 +6,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   ModerationUI,
+  AppBskyEmbedExternal,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {PostMeta} from '../PostMeta'
@@ -87,15 +88,19 @@ export function QuoteEmbed({
     () => quote.text.trim().length === 0,
     [quote.text],
   )
-  const imagesEmbed = React.useMemo(
-    () =>
-      quote.embeds?.find(
-        embed =>
-          AppBskyEmbedImages.isView(embed) ||
-          AppBskyEmbedRecordWithMedia.isView(embed),
-      ),
-    [quote.embeds],
-  )
+  const embed = React.useMemo(() => {
+    const e = quote.embeds?.[0]
+
+    if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      return e
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(e) &&
+      (AppBskyEmbedImages.isView(e.media) ||
+        AppBskyEmbedExternal.isView(e.media))
+    ) {
+      return e.media
+    }
+  }, [quote.embeds])
   return (
     <Link
       style={[styles.container, pal.borderDark, style]}
@@ -117,12 +122,7 @@ export function QuoteEmbed({
           {quote.text}
         </Text>
       ) : null}
-      {AppBskyEmbedImages.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed} moderation={{}} />
-      )}
-      {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed.media} moderation={{}} />
-      )}
+      {embed && <PostEmbeds embed={embed} moderation={{}} />}
     </Link>
   )
 }
