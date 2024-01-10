@@ -8,10 +8,8 @@ import {useTheme, atoms, tokens} from '#/alf'
 import {Text} from '#/view/com/Typography'
 import {useInteractionState} from '#/view/com/util/hooks/useInteractionState'
 
-import {BaseProps} from '#/view/com/forms/types'
+import {InputDateProps} from '#/view/com/forms/InputDate/types'
 import {toSimpleDateString} from '#/view/com/forms/InputDate/utils'
-
-type Props = BaseProps
 
 export * as utils from '#/view/com/forms/InputDate/utils'
 
@@ -24,7 +22,7 @@ export function InputDate({
   accessibilityLabel,
   accessibilityHint,
   ...props
-}: Props) {
+}: InputDateProps) {
   const labelId = React.useId()
   const t = useTheme()
   const [value, setValue] = React.useState<string>(initialValue)

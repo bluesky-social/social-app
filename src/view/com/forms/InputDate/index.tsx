@@ -1,16 +1,14 @@
 import React from 'react'
-import {View, TextInputProps} from 'react-native'
+import {View} from 'react-native'
 import DateTimePicker, {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker'
 
 import {useTheme, atoms} from '#/alf'
 import {Text} from '#/view/com/Typography'
-import {BaseProps} from '#/view/com/forms/types'
 import {toSimpleDateString} from '#/view/com/forms/InputDate/utils'
 
-type Props = Omit<TextInputProps, 'placeholder' | 'value'> & BaseProps
-
+import {InputDateProps} from '#/view/com/forms/InputDate/types'
 export * as utils from '#/view/com/forms/InputDate/utils'
 
 /**
@@ -27,7 +25,7 @@ export function InputDate({
   label,
   accessibilityLabel,
   accessibilityHint,
-}: Props) {
+}: InputDateProps) {
   const labelId = React.useId()
   const t = useTheme()
   const [value, setValue] = React.useState(initialValue)
