@@ -36,7 +36,8 @@ const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-const REFRESH_AFTER = STALE.HOURS.ONE
+// DISABLED need to check if this is causing random feed refreshes -prf
+// const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
 let Feed = ({
@@ -148,11 +149,12 @@ let Feed = ({
   React.useEffect(() => {
     if (enabled) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
-      if (timeSinceFirstLoad > REFRESH_AFTER) {
+      // DISABLED need to check if this is causing random feed refreshes -prf
+      /*if (timeSinceFirstLoad > REFRESH_AFTER) {
         // do a full refresh
         scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
         queryClient.resetQueries({queryKey: RQKEY(feed)})
-      } else if (
+      } else*/ if (
         timeSinceFirstLoad > CHECK_LATEST_AFTER &&
         checkForNewRef.current
       ) {
