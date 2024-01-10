@@ -74,6 +74,7 @@ import {
   useInAppBrowser,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+import {isNative} from '#/platform/detection'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -616,15 +617,17 @@ export function SettingsScreen({}: Props) {
             <Trans>External Media Preferences</Trans>
           </Text>
         </TouchableOpacity>
-        <View style={[pal.view, styles.toggleCard]}>
-          <ToggleButton
-            type="default-light"
-            label={_(msg`Use in-app browser`)}
-            labelType="lg"
-            isSelected={inAppBrowserPref ?? false}
-            onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
-          />
-        </View>
+        {isNative && (
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label={_(msg`Use in-app browser`)}
+              labelType="lg"
+              isSelected={inAppBrowserPref ?? false}
+              onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
+            />
+          </View>
+        )}
 
         <View style={styles.spacer20} />
 
