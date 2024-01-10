@@ -151,9 +151,15 @@ export function Buttons() {
 
   return (
     <View style={[a.gap_md, a.align_start]}>
-      <Button>Unstyled button</Button>
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something">
+        Unstyled button
+      </Button>
 
-      <Button>
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something">
         {({state}) => (
           <View style={[a.p_md, a.rounded_full, t.atoms.bg_contrast_300]}>
             <Text>Entirely custom button, state: {JSON.stringify(state)}</Text>
@@ -161,15 +167,28 @@ export function Buttons() {
         )}
       </Button>
 
-      <Button type="primary" size="large">
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        type="primary"
+        size="large">
         Default button
       </Button>
 
-      <Button type="primary" size="large" disabled>
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        type="primary"
+        size="large"
+        disabled>
         Default button (disabled)
       </Button>
 
-      <Button type="primary" size="large">
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        type="primary"
+        size="large">
         {({props}) => (
           <>
             <FontAwesomeIcon icon={['fas', 'plus']} size={12} />
@@ -178,37 +197,61 @@ export function Buttons() {
         )}
       </Button>
 
-      <Button type="secondary" size="small">
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        type="secondary"
+        size="small">
         Small button
       </Button>
 
-      <Button type="secondary" size="small" disabled>
+      <Button
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        type="secondary"
+        size="small"
+        disabled>
         Small button (disabled)
       </Button>
 
       <Link
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
         to="https://blueskyweb.xyz"
         warnOnMismatchingTextChild
         style={[a.text_md]}>
         External
       </Link>
-      <Link to="https://blueskyweb.xyz" style={[a.text_md]}>
+      <Link
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        to="https://blueskyweb.xyz"
+        style={[a.text_md]}>
         <H3>External with custom children</H3>
       </Link>
       <Link
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
         to="https://blueskyweb.xyz"
         warnOnMismatchingTextChild
         style={[a.text_md]}>
         https://blueskyweb.xyz
       </Link>
       <Link
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
         to="https://bsky.app/profile/bsky.app"
         warnOnMismatchingTextChild
         style={[a.text_md]}>
         Internal
       </Link>
 
-      <Link type="primary" size="large" to="https://bsky.app/profile/bsky.app">
+      <Link
+        accessibilityLabel="Click here"
+        accessibilityHint="Opens something"
+        type="primary"
+        size="large"
+        to="https://bsky.app/profile/bsky.app">
         {({props}) => <ButtonText {...props}>Link as a button</ButtonText>}
       </Link>
     </View>

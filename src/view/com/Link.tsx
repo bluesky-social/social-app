@@ -59,7 +59,7 @@ export function Link({
 }: LinkProps) {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
-  const {href, accessibilityRole} = useLinkProps<AllNavigatorParams>({
+  const {href} = useLinkProps<AllNavigatorParams>({
     to:
       typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
   })
@@ -139,9 +139,9 @@ export function Link({
 
   return (
     <Button
-      role="link"
-      accessibilityRole={accessibilityRole}
       {...rest}
+      role="link"
+      accessibilityRole="link"
       href={href}
       onPress={onPress}
       {...web({

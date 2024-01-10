@@ -5,6 +5,7 @@ import {
   PressableProps,
   TextProps,
   ViewStyle,
+  AccessibilityProps,
 } from 'react-native'
 
 import {useTheme, atoms, tokens, web, native} from '#/alf'
@@ -22,7 +23,10 @@ export type VariantProps = {
   size?: ButtonSize
 }
 
-export type ButtonProps = Omit<PressableProps, 'children'> &
+export type ButtonProps = Omit<
+  PressableProps,
+  'children' | 'style' | 'accessibilityLabel' | 'accessibilityHint'
+> &
   VariantProps & {
     children:
       | ((props: {
@@ -37,14 +41,17 @@ export type ButtonProps = Omit<PressableProps, 'children'> &
         }) => React.ReactNode)
       | React.ReactNode
       | string
+    accessibilityLabel: Required<AccessibilityProps>['accessibilityLabel']
+    accessibilityHint: Required<AccessibilityProps>['accessibilityHint']
   }
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
 export function Button({
   children,
-  style,
   type,
   size,
+  accessibilityLabel,
+  accessibilityHint,
   disabled = false,
   ...rest
 }: ButtonProps) {
@@ -179,6 +186,9 @@ export function Button({
     <Pressable
       role="button"
       {...rest}
+      aria-label={accessibilityLabel}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
       disabled={disabled || false}
       accessibilityState={{
         disabled: disabled || false,
@@ -188,7 +198,6 @@ export function Button({
         atoms.align_center,
         ...baseStyles,
         ...(state.hovered ? hoverStyles : []),
-        typeof style === 'function' ? style(state) : style,
       ]}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
