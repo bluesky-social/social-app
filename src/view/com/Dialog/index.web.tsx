@@ -4,8 +4,11 @@ import {FocusScope} from '@tamagui/focus-scope'
 import Animated, {FadeInDown, FadeIn, FadeOut} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {EventStopper} from '#/view/com/util/EventStopper'
+import {H3, Text} from '#/view/com/Typography'
 import {Portal} from '#/view/com/Portal'
 import {DialogProps} from '#/view/com/Dialog/types'
+import {Button} from '#/view/com/Button'
 
 const Context = React.createContext<{
   dismiss: () => void
@@ -17,7 +20,7 @@ export function useDialog() {
   return React.useContext(Context)
 }
 
-export function Dialog({
+export function Outer({
   isOpen,
   onDismiss,
   children,
@@ -63,7 +66,7 @@ export function Dialog({
                   style={[
                     a.absolute,
                     a.inset_0,
-                    t.atoms.bg_contrast_100,
+                    t.atoms.bg_contrast_200,
                     {opacity: 0.8},
                   ]}
                 />
@@ -81,8 +84,11 @@ export function Dialog({
                     <Animated.View
                       entering={FadeInDown.duration(200)}
                       exiting={FadeOut.duration(200)}
-                      aria-role="dialog">
-                      {children}
+                      aria-role="dialog"
+                    >
+                      <EventStopper>
+                        {children}
+                      </EventStopper>
                     </Animated.View>
                   </FocusScope>
                 </View>
@@ -92,5 +98,62 @@ export function Dialog({
         </Portal>
       )}
     </>
+  )
+}
+
+export function Inner(props: React.PropsWithChildren<{}>) {
+  const t = useTheme()
+  return (
+    <View style={[
+      a.relative,
+      a.rounded_md,
+      a.p_xl,
+      t.atoms.bg,
+    ]}>
+      {props.children}
+    </View>
+  )
+}
+
+export function Header({ children, title }: React.PropsWithChildren<{ title: string }>) {
+  const t = useTheme()
+  return (
+    <View style={[a.flex_row, a.justify_between, a.mb_lg]}>
+      <H3 style={[t.atoms.text_contrast_500, a.pr_lg]}>{title}</H3>
+      {children}
+    </View>
+  )
+}
+
+export function Close() {
+  const t = useTheme()
+  const {dismiss} = useDialog()
+  return (
+    <View style={[
+      a.absolute,
+      a.z_10,
+      {
+        top: a.pt_lg.paddingTop,
+        right: a.pr_lg.paddingRight,
+      }
+    ]}>
+      <Button onPress={dismiss} accessibilityLabel='Close dialog' accessibilityHint='Clicking this button will close the current dialog.'>
+        {({ state}) => (
+          <View style={[
+            a.justify_center,
+            a.align_center,
+            a.rounded_full,
+            t.atoms.bg_contrast_200,
+            {
+              pointerEvents: 'none',
+              height: 32,
+              width: 32,
+            }
+          ]}>
+            <Text>X</Text>
+          </View>
+        )}
+      </Button>
+    </View>
   )
 }

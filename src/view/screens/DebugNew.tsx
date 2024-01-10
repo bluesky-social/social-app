@@ -12,7 +12,7 @@ import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
 import {InputText} from '#/view/com/forms/InputText'
 import {InputDate, utils} from '#/view/com/forms/InputDate'
 import {Logo} from '#/view/icons/Logo'
-import {Dialog} from '#/view/com/Dialog'
+import * as Dialog from '#/view/com/Dialog'
 
 function ThemeSelector() {
   const setColorMode = useSetColorMode()
@@ -320,21 +320,24 @@ function Forms() {
 function Dialogs() {
   const [isOpen, setIsOpen] = React.useState(false)
 
-  console.log({isOpen})
-
   return (
     <>
       <Button type='secondary' size='small' onPress={() => setIsOpen(true)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
         Open basic dialog
       </Button>
-      <Dialog isOpen={isOpen} onDismiss={() => setIsOpen(false)}>
-        <Button type='primary' size='small' onPress={() => setIsOpen(false)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
-          Close basic dialog
-        </Button>
-        <Button type='secondary' size='small' onPress={() => setIsOpen(false)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
-          Close basic dialog
-        </Button>
-      </Dialog>
+      <Dialog.Outer isOpen={isOpen} onDismiss={() => setIsOpen(false)}>
+        <Dialog.Inner>
+          <Dialog.Close />
+          <Dialog.Header title='Basic dialog' />
+
+          <Button type='primary' size='small' onPress={() => setIsOpen(false)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
+            Close basic dialog
+          </Button>
+          <Button type='secondary' size='small' onPress={() => setIsOpen(false)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
+            Close basic dialog
+          </Button>
+        </Dialog.Inner>
+      </Dialog.Outer>
     </>
   )
 }
