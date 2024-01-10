@@ -25,7 +25,10 @@ type StateContext = string
 
 interface ApiContext {
   markAllRead: () => Promise<void>
-  checkUnread: (opts?: {invalidate?: boolean}) => Promise<void>
+  checkUnread: (opts?: {
+    invalidate?: boolean
+    isPoll?: boolean
+  }) => Promise<void>
   getCachedUnreadPage: () => FeedPage | undefined
 }
 
@@ -50,6 +53,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     usableInFeed: false,
     syncedAt: new Date(),
     data: undefined,
+    hasUnread: false,
   })
 
   // periodic sync
@@ -58,7 +62,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       return
     }
     checkUnreadRef.current() // fire on init
-    const interval = setInterval(checkUnreadRef.current, UPDATE_INTERVAL)
+    const interval = setInterval(
+      () => checkUnreadRef.current?.({isPoll: true}),
+      UPDATE_INTERVAL,
+    )
     return () => clearInterval(interval)
   }, [hasSession])
 
@@ -69,6 +76,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         usableInFeed: false,
         syncedAt: new Date(),
         data: undefined,
+        hasUnread: data.event !== '' ? 'yes' : 'no',
       }
       setNumUnread(data.event)
     }
@@ -95,11 +103,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
 
-      async checkUnread({invalidate}: {invalidate?: boolean} = {}) {
+      async checkUnread({
+        invalidate,
+        isPoll,
+      }: {invalidate?: boolean; isPoll?: boolean} = {}) {
         try {
           if (!getAgent().session) return
           if (AppState.currentState !== 'active') {
             return
+          }
+
+          // reduce polling if unread count is set
+          if (isPoll && cacheRef.current?.hasUnread !== 'no') {
+            // if hit 30+ then don't poll, otherwise reduce polling by 50%
+            if (cacheRef.current?.hasUnread === 'max' || Math.random() >= 0.5) {
+              return
+            }
           }
 
           // count
@@ -133,6 +152,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             usableInFeed: !!invalidate, // will be used immediately
             data: page,
             syncedAt: !lastIndexed || now > lastIndexed ? now : lastIndexed,
+            hasUnread:
+              unreadCount >= 30 ? 'max' : unreadCount > 0 ? 'yes' : 'no',
           }
 
           // update & broadcast
