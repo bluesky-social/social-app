@@ -9,16 +9,23 @@ import {
 
 import {useTheme, atoms, web, tokens} from '#/alf'
 import {Text} from '#/view/com/Typography'
+import {useInteractionState} from '#/view/com/util/hooks/useInteractionState'
 
-type Props = Omit<TextInputProps, 'placeholder'> & {
-  label?: string
-  placeholder: string
-  hasError?: boolean
-  icon?: React.FunctionComponent<any>
-  suffix?: React.FunctionComponent<any>
-}
+import {BaseProps} from '#/view/com/forms/types'
+
+type Props = BaseProps &
+  Omit<TextInputProps, 'placeholder'> & {
+    placeholder: Required<TextInputProps>['placeholder']
+    icon?: React.FunctionComponent<any>
+    suffix?: React.FunctionComponent<any>
+  }
 
 export function InputText({
+  value: initialValue,
+  onChange,
+  testID,
+  accessibilityLabel,
+  accessibilityHint,
   label,
   hasError,
   icon: Icon,
@@ -27,36 +34,15 @@ export function InputText({
 }: Props) {
   const labelId = React.useId()
   const t = useTheme()
-  const [state, setState] = React.useState({
-    hovered: false,
-    focused: false,
-  })
+  const [value, setValue] = React.useState<string>(initialValue)
   const [suffixPadding, setSuffixPadding] = React.useState(0)
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const onHoverIn = React.useCallback(() => {
-    setState(s => ({
-      ...s,
-      hovered: true,
-    }))
-  }, [setState])
-  const onHoverOut = React.useCallback(() => {
-    setState(s => ({
-      ...s,
-      hovered: false,
-    }))
-  }, [setState])
-  const onFocus = React.useCallback(() => {
-    setState(s => ({
-      ...s,
-      focused: true,
-    }))
-  }, [setState])
-  const onBlur = React.useCallback(() => {
-    setState(s => ({
-      ...s,
-      focused: false,
-    }))
-  }, [setState])
   const handleSuffixLayout = React.useCallback(
     (e: LayoutChangeEvent) => {
       setSuffixPadding(e.nativeEvent.layout.width + 16)
@@ -83,7 +69,7 @@ export function InputText({
       })
     }
 
-    if (state.hovered || state.focused) {
+    if (hovered || focused) {
       input.push({
         borderColor: t.atoms.border_contrast_500.borderColor,
       })
@@ -96,7 +82,16 @@ export function InputText({
     }
 
     return {inputStyles: input, iconStyles: icon}
-  }, [t, state, hasError, Icon])
+  }, [t, hovered, focused, hasError, Icon])
+
+  const handleOnChange = React.useCallback(
+    (e: any) => {
+      const value = e.currentTarget.value
+      onChange(value)
+      setValue(value)
+    },
+    [onChange, setValue],
+  )
 
   return (
     <View style={[atoms.relative, atoms.w_full]}>
@@ -114,12 +109,17 @@ export function InputText({
       )}
 
       <TextInput
+        {...props}
+        value={value}
+        testID={testID}
         aria-labelledby={labelId}
         aria-label={label}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityHint={accessibilityHint}
         placeholderTextColor={t.atoms.text_contrast_500.color}
-        {...props}
         onFocus={onFocus}
         onBlur={onBlur}
+        onChange={handleOnChange}
         {...web({
           onMouseEnter: onHoverIn,
           onMouseLeave: onHoverOut,

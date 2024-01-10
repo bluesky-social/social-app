@@ -218,12 +218,39 @@ export function Buttons() {
 function Forms() {
   return (
     <View style={[a.gap_md, a.align_start]}>
-      <InputText label="Name" placeholder="Type here" />
-      <InputText placeholder="Type here" icon={Logo} />
-      <InputText hasError placeholder="Type here" icon={Logo} />
-
       <InputText
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
         placeholder="Type here"
+        value=""
+        onChange={text => console.log(text)}
+      />
+      <InputText
+        hasError
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value="Test initial value"
+        onChange={text => console.log(text)}
+      />
+      <InputText
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value=""
+        onChange={text => console.log(text)}
+        icon={Logo}
+      />
+      <InputText
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value=""
+        onChange={text => console.log(text)}
         icon={Logo}
         suffix={() => <Text>.bksy.social</Text>}
       />
