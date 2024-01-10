@@ -167,6 +167,7 @@ export const s = StyleSheet.create({
   flexGrow1: {flexGrow: 1},
   alignCenter: {alignItems: 'center'},
   alignBaseline: {alignItems: 'baseline'},
+  justifyCenter: {justifyContent: 'center'},
 
   // position
   absolute: {position: 'absolute'},

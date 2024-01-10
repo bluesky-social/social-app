@@ -33,6 +33,7 @@ import {cleanError} from '#/lib/strings/errors'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -61,8 +62,8 @@ export function AppPasswords({}: Props) {
         ]}
         testID="appPasswordsScreen">
         <ErrorScreen
-          title="Oops!"
-          message="There was an issue with fetching your app passwords"
+          title={_(msg`Oops!`)}
+          message={_(msg`There was an issue with fetching your app passwords`)}
           details={cleanError(error)}
         />
       </CenteredView>
@@ -98,7 +99,7 @@ export function AppPasswords({}: Props) {
           <Button
             testID="appPasswordBtn"
             type="primary"
-            label="Add App Password"
+            label={_(msg`Add App Password`)}
             style={styles.btn}
             labelStyle={styles.btnLabel}
             onPress={onAdd}
@@ -139,7 +140,7 @@ export function AppPasswords({}: Props) {
               <Button
                 testID="appPasswordBtn"
                 type="primary"
-                label="Add App Password"
+                label={_(msg`Add App Password`)}
                 style={styles.btn}
                 labelStyle={styles.btnLabel}
                 onPress={onAdd}
@@ -152,7 +153,7 @@ export function AppPasswords({}: Props) {
             <Button
               testID="appPasswordBtn"
               type="primary"
-              label="Add App Password"
+              label={_(msg`Add App Password`)}
               style={styles.btn}
               labelStyle={styles.btnLabel}
               onPress={onAdd}
@@ -224,7 +225,7 @@ function AppPassword({
       ),
       async onPressConfirm() {
         await deleteMutation.mutateAsync({name})
-        Toast.show('App password deleted')
+        Toast.show(_(msg`App password deleted`))
       },
     })
   }, [deleteMutation, openModal, name, _])

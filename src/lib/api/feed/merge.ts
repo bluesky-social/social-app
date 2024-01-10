@@ -98,7 +98,7 @@ export class MergeFeedAPI implements FeedAPI {
     }
 
     return {
-      cursor: posts.length ? String(this.itemCursor) : undefined,
+      cursor: String(this.itemCursor),
       feed: posts,
     }
   }

@@ -20,6 +20,8 @@ import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {useSession} from '#/state/session'
 import {cleanError} from '#/lib/strings/errors'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}
@@ -50,6 +52,7 @@ export function ListMembers({
   desktopFixedHeightOffset?: number
 }) {
   const {track} = useAnalytics()
+  const {_} = useLingui()
   const [isRefreshing, setIsRefreshing] = React.useState(false)
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
@@ -143,12 +146,12 @@ export function ListMembers({
         <Button
           testID={`user-${profile.handle}-editBtn`}
           type="default"
-          label="Edit"
+          label={_(msg({message: 'Edit', context: 'action'}))}
           onPress={() => onPressEditMembership(profile)}
         />
       )
     },
-    [isOwner, onPressEditMembership],
+    [isOwner, onPressEditMembership, _],
   )
 
   const renderItem = React.useCallback(
@@ -165,7 +168,9 @@ export function ListMembers({
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label="There was an issue fetching the list. Tap here to try again."
+            label={_(
+              msg`There was an issue fetching the list. Tap here to try again.`,
+            )}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -191,6 +196,7 @@ export function ListMembers({
       onPressTryAgain,
       onPressRetryLoadMore,
       isMobile,
+      _,
     ],
   )
 

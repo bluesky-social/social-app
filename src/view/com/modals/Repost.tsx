@@ -37,11 +37,23 @@ export function Component({
           style={[styles.actionBtn]}
           onPress={onRepost}
           accessibilityRole="button"
-          accessibilityLabel={isReposted ? 'Undo repost' : 'Repost'}
-          accessibilityHint={isReposted ? 'Remove repost' : 'Repost '}>
+          accessibilityLabel={
+            isReposted
+              ? _(msg`Undo repost`)
+              : _(msg({message: `Repost`, context: 'action'}))
+          }
+          accessibilityHint={
+            isReposted
+              ? _(msg`Remove repost`)
+              : _(msg({message: `Repost`, context: 'action'}))
+          }>
           <RepostIcon strokeWidth={2} size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            <Trans>{!isReposted ? 'Repost' : 'Undo repost'}</Trans>
+            {!isReposted ? (
+              <Trans context="action">Repost</Trans>
+            ) : (
+              <Trans>Undo repost</Trans>
+            )}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -49,11 +61,13 @@ export function Component({
           style={[styles.actionBtn]}
           onPress={onQuote}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Quote post`)}
+          accessibilityLabel={_(
+            msg({message: `Quote post`, context: 'action'}),
+          )}
           accessibilityHint="">
           <FontAwesomeIcon icon="quote-left" size={24} style={s.blue3} />
           <Text type="title-lg" style={[styles.actionBtnLabel, pal.text]}>
-            <Trans>Quote Post</Trans>
+            <Trans context="action">Quote Post</Trans>
           </Text>
         </TouchableOpacity>
       </View>

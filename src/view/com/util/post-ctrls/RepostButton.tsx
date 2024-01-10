@@ -7,7 +7,8 @@ import {Text} from '../text/Text'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 import {useModalControls} from '#/state/modals'
 import {useRequireAuth} from '#/state/session'
-import {plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 interface Props {
   isReposted: boolean
@@ -25,6 +26,7 @@ let RepostButton = ({
   onQuote,
 }: Props): React.ReactNode => {
   const theme = useTheme()
+  const {_} = useLingui()
   const {openModal} = useModalControls()
   const requireAuth = useRequireAuth()
 
@@ -52,17 +54,11 @@ let RepostButton = ({
       }}
       style={[styles.control, !big && styles.controlPad]}
       accessibilityRole="button"
-      accessibilityLabel={
+      accessibilityLabel={`${
         isReposted
-          ? plural(repostCount || 0, {
-              one: 'Undo repost (# repost)',
-              other: 'Undo reposts (# reposts)',
-            })
-          : plural(repostCount || 0, {
-              one: 'Repost (# repost)',
-              other: 'Repost (# reposts)',
-            })
-      }
+          ? _(msg`Undo repost`)
+          : _(msg({message: 'Repost', context: 'action'}))
+      } (${plural(repostCount || 0, {one: "# repost", other: "# reposts"})})`}
       accessibilityHint=""
       hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
       <RepostIcon

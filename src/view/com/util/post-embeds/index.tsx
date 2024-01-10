@@ -63,7 +63,7 @@ export function PostEmbeds({
     const mediaModeration = isModOnQuote ? {} : moderation
     const quoteModeration = isModOnQuote ? moderation : {}
     return (
-      <View style={[styles.stackContainer, style]}>
+      <View style={style}>
         <PostEmbeds embed={embed.media} moderation={mediaModeration} />
         <ContentHider moderation={quoteModeration}>
           <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
@@ -168,11 +168,14 @@ export function PostEmbeds({
     const link = embed.external
 
     return (
-      <View style={[styles.extOuter, pal.view, pal.border, style]}>
-        <Link asAnchor href={link.uri}>
-          <ExternalLinkEmbed link={link} />
-        </Link>
-      </View>
+      <Link
+        asAnchor
+        anchorNoUnderline
+        href={link.uri}
+        style={[styles.extOuter, pal.view, pal.borderDark, style]}
+        hoverStyle={{borderColor: pal.colors.borderLinkHover}}>
+        <ExternalLinkEmbed link={link} />
+      </Link>
     )
   }
 
@@ -180,9 +183,6 @@ export function PostEmbeds({
 }
 
 const styles = StyleSheet.create({
-  stackContainer: {
-    gap: 6,
-  },
   imagesContainer: {
     marginTop: 8,
   },

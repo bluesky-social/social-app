@@ -27,8 +27,10 @@ function RepliesThresholdInput({
   initialValue: number
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
+  const preValue = React.useRef(initialValue)
   const save = React.useMemo(
     () =>
       debounce(
@@ -46,7 +48,12 @@ function RepliesThresholdInput({
       <Slider
         value={value}
         onValueChange={(v: number | number[]) => {
-          const threshold = Math.floor(Array.isArray(v) ? v[0] : v)
+          let threshold = Array.isArray(v) ? v[0] : v
+          if (threshold > preValue.current) threshold = Math.floor(threshold)
+          else threshold = Math.ceil(threshold)
+
+          preValue.current = threshold
+
           setValue(threshold)
           save(threshold)
         }}
@@ -60,7 +67,7 @@ function RepliesThresholdInput({
         <Plural
           value={value}
           _0="Show all replies"
-          one="Show replies with at least 1 like"
+          one="Show replies with at least # like"
           other="Show replies with at least # likes"
         />
       </Text>

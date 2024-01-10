@@ -71,32 +71,34 @@ let PostDropdownBtn = ({
   const onDeletePost = React.useCallback(() => {
     postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
-        Toast.show('Post deleted')
+        Toast.show(_(msg`Post deleted`))
       },
       e => {
         logger.error('Failed to delete post', {error: e})
-        Toast.show('Failed to delete post, please try again')
+        Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
-  }, [postUri, postDeleteMutation])
+  }, [postUri, postDeleteMutation, _])
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
       const muted = toggleThreadMute(rootUri)
       if (muted) {
-        Toast.show('You will no longer receive notifications for this thread')
+        Toast.show(
+          _(msg`You will no longer receive notifications for this thread`),
+        )
       } else {
-        Toast.show('You will now receive notifications for this thread')
+        Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [rootUri, toggleThreadMute])
+  }, [rootUri, toggleThreadMute, _])
 
   const onCopyPostText = React.useCallback(() => {
     Clipboard.setString(record?.text || '')
-    Toast.show('Copied to clipboard')
-  }, [record])
+    Toast.show(_(msg`Copied to clipboard`))
+  }, [record, _])
 
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(translatorUrl)
@@ -253,7 +255,7 @@ let PostDropdownBtn = ({
       <NativeDropdown
         testID={testID}
         items={dropdownItems}
-        accessibilityLabel="More post options"
+        accessibilityLabel={_(msg`More post options`)}
         accessibilityHint="">
         <View style={style}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />

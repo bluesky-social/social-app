@@ -41,7 +41,7 @@ export function SelectPhotoBtn({gallery}: Props) {
       hitSlop={HITSLOP_10}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Gallery`)}
-      accessibilityHint="Opens device photo gallery">
+      accessibilityHint={_(msg`Opens device photo gallery`)}>
       <FontAwesomeIcon
         icon={['far', 'image']}
         style={pal.link as FontAwesomeIconStyle}

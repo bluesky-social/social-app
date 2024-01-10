@@ -4,6 +4,8 @@ import {Image} from 'expo-image'
 import {clamp} from 'lib/numbers'
 import {Dimensions} from 'lib/media/types'
 import * as imageSizes from 'lib/media/image-sizes'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 10 // 10/1
@@ -29,6 +31,7 @@ export function AutoSizedImage({
   style,
   children = null,
 }: Props) {
+  const {_} = useLingui()
   const [dim, setDim] = React.useState<Dimensions | undefined>(
     dimensionsHint || imageSizes.get(uri),
   )
@@ -64,7 +67,7 @@ export function AutoSizedImage({
           accessible={true} // Must set for `accessibilityLabel` to work
           accessibilityIgnoresInvertColors
           accessibilityLabel={alt}
-          accessibilityHint="Tap to view fully"
+          accessibilityHint={_(msg`Tap to view fully`)}
         />
         {children}
       </Pressable>

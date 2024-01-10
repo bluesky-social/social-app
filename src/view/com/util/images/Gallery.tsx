@@ -2,6 +2,8 @@ import {AppBskyEmbedImages} from '@atproto/api'
 import React, {ComponentProps, FC} from 'react'
 import {StyleSheet, Text, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type EventFunction = (index: number) => void
 
@@ -22,6 +24,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
   onPressIn,
   onLongPress,
 }) => {
+  const {_} = useLingui()
   const image = images[index]
   return (
     <View style={styles.fullWidth}>
@@ -31,7 +34,7 @@ export const GalleryItem: FC<GalleryItemProps> = ({
         onLongPress={onLongPress ? () => onLongPress(index) : undefined}
         style={styles.fullWidth}
         accessibilityRole="button"
-        accessibilityLabel={image.alt || 'Image'}
+        accessibilityLabel={image.alt || _(msg`Image`)}
         accessibilityHint="">
         <Image
           source={{uri: image.thumb}}

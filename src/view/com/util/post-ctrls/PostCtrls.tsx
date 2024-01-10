@@ -25,7 +25,8 @@ import {
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
-import {plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 let PostCtrls = ({
   big,
@@ -43,6 +44,7 @@ let PostCtrls = ({
   onPressReply: () => void
 }): React.ReactNode => {
   const theme = useTheme()
+  const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
   const postLikeMutation = usePostLikeMutation()
@@ -176,17 +178,9 @@ let PostCtrls = ({
           requireAuth(() => onPressToggleLike())
         }}
         accessibilityRole="button"
-        accessibilityLabel={
-          post.viewer?.like
-            ? plural(post.likeCount || 0, {
-                one: 'Unlike (# like)',
-                other: 'Unlike (# likes)',
-              })
-            : plural(post.likeCount || 0, {
-                one: 'Like (# like)',
-                other: 'Like (# likes)',
-              })
-        }
+        accessibilityLabel={`${
+          post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
+        } (${plural(post.likeCount || 0, {one: "# like", other: "# likes"})})`}
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         {post.viewer?.like ? (

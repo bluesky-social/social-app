@@ -82,7 +82,7 @@ export function SavedFeeds({}: Props) {
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
       <ViewHeader title={_(msg`Edit My Feeds`)} showOnDesktop showBorder />
-      <ScrollView style={s.flex1}>
+      <ScrollView style={s.flex1} contentContainerStyle={[styles.noBorder]}>
         <View style={[pal.text, pal.border, styles.title]}>
           <Text type="title" style={pal.text}>
             <Trans>Pinned Feeds</Trans>
@@ -160,7 +160,7 @@ export function SavedFeeds({}: Props) {
                 type="sm"
                 style={pal.link}
                 href="https://github.com/bluesky-social/feed-generator"
-                text="See this guide"
+                text={_(msg`See this guide`)}
               />{' '}
               for more information.
             </Trans>
@@ -188,6 +188,7 @@ function ListItem({
   >['reset']
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
@@ -205,10 +206,10 @@ function ListItem({
         await pinFeed({uri: feedUri})
       }
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to toggle pinned feed', {error: e})
     }
-  }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState])
+  }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState, _])
 
   const onPressUp = React.useCallback(async () => {
     if (!isPinned) return
@@ -227,10 +228,10 @@ function ListItem({
         index: pinned.indexOf(feedUri),
       })
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {error: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
+  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
 
   const onPressDown = React.useCallback(async () => {
     if (!isPinned) return
@@ -248,10 +249,10 @@ function ListItem({
         index: pinned.indexOf(feedUri),
       })
     } catch (e) {
-      Toast.show('There was an issue contacting the server')
+      Toast.show(_(msg`There was an issue contacting the server`))
       logger.error('Failed to set pinned feed order', {error: e})
     }
-  }, [feedUri, isPinned, setSavedFeeds, currentFeeds])
+  }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
 
   return (
     <Pressable
@@ -288,7 +289,7 @@ function ListItem({
       <FeedSourceCard
         key={feedUri}
         feedUri={feedUri}
-        style={styles.noBorder}
+        style={styles.noTopBorder}
         showSaveBtn
         showMinimalPlaceholder
       />
@@ -344,12 +345,18 @@ const styles = StyleSheet.create({
   webArrowUpButton: {
     marginBottom: 10,
   },
-  noBorder: {
+  noTopBorder: {
     borderTopWidth: 0,
   },
   footerText: {
     paddingHorizontal: 26,
     paddingTop: 22,
     paddingBottom: 100,
+  },
+  noBorder: {
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
   },
 })

@@ -191,14 +191,16 @@ let ProfileHeaderLoaded = ({
         track('ProfileHeader:FollowButtonClicked')
         await queueFollow()
         Toast.show(
-          `Following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-          )}`,
+          _(
+            msg`Following ${sanitizeDisplayName(
+              profile.displayName || profile.handle,
+            )}`,
+          ),
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to follow', {error: String(e)})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          Toast.show(_(msg`There was an issue! ${e.toString()}`))
         }
       }
     })
@@ -210,14 +212,16 @@ let ProfileHeaderLoaded = ({
         track('ProfileHeader:UnfollowButtonClicked')
         await queueUnfollow()
         Toast.show(
-          `No longer following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-          )}`,
+          _(
+            msg`No longer following ${sanitizeDisplayName(
+              profile.displayName || profile.handle,
+            )}`,
+          ),
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
           logger.error('Failed to unfollow', {error: String(e)})
-          Toast.show(`There was an issue! ${e.toString()}`)
+          Toast.show(_(msg`There was an issue! ${e.toString()}`))
         }
       }
     })
@@ -252,27 +256,27 @@ let ProfileHeaderLoaded = ({
     track('ProfileHeader:MuteAccountButtonClicked')
     try {
       await queueMute()
-      Toast.show('Account muted')
+      Toast.show(_(msg`Account muted`))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to mute account', {error: e})
-        Toast.show(`There was an issue! ${e.toString()}`)
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
-  }, [track, queueMute])
+  }, [track, queueMute, _])
 
   const onPressUnmuteAccount = React.useCallback(async () => {
     track('ProfileHeader:UnmuteAccountButtonClicked')
     try {
       await queueUnmute()
-      Toast.show('Account unmuted')
+      Toast.show(_(msg`Account unmuted`))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('Failed to unmute account', {error: e})
-        Toast.show(`There was an issue! ${e.toString()}`)
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
-  }, [track, queueUnmute])
+  }, [track, queueUnmute, _])
 
   const onPressBlockAccount = React.useCallback(async () => {
     track('ProfileHeader:BlockAccountButtonClicked')
@@ -285,11 +289,11 @@ let ProfileHeaderLoaded = ({
       onPressConfirm: async () => {
         try {
           await queueBlock()
-          Toast.show('Account blocked')
+          Toast.show(_(msg`Account blocked`))
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to block account', {error: e})
-            Toast.show(`There was an issue! ${e.toString()}`)
+            Toast.show(_(msg`There was an issue! ${e.toString()}`))
           }
         }
       },
@@ -307,11 +311,11 @@ let ProfileHeaderLoaded = ({
       onPressConfirm: async () => {
         try {
           await queueUnblock()
-          Toast.show('Account unblocked')
+          Toast.show(_(msg`Account unblocked`))
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to unblock account', {error: e})
-            Toast.show(`There was an issue! ${e.toString()}`)
+            Toast.show(_(msg`There was an issue! ${e.toString()}`))
           }
         }
       },
@@ -449,7 +453,9 @@ let ProfileHeaderLoaded = ({
               style={[styles.btn, styles.mainBtn, pal.btn]}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Edit profile`)}
-              accessibilityHint="Opens editor for profile display name, avatar, background image, and description">
+              accessibilityHint={_(
+                msg`Opens editor for profile display name, avatar, background image, and description`,
+              )}>
               <Text type="button" style={pal.text}>
                 <Trans>Edit Profile</Trans>
               </Text>
@@ -464,7 +470,7 @@ let ProfileHeaderLoaded = ({
                 accessibilityLabel={_(msg`Unblock`)}
                 accessibilityHint="">
                 <Text type="button" style={[pal.text, s.bold]}>
-                  <Trans>Unblock</Trans>
+                  <Trans context="action">Unblock</Trans>
                 </Text>
               </TouchableOpacity>
             )
@@ -486,8 +492,12 @@ let ProfileHeaderLoaded = ({
                     },
                   ]}
                   accessibilityRole="button"
-                  accessibilityLabel={`Show follows similar to ${profile.handle}`}
-                  accessibilityHint={`Shows a list of users similar to this user.`}>
+                  accessibilityLabel={_(
+                    msg`Show follows similar to ${profile.handle}`,
+                  )}
+                  accessibilityHint={_(
+                    msg`Shows a list of users similar to this user.`,
+                  )}>
                   <FontAwesomeIcon
                     icon="user-plus"
                     style={[
@@ -509,8 +519,10 @@ let ProfileHeaderLoaded = ({
                   onPress={onPressUnfollow}
                   style={[styles.btn, styles.mainBtn, pal.btn]}
                   accessibilityRole="button"
-                  accessibilityLabel={`Unfollow ${profile.handle}`}
-                  accessibilityHint={`Hides posts from ${profile.handle} in your feed`}>
+                  accessibilityLabel={_(msg`Unfollow ${profile.handle}`)}
+                  accessibilityHint={_(
+                    msg`Hides posts from ${profile.handle} in your feed`,
+                  )}>
                   <FontAwesomeIcon
                     icon="check"
                     style={[pal.text, s.mr5]}
@@ -526,8 +538,10 @@ let ProfileHeaderLoaded = ({
                   onPress={onPressFollow}
                   style={[styles.btn, styles.mainBtn, palInverted.view]}
                   accessibilityRole="button"
-                  accessibilityLabel={`Follow ${profile.handle}`}
-                  accessibilityHint={`Shows posts from ${profile.handle} in your feed`}>
+                  accessibilityLabel={_(msg`Follow ${profile.handle}`)}
+                  accessibilityHint={_(
+                    msg`Shows posts from ${profile.handle} in your feed`,
+                  )}>
                   <FontAwesomeIcon
                     icon="plus"
                     style={[palInverted.text, s.mr5]}
@@ -578,7 +592,7 @@ let ProfileHeaderLoaded = ({
               invalidHandle ? styles.invalidHandle : undefined,
               styles.handle,
             ]}>
-            {invalidHandle ? '⚠Invalid Handle' : `@${profile.handle}`}
+            {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
           </ThemedText>
         </View>
         {!blockHide && (
@@ -598,7 +612,7 @@ let ProfileHeaderLoaded = ({
                   one: '# follower',
                   other: '# followers',
                 })}
-                accessibilityHint={'Opens followers list'}>
+                accessibilityHint={_(msg`Opens followers list`)}>
                 <Text type="md" style={[s.bold, pal.text]}>
                   {followers}{' '}
                 </Text>
@@ -616,14 +630,16 @@ let ProfileHeaderLoaded = ({
                   })
                 }
                 asAnchor
-                accessibilityLabel={`${following} following`}
-                accessibilityHint={'Opens following list'}>
-                <Text type="md" style={[s.bold, pal.text]}>
-                  {following}{' '}
-                </Text>
-                <Text type="md" style={[pal.textLight]}>
-                  <Trans>following</Trans>
-                </Text>
+                accessibilityLabel={_(msg`${following} following`)}
+                accessibilityHint={_(msg`Opens following list`)}>
+                <Trans>
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {following}{' '}
+                  </Text>
+                  <Text type="md" style={[pal.textLight]}>
+                    following
+                  </Text>
+                </Trans>
               </Link>
               <Text type="md" style={[s.bold, pal.text]}>
                 {formatCount(profile.postsCount || 0)}{' '}
@@ -687,7 +703,7 @@ let ProfileHeaderLoaded = ({
         testID="profileHeaderAviButton"
         onPress={onPressAvi}
         accessibilityRole="image"
-        accessibilityLabel={`View ${profile.handle}'s avatar`}
+        accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
         accessibilityHint="">
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>

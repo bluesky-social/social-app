@@ -67,7 +67,7 @@ let DrawerProfileCard = ({
     <TouchableOpacity
       testID="profileCardButton"
       accessibilityLabel={_(msg`Profile`)}
-      accessibilityHint="Navigates to your profile"
+      accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}>
       <UserAvatar
         size={80}
@@ -439,7 +439,9 @@ let NotificationsMenuItem = ({
       label={_(msg`Notifications`)}
       accessibilityLabel={_(msg`Notifications`)}
       accessibilityHint={
-        numUnreadNotifications === '' ? '' : `${numUnreadNotifications} unread`
+        numUnreadNotifications === ''
+          ? ''
+          : _(msg`${numUnreadNotifications} unread`)
       }
       count={numUnreadNotifications}
       bold={isActive}

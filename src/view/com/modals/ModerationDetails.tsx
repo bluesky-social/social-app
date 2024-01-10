@@ -10,6 +10,8 @@ import {isWeb} from 'platform/detection'
 import {listUriToHref} from 'lib/strings/url-helpers'
 import {Button} from '../util/forms/Button'
 import {useModalControls} from '#/state/modals'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 export const snapPoints = [300]
 
@@ -23,19 +25,21 @@ export function Component({
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   let name
   let description
   if (!moderation.cause) {
-    name = 'Content Warning'
-    description =
-      'Moderator has chosen to set a general warning on the content.'
+    name = _(msg`Content Warning`)
+    description = _(
+      msg`Moderator has chosen to set a general warning on the content.`,
+    )
   } else if (moderation.cause.type === 'blocking') {
     if (moderation.cause.source.type === 'list') {
       const list = moderation.cause.source.list
-      name = 'User Blocked by List'
+      name = _(msg`User Blocked by List`)
       description = (
-        <>
+        <Trans>
           This user is included in the{' '}
           <TextLink
             type="2xl"
@@ -44,25 +48,30 @@ export function Component({
             style={pal.link}
           />{' '}
           list which you have blocked.
-        </>
+        </Trans>
       )
     } else {
-      name = 'User Blocked'
-      description = 'You have blocked this user. You cannot view their content.'
+      name = _(msg`User Blocked`)
+      description = _(
+        msg`You have blocked this user. You cannot view their content.`,
+      )
     }
   } else if (moderation.cause.type === 'blocked-by') {
-    name = 'User Blocks You'
-    description = 'This user has blocked you. You cannot view their content.'
+    name = _(msg`User Blocks You`)
+    description = _(
+      msg`This user has blocked you. You cannot view their content.`,
+    )
   } else if (moderation.cause.type === 'block-other') {
-    name = 'Content Not Available'
-    description =
-      'This content is not available because one of the users involved has blocked the other.'
+    name = _(msg`Content Not Available`)
+    description = _(
+      msg`This content is not available because one of the users involved has blocked the other.`,
+    )
   } else if (moderation.cause.type === 'muted') {
     if (moderation.cause.source.type === 'list') {
       const list = moderation.cause.source.list
-      name = <>Account Muted by List</>
+      name = _(msg`Account Muted by List`)
       description = (
-        <>
+        <Trans>
           This user is included the{' '}
           <TextLink
             type="2xl"
@@ -71,11 +80,11 @@ export function Component({
             style={pal.link}
           />{' '}
           list which you have muted.
-        </>
+        </Trans>
       )
     } else {
-      name = 'Account Muted'
-      description = 'You have muted this user.'
+      name = _(msg`Account Muted`)
+      description = _(msg`You have muted this user.`)
     }
   } else {
     name = moderation.cause.labelDef.strings[context].en.name
