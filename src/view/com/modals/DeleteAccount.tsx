@@ -79,27 +79,29 @@ export function Component({}: {}) {
     <View style={[styles.container, pal.view]}>
       <View style={[styles.innerContainer, pal.view]}>
         <View style={[styles.titleContainer, pal.view]}>
-          <Text type="title-xl" style={[s.textCenter, pal.text]}>
-            <Trans>Delete Account</Trans>
-          </Text>
-          <View style={[pal.view, s.flexRow]}>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {' "'}
+          <Trans>
+            <Text type="title-xl" style={[s.textCenter, pal.text]}>
+              Delete Account{' '}
             </Text>
-            <Text
-              type="title-xl"
-              numberOfLines={1}
-              style={[
-                isMobile ? styles.titleMobile : styles.titleDesktop,
-                pal.text,
-                s.bold,
-              ]}>
-              {currentAccount?.handle}
-            </Text>
-            <Text type="title-xl" style={[pal.text, s.bold]}>
-              {'"'}
-            </Text>
-          </View>
+            <View style={[pal.view, s.flexRow]}>
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                {'"'}
+              </Text>
+              <Text
+                type="title-xl"
+                numberOfLines={1}
+                style={[
+                  isMobile ? styles.titleMobile : styles.titleDesktop,
+                  pal.text,
+                  s.bold,
+                ]}>
+                {currentAccount?.handle}
+              </Text>
+              <Text type="title-xl" style={[pal.text, s.bold]}>
+                {'"'}
+              </Text>
+            </View>
+          </Trans>
         </View>
         {!isEmailSent ? (
           <>
@@ -185,7 +187,7 @@ export function Component({}: {}) {
             </Text>
             <TextInput
               style={[styles.textInput, pal.borderDark, pal.text]}
-              placeholder="Password"
+              placeholder={_(msg`Password`)}
               placeholderTextColor={pal.textLight.color}
               keyboardAppearance={theme.colorScheme}
               secureTextEntry

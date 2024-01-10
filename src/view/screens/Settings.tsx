@@ -699,7 +699,7 @@ export function SettingsScreen({}: Props) {
         {__DEV__ ? (
           <ToggleButton
             type="default-light"
-            label="Experiment: Use AppView Proxy"
+            label={_(msg`Experiment: Use AppView Proxy`)}
             isSelected={debugHeaderEnabled}
             onPress={toggleDebugHeader}
           />

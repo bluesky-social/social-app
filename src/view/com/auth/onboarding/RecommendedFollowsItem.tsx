@@ -11,7 +11,8 @@ import {Text} from 'view/com/util/text/Text'
 import Animated, {FadeInRight} from 'react-native-reanimated'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {logger} from '#/logger'
@@ -70,6 +71,7 @@ export function ProfileCard({
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [addingMoreSuggestions, setAddingMoreSuggestions] =
     React.useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
@@ -133,7 +135,7 @@ export function ProfileCard({
           type={profile.viewer?.following ? 'default' : 'inverted'}
           labelStyle={styles.followButton}
           onPress={onToggleFollow}
-          label={profile.viewer?.following ? 'Unfollow' : 'Follow'}
+          label={profile.viewer?.following ? _(msg`Unfollow`) : _(msg`Follow`)}
         />
       </View>
       {profile.description ? (

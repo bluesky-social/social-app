@@ -1,3 +1,7 @@
+import {t} from '@lingui/macro'
+import * as persisted from '#/state/persisted'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+
 const NOW = 5
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -15,17 +19,17 @@ export function ago(date: number | string | Date): string {
   }
   const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
   if (diffSeconds < NOW) {
-    return `now`
+    return t`now`
   } else if (diffSeconds < MINUTE) {
-    return `${diffSeconds}s`
+    return t`${diffSeconds}s`
   } else if (diffSeconds < HOUR) {
-    return `${Math.floor(diffSeconds / MINUTE)}m`
+    return t`${Math.floor(diffSeconds / MINUTE)}m`
   } else if (diffSeconds < DAY) {
-    return `${Math.floor(diffSeconds / HOUR)}h`
+    return t`${Math.floor(diffSeconds / HOUR)}h`
   } else if (diffSeconds < MONTH) {
-    return `${Math.floor(diffSeconds / DAY)}d`
+    return t`${Math.floor(diffSeconds / DAY)}d`
   } else if (diffSeconds < YEAR) {
-    return `${Math.floor(diffSeconds / MONTH)}mo`
+    return t`${Math.floor(diffSeconds / MONTH)}mo`
   } else {
     return new Date(ts).toLocaleDateString()
   }
@@ -33,14 +37,20 @@ export function ago(date: number | string | Date): string {
 
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)
-  return `${d.toLocaleDateString('en-us', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })} at ${d.toLocaleTimeString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-  })}`
+  return t`${d.toLocaleDateString(
+    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
+    {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    },
+  )} at ${d.toLocaleTimeString(
+    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
+    {
+      hour: 'numeric',
+      minute: '2-digit',
+    },
+  )}`
 }
 
 export function getAge(birthDate: Date): number {

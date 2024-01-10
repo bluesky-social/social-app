@@ -64,7 +64,7 @@ export function Step1({
       <Option
         testID="otherServerBtn"
         isSelected={!isDefaultSelected}
-        label="Other"
+        label={_(msg`Other`)}
         onPress={onPressOther}>
         <View style={styles.otherForm}>
           <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>

@@ -50,7 +50,7 @@ export function InputIssueDetails({
         <TextInput
           accessibilityLabel={_(msg`Text input field`)}
           accessibilityHint="Enter a reason for reporting this post."
-          placeholder="Enter a reason or any other details here."
+          placeholder={_(msg`Enter a reason or any other details here.`)}
           placeholderTextColor={pal.textLight.color}
           value={details}
           onChangeText={setDetails}

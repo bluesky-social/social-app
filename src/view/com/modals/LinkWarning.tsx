@@ -84,7 +84,7 @@ export function Component({text, href}: {text: string; href: string}) {
             }}
             accessibilityLabel={_(msg`Cancel`)}
             accessibilityHint=""
-            label="Cancel"
+            label={_(msg`Cancel`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

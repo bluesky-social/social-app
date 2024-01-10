@@ -22,7 +22,11 @@ export function DesktopFeeds() {
 
   return (
     <View style={[styles.container, pal.view]}>
-      <FeedItem href="/" title="Following" current={route.name === 'Home'} />
+      <FeedItem
+        href="/"
+        title={_(msg`Following`)}
+        current={route.name === 'Home'}
+      />
       {feeds
         .filter(f => f.displayName !== 'Following')
         .map(feed => {
