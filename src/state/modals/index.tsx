@@ -187,6 +187,11 @@ export interface EmbedConsentModal {
   onAccept: () => void
 }
 
+export interface InAppBrowserConsentModal {
+  name: 'in-app-browser-consent'
+  href: string
+}
+
 export type Modal =
   // Account
   | AddAppPasswordModal
@@ -231,6 +236,7 @@ export type Modal =
   | ConfirmModal
   | LinkWarningModal
   | EmbedConsentModal
+  | InAppBrowserConsentModal
 
 const ModalContext = React.createContext<{
   isModalActive: boolean
