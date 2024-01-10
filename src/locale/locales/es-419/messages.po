@@ -2591,11 +2591,11 @@ msgstr "Te damos la bienvenida a <0>Bluesky</0>"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
-msgstr "¿Cuál es el problema con esta {collectionName}?"
+msgstr "¿Cuál es el problema con este contenido: {collectionName}?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
 msgid "What's up?"
-msgstr "¿Qué onda?"
+msgstr "¿Qué sucede?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
