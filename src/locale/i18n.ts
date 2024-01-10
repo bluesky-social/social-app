@@ -7,6 +7,7 @@ import {messages as messagesEn} from '#/locale/locales/en/messages'
 // import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesId} from '#/locale/locales/id/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
+import {messages as messagesEs-419} from '#/locale/locales/es-419/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
 import {messages as messagesHi} from '#/locale/locales/hi/messages'
 import {messages as messagesJa} from '#/locale/locales/ja/messages'
@@ -33,6 +34,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
+      break
+    }
+    case AppLanguage.es-419: {
+      i18n.loadAndActivate({locale, messages: messagesEs-419})
       break
     }
     case AppLanguage.fr: {
