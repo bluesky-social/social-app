@@ -10,6 +10,7 @@ import {Button, ButtonText} from '#/view/com/Button'
 import {Link} from '#/view/com/Link'
 import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
 import {InputText} from '#/view/com/forms/InputText'
+import {InputDate, utils} from '#/view/com/forms/InputDate'
 import {Logo} from '#/view/icons/Logo'
 
 function ThemeSelector() {
@@ -225,6 +226,21 @@ function Forms() {
         placeholder="Type here"
         icon={Logo}
         suffix={() => <Text>.bksy.social</Text>}
+      />
+
+      <InputDate
+        testID="date"
+        value={'2001-01-01'}
+        onChange={date => console.log(date)}
+        accessibilityLabel="Date"
+        accessibilityHint="Enter a date"
+      />
+      <InputDate
+        testID="date"
+        value={utils.toSimpleDateString(new Date())}
+        onChange={date => console.log(date)}
+        accessibilityLabel="Date"
+        accessibilityHint="Enter a date"
       />
     </View>
   )
