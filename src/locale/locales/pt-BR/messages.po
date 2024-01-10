@@ -15,11 +15,11 @@ msgstr ""
 
 #: src/view/screens/Profile.tsx:214
 #~ msgid "- end of feed -"
-#~ msgstr ""
+#~ msgstr "- fim do feed -"
 
 #: src/view/com/modals/SelfLabel.tsx:138
 #~ msgid ". This warning is only available for posts with media attached."
-#~ msgstr ""
+#~ msgstr ". Este aviso só aparece em posts com imagens."
 
 #: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
@@ -35,17 +35,17 @@ msgstr "Lista {0} {purposeLabel}"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr "{invitesAvailable, plural, one {Códigos de convite: # disponível} other {Códigos de convite: # disponíveis}}"
+msgstr "{invitesAvailable, plural, one {Convites: # disponível} other {Convites: # disponíveis}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:659
 msgid "{invitesAvailable} invite code available"
-msgstr "Código de convite {invitesAvailable} disponível"
+msgstr "{invitesAvailable} convite disponível"
 
 #: src/view/screens/Settings.tsx:409
 #: src/view/shell/Drawer.tsx:661
 msgid "{invitesAvailable} invite codes available"
-msgstr "Códigos de convite {invitesAvailable} disponíveis"
+msgstr "{invitesAvailable} convites disponíveis"
 
 #: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
@@ -57,23 +57,23 @@ msgstr "<0/> membros"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>Escolha seu</0><1>Recomendado</1><2>Feeds</2>"
+msgstr "<0>Escolha seu</0><2>Feed</2><1>Recomendado</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr "<0>Seguir alguns</0><1>Recomendado</1><2>Usuários</2>"
+msgstr "<0>Seguir alguns</0><2>Usuários</2><1>recomendados</1>"
 
 #: src/view/com/modals/AddAppPasswords.tsx:132
 #~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
-#~ msgstr ""
+#~ msgstr "<0>Aqui está sua senha de app.</0> Use-a para logar em outros aplicativos junto com seu usuário."
 
 #: src/view/screens/Moderation.tsx:212
 #~ msgid "<0>Note: This setting may not be respected by third-party apps that display Bluesky content.</0>"
-#~ msgstr ""
+#~ msgstr "<0>Nota: Esta configuração pode não ser respeitada por aplicativos de terceiros que acessam o conteúdo do Bluesky.</0>"
 
 #: src/view/screens/Moderation.tsx:212
 #~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
-#~ msgstr ""
+#~ msgstr "<0>Nota: Seu perfil e seus posts continuarão disponíveis publicamente. Aplciativos de terceiros que acessam o conteúdo do Bluesky podem não respeitar esta configuração.</0>"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -109,7 +109,7 @@ msgstr "Adicionar um aviso de conteúdo"
 
 #: src/view/screens/ProfileList.tsx:753
 msgid "Add a user to this list"
-msgstr "Adicionar um usuário a esta lista"
+msgstr "Adicionar um usuário nessa lista"
 
 #: src/view/screens/Settings.tsx:355
 #: src/view/screens/Settings.tsx:364
@@ -133,11 +133,11 @@ msgstr "Adicionar detalhes ao relatório"
 
 #: src/view/com/composer/Composer.tsx:447
 msgid "Add link card"
-msgstr "Adicionar cartão de link"
+msgstr "Adicionar prévia de link"
 
 #: src/view/com/composer/Composer.tsx:450
 msgid "Add link card:"
-msgstr "Adicionar cartão de link:"
+msgstr "Adicionar prévia de link:"
 
 #: src/view/com/modals/ChangeHandle.tsx:415
 msgid "Add the following DNS record to your domain:"
@@ -158,7 +158,7 @@ msgstr "Adicionado à lista"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:170
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "Ajuste o número de curtidas que uma resposta deve ser mostrada no seu feed."
+msgstr "Ajuste o número de curtidas para que uma resposta apareça no seu feed."
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -178,7 +178,7 @@ msgstr "Texto alternativo"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "O texto alternativo descreve imagens para usuários cegos e com baixa visão e ajuda a dar contexto a todos."
+msgstr "O texto alternativo descreve imagens para usuários cegos e com baixa visão, além de dar contexto a todos."
 
 #: src/view/com/modals/VerifyEmail.tsx:118
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
@@ -186,7 +186,7 @@ msgstr "Um email foi enviado para {0}. Ele inclui um código de confirmação qu
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "Um email foi enviado para seu endereço anterior, {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
+msgstr "Um email foi enviado para seu email anterior, {0}. Ele inclui um código de confirmação que você pode inserir abaixo."
 
 #: src/view/com/notifications/FeedItem.tsx:237
 #: src/view/com/threadgate/WhoCanReply.tsx:178
@@ -207,11 +207,11 @@ msgstr "Senhas de Aplicativos"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Appeal content warning"
-msgstr "Aviso de conteúdo de apelação"
+msgstr "Contestar aviso de conteúdo"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Content Warning"
-msgstr "Aviso de Conteúdo de Apelação"
+msgstr "Contestar aviso de conteúdo"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 #~ msgid "Appeal Decision"
