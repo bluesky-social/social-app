@@ -2029,7 +2029,7 @@ msgstr "Seleccionar Bluesky Social"
 
 #: src/view/com/auth/login/Login.tsx:117
 msgid "Select from an existing account"
-msgstr "Selecciona de una cuenta existente"
+msgstr "Selecciona una cuenta existente"
 
 #: src/view/com/auth/login/LoginForm.tsx:147
 msgid "Select service"
