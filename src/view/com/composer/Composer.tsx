@@ -73,7 +73,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
-  const {activeModals} = useModals()
+  const {isModalActive, activeModals} = useModals()
   const {openModal, closeModal} = useModalControls()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
@@ -175,11 +175,11 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
   useEffect(() => {
-    if (isWeb) {
+    if (isWeb && !isModalActive) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
-  }, [onEscape])
+  }, [onEscape, isModalActive])
 
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
