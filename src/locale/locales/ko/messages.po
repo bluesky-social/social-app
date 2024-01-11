@@ -497,7 +497,7 @@ msgstr "비즈니스"
 
 #: src/view/com/modals/ServerInput.tsx:115
 msgid "Button disabled. Input custom domain to proceed."
-msgstr "버튼이 비활성화되었습니다. 계속하려면 사용자 지정 도메인을 입력합니다"
+msgstr "버튼이 비활성화되었습니다. 계속하려면 사용자 지정 도메인을 입력하세요"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
@@ -896,7 +896,7 @@ msgstr "내가 만듦"
 
 #: src/view/com/composer/Composer.tsx:447
 msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "미리보기 이미지가 있는 카드를 만듭니다. 카드가 {url}로 연결됩니다"
+msgstr "미리보기 이미지가 있는 카드를 만듭니다. 카드가 {url}(으)로 연결됩니다"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
@@ -917,7 +917,7 @@ msgstr "어두움"
 
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
-msgstr "다크 모드"
+msgstr "어두운 모드"
 
 #: src/Navigation.tsx:204
 msgid "Debug"
@@ -1023,7 +1023,7 @@ msgstr "도메인 값"
 
 #: src/view/com/modals/ChangeHandle.tsx:489
 msgid "Domain verified!"
-msgstr "도메인을 확인했습니다!"
+msgstr "도메인을 확인했습니다."
 
 #: src/view/com/auth/create/Step2.tsx:83
 msgid "Don't have an invite code?"
@@ -1421,7 +1421,7 @@ msgstr "팔로우"
 
 #: src/view/com/profile/ProfileHeader.tsx:543
 msgid "Follow {0}"
-msgstr "{0} 님을 팔로우하기"
+msgstr "{0} 님을 팔로우"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -2211,11 +2211,11 @@ msgstr "DNS 패널 없음"
 
 #: src/view/com/profile/ProfileHeader.tsx:217
 msgid "No longer following {0}"
-msgstr "더 이상 {0}(을)를 팔로우하지 않음"
+msgstr "더 이상 {0} 님을 팔로우하지 않음"
 
 #: src/view/com/notifications/Feed.tsx:107
 msgid "No notifications yet!"
-msgstr "아직 알림이 없습니다!"
+msgstr "아직 알림이 없습니다."
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:191
@@ -2620,7 +2620,7 @@ msgstr "주 언어"
 
 #: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
-msgstr "내 팔로우 우선시키기"
+msgstr "내 팔로우 먼저 표시"
 
 #: src/view/screens/Settings.tsx:585
 #: src/view/shell/desktop/RightNav.tsx:84
@@ -3737,7 +3737,7 @@ msgstr "언팔로우"
 
 #: src/view/com/profile/ProfileHeader.tsx:524
 msgid "Unfollow {0}"
-msgstr "{0} 님을 언팔로우하기"
+msgstr "{0} 님을 언팔로우"
 
 #: src/view/com/auth/create/state.ts:216
 msgid "Unfortunately, you do not meet the requirements to create an account."
@@ -3782,7 +3782,7 @@ msgstr "업데이트 사용 가능"
 
 #: src/view/com/modals/ChangeHandle.tsx:509
 msgid "Update to {handle}"
-msgstr "{handle}로 변경"
+msgstr "{handle}(으)로 변경"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:174
 msgid "Updating..."
@@ -3947,7 +3947,7 @@ msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다
 
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
-msgstr "죄송합니다! 페이지를 찾을 수 없습니다."
+msgstr "죄송합니다. 페이지를 찾을 수 없습니다."
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
 msgid "Welcome to <0>Bluesky</0>"
