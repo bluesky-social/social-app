@@ -5,36 +5,24 @@ import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
 import {useTheme, atoms as a} from '#/alf'
 import {Portal} from '#/view/com/Portal'
 
-import {DialogProps, DialogControl} from '#/view/com/Dialog/types'
+import {
+  DialogOuterProps,
+  DialogControlProps,
+  DialogInnerProps,
+} from '#/view/com/Dialog/types'
+import {Context} from '#/view/com/Dialog/context'
 
-const Context = React.createContext<{
-  close: () => void
-}>({
-  close: () => {},
-})
-
-export function useDialogControl() {
-  const control = React.useRef<DialogControl>({
-    open: () => {},
-    close: () => {},
-  })
-
-  return control
-}
-
-export function useDialog() {
-  return React.useContext(Context)
-}
+export {useDialogControl} from '#/view/com/Dialog/context'
 
 export function Outer({
   control,
   onClose,
   children,
-}: React.PropsWithChildren<DialogProps>) {
+}: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
 
-  const open = React.useCallback<DialogControl['open']>((i = 0) => {
+  const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
     sheet.current?.snapToIndex(i)
   }, [])
 
@@ -51,6 +39,8 @@ export function Outer({
     }),
     [open, close],
   )
+
+  const context = React.useMemo(() => ({close}), [close])
 
   return (
     <Portal>
@@ -73,13 +63,13 @@ export function Outer({
         handleStyle={{display: 'none'}}
         onChange={() => {}}
         onClose={onClose}>
-        {children}
+        <Context.Provider value={context}>{children}</Context.Provider>
       </BottomSheet>
     </Portal>
   )
 }
 
-export function Inner(props: React.PropsWithChildren<{}>) {
+export function Inner(props: DialogInnerProps) {
   const t = useTheme()
   return (
     <View

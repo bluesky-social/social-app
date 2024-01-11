@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {View, TouchableWithoutFeedback, ViewStyle} from 'react-native'
+import {View, TouchableWithoutFeedback} from 'react-native'
 import {FocusScope} from '@tamagui/focus-scope'
 import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
 
@@ -8,34 +8,18 @@ import {Text} from '#/view/com/Typography'
 import {Portal} from '#/view/com/Portal'
 import {Button} from '#/view/com/Button'
 
-import {DialogProps, DialogControl} from '#/view/com/Dialog/types'
+import {DialogOuterProps, DialogInnerProps} from '#/view/com/Dialog/types'
+import {Context, useDialogContext} from '#/view/com/Dialog/context'
+
+export {useDialogControl} from '#/view/com/Dialog/context'
 
 const stopPropagation = (e: any) => e.stopPropagation()
-
-const Context = React.createContext<{
-  close: () => void
-}>({
-  close: () => {},
-})
-
-export function useDialogControl() {
-  const control = React.useRef<DialogControl>({
-    open: () => {},
-    close: () => {},
-  })
-
-  return control
-}
-
-export function useDialog() {
-  return React.useContext(Context)
-}
 
 export function Outer({
   control,
   onClose,
   children,
-}: React.PropsWithChildren<DialogProps>) {
+}: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
@@ -127,10 +111,7 @@ export function Outer({
   )
 }
 
-export function Inner({
-  children,
-  style,
-}: React.PropsWithChildren<{style?: ViewStyle}>) {
+export function Inner({children, style}: DialogInnerProps) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   return (
@@ -164,7 +145,7 @@ export function Handle() {
 
 export function Close() {
   const t = useTheme()
-  const {close} = useDialog()
+  const {close} = useDialogContext()
   return (
     <View
       style={[

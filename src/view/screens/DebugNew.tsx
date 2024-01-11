@@ -332,7 +332,7 @@ function Dialogs() {
       </Button>
 
       <Dialog.Outer control={control}>
-        <Dialog.Inner>
+        <Dialog.Inner style={{width: 'auto'}}>
           <Dialog.Handle />
           <View style={[a.gap_md]}>
             <Button
