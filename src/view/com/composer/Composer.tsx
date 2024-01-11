@@ -62,6 +62,8 @@ import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import lande from 'lande'
+import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -180,6 +182,31 @@ export const ComposePost = observer(function ComposePost({
       return () => window.removeEventListener('keydown', onEscape)
     }
   }, [onEscape])
+
+  const [suggestedLanguage, setSuggestedLanguage] = useState<string>()
+  useEffect(() => {
+    const text = richtext.text.trim()
+
+    // Don't run the language model on small posts, the results are likely
+    // to be inaccurate anyway.
+    if (text.length < 10) {
+      setSuggestedLanguage(undefined)
+      return
+    }
+
+    const idle = requestIdleCallback(() => {
+      // Only select languages that are
+      const result = lande(text).filter(
+        ([lang, value]) => value >= 0.85 && code3ToCode2Strict(lang),
+      )
+
+      setSuggestedLanguage(
+        result.length > 0 ? code3ToCode2Strict(result[0][0]) : undefined,
+      )
+    })
+
+    return () => cancelIdleCallback(idle)
+  }, [richtext])
 
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
@@ -454,6 +481,39 @@ export const ComposePost = observer(function ComposePost({
               ))}
           </View>
         ) : null}
+        {suggestedLanguage &&
+        !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage) ? (
+          <View style={[pal.borderDark, styles.infoBar]}>
+            <Text style={[pal.text, s.flex1]}>
+              <Trans>
+                You seem to be writing in{' '}
+                <Text type="sm-bold" style={pal.text}>
+                  {codeToLanguageName(suggestedLanguage)}
+                </Text>
+                , but your post language is currently set to{' '}
+                <Text type="sm-bold" style={pal.text}>
+                  {toPostLanguages(langPrefs.postLanguage)
+                    .map(lang => codeToLanguageName(lang))
+                    .join(', ')}
+                </Text>
+              </Trans>
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
+              accessibilityRole="button"
+              accessibilityLabel={_(
+                msg`Switch to ${codeToLanguageName(suggestedLanguage)}`,
+              )}
+              accessibilityHint={_(
+                msg`Switch to ${codeToLanguageName(suggestedLanguage)}`,
+              )}>
+              <Text style={pal.link}>
+                <Trans>Switch</Trans>
+              </Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>
@@ -564,5 +624,16 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     alignItems: 'center',
     borderTopWidth: 1,
+  },
+
+  infoBar: {
+    flexDirection: 'row',
+    gap: 16,
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginHorizontal: 10,
+    marginBottom: 10,
   },
 })

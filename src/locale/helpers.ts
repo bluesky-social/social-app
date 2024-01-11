@@ -22,6 +22,14 @@ export function code3ToCode2(lang: string): string {
   return lang
 }
 
+export function code3ToCode2Strict(lang: string): string | undefined {
+  if (lang.length === 3) {
+    return LANGUAGES_MAP_CODE3[lang]?.code2
+  }
+
+  return undefined
+}
+
 export function codeToLanguageName(lang: string): string {
   const lang2 = code3ToCode2(lang)
   return LANGUAGES_MAP_CODE2[lang2]?.name || lang
