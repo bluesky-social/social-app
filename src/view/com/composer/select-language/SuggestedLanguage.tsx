@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import lande from 'lande'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {Text} from '../../util/text/Text'
+import {Button} from '../../util/forms/Button'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {
   toPostLanguages,
@@ -12,6 +13,10 @@ import {
 } from '#/state/preferences/languages'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {s} from '#/lib/styles'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 
 export function SuggestedLanguage({text}: {text: string}) {
   const [suggestedLanguage, setSuggestedLanguage] = useState<string>()
@@ -46,35 +51,33 @@ export function SuggestedLanguage({text}: {text: string}) {
 
   return suggestedLanguage &&
     !toPostLanguages(langPrefs.postLanguage).includes(suggestedLanguage) ? (
-    <View style={[pal.borderDark, styles.infoBar]}>
+    <View style={[pal.border, styles.infoBar]}>
+      <FontAwesomeIcon
+        icon="language"
+        style={pal.text as FontAwesomeIconStyle}
+        size={24}
+      />
       <Text style={[pal.text, s.flex1]}>
         <Trans>
-          You seem to be writing in{' '}
+          Are you writing in{' '}
           <Text type="sm-bold" style={pal.text}>
             {codeToLanguageName(suggestedLanguage)}
           </Text>
-          , but your post language is currently set to{' '}
-          <Text type="sm-bold" style={pal.text}>
-            {toPostLanguages(langPrefs.postLanguage)
-              .map(lang => codeToLanguageName(lang))
-              .join(', ')}
-          </Text>
+          ?
         </Trans>
       </Text>
 
-      <TouchableOpacity
+      <Button
+        type="default"
         onPress={() => setLangPrefs.setPostLanguage(suggestedLanguage)}
-        accessibilityRole="button"
         accessibilityLabel={_(
-          msg`Switch to ${codeToLanguageName(suggestedLanguage)}`,
+          msg`Change post language to ${codeToLanguageName(suggestedLanguage)}`,
         )}
-        accessibilityHint={_(
-          msg`Switch to ${codeToLanguageName(suggestedLanguage)}`,
-        )}>
-        <Text style={pal.link}>
-          <Trans>Switch</Trans>
+        accessibilityHint="">
+        <Text type="button" style={[pal.link, s.fw600]}>
+          <Trans>Yes</Trans>
         </Text>
-      </TouchableOpacity>
+      </Button>
     </View>
   ) : null
 }
@@ -82,7 +85,8 @@ export function SuggestedLanguage({text}: {text: string}) {
 const styles = StyleSheet.create({
   infoBar: {
     flexDirection: 'row',
-    gap: 16,
+    alignItems: 'center',
+    gap: 10,
     borderWidth: 1,
     borderRadius: 6,
     paddingHorizontal: 16,
