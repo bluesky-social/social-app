@@ -14,7 +14,7 @@ import * as Toast from 'view/com/util/Toast'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   usePinFeedMutation,
@@ -108,9 +108,9 @@ export function FeedSourceCardLoaded({
           try {
             await removeFeed({uri: feed.uri})
             // await item.unsave()
-            Toast.show('Removed from my feeds')
+            Toast.show(_(msg`Removed from my feeds`))
           } catch (e) {
-            Toast.show('There was an issue contacting your server')
+            Toast.show(_(msg`There was an issue contacting your server`))
             logger.error('Failed to unsave feed', {error: e})
           }
         },
@@ -122,9 +122,9 @@ export function FeedSourceCardLoaded({
         } else {
           await saveFeed({uri: feed.uri})
         }
-        Toast.show('Added to my feeds')
+        Toast.show(_(msg`Added to my feeds`))
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
+        Toast.show(_(msg`There was an issue contacting your server`))
         logger.error('Failed to save feed', {error: e})
       }
     }
@@ -164,7 +164,7 @@ export function FeedSourceCardLoaded({
             testID={`feed-${feedUri}-toggleSave`}
             disabled={isRemovePending}
             accessibilityRole="button"
-            accessibilityLabel={'Remove from my feeds'}
+            accessibilityLabel={_(msg`Remove from my feeds`)}
             accessibilityHint=""
             onPress={() => {
               openModal({
@@ -175,9 +175,11 @@ export function FeedSourceCardLoaded({
                   try {
                     await removeFeed({uri: feedUri})
                     // await item.unsave()
-                    Toast.show('Removed from my feeds')
+                    Toast.show(_(msg`Removed from my feeds`))
                   } catch (e) {
-                    Toast.show('There was an issue contacting your server')
+                    Toast.show(
+                      _(msg`There was an issue contacting your server`),
+                    )
                     logger.error('Failed to unsave feed', {error: e})
                   }
                 },
@@ -223,19 +225,22 @@ export function FeedSourceCardLoaded({
             {feed.displayName}
           </Text>
           <Text style={[pal.textLight]} numberOfLines={3}>
-            {feed.type === 'feed' ? 'Feed' : 'List'} by{' '}
-            {sanitizeHandle(feed.creatorHandle, '@')}
+            {feed.type === 'feed' ? (
+              <Trans>Feed by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
+            ) : (
+              <Trans>List by {sanitizeHandle(feed.creatorHandle, '@')}</Trans>
+            )}
           </Text>
         </View>
 
         {showSaveBtn && feed.type === 'feed' && (
-          <View>
+          <View style={[s.justifyCenter]}>
             <Pressable
               testID={`feed-${feed.displayName}-toggleSave`}
               disabled={isSavePending || isPinPending || isRemovePending}
               accessibilityRole="button"
               accessibilityLabel={
-                isSaved ? 'Remove from my feeds' : 'Add to my feeds'
+                isSaved ? _(msg`Remove from my feeds`) : _(msg`Add to my feeds`)
               }
               accessibilityHint=""
               onPress={onToggleSaved}
@@ -269,8 +274,10 @@ export function FeedSourceCardLoaded({
 
       {showLikes && feed.type === 'feed' ? (
         <Text type="sm-medium" style={[pal.text, pal.textLight]}>
-          Liked by {feed.likeCount || 0}{' '}
-          {pluralize(feed.likeCount || 0, 'user')}
+          <Trans>
+            Liked by {feed.likeCount || 0}{' '}
+            {pluralize(feed.likeCount || 0, 'user')}
+          </Trans>
         </Text>
       ) : null}
     </Pressable>

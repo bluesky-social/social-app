@@ -4,10 +4,10 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  moderatePost,
   PostModeration,
   RichText as RichTextAPI,
 } from '@atproto/api'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link, TextLink} from '../util/Link'
 import {UserInfoText} from '../util/UserInfoText'
@@ -27,6 +27,8 @@ import {countLines} from 'lib/strings/helpers'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function Post({
   post,
@@ -95,6 +97,7 @@ function PostInner({
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
@@ -118,6 +121,7 @@ function PostInner({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
     })
   }, [openComposer, post, record])
@@ -158,13 +162,15 @@ function PostInner({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reply to{' '}
-                <UserInfoText
-                  type="sm"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight]}
-                />
+                <Trans context="description">
+                  Reply to{' '}
+                  <UserInfoText
+                    type="sm"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight]}
+                  />
+                </Trans>
               </Text>
             </View>
           )}
@@ -187,7 +193,7 @@ function PostInner({
             ) : undefined}
             {limitLines ? (
               <TextLink
-                text="Show More"
+                text={_(msg`Show More`)}
                 style={pal.link}
                 onPress={onPressShowMore}
                 href="#"
@@ -207,7 +213,12 @@ function PostInner({
               </ContentHider>
             ) : null}
           </ContentHider>
-          <PostCtrls post={post} record={record} onPressReply={onPressReply} />
+          <PostCtrls
+            post={post}
+            record={record}
+            richText={richText}
+            onPressReply={onPressReply}
+          />
         </View>
       </View>
     </Link>
@@ -221,6 +232,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     paddingLeft: 10,
     borderTopWidth: 1,
+    // @ts-ignore web only -prf
     cursor: 'pointer',
   },
   layout: {

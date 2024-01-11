@@ -2,12 +2,12 @@ import {
   AppBskyNotificationListNotifications,
   ModerationOpts,
   moderateProfile,
-  moderatePost,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
 } from '@atproto/api'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import chunk from 'lodash.chunk'
 import {QueryClient} from '@tanstack/react-query'
 import {getAgent} from '../../session'
@@ -156,7 +156,7 @@ async function fetchSubjects(
 ): Promise<Map<string, AppBskyFeedDefs.PostView>> {
   const uris = new Set<string>()
   for (const notif of groupedNotifs) {
-    if (notif.subjectUri) {
+    if (notif.subjectUri && !notif.subjectUri.includes('feed.generator')) {
       uris.add(notif.subjectUri)
     }
   }
@@ -216,6 +216,8 @@ function getSubjectUri(
         ? notif.record.subject?.uri
         : undefined
     }
+  } else if (type === 'feedgen-like') {
+    return notif.reasonSubject
   }
 }
 

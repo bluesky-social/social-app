@@ -10,11 +10,12 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useProfileListsQuery, RQKEY} from '#/state/queries/profile-lists'
 import {logger} from '#/logger'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {cleanError} from '#/lib/strings/errors'
 import {useTheme} from '#/lib/ThemeContext'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {isNative} from '#/platform/detection'
+import {useLingui} from '@lingui/react'
 
 const LOADING = {_reactKey: '__loading__'}
 const EMPTY = {_reactKey: '__empty__'}
@@ -42,6 +43,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
     const pal = usePalette('default')
     const theme = useTheme()
     const {track} = useAnalytics()
+    const {_} = useLingui()
     const [isPTRing, setIsPTRing] = React.useState(false)
     const opts = React.useMemo(() => ({enabled}), [enabled])
     const {
@@ -149,7 +151,9 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
         } else if (item === LOAD_MORE_ERROR_ITEM) {
           return (
             <LoadMoreRetryBtn
-              label="There was an issue fetching your lists. Tap here to try again."
+              label={_(
+                msg`There was an issue fetching your lists. Tap here to try again.`,
+              )}
               onPress={onPressRetryLoadMore}
             />
           )
@@ -164,7 +168,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           />
         )
       },
-      [error, refetch, onPressRetryLoadMore, pal],
+      [error, refetch, onPressRetryLoadMore, pal, _],
     )
 
     return (

@@ -75,10 +75,16 @@ export function PreferencesThreads({navigation}: Props) {
                 <RadioGroup
                   type="default-light"
                   items={[
-                    {key: 'oldest', label: 'Oldest replies first'},
-                    {key: 'newest', label: 'Newest replies first'},
-                    {key: 'most-likes', label: 'Most-liked replies first'},
-                    {key: 'random', label: 'Random (aka "Poster\'s Roulette")'},
+                    {key: 'oldest', label: _(msg`Oldest replies first`)},
+                    {key: 'newest', label: _(msg`Newest replies first`)},
+                    {
+                      key: 'most-likes',
+                      label: _(msg`Most-liked replies first`),
+                    },
+                    {
+                      key: 'random',
+                      label: _(msg`Random (aka "Poster's Roulette")`),
+                    },
                   ]}
                   onSelect={key => setThreadViewPrefs({sort: key})}
                   initialSelection={preferences?.threadViewPrefs?.sort}
@@ -97,7 +103,7 @@ export function PreferencesThreads({navigation}: Props) {
               </Text>
               <ToggleButton
                 type="default-light"
-                label={prioritizeFollowedUsers ? 'Yes' : 'No'}
+                label={prioritizeFollowedUsers ? _(msg`Yes`) : _(msg`No`)}
                 isSelected={prioritizeFollowedUsers}
                 onPress={() =>
                   setThreadViewPrefs({
@@ -120,7 +126,7 @@ export function PreferencesThreads({navigation}: Props) {
               </Text>
               <ToggleButton
                 type="default-light"
-                label={treeViewEnabled ? 'Yes' : 'No'}
+                label={treeViewEnabled ? _(msg`Yes`) : _(msg`No`)}
                 isSelected={treeViewEnabled}
                 onPress={() =>
                   setThreadViewPrefs({
@@ -153,7 +159,7 @@ export function PreferencesThreads({navigation}: Props) {
           accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Done</Trans>
+            <Trans context="action">Done</Trans>
           </Text>
         </TouchableOpacity>
       </View>

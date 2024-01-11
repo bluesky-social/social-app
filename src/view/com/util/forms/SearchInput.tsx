@@ -11,6 +11,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {HITSLOP_10} from 'lib/constants'
 import {MagnifyingGlassIcon} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -49,7 +50,7 @@ export function SearchInput({
       <TextInput
         testID="searchTextInput"
         ref={textInput}
-        placeholder="Search"
+        placeholder={_(msg`Search`)}
         placeholderTextColor={pal.colors.textLight}
         selectTextOnFocus
         returnKeyType="search"
@@ -71,7 +72,8 @@ export function SearchInput({
           onPress={onPressCancelSearchInner}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Clear search query`)}
-          accessibilityHint="">
+          accessibilityHint=""
+          hitSlop={HITSLOP_10}>
           <FontAwesomeIcon
             icon="xmark"
             size={16}

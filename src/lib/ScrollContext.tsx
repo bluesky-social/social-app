@@ -1,28 +1,17 @@
 import React, {createContext, useContext, useMemo} from 'react'
-import {ScrollHandler} from 'react-native-reanimated'
-import {NativeScrollEvent} from 'react-native'
+import {ScrollHandlers} from 'react-native-reanimated'
 
-type ScrollHandlers = {
-  onBeginDrag: undefined | ScrollHandler
-  onEndDrag: undefined | ScrollHandler<any>
-  onScroll: undefined | ScrollHandler<any>
-  onScrollEndWeb:
-    | undefined
-    | ((e: Pick<NativeScrollEvent, 'contentOffset'>) => void) // Web-only.
-}
-
-const ScrollContext = createContext<ScrollHandlers>({
+const ScrollContext = createContext<ScrollHandlers<any>>({
   onBeginDrag: undefined,
   onEndDrag: undefined,
   onScroll: undefined,
-  onScrollEndWeb: undefined,
 })
 
-export function useScrollHandlers(): ScrollHandlers {
+export function useScrollHandlers(): ScrollHandlers<any> {
   return useContext(ScrollContext)
 }
 
-type ProviderProps = {children: React.ReactNode} & Partial<ScrollHandlers>
+type ProviderProps = {children: React.ReactNode} & ScrollHandlers<any>
 
 // Note: this completely *overrides* the parent handlers.
 // It's up to you to compose them with the parent ones via useScrollHandlers() if needed.
@@ -31,16 +20,14 @@ export function ScrollProvider({
   onBeginDrag,
   onEndDrag,
   onScroll,
-  onScrollEndWeb,
 }: ProviderProps) {
   const handlers = useMemo(
     () => ({
       onBeginDrag,
       onEndDrag,
       onScroll,
-      onScrollEndWeb,
     }),
-    [onBeginDrag, onEndDrag, onScroll, onScrollEndWeb],
+    [onBeginDrag, onEndDrag, onScroll],
   )
   return (
     <ScrollContext.Provider value={handlers}>{children}</ScrollContext.Provider>

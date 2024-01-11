@@ -49,7 +49,7 @@ function ShellInner() {
           onPress={() => setDrawerOpen(false)}
           style={styles.drawerMask}
           accessibilityLabel={t`Close navigation footer`}
-          accessibilityHint="Closes bottom navigation bar">
+          accessibilityHint={t`Closes bottom navigation bar`}>
           <View style={styles.drawerContainer}>
             <DrawerContent />
           </View>

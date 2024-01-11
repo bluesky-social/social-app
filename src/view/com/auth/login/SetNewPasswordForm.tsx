@@ -95,7 +95,7 @@ export const SetNewPasswordForm = ({
             <TextInput
               testID="resetCodeInput"
               style={[pal.text, styles.textInput]}
-              placeholder="Reset code"
+              placeholder={_(msg`Reset code`)}
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoCorrect={false}
@@ -106,7 +106,9 @@ export const SetNewPasswordForm = ({
               editable={!isProcessing}
               accessible={true}
               accessibilityLabel={_(msg`Reset code`)}
-              accessibilityHint="Input code sent to your email for password reset"
+              accessibilityHint={_(
+                msg`Input code sent to your email for password reset`,
+              )}
             />
           </View>
           <View style={[pal.borderDark, styles.groupContent]}>
@@ -117,7 +119,7 @@ export const SetNewPasswordForm = ({
             <TextInput
               testID="newPasswordInput"
               style={[pal.text, styles.textInput]}
-              placeholder="New password"
+              placeholder={_(msg`New password`)}
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoCorrect={false}
@@ -128,7 +130,7 @@ export const SetNewPasswordForm = ({
               editable={!isProcessing}
               accessible={true}
               accessibilityLabel={_(msg`Password`)}
-              accessibilityHint="Input new password"
+              accessibilityHint={_(msg`Input new password`)}
             />
           </View>
         </View>
@@ -161,7 +163,7 @@ export const SetNewPasswordForm = ({
               onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Go to next`)}
-              accessibilityHint="Navigates to the next screen">
+              accessibilityHint={_(msg`Navigates to the next screen`)}>
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 <Trans>Next</Trans>
               </Text>

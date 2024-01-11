@@ -27,8 +27,10 @@ function RepliesThresholdInput({
   initialValue: number
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
+  const preValue = React.useRef(initialValue)
   const save = React.useMemo(
     () =>
       debounce(
@@ -46,7 +48,12 @@ function RepliesThresholdInput({
       <Slider
         value={value}
         onValueChange={(v: number | number[]) => {
-          const threshold = Math.floor(Array.isArray(v) ? v[0] : v)
+          let threshold = Array.isArray(v) ? v[0] : v
+          if (threshold > preValue.current) threshold = Math.floor(threshold)
+          else threshold = Math.ceil(threshold)
+
+          preValue.current = threshold
+
           setValue(threshold)
           save(threshold)
         }}
@@ -58,10 +65,12 @@ function RepliesThresholdInput({
       />
       <Text type="xs" style={pal.text}>
         {value === 0
-          ? `Show all replies`
-          : `Show replies with at least ${value} ${
-              value > 1 ? `likes` : `like`
-            }`}
+          ? _(msg`Show all replies`)
+          : _(
+              msg`Show replies with at least ${value} ${
+                value > 1 ? `likes` : `like`
+              }`,
+            )}
       </Text>
     </View>
   )
@@ -117,7 +126,7 @@ export function PreferencesHomeFeed({navigation}: Props) {
             <ToggleButton
               testID="toggleRepliesBtn"
               type="default-light"
-              label={showReplies ? 'Yes' : 'No'}
+              label={showReplies ? _(msg`Yes`) : _(msg`No`)}
               isSelected={showReplies}
               onPress={() =>
                 setFeedViewPref({

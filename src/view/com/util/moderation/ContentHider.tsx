@@ -63,7 +63,9 @@ export function ContentHider({
           }
         }}
         accessibilityRole="button"
-        accessibilityHint={override ? 'Hide the content' : 'Show the content'}
+        accessibilityHint={
+          override ? _(msg`Hide the content`) : _(msg`Show the content`)
+        }
         accessibilityLabel=""
         style={[
           styles.cover,

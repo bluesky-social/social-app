@@ -97,6 +97,7 @@ export function FeedsScreen(_props: Props) {
     data: preferences,
     isLoading: isPreferencesLoading,
     error: preferencesError,
+    refetch: refetchPreferences,
   } = usePreferencesQuery()
   const {
     data: popularFeeds,
@@ -151,9 +152,12 @@ export function FeedsScreen(_props: Props) {
   }, [query, debouncedSearch])
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
-    await refetchPopularFeeds()
+    await Promise.all([
+      refetchPreferences().catch(_e => undefined),
+      refetchPopularFeeds().catch(_e => undefined),
+    ])
     setIsPTR(false)
-  }, [setIsPTR, refetchPopularFeeds])
+  }, [setIsPTR, refetchPreferences, refetchPopularFeeds])
   const onEndReached = React.useCallback(() => {
     if (
       isPopularFeedsFetching ||
@@ -328,7 +332,7 @@ export function FeedsScreen(_props: Props) {
         hitSlop={10}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Edit Saved Feeds`)}
-        accessibilityHint="Opens screen to edit Saved Feeds">
+        accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
         <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
       </Link>
     )
@@ -494,6 +498,8 @@ export function FeedsScreen(_props: Props) {
         // @ts-ignore our .web version only -prf
         desktopFixedHeight
         scrollIndicatorInsets={{right: 1}}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
       />
 
       {hasSession && (

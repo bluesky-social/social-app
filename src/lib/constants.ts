@@ -41,7 +41,7 @@ export function IS_LOCAL_DEV(url: string) {
 }
 
 export function IS_STAGING(url: string) {
-  return !IS_LOCAL_DEV(url) && !IS_PROD(url)
+  return url.startsWith('https://staging.bsky.dev')
 }
 
 export function IS_PROD(url: string) {
@@ -51,7 +51,8 @@ export function IS_PROD(url: string) {
   // -prf
   return (
     url.startsWith('https://bsky.social') ||
-    url.startsWith('https://api.bsky.app')
+    url.startsWith('https://api.bsky.app') ||
+    /bsky\.network\/?$/.test(url)
   )
 }
 
@@ -116,8 +117,8 @@ export async function DEFAULT_FEEDS(
   } else {
     // production
     return {
-      pinned: [],
-      saved: [],
+      pinned: [PROD_DEFAULT_FEED('whats-hot')],
+      saved: [PROD_DEFAULT_FEED('whats-hot')],
     }
   }
 }

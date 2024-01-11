@@ -240,7 +240,11 @@ function PostThreadLoaded({
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
       if (item === TOP_COMPONENT) {
-        return isTablet ? <ViewHeader title={_(msg`Post`)} /> : null
+        return isTablet ? (
+          <ViewHeader
+            title={_(msg({message: `Post`, context: 'description'}))}
+          />
+        ) : null
       } else if (item === PARENT_SPINNER) {
         return (
           <View style={styles.parentSpinner}>
@@ -411,7 +415,7 @@ function PostThreadBlocked() {
               style={[pal.link as FontAwesomeIconStyle, s.mr5]}
               size={14}
             />
-            Back
+            <Trans context="action">Back</Trans>
           </Text>
         </TouchableOpacity>
       </View>

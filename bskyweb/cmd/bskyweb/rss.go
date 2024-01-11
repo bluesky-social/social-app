@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
@@ -39,11 +40,33 @@ type rss struct {
 
 func (srv *Server) WebProfileRSS(c echo.Context) error {
 	ctx := c.Request().Context()
+	req := c.Request()
 
-	didParam := c.Param("did")
-	did, err := syntax.ParseDID(didParam)
+	identParam := c.Param("ident")
+
+	// if not a DID, try parsing as a handle and doing a redirect
+	if !strings.HasPrefix(identParam, "did:") {
+		handle, err := syntax.ParseHandle(identParam)
+		if err != nil {
+			return echo.NewHTTPError(400, fmt.Sprintf("not a valid handle: %s", identParam))
+		}
+
+		// check that public view is Ok, and resolve DID
+		pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle.String())
+		if err != nil {
+			return echo.NewHTTPError(404, fmt.Sprintf("account not found: %s", handle))
+		}
+		for _, label := range pv.Labels {
+			if label.Src == pv.Did && label.Val == "!no-unauthenticated" {
+				return echo.NewHTTPError(403, fmt.Sprintf("account does not allow public views: %s", handle))
+			}
+		}
+		return c.Redirect(http.StatusFound, fmt.Sprintf("/profile/%s/rss", pv.Did))
+	}
+
+	did, err := syntax.ParseDID(identParam)
 	if err != nil {
-		return echo.NewHTTPError(400, fmt.Sprintf("not a valid DID: %s", didParam))
+		return echo.NewHTTPError(400, fmt.Sprintf("not a valid DID: %s", identParam))
 	}
 
 	// check that public view is Ok
@@ -84,7 +107,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 			pubDate = createdAt.Time().Format(time.RFC822Z)
 		}
 		posts = append(posts, Item{
-			Link:        fmt.Sprintf("https://bsky.app/profile/%s/post/%s", pv.Handle, aturi.RecordKey().String()),
+			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
 			Description: rec.Text,
 			PubDate:     pubDate,
 			GUID: ItemGUID{
@@ -105,7 +128,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 	feed := &rss{
 		Version:     "2.0",
 		Description: desc,
-		Link:        fmt.Sprintf("https://bsky.app/profile/%s", pv.Handle),
+		Link:        fmt.Sprintf("https://%s/profile/%s", req.Host, pv.Handle),
 		Title:       title,
 		Item:        posts,
 	}

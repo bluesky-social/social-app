@@ -18,11 +18,14 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {loadString, saveString} from '#/lib/storage'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {clamp} from '#/lib/numbers'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
-  const {feeds: pinnedFeeds} = usePinnedFeedsInfos()
+  const {feeds: pinnedFeeds, isLoading: isPinnedFeedsLoading} =
+    usePinnedFeedsInfos()
   const {isDesktop} = useWebMediaQueries()
   const [initialPage, setInitialPage] = React.useState<string | undefined>(
     undefined,
@@ -41,7 +44,12 @@ export function HomeScreen(props: Props) {
     loadLastActivePage()
   }, [])
 
-  if (preferences && pinnedFeeds && initialPage !== undefined) {
+  if (
+    preferences &&
+    pinnedFeeds &&
+    initialPage !== undefined &&
+    !isPinnedFeedsLoading
+  ) {
     return (
       <HomeScreenReady
         {...props}
@@ -102,7 +110,9 @@ function HomeScreenReady({
   const homeFeedParams = React.useMemo<FeedParams>(() => {
     return {
       mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
-      mergeFeedSources: preferences.feeds.saved,
+      mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
+        ? preferences.feeds.saved
+        : [PROD_DEFAULT_FEED('whats-hot')],
     }
   }, [preferences])
 
@@ -176,7 +186,7 @@ function HomeScreenReady({
     <Pager
       key={pinnedFeedOrderKey}
       testID="homeScreen"
-      initialPage={selectedPageIndex}
+      initialPage={clamp(selectedPageIndex, 0, customFeeds.length)}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
       renderTabBar={renderTabBar}

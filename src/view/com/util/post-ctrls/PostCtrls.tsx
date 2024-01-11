@@ -6,7 +6,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
@@ -26,21 +30,28 @@ import {
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 let PostCtrls = ({
   big,
   post,
   record,
+  richText,
+  showAppealLabelItem,
   style,
   onPressReply,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
+  richText: RichTextAPI
+  showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
 }): React.ReactNode => {
   const theme = useTheme()
+  const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
   const postLikeMutation = usePostLikeMutation()
@@ -174,9 +185,9 @@ let PostCtrls = ({
           requireAuth(() => onPressToggleLike())
         }}
         accessibilityRole="button"
-        accessibilityLabel={`${post.viewer?.like ? 'Unlike' : 'Like'} (${
-          post.likeCount
-        } ${pluralize(post.likeCount || 0, 'like')})`}
+        accessibilityLabel={`${
+          post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
+        } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         {post.viewer?.like ? (
@@ -207,6 +218,8 @@ let PostCtrls = ({
           postCid={post.cid}
           postUri={post.uri}
           record={record}
+          richText={richText}
+          showAppealLabelItem={showAppealLabelItem}
           style={styles.ctrlPad}
         />
       )}

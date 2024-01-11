@@ -6,6 +6,10 @@ import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {
+  EmojiPicker,
+  EmojiPickerState,
+} from 'view/com/composer/text-input/web/EmojiPicker.web.tsx'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -15,6 +19,26 @@ export function Composer({}: {winHeight: number}) {
   const state = useComposerState()
   const isActive = !!state
   useWebBodyScrollLock(isActive)
+
+  const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
+    isOpen: false,
+    pos: {top: 0, left: 0, right: 0, bottom: 0},
+  })
+
+  const onOpenPicker = React.useCallback((pos: DOMRect | undefined) => {
+    if (!pos) return
+    setPickerState({
+      isOpen: true,
+      pos,
+    })
+  }, [])
+
+  const onClosePicker = React.useCallback(() => {
+    setPickerState(prev => ({
+      ...prev,
+      isOpen: false,
+    }))
+  }, [])
 
   // rendering
   // =
@@ -44,8 +68,10 @@ export function Composer({}: {winHeight: number}) {
           quote={state.quote}
           onPost={state.onPost}
           mention={state.mention}
+          openPicker={onOpenPicker}
         />
       </Animated.View>
+      <EmojiPicker state={pickerState} close={onClosePicker} />
     </Animated.View>
   )
 }

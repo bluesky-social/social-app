@@ -23,7 +23,7 @@ import {
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 
-export const snapPoints = ['50%']
+export const snapPoints = ['50%', '90%']
 
 function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const pal = usePalette('default')
@@ -63,6 +63,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
 
       <View>
         <DateInput
+          handleAsUTC
           testID="birthdayInput"
           value={date}
           onChange={setDate}
@@ -70,7 +71,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
           buttonStyle={[pal.border, styles.dateInputButton]}
           buttonLabelType="lg"
           accessibilityLabel={_(msg`Birthday`)}
-          accessibilityHint="Enter your birth date"
+          accessibilityHint={_(msg`Enter your birth date`)}
           accessibilityLabelledBy="birthDate"
         />
       </View>

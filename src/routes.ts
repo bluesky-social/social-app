@@ -26,6 +26,7 @@ export const router = new Router({
   AppPasswords: '/settings/app-passwords',
   PreferencesHomeFeed: '/settings/home-feed',
   PreferencesThreads: '/settings/threads',
+  PreferencesExternalEmbeds: '/settings/external-embeds',
   SavedFeeds: '/settings/saved-feeds',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',

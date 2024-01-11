@@ -12,6 +12,7 @@ import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
+import {Trans} from '@lingui/macro'
 
 export function CustomFeedEmptyState() {
   const pal = usePalette('default')
@@ -33,15 +34,17 @@ export function CustomFeedEmptyState() {
         <MagnifyingGlassIcon style={[styles.emptyIcon, pal.text]} size={62} />
       </View>
       <Text type="xl-medium" style={[s.textCenter, pal.text]}>
-        This feed is empty! You may need to follow more users or tune your
-        language settings.
+        <Trans>
+          This feed is empty! You may need to follow more users or tune your
+          language settings.
+        </Trans>
       </Text>
       <Button
         type="inverted"
         style={styles.emptyBtn}
         onPress={onPressFindAccounts}>
         <Text type="lg-medium" style={palInverted.text}>
-          Find accounts to follow
+          <Trans>Find accounts to follow</Trans>
         </Text>
         <FontAwesomeIcon
           icon="angle-right"

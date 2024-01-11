@@ -51,6 +51,7 @@ import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
+import {TextLink} from '../com/util/Link'
 
 let DrawerProfileCard = ({
   account,
@@ -67,7 +68,7 @@ let DrawerProfileCard = ({
     <TouchableOpacity
       testID="profileCardButton"
       accessibilityLabel={_(msg`Profile`)}
-      accessibilityHint="Navigates to your profile"
+      accessibilityHint={_(msg`Navigates to your profile`)}
       onPress={onPressProfile}>
       <UserAvatar
         size={80}
@@ -106,6 +107,7 @@ export {DrawerProfileCard}
 let DrawerContent = ({}: {}): React.ReactNode => {
   const theme = useTheme()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
@@ -243,6 +245,23 @@ let DrawerContent = ({}: {}): React.ReactNode => {
           ) : (
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
           )}
+
+          <View style={styles.smallSpacer} />
+
+          <View style={[{flexWrap: 'wrap', gap: 12}, s.flexCol]}>
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/tos"
+              text={_(msg`Terms of Service`)}
+            />
+            <TextLink
+              type="md"
+              style={pal.link}
+              href="https://blueskyweb.xyz/support/privacy-policy"
+              text={_(msg`Privacy Policy`)}
+            />
+          </View>
 
           <View style={styles.smallSpacer} />
           <View style={styles.smallSpacer} />
@@ -416,7 +435,9 @@ let NotificationsMenuItem = ({
       label={_(msg`Notifications`)}
       accessibilityLabel={_(msg`Notifications`)}
       accessibilityHint={
-        numUnreadNotifications === '' ? '' : `${numUnreadNotifications} unread`
+        numUnreadNotifications === ''
+          ? ''
+          : _(msg`${numUnreadNotifications} unread`)
       }
       count={numUnreadNotifications}
       bold={isActive}

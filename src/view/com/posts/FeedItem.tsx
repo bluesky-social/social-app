@@ -34,6 +34,9 @@ import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
+import {useSession} from '#/state/session'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function FeedItem({
   post,
@@ -102,10 +105,15 @@ let FeedItemInner = ({
 }): React.ReactNode => {
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
+  const {currentAccount} = useSession()
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
+  const isModeratedPost =
+    moderation.decisions.post.cause?.type === 'label' &&
+    moderation.decisions.post.cause.label.src !== currentAccount?.did
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -126,6 +134,7 @@ let FeedItemInner = ({
           displayName: post.author.displayName,
           avatar: post.author.avatar,
         },
+        embed: post.embed,
       },
     })
   }, [post, record, openComposer])
@@ -176,24 +185,28 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                From{' '}
-                <FeedNameText
-                  type="sm-bold"
-                  uri={reason.uri}
-                  href={reason.href}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  style={pal.textLight}
-                />
+                <Trans context="from-feed">
+                  From{' '}
+                  <FeedNameText
+                    type="sm-bold"
+                    uri={reason.uri}
+                    href={reason.href}
+                    lineHeight={1.2}
+                    numberOfLines={1}
+                    style={pal.textLight}
+                  />
+                </Trans>
               </Text>
             </Link>
           ) : AppBskyFeedDefs.isReasonRepost(reason) ? (
             <Link
               style={styles.includeReason}
               href={makeProfileLink(reason.by)}
-              title={`Reposted by ${sanitizeDisplayName(
-                reason.by.displayName || reason.by.handle,
-              )}`}>
+              title={_(
+                msg`Reposted by ${sanitizeDisplayName(
+                  reason.by.displayName || reason.by.handle,
+                )})`,
+              )}>
               <FontAwesomeIcon
                 icon="retweet"
                 style={{
@@ -207,17 +220,19 @@ let FeedItemInner = ({
                 style={pal.textLight}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reposted by{' '}
-                <TextLinkOnWebOnly
-                  type="sm-bold"
-                  style={pal.textLight}
-                  lineHeight={1.2}
-                  numberOfLines={1}
-                  text={sanitizeDisplayName(
-                    reason.by.displayName || sanitizeHandle(reason.by.handle),
-                  )}
-                  href={makeProfileLink(reason.by)}
-                />
+                <Trans>
+                  Reposted by{' '}
+                  <TextLinkOnWebOnly
+                    type="sm-bold"
+                    style={pal.textLight}
+                    lineHeight={1.2}
+                    numberOfLines={1}
+                    text={sanitizeDisplayName(
+                      reason.by.displayName || sanitizeHandle(reason.by.handle),
+                    )}
+                    href={makeProfileLink(reason.by)}
+                  />
+                </Trans>
               </Text>
             </Link>
           ) : null}
@@ -268,13 +283,15 @@ let FeedItemInner = ({
                 style={[pal.textLight, s.mr2]}
                 lineHeight={1.2}
                 numberOfLines={1}>
-                Reply to{' '}
-                <UserInfoText
-                  type="md"
-                  did={replyAuthorDid}
-                  attr="displayName"
-                  style={[pal.textLight, s.ml2]}
-                />
+                <Trans context="description">
+                  Reply to{' '}
+                  <UserInfoText
+                    type="md"
+                    did={replyAuthorDid}
+                    attr="displayName"
+                    style={[pal.textLight, s.ml2]}
+                  />
+                </Trans>
               </Text>
             </View>
           )}
@@ -284,7 +301,15 @@ let FeedItemInner = ({
             postEmbed={post.embed}
             postAuthor={post.author}
           />
-          <PostCtrls post={post} record={record} onPressReply={onPressReply} />
+          <PostCtrls
+            post={post}
+            record={record}
+            richText={richText}
+            onPressReply={onPressReply}
+            showAppealLabelItem={
+              post.author.did === currentAccount?.did && isModeratedPost
+            }
+          />
         </View>
       </View>
     </Link>
@@ -304,6 +329,7 @@ let PostContent = ({
   postAuthor: AppBskyFeedDefs.PostView['author']
 }): React.ReactNode => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -333,7 +359,7 @@ let PostContent = ({
       ) : undefined}
       {limitLines ? (
         <TextLink
-          text="Show More"
+          text={_(msg`Show More`)}
           style={pal.link}
           onPress={onPressShowMore}
           href="#"
@@ -364,6 +390,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingLeft: 10,
     paddingRight: 15,
+    // @ts-ignore web only -prf
     cursor: 'pointer',
     overflow: 'hidden',
   },

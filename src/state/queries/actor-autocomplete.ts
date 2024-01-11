@@ -24,6 +24,8 @@ export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()
   const moderationOpts = useModerationOpts()
 
+  prefix = prefix.toLowerCase()
+
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
     queryKey: RQKEY(prefix || ''),
@@ -112,7 +114,7 @@ function computeSuggestions(
   }
   return items.filter(profile => {
     const mod = moderateProfile(profile, moderationOpts)
-    return !mod.account.filter
+    return !mod.account.filter && mod.account.cause?.type !== 'muted'
   })
 }
 

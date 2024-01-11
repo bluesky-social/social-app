@@ -19,6 +19,7 @@ import {
 } from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {STALE} from '#/state/queries'
+import {useHiddenPosts} from '#/state/preferences/hidden-posts'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -30,7 +31,7 @@ export function usePreferencesQuery() {
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: true,
-    refetchInterval: STALE.SECONDS.FIFTEEN,
+    refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
       const agent = getAgent()
@@ -94,15 +95,21 @@ export function usePreferencesQuery() {
 export function useModerationOpts() {
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
+  const hiddenPosts = useHiddenPosts()
   const opts = useMemo(() => {
     if (!prefs.data) {
       return
     }
-    return getModerationOpts({
+    const moderationOpts = getModerationOpts({
       userDid: currentAccount?.did || '',
       preferences: prefs.data,
     })
-  }, [currentAccount?.did, prefs.data])
+
+    return {
+      ...moderationOpts,
+      hiddenPosts,
+    }
+  }, [currentAccount?.did, prefs.data, hiddenPosts])
   return opts
 }
 

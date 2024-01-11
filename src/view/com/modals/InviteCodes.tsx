@@ -18,7 +18,7 @@ import {ScrollView} from './util'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
 import {useModalControls} from '#/state/modals'
 import {useInvitesState, useInvitesAPI} from '#/state/invites'
@@ -30,6 +30,7 @@ import {
   useInviteCodesQuery,
   InviteCodesQueryResponse,
 } from '#/state/queries/invites'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = ['70%']
 
@@ -49,6 +50,7 @@ export function Component() {
 
 export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {isTabletOrDesktop} = useWebMediaQueries()
 
@@ -75,7 +77,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
           ]}>
           <Button
             type="primary"
-            label="Done"
+            label={_(msg`Done`)}
             style={styles.btn}
             labelStyle={styles.btnLabel}
             onPress={onClose}
@@ -118,7 +120,7 @@ export function Inner({invites}: {invites: InviteCodesQueryResponse}) {
         <Button
           testID="closeBtn"
           type="primary"
-          label="Done"
+          label={_(msg`Done`)}
           style={styles.btn}
           labelStyle={styles.btnLabel}
           onPress={onClose}
@@ -140,15 +142,16 @@ function InviteCode({
   invites: InviteCodesQueryResponse
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const invitesState = useInvitesState()
   const {setInviteCopied} = useInvitesAPI()
   const uses = invite.uses
 
   const onPress = React.useCallback(() => {
     Clipboard.setString(invite.code)
-    Toast.show('Copied to clipboard')
+    Toast.show(_(msg`Copied to clipboard`))
     setInviteCopied(invite.code)
-  }, [setInviteCopied, invite])
+  }, [setInviteCopied, invite, _])
 
   return (
     <View
@@ -163,10 +166,10 @@ function InviteCode({
         accessibilityRole="button"
         accessibilityLabel={
           invites.available.length === 1
-            ? 'Invite codes: 1 available'
-            : `Invite codes: ${invites.available.length} available`
+            ? _(msg`Invite codes: 1 available`)
+            : _(msg`Invite codes: ${invites.available.length} available`)
         }
-        accessibilityHint="Opens list of invite codes">
+        accessibilityHint={_(msg`Opens list of invite codes`)}>
         <Text
           testID={`${testID}-code`}
           type={used ? 'md' : 'md-bold'}

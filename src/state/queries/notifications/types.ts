@@ -35,4 +35,5 @@ export interface CachedFeedPage {
   usableInFeed: boolean
   syncedAt: Date
   data: FeedPage | undefined
+  unreadCount: number
 }

@@ -13,6 +13,17 @@ import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {logger} from '#/logger'
+
+function sanitizeDate(date: Date): Date {
+  if (!date || date.toString() === 'Invalid Date') {
+    logger.error(`Create account: handled invalid date for birthDate`, {
+      hasDate: !!date,
+    })
+    return new Date()
+  }
+  return date
+}
 
 /** STEP 2: Your account
  * @field Invite code or waitlist
@@ -38,6 +49,10 @@ export function Step2({
     openModal({name: 'waitlist'})
   }, [openModal])
 
+  const birthDate = React.useMemo(() => {
+    return sanitizeDate(uiState.birthDate)
+  }, [uiState.birthDate])
+
   return (
     <View>
       <StepHeader step="2" title={_(msg`Your account`)} />
@@ -45,7 +60,7 @@ export function Step2({
       {uiState.isInviteCodeRequired && (
         <View style={s.pb20}>
           <Text type="md-medium" style={[pal.text, s.mb2]}>
-            Invite code
+            <Trans>Invite code</Trans>
           </Text>
           <TextInput
             testID="inviteCodeInput"
@@ -55,14 +70,17 @@ export function Step2({
             editable
             onChange={value => uiDispatch({type: 'set-invite-code', value})}
             accessibilityLabel={_(msg`Invite code`)}
-            accessibilityHint="Input invite code to proceed"
+            accessibilityHint={_(msg`Input invite code to proceed`)}
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
           />
         </View>
       )}
 
       {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
         <Text style={[s.alignBaseline, pal.text]}>
-          Don't have an invite code?{' '}
+          <Trans>Don't have an invite code?</Trans>{' '}
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
             accessibilityLabel={_(msg`Join the waitlist.`)}
@@ -88,8 +106,11 @@ export function Step2({
               editable
               onChange={value => uiDispatch({type: 'set-email', value})}
               accessibilityLabel={_(msg`Email`)}
-              accessibilityHint="Input email for Bluesky waitlist"
+              accessibilityHint={_(msg`Input email for Bluesky waitlist`)}
               accessibilityLabelledBy="email"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           </View>
 
@@ -109,8 +130,11 @@ export function Step2({
               secureTextEntry
               onChange={value => uiDispatch({type: 'set-password', value})}
               accessibilityLabel={_(msg`Password`)}
-              accessibilityHint="Set password"
+              accessibilityHint={_(msg`Set password`)}
               accessibilityLabelledBy="password"
+              autoCapitalize="none"
+              autoComplete="off"
+              autoCorrect={false}
             />
           </View>
 
@@ -122,14 +146,15 @@ export function Step2({
               <Trans>Your birth date</Trans>
             </Text>
             <DateInput
+              handleAsUTC
               testID="birthdayInput"
-              value={uiState.birthDate}
+              value={birthDate}
               onChange={value => uiDispatch({type: 'set-birth-date', value})}
               buttonType="default-light"
               buttonStyle={[pal.border, styles.dateInputButton]}
               buttonLabelType="lg"
               accessibilityLabel={_(msg`Birthday`)}
-              accessibilityHint="Enter your birth date"
+              accessibilityHint={_(msg`Enter your birth date`)}
               accessibilityLabelledBy="birthDate"
             />
           </View>

@@ -15,6 +15,7 @@ import {useMutedThreads} from '#/state/muted-threads'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
 import {logger} from '#/logger'
 import {truncateAndInvalidate} from '../util'
+import {AppState} from 'react-native'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -24,7 +25,10 @@ type StateContext = string
 
 interface ApiContext {
   markAllRead: () => Promise<void>
-  checkUnread: (opts?: {invalidate?: boolean}) => Promise<void>
+  checkUnread: (opts?: {
+    invalidate?: boolean
+    isPoll?: boolean
+  }) => Promise<void>
   getCachedUnreadPage: () => FeedPage | undefined
 }
 
@@ -49,6 +53,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     usableInFeed: false,
     syncedAt: new Date(),
     data: undefined,
+    unreadCount: 0,
   })
 
   // periodic sync
@@ -57,7 +62,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       return
     }
     checkUnreadRef.current() // fire on init
-    const interval = setInterval(checkUnreadRef.current, UPDATE_INTERVAL)
+    const interval = setInterval(
+      () => checkUnreadRef.current?.({isPoll: true}),
+      UPDATE_INTERVAL,
+    )
     return () => clearInterval(interval)
   }, [hasSession])
 
@@ -68,6 +76,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         usableInFeed: false,
         syncedAt: new Date(),
         data: undefined,
+        unreadCount:
+          data.event === '30+'
+            ? 30
+            : data.event === ''
+            ? 0
+            : parseInt(data.event, 10) || 1,
       }
       setNumUnread(data.event)
     }
@@ -89,11 +103,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
+        if (isNative) {
+          Notifications.setBadgeCountAsync(0)
+        }
       },
 
-      async checkUnread({invalidate}: {invalidate?: boolean} = {}) {
+      async checkUnread({
+        invalidate,
+        isPoll,
+      }: {invalidate?: boolean; isPoll?: boolean} = {}) {
         try {
           if (!getAgent().session) return
+          if (AppState.currentState !== 'active') {
+            return
+          }
+
+          // reduce polling if unread count is set
+          if (isPoll && cacheRef.current?.unreadCount !== 0) {
+            // if hit 30+ then don't poll, otherwise reduce polling by 50%
+            if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+              return
+            }
+          }
 
           // count
           const page = await fetchPage({
@@ -126,6 +157,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             usableInFeed: !!invalidate, // will be used immediately
             data: page,
             syncedAt: !lastIndexed || now > lastIndexed ? now : lastIndexed,
+            unreadCount,
           }
 
           // update & broadcast

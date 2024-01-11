@@ -110,20 +110,28 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
     switch (lang) {
       case 'en':
         return AppLanguage.en
-      case 'hi':
-        return AppLanguage.hi
-      case 'ja':
-        return AppLanguage.ja
-      case 'fr':
-        return AppLanguage.fr
-      case 'de':
-        return AppLanguage.de
+      // DISABLED until this translation is fixed -prf
+      // case 'de':
+      //   return AppLanguage.de
       case 'es':
         return AppLanguage.es
+      case 'fr':
+        return AppLanguage.fr
+      case 'hi':
+        return AppLanguage.hi
+      case 'id':
+        return AppLanguage.id
+      case 'ja':
+        return AppLanguage.ja
+      case 'ko':
+        return AppLanguage.ko
+      case 'pt-BR':
+        return AppLanguage.pt_BR
+      case 'uk':
+        return AppLanguage.uk
       default:
         continue
     }
   }
-
   return AppLanguage.en
 }

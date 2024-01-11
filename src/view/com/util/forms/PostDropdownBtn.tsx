@@ -2,7 +2,12 @@ import React, {memo} from 'react'
 import {Linking, StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedPost,
+  AtUri,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
@@ -18,11 +23,13 @@ import {getTranslatorLink} from '#/locale/helpers'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
+import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 
 let PostDropdownBtn = ({
   testID,
@@ -30,6 +37,7 @@ let PostDropdownBtn = ({
   postCid,
   postUri,
   record,
+  richText,
   style,
   showAppealLabelItem,
 }: {
@@ -38,6 +46,7 @@ let PostDropdownBtn = ({
   postCid: string
   postUri: string
   record: AppBskyFeedPost.Record
+  richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   showAppealLabelItem?: boolean
 }): React.ReactNode => {
@@ -50,9 +59,12 @@ let PostDropdownBtn = ({
   const mutedThreads = useMutedThreads()
   const toggleThreadMute = useToggleThreadMute()
   const postDeleteMutation = usePostDeleteMutation()
+  const hiddenPosts = useHiddenPosts()
+  const {hidePost} = useHiddenPostsApi()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
+  const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
@@ -67,36 +79,44 @@ let PostDropdownBtn = ({
   const onDeletePost = React.useCallback(() => {
     postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
-        Toast.show('Post deleted')
+        Toast.show(_(msg`Post deleted`))
       },
       e => {
         logger.error('Failed to delete post', {error: e})
-        Toast.show('Failed to delete post, please try again')
+        Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
-  }, [postUri, postDeleteMutation])
+  }, [postUri, postDeleteMutation, _])
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
       const muted = toggleThreadMute(rootUri)
       if (muted) {
-        Toast.show('You will no longer receive notifications for this thread')
+        Toast.show(
+          _(msg`You will no longer receive notifications for this thread`),
+        )
       } else {
-        Toast.show('You will now receive notifications for this thread')
+        Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
       logger.error('Failed to toggle thread mute', {error: e})
     }
-  }, [rootUri, toggleThreadMute])
+  }, [rootUri, toggleThreadMute, _])
 
   const onCopyPostText = React.useCallback(() => {
-    Clipboard.setString(record?.text || '')
-    Toast.show('Copied to clipboard')
-  }, [record])
+    const str = richTextToString(richText)
+
+    Clipboard.setString(str)
+    Toast.show(_(msg`Copied to clipboard`))
+  }, [_, richText])
 
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(translatorUrl)
   }, [translatorUrl])
+
+  const onHidePost = React.useCallback(() => {
+    hidePost({uri: postUri})
+  }, [postUri, hidePost])
 
   const dropdownItems: NativeDropdownItem[] = [
     {
@@ -159,6 +179,27 @@ let PostDropdownBtn = ({
         web: 'comment-slash',
       },
     },
+    hasSession &&
+      !isAuthor &&
+      !isPostHidden && {
+        label: _(msg`Hide post`),
+        onPress() {
+          openModal({
+            name: 'confirm',
+            title: _(msg`Hide this post?`),
+            message: _(msg`This will hide this post from your feeds.`),
+            onPressConfirm: onHidePost,
+          })
+        },
+        testID: 'postDropdownHideBtn',
+        icon: {
+          ios: {
+            name: 'eye.slash',
+          },
+          android: 'ic_menu_delete',
+          web: ['far', 'eye-slash'],
+        },
+      },
     {
       label: 'separator',
     },
@@ -224,7 +265,7 @@ let PostDropdownBtn = ({
       <NativeDropdown
         testID={testID}
         items={dropdownItems}
-        accessibilityLabel="More post options"
+        accessibilityLabel={_(msg`More post options`)}
         accessibilityHint="">
         <View style={style}>
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />

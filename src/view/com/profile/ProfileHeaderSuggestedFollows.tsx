@@ -21,6 +21,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {Trans} from '@lingui/macro'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -60,7 +61,7 @@ export function ProfileHeaderSuggestedFollows({
             paddingRight: INNER_PADDING / 2,
           }}>
           <Text type="sm-bold" style={[pal.textLight]}>
-            Suggested for you
+            <Trans>Suggested for you</Trans>
           </Text>
 
           <Pressable

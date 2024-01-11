@@ -76,10 +76,10 @@ export function Component({
           type="default"
           onPress={onPressDone}
           style={styles.footerBtn}
-          accessibilityLabel={_(msg`Done`)}
+          accessibilityLabel={_(msg({message: `Done`, context: 'action'}))}
           accessibilityHint=""
           onAccessibilityEscape={onPressDone}
-          label="Done"
+          label={_(msg({message: `Done`, context: 'action'}))}
         />
       </View>
     </View>
@@ -175,12 +175,22 @@ function ListItem({
           {sanitizeDisplayName(list.name)}
         </Text>
         <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-          {list.purpose === 'app.bsky.graph.defs#curatelist' && 'User list '}
-          {list.purpose === 'app.bsky.graph.defs#modlist' && 'Moderation list '}
-          by{' '}
-          {list.creator.did === currentAccount?.did
-            ? 'you'
-            : sanitizeHandle(list.creator.handle, '@')}
+          {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+            (list.creator.did === currentAccount?.did ? (
+              <Trans>User list by you</Trans>
+            ) : (
+              <Trans>
+                User list by {sanitizeHandle(list.creator.handle, '@')}
+              </Trans>
+            ))}
+          {list.purpose === 'app.bsky.graph.defs#modlist' &&
+            (list.creator.did === currentAccount?.did ? (
+              <Trans>Moderation list by you</Trans>
+            ) : (
+              <Trans>
+                Moderation list by {sanitizeHandle(list.creator.handle, '@')}
+              </Trans>
+            ))}
         </Text>
       </View>
       <View>

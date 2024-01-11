@@ -109,7 +109,7 @@ function ListImpl<ItemT>(
   const containerRef = useRef(null)
   useResizeObserver(containerRef, onContentSizeChange)
 
-  // --- onScroll & onScrollEndWeb ---
+  // --- onScroll ---
   const [isInsideVisibleTree, setIsInsideVisibleTree] = React.useState(false)
   const handleWindowScroll = useNonReactiveCallback(() => {
     if (isInsideVisibleTree) {
@@ -124,16 +124,6 @@ function ListImpl<ItemT>(
       )
     }
   })
-  const handleWindowScrollEnd = useNonReactiveCallback(() => {
-    if (isInsideVisibleTree) {
-      contextScrollHandlers.onScrollEndWeb?.({
-        contentOffset: {
-          x: Math.max(0, window.scrollX),
-          y: Math.max(0, window.scrollY),
-        },
-      })
-    }
-  })
   React.useEffect(() => {
     if (!isInsideVisibleTree) {
       // Prevents hidden tabs from firing scroll events.
@@ -141,12 +131,10 @@ function ListImpl<ItemT>(
       return
     }
     window.addEventListener('scroll', handleWindowScroll)
-    window.addEventListener('scrollend', handleWindowScrollEnd)
     return () => {
       window.removeEventListener('scroll', handleWindowScroll)
-      window.removeEventListener('scrollend', handleWindowScrollEnd)
     }
-  }, [isInsideVisibleTree, handleWindowScroll, handleWindowScrollEnd])
+  }, [isInsideVisibleTree, handleWindowScroll])
 
   // --- onScrolledDownChange ---
   const isScrolledDown = useRef(false)

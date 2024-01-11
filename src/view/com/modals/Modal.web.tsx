@@ -35,6 +35,7 @@ import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as LinkWarningModal from './LinkWarning'
+import * as EmbedConsentModal from './EmbedConsent'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
@@ -131,6 +132,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ChangeEmailModal.Component />
   } else if (modal.name === 'link-warning') {
     element = <LinkWarningModal.Component {...modal} />
+  } else if (modal.name === 'embed-consent') {
+    element = <EmbedConsentModal.Component {...modal} />
   } else {
     return null
   }
