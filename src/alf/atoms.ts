@@ -4,6 +4,9 @@ export const atoms = {
   /*
    * Positioning
    */
+  fixed: {
+    position: 'fixed',
+  },
   absolute: {
     position: 'absolute',
   },

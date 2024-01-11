@@ -1,9 +1,9 @@
 import React, {useImperativeHandle} from 'react'
-import {View, TouchableWithoutFeedback, DimensionValue} from 'react-native'
+import {View, TouchableWithoutFeedback, ViewStyle} from 'react-native'
 import {FocusScope} from '@tamagui/focus-scope'
-import Animated, {FadeInDown, FadeIn, FadeOut} from 'react-native-reanimated'
+import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
 import {Text} from '#/view/com/Typography'
 import {Portal} from '#/view/com/Portal'
 import {Button} from '#/view/com/Button'
@@ -86,20 +86,21 @@ export function Outer({
               onPress={close}>
               <View
                 style={[
-                  a.absolute,
+                  web(a.fixed),
                   a.inset_0,
                   a.z_10,
-                  a.flex_row,
-                  a.justify_center,
+                  a.align_center,
+                  gtMobile ? a.p_lg : a.p_md,
+                  {overflowY: 'auto'},
                 ]}>
                 {isVisible && (
                   <Animated.View
                     entering={FadeIn.duration(150)}
-                    exiting={FadeOut.duration(150)}
+                    // exiting={FadeOut.duration(150)}
                     style={[
-                      a.absolute,
+                      web(a.fixed),
                       a.inset_0,
-                      t.atoms.bg_contrast_200,
+                      t.atoms.bg_contrast_300,
                       {opacity: 0.8},
                     ]}
                   />
@@ -109,30 +110,13 @@ export function Outer({
                   style={[
                     a.w_full,
                     a.z_20,
+                    a.justify_center,
+                    a.align_center,
                     {
-                      maxWidth: 600,
-                      paddingTop: gtMobile ? ('10vh' as DimensionValue) : 0,
+                      minHeight: web('calc(90vh - 36px)') || undefined,
                     },
                   ]}>
-                  <View
-                    // @ts-ignore web only -prf
-                    onClick={stopPropagation}
-                    onStartShouldSetResponder={_ => true}
-                    onTouchEnd={stopPropagation}>
-                    <FocusScope loop enabled trapped>
-                      {isVisible ? (
-                        <Animated.View
-                          aria-role="dialog"
-                          entering={FadeInDown.duration(100)}
-                          exiting={FadeOut.duration(100)}
-                          style={{width: '100%'}}>
-                          {children}
-                        </Animated.View>
-                      ) : (
-                        <View />
-                      )}
-                    </FocusScope>
-                  </View>
+                  {isVisible ? children : null}
                 </View>
               </View>
             </TouchableWithoutFeedback>
@@ -143,12 +127,34 @@ export function Outer({
   )
 }
 
-export function Inner(props: React.PropsWithChildren<{}>) {
+export function Inner({
+  children,
+  style,
+}: React.PropsWithChildren<{style?: ViewStyle}>) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   return (
-    <View style={[a.relative, a.rounded_md, a.p_xl, t.atoms.bg]}>
-      {props.children}
-    </View>
+    <FocusScope loop enabled trapped>
+      <Animated.View
+        aria-role="dialog"
+        // @ts-ignore web only -prf
+        onClick={stopPropagation}
+        onStartShouldSetResponder={_ => true}
+        onTouchEnd={stopPropagation}
+        entering={FadeInDown.duration(100)}
+        // exiting={FadeOut.duration(100)}
+        style={[
+          a.relative,
+          a.rounded_md,
+          a.w_full,
+          gtMobile ? a.p_xl : a.p_lg,
+          t.atoms.bg,
+          {maxWidth: 600},
+          ...(Array.isArray(style) ? style : [style || {}]),
+        ]}>
+        {children}
+      </Animated.View>
+    </FocusScope>
   )
 }
 

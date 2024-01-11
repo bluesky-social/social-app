@@ -343,6 +343,7 @@ function Dialogs() {
               accessibilityHint="Open basic dialog">
               Close basic dialog
             </Button>
+            <View style={{height: 100}} />
             <Button
               type="secondary"
               size="small"
