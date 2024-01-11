@@ -169,6 +169,9 @@ export function DesktopSearch() {
             accessibilityRole="search"
             accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
+            autoCorrect={false}
+            autoComplete="off"
+            autoCapitalize="none"
           />
           {query ? (
             <View style={styles.cancelBtn}>
