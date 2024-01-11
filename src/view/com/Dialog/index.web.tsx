@@ -39,13 +39,17 @@ export function Outer({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
+  const [isVisible, setIsVisible] = React.useState(true)
 
   const open = React.useCallback(() => {
     setIsOpen(true)
   }, [setIsOpen])
 
-  const close = React.useCallback(() => {
+  const close = React.useCallback(async () => {
+    setIsVisible(false)
+    await new Promise(resolve => setTimeout(resolve, 150))
     setIsOpen(false)
+    setIsVisible(true)
     onClose?.()
   }, [onClose, setIsOpen])
 
@@ -88,16 +92,18 @@ export function Outer({
                   a.flex_row,
                   a.justify_center,
                 ]}>
-                <Animated.View
-                  entering={FadeIn.duration(200)}
-                  exiting={FadeOut.duration(200)}
-                  style={[
-                    a.absolute,
-                    a.inset_0,
-                    t.atoms.bg_contrast_200,
-                    {opacity: 0.8},
-                  ]}
-                />
+                {isVisible && (
+                  <Animated.View
+                    entering={FadeIn.duration(150)}
+                    exiting={FadeOut.duration(150)}
+                    style={[
+                      a.absolute,
+                      a.inset_0,
+                      t.atoms.bg_contrast_200,
+                      {opacity: 0.8},
+                    ]}
+                  />
+                )}
 
                 <View
                   style={[
@@ -114,12 +120,17 @@ export function Outer({
                     onStartShouldSetResponder={_ => true}
                     onTouchEnd={stopPropagation}>
                     <FocusScope loop enabled trapped>
-                      <Animated.View
-                        entering={FadeInDown}
-                        exiting={FadeOut}
-                        aria-role="dialog">
-                        {children}
-                      </Animated.View>
+                      {isVisible ? (
+                        <Animated.View
+                          aria-role="dialog"
+                          entering={FadeInDown.duration(100)}
+                          exiting={FadeOut.duration(100)}
+                          style={{width: '100%'}}>
+                          {children}
+                        </Animated.View>
+                      ) : (
+                        <View />
+                      )}
                     </FocusScope>
                   </View>
                 </View>
