@@ -136,9 +136,11 @@ function createPersistSessionHandler(
       event,
       did: refreshedAccount.did,
       handle: refreshedAccount.handle,
+      service: refreshedAccount.service,
     })
 
     if (expired) {
+      logger.warn(`session: expired`)
       emitSessionDropped()
     }
 

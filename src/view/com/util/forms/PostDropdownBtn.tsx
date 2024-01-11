@@ -2,7 +2,12 @@ import React, {memo} from 'react'
 import {Linking, StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {AppBskyActorDefs, AppBskyFeedPost, AtUri} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  AppBskyFeedPost,
+  AtUri,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
@@ -24,6 +29,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
 
 let PostDropdownBtn = ({
   testID,
@@ -31,6 +37,7 @@ let PostDropdownBtn = ({
   postCid,
   postUri,
   record,
+  richText,
   style,
   showAppealLabelItem,
 }: {
@@ -39,6 +46,7 @@ let PostDropdownBtn = ({
   postCid: string
   postUri: string
   record: AppBskyFeedPost.Record
+  richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   showAppealLabelItem?: boolean
 }): React.ReactNode => {
@@ -96,9 +104,11 @@ let PostDropdownBtn = ({
   }, [rootUri, toggleThreadMute, _])
 
   const onCopyPostText = React.useCallback(() => {
-    Clipboard.setString(record?.text || '')
+    const str = richTextToString(richText)
+
+    Clipboard.setString(str)
     Toast.show(_(msg`Copied to clipboard`))
-  }, [record, _])
+  }, [_, richText])
 
   const onOpenTranslate = React.useCallback(() => {
     Linking.openURL(translatorUrl)

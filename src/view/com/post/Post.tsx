@@ -213,7 +213,12 @@ function PostInner({
               </ContentHider>
             ) : null}
           </ContentHider>
-          <PostCtrls post={post} record={record} onPressReply={onPressReply} />
+          <PostCtrls
+            post={post}
+            record={record}
+            richText={richText}
+            onPressReply={onPressReply}
+          />
         </View>
       </View>
     </Link>
