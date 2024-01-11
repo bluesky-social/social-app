@@ -8,7 +8,7 @@ msgstr ""
 "Language: uk\n"
 "Project-Id-Version: bsky-app-ua\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-06 10:39\n"
+"PO-Revision-Date: 2024-01-09 23:26\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
@@ -604,19 +604,19 @@ msgstr "Скопіювати"
 
 #: src/view/screens/ProfileList.tsx:385
 msgid "Copy link to list"
-msgstr "Скопіювати посилання на список"
+msgstr "Скопіювати посилання"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy link to post"
-msgstr "Скопіювати посилання на пост"
+msgstr "Скопіювати посилання"
 
 #: src/view/com/profile/ProfileHeader.tsx:338
 msgid "Copy link to profile"
-msgstr "Скопіювати посилання на профіль"
+msgstr "Скопіювати посилання"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Copy post text"
-msgstr "Скопіювати текст повідомлення"
+msgstr "Скопіювати текст"
 
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
@@ -655,7 +655,7 @@ msgstr "Власний домен"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
-msgstr "Налаштування медіа зі сторонніх сайтів."
+msgstr "Налаштування медіа зі сторонніх вебсайтів."
 
 #: src/view/screens/Settings.tsx:648
 msgid "Danger Zone"
@@ -809,7 +809,7 @@ msgstr "Редагувати збережені стрічки"
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
-msgstr "Ел. пошта"
+msgstr "Ел. адреса"
 
 #: src/view/com/auth/create/Step2.tsx:99
 msgid "Email address"
@@ -817,11 +817,11 @@ msgstr "Адреса електронної пошти"
 
 #: src/view/com/modals/ChangeEmail.tsx:111
 msgid "Email Updated"
-msgstr "Email оновлено"
+msgstr "Ел. адресу оновлено"
 
 #: src/view/screens/Settings.tsx:290
 msgid "Email:"
-msgstr "Email:"
+msgstr "Ел. адреса:"
 
 #: src/view/com/modals/EmbedConsent.tsx:113
 msgid "Enable {0} only"
@@ -1184,7 +1184,7 @@ msgstr "Вибір мови"
 
 #: src/view/screens/LanguageSettings.tsx:89
 msgid "Language Settings"
-msgstr "Налаштування мови"
+msgstr "Налаштування мов"
 
 #: src/view/screens/Settings.tsx:541
 msgid "Languages"
@@ -1363,7 +1363,7 @@ msgstr "Додаткові опції"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
-msgstr "Кількістю вподобань"
+msgstr "За кількістю вподобань"
 
 #: src/view/com/profile/ProfileHeader.tsx:370
 msgid "Mute Account"
@@ -1579,7 +1579,7 @@ msgstr "Відкриває налаштування мов"
 
 #: src/view/screens/Settings.tsx:587
 msgid "Opens external embeds settings"
-msgstr "Відкрити налаштування зовнішніх вбудувань"
+msgstr "Відкриває налаштування зовнішніх вбудувань"
 
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:641
@@ -1657,7 +1657,7 @@ msgstr "Пароль змінено!"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
-msgstr "Зображення призначені для дорослих."
+msgstr "Зображення, призначені для дорослих."
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
@@ -1674,11 +1674,11 @@ msgstr "Відтворити відео"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
 msgid "Plays the GIF"
-msgstr "Відтворити GIF"
+msgstr "Відтворює GIF"
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
-msgstr "Будь ласка, виберіть псевдонім."
+msgstr "Будь ласка, оберіть псевдонім."
 
 #: src/view/com/auth/create/state.ts:109
 msgid "Please choose your password."
@@ -1686,7 +1686,7 @@ msgstr "Будь ласка, оберіть ваш пароль."
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "Будь ласка, підтвердіть вашу електронну пошту, перш ніж змінити її. Це тимчасова вимога під час додавання інструментів оновлення електронної пошти, і незабаром вона буде видалена."
+msgstr "Будь ласка, підтвердіть вашу електронну адресу, перш ніж змінити її. Це тимчасова вимога під час додавання інструментів оновлення електронної адреси, незабаром її видалять."
 
 #: src/view/com/modals/AddAppPasswords.tsx:140
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
@@ -1781,7 +1781,7 @@ msgstr "Профіль"
 
 #: src/view/screens/Settings.tsx:841
 msgid "Protect your account by verifying your email."
-msgstr "Захистіть свій обліковий запис, підтвердивши свою електронну пошту."
+msgstr "Захистіть свій обліковий запис, підтвердивши свою електронну адресу."
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -1789,7 +1789,7 @@ msgstr "Публічні, поширювані списки користувач
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "Публічні списки для створення стрічок."
+msgstr "Публічні, поширювані списки для створення стрічок."
 
 #: src/view/com/modals/Repost.tsx:52
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
@@ -1925,7 +1925,7 @@ msgstr "Змінити"
 
 #: src/view/screens/Settings.tsx:422
 msgid "Require alt text before posting"
-msgstr "Вимагати додавання альтернативного тексту перед тим як постити зображення"
+msgstr "Вимагати альтернативний текст до зображень перед публікацією"
 
 #: src/view/com/auth/create/Step2.tsx:68
 msgid "Required for this provider"
@@ -2234,7 +2234,7 @@ msgstr "Сортувати відповіді"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr "Сортувати відповіді до постів за:"
+msgstr "Оберіть, як сортувати відповіді до постів:"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2511,7 +2511,7 @@ msgstr "Користувачі"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:143
 msgid "users followed by <0/>"
-msgstr "користувачі на яких підписані <0/>"
+msgstr "користувачі, на яких підписані <0/>"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:115
 #~ msgid "Users followed by <0/>"
@@ -2519,7 +2519,7 @@ msgstr "користувачі на яких підписані <0/>"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
-msgstr "Користувачі в \"{0}\""
+msgstr "Користувачі в «{0}»"
 
 #: src/view/screens/Settings.tsx:802
 msgid "Verify email"
@@ -2588,7 +2588,7 @@ msgstr "Які мови використані в цьому пості?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "Пости якими мовами ви хочете бачити у алгоритмічних стрічках?"
+msgstr "Якими мовами ви хочете бачити пости у алгоритмічних стрічках?"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
