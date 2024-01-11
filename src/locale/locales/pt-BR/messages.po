@@ -51,7 +51,7 @@ msgstr "<0>Escolha seus</0><2>Feeds</2><1>recomendados</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr "<0>Seguir alguns</0><2>Usuários</2><1>recomendados</1>"
+msgstr "<0>Siga alguns</0><2>Usuários</2><1>recomendados</1>"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -71,7 +71,7 @@ msgstr "Conta"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
-msgstr "Opções da conta"
+msgstr "Configurações da conta"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:193
@@ -85,7 +85,7 @@ msgstr "Adicionar um aviso de conteúdo"
 
 #: src/view/screens/ProfileList.tsx:753
 msgid "Add a user to this list"
-msgstr "Adicionar um usuário nessa lista"
+msgstr "Adicionar um usuário nesta lista"
 
 #: src/view/screens/Settings.tsx:355 src/view/screens/Settings.tsx:364
 msgid "Add account"
@@ -104,7 +104,7 @@ msgstr "Adicionar detalhes"
 
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details to report"
-msgstr "Adicionar detalhes ao relatório"
+msgstr "Adicionar detalhes à denúncia"
 
 #: src/view/com/composer/Composer.tsx:447
 msgid "Add link card"
@@ -1883,7 +1883,7 @@ msgstr "Enviar comentários"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 msgid "Send Report"
-msgstr "Enviar Denúncia"
+msgstr "Denunciar"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:78
 msgid "Set new password"
