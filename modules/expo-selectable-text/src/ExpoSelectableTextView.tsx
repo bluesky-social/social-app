@@ -1,4 +1,4 @@
-import { requireNativeViewManager } from 'expo-modules-core'
+import {requireNativeViewManager} from 'expo-modules-core'
 import * as React from 'react'
 
 import {
@@ -7,37 +7,37 @@ import {
   ExpoProTextPressEvent,
   ExpoProTextSegment,
   ExpoProTextViewProps,
-} from './ExpoProText.types'
-import { Text, View } from 'react-native'
+} from './ExpoSelectableText.types'
+import {StyleSheet, Text, View} from 'react-native'
 
 const NativeView: React.ComponentType<ExpoProTextNativeViewProps> =
-  requireNativeViewManager('ExpoProText')
+  requireNativeViewManager('ExpoSelectableText')
 
-export default function ExpoProTextView({
+export default function ExpoSelectableTextView({
   style,
   children,
   selectable = false,
   onPress,
   onLongPress,
 }: ExpoProTextViewProps) {
-  const [dims, setDims] = React.useState({ height: 0 })
+  const [dims, setDims] = React.useState({height: 0})
   const segmentPressCallbacks = React.useRef<
-    Array<{ index: number; onPress: () => void }>
+    Array<{index: number; onPress: () => void}>
   >([])
   const segmentLongPressCallbacks = React.useRef<
-    Array<{ index: number, onLongPress: () => void, }>
+    Array<{index: number; onLongPress: () => void}>
   >([])
 
   const onTextLayout = React.useCallback((e: ExpoProTextLayoutEvent) => {
+    console.log('layout')
     setDims({
       height: e.nativeEvent.height,
     })
   }, [])
 
   const onTextPress = React.useCallback((e: ExpoProTextPressEvent) => {
-    console.log(e.nativeEvent)
     const onPressSegment = segmentPressCallbacks.current.find(
-      (s) => s.index === e.nativeEvent.index,
+      s => s.index === e.nativeEvent.index,
     )
     onPressSegment?.onPress()
   }, [])
@@ -58,7 +58,7 @@ export default function ExpoProTextView({
         React.isValidElement(child) &&
         (child as React.ReactElement<any>).type === Text
       ) {
-        const { onPress, onLongPress, children, style } = child.props
+        const {onPress, onLongPress, children, style} = child.props
 
         segments.push({
           index,
@@ -88,21 +88,25 @@ export default function ExpoProTextView({
   }, [children])
 
   const segmentsJson = React.useMemo(() => {
-    const json = JSON.stringify({ segments: textSegments })
-    console.log(json)
+    const json = JSON.stringify({segments: textSegments})
     return json
   }, [textSegments])
 
+  const rootStyle = React.useMemo(() => {
+    return style ? JSON.stringify(style) : undefined
+  }, [style])
+
   return (
-    <View style={dims}>
+    <View style={[dims, {width: '100%'}]}>
       <NativeView
-        textStyle={style}
         segments={segmentsJson}
         selectable={selectable}
         onTextPress={onTextPress}
         onTextLongPress={onLongPress}
         onTextLayout={onTextLayout}
         disableLongPress={onLongPress !== undefined}
+        style={{flex: 1}}
+        rootStyle={rootStyle}
       />
     </View>
   )

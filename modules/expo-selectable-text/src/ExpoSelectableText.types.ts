@@ -1,5 +1,5 @@
 import React from 'react'
-import { ColorValue } from 'react-native'
+import {ColorValue, TextStyle, ViewStyle} from 'react-native'
 
 interface ExpoProTextViewCommonProps {
   selectable?: boolean
@@ -7,7 +7,7 @@ interface ExpoProTextViewCommonProps {
 
 export interface ExpoProTextViewProps extends ExpoProTextViewCommonProps {
   children: React.ReactNode
-  style?: ExpoProTextStyle
+  style?: TextStyle
   onPress?: () => void
   onLongPress?: () => void
 }
@@ -19,6 +19,8 @@ export interface ExpoProTextNativeViewProps extends ExpoProTextViewCommonProps {
   onTextLongPress?: (event: ExpoProTextPressEvent) => void
   onTextLayout?: (event: ExpoProTextLayoutEvent) => void
   disableLongPress: boolean
+  style: ViewStyle
+  rootStyle?: string
 }
 
 interface ExpoProTextStyle {

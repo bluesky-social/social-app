@@ -1,13 +1,17 @@
 import React from 'react'
-import {Text as RNText, TextProps} from 'react-native'
+import {StyleSheet, Text as RNText, TextProps} from 'react-native'
 import {s, lh} from 'lib/styles'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
+import {SelectableText} from '../../../../../modules/expo-selectable-text'
+import {isIOS} from 'platform/detection'
+import {fontSize} from '#/alf/tokens'
 
 export type CustomTextProps = TextProps & {
   type?: TypographyVariant
   lineHeight?: number
   title?: string
   dataSet?: Record<string, string | number>
+  selectable?: boolean
 }
 
 export function Text({
@@ -17,11 +21,30 @@ export function Text({
   style,
   title,
   dataSet,
+  selectable,
   ...props
 }: React.PropsWithChildren<CustomTextProps>) {
   const theme = useTheme()
   const typography = theme.typography[type]
   const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
+
+  // {"color":"#000000","fontSize":20,"letterSpacing":0.2,"fontWeight":"400","flex":1,"lineHeight":26}
+
+  if (selectable && isIOS) {
+    return (
+      <SelectableText
+        selectable
+        style={StyleSheet.flatten([
+          s.black,
+          typography,
+          lineHeightStyle,
+          style,
+        ])}>
+        {children}
+      </SelectableText>
+    )
+  }
+
   return (
     <RNText
       style={[s.black, typography, lineHeightStyle, style]}

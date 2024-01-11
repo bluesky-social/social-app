@@ -1,11 +1,16 @@
 import Foundation
 import ExpoModulesCore
 
-class ExpoProTextView: ExpoView {
+class ExpoSelectableTextView: ExpoView {
   let textView: UITextView = UITextView()
   var segments: Array<TextSegment> = [] {
     didSet {
       setText()
+    }
+  }
+  var style: TextStyle? {
+    didSet {
+      self.setNeedsLayout()
     }
   }
 
@@ -21,6 +26,8 @@ class ExpoProTextView: ExpoView {
     textView.isEditable = false
     textView.isScrollEnabled = false
     textView.backgroundColor = .clear
+
+    clipsToBounds = true
 
     // Add the text view to the root view
     addSubview(textView)
@@ -71,8 +78,8 @@ class ExpoProTextView: ExpoView {
     segments.forEach { segment in
       // Set some generic attributes that don't need ranges
       let attributes: [NSAttributedString.Key:Any] = [
-        .font: UIFont.systemFont(ofSize: segment.style?.fontSize ?? 12.0, weight: segment.style?.fontWeight?.toFontWeight() ?? .regular),
-        .foregroundColor: ExpoProTextUtil.hexToUIColor(hex: segment.style?.color),
+        .font: UIFont.systemFont(ofSize: segment.style?.fontSize ?? self.style?.fontSize ?? 12.0, weight: segment.style?.fontWeight?.toFontWeight() ?? self.style?.fontWeight?.toFontWeight() ?? .regular),
+        .foregroundColor: ExpoSelectableTextUtil.hexToUIColor(hex: segment.style?.color),
       ]
 
       // Create the attributed string with the generic attributes
@@ -81,7 +88,8 @@ class ExpoProTextView: ExpoView {
       // Set the paragraph style attributes if necessary
       if let lineHeight = segment.style?.lineHeight {
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = lineHeight
+        paragraphStyle.minimumLineHeight = lineHeight
+        paragraphStyle.maximumLineHeight = lineHeight
         string.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, string.length))
       }
 

@@ -369,6 +369,7 @@ let PostThreadItemLoaded = ({
                     richText={richText}
                     lineHeight={1.3}
                     style={s.flex1}
+                    selectable
                   />
                 </View>
               ) : undefined}

@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name           = 'ExpoProText'
+  s.name           = 'ExpoSelectableText'
   s.version        = '1.0.0'
   s.summary        = 'A sample project summary'
   s.description    = 'A sample project description'
@@ -16,6 +16,6 @@ Pod::Spec.new do |s|
     'DEFINES_MODULE' => 'YES',
     'SWIFT_COMPILATION_MODE' => 'wholemodule'
   }
-  
+
   s.source_files = "**/*.{h,m,mm,swift,hpp,cpp}"
 end

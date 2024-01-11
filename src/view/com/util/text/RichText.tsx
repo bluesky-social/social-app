@@ -17,6 +17,7 @@ export function RichText({
   lineHeight = 1.2,
   style,
   numberOfLines,
+  selectable,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -24,6 +25,7 @@ export function RichText({
   lineHeight?: number
   style?: StyleProp<TextStyle>
   numberOfLines?: number
+  selectable?: boolean
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -54,7 +56,8 @@ export function RichText({
         style={[style, pal.text, lineHeightStyle]}
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
-        dataSet={WORD_WRAP}>
+        dataSet={WORD_WRAP}
+        selectable={selectable}>
         {text}
       </Text>
     )
