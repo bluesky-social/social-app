@@ -25,15 +25,15 @@ export function SuggestedLanguage({text}: {text: string}) {
 
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
-    if (textTrimmed.length < 10) {
+    if (textTrimmed.length < 40) {
       setSuggestedLanguage(undefined)
       return
     }
 
     const idle = requestIdleCallback(() => {
-      // Only select languages that are
+      // Only select languages that have a high confidence and convert to code2
       const result = lande(textTrimmed).filter(
-        ([lang, value]) => value >= 0.85 && code3ToCode2Strict(lang),
+        ([lang, value]) => value >= 0.97 && code3ToCode2Strict(lang),
       )
 
       setSuggestedLanguage(
