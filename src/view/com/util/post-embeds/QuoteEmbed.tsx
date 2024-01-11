@@ -118,7 +118,7 @@ export function QuoteEmbed({
         <PostAlerts moderation={moderation} style={styles.alert} />
       ) : null}
       {!isEmpty ? (
-        <Text type="post-text" style={pal.text} numberOfLines={6}>
+        <Text type="post-text" style={pal.text} numberOfLines={20}>
           {quote.text}
         </Text>
       ) : null}
