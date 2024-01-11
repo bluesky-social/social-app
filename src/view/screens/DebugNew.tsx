@@ -318,22 +318,29 @@ function Forms() {
 }
 
 function Dialogs() {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const control = Dialog.useDialogControl()
 
   return (
     <>
-      <Button type='secondary' size='small' onPress={() => setIsOpen(true)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
+      <Button
+        type="secondary"
+        size="small"
+        onPress={() => control.current.open()}
+        accessibilityLabel="Open basic dialog"
+        accessibilityHint="Open basic dialog">
         Open basic dialog
       </Button>
-      <Dialog.Outer isOpen={isOpen} onDismiss={() => setIsOpen(false)}>
-        <Dialog.Inner>
-          <Dialog.Close />
-          <Dialog.Header title='Basic dialog' />
 
-          <Button type='primary' size='small' onPress={() => setIsOpen(false)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
-            Close basic dialog
-          </Button>
-          <Button type='secondary' size='small' onPress={() => setIsOpen(false)} accessibilityLabel='Open basic dialog' accessibilityHint='Open basic dialog'>
+      <Dialog.Outer control={control}>
+        <Dialog.Inner>
+          <Dialog.Handle />
+          <Dialog.Close />
+          <Button
+            type="primary"
+            size="small"
+            onPress={() => control.current.close()}
+            accessibilityLabel="Open basic dialog"
+            accessibilityHint="Open basic dialog">
             Close basic dialog
           </Button>
         </Dialog.Inner>
