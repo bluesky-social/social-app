@@ -304,6 +304,7 @@ let FeedItemInner = ({
           <PostCtrls
             post={post}
             record={record}
+            richText={richText}
             onPressReply={onPressReply}
             showAppealLabelItem={
               post.author.did === currentAccount?.did && isModeratedPost

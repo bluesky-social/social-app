@@ -6,7 +6,11 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
@@ -33,6 +37,7 @@ let PostCtrls = ({
   big,
   post,
   record,
+  richText,
   showAppealLabelItem,
   style,
   onPressReply,
@@ -40,6 +45,7 @@ let PostCtrls = ({
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
+  richText: RichTextAPI
   showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
@@ -212,6 +218,7 @@ let PostCtrls = ({
           postCid={post.cid}
           postUri={post.uri}
           record={record}
+          richText={richText}
           showAppealLabelItem={showAppealLabelItem}
           style={styles.ctrlPad}
         />
