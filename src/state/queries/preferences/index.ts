@@ -31,7 +31,7 @@ export function usePreferencesQuery() {
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: true,
-    refetchInterval: STALE.SECONDS.FIFTEEN,
+    refetchOnWindowFocus: true,
     queryKey: preferencesQueryKey,
     queryFn: async () => {
       const agent = getAgent()

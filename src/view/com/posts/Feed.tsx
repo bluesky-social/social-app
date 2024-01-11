@@ -36,7 +36,8 @@ const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const ERROR_ITEM = {_reactKey: '__error__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
 
-const REFRESH_AFTER = STALE.HOURS.ONE
+// DISABLED need to check if this is causing random feed refreshes -prf
+// const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
 let Feed = ({
@@ -46,6 +47,7 @@ let Feed = ({
   style,
   enabled,
   pollInterval,
+  disablePoll,
   scrollElRef,
   onScrolledDownChange,
   onHasNew,
@@ -63,6 +65,7 @@ let Feed = ({
   style?: StyleProp<ViewStyle>
   enabled?: boolean
   pollInterval?: number
+  disablePoll?: boolean
   scrollElRef?: ListRef
   onHasNew?: (v: boolean) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
@@ -107,7 +110,7 @@ let Feed = ({
   )
 
   const checkForNew = React.useCallback(async () => {
-    if (!data?.pages[0] || isFetching || !onHasNew || !enabled) {
+    if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
       return
     }
     try {
@@ -117,7 +120,7 @@ let Feed = ({
     } catch (e) {
       logger.error('Poll latest failed', {feed, error: String(e)})
     }
-  }, [feed, data, isFetching, onHasNew, enabled])
+  }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = React.useCallback(() => {
@@ -146,11 +149,12 @@ let Feed = ({
   React.useEffect(() => {
     if (enabled) {
       const timeSinceFirstLoad = Date.now() - lastFetchRef.current
-      if (timeSinceFirstLoad > REFRESH_AFTER) {
+      // DISABLED need to check if this is causing random feed refreshes -prf
+      /*if (timeSinceFirstLoad > REFRESH_AFTER) {
         // do a full refresh
         scrollElRef?.current?.scrollToOffset({offset: 0, animated: false})
         queryClient.resetQueries({queryKey: RQKEY(feed)})
-      } else if (
+      } else*/ if (
         timeSinceFirstLoad > CHECK_LATEST_AFTER &&
         checkForNewRef.current
       ) {
