@@ -1690,7 +1690,7 @@ msgstr "Remover este feed dos meus feeds?"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:131
 msgid "Remove this feed from your saved feeds?"
-msgstr "Remover este feed de seus feeds salvos?"
+msgstr "Remover este feed dos feeds salvos?"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:136
@@ -1855,7 +1855,7 @@ msgstr "Selecionar serviço"
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "Selecione quais idiomas você deseja que seus feeds inscritos incluam. Se nenhum for selecionado, todas os idiomas serão exibidos."
+msgstr "Selecione quais idiomas você deseja ver nos seus feeds. Se nenhum for selecionado, todas os idiomas serão exibidos."
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
@@ -2034,7 +2034,7 @@ msgstr "Classificar Respostas"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr "Classificar respostas do mesmo post por:"
+msgstr "Classificar respostas de um post por:"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -2132,7 +2132,7 @@ msgstr "Houve um problema inesperado no aplicativo. Por favor, avise-nos se isso
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
-msgstr "Este {screenDescription} foi sinalizado:"
+msgstr "Este {screenDescription} foi reportado:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
@@ -2180,7 +2180,7 @@ msgstr "Isso ocultará este post de seus feeds."
 
 #: src/view/screens/PreferencesThreads.tsx:53 src/view/screens/Settings.tsx:503
 msgid "Thread Preferences"
-msgstr "Preferências de Threads"
+msgstr "Preferências das Threads"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
@@ -2246,7 +2246,7 @@ msgstr "Desmutar thread"
 
 #: src/view/screens/ProfileList.tsx:441
 msgid "Unpin moderation list"
-msgstr "Desfixar lista de moderação"
+msgstr "Desafixar lista de moderação"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
@@ -2274,7 +2274,7 @@ msgstr "Usar provedor padrão"
 
 #: src/view/com/modals/AddAppPasswords.tsx:150
 msgid "Use this to sign into the other app along with your handle."
-msgstr "Use isto para entrar no outro aplicativo juntamente com seu identificador."
+msgstr "Use esta senha para entrar no outro aplicativo juntamente com seu identificador."
 
 #: src/view/com/modals/InviteCodes.tsx:197
 msgid "Used by:"
@@ -2459,7 +2459,7 @@ msgstr "Seu email parece ser inválido."
 
 #: src/view/com/modals/Waitlist.tsx:107
 msgid "Your email has been saved! We'll be in touch soon."
-msgstr "Seu email foi salvo! Entraremos em contato em breve."
+msgstr "Seu email foi salvo! Logo entraremos em contato."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
@@ -2467,7 +2467,7 @@ msgstr "Seu email foi atualizado mas não foi verificado. Como próximo passo, p
 
 #: src/view/com/modals/VerifyEmail.tsx:108
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr "Seu email ainda não foi verificado. Esta é uma etapa de segurança importante que recomendamos."
+msgstr "Seu email ainda não foi verificado. Esta é uma etapa importante de segurança que recomendamos."
 
 #: src/view/com/auth/create/Step3.tsx:42
 #: src/view/com/modals/ChangeHandle.tsx:270
@@ -2485,7 +2485,7 @@ msgstr "Seus códigos de convite estão ocultos quando conectado com uma Senha d
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Suas postagens, curtidas e blocos são públicos. Mudos são privados."
+msgstr "Suas postagens, curtidas e blocos são públicos. Usuários silenciados são privados."
 
 #: src/view/com/modals/SwitchAccount.tsx:82
 msgid "Your profile"
