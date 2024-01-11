@@ -174,6 +174,7 @@ export function FeedPage({
           feed={feed}
           feedParams={feedParams}
           pollInterval={POLL_FREQ}
+          disablePoll={hasNew}
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}
           onHasNew={setHasNew}

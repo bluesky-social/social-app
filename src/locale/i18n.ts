@@ -27,10 +27,6 @@ export async function dynamicActivate(locale: AppLanguage) {
     //   i18n.loadAndActivate({locale, messages: messagesDe})
     //   break
     // }
-    case AppLanguage.id: {
-      i18n.loadAndActivate({locale, messages: messagesId})
-      break
-    }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
       break
@@ -41,6 +37,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.hi: {
       i18n.loadAndActivate({locale, messages: messagesHi})
+      break
+    }
+    case AppLanguage.id: {
+      i18n.loadAndActivate({locale, messages: messagesId})
       break
     }
     case AppLanguage.ja: {

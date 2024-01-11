@@ -97,6 +97,7 @@ export function FeedsScreen(_props: Props) {
     data: preferences,
     isLoading: isPreferencesLoading,
     error: preferencesError,
+    refetch: refetchPreferences,
   } = usePreferencesQuery()
   const {
     data: popularFeeds,
@@ -151,9 +152,12 @@ export function FeedsScreen(_props: Props) {
   }, [query, debouncedSearch])
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
-    await refetchPopularFeeds()
+    await Promise.all([
+      refetchPreferences().catch(_e => undefined),
+      refetchPopularFeeds().catch(_e => undefined),
+    ])
     setIsPTR(false)
-  }, [setIsPTR, refetchPopularFeeds])
+  }, [setIsPTR, refetchPreferences, refetchPopularFeeds])
   const onEndReached = React.useCallback(() => {
     if (
       isPopularFeedsFetching ||

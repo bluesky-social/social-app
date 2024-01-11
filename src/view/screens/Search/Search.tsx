@@ -572,6 +572,7 @@ export function SearchScreen(
             accessibilityLabel={_(msg`Search`)}
             accessibilityHint=""
             autoCorrect={false}
+            autoComplete="off"
             autoCapitalize="none"
           />
           {query ? (
