@@ -486,7 +486,7 @@ export const ComposePost = observer(function ComposePost({
           <View style={[pal.borderDark, styles.infoBar]}>
             <Text style={[pal.text, s.flex1]}>
               <Trans>
-                You seem to be writing to be in{' '}
+                You seem to be writing in{' '}
                 <Text type="sm-bold" style={pal.text}>
                   {codeToLanguageName(suggestedLanguage)}
                 </Text>
