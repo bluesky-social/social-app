@@ -334,15 +334,24 @@ function Dialogs() {
       <Dialog.Outer control={control}>
         <Dialog.Inner>
           <Dialog.Handle />
-          <Dialog.Close />
-          <Button
-            type="primary"
-            size="small"
-            onPress={() => control.current.close()}
-            accessibilityLabel="Open basic dialog"
-            accessibilityHint="Open basic dialog">
-            Close basic dialog
-          </Button>
+          <View style={[a.gap_md]}>
+            <Button
+              type="primary"
+              size="small"
+              onPress={() => control.current.close()}
+              accessibilityLabel="Open basic dialog"
+              accessibilityHint="Open basic dialog">
+              Close basic dialog
+            </Button>
+            <Button
+              type="secondary"
+              size="small"
+              onPress={() => control.current.close()}
+              accessibilityLabel="Open basic dialog"
+              accessibilityHint="Open basic dialog">
+              Some other control
+            </Button>
+          </View>
         </Dialog.Inner>
       </Dialog.Outer>
     </>

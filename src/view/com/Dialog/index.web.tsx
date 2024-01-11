@@ -4,12 +4,13 @@ import {FocusScope} from '@tamagui/focus-scope'
 import Animated, {FadeInDown, FadeIn, FadeOut} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
-import {EventStopper} from '#/view/com/util/EventStopper'
 import {Text} from '#/view/com/Typography'
 import {Portal} from '#/view/com/Portal'
 import {Button} from '#/view/com/Button'
 
 import {DialogProps, DialogControl} from '#/view/com/Dialog/types'
+
+const stopPropagation = (e: any) => e.stopPropagation()
 
 const Context = React.createContext<{
   close: () => void
@@ -58,6 +59,8 @@ export function Outer({
   )
 
   React.useEffect(() => {
+    if (!isOpen) return
+
     function handler(e: KeyboardEvent) {
       if (e.key === 'Escape') close()
     }
@@ -65,7 +68,7 @@ export function Outer({
     document.addEventListener('keydown', handler)
 
     return () => document.removeEventListener('keydown', handler)
-  }, [close])
+  }, [isOpen, close])
 
   const context = React.useMemo(() => ({close}), [close])
 
@@ -105,14 +108,20 @@ export function Outer({
                       paddingTop: gtMobile ? ('10vh' as DimensionValue) : 0,
                     },
                   ]}>
-                  <FocusScope loop enabled trapped>
-                    <Animated.View
-                      entering={FadeInDown.duration(200)}
-                      exiting={FadeOut.duration(200)}
-                      aria-role="dialog">
-                      <EventStopper>{children}</EventStopper>
-                    </Animated.View>
-                  </FocusScope>
+                  <View
+                    // @ts-ignore web only -prf
+                    onClick={stopPropagation}
+                    onStartShouldSetResponder={_ => true}
+                    onTouchEnd={stopPropagation}>
+                    <FocusScope loop enabled trapped>
+                      <Animated.View
+                        entering={FadeInDown}
+                        exiting={FadeOut}
+                        aria-role="dialog">
+                        {children}
+                      </Animated.View>
+                    </FocusScope>
+                  </View>
                 </View>
               </View>
             </TouchableWithoutFeedback>

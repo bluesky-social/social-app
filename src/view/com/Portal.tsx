@@ -33,8 +33,6 @@ export function Provider(props: React.PropsWithChildren<{}>) {
     setOutlet(<>{Object.values(map.current)}</>)
   }, [])
 
-  console.log(outlet)
-
   return (
     <Context.Provider value={{outlet, append, remove}}>
       {props.children}
