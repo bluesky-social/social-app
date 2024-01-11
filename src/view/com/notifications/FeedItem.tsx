@@ -39,7 +39,7 @@ import {formatCount} from '../util/numeric/format'
 import {makeProfileLink} from 'lib/routes/links'
 import {TimeElapsed} from '../util/TimeElapsed'
 import {isWeb} from 'platform/detection'
-import {Trans, msg, Plural} from '@lingui/macro'
+import {Trans, msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
 
@@ -180,6 +180,7 @@ let FeedItem = ({
     return null
   }
 
+  let formattedCount = authors.length > 1 ? formatCount(authors.length - 1) : ''
   return (
     <Link
       testID={`feedItem-by-${item.notification.author.handle}`}
@@ -239,12 +240,10 @@ let FeedItem = ({
                   <Trans>and</Trans>{' '}
                 </Text>
                 <Text style={[pal.text, s.bold]}>
-                  {formatCount(authors.length - 1)}{' '}
-                  <Plural
-                    value={authors.length - 1}
-                    one="other"
-                    other="others"
-                  />
+                  {plural(authors.length - 1, {
+                    one: `${formattedCount} other`,
+                    other: `${formattedCount} others`,
+                  })}
                 </Text>
               </>
             ) : undefined}

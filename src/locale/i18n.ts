@@ -17,6 +17,10 @@ import {messages as messagesUk} from '#/locale/locales/uk/messages'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 
+import '@formatjs/intl-locale/polyfill'
+import '@formatjs/intl-pluralrules/polyfill'
+import '@formatjs/intl-pluralrules/locale-data/en'
+
 /**
  * We do a dynamic import of just the catalog that we need
  */
@@ -25,38 +29,47 @@ export async function dynamicActivate(locale: AppLanguage) {
     // DISABLED until this translation is fixed -prf
     // case AppLanguage.de: {
     //   i18n.loadAndActivate({locale, messages: messagesDe})
+    //   await import('@formatjs/intl-pluralrules/locale-data/de')
     //   break
     // }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
+      await import('@formatjs/intl-pluralrules/locale-data/es')
       break
     }
     case AppLanguage.fr: {
       i18n.loadAndActivate({locale, messages: messagesFr})
+      await import('@formatjs/intl-pluralrules/locale-data/fr')
       break
     }
     case AppLanguage.hi: {
       i18n.loadAndActivate({locale, messages: messagesHi})
+      await import('@formatjs/intl-pluralrules/locale-data/hi')
       break
     }
     case AppLanguage.id: {
       i18n.loadAndActivate({locale, messages: messagesId})
+      await import('@formatjs/intl-pluralrules/locale-data/id')
       break
     }
     case AppLanguage.ja: {
       i18n.loadAndActivate({locale, messages: messagesJa})
+      await import('@formatjs/intl-pluralrules/locale-data/ja')
       break
     }
     case AppLanguage.ko: {
       i18n.loadAndActivate({locale, messages: messagesKo})
+      await import('@formatjs/intl-pluralrules/locale-data/ko')
       break
     }
     case AppLanguage.pt_BR: {
       i18n.loadAndActivate({locale, messages: messagesPt_BR})
+      await import('@formatjs/intl-pluralrules/locale-data/pt')
       break
     }
     case AppLanguage.uk: {
       i18n.loadAndActivate({locale, messages: messagesUk})
+      await import('@formatjs/intl-pluralrules/locale-data/uk')
       break
     }
     default: {
