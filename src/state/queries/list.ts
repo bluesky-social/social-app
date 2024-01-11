@@ -3,6 +3,7 @@ import {
   AppBskyGraphGetList,
   AppBskyGraphList,
   AppBskyGraphDefs,
+  Facet,
 } from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
@@ -38,6 +39,7 @@ export interface ListCreateMutateParams {
   purpose: string
   name: string
   description: string
+  descriptionFacets: Facet[] | undefined
   avatar: RNImage | null | undefined
 }
 export function useListCreateMutation() {
@@ -45,7 +47,13 @@ export function useListCreateMutation() {
   const queryClient = useQueryClient()
   return useMutation<{uri: string; cid: string}, Error, ListCreateMutateParams>(
     {
-      async mutationFn({purpose, name, description, avatar}) {
+      async mutationFn({
+        purpose,
+        name,
+        description,
+        descriptionFacets,
+        avatar,
+      }) {
         if (!currentAccount) {
           throw new Error('Not logged in')
         }
@@ -59,6 +67,7 @@ export function useListCreateMutation() {
           purpose,
           name,
           description,
+          descriptionFacets,
           avatar: undefined,
           createdAt: new Date().toISOString(),
         }
@@ -93,6 +102,7 @@ export interface ListMetadataMutateParams {
   uri: string
   name: string
   description: string
+  descriptionFacets: Facet[] | undefined
   avatar: RNImage | null | undefined
 }
 export function useListMetadataMutation() {
@@ -103,7 +113,7 @@ export function useListMetadataMutation() {
     Error,
     ListMetadataMutateParams
   >({
-    async mutationFn({uri, name, description, avatar}) {
+    async mutationFn({uri, name, description, descriptionFacets, avatar}) {
       const {hostname, rkey} = new AtUri(uri)
       if (!currentAccount) {
         throw new Error('Not logged in')
@@ -121,6 +131,7 @@ export function useListMetadataMutation() {
       // update the fields
       record.name = name
       record.description = description
+      record.descriptionFacets = descriptionFacets
       if (avatar) {
         const blobRes = await uploadBlob(getAgent(), avatar.path, avatar.mime)
         record.avatar = blobRes.data.blob
