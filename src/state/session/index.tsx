@@ -193,11 +193,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const clearCurrentAccount = React.useCallback(() => {
-    logger.debug(
-      `session: clear current account`,
-      {},
-      logger.DebugContext.session,
-    )
+    logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
     queryClient.clear()
     setStateAndPersist(s => ({
@@ -322,8 +318,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
+    logger.info(`session: logout`)
     clearCurrentAccount()
-    logger.debug(`session: logout`, {}, logger.DebugContext.session)
     setStateAndPersist(s => {
       return {
         ...s,
