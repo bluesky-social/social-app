@@ -45,28 +45,28 @@ export function Component({href}: {href: string}) {
       </Text>
       <Text style={pal.text}>
         <Trans>
-          Your choice will be saved, but can be changed later in settings
+          Your choice will be saved, but can be changed later in settings.
         </Trans>
       </Text>
       <View style={[styles.btnContainer]}>
         <Button
           testID="confirmBtn"
-          type="primary"
+          type="inverted"
           onPress={onUseIAB}
           accessibilityLabel={_(msg`Use in-app browser`)}
           accessibilityHint=""
           label={_(msg`Use in-app browser`)}
-          labelContainerStyle={{justifyContent: 'center', padding: 4}}
+          labelContainerStyle={{justifyContent: 'center', padding: 8}}
           labelStyle={[s.f18]}
         />
         <Button
           testID="confirmBtn"
-          type="primary"
+          type="inverted"
           onPress={onUseLinking}
           accessibilityLabel={_(msg`Use my default browser`)}
           accessibilityHint=""
           label={_(msg`Use my default browser`)}
-          labelContainerStyle={{justifyContent: 'center', padding: 4}}
+          labelContainerStyle={{justifyContent: 'center', padding: 8}}
           labelStyle={[s.f18]}
         />
         <Button
@@ -78,7 +78,7 @@ export function Component({href}: {href: string}) {
           accessibilityLabel={_(msg`Cancel`)}
           accessibilityHint=""
           label="Cancel"
-          labelContainerStyle={{justifyContent: 'center', padding: 4}}
+          labelContainerStyle={{justifyContent: 'center', padding: 8}}
           labelStyle={[s.f18]}
         />
       </View>

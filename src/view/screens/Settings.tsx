@@ -617,17 +617,6 @@ export function SettingsScreen({}: Props) {
             <Trans>External Media Preferences</Trans>
           </Text>
         </TouchableOpacity>
-        {isNative && (
-          <View style={[pal.view, styles.toggleCard]}>
-            <ToggleButton
-              type="default-light"
-              label={_(msg`Use in-app browser`)}
-              labelType="lg"
-              isSelected={inAppBrowserPref ?? false}
-              onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
-            />
-          </View>
-        )}
 
         <View style={styles.spacer20} />
 
@@ -676,6 +665,17 @@ export function SettingsScreen({}: Props) {
             <Trans>Change handle</Trans>
           </Text>
         </TouchableOpacity>
+        {isNative && (
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label={_(msg`Open links with in-app browser`)}
+              labelType="lg"
+              isSelected={inAppBrowserPref ?? false}
+              onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
+            />
+          </View>
+        )}
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Danger Zone</Trans>
