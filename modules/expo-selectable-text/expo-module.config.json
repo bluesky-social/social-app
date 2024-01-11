@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["ExpoSelectableTextModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.selectabletext.ExpoSelectableTextModule"]
+  }
+}
