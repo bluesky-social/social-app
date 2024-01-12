@@ -611,8 +611,8 @@ function AboutSection({
             <TextLink
               href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
               text={plural(likeCount, {
-                one: "Liked by # user",
-                other: "Liked by # users",
+                one: 'Liked by # user',
+                other: 'Liked by # users',
               })}
               style={[pal.textLight, s.semiBold]}
             />

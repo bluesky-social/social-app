@@ -186,7 +186,7 @@ let PostCtrls = ({
         accessibilityRole="button"
         accessibilityLabel={`${
           post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-        } (${plural(post.likeCount || 0, {one: "# like", other: "# likes"})})`}
+        } (${plural(post.likeCount || 0, {one: '# like', other: '# likes'})})`}
         accessibilityHint=""
         hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
         {post.viewer?.like ? (

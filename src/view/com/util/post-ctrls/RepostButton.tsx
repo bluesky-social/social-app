@@ -58,7 +58,7 @@ let RepostButton = ({
         isReposted
           ? _(msg`Undo repost`)
           : _(msg({message: 'Repost', context: 'action'}))
-      } (${plural(repostCount || 0, {one: "# repost", other: "# reposts"})})`}
+      } (${plural(repostCount || 0, {one: '# repost', other: '# reposts'})})`}
       accessibilityHint=""
       hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
       <RepostIcon

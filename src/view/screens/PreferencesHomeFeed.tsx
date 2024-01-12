@@ -27,7 +27,6 @@ function RepliesThresholdInput({
   initialValue: number
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const preValue = React.useRef(initialValue)
