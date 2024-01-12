@@ -52,6 +52,9 @@ export function Storybook() {
           <ThemeProvider theme="light">
             <Theming />
           </ThemeProvider>
+          <ThemeProvider theme="dim">
+            <Theming />
+          </ThemeProvider>
           <ThemeProvider theme="dark">
             <Theming />
           </ThemeProvider>

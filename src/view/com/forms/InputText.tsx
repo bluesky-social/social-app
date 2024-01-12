@@ -71,7 +71,7 @@ export function InputText({
 
     if (hovered || focused) {
       input.push({
-        borderColor: t.atoms.border_contrast_500.borderColor,
+        borderColor: t.atoms.border_contrast.borderColor,
       })
 
       if (hasError) {
@@ -155,7 +155,7 @@ export function InputText({
           ]}>
           <Icon
             style={[
-              {color: t.atoms.border_contrast_500.borderColor},
+              {color: t.atoms.border_contrast.borderColor},
               {
                 width: 20,
                 pointerEvents: 'none',

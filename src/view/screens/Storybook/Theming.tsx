@@ -29,7 +29,7 @@ export function Theming() {
         theme.atoms.text_contrast_400
       </Text>
 
-      <View style={[a.flex_1, t.atoms.border_contrast_500, a.border_t]} />
+      <View style={[a.flex_1, t.atoms.border_contrast, a.border_t]} />
 
       <View style={[a.w_full, a.gap_md]}>
         <View style={[t.atoms.bg, a.justify_center, a.p_md]}>
