@@ -35,7 +35,7 @@ msgstr "Lista {0} {purposeLabel}"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr "{invitesAvailable, plural, one {Códigos de convite: # disponível} other {Códigos de convite: # disponíveis}}"
+msgstr "{invitesAvailable, plural, one {Códigos de convite: # disponível} other {Cód. de convite: # disponíveis}}"
 
 #: src/view/screens/Settings.tsx:407
 #: src/view/shell/Drawer.tsx:659
@@ -45,7 +45,7 @@ msgstr "Código de convite {invitesAvailable} disponível"
 #: src/view/screens/Settings.tsx:409
 #: src/view/shell/Drawer.tsx:661
 msgid "{invitesAvailable} invite codes available"
-msgstr "Códigos de convite {invitesAvailable} disponíveis"
+msgstr "Cód. de convite {invitesAvailable} disponíveis"
 
 #: src/view/screens/Search/Search.tsx:87
 msgid "{message}"
@@ -1713,7 +1713,7 @@ msgstr "Aguarde até que o cartão de link termine de carregar"
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 msgid "Post"
-msgstr "Post"
+msgstr "Postar"
 
 #: src/view/com/post-thread/PostThread.tsx:378
 msgid "Post hidden"
