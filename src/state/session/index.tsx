@@ -193,11 +193,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const clearCurrentAccount = React.useCallback(() => {
-    logger.debug(
-      `session: clear current account`,
-      {},
-      logger.DebugContext.session,
-    )
+    logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
     queryClient.clear()
     setStateAndPersist(s => ({
@@ -322,8 +318,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
+    logger.info(`session: logout`)
     clearCurrentAccount()
-    logger.debug(`session: logout`, {}, logger.DebugContext.session)
     setStateAndPersist(s => {
       return {
         ...s,
@@ -551,30 +547,36 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return persisted.onUpdate(() => {
       const session = persisted.get('session')
 
-      logger.debug(`session: onUpdate`, {}, logger.DebugContext.session)
+      logger.info(`session: persisted onUpdate`, {})
 
-      if (session.currentAccount) {
+      if (session.currentAccount && session.currentAccount.refreshJwt) {
         if (session.currentAccount?.did !== state.currentAccount?.did) {
-          logger.debug(
-            `session: switching account`,
-            {
-              from: {
-                did: state.currentAccount?.did,
-                handle: state.currentAccount?.handle,
-              },
-              to: {
-                did: session.currentAccount.did,
-                handle: session.currentAccount.handle,
-              },
+          logger.info(`session: persisted onUpdate, switching accounts`, {
+            from: {
+              did: state.currentAccount?.did,
+              handle: state.currentAccount?.handle,
             },
-            logger.DebugContext.session,
-          )
+            to: {
+              did: session.currentAccount.did,
+              handle: session.currentAccount.handle,
+            },
+          })
 
           initSession(session.currentAccount)
+        } else {
+          logger.info(`session: persisted onUpdate, updating session`, {})
+
+          /*
+           * Use updated session in this tab's agent. Do not call
+           * upsertAccount, since that will only persist the session that's
+           * already persisted, and we'll get a loop between tabs.
+           */
+          // @ts-ignore we checked for `refreshJwt` above
+          __globalAgent.session = session.currentAccount
         }
       } else if (!session.currentAccount && state.currentAccount) {
         logger.debug(
-          `session: logging out`,
+          `session: persisted onUpdate, logging out`,
           {
             did: state.currentAccount?.did,
             handle: state.currentAccount?.handle,
@@ -582,10 +584,22 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           logger.DebugContext.session,
         )
 
+        /*
+         * No need to do a hard logout here. If we reach this, tokens for this
+         * account have already been cleared either by an `expired` event
+         * handled by `persistSession` (which nukes this accounts tokens only),
+         * or by a `logout` call  which nukes all accounts tokens)
+         */
         clearCurrentAccount()
       }
+
+      setState(s => ({
+        ...s,
+        accounts: session.accounts,
+        currentAccount: session.currentAccount,
+      }))
     })
-  }, [state, clearCurrentAccount, initSession])
+  }, [state, setState, clearCurrentAccount, initSession])
 
   const stateContext = React.useMemo(
     () => ({
