@@ -275,7 +275,7 @@ msgstr "アプリの言語"
 
 #: src/view/com/modals/AddAppPasswords.tsx:133
 #~ msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-#~ msgstr "アプリパスワードの名前には、文字、数字、スペース、ハイフン、アンダースコアのみが使用可能です。"
+#~ msgstr "アプリパスワードの名前には、英数字、スペース、ハイフン、アンダースコアのみが使用可能です。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:98
 #~ msgid "App Password names must be at least 4 characters long."
@@ -485,7 +485,7 @@ msgstr "カメラ"
 
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "文字、数字、スペース、ハイフン、およびアンダースコアのみが使用可能です。長さは4文字以上32文字以下である必要があります。"
+msgstr "英数字、スペース、ハイフン、アンダースコアのみが使用可能です。長さは4文字以上32文字以下である必要があります。"
 
 #: src/view/com/composer/Composer.tsx:294
 #: src/view/com/composer/Composer.tsx:297
