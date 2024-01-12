@@ -320,8 +320,14 @@ export function SettingsScreen({}: Props) {
                   />
                 </>
               )}
-              <Text type="lg" style={pal.text}>
-                {currentAccount.email || '(no email)'}{' '}
+              <Text
+                type="lg"
+                numberOfLines={1}
+                style={[
+                  pal.text,
+                  {overflow: 'hidden', marginRight: 4, flex: 1},
+                ]}>
+                {currentAccount.email || '(no email)'}
               </Text>
               <Link onPress={() => openModal({name: 'change-email'})}>
                 <Text type="lg" style={pal.link}>
