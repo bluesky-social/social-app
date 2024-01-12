@@ -26,6 +26,7 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
+import {ProfileHeaderModCard} from './ProfileHeaderModCard'
 import {formatCount} from '../util/numeric/format'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
@@ -663,6 +664,7 @@ let ProfileHeaderLoaded = ({
         {isMe && (
           <LabelInfo details={{did: profile.did}} labels={profile.labels} />
         )}
+        <ProfileHeaderModCard />
       </View>
 
       {!isProfilePreview && showSuggestedFollows && (

@@ -56,6 +56,7 @@ import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
 import {ProfileFeedScreen} from './view/screens/ProfileFeed'
 import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
+import {ProfileModserviceScreen} from './view/screens/ProfileModservice'
 import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
@@ -196,6 +197,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ProfileFeedLikedBy"
         getComponent={() => ProfileFeedLikedByScreen}
         options={{title: title(msg`Liked by`)}}
+      />
+      <Stack.Screen
+        name="ProfileModservice"
+        getComponent={() => ProfileModserviceScreen}
+        options={{title: title(msg`Moderation service`)}}
       />
       <Stack.Screen
         name="Debug"
