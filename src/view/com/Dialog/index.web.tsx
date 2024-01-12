@@ -11,7 +11,8 @@ import {Button} from '#/view/com/Button'
 import {DialogOuterProps, DialogInnerProps} from '#/view/com/Dialog/types'
 import {Context, useDialogContext} from '#/view/com/Dialog/context'
 
-export {useDialogControl} from '#/view/com/Dialog/context'
+export {useDialogControl, useDialogContext} from '#/view/com/Dialog/context'
+export * from '#/view/com/Dialog/types'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 
@@ -38,7 +39,7 @@ export function Outer({
   }, [onClose, setIsOpen])
 
   useImperativeHandle(
-    control,
+    control.ref,
     () => ({
       open,
       close,
@@ -58,7 +59,12 @@ export function Outer({
     return () => document.removeEventListener('keydown', handler)
   }, [isOpen, close])
 
-  const context = React.useMemo(() => ({close}), [close])
+  const context = React.useMemo(
+    () => ({
+      close,
+    }),
+    [close],
+  )
 
   return (
     <>
@@ -111,12 +117,19 @@ export function Outer({
   )
 }
 
-export function Inner({children, style}: DialogInnerProps) {
+export function Inner({
+  children,
+  style,
+  accessibilityLabelledBy,
+  accessibilityDescribedBy,
+}: DialogInnerProps) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   return (
     <FocusScope loop enabled trapped>
       <Animated.View
+        aria-labelledby={accessibilityLabelledBy}
+        aria-describedby={accessibilityDescribedBy}
         aria-role="dialog"
         // @ts-ignore web only -prf
         onClick={stopPropagation}
@@ -128,9 +141,10 @@ export function Inner({children, style}: DialogInnerProps) {
           a.relative,
           a.rounded_md,
           a.w_full,
+          a.border,
           gtMobile ? a.p_xl : a.p_lg,
           t.atoms.bg,
-          {maxWidth: 600},
+          {maxWidth: 600, borderColor: t.palette.contrast_300},
           ...(Array.isArray(style) ? style : [style || {}]),
         ]}>
         {children}

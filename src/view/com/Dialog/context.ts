@@ -15,5 +15,9 @@ export function useDialogControl() {
     close: () => {},
   })
 
-  return control
+  return {
+    ref: control,
+    open: () => control.current.open(),
+    close: () => control.current.close(),
+  }
 }

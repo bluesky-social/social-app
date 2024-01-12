@@ -12,12 +12,14 @@ import {
 } from '#/view/com/Dialog/types'
 import {Context} from '#/view/com/Dialog/context'
 
-export {useDialogControl} from '#/view/com/Dialog/context'
+export {useDialogControl, useDialogContext} from '#/view/com/Dialog/context'
+export * from '#/view/com/Dialog/types'
 
 export function Outer({
+  children,
   control,
   onClose,
-  children,
+  nativeOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
@@ -32,7 +34,7 @@ export function Outer({
   }, [onClose])
 
   useImperativeHandle(
-    control,
+    control.ref,
     () => ({
       open,
       close,
@@ -45,13 +47,14 @@ export function Outer({
   return (
     <Portal>
       <BottomSheet
-        ref={sheet}
-        index={-1}
         snapPoints={['90%']}
         enablePanDownToClose
         keyboardBehavior="extend"
-        backgroundStyle={{backgroundColor: 'transparent'}}
         android_keyboardInputMode="adjustResize"
+        {...(nativeOptions?.sheet || {})}
+        ref={sheet}
+        index={-1}
+        backgroundStyle={{backgroundColor: 'transparent'}}
         backdropComponent={props => (
           <BottomSheetBackdrop
             appearsOnIndex={0}
@@ -61,28 +64,37 @@ export function Outer({
         )}
         handleIndicatorStyle={{backgroundColor: t.palette.primary}}
         handleStyle={{display: 'none'}}
-        onChange={() => {}}
         onClose={onClose}>
-        <Context.Provider value={context}>{children}</Context.Provider>
+        <Context.Provider value={context}>
+          <View
+            style={[
+              a.absolute,
+              a.inset_0,
+              t.atoms.bg,
+              {
+                borderTopLeftRadius: 40,
+                borderTopRightRadius: 40,
+                height: Dimensions.get('window').height * 2,
+              },
+            ]}
+          />
+          {children}
+        </Context.Provider>
       </BottomSheet>
     </Portal>
   )
 }
 
+// TODO a11y props here, or is that handled by the sheet?
 export function Inner(props: DialogInnerProps) {
-  const t = useTheme()
   return (
     <View
       style={[
-        a.absolute,
-        a.inset_0,
         a.p_lg,
         a.pt_xxl,
-        t.atoms.bg,
         {
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
-          height: Dimensions.get('window').height * 2,
         },
       ]}>
       {props.children}
@@ -101,7 +113,7 @@ export function Handle() {
         t.atoms.bg_contrast_200,
         {
           top: 12,
-          width: 80,
+          width: 50,
           height: 6,
           alignSelf: 'center',
         },

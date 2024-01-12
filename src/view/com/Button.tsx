@@ -284,13 +284,7 @@ export function ButtonText({
   return (
     <Text
       {...rest}
-      style={[
-        atoms.flex_1,
-        atoms.font_semibold,
-        atoms.text_center,
-        ...textStyles,
-        style,
-      ]}>
+      style={[atoms.font_semibold, atoms.text_center, ...textStyles, style]}>
       {children}
     </Text>
   )

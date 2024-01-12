@@ -8,32 +8,39 @@ import * as tokens from '#/alf/tokens'
 import {atoms as a, useTheme, useBreakpoints, ThemeProvider as Alf} from '#/alf'
 import {Button, ButtonText} from '#/view/com/Button'
 import {Link} from '#/view/com/Link'
-import {Text, H1, H2, H3, H4, H5, H6} from '#/view/com/Typography'
+import {Text, H1, H2, H3, H4, H5, H6, P} from '#/view/com/Typography'
 import {InputText} from '#/view/com/forms/InputText'
 import {InputDate, utils} from '#/view/com/forms/InputDate'
 import {Logo} from '#/view/icons/Logo'
 import * as Dialog from '#/view/com/Dialog'
+import * as Prompt from '#/view/com/Prompt'
 
 function ThemeSelector() {
   const setColorMode = useSetColorMode()
 
   return (
-    <View style={[a.flex_row, a.gap_md]}>
+    <View style={[a.flex_row, a.align_start, a.gap_md]}>
       <Button
         type="secondary"
         size="small"
+        accessibilityLabel='Set theme to "system"'
+        accessibilityHint="Set theme to system default"
         onPress={() => setColorMode('system')}>
         System
       </Button>
       <Button
         type="secondary"
         size="small"
+        accessibilityLabel='Set theme to "system"'
+        accessibilityHint="Set theme to system default"
         onPress={() => setColorMode('light')}>
         Light
       </Button>
       <Button
         type="secondary"
         size="small"
+        accessibilityLabel='Set theme to "system"'
+        accessibilityHint="Set theme to system default"
         onPress={() => setColorMode('dark')}>
         Dark
       </Button>
@@ -319,39 +326,58 @@ function Forms() {
 
 function Dialogs() {
   const control = Dialog.useDialogControl()
+  const prompt = Prompt.usePromptControl()
 
   return (
     <>
       <Button
         type="secondary"
         size="small"
-        onPress={() => control.current.open()}
+        onPress={() => control.open()}
         accessibilityLabel="Open basic dialog"
         accessibilityHint="Open basic dialog">
         Open basic dialog
       </Button>
 
+      <Button
+        type="negative"
+        size="small"
+        onPress={() => prompt.open()}
+        accessibilityLabel="Open prompt"
+        accessibilityHint="Open prompt">
+        Open prompt
+      </Button>
+
+      <Prompt.Outer control={prompt}>
+        <Prompt.Title>Are you sure?</Prompt.Title>
+        <Prompt.Description>
+          This action cannot be undone. This action cannot be undone. This
+          action cannot be undone.
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>Cancel</Prompt.Cancel>
+          <Prompt.Action>Confirm</Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
+
       <Dialog.Outer control={control}>
-        <Dialog.Inner style={{width: 'auto'}}>
+        <Dialog.Inner
+          accessibilityLabelledBy="dialog-title"
+          accessibilityDescribedBy="dialog-description">
           <Dialog.Handle />
           <View style={[a.gap_md]}>
-            <Button
-              type="primary"
-              size="small"
-              onPress={() => control.current.close()}
-              accessibilityLabel="Open basic dialog"
-              accessibilityHint="Open basic dialog">
-              Close basic dialog
-            </Button>
-            <View style={{height: 100}} />
-            <Button
-              type="secondary"
-              size="small"
-              onPress={() => control.current.close()}
-              accessibilityLabel="Open basic dialog"
-              accessibilityHint="Open basic dialog">
-              Some other control
-            </Button>
+            <H3 nativeID="dialog-title">Dialog</H3>
+            <P nativeID="dialog-description">Description</P>
+            <View style={[a.flex_row, a.justify_end]}>
+              <Button
+                type="primary"
+                size="small"
+                onPress={() => control.close()}
+                accessibilityLabel="Open basic dialog"
+                accessibilityHint="Open basic dialog">
+                Close basic dialog
+              </Button>
+            </View>
           </View>
         </Dialog.Inner>
       </Dialog.Outer>

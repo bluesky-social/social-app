@@ -1,5 +1,8 @@
 import React from 'react'
-import type {ViewStyle} from 'react-native'
+import type {ViewStyle, AccessibilityProps} from 'react-native'
+import {BottomSheetProps} from '@gorhom/bottom-sheet'
+
+type A11yProps = Required<AccessibilityProps>
 
 export type DialogContextProps = {
   close: () => void
@@ -11,8 +14,20 @@ export type DialogControlProps = {
 }
 
 export type DialogOuterProps = {
-  control: React.RefObject<DialogControlProps>
+  control: {
+    ref: React.RefObject<DialogControlProps>
+    open: (index?: number) => void
+    close: () => void
+  }
   onClose?: () => void
+  nativeOptions?: {
+    sheet?: Omit<BottomSheetProps, 'children'>
+  }
+  webOptions?: {}
 }
 
-export type DialogInnerProps = React.PropsWithChildren<{style?: ViewStyle}>
+export type DialogInnerProps = React.PropsWithChildren<{
+  style?: ViewStyle
+  accessibilityLabelledBy: A11yProps['aria-labelledby']
+  accessibilityDescribedBy: string
+}>

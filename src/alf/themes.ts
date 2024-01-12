@@ -11,12 +11,36 @@ export const lightPalette = {
   primary: tokens.color.blue_500,
   positive: tokens.color.green_500,
   negative: tokens.color.red_500,
+
+  contrast_0: tokens.color.gray_0,
+  contrast_100: tokens.color.gray_100,
+  contrast_200: tokens.color.gray_200,
+  contrast_300: tokens.color.gray_300,
+  contrast_400: tokens.color.gray_400,
+  contrast_500: tokens.color.gray_500,
+  contrast_600: tokens.color.gray_600,
+  contrast_700: tokens.color.gray_700,
+  contrast_800: tokens.color.gray_800,
+  contrast_900: tokens.color.gray_900,
+  contrast_1000: tokens.color.gray_1000,
 } as const
 
 export const darkPalette: Palette = {
   primary: tokens.color.blue_500,
   positive: tokens.color.green_400,
   negative: tokens.color.red_400,
+
+  contrast_0: tokens.color.gray_1000,
+  contrast_100: tokens.color.gray_900,
+  contrast_200: tokens.color.gray_800,
+  contrast_300: tokens.color.gray_700,
+  contrast_400: tokens.color.gray_600,
+  contrast_500: tokens.color.gray_500,
+  contrast_600: tokens.color.gray_400,
+  contrast_700: tokens.color.gray_300,
+  contrast_800: tokens.color.gray_200,
+  contrast_900: tokens.color.gray_100,
+  contrast_1000: tokens.color.gray_0,
 } as const
 
 export const light = {
