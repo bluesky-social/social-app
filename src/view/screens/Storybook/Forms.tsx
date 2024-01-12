@@ -1,0 +1,66 @@
+import React from 'react'
+import {View} from 'react-native'
+
+import {atoms as a} from '#/alf'
+import {Text} from '#/view/com/Typography'
+import {InputText} from '#/view/com/forms/InputText'
+import {InputDate, utils} from '#/view/com/forms/InputDate'
+import {Logo} from '#/view/icons/Logo'
+
+export function Forms() {
+  return (
+    <View style={[a.gap_md, a.align_start]}>
+      <InputText
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value=""
+        onChange={text => console.log(text)}
+      />
+      <InputText
+        hasError
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value="Test initial value"
+        onChange={text => console.log(text)}
+      />
+      <InputText
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value=""
+        onChange={text => console.log(text)}
+        icon={Logo}
+      />
+      <InputText
+        testID="input"
+        accessibilityLabel="Input"
+        accessibilityHint="Enter some text"
+        placeholder="Type here"
+        value=""
+        onChange={text => console.log(text)}
+        icon={Logo}
+        suffix={() => <Text>.bksy.social</Text>}
+      />
+
+      <InputDate
+        testID="date"
+        value={'2001-01-01'}
+        onChange={date => console.log(date)}
+        accessibilityLabel="Date"
+        accessibilityHint="Enter a date"
+      />
+      <InputDate
+        testID="date"
+        value={utils.toSimpleDateString(new Date())}
+        onChange={date => console.log(date)}
+        accessibilityLabel="Date"
+        accessibilityHint="Enter a date"
+      />
+    </View>
+  )
+}

@@ -72,7 +72,7 @@ export function Title({children}: React.PropsWithChildren<{}>) {
   return (
     <H2
       nativeID={titleId}
-      style={[a.font_semibold, t.atoms.text_contrast_700, a.pb_sm]}>
+      style={[a.font_bold, t.atoms.text_contrast_600, a.pb_sm]}>
       {children}
     </H2>
   )
@@ -82,7 +82,7 @@ export function Description({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
-    <P nativeID={descriptionId} style={[t.atoms.text_contrast_700, a.pb_lg]}>
+    <P nativeID={descriptionId} style={[t.atoms.text, a.pb_lg]}>
       {children}
     </P>
   )

@@ -19,7 +19,7 @@ export function H1({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.text_xl, atoms.font_bold, t.atoms.text, flatten(style)]}
+      style={[atoms.text_5xl, atoms.font_bold, t.atoms.text, flatten(style)]}
     />
   )
 }
@@ -35,7 +35,7 @@ export function H2({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.text_lg, atoms.font_bold, t.atoms.text, flatten(style)]}
+      style={[atoms.text_4xl, atoms.font_bold, t.atoms.text, flatten(style)]}
     />
   )
 }
@@ -51,7 +51,7 @@ export function H3({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.text_md, atoms.font_bold, t.atoms.text, flatten(style)]}
+      style={[atoms.text_3xl, atoms.font_bold, t.atoms.text, flatten(style)]}
     />
   )
 }
@@ -67,7 +67,7 @@ export function H4({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.text_sm, atoms.font_bold, t.atoms.text, flatten(style)]}
+      style={[atoms.text_2xl, atoms.font_bold, t.atoms.text, flatten(style)]}
     />
   )
 }
@@ -83,7 +83,7 @@ export function H5({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.text_xs, atoms.font_bold, t.atoms.text, flatten(style)]}
+      style={[atoms.text_xl, atoms.font_bold, t.atoms.text, flatten(style)]}
     />
   )
 }
@@ -99,7 +99,7 @@ export function H6({style, ...rest}: TextProps) {
     <RNText
       {...attr}
       {...rest}
-      style={[atoms.text_xxs, atoms.font_bold, t.atoms.text, flatten(style)]}
+      style={[atoms.text_lg, atoms.font_bold, t.atoms.text, flatten(style)]}
     />
   )
 }

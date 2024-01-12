@@ -91,7 +91,7 @@ export function Inner(props: DialogInnerProps) {
     <View
       style={[
         a.p_lg,
-        a.pt_xxl,
+        a.pt_3xl,
         {
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,

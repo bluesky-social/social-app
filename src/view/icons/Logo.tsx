@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, TextProps} from 'react-native'
 import Svg, {
   Path,
   Defs,
@@ -15,7 +15,8 @@ const ratio = 57 / 64
 
 type Props = {
   fill?: PathProps['fill']
-} & SvgProps
+  style?: TextProps['style']
+} & Omit<SvgProps, 'style'>
 
 export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
   const {fill, ...rest} = props

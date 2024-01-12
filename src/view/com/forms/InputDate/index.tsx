@@ -48,8 +48,8 @@ export function InputDate({
           nativeID={labelId}
           style={[
             atoms.text_sm,
-            atoms.font_semibold,
-            t.atoms.text_contrast_700,
+            atoms.font_bold,
+            t.atoms.text_contrast_600,
             atoms.mb_sm,
           ]}>
           {label}

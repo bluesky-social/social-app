@@ -12,7 +12,8 @@ export const lightPalette = {
   positive: tokens.color.green_500,
   negative: tokens.color.red_500,
 
-  contrast_0: tokens.color.gray_0,
+  contrast_25: tokens.color.gray_25,
+  contrast_50: tokens.color.gray_50,
   contrast_100: tokens.color.gray_100,
   contrast_200: tokens.color.gray_200,
   contrast_300: tokens.color.gray_300,
@@ -22,7 +23,6 @@ export const lightPalette = {
   contrast_700: tokens.color.gray_700,
   contrast_800: tokens.color.gray_800,
   contrast_900: tokens.color.gray_900,
-  contrast_1000: tokens.color.gray_1000,
 } as const
 
 export const darkPalette: Palette = {
@@ -30,17 +30,17 @@ export const darkPalette: Palette = {
   positive: tokens.color.green_400,
   negative: tokens.color.red_400,
 
-  contrast_0: tokens.color.gray_1000,
-  contrast_100: tokens.color.gray_900,
-  contrast_200: tokens.color.gray_800,
-  contrast_300: tokens.color.gray_700,
-  contrast_400: tokens.color.gray_600,
-  contrast_500: tokens.color.gray_500,
-  contrast_600: tokens.color.gray_400,
-  contrast_700: tokens.color.gray_300,
-  contrast_800: tokens.color.gray_200,
-  contrast_900: tokens.color.gray_100,
-  contrast_1000: tokens.color.gray_0,
+  contrast_25: tokens.color.gray_900,
+  contrast_50: tokens.color.gray_800,
+  contrast_100: tokens.color.gray_700,
+  contrast_200: tokens.color.gray_600,
+  contrast_300: tokens.color.gray_500,
+  contrast_400: tokens.color.gray_400,
+  contrast_500: tokens.color.gray_300,
+  contrast_600: tokens.color.gray_200,
+  contrast_700: tokens.color.gray_100,
+  contrast_800: tokens.color.gray_50,
+  contrast_900: tokens.color.gray_25,
 } as const
 
 export const light = {
@@ -48,13 +48,16 @@ export const light = {
   palette: lightPalette,
   atoms: {
     text: {
-      color: tokens.color.gray_1000,
+      color: tokens.color.gray_900,
     },
-    text_contrast_700: {
-      color: tokens.color.gray_700,
+    text_contrast_600: {
+      color: lightPalette.contrast_600,
     },
     text_contrast_500: {
-      color: tokens.color.gray_500,
+      color: lightPalette.contrast_500,
+    },
+    text_contrast_400: {
+      color: lightPalette.contrast_400,
     },
     text_inverted: {
       color: tokens.color.white,
@@ -62,20 +65,20 @@ export const light = {
     bg: {
       backgroundColor: tokens.color.white,
     },
+    bg_contrast_25: {
+      backgroundColor: lightPalette.contrast_25,
+    },
+    bg_contrast_50: {
+      backgroundColor: lightPalette.contrast_50,
+    },
     bg_contrast_100: {
-      backgroundColor: tokens.color.gray_100,
+      backgroundColor: lightPalette.contrast_100,
     },
     bg_contrast_200: {
-      backgroundColor: tokens.color.gray_200,
+      backgroundColor: lightPalette.contrast_200,
     },
     bg_contrast_300: {
-      backgroundColor: tokens.color.gray_300,
-    },
-    bg_positive: {
-      backgroundColor: tokens.color.green_500,
-    },
-    bg_negative: {
-      backgroundColor: tokens.color.red_400,
+      backgroundColor: lightPalette.contrast_300,
     },
     border: {
       borderColor: tokens.color.gray_200,
@@ -93,32 +96,35 @@ export const dark: Theme = {
     text: {
       color: tokens.color.white,
     },
-    text_contrast_700: {
-      color: tokens.color.gray_300,
+    text_contrast_600: {
+      color: darkPalette.contrast_600,
     },
     text_contrast_500: {
-      color: tokens.color.gray_500,
+      color: darkPalette.contrast_500,
+    },
+    text_contrast_400: {
+      color: darkPalette.contrast_400,
     },
     text_inverted: {
-      color: tokens.color.gray_1000,
+      color: tokens.color.gray_900,
     },
     bg: {
-      backgroundColor: tokens.color.gray_1000,
-    },
-    bg_contrast_100: {
       backgroundColor: tokens.color.gray_900,
     },
+    bg_contrast_25: {
+      backgroundColor: darkPalette.contrast_25,
+    },
+    bg_contrast_50: {
+      backgroundColor: darkPalette.contrast_50,
+    },
+    bg_contrast_100: {
+      backgroundColor: darkPalette.contrast_100,
+    },
     bg_contrast_200: {
-      backgroundColor: tokens.color.gray_800,
+      backgroundColor: darkPalette.contrast_200,
     },
     bg_contrast_300: {
-      backgroundColor: tokens.color.gray_700,
-    },
-    bg_positive: {
-      backgroundColor: tokens.color.green_400,
-    },
-    bg_negative: {
-      backgroundColor: tokens.color.red_400,
+      backgroundColor: darkPalette.contrast_300,
     },
     border: {
       borderColor: tokens.color.gray_800,
