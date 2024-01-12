@@ -106,11 +106,14 @@ export function Button({
       case 'primary': {
         if (disabled) {
           baseStyles.push({
-            backgroundColor: tokens.color.blue_300,
+            backgroundColor: tokens.color.blue_200,
           })
         } else {
           baseStyles.push({
             backgroundColor: tokens.color.blue_500,
+          })
+          hoverStyles.push({
+            backgroundColor: tokens.color.blue_600,
           })
         }
         break
@@ -118,11 +121,14 @@ export function Button({
       case 'secondary': {
         if (disabled) {
           baseStyles.push({
-            backgroundColor: tokens.color.gray_100,
+            backgroundColor: tokens.color.gray_200,
           })
         } else {
           baseStyles.push({
-            backgroundColor: tokens.color.gray_200,
+            backgroundColor: tokens.color.gray_300,
+          })
+          hoverStyles.push({
+            backgroundColor: tokens.color.gray_400,
           })
         }
         break
@@ -145,16 +151,16 @@ export function Button({
     switch (size) {
       case 'large': {
         baseStyles.push(
-          atoms.py_md,
-          atoms.px_xl,
-          atoms.rounded_md,
+          {paddingVertical: 15},
+          atoms.px_2xl,
+          atoms.rounded_sm,
           atoms.gap_sm,
         )
         break
       }
       case 'small': {
         baseStyles.push(
-          atoms.py_sm,
+          {paddingVertical: 9},
           atoms.px_md,
           atoms.rounded_sm,
           atoms.gap_xs,
@@ -239,11 +245,11 @@ export function ButtonText({
       case 'secondary': {
         if (disabled) {
           baseStyles.push({
-            color: tokens.color.gray_500,
+            color: tokens.color.gray_400,
           })
         } else {
           baseStyles.push({
-            color: tokens.color.gray_700,
+            color: tokens.color.gray_800,
           })
         }
         break
@@ -261,7 +267,7 @@ export function ButtonText({
     switch (size) {
       case 'small': {
         baseStyles.push(
-          atoms.text_sm,
+          atoms.text_md,
           web({paddingBottom: 1}),
           native({marginTop: 2}),
         )

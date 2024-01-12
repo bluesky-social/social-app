@@ -8,6 +8,8 @@ export type ReadonlyPalette = typeof lightPalette
 export type Palette = Mutable<ReadonlyPalette>
 
 export const lightPalette = {
+  white: tokens.color.white,
+  black: tokens.color.black,
   primary: tokens.color.blue_500,
   positive: tokens.color.green_500,
   negative: tokens.color.red_500,
@@ -26,9 +28,11 @@ export const lightPalette = {
 } as const
 
 export const darkPalette: Palette = {
+  white: tokens.color.white,
+  black: tokens.color.black,
   primary: tokens.color.blue_500,
-  positive: tokens.color.green_400,
-  negative: tokens.color.red_400,
+  positive: tokens.color.green_500,
+  negative: tokens.color.red_500,
 
   contrast_25: tokens.color.gray_900,
   contrast_50: tokens.color.gray_800,
