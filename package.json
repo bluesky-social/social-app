@@ -12,7 +12,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "build-web": "expo export:web && node ./scripts/post-web-build.js && cp --verbose ./web-build/static/js/*.* ./bskyweb/static/js/",
+    "build-web": "expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/",
     "build-all": "yarn intl:build && eas build --platform all",
     "start": "expo start --dev-client",
     "start:prod": "expo start --dev-client --no-dev --minify",
