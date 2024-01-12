@@ -62,7 +62,7 @@ msgstr "<0/> membres"
 
 #: src/view/com/profile/ProfileHeader.tsx:634
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>abonné·e·s</1>"
+msgstr "<0>{following} </0><1>abonnements</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -121,7 +121,7 @@ msgstr "Compte masqué"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "Compte masqué par list"
+msgstr "Compte masqué par liste"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
@@ -948,7 +948,7 @@ msgstr "Ignorer le brouillon"
 
 #: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "Empêcher les applis de montrer mon compte aux personnes déconnectées"
+msgstr "Empêcher les applis de montrer mon compte aux personnes non connectées"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
@@ -1078,7 +1078,7 @@ msgstr "Modifier les fils d’actu enregistrés"
 
 #: src/view/com/modals/CreateOrEditList.tsx:188
 msgid "Edit User List"
-msgstr "Modifier la liste de compte"
+msgstr "Modifier la liste de comptes"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Edit your display name"
@@ -1196,20 +1196,20 @@ msgstr "Tout le monde"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "Sors du processus de changement de pseudo"
+msgstr "Sort du processus de changement de pseudo"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:113
 msgid "Exits image view"
-msgstr "Sors de la vue de l’image"
+msgstr "Sort de la vue de l’image"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/shell/desktop/Search.tsx:182
 msgid "Exits inputting search query"
-msgstr "Sors de la saisie de la recherche"
+msgstr "Sort de la saisie de la recherche"
 
 #: src/view/com/modals/Waitlist.tsx:138
 msgid "Exits signing up for waitlist with {email}"
-msgstr "Sors de l’inscription sur la liste d’attente avec {email}"
+msgstr "Sort de l’inscription sur la liste d’attente avec {email}"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:156
 msgid "Expand alt text"
@@ -1218,7 +1218,7 @@ msgstr "Développer le texte alt"
 #: src/view/com/composer/ComposerReplyTo.tsx:81
 #: src/view/com/composer/ComposerReplyTo.tsx:84
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Étend ou rétrécit le post complet auquel vous répondez"
+msgstr "Développe ou réduit le post complet auquel vous répondez"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
@@ -1294,7 +1294,7 @@ msgstr "Les fils d’actu sont créés par d’autres personnes pour rassembler 
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "Les fils d’actu sont des algorithmes personnalisés qui se construisent avec un peu d’expertise en codage. <0/> pour plus d’informations."
+msgstr "Les fils d’actu sont des algorithmes personnalisés qui se construisent avec un peu d’expertise en programmation. <0/> pour plus d’informations."
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:47
 #: src/view/com/posts/FollowingEmptyState.tsx:57
@@ -1488,19 +1488,19 @@ msgstr "Masque les posts de {0} dans votre fil d’actu"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "Hmm, un problème s’est produit avec le serveur de fils d’actu. Veuillez informer la personne à l’origine du fil d’actu de ce problème."
+msgstr "Hmm, un problème s’est produit avec le serveur de fils d’actu. Veuillez informer la personne propriétaire du fil d’actu de ce problème."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "Hmm, le serveur du fils d’actu semble être mal configuré. Veuillez informer la personne à l’origine du fil d’actu de ce problème."
+msgstr "Hmm, le serveur du fils d’actu semble être mal configuré. Veuillez informer la personne propriétaire du fil d’actu de ce problème."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "Mmm… le serveur de fils d’actu semble être hors ligne. Veuillez informer la personne à l’origine du fil d’actu de ce problème."
+msgstr "Mmm… le serveur de fils d’actu semble être hors ligne. Veuillez informer la personne propriétaire du fil d’actu de ce problème."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "Mmm… le serveur de fils d’actu ne répond pas. Veuillez informer la personne à l’origine du fil d’actu de ce problème."
+msgstr "Mmm… le serveur de fils d’actu ne répond pas. Veuillez informer la personne propriétaire du fil d’actu de ce problème."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:96
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
@@ -1544,7 +1544,7 @@ msgstr "J’ai mon propre domaine"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:158
 msgid "If alt text is long, toggles alt text expanded state"
-msgstr "Si le texte alternatif est trop long, affiche le texte alternatif complet"
+msgstr "Si le texte alternatif est trop long, change son mode d’affichage"
 
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
@@ -1741,7 +1741,7 @@ msgstr "Clair"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:189
 msgid "Like"
-msgstr "Aimer"
+msgstr "Liker"
 
 #: src/view/screens/ProfileFeed.tsx:600
 msgid "Like this feed"
@@ -2160,7 +2160,7 @@ msgstr "Pas maintenant"
 
 #: src/view/screens/Moderation.tsx:232
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Remarque : Bluesky est un réseau ouvert et public. Ce paramètre limite uniquement la visibilité de votre contenu sur l’application et le site Web de Bluesky, et d’autres applications peuvent ne pas respecter ce paramètre. Votre contenu peut toujours être montré aux personnes déconnectées par d’autres applications et sites Web."
+msgstr "Remarque : Bluesky est un réseau ouvert et public. Ce paramètre limite uniquement la visibilité de votre contenu sur l’application et le site Web de Bluesky, et d’autres applications peuvent ne pas respecter ce paramètre. Votre contenu peut toujours être montré aux personnes non connectées par d’autres applications et sites Web."
 
 #: src/Navigation.tsx:447
 #: src/view/screens/Notifications.tsx:113
@@ -2398,7 +2398,7 @@ msgstr "Lire la vidéo"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
 msgid "Plays the GIF"
-msgstr "Lis le GIF"
+msgstr "Lit le GIF"
 
 #: src/view/com/auth/create/state.ts:116
 msgid "Please choose your handle."
@@ -2628,7 +2628,7 @@ msgstr "Supprimer l’aperçu d’image"
 
 #: src/view/com/modals/Repost.tsx:47
 msgid "Remove repost"
-msgstr "Supprimer le reposts"
+msgstr "Supprimer le repost"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 msgid "Remove this feed from my feeds?"
@@ -2873,7 +2873,7 @@ msgstr "Recherche"
 #: src/view/com/auth/LoggedOut.tsx:105
 #: src/view/com/modals/ListAddRemoveUsers.tsx:70
 msgid "Search for users"
-msgstr "Rechercher des personnes"
+msgstr "Rechercher des comptes"
 
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
@@ -2974,7 +2974,7 @@ msgstr "Définir un nouveau mot de passe"
 
 #: src/view/com/auth/create/Step2.tsx:133
 msgid "Set password"
-msgstr "Définis le mot de passe"
+msgstr "Définit le mot de passe"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
@@ -2998,23 +2998,23 @@ msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’a
 
 #: src/view/com/modals/ChangeHandle.tsx:266
 msgid "Sets Bluesky username"
-msgstr "Définis le pseudo Bluesky"
+msgstr "Définit le pseudo Bluesky"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:153
 msgid "Sets email for password reset"
-msgstr "Définis l’e-mail pour la réinitialisation du mot de passe"
+msgstr "Définit l’e-mail pour la réinitialisation du mot de passe"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:118
 msgid "Sets hosting provider for password reset"
-msgstr "Définis l’hébergeur pour la réinitialisation du mot de passe"
+msgstr "Définit l’hébergeur pour la réinitialisation du mot de passe"
 
 #: src/view/com/auth/create/Step1.tsx:143
 msgid "Sets hosting provider to {label}"
-msgstr "Définis l’hébergeur à {label}"
+msgstr "Définit l’hébergeur à {label}"
 
 #: src/view/com/auth/login/LoginForm.tsx:148
 msgid "Sets server for the Bluesky client"
-msgstr "Définis le serveur pour le client Bluesky"
+msgstr "Définit le serveur pour le client Bluesky"
 
 #: src/Navigation.tsx:136
 #: src/view/screens/Settings.tsx:287
@@ -3179,7 +3179,7 @@ msgstr "Connecté en tant que"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:103
 msgid "Signed in as @{0}"
-msgstr "Connecté comme @{0}"
+msgstr "Connecté en tant que @{0}"
 
 #: src/view/com/modals/SwitchAccount.tsx:66
 msgid "Signs {0} out of Bluesky"
@@ -3191,11 +3191,11 @@ msgstr "Ignorer"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 msgid "Something went wrong and we're not sure what."
-msgstr "Quelque chose a échoué et on ne sait pas trop quoi."
+msgstr "Quelque chose n’a pas marché, mais on ne sait pas trop quoi."
 
 #: src/view/com/modals/Waitlist.tsx:51
 msgid "Something went wrong. Check your email and try again."
-msgstr "Quelque chose a échoué. Vérifiez vos e-mails et réessayez."
+msgstr "Quelque chose n’a pas marché. Vérifiez vos e-mails et réessayez."
 
 #: src/App.native.tsx:57
 msgid "Sorry! Your session expired. Please log in again."
@@ -3425,7 +3425,7 @@ msgstr "Ce {screenDescription} a été signalé :"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
-msgstr "Ce compte a demandé aux personnes de s’identifier pour voir son profil."
+msgstr "Ce compte a demandé aux personnes de se connecter pour voir son profil."
 
 #: src/view/com/modals/EmbedConsent.tsx:68
 msgid "This content is hosted by {0}. Do you want to enable external media?"
@@ -3642,7 +3642,7 @@ msgstr "Utilisez-le pour vous connecter à l’autre application avec votre iden
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
-msgstr "Utilise votre domaine comme un fournisseur de client Bluesky"
+msgstr "Utilise votre domaine comme votre fournisseur de client Bluesky"
 
 #: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
@@ -3767,7 +3767,7 @@ msgstr "Nous sommes ravis de vous accueillir !"
 
 #: src/view/screens/ProfileList.tsx:83
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "Nous sommes désolés, mais nous n’avons pas pu résoudre cette liste. Si cela persiste, veuillez contacter l’origine de la liste, @{handleOrDid}."
+msgstr "Nous sommes désolés, mais nous n’avons pas pu charger cette liste. Si cela persiste, veuillez contacter l’origine de la liste, @{handleOrDid}."
 
 #: src/view/screens/Search/Search.tsx:243
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
