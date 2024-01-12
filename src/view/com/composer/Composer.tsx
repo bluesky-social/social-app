@@ -45,6 +45,7 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -454,6 +455,7 @@ export const ComposePost = observer(function ComposePost({
               ))}
           </View>
         ) : null}
+        <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>
