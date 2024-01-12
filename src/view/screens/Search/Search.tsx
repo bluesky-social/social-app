@@ -332,7 +332,9 @@ export function SearchScreenInner({
         tabBarPosition="top"
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <CenteredView sideBorders style={pal.border}>
+          <CenteredView
+            sideBorders
+            style={[pal.border, pal.view, styles.tabBarContainer]}>
             <TabBar items={SECTIONS_LOGGEDIN} {...props} />
           </CenteredView>
         )}
@@ -373,7 +375,9 @@ export function SearchScreenInner({
       tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <CenteredView sideBorders style={pal.border}>
+        <CenteredView
+          sideBorders
+          style={[pal.border, pal.view, styles.tabBarContainer]}>
           <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
         </CenteredView>
       )}
@@ -529,6 +533,7 @@ export function SearchScreen(
         style={[
           styles.header,
           pal.border,
+          pal.view,
           isTabletOrDesktop && {paddingTop: 10},
         ]}
         sideBorders={isTabletOrDesktop}>
@@ -652,18 +657,19 @@ function scrollToTopWeb() {
   }
 }
 
+const HEADER_HEIGHT = 50
+
 const styles = StyleSheet.create({
-  container: {
-    // @ts-ignore web only
-    position: 'sticky',
-    top: 0,
-    zIndex: 1,
-  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
+    height: HEADER_HEIGHT,
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: 0,
+    zIndex: 1,
   },
   headerMenuBtn: {
     width: 30,
@@ -692,5 +698,11 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+  },
+  tabBarContainer: {
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: isWeb ? HEADER_HEIGHT : 0,
+    zIndex: 1,
   },
 })
