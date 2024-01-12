@@ -130,10 +130,7 @@ class ExpoSelectableTextView: ExpoView {
       let range = text.range(of: segment.text)
       // Figure out the bounds
       if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
-        let lowerIndex = text.distance(from: text.startIndex , to: lowerBound)
-        let upperIndex = text.distance(from: text.startIndex, to: upperBound)
-
-        if charIndex >= lowerIndex, charIndex <= upperIndex {
+        if charIndex >= lowerBound.utf16Offset(in: text), charIndex <= upperBound.utf16Offset(in: text) {
           foundSegment = segment
         }
       }
