@@ -2,7 +2,7 @@ import Foundation
 import ExpoModulesCore
 
 class ExpoSelectableTextView: ExpoView {
-  let textView: UITextView = UITextView()
+  var textView: UITextView
   var segments: Array<TextSegment> = [] {
     didSet {
       // We don't want to set the text if the root style has not been set yet
@@ -21,6 +21,12 @@ class ExpoSelectableTextView: ExpoView {
   let onTextLayout = EventDispatcher()
 
   public required init(appContext: AppContext? = nil) {
+    if #available(iOS 16.0, *) {
+      textView = UITextView(usingTextLayoutManager: false)
+    } else {
+      textView = UITextView()
+    }
+
     super.init(appContext: appContext)
 
     // Configure default appearance
@@ -34,7 +40,7 @@ class ExpoSelectableTextView: ExpoView {
     textView.textContainer.lineFragmentPadding = 0
 
     // Add the text view to the root view
-    addSubview(textView)
+    self.addSubview(textView)
 
     // Configure the press recognizer
     let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(callOnPress(_:)))
