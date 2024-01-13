@@ -1,6 +1,5 @@
 import React, {ComponentProps, memo, useMemo} from 'react'
 import {
-  Linking,
   GestureResponderEvent,
   Platform,
   StyleProp,
@@ -31,6 +30,7 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -65,6 +65,7 @@ export const Link = memo(function Link({
   const {closeModal} = useModalControls()
   const navigation = useNavigation<NavigationProp>()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
+  const openLink = useOpenLink()
 
   const onPress = React.useCallback(
     (e?: Event) => {
@@ -74,11 +75,12 @@ export const Link = memo(function Link({
           navigation,
           href: sanitizeUrl(href),
           navigationAction,
+          openLink,
           e,
         })
       }
     },
-    [closeModal, navigation, navigationAction, href],
+    [closeModal, navigation, navigationAction, href, openLink],
   )
 
   if (noFeedback) {
@@ -172,6 +174,7 @@ export const TextLink = memo(function TextLink({
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
   const navigation = useNavigation<NavigationProp>()
   const {openModal, closeModal} = useModalControls()
+  const openLink = useOpenLink()
 
   if (warnOnMismatchingLabel && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
@@ -189,6 +192,7 @@ export const TextLink = memo(function TextLink({
         text,
         navigationAction,
         warnOnMismatchingLabel,
+        openLink,
       })
     },
     [
@@ -200,6 +204,7 @@ export const TextLink = memo(function TextLink({
       text,
       navigationAction,
       warnOnMismatchingLabel,
+      openLink,
     ],
   )
   const hrefAttrs = useMemo(() => {
@@ -313,6 +318,7 @@ export const onTextLinkPress = ({
   text,
   navigationAction = 'push',
   warnOnMismatchingLabel,
+  openLink,
 }: {
   onPress?: (e: GestureResponderEvent) => void
   e?: Event
@@ -323,6 +329,7 @@ export const onTextLinkPress = ({
   text?: any
   navigationAction?: 'push' | 'replace' | 'navigate'
   warnOnMismatchingLabel?: boolean
+  openLink: (href: string) => void
 }) => {
   const requiresWarning =
     warnOnMismatchingLabel &&
@@ -368,7 +375,7 @@ export const onTextLinkPress = ({
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
     if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
-      Linking.openURL(href)
+      openLink(href)
     } else {
       closeModal() // close any active modals
 

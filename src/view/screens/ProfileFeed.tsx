@@ -490,6 +490,7 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
           enabled={isFocused}
           feed={feed}
           pollInterval={60e3}
+          disablePoll={hasNew}
           scrollElRef={scrollElRef}
           onHasNew={setHasNew}
           onScrolledDownChange={setIsScrolledDown}

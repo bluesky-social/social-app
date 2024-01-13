@@ -336,6 +336,7 @@ let PostThreadItemLoaded = ({
               postCid={post.cid}
               postUri={post.uri}
               record={record}
+              richText={richText}
               showAppealLabelItem={
                 post.author.did === currentAccount?.did && isModeratedPost
               }
@@ -440,6 +441,7 @@ let PostThreadItemLoaded = ({
                 big
                 post={post}
                 record={record}
+                richText={richText}
                 onPressReply={onPressReply}
               />
             </View>
@@ -588,6 +590,7 @@ let PostThreadItemLoaded = ({
                 <PostCtrls
                   post={post}
                   record={record}
+                  richText={richText}
                   onPressReply={onPressReply}
                 />
               </View>

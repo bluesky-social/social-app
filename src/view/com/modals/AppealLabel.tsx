@@ -38,7 +38,7 @@ export function Component(props: ReportComponentProps) {
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
       await getAgent().createModerationReport({
-        reasonType: ComAtprotoModerationDefs.REASONOTHER,
+        reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
         subject: {
           $type,
           ...props,
