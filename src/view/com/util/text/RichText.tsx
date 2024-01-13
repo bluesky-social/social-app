@@ -108,7 +108,8 @@ export function RichText({
       style={[style, pal.text, lineHeightStyle]}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
-      dataSet={WORD_WRAP}>
+      dataSet={WORD_WRAP}
+      selectable={selectable}>
       {els}
     </Text>
   )

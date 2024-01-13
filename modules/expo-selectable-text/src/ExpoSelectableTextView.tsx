@@ -8,7 +8,11 @@ import {
   ExpoProTextSegment,
   ExpoProTextViewProps,
 } from './ExpoSelectableText.types'
-import {Text, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
+import {onTextLinkPress, TextLink} from 'view/com/util/Link'
+import {useNavigation} from '@react-navigation/native'
+import {NavigationProp} from 'lib/routes/types'
+import {useModalControls} from 'state/modals'
 
 const NativeView: React.ComponentType<ExpoProTextNativeViewProps> =
   requireNativeViewManager('ExpoSelectableText')
@@ -16,11 +20,18 @@ const NativeView: React.ComponentType<ExpoProTextNativeViewProps> =
 export default function ExpoSelectableTextView({
   style,
   children,
-  selectable = false,
+  selectable = true,
   onPress,
   onLongPress,
 }: ExpoProTextViewProps) {
+  // Dimensions based on the native view's text height
   const [dims, setDims] = React.useState({height: 0})
+
+  // Needed for navigation on link presses
+  const navigation = useNavigation<NavigationProp>()
+  const {openModal, closeModal} = useModalControls()
+
+  // Store the callbacks for onPress and onLongPress events
   const segmentPressCallbacks = React.useRef<
     Array<{index: number; onPress: () => void}>
   >([])
@@ -28,73 +39,108 @@ export default function ExpoSelectableTextView({
     Array<{index: number; onLongPress: () => void}>
   >([])
 
-  const onTextLayout = React.useCallback((e: ExpoProTextLayoutEvent) => {
-    console.log('layout')
-    setDims({
-      height: e.nativeEvent.height,
-    })
-  }, [])
+  // The root style, stringified
+  const rootStyle = React.useMemo(() => {
+    return style ? JSON.stringify(style) : undefined
+  }, [style])
 
-  const onTextPress = React.useCallback((e: ExpoProTextPressEvent) => {
-    const onPressSegment = segmentPressCallbacks.current.find(
-      s => s.index === e.nativeEvent.index,
-    )
-    onPressSegment?.onPress()
-  }, [])
-
+  // The text segments, stringified
   const textSegments = React.useMemo(() => {
     const segments: ExpoProTextSegment[] = []
 
     for (const [index, child] of React.Children.toArray(children).entries()) {
+      // Most of our children will be strings. Simply add them to the segments array.
       if (typeof child === 'string') {
         segments.push({
           index,
           text: child,
-          style,
+          style: style,
           handlePress: onPress !== undefined,
           handleLongPress: onLongPress !== undefined,
         })
-      } else if (
-        React.isValidElement(child) &&
-        (child as React.ReactElement<any>).type === Text
-      ) {
-        const {onPress, onLongPress, children, style} = child.props
+      } else if (React.isValidElement(child)) {
+        // If it is a child, it is either a nested <Text> or a <TextLink>. Check if the child is a string or a <TextLink>
+        // If it's a <TextLink> we need to create on the onPress handler (it won't be created in the component since the
+        // component never actually gets rendered)
 
-        segments.push({
-          index,
-          text: children,
-          style,
-          handlePress: onPress !== undefined,
-          handleLongPress: onLongPress !== undefined,
-        })
+        const {
+          children: innerChildren,
+          onLongPress: innerOnLongPress,
+          style: innerStyle,
+          text: innerText,
+          href,
+          navigationAction,
+          warnOnMismatchingLabel,
+        } = child.props
+        let innerOnPress = child.props.onPress
 
-        if (onPress !== undefined) {
-          segmentPressCallbacks.current.push({
+        const type = (child as React.ReactElement<any>).type
+
+        if (typeof innerChildren === 'string' || type === TextLink) {
+          if (type === TextLink) {
+            // Set the onPress handler
+            innerOnPress = () => {
+              onTextLinkPress({
+                openModal,
+                closeModal,
+                text: innerText,
+                navigation,
+                href,
+                navigationAction,
+                warnOnMismatchingLabel,
+              })
+            }
+          }
+
+          // Add the segment to the array
+          segments.push({
             index,
-            onPress,
+            text: innerText ?? innerChildren,
+            style: StyleSheet.flatten(innerStyle),
+            handlePress: innerOnPress !== undefined,
+            handleLongPress: innerOnLongPress !== undefined,
           })
-        }
 
-        if (onLongPress !== undefined) {
-          segmentLongPressCallbacks.current.push({
-            index,
-            onLongPress,
-          })
+          // If we have press events, push them in
+          if (innerOnPress !== undefined) {
+            segmentPressCallbacks.current.push({
+              index,
+              onPress: innerOnPress,
+            })
+          }
+          if (onLongPress !== undefined) {
+            segmentLongPressCallbacks.current.push({
+              index,
+              onLongPress: innerOnLongPress,
+            })
+          }
         }
       }
     }
 
     return segments
-  }, [children, onLongPress, onPress, style])
+  }, [children, closeModal, navigation, onLongPress, onPress, openModal, style])
 
   const segmentsJson = React.useMemo(() => {
-    const json = JSON.stringify({segments: textSegments})
-    return json
+    return JSON.stringify({segments: textSegments})
   }, [textSegments])
 
-  const rootStyle = React.useMemo(() => {
-    return style ? JSON.stringify(style) : undefined
-  }, [style])
+  const onTextLayout = React.useCallback((e: ExpoProTextLayoutEvent) => {
+    setDims({
+      height: e.nativeEvent.height,
+    })
+  }, [])
+
+  const onTextPress = React.useCallback(
+    (e: ExpoProTextPressEvent) => {
+      const onPressSegment =
+        segmentPressCallbacks.current.find(s => s.index === e.nativeEvent.index)
+          ?.onPress ?? onPress
+
+      onPressSegment?.()
+    },
+    [onPress],
+  )
 
   return (
     <View style={[dims, {width: '100%'}]}>
