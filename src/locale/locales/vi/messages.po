@@ -1,0 +1,6182 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2023-11-05 16:01-0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: vi\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/view/screens/Profile.tsx:214
+#~ msgid "- end of feed -"
+#~ msgstr "- cuối bảng tin -"
+
+#: src/view/com/modals/SelfLabel.tsx:138
+#~ msgid ". This warning is only available for posts with media attached."
+#~ msgstr ". Cảnh báo này dành cho những bài viết có đính kèm Ảnh/Video."
+
+#: src/view/com/modals/VerifyEmail.tsx:142
+msgid "(no email)"
+msgstr "(không có email)"
+
+#: src/view/shell/desktop/RightNav.tsx:168
+#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
+#~ msgstr "{0, plural, one {# mã mời có sẵn} other {# mã mời có sẵn}}"
+
+#: src/view/com/modals/CreateOrEditList.tsx:185
+#: src/view/screens/Settings.tsx:294
+#~ msgid "{0}"
+#~ msgstr "{0}"
+
+#: src/view/com/modals/CreateOrEditList.tsx:176
+#~ msgid "{0} {purposeLabel} List"
+#~ msgstr "{0} {purposeLabel} Danh sách"
+
+#: src/screens/Profile/Header/Metrics.tsx:44
+msgid "{following} following"
+msgstr "{following} đang theo dõi"
+
+#: src/view/shell/desktop/RightNav.tsx:151
+#~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
+#~ msgstr "{invitesAvailable, plural, one {Mã mời: # có sẵn} other {Mã mời: # có sẵn}}"
+
+#: src/view/screens/Settings.tsx:435
+#: src/view/shell/Drawer.tsx:661
+#~ msgid "{invitesAvailable} invite code available"
+#~ msgstr "{invitesAvailable} mã mời có sẵn"
+
+#: src/view/screens/Settings.tsx:437
+#: src/view/shell/Drawer.tsx:663
+#~ msgid "{invitesAvailable} invite codes available"
+#~ msgstr "{invitesAvailable} mã mời có sẵn"
+
+#: src/view/screens/Search/Search.tsx:87
+#~ msgid "{message}"
+#~ msgstr "{message}"
+
+#: src/view/shell/Drawer.tsx:443
+msgid "{numUnreadNotifications} unread"
+msgstr "{numUnreadNotifications} chưa đọc"
+
+#: src/Navigation.tsx:147
+#~ msgid "@{0}"
+#~ msgstr "@{0}"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:158
+msgid "<0/> members"
+msgstr "<0/> thành viên"
+
+#: src/view/shell/Drawer.tsx:97
+msgid "<0>{0}</0> following"
+msgstr "<0>{0}</0> đang theo dõi"
+
+#: src/screens/Profile/Header/Metrics.tsx:45
+msgid "<0>{following} </0><1>following</1>"
+msgstr "<0>{following} </0><1>đang theo dõi</1>"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
+msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
+msgstr "<0>Lựa chọn</0><1>Bảng tin</1><2>được đề xuất</2>"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
+msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
+msgstr "<0>Theo dõi</0><1>Người dùng</1><2>được đề xuất</2>"
+
+#: src/view/com/modals/AddAppPasswords.tsx:132
+#~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
+#~ msgstr "<0>Đây là mật khẩu ứng dụng của bạn.</0> Sử dụng nó để đăng nhập vào ứng dụng khác."
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: This setting may not be respected by third-party apps that display Bluesky content.</0>"
+#~ msgstr "<0>Chú ý: Các ứng dụng bên thứ ba hiển thị nội dung của Bluesky có thể không tuân thủ cài đặt này.</0>"
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
+#~ msgstr "<0>Chú ý: Hồ sơ và các bài viết của bạn sẽ vẫn hiển thị công khai. Các ứng dụng của bên thứ ba hiển thị nội dung của Bluesky có thể không tuân thủ cài đặt này.</0>"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
+msgid "<0>Welcome to</0><1>Bluesky</1>"
+msgstr "<0>Chào mừng đến với</0><1>Bluesky</1>"
+
+#: src/screens/Profile/Header/Handle.tsx:42
+msgid "⚠Invalid Handle"
+msgstr "⚠Tên người dùng không hợp lệ"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+#~ msgid "A content warning has been applied to this {0}."
+#~ msgstr "Đã áp dụng cảnh báo nội dung cho {0} này."
+
+#: src/lib/hooks/useOTAUpdate.ts:16
+#~ msgid "A new version of the app is available. Please update to continue using the app."
+#~ msgstr "Một phiên bản mới của ứng dụng đã được phát hành. Vui lòng cập nhật để tiếp tục sử dụng ứng dụng."
+
+#: src/view/com/util/ViewHeader.tsx:89
+#: src/view/screens/Search/Search.tsx:739
+msgid "Access navigation links and settings"
+msgstr "Truy cập liên kết điều hướng và cài đặt"
+
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:52
+msgid "Access profile and other navigation links"
+msgstr "Truy cập hồ sơ và liên kết điều hướng khác"
+
+#: src/view/com/modals/EditImage.tsx:300
+#: src/view/screens/Settings/index.tsx:470
+msgid "Accessibility"
+msgstr "Khả năng tiếp cận"
+
+#: src/components/moderation/LabelsOnMe.tsx:42
+msgid "account"
+msgstr ""
+
+#: src/screens/Login/LoginForm.tsx:144
+#: src/view/screens/Settings/index.tsx:327
+#: src/view/screens/Settings/index.tsx:743
+msgid "Account"
+msgstr "Tài khoản"
+
+#: src/view/com/profile/ProfileMenu.tsx:139
+msgid "Account blocked"
+msgstr "Tài khoản đã bị chặn"
+
+#: src/view/com/profile/ProfileMenu.tsx:153
+msgid "Account followed"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:113
+msgid "Account muted"
+msgstr "Tài khoản đã bị tắt tiếng"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:93
+#: src/lib/moderation/useModerationCauseDescription.ts:91
+msgid "Account Muted"
+msgstr "Tài khoản bị tắt tiếng"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:82
+msgid "Account Muted by List"
+msgstr "Tài khoản bị tắt tiếng bởi danh sách"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:41
+msgid "Account options"
+msgstr "Lựa chọn tài khoản"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:25
+msgid "Account removed from quick access"
+msgstr "Tài khoản bị xóa khỏi truy cập nhanh"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:137
+#: src/view/com/profile/ProfileMenu.tsx:128
+msgid "Account unblocked"
+msgstr "Tài khoản được bỏ chặn"
+
+#: src/view/com/profile/ProfileMenu.tsx:166
+msgid "Account unfollowed"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:102
+msgid "Account unmuted"
+msgstr "Tài khoản được mở tiếng"
+
+#: src/components/dialogs/MutedWords.tsx:164
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
+#: src/view/com/modals/ListAddRemoveUsers.tsx:268
+#: src/view/com/modals/UserAddRemoveLists.tsx:219
+#: src/view/screens/ProfileList.tsx:827
+msgid "Add"
+msgstr "Thêm"
+
+#: src/view/com/modals/SelfLabel.tsx:56
+msgid "Add a content warning"
+msgstr "Thêm cảnh báo nội dung"
+
+#: src/view/screens/ProfileList.tsx:817
+msgid "Add a user to this list"
+msgstr "Thêm người dùng vào danh sách này"
+
+#: src/components/dialogs/SwitchAccount.tsx:55
+#: src/view/screens/Settings/index.tsx:402
+#: src/view/screens/Settings/index.tsx:411
+msgid "Add account"
+msgstr "Thêm tài khoản"
+
+#: src/view/com/composer/photos/Gallery.tsx:119
+#: src/view/com/composer/photos/Gallery.tsx:180
+#: src/view/com/modals/AltImage.tsx:117
+msgid "Add alt text"
+msgstr "Thêm mô tả hình ảnh"
+
+#: src/view/screens/AppPasswords.tsx:104
+#: src/view/screens/AppPasswords.tsx:145
+#: src/view/screens/AppPasswords.tsx:158
+msgid "Add App Password"
+msgstr "Thêm mật khẩu ứng dụng"
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:41
+#: src/view/com/modals/report/Modal.tsx:191
+#~ msgid "Add details"
+#~ msgstr "Thêm chi tiết"
+
+#: src/view/com/modals/report/Modal.tsx:194
+#~ msgid "Add details to report"
+#~ msgstr "Thêm báo cáo chi tiết"
+
+#: src/view/com/composer/Composer.tsx:467
+msgid "Add link card"
+msgstr "Thêm thẻ liên kết"
+
+#: src/view/com/composer/Composer.tsx:472
+msgid "Add link card:"
+msgstr "Thêm thẻ liên kết:"
+
+#: src/components/dialogs/MutedWords.tsx:157
+msgid "Add mute word for configured settings"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:86
+msgid "Add muted words and tags"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:416
+msgid "Add the following DNS record to your domain:"
+msgstr "Thêm bản ghi DNS sau vào tên miền của bạn:"
+
+#: src/view/com/profile/ProfileMenu.tsx:263
+#: src/view/com/profile/ProfileMenu.tsx:266
+msgid "Add to Lists"
+msgstr "Thêm vào Danh sách"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:234
+msgid "Add to my feeds"
+msgstr "Thêm vào bảng tin của tôi"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
+msgid "Added"
+msgstr "Đã thêm"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:191
+#: src/view/com/modals/UserAddRemoveLists.tsx:144
+msgid "Added to list"
+msgstr "Đã thêm vào danh sách"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:108
+msgid "Added to my feeds"
+msgstr "Đã thêm vào bảng tin của tôi"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:173
+msgid "Adjust the number of likes a reply must have to be shown in your feed."
+msgstr "Điều chỉnh số lượt thích mà một phản hồi phải có để hiển thị trong bảng tin của bạn."
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:34
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:117
+#: src/view/com/modals/SelfLabel.tsx:75
+msgid "Adult Content"
+msgstr "Nội dung 18+"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:137
+#~ msgid "Adult content can only be enabled via the Web at <0/>."
+#~ msgstr "Nội dung 18+ chỉ có thể được kích hoạt bởi web tại <0/>."
+
+#: src/components/moderation/LabelPreference.tsx:242
+msgid "Adult content is disabled."
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:375
+#: src/view/screens/Settings/index.tsx:684
+msgid "Advanced"
+msgstr "Nâng cao"
+
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:178
+#: src/view/com/modals/ChangePassword.tsx:170
+msgid "Already have a code?"
+msgstr ""
+
+#: src/screens/Login/ChooseAccountForm.tsx:39
+msgid "Already signed in as @{0}"
+msgstr "Đã đăng nhập với tư cách @{0}"
+
+#: src/view/com/composer/photos/Gallery.tsx:130
+msgid "ALT"
+msgstr "ALT"
+
+#: src/view/com/modals/EditImage.tsx:316
+msgid "Alt text"
+msgstr "Mô tả hình ảnh"
+
+#: src/view/com/composer/photos/Gallery.tsx:209
+msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
+msgstr "Mô tả dành cho người khiếm thị, và bổ sung ngữ cảnh cho mọi người."
+
+#: src/view/com/modals/VerifyEmail.tsx:124
+msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
+msgstr "Một email đã được gửi tới {0}. Nó bao gồm một mã xác nhận mà bạn có thể nhập xuống dưới."
+
+#: src/view/com/modals/ChangeEmail.tsx:119
+msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
+msgstr "Một email đã được gửi tới địa chỉ trước đó của bạn, {0}. Nó bao gồm một mã xác nhận mà bạn có thể nhập xuống dưới."
+
+#: src/lib/moderation/useReportOptions.ts:26
+msgid "An issue not included in these options"
+msgstr ""
+
+#: src/view/com/profile/FollowButton.tsx:35
+#: src/view/com/profile/FollowButton.tsx:45
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:188
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:198
+msgid "An issue occurred, please try again."
+msgstr "Có vấn đề xảy ra, vui lòng thử lại."
+
+#: src/view/com/notifications/FeedItem.tsx:240
+#: src/view/com/threadgate/WhoCanReply.tsx:178
+msgid "and"
+msgstr "và"
+
+#: src/screens/Onboarding/index.tsx:32
+msgid "Animals"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:31
+msgid "Anti-Social Behavior"
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:95
+msgid "App Language"
+msgstr "Ngôn ngữ ứng dụng"
+
+#: src/view/screens/AppPasswords.tsx:223
+msgid "App password deleted"
+msgstr "Mật khẩu ứng dụng đã xóa"
+
+#: src/view/com/modals/AddAppPasswords.tsx:135
+msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
+msgstr "Tên mật khẩu ứng dụng chỉ có thể bao gồm chữ cái, số, khoảng trắng, dấu gạch ngang và dấu gạch dưới."
+
+#: src/view/com/modals/AddAppPasswords.tsx:100
+msgid "App Password names must be at least 4 characters long."
+msgstr "Tên mật khẩu ứng dụng phải có ít nhất 4 ký tự."
+
+#: src/view/screens/Settings/index.tsx:695
+msgid "App password settings"
+msgstr "Cài đặt mật khẩu ứng dụng"
+
+#: src/view/screens/Settings.tsx:650
+#~ msgid "App passwords"
+#~ msgstr "Mật khẩu ứng dụng"
+
+#: src/Navigation.tsx:251
+#: src/view/screens/AppPasswords.tsx:189
+#: src/view/screens/Settings/index.tsx:704
+msgid "App Passwords"
+msgstr "Mật khẩu ứng dụng"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:133
+#: src/components/moderation/LabelsOnMeDialog.tsx:136
+msgid "Appeal"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:201
+msgid "Appeal \"{0}\" label"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:248
+#~ msgid "Appeal content warning"
+#~ msgstr "Khiếu nại cảnh báo nội dung"
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Content Warning"
+#~ msgstr "Khiếu nại cảnh báo nội dung"
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Decision"
+#~ msgstr "Quyết định khiếu nại"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:192
+msgid "Appeal submitted."
+msgstr ""
+
+#: src/view/com/util/moderation/LabelInfo.tsx:52
+#~ msgid "Appeal this decision"
+#~ msgstr "Khiếu nại quyết định này"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:56
+#~ msgid "Appeal this decision."
+#~ msgstr "Khiếu nại quyết định này."
+
+#: src/view/screens/Settings/index.tsx:485
+msgid "Appearance"
+msgstr "Hình thức"
+
+#: src/view/screens/Moderation.tsx:206
+#~ msgid "Apps that respect this setting, including the official Bluesky app and bsky.app website, won't show your content to logged out users."
+#~ msgstr "Những ứng dụng bao gồm ứng dụng Bluesky chính thức và trang web bsky.app sẽ không hiển thị nội dung của bạn cho những người dùng đã đăng xuất."
+
+#: src/view/screens/AppPasswords.tsx:265
+msgid "Are you sure you want to delete the app password \"{name}\"?"
+msgstr "Bạn có chắc chắn muốn xóa mật khẩu ứng dụng \"{name}\"?"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:280
+msgid "Are you sure you want to remove {0} from your feeds?"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:509
+msgid "Are you sure you'd like to discard this draft?"
+msgstr "Bạn có chắc chắn muốn hủy bản nháp này?"
+
+#: src/components/dialogs/MutedWords.tsx:281
+msgid "Are you sure?"
+msgstr "Bạn có chắc chắn?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:231
+#~ msgid "Are you sure? This cannot be undone."
+#~ msgstr "Bạn có chắc chắn? Điều này không thể được hoàn tác."
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
+msgid "Are you writing in <0>{0}</0>?"
+msgstr "Có phải bạn đang viết bằng <0>{0}</0>?"
+
+#: src/screens/Onboarding/index.tsx:26
+msgid "Art"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:123
+msgid "Artistic or non-erotic nudity."
+msgstr "Ảnh khỏa thân nghệ thuật hoặc không khiêu dâm."
+
+#: src/view/screens/Moderation.tsx:189
+#~ msgid "Ask apps to limit the visibility of my account"
+#~ msgstr "Yêu cầu ứng dụng giới hạn khả năng hiển thị tài khoản của tôi"
+
+#: src/screens/Signup/StepHandle.tsx:118
+msgid "At least 3 characters"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:246
+#: src/components/moderation/LabelsOnMeDialog.tsx:247
+#: src/screens/Login/ChooseAccountForm.tsx:73
+#: src/screens/Login/ChooseAccountForm.tsx:78
+#: src/screens/Login/ForgotPasswordForm.tsx:129
+#: src/screens/Login/ForgotPasswordForm.tsx:135
+#: src/screens/Login/LoginForm.tsx:221
+#: src/screens/Login/LoginForm.tsx:227
+#: src/screens/Login/SetNewPasswordForm.tsx:160
+#: src/screens/Login/SetNewPasswordForm.tsx:166
+#: src/screens/Profile/Header/Shell.tsx:96
+#: src/screens/Signup/index.tsx:179
+#: src/view/com/util/ViewHeader.tsx:87
+msgid "Back"
+msgstr "Quay lại"
+
+#: src/view/com/post-thread/PostThread.tsx:400
+#~ msgctxt "action"
+#~ msgid "Back"
+#~ msgstr "Quay lại"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:144
+msgid "Based on your interest in {interestsText}"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:542
+msgid "Basics"
+msgstr "Cơ bản"
+
+#: src/components/dialogs/BirthDateSettings.tsx:107
+msgid "Birthday"
+msgstr "Ngày sinh"
+
+#: src/view/screens/Settings/index.tsx:359
+msgid "Birthday:"
+msgstr "Ngày sinh:"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:361
+msgid "Block"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:300
+#: src/view/com/profile/ProfileMenu.tsx:307
+msgid "Block Account"
+msgstr "Chặn tài khoản"
+
+#: src/view/com/profile/ProfileMenu.tsx:344
+msgid "Block Account?"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:530
+msgid "Block accounts"
+msgstr "Chặn tài khoản"
+
+#: src/view/screens/ProfileList.tsx:478
+#: src/view/screens/ProfileList.tsx:634
+msgid "Block list"
+msgstr "Danh sách chặn"
+
+#: src/view/screens/ProfileList.tsx:629
+msgid "Block these accounts?"
+msgstr "Chặn tài khoản này?"
+
+#: src/view/screens/ProfileList.tsx:319
+#~ msgid "Block this List"
+#~ msgstr "Chặn danh sách này"
+
+#: src/view/com/lists/ListCard.tsx:110
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:55
+msgid "Blocked"
+msgstr "Đã chặn"
+
+#: src/screens/Moderation/index.tsx:267
+msgid "Blocked accounts"
+msgstr "Tài khoản đã bị chặn"
+
+#: src/Navigation.tsx:134
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
+msgid "Blocked Accounts"
+msgstr "Tài khoản đã bị chặn"
+
+#: src/view/com/profile/ProfileMenu.tsx:356
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
+msgstr "Tài khoản bị chặn không thể phản hồi, nhắc đến hay nói cách khác là tương tác với bạn."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
+msgstr "Tài khoản bị chặn không thể phản hồi, nhắc đến hay nói cách khác là tương tác với bạn. Bạn sẽ không thấy nội dung của họ và họ sẽ bị ngăn cho xem nội dung của bạn."
+
+#: src/view/com/post-thread/PostThread.tsx:313
+msgid "Blocked post."
+msgstr "Bài viết bị chặn."
+
+#: src/screens/Profile/Sections/Labels.tsx:152
+msgid "Blocking does not prevent this labeler from placing labels on your account."
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:631
+msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
+msgstr "Việc chặn là công khai. Tài khoản bị chặn không thể phản hồi, nhắc đến hay nói cách khác là tương tác với bạn."
+
+#: src/view/com/profile/ProfileMenu.tsx:353
+msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
+msgstr ""
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:98
+#: src/view/com/auth/SplashScreen.web.tsx:169
+msgid "Blog"
+msgstr "Blog"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:32
+#: src/view/com/auth/server-input/index.tsx:89
+#: src/view/com/auth/server-input/index.tsx:91
+msgid "Bluesky"
+msgstr "Bluesky"
+
+#: src/view/com/auth/server-input/index.tsx:154
+msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:82
+msgid "Bluesky is flexible."
+msgstr "Bluesky là linh hoạt."
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:71
+msgid "Bluesky is open."
+msgstr "Bluesky là mở."
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:58
+msgid "Bluesky is public."
+msgstr "Bluesky là công khai."
+
+#: src/view/com/modals/Waitlist.tsx:70
+#~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
+#~ msgstr "Bluesky sử dụng lời mời để xây dựng một cộng đồng lành mạnh. Nếu bạn không biết bất kỳ ai có lời mời, bạn có thể đăng ký vào danh sách chờ và chúng tôi sẽ sớm gửi cho bạn."
+
+#: src/screens/Moderation/index.tsx:533
+msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
+msgstr "Bluesky sẽ không hiển thị hồ sơ và các bài viết của bạn với người dùng đã đăng xuất. Các ứng dụng khác có thể không đáp ứng được yêu cầu này. Điều này không làm tài khoản của bạn riêng tư."
+
+#: src/view/com/modals/ServerInput.tsx:78
+#~ msgid "Bluesky.Social"
+#~ msgstr "Bluesky.Social"
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:53
+msgid "Blur images"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:51
+msgid "Blur images and filter from feeds"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:33
+msgid "Books"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:792
+#~ msgid "Build version {0} {1}"
+#~ msgstr "Phiên bản {0} {1}"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:92
+#: src/view/com/auth/SplashScreen.web.tsx:166
+msgid "Business"
+msgstr "Doanh nghiệp"
+
+#: src/view/com/modals/ServerInput.tsx:115
+#~ msgid "Button disabled. Input custom domain to proceed."
+#~ msgstr "Nút bị vô hiệu hóa. Nhập tên miền tùy chỉnh để tiếp tục."
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:157
+msgid "by —"
+msgstr "bởi —"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
+msgid "by {0}"
+msgstr "bởi {0}"
+
+#: src/components/LabelingServiceCard/index.tsx:57
+msgid "By {0}"
+msgstr ""
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:161
+msgid "by <0/>"
+msgstr "bởi <0/>"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:74
+msgid "By creating an account you agree to the {els}."
+msgstr ""
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:159
+msgid "by you"
+msgstr "bởi bạn"
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:77
+msgid "Camera"
+msgstr "Máy ảnh"
+
+#: src/view/com/modals/AddAppPasswords.tsx:217
+msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
+msgstr "Chỉ bảo gồm kí tự, số, khoảng trắng, dấu gạch ngang và dấu gạch dưới. Phải có ít nhất 4 kí tự và tối đa 32 kí tự."
+
+#: src/components/Menu/index.tsx:213
+#: src/components/Prompt.tsx:113
+#: src/components/Prompt.tsx:115
+#: src/components/TagMenu/index.tsx:268
+#: src/view/com/composer/Composer.tsx:317
+#: src/view/com/composer/Composer.tsx:322
+#: src/view/com/modals/ChangeEmail.tsx:218
+#: src/view/com/modals/ChangeEmail.tsx:220
+#: src/view/com/modals/ChangeHandle.tsx:154
+#: src/view/com/modals/ChangePassword.tsx:267
+#: src/view/com/modals/ChangePassword.tsx:270
+#: src/view/com/modals/CreateOrEditList.tsx:356
+#: src/view/com/modals/crop-image/CropImage.web.tsx:138
+#: src/view/com/modals/EditImage.tsx:324
+#: src/view/com/modals/EditProfile.tsx:250
+#: src/view/com/modals/InAppBrowserConsent.tsx:78
+#: src/view/com/modals/InAppBrowserConsent.tsx:80
+#: src/view/com/modals/LinkWarning.tsx:105
+#: src/view/com/modals/LinkWarning.tsx:107
+#: src/view/com/modals/Repost.tsx:88
+#: src/view/com/modals/VerifyEmail.tsx:247
+#: src/view/com/modals/VerifyEmail.tsx:253
+#: src/view/screens/Search/Search.tsx:808
+#: src/view/shell/desktop/Search.tsx:239
+msgid "Cancel"
+msgstr "Hủy bỏ"
+
+#: src/view/com/modals/CreateOrEditList.tsx:361
+#: src/view/com/modals/DeleteAccount.tsx:155
+#: src/view/com/modals/DeleteAccount.tsx:233
+msgctxt "action"
+msgid "Cancel"
+msgstr "Hủy bỏ"
+
+#: src/view/com/modals/DeleteAccount.tsx:151
+#: src/view/com/modals/DeleteAccount.tsx:229
+msgid "Cancel account deletion"
+msgstr "Hủy xóa tài khoản"
+
+#: src/view/com/modals/AltImage.tsx:123
+#~ msgid "Cancel add image alt text"
+#~ msgstr "Hủy thêm mô tả ảnh"
+
+#: src/view/com/modals/ChangeHandle.tsx:150
+msgid "Cancel change handle"
+msgstr "Hủy thay đổi tên người dùng"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:135
+msgid "Cancel image crop"
+msgstr "Hủy cắt ảnh"
+
+#: src/view/com/modals/EditProfile.tsx:245
+msgid "Cancel profile editing"
+msgstr "Hủy thay đổi hồ sơ"
+
+#: src/view/com/modals/Repost.tsx:79
+msgid "Cancel quote post"
+msgstr "Hủy bài viết trích dẫn"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:87
+#: src/view/shell/desktop/Search.tsx:235
+msgid "Cancel search"
+msgstr "Hủy tìm kiếm"
+
+#: src/view/com/modals/Waitlist.tsx:136
+#~ msgid "Cancel waitlist signup"
+#~ msgstr "Hủy đăng kí danh sách chờ"
+
+#: src/view/com/modals/LinkWarning.tsx:106
+msgid "Cancels opening the linked website"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:152
+msgid "Change"
+msgstr "Thay đổi"
+
+#: src/view/screens/Settings/index.tsx:353
+msgctxt "action"
+msgid "Change"
+msgstr "Thay đổi"
+
+#: src/view/screens/Settings/index.tsx:716
+msgid "Change handle"
+msgstr "Thay đổi tên người dùng"
+
+#: src/view/com/modals/ChangeHandle.tsx:162
+#: src/view/screens/Settings/index.tsx:727
+msgid "Change Handle"
+msgstr "Thay đổi tên người dùng"
+
+#: src/view/com/modals/VerifyEmail.tsx:147
+msgid "Change my email"
+msgstr "Thay đổi email"
+
+#: src/view/screens/Settings/index.tsx:754
+msgid "Change password"
+msgstr ""
+
+#: src/view/com/modals/ChangePassword.tsx:141
+#: src/view/screens/Settings/index.tsx:765
+msgid "Change Password"
+msgstr ""
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
+msgid "Change post language to {0}"
+msgstr "Chuyển ngôn ngữ của bài viết sang {0}"
+
+#: src/view/com/modals/ChangeEmail.tsx:109
+msgid "Change Your Email"
+msgstr "Thay đổi email"
+
+#: src/screens/Deactivated.tsx:72
+#: src/screens/Deactivated.tsx:76
+msgid "Check my status"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
+msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
+msgstr "Khám phá một vài bảng tin được đề xuất. Chạm vào dấu + để thêm chúng vào danh sách bảng tin đã được ghim của bạn."
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
+msgid "Check out some recommended users. Follow them to see similar users."
+msgstr "Khám phá một vài người dùng được đề xuất. Theo dõi họ để thấy những người dùng tương tự."
+
+#: src/view/com/modals/DeleteAccount.tsx:168
+msgid "Check your inbox for an email with the confirmation code to enter below:"
+msgstr "Kiểm tra hộp thư đến của bạn để xem email có chứa mã xác nhận để nhập ở dưới đây:"
+
+#: src/view/com/modals/Threadgate.tsx:72
+msgid "Choose \"Everybody\" or \"Nobody\""
+msgstr "Chọn \"Mọi người\" hoặc \"Không ai cả\""
+
+#: src/view/screens/Settings.tsx:663
+#~ msgid "Choose a new Bluesky username or create"
+#~ msgstr "Lựa chọn một tên đăng nhập mới cho Bluesky hoặc tạo mới"
+
+#: src/view/com/auth/server-input/index.tsx:79
+msgid "Choose Service"
+msgstr "Chọn dịch vụ"
+
+#: src/screens/Onboarding/StepFinished.tsx:139
+msgid "Choose the algorithms that power your custom feeds."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:85
+msgid "Choose the algorithms that power your experience with custom feeds."
+msgstr "Chọn các thuật toán để định hình trải nghiệm của bạn với bảng tin tùy chỉnh."
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65
+#~ msgid "Choose your"
+#~ msgstr "Lựa chọn"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:104
+msgid "Choose your main feeds"
+msgstr ""
+
+#: src/screens/Signup/StepInfo/index.tsx:112
+msgid "Choose your password"
+msgstr "Nhập mật khẩu"
+
+#: src/view/screens/Settings/index.tsx:868
+msgid "Clear all legacy storage data"
+msgstr "Xóa tất cả dữ liệu lưu trữ cũ"
+
+#: src/view/screens/Settings/index.tsx:871
+msgid "Clear all legacy storage data (restart after this)"
+msgstr "Xóa tất cả dữ liệu lưu trữ cũ (sau đó khởi động lại)"
+
+#: src/view/screens/Settings/index.tsx:880
+msgid "Clear all storage data"
+msgstr "Xóa tất cả dữ liệu lưu trữ"
+
+#: src/view/screens/Settings/index.tsx:883
+msgid "Clear all storage data (restart after this)"
+msgstr "Xóa tất cả dữ liệu lưu trữ (sau đó khởi động lại)"
+
+#: src/view/com/util/forms/SearchInput.tsx:88
+#: src/view/screens/Search/Search.tsx:789
+msgid "Clear search query"
+msgstr "Xóa truy vấn tìm kiếm"
+
+#: src/view/screens/Settings/index.tsx:869
+msgid "Clears all legacy storage data"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:881
+msgid "Clears all storage data"
+msgstr ""
+
+#: src/view/screens/Support.tsx:40
+msgid "click here"
+msgstr "bấm tại đây"
+
+#: src/components/TagMenu/index.web.tsx:138
+msgid "Click here to open tag menu for {tag}"
+msgstr ""
+
+#: src/components/RichText.tsx:192
+msgid "Click here to open tag menu for #{tag}"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:35
+msgid "Climate"
+msgstr ""
+
+#: src/view/com/modals/ChangePassword.tsx:267
+#: src/view/com/modals/ChangePassword.tsx:270
+msgid "Close"
+msgstr ""
+
+#: src/components/Dialog/index.web.tsx:106
+#: src/components/Dialog/index.web.tsx:218
+msgid "Close active dialog"
+msgstr ""
+
+#: src/screens/Login/PasswordUpdatedForm.tsx:38
+msgid "Close alert"
+msgstr "Đóng cảnh báo"
+
+#: src/view/com/util/BottomSheetCustomBackdrop.tsx:36
+msgid "Close bottom drawer"
+msgstr "Đóng ngăn kéo phía dưới"
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:36
+msgid "Close image"
+msgstr "Đóng ảnh"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:129
+msgid "Close image viewer"
+msgstr "Đóng trình xem ảnh"
+
+#: src/view/shell/index.web.tsx:55
+msgid "Close navigation footer"
+msgstr "Đóng phần điều hướng dưới chân trang"
+
+#: src/components/Menu/index.tsx:207
+#: src/components/TagMenu/index.tsx:262
+msgid "Close this dialog"
+msgstr ""
+
+#: src/view/shell/index.web.tsx:56
+msgid "Closes bottom navigation bar"
+msgstr "Đóng thanh điều hướng phía dưới"
+
+#: src/screens/Login/PasswordUpdatedForm.tsx:39
+msgid "Closes password update alert"
+msgstr "Đóng cảnh báo cập nhật mật khẩu"
+
+#: src/view/com/composer/Composer.tsx:319
+msgid "Closes post composer and discards post draft"
+msgstr "Đóng trình soạn thảo bài viết và loại bỏ bài viết nháp"
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:37
+msgid "Closes viewer for header image"
+msgstr "Đóng trình xem cho tiêu đề hình ảnh"
+
+#: src/view/com/notifications/FeedItem.tsx:321
+msgid "Collapses list of users for a given notification"
+msgstr "Thu gọn danh sách người dùng cho một thông báo nhất định"
+
+#: src/screens/Onboarding/index.tsx:41
+msgid "Comedy"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:27
+msgid "Comics"
+msgstr ""
+
+#: src/Navigation.tsx:241
+#: src/view/screens/CommunityGuidelines.tsx:32
+msgid "Community Guidelines"
+msgstr "Quy tắc cộng đồng"
+
+#: src/screens/Onboarding/StepFinished.tsx:152
+msgid "Complete onboarding and start using your account"
+msgstr ""
+
+#: src/screens/Signup/index.tsx:154
+msgid "Complete the challenge"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:438
+msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
+msgstr "Soạn bài viết có độ dài tối đa {MAX_GRAPHEME_LENGTH} ký tự"
+
+#: src/view/com/composer/Prompt.tsx:24
+msgid "Compose reply"
+msgstr "Viết phản hồi"
+
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:81
+msgid "Configure content filtering setting for category: {0}"
+msgstr ""
+
+#: src/components/moderation/LabelPreference.tsx:81
+msgid "Configure content filtering setting for category: {name}"
+msgstr ""
+
+#: src/components/moderation/LabelPreference.tsx:244
+msgid "Configured in <0>moderation settings</0>."
+msgstr ""
+
+#: src/components/Prompt.tsx:153
+#: src/components/Prompt.tsx:156
+#: src/view/com/modals/SelfLabel.tsx:154
+#: src/view/com/modals/VerifyEmail.tsx:231
+#: src/view/com/modals/VerifyEmail.tsx:233
+#: src/view/screens/PreferencesFollowingFeed.tsx:308
+#: src/view/screens/PreferencesThreads.tsx:159
+msgid "Confirm"
+msgstr "Xác nhận"
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+#~ msgctxt "action"
+#~ msgid "Confirm"
+#~ msgstr "Xác nhận"
+
+#: src/view/com/modals/ChangeEmail.tsx:193
+#: src/view/com/modals/ChangeEmail.tsx:195
+msgid "Confirm Change"
+msgstr "Xác nhận thay đổi"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:35
+msgid "Confirm content language settings"
+msgstr "Xác nhận cài đặt ngôn ngữ nội dung"
+
+#: src/view/com/modals/DeleteAccount.tsx:219
+msgid "Confirm delete account"
+msgstr "Xác nhận xóa tài khoản"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:151
+#~ msgid "Confirm your age to enable adult content."
+#~ msgstr "Xác nhận tuổi để kích hoạt nội dung 18+"
+
+#: src/screens/Moderation/index.tsx:301
+msgid "Confirm your age:"
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:292
+msgid "Confirm your birthdate"
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:157
+#: src/view/com/modals/DeleteAccount.tsx:175
+#: src/view/com/modals/DeleteAccount.tsx:181
+#: src/view/com/modals/VerifyEmail.tsx:165
+msgid "Confirmation code"
+msgstr "Mã xác nhận"
+
+#: src/view/com/modals/Waitlist.tsx:120
+#~ msgid "Confirms signing up {email} to the waitlist"
+#~ msgstr "Xác nhận đăng ký {email} vào danh sách chờ"
+
+#: src/screens/Login/LoginForm.tsx:248
+msgid "Connecting..."
+msgstr "Đang kết nối..."
+
+#: src/screens/Signup/index.tsx:219
+msgid "Contact support"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMe.tsx:42
+msgid "content"
+msgstr ""
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:18
+msgid "Content Blocked"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:81
+#~ msgid "Content filtering"
+#~ msgstr "Lọc nội dung"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:44
+#~ msgid "Content Filtering"
+#~ msgstr "Lọc nội dung"
+
+#: src/screens/Moderation/index.tsx:285
+msgid "Content filters"
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
+#: src/view/screens/LanguageSettings.tsx:278
+msgid "Content Languages"
+msgstr "Ngôn ngữ nội dung"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:75
+#: src/lib/moderation/useModerationCauseDescription.ts:75
+msgid "Content Not Available"
+msgstr "Nội dung không khả dụng"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:46
+#: src/components/moderation/ScreenHider.tsx:99
+#: src/lib/moderation/useGlobalLabelStrings.ts:22
+#: src/lib/moderation/useModerationCauseDescription.ts:38
+msgid "Content Warning"
+msgstr "Cảnh báo nội dung"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:31
+msgid "Content warnings"
+msgstr "Cảnh báo nội dung"
+
+#: src/components/Menu/index.web.tsx:84
+msgid "Context menu backdrop, click to close the menu."
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:161
+#: src/screens/Onboarding/StepFollowingFeed.tsx:154
+#: src/screens/Onboarding/StepInterests/index.tsx:252
+#: src/screens/Onboarding/StepModeration/index.tsx:103
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:118
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:96
+msgid "Continue"
+msgstr "Tiếp tục"
+
+#: src/components/AccountList.tsx:108
+msgid "Continue as {0} (currently signed in)"
+msgstr ""
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:151
+#: src/screens/Onboarding/StepInterests/index.tsx:249
+#: src/screens/Onboarding/StepModeration/index.tsx:100
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:115
+#: src/screens/Signup/index.tsx:198
+msgid "Continue to next step"
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:158
+msgid "Continue to the next step"
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:199
+msgid "Continue to the next step without following any accounts"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:44
+msgid "Cooking"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:196
+#: src/view/com/modals/InviteCodes.tsx:183
+msgid "Copied"
+msgstr "Đã sao chép"
+
+#: src/view/screens/Settings/index.tsx:251
+msgid "Copied build version to clipboard"
+msgstr "Đã sao chép phiên bản vào bộ nhớ tạm"
+
+#: src/view/com/modals/AddAppPasswords.tsx:77
+#: src/view/com/modals/ChangeHandle.tsx:326
+#: src/view/com/modals/InviteCodes.tsx:153
+#: src/view/com/util/forms/PostDropdownBtn.tsx:158
+msgid "Copied to clipboard"
+msgstr "Đã sao chép vào bộ nhớ tạm"
+
+#: src/view/com/modals/AddAppPasswords.tsx:190
+msgid "Copies app password"
+msgstr "Sao chép mật khẩu ứng dụng"
+
+#: src/view/com/modals/AddAppPasswords.tsx:189
+msgid "Copy"
+msgstr "Sao chép"
+
+#: src/view/com/modals/ChangeHandle.tsx:480
+msgid "Copy {0}"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:388
+msgid "Copy link to list"
+msgstr "Sao chép liên kết đến danh sách"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:228
+#: src/view/com/util/forms/PostDropdownBtn.tsx:237
+msgid "Copy link to post"
+msgstr "Sao chép liên kết đến bài viết"
+
+#: src/view/com/profile/ProfileHeader.tsx:342
+#~ msgid "Copy link to profile"
+#~ msgstr "Sao chép liên kết đến hồ sơ"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:220
+#: src/view/com/util/forms/PostDropdownBtn.tsx:222
+msgid "Copy post text"
+msgstr "Sao chép nội dung bài viết"
+
+#: src/Navigation.tsx:246
+#: src/view/screens/CopyrightPolicy.tsx:29
+msgid "Copyright Policy"
+msgstr "Chính sách bản quyền"
+
+#: src/view/screens/ProfileFeed.tsx:103
+msgid "Could not load feed"
+msgstr "Không thể tải bảng tin"
+
+#: src/view/screens/ProfileList.tsx:907
+msgid "Could not load list"
+msgstr "Không thể tải danh sách"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:65
+#: src/view/com/auth/SplashScreen.tsx:75
+#: src/view/com/auth/SplashScreen.web.tsx:104
+msgid "Create a new account"
+msgstr "Tạo tài khoản mới"
+
+#: src/view/screens/Settings/index.tsx:403
+msgid "Create a new Bluesky account"
+msgstr "Tạo tài khoản Bluesky mới"
+
+#: src/screens/Signup/index.tsx:129
+msgid "Create Account"
+msgstr "Tạo tài khoản"
+
+#: src/view/com/modals/AddAppPasswords.tsx:227
+msgid "Create App Password"
+msgstr "Tạo mật khẩu ứng dụng"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:55
+#: src/view/com/auth/SplashScreen.tsx:66
+#: src/view/com/auth/SplashScreen.web.tsx:95
+msgid "Create new account"
+msgstr "Tạo tài khoản mới"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:94
+msgid "Create report for {0}"
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:246
+msgid "Created {0}"
+msgstr "Đã tạo {0}"
+
+#: src/view/screens/ProfileFeed.tsx:625
+#~ msgid "Created by <0/>"
+#~ msgstr "Được tạo bởi <0/>"
+
+#: src/view/screens/ProfileFeed.tsx:623
+#~ msgid "Created by you"
+#~ msgstr "Được tạo bởi bạn"
+
+#: src/view/com/composer/Composer.tsx:469
+msgid "Creates a card with a thumbnail. The card links to {url}"
+msgstr "Tạo một thẻ với hình đại diện. Thẻ sẽ liên kết đến {url}"
+
+#: src/screens/Onboarding/index.tsx:29
+msgid "Culture"
+msgstr ""
+
+#: src/view/com/auth/server-input/index.tsx:97
+#: src/view/com/auth/server-input/index.tsx:99
+msgid "Custom"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:388
+msgid "Custom domain"
+msgstr "Tên miền tùy chỉnh"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:107
+#: src/view/screens/Feeds.tsx:692
+msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
+msgstr ""
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr "Tùy chỉnh phương tiện từ các trang bên ngoài."
+
+#: src/view/screens/Settings.tsx:687
+#~ msgid "Danger Zone"
+#~ msgstr "Vùng nguy hiểm"
+
+#: src/view/screens/Settings/index.tsx:504
+#: src/view/screens/Settings/index.tsx:530
+msgid "Dark"
+msgstr "Tối"
+
+#: src/view/screens/Debug.tsx:63
+msgid "Dark mode"
+msgstr "Chế độ tối"
+
+#: src/view/screens/Settings/index.tsx:517
+msgid "Dark Theme"
+msgstr ""
+
+#: src/screens/Signup/StepInfo/index.tsx:132
+msgid "Date of birth"
+msgstr ""
+
+#: src/Navigation.tsx:204
+#~ msgid "Debug"
+#~ msgstr "Gỡ lỗi"
+
+#: src/view/screens/Settings/index.tsx:841
+msgid "Debug Moderation"
+msgstr ""
+
+#: src/view/screens/Debug.tsx:83
+msgid "Debug panel"
+msgstr "Bảng gỡ lỗi"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:319
+#: src/view/screens/AppPasswords.tsx:268
+#: src/view/screens/ProfileList.tsx:613
+msgid "Delete"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:796
+msgid "Delete account"
+msgstr "Xóa tài khoản"
+
+#: src/view/com/modals/DeleteAccount.tsx:86
+msgid "Delete Account"
+msgstr "Xóa tài khoản"
+
+#: src/view/screens/AppPasswords.tsx:239
+msgid "Delete app password"
+msgstr "Xóa mật khẩu ứng dụng"
+
+#: src/view/screens/AppPasswords.tsx:263
+msgid "Delete app password?"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:415
+msgid "Delete List"
+msgstr "Xóa danh sách"
+
+#: src/view/com/modals/DeleteAccount.tsx:222
+msgid "Delete my account"
+msgstr "Xóa tài khoản của tôi"
+
+#: src/view/screens/Settings.tsx:706
+#~ msgid "Delete my account…"
+#~ msgstr "Xóa tài khoản của tôi..."
+
+#: src/view/screens/Settings/index.tsx:808
+msgid "Delete My Account…"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:302
+#: src/view/com/util/forms/PostDropdownBtn.tsx:304
+msgid "Delete post"
+msgstr "Xóa bài viết"
+
+#: src/view/screens/ProfileList.tsx:608
+msgid "Delete this list?"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:314
+msgid "Delete this post?"
+msgstr "Xóa bài viết này?"
+
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:64
+msgid "Deleted"
+msgstr "Đã xóa"
+
+#: src/view/com/post-thread/PostThread.tsx:305
+msgid "Deleted post."
+msgstr "Đã xóa bài viết."
+
+#: src/view/com/modals/CreateOrEditList.tsx:301
+#: src/view/com/modals/CreateOrEditList.tsx:322
+#: src/view/com/modals/EditProfile.tsx:199
+#: src/view/com/modals/EditProfile.tsx:211
+msgid "Description"
+msgstr "Mô tả"
+
+#: src/view/com/auth/create/Step1.tsx:96
+#~ msgid "Dev Server"
+#~ msgstr "Dev Server"
+
+#: src/view/screens/Settings.tsx:711
+#~ msgid "Developer Tools"
+#~ msgstr "Bộ công cụ phát triển"
+
+#: src/view/com/composer/Composer.tsx:218
+msgid "Did you want to say anything?"
+msgstr "Bạn muốn nói gì không?"
+
+#: src/view/screens/Settings/index.tsx:523
+msgid "Dim"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:32
+#: src/lib/moderation/useLabelBehaviorDescription.ts:42
+#: src/lib/moderation/useLabelBehaviorDescription.ts:68
+#: src/screens/Moderation/index.tsx:341
+msgid "Disabled"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:511
+msgid "Discard"
+msgstr "Hủy"
+
+#: src/view/com/composer/Composer.tsx:138
+#~ msgid "Discard draft"
+#~ msgstr "Hủy bản nháp"
+
+#: src/view/com/composer/Composer.tsx:508
+msgid "Discard draft?"
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:518
+#: src/screens/Moderation/index.tsx:522
+msgid "Discourage apps from showing my account to logged-out users"
+msgstr "Ngăn chặn ứng dụng hiển thị tài khoản của tôi đối với người dùng đã đăng xuất"
+
+#: src/view/com/posts/FollowingEmptyState.tsx:74
+#: src/view/com/posts/FollowingEndOfFeed.tsx:75
+msgid "Discover new custom feeds"
+msgstr "Khám phám bảng tin cá nhân mới"
+
+#: src/view/screens/Feeds.tsx:409
+#~ msgid "Discover new feeds"
+#~ msgstr "Khám phá bảng tin"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:193
+msgid "Display name"
+msgstr "Tên hiển thị"
+
+#: src/view/com/modals/EditProfile.tsx:181
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#: src/view/com/modals/ChangeHandle.tsx:397
+msgid "DNS Panel"
+msgstr ""
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:39
+msgid "Does not include nudity."
+msgstr ""
+
+#: src/screens/Signup/StepHandle.tsx:104
+msgid "Doesn't begin or end with a hyphen"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:481
+msgid "Domain Value"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:488
+msgid "Domain verified!"
+msgstr "Tên miền được xác thực!"
+
+#: src/view/com/auth/create/Step2.tsx:83
+#~ msgid "Don't have an invite code?"
+#~ msgstr "Không có mã mời nào?"
+
+#: src/components/dialogs/BirthDateSettings.tsx:119
+#: src/components/dialogs/BirthDateSettings.tsx:125
+#: src/components/forms/DateField/index.tsx:74
+#: src/components/forms/DateField/index.tsx:80
+#: src/view/com/auth/server-input/index.tsx:169
+#: src/view/com/auth/server-input/index.tsx:170
+#: src/view/com/modals/AddAppPasswords.tsx:227
+#: src/view/com/modals/AltImage.tsx:140
+#: src/view/com/modals/crop-image/CropImage.web.tsx:153
+#: src/view/com/modals/InviteCodes.tsx:81
+#: src/view/com/modals/InviteCodes.tsx:124
+#: src/view/com/modals/ListAddRemoveUsers.tsx:142
+#: src/view/screens/PreferencesFollowingFeed.tsx:311
+#: src/view/screens/Settings/ExportCarDialog.tsx:94
+#: src/view/screens/Settings/ExportCarDialog.tsx:96
+msgid "Done"
+msgstr "Xong"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/EditImage.tsx:334
+#: src/view/com/modals/ListAddRemoveUsers.tsx:144
+#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
+#: src/view/com/modals/UserAddRemoveLists.tsx:95
+#: src/view/com/modals/UserAddRemoveLists.tsx:98
+#: src/view/screens/PreferencesThreads.tsx:162
+msgctxt "action"
+msgid "Done"
+msgstr "Xong"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:43
+msgid "Done{extraText}"
+msgstr "Xong {extraText}"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:45
+#~ msgid "Double tap to sign in"
+#~ msgstr "Nhấn đúp để đăng nhập"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:59
+#: src/view/screens/Settings/ExportCarDialog.tsx:63
+msgid "Download CAR file"
+msgstr ""
+
+#: src/view/com/composer/text-input/TextInput.web.tsx:249
+msgid "Drop to add images"
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:120
+msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:258
+msgid "e.g. alice"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:186
+msgid "e.g. Alice Roberts"
+msgstr "ví dụ: Alice Roberts"
+
+#: src/view/com/modals/ChangeHandle.tsx:380
+msgid "e.g. alice.com"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:204
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr "ví dụ: nghệ thuật, yêu chó và thích đọc sách."
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:43
+msgid "E.g. artistic nudes."
+msgstr ""
+
+#: src/view/com/modals/CreateOrEditList.tsx:284
+msgid "e.g. Great Posters"
+msgstr "ví dụ: Great Posters"
+
+#: src/view/com/modals/CreateOrEditList.tsx:285
+msgid "e.g. Spammers"
+msgstr "ví dụ: thư rác"
+
+#: src/view/com/modals/CreateOrEditList.tsx:313
+msgid "e.g. The posters who never miss."
+msgstr "ví dụ: người đăng bài đều đặn."
+
+#: src/view/com/modals/CreateOrEditList.tsx:314
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr "ví dụ: người dung thường xuyên trả lời bằng quảng cáo."
+
+#: src/view/com/modals/InviteCodes.tsx:97
+msgid "Each code works once. You'll receive more invite codes periodically."
+msgstr "Mỗi mã chỉ được dùng một lần. Bạn sẽ nhận được nhiều mã hơn theo định kỳ."
+
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
+msgid "Edit"
+msgstr "Chỉnh sửa"
+
+#: src/view/com/util/UserAvatar.tsx:299
+#: src/view/com/util/UserBanner.tsx:85
+msgid "Edit avatar"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:144
+#: src/view/com/modals/EditImage.tsx:208
+msgid "Edit image"
+msgstr "Chỉnh sửa ảnh"
+
+#: src/view/screens/ProfileList.tsx:403
+msgid "Edit list details"
+msgstr "Chỉnh sửa chi tiết danh sách"
+
+#: src/view/com/modals/CreateOrEditList.tsx:251
+msgid "Edit Moderation List"
+msgstr "Chỉnh sửa danh sách kiểm duyệt"
+
+#: src/Navigation.tsx:256
+#: src/view/screens/Feeds.tsx:434
+#: src/view/screens/SavedFeeds.tsx:84
+msgid "Edit My Feeds"
+msgstr "Chỉnh sửa bảng tin của tôi"
+
+#: src/view/com/modals/EditProfile.tsx:153
+msgid "Edit my profile"
+msgstr "Chỉnh sửa hồ sơ của tôi"
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:171
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:168
+msgid "Edit profile"
+msgstr "Chỉnh sửa hồ sơ"
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:174
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:171
+msgid "Edit Profile"
+msgstr "Chỉnh sửa hồ sơ"
+
+#: src/view/com/home/HomeHeaderLayout.web.tsx:62
+#: src/view/screens/Feeds.tsx:355
+msgid "Edit Saved Feeds"
+msgstr "Chỉnh sửa bảng tin đã lưu"
+
+#: src/view/com/modals/CreateOrEditList.tsx:246
+msgid "Edit User List"
+msgstr "Chỉnh sửa danh sách người dùng"
+
+#: src/view/com/modals/EditProfile.tsx:194
+msgid "Edit your display name"
+msgstr "Chỉnh sửa tên hiển thị"
+
+#: src/view/com/modals/EditProfile.tsx:212
+msgid "Edit your profile description"
+msgstr "Chỉnh sửa mô tả hồ sơ"
+
+#: src/screens/Onboarding/index.tsx:34
+msgid "Education"
+msgstr ""
+
+#: src/screens/Signup/StepInfo/index.tsx:80
+#: src/view/com/modals/ChangeEmail.tsx:141
+msgid "Email"
+msgstr "Email"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:99
+msgid "Email address"
+msgstr "Địa chỉ email"
+
+#: src/view/com/modals/ChangeEmail.tsx:56
+#: src/view/com/modals/ChangeEmail.tsx:88
+msgid "Email updated"
+msgstr "Email đã được cập nhật"
+
+#: src/view/com/modals/ChangeEmail.tsx:111
+msgid "Email Updated"
+msgstr "Email đã được cập nhật"
+
+#: src/view/com/modals/VerifyEmail.tsx:78
+msgid "Email verified"
+msgstr "Email đã được xác minh"
+
+#: src/view/screens/Settings/index.tsx:331
+msgid "Email:"
+msgstr "Email:"
+
+#: src/components/dialogs/EmbedConsent.tsx:101
+msgid "Enable {0} only"
+msgstr "Chỉ kích hoạt {0}"
+
+#: src/screens/Moderation/index.tsx:329
+msgid "Enable adult content"
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:94
+msgid "Enable Adult Content"
+msgstr "Kích hoạt nội dung 18+"
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:79
+msgid "Enable adult content in your feeds"
+msgstr ""
+
+#: src/components/dialogs/EmbedConsent.tsx:82
+#: src/components/dialogs/EmbedConsent.tsx:89
+msgid "Enable external media"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+#~ msgid "Enable External Media"
+#~ msgstr "Kích hoạt phương tiện ngoại vi"
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:75
+msgid "Enable media players for"
+msgstr "Kích hoạt trình phát cho"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:147
+msgid "Enable this setting to only see replies between people you follow."
+msgstr "Kích hoạt cài đặt này để chỉ xem các phản hồi giữa những người bạn theo dõi."
+
+#: src/components/dialogs/EmbedConsent.tsx:94
+msgid "Enable this source only"
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:339
+msgid "Enabled"
+msgstr ""
+
+#: src/screens/Profile/Sections/Feed.tsx:84
+msgid "End of feed"
+msgstr "Cuối bảng tin"
+
+#: src/view/com/modals/AddAppPasswords.tsx:167
+msgid "Enter a name for this App Password"
+msgstr "Nhập tên cho mật khẩu ứng dụng này"
+
+#: src/screens/Login/SetNewPasswordForm.tsx:139
+msgid "Enter a password"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:99
+#: src/components/dialogs/MutedWords.tsx:100
+msgid "Enter a word or tag"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:105
+msgid "Enter Confirmation Code"
+msgstr "Nhập mã xác nhận"
+
+#: src/view/com/auth/create/Step1.tsx:71
+#~ msgid "Enter the address of your provider:"
+#~ msgstr "Nhập địa chỉ nhà cung cấp của bạn:"
+
+#: src/view/com/modals/ChangePassword.tsx:153
+msgid "Enter the code you received to change your password."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:370
+msgid "Enter the domain you want to use"
+msgstr "Nhập tên miền bạn muốn sử dụng"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:119
+msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
+msgstr "Nhập địa chỉ email bạn đã dùng để tạo tài khoản. Chúng tôi sẽ gửi bạn một \"Mã khôi phục\" để cài mật khẩu mới. "
+
+#: src/components/dialogs/BirthDateSettings.tsx:108
+msgid "Enter your birth date"
+msgstr "Nhập ngày sinh của bạn"
+
+#: src/view/com/modals/Waitlist.tsx:78
+#~ msgid "Enter your email"
+#~ msgstr "Nhập email của bạn"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:105
+#: src/screens/Signup/StepInfo/index.tsx:91
+msgid "Enter your email address"
+msgstr "Nhập địa chỉ email"
+
+#: src/view/com/modals/ChangeEmail.tsx:41
+msgid "Enter your new email above"
+msgstr "Nhập email mới của bạn phía trên"
+
+#: src/view/com/modals/ChangeEmail.tsx:117
+msgid "Enter your new email address below."
+msgstr "Nhập địa chỉ email mới"
+
+#: src/screens/Login/index.tsx:101
+msgid "Enter your username and password"
+msgstr "Nhập tên đăng nhập và mật khẩu"
+
+#: src/screens/Signup/StepCaptcha/index.tsx:49
+msgid "Error receiving captcha response."
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:112
+msgid "Error:"
+msgstr "Lỗi:"
+
+#: src/view/com/modals/Threadgate.tsx:76
+msgid "Everybody"
+msgstr "Mọi người"
+
+#: src/lib/moderation/useReportOptions.ts:66
+msgid "Excessive mentions or replies"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:230
+msgid "Exits account deletion process"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:151
+msgid "Exits handle change process"
+msgstr "Thoát quá trình thay đổi tên người dùng"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:136
+msgid "Exits image cropping process"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:130
+msgid "Exits image view"
+msgstr "Thoát xem ảnh"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:88
+#: src/view/shell/desktop/Search.tsx:236
+msgid "Exits inputting search query"
+msgstr "Thoát nhập truy vấn tìm kiếm"
+
+#: src/view/com/modals/Waitlist.tsx:138
+#~ msgid "Exits signing up for waitlist with {email}"
+#~ msgstr "Thoát đăng ký danh sách chờ với {email}"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:183
+msgid "Expand alt text"
+msgstr "Mở rộng mô tả ảnh"
+
+#: src/view/com/composer/ComposerReplyTo.tsx:81
+#: src/view/com/composer/ComposerReplyTo.tsx:84
+msgid "Expand or collapse the full post you are replying to"
+msgstr "Mở rộng hoặc thu gọn bài viết bạn đang phản hồi"
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:47
+msgid "Explicit or potentially disturbing media."
+msgstr ""
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:35
+msgid "Explicit sexual images."
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:777
+msgid "Export my data"
+msgstr ""
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:44
+#: src/view/screens/Settings/index.tsx:788
+msgid "Export My Data"
+msgstr ""
+
+#: src/components/dialogs/EmbedConsent.tsx:55
+#: src/components/dialogs/EmbedConsent.tsx:59
+msgid "External Media"
+msgstr "Phương tiện ngoại vi"
+
+#: src/components/dialogs/EmbedConsent.tsx:71
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
+msgstr "Phương tiện ngoại vi có thể cho phép trang web thu thập thông tin về bạn và thiết bị của bạn. Không có thông tin hoặc yêu cầu nào được gửi cho đến khi bạn ấn nút \"chơi\"."
+
+#: src/Navigation.tsx:275
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52
+#: src/view/screens/Settings/index.tsx:677
+msgid "External Media Preferences"
+msgstr "Tùy chọn phương tiện ngoại vi"
+
+#: src/view/screens/Settings/index.tsx:668
+msgid "External media settings"
+msgstr "Cài đặt phương tiện ngoại vi"
+
+#: src/view/com/modals/AddAppPasswords.tsx:116
+#: src/view/com/modals/AddAppPasswords.tsx:120
+msgid "Failed to create app password."
+msgstr "Lỗi tạo mật khẩu ứng dụng."
+
+#: src/view/com/modals/CreateOrEditList.tsx:207
+msgid "Failed to create the list. Check your internet connection and try again."
+msgstr "Lỗi tạo danh sách. Kiểm tra kết nối mạng và thử lại."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
+msgid "Failed to delete post, please try again"
+msgstr "Lỗi xóa bài viết, vui lòng thử lại"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
+msgid "Failed to load recommended feeds"
+msgstr "Lỗi khi tải bảng tin đề xuất"
+
+#: src/view/com/lightbox/Lightbox.tsx:83
+msgid "Failed to save image: {0}"
+msgstr ""
+
+#: src/Navigation.tsx:196
+msgid "Feed"
+msgstr "Bảng tin"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:218
+msgid "Feed by {0}"
+msgstr "Bảng tin bởi {0}"
+
+#: src/view/screens/Feeds.tsx:605
+msgid "Feed offline"
+msgstr "Bảng tin ngoại tuyến"
+
+#: src/view/com/feeds/FeedPage.tsx:143
+#~ msgid "Feed Preferences"
+#~ msgstr "Tùy chọn bảng tin"
+
+#: src/view/shell/desktop/RightNav.tsx:61
+#: src/view/shell/Drawer.tsx:314
+msgid "Feedback"
+msgstr "Phản hồi"
+
+#: src/Navigation.tsx:464
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Profile.tsx:194
+#: src/view/shell/bottom-bar/BottomBar.tsx:191
+#: src/view/shell/desktop/LeftNav.tsx:346
+#: src/view/shell/Drawer.tsx:479
+#: src/view/shell/Drawer.tsx:480
+msgid "Feeds"
+msgstr "Bảng tin"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
+msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
+msgstr "Bảng tin được tạo bởi người dùng để chọn lọc nội dung. Lựa chọn một vài bảng tin mà bạn thấy thú vị."
+
+#: src/view/screens/SavedFeeds.tsx:156
+msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
+msgstr "Bảng tin là những thuật toán tùy chỉnh mà người xây dựng với một chút kỹ thuật lập trình. <0/> để biết thêm thông tin."
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:80
+msgid "Feeds can be topical as well!"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:481
+msgid "File Contents"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:66
+msgid "Filter from feeds"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:155
+msgid "Finalizing"
+msgstr ""
+
+#: src/view/com/posts/CustomFeedEmptyState.tsx:47
+#: src/view/com/posts/FollowingEmptyState.tsx:57
+#: src/view/com/posts/FollowingEndOfFeed.tsx:58
+msgid "Find accounts to follow"
+msgstr "Tìm tài khoản để theo dõi"
+
+#: src/view/screens/Search/Search.tsx:532
+msgid "Find users on Bluesky"
+msgstr "Tìm kiếm người dùng trên Bluesky"
+
+#: src/view/screens/Search/Search.tsx:530
+msgid "Find users with the search tool on the right"
+msgstr "Tìm kiếm người dùng với công cụ tìm kiếm bên phải"
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:155
+msgid "Finding similar accounts..."
+msgstr "Đang tìm các tài khoản tương tự..."
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:111
+msgid "Fine-tune the content you see on your Following feed."
+msgstr ""
+
+#: src/view/screens/PreferencesHomeFeed.tsx:111
+#~ msgid "Fine-tune the content you see on your home screen."
+#~ msgstr "Tinh chỉnh nội dụng bạn nhìn thấy trên màn hình chính."
+
+#: src/view/screens/PreferencesThreads.tsx:60
+msgid "Fine-tune the discussion threads."
+msgstr "Tinh chỉnh các chủ để thảo luận."
+
+#: src/screens/Onboarding/index.tsx:38
+msgid "Fitness"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:135
+msgid "Flexible"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:116
+msgid "Flip horizontal"
+msgstr "Lật ngang"
+
+#: src/view/com/modals/EditImage.tsx:121
+#: src/view/com/modals/EditImage.tsx:288
+msgid "Flip vertically"
+msgstr "Lật dọc"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:189
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:236
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:146
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:246
+msgid "Follow"
+msgstr "Theo dõi"
+
+#: src/view/com/profile/FollowButton.tsx:69
+msgctxt "action"
+msgid "Follow"
+msgstr "Theo dõi"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:58
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:221
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:128
+msgid "Follow {0}"
+msgstr "Theo dõi {0}"
+
+#: src/view/com/profile/ProfileMenu.tsx:242
+#: src/view/com/profile/ProfileMenu.tsx:253
+msgid "Follow Account"
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
+msgid "Follow All"
+msgstr ""
+
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:144
+msgid "Follow Back"
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:182
+msgid "Follow selected accounts and continue to the next step"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:42
+#~ msgid "Follow some"
+#~ msgstr "Theo dõi một vài"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
+msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
+msgstr "Theo dõi một vài người dùng để bắt đầu. Chúng tôi có thể đề xuất thêm nhiều người dùng cho bạn dựa trên những người bạn thấy thú vị."
+
+#: src/view/com/profile/ProfileCard.tsx:216
+msgid "Followed by {0}"
+msgstr "Theo dõi bởi {0}"
+
+#: src/view/com/modals/Threadgate.tsx:98
+msgid "Followed users"
+msgstr "Đang theo dõi"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:154
+msgid "Followed users only"
+msgstr "Chỉ đang theo dõi"
+
+#: src/view/com/notifications/FeedItem.tsx:170
+msgid "followed you"
+msgstr "đã theo dõi bạn"
+
+#: src/view/com/profile/ProfileFollowers.tsx:104
+#: src/view/screens/ProfileFollowers.tsx:25
+msgid "Followers"
+msgstr "Người theo dõi"
+
+#: src/view/com/profile/ProfileHeader.tsx:624
+#~ msgid "following"
+#~ msgstr "đang theo dõi"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:234
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:149
+#: src/view/com/profile/ProfileFollows.tsx:104
+#: src/view/screens/ProfileFollows.tsx:25
+msgid "Following"
+msgstr "Đang theo dõi"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:93
+msgid "Following {0}"
+msgstr "Đang theo dõi {0}"
+
+#: src/view/screens/Settings/index.tsx:553
+msgid "Following feed preferences"
+msgstr ""
+
+#: src/Navigation.tsx:262
+#: src/view/com/home/HomeHeaderLayout.web.tsx:50
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
+#: src/view/screens/PreferencesFollowingFeed.tsx:104
+#: src/view/screens/Settings/index.tsx:562
+msgid "Following Feed Preferences"
+msgstr ""
+
+#: src/screens/Profile/Header/Handle.tsx:24
+msgid "Follows you"
+msgstr "Theo dõi bạn"
+
+#: src/view/com/profile/ProfileCard.tsx:141
+msgid "Follows You"
+msgstr "Theo dõi bạn"
+
+#: src/screens/Onboarding/index.tsx:43
+msgid "Food"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:110
+msgid "For security reasons, we'll need to send a confirmation code to your email address."
+msgstr "Vì lý do bảo mật, chúng tôi sẽ cần gửi mã xác nhận đến địa chỉ email của bạn."
+
+#: src/view/com/modals/AddAppPasswords.tsx:210
+msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
+msgstr "Vì lý do bảo mật, bạn sẽ không thể thấy lại cái này. Nếu bạn mất mật khẩu, bạn sẽ cần tạo lại."
+
+#: src/view/com/auth/login/LoginForm.tsx:238
+#~ msgid "Forgot"
+#~ msgstr "Quên"
+
+#: src/view/com/auth/login/LoginForm.tsx:235
+#~ msgid "Forgot password"
+#~ msgstr "Quên mật khẩu"
+
+#: src/screens/Login/index.tsx:129
+#: src/screens/Login/index.tsx:144
+msgid "Forgot Password"
+msgstr "Quên mật khẩu"
+
+#: src/screens/Login/LoginForm.tsx:201
+msgid "Forgot password?"
+msgstr ""
+
+#: src/screens/Login/LoginForm.tsx:212
+msgid "Forgot?"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:52
+msgid "Frequently Posts Unwanted Content"
+msgstr ""
+
+#: src/screens/Hashtag.tsx:109
+#: src/screens/Hashtag.tsx:149
+msgid "From @{sanitizedAuthor}"
+msgstr ""
+
+#: src/view/com/posts/FeedItem.tsx:179
+msgctxt "from-feed"
+msgid "From <0/>"
+msgstr "Từ <0/>"
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
+msgid "Gallery"
+msgstr "Thư viện ảnh"
+
+#: src/view/com/modals/VerifyEmail.tsx:189
+#: src/view/com/modals/VerifyEmail.tsx:191
+msgid "Get Started"
+msgstr "Bắt đầu"
+
+#: src/lib/moderation/useReportOptions.ts:37
+msgid "Glaring violations of law or terms of service"
+msgstr ""
+
+#: src/components/moderation/ScreenHider.tsx:151
+#: src/components/moderation/ScreenHider.tsx:160
+#: src/view/com/auth/LoggedOut.tsx:82
+#: src/view/com/auth/LoggedOut.tsx:83
+#: src/view/screens/NotFound.tsx:55
+#: src/view/screens/ProfileFeed.tsx:112
+#: src/view/screens/ProfileList.tsx:916
+#: src/view/shell/desktop/LeftNav.tsx:108
+msgid "Go back"
+msgstr "Quay lại"
+
+#: src/components/Error.tsx:91
+#: src/screens/Profile/ErrorState.tsx:62
+#: src/screens/Profile/ErrorState.tsx:66
+#: src/view/screens/NotFound.tsx:54
+#: src/view/screens/ProfileFeed.tsx:117
+#: src/view/screens/ProfileList.tsx:921
+msgid "Go Back"
+msgstr "Quay lại"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:73
+#: src/components/ReportDialog/SubmitView.tsx:102
+#: src/screens/Onboarding/Layout.tsx:102
+#: src/screens/Onboarding/Layout.tsx:191
+#: src/screens/Signup/index.tsx:173
+msgid "Go back to previous step"
+msgstr ""
+
+#: src/view/screens/NotFound.tsx:55
+msgid "Go home"
+msgstr ""
+
+#: src/view/screens/NotFound.tsx:54
+msgid "Go Home"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:839
+#: src/view/shell/desktop/Search.tsx:263
+msgid "Go to @{queryMaybeHandle}"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:172
+#: src/view/com/modals/ChangePassword.tsx:167
+msgid "Go to next"
+msgstr "Kế tiếp"
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:46
+msgid "Graphic Media"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:266
+msgid "Handle"
+msgstr "Tên người dùng"
+
+#: src/lib/moderation/useReportOptions.ts:32
+msgid "Harassment, trolling, or intolerance"
+msgstr ""
+
+#: src/Navigation.tsx:282
+msgid "Hashtag"
+msgstr ""
+
+#: src/components/RichText.tsx:191
+msgid "Hashtag: #{tag}"
+msgstr ""
+
+#: src/screens/Signup/index.tsx:217
+msgid "Having trouble?"
+msgstr ""
+
+#: src/view/shell/desktop/RightNav.tsx:90
+#: src/view/shell/Drawer.tsx:324
+msgid "Help"
+msgstr "Trợ giúp"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:140
+msgid "Here are some accounts for you to follow"
+msgstr ""
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:89
+msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
+msgstr ""
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:84
+msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:154
+msgid "Here is your app password."
+msgstr "Đây là mật khẩu ứng dụng của bạn."
+
+#: src/components/moderation/ContentHider.tsx:115
+#: src/components/moderation/LabelPreference.tsx:134
+#: src/components/moderation/PostHider.tsx:107
+#: src/lib/moderation/useLabelBehaviorDescription.ts:15
+#: src/lib/moderation/useLabelBehaviorDescription.ts:20
+#: src/lib/moderation/useLabelBehaviorDescription.ts:25
+#: src/lib/moderation/useLabelBehaviorDescription.ts:30
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:52
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:76
+#: src/view/com/util/forms/PostDropdownBtn.tsx:328
+msgid "Hide"
+msgstr "Ẩn"
+
+#: src/view/com/notifications/FeedItem.tsx:329
+msgctxt "action"
+msgid "Hide"
+msgstr "Ẩn"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:276
+#: src/view/com/util/forms/PostDropdownBtn.tsx:278
+msgid "Hide post"
+msgstr "Ẩn bài viết"
+
+#: src/components/moderation/ContentHider.tsx:67
+#: src/components/moderation/PostHider.tsx:64
+msgid "Hide the content"
+msgstr "Ẩn nội dung"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:325
+msgid "Hide this post?"
+msgstr "Ẩn bài viết này?"
+
+#: src/view/com/notifications/FeedItem.tsx:319
+msgid "Hide user list"
+msgstr "Ẩn danh sách người dùng"
+
+#: src/view/com/profile/ProfileHeader.tsx:526
+#~ msgid "Hides posts from {0} in your feed"
+#~ msgstr "Ẩn bài viết từ {0} trong bảng tin của bạn"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:102
+#~ msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
+#~ msgstr "Hmm, đã có vấn đề xảy ra khi kết nối với máy chủ. Vui lòng thông báo cho quản trị viên về vấn đề này."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:111
+msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
+msgstr "Hmm, đã có vấn đề xảy ra khi kết nối với máy chủ. Vui lòng thông báo cho quản trị viên về vấn đề này."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:99
+msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
+msgstr "Hmm, dường như máy chủ đã được cấu hình không đúng. Vui lòng thông báo cho quản trị viên về vấn đề này."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:105
+msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
+msgstr "Hmm, máy chủ ngoại tuyến. Vui lòng thông báo cho quản trị viên về vấn đề này."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:102
+msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
+msgstr "Hmm, máy chủ phản hồi thông tin không đúng. Vui lòng thông báo cho quản trị viên về vấn đề này."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:96
+msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
+msgstr "Hmm, chúng tôi không thể tìm thấy bảng tin này. Nó có thể đã bị xóa."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:87
+#~ msgid "Hmmm, we're having trouble finding this feed. It may have been deleted."
+#~ msgstr "Hmm, chúng tôi không thể tìm thấy bảng tin này. Nó có thể đã bị xóa."
+
+#: src/screens/Moderation/index.tsx:59
+msgid "Hmmmm, it seems we're having trouble loading this data. See below for more details. If this issue persists, please contact us."
+msgstr ""
+
+#: src/screens/Profile/ErrorState.tsx:31
+msgid "Hmmmm, we couldn't load that moderation service."
+msgstr ""
+
+#: src/Navigation.tsx:454
+#: src/view/shell/bottom-bar/BottomBar.tsx:147
+#: src/view/shell/desktop/LeftNav.tsx:310
+#: src/view/shell/Drawer.tsx:401
+#: src/view/shell/Drawer.tsx:402
+msgid "Home"
+msgstr "Trang chủ"
+
+#: src/Navigation.tsx:249
+#: src/view/com/pager/FeedsTabBarMobile.tsx:98
+#: src/view/screens/PreferencesHomeFeed.tsx:104
+#: src/view/screens/Settings.tsx:509
+#~ msgid "Home Feed Preferences"
+#~ msgstr "Tùy chọn trang chủ bảng tin"
+
+#: src/view/com/modals/ChangeHandle.tsx:420
+msgid "Host:"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:89
+#: src/screens/Login/LoginForm.tsx:134
+#: src/screens/Signup/StepInfo/index.tsx:40
+#: src/view/com/modals/ChangeHandle.tsx:281
+msgid "Hosting provider"
+msgstr "Nhà cung cấp hosting"
+
+#: src/view/com/auth/create/Step1.tsx:76
+#: src/view/com/auth/create/Step1.tsx:81
+#~ msgid "Hosting provider address"
+#~ msgstr "Địa chỉ nhà cung cấp hosting"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:44
+msgid "How should we open this link?"
+msgstr "Chúng tôi nên mở liên kết này như thế nào?"
+
+#: src/view/com/modals/VerifyEmail.tsx:214
+msgid "I have a code"
+msgstr "Tôi có mã"
+
+#: src/view/com/modals/VerifyEmail.tsx:216
+msgid "I have a confirmation code"
+msgstr "Tôi có mã xác nhận"
+
+#: src/view/com/modals/ChangeHandle.tsx:284
+msgid "I have my own domain"
+msgstr "Tôi có tên miền riêng"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:185
+msgid "If alt text is long, toggles alt text expanded state"
+msgstr "Nếu mô tả ảnh dài, hãy chuyển trạng thái mở rộng mô tả ảnh"
+
+#: src/view/com/modals/SelfLabel.tsx:127
+msgid "If none are selected, suitable for all ages."
+msgstr "Nếu không chọn bất kỳ cái nào, đồng nghĩa phù hợp với mọi lứa tuổi"
+
+#: src/screens/Signup/StepInfo/Policies.tsx:83
+msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:610
+msgid "If you delete this list, you won't be able to recover it."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:316
+msgid "If you remove this post, you won't be able to recover it."
+msgstr ""
+
+#: src/view/com/modals/ChangePassword.tsx:148
+msgid "If you want to change your password, we will send you a code to verify that this is your account."
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:36
+msgid "Illegal and Urgent"
+msgstr ""
+
+#: src/view/com/util/images/Gallery.tsx:38
+msgid "Image"
+msgstr "Ảnh"
+
+#: src/view/com/modals/AltImage.tsx:121
+msgid "Image alt text"
+msgstr "Mô tả ảnh"
+
+#: src/view/com/util/UserAvatar.tsx:308
+#: src/view/com/util/UserBanner.tsx:116
+#~ msgid "Image options"
+#~ msgstr "Lựa chọn ảnh"
+
+#: src/lib/moderation/useReportOptions.ts:47
+msgid "Impersonation or false claims about identity or affiliation"
+msgstr ""
+
+#: src/view/com/search/Suggestions.tsx:104
+#: src/view/com/search/Suggestions.tsx:115
+#~ msgid "In Your Network"
+#~ msgstr "Trong mạng của bạn"
+
+#: src/screens/Login/SetNewPasswordForm.tsx:127
+msgid "Input code sent to your email for password reset"
+msgstr "Nhập mã đã được gửi đến email của bạn để khôi phục mật khẩu"
+
+#: src/view/com/modals/DeleteAccount.tsx:183
+msgid "Input confirmation code for account deletion"
+msgstr "Nhập mã xác nhận để xóa tài khoản"
+
+#: src/view/com/auth/create/Step2.tsx:109
+#~ msgid "Input email for Bluesky waitlist"
+#~ msgstr "Nhập email vào danh sách chờ của Bluesky"
+
+#: src/view/com/auth/create/Step1.tsx:80
+#~ msgid "Input hosting provider address"
+#~ msgstr "Nhập địa chỉ nhà cung cấp hosting"
+
+#: src/view/com/auth/create/Step2.tsx:73
+#~ msgid "Input invite code to proceed"
+#~ msgstr "Nhập mã mời để tiếp tục"
+
+#: src/view/com/modals/AddAppPasswords.tsx:181
+msgid "Input name for app password"
+msgstr "Nhập tên cho mật khẩu ứng dụng"
+
+#: src/screens/Login/SetNewPasswordForm.tsx:151
+msgid "Input new password"
+msgstr "Nhập mật khẩu mới"
+
+#: src/view/com/modals/DeleteAccount.tsx:202
+msgid "Input password for account deletion"
+msgstr "Nhập mật khẩu để xóa tài khoản"
+
+#: src/screens/Login/LoginForm.tsx:195
+msgid "Input the password tied to {identifier}"
+msgstr "Nhập mật khẩu liên kết với {identifier}"
+
+#: src/screens/Login/LoginForm.tsx:168
+msgid "Input the username or email address you used at signup"
+msgstr "Nhập tên đăng nhập hoặc địa chỉ email đã đăng ký"
+
+#: src/view/com/modals/Waitlist.tsx:90
+#~ msgid "Input your email to get on the Bluesky waitlist"
+#~ msgstr "Nhập email của bạn để vào danh sách chờ của Bluesky"
+
+#: src/screens/Login/LoginForm.tsx:194
+msgid "Input your password"
+msgstr "Nhập mật khẩu của bạn"
+
+#: src/view/com/modals/ChangeHandle.tsx:389
+msgid "Input your preferred hosting provider"
+msgstr ""
+
+#: src/screens/Signup/StepHandle.tsx:62
+msgid "Input your user handle"
+msgstr "Nhập tên người dùng của bạn"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:221
+msgid "Invalid or unsupported post record"
+msgstr "Bản ghi bài viết không hợp lệ hoặc không được hỗ trợ"
+
+#: src/screens/Login/LoginForm.tsx:114
+msgid "Invalid username or password"
+msgstr "Tên đăng nhập hoặc mật khẩu không hợp lệ"
+
+#: src/view/screens/Settings.tsx:411
+#~ msgid "Invite"
+#~ msgstr "Mời"
+
+#: src/view/com/modals/InviteCodes.tsx:94
+msgid "Invite a Friend"
+msgstr "Mời bạn"
+
+#: src/screens/Signup/StepInfo/index.tsx:58
+msgid "Invite code"
+msgstr "Mã mời"
+
+#: src/screens/Signup/state.ts:278
+msgid "Invite code not accepted. Check that you input it correctly and try again."
+msgstr "Mã mời không được chấp nhận. Kiểm tra lại thông tin đã nhập và thử lại."
+
+#: src/view/com/modals/InviteCodes.tsx:171
+msgid "Invite codes: {0} available"
+msgstr "Mã mời: {0} có sẵn"
+
+#: src/view/shell/Drawer.tsx:642
+#~ msgid "Invite codes: {invitesAvailable} available"
+#~ msgstr "Mã mời: {invitesAvailable} có sẵn"
+
+#: src/view/com/modals/InviteCodes.tsx:170
+msgid "Invite codes: 1 available"
+msgstr "Mã mời: 1 có sẵn"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:65
+msgid "It shows posts from the people you follow as they happen."
+msgstr ""
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:104
+#: src/view/com/auth/SplashScreen.web.tsx:172
+msgid "Jobs"
+msgstr "Công việc"
+
+#: src/view/com/modals/Waitlist.tsx:67
+#~ msgid "Join the waitlist"
+#~ msgstr "Tham gia danh sách chờ"
+
+#: src/view/com/auth/create/Step2.tsx:86
+#: src/view/com/auth/create/Step2.tsx:90
+#~ msgid "Join the waitlist."
+#~ msgstr "Tham gia danh sách chờ."
+
+#: src/view/com/modals/Waitlist.tsx:128
+#~ msgid "Join Waitlist"
+#~ msgstr "Tham gia danh sách chờ"
+
+#: src/screens/Onboarding/index.tsx:24
+msgid "Journalism"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMe.tsx:59
+msgid "label has been placed on this {labelTarget}"
+msgstr ""
+
+#: src/components/moderation/ContentHider.tsx:144
+msgid "Labeled by {0}."
+msgstr ""
+
+#: src/components/moderation/ContentHider.tsx:142
+msgid "Labeled by the author."
+msgstr ""
+
+#: src/view/screens/Profile.tsx:188
+msgid "Labels"
+msgstr ""
+
+#: src/screens/Profile/Sections/Labels.tsx:142
+msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
+msgstr ""
+
+#: src/components/moderation/LabelsOnMe.tsx:61
+msgid "labels have been placed on this {labelTarget}"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:62
+msgid "Labels on your account"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:64
+msgid "Labels on your content"
+msgstr ""
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:104
+msgid "Language selection"
+msgstr "Lựa chọn ngôn ngữ"
+
+#: src/view/screens/Settings/index.tsx:614
+msgid "Language settings"
+msgstr "Cài đặt ngôn ngữ"
+
+#: src/Navigation.tsx:144
+#: src/view/screens/LanguageSettings.tsx:89
+msgid "Language Settings"
+msgstr "Cài đặt ngôn ngữ"
+
+#: src/view/screens/Settings/index.tsx:623
+msgid "Languages"
+msgstr "Ngôn ngữ"
+
+#: src/view/com/auth/create/StepHeader.tsx:13
+#~ msgid "Last step!"
+#~ msgstr "Bước cuối!"
+
+#: src/view/screens/Search/Search.tsx:380
+msgid "Latest"
+msgstr ""
+
+#: src/view/com/util/moderation/ContentHider.tsx:103
+#~ msgid "Learn more"
+#~ msgstr "Tìm hiểu thêm"
+
+#: src/components/moderation/ScreenHider.tsx:136
+msgid "Learn More"
+msgstr "Tìm hiểu thêm"
+
+#: src/components/moderation/ContentHider.tsx:65
+#: src/components/moderation/ContentHider.tsx:128
+msgid "Learn more about the moderation applied to this content."
+msgstr ""
+
+#: src/components/moderation/PostHider.tsx:85
+#: src/components/moderation/ScreenHider.tsx:125
+msgid "Learn more about this warning"
+msgstr "Tìm hiểu thêm về cảnh báo này"
+
+#: src/screens/Moderation/index.tsx:549
+msgid "Learn more about what is public on Bluesky."
+msgstr "Tìm hiểu về những gì được công khai trên Bluesky"
+
+#: src/components/moderation/ContentHider.tsx:152
+msgid "Learn more."
+msgstr ""
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
+msgid "Leave them all unchecked to see any language."
+msgstr "Bỏ chọn tất cả để xem bất kỳ ngôn ngữ nào."
+
+#: src/view/com/modals/LinkWarning.tsx:65
+msgid "Leaving Bluesky"
+msgstr "Rời Bluesky"
+
+#: src/screens/Deactivated.tsx:128
+msgid "left to go."
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:296
+msgid "Legacy storage cleared, you need to restart the app now."
+msgstr "Lưu trữ cũ đã xóa, bạn cần khởi động lại ứng dụng bây giờ."
+
+#: src/screens/Login/index.tsx:130
+#: src/screens/Login/index.tsx:145
+msgid "Let's get your password reset!"
+msgstr "Khôi phục lại mật khẩu!"
+
+#: src/screens/Onboarding/StepFinished.tsx:155
+msgid "Let's go!"
+msgstr ""
+
+#: src/view/com/util/UserAvatar.tsx:245
+#: src/view/com/util/UserBanner.tsx:60
+#~ msgid "Library"
+#~ msgstr "Thư viện"
+
+#: src/view/screens/Settings/index.tsx:498
+msgid "Light"
+msgstr "Sáng"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
+msgid "Like"
+msgstr "Thích"
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:258
+#: src/view/screens/ProfileFeed.tsx:573
+msgid "Like this feed"
+msgstr "Thích bảng tin này"
+
+#: src/components/LikesDialog.tsx:87
+#: src/Navigation.tsx:201
+#: src/Navigation.tsx:206
+msgid "Liked by"
+msgstr "Đã thích bởi"
+
+#: src/screens/Profile/ProfileLabelerLikedBy.tsx:29
+#: src/view/screens/PostLikedBy.tsx:27
+#: src/view/screens/ProfileFeedLikedBy.tsx:27
+msgid "Liked By"
+msgstr ""
+
+#: src/view/com/feeds/FeedSourceCard.tsx:268
+msgid "Liked by {0} {1}"
+msgstr "Đã thích bởi {0} {1}"
+
+#: src/components/LabelingServiceCard/index.tsx:72
+msgid "Liked by {count} {0}"
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:278
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:292
+#: src/view/screens/ProfileFeed.tsx:588
+msgid "Liked by {likeCount} {0}"
+msgstr "Đã thích bởi {likeCount} {0}"
+
+#: src/view/com/notifications/FeedItem.tsx:174
+msgid "liked your custom feed"
+msgstr ""
+
+#: src/view/com/notifications/FeedItem.tsx:171
+#~ msgid "liked your custom feed{0}"
+#~ msgstr "đã thích bảng tin cá nhân của bạn"
+
+#: src/view/com/notifications/FeedItem.tsx:159
+msgid "liked your post"
+msgstr "đã thích bài viết của bạn"
+
+#: src/view/screens/Profile.tsx:193
+msgid "Likes"
+msgstr "Thích"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:182
+msgid "Likes on this post"
+msgstr "Thích bài viết này"
+
+#: src/view/screens/Moderation.tsx:203
+#~ msgid "Limit the visibility of my account"
+#~ msgstr "Giới hạn khả năng hiển thị tài khoản của tôi"
+
+#: src/view/screens/Moderation.tsx:203
+#~ msgid "Limit the visibility of my account to logged-out users"
+#~ msgstr "Giới hạn khả năng hiển thị tài khoản của tôi với người dùng đã đăng xuất"
+
+#: src/Navigation.tsx:170
+msgid "List"
+msgstr "Danh sách"
+
+#: src/view/com/modals/CreateOrEditList.tsx:262
+msgid "List Avatar"
+msgstr "Ảnh đại diện danh sách"
+
+#: src/view/screens/ProfileList.tsx:311
+msgid "List blocked"
+msgstr "Danh sách bị chặn"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:220
+msgid "List by {0}"
+msgstr "Danh sách theo {0}"
+
+#: src/view/screens/ProfileList.tsx:355
+msgid "List deleted"
+msgstr "Danh sách đã xóa"
+
+#: src/view/screens/ProfileList.tsx:283
+msgid "List muted"
+msgstr "Danh sách bị tắt tiếng"
+
+#: src/view/com/modals/CreateOrEditList.tsx:276
+msgid "List Name"
+msgstr "Tên danh sách"
+
+#: src/view/screens/ProfileList.tsx:325
+msgid "List unblocked"
+msgstr "Danh sách đã bỏ chặn"
+
+#: src/view/screens/ProfileList.tsx:297
+msgid "List unmuted"
+msgstr "Danh sách đã mở tiếng"
+
+#: src/Navigation.tsx:114
+#: src/view/screens/Profile.tsx:189
+#: src/view/screens/Profile.tsx:195
+#: src/view/shell/desktop/LeftNav.tsx:383
+#: src/view/shell/Drawer.tsx:495
+#: src/view/shell/Drawer.tsx:496
+msgid "Lists"
+msgstr "Danh sách"
+
+#: src/view/com/post-thread/PostThread.tsx:263
+#: src/view/com/post-thread/PostThread.tsx:271
+#~ msgid "Load more posts"
+#~ msgstr "Tải thêm bài viết"
+
+#: src/view/screens/Notifications.tsx:159
+msgid "Load new notifications"
+msgstr "Tải thông báo mới"
+
+#: src/screens/Profile/Sections/Feed.tsx:70
+#: src/view/com/feeds/FeedPage.tsx:138
+#: src/view/screens/ProfileFeed.tsx:496
+#: src/view/screens/ProfileList.tsx:695
+msgid "Load new posts"
+msgstr "Tải bài viết mới"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:99
+msgid "Loading..."
+msgstr "Đang tải..."
+
+#: src/view/com/modals/ServerInput.tsx:50
+#~ msgid "Local dev server"
+#~ msgstr "Local dev server"
+
+#: src/Navigation.tsx:221
+msgid "Log"
+msgstr "Nhật ký"
+
+#: src/screens/Deactivated.tsx:149
+#: src/screens/Deactivated.tsx:152
+#: src/screens/Deactivated.tsx:178
+#: src/screens/Deactivated.tsx:181
+msgid "Log out"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:134
+#~ msgid "Logged-out users"
+#~ msgstr "Người dùng đã đăng xuất"
+
+#: src/screens/Moderation/index.tsx:442
+msgid "Logged-out visibility"
+msgstr "Khả năng hiển thị khi đăng xuất"
+
+#: src/components/AccountList.tsx:54
+msgid "Login to account that is not listed"
+msgstr "Đăng nhập vào tài khoản không được liệt kê"
+
+#: src/view/screens/ProfileFeed.tsx:472
+#~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
+#~ msgstr "Bảng tin này chỉ hiển thị với người dùng Bluesky. Vui lòng đăng kí hoặc đăng nhập để xem bảng tin này."
+
+#: src/screens/Login/SetNewPasswordForm.tsx:116
+msgid "Looks like XXXXX-XXXXX"
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:79
+msgid "Make sure this is where you intend to go!"
+msgstr "Hãy chắc chắn rằng đây là nơi bạn định đến!"
+
+#: src/components/dialogs/MutedWords.tsx:82
+msgid "Manage your muted words and tags"
+msgstr ""
+
+#: src/view/screens/Profile.tsx:192
+msgid "Media"
+msgstr "Phương tiện"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:139
+msgid "mentioned users"
+msgstr "người dùng được nhắc đến"
+
+#: src/view/com/modals/Threadgate.tsx:93
+msgid "Mentioned users"
+msgstr "Người dùng được nhắc đến"
+
+#: src/view/com/util/ViewHeader.tsx:87
+#: src/view/screens/Search/Search.tsx:738
+msgid "Menu"
+msgstr "Danh sách"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:194
+#~ msgid "Message from server"
+#~ msgstr "Tin nhắn từ máy chủ"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:192
+msgid "Message from server: {0}"
+msgstr "Tin nhắn từ máy chủ: {0}"
+
+#: src/lib/moderation/useReportOptions.ts:45
+msgid "Misleading Account"
+msgstr ""
+
+#: src/Navigation.tsx:119
+#: src/screens/Moderation/index.tsx:104
+#: src/view/screens/Settings/index.tsx:645
+#: src/view/shell/desktop/LeftNav.tsx:401
+#: src/view/shell/Drawer.tsx:514
+#: src/view/shell/Drawer.tsx:515
+msgid "Moderation"
+msgstr "Kiểm duyệt"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:112
+msgid "Moderation details"
+msgstr ""
+
+#: src/view/com/lists/ListCard.tsx:93
+#: src/view/com/modals/UserAddRemoveLists.tsx:206
+msgid "Moderation list by {0}"
+msgstr "Danh sách kiểm duyệt theo {0}"
+
+#: src/view/screens/ProfileList.tsx:789
+msgid "Moderation list by <0/>"
+msgstr "Danh sách kiểm duyệt theo <0/>"
+
+#: src/view/com/lists/ListCard.tsx:91
+#: src/view/com/modals/UserAddRemoveLists.tsx:204
+#: src/view/screens/ProfileList.tsx:787
+msgid "Moderation list by you"
+msgstr "Danh sách kiểm duyệt của bạn"
+
+#: src/view/com/modals/CreateOrEditList.tsx:198
+msgid "Moderation list created"
+msgstr "Danh sách kiểm duyệt đã tạo"
+
+#: src/view/com/modals/CreateOrEditList.tsx:184
+msgid "Moderation list updated"
+msgstr "Danh sách kiểm duyệt đã cập nhật"
+
+#: src/screens/Moderation/index.tsx:243
+msgid "Moderation lists"
+msgstr "Danh sách kiểm duyệt"
+
+#: src/Navigation.tsx:124
+#: src/view/screens/ModerationModlists.tsx:58
+msgid "Moderation Lists"
+msgstr "Danh sách kiểm duyệt"
+
+#: src/view/screens/Settings/index.tsx:639
+msgid "Moderation settings"
+msgstr "Cài đặt kiểm duyệt"
+
+#: src/Navigation.tsx:216
+msgid "Moderation states"
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:215
+msgid "Moderation tools"
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:48
+#: src/lib/moderation/useModerationCauseDescription.ts:40
+msgid "Moderator has chosen to set a general warning on the content."
+msgstr "Người kiểm duyệt đã chọn đặt cảnh báo cho nội dung."
+
+#: src/view/com/post-thread/PostThreadItem.tsx:541
+msgid "More"
+msgstr ""
+
+#: src/view/shell/desktop/Feeds.tsx:65
+msgid "More feeds"
+msgstr "Các bảng tin khác"
+
+#: src/view/screens/ProfileList.tsx:599
+msgid "More options"
+msgstr "Các tùy chọn khác"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:268
+#~ msgid "More post options"
+#~ msgstr "Các tùy chọn bài viết khác"
+
+#: src/view/screens/PreferencesThreads.tsx:82
+msgid "Most-liked replies first"
+msgstr "Phản hồi được thích nhiều nhất trước"
+
+#: src/components/TagMenu/index.tsx:249
+msgid "Mute"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:105
+msgid "Mute {truncatedTag}"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:279
+#: src/view/com/profile/ProfileMenu.tsx:286
+msgid "Mute Account"
+msgstr "Tắt tiếng tài khoản"
+
+#: src/view/screens/ProfileList.tsx:518
+msgid "Mute accounts"
+msgstr "Tắt tiếng tài khoản"
+
+#: src/components/TagMenu/index.tsx:209
+msgid "Mute all {displayTag} posts"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:148
+msgid "Mute in tags only"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:133
+msgid "Mute in text & tags"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:461
+#: src/view/screens/ProfileList.tsx:624
+msgid "Mute list"
+msgstr "Danh sách tắt tiếng"
+
+#: src/view/screens/ProfileList.tsx:619
+msgid "Mute these accounts?"
+msgstr "Tắt tiếng tài khoản này?"
+
+#: src/view/screens/ProfileList.tsx:278
+#~ msgid "Mute this List"
+#~ msgstr "Tắt tiếng danh sách này"
+
+#: src/components/dialogs/MutedWords.tsx:126
+msgid "Mute this word in post text and tags"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:141
+msgid "Mute this word in tags only"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:251
+#: src/view/com/util/forms/PostDropdownBtn.tsx:257
+msgid "Mute thread"
+msgstr "Tắt tiếng chủ đề"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:267
+#: src/view/com/util/forms/PostDropdownBtn.tsx:269
+msgid "Mute words & tags"
+msgstr ""
+
+#: src/view/com/lists/ListCard.tsx:102
+msgid "Muted"
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:255
+msgid "Muted accounts"
+msgstr "Tài khoản bị tắt tiếng"
+
+#: src/Navigation.tsx:129
+#: src/view/screens/ModerationMutedAccounts.tsx:107
+msgid "Muted Accounts"
+msgstr "Tài khoản bị tắt tiếng"
+
+#: src/view/screens/ModerationMutedAccounts.tsx:115
+msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
+msgstr "Các tài khoản bị tắt tiếng sẽ không hiển thị bài viết trên bảng tin và thông báo của bạn. Việc tắt tiếng là hoàn toàn riêng tư."
+
+#: src/lib/moderation/useModerationCauseDescription.ts:85
+msgid "Muted by \"{0}\""
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:231
+msgid "Muted words & tags"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:621
+msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
+msgstr "Việc tắt tiếng là riêng tư. Các tài khoản bị tắt tiếng có thể tương tác với bạn, nhưng bạn sẽ không thấy bất kỳ bài viết hoặc thông báo từ họ."
+
+#: src/view/screens/Moderation.tsx:134
+#~ msgid "My Account"
+#~ msgstr "Tài khoản"
+
+#: src/components/dialogs/BirthDateSettings.tsx:35
+#: src/components/dialogs/BirthDateSettings.tsx:38
+msgid "My Birthday"
+msgstr "Ngày sinh"
+
+#: src/view/screens/Feeds.tsx:663
+msgid "My Feeds"
+msgstr "Bảng tin"
+
+#: src/view/shell/desktop/LeftNav.tsx:65
+msgid "My Profile"
+msgstr "Hồ sơ"
+
+#: src/view/screens/Settings/index.tsx:596
+msgid "My saved feeds"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:602
+msgid "My Saved Feeds"
+msgstr "Bảng tin đã lưu"
+
+#: src/view/com/modals/AddAppPasswords.tsx:180
+#: src/view/com/modals/CreateOrEditList.tsx:291
+msgid "Name"
+msgstr "Tên"
+
+#: src/view/com/modals/CreateOrEditList.tsx:146
+msgid "Name is required"
+msgstr "Tên là bắt buộc"
+
+#: src/lib/moderation/useReportOptions.ts:57
+#: src/lib/moderation/useReportOptions.ts:78
+#: src/lib/moderation/useReportOptions.ts:86
+msgid "Name or Description Violates Community Standards"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:25
+msgid "Nature"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:173
+#: src/screens/Login/LoginForm.tsx:255
+#: src/view/com/modals/ChangePassword.tsx:168
+msgid "Navigates to the next screen"
+msgstr "Chuyển đến màn kế tiếp"
+
+#: src/view/shell/Drawer.tsx:71
+msgid "Navigates to your profile"
+msgstr "Chuyển đến hồ sơ của bạn"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:123
+msgid "Need to report a copyright violation?"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:107
+#: src/view/com/modals/EmbedConsent.tsx:123
+#~ msgid "Never load embeds from {0}"
+#~ msgstr "Không bao giờ tải nội dung nhúng từ {0}"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:74
+msgid "Never lose access to your followers and data."
+msgstr "Không bao giờ mất quyền truy cập đến người theo dõi và dữ liệu của bạn."
+
+#: src/screens/Onboarding/StepFinished.tsx:123
+msgid "Never lose access to your followers or data."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:519
+msgid "Nevermind, create a handle for me"
+msgstr ""
+
+#: src/view/screens/Lists.tsx:76
+msgctxt "action"
+msgid "New"
+msgstr "Mới"
+
+#: src/view/screens/ModerationModlists.tsx:78
+msgid "New"
+msgstr "Mới"
+
+#: src/view/com/modals/CreateOrEditList.tsx:253
+msgid "New Moderation List"
+msgstr "Danh sách kiểm duyệt mới"
+
+#: src/view/com/modals/ChangePassword.tsx:212
+msgid "New password"
+msgstr "Mật khẩu mới"
+
+#: src/view/com/modals/ChangePassword.tsx:217
+msgid "New Password"
+msgstr ""
+
+#: src/view/com/feeds/FeedPage.tsx:149
+msgctxt "action"
+msgid "New post"
+msgstr "Bài viết mới"
+
+#: src/view/screens/Feeds.tsx:555
+#: src/view/screens/Notifications.tsx:168
+#: src/view/screens/Profile.tsx:452
+#: src/view/screens/ProfileFeed.tsx:434
+#: src/view/screens/ProfileList.tsx:199
+#: src/view/screens/ProfileList.tsx:227
+#: src/view/shell/desktop/LeftNav.tsx:252
+msgid "New post"
+msgstr "Bài viết mới"
+
+#: src/view/shell/desktop/LeftNav.tsx:262
+msgctxt "action"
+msgid "New Post"
+msgstr "Bài viết mới"
+
+#: src/view/shell/desktop/LeftNav.tsx:258
+#~ msgid "New Post"
+#~ msgstr "Bài viết mới"
+
+#: src/view/com/modals/CreateOrEditList.tsx:248
+msgid "New User List"
+msgstr "Danh sách người dùng mới"
+
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr "Phản hồi mới nhất trước"
+
+#: src/screens/Onboarding/index.tsx:23
+msgid "News"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:143
+#: src/screens/Login/ForgotPasswordForm.tsx:150
+#: src/screens/Login/LoginForm.tsx:254
+#: src/screens/Login/LoginForm.tsx:261
+#: src/screens/Login/SetNewPasswordForm.tsx:174
+#: src/screens/Login/SetNewPasswordForm.tsx:180
+#: src/screens/Signup/index.tsx:205
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+#: src/view/com/modals/ChangePassword.tsx:253
+#: src/view/com/modals/ChangePassword.tsx:255
+msgid "Next"
+msgstr "Tiếp theo"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
+msgctxt "action"
+msgid "Next"
+msgstr "Tiếp theo"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:169
+msgid "Next image"
+msgstr "Ảnh tiếp theo"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:129
+#: src/view/screens/PreferencesFollowingFeed.tsx:200
+#: src/view/screens/PreferencesFollowingFeed.tsx:235
+#: src/view/screens/PreferencesFollowingFeed.tsx:272
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
+msgid "No"
+msgstr "Không"
+
+#: src/view/screens/ProfileFeed.tsx:562
+#: src/view/screens/ProfileList.tsx:769
+msgid "No description"
+msgstr "Không có mô tả"
+
+#: src/view/com/modals/ChangeHandle.tsx:405
+msgid "No DNS Panel"
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:118
+msgid "No longer following {0}"
+msgstr "Ngừng theo dõi {0}"
+
+#: src/screens/Signup/StepHandle.tsx:114
+msgid "No longer than 253 characters"
+msgstr ""
+
+#: src/view/com/notifications/Feed.tsx:109
+msgid "No notifications yet!"
+msgstr "Không có thông báo nào"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:101
+#: src/view/com/composer/text-input/web/Autocomplete.tsx:195
+msgid "No result"
+msgstr "Không có kết quả"
+
+#: src/components/Lists.tsx:183
+msgid "No results found"
+msgstr ""
+
+#: src/view/screens/Feeds.tsx:495
+msgid "No results found for \"{query}\""
+msgstr "Không tìm thấy kết quả cho \"{query}\""
+
+#: src/view/com/modals/ListAddUser.tsx:142
+#: src/view/shell/desktop/Search.tsx:112
+#~ msgid "No results found for {0}"
+#~ msgstr "Không tìm thấy kết quả cho {0}"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:127
+#: src/view/screens/Search/Search.tsx:292
+#: src/view/screens/Search/Search.tsx:330
+msgid "No results found for {query}"
+msgstr "Không tìm thấy kết quả cho {query}"
+
+#: src/components/dialogs/EmbedConsent.tsx:105
+#: src/components/dialogs/EmbedConsent.tsx:112
+msgid "No thanks"
+msgstr "Không, cảm ơn"
+
+#: src/view/com/modals/Threadgate.tsx:82
+msgid "Nobody"
+msgstr "Không ai cả"
+
+#: src/components/LikedByList.tsx:79
+#: src/components/LikesDialog.tsx:99
+msgid "Nobody has liked this yet. Maybe you should be the first!"
+msgstr ""
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:42
+msgid "Non-sexual Nudity"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:136
+#~ msgid "Not Applicable"
+#~ msgstr "Không áp dụng"
+
+#: src/view/com/modals/SelfLabel.tsx:135
+msgid "Not Applicable."
+msgstr "Không áp dụng"
+
+#: src/Navigation.tsx:109
+#: src/view/screens/Profile.tsx:99
+msgid "Not Found"
+msgstr "Không tìm thấy"
+
+#: src/view/com/modals/VerifyEmail.tsx:246
+#: src/view/com/modals/VerifyEmail.tsx:252
+msgid "Not right now"
+msgstr "Không phải bây giờ"
+
+#: src/view/com/profile/ProfileMenu.tsx:368
+#: src/view/com/util/forms/PostDropdownBtn.tsx:342
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:246
+msgid "Note about sharing"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:227
+#~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
+#~ msgstr "Chú ý: Bluesky là một mạng xã hội mở và công khai, việc kích hoạt này sẽ không làm hồ sơ của bạn riêng tư hoặc giới hạn khả năng của người dùng khác thấy các bài viết của bạn. Cài đặt này chỉ giới hạn khả năng hiển thị của bài viết trên ứng dụng Bluesky và trang web; các ứng dụng bên thứ ba hiển thị nội dung của Bluesky có thể không tuân thủ cài đặt này và có thể hiển thị nội dung của bạn với người dùng đã đăng xuất. "
+
+#: src/screens/Moderation/index.tsx:540
+msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
+msgstr "Chú ý: Bluesky là một mạng xã hội mở và công khai. Cài đặt này chỉ giới hạn khả năng hiển thị của bài viết trên ứng dụng Bluesky và trang web và các ứng dụng khác có thể không tuân thủ cài đặt này. Nội dung của bạn vẫn có thể được hiển thị cho người dùng đã đăng xuất bởi ứng dụng hoặc trang web khác."
+
+#: src/view/screens/Moderation.tsx:227
+#~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+#~ msgstr "Chú ý: Các ứng dụng của bên thứ ba hiển thị nội dung của Bluesky có thể không tuân thủ cài đặt này."
+
+#: src/Navigation.tsx:469
+#: src/view/screens/Notifications.tsx:124
+#: src/view/screens/Notifications.tsx:148
+#: src/view/shell/bottom-bar/BottomBar.tsx:215
+#: src/view/shell/desktop/LeftNav.tsx:365
+#: src/view/shell/Drawer.tsx:438
+#: src/view/shell/Drawer.tsx:439
+msgid "Notifications"
+msgstr "Thông báo"
+
+#: src/view/com/modals/SelfLabel.tsx:103
+msgid "Nudity"
+msgstr "Khỏa thân"
+
+#: src/lib/moderation/useReportOptions.ts:71
+msgid "Nudity or adult content not labeled as such"
+msgstr ""
+
+#: src/screens/Signup/index.tsx:142
+msgid "of"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:11
+msgid "Off"
+msgstr ""
+
+#: src/view/com/util/ErrorBoundary.tsx:49
+msgid "Oh no!"
+msgstr "Ôi không!"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:132
+msgid "Oh no! Something went wrong."
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:126
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:327
+msgid "OK"
+msgstr ""
+
+#: src/screens/Login/PasswordUpdatedForm.tsx:44
+msgid "Okay"
+msgstr "Đồng ý"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr "Phản hồi cũ nhất trước"
+
+#: src/view/screens/Settings/index.tsx:244
+msgid "Onboarding reset"
+msgstr "Đặt lại quá trình giới thiệu"
+
+#: src/view/com/composer/Composer.tsx:392
+msgid "One or more images is missing alt text."
+msgstr "Một vài ảnh bị thiếu mô tả."
+
+#: src/view/com/threadgate/WhoCanReply.tsx:100
+msgid "Only {0} can reply."
+msgstr "Chỉ {0} có thể phản hồi"
+
+#: src/screens/Signup/StepHandle.tsx:97
+msgid "Only contains letters, numbers, and hyphens"
+msgstr ""
+
+#: src/components/Lists.tsx:75
+msgid "Oops, something went wrong!"
+msgstr ""
+
+#: src/components/Lists.tsx:170
+#: src/view/screens/AppPasswords.tsx:67
+#: src/view/screens/Profile.tsx:99
+msgid "Oops!"
+msgstr "Ôi!"
+
+#: src/screens/Onboarding/StepFinished.tsx:119
+msgid "Open"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:491
+#: src/view/com/composer/Composer.tsx:492
+msgid "Open emoji picker"
+msgstr "Mở bảng chọn biểu tượng cảm xúc"
+
+#: src/view/screens/ProfileFeed.tsx:300
+msgid "Open feed options menu"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:734
+msgid "Open links with in-app browser"
+msgstr "Mở liên kết bằng trình duyệt trong ứng dụng"
+
+#: src/screens/Moderation/index.tsx:227
+msgid "Open muted words and tags settings"
+msgstr ""
+
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:50
+msgid "Open navigation"
+msgstr "Mở thanh điều hướng"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:183
+msgid "Open post options menu"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:828
+#: src/view/screens/Settings/index.tsx:838
+msgid "Open storybook page"
+msgstr "Mở trang storybook"
+
+#: src/view/screens/Settings/index.tsx:816
+msgid "Open system log"
+msgstr ""
+
+#: src/view/com/util/forms/DropdownButton.tsx:154
+msgid "Opens {numItems} options"
+msgstr "Mở lựa chọn {numItems}"
+
+#: src/view/screens/Log.tsx:54
+msgid "Opens additional details for a debug entry"
+msgstr "Mở chi tiết bổ sung cho mục gỡ lỗi"
+
+#: src/view/com/notifications/FeedItem.tsx:353
+msgid "Opens an expanded list of users in this notification"
+msgstr "Mở danh sách người dùng mở rộng cho thông báo này"
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:78
+msgid "Opens camera on device"
+msgstr "Mở camera của thiết bị"
+
+#: src/view/com/composer/Prompt.tsx:25
+msgid "Opens composer"
+msgstr "Mở trình soạn thảo"
+
+#: src/view/screens/Settings/index.tsx:615
+msgid "Opens configurable language settings"
+msgstr "Mở tùy chọn cài đặt ngôn ngữ"
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:44
+msgid "Opens device photo gallery"
+msgstr "Mở thư viện ảnh của thiết bị"
+
+#: src/view/com/profile/ProfileHeader.tsx:459
+#~ msgid "Opens editor for profile display name, avatar, background image, and description"
+#~ msgstr "Mở trình chỉnh sửa tên hiển thị hồ sơ, ảnh đại diện, hình nền và mô tả"
+
+#: src/view/screens/Settings/index.tsx:669
+msgid "Opens external embeds settings"
+msgstr "Mở cài đặt nhúng từ nguồn bên ngoài"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:57
+#: src/view/com/auth/SplashScreen.tsx:68
+#: src/view/com/auth/SplashScreen.web.tsx:97
+msgid "Opens flow to create a new Bluesky account"
+msgstr ""
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:75
+#: src/view/com/auth/SplashScreen.tsx:83
+#: src/view/com/auth/SplashScreen.web.tsx:112
+msgid "Opens flow to sign into your existing Bluesky account"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:614
+#~ msgid "Opens followers list"
+#~ msgstr "Mở danh sách người theo dõi"
+
+#: src/view/com/profile/ProfileHeader.tsx:633
+#~ msgid "Opens following list"
+#~ msgstr "Mở danh sách đang theo dõi"
+
+#: src/view/screens/Settings.tsx:412
+#~ msgid "Opens invite code list"
+#~ msgstr "Mở danh sách mã mời"
+
+#: src/view/com/modals/InviteCodes.tsx:173
+msgid "Opens list of invite codes"
+msgstr "Mở danh sách mã mời"
+
+#: src/view/screens/Settings/index.tsx:798
+msgid "Opens modal for account deletion confirmation. Requires email code"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:696
+#~ msgid "Opens modal for account deletion confirmation. Requires email code."
+#~ msgstr "Mở cửa sổ xác nhận xóa tài khoản. Yêu cầu mã email."
+
+#: src/view/screens/Settings/index.tsx:756
+msgid "Opens modal for changing your Bluesky password"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:718
+msgid "Opens modal for choosing a new Bluesky handle"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:779
+msgid "Opens modal for downloading your Bluesky account data (repository)"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:968
+msgid "Opens modal for email verification"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:282
+msgid "Opens modal for using custom domain"
+msgstr "Mở cửa sổ sử dụng tên miền cá nhân"
+
+#: src/view/screens/Settings/index.tsx:640
+msgid "Opens moderation settings"
+msgstr "Mở cài đặt kiểm duyệt"
+
+#: src/screens/Login/LoginForm.tsx:202
+msgid "Opens password reset form"
+msgstr "Mở biểu mẫu khôi phục mật khẩu"
+
+#: src/view/com/home/HomeHeaderLayout.web.tsx:63
+#: src/view/screens/Feeds.tsx:356
+msgid "Opens screen to edit Saved Feeds"
+msgstr "Mở màn hình để chỉnh sửa bảng tin đã lưu"
+
+#: src/view/screens/Settings/index.tsx:597
+msgid "Opens screen with all saved feeds"
+msgstr "Mở trang với bảng tin đã lưu"
+
+#: src/view/screens/Settings/index.tsx:696
+msgid "Opens the app password settings"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:642
+#~ msgid "Opens the app password settings page"
+#~ msgstr "Mở trang cài đặt mật khẩu ứng dụng"
+
+#: src/view/screens/Settings/index.tsx:554
+msgid "Opens the Following feed preferences"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:501
+#~ msgid "Opens the home feed preferences"
+#~ msgstr "Mở tùy chọn trang chủ bảng tin"
+
+#: src/view/com/modals/LinkWarning.tsx:93
+msgid "Opens the linked website"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:829
+#: src/view/screens/Settings/index.tsx:839
+msgid "Opens the storybook page"
+msgstr "Mở trang storybook"
+
+#: src/view/screens/Settings/index.tsx:817
+msgid "Opens the system log page"
+msgstr "Mở trang nhật ký hệ thống"
+
+#: src/view/screens/Settings/index.tsx:575
+msgid "Opens the threads preferences"
+msgstr "Mở tùy chọn chủ đề"
+
+#: src/view/com/util/forms/DropdownButton.tsx:280
+msgid "Option {0} of {numItems}"
+msgstr "Lựa chọn {0} trong số {numItems}"
+
+#: src/components/ReportDialog/SubmitView.tsx:160
+msgid "Optionally provide additional information below:"
+msgstr ""
+
+#: src/view/com/modals/Threadgate.tsx:89
+msgid "Or combine these options:"
+msgstr "Hoặc kết hợp các tùy chọn:"
+
+#: src/lib/moderation/useReportOptions.ts:25
+msgid "Other"
+msgstr ""
+
+#: src/components/AccountList.tsx:73
+msgid "Other account"
+msgstr "Tài khoản khác"
+
+#: src/view/com/modals/ServerInput.tsx:88
+#~ msgid "Other service"
+#~ msgstr "Dịch vụ khác"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:91
+msgid "Other..."
+msgstr "Khác..."
+
+#: src/components/Lists.tsx:184
+#: src/view/screens/NotFound.tsx:45
+msgid "Page not found"
+msgstr "Không tìm thấy trang"
+
+#: src/view/screens/NotFound.tsx:42
+msgid "Page Not Found"
+msgstr ""
+
+#: src/screens/Login/LoginForm.tsx:178
+#: src/screens/Signup/StepInfo/index.tsx:101
+#: src/view/com/modals/DeleteAccount.tsx:194
+#: src/view/com/modals/DeleteAccount.tsx:201
+msgid "Password"
+msgstr "Mật khẩu"
+
+#: src/view/com/modals/ChangePassword.tsx:142
+msgid "Password Changed"
+msgstr ""
+
+#: src/screens/Login/index.tsx:157
+msgid "Password updated"
+msgstr "Mật khẩu đã được cập nhật"
+
+#: src/screens/Login/PasswordUpdatedForm.tsx:30
+msgid "Password updated!"
+msgstr "Mật khẩu đã được cập nhật!"
+
+#: src/view/screens/Search/Search.tsx:390
+#: src/view/screens/Search/Search.tsx:399
+msgid "People"
+msgstr ""
+
+#: src/Navigation.tsx:164
+msgid "People followed by @{0}"
+msgstr "Người mà @{0} đang theo dõi"
+
+#: src/Navigation.tsx:157
+msgid "People following @{0}"
+msgstr "Người đang theo dõi @{0}"
+
+#: src/view/com/lightbox/Lightbox.tsx:66
+msgid "Permission to access camera roll is required."
+msgstr "Yêu cầu quyền truy cập cuộn camera."
+
+#: src/view/com/lightbox/Lightbox.tsx:72
+msgid "Permission to access camera roll was denied. Please enable it in your system settings."
+msgstr "Quyền truy cập cuộn camera bị từ chối. Vui lòng kích hoạt nó trong cài đặt hệ thống của bạn."
+
+#: src/screens/Onboarding/index.tsx:31
+msgid "Pets"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:121
+msgid "Pictures meant for adults."
+msgstr "Hình ảnh 18+."
+
+#: src/view/screens/ProfileFeed.tsx:292
+#: src/view/screens/ProfileList.tsx:563
+msgid "Pin to home"
+msgstr "Ghim lên màn hình chính"
+
+#: src/view/screens/ProfileFeed.tsx:295
+msgid "Pin to Home"
+msgstr ""
+
+#: src/view/screens/SavedFeeds.tsx:88
+msgid "Pinned Feeds"
+msgstr "Bảng tin đã ghim"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:123
+msgid "Play {0}"
+msgstr "Chơi {0}"
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:57
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:58
+msgid "Play Video"
+msgstr "Phát Video"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:122
+msgid "Plays the GIF"
+msgstr "Phát GIF"
+
+#: src/screens/Signup/state.ts:241
+msgid "Please choose your handle."
+msgstr "Vui lòng lựa chọn tên người dùng."
+
+#: src/screens/Signup/state.ts:234
+msgid "Please choose your password."
+msgstr "Vui lòng lựa chọn mật khẩu."
+
+#: src/screens/Signup/state.ts:251
+msgid "Please complete the verification captcha."
+msgstr ""
+
+#: src/view/com/modals/ChangeEmail.tsx:67
+msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
+msgstr "Vui lòng xác nhận email trước khi thay đổi. Đây là yêu cầu tạm thời trong khi công cụ cập nhật được thêm và nó sẽ sớm bị xóa."
+
+#: src/view/com/modals/AddAppPasswords.tsx:91
+msgid "Please enter a name for your app password. All spaces is not allowed."
+msgstr "Vui lòng nhập tên cho mật khẩu ứng dụng. Không chứa khoảng trắng."
+
+#: src/view/com/modals/AddAppPasswords.tsx:146
+msgid "Please enter a unique name for this App Password or use our randomly generated one."
+msgstr "Vui lòng nhập tên độc nhất cho mật khẩu ứng dụng này hoặc sử dụng mật khẩu được tạo ngẫu nhiên của chúng tôi."
+
+#: src/components/dialogs/MutedWords.tsx:67
+msgid "Please enter a valid word, tag, or phrase to mute"
+msgstr ""
+
+#: src/screens/Signup/state.ts:220
+msgid "Please enter your email."
+msgstr "Vui lòng nhập email."
+
+#: src/view/com/modals/DeleteAccount.tsx:190
+msgid "Please enter your password as well:"
+msgstr "Vui lòng nhập mật khẩu của bạn:"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:221
+msgid "Please explain why you think this label was incorrectly applied by {0}"
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this content warning was incorrectly applied!"
+#~ msgstr "Vui lòng cho chúng tôi biết tại sao cảnh báo nội dung này bị áp dụng không chính xác!"
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this decision was incorrect."
+#~ msgstr "Vui lòng cho chúng tôi biết tại sao quyết định này là không chính xác."
+
+#: src/view/com/modals/VerifyEmail.tsx:101
+msgid "Please Verify Your Email"
+msgstr "Vui lòng xác minh email của bạn"
+
+#: src/view/com/composer/Composer.tsx:222
+msgid "Please wait for your link card to finish loading"
+msgstr "Vui lòng đợi thẻ liên kết của bạn tải xong"
+
+#: src/screens/Onboarding/index.tsx:37
+msgid "Politics"
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:111
+msgid "Porn"
+msgstr "Khiêu dâm"
+
+#: src/view/com/composer/Composer.tsx:367
+#: src/view/com/composer/Composer.tsx:375
+msgctxt "action"
+msgid "Post"
+msgstr "Đăng bài"
+
+#: src/view/com/post-thread/PostThread.tsx:292
+msgctxt "description"
+msgid "Post"
+msgstr "Bài viết"
+
+#: src/view/com/composer/Composer.tsx:346
+#: src/view/com/post-thread/PostThread.tsx:225
+#: src/view/screens/PostThread.tsx:80
+#~ msgid "Post"
+#~ msgstr "Post"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:175
+msgid "Post by {0}"
+msgstr "Bài viết đăng bởi {0}"
+
+#: src/Navigation.tsx:176
+#: src/Navigation.tsx:183
+#: src/Navigation.tsx:190
+msgid "Post by @{0}"
+msgstr "Bài viết đăng bởi @{0}"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:105
+msgid "Post deleted"
+msgstr "Bài viết đã xóa"
+
+#: src/view/com/post-thread/PostThread.tsx:157
+msgid "Post hidden"
+msgstr "Ẩn bài viết"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:97
+#: src/lib/moderation/useModerationCauseDescription.ts:99
+msgid "Post Hidden by Muted Word"
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:100
+#: src/lib/moderation/useModerationCauseDescription.ts:108
+msgid "Post Hidden by You"
+msgstr ""
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:87
+msgid "Post language"
+msgstr "Ngôn ngữ bài viết"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
+msgid "Post Languages"
+msgstr "Ngôn ngữ bài viết"
+
+#: src/view/com/post-thread/PostThread.tsx:152
+#: src/view/com/post-thread/PostThread.tsx:164
+msgid "Post not found"
+msgstr "Không tìm thấy bài viết"
+
+#: src/components/TagMenu/index.tsx:253
+msgid "posts"
+msgstr ""
+
+#: src/view/screens/Profile.tsx:190
+#: src/view/screens/Search/Search.tsx:410
+msgid "Posts"
+msgstr "Bài viết"
+
+#: src/components/dialogs/MutedWords.tsx:89
+msgid "Posts can be muted based on their text, their tags, or both."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:64
+msgid "Posts hidden"
+msgstr "Bài viết bị ẩn"
+
+#: src/view/com/modals/LinkWarning.tsx:60
+msgid "Potentially Misleading Link"
+msgstr "Liên kết có khả năng gây hiểu lầm"
+
+#: src/components/forms/HostingProvider.tsx:46
+msgid "Press to change hosting provider"
+msgstr ""
+
+#: src/components/Error.tsx:74
+#: src/components/Lists.tsx:80
+#: src/screens/Signup/index.tsx:186
+msgid "Press to retry"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.web.tsx:150
+msgid "Previous image"
+msgstr "Xem trước ảnh"
+
+#: src/view/screens/LanguageSettings.tsx:187
+msgid "Primary Language"
+msgstr "Ngôn ngữ chính"
+
+#: src/view/screens/PreferencesThreads.tsx:97
+msgid "Prioritize Your Follows"
+msgstr "Ưu tiên người bạn đang theo dõi"
+
+#: src/view/screens/Settings/index.tsx:652
+#: src/view/shell/desktop/RightNav.tsx:72
+msgid "Privacy"
+msgstr "Quyền riêng tư"
+
+#: src/Navigation.tsx:231
+#: src/screens/Signup/StepInfo/Policies.tsx:56
+#: src/view/screens/PrivacyPolicy.tsx:29
+#: src/view/screens/Settings/index.tsx:923
+#: src/view/shell/Drawer.tsx:265
+msgid "Privacy Policy"
+msgstr "Chính sách bảo mật"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:156
+msgid "Processing..."
+msgstr "Đang xử lý..."
+
+#: src/view/screens/DebugMod.tsx:888
+#: src/view/screens/Profile.tsx:342
+msgid "profile"
+msgstr ""
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:260
+#: src/view/shell/desktop/LeftNav.tsx:419
+#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:549
+#: src/view/shell/Drawer.tsx:550
+msgid "Profile"
+msgstr "Hồ sơ"
+
+#: src/view/com/modals/EditProfile.tsx:129
+msgid "Profile updated"
+msgstr "Hồ sơ đã cập nhật"
+
+#: src/view/screens/Settings/index.tsx:981
+msgid "Protect your account by verifying your email."
+msgstr "Bảo vệ tài khoản bằng cách xác minh email của bạn."
+
+#: src/screens/Onboarding/StepFinished.tsx:105
+msgid "Public"
+msgstr ""
+
+#: src/view/screens/ModerationModlists.tsx:61
+msgid "Public, shareable lists of users to mute or block in bulk."
+msgstr "Công khai, danh sách người dùng có thể chia sẻ để tắt tiếng hoặc chặn hàng loạt."
+
+#: src/view/screens/Lists.tsx:61
+msgid "Public, shareable lists which can drive feeds."
+msgstr "Công khai, danh sách có thể chia sẻ mà có thể ảnh hưởng đến nội dung được hiển thị trong bảng tin."
+
+#: src/view/com/composer/Composer.tsx:352
+msgid "Publish post"
+msgstr "Đăng bài"
+
+#: src/view/com/composer/Composer.tsx:352
+msgid "Publish reply"
+msgstr "Đăng phản hồi"
+
+#: src/view/com/modals/Repost.tsx:66
+msgctxt "action"
+msgid "Quote post"
+msgstr "Trích dẫn bài viết"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
+msgid "Quote post"
+msgstr "Bài viết trích dẫn"
+
+#: src/view/com/modals/Repost.tsx:71
+msgctxt "action"
+msgid "Quote Post"
+msgstr "Trích dẫn bài viết"
+
+#: src/view/com/modals/Repost.tsx:56
+#~ msgid "Quote Post"
+#~ msgstr "Bài viết trích dẫn"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr "Ngẫu nhiên (hay là \"Poster's Roulette\")"
+
+#: src/view/com/modals/EditImage.tsx:237
+msgid "Ratios"
+msgstr "Tỷ lệ"
+
+#: src/view/screens/Search/Search.tsx:867
+msgid "Recent Searches"
+msgstr ""
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:50
+#~ msgid "Recommended"
+#~ msgstr "Được đề xuất"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
+msgid "Recommended Feeds"
+msgstr "Bảng tin được đề xuất"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:180
+msgid "Recommended Users"
+msgstr "Người dùng được đề xuất"
+
+#: src/components/dialogs/MutedWords.tsx:286
+#: src/view/com/feeds/FeedSourceCard.tsx:283
+#: src/view/com/modals/ListAddRemoveUsers.tsx:268
+#: src/view/com/modals/SelfLabel.tsx:83
+#: src/view/com/modals/UserAddRemoveLists.tsx:219
+#: src/view/com/posts/FeedErrorMessage.tsx:204
+msgid "Remove"
+msgstr "Xóa"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:106
+#~ msgid "Remove {0} from my feeds?"
+#~ msgstr "Xóa {0} khỏi bảng tin của tôi?"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:22
+msgid "Remove account"
+msgstr "Xóa tài khoản"
+
+#: src/view/com/util/UserAvatar.tsx:358
+msgid "Remove Avatar"
+msgstr ""
+
+#: src/view/com/util/UserBanner.tsx:148
+msgid "Remove Banner"
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:160
+msgid "Remove feed"
+msgstr "Xóa bảng tin"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:201
+msgid "Remove feed?"
+msgstr ""
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+#: src/view/com/feeds/FeedSourceCard.tsx:233
+#: src/view/screens/ProfileFeed.tsx:335
+#: src/view/screens/ProfileFeed.tsx:341
+msgid "Remove from my feeds"
+msgstr "Xóa khỏi bảng tin của tôi"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:278
+msgid "Remove from my feeds?"
+msgstr ""
+
+#: src/view/com/composer/photos/Gallery.tsx:167
+msgid "Remove image"
+msgstr "Xóa ảnh"
+
+#: src/view/com/composer/ExternalEmbed.tsx:70
+msgid "Remove image preview"
+msgstr "Xóa ảnh xem trước"
+
+#: src/components/dialogs/MutedWords.tsx:329
+msgid "Remove mute word from your list"
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:48
+msgid "Remove repost"
+msgstr "Xóa bài đăng lại"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+#~ msgid "Remove this feed from my feeds?"
+#~ msgstr "Xóa bảng tin này khỏi bảng tin của tôi?"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:202
+msgid "Remove this feed from your saved feeds"
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:132
+#~ msgid "Remove this feed from your saved feeds?"
+#~ msgstr "Xóa bảng tin này khỏi danh sách bảng tin đã lưu của bạn?"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:199
+#: src/view/com/modals/UserAddRemoveLists.tsx:152
+msgid "Removed from list"
+msgstr "Xóa khỏi danh sách"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:121
+msgid "Removed from my feeds"
+msgstr "Đã xóa khỏi bảng tin của tôi"
+
+#: src/view/screens/ProfileFeed.tsx:209
+msgid "Removed from your feeds"
+msgstr ""
+
+#: src/view/com/composer/ExternalEmbed.tsx:71
+msgid "Removes default thumbnail from {0}"
+msgstr "Xóa hình đại diện mặc định khỏi {0}"
+
+#: src/view/screens/Profile.tsx:191
+msgid "Replies"
+msgstr "Phản hồi"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:98
+msgid "Replies to this thread are disabled"
+msgstr "Phản hồi chủ đề này bị vô hiệu hóa"
+
+#: src/view/com/composer/Composer.tsx:365
+msgctxt "action"
+msgid "Reply"
+msgstr "Phản hồi"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:144
+msgid "Reply Filters"
+msgstr "Bộ lọc phản hồi"
+
+#: src/view/com/post/Post.tsx:166
+#: src/view/com/posts/FeedItem.tsx:280
+msgctxt "description"
+msgid "Reply to <0/>"
+msgstr "Phản hồi <0/>"
+
+#: src/view/com/modals/report/Modal.tsx:166
+#~ msgid "Report {collectionName}"
+#~ msgstr "Báo cáo {collectionName}"
+
+#: src/view/com/profile/ProfileMenu.tsx:319
+#: src/view/com/profile/ProfileMenu.tsx:322
+msgid "Report Account"
+msgstr "Báo cáo tài khoản"
+
+#: src/components/ReportDialog/index.tsx:49
+msgid "Report dialog"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:352
+#: src/view/screens/ProfileFeed.tsx:354
+msgid "Report feed"
+msgstr "Báo cáo bảng tin"
+
+#: src/view/screens/ProfileList.tsx:429
+msgid "Report List"
+msgstr "Báo cáo danh sách"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:292
+#: src/view/com/util/forms/PostDropdownBtn.tsx:294
+msgid "Report post"
+msgstr "Báo cáo bài viết"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:42
+msgid "Report this content"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:55
+msgid "Report this feed"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:52
+msgid "Report this list"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:49
+msgid "Report this post"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:46
+msgid "Report this user"
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:44
+#: src/view/com/modals/Repost.tsx:49
+#: src/view/com/modals/Repost.tsx:54
+#: src/view/com/util/post-ctrls/RepostButton.tsx:61
+msgctxt "action"
+msgid "Repost"
+msgstr "Đăng lại"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Repost"
+msgstr "Đăng lại"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
+msgid "Repost or quote post"
+msgstr "Đăng lại hoặc trích dẫn bài viết"
+
+#: src/view/screens/PostRepostedBy.tsx:27
+#~ msgid "Reposted by"
+#~ msgstr "Đăng lại bởi"
+
+#: src/view/screens/PostRepostedBy.tsx:27
+msgid "Reposted By"
+msgstr ""
+
+#: src/view/com/posts/FeedItem.tsx:197
+msgid "Reposted by {0}"
+msgstr ""
+
+#: src/view/com/posts/FeedItem.tsx:206
+#~ msgid "Reposted by {0})"
+#~ msgstr "Đã được đăng lại bởi {0})"
+
+#: src/view/com/posts/FeedItem.tsx:214
+msgid "Reposted by <0/>"
+msgstr "Đăng lại bởi <0/>"
+
+#: src/view/com/notifications/FeedItem.tsx:166
+msgid "reposted your post"
+msgstr "đã đăng lại bài viết của bạn"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:187
+msgid "Reposts of this post"
+msgstr "Đăng lại bài viết này"
+
+#: src/view/com/modals/ChangeEmail.tsx:181
+#: src/view/com/modals/ChangeEmail.tsx:183
+msgid "Request Change"
+msgstr "Yêu cầu thay đổi"
+
+#: src/view/com/modals/ChangePassword.tsx:241
+#: src/view/com/modals/ChangePassword.tsx:243
+msgid "Request Code"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:188
+#~ msgid "Request to limit the visibility of my account"
+#~ msgstr "Yêu cầu giới hạn khả năng hiển thị tài khoản của tôi"
+
+#: src/view/screens/Settings/index.tsx:475
+msgid "Require alt text before posting"
+msgstr "Yêu cẩu thêm mô tả ảnh trước khi đăng"
+
+#: src/screens/Signup/StepInfo/index.tsx:69
+msgid "Required for this provider"
+msgstr "Bắt buộc đối với nhà cung cấp này"
+
+#: src/view/com/modals/ChangePassword.tsx:185
+msgid "Reset code"
+msgstr "Mã khôi phục"
+
+#: src/view/com/modals/ChangePassword.tsx:192
+msgid "Reset Code"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:757
+#~ msgid "Reset onboarding"
+#~ msgstr "Đặt lại quá trình hướng dẫn sử dụng"
+
+#: src/view/screens/Settings/index.tsx:858
+#: src/view/screens/Settings/index.tsx:861
+msgid "Reset onboarding state"
+msgstr "Đặt lại trạng thái hướng dẫn sử dụng"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:86
+msgid "Reset password"
+msgstr "Đặt lại mật khẩu"
+
+#: src/view/screens/Settings.tsx:747
+#~ msgid "Reset preferences"
+#~ msgstr "Tùy chọn đặt lại"
+
+#: src/view/screens/Settings/index.tsx:848
+#: src/view/screens/Settings/index.tsx:851
+msgid "Reset preferences state"
+msgstr "Đặt lại trạng thái tùy chọn"
+
+#: src/view/screens/Settings/index.tsx:859
+msgid "Resets the onboarding state"
+msgstr "Đặt lại trạng thái giới thiệu"
+
+#: src/view/screens/Settings/index.tsx:849
+msgid "Resets the preferences state"
+msgstr "Đặt lại trạng thái tùy chọn"
+
+#: src/screens/Login/LoginForm.tsx:235
+msgid "Retries login"
+msgstr "Đăng nhập lại"
+
+#: src/view/com/util/error/ErrorMessage.tsx:57
+#: src/view/com/util/error/ErrorScreen.tsx:74
+msgid "Retries the last action, which errored out"
+msgstr "Thực hiện lại hành động cuối cùng nếu có lỗi xảy ra"
+
+#: src/components/Error.tsx:79
+#: src/components/Lists.tsx:91
+#: src/screens/Login/LoginForm.tsx:234
+#: src/screens/Login/LoginForm.tsx:241
+#: src/screens/Onboarding/StepInterests/index.tsx:225
+#: src/screens/Onboarding/StepInterests/index.tsx:228
+#: src/screens/Signup/index.tsx:193
+#: src/view/com/util/error/ErrorMessage.tsx:55
+#: src/view/com/util/error/ErrorScreen.tsx:72
+msgid "Retry"
+msgstr "Thử lại"
+
+#: src/view/com/modals/ChangeHandle.tsx:169
+#~ msgid "Retry change handle"
+#~ msgstr "Thử lại thay đổi tên người dùng"
+
+#: src/components/Error.tsx:86
+#: src/view/screens/ProfileList.tsx:917
+msgid "Return to previous page"
+msgstr "Quay lại trang trước"
+
+#: src/view/screens/NotFound.tsx:59
+msgid "Returns to home page"
+msgstr ""
+
+#: src/view/screens/NotFound.tsx:58
+#: src/view/screens/ProfileFeed.tsx:113
+msgid "Returns to previous page"
+msgstr ""
+
+#: src/view/shell/desktop/RightNav.tsx:59
+#~ msgid "SANDBOX. Posts and accounts are not permanent."
+#~ msgstr "SANDBOX. Bài viết và tài khoản không phải là vĩnh viễn."
+
+#: src/components/dialogs/BirthDateSettings.tsx:125
+#: src/view/com/modals/ChangeHandle.tsx:174
+#: src/view/com/modals/CreateOrEditList.tsx:338
+#: src/view/com/modals/EditProfile.tsx:225
+msgid "Save"
+msgstr "Lưu"
+
+#: src/view/com/lightbox/Lightbox.tsx:132
+#: src/view/com/modals/CreateOrEditList.tsx:346
+msgctxt "action"
+msgid "Save"
+msgstr "Lưu"
+
+#: src/view/com/modals/AltImage.tsx:131
+msgid "Save alt text"
+msgstr "Lưu mô tả ảnh"
+
+#: src/components/dialogs/BirthDateSettings.tsx:119
+msgid "Save birthday"
+msgstr ""
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:212
+#~ msgid "Save changes"
+#~ msgstr "Lưu thay đổi"
+
+#: src/view/com/modals/EditProfile.tsx:233
+msgid "Save Changes"
+msgstr "Lưu thay đổi"
+
+#: src/view/com/modals/ChangeHandle.tsx:171
+msgid "Save handle change"
+msgstr "Lưu thay đổi tên người dùng"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:145
+msgid "Save image crop"
+msgstr "Lưu hình ảnh đã cắt"
+
+#: src/view/screens/ProfileFeed.tsx:336
+#: src/view/screens/ProfileFeed.tsx:342
+msgid "Save to my feeds"
+msgstr ""
+
+#: src/view/screens/SavedFeeds.tsx:122
+msgid "Saved Feeds"
+msgstr "Bảng tin đã lưu"
+
+#: src/view/com/lightbox/Lightbox.tsx:81
+msgid "Saved to your camera roll."
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:213
+msgid "Saved to your feeds"
+msgstr ""
+
+#: src/view/com/modals/EditProfile.tsx:226
+msgid "Saves any changes to your profile"
+msgstr "Lưu mọi thay đổi vào hồ sơ của bạn"
+
+#: src/view/com/modals/ChangeHandle.tsx:172
+msgid "Saves handle change to {handle}"
+msgstr "Lưu thay đổi tên người dùng thành {handle}"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:146
+msgid "Saves image crop settings"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:36
+msgid "Science"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:873
+msgid "Scroll to top"
+msgstr "Cuộn lên đầu trang"
+
+#: src/Navigation.tsx:459
+#: src/view/com/auth/LoggedOut.tsx:123
+#: src/view/com/modals/ListAddRemoveUsers.tsx:75
+#: src/view/com/util/forms/SearchInput.tsx:67
+#: src/view/com/util/forms/SearchInput.tsx:79
+#: src/view/screens/Search/Search.tsx:511
+#: src/view/screens/Search/Search.tsx:760
+#: src/view/screens/Search/Search.tsx:778
+#: src/view/shell/bottom-bar/BottomBar.tsx:169
+#: src/view/shell/desktop/LeftNav.tsx:328
+#: src/view/shell/desktop/Search.tsx:215
+#: src/view/shell/desktop/Search.tsx:224
+#: src/view/shell/Drawer.tsx:365
+#: src/view/shell/Drawer.tsx:366
+msgid "Search"
+msgstr "Tìm kiếm"
+
+#: src/view/screens/Search/Search.tsx:827
+#: src/view/shell/desktop/Search.tsx:256
+msgid "Search for \"{query}\""
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:145
+msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:94
+msgid "Search for all posts with tag {displayTag}"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:390
+#~ msgid "Search for posts and users."
+#~ msgstr "Tìm kiếm bài viết hoặc người dùng."
+
+#: src/view/com/auth/LoggedOut.tsx:105
+#: src/view/com/auth/LoggedOut.tsx:106
+#: src/view/com/modals/ListAddRemoveUsers.tsx:70
+msgid "Search for users"
+msgstr "Tìm kiếm người dùng"
+
+#: src/view/com/modals/ChangeEmail.tsx:110
+msgid "Security Step Required"
+msgstr "Bước bảo mật bắt buộc"
+
+#: src/components/TagMenu/index.web.tsx:66
+msgid "See {truncatedTag} posts"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:83
+msgid "See {truncatedTag} posts by user"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:128
+msgid "See <0>{displayTag}</0> posts"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:187
+msgid "See <0>{displayTag}</0> posts by this user"
+msgstr ""
+
+#: src/view/screens/SavedFeeds.tsx:163
+msgid "See this guide"
+msgstr "Xem hướng dẫn"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:40
+msgid "See what's next"
+msgstr "Xem điều gì tiếp theo"
+
+#: src/view/com/util/Selector.tsx:106
+msgid "Select {item}"
+msgstr "Chọn {item}"
+
+#: src/screens/Login/ChooseAccountForm.tsx:61
+msgid "Select account"
+msgstr ""
+
+#: src/view/com/modals/ServerInput.tsx:75
+#~ msgid "Select Bluesky Social"
+#~ msgstr "Chọn mạng xã hội Bluesky"
+
+#: src/screens/Login/index.tsx:120
+msgid "Select from an existing account"
+msgstr "Chọn từ tài khoản đã tồn tại"
+
+#: src/view/screens/LanguageSettings.tsx:299
+msgid "Select languages"
+msgstr ""
+
+#: src/components/ReportDialog/SelectLabelerView.tsx:30
+msgid "Select moderator"
+msgstr ""
+
+#: src/view/com/util/Selector.tsx:107
+msgid "Select option {i} of {numItems}"
+msgstr "Chọn lựa chọn {i} trong số {numItems}"
+
+#: src/view/com/auth/login/LoginForm.tsx:147
+#~ msgid "Select service"
+#~ msgstr "Chọn dịch vụ"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
+msgid "Select some accounts below to follow"
+msgstr ""
+
+#: src/components/ReportDialog/SubmitView.tsx:133
+msgid "Select the moderation service(s) to report to"
+msgstr ""
+
+#: src/view/com/auth/server-input/index.tsx:82
+msgid "Select the service that hosts your data."
+msgstr ""
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:100
+msgid "Select topical feeds to follow from the list below"
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/index.tsx:63
+msgid "Select what you want to see (or not see), and we’ll handle the rest."
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:281
+msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
+msgstr "Chọn ngôn ngữ bạn muốn bảng tin hiển thị. Nếu không chọn bất kỳ ngôn ngữ nào, đồng nghĩa tất cả ngôn ngữ sẽ được hiển thị."
+
+#: src/view/screens/LanguageSettings.tsx:98
+#~ msgid "Select your app language for the default text to display in the app"
+#~ msgstr "Chọn ngôn ngữ hiển thị mặc định cho ứng dụng"
+
+#: src/view/screens/LanguageSettings.tsx:98
+msgid "Select your app language for the default text to display in the app."
+msgstr ""
+
+#: src/screens/Signup/StepInfo/index.tsx:133
+msgid "Select your date of birth"
+msgstr ""
+
+#: src/screens/Onboarding/StepInterests/index.tsx:200
+msgid "Select your interests from the options below"
+msgstr ""
+
+#: src/view/screens/LanguageSettings.tsx:190
+msgid "Select your preferred language for translations in your feed."
+msgstr "Chọn ngôn ngữ cho bản dịch trong bảng tin của bạn."
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
+msgid "Select your primary algorithmic feeds"
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
+msgid "Select your secondary algorithmic feeds"
+msgstr ""
+
+#: src/view/com/modals/VerifyEmail.tsx:202
+#: src/view/com/modals/VerifyEmail.tsx:204
+msgid "Send Confirmation Email"
+msgstr "Gửi email xác nhận"
+
+#: src/view/com/modals/DeleteAccount.tsx:130
+msgid "Send email"
+msgstr "Gửi email"
+
+#: src/view/com/modals/DeleteAccount.tsx:143
+msgctxt "action"
+msgid "Send Email"
+msgstr "Gửi email"
+
+#: src/view/com/modals/DeleteAccount.tsx:138
+#~ msgid "Send Email"
+#~ msgstr "Gửi email"
+
+#: src/view/shell/Drawer.tsx:298
+#: src/view/shell/Drawer.tsx:319
+msgid "Send feedback"
+msgstr "Gửi phản hồi"
+
+#: src/components/ReportDialog/SubmitView.tsx:213
+#: src/components/ReportDialog/SubmitView.tsx:217
+msgid "Send report"
+msgstr ""
+
+#: src/view/com/modals/report/SendReportButton.tsx:45
+#~ msgid "Send Report"
+#~ msgstr "Gửi báo cáo"
+
+#: src/components/ReportDialog/SelectLabelerView.tsx:44
+msgid "Send report to {0}"
+msgstr ""
+
+#: src/view/com/modals/DeleteAccount.tsx:132
+msgid "Sends email with confirmation code for account deletion"
+msgstr "Gửi email với mã xác nhận để xóa tài khoản"
+
+#: src/view/com/auth/server-input/index.tsx:114
+msgid "Server address"
+msgstr ""
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:306
+#~ msgid "Set {value} for {labelGroup} content moderation policy"
+#~ msgstr "Đặt giá trị {value} cho chính sách kiểm duyệt nội dung của {labelGroup}"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:155
+#: src/view/com/modals/ContentFilteringSettings.tsx:174
+#~ msgctxt "action"
+#~ msgid "Set Age"
+#~ msgstr "Đặt tuổi"
+
+#: src/screens/Moderation/index.tsx:304
+msgid "Set birthdate"
+msgstr ""
+
+#: src/view/screens/Settings.tsx:482
+#~ msgid "Set color theme to dark"
+#~ msgstr "Chuyển sang chế độ tối"
+
+#: src/view/screens/Settings.tsx:475
+#~ msgid "Set color theme to light"
+#~ msgstr "Chuyển sang chế độ sáng"
+
+#: src/view/screens/Settings.tsx:469
+#~ msgid "Set color theme to system setting"
+#~ msgstr "Chuyển sang chế độ của hệ thống"
+
+#: src/screens/Login/SetNewPasswordForm.tsx:102
+msgid "Set new password"
+msgstr "Đặt mật khẩu mới"
+
+#: src/view/com/auth/create/Step2.tsx:133
+#~ msgid "Set password"
+#~ msgstr "Đặt mật khẩu"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:225
+msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
+msgstr "Chọn \"Không\" để ẩn tất cả bài viết trích dẫn khỏi bảng tin của bạn. Các bài đăng lại sẽ vẫn hiển thị."
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:122
+msgid "Set this setting to \"No\" to hide all replies from your feed."
+msgstr "Chọn \"Không\" để ẩn tất cả phản hồi khỏi bảng tin của bạn."
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:191
+msgid "Set this setting to \"No\" to hide all reposts from your feed."
+msgstr "Chọn \"Không\" để ẩn tất cả bài đăng lại khỏi bảng tin của bạn."
+
+#: src/view/screens/PreferencesThreads.tsx:122
+msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
+msgstr "Chọn \"Có\" để hiển thị phản hồi dưới dạng xem theo chủ đề. Đây là một tính năng thử nghiệm."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:261
+#~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
+#~ msgstr "Chọn \"Có\" để hiện thị mẫu của các bảng tin đã lưu trong bảng tin người theo dõi của bạn. Đây là một tính năng thử nghiệm."
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:261
+msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
+msgstr ""
+
+#: src/screens/Onboarding/Layout.tsx:48
+msgid "Set up your account"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:267
+msgid "Sets Bluesky username"
+msgstr "Thiết lập tên đăng nhập Bluesky"
+
+#: src/view/screens/Settings/index.tsx:507
+msgid "Sets color theme to dark"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:500
+msgid "Sets color theme to light"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:494
+msgid "Sets color theme to system setting"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:533
+msgid "Sets dark theme to the dark theme"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:526
+msgid "Sets dark theme to the dim theme"
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:113
+msgid "Sets email for password reset"
+msgstr "Thiết lập email để đặt lại mật khẩu"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:118
+#~ msgid "Sets hosting provider for password reset"
+#~ msgstr "Thiết lập nhà cung cấp hosting để đặt lại mật khẩu"
+
+#: src/view/com/auth/create/Step1.tsx:143
+#~ msgid "Sets hosting provider to {label}"
+#~ msgstr "Thiết lập nhà cung cấp hosting cho {label}"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:124
+msgid "Sets image aspect ratio to square"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:114
+msgid "Sets image aspect ratio to tall"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:104
+msgid "Sets image aspect ratio to wide"
+msgstr ""
+
+#: src/view/com/auth/login/LoginForm.tsx:148
+#~ msgid "Sets server for the Bluesky client"
+#~ msgstr "Thiết lập máy chủ cho ứng dụng Bluesky"
+
+#: src/Navigation.tsx:139
+#: src/view/screens/Settings/index.tsx:313
+#: src/view/shell/desktop/LeftNav.tsx:437
+#: src/view/shell/Drawer.tsx:570
+#: src/view/shell/Drawer.tsx:571
+msgid "Settings"
+msgstr "Cài đặt"
+
+#: src/view/com/modals/SelfLabel.tsx:125
+msgid "Sexual activity or erotic nudity."
+msgstr "Hoạt động tình dục hoặc khỏa thân khiêu dâm"
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:38
+msgid "Sexually Suggestive"
+msgstr ""
+
+#: src/view/com/lightbox/Lightbox.tsx:141
+msgctxt "action"
+msgid "Share"
+msgstr "Chia sẻ"
+
+#: src/view/com/profile/ProfileMenu.tsx:215
+#: src/view/com/profile/ProfileMenu.tsx:224
+#: src/view/com/util/forms/PostDropdownBtn.tsx:228
+#: src/view/com/util/forms/PostDropdownBtn.tsx:237
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:235
+#: src/view/screens/ProfileList.tsx:388
+msgid "Share"
+msgstr "Chia sẻ"
+
+#: src/view/com/profile/ProfileMenu.tsx:373
+#: src/view/com/util/forms/PostDropdownBtn.tsx:347
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:251
+msgid "Share anyway"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:362
+#: src/view/screens/ProfileFeed.tsx:364
+msgid "Share feed"
+msgstr "Chia sẻ bảng tin"
+
+#: src/view/screens/ProfileFeed.tsx:276
+#~ msgid "Share link"
+#~ msgstr "Chia sẻ liên kết"
+
+#: src/view/com/modals/LinkWarning.tsx:89
+#: src/view/com/modals/LinkWarning.tsx:95
+msgid "Share Link"
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:92
+msgid "Shares the linked website"
+msgstr ""
+
+#: src/components/moderation/ContentHider.tsx:115
+#: src/components/moderation/LabelPreference.tsx:136
+#: src/components/moderation/PostHider.tsx:107
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
+#: src/view/screens/Settings/index.tsx:363
+msgid "Show"
+msgstr "Hiển thị"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:68
+msgid "Show all replies"
+msgstr "Hiển thị tất cả phản hồi"
+
+#: src/components/moderation/ScreenHider.tsx:169
+#: src/components/moderation/ScreenHider.tsx:172
+msgid "Show anyway"
+msgstr "Vẫn hiển thị"
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:27
+#: src/lib/moderation/useLabelBehaviorDescription.ts:63
+msgid "Show badge"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:61
+msgid "Show badge and filter from feeds"
+msgstr ""
+
+#: src/view/com/modals/EmbedConsent.tsx:87
+#~ msgid "Show embeds from {0}"
+#~ msgstr "Hiển thị nhúng từ {0}"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:200
+msgid "Show follows similar to {0}"
+msgstr "Hiển thị người theo dõi tương tụ như {0}"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:507
+#: src/view/com/post/Post.tsx:201
+#: src/view/com/posts/FeedItem.tsx:355
+msgid "Show More"
+msgstr "Hiển thị thêm"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:258
+msgid "Show Posts from My Feeds"
+msgstr "Hiển thị bài viết từ bảng tin của tôi"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:222
+msgid "Show Quote Posts"
+msgstr "Hiển thị bài viết trích dẫn"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:119
+msgid "Show quote-posts in Following feed"
+msgstr ""
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:135
+msgid "Show quotes in Following"
+msgstr ""
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:95
+msgid "Show re-posts in Following feed"
+msgstr ""
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:119
+msgid "Show Replies"
+msgstr "Hiển thị phản hồi"
+
+#: src/view/screens/PreferencesThreads.tsx:100
+msgid "Show replies by people you follow before all other replies."
+msgstr "Hiển thị phản hồi từ người bạn theo dõi trước"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:87
+msgid "Show replies in Following"
+msgstr ""
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:71
+msgid "Show replies in Following feed"
+msgstr ""
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:70
+msgid "Show replies with at least {value} {0}"
+msgstr "Hiển thị các phản hồi có ít nhất {value} {0}"
+
+#: src/view/screens/PreferencesFollowingFeed.tsx:188
+msgid "Show Reposts"
+msgstr "Hiển thị bài đăng lại"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:111
+msgid "Show reposts in Following"
+msgstr ""
+
+#: src/components/moderation/ContentHider.tsx:68
+#: src/components/moderation/PostHider.tsx:64
+msgid "Show the content"
+msgstr "Hiển thị nội dung"
+
+#: src/view/com/notifications/FeedItem.tsx:351
+msgid "Show users"
+msgstr "Hiển thị người dùng"
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:58
+msgid "Show warning"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:56
+msgid "Show warning and filter from feeds"
+msgstr ""
+
+#: src/view/com/profile/ProfileHeader.tsx:501
+#~ msgid "Shows a list of users similar to this user."
+#~ msgstr "Hiển thị danh sách người dùng tương tự người dùng này."
+
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:130
+msgid "Shows posts from {0} in your feed"
+msgstr "Hiển thị bài viết từ {0} trong bảng tin của bạn"
+
+#: src/screens/Login/index.tsx:100
+#: src/screens/Login/index.tsx:119
+#: src/screens/Login/LoginForm.tsx:131
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:73
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:83
+#: src/view/com/auth/SplashScreen.tsx:81
+#: src/view/com/auth/SplashScreen.tsx:90
+#: src/view/com/auth/SplashScreen.web.tsx:110
+#: src/view/com/auth/SplashScreen.web.tsx:119
+#: src/view/shell/bottom-bar/BottomBar.tsx:300
+#: src/view/shell/bottom-bar/BottomBar.tsx:301
+#: src/view/shell/bottom-bar/BottomBar.tsx:303
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:178
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:179
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:181
+#: src/view/shell/NavSignupCard.tsx:58
+#: src/view/shell/NavSignupCard.tsx:59
+#: src/view/shell/NavSignupCard.tsx:61
+msgid "Sign in"
+msgstr "Đăng nhập"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:78
+#: src/view/com/auth/SplashScreen.tsx:57
+#: src/view/com/auth/SplashScreen.web.tsx:87
+#~ msgid "Sign In"
+#~ msgstr "Đăng nhập"
+
+#: src/components/AccountList.tsx:109
+msgid "Sign in as {0}"
+msgstr "Đăng nhập với tư cách {0}"
+
+#: src/screens/Login/ChooseAccountForm.tsx:64
+msgid "Sign in as..."
+msgstr "Đăng nhập với tư cách..."
+
+#: src/view/com/auth/login/LoginForm.tsx:134
+#~ msgid "Sign into"
+#~ msgstr "Đăng nhập vào"
+
+#: src/view/screens/Settings/index.tsx:107
+#: src/view/screens/Settings/index.tsx:110
+msgid "Sign out"
+msgstr "Đăng xuất"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:290
+#: src/view/shell/bottom-bar/BottomBar.tsx:291
+#: src/view/shell/bottom-bar/BottomBar.tsx:293
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:168
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:169
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:171
+#: src/view/shell/NavSignupCard.tsx:49
+#: src/view/shell/NavSignupCard.tsx:50
+#: src/view/shell/NavSignupCard.tsx:52
+msgid "Sign up"
+msgstr "Đăng ký"
+
+#: src/view/shell/NavSignupCard.tsx:42
+msgid "Sign up or sign in to join the conversation"
+msgstr "Đăng ký hoặc đăng nhập để tham gia hội thoại"
+
+#: src/components/moderation/ScreenHider.tsx:97
+#: src/lib/moderation/useGlobalLabelStrings.ts:28
+msgid "Sign-in Required"
+msgstr "Yêu cầu đăng nhập"
+
+#: src/view/screens/Settings/index.tsx:374
+msgid "Signed in as"
+msgstr "Đã đăng nhập với tư cách"
+
+#: src/screens/Login/ChooseAccountForm.tsx:48
+msgid "Signed in as @{0}"
+msgstr "Đã đăng nhập với tư cách @{0}"
+
+#: src/view/com/modals/SwitchAccount.tsx:66
+#~ msgid "Signs {0} out of Bluesky"
+#~ msgstr "Đăng xuất {0} khỏi Bluesky"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:239
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:203
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:35
+msgid "Skip"
+msgstr "Bỏ qua"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:236
+msgid "Skip this flow"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:40
+msgid "Software Dev"
+msgstr ""
+
+#: src/view/com/modals/ProfilePreview.tsx:62
+#~ msgid "Something went wrong and we're not sure what."
+#~ msgstr "Có lỗi xảy ra và chúng tôi không chắc về điều này."
+
+#: src/components/ReportDialog/index.tsx:59
+#: src/screens/Moderation/index.tsx:114
+#: src/screens/Profile/Sections/Labels.tsx:76
+msgid "Something went wrong, please try again."
+msgstr ""
+
+#: src/view/com/modals/Waitlist.tsx:51
+#~ msgid "Something went wrong. Check your email and try again."
+#~ msgstr "Có lỗi xảy ra. Kiểm tra email của bạn và thử lại."
+
+#: src/App.native.tsx:66
+msgid "Sorry! Your session expired. Please log in again."
+msgstr "Xin lỗi! Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."
+
+#: src/view/screens/PreferencesThreads.tsx:69
+msgid "Sort Replies"
+msgstr "Sắp xếp phản hồi"
+
+#: src/view/screens/PreferencesThreads.tsx:72
+msgid "Sort replies to the same post by:"
+msgstr "Sắp xếp phản hồi cho cùng một bài viết theo:"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:146
+msgid "Source:"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:65
+msgid "Spam"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:53
+msgid "Spam; excessive mentions or replies"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:30
+msgid "Sports"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:123
+msgid "Square"
+msgstr "Hình vuông"
+
+#: src/view/com/auth/create/Step1.tsx:90
+#: src/view/com/modals/ServerInput.tsx:62
+#~ msgid "Staging"
+#~ msgstr "Staging"
+
+#: src/view/screens/Settings/index.tsx:903
+msgid "Status page"
+msgstr "Trang trạng thái"
+
+#: src/screens/Signup/index.tsx:142
+msgid "Step"
+msgstr ""
+
+#: src/view/com/auth/create/StepHeader.tsx:15
+#~ msgid "Step {step} of 3"
+#~ msgstr "Bước thứ {step} trong 3 bước"
+
+#: src/view/screens/Settings/index.tsx:292
+msgid "Storage cleared, you need to restart the app now."
+msgstr "Bộ nhớ đã được xóa, bạn cần khởi động lại ứng dụng bây giờ."
+
+#: src/Navigation.tsx:211
+#: src/view/screens/Settings/index.tsx:831
+msgid "Storybook"
+msgstr "Storybook"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:255
+#: src/components/moderation/LabelsOnMeDialog.tsx:256
+msgid "Submit"
+msgstr "Gửi"
+
+#: src/view/screens/ProfileList.tsx:590
+msgid "Subscribe"
+msgstr "Đăng ký"
+
+#: src/screens/Profile/Sections/Labels.tsx:180
+msgid "Subscribe to @{0} to use these labels:"
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:221
+msgid "Subscribe to Labeler"
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:172
+#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
+msgid "Subscribe to the {0} feed"
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
+msgid "Subscribe to this labeler"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:586
+msgid "Subscribe to this list"
+msgstr "Đăng ký danh sách này"
+
+#: src/view/com/lists/ListCard.tsx:101
+#~ msgid "Subscribed"
+#~ msgstr "Đã đăng ký"
+
+#: src/view/screens/Search/Search.tsx:466
+msgid "Suggested Follows"
+msgstr "Gợi ý theo dõi"
+
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
+msgid "Suggested for you"
+msgstr "Gợi ý cho bạn"
+
+#: src/view/com/modals/SelfLabel.tsx:95
+msgid "Suggestive"
+msgstr "Gợi ý"
+
+#: src/Navigation.tsx:226
+#: src/view/screens/Support.tsx:30
+#: src/view/screens/Support.tsx:33
+msgid "Support"
+msgstr "Hỗ trợ"
+
+#: src/view/com/modals/ProfilePreview.tsx:110
+#~ msgid "Swipe up to see more"
+#~ msgstr "Vuốt lên để xem thêm"
+
+#: src/components/dialogs/SwitchAccount.tsx:46
+#: src/components/dialogs/SwitchAccount.tsx:49
+msgid "Switch Account"
+msgstr "Chuyển tài khoản"
+
+#: src/view/screens/Settings/index.tsx:139
+msgid "Switch to {0}"
+msgstr "Chuyển sang {0}"
+
+#: src/view/screens/Settings/index.tsx:140
+msgid "Switches the account you are logged in to"
+msgstr "Chuyển sang tài khoản bạn đã đăng nhập vào"
+
+#: src/view/screens/Settings/index.tsx:491
+msgid "System"
+msgstr "Hệ thống"
+
+#: src/view/screens/Settings/index.tsx:819
+msgid "System log"
+msgstr "Nhật ký hệ thống"
+
+#: src/components/dialogs/MutedWords.tsx:323
+msgid "tag"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:78
+msgid "Tag menu: {displayTag}"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:113
+msgid "Tall"
+msgstr "Cao"
+
+#: src/view/com/util/images/AutoSizedImage.tsx:70
+msgid "Tap to view fully"
+msgstr "Nhấp để xem đầy đủ"
+
+#: src/screens/Onboarding/index.tsx:39
+msgid "Tech"
+msgstr ""
+
+#: src/view/shell/desktop/RightNav.tsx:81
+msgid "Terms"
+msgstr "Điều khoản"
+
+#: src/Navigation.tsx:236
+#: src/screens/Signup/StepInfo/Policies.tsx:49
+#: src/view/screens/Settings/index.tsx:917
+#: src/view/screens/TermsOfService.tsx:29
+#: src/view/shell/Drawer.tsx:259
+msgid "Terms of Service"
+msgstr "Điều khoản dịch vụ"
+
+#: src/lib/moderation/useReportOptions.ts:58
+#: src/lib/moderation/useReportOptions.ts:79
+#: src/lib/moderation/useReportOptions.ts:87
+msgid "Terms used violate community standards"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:323
+msgid "text"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:219
+msgid "Text input field"
+msgstr "Trường nhập văn bản"
+
+#: src/components/ReportDialog/SubmitView.tsx:76
+msgid "Thank you. Your report has been sent."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:465
+msgid "That contains the following:"
+msgstr ""
+
+#: src/screens/Signup/index.tsx:84
+msgid "That handle is already taken."
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:283
+#: src/view/com/profile/ProfileMenu.tsx:349
+msgid "The account will be able to interact with you after unblocking."
+msgstr "Tài khoản sẽ có thể tương tác với bạn sau khi bỏ chặn."
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:127
+msgid "the author"
+msgstr ""
+
+#: src/view/screens/CommunityGuidelines.tsx:36
+msgid "The Community Guidelines have been moved to <0/>"
+msgstr "Quy tắc cộng đồng đã được chuyển sang <0/>"
+
+#: src/view/screens/CopyrightPolicy.tsx:33
+msgid "The Copyright Policy has been moved to <0/>"
+msgstr "Chính sách bản quyền đã được chuyển sang <0/>"
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:48
+msgid "The following labels were applied to your account."
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:49
+msgid "The following labels were applied to your content."
+msgstr ""
+
+#: src/screens/Onboarding/Layout.tsx:58
+msgid "The following steps will help customize your Bluesky experience."
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:153
+#: src/view/com/post-thread/PostThread.tsx:165
+msgid "The post may have been deleted."
+msgstr "Bài viết có thể đã bị xóa."
+
+#: src/view/screens/PrivacyPolicy.tsx:33
+msgid "The Privacy Policy has been moved to <0/>"
+msgstr "Chính sách bảo mật đã được chuyển sang <0/>"
+
+#: src/view/screens/Support.tsx:36
+msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
+msgstr "Biểu mẫu hỗ trợ đã được chuyển đến một địa chỉ mới. Nếu bạn cần trợ giúp, vui lòng <0/> hoặc truy cập {HELP_DESK_URL} để liên lạc với chúng tôi."
+
+#: src/view/screens/TermsOfService.tsx:33
+msgid "The Terms of Service have been moved to"
+msgstr "Điều khoản dịch vụ đã được chuyển sang"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:141
+msgid "There are many feeds to try:"
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
+#: src/view/screens/ProfileFeed.tsx:544
+msgid "There was an an issue contacting the server, please check your internet connection and try again."
+msgstr "Có sự cố khi kết nối đến máy chủ, vui lòng kiểm tra kết nối mạng của bạn và thử lại."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:138
+msgid "There was an an issue removing this feed. Please check your internet connection and try again."
+msgstr "Có sự cố khi xóa bảng tin này. Vui lòng kiểm tra kết nối mạng và thử lại."
+
+#: src/view/screens/ProfileFeed.tsx:218
+msgid "There was an an issue updating your feeds, please check your internet connection and try again."
+msgstr "Có sự cố khi cập nhật bảng tin của bạn, vui lòng kiểm tra kết nối mạng và thử lại"
+
+#: src/view/screens/ProfileFeed.tsx:245
+#: src/view/screens/ProfileList.tsx:275
+#: src/view/screens/SavedFeeds.tsx:209
+#: src/view/screens/SavedFeeds.tsx:231
+#: src/view/screens/SavedFeeds.tsx:252
+msgid "There was an issue contacting the server"
+msgstr "Có sự cố khi kết nối đến máy chủ"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:57
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:66
+#: src/view/com/feeds/FeedSourceCard.tsx:110
+#: src/view/com/feeds/FeedSourceCard.tsx:123
+msgid "There was an issue contacting your server"
+msgstr "Có sự cố khi kết nối đến máy chủ của bạn"
+
+#: src/view/com/notifications/Feed.tsx:117
+msgid "There was an issue fetching notifications. Tap here to try again."
+msgstr "Có sự cố khi lấy thông báo. Nhấp vào đây để thử lại."
+
+#: src/view/com/posts/Feed.tsx:287
+msgid "There was an issue fetching posts. Tap here to try again."
+msgstr "Có sự cố khi lấy bài viết. Nhấp vào đây để thử lại."
+
+#: src/view/com/lists/ListMembers.tsx:172
+msgid "There was an issue fetching the list. Tap here to try again."
+msgstr "Có sự cố khi lấy danh sách. Nhấp vào đây để thử lại."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:148
+#: src/view/com/lists/ProfileLists.tsx:155
+msgid "There was an issue fetching your lists. Tap here to try again."
+msgstr "Có sự cố khi lấy danh sách của bạn. Nhấp vào đây để thử lại."
+
+#: src/components/ReportDialog/SubmitView.tsx:81
+msgid "There was an issue sending your report. Please check your internet connection."
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:65
+msgid "There was an issue syncing your preferences with the server"
+msgstr "Có sự cố khi đồng bộ tùy chọn của bạn với máy chủ"
+
+#: src/view/screens/AppPasswords.tsx:68
+msgid "There was an issue with fetching your app passwords"
+msgstr "Có sự cố khi lấy mật khẩu ứng dụng của bạn"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:105
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:127
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:141
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:99
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:111
+#: src/view/com/profile/ProfileMenu.tsx:106
+#: src/view/com/profile/ProfileMenu.tsx:117
+#: src/view/com/profile/ProfileMenu.tsx:132
+#: src/view/com/profile/ProfileMenu.tsx:143
+#: src/view/com/profile/ProfileMenu.tsx:157
+#: src/view/com/profile/ProfileMenu.tsx:170
+msgid "There was an issue! {0}"
+msgstr "Có sự cố! {0}"
+
+#: src/view/screens/ProfileList.tsx:288
+#: src/view/screens/ProfileList.tsx:302
+#: src/view/screens/ProfileList.tsx:316
+#: src/view/screens/ProfileList.tsx:330
+msgid "There was an issue. Please check your internet connection and try again."
+msgstr "Có sự cố. Vui lòng kiểm tra kết nối mạng của bạn và thử lại."
+
+#: src/view/com/util/ErrorBoundary.tsx:51
+msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
+msgstr "Ứng dụng đã xảy ra sự cố không mong muốn. Vui lòng thông báo cho chúng tôi nếu bạn bị lôi này!"
+
+#: src/screens/Deactivated.tsx:106
+msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
+msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:146
+msgid "These are popular accounts you might like:"
+msgstr ""
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+#~ msgid "This {0} has been labeled."
+#~ msgstr "Đã gán nhãn {0} này."
+
+#: src/components/moderation/ScreenHider.tsx:116
+msgid "This {screenDescription} has been flagged:"
+msgstr "Đã gắn cờ {screenDescription} này:"
+
+#: src/components/moderation/ScreenHider.tsx:111
+msgid "This account has requested that users sign in to view their profile."
+msgstr "Tài khoản này yêu cầu đăng nhập để xem hồ sơ của họ."
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:204
+msgid "This appeal will be sent to <0>{0}</0>."
+msgstr ""
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:19
+msgid "This content has been hidden by the moderators."
+msgstr ""
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:24
+msgid "This content has received a general warning from moderators."
+msgstr ""
+
+#: src/components/dialogs/EmbedConsent.tsx:64
+msgid "This content is hosted by {0}. Do you want to enable external media?"
+msgstr "Nội dung này được lưu trữ bởi {0}. Bạn có muốn kích hoạt phương tiện ngoại vi?"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:77
+#: src/lib/moderation/useModerationCauseDescription.ts:77
+msgid "This content is not available because one of the users involved has blocked the other."
+msgstr "Nội dung này không khả dụng vì một trong những người dùng liên quan đã chặn người kia."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:108
+msgid "This content is not viewable without a Bluesky account."
+msgstr "Nội dung này không thể xem nếu không có tài khoản Bluesky"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:75
+msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:114
+msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
+msgstr "Bảng tin này hiện tại đang có lượng truy cập lớn và tạm thời không khả dụng. Vui lòng thử lại sau."
+
+#: src/screens/Profile/Sections/Feed.tsx:50
+#: src/view/screens/ProfileFeed.tsx:477
+#: src/view/screens/ProfileList.tsx:675
+msgid "This feed is empty!"
+msgstr "Bảng tin này trống!"
+
+#: src/view/com/posts/CustomFeedEmptyState.tsx:37
+msgid "This feed is empty! You may need to follow more users or tune your language settings."
+msgstr "Bảng tin này trống! Bạn có thể cần theo dõi nhiều người hơn hoặc điều chỉnh ngôn ngữ."
+
+#: src/components/dialogs/BirthDateSettings.tsx:41
+msgid "This information is not shared with other users."
+msgstr "Thông tin này không được chia sẻ với người dùng khác."
+
+#: src/view/com/modals/VerifyEmail.tsx:119
+msgid "This is important in case you ever need to change your email or reset your password."
+msgstr "Điều này rất quan trọng trong trường hợp bạn cần thay đổi địa chỉ email hoặc đặt lại mật khẩu."
+
+#: src/view/com/auth/create/Step1.tsx:55
+#~ msgid "This is the service that keeps you online."
+#~ msgstr "Đây là dịch vụ giúp bạn trực tuyến."
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:124
+msgid "This label was applied by {0}."
+msgstr ""
+
+#: src/screens/Profile/Sections/Labels.tsx:167
+msgid "This labeler hasn't declared what labels it publishes, and may not be active."
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:72
+msgid "This link is taking you to the following website:"
+msgstr "Liên kết này dẫn bạn đến trang web sau:"
+
+#: src/view/screens/ProfileList.tsx:853
+msgid "This list is empty!"
+msgstr "Danh sách này trống!"
+
+#: src/screens/Profile/ErrorState.tsx:40
+msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:107
+msgid "This name is already in use"
+msgstr "Tên này đã được sử dụng"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:125
+msgid "This post has been deleted."
+msgstr "Bài viết đã bị xóa."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:344
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:248
+msgid "This post is only visible to logged-in users. It won't be visible to people who aren't logged in."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:326
+msgid "This post will be hidden from feeds."
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:370
+msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't logged in."
+msgstr ""
+
+#: src/screens/Signup/StepInfo/Policies.tsx:37
+msgid "This service has not provided terms of service or a privacy policy."
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:445
+msgid "This should create a domain record at:"
+msgstr ""
+
+#: src/view/com/profile/ProfileFollowers.tsx:87
+msgid "This user doesn't have any followers."
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:72
+#: src/lib/moderation/useModerationCauseDescription.ts:68
+msgid "This user has blocked you. You cannot view their content."
+msgstr "Người dùng này đã chặn bạn. Bạn không thể xem nội dung."
+
+#: src/lib/moderation/useGlobalLabelStrings.ts:30
+msgid "This user has requested that their content only be shown to signed-in users."
+msgstr ""
+
+#: src/view/com/modals/ModerationDetails.tsx:42
+#~ msgid "This user is included in the <0/> list which you have blocked."
+#~ msgstr "Người dùng này trong danh sách <0/> mà bạn đã chặn."
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:55
+msgid "This user is included in the <0>{0}</0> list which you have blocked."
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:84
+msgid "This user is included in the <0>{0}</0> list which you have muted."
+msgstr ""
+
+#: src/view/com/modals/ModerationDetails.tsx:74
+#~ msgid "This user is included the <0/> list which you have muted."
+#~ msgstr "Người dùng này trong danh sách <0/> mà bạn đã tắt tiếng."
+
+#: src/view/com/profile/ProfileFollows.tsx:87
+msgid "This user isn't following anyone."
+msgstr ""
+
+#: src/view/com/modals/SelfLabel.tsx:137
+msgid "This warning is only available for posts with media attached."
+msgstr "Cảnh báo này chỉ khả dụng cho bài viết đính kèm ảnh/video."
+
+#: src/components/dialogs/MutedWords.tsx:283
+msgid "This will delete {0} from your muted words. You can always add it back later."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:190
+#~ msgid "This will hide this post from your feeds."
+#~ msgstr "Điều này sẽ ẩn bài viết này khỏi bảng tin của bạn."
+
+#: src/view/screens/Settings/index.tsx:574
+msgid "Thread preferences"
+msgstr ""
+
+#: src/view/screens/PreferencesThreads.tsx:53
+#: src/view/screens/Settings/index.tsx:584
+msgid "Thread Preferences"
+msgstr "Tùy chọn chủ đề"
+
+#: src/view/screens/PreferencesThreads.tsx:119
+msgid "Threaded Mode"
+msgstr "Chế độ theo chủ đề"
+
+#: src/Navigation.tsx:269
+msgid "Threads Preferences"
+msgstr "Tùy chọn chủ đề"
+
+#: src/components/ReportDialog/SelectLabelerView.tsx:33
+msgid "To whom would you like to send this report?"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:112
+msgid "Toggle between muted word options."
+msgstr ""
+
+#: src/view/com/util/forms/DropdownButton.tsx:246
+msgid "Toggle dropdown"
+msgstr "Đóng/mở dropdown"
+
+#: src/screens/Moderation/index.tsx:332
+msgid "Toggle to enable or disable adult content"
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:370
+msgid "Top"
+msgstr ""
+
+#: src/view/com/modals/EditImage.tsx:272
+msgid "Transformations"
+msgstr "Chuyển đổi"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:644
+#: src/view/com/post-thread/PostThreadItem.tsx:646
+#: src/view/com/util/forms/PostDropdownBtn.tsx:212
+#: src/view/com/util/forms/PostDropdownBtn.tsx:214
+msgid "Translate"
+msgstr "Dịch"
+
+#: src/view/com/util/error/ErrorScreen.tsx:82
+msgctxt "action"
+msgid "Try again"
+msgstr "Thử lại"
+
+#: src/view/com/util/error/ErrorScreen.tsx:73
+#~ msgid "Try again"
+#~ msgstr "Thử lại"
+
+#: src/view/com/modals/ChangeHandle.tsx:428
+msgid "Type:"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:478
+msgid "Un-block list"
+msgstr "Danh sách bỏ chặn"
+
+#: src/view/screens/ProfileList.tsx:461
+msgid "Un-mute list"
+msgstr "Danh sách bỏ tắt tiếng"
+
+#: src/screens/Login/ForgotPasswordForm.tsx:74
+#: src/screens/Login/index.tsx:78
+#: src/screens/Login/LoginForm.tsx:119
+#: src/screens/Login/SetNewPasswordForm.tsx:77
+#: src/screens/Signup/index.tsx:63
+#: src/view/com/modals/ChangePassword.tsx:70
+msgid "Unable to contact your service. Please check your Internet connection."
+msgstr "Không thể kết nối. Vui lòng kiểm tra kết nối Internet của bạn."
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:181
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:287
+#: src/view/com/profile/ProfileMenu.tsx:361
+#: src/view/screens/ProfileList.tsx:572
+msgid "Unblock"
+msgstr "Bỏ chặn"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:186
+msgctxt "action"
+msgid "Unblock"
+msgstr "Bỏ chặn"
+
+#: src/view/com/profile/ProfileMenu.tsx:299
+#: src/view/com/profile/ProfileMenu.tsx:305
+msgid "Unblock Account"
+msgstr "Bỏ chặn tài khoản"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:281
+#: src/view/com/profile/ProfileMenu.tsx:343
+msgid "Unblock Account?"
+msgstr ""
+
+#: src/view/com/modals/Repost.tsx:43
+#: src/view/com/modals/Repost.tsx:56
+#: src/view/com/util/post-ctrls/RepostButton.tsx:60
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Undo repost"
+msgstr "Hoàn tác đăng lại"
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:246
+msgid "Unfollow"
+msgstr ""
+
+#: src/view/com/profile/FollowButton.tsx:60
+msgctxt "action"
+msgid "Unfollow"
+msgstr "Bỏ theo dõi"
+
+#: src/screens/Profile/Header/ProfileHeaderStandard.tsx:220
+msgid "Unfollow {0}"
+msgstr "Bỏ theo dõi {0}"
+
+#: src/view/com/profile/ProfileMenu.tsx:241
+#: src/view/com/profile/ProfileMenu.tsx:251
+msgid "Unfollow Account"
+msgstr ""
+
+#: src/view/com/auth/create/state.ts:216
+#~ msgid "Unfortunately, you do not meet the requirements to create an account."
+#~ msgstr "Thật không may, bạn không đáp ứng được yêu cầu để tạo tài khoản."
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:195
+msgid "Unlike"
+msgstr "Bỏ thích"
+
+#: src/view/screens/ProfileFeed.tsx:573
+msgid "Unlike this feed"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:249
+#: src/view/screens/ProfileList.tsx:579
+msgid "Unmute"
+msgstr "Mở tiếng"
+
+#: src/components/TagMenu/index.web.tsx:104
+msgid "Unmute {truncatedTag}"
+msgstr ""
+
+#: src/view/com/profile/ProfileMenu.tsx:278
+#: src/view/com/profile/ProfileMenu.tsx:284
+msgid "Unmute Account"
+msgstr "Bỏ tắt tiếng tài khoản"
+
+#: src/components/TagMenu/index.tsx:208
+msgid "Unmute all {displayTag} posts"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:251
+#: src/view/com/util/forms/PostDropdownBtn.tsx:256
+msgid "Unmute thread"
+msgstr "Bỏ tắt tiếng chủ đề"
+
+#: src/view/screens/ProfileFeed.tsx:295
+#: src/view/screens/ProfileList.tsx:563
+msgid "Unpin"
+msgstr "Bỏ ghim"
+
+#: src/view/screens/ProfileFeed.tsx:292
+msgid "Unpin from home"
+msgstr ""
+
+#: src/view/screens/ProfileList.tsx:444
+msgid "Unpin moderation list"
+msgstr "Bỏ ghim danh sách kiểm duyệt"
+
+#: src/view/screens/ProfileFeed.tsx:354
+#~ msgid "Unsave"
+#~ msgstr "Bỏ lưu"
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:219
+msgid "Unsubscribe"
+msgstr ""
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
+msgid "Unsubscribe from this labeler"
+msgstr ""
+
+#: src/lib/moderation/useReportOptions.ts:70
+msgid "Unwanted Sexual Content"
+msgstr ""
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:70
+msgid "Update {displayName} in Lists"
+msgstr "Cập nhật {displayName} trong Danh sách"
+
+#: src/lib/hooks/useOTAUpdate.ts:15
+#~ msgid "Update Available"
+#~ msgstr "Cập nhật khả dụng"
+
+#: src/view/com/modals/ChangeHandle.tsx:508
+msgid "Update to {handle}"
+msgstr ""
+
+#: src/screens/Login/SetNewPasswordForm.tsx:186
+msgid "Updating..."
+msgstr "Đang cập nhật..."
+
+#: src/view/com/modals/ChangeHandle.tsx:454
+msgid "Upload a text file to:"
+msgstr "Tải tệp văn bản lên:"
+
+#: src/view/com/util/UserAvatar.tsx:326
+#: src/view/com/util/UserAvatar.tsx:329
+#: src/view/com/util/UserBanner.tsx:116
+#: src/view/com/util/UserBanner.tsx:119
+msgid "Upload from Camera"
+msgstr ""
+
+#: src/view/com/util/UserAvatar.tsx:343
+#: src/view/com/util/UserBanner.tsx:133
+msgid "Upload from Files"
+msgstr ""
+
+#: src/view/com/util/UserAvatar.tsx:337
+#: src/view/com/util/UserAvatar.tsx:341
+#: src/view/com/util/UserBanner.tsx:127
+#: src/view/com/util/UserBanner.tsx:131
+msgid "Upload from Library"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:408
+msgid "Use a file on your server"
+msgstr ""
+
+#: src/view/screens/AppPasswords.tsx:197
+msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
+msgstr "Sử dụng mật khẩu ứng dụng để đăng nhập vào các ứng dụng Bluesky khác mà không cần cung cấp quyền truy cập đầy đủ vào tài khoản hoặc mật khẩu của bạn."
+
+#: src/view/com/modals/ChangeHandle.tsx:517
+msgid "Use bsky.social as hosting provider"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:516
+msgid "Use default provider"
+msgstr "Sự dụng nhà cung cấp mặc định"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:56
+#: src/view/com/modals/InAppBrowserConsent.tsx:58
+msgid "Use in-app browser"
+msgstr "Sử dụng trình duyệt trong ứng dụng"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:66
+#: src/view/com/modals/InAppBrowserConsent.tsx:68
+msgid "Use my default browser"
+msgstr "Sử dụng trình duyệt mặc định"
+
+#: src/view/com/modals/ChangeHandle.tsx:400
+msgid "Use the DNS panel"
+msgstr ""
+
+#: src/view/com/modals/AddAppPasswords.tsx:156
+msgid "Use this to sign into the other app along with your handle."
+msgstr "Sử dụng để đăng nhập vào ứng dụng khác cùng với tên người dùng của bạn."
+
+#: src/view/com/modals/ServerInput.tsx:105
+#~ msgid "Use your domain as your Bluesky client service provider"
+#~ msgstr "Sử dụng tên miền của bạn làm nhà cung cấp dịch vụ cho Bluesky"
+
+#: src/view/com/modals/InviteCodes.tsx:201
+msgid "Used by:"
+msgstr "Được sử dụng bởi:"
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:64
+#: src/lib/moderation/useModerationCauseDescription.ts:56
+msgid "User Blocked"
+msgstr "Người dùng bị chặn"
+
+#: src/lib/moderation/useModerationCauseDescription.ts:48
+msgid "User Blocked by \"{0}\""
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:53
+msgid "User Blocked by List"
+msgstr "Người dùng bị chặn bởi danh sách"
+
+#: src/lib/moderation/useModerationCauseDescription.ts:66
+msgid "User Blocking You"
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:70
+msgid "User Blocks You"
+msgstr "Người dùng chặn bạn"
+
+#: src/view/com/auth/create/Step3.tsx:38
+#~ msgid "User handle"
+#~ msgstr "Tên người dùng"
+
+#: src/view/com/lists/ListCard.tsx:85
+#: src/view/com/modals/UserAddRemoveLists.tsx:198
+msgid "User list by {0}"
+msgstr "Danh sách người dùng tạo ra bởi {0}"
+
+#: src/view/screens/ProfileList.tsx:777
+msgid "User list by <0/>"
+msgstr "Danh sách người dùng tạo ra bởi <0/>"
+
+#: src/view/com/lists/ListCard.tsx:83
+#: src/view/com/modals/UserAddRemoveLists.tsx:196
+#: src/view/screens/ProfileList.tsx:775
+msgid "User list by you"
+msgstr "danh sách người dùng do bạn tạo ra"
+
+#: src/view/com/modals/CreateOrEditList.tsx:197
+msgid "User list created"
+msgstr "Đã tạo danh sách người dùng"
+
+#: src/view/com/modals/CreateOrEditList.tsx:183
+msgid "User list updated"
+msgstr "Đã cập nhật danh sách người dùng"
+
+#: src/view/screens/Lists.tsx:58
+msgid "User Lists"
+msgstr "Danh sách người dùng"
+
+#: src/screens/Login/LoginForm.tsx:151
+msgid "Username or email address"
+msgstr "Tên đăng nhập hoặc địa chỉ email"
+
+#: src/view/screens/ProfileList.tsx:811
+#: src/view/screens/Search/Search.tsx:416
+#: src/view/screens/Search/Search.tsx:425
+msgid "Users"
+msgstr "Người dùng"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:143
+msgid "users followed by <0/>"
+msgstr "người dùng được theo dõi bởi <0/>"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:115
+#~ msgid "Users followed by <0/>"
+#~ msgstr "Người dùng được theo dõi bởi <0/>"
+
+#: src/view/com/modals/Threadgate.tsx:106
+msgid "Users in \"{0}\""
+msgstr "Người dùng trong \"{0}\""
+
+#: src/components/LikesDialog.tsx:85
+msgid "Users that have liked this content or profile"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:436
+msgid "Value:"
+msgstr ""
+
+#: src/view/com/modals/ChangeHandle.tsx:509
+msgid "Verify {0}"
+msgstr ""
+
+#: src/view/screens/Settings/index.tsx:942
+msgid "Verify email"
+msgstr "Xác minh email"
+
+#: src/view/screens/Settings/index.tsx:967
+msgid "Verify my email"
+msgstr "Xác minh email của tôi"
+
+#: src/view/screens/Settings/index.tsx:976
+msgid "Verify My Email"
+msgstr "Xác minh email của tôi"
+
+#: src/view/com/modals/ChangeEmail.tsx:205
+#: src/view/com/modals/ChangeEmail.tsx:207
+msgid "Verify New Email"
+msgstr "Xác minh email mới"
+
+#: src/view/com/modals/VerifyEmail.tsx:103
+msgid "Verify Your Email"
+msgstr "Xác minh email của bạn"
+
+#: src/view/screens/Settings/index.tsx:893
+msgid "Version {0}"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:42
+msgid "Video Games"
+msgstr ""
+
+#: src/screens/Profile/Header/Shell.tsx:107
+msgid "View {0}'s avatar"
+msgstr "Xem ảnh đại diện của {0}"
+
+#: src/view/screens/Log.tsx:52
+msgid "View debug entry"
+msgstr "Xem gỡ lỗi"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:132
+msgid "View details"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:127
+msgid "View details for reporting a copyright violation"
+msgstr ""
+
+#: src/view/com/posts/FeedSlice.tsx:99
+msgid "View full thread"
+msgstr "Xem chủ đề đầy đủ"
+
+#: src/components/moderation/LabelsOnMe.tsx:51
+msgid "View information about these labels"
+msgstr ""
+
+#: src/view/com/posts/FeedErrorMessage.tsx:166
+msgid "View profile"
+msgstr "Xem hồ sơ"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:128
+msgid "View the avatar"
+msgstr "Xem ảnh đại diện"
+
+#: src/components/LabelingServiceCard/index.tsx:140
+msgid "View the labeling service provided by @{0}"
+msgstr ""
+
+#: src/view/screens/ProfileFeed.tsx:585
+msgid "View users who like this feed"
+msgstr ""
+
+#: src/view/com/modals/LinkWarning.tsx:89
+#: src/view/com/modals/LinkWarning.tsx:95
+msgid "Visit Site"
+msgstr "Truy cập trang"
+
+#: src/components/moderation/LabelPreference.tsx:135
+#: src/lib/moderation/useLabelBehaviorDescription.ts:17
+#: src/lib/moderation/useLabelBehaviorDescription.ts:22
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:53
+msgid "Warn"
+msgstr "Cảnh báo"
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:48
+msgid "Warn content"
+msgstr ""
+
+#: src/lib/moderation/useLabelBehaviorDescription.ts:46
+msgid "Warn content and filter from feeds"
+msgstr ""
+
+#: src/screens/Hashtag.tsx:133
+msgid "We couldn't find any results for that hashtag."
+msgstr ""
+
+#: src/screens/Deactivated.tsx:133
+msgid "We estimate {estimatedTime} until your account is ready."
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:97
+msgid "We hope you have a wonderful time. Remember, Bluesky is:"
+msgstr ""
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from <0/>."
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:203
+msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:125
+msgid "We recommend our \"Discover\" feed:"
+msgstr ""
+
+#: src/components/dialogs/BirthDateSettings.tsx:52
+msgid "We were unable to load your birth date preferences. Please try again."
+msgstr ""
+
+#: src/screens/Moderation/index.tsx:385
+msgid "We were unable to load your configured labelers at this time."
+msgstr ""
+
+#: src/screens/Onboarding/StepInterests/index.tsx:137
+msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
+msgstr ""
+
+#: src/screens/Deactivated.tsx:137
+msgid "We will let you know when your account is ready."
+msgstr ""
+
+#: src/view/com/modals/AppealLabel.tsx:48
+#~ msgid "We'll look into your appeal promptly."
+#~ msgstr "Chúng tôi sẽ xem xét đơn kháng nghị của bạn ngay lập tức."
+
+#: src/screens/Onboarding/StepInterests/index.tsx:142
+msgid "We'll use this to help customize your experience."
+msgstr ""
+
+#: src/screens/Signup/index.tsx:130
+msgid "We're so excited to have you join us!"
+msgstr "Chúng tôi rất vui mừng khi có bạn tham gia cùng chúng tôi!"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:99
+#~ msgid "We're sorry, but this content is not viewable without a Bluesky account."
+#~ msgstr "Chúng tôi xin lỗi, nhưng nội dung này không thể xem nếu không có tài khoản Bluesky."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:105
+#~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
+#~ msgstr "Chúng tôi xin lỗi, nhưng bảng tin này hiện tại đang có lượng truy cập lớn và tạm thời không khả dụng. Vui lòng thử lại sau."
+
+#: src/view/screens/ProfileList.tsx:89
+msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
+msgstr "Chúng tôi xin lỗi, nhưng chúng tôi không thể giải quyết danh sách này. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với người tạo danh sách, @{handleOrDid}."
+
+#: src/components/dialogs/MutedWords.tsx:229
+msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:265
+msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
+msgstr "Chúng tôi xin lỗi, nhưng không thể hoàn tất tìm kiếm của bạn. Vui long thử lại sau vài phút."
+
+#: src/components/Lists.tsx:188
+#: src/view/screens/NotFound.tsx:48
+msgid "We're sorry! We can't find the page you were looking for."
+msgstr "Chúng tôi xin lỗi! Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm."
+
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:321
+msgid "We're sorry! You can only subscribe to ten labelers, and you've reached your limit of ten."
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:48
+msgid "Welcome to <0>Bluesky</0>"
+msgstr "Chào mừng đến với <0>Bluesky</0>"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:134
+msgid "What are your interests?"
+msgstr ""
+
+#: src/view/com/modals/report/Modal.tsx:169
+#~ msgid "What is the issue with this {collectionName}?"
+#~ msgstr "Có vấn đề gì với {collectionName} này?"
+
+#: src/view/com/auth/SplashScreen.tsx:58
+#: src/view/com/auth/SplashScreen.web.tsx:84
+#: src/view/com/composer/Composer.tsx:296
+msgid "What's up?"
+msgstr "Có gì mới không?"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
+msgid "Which languages are used in this post?"
+msgstr "Những ngôn ngữ được sử dụng trong bài viết này?"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
+msgid "Which languages would you like to see in your algorithmic feeds?"
+msgstr "Bạn muốn thấy ngôn ngữ nào trong các bảng tin thuật toán của mình?"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
+#: src/view/com/modals/Threadgate.tsx:66
+msgid "Who can reply"
+msgstr "Ai có thể phản hồi"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:79
+#~ msgid "Who can reply?"
+#~ msgstr "Ai có thể phản hồi?"
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:43
+msgid "Why should this content be reviewed?"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:56
+msgid "Why should this feed be reviewed?"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:53
+msgid "Why should this list be reviewed?"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:50
+msgid "Why should this post be reviewed?"
+msgstr ""
+
+#: src/components/ReportDialog/SelectReportOptionView.tsx:47
+msgid "Why should this user be reviewed?"
+msgstr ""
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:103
+msgid "Wide"
+msgstr "Rộng"
+
+#: src/view/com/composer/Composer.tsx:436
+msgid "Write post"
+msgstr "Viết bài"
+
+#: src/view/com/composer/Composer.tsx:295
+#: src/view/com/composer/Prompt.tsx:37
+msgid "Write your reply"
+msgstr "Viết phản hồi"
+
+#: src/screens/Onboarding/index.tsx:28
+msgid "Writers"
+msgstr ""
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/screens/PreferencesFollowingFeed.tsx:129
+#: src/view/screens/PreferencesFollowingFeed.tsx:201
+#: src/view/screens/PreferencesFollowingFeed.tsx:236
+#: src/view/screens/PreferencesFollowingFeed.tsx:271
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
+msgid "Yes"
+msgstr "Có"
+
+#: src/screens/Deactivated.tsx:130
+msgid "You are in line."
+msgstr ""
+
+#: src/view/com/profile/ProfileFollows.tsx:86
+msgid "You are not following anyone."
+msgstr ""
+
+#: src/view/com/posts/FollowingEmptyState.tsx:67
+#: src/view/com/posts/FollowingEndOfFeed.tsx:68
+msgid "You can also discover new Custom Feeds to follow."
+msgstr "Bạn cũng có thể khám phá bảng tin cá nhân mới để theo dõi."
+
+#: src/view/com/auth/create/Step1.tsx:106
+#~ msgid "You can change hosting providers at any time."
+#~ msgstr "Bạn có thể thay đổi nhà cung cấp hosting bất kỳ lúc nào."
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:143
+msgid "You can change these settings later."
+msgstr ""
+
+#: src/screens/Login/index.tsx:158
+#: src/screens/Login/PasswordUpdatedForm.tsx:33
+msgid "You can now sign in with your new password."
+msgstr "Bạn có thể đăng nhập bằng mật khẩu mới bây giờ."
+
+#: src/view/com/profile/ProfileFollowers.tsx:86
+msgid "You do not have any followers."
+msgstr ""
+
+#: src/view/com/modals/InviteCodes.tsx:67
+msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
+msgstr "Bạn không có bất kỳ mã mới nào! Chúng tôi sẽ gửi bạn cho bạn một ít nếu bạn ở trên Bluesky lâu hơn chút nữa."
+
+#: src/view/screens/SavedFeeds.tsx:102
+msgid "You don't have any pinned feeds."
+msgstr "Bạn không có bất kỳ bảng tin đã ghim nào."
+
+#: src/view/screens/Feeds.tsx:452
+msgid "You don't have any saved feeds!"
+msgstr "Bạn không có bất kỳ bảng tin đã lưu nào!"
+
+#: src/view/screens/SavedFeeds.tsx:135
+msgid "You don't have any saved feeds."
+msgstr "Bạn không có bất kỳ bảng tin đã lưu nào."
+
+#: src/view/com/post-thread/PostThread.tsx:159
+msgid "You have blocked the author or you have been blocked by the author."
+msgstr "Bạn đã chặn tác giả hoặc bạn đã bị chặn bởi tác giả."
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:66
+#: src/lib/moderation/useModerationCauseDescription.ts:50
+#: src/lib/moderation/useModerationCauseDescription.ts:58
+msgid "You have blocked this user. You cannot view their content."
+msgstr "Bạn đã chặn người dùng này. Bạn không thể xem nội dung của họ."
+
+#: src/screens/Login/SetNewPasswordForm.tsx:54
+#: src/screens/Login/SetNewPasswordForm.tsx:91
+#: src/view/com/modals/ChangePassword.tsx:87
+#: src/view/com/modals/ChangePassword.tsx:121
+msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
+msgstr ""
+
+#: src/lib/moderation/useModerationCauseDescription.ts:109
+msgid "You have hidden this post"
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:101
+msgid "You have hidden this post."
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:94
+#: src/lib/moderation/useModerationCauseDescription.ts:92
+msgid "You have muted this account."
+msgstr ""
+
+#: src/lib/moderation/useModerationCauseDescription.ts:86
+msgid "You have muted this user"
+msgstr ""
+
+#: src/view/com/modals/ModerationDetails.tsx:87
+#~ msgid "You have muted this user."
+#~ msgstr "Bạn đã tắt tiếng người dùng này."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:136
+msgid "You have no feeds."
+msgstr "Bạn không có bảng tin nào."
+
+#: src/view/com/lists/MyLists.tsx:89
+#: src/view/com/lists/ProfileLists.tsx:140
+msgid "You have no lists."
+msgstr "Bạn không có danh sách nào."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
+msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
+msgstr ""
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
+#~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
+#~ msgstr "Bạn không có bất kỳ tài khoản bị chặn nào. Để chặn tài khoản, đi đến hồ sơ của họ và chọn \"Chặn tài khoản\"."
+
+#: src/view/screens/AppPasswords.tsx:89
+msgid "You have not created any app passwords yet. You can create one by pressing the button below."
+msgstr "Bạn chưa tạo bất kỳ mật khẩu ứng dụng nào. Bấm nút phía dưới để tạo."
+
+#: src/view/screens/ModerationMutedAccounts.tsx:131
+msgid "You have not muted any accounts yet. To mute an account, go to their profile and select \"Mute account\" from the menu on their account."
+msgstr ""
+
+#: src/view/screens/ModerationMutedAccounts.tsx:131
+#~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
+#~ msgstr "Bạn không có bất kỳ tài khoản bị tắt tiếng nào. Để tắt tiếng tài khoản, đi đến hồ sơ của họ và chọn \"Tắt tiếng tài khoản\"."
+
+#: src/components/dialogs/MutedWords.tsx:249
+msgid "You haven't muted any words or tags yet"
+msgstr ""
+
+#: src/components/moderation/LabelsOnMeDialog.tsx:68
+msgid "You may appeal these labels if you feel they were placed in error."
+msgstr ""
+
+#: src/screens/Signup/StepInfo/Policies.tsx:79
+msgid "You must be 13 years of age or older to sign up."
+msgstr ""
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:170
+#~ msgid "You must be 18 or older to enable adult content."
+#~ msgstr "Bạn phải trên 18 tuổi để kích hoạt nội dung 18+."
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:110
+msgid "You must be 18 years or older to enable adult content"
+msgstr ""
+
+#: src/components/ReportDialog/SubmitView.tsx:203
+msgid "You must select at least one labeler for a report"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:144
+msgid "You will no longer receive notifications for this thread"
+msgstr "Bạn sẽ không nhận được thông báo cho chủ đề này nữa"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:147
+msgid "You will now receive notifications for this thread"
+msgstr "Bạn sẽ nhận được thông báo của chủ đề này"
+
+#: src/screens/Login/SetNewPasswordForm.tsx:104
+msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
+msgstr "Bạn sẽ nhận được một email với \"Mã khôi phục\". Nhập mã đó tại đây, sau đó nhập mật khẩu mới của bạn."
+
+#: src/screens/Onboarding/StepModeration/index.tsx:60
+msgid "You're in control"
+msgstr ""
+
+#: src/screens/Deactivated.tsx:87
+#: src/screens/Deactivated.tsx:88
+#: src/screens/Deactivated.tsx:103
+msgid "You're in line"
+msgstr ""
+
+#: src/screens/Onboarding/StepFinished.tsx:94
+msgid "You're ready to go!"
+msgstr ""
+
+#: src/components/moderation/ModerationDetailsDialog.tsx:98
+#: src/lib/moderation/useModerationCauseDescription.ts:101
+msgid "You've chosen to hide a word or tag within this post."
+msgstr ""
+
+#: src/view/com/posts/FollowingEndOfFeed.tsx:48
+msgid "You've reached the end of your feed! Find some more accounts to follow."
+msgstr "Bạn đã đến cuối bảng tin! Theo dõi thêm nhiều tài khoản hơn."
+
+#: src/screens/Signup/index.tsx:150
+msgid "Your account"
+msgstr "Tài khoản của bạn"
+
+#: src/view/com/modals/DeleteAccount.tsx:68
+msgid "Your account has been deleted"
+msgstr "Tài khoản của bạn đã bị xóa"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:47
+msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
+msgstr ""
+
+#: src/screens/Signup/StepInfo/index.tsx:121
+msgid "Your birth date"
+msgstr "Ngày sinh của bạn"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:47
+msgid "Your choice will be saved, but can be changed later in settings."
+msgstr "Lựa chọn của bạn sẽ được lưu lại, nhưng có thể được thay đổi trong cài đặt."
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:62
+msgid "Your default feed is \"Following\""
+msgstr ""
+
+#: src/screens/Login/ForgotPasswordForm.tsx:57
+#: src/screens/Signup/state.ts:227
+#: src/view/com/modals/ChangePassword.tsx:54
+msgid "Your email appears to be invalid."
+msgstr "Email của bạn không hợp lệ."
+
+#: src/view/com/modals/Waitlist.tsx:109
+#~ msgid "Your email has been saved! We'll be in touch soon."
+#~ msgstr "Email của bạn đã được lưu! Chúng tôi sẽ sớm liên lạc lại."
+
+#: src/view/com/modals/ChangeEmail.tsx:125
+msgid "Your email has been updated but not verified. As a next step, please verify your new email."
+msgstr "Email của bạn đã được cập nhật nhưng chưa được xác minh. Bước tiếp theo, vui lòng xác minh email mới của bạn."
+
+#: src/view/com/modals/VerifyEmail.tsx:114
+msgid "Your email has not yet been verified. This is an important security step which we recommend."
+msgstr "Email của bạn vẫn chưa được xác minh. Đây là một bước bảo mật quan trọng mà chúng tôi khuyến nghị."
+
+#: src/view/com/posts/FollowingEmptyState.tsx:47
+msgid "Your following feed is empty! Follow more users to see what's happening."
+msgstr "Bảng tin bạn đang theo dõi trống! Theo dõi thêm nhiều người dùng để xem chuyện gì đang xảy ra."
+
+#: src/screens/Signup/StepHandle.tsx:72
+msgid "Your full handle will be"
+msgstr "Tên người dùng đầy đủ của bạn sẽ là"
+
+#: src/view/com/modals/ChangeHandle.tsx:271
+msgid "Your full handle will be <0>@{0}</0>"
+msgstr "Tên người dùng đầy đủ của bạn sẽ là <0>@{0}</0>"
+
+#: src/view/com/auth/create/Step1.tsx:53
+#~ msgid "Your hosting provider"
+#~ msgstr "Nhà cung cấp hosting của bạn"
+
+#: src/view/screens/Settings.tsx:430
+#: src/view/shell/desktop/RightNav.tsx:137
+#: src/view/shell/Drawer.tsx:657
+#~ msgid "Your invite codes are hidden when logged in using an App Password"
+#~ msgstr "Mã mời sẽ bị ẩn khi bạn đăng nhập bằng mật khẩu ứng dụng"
+
+#: src/components/dialogs/MutedWords.tsx:220
+msgid "Your muted words"
+msgstr ""
+
+#: src/view/com/modals/ChangePassword.tsx:157
+msgid "Your password has been changed successfully!"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:284
+msgid "Your post has been published"
+msgstr "Bài viết của bạn đã được xuất bản"
+
+#: src/screens/Onboarding/StepFinished.tsx:109
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:61
+msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr "Bài viết, lượt thích và danh sách chặn của bạn là công khai. Tắt tiếng là riêng tư"
+
+#: src/view/screens/Settings/index.tsx:125
+msgid "Your profile"
+msgstr "Hồ sơ của bạn"
+
+#: src/view/screens/Moderation.tsx:205
+#~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
+#~ msgstr "Hồ sơ và tài khoản của bạn sẽ không hiển thị với người dùng chưa có tài khoản Bluesky hoặc chưa đăng nhập. Kích hoạt tính năng này sẽ không làm cho hồ sơ của bạn riêng tư."
+
+#: src/view/screens/Moderation.tsx:220
+#~ msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
+#~ msgstr "Hồ sơ và nội dung của bạn sẽ không hiển thị với người dùng chưa có tài khoản Bluesky hoặc chưa đăng nhập. Kích hoạt tính năng này sẽ không làm cho hồ sơ của bạn riêng tư."
+
+#: src/view/screens/Moderation.tsx:220
+#~ msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
+#~ msgstr "Hồ sơ và bài viết của bạn sẽ không hiển thị với người dùng chưa có tài khoản Bluesky hoặc chưa đăng nhập."
+
+#: src/view/com/composer/Composer.tsx:283
+msgid "Your reply has been published"
+msgstr "Phản hồi của bạn đã được xuất bản"
+
+#: src/screens/Signup/index.tsx:152
+msgid "Your user handle"
+msgstr "Tên người dùng của bạn"

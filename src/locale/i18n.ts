@@ -21,6 +21,8 @@ import {messages as messagesUk} from '#/locale/locales/uk/messages'
 import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
 import {messages as messagesZh_TW} from '#/locale/locales/zh-TW/messages'
 import {useLanguagePrefs} from '#/state/preferences'
+import {messages as messagesVi} from '#/locale/locales/vi/messages'
+
 
 /**
  * We do a dynamic import of just the catalog that we need
@@ -89,6 +91,10 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.zh_TW: {
       i18n.loadAndActivate({locale, messages: messagesZh_TW})
+      break
+    }
+    case AppLanguage.vi: {
+      i18n.loadAndActivate({locale, messages: messagesVi})
       break
     }
     default: {
