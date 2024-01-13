@@ -1,5 +1,5 @@
 import React from 'react'
-import {Linking, SafeAreaView, StyleSheet, View} from 'react-native'
+import {SafeAreaView, StyleSheet, View} from 'react-native'
 import {ScrollView} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
@@ -12,6 +12,7 @@ import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 
 export const snapPoints = ['50%']
 
@@ -21,10 +22,11 @@ export function Component({text, href}: {text: string; href: string}) {
   const {isMobile} = useWebMediaQueries()
   const {_} = useLingui()
   const potentiallyMisleading = isPossiblyAUrl(text)
+  const openLink = useOpenLink()
 
   const onPressVisit = () => {
     closeModal()
-    Linking.openURL(href)
+    openLink(href)
   }
 
   return (

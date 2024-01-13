@@ -70,6 +70,11 @@ import {useLingui} from '@lingui/react'
 import {useQueryClient} from '@tanstack/react-query'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {
+  useInAppBrowser,
+  useSetInAppBrowser,
+} from '#/state/preferences/in-app-browser'
+import {isNative} from '#/platform/detection'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -146,6 +151,8 @@ export function SettingsScreen({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
+  const inAppBrowserPref = useInAppBrowser()
+  const setUseInAppBrowser = useSetInAppBrowser()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -313,8 +320,14 @@ export function SettingsScreen({}: Props) {
                   />
                 </>
               )}
-              <Text type="lg" style={pal.text}>
-                {currentAccount.email || '(no email)'}{' '}
+              <Text
+                type="lg"
+                numberOfLines={1}
+                style={[
+                  pal.text,
+                  {overflow: 'hidden', marginRight: 4, flex: 1},
+                ]}>
+                {currentAccount.email || '(no email)'}
               </Text>
               <Link onPress={() => openModal({name: 'change-email'})}>
                 <Text type="lg" style={pal.link}>
@@ -658,6 +671,17 @@ export function SettingsScreen({}: Props) {
             <Trans>Change handle</Trans>
           </Text>
         </TouchableOpacity>
+        {isNative && (
+          <View style={[pal.view, styles.toggleCard]}>
+            <ToggleButton
+              type="default-light"
+              label={_(msg`Open links with in-app browser`)}
+              labelType="lg"
+              isSelected={inAppBrowserPref ?? false}
+              onPress={() => setUseInAppBrowser(!inAppBrowserPref)}
+            />
+          </View>
+        )}
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Danger Zone</Trans>
