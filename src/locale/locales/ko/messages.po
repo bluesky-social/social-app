@@ -1036,7 +1036,7 @@ msgstr "도메인을 확인했습니다."
 
 #: src/view/com/auth/create/Step2.tsx:83
 msgid "Don't have an invite code?"
-msgstr "초대 코드가 없으십니까?"
+msgstr "초대 코드가 없나요?"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
 #: src/view/com/modals/EditImage.tsx:333
@@ -3986,7 +3986,7 @@ msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
 
 #: src/view/com/modals/report/Modal.tsx:172
 msgid "What is the issue with this {collectionName}?"
-msgstr "이 {collectionName}에 어떤 문제가 있습니까?"
+msgstr "이 {collectionName}에 어떤 문제가 있나요?"
 
 #: src/view/com/auth/SplashScreen.tsx:34
 #: src/view/com/composer/Composer.tsx:279
@@ -3995,7 +3995,7 @@ msgstr "무슨 일이 일어나고 있나요?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr "이 게시물에는 어떤 언어가 사용됩니까?"
+msgstr "이 게시물에 어떤 언어가 사용되나요?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
