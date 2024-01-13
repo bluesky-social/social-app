@@ -30,6 +30,8 @@ export function Text({
 
   // {"color":"#000000","fontSize":20,"letterSpacing":0.2,"fontWeight":"400","flex":1,"lineHeight":26}
 
+  // if (false) {
+  // TODO remove
   if (selectable && isIOS) {
     return (
       <SelectableText

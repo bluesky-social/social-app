@@ -14,23 +14,13 @@ export interface ExpoProTextViewProps extends ExpoProTextViewCommonProps {
 
 export interface ExpoProTextNativeViewProps extends ExpoProTextViewCommonProps {
   segments: string
-  textStyle?: ExpoProTextStyle
+  textStyle?: TextStyle
   onTextPress?: (event: ExpoProTextPressEvent) => void
   onTextLongPress?: (event: ExpoProTextPressEvent) => void
   onTextLayout?: (event: ExpoProTextLayoutEvent) => void
   disableLongPress: boolean
   style: ViewStyle
   rootStyle?: string
-}
-
-interface ExpoProTextStyle {
-  color: ColorValue
-  fontSize?: number
-  fontStyle?: 'normal' | 'italic'
-  fontWeight?: 'normal' | 'bold'
-  letterSpacing?: number
-  textAlign?: 'auto' | 'left' | 'right' | 'center' | 'justify'
-  lineHeight?: number
 }
 
 export interface ExpoProTextLayoutEvent {
@@ -48,7 +38,7 @@ export interface ExpoProTextPressEvent {
 export interface ExpoProTextSegment {
   index: number
   text: string
-  style?: ExpoProTextStyle
+  style?: TextStyle
   handlePress?: boolean
   handleLongPress?: boolean
 }
