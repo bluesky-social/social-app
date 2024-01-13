@@ -37,20 +37,16 @@ export function ago(date: number | string | Date): string {
 
 export function niceDate(date: number | string | Date) {
   const d = new Date(date)
-  return t`${d.toLocaleDateString(
-    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
-    {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    },
-  )} at ${d.toLocaleTimeString(
-    sanitizeAppLanguageSetting(persisted.get('languagePrefs').appLanguage),
-    {
-      hour: 'numeric',
-      minute: '2-digit',
-    },
-  )}`
+  const appLanguage = persisted.get('languagePrefs').appLanguage
+  const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
+  return t`${d.toLocaleDateString(sanitizedLanguage, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })} at ${d.toLocaleTimeString(sanitizedLanguage, {
+    hour: 'numeric',
+    minute: '2-digit',
+  })}`
 }
 
 export function getAge(birthDate: Date): number {
