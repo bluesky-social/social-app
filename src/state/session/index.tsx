@@ -223,7 +223,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
 
-      await agent.upsertProfile(_existing => {
+      /*dont await*/ agent.upsertProfile(_existing => {
         return {
           displayName: handle,
         }
