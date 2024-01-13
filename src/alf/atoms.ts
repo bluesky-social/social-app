@@ -48,6 +48,12 @@ export const atoms = {
   /*
    * Border radius
    */
+  rounded_2xs: {
+    borderRadius: tokens.borderRadius._2xs,
+  },
+  rounded_xs: {
+    borderRadius: tokens.borderRadius.xs,
+  },
   rounded_sm: {
     borderRadius: tokens.borderRadius.sm,
   },

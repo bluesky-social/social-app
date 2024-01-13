@@ -16,7 +16,7 @@ export const color = {
 
   blue_25: `#F5FAFF`,
   blue_50: `#EFF8FF`,
-  blue_100: `#EFF8FF`,
+  blue_100: `#D1E9FF`,
   blue_200: `#B2DDFF`,
   blue_300: `#84CAFF`,
   blue_400: `#53B1FD`,
@@ -84,6 +84,8 @@ export const lineHeight = {
 } as const
 
 export const borderRadius = {
+  _2xs: 2,
+  xs: 4,
   sm: 8,
   md: 12,
   full: 999,
