@@ -17,6 +17,7 @@ export function RichText({
   lineHeight = 1.2,
   style,
   numberOfLines,
+  lang,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -24,6 +25,7 @@ export function RichText({
   lineHeight?: number
   style?: StyleProp<TextStyle>
   numberOfLines?: number
+  lang?: string
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -42,7 +44,11 @@ export function RichText({
       }
       return (
         // @ts-ignore web only -prf
-        <Text testID={testID} style={[style, pal.text]} dataSet={WORD_WRAP}>
+        <Text
+          testID={testID}
+          style={[style, pal.text]}
+          dataSet={WORD_WRAP}
+          lang={lang}>
           {text}
         </Text>
       )
@@ -54,7 +60,8 @@ export function RichText({
         style={[style, pal.text, lineHeightStyle]}
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
-        dataSet={WORD_WRAP}>
+        dataSet={WORD_WRAP}
+        lang={lang}>
         {text}
       </Text>
     )
@@ -105,7 +112,8 @@ export function RichText({
       style={[style, pal.text, lineHeightStyle]}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
-      dataSet={WORD_WRAP}>
+      dataSet={WORD_WRAP}
+      lang={lang}>
       {els}
     </Text>
   )

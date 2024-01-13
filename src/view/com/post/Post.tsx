@@ -29,6 +29,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {getPostLanguage} from '../../../locale/helpers'
 
 export function Post({
   post,
@@ -188,6 +189,7 @@ function PostInner({
                   lineHeight={1.3}
                   numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={s.flex1}
+                  lang={getPostLanguage(post)}
                 />
               </View>
             ) : undefined}

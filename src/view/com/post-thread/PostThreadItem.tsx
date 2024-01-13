@@ -19,7 +19,11 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines, pluralize} from 'lib/strings/helpers'
 import {isEmbedByEmbedder} from 'lib/embeds'
-import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
+import {
+  getTranslatorLink,
+  isPostInLanguage,
+  getPostLanguage,
+} from '../../../locale/helpers'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
@@ -370,6 +374,7 @@ let PostThreadItemLoaded = ({
                     richText={richText}
                     lineHeight={1.3}
                     style={s.flex1}
+                    lang={getPostLanguage(post)}
                   />
                 </View>
               ) : undefined}
@@ -561,6 +566,7 @@ let PostThreadItemLoaded = ({
                       style={[pal.text, s.flex1]}
                       lineHeight={1.3}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                      lang={getPostLanguage(post)}
                     />
                   </View>
                 ) : undefined}

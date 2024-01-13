@@ -37,6 +37,7 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {getPostLanguage} from '../../../locale/helpers'
 
 export function FeedItem({
   post,
@@ -300,6 +301,7 @@ let FeedItemInner = ({
             richText={richText}
             postEmbed={post.embed}
             postAuthor={post.author}
+            lang={getPostLanguage(post)}
           />
           <PostCtrls
             post={post}
@@ -322,11 +324,13 @@ let PostContent = ({
   richText,
   postEmbed,
   postAuthor,
+  lang,
 }: {
   moderation: PostModeration
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
+  lang?: string
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -354,6 +358,7 @@ let PostContent = ({
             lineHeight={1.3}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
             style={s.flex1}
+            lang={lang}
           />
         </View>
       ) : undefined}
