@@ -476,19 +476,19 @@ msgstr "ボタンは無効です。続けるためにはカスタムドメイン
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
-msgstr "—により"
+msgstr "作成者：-"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
 msgid "by {0}"
-msgstr "{0}が作成"
+msgstr "作成者：{0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:161
 msgid "by <0/>"
-msgstr "<0/>により"
+msgstr "作成者：<0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
-msgstr "あなたにより"
+msgstr "作成者：あなた"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
 #: src/view/com/util/UserAvatar.tsx:221
@@ -673,7 +673,7 @@ msgstr "ナビゲーションフッターを閉じる"
 
 #: src/view/shell/index.web.tsx:50
 msgid "Closes bottom navigation bar"
-msgstr "ボタンのナビゲーションバーを閉じる"
+msgstr "下部のナビゲーションバーを閉じる"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:39
 msgid "Closes password update alert"
@@ -871,7 +871,7 @@ msgstr "作成者：あなた"
 
 #: src/view/com/composer/Composer.tsx:448
 msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "サムネイル付きのカードを作成します。そのカードは次のリンクへリンクします：{url}"
+msgstr "サムネイル付きのカードを作成します。そのカードは次のアドレスへリンクします：{url}"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
@@ -900,7 +900,7 @@ msgstr "デバッグ"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
-msgstr "デバックパネル"
+msgstr "デバッグパネル"
 
 #: src/view/screens/Settings.tsx:694
 msgid "Delete account"
