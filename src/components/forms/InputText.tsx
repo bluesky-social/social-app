@@ -42,6 +42,7 @@ export function InputText({
     onOut: onHoverOut,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const hasIcon = !!Icon
 
   const handleSuffixLayout = React.useCallback(
     (e: LayoutChangeEvent) => {
@@ -50,39 +51,85 @@ export function InputText({
     [setSuffixPadding],
   )
 
-  const {inputStyles, iconStyles} = React.useMemo(() => {
-    const input: TextStyle[] = []
-    const icon: TextStyle[] = []
+  const {inputBaseStyles, inputHoverStyles, inputFocusStyles} =
+    React.useMemo(() => {
+      const base: TextStyle[] = []
+      const hover: TextStyle[] = [
+        {
+          borderColor: t.palette.contrast_300,
+        },
+      ]
+      const focus: TextStyle[] = [
+        {
+          backgroundColor: t.palette.contrast_50,
+          borderColor: t.palette.primary_500,
+        },
+      ]
 
-    if (Icon) {
-      input.push({
-        paddingLeft: 40,
-      })
-    }
-
-    if (hasError) {
-      input.push({
-        borderColor: tokens.color.red_200,
-      })
-      icon.push({
-        color: tokens.color.red_400,
-      })
-    }
-
-    if (hovered || focused) {
-      input.push({
-        borderColor: t.atoms.border_contrast.borderColor,
-      })
+      if (hasIcon) {
+        base.push({
+          paddingLeft: 40,
+        })
+      }
 
       if (hasError) {
-        input.push({
+        base.push({
+          backgroundColor:
+            t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+          borderColor:
+            t.name === 'light'
+              ? t.palette.negative_300
+              : t.palette.negative_800,
+        })
+        hover.push({
+          borderColor: tokens.color.red_500,
+        })
+        focus.push({
+          backgroundColor:
+            t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
           borderColor: tokens.color.red_500,
         })
       }
-    }
 
-    return {inputStyles: input, iconStyles: icon}
-  }, [t, hovered, focused, hasError, Icon])
+      return {
+        inputBaseStyles: base,
+        inputHoverStyles: hover,
+        inputFocusStyles: focus,
+      }
+    }, [t, hasError, hasIcon])
+
+  const {iconBaseStyles, iconHoverStyles, iconFocusStyles} =
+    React.useMemo(() => {
+      const base: TextStyle[] = []
+      const hover: TextStyle[] = [
+        {
+          color: t.palette.contrast_500,
+        },
+      ]
+      const focus: TextStyle[] = [
+        {
+          color: t.palette.primary_500,
+        },
+      ]
+
+      if (hasError) {
+        base.push({
+          color: t.palette.negative_400,
+        })
+        hover.push({
+          color: t.palette.negative_500,
+        })
+        focus.push({
+          color: t.palette.negative_500,
+        })
+      }
+
+      return {
+        iconBaseStyles: base,
+        iconHoverStyles: hover,
+        iconFocusStyles: focus,
+      }
+    }, [t, hasError])
 
   const handleOnChange = React.useCallback(
     (e: any) => {
@@ -116,7 +163,7 @@ export function InputText({
         aria-label={label}
         accessibilityLabel={accessibilityLabel}
         accessibilityHint={accessibilityHint}
-        placeholderTextColor={t.atoms.text_contrast_500.color}
+        placeholderTextColor={t.atoms.text_contrast_400.color}
         onFocus={onFocus}
         onBlur={onBlur}
         onChange={handleOnChange}
@@ -125,20 +172,21 @@ export function InputText({
           onMouseLeave: onHoverOut,
         })}
         style={[
-          t.name === 'dark' ? t.atoms.bg_contrast_100 : t.atoms.bg,
+          t.atoms.bg_contrast_50,
           atoms.w_full,
           atoms.px_lg,
           atoms.py_md,
           atoms.rounded_sm,
           atoms.text_md,
-          t.atoms.border,
           t.atoms.text,
           web({
             paddingTop: atoms.pt_md.paddingTop - 1,
           }),
-          {paddingRight: suffixPadding},
+          {borderColor: 'transparent', paddingRight: suffixPadding},
           {borderWidth: 2, lineHeight: atoms.text_md.lineHeight * 1.1875},
-          ...inputStyles,
+          ...inputBaseStyles,
+          ...(hovered ? inputHoverStyles : []),
+          ...(focused ? inputFocusStyles : []),
           ...(Array.isArray(props.style) ? props.style : [props.style]),
         ]}
       />
@@ -155,12 +203,19 @@ export function InputText({
           ]}>
           <Icon
             style={[
-              {color: t.atoms.border_contrast.borderColor},
+              {
+                color:
+                  t.name === 'light'
+                    ? t.palette.contrast_400
+                    : t.palette.contrast_700,
+              },
               {
                 width: 20,
                 pointerEvents: 'none',
               },
-              ...iconStyles,
+              ...iconBaseStyles,
+              ...(hovered ? iconHoverStyles : []),
+              ...(focused ? iconFocusStyles : []),
             ]}
           />
         </View>

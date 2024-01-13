@@ -3,7 +3,7 @@ import {View, PressableProps, LayoutChangeEvent} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useTheme, atoms as a} from '#/alf'
-import {H2, P} from '#/components/Typography'
+import {H4, P} from '#/components/Typography'
 import {Button} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
@@ -70,11 +70,11 @@ export function Title({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {titleId} = React.useContext(Context)
   return (
-    <H2
+    <H4
       nativeID={titleId}
       style={[a.font_bold, t.atoms.text_contrast_600, a.pb_sm]}>
       {children}
-    </H2>
+    </H4>
   )
 }
 
