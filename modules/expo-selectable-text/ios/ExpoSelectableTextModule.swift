@@ -10,9 +10,7 @@ public class ExpoSelectableTextModule: Module {
       Prop("segments") { (view: ExpoSelectableTextView, prop: String) in
         // Convert the JSON to segments
         if let data = prop.data(using: .utf8) {
-          print("first")
           if let segments = try? JSONDecoder().decode(TextSegments.self, from: data) {
-            print("second")
             view.segments = segments.segments
           }
         }
