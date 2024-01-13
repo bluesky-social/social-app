@@ -85,7 +85,7 @@ export default function ExpoSelectableTextView({
     }
 
     return segments
-  }, [children])
+  }, [children, onLongPress, onPress, style])
 
   const segmentsJson = React.useMemo(() => {
     const json = JSON.stringify({segments: textSegments})
