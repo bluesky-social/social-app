@@ -1,5 +1,5 @@
 import React from 'react'
-import {ColorValue, TextStyle, ViewStyle} from 'react-native'
+import {TextStyle, ViewStyle} from 'react-native'
 
 interface ExpoProTextViewCommonProps {
   selectable?: boolean

@@ -4,7 +4,6 @@ import {s, lh} from 'lib/styles'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {SelectableText} from '../../../../../modules/expo-selectable-text'
 import {isIOS} from 'platform/detection'
-import {fontSize} from '#/alf/tokens'
 
 export type CustomTextProps = TextProps & {
   type?: TypographyVariant

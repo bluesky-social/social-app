@@ -1,5 +1,8 @@
 import ExpoModulesCore
 
+struct TextSegments: Decodable {
+  let segments: Array<TextSegment>
+}
 
 struct TextSegment: Decodable {
   let index: Int
