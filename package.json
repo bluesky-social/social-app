@@ -141,7 +141,7 @@
     "react-avatar-editor": "^13.0.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.73.1",
+    "react-native": "0.73.2",
     "react-native-appstate-hook": "^1.0.6",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-fs": "^2.20.0",
