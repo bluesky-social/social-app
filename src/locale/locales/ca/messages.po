@@ -208,19 +208,19 @@ msgstr "Aparença"
 
 #: src/view/screens/AppPasswords.tsx:223
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "Segur que voleu eliminar la contrasenya de l'aplicació \"{name}\"?"
+msgstr "Confirmes que vols eliminar la contrasenya de l'aplicació \"{name}\"?"
 
 #: src/view/com/composer/Composer.tsx:142
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "Segur que voleu descartar aquest esborrany?"
+msgstr "Confirmes que vols descartar aquest esborrany?"
 
 #: src/view/screens/ProfileList.tsx:353
 msgid "Are you sure?"
-msgstr "Segur?"
+msgstr "Ho confirmes?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:219
 msgid "Are you sure? This cannot be undone."
-msgstr "Segur? Aquesta acció no es pot desfer."
+msgstr "Ho confirmes? Aquesta acció no es pot desfer."
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
