@@ -53,8 +53,8 @@ class ExpoSelectableTextView: ExpoView {
   }
 
   @IBAction func callOnPress(_ sender: UITapGestureRecognizer) -> Void {
-    if let segment = getPressedSegment(sender) {
-      if segment.handlePress, textView.selectedTextRange == nil {
+    if let segment = getPressedSegment(sender), segment.handlePress {
+      if textView.selectedTextRange == nil {
         onTextPress([
           "index": segment.index
         ])
@@ -113,6 +113,7 @@ class ExpoSelectableTextView: ExpoView {
     }
 
     textView.attributedText = finalAttributedString
+    textView.selectedTextRange = nil
 
     self.setNeedsLayout()
   }
