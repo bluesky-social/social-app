@@ -5,12 +5,14 @@ class ExpoSelectableTextView: ExpoView {
   let textView: UITextView = UITextView()
   var segments: Array<TextSegment> = [] {
     didSet {
-      setText()
+      // We don't want to set the text if the root style has not been set yet
+      self.setText()
     }
   }
   var style: TextStyle? {
     didSet {
-      self.setNeedsLayout()
+      // If the text has not been set and there are segments, set the text
+      self.setText()
     }
   }
 
