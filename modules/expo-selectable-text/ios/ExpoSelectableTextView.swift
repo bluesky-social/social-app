@@ -27,23 +27,21 @@ class ExpoSelectableTextView: ExpoView {
     textView.isScrollEnabled = false
     textView.backgroundColor = .clear
 
-    clipsToBounds = true
+    // Remove all of the padding from the view
+    textView.textContainerInset = UIEdgeInsets.zero
+    textView.textContainer.lineFragmentPadding = 0
 
     // Add the text view to the root view
     addSubview(textView)
 
     // Configure the press recognizer
-    configurePressRecognizer()
-  }
-
-  override func layoutSubviews() {
-    // Set the textView's frame on layout
-    setSize()
-  }
-
-  func configurePressRecognizer() -> Void {
     let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(callOnPress(_:)))
     textView.addGestureRecognizer(tapGestureRecognizer)
+  }
+
+  override func layoutSubviews() -> Void {
+    // Set the textView's frame on layout
+    setSize()
   }
 
   @IBAction func callOnPress(_ sender: UITapGestureRecognizer) -> Void {
