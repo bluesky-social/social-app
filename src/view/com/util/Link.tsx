@@ -69,13 +69,13 @@ export const Link = memo(function Link({
   const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
-        return onPressInner(
+        return onTextLinkPress({
           closeModal,
           navigation,
-          sanitizeUrl(href),
+          href: sanitizeUrl(href),
           navigationAction,
           e,
-        )
+        })
       }
     },
     [closeModal, navigation, navigationAction, href],
@@ -179,39 +179,27 @@ export const TextLink = memo(function TextLink({
 
   props.onPress = React.useCallback(
     (e?: Event) => {
-      const requiresWarning =
-        warnOnMismatchingLabel &&
-        linkRequiresWarning(href, typeof text === 'string' ? text : '')
-      if (requiresWarning) {
-        e?.preventDefault?.()
-        openModal({
-          name: 'link-warning',
-          text: typeof text === 'string' ? text : '',
-          href,
-        })
-      }
-      if (onPress) {
-        e?.preventDefault?.()
-        // @ts-ignore function signature differs by platform -prf
-        return onPress()
-      }
-      return onPressInner(
+      onTextLinkPress({
+        onPress,
+        e,
+        openModal,
         closeModal,
         navigation,
-        sanitizeUrl(href),
+        href,
+        text,
         navigationAction,
-        e,
-      )
+        warnOnMismatchingLabel,
+      })
     },
     [
       onPress,
-      closeModal,
       openModal,
+      closeModal,
       navigation,
       href,
       text,
-      warnOnMismatchingLabel,
       navigationAction,
+      warnOnMismatchingLabel,
     ],
   )
   const hrefAttrs = useMemo(() => {
@@ -301,6 +289,9 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   )
 })
 
+// Moving all of this logic into a separate function. Becuase we need to be able to use this function from
+// SelectableText, it's easier to move it outside the component instead of duplicating logic
+
 // NOTE
 // we can't use the onPress given by useLinkProps because it will
 // match most paths to the HomeTab routes while we actually want to
@@ -312,13 +303,45 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
 // this method copies from the onPress implementation but adds our
 // needed customizations
 // -prf
-function onPressInner(
-  closeModal = () => {},
-  navigation: NavigationProp,
-  href: string,
-  navigationAction: 'push' | 'replace' | 'navigate' = 'push',
-  e?: Event,
-) {
+export const onTextLinkPress = ({
+  onPress,
+  e,
+  openModal,
+  closeModal,
+  navigation,
+  href,
+  text,
+  navigationAction = 'push',
+  warnOnMismatchingLabel,
+}: {
+  onPress?: (e: GestureResponderEvent) => void
+  e?: Event
+  openModal?: any
+  closeModal: any
+  navigation: NavigationProp
+  href: string
+  text?: any
+  navigationAction?: 'push' | 'replace' | 'navigate'
+  warnOnMismatchingLabel?: boolean
+}) => {
+  const requiresWarning =
+    warnOnMismatchingLabel &&
+    linkRequiresWarning(href, typeof text === 'string' ? text : '')
+  if (requiresWarning) {
+    e?.preventDefault?.()
+    openModal({
+      name: 'link-warning',
+      text: typeof text === 'string' ? text : '',
+      href,
+    })
+  }
+  if (onPress) {
+    e?.preventDefault?.()
+    // @ts-ignore function signature differs by platform -prf
+    onPress()
+    return
+  }
+
   let shouldHandle = false
   const isLeftClick =
     // @ts-ignore Web only -prf
