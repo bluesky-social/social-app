@@ -24,6 +24,7 @@ module.exports = {
     'zh-CN',
     'zh-HK',
     'zh-TW',
+    'vi'
   ],
   catalogs: [
     {

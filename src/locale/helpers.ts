@@ -101,7 +101,7 @@ export function getTranslatorLink(text: string, lang: string): string {
 /**
  * Returns a valid `appLanguage` value from an arbitrary string.
  *
- * Contenxt: post-refactor, we populated some user's `appLanguage` setting with
+ * Context: post-refactor, we populated some user's `appLanguage` setting with
  * `postLanguage`, which can be a comma-separated list of values. This breaks
  * `appLanguage` handling in the app, so we introduced this util to parse out a
  * valid `appLanguage` from the pre-populated `postLanguage` values.
@@ -163,6 +163,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.zh_HK
       case 'zh-TW':
         return AppLanguage.zh_TW
+      case 'vi':
+        return AppLanguage.vi
       default:
         continue
     }
