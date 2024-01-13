@@ -4,15 +4,15 @@ import {FocusScope} from '@tamagui/focus-scope'
 import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
-import {Text} from '#/view/com/Typography'
-import {Portal} from '#/view/com/Portal'
-import {Button} from '#/view/com/Button'
+import {Text} from '#/components/Typography'
+import {Portal} from '#/components/Portal'
+import {Button} from '#/components/Button'
 
-import {DialogOuterProps, DialogInnerProps} from '#/view/com/Dialog/types'
-import {Context, useDialogContext} from '#/view/com/Dialog/context'
+import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
+import {Context, useDialogContext} from '#/components/Dialog/context'
 
-export {useDialogControl, useDialogContext} from '#/view/com/Dialog/context'
-export * from '#/view/com/Dialog/types'
+export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export * from '#/components/Dialog/types'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 

@@ -3,17 +3,17 @@ import {View, Dimensions} from 'react-native'
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
 
 import {useTheme, atoms as a} from '#/alf'
-import {Portal} from '#/view/com/Portal'
+import {Portal} from '#/components/Portal'
 
 import {
   DialogOuterProps,
   DialogControlProps,
   DialogInnerProps,
-} from '#/view/com/Dialog/types'
-import {Context} from '#/view/com/Dialog/context'
+} from '#/components/Dialog/types'
+import {Context} from '#/components/Dialog/context'
 
-export {useDialogControl, useDialogContext} from '#/view/com/Dialog/context'
-export * from '#/view/com/Dialog/types'
+export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export * from '#/components/Dialog/types'
 
 export function Outer({
   children,
@@ -62,7 +62,7 @@ export function Outer({
             {...props}
           />
         )}
-        handleIndicatorStyle={{backgroundColor: t.palette.primary}}
+        handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
         handleStyle={{display: 'none'}}
         onClose={onClose}>
         <Context.Provider value={context}>

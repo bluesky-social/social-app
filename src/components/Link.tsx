@@ -15,7 +15,7 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 
 import {isWeb} from '#/platform/detection'
 import {useTheme, web} from '#/alf'
-import {Button, ButtonProps} from '#/view/com/Button'
+import {Button, ButtonProps} from '#/components/Button'
 import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
@@ -157,10 +157,10 @@ export function Link({
             <Text
               style={[
                 style,
-                {color: t.palette.primary},
+                {color: t.palette.primary_500},
                 state.hovered && {
                   textDecorationLine: 'underline',
-                  textDecorationColor: t.palette.primary,
+                  textDecorationColor: t.palette.primary_500,
                 },
               ]}>
               {children as string}

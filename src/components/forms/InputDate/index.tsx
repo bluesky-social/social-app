@@ -5,11 +5,11 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker'
 
 import {useTheme, atoms} from '#/alf'
-import {Text} from '#/view/com/Typography'
-import {toSimpleDateString} from '#/view/com/forms/InputDate/utils'
+import {Text} from '#/components/Typography'
+import {toSimpleDateString} from '#/components/forms/InputDate/utils'
 
-import {InputDateProps} from '#/view/com/forms/InputDate/types'
-export * as utils from '#/view/com/forms/InputDate/utils'
+import {InputDateProps} from '#/components/forms/InputDate/types'
+export * as utils from '#/components/forms/InputDate/utils'
 
 /**
  * Date-only input. Accepts a date in the format YYYY-MM-DD, and reports date

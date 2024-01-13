@@ -2,9 +2,9 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {Text} from '#/view/com/Typography'
-import {InputText} from '#/view/com/forms/InputText'
-import {InputDate, utils} from '#/view/com/forms/InputDate'
+import {Text} from '#/components/Typography'
+import {InputText} from '#/components/forms/InputText'
+import {InputDate, utils} from '#/components/forms/InputDate'
 import {Logo} from '#/view/icons/Logo'
 
 export function Forms() {

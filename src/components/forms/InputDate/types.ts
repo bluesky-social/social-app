@@ -1,6 +1,6 @@
 import {TextInputProps} from 'react-native'
 
-import {BaseProps} from '#/view/com/forms/types'
+import {BaseProps} from '#/components/forms/types'
 
 export type InputDateProps = BaseProps & {
   /**

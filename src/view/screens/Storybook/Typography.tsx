@@ -1,11 +1,12 @@
 import React from 'react'
+import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {Text, H1, H2, H3, H4, H5, H6, P} from '#/view/com/Typography'
+import {Text, H1, H2, H3, H4, H5, H6, P} from '#/components/Typography'
 
 export function Typography() {
   return (
-    <>
+    <View style={[a.gap_md]}>
       <H1>H1 Heading</H1>
       <H2>H2 Heading</H2>
       <H3>H3 Heading</H3>
@@ -24,6 +25,6 @@ export function Typography() {
       <Text style={[a.text_sm]}>atoms.text_sm</Text>
       <Text style={[a.text_xs]}>atoms.text_xs</Text>
       <Text style={[a.text_2xs]}>atoms.text_2xs</Text>
-    </>
+    </View>
   )
 }

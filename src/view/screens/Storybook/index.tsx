@@ -4,12 +4,13 @@ import {CenteredView, ScrollView} from '#/view/com/util/Views'
 
 import {atoms as a, useTheme, ThemeProvider} from '#/alf'
 import {useSetColorMode} from '#/state/shell'
-import {Button} from '#/view/com/Button'
+import {Button} from '#/components/Button'
 
 import {Theming} from './Theming'
 import {Typography} from './Typography'
 import {Spacing} from './Spacing'
 import {Buttons} from './Buttons'
+import {Links} from './Links'
 import {Forms} from './Forms'
 import {Dialogs} from './Dialogs'
 import {Breakpoints} from './Breakpoints'
@@ -21,10 +22,11 @@ export function Storybook() {
   return (
     <ScrollView>
       <CenteredView style={[t.atoms.bg]}>
-        <View style={[a.p_xl, a.gap_2xl, {paddingBottom: 200}]}>
+        <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 200}]}>
           <View style={[a.flex_row, a.align_start, a.gap_md]}>
             <Button
-              type="secondary"
+              variant="outline"
+              color="primary"
               size="small"
               accessibilityLabel='Set theme to "system"'
               accessibilityHint="Set theme to system default"
@@ -32,7 +34,8 @@ export function Storybook() {
               System
             </Button>
             <Button
-              type="secondary"
+              variant="solid"
+              color="secondary"
               size="small"
               accessibilityLabel='Set theme to "system"'
               accessibilityHint="Set theme to system default"
@@ -40,7 +43,8 @@ export function Storybook() {
               Light
             </Button>
             <Button
-              type="secondary"
+              variant="solid"
+              color="secondary"
               size="small"
               accessibilityLabel='Set theme to "system"'
               accessibilityHint="Set theme to system default"
@@ -62,6 +66,7 @@ export function Storybook() {
           <Typography />
           <Spacing />
           <Buttons />
+          <Links />
           <Forms />
           <Dialogs />
           <Breakpoints />

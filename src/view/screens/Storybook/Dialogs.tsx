@@ -2,10 +2,10 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {Button} from '#/view/com/Button'
-import {H3, P} from '#/view/com/Typography'
-import * as Dialog from '#/view/com/Dialog'
-import * as Prompt from '#/view/com/Prompt'
+import {Button} from '#/components/Button'
+import {H3, P} from '#/components/Typography'
+import * as Dialog from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
 
 export function Dialogs() {
   const control = Dialog.useDialogControl()
@@ -14,7 +14,8 @@ export function Dialogs() {
   return (
     <>
       <Button
-        type="secondary"
+        variant="outline"
+        color="secondary"
         size="small"
         onPress={() => control.open()}
         accessibilityLabel="Open basic dialog"
@@ -23,7 +24,8 @@ export function Dialogs() {
       </Button>
 
       <Button
-        type="negative"
+        variant="solid"
+        color="primary"
         size="small"
         onPress={() => prompt.open()}
         accessibilityLabel="Open prompt"
@@ -53,7 +55,8 @@ export function Dialogs() {
             <P nativeID="dialog-description">Description</P>
             <View style={[a.flex_row, a.justify_end]}>
               <Button
-                type="primary"
+                variant="outline"
+                color="primary"
                 size="small"
                 onPress={() => control.close()}
                 accessibilityLabel="Open basic dialog"

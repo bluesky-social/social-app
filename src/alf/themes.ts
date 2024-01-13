@@ -8,11 +8,8 @@ export type ReadonlyPalette = typeof lightPalette
 export type Palette = Mutable<ReadonlyPalette>
 
 export const lightPalette = {
-  white: '#FFFFFF',
-  black: '#080B12',
-  primary: tokens.color.blue_500,
-  positive: tokens.color.green_500,
-  negative: tokens.color.red_500,
+  white: tokens.color.white,
+  black: tokens.color.black,
 
   contrast_25: tokens.color.gray_25,
   contrast_50: tokens.color.gray_50,
@@ -25,14 +22,47 @@ export const lightPalette = {
   contrast_700: tokens.color.gray_700,
   contrast_800: tokens.color.gray_800,
   contrast_900: tokens.color.gray_900,
+
+  primary_25: tokens.color.blue_25,
+  primary_50: tokens.color.blue_50,
+  primary_100: tokens.color.blue_100,
+  primary_200: tokens.color.blue_200,
+  primary_300: tokens.color.blue_300,
+  primary_400: tokens.color.blue_400,
+  primary_500: tokens.color.blue_500,
+  primary_600: tokens.color.blue_600,
+  primary_700: tokens.color.blue_700,
+  primary_800: tokens.color.blue_800,
+  primary_900: tokens.color.blue_900,
+
+  positive_25: tokens.color.green_25,
+  positive_50: tokens.color.green_50,
+  positive_100: tokens.color.green_100,
+  positive_200: tokens.color.green_200,
+  positive_300: tokens.color.green_300,
+  positive_400: tokens.color.green_400,
+  positive_500: tokens.color.green_500,
+  positive_600: tokens.color.green_600,
+  positive_700: tokens.color.green_700,
+  positive_800: tokens.color.green_800,
+  positive_900: tokens.color.green_900,
+
+  negative_25: tokens.color.red_25,
+  negative_50: tokens.color.red_50,
+  negative_100: tokens.color.red_100,
+  negative_200: tokens.color.red_200,
+  negative_300: tokens.color.red_300,
+  negative_400: tokens.color.red_400,
+  negative_500: tokens.color.red_500,
+  negative_600: tokens.color.red_600,
+  negative_700: tokens.color.red_700,
+  negative_800: tokens.color.red_800,
+  negative_900: tokens.color.red_900,
 } as const
 
 export const darkPalette: Palette = {
-  white: '#FFFFFF',
-  black: '#080B12',
-  primary: tokens.color.blue_500,
-  positive: tokens.color.green_500,
-  negative: tokens.color.red_500,
+  white: tokens.color.white,
+  black: tokens.color.black,
 
   contrast_25: tokens.color.gray_900,
   contrast_50: tokens.color.gray_800,
@@ -45,6 +75,42 @@ export const darkPalette: Palette = {
   contrast_700: tokens.color.gray_100,
   contrast_800: tokens.color.gray_50,
   contrast_900: tokens.color.gray_25,
+
+  primary_25: tokens.color.blue_25,
+  primary_50: tokens.color.blue_50,
+  primary_100: tokens.color.blue_100,
+  primary_200: tokens.color.blue_200,
+  primary_300: tokens.color.blue_300,
+  primary_400: tokens.color.blue_400,
+  primary_500: tokens.color.blue_500,
+  primary_600: tokens.color.blue_600,
+  primary_700: tokens.color.blue_700,
+  primary_800: tokens.color.blue_800,
+  primary_900: tokens.color.blue_900,
+
+  positive_25: tokens.color.green_25,
+  positive_50: tokens.color.green_50,
+  positive_100: tokens.color.green_100,
+  positive_200: tokens.color.green_200,
+  positive_300: tokens.color.green_300,
+  positive_400: tokens.color.green_400,
+  positive_500: tokens.color.green_500,
+  positive_600: tokens.color.green_600,
+  positive_700: tokens.color.green_700,
+  positive_800: tokens.color.green_800,
+  positive_900: tokens.color.green_900,
+
+  negative_25: tokens.color.red_25,
+  negative_50: tokens.color.red_50,
+  negative_100: tokens.color.red_100,
+  negative_200: tokens.color.red_200,
+  negative_300: tokens.color.red_300,
+  negative_400: tokens.color.red_400,
+  negative_500: tokens.color.red_500,
+  negative_600: tokens.color.red_600,
+  negative_700: tokens.color.red_700,
+  negative_800: tokens.color.red_800,
+  negative_900: tokens.color.red_900,
 } as const
 
 export const light = {
@@ -52,7 +118,7 @@ export const light = {
   palette: lightPalette,
   atoms: {
     text: {
-      color: tokens.color.gray_900,
+      color: lightPalette.black,
     },
     text_contrast_600: {
       color: lightPalette.contrast_600,
@@ -110,7 +176,7 @@ export const dim: Theme = {
       color: darkPalette.contrast_400,
     },
     text_inverted: {
-      color: darkPalette.contrast_900,
+      color: darkPalette.black,
     },
     bg: {
       backgroundColor: darkPalette.contrast_25,
@@ -156,7 +222,7 @@ export const dark: Theme = {
       color: darkPalette.contrast_400,
     },
     text_inverted: {
-      color: tokens.color.gray_900,
+      color: darkPalette.black,
     },
     bg: {
       backgroundColor: darkPalette.black,

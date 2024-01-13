@@ -1,5 +1,5 @@
 import React from 'react'
-import {DialogContextProps, DialogControlProps} from '#/view/com/Dialog/types'
+import {DialogContextProps, DialogControlProps} from '#/components/Dialog/types'
 
 export const Context = React.createContext<DialogContextProps>({
   close: () => {},

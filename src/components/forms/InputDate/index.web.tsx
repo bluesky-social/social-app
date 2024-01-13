@@ -1,36 +1,36 @@
 import React from 'react'
-import {View, TextStyle, Pressable} from 'react-native'
-import DateTimePicker, {
-  BaseProps as DateTimePickerProps,
-} from '@react-native-community/datetimepicker'
+import {View, TextStyle} from 'react-native'
+// @ts-ignore
+import {unstable_createElement} from 'react-native-web'
 
 import {Logo} from '#/view/icons/Logo'
 import {useTheme, atoms, tokens} from '#/alf'
-import {Text} from '#/view/com/Typography'
-import {useInteractionState} from '#/view/com/util/hooks/useInteractionState'
+import {Text} from '#/components/Typography'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 
-import {InputDateProps} from '#/view/com/forms/InputDate/types'
-import {
-  localizeDate,
-  toSimpleDateString,
-} from '#/view/com/forms/InputDate/utils'
+import {InputDateProps} from '#/components/forms/InputDate/types'
+import {toSimpleDateString} from '#/components/forms/InputDate/utils'
 
-export * as utils from '#/view/com/forms/InputDate/utils'
+export * as utils from '#/components/forms/InputDate/utils'
 
 export function InputDate({
-  value: initialValue,
-  onChange,
-  testID,
   label,
   hasError,
+  testID,
+  value: initialValue,
+  onChange,
   accessibilityLabel,
   accessibilityHint,
   ...props
 }: InputDateProps) {
   const labelId = React.useId()
   const t = useTheme()
-  const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = React.useState<string>(initialValue)
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
   const {inputStyles, iconStyles} = React.useMemo(() => {
@@ -50,7 +50,7 @@ export function InputDate({
       })
     }
 
-    if (focused) {
+    if (hovered || focused) {
       input.push({
         borderColor: t.atoms.border_contrast.borderColor,
       })
@@ -63,13 +63,11 @@ export function InputDate({
     }
 
     return {inputStyles: input, iconStyles: icon}
-  }, [t, focused, hasError])
+  }, [t, hovered, focused, hasError])
 
-  const onChangeInternal = React.useCallback<
-    Required<DateTimePickerProps>['onChange']
-  >(
-    (_event, date) => {
-      setOpen(false)
+  const handleOnChange = React.useCallback(
+    (e: any) => {
+      const date = e.currentTarget.valueAsDate
 
       if (date) {
         const formatted = toSimpleDateString(date)
@@ -77,7 +75,7 @@ export function InputDate({
         setValue(formatted)
       }
     },
-    [onChange, setOpen, setValue],
+    [onChange, setValue],
   )
 
   return (
@@ -95,29 +93,39 @@ export function InputDate({
         </Text>
       )}
 
-      <Pressable
-        {...props}
-        aria-labelledby={labelId}
-        aria-label={label}
-        accessibilityLabelledBy={labelId}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityHint={accessibilityHint}
-        onPress={() => setOpen(true)}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        style={[
+      {unstable_createElement('input', {
+        ...props,
+        testID: `${testID}-datepicker`,
+        'aria-labelledby': labelId,
+        'aria-label': label,
+        accessibilityLabel: accessibilityLabel,
+        accessibilityHint: accessibilityHint,
+        type: 'date',
+        value: value,
+        onFocus: onFocus,
+        onBlur: onBlur,
+        onChange: handleOnChange,
+        onMouseEnter: onHoverIn,
+        onMouseLeave: onHoverOut,
+        style: [
           {
-            paddingTop: atoms.pt_md.paddingTop + 2,
+            outline: 0,
+            border: 0,
+            appearance: 'none',
+            boxSizing: 'border-box',
+            lineHeight: atoms.text_md.lineHeight * 1.1875,
+            paddingTop: atoms.pt_md.paddingTop - 1,
           },
           atoms.w_full,
           atoms.px_lg,
           atoms.pb_md,
           atoms.rounded_sm,
+          atoms.text_md,
           t.atoms.bg_contrast_100,
+          t.atoms.text,
           ...inputStyles,
-        ]}>
-        <Text style={[atoms.text_md, t.atoms.text]}>{localizeDate(value)}</Text>
-      </Pressable>
+        ],
+      })}
 
       <View
         style={[
@@ -139,23 +147,6 @@ export function InputDate({
           ]}
         />
       </View>
-
-      {open && (
-        <DateTimePicker
-          testID={`${testID}-datepicker`}
-          mode="date"
-          timeZoneName={'Etc/UTC'}
-          display="spinner"
-          // @ts-ignore applies in iOS only -prf
-          themeVariant={t.name === 'dark' ? 'dark' : 'light'}
-          value={new Date(value)}
-          onChange={onChangeInternal}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityHint={accessibilityHint}
-          aria-labelledby={labelId}
-          aria-label={label}
-        />
-      )}
     </View>
   )
 }

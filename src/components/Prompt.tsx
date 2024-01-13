@@ -3,12 +3,12 @@ import {View, PressableProps, LayoutChangeEvent} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useTheme, atoms as a} from '#/alf'
-import {H2, P} from '#/view/com/Typography'
-import {Button} from '#/view/com/Button'
+import {H2, P} from '#/components/Typography'
+import {Button} from '#/components/Button'
 
-import * as Dialog from '#/view/com/Dialog'
+import * as Dialog from '#/components/Dialog'
 
-export {useDialogControl as usePromptControl} from '#/view/com/Dialog'
+export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
 const Context = React.createContext<{
   titleId: string
@@ -102,7 +102,8 @@ export function Cancel({
   const {close} = Dialog.useDialogContext()
   return (
     <Button
-      type="secondary"
+      variant="solid"
+      color="secondary"
       size="small"
       accessibilityLabel="Cancel"
       accessibilityHint="Cancel this action"
@@ -123,7 +124,8 @@ export function Action({
   }, [close, onPress])
   return (
     <Button
-      type="primary"
+      variant="solid"
+      color="primary"
       size="small"
       accessibilityLabel="Confirm"
       accessibilityHint="Confirm this action"

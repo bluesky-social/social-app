@@ -8,10 +8,10 @@ import {
 } from 'react-native'
 
 import {useTheme, atoms, web, tokens} from '#/alf'
-import {Text} from '#/view/com/Typography'
-import {useInteractionState} from '#/view/com/util/hooks/useInteractionState'
+import {Text} from '#/components/Typography'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 
-import {BaseProps} from '#/view/com/forms/types'
+import {BaseProps} from '#/components/forms/types'
 
 type Props = BaseProps &
   Omit<TextInputProps, 'placeholder'> & {
