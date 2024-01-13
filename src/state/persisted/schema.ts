@@ -53,6 +53,7 @@ export const schema = z.object({
     step: z.string(),
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
+  useInAppBrowser: z.boolean().optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -84,4 +85,5 @@ export const defaults: Schema = {
     step: 'Home',
   },
   hiddenPosts: [],
+  useInAppBrowser: undefined,
 }
