@@ -1,4 +1,3 @@
-import Foundation
 import ExpoModulesCore
 
 class ExpoSelectableTextView: ExpoView {
@@ -49,7 +48,7 @@ class ExpoSelectableTextView: ExpoView {
 
   override func layoutSubviews() -> Void {
     // Set the textView's frame on layout
-    setSize()
+    self.setSize()
   }
 
   @IBAction func callOnPress(_ sender: UITapGestureRecognizer) -> Void {
@@ -72,7 +71,7 @@ class ExpoSelectableTextView: ExpoView {
     let size = CGSize(width: maxWidth, height: sizeThatFits.height)
     textView.frame.size = size
 
-    onTextLayout([
+    self.onTextLayout([
       "height": sizeThatFits.height,
       "width": maxWidth
     ])
@@ -81,7 +80,7 @@ class ExpoSelectableTextView: ExpoView {
   func setText() -> Void {
     let finalAttributedString = NSMutableAttributedString()
 
-    segments.forEach { segment in
+    self.segments.forEach { segment in
       // Set some generic attributes that don't need ranges
       let attributes: [NSAttributedString.Key:Any] = [
         .font: UIFont.systemFont(ofSize: segment.style?.fontSize ?? self.style?.fontSize ?? 12.0, weight: segment.style?.fontWeight?.toFontWeight() ?? self.style?.fontWeight?.toFontWeight() ?? .regular),
@@ -133,7 +132,7 @@ class ExpoSelectableTextView: ExpoView {
     var foundSegment: TextSegment?
 
     // Check each segment
-    segments.forEach { segment in
+    self.segments.forEach { segment in
       let range = text.range(of: segment.text)
       // Figure out the bounds
       if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
