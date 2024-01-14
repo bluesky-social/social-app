@@ -37,7 +37,11 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {isPostInLanguage, getPostLanguage} from '../../../locale/helpers'
+import {
+  isPostInLanguage,
+  getPostLanguage,
+  sanitizeAppLanguageSetting,
+} from '../../../locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences'
 
 export function FeedItem({
@@ -330,6 +334,7 @@ let PostContent = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
+  const sanitizedLanguage = sanitizeAppLanguageSetting(langPrefs.appLanguage)
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -340,10 +345,10 @@ let PostContent = ({
 
   const postLang = useMemo(
     () =>
-      langPrefs.appLanguage && !isPostInLanguage(post, [langPrefs.appLanguage])
+      sanitizedLanguage && !isPostInLanguage(post, [sanitizedLanguage])
         ? getPostLanguage(post)
         : undefined,
-    [post, langPrefs.appLanguage],
+    [post, sanitizedLanguage],
   )
 
   return (

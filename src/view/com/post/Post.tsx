@@ -29,7 +29,11 @@ import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {isPostInLanguage, getPostLanguage} from '../../../locale/helpers'
+import {
+  isPostInLanguage,
+  getPostLanguage,
+  sanitizeAppLanguageSetting,
+} from '../../../locale/helpers'
 import {useLanguagePrefs} from '#/state/preferences'
 
 export function Post({
@@ -101,6 +105,7 @@ function PostInner({
   const pal = usePalette('default')
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
+  const sanitizedLanguage = sanitizeAppLanguageSetting(langPrefs.appLanguage)
   const {openComposer} = useComposerControls()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
@@ -135,10 +140,10 @@ function PostInner({
 
   const postLang = useMemo(
     () =>
-      langPrefs.appLanguage && !isPostInLanguage(post, [langPrefs.appLanguage])
+      sanitizedLanguage && !isPostInLanguage(post, [sanitizedLanguage])
         ? getPostLanguage(post)
         : undefined,
-    [post, langPrefs.appLanguage],
+    [post, sanitizedLanguage],
   )
 
   return (

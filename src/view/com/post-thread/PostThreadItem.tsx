@@ -23,6 +23,7 @@ import {
   getTranslatorLink,
   isPostInLanguage,
   getPostLanguage,
+  sanitizeAppLanguageSetting,
 } from '../../../locale/helpers'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
@@ -164,6 +165,7 @@ let PostThreadItemLoaded = ({
   const pal = usePalette('default')
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
+  const sanitizedLanguage = sanitizeAppLanguageSetting(langPrefs.appLanguage)
   const {openComposer} = useComposerControls()
   const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = React.useState(
@@ -209,10 +211,10 @@ let PostThreadItemLoaded = ({
   )
   const postLang = useMemo(
     () =>
-      langPrefs.appLanguage && !isPostInLanguage(post, [langPrefs.appLanguage])
+      sanitizedLanguage && !isPostInLanguage(post, [sanitizedLanguage])
         ? getPostLanguage(post)
         : undefined,
-    [post, langPrefs.appLanguage],
+    [post, sanitizedLanguage],
   )
 
   const onPressReply = React.useCallback(() => {
