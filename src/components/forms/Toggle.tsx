@@ -5,8 +5,10 @@ import {useTheme, atoms as a, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {StyleProp} from 'react-native'
+import {AccessibilityRole} from 'react-native'
 
 type ItemState = {
+  id: string
   name: string
   value: boolean
   disabled: boolean
@@ -16,6 +18,7 @@ type ItemState = {
 }
 
 const ItemContext = React.createContext<ItemState>({
+  id: '',
   name: '',
   value: false,
   disabled: false,
@@ -49,7 +52,9 @@ function Item({
   disabled,
   onChange,
   style,
+  role,
 }: ItemProps) {
+  const labelId = React.useId()
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -69,6 +74,7 @@ function Item({
 
   const state = React.useMemo(
     () => ({
+      id: labelId,
       name,
       value,
       disabled: disabled ?? false,
@@ -76,7 +82,7 @@ function Item({
       pressed,
       focused,
     }),
-    [name, value, disabled, hovered, pressed, focused],
+    [labelId, name, value, disabled, hovered, pressed, focused],
   )
 
   return (
@@ -84,9 +90,14 @@ function Item({
       <Pressable
         disabled={disabled}
         aria-disabled={disabled ?? false}
-        role="checkbox"
-        accessibilityRole="checkbox"
         aria-checked={value}
+        aria-labelledby={labelId}
+        role={role}
+        accessibilityRole={role as AccessibilityRole}
+        accessibilityState={{
+          disabled: disabled ?? false,
+          selected: value,
+        }}
         onPress={onPress}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}
@@ -185,6 +196,7 @@ function Group({
               {React.cloneElement(child, {
                 // @ts-ignore TODO figure out children types
                 disabled: isDisabled,
+                role: role === 'radio' ? 'radio' : 'checkbox',
                 value: isSelected,
                 onChange: itemOnChange,
               })}
@@ -198,9 +210,10 @@ function Group({
 
 function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {id, disabled} = React.useContext(ItemContext)
   return (
     <Text
+      nativeID={id}
       style={[
         a.font_bold,
         {
