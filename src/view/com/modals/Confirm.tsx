@@ -12,7 +12,7 @@ import {cleanError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import type {ConfirmModal} from '#/state/modals'
 import {useModalControls} from '#/state/modals'
 
@@ -72,10 +72,10 @@ export function Component({
           onPress={onPress}
           style={[styles.btn, confirmBtnStyle]}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Confirm`)}
+          accessibilityLabel={_(msg({message: 'Confirm', context: 'action'}))}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
-            {confirmBtnText ?? 'Confirm'}
+            {confirmBtnText ?? <Trans context="action">Confirm</Trans>}
           </Text>
         </TouchableOpacity>
       )}
@@ -85,10 +85,10 @@ export function Component({
           onPress={onPressCancel}
           style={[styles.btnCancel, s.mt10]}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Cancel`)}
+          accessibilityLabel={_(msg({message: 'Cancel', context: 'action'}))}
           accessibilityHint="">
           <Text type="button-lg" style={pal.textLight}>
-            {cancelBtnText ?? 'Cancel'}
+            {cancelBtnText ?? <Trans context="action">Cancel</Trans>}
           </Text>
         </TouchableOpacity>
       )}

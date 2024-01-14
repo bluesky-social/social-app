@@ -92,7 +92,7 @@ export function Component({
                   testID="sexualLabelBtn"
                   selected={selected.includes('sexual')}
                   left
-                  label="Suggestive"
+                  label={_(msg`Suggestive`)}
                   onSelect={() => toggleAdultLabel('sexual')}
                   accessibilityHint=""
                   style={s.flex1}
@@ -100,7 +100,7 @@ export function Component({
                 <SelectableBtn
                   testID="nudityLabelBtn"
                   selected={selected.includes('nudity')}
-                  label="Nudity"
+                  label={_(msg`Nudity`)}
                   onSelect={() => toggleAdultLabel('nudity')}
                   accessibilityHint=""
                   style={s.flex1}
@@ -108,7 +108,7 @@ export function Component({
                 <SelectableBtn
                   testID="pornLabelBtn"
                   selected={selected.includes('porn')}
-                  label="Porn"
+                  label={_(msg`Porn`)}
                   right
                   onSelect={() => toggleAdultLabel('porn')}
                   accessibilityHint=""
@@ -154,7 +154,7 @@ export function Component({
           accessibilityLabel={_(msg`Confirm`)}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Done</Trans>
+            <Trans context="action">Done</Trans>
           </Text>
         </TouchableOpacity>
       </View>

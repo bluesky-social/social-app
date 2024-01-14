@@ -6,6 +6,7 @@ import {
   AppBskyEmbedImages,
   AppBskyEmbedRecordWithMedia,
   ModerationUI,
+  AppBskyEmbedExternal,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {PostMeta} from '../PostMeta'
@@ -17,6 +18,7 @@ import {PostEmbeds} from '.'
 import {PostAlerts} from '../moderation/PostAlerts'
 import {makeProfileLink} from 'lib/routes/links'
 import {InfoCircleIcon} from 'lib/icons'
+import {Trans} from '@lingui/macro'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -52,7 +54,7 @@ export function MaybeQuoteEmbed({
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          Blocked
+          <Trans>Blocked</Trans>
         </Text>
       </View>
     )
@@ -61,7 +63,7 @@ export function MaybeQuoteEmbed({
       <View style={[styles.errorContainer, pal.borderDark]}>
         <InfoCircleIcon size={18} style={pal.text} />
         <Text type="lg" style={pal.text}>
-          Deleted
+          <Trans>Deleted</Trans>
         </Text>
       </View>
     )
@@ -86,15 +88,19 @@ export function QuoteEmbed({
     () => quote.text.trim().length === 0,
     [quote.text],
   )
-  const imagesEmbed = React.useMemo(
-    () =>
-      quote.embeds?.find(
-        embed =>
-          AppBskyEmbedImages.isView(embed) ||
-          AppBskyEmbedRecordWithMedia.isView(embed),
-      ),
-    [quote.embeds],
-  )
+  const embed = React.useMemo(() => {
+    const e = quote.embeds?.[0]
+
+    if (AppBskyEmbedImages.isView(e) || AppBskyEmbedExternal.isView(e)) {
+      return e
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(e) &&
+      (AppBskyEmbedImages.isView(e.media) ||
+        AppBskyEmbedExternal.isView(e.media))
+    ) {
+      return e.media
+    }
+  }, [quote.embeds])
   return (
     <Link
       style={[styles.container, pal.borderDark, style]}
@@ -112,16 +118,11 @@ export function QuoteEmbed({
         <PostAlerts moderation={moderation} style={styles.alert} />
       ) : null}
       {!isEmpty ? (
-        <Text type="post-text" style={pal.text} numberOfLines={6}>
+        <Text type="post-text" style={pal.text} numberOfLines={20}>
           {quote.text}
         </Text>
       ) : null}
-      {AppBskyEmbedImages.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed} moderation={{}} />
-      )}
-      {AppBskyEmbedRecordWithMedia.isView(imagesEmbed) && (
-        <PostEmbeds embed={imagesEmbed.media} moderation={{}} />
-      )}
+      {embed && <PostEmbeds embed={embed} moderation={{}} />}
     </Link>
   )
 }

@@ -73,7 +73,7 @@ export function ListsScreen({}: Props) {
             }}>
             <FontAwesomeIcon icon="plus" color={pal.colors.text} />
             <Text type="button" style={pal.text}>
-              <Trans>New</Trans>
+              <Trans context="action">New</Trans>
             </Text>
           </Button>
         </View>

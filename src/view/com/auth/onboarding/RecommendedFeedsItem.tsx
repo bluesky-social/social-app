@@ -18,6 +18,8 @@ import {
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function RecommendedFeedsItem({
   item,
@@ -26,6 +28,7 @@ export function RecommendedFeedsItem({
 }) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {
     mutateAsync: pinFeed,
@@ -51,7 +54,7 @@ export function RecommendedFeedsItem({
         await removeFeed({uri: item.uri})
         resetRemoveFeed()
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
+        Toast.show(_(msg`There was an issue contacting your server`))
         logger.error('Failed to unsave feed', {error: e})
       }
     } else {
@@ -60,7 +63,7 @@ export function RecommendedFeedsItem({
         resetPinFeed()
         track('Onboarding:CustomFeedAdded')
       } catch (e) {
-        Toast.show('There was an issue contacting your server')
+        Toast.show(_(msg`There was an issue contacting your server`))
         logger.error('Failed to pin feed', {error: e})
       }
     }
@@ -94,7 +97,7 @@ export function RecommendedFeedsItem({
           </Text>
 
           <Text style={[pal.textLight, {marginBottom: 8}]} numberOfLines={1}>
-            by {sanitizeHandle(item.creator.handle, '@')}
+            <Trans>by {sanitizeHandle(item.creator.handle, '@')}</Trans>
           </Text>
 
           {item.description ? (
@@ -133,7 +136,7 @@ export function RecommendedFeedsItem({
                       color={pal.colors.textInverted}
                     />
                     <Text type="lg-medium" style={pal.textInverted}>
-                      Added
+                      <Trans>Added</Trans>
                     </Text>
                   </>
                 ) : (
@@ -144,7 +147,7 @@ export function RecommendedFeedsItem({
                       color={pal.colors.textInverted}
                     />
                     <Text type="lg-medium" style={pal.textInverted}>
-                      Add
+                      <Trans>Add</Trans>
                     </Text>
                   </>
                 )}

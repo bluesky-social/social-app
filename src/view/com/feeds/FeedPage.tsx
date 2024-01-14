@@ -174,6 +174,7 @@ export function FeedPage({
           feed={feed}
           feedParams={feedParams}
           pollInterval={POLL_FREQ}
+          disablePoll={hasNew}
           scrollElRef={scrollElRef}
           onScrolledDownChange={setIsScrolledDown}
           onHasNew={setHasNew}
@@ -197,7 +198,7 @@ export function FeedPage({
           onPress={onPressCompose}
           icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
+          accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""
         />
       )}

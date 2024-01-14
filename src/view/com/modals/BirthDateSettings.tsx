@@ -71,7 +71,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
           buttonStyle={[pal.border, styles.dateInputButton]}
           buttonLabelType="lg"
           accessibilityLabel={_(msg`Birthday`)}
-          accessibilityHint="Enter your birth date"
+          accessibilityHint={_(msg`Enter your birth date`)}
           accessibilityLabelledBy="birthDate"
         />
       </View>

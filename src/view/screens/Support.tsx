@@ -34,10 +34,10 @@ export const SupportScreen = (_props: Props) => {
         </Text>
         <Text style={[pal.text, s.p20]}>
           <Trans>
-            The support form has been moved. If you need help, please
+            The support form has been moved. If you need help, please{' '}
             <TextLink
               href={HELP_DESK_URL}
-              text=" click here"
+              text={_(msg`click here`)}
               style={pal.link}
             />{' '}
             or visit {HELP_DESK_URL} to get in touch with us.

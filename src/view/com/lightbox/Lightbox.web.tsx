@@ -110,7 +110,7 @@ function LightboxInner({
         onPress={onClose}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Close image viewer`)}
-        accessibilityHint="Exits image view"
+        accessibilityHint={_(msg`Exits image view`)}
         onAccessibilityEscape={onClose}>
         <View style={styles.imageCenterer}>
           <Image
@@ -154,7 +154,9 @@ function LightboxInner({
         <View style={styles.footer}>
           <Pressable
             accessibilityLabel={_(msg`Expand alt text`)}
-            accessibilityHint="If alt text is long, toggles alt text expanded state"
+            accessibilityHint={_(
+              msg`If alt text is long, toggles alt text expanded state`,
+            )}
             onPress={() => {
               setAltExpanded(!isAltExpanded)
             }}>

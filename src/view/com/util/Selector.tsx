@@ -2,6 +2,8 @@ import React, {createRef, useState, useMemo, useRef} from 'react'
 import {Animated, Pressable, StyleSheet, View} from 'react-native'
 import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 interface Layout {
   x: number
@@ -19,6 +21,7 @@ export function Selector({
   panX: Animated.Value
   onSelect?: (index: number) => void
 }) {
+  const {_} = useLingui()
   const containerRef = useRef<View>(null)
   const pal = usePalette('default')
   const [itemLayouts, setItemLayouts] = useState<undefined | Layout[]>(
@@ -100,8 +103,8 @@ export function Selector({
             testID={`selector-${i}`}
             key={item}
             onPress={() => onPressItem(i)}
-            accessibilityLabel={`Select ${item}`}
-            accessibilityHint={`Select option ${i} of ${numItems}`}>
+            accessibilityLabel={_(msg`Select ${item}`)}
+            accessibilityHint={_(msg`Select option ${i} of ${numItems}`)}>
             <View style={styles.item} ref={itemRefs[i]}>
               <Text
                 style={

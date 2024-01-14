@@ -147,7 +147,7 @@ export function Inner({
             onPress={onPressCancel}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Cancel change handle`)}
-            accessibilityHint="Exits handle change process"
+            accessibilityHint={_(msg`Exits handle change process`)}
             onAccessibilityEscape={onPressCancel}>
             <Text type="lg" style={pal.textLight}>
               Cancel
@@ -168,7 +168,7 @@ export function Inner({
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Save handle change`)}
-              accessibilityHint={`Saves handle change to ${handle}`}>
+              accessibilityHint={_(msg`Saves handle change to ${handle}`)}>
               <Text type="2xl-medium" style={pal.link}>
                 <Trans>Save</Trans>
               </Text>
@@ -263,14 +263,16 @@ function ProvidedHandleForm({
           editable={!isProcessing}
           accessible={true}
           accessibilityLabel={_(msg`Handle`)}
-          accessibilityHint="Sets Bluesky username"
+          accessibilityHint={_(msg`Sets Bluesky username`)}
         />
       </View>
       <Text type="md" style={[pal.textLight, s.pl10, s.pt10]}>
-        <Trans>Your full handle will be</Trans>{' '}
-        <Text type="md-bold" style={pal.textLight}>
-          @{createFullHandle(handle, userDomain)}
-        </Text>
+        <Trans>
+          Your full handle will be{' '}
+          <Text type="md-bold" style={pal.textLight}>
+            @{createFullHandle(handle, userDomain)}
+          </Text>
+        </Trans>
       </Text>
       <TouchableOpacity
         onPress={onToggleCustom}

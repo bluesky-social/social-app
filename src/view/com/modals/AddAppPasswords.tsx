@@ -72,10 +72,10 @@ export function Component({}: {}) {
   const onCopy = React.useCallback(() => {
     if (appPassword) {
       Clipboard.setString(appPassword)
-      Toast.show('Copied to clipboard')
+      Toast.show(_(msg`Copied to clipboard`))
       setWasCopied(true)
     }
-  }, [appPassword])
+  }, [appPassword, _])
 
   const onDone = React.useCallback(() => {
     closeModal()
@@ -85,7 +85,9 @@ export function Component({}: {}) {
     // if name is all whitespace, we don't allow it
     if (!name || !name.trim()) {
       Toast.show(
-        'Please enter a name for your app password. All spaces is not allowed.',
+        _(
+          msg`Please enter a name for your app password. All spaces is not allowed.`,
+        ),
         'times',
       )
       return
@@ -93,14 +95,14 @@ export function Component({}: {}) {
     // if name is too short (under 4 chars), we don't allow it
     if (name.length < 4) {
       Toast.show(
-        'App Password names must be at least 4 characters long.',
+        _(msg`App Password names must be at least 4 characters long.`),
         'times',
       )
       return
     }
 
     if (passwords?.find(p => p.name === name)) {
-      Toast.show('This name is already in use', 'times')
+      Toast.show(_(msg`This name is already in use`), 'times')
       return
     }
 
@@ -109,11 +111,11 @@ export function Component({}: {}) {
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
-        Toast.show('Failed to create app password.', 'times')
+        Toast.show(_(msg`Failed to create app password.`), 'times')
         // TODO: better error handling (?)
       }
     } catch (e) {
-      Toast.show('Failed to create app password.', 'times')
+      Toast.show(_(msg`Failed to create app password.`), 'times')
       logger.error('Failed to create app password', {error: e})
     }
   }
@@ -127,7 +129,9 @@ export function Component({}: {}) {
       setName(text)
     } else {
       Toast.show(
-        'App Password names can only contain letters, numbers, spaces, dashes, and underscores.',
+        _(
+          msg`App Password names can only contain letters, numbers, spaces, dashes, and underscores.`,
+        ),
       )
     }
   }
@@ -158,7 +162,7 @@ export function Component({}: {}) {
               style={[styles.input, pal.text]}
               onChangeText={_onChangeText}
               value={name}
-              placeholder="Enter a name for this App Password"
+              placeholder={_(msg`Enter a name for this App Password`)}
               placeholderTextColor={pal.colors.textLight}
               autoCorrect={false}
               autoComplete="off"
@@ -175,7 +179,7 @@ export function Component({}: {}) {
               onEndEditing={createAppPassword}
               accessible={true}
               accessibilityLabel={_(msg`Name`)}
-              accessibilityHint="Input name for app password"
+              accessibilityHint={_(msg`Input name for app password`)}
             />
           </View>
         ) : (
@@ -184,7 +188,7 @@ export function Component({}: {}) {
             onPress={onCopy}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Copy`)}
-            accessibilityHint="Copies app password">
+            accessibilityHint={_(msg`Copies app password`)}>
             <Text type="2xl-bold" style={[pal.text]}>
               {appPassword}
             </Text>
@@ -221,7 +225,7 @@ export function Component({}: {}) {
       <View style={styles.btnContainer}>
         <Button
           type="primary"
-          label={!appPassword ? 'Create App Password' : 'Done'}
+          label={!appPassword ? _(msg`Create App Password`) : _(msg`Done`)}
           style={styles.btn}
           labelStyle={styles.btnLabel}
           onPress={!appPassword ? createAppPassword : onDone}
