@@ -193,7 +193,7 @@ msgstr "Afegeix una advertència de contingut"
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Content Warning"
 msgstr "Afegeix una advertència de contingut"
-
+Apel·lació d'advertència sobre el contingut
 #: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
 msgstr "Apel·la aquesta decisió"
@@ -283,7 +283,7 @@ msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:115
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
-msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera. No veuràs mai el seu contingut ni ells el teu."
+msgstr "Els comptes bloquejats no poden respondre a cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera. No veuràs mai el seu contingut ni ells el teu."
 
 #: src/view/com/post-thread/PostThread.tsx:250
 msgid "Blocked post."
@@ -341,7 +341,7 @@ msgstr "Càmera"
 
 #: src/view/com/modals/AddAppPasswords.tsx:214
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
-msgstr "Només pot tenir lletres, nombres, espais, guions i guions baixos. Ha de tenir almenys 4 caràcters i no més de 32."
+msgstr "Només pot tenir lletres, números, espais, guions i guions baixos. Ha de tenir almenys 4 caràcters i no més de 32."
 
 #: src/view/com/composer/Composer.tsx:289
 #: src/view/com/composer/Composer.tsx:292
@@ -370,7 +370,7 @@ msgstr "Cancel·la la supressió del compte"
 
 #: src/view/com/modals/AltImage.tsx:123
 msgid "Cancel add image alt text"
-msgstr "Cancel·la afegir imatge al text"
+msgstr "Cancel·la afegir text a la imatge"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
@@ -1354,11 +1354,11 @@ msgstr "No"
 #: src/view/screens/ProfileFeed.tsx:579
 #: src/view/screens/ProfileList.tsx:720
 msgid "No description"
-msgstr "Sense descripció"
+msgstr "Cap descripció"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
 msgid "No result"
-msgstr "Sense resultats"
+msgstr "Cap resultat"
 
 #: src/view/screens/Feeds.tsx:452
 msgid "No results found for \"{query}\""
