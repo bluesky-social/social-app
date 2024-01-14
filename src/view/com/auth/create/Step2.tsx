@@ -79,8 +79,10 @@ export function Step2({
       )}
 
       {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
-        <Text style={[s.alignBaseline, pal.text]}>
-          <Trans>Don't have an invite code?</Trans>{' '}
+        <View style={[s.flexRow, s.alignCenter]}>
+          <Text style={pal.text}>
+            <Trans>Don't have an invite code?</Trans>
+          </Text>
           <TouchableWithoutFeedback
             onPress={onPressWaitlist}
             accessibilityLabel={_(msg`Join the waitlist.`)}
@@ -91,7 +93,7 @@ export function Step2({
               </Text>
             </View>
           </TouchableWithoutFeedback>
-        </Text>
+        </View>
       ) : (
         <>
           <View style={s.pb20}>
@@ -187,5 +189,6 @@ const styles = StyleSheet.create({
   // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
   touchable: {
     ...(isWeb && {cursor: 'pointer'}),
+    paddingLeft: 4,
   },
 })
