@@ -1,6 +1,5 @@
 import React from 'react'
-import {View, PressableProps, LayoutChangeEvent} from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {View, PressableProps} from 'react-native'
 
 import {useTheme, atoms as a} from '#/alf'
 import {H4, P} from '#/components/Typography'
@@ -24,43 +23,24 @@ export function Outer({
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
 }>) {
-  const insets = useSafeAreaInsets()
   const titleId = React.useId()
   const descriptionId = React.useId()
-  const [defaultSnapPoints, setDefaultSnapPoints] = React.useState<
-    string | number
-  >('25%')
 
   const context = React.useMemo(
     () => ({titleId, descriptionId}),
     [titleId, descriptionId],
   )
 
-  const measureDefaultSnapPoint = React.useCallback(
-    (e: LayoutChangeEvent) => {
-      setDefaultSnapPoints(e.nativeEvent.layout.height + insets.bottom + 50)
-    },
-    [insets, setDefaultSnapPoints],
-  )
-
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={{
-        sheet: {
-          snapPoints: [defaultSnapPoints],
-        },
-      }}>
+    <Dialog.Outer control={control}>
       <Context.Provider value={context}>
-        <View onLayout={measureDefaultSnapPoint}>
-          <Dialog.Inner
-            accessibilityLabelledBy={titleId}
-            accessibilityDescribedBy={descriptionId}
-            style={{width: 'auto', maxWidth: 400}}>
-            <Dialog.Handle />
-            {children}
-          </Dialog.Inner>
-        </View>
+        <Dialog.Inner
+          accessibilityLabelledBy={titleId}
+          accessibilityDescribedBy={descriptionId}
+          style={{width: 'auto', maxWidth: 400}}>
+          <Dialog.Handle />
+          {children}
+        </Dialog.Inner>
       </Context.Provider>
     </Dialog.Outer>
   )

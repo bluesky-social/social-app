@@ -11,6 +11,7 @@ import {Button} from '#/components/Button'
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 
+export {ScrollView, TextInput} from 'react-native'
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 

@@ -1,6 +1,7 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions} from 'react-native'
+import {View, Dimensions, LayoutChangeEvent} from 'react-native'
 import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Portal} from '#/components/Portal'
@@ -12,6 +13,13 @@ import {
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 
+/**
+ * Exports
+ */
+export {
+  BottomSheetScrollView as ScrollView,
+  BottomSheetTextInput as TextInput,
+} from '@gorhom/bottom-sheet'
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 
@@ -21,8 +29,12 @@ export function Outer({
   onClose,
   nativeOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
+  const insets = useSafeAreaInsets()
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
+  const [defaultSnapPoints, setDefaultSnapPoints] = React.useState<
+    string | number
+  >('25%')
 
   const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
     sheet.current?.snapToIndex(i)
@@ -32,6 +44,15 @@ export function Outer({
     sheet.current?.close()
     onClose?.()
   }, [onClose])
+
+  const measureDefaultSnapPoint = React.useCallback(
+    (e: LayoutChangeEvent) => {
+      const min = e.nativeEvent.layout.height + insets.bottom + 40
+      const max = Dimensions.get('window').height - insets.top - 40
+      setDefaultSnapPoints(min < max ? min : max)
+    },
+    [insets, setDefaultSnapPoints],
+  )
 
   useImperativeHandle(
     control.ref,
@@ -47,9 +68,9 @@ export function Outer({
   return (
     <Portal>
       <BottomSheet
-        snapPoints={['90%']}
+        snapPoints={[defaultSnapPoints]}
         enablePanDownToClose
-        keyboardBehavior="extend"
+        keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize"
         {...(nativeOptions?.sheet || {})}
         ref={sheet}
@@ -78,7 +99,7 @@ export function Outer({
               },
             ]}
           />
-          {children}
+          <View onLayout={measureDefaultSnapPoint}>{children}</View>
         </Context.Provider>
       </BottomSheet>
     </Portal>

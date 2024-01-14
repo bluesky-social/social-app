@@ -50,6 +50,7 @@ export function Dialogs() {
           accessibilityLabelledBy="dialog-title"
           accessibilityDescribedBy="dialog-description">
           <Dialog.Handle />
+
           <View style={[a.gap_md]}>
             <H3 nativeID="dialog-title">Dialog</H3>
             <P nativeID="dialog-description">Description</P>
