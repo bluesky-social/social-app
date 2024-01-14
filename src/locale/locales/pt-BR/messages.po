@@ -2262,7 +2262,7 @@ msgstr "Ninguém"
 
 #: src/view/com/modals/SelfLabel.tsx:136
 #~ msgid "Not Applicable"
-#~ msgstr "Não Aplicável"
+#~ msgstr ""
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "Not Applicable."
@@ -2287,7 +2287,7 @@ msgstr "Nota: o Bluesky é uma rede aberta e pública. Essa configuração limit
 
 #: src/view/screens/Moderation.tsx:227
 #~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
-#~ msgstr "Nota: Aplicativos de terceiros que exibem conteúdo do Bluesky podem não respeitar essa configuração."
+#~ msgstr ""
 
 #: src/Navigation.tsx:447
 #: src/view/screens/Notifications.tsx:113
