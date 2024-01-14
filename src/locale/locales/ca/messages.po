@@ -59,7 +59,7 @@ msgstr "<0>Segueix alguns</0><1>usuaris</1><2>recomanats</2>"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
-msgstr "S'hi ha aplicat una advertència de contingut"
+msgstr "S'ha aplicat una advertència de contingut a {0}"
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -196,11 +196,11 @@ msgstr "Afegeix una advertència de contingut"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
-msgstr "Apel·lar aquesta decisió"
+msgstr "Apel·la aquesta decisió"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:56
 msgid "Appeal this decision."
-msgstr "Apel·lar aquesta decisió."
+msgstr "Apel·la aquesta decisió."
 
 #: src/view/screens/Settings.tsx:432
 msgid "Appearance"
@@ -263,7 +263,7 @@ msgstr "Bloqueja comptes"
 
 #: src/view/screens/ProfileList.tsx:473
 msgid "Block list"
-msgstr "Bloquejar una llista"
+msgstr "Bloqueja una llista"
 
 #: src/view/screens/ProfileList.tsx:308
 msgid "Block these accounts?"
@@ -386,7 +386,7 @@ msgstr "Cancel·la l'edició del perfil"
 
 #: src/view/com/modals/Repost.tsx:64
 msgid "Cancel quote post"
-msgstr "Cancel·la la citació"
+msgstr "Cancel·la la citació de la publicació"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:87
 #: src/view/shell/desktop/Search.tsx:178
@@ -448,11 +448,11 @@ msgstr "Tria la teva contrasenya."
 
 #: src/view/screens/Settings.tsx:694
 msgid "Clear all legacy storage data"
-msgstr "Esborra totes les dades emmagatzemades"
+msgstr "Esborra totes les dades antigues emmagatzemades"
 
 #: src/view/screens/Settings.tsx:696
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "Esborra totes les dades emmagatzemades (i després reinicia)"
+msgstr "Esborra totes les dades antigues emmagatzemades (i després reinicia)"
 
 #: src/view/screens/Settings.tsx:706
 msgid "Clear all storage data"
@@ -941,20 +941,20 @@ msgstr "Comença"
 #: src/view/com/util/moderation/ScreenHider.tsx:123
 #: src/view/shell/desktop/LeftNav.tsx:104
 msgid "Go back"
-msgstr "Enrere"
+msgstr "Ves enrere"
 
 #: src/view/screens/ProfileFeed.tsx:104
 #: src/view/screens/ProfileFeed.tsx:109
 #: src/view/screens/ProfileList.tsx:848
 #: src/view/screens/ProfileList.tsx:853
 msgid "Go Back"
-msgstr "Enrere"
+msgstr "Ves enrere"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:181
 #: src/view/com/auth/login/LoginForm.tsx:279
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:163
 msgid "Go to next"
-msgstr "Vés al següent"
+msgstr "Ves al següent"
 
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
@@ -1141,7 +1141,7 @@ msgstr "Restablirem la teva contrasenya!"
 #: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
 msgid "Library"
-msgstr "Llibreria"
+msgstr "Biblioteca"
 
 #: src/view/screens/ProfileFeed.tsx:586
 msgid "Like this feed"
@@ -1737,15 +1737,15 @@ msgstr "Codi de restabliment"
 
 #: src/view/screens/Settings.tsx:686
 msgid "Reset onboarding state"
-msgstr "Restablir l'estat de la incorporació"
+msgstr "Restableix l'estat de la incorporació"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:98
 msgid "Reset password"
-msgstr "Restablir la contrasenya"
+msgstr "Restableix la contrasenya"
 
 #: src/view/screens/Settings.tsx:676
 msgid "Reset preferences state"
-msgstr "Restablir l'estat de les preferències"
+msgstr "Restableix l'estat de les preferències"
 
 #: src/view/screens/Settings.tsx:684
 msgid "Resets the onboarding state"
@@ -2243,7 +2243,7 @@ msgstr "Actualitzant…"
 
 #: src/view/com/modals/ChangeHandle.tsx:453
 msgid "Upload a text file to:"
-msgstr "Puja un arxiu de text a:"
+msgstr "Puja un fitxer de text a:"
 
 #: src/view/screens/AppPasswords.tsx:194
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
