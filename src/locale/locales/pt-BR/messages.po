@@ -36,7 +36,7 @@ msgstr "{0}"
 
 #: src/view/com/modals/CreateOrEditList.tsx:176
 #~ msgid "{0} {purposeLabel} List"
-#~ msgstr "Lista {0} {purposeLabel}"
+#~ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
@@ -562,7 +562,7 @@ msgstr "Cancelar exclusão da conta"
 
 #: src/view/com/modals/AltImage.tsx:123
 #~ msgid "Cancel add image alt text"
-#~ msgstr "Cancelar adição de texto alternativo da imagem"
+#~ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
@@ -596,7 +596,7 @@ msgstr "Alterar"
 
 #: src/view/screens/Settings.tsx:306
 #~ msgid "Change"
-#~ msgstr "Alterar"
+#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:662
 #: src/view/screens/Settings.tsx:671
@@ -1403,7 +1403,7 @@ msgstr "Seguir {0}"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:42
 #~ msgid "Follow some"
-#~ msgstr "Seguir alguns"
+#~ msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -1431,7 +1431,7 @@ msgstr "Seguidores"
 
 #: src/view/com/profile/ProfileHeader.tsx:624
 #~ msgid "following"
-#~ msgstr "seguindo"
+#~ msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:534
 #: src/view/screens/ProfileFollows.tsx:25
@@ -1978,7 +1978,7 @@ msgstr "Menu"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:194
 #~ msgid "Message from server"
-#~ msgstr "Mensagem do servidor"
+#~ msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:197
 msgid "Message from server: {0}"
@@ -2179,7 +2179,7 @@ msgstr "Novo Post"
 
 #: src/view/shell/desktop/LeftNav.tsx:258
 #~ msgid "New Post"
-#~ msgstr "Novo Post"
+#~ msgstr ""
 
 #: src/view/com/modals/CreateOrEditList.tsx:190
 msgid "New User List"
@@ -2597,7 +2597,7 @@ msgstr "Post"
 #: src/view/com/post-thread/PostThread.tsx:225
 #: src/view/screens/PostThread.tsx:80
 #~ msgid "Post"
-#~ msgstr "Post"
+#~ msgstr ""
 
 #: src/view/com/post-thread/PostThreadItem.tsx:176
 msgid "Post by {0}"
@@ -2717,7 +2717,7 @@ msgstr "Citar Post"
 
 #: src/view/com/modals/Repost.tsx:56
 #~ msgid "Quote Post"
-#~ msgstr "Citar Post"
+#~ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -2891,7 +2891,7 @@ msgstr "Solicitar Alteração"
 
 #: src/view/screens/Moderation.tsx:188
 #~ msgid "Request to limit the visibility of my account"
-#~ msgstr "Solicitação para limitar a visibilidade da minha conta"
+#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
@@ -2985,7 +2985,7 @@ msgstr "Salvar texto alternativo"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:212
 #~ msgid "Save changes"
-#~ msgstr "Salvar alterações"
+#~ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:232
 msgid "Save Changes"
@@ -3102,7 +3102,7 @@ msgstr "Enviar Email"
 
 #: src/view/com/modals/DeleteAccount.tsx:138
 #~ msgid "Send Email"
-#~ msgstr "Enviar Email"
+#~ msgstr ""
 
 #: src/view/shell/Drawer.tsx:295
 #: src/view/shell/Drawer.tsx:316
@@ -3216,7 +3216,7 @@ msgstr "Compartilhar feed"
 
 #: src/view/screens/ProfileFeed.tsx:276
 #~ msgid "Share link"
-#~ msgstr "Compartilhar link"
+#~ msgstr ""
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:261
 #: src/view/com/util/moderation/ContentHider.tsx:107
@@ -3519,7 +3519,7 @@ msgstr "O formulário de suporte foi movido. Se precisar de ajuda, por favor, <0
 
 #: src/view/screens/Support.tsx:36
 #~ msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-#~ msgstr "O formulário de suporte foi movido. Se precisar de ajuda, por favor <0/> ou visite {HELP_DESK_URL} para entrar em contato conosco."
+#~ msgstr ""
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -3718,7 +3718,7 @@ msgstr "Tentar novamente"
 
 #: src/view/com/util/error/ErrorScreen.tsx:73
 #~ msgid "Try again"
-#~ msgstr "Tente novamente"
+#~ msgstr ""
 
 #: src/view/screens/ProfileList.tsx:484
 msgid "Un-block list"
