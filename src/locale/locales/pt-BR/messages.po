@@ -1333,7 +1333,7 @@ msgstr "Preferências de Feed"
 #: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
-msgstr "Comentários"
+msgstr "Feedback"
 
 #: src/Navigation.tsx:442
 #: src/view/screens/Feeds.tsx:479
@@ -3107,7 +3107,7 @@ msgstr "Enviar Email"
 #: src/view/shell/Drawer.tsx:295
 #: src/view/shell/Drawer.tsx:316
 msgid "Send feedback"
-msgstr "Enviar comentários"
+msgstr "Enviar feedback"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 msgid "Send Report"
