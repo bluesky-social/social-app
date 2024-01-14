@@ -37,7 +37,8 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {getPostLanguage} from '../../../locale/helpers'
+import {isPostInLanguage, getPostLanguage} from '../../../locale/helpers'
+import {useLanguagePrefs} from '#/state/preferences'
 
 export function FeedItem({
   post,
@@ -297,11 +298,9 @@ let FeedItemInner = ({
             </View>
           )}
           <PostContent
+            post={post}
             moderation={moderation}
             richText={richText}
-            postEmbed={post.embed}
-            postAuthor={post.author}
-            lang={getPostLanguage(post)}
           />
           <PostCtrls
             post={post}
@@ -320,20 +319,17 @@ let FeedItemInner = ({
 FeedItemInner = memo(FeedItemInner)
 
 let PostContent = ({
+  post,
   moderation,
   richText,
-  postEmbed,
-  postAuthor,
-  lang,
 }: {
+  post: Shadow<AppBskyFeedDefs.PostView>
   moderation: PostModeration
   richText: RichTextAPI
-  postEmbed: AppBskyFeedDefs.PostView['embed']
-  postAuthor: AppBskyFeedDefs.PostView['author']
-  lang?: string
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const langPrefs = useLanguagePrefs()
   const [limitLines, setLimitLines] = useState(
     () => countLines(richText.text) >= MAX_POST_LINES,
   )
@@ -341,6 +337,14 @@ let PostContent = ({
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
   }, [setLimitLines])
+
+  const postLang = useMemo(
+    () =>
+      langPrefs.appLanguage && !isPostInLanguage(post, [langPrefs.appLanguage])
+        ? getPostLanguage(post)
+        : undefined,
+    [post, langPrefs.appLanguage],
+  )
 
   return (
     <ContentHider
@@ -358,7 +362,7 @@ let PostContent = ({
             lineHeight={1.3}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
             style={s.flex1}
-            lang={lang}
+            lang={postLang}
           />
         </View>
       ) : undefined}
@@ -370,16 +374,16 @@ let PostContent = ({
           href="#"
         />
       ) : undefined}
-      {postEmbed ? (
+      {post.embed ? (
         <ContentHider
           testID="contentHider-embed"
           moderation={moderation.embed}
           moderationDecisions={moderation.decisions}
-          ignoreMute={isEmbedByEmbedder(postEmbed, postAuthor.did)}
+          ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
           ignoreQuoteDecisions
           style={styles.embed}>
           <PostEmbeds
-            embed={postEmbed}
+            embed={post.embed}
             moderation={moderation.embed}
             moderationDecisions={moderation.decisions}
           />

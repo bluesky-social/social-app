@@ -207,6 +207,13 @@ let PostThreadItemLoaded = ({
       ),
     [post, langPrefs.primaryLanguage],
   )
+  const postLang = useMemo(
+    () =>
+      langPrefs.appLanguage && !isPostInLanguage(post, [langPrefs.appLanguage])
+        ? getPostLanguage(post)
+        : undefined,
+    [post, langPrefs.appLanguage],
+  )
 
   const onPressReply = React.useCallback(() => {
     openComposer({
@@ -374,7 +381,7 @@ let PostThreadItemLoaded = ({
                     richText={richText}
                     lineHeight={1.3}
                     style={s.flex1}
-                    lang={getPostLanguage(post)}
+                    lang={postLang}
                   />
                 </View>
               ) : undefined}
@@ -566,7 +573,7 @@ let PostThreadItemLoaded = ({
                       style={[pal.text, s.flex1]}
                       lineHeight={1.3}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-                      lang={getPostLanguage(post)}
+                      lang={postLang}
                     />
                   </View>
                 ) : undefined}
