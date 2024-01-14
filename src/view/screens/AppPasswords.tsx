@@ -62,8 +62,8 @@ export function AppPasswords({}: Props) {
         ]}
         testID="appPasswordsScreen">
         <ErrorScreen
-          title="Oops!"
-          message="There was an issue with fetching your app passwords"
+          title={_(msg`Oops!`)}
+          message={_(msg`There was an issue with fetching your app passwords`)}
           details={cleanError(error)}
         />
       </CenteredView>

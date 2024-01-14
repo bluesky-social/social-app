@@ -16,7 +16,7 @@ import {BACK_HITSLOP} from 'lib/constants'
 import {isNative} from 'platform/detection'
 import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
 
@@ -153,17 +153,19 @@ export function ProfileSubpageHeader({
             <LoadingPlaceholder width={50} height={8} />
           ) : (
             <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
-              by{' '}
               {!creator ? (
-                '—'
+                <Trans>by —</Trans>
               ) : isOwner ? (
-                'you'
+                <Trans>by you</Trans>
               ) : (
-                <TextLink
-                  text={sanitizeHandle(creator.handle, '@')}
-                  href={makeProfileLink(creator)}
-                  style={pal.textLight}
-                />
+                <Trans>
+                  by{' '}
+                  <TextLink
+                    text={sanitizeHandle(creator.handle, '@')}
+                    href={makeProfileLink(creator)}
+                    style={pal.textLight}
+                  />
+                </Trans>
               )}
             </Text>
           )}

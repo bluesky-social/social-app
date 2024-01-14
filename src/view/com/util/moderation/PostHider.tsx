@@ -9,7 +9,7 @@ import {addStyle} from 'lib/styles'
 import {describeModerationCause} from 'lib/moderation'
 import {ShieldExclamation} from 'lib/icons'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
 interface Props extends ComponentProps<typeof Link> {
@@ -57,7 +57,9 @@ export function PostHider({
         }
       }}
       accessibilityRole="button"
-      accessibilityHint={override ? 'Hide the content' : 'Show the content'}
+      accessibilityHint={
+        override ? _(msg`Hide the content`) : _(msg`Show the content`)
+      }
       accessibilityLabel=""
       style={[
         styles.description,
@@ -103,7 +105,7 @@ export function PostHider({
       </Text>
       {!moderation.noOverride && (
         <Text type="sm" style={[styles.showBtn, pal.link]}>
-          {override ? 'Hide' : 'Show'}
+          {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
         </Text>
       )}
     </Pressable>

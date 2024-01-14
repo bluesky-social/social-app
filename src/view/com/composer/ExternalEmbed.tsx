@@ -68,7 +68,7 @@ export const ExternalEmbed = ({
         onPress={onRemove}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Remove image preview`)}
-        accessibilityHint={`Removes default thumbnail from ${link.uri}`}
+        accessibilityHint={_(msg`Removes default thumbnail from ${link.uri}`)}
         onAccessibilityEscape={onRemove}>
         <FontAwesomeIcon size={18} icon="xmark" style={s.white} />
       </TouchableOpacity>

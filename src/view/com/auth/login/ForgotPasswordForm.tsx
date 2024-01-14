@@ -67,7 +67,7 @@ export const ForgotPasswordForm = ({
 
   const onPressNext = async () => {
     if (!EmailValidator.validate(email)) {
-      return setError('Your email appears to be invalid.')
+      return setError(_(msg`Your email appears to be invalid.`))
     }
 
     setError('')
@@ -83,7 +83,9 @@ export const ForgotPasswordForm = ({
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
+          _(
+            msg`Unable to contact your service. Please check your Internet connection.`,
+          ),
         )
       } else {
         setError(cleanError(errMsg))
@@ -112,7 +114,9 @@ export const ForgotPasswordForm = ({
             onPress={onPressSelectService}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Hosting provider`)}
-            accessibilityHint="Sets hosting provider for password reset">
+            accessibilityHint={_(
+              msg`Sets hosting provider for password reset`,
+            )}>
             <FontAwesomeIcon
               icon="globe"
               style={[pal.textLight, styles.groupContentIcon]}
@@ -136,7 +140,7 @@ export const ForgotPasswordForm = ({
             <TextInput
               testID="forgotPasswordEmail"
               style={[pal.text, styles.textInput]}
-              placeholder="Email address"
+              placeholder={_(msg`Email address`)}
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoFocus
@@ -146,7 +150,7 @@ export const ForgotPasswordForm = ({
               onChangeText={setEmail}
               editable={!isProcessing}
               accessibilityLabel={_(msg`Email`)}
-              accessibilityHint="Sets email for password reset"
+              accessibilityHint={_(msg`Sets email for password reset`)}
             />
           </View>
         </View>
@@ -179,7 +183,7 @@ export const ForgotPasswordForm = ({
               onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Go to next`)}
-              accessibilityHint="Navigates to the next screen">
+              accessibilityHint={_(msg`Navigates to the next screen`)}>
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 <Trans>Next</Trans>
               </Text>

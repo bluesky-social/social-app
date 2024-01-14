@@ -53,7 +53,9 @@ export function ErrorMessage({
           onPress={onPressTryAgain}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Retry`)}
-          accessibilityHint="Retries the last action, which errored out">
+          accessibilityHint={_(
+            msg`Retries the last action, which errored out`,
+          )}>
           <FontAwesomeIcon
             icon="arrows-rotate"
             style={{color: theme.palette.error.icon}}

@@ -148,9 +148,13 @@ function AdultContentEnabledPref() {
       ) : typeof preferences?.birthDate === 'undefined' ? (
         <View style={[pal.viewLight, styles.agePrompt]}>
           <Text type="md" style={[pal.text, {flex: 1}]}>
-            Confirm your age to enable adult content.
+            <Trans>Confirm your age to enable adult content.</Trans>
           </Text>
-          <Button type="primary" label="Set Age" onPress={onSetAge} />
+          <Button
+            type="primary"
+            label={_(msg({message: 'Set Age', context: 'action'}))}
+            onPress={onSetAge}
+          />
         </View>
       ) : (preferences.userAge || 0) >= 18 ? (
         <ToggleButton
@@ -165,7 +169,11 @@ function AdultContentEnabledPref() {
           <Text type="md" style={[pal.text, {flex: 1}]}>
             <Trans>You must be 18 or older to enable adult content.</Trans>
           </Text>
-          <Button type="primary" label="Set Age" onPress={onSetAge} />
+          <Button
+            type="primary"
+            label={_(msg({message: 'Set Age', context: 'action'}))}
+            onPress={onSetAge}
+          />
         </View>
       )}
     </View>
@@ -208,7 +216,7 @@ function ContentLabelPref({
 
       {disabled || !visibility ? (
         <Text type="sm-bold" style={pal.textLight}>
-          <Trans>Hide</Trans>
+          <Trans context="action">Hide</Trans>
         </Text>
       ) : (
         <SelectGroup
@@ -229,6 +237,7 @@ interface SelectGroupProps {
 
 function SelectGroup({current, onChange, labelGroup}: SelectGroupProps) {
   const {_} = useLingui()
+
   return (
     <View style={styles.selectableBtns}>
       <SelectableBtn
@@ -279,6 +288,8 @@ function SelectableBtn({
 }: SelectableBtnProps) {
   const pal = usePalette('default')
   const palPrimary = usePalette('inverted')
+  const {_} = useLingui()
+
   return (
     <Pressable
       style={[
@@ -291,7 +302,9 @@ function SelectableBtn({
       onPress={() => onChange(value)}
       accessibilityRole="button"
       accessibilityLabel={value}
-      accessibilityHint={`Set ${value} for ${labelGroup} content moderation policy`}>
+      accessibilityHint={_(
+        msg`Set ${value} for ${labelGroup} content moderation policy`,
+      )}>
       <Text style={current === value ? palPrimary.text : pal.text}>
         {label}
       </Text>

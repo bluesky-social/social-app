@@ -11,6 +11,8 @@ import {NavigationProp} from 'lib/routes/types'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import Animated from 'react-native-reanimated'
 import {useSetDrawerOpen} from '#/state/shell'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -32,6 +34,7 @@ export function ViewHeader({
   renderButton?: () => JSX.Element
 }) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
@@ -75,9 +78,9 @@ export function ViewHeader({
             hitSlop={BACK_HITSLOP}
             style={canGoBack ? styles.backBtn : styles.backBtnWide}
             accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
+            accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
             accessibilityHint={
-              canGoBack ? '' : 'Access navigation links and settings'
+              canGoBack ? '' : _(msg`Access navigation links and settings`)
             }>
             {canGoBack ? (
               <FontAwesomeIcon

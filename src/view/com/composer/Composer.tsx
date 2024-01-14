@@ -45,6 +45,7 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -260,7 +261,11 @@ export const ComposePost = observer(function ComposePost({
     setLangPrefs.savePostLanguageToHistory()
     onPost?.()
     onClose()
-    Toast.show(`Your ${replyTo ? 'reply' : 'post'} has been published`)
+    Toast.show(
+      replyTo
+        ? _(msg`Your reply has been published`)
+        : _(msg`Your post has been published`),
+    )
   }
 
   const canPost = useMemo(
@@ -269,7 +274,9 @@ export const ComposePost = observer(function ComposePost({
       (!requireAltTextEnabled || !gallery.needsAltText),
     [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
-  const selectTextInputPlaceholder = replyTo ? 'Write your reply' : `What's up?`
+  const selectTextInputPlaceholder = replyTo
+    ? _(msg`Write your reply`)
+    : _(msg`What's up?`)
 
   const canSelectImages = useMemo(() => gallery.size < 4, [gallery.size])
   const hasMedia = gallery.size > 0 || Boolean(extLink)
@@ -291,7 +298,9 @@ export const ComposePost = observer(function ComposePost({
             onAccessibilityEscape={onPressCancel}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Cancel`)}
-            accessibilityHint="Closes post composer and discards post draft">
+            accessibilityHint={_(
+              msg`Closes post composer and discards post draft`,
+            )}>
             <Text style={[pal.link, s.f18]}>
               <Trans>Cancel</Trans>
             </Text>
@@ -323,7 +332,7 @@ export const ComposePost = observer(function ComposePost({
                   onPress={onPressPublish}
                   accessibilityRole="button"
                   accessibilityLabel={
-                    replyTo ? 'Publish reply' : 'Publish post'
+                    replyTo ? _(msg`Publish reply`) : _(msg`Publish post`)
                   }
                   accessibilityHint="">
                   <LinearGradient
@@ -335,14 +344,18 @@ export const ComposePost = observer(function ComposePost({
                     end={{x: 1, y: 1}}
                     style={styles.postBtn}>
                     <Text style={[s.white, s.f16, s.bold]}>
-                      {replyTo ? 'Reply' : 'Post'}
+                      {replyTo ? (
+                        <Trans context="action">Reply</Trans>
+                      ) : (
+                        <Trans context="action">Post</Trans>
+                      )}
                     </Text>
                   </LinearGradient>
                 </TouchableOpacity>
               ) : (
                 <View style={[styles.postBtn, pal.btn]}>
                   <Text style={[pal.textLight, s.f16, s.bold]}>
-                    <Trans>Post</Trans>
+                    <Trans context="action">Post</Trans>
                   </Text>
                 </View>
               )}
@@ -400,7 +413,9 @@ export const ComposePost = observer(function ComposePost({
               onError={setError}
               accessible={true}
               accessibilityLabel={_(msg`Write post`)}
-              accessibilityHint={`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`}
+              accessibilityHint={_(
+                msg`Compose posts up to ${MAX_GRAPHEME_LENGTH} characters in length`,
+              )}
             />
           </View>
 
@@ -429,7 +444,9 @@ export const ComposePost = observer(function ComposePost({
                   onPress={() => onPressAddLinkCard(url)}
                   accessibilityRole="button"
                   accessibilityLabel={_(msg`Add link card`)}
-                  accessibilityHint={`Creates a card with a thumbnail. The card links to ${url}`}>
+                  accessibilityHint={_(
+                    msg`Creates a card with a thumbnail. The card links to ${url}`,
+                  )}>
                   <Text style={pal.text}>
                     <Trans>Add link card:</Trans>{' '}
                     <Text style={[pal.link, s.ml5]}>{toShortUrl(url)}</Text>
@@ -438,6 +455,7 @@ export const ComposePost = observer(function ComposePost({
               ))}
           </View>
         ) : null}
+        <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>

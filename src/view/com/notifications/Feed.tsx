@@ -13,6 +13,8 @@ import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {List, ListRef} from '../util/List'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -31,6 +33,7 @@ export function Feed({
 }) {
   const [isPTRing, setIsPTRing] = React.useState(false)
 
+  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {checkUnread} = useUnreadNotificationsApi()
   const {
@@ -101,14 +104,16 @@ export function Feed({
         return (
           <EmptyState
             icon="bell"
-            message="No notifications yet!"
+            message={_(msg`No notifications yet!`)}
             style={styles.emptyState}
           />
         )
       } else if (item === LOAD_MORE_ERROR_ITEM) {
         return (
           <LoadMoreRetryBtn
-            label="There was an issue fetching notifications. Tap here to try again."
+            label={_(
+              msg`There was an issue fetching notifications. Tap here to try again.`,
+            )}
             onPress={onPressRetryLoadMore}
           />
         )
@@ -117,7 +122,7 @@ export function Feed({
       }
       return <FeedItem item={item} moderationOpts={moderationOpts!} />
     },
-    [onPressRetryLoadMore, moderationOpts],
+    [onPressRetryLoadMore, moderationOpts, _],
   )
 
   const FeedFooter = React.useCallback(

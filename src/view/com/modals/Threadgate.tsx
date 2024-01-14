@@ -126,10 +126,10 @@ export function Component({
           }}
           style={styles.btn}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Done`)}
+          accessibilityLabel={_(msg({message: `Done`, context: 'action'}))}
           accessibilityHint="">
           <Text style={[s.white, s.bold, s.f18]}>
-            <Trans>Done</Trans>
+            <Trans context="action">Done</Trans>
           </Text>
         </TouchableOpacity>
       </View>

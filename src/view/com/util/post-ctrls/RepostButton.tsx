@@ -8,6 +8,8 @@ import {pluralize} from 'lib/strings/helpers'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 import {useModalControls} from '#/state/modals'
 import {useRequireAuth} from '#/state/session'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 interface Props {
   isReposted: boolean
@@ -25,6 +27,7 @@ let RepostButton = ({
   onQuote,
 }: Props): React.ReactNode => {
   const theme = useTheme()
+  const {_} = useLingui()
   const {openModal} = useModalControls()
   const requireAuth = useRequireAuth()
 
@@ -53,7 +56,9 @@ let RepostButton = ({
       style={[styles.control, !big && styles.controlPad]}
       accessibilityRole="button"
       accessibilityLabel={`${
-        isReposted ? 'Undo repost' : 'Repost'
+        isReposted
+          ? _(msg`Undo repost`)
+          : _(msg({message: 'Repost', context: 'action'}))
       } (${repostCount} ${pluralize(repostCount || 0, 'repost')})`}
       accessibilityHint=""
       hitSlop={big ? HITSLOP_20 : HITSLOP_10}>

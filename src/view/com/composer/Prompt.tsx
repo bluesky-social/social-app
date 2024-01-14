@@ -22,7 +22,7 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
       onPress={() => onPressCompose()}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Compose reply`)}
-      accessibilityHint="Opens composer">
+      accessibilityHint={_(msg`Opens composer`)}>
       <UserAvatar avatar={profile?.avatar} size={38} />
       <Text
         type="xl"

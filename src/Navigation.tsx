@@ -76,6 +76,8 @@ import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
+import {msg} from '@lingui/macro'
+import {i18n, MessageDescriptor} from '@lingui/core'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -93,55 +95,56 @@ const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
  * These "common screens" are reused across stacks.
  */
 function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
-  const title = (page: string) => bskyTitle(page, unreadCountLabel)
+  const title = (page: MessageDescriptor) =>
+    bskyTitle(i18n._(page), unreadCountLabel)
 
   return (
     <>
       <Stack.Screen
         name="NotFound"
         getComponent={() => NotFoundScreen}
-        options={{title: title('Not Found')}}
+        options={{title: title(msg`Not Found`)}}
       />
       <Stack.Screen
         name="Lists"
         component={ListsScreen}
-        options={{title: title('Lists'), requireAuth: true}}
+        options={{title: title(msg`Lists`), requireAuth: true}}
       />
       <Stack.Screen
         name="Moderation"
         getComponent={() => ModerationScreen}
-        options={{title: title('Moderation'), requireAuth: true}}
+        options={{title: title(msg`Moderation`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
         getComponent={() => ModerationModlistsScreen}
-        options={{title: title('Moderation Lists'), requireAuth: true}}
+        options={{title: title(msg`Moderation Lists`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationMutedAccounts"
         getComponent={() => ModerationMutedAccounts}
-        options={{title: title('Muted Accounts'), requireAuth: true}}
+        options={{title: title(msg`Muted Accounts`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationBlockedAccounts"
         getComponent={() => ModerationBlockedAccounts}
-        options={{title: title('Blocked Accounts'), requireAuth: true}}
+        options={{title: title(msg`Blocked Accounts`), requireAuth: true}}
       />
       <Stack.Screen
         name="Settings"
         getComponent={() => SettingsScreen}
-        options={{title: title('Settings'), requireAuth: true}}
+        options={{title: title(msg`Settings`), requireAuth: true}}
       />
       <Stack.Screen
         name="LanguageSettings"
         getComponent={() => LanguageSettingsScreen}
-        options={{title: title('Language Settings'), requireAuth: true}}
+        options={{title: title(msg`Language Settings`), requireAuth: true}}
       />
       <Stack.Screen
         name="Profile"
         getComponent={() => ProfileScreen}
         options={({route}) => ({
-          title: title(`@${route.params.name}`),
+          title: title(msg`@${route.params.name}`),
           animation: 'none',
         })}
       />
@@ -149,106 +152,112 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="ProfileFollowers"
         getComponent={() => ProfileFollowersScreen}
         options={({route}) => ({
-          title: title(`People following @${route.params.name}`),
+          title: title(msg`People following @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileFollows"
         getComponent={() => ProfileFollowsScreen}
         options={({route}) => ({
-          title: title(`People followed by @${route.params.name}`),
+          title: title(msg`People followed by @${route.params.name}`),
         })}
       />
       <Stack.Screen
         name="ProfileList"
         getComponent={() => ProfileListScreen}
-        options={{title: title('List'), requireAuth: true}}
+        options={{title: title(msg`List`), requireAuth: true}}
       />
       <Stack.Screen
         name="PostThread"
         getComponent={() => PostThreadScreen}
-        options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+        options={({route}) => ({
+          title: title(msg`Post by @${route.params.name}`),
+        })}
       />
       <Stack.Screen
         name="PostLikedBy"
         getComponent={() => PostLikedByScreen}
-        options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+        options={({route}) => ({
+          title: title(msg`Post by @${route.params.name}`),
+        })}
       />
       <Stack.Screen
         name="PostRepostedBy"
         getComponent={() => PostRepostedByScreen}
-        options={({route}) => ({title: title(`Post by @${route.params.name}`)})}
+        options={({route}) => ({
+          title: title(msg`Post by @${route.params.name}`),
+        })}
       />
       <Stack.Screen
         name="ProfileFeed"
         getComponent={() => ProfileFeedScreen}
-        options={{title: title('Feed'), requireAuth: true}}
+        options={{title: title(msg`Feed`), requireAuth: true}}
       />
       <Stack.Screen
         name="ProfileFeedLikedBy"
         getComponent={() => ProfileFeedLikedByScreen}
-        options={{title: title('Liked by')}}
+        options={{title: title(msg`Liked by`)}}
       />
       <Stack.Screen
         name="Debug"
         getComponent={() => DebugScreen}
-        options={{title: title('Debug'), requireAuth: true}}
+        options={{title: title(msg`Debug`), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"
         getComponent={() => LogScreen}
-        options={{title: title('Log'), requireAuth: true}}
+        options={{title: title(msg`Log`), requireAuth: true}}
       />
       <Stack.Screen
         name="Support"
         getComponent={() => SupportScreen}
-        options={{title: title('Support')}}
+        options={{title: title(msg`Support`)}}
       />
       <Stack.Screen
         name="PrivacyPolicy"
         getComponent={() => PrivacyPolicyScreen}
-        options={{title: title('Privacy Policy')}}
+        options={{title: title(msg`Privacy Policy`)}}
       />
       <Stack.Screen
         name="TermsOfService"
         getComponent={() => TermsOfServiceScreen}
-        options={{title: title('Terms of Service')}}
+        options={{title: title(msg`Terms of Service`)}}
       />
       <Stack.Screen
         name="CommunityGuidelines"
         getComponent={() => CommunityGuidelinesScreen}
-        options={{title: title('Community Guidelines')}}
+        options={{title: title(msg`Community Guidelines`)}}
       />
       <Stack.Screen
         name="CopyrightPolicy"
         getComponent={() => CopyrightPolicyScreen}
-        options={{title: title('Copyright Policy')}}
+        options={{title: title(msg`Copyright Policy`)}}
       />
       <Stack.Screen
         name="AppPasswords"
         getComponent={() => AppPasswords}
-        options={{title: title('App Passwords'), requireAuth: true}}
+        options={{title: title(msg`App Passwords`), requireAuth: true}}
       />
       <Stack.Screen
         name="SavedFeeds"
         getComponent={() => SavedFeeds}
-        options={{title: title('Edit My Feeds'), requireAuth: true}}
+        options={{title: title(msg`Edit My Feeds`), requireAuth: true}}
       />
       <Stack.Screen
         name="PreferencesHomeFeed"
         getComponent={() => PreferencesHomeFeed}
-        options={{title: title('Home Feed Preferences'), requireAuth: true}}
+        options={{title: title(msg`Home Feed Preferences`), requireAuth: true}}
       />
       <Stack.Screen
         name="PreferencesThreads"
         getComponent={() => PreferencesThreads}
-        options={{title: title('Threads Preferences'), requireAuth: true}}
+        options={{title: title(msg`Threads Preferences`), requireAuth: true}}
       />
       <Stack.Screen
         name="PreferencesExternalEmbeds"
         getComponent={() => PreferencesExternalEmbeds}
         options={{
-          title: title('External Media Preferences'),
+          title: title(msg`External Media Preferences`),
           requireAuth: true,
         }}
       />
@@ -407,7 +416,7 @@ const FlatNavigator = () => {
   const pal = usePalette('default')
   const numUnread = useUnreadNotifications()
 
-  const title = (page: string) => bskyTitle(page, numUnread)
+  const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread)
   return (
     <Flat.Navigator
       screenOptions={{
@@ -420,22 +429,22 @@ const FlatNavigator = () => {
       <Flat.Screen
         name="Home"
         getComponent={() => HomeScreen}
-        options={{title: title('Home'), requireAuth: true}}
+        options={{title: title(msg`Home`), requireAuth: true}}
       />
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
-        options={{title: title('Search')}}
+        options={{title: title(msg`Search`)}}
       />
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}
-        options={{title: title('Feeds'), requireAuth: true}}
+        options={{title: title(msg`Feeds`), requireAuth: true}}
       />
       <Flat.Screen
         name="Notifications"
         getComponent={() => NotificationsScreen}
-        options={{title: title('Notifications'), requireAuth: true}}
+        options={{title: title(msg`Notifications`), requireAuth: true}}
       />
       {commonScreens(Flat as typeof HomeTab, numUnread)}
     </Flat.Navigator>
