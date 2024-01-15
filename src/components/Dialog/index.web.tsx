@@ -11,7 +11,6 @@ import {Button} from '#/components/Button'
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context, useDialogContext} from '#/components/Dialog/context'
 
-export {ScrollView, TextInput} from 'react-native'
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 
@@ -91,7 +90,7 @@ export function Outer({
                     style={[
                       web(a.fixed),
                       a.inset_0,
-                      t.atoms.bg_contrast_300,
+                      t.atoms.bg_contrast_100,
                       {opacity: 0.8},
                     ]}
                   />
@@ -145,7 +144,7 @@ export function Inner({
           a.border,
           gtMobile ? a.p_xl : a.p_lg,
           t.atoms.bg,
-          {maxWidth: 600, borderColor: t.palette.contrast_300},
+          {maxWidth: 600, borderColor: t.palette.contrast_200},
           ...(Array.isArray(style) ? style : [style || {}]),
         ]}>
         {children}
@@ -153,6 +152,8 @@ export function Inner({
     </FocusScope>
   )
 }
+
+export const ScrollableInner = Inner
 
 export function Handle() {
   return null

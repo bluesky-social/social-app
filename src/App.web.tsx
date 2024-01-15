@@ -30,10 +30,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
-import {
-  Provider as PortalProvider,
-  Outlet as PortalOutlet,
-} from '#/components/Portal'
+import {Provider as PortalProvider} from '#/components/Portal'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
@@ -62,7 +59,6 @@ function InnerApp() {
               <RootSiblingParent>
                 <SafeAreaProvider>
                   <Shell />
-                  <PortalOutlet />
                 </SafeAreaProvider>
               </RootSiblingParent>
               <ToastContainer />

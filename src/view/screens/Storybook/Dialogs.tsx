@@ -45,15 +45,18 @@ export function Dialogs() {
         </Prompt.Actions>
       </Prompt.Outer>
 
-      <Dialog.Outer control={control}>
-        <Dialog.Inner
+      <Dialog.Outer
+        control={control}
+        nativeOptions={{sheet: {snapPoints: ['90%']}}}>
+        <Dialog.Handle />
+
+        <Dialog.ScrollableInner
           accessibilityLabelledBy="dialog-title"
           accessibilityDescribedBy="dialog-description">
-          <Dialog.Handle />
-
           <View style={[a.relative, a.gap_md, a.w_full]}>
             <H3 nativeID="dialog-title">Dialog</H3>
             <P nativeID="dialog-description">Description</P>
+            <View style={{height: 1000}} />
             <View style={[a.flex_row, a.justify_end]}>
               <Button
                 variant="outline"
@@ -66,7 +69,7 @@ export function Dialogs() {
               </Button>
             </View>
           </View>
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Dialog.Outer>
     </>
   )

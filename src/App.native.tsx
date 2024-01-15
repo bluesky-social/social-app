@@ -41,10 +41,7 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Splash} from '#/Splash'
-import {
-  Provider as PortalProvider,
-  Outlet as PortalOutlet,
-} from '#/components/Portal'
+import {Provider as PortalProvider} from '#/components/Portal'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -80,7 +77,6 @@ function InnerApp() {
                     <GestureHandlerRootView style={s.h100pct}>
                       <TestCtrls />
                       <Shell />
-                      <PortalOutlet />
                     </GestureHandlerRootView>
                   </RootSiblingParent>
                 </ThemeProvider>

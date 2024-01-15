@@ -2,6 +2,7 @@ import React, {useImperativeHandle} from 'react'
 import {View, Dimensions} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdrop,
+  BottomSheetScrollView,
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -16,13 +17,6 @@ import {
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 
-/**
- * Exports
- */
-export {
-  BottomSheetScrollView as ScrollView,
-  BottomSheetTextInput as TextInput,
-} from '@gorhom/bottom-sheet'
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 
@@ -34,6 +28,8 @@ export function Outer({
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
+  const sheetOptions = nativeOptions?.sheet || {}
+  const hasSnapPoints = !!sheetOptions.snapPoints
 
   const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
     sheet.current?.snapToIndex(i)
@@ -58,15 +54,15 @@ export function Outer({
   return (
     <Portal>
       <BottomSheet
-        enableDynamicSizing
+        enableDynamicSizing={!hasSnapPoints}
         enablePanDownToClose
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize"
         keyboardBlurBehavior="restore"
-        {...(nativeOptions?.sheet || {})}
+        {...sheetOptions}
         ref={sheet}
         index={-1}
-        backgroundStyle={{backgroundColor: 'transparent'}}
+        backgroundStyle={{backgroundColor: t.atoms.bg.backgroundColor}}
         backdropComponent={props => (
           <BottomSheetBackdrop
             appearsOnIndex={0}
@@ -77,23 +73,21 @@ export function Outer({
         handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
         handleStyle={{display: 'none'}}
         onClose={onClose}>
-        <BottomSheetView>
-          <Context.Provider value={context}>
-            <View
-              style={[
-                a.absolute,
-                a.inset_0,
-                t.atoms.bg,
-                {
-                  borderTopLeftRadius: 40,
-                  borderTopRightRadius: 40,
-                  height: Dimensions.get('window').height * 2,
-                },
-              ]}
-            />
-            {children}
-          </Context.Provider>
-        </BottomSheetView>
+        <Context.Provider value={context}>
+          <View
+            style={[
+              a.absolute,
+              a.inset_0,
+              t.atoms.bg,
+              {
+                borderTopLeftRadius: 40,
+                borderTopRightRadius: 40,
+                height: Dimensions.get('window').height * 2,
+              },
+            ]}
+          />
+          {children}
+        </Context.Provider>
       </BottomSheet>
     </Portal>
   )
@@ -103,7 +97,7 @@ export function Outer({
 export function Inner(props: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
-    <View
+    <BottomSheetView
       style={[
         a.p_lg,
         a.pt_3xl,
@@ -114,7 +108,26 @@ export function Inner(props: DialogInnerProps) {
         },
       ]}>
       {props.children}
-    </View>
+    </BottomSheetView>
+  )
+}
+
+export function ScrollableInner(props: DialogInnerProps) {
+  const insets = useSafeAreaInsets()
+  return (
+    <BottomSheetScrollView
+      style={[
+        a.flex_1, // main diff is this
+        a.p_lg,
+        a.pt_3xl,
+        {
+          borderTopLeftRadius: 40,
+          borderTopRightRadius: 40,
+          paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
+        },
+      ]}>
+      {props.children}
+    </BottomSheetScrollView>
   )
 }
 
@@ -126,12 +139,13 @@ export function Handle() {
         a.absolute,
         a.rounded_sm,
         a.z_10,
-        t.atoms.bg_contrast_200,
         {
-          top: 12,
-          width: 50,
-          height: 6,
+          top: a.pt_lg.paddingTop,
+          width: 35,
+          height: 4,
           alignSelf: 'center',
+          backgroundColor: t.palette.contrast_900,
+          opacity: 0.5,
         },
       ]}
     />

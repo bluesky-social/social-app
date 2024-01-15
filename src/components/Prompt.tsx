@@ -34,11 +34,12 @@ export function Outer({
   return (
     <Dialog.Outer control={control}>
       <Context.Provider value={context}>
+        <Dialog.Handle />
+
         <Dialog.Inner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
           style={{width: 'auto', maxWidth: 400}}>
-          <Dialog.Handle />
           {children}
         </Dialog.Inner>
       </Context.Provider>
