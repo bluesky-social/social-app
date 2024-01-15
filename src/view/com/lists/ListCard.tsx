@@ -94,15 +94,23 @@ export const ListCard = ({
                 </Trans>
               ))}
           </Text>
-          {!!list.viewer?.muted && (
-            <View style={s.flexRow}>
+          <View style={s.flexRow}>
+            {list.viewer?.muted ? (
               <View style={[s.mt5, pal.btn, styles.pill]}>
                 <Text type="xs" style={pal.text}>
-                  <Trans>Subscribed</Trans>
+                  <Trans>Muted</Trans>
                 </Text>
               </View>
-            </View>
-          )}
+            ) : null}
+
+            {list.viewer?.blocked ? (
+              <View style={[s.mt5, pal.btn, styles.pill]}>
+                <Text type="xs" style={pal.text}>
+                  <Trans>Blocked</Trans>
+                </Text>
+              </View>
+            ) : null}
+          </View>
         </View>
         {renderButton ? (
           <View style={styles.layoutButton}>{renderButton()}</View>
