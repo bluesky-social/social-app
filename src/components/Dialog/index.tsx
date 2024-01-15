@@ -62,9 +62,10 @@ export function Outer({
         {...sheetOptions}
         ref={sheet}
         index={-1}
-        backgroundStyle={{backgroundColor: t.atoms.bg.backgroundColor}}
+        backgroundStyle={{backgroundColor: 'transparent'}}
         backdropComponent={props => (
           <BottomSheetBackdrop
+            opacity={0.4}
             appearsOnIndex={0}
             disappearsOnIndex={-1}
             {...props}
