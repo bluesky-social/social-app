@@ -3,12 +3,14 @@ import {View, Dimensions} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
+  BottomSheetTextInput,
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Portal} from '#/components/Portal'
+import {createTextInput} from '#/components/forms/InputText'
 
 import {
   DialogOuterProps,
@@ -19,6 +21,8 @@ import {Context} from '#/components/Dialog/context'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
+// @ts-ignore
+export const InputText = createTextInput(BottomSheetTextInput)
 
 export function Outer({
   children,

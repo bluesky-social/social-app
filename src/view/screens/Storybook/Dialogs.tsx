@@ -56,6 +56,14 @@ export function Dialogs() {
           <View style={[a.relative, a.gap_md, a.w_full]}>
             <H3 nativeID="dialog-title">Dialog</H3>
             <P nativeID="dialog-description">Description</P>
+            <Dialog.InputText
+              testID=""
+              value=""
+              onChange={() => {}}
+              placeholder="Type here"
+              accessibilityLabel="Type"
+              accessibilityHint="Type"
+            />
             <View style={{height: 1000}} />
             <View style={[a.flex_row, a.justify_end]}>
               <Button

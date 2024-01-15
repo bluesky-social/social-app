@@ -13,6 +13,7 @@ import {Context, useDialogContext} from '#/components/Dialog/context'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
+export {InputText} from '#/components/forms/InputText'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 
