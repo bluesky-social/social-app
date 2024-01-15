@@ -4,15 +4,20 @@ import {
 } from '@atproto/api'
 import {FeedAPI, FeedAPIResponse} from './types'
 import {getAgent} from '#/state/session'
+import {getContentLanguages} from '#/state/preferences/languages'
 
 export class CustomFeedAPI implements FeedAPI {
   constructor(public params: GetCustomFeed.QueryParams) {}
 
   async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await getAgent().app.bsky.feed.getFeed({
-      ...this.params,
-      limit: 1,
-    })
+    const contentLangs = getContentLanguages().join(',')
+    const res = await getAgent().app.bsky.feed.getFeed(
+      {
+        ...this.params,
+        limit: 1,
+      },
+      {headers: {'Accept-Language': contentLangs}},
+    )
     return res.data.feed[0]
   }
 
@@ -23,11 +28,15 @@ export class CustomFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await getAgent().app.bsky.feed.getFeed({
-      ...this.params,
-      cursor,
-      limit,
-    })
+    const contentLangs = getContentLanguages().join(',')
+    const res = await getAgent().app.bsky.feed.getFeed(
+      {
+        ...this.params,
+        cursor,
+        limit,
+      },
+      {headers: {'Accept-Language': contentLangs}},
+    )
     if (res.success) {
       // NOTE
       // some custom feeds fail to enforce the pagination limit
