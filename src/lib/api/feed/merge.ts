@@ -26,7 +26,7 @@ export class MergeFeedAPI implements FeedAPI {
 
   reset() {
     this.following = new MergeFeedSource_Following(this.feedTuners)
-    this.customFeeds = [] // just empty the array, they will be captured in _fetchNext()
+    this.customFeeds = []
     this.feedCursor = 0
     this.itemCursor = 0
     this.sampleCursor = 0
