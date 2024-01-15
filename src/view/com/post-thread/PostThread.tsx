@@ -39,7 +39,7 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {logger} from '#/logger'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
@@ -358,6 +358,7 @@ function PostThreadLoaded({
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      removeClippedSubviews={isAndroid ? false : undefined}
     />
   )
 }

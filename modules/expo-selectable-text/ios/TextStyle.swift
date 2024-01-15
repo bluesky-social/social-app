@@ -1,16 +1,29 @@
-struct TextStyle: Decodable {
+import ExpoModulesCore
+
+struct TextStyle: Record {
+  @Field
   var color: String? = "black"
+  @Field
   var fontSize: CGFloat? = 12
+  @Field
   var fontStyle: String? = "normal"
+  @Field
   var fontWeight: FontWeight?
+  @Field
   var letterSpacing: Double?
+  @Field
   var textAlign: String? = "auto"
+  @Field
   var lineHeight: Double?
+  @Field
   var textDecorationLine: TextDecorationLine?
+  @Field
   var flex: Int?
+  @Field
+  var pointerEvents: String?
 }
 
-enum FontWeight: String, Decodable {
+enum FontWeight: String, Enumerable {
   case bold
   case normal
   case one = "100"
@@ -51,10 +64,9 @@ enum FontWeight: String, Decodable {
   }
 }
 
-enum TextDecorationLine: String, Decodable {
+enum TextDecorationLine: String, Enumerable {
   case underline
   case lineThrough = "line-through"
   case underlineLineThrough = "underline line-through"
-
   case normal
 }

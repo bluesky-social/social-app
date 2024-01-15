@@ -110,7 +110,8 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
           accessibilityRole="button">
           <Text
             style={[s.gray3, styles.footerText]}
-            numberOfLines={isAltExpanded ? undefined : 3}>
+            numberOfLines={isAltExpanded ? undefined : 3}
+            selectable>
             {altText}
           </Text>
         </Pressable>

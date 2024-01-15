@@ -35,11 +35,7 @@ podspec inside of this directory.
 ## Technical
 
 Whenever we use the SelectableText component, we then loop over each of the children (or just the text if the child
-is typeof Text). We create "segments" of text based on this and encode them to JSON* to pass to the native side.
-
-/* Expo Modules doesn't currently support passing an array over the bridge, but even if it did, it would be parsing
-sending JSON over the bridge anyway, so this is not an issue. I want to make sure this is the case (on expo support) but
-regardless there's no real perf concern.
+is typeof Text). We create "segments" of text based on this.
 
 The native side renders a *single* UITextView and adds each of the text segments to the view. Using NSAttributedStrings,
 we can add the styles for each segment individually (falling back to the root styles).
@@ -54,7 +50,3 @@ As such, we create a gesture recognizer for the entire UITextView. The recognize
 the press, determines which segment it is, and sends an `onTextPress` event to the JS side along with the index of the
 segment. On the JS side, we have our array of segments (that included the `onPress` event from the `Text`/`SelectableText`)
 that we can now call based on the index from the native event.
-
-We can't reliably modify the size of the view's container on the native side (*don't take my word for this, I might be -
-and likely am - wrong about this). Therefore, we send an `onTextLayout` event to the JS thread that we can use to resize
-the container's height based on the required height to display the text. This only gets called once per text update.

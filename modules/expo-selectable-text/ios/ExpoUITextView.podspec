@@ -1,8 +1,8 @@
 Pod::Spec.new do |s|
-  s.name           = 'ExpoSelectableText'
+  s.name           = 'ExpoUITextView'
   s.version        = '1.0.0'
-  s.summary        = 'Simple wrapper for RN Text to use UITextView instead of UILabel'
-  s.description    = 'Simple wrapper for RN Text to use UITextView instead of UILabel'
+  s.summary        = 'Drop in replacement for RN Text that uses UITextView'
+  s.description    = 'Drop in replacement for RN Text that uses UITextView'
   s.author         = ''
   s.homepage       = 'https://github.com/bluesky-social/social-app/modules/expo-selectable-text'
   s.platform       = :ios, '13.0'

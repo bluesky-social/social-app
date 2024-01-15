@@ -44,7 +44,11 @@ export function RichText({
       }
       return (
         // @ts-ignore web only -prf
-        <Text testID={testID} style={[style, pal.text]} dataSet={WORD_WRAP}>
+        <Text
+          testID={testID}
+          style={[style, pal.text]}
+          dataSet={WORD_WRAP}
+          selectable={selectable}>
           {text}
         </Text>
       )
@@ -82,6 +86,7 @@ export function RichText({
           href={`/profile/${mention.did}`}
           style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
           dataSet={WORD_WRAP}
+          selectable={selectable}
         />,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
@@ -94,6 +99,7 @@ export function RichText({
           style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
           dataSet={WORD_WRAP}
           warnOnMismatchingLabel
+          selectable={selectable}
         />,
       )
     } else {

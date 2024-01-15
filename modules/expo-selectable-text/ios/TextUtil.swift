@@ -1,4 +1,4 @@
-public class ExpoSelectableTextUtil {
+public class TextUtil {
   public static func hexToUIColor(hex: String?) -> UIColor {
     guard let hex else {
       return UIColor.black

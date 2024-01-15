@@ -1,9 +1,9 @@
 import React from 'react'
-import {StyleSheet, Text as RNText, TextProps} from 'react-native'
+import {Text as RNText, TextProps} from 'react-native'
 import {s, lh} from 'lib/styles'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
-import {SelectableText} from '../../../../../modules/expo-selectable-text'
 import {isIOS} from 'platform/detection'
+import ExpoSelectableTextView from '../../../../../modules/expo-selectable-text/src/ExpoUITextView'
 
 export type CustomTextProps = TextProps & {
   type?: TypographyVariant
@@ -27,20 +27,13 @@ export function Text({
   const typography = theme.typography[type]
   const lineHeightStyle = lineHeight ? lh(theme, type, lineHeight) : undefined
 
-  // if (false) {
-  // TODO remove
   if (selectable && isIOS) {
     return (
-      <SelectableText
-        selectable
-        style={StyleSheet.flatten([
-          s.black,
-          typography,
-          lineHeightStyle,
-          style,
-        ])}>
+      <ExpoSelectableTextView
+        style={[s.black, typography, lineHeightStyle, style]}
+        {...props}>
         {children}
-      </SelectableText>
+      </ExpoSelectableTextView>
     )
   }
 
@@ -49,6 +42,7 @@ export function Text({
       style={[s.black, typography, lineHeightStyle, style]}
       // @ts-ignore web only -esb
       dataSet={Object.assign({tooltip: title}, dataSet || {})}
+      selectable={selectable}
       {...props}>
       {children}
     </RNText>

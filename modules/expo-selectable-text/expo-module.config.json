@@ -1,6 +1,6 @@
 {
   "platforms": ["ios"],
   "ios": {
-    "modules": ["ExpoSelectableTextModule"]
+    "modules": ["ExpoUITextViewModule", "ExpoUITextViewChildModule"]
   }
 }

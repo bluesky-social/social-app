@@ -1,13 +1,15 @@
 import ExpoModulesCore
 
-struct TextSegments: Decodable {
-  let segments: Array<TextSegment>
+struct TextSegments: Record {
+  @Field
+  var segments: Array<TextSegment>
 }
 
-struct TextSegment: Decodable {
-  let index: Int
-  let text: String
-  let style: TextStyle?
-  let handlePress: Bool
-  let handleLongPress: Bool
+struct TextSegment: Record {
+  @Field
+  var index: Int
+  @Field
+  var text: String
+  @Field
+  var style: TextStyle?
 }
