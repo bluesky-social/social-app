@@ -345,11 +345,6 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr "Ketelanjangan artistik atau non-erotis."
 
-#: src/view/com/post-thread/PostThread.tsx:400
-msgctxt "action"
-msgid "Back"
-msgstr ""
-
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:170
@@ -363,6 +358,11 @@ msgstr ""
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "Kembali"
+
+#: src/view/com/post-thread/PostThread.tsx:400
+msgctxt "action"
+msgid "Back"
+msgstr ""
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
@@ -398,6 +398,7 @@ msgstr "Blokir akun ini?"
 msgid "Block this List"
 msgstr ""
 
+#: src/view/com/lists/ListCard.tsx:109
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:57
 msgid "Blocked"
 msgstr ""
@@ -500,15 +501,6 @@ msgstr "Kamera"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "Hanya dapat terdiri dari huruf, angka, spasi, tanda hubung dan garis bawah. Minimal 4 karakter, namun tidak boleh lebih dari 32 karakter."
 
-#: src/view/com/modals/Confirm.tsx:88
-#: src/view/com/modals/Confirm.tsx:91
-#: src/view/com/modals/CreateOrEditList.tsx:293
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:227
-msgctxt "action"
-msgid "Cancel"
-msgstr ""
-
 #: src/view/com/composer/Composer.tsx:300
 #: src/view/com/composer/Composer.tsx:305
 #: src/view/com/modals/ChangeEmail.tsx:218
@@ -527,8 +519,17 @@ msgstr ""
 msgid "Cancel"
 msgstr "Batal"
 
+#: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
+#: src/view/com/modals/CreateOrEditList.tsx:293
+#: src/view/com/modals/DeleteAccount.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:230
+msgctxt "action"
+msgid "Cancel"
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:148
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:226
 msgid "Cancel account deletion"
 msgstr "Batal menghapus akun"
 
@@ -704,12 +705,6 @@ msgstr ""
 msgid "Compose reply"
 msgstr "Tulis balasan"
 
-#: src/view/com/modals/Confirm.tsx:75
-#: src/view/com/modals/Confirm.tsx:78
-msgctxt "action"
-msgid "Confirm"
-msgstr ""
-
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:231
@@ -718,6 +713,12 @@ msgstr ""
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "Konfirmasi"
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+msgctxt "action"
+msgid "Confirm"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:193
 #: src/view/com/modals/ChangeEmail.tsx:195
@@ -728,7 +729,7 @@ msgstr "Konfirmasi Perubahan"
 msgid "Confirm content language settings"
 msgstr "Konfirmasi pengaturan bahasa konten"
 
-#: src/view/com/modals/DeleteAccount.tsx:213
+#: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Confirm delete account"
 msgstr "Konfirmasi hapus akun"
 
@@ -920,7 +921,7 @@ msgstr "Hapus kata sandi aplikasi"
 msgid "Delete List"
 msgstr "Hapus Daftar "
 
-#: src/view/com/modals/DeleteAccount.tsx:216
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Delete my account"
 msgstr "Hapus akun saya"
 
@@ -1624,7 +1625,7 @@ msgstr ""
 msgid "Input new password"
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:196
+#: src/view/com/modals/DeleteAccount.tsx:199
 msgid "Input password for account deletion"
 msgstr ""
 
@@ -2014,6 +2015,10 @@ msgstr ""
 msgid "Mute thread"
 msgstr "Bisukan utasan"
 
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "Akun yang dibisukan"
@@ -2124,11 +2129,6 @@ msgstr ""
 msgid "Newest replies first"
 msgstr ""
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-msgctxt "action"
-msgid "Next"
-msgstr ""
-
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:178
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:188
@@ -2138,6 +2138,11 @@ msgstr ""
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
 msgid "Next"
 msgstr "Berikutnya"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
+msgctxt "action"
+msgid "Next"
+msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:142
 msgid "Next image"
@@ -2395,7 +2400,7 @@ msgstr "Halaman tidak ditemukan"
 #: src/view/com/auth/create/Step2.tsx:132
 #: src/view/com/auth/login/LoginForm.tsx:223
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:132
-#: src/view/com/modals/DeleteAccount.tsx:195
+#: src/view/com/modals/DeleteAccount.tsx:198
 msgid "Password"
 msgstr "Kata sandi"
 
@@ -2473,7 +2478,7 @@ msgstr "Mohon masukkan nama unik untuk Kata Sandi Aplikasi ini atau gunakan nama
 msgid "Please enter your email."
 msgstr "Masukkan email Anda."
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:187
 msgid "Please enter your password as well:"
 msgstr "Masukkan juga kata sandi Anda:"
 
@@ -3315,8 +3320,8 @@ msgid "Subscribe to this list"
 msgstr "Langganan ke daftar ini"
 
 #: src/view/com/lists/ListCard.tsx:101
-msgid "Subscribed"
-msgstr ""
+#~ msgid "Subscribed"
+#~ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
@@ -3450,7 +3455,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/view/com/posts/Feed.tsx:261
+#: src/view/com/posts/Feed.tsx:263
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -3628,15 +3633,15 @@ msgstr "Bunyikan daftar"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Tidak dapat terhubung ke layanan. Mohon periksa koneksi internet Anda."
 
-#: src/view/com/profile/ProfileHeader.tsx:475
-msgctxt "action"
-msgid "Unblock"
-msgstr ""
-
 #: src/view/com/profile/ProfileHeader.tsx:472
 #: src/view/screens/ProfileList.tsx:568
 msgid "Unblock"
 msgstr "Buka blokir"
+
+#: src/view/com/profile/ProfileHeader.tsx:475
+msgctxt "action"
+msgid "Unblock"
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:308
 #: src/view/com/profile/ProfileHeader.tsx:392
@@ -3845,6 +3850,10 @@ msgstr "Kunjungi Halaman"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
+msgstr ""
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from"
 msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:48
