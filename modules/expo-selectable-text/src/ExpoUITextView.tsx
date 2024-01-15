@@ -45,7 +45,7 @@ export default function ExpoUITextView({
           {...textDefaults}
           {...rest}
           ellipsizeMode={rest.ellipsizeMode ?? rest.lineBreakMode ?? 'tail'}
-          style={[{flex: 1}, rootStyle]}>
+          style={[{flex: 1}, flattenedStyle]}>
           {React.Children.toArray(children).map((c, index) => {
             if (React.isValidElement(c)) {
               return c

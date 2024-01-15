@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
 import {shareImageModal, saveImageToMediaLibrary} from 'lib/media/manip'
@@ -105,16 +105,15 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
   return (
     <View style={[styles.footer]}>
       {altText ? (
-        <Pressable
-          onPress={() => setAltExpanded(!isAltExpanded)}
-          accessibilityRole="button">
+        <View accessibilityRole="button" style={styles.footerText}>
           <Text
-            style={[s.gray3, styles.footerText]}
+            style={[s.gray3]}
             numberOfLines={isAltExpanded ? undefined : 3}
-            selectable>
+            selectable
+            onPress={() => setAltExpanded(prev => !prev)}>
             {altText}
           </Text>
-        </Pressable>
+        </View>
       ) : null}
       <View style={styles.footerBtns}>
         <Button
