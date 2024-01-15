@@ -1,4 +1,4 @@
-import ExpoSelectableTextView from './src/ExpoUITextView'
-import {ExpoProTextViewProps} from './src/ExpoUITextView.types'
+import ExpoUITextView from './src/ExpoUITextView'
+import {ExpoUITextViewProps} from './src/ExpoUITextView.types'
 
-export {ExpoSelectableTextView as SelectableText, type ExpoProTextViewProps}
+export {ExpoUITextView as UITextView, type ExpoUITextViewProps}

@@ -1,23 +1,29 @@
 import React from 'react'
 import {requireNativeViewManager} from 'expo-modules-core'
-import {StyleSheet, ViewStyle} from 'react-native'
+import {StyleSheet, TextProps, ViewStyle} from 'react-native'
 import {
   ExpoUITextViewChildNativeProps,
   ExpoUITextViewNativeProps,
   ExpoUITextViewProps,
 } from './ExpoUITextView.types'
 
-const NativeView: React.ComponentType<ExpoUITextViewNativeProps> =
-  requireNativeViewManager('ExpoSelectableText')
+const ExpoUITextViewRoot: React.ComponentType<ExpoUITextViewNativeProps> =
+  requireNativeViewManager('ExpoUITextView')
 
-const NativeViewChild: React.ComponentType<ExpoUITextViewChildNativeProps> =
-  requireNativeViewManager('ExpoTextChild')
+const ExpoUITextViewChild: React.ComponentType<ExpoUITextViewChildNativeProps> =
+  requireNativeViewManager('ExpoUITextViewChild')
 
 const TextAncestorContext = React.createContext<[boolean, ViewStyle]>([
   false,
   StyleSheet.create({}),
 ])
 const useTextAncestorContext = () => React.useContext(TextAncestorContext)
+
+const textDefaults: TextProps = {
+  allowFontScaling: true,
+  selectable: true,
+  lineBreakMode: 'tail',
+}
 
 export default function ExpoUITextView({
   style,
@@ -36,13 +42,16 @@ export default function ExpoUITextView({
   if (!isAncestor) {
     return (
       <TextAncestorContext.Provider value={[true, flattenedStyle]}>
-        <NativeView style={{flex: 1}}>
+        <ExpoUITextViewRoot
+          {...textDefaults}
+          {...rest}
+          style={[{flex: 1}, rootStyle]}>
           {React.Children.toArray(children).map((c, index) => {
             if (React.isValidElement(c)) {
               return c
             } else if (typeof c === 'string') {
               return (
-                <NativeViewChild
+                <ExpoUITextViewChild
                   key={index}
                   textStyle={flattenedStyle}
                   text={c}
@@ -52,7 +61,7 @@ export default function ExpoUITextView({
               )
             }
           })}
-        </NativeView>
+        </ExpoUITextViewRoot>
       </TextAncestorContext.Provider>
     )
   } else {
@@ -63,7 +72,7 @@ export default function ExpoUITextView({
             return c
           } else if (typeof c === 'string') {
             return (
-              <NativeViewChild
+              <ExpoUITextViewChild
                 key={index}
                 textStyle={flattenedStyle}
                 text={c}

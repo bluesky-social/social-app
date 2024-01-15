@@ -5,7 +5,7 @@ export interface ExpoUITextViewProps extends TextProps {}
 
 export interface ExpoUITextViewNativeProps {
   children: React.ReactNode
-  style: ViewStyle
+  style: ViewStyle[]
 }
 
 export interface ExpoUITextViewChildNativeProps extends ExpoUITextViewProps {

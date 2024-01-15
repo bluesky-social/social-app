@@ -3,7 +3,7 @@ import {Text as RNText, TextProps} from 'react-native'
 import {s, lh} from 'lib/styles'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {isIOS} from 'platform/detection'
-import ExpoSelectableTextView from '../../../../../modules/expo-selectable-text/src/ExpoUITextView'
+import {UITextView} from '../../../../../modules/expo-selectable-text'
 
 export type CustomTextProps = TextProps & {
   type?: TypographyVariant
@@ -29,11 +29,11 @@ export function Text({
 
   if (selectable && isIOS) {
     return (
-      <ExpoSelectableTextView
+      <UITextView
         style={[s.black, typography, lineHeightStyle, style]}
         {...props}>
         {children}
-      </ExpoSelectableTextView>
+      </UITextView>
     )
   }
 

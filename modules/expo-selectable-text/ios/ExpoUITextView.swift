@@ -6,6 +6,10 @@ class ExpoUITextView: ExpoView {
 
   var tapGestureRecognizer: UITapGestureRecognizer?
 
+  let onTextLayout = EventDispatcher()
+
+  // Props
+
   public required init(appContext: AppContext? = nil) {
     if #available(iOS 16.0, *) {
       textView = UITextView(usingTextLayoutManager: false)
@@ -18,8 +22,6 @@ class ExpoUITextView: ExpoView {
     textView.isEditable = false
     textView.isScrollEnabled = false
     textView.backgroundColor = .clear
-    textView.textContainer.lineBreakMode = .byTruncatingTail
-    textView.isSelectable = true
 
     // Remove all of the padding from the view
     textView.textContainerInset = UIEdgeInsets.zero
@@ -34,6 +36,14 @@ class ExpoUITextView: ExpoView {
     tapGestureRecognizer.isEnabled = true
     self.tapGestureRecognizer = tapGestureRecognizer
     textView.addGestureRecognizer(tapGestureRecognizer)
+
+    // Listen for dynamic type changes
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(preferredContentSizeChanged(_:)),
+      name: UIContentSizeCategory.didChangeNotification,
+      object: nil
+    )
   }
 
   // Update children whenever new react subviews are added
@@ -66,6 +76,23 @@ class ExpoUITextView: ExpoView {
     textView.frame.size = size
     self.appContext?.reactBridge?.uiManager.setSize(size, for: self)
 
+    // Get each line and call onTextLayout
+    var lines: [String] = []
+    textView.layoutManager.enumerateLineFragments(
+      forGlyphRange: NSRange(location: 0, length: textView.attributedText.length)) 
+    { (rect, usedRect, textContainer, glyphRange, stop) in
+      let characterRange = self.textView.layoutManager.characterRange(forGlyphRange: glyphRange, actualGlyphRange: nil)
+      let line = (self.textView.text as NSString).substring(with: characterRange)
+      lines.append(line)
+    }
+
+    onTextLayout([
+      "lines": lines
+    ])
+  }
+
+  @objc func preferredContentSizeChanged(_ notification: Notification) {
+    self.setText()
   }
 
   @IBAction func callOnPress(_ sender: UITapGestureRecognizer) -> Void {
@@ -139,10 +166,14 @@ class ExpoUITextView: ExpoView {
         return
       }
 
+      let scaledFontSize = self.textView.adjustsFontForContentSizeCategory ?
+        UIFontMetrics.default.scaledValue(for: child.style?.fontSize ?? 12.0) :
+        child.style?.fontSize ?? 12.0
+
       // Set some generic attributes that don't need ranges
       let attributes: [NSAttributedString.Key:Any] = [
         .font: UIFont.systemFont(
-          ofSize: child.style?.fontSize ?? 12.0,
+          ofSize: scaledFontSize,
           weight: child.style?.fontWeight?.toFontWeight() ?? .regular
         ),
         .foregroundColor: TextUtil.hexToUIColor(hex: child.style?.color),

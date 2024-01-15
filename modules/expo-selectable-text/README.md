@@ -1,24 +1,8 @@
 # Expo Selectable Text
 
-This module creates a wrapper `<SelectableText>` for React Native's `<Text>` component. Text components are
-parsed and rendered using UITextView instead of UILabel, allowing for text selection.
+This module is a drop-in replacement for React Native's `Text` component. Simply replace `<Text>` with `<UITextView>`.
 
 ## Usage
-
-In most cases, you can simply use like so:
-
-```tsx
-<SelectableText selectable style={{color: '#000000', fontSize: 20}}>
-  Here is some text.
-</SelectableText>
-```
-
-You may also have nested `<Text>` components inside the `<SelectableText>` block. For example:
-```tsx
-<SelectableText selectable style={{color: '#000000', fontSize: 20}}>
-  Here is some text. <Text style={{color: 'lightblue'}} onPress={() => {Alert.alert('Press!')}}>And this is a link.</Text>
-</SelectableText>
-```
 
 Note that nested components should always use `<Text>` and not `<SelectableText>`. Only the outermost `<Text>` should
 be replaced with `<SelectableText>`.
@@ -34,19 +18,54 @@ podspec inside of this directory.
 
 ## Technical
 
-Whenever we use the SelectableText component, we then loop over each of the children (or just the text if the child
-is typeof Text). We create "segments" of text based on this.
+React Native's `Text` component allows for "infinite" nesting of further `Text` components. To make a true "drop-in",
+we want to do the same thing.
 
-The native side renders a *single* UITextView and adds each of the text segments to the view. Using NSAttributedStrings,
-we can add the styles for each segment individually (falling back to the root styles).
+To achieve this, we first need to handle determining if we are dealing with an ancestor or root `UITextView` component.
+We can implement similar logic to the `Text` component [see Text.js](https://github.com/facebook/react-native/blob/7f2529de7bc9ab1617eaf571e950d0717c3102a6/packages/react-native/Libraries/Text/Text.js).
 
-There's a few ways we could go about handling presses. For one, we could create fake URLs to add to each
-NSAttributedString and handle their presses. However, this has a few downsides:
-1. We can't support long presses this way without adding an additional gesture recognizer.
-2. The presses actually are not "instant". The default gesture for these links requires a slighly longer press than just
-a tap, so we'd end up needing to modify this recognizer anyway.
+We create a context that contains a boolean to tell us if we have already rendered the root `UITextView`. We also store
+the root styles so that we can apply those styles if the ancestor `UITextView`s have not overwritten those styles.
 
-As such, we create a gesture recognizer for the entire UITextView. The recognizer determines the text at the position of
-the press, determines which segment it is, and sends an `onTextPress` event to the JS side along with the index of the
-segment. On the JS side, we have our array of segments (that included the `onPress` event from the `Text`/`SelectableText`)
-that we can now call based on the index from the native event.
+All of our children are placed into `ExpoUITextViewRoot`, which is the main native view that will display the native
+`UITextView`. There are no styles that need to be applied to this view, as we will be updating the size of the view
+dynamically based on the text size.
+
+We next map each child into the view. We have to be careful here to check if the child's `children` prop is a string. If
+it is, that means we have encountered what was once an RN `Text` component. RN doesn't let us pass plain text as
+children outside of `Text`, so we instead just pass the text into the `text` prop on the `ExpoUITextViewChild` native
+view. We continue down the tree, until we run out of children.
+
+On the native side, we have two view types: `ExpoUITextView` and `ExpoUITextViewChild`. Again, the `ExpoUITextView`
+contains the `UITextView`, and the `ExpoUITextViewChild` views are invisible, only allowing us to access their props.
+
+Each time a new subview is added to the root view, we check its type. If it is of `ExpoUITextViewChild`, we add it to
+our subviews. We prefer to keep these "rendered" in as subviews so that React can manage their order. This also keeps
+them stateful. Again though, these views are not visible and do not actually render a view.
+
+We also update the `UITextView`'s text each time new subviews are added. We create a `NSAttributedString` that contains
+the text of each child and applies the styles to the string. There is near parity to base RN `TextStyle`, however there
+may be a few discrepancies. As I find those I'll correct them.
+
+As for `Text` props, the following props are implemented:
+
+- All accessibility props
+- `allowFontScaling`
+- `adjustsFontSizeToFit`
+- `ellipsizeMode`
+- `numberOfLines`
+- `onLayout`
+- `onPress`
+- `onTextLayout`
+- `selectable`
+
+All `ViewStyle` props will apply to the root `UITextView`. Individual children will respect these `TextStyle` styles:
+
+- `color`
+- `fontSize`
+- `fontStyle`
+- `fontWeight`
+- `fontVariant`
+- `letterSpacing`
+- `lineHeight`
+- `textDecorationLine`
