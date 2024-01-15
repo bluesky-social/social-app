@@ -25,7 +25,7 @@ module.exports = function () {
   /**
    * Android build number. Must be incremented for each release.
    */
-  const ANDROID_VERSION_CODE = 55
+  const ANDROID_VERSION_CODE = 56
 
   /**
    * Uses built-in Expo env vars
