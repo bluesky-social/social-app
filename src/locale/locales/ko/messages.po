@@ -3480,11 +3480,11 @@ msgstr "차단을 해제하면 해당 계정이 나와 상호작용할 수 있�
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "커뮤니티 가이드라인이 <0/>(으)로 이동되었습니다."
+msgstr "커뮤니티 가이드라인을 <0/>(으)로 이동했습니다"
 
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
-msgstr "저작권 정책이 <0/>(으)로 이동되었습니다."
+msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 
 #: src/view/com/post-thread/PostThread.tsx:437
 msgid "The post may have been deleted."
@@ -3492,11 +3492,11 @@ msgstr "게시물이 삭제되었을 수 있습니다."
 
 #: src/view/screens/PrivacyPolicy.tsx:33
 msgid "The Privacy Policy has been moved to <0/>"
-msgstr "개인정보 처리방침이 <0/>(으)로 이동되었습니다."
+msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "지원 양식이 이동되었습니다. 도움이 필요하다면 <0/>하거나 {HELP_DESK_URL}에 방문하여 문의해 주세요."
+msgstr "지원 양식을 이동했습니다. 도움이 필요하다면 <0/>하거나 {HELP_DESK_URL}에 방문하여 문의해 주세요."
 
 #: src/view/screens/Debug.tsx:185
 msgid "The task has been completed"
@@ -3508,7 +3508,7 @@ msgstr "작업을 문제 없이 성공적으로 완료했습니다"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
-msgstr "서비스 이용약관이 다음으로 이동되었습니다:"
+msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 
 #: src/view/screens/ProfileFeed.tsx:558
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
