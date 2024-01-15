@@ -90,7 +90,7 @@ export function Outer({
                     style={[
                       web(a.fixed),
                       a.inset_0,
-                      t.atoms.bg_contrast_100,
+                      t.atoms.bg,
                       {opacity: 0.8},
                     ]}
                   />
@@ -144,7 +144,13 @@ export function Inner({
           a.border,
           gtMobile ? a.p_xl : a.p_lg,
           t.atoms.bg,
-          {maxWidth: 600, borderColor: t.palette.contrast_200},
+          {
+            maxWidth: 600,
+            borderColor: t.palette.contrast_200,
+            shadowColor: t.palette.black,
+            shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
+            shadowRadius: 30,
+          },
           ...(Array.isArray(style) ? style : [style || {}]),
         ]}>
         {children}
