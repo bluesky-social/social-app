@@ -1,6 +1,9 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions, LayoutChangeEvent} from 'react-native'
-import BottomSheet, {BottomSheetBackdrop} from '@gorhom/bottom-sheet'
+import {View, Dimensions} from 'react-native'
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useTheme, atoms as a} from '#/alf'
@@ -29,12 +32,8 @@ export function Outer({
   onClose,
   nativeOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
-  const insets = useSafeAreaInsets()
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
-  const [defaultSnapPoints, setDefaultSnapPoints] = React.useState<
-    string | number
-  >('25%')
 
   const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
     sheet.current?.snapToIndex(i)
@@ -44,15 +43,6 @@ export function Outer({
     sheet.current?.close()
     onClose?.()
   }, [onClose])
-
-  const measureDefaultSnapPoint = React.useCallback(
-    (e: LayoutChangeEvent) => {
-      const min = e.nativeEvent.layout.height + insets.bottom + 40
-      const max = Dimensions.get('window').height - insets.top - 40
-      setDefaultSnapPoints(min < max ? min : max)
-    },
-    [insets, setDefaultSnapPoints],
-  )
 
   useImperativeHandle(
     control.ref,
@@ -68,10 +58,11 @@ export function Outer({
   return (
     <Portal>
       <BottomSheet
-        snapPoints={[defaultSnapPoints]}
+        enableDynamicSizing
         enablePanDownToClose
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize"
+        keyboardBlurBehavior="restore"
         {...(nativeOptions?.sheet || {})}
         ref={sheet}
         index={-1}
@@ -86,21 +77,23 @@ export function Outer({
         handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
         handleStyle={{display: 'none'}}
         onClose={onClose}>
-        <Context.Provider value={context}>
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              t.atoms.bg,
-              {
-                borderTopLeftRadius: 40,
-                borderTopRightRadius: 40,
-                height: Dimensions.get('window').height * 2,
-              },
-            ]}
-          />
-          <View onLayout={measureDefaultSnapPoint}>{children}</View>
-        </Context.Provider>
+        <BottomSheetView>
+          <Context.Provider value={context}>
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                t.atoms.bg,
+                {
+                  borderTopLeftRadius: 40,
+                  borderTopRightRadius: 40,
+                  height: Dimensions.get('window').height * 2,
+                },
+              ]}
+            />
+            {children}
+          </Context.Provider>
+        </BottomSheetView>
       </BottomSheet>
     </Portal>
   )
@@ -108,6 +101,7 @@ export function Outer({
 
 // TODO a11y props here, or is that handled by the sheet?
 export function Inner(props: DialogInnerProps) {
+  const insets = useSafeAreaInsets()
   return (
     <View
       style={[
@@ -116,6 +110,7 @@ export function Inner(props: DialogInnerProps) {
         {
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
+          paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
         },
       ]}>
       {props.children}
