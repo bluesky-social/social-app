@@ -123,10 +123,10 @@ export function ScrollableInner(props: DialogInnerProps) {
         {
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
-          paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
         },
       ]}>
       {props.children}
+      <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
 }
