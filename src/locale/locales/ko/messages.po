@@ -264,7 +264,7 @@ msgstr "고급"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
-msgstr "이미 @{0}(으)로 로그인했습니다."
+msgstr "이미 @{0}(으)로 로그인했습니다"
 
 #: src/view/com/composer/photos/Gallery.tsx:130
 msgid "ALT"
@@ -1069,7 +1069,7 @@ msgstr "완료{extraText}"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:45
 msgid "Double tap to sign in"
-msgstr "두 번 탭하여 로그인하기"
+msgstr "두 번 탭하여 로그인합니다"
 
 #: src/view/com/auth/create/Step3.tsx:33
 #: src/view/com/modals/ChangeHandle.tsx:257
@@ -1250,7 +1250,7 @@ msgstr "이메일 주소를 입력하세요"
 
 #: src/view/com/modals/ChangeEmail.tsx:41
 msgid "Enter your new email above"
-msgstr "이메일 주소를 다시 입력하세요"
+msgstr "새 이메일을 입력하세요"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
@@ -1328,7 +1328,7 @@ msgstr "리스트를 만들지 못했습니다. 인터넷 연결을 확인한 �
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:86
 msgid "Failed to delete post, please try again"
-msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요."
+msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -2115,7 +2115,7 @@ msgstr "이름"
 
 #: src/view/com/modals/CreateOrEditList.tsx:108
 msgid "Name is required"
-msgstr "이름을 입력하세요."
+msgstr "이름을 입력하세요"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:186
 #: src/view/com/auth/login/LoginForm.tsx:286
@@ -2237,7 +2237,7 @@ msgstr "결과 없음"
 
 #: src/view/screens/Feeds.tsx:456
 msgid "No results found for \"{query}\""
-msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다."
+msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:270
@@ -2245,7 +2245,7 @@ msgstr "\"{query}\"에 대한 결과를 찾을 수 없습니다."
 #: src/view/screens/Search/Search.tsx:630
 #: src/view/shell/desktop/Search.tsx:213
 msgid "No results found for {query}"
-msgstr "{query}에 대한 결과를 찾을 수 없습니다."
+msgstr "{query}에 대한 결과를 찾을 수 없습니다"
 
 #: src/view/com/modals/EmbedConsent.tsx:129
 msgid "No thanks"
@@ -2554,7 +2554,7 @@ msgstr "비밀번호도 입력해 주세요:"
 
 #: src/lib/hooks/useAccountSwitcher.ts:42
 msgid "Please sign in as @{0}"
-msgstr "@{0}(으)로 로그인하세요."
+msgstr "@{0}(으)로 로그인하세요"
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
@@ -2567,7 +2567,7 @@ msgstr "이메일 인증하기"
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
-msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요."
+msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
@@ -3305,7 +3305,7 @@ msgstr "가입하기"
 
 #: src/view/shell/NavSignupCard.tsx:42
 msgid "Sign up or sign in to join the conversation"
-msgstr "가입 또는 로그인하여 대화에 참여하세요."
+msgstr "가입 또는 로그인하여 대화에 참여하세요"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:76
 msgid "Sign-in Required"
@@ -3318,7 +3318,7 @@ msgstr "로그인한 계정"
 #: src/lib/hooks/useAccountSwitcher.ts:36
 #: src/view/com/auth/login/ChooseAccountForm.tsx:103
 msgid "Signed in as @{0}"
-msgstr "@{0}(으)로 로그인했습니다."
+msgstr "@{0}(으)로 로그인했습니다"
 
 #: src/view/com/modals/SwitchAccount.tsx:66
 msgid "Signs {0} out of Bluesky"
@@ -3500,11 +3500,11 @@ msgstr "지원 양식이 이동되었습니다. 도움이 필요하다면 <0/>�
 
 #: src/view/screens/Debug.tsx:185
 msgid "The task has been completed"
-msgstr "작업을 완료했습니다."
+msgstr "작업을 완료했습니다"
 
 #: src/view/screens/Debug.tsx:189
 msgid "The task has been completed successfully and with no problems"
-msgstr "작업을 문제 없이 성공적으로 완료했습니다."
+msgstr "작업을 문제 없이 성공적으로 완료했습니다"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -3528,7 +3528,7 @@ msgstr "피드를 업데이트하는 동안 문제가 발생했습니다. 인터
 #: src/view/screens/SavedFeeds.tsx:231
 #: src/view/screens/SavedFeeds.tsx:252
 msgid "There was an issue contacting the server"
-msgstr "서버에 연결하는 동안 문제가 발생했습니다."
+msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:57
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:66
@@ -3536,7 +3536,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다."
 #: src/view/com/feeds/FeedSourceCard.tsx:127
 #: src/view/com/feeds/FeedSourceCard.tsx:181
 msgid "There was an issue contacting your server"
-msgstr "서버에 연결하는 동안 문제가 발생했습니다."
+msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 
 #: src/view/com/notifications/Feed.tsx:115
 msgid "There was an issue fetching notifications. Tap here to try again."
@@ -3557,11 +3557,11 @@ msgstr "리스트를 가져오는 동안 문제가 발생했습니다. 이곳을
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
-msgstr "설정을 서버와 동기화하는 동안 문제가 발생했습니다."
+msgstr "설정을 서버와 동기화하는 동안 문제가 발생했습니다"
 
 #: src/view/screens/AppPasswords.tsx:66
 msgid "There was an issue with fetching your app passwords"
-msgstr "앱 비밀번호를 가져오는 동안 문제가 발생했습니다."
+msgstr "앱 비밀번호를 가져오는 동안 문제가 발생했습니다"
 
 #: src/view/com/profile/ProfileHeader.tsx:204
 #: src/view/com/profile/ProfileHeader.tsx:225
@@ -3639,7 +3639,7 @@ msgstr "이 리스트는 비어 있습니다."
 
 #: src/view/com/modals/AddAppPasswords.tsx:105
 msgid "This name is already in use"
-msgstr "이 이름은 이미 사용 중입니다."
+msgstr "이 이름은 이미 사용 중입니다"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:123
 msgid "This post has been deleted."
@@ -4098,11 +4098,11 @@ msgstr "성인 콘텐츠를 활성화하려면 18세 이상이어야 합니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:96
 msgid "You will no longer receive notifications for this thread"
-msgstr "이 스레드에 대한 알림을 더 이상 받지 않습니다."
+msgstr "이 스레드에 대한 알림을 더 이상 받지 않습니다"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:99
 msgid "You will now receive notifications for this thread"
-msgstr "이제 이 스레드에 대한 알림을 받습니다."
+msgstr "이제 이 스레드에 대한 알림을 받습니다"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
@@ -4118,7 +4118,7 @@ msgstr "내 계정"
 
 #: src/view/com/modals/DeleteAccount.tsx:65
 msgid "Your account has been deleted"
-msgstr "계정을 삭제했습니다."
+msgstr "계정을 삭제했습니다"
 
 #: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
