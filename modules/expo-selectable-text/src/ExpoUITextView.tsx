@@ -22,7 +22,6 @@ const useTextAncestorContext = () => React.useContext(TextAncestorContext)
 const textDefaults: TextProps = {
   allowFontScaling: true,
   selectable: true,
-  lineBreakMode: 'tail',
 }
 
 export default function ExpoUITextView({
@@ -45,6 +44,7 @@ export default function ExpoUITextView({
         <ExpoUITextViewRoot
           {...textDefaults}
           {...rest}
+          ellipsizeMode={rest.ellipsizeMode ?? rest.lineBreakMode ?? 'tail'}
           style={[{flex: 1}, rootStyle]}>
           {React.Children.toArray(children).map((c, index) => {
             if (React.isValidElement(c)) {

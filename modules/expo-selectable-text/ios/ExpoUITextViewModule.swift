@@ -34,10 +34,15 @@ public class ExpoUITextViewModule: Module {
       Prop("allowFontScaling") { (view: ExpoUITextView, prop: Bool) in
         view.textView.adjustsFontForContentSizeCategory = prop
       }
-      Prop("numberOfLines") { (view: ExpoUITextView, prop: Int) in
-        view.textView.textContainer.maximumNumberOfLines = prop
+      Prop("numberOfLines") { (view: ExpoUITextView, prop: Int?) in
+        view.textView.textContainer.maximumNumberOfLines = prop ?? 0
+
+        if view.textView.attributedText != nil {
+          view.setText()
+        }
       }
       Prop("ellipsizeMode") { (view: ExpoUITextView, prop: EllipsizeMode) in
+        print(prop.toLineBreakMode())
         view.textView.textContainer.lineBreakMode = prop.toLineBreakMode()
       }
       Prop("selectable") { (view: ExpoUITextView, prop: Bool) in

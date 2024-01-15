@@ -3,7 +3,7 @@ import {TextProps, TextStyle, ViewStyle} from 'react-native'
 
 export interface ExpoUITextViewProps extends TextProps {}
 
-export interface ExpoUITextViewNativeProps {
+export interface ExpoUITextViewNativeProps extends TextProps {
   children: React.ReactNode
   style: ViewStyle[]
 }
