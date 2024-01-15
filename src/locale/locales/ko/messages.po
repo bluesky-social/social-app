@@ -1625,7 +1625,7 @@ msgstr "호스팅 제공자 주소"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
-msgstr "이 링크를 무엇으로 여시겠습니까?"
+msgstr "이 링크를 어떻게 여시겠습니까?"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
