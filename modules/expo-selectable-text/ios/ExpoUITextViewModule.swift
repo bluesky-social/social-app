@@ -42,7 +42,6 @@ public class ExpoUITextViewModule: Module {
         }
       }
       Prop("ellipsizeMode") { (view: ExpoUITextView, prop: EllipsizeMode) in
-        print(prop.toLineBreakMode())
         view.textView.textContainer.lineBreakMode = prop.toLineBreakMode()
       }
       Prop("selectable") { (view: ExpoUITextView, prop: Bool) in
