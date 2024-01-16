@@ -123,20 +123,15 @@ class ExpoUITextView: ExpoView {
     )
 
     let text = textView.attributedText.string
-    var foundChild: ExpoUITextViewChild?
 
-    // Check each segment
-    self.textChildren.forEach { child in
+    return textChildren.first(where: { child in
       let range = text.range(of: child.text ?? "")
-      // Figure out the bounds
-      if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
-        if charIndex >= lowerBound.utf16Offset(in: text), charIndex <= upperBound.utf16Offset(in: text) {
-          foundChild = child
-        }
-      }
-    }
 
-    return foundChild
+      if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
+        return charIndex >= lowerBound.utf16Offset(in: text) && charIndex <= upperBound.utf16Offset(in: text)
+      }
+      return false
+    })
   }
 
   // Get the children. Always use getTextChildren() so that we ensure the correct order of views
