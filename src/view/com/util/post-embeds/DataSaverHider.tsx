@@ -72,7 +72,7 @@ export function DataSaverHider({
     }
 
     if (state === State.LOADING) {
-      Image.prefetch(thumbs, 'memory-disk').finally(() => {
+      Image.prefetch(thumbs, 'memory-disk').then(() => {
         if (aborted) {
           return
         }
