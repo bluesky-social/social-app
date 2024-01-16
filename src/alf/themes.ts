@@ -1,5 +1,6 @@
 import * as tokens from '#/alf/tokens'
 import type {Mutable} from '#/alf/types'
+import {atoms} from '#/alf/atoms'
 
 export type ThemeName = 'light' | 'dim' | 'dark'
 export type ReadonlyTheme = typeof light
@@ -156,6 +157,18 @@ export const light = {
     border_contrast: {
       borderColor: lightPalette.contrast_400,
     },
+    shadow_sm: {
+      ...atoms.shadow_sm,
+      shadowColor: lightPalette.black,
+    },
+    shadow_md: {
+      ...atoms.shadow_md,
+      shadowColor: lightPalette.black,
+    },
+    shadow_lg: {
+      ...atoms.shadow_lg,
+      shadowColor: lightPalette.black,
+    },
   },
 }
 
@@ -202,6 +215,21 @@ export const dim: Theme = {
     border_contrast: {
       borderColor: darkPalette.contrast_300,
     },
+    shadow_sm: {
+      ...atoms.shadow_sm,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+    shadow_md: {
+      ...atoms.shadow_md,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+    shadow_lg: {
+      ...atoms.shadow_lg,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
   },
 }
 
@@ -247,6 +275,21 @@ export const dark: Theme = {
     },
     border_contrast: {
       borderColor: darkPalette.contrast_300,
+    },
+    shadow_sm: {
+      ...atoms.shadow_sm,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+    shadow_md: {
+      ...atoms.shadow_md,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+    shadow_lg: {
+      ...atoms.shadow_lg,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
     },
   },
 }

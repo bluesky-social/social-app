@@ -210,6 +210,25 @@ export const atoms = {
   },
 
   /*
+   * Shadow
+   */
+  shadow_sm: {
+    shadowRadius: 8,
+    shadowOpacity: 0.1,
+    elevation: 8,
+  },
+  shadow_md: {
+    shadowRadius: 16,
+    shadowOpacity: 0.1,
+    elevation: 16,
+  },
+  shadow_lg: {
+    shadowRadius: 32,
+    shadowOpacity: 0.1,
+    elevation: 24,
+  },
+
+  /*
    * Padding
    */
   p_2xs: {
