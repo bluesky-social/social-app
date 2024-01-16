@@ -12,6 +12,7 @@ type ItemState = {
   name: string
   value: boolean
   disabled: boolean
+  hasError: boolean
   hovered: boolean
   pressed: boolean
   focused: boolean
@@ -22,6 +23,7 @@ const ItemContext = React.createContext<ItemState>({
   name: '',
   value: false,
   disabled: false,
+  hasError: false,
   hovered: false,
   pressed: false,
   focused: false,
@@ -80,11 +82,12 @@ function Item({
       name,
       value,
       disabled: disabled ?? false,
+      hasError: hasError ?? false,
       hovered,
       pressed,
       focused,
     }),
-    [labelId, name, value, disabled, hovered, pressed, focused],
+    [labelId, name, value, disabled, hovered, pressed, focused, hasError],
   )
 
   return (
@@ -235,47 +238,87 @@ function createSharedToggleStyles({
   focused,
   value,
   disabled,
+  hasError,
 }: {
   theme: ReturnType<typeof useTheme>
   value: boolean
   hovered: boolean
   focused: boolean
   disabled: boolean
+  hasError: boolean
 }) {
-  return [
-    hovered || focused
-      ? {
-          backgroundColor: t.palette.contrast_50,
-          borderColor: t.palette.contrast_500,
-        }
-      : {},
-    value
-      ? {
-          backgroundColor:
-            t.name === 'light' ? t.palette.primary_25 : t.palette.primary_900,
-          borderColor: t.palette.primary_500,
-        }
-      : {},
-    value && (hovered || focused)
-      ? {
-          backgroundColor:
-            t.name === 'light' ? t.palette.primary_100 : t.palette.primary_800,
-          borderColor:
-            t.name === 'light' ? t.palette.primary_600 : t.palette.primary_400,
-        }
-      : {},
-    disabled
-      ? {
-          backgroundColor: t.palette.contrast_200,
-          borderColor: t.palette.contrast_300,
-        }
-      : {},
-  ]
+  const base: ViewStyle[] = []
+  const baseHover: ViewStyle[] = []
+  const indicator: ViewStyle[] = []
+
+  if (value) {
+    base.push({
+      backgroundColor:
+        t.name === 'light' ? t.palette.primary_25 : t.palette.primary_900,
+      borderColor: t.palette.primary_500,
+    })
+
+    if (hovered || focused) {
+      baseHover.push({
+        backgroundColor:
+          t.name === 'light' ? t.palette.primary_100 : t.palette.primary_800,
+        borderColor:
+          t.name === 'light' ? t.palette.primary_600 : t.palette.primary_400,
+      })
+    }
+  } else {
+    if (hovered || focused) {
+      baseHover.push({
+        backgroundColor: t.palette.contrast_50,
+        borderColor: t.palette.contrast_500,
+      })
+    }
+  }
+
+  if (hasError) {
+    base.push({
+      backgroundColor:
+        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+      borderColor:
+        t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
+    })
+
+    if (hovered || focused) {
+      baseHover.push({
+        backgroundColor:
+          t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        borderColor: t.palette.negative_500,
+      })
+    }
+  }
+
+  if (disabled) {
+    base.push({
+      backgroundColor: t.palette.contrast_200,
+      borderColor: t.palette.contrast_300,
+    })
+  }
+
+  return {
+    baseStyles: base,
+    baseHoverStyles: baseHover,
+    indicatorStyles: indicator,
+  }
 }
 
 function Checkbox() {
   const t = useTheme()
-  const {value, hovered, focused, disabled} = React.useContext(ItemContext)
+  const {value, hovered, focused, disabled, hasError} =
+    React.useContext(ItemContext)
+  const {baseStyles, baseHoverStyles, indicatorStyles} =
+    createSharedToggleStyles({
+      theme: t,
+      hovered,
+      focused,
+      value,
+      disabled,
+      hasError,
+    })
   return (
     <View
       style={[
@@ -290,13 +333,8 @@ function Checkbox() {
           backgroundColor: value ? t.palette.primary_500 : undefined,
           borderColor: value ? t.palette.primary_500 : undefined,
         },
-        ...createSharedToggleStyles({
-          theme: t,
-          hovered,
-          focused,
-          value,
-          disabled,
-        }),
+        baseStyles,
+        hovered || focused ? baseHoverStyles : {},
       ]}>
       {value ? (
         <View
@@ -309,6 +347,7 @@ function Checkbox() {
                   backgroundColor: t.palette.primary_500,
                 }
               : {},
+            indicatorStyles,
           ]}
         />
       ) : null}
@@ -318,7 +357,17 @@ function Checkbox() {
 
 function Switch() {
   const t = useTheme()
-  const {value, hovered, focused, disabled} = React.useContext(ItemContext)
+  const {value, hovered, focused, disabled, hasError} =
+    React.useContext(ItemContext)
+  const {baseStyles, baseHoverStyles, indicatorStyles} =
+    createSharedToggleStyles({
+      theme: t,
+      hovered,
+      focused,
+      value,
+      disabled,
+      hasError,
+    })
   return (
     <View
       style={[
@@ -331,13 +380,8 @@ function Switch() {
           height: 20,
           width: 30,
         },
-        ...createSharedToggleStyles({
-          theme: t,
-          hovered,
-          focused,
-          value,
-          disabled,
-        }),
+        baseStyles,
+        hovered || focused ? baseHoverStyles : {},
       ]}>
       <View
         style={[
@@ -356,6 +400,7 @@ function Switch() {
                 left: 13,
               }
             : {},
+          indicatorStyles,
         ]}
       />
     </View>
@@ -364,7 +409,17 @@ function Switch() {
 
 function Radio() {
   const t = useTheme()
-  const {value, hovered, focused, disabled} = React.useContext(ItemContext)
+  const {value, hovered, focused, disabled, hasError} =
+    React.useContext(ItemContext)
+  const {baseStyles, baseHoverStyles, indicatorStyles} =
+    createSharedToggleStyles({
+      theme: t,
+      hovered,
+      focused,
+      value,
+      disabled,
+      hasError,
+    })
   return (
     <View
       style={[
@@ -379,13 +434,8 @@ function Radio() {
           backgroundColor: value ? t.palette.primary_500 : undefined,
           borderColor: value ? t.palette.primary_500 : undefined,
         },
-        ...createSharedToggleStyles({
-          theme: t,
-          hovered,
-          focused,
-          value,
-          disabled,
-        }),
+        baseStyles,
+        hovered || focused ? baseHoverStyles : {},
       ]}>
       {value ? (
         <View
@@ -398,6 +448,7 @@ function Radio() {
                   backgroundColor: t.palette.primary_500,
                 }
               : {},
+            indicatorStyles,
           ]}
         />
       ) : null}

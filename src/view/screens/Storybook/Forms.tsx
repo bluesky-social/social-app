@@ -146,6 +146,10 @@ export function Forms() {
             <Toggle.Checkbox />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
+          <Toggle.Item name="e" hasError>
+            <Toggle.Checkbox />
+            <Toggle.Label>Click me</Toggle.Label>
+          </Toggle.Item>
         </Toggle.Group>
 
         <Toggle.Group
@@ -170,6 +174,10 @@ export function Forms() {
             <Toggle.Switch />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
+          <Toggle.Item name="e" hasError>
+            <Toggle.Switch />
+            <Toggle.Label>Click me</Toggle.Label>
+          </Toggle.Item>
         </Toggle.Group>
 
         <Toggle.Group
@@ -190,6 +198,10 @@ export function Forms() {
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
           <Toggle.Item name="d" disabled>
+            <Toggle.Radio />
+            <Toggle.Label>Click me</Toggle.Label>
+          </Toggle.Item>
+          <Toggle.Item name="e" hasError>
             <Toggle.Radio />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
