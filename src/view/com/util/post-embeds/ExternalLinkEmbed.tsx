@@ -9,7 +9,7 @@ import {toNiceDomain} from 'lib/strings/url-helpers'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
 import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
-import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useDataSaverEnabled, useExternalEmbedsPrefs} from 'state/preferences'
 
 export const ExternalLinkEmbed = ({
   link,
@@ -19,6 +19,7 @@ export const ExternalLinkEmbed = ({
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
+  const dataSaverEnabled = useDataSaverEnabled()
 
   const embedPlayerParams = React.useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
@@ -30,7 +31,7 @@ export const ExternalLinkEmbed = ({
 
   return (
     <View style={{flexDirection: 'column'}}>
-      {link.thumb && !embedPlayerParams ? (
+      {!dataSaverEnabled && link.thumb && !embedPlayerParams ? (
         <View
           style={{
             borderTopLeftRadius: 6,
