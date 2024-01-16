@@ -83,9 +83,7 @@ function EmptyState({message, error}: {message: string; error?: string}) {
         },
       ]}>
       <View style={[pal.viewLight, {padding: 18, borderRadius: 8}]}>
-        <Text style={[pal.text]}>
-          <Trans>{message}</Trans>
-        </Text>
+        <Text style={[pal.text]}>{message}</Text>
 
         {error && (
           <>
