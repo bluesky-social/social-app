@@ -105,7 +105,7 @@ export function Button({
     }))
   }, [setState])
 
-  const {baseStyles, hoverStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles, focusStyles} = React.useMemo(() => {
     const baseStyles: ViewStyle[] = []
     const hoverStyles: ViewStyle[] = []
     const light = t.name === 'light'
@@ -260,6 +260,12 @@ export function Button({
     return {
       baseStyles,
       hoverStyles,
+      focusStyles: [
+        ...hoverStyles,
+        {
+          outline: 0,
+        },
+      ],
     }
   }, [t, variant, color, size, disabled])
 
@@ -292,6 +298,7 @@ export function Button({
         atoms.align_center,
         ...baseStyles,
         ...(state.hovered ? hoverStyles : []),
+        ...(state.focused ? focusStyles : []),
       ]}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
