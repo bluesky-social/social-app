@@ -347,7 +347,7 @@ msgstr "Nudez artística ou não erótica."
 
 #: src/view/screens/Moderation.tsx:189
 #~ msgid "Ask apps to limit the visibility of my account"
-#~ msgstr "Requisitar que meu perfil tenha visibilidade limitada"
+#~ msgstr "Exigir visibilidade limitada da minha conta"
 
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
@@ -702,7 +702,7 @@ msgstr "Escreva posts de até {MAX_GRAPHEME_LENGTH} caracteres"
 
 #: src/view/com/composer/Prompt.tsx:24
 msgid "Compose reply"
-msgstr "Responder"
+msgstr "Escrever resposta"
 
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/SelfLabel.tsx:154
@@ -710,6 +710,12 @@ msgstr "Responder"
 #: src/view/com/modals/VerifyEmail.tsx:233
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+msgctxt "action"
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -2038,6 +2044,10 @@ msgstr "Silenciar thread"
 msgid "Muted"
 msgstr "Silenciada"
 
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr "Silenciada"
+
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "Contas silenciadas"
@@ -2830,7 +2840,7 @@ msgstr "Solicitar Alteração"
 
 #: src/view/screens/Moderation.tsx:188
 #~ msgid "Request to limit the visibility of my account"
-#~ msgstr "Exigir limite na visibilidade da minha conta"
+#~ msgstr "Exigir visibilidade limitada da minha conta"
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
