@@ -26,8 +26,18 @@ export type DialogOuterProps = {
   webOptions?: {}
 }
 
-export type DialogInnerProps = React.PropsWithChildren<{
+type DialogInnerPropsBase<T> = React.PropsWithChildren<{
   style?: ViewStyle
-  accessibilityLabelledBy: A11yProps['aria-labelledby']
-  accessibilityDescribedBy: string
-}>
+}> &
+  T
+export type DialogInnerProps =
+  | DialogInnerPropsBase<{
+      label?: undefined
+      accessibilityLabelledBy: A11yProps['aria-labelledby']
+      accessibilityDescribedBy: string
+    }>
+  | DialogInnerPropsBase<{
+      label: string
+      accessibilityLabelledBy?: undefined
+      accessibilityDescribedBy?: undefined
+    }>

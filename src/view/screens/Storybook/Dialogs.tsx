@@ -51,8 +51,8 @@ export function Dialogs() {
         <Dialog.Handle />
 
         <Dialog.ScrollableInner
-          accessibilityLabelledBy="dialog-title"
-          accessibilityDescribedBy="dialog-description">
+          accessibilityDescribedBy="dialog-description"
+          accessibilityLabelledBy="dialog-title">
           <View style={[a.relative, a.gap_md, a.w_full]}>
             <H3 nativeID="dialog-title">Dialog</H3>
             <P nativeID="dialog-description">Description</P>

@@ -166,6 +166,8 @@ export function createTextInput(Input: typeof TextInput) {
           testID={testID}
           aria-labelledby={labelId}
           aria-label={label}
+          aria-invalid={hasError}
+          aria-placeholder={props.placeholder}
           accessibilityLabel={accessibilityLabel}
           accessibilityHint={accessibilityHint}
           placeholderTextColor={t.atoms.text_contrast_400.color}

@@ -120,6 +120,7 @@ export function Outer({
 export function Inner({
   children,
   style,
+  label,
   accessibilityLabelledBy,
   accessibilityDescribedBy,
 }: DialogInnerProps) {
@@ -128,9 +129,11 @@ export function Inner({
   return (
     <FocusScope loop enabled trapped>
       <Animated.View
+        aria-modal
+        aria-role="dialog"
+        aria-label={label}
         aria-labelledby={accessibilityLabelledBy}
         aria-describedby={accessibilityDescribedBy}
-        aria-role="dialog"
         // @ts-ignore web only -prf
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}

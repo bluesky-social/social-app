@@ -327,6 +327,7 @@ export function Button({
       role="button"
       {...rest}
       aria-label={accessibilityLabel}
+      aria-pressed={state.pressed}
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       disabled={disabled || false}

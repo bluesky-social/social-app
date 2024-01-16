@@ -41,6 +41,7 @@ type ItemProps = Omit<PressableProps, 'children' | 'style' | 'onPress'> & {
   name: string
   value?: boolean
   onChange?: ({name, value}: {name: string; value: boolean}) => void
+  hasError?: boolean
   style?: (state: ItemState) => ViewStyle
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
 }
@@ -51,6 +52,7 @@ function Item({
   value = false,
   disabled,
   onChange,
+  hasError,
   style,
   role,
 }: ItemProps) {
@@ -92,6 +94,7 @@ function Item({
         aria-disabled={disabled ?? false}
         aria-checked={value}
         aria-labelledby={labelId}
+        aria-invalid={hasError}
         role={role}
         accessibilityRole={role as AccessibilityRole}
         accessibilityState={{
