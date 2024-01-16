@@ -12,7 +12,16 @@ import LinearGradient from 'react-native-linear-gradient'
 import {useTheme, atoms, tokens, web, native} from '#/alf'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
-export type ButtonColor = 'primary' | 'secondary' | 'negative'
+export type ButtonColor =
+  | 'primary'
+  | 'secondary'
+  | 'negative'
+  | 'gradient_sky'
+  | 'gradient_midnight'
+  | 'gradient_sunrise'
+  | 'gradient_sunset'
+  | 'gradient_nordic'
+  | 'gradient_bonfire'
 export type ButtonSize = 'small' | 'large'
 export type VariantProps = {
   /**
@@ -270,6 +279,36 @@ export function Button({
     }
   }, [t, variant, color, size, disabled])
 
+  const {gradientColors, gradientHoverColors, gradientLocations} =
+    React.useMemo(() => {
+      const colors: string[] = []
+      const hoverColors: string[] = []
+      const locations: number[] = []
+      const gradient = {
+        primary: tokens.gradients.sky,
+        secondary: tokens.gradients.sky,
+        negative: tokens.gradients.sky,
+        gradient_sky: tokens.gradients.sky,
+        gradient_midnight: tokens.gradients.midnight,
+        gradient_sunrise: tokens.gradients.sunrise,
+        gradient_sunset: tokens.gradients.sunset,
+        gradient_nordic: tokens.gradients.nordic,
+        gradient_bonfire: tokens.gradients.bonfire,
+      }[color || 'primary']
+
+      if (variant === 'gradient') {
+        colors.push(...gradient.values.map(([_, color]) => color))
+        hoverColors.push(...gradient.values.map(_ => gradient.hover_value))
+        locations.push(...gradient.values.map(([location, _]) => location))
+      }
+
+      return {
+        gradientColors: colors,
+        gradientHoverColors: hoverColors,
+        gradientLocations: locations,
+      }
+    }, [variant, color])
+
   const childProps = React.useMemo(
     () => ({
       state,
@@ -311,10 +350,11 @@ export function Button({
       {variant === 'gradient' && (
         <LinearGradient
           colors={
-            state.hovered
-              ? [t.palette.primary_700, t.palette.primary_500]
-              : [t.palette.primary_600, t.palette.primary_400]
+            state.hovered || state.pressed || state.focused
+              ? gradientHoverColors
+              : gradientColors
           }
+          locations={gradientLocations}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[atoms.absolute, atoms.inset_0]}
@@ -353,7 +393,7 @@ export function ButtonText({
     const light = t.name === 'light'
 
     if (color === 'primary') {
-      if (variant === 'solid' || variant === 'gradient') {
+      if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
@@ -425,6 +465,12 @@ export function ButtonText({
         } else {
           baseStyles.push({color: t.palette.negative_500, opacity: 0.5})
         }
+      }
+    } else {
+      if (!disabled) {
+        baseStyles.push({color: t.palette.white})
+      } else {
+        baseStyles.push({color: t.palette.white, opacity: 0.5})
       }
     }
 
