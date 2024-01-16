@@ -2,11 +2,13 @@ import ExpoModulesCore
 
 class ExpoUITextView: ExpoView {
   var textView: UITextView
-  var textChildren: [ExpoUITextViewChild] = []
+  var textChildren: [ExpoUITextViewChild] = [] {
+    didSet {
+      self.setText()
+    }
+  }
 
   let onTextLayout = EventDispatcher()
-
-  // Props
 
   public required init(appContext: AppContext? = nil) {
     if #available(iOS 16.0, *) {
@@ -149,8 +151,6 @@ class ExpoUITextView: ExpoView {
 
     // Save the children for our onPress handler
     self.textChildren = children
-    // Update the UITextView with the styled text
-    self.setText()
   }
 
   func setText() -> Void {
