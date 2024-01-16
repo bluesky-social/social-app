@@ -14,11 +14,14 @@ import {ErrorScreen} from '../util/error/ErrorScreen'
 import {CenteredView} from '../util/Views'
 import {cleanError} from '#/lib/strings/errors'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const snapPoints = [520, '100%']
 
 export function Component({did}: {did: string}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const {
     data: profile,
@@ -43,7 +46,7 @@ export function Component({did}: {did: string}) {
   if (profileError) {
     return (
       <ErrorScreen
-        title="Oops!"
+        title={_(msg`Oops!`)}
         message={cleanError(profileError)}
         onPressTryAgain={refetchProfile}
       />
@@ -55,8 +58,8 @@ export function Component({did}: {did: string}) {
   // should never happen
   return (
     <ErrorScreen
-      title="Oops!"
-      message="Something went wrong and we're not sure what."
+      title={_(msg`Oops!`)}
+      message={_(msg`Something went wrong and we're not sure what.`)}
       onPressTryAgain={refetchProfile}
     />
   )
@@ -104,7 +107,7 @@ function ComponentLoaded({
             <>
               <InfoCircleIcon size={21} style={pal.textLight} />
               <ThemedText type="xl" fg="light">
-                Swipe up to see more
+                <Trans>Swipe up to see more</Trans>
               </ThemedText>
             </>
           )}

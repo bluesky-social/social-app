@@ -17,6 +17,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
+import {Trans} from '@lingui/macro'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -187,7 +188,7 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
             })
           ) : (
             <Text type="sm" style={[pal.text, styles.noResult]}>
-              No result
+              <Trans>No result</Trans>
             </Text>
           )}
         </View>

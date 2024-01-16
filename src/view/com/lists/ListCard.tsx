@@ -11,6 +11,7 @@ import {useSession} from '#/state/session'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
+import {Trans} from '@lingui/macro'
 
 export const ListCard = ({
   testID,
@@ -76,23 +77,40 @@ export const ListCard = ({
             {sanitizeDisplayName(list.name)}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
-            {list.purpose === 'app.bsky.graph.defs#curatelist' && 'User list '}
+            {list.purpose === 'app.bsky.graph.defs#curatelist' &&
+              (list.creator.did === currentAccount?.did ? (
+                <Trans>User list by you</Trans>
+              ) : (
+                <Trans>
+                  User list by {sanitizeHandle(list.creator.handle, '@')}
+                </Trans>
+              ))}
             {list.purpose === 'app.bsky.graph.defs#modlist' &&
-              'Moderation list '}
-            by{' '}
-            {list.creator.did === currentAccount?.did
-              ? 'you'
-              : sanitizeHandle(list.creator.handle, '@')}
+              (list.creator.did === currentAccount?.did ? (
+                <Trans>Moderation list by you</Trans>
+              ) : (
+                <Trans>
+                  Moderation list by {sanitizeHandle(list.creator.handle, '@')}
+                </Trans>
+              ))}
           </Text>
-          {!!list.viewer?.muted && (
-            <View style={s.flexRow}>
+          <View style={s.flexRow}>
+            {list.viewer?.muted ? (
               <View style={[s.mt5, pal.btn, styles.pill]}>
                 <Text type="xs" style={pal.text}>
-                  Subscribed
+                  <Trans>Muted</Trans>
                 </Text>
               </View>
-            </View>
-          )}
+            ) : null}
+
+            {list.viewer?.blocked ? (
+              <View style={[s.mt5, pal.btn, styles.pill]}>
+                <Text type="xs" style={pal.text}>
+                  <Trans>Blocked</Trans>
+                </Text>
+              </View>
+            ) : null}
+          </View>
         </View>
         {renderButton ? (
           <View style={styles.layoutButton}>{renderButton()}</View>

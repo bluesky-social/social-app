@@ -38,6 +38,7 @@ export function FeedErrorMessage({
   error?: Error
   onPressTryAgain: () => void
 }) {
+  const {_: _l} = useLingui()
   const knownError = React.useMemo(
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
@@ -60,7 +61,7 @@ export function FeedErrorMessage({
     return (
       <EmptyState
         icon="ban"
-        message="Posts hidden"
+        message={_l(msgLingui`Posts hidden`)}
         style={{paddingVertical: 40}}
       />
     )
@@ -134,7 +135,9 @@ function FeedgenErrorMessage({
           await removeFeed({uri})
         } catch (err) {
           Toast.show(
-            'There was an an issue removing this feed. Please check your internet connection and try again.',
+            _l(
+              msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
+            ),
           )
           logger.error('Failed to remove feed', {error: err})
         }
@@ -160,20 +163,20 @@ function FeedgenErrorMessage({
             {knownError === KnownError.FeedgenDoesNotExist && (
               <Button
                 type="inverted"
-                label="Remove feed"
+                label={_l(msgLingui`Remove feed`)}
                 onPress={onRemoveFeed}
               />
             )}
             <Button
               type="default-light"
-              label="View profile"
+              label={_l(msgLingui`View profile`)}
               onPress={onViewProfile}
             />
           </View>
         )
       }
     }
-  }, [knownError, onViewProfile, onRemoveFeed])
+  }, [knownError, onViewProfile, onRemoveFeed, _l])
 
   return (
     <View
@@ -191,7 +194,7 @@ function FeedgenErrorMessage({
 
       {rawError?.message && (
         <Text style={pal.textLight}>
-          <Trans>Message from server</Trans>: {rawError.message}
+          <Trans>Message from server: {rawError.message}</Trans>
         </Text>
       )}
 

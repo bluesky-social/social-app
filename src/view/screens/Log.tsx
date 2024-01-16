@@ -50,7 +50,9 @@ export function LogScreen({}: NativeStackScreenProps<
                   style={[styles.entry, pal.border, pal.view]}
                   onPress={toggler(entry.id)}
                   accessibilityLabel={_(msg`View debug entry`)}
-                  accessibilityHint="Opens additional details for a debug entry">
+                  accessibilityHint={_(
+                    msg`Opens additional details for a debug entry`,
+                  )}>
                   {entry.level === 'debug' ? (
                     <FontAwesomeIcon icon="info" />
                   ) : (

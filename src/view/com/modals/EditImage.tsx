@@ -112,16 +112,16 @@ export const Component = observer(function EditImageImpl({
       // },
       {
         name: 'flip' as const,
-        label: 'Flip horizontal',
+        label: _(msg`Flip horizontal`),
         onPress: onFlipHorizontal,
       },
       {
         name: 'flip' as const,
-        label: 'Flip vertically',
+        label: _(msg`Flip vertically`),
         onPress: onFlipVertical,
       },
     ],
-    [onFlipHorizontal, onFlipVertical],
+    [onFlipHorizontal, onFlipVertical, _],
   )
 
   useEffect(() => {
@@ -284,7 +284,7 @@ export const Component = observer(function EditImageImpl({
                   size={label?.startsWith('Flip') ? 22 : 24}
                   style={[
                     pal.text,
-                    label === 'Flip vertically'
+                    label === _(msg`Flip vertically`)
                       ? styles.flipVertical
                       : undefined,
                   ]}
@@ -330,7 +330,7 @@ export const Component = observer(function EditImageImpl({
             end={{x: 1, y: 1}}
             style={[styles.btn]}>
             <Text type="xl-medium" style={s.white}>
-              <Trans>Done</Trans>
+              <Trans context="action">Done</Trans>
             </Text>
           </LinearGradient>
         </Pressable>

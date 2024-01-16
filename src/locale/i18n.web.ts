@@ -29,6 +29,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       mod = await import(`./locales/hi/messages`)
       break
     }
+    case AppLanguage.id: {
+      mod = await import(`./locales/id/messages`)
+      break
+    }
     case AppLanguage.ja: {
       mod = await import(`./locales/ja/messages`)
       break
@@ -58,6 +62,9 @@ export async function dynamicActivate(locale: AppLanguage) {
 export async function useLocaleLanguage() {
   const {appLanguage} = useLanguagePrefs()
   useEffect(() => {
-    dynamicActivate(sanitizeAppLanguageSetting(appLanguage))
+    const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
+
+    document.documentElement.lang = sanitizedLanguage
+    dynamicActivate(sanitizedLanguage)
   }, [appLanguage])
 }

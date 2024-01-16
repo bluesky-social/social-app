@@ -22,7 +22,7 @@ export function AccountDropdownBtn({account}: {account: SessionAccount}) {
       label: _(msg`Remove account`),
       onPress: () => {
         removeAccount(account)
-        Toast.show('Account removed from quick access')
+        Toast.show(_(msg`Account removed from quick access`))
       },
       icon: {
         ios: {
