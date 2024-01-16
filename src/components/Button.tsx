@@ -264,7 +264,7 @@ export function Button({
         ...hoverStyles,
         {
           outline: 0,
-        },
+        } as ViewStyle,
       ],
     }
   }, [t, variant, color, size, disabled])
@@ -297,7 +297,7 @@ export function Button({
         atoms.flex_row,
         atoms.align_center,
         ...baseStyles,
-        ...(state.hovered ? hoverStyles : []),
+        ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
       ]}
       onPressIn={onPressIn}
