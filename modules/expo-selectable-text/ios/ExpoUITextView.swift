@@ -49,7 +49,6 @@ class ExpoUITextView: ExpoView {
   override func insertReactSubview(_ subview: UIView!, at atIndex: Int) {
     if subview.isKind(of: ExpoUITextViewChild.self) {
       insertSubview(subview, at: atIndex)
-      self.getTextChildren()
     }
   }
 
@@ -62,6 +61,10 @@ class ExpoUITextView: ExpoView {
 
   override func reactSubviews() -> [UIView]! {
     return subviews
+  }
+
+  override func didMoveToWindow() {
+    self.getTextChildren()
   }
 
   override func layoutSubviews() {
