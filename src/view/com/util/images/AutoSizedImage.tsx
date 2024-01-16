@@ -39,10 +39,12 @@ export function AutoSizedImage({
     dim ? calc(dim) : 1,
   )
   React.useEffect(() => {
-    let aborted = false
     if (dim) {
       return
     }
+
+    let aborted = false
+
     imageSizes.fetch(uri).then(newDim => {
       if (aborted) {
         return
@@ -50,6 +52,10 @@ export function AutoSizedImage({
       setDim(newDim)
       setAspectRatio(calc(newDim))
     })
+
+    return () => {
+      aborted = true
+    }
   }, [dim, setDim, setAspectRatio, uri])
 
   if (onPress || onLongPress || onPressIn) {
