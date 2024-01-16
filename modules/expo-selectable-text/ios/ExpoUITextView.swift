@@ -4,8 +4,6 @@ class ExpoUITextView: ExpoView {
   var textView: UITextView
   var textChildren: [ExpoUITextViewChild] = []
 
-  var tapGestureRecognizer: UITapGestureRecognizer?
-
   let onTextLayout = EventDispatcher()
 
   // Props
@@ -34,7 +32,6 @@ class ExpoUITextView: ExpoView {
     // Configure the tap gesture recognizer
     let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(callOnPress(_:)))
     tapGestureRecognizer.isEnabled = true
-    self.tapGestureRecognizer = tapGestureRecognizer
     textView.addGestureRecognizer(tapGestureRecognizer)
 
     // Listen for dynamic type changes
