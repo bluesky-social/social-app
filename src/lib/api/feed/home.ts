@@ -68,7 +68,8 @@ export class HomeFeedAPI implements FeedAPI {
       const res = await this.following.fetch({cursor, limit})
       returnCursor = res.cursor
       posts = posts.concat(res.feed)
-      if (res.feed.length === 0 || !cursor) {
+      if (!returnCursor) {
+        cursor = ''
         posts.push(FALLBACK_MARKER_POST)
         this.usingDiscover = true
       }
