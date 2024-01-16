@@ -145,8 +145,10 @@ export function Link({
       href={href}
       onPress={onPress}
       {...web({
-        target: isExternal ? '_blank' : undefined,
-        rel: isExternal ? 'noopener noreferrer' : undefined,
+        hrefAttrs: {
+          target: isExternal ? 'blank' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
+        },
         dataSet: {
           // default to no underline, apply this ourselves
           noUnderline: '1',
