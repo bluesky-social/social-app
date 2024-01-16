@@ -7,10 +7,11 @@ import {
   ViewStyle,
   AccessibilityProps,
 } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 import {useTheme, atoms, tokens, web, native} from '#/alf'
 
-export type ButtonVariant = 'solid' | 'outline' | 'ghost'
+export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor = 'primary' | 'secondary' | 'negative'
 export type ButtonSize = 'small' | 'large'
 export type VariantProps = {
@@ -296,6 +297,7 @@ export function Button({
       style={[
         atoms.flex_row,
         atoms.align_center,
+        atoms.overflow_hidden,
         ...baseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
@@ -306,6 +308,18 @@ export function Button({
       onHoverOut={onHoverOut}
       onFocus={onFocus}
       onBlur={onBlur}>
+      {variant === 'gradient' && (
+        <LinearGradient
+          colors={
+            state.hovered
+              ? [t.palette.primary_700, t.palette.primary_500]
+              : [t.palette.primary_600, t.palette.primary_400]
+          }
+          start={{x: 0, y: 0}}
+          end={{x: 1, y: 1}}
+          style={[atoms.absolute, atoms.inset_0]}
+        />
+      )}
       {typeof children === 'string' ? (
         <ButtonText
           variant={variant}
@@ -339,7 +353,7 @@ export function ButtonText({
     const light = t.name === 'light'
 
     if (color === 'primary') {
-      if (variant === 'solid') {
+      if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {
@@ -361,7 +375,7 @@ export function ButtonText({
         }
       }
     } else if (color === 'secondary') {
-      if (variant === 'solid') {
+      if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
           baseStyles.push({
             color: light ? tokens.color.gray_700 : tokens.color.gray_100,
@@ -393,7 +407,7 @@ export function ButtonText({
         }
       }
     } else if (color === 'negative') {
-      if (variant === 'solid') {
+      if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
           baseStyles.push({color: t.palette.white})
         } else {

@@ -36,6 +36,15 @@ export function Buttons() {
             ))}
           </View>
         ))}
+
+        <Button
+          variant="gradient"
+          color="primary"
+          size="large"
+          accessibilityLabel="Click here"
+          accessibilityHint="Opens something">
+          Button
+        </Button>
       </View>
     </View>
   )

@@ -35,6 +35,10 @@ export const atoms = {
     zIndex: 50,
   },
 
+  overflow_hidden: {
+    overflow: 'hidden',
+  },
+
   /*
    * Width
    */
