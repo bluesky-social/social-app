@@ -425,6 +425,7 @@ msgstr "이 계정들을 차단하시겠습니까?"
 msgid "Block this List"
 msgstr "이 리스트 차단"
 
+#: src/view/com/lists/ListCard.tsx:109
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:57
 msgid "Blocked"
 msgstr "차단됨"
@@ -2075,6 +2076,10 @@ msgstr "이 리스트 뮤트"
 msgid "Mute thread"
 msgstr "스레드 뮤트"
 
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr "뮤트됨"
+
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "뮤트한 계정"
@@ -3542,7 +3547,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:261
+#: src/view/com/posts/Feed.tsx:263
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -3959,6 +3964,10 @@ msgstr "사이트 방문"
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
 msgstr "경고"
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from"
+msgstr "팔로우한 사용자의 게시물이 부족합니다. 다음 피드에서 가져온 최신 게시물:"
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
