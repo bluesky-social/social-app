@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-12-22 01:56+0530\n"
-"PO-Revision-Date: 2024-01-11 13:54-0300\n"
-"Last-Translator: gildaswise\n"
-"Language-Team: maisondasilva, gildaswise\n"
-"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt-BR\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-01-15 18:00\n"
+"Last-Translator: gildaswise\n"
+"Language-Team: maisondasilva, gildaswise\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4.2\n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
 msgid "(no email)"
@@ -349,11 +349,6 @@ msgstr "Nudez artística ou não erótica."
 #~ msgid "Ask apps to limit the visibility of my account"
 #~ msgstr "Requisitar que meu perfil tenha visibilidade limitada"
 
-#: src/view/com/post-thread/PostThread.tsx:400
-msgctxt "action"
-msgid "Back"
-msgstr "Voltar"
-
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:170
@@ -365,6 +360,11 @@ msgstr "Voltar"
 #: src/view/com/post-thread/PostThread.tsx:450
 #: src/view/com/profile/ProfileHeader.tsx:688
 #: src/view/com/util/ViewHeader.tsx:81
+msgid "Back"
+msgstr "Voltar"
+
+#: src/view/com/post-thread/PostThread.tsx:400
+msgctxt "action"
 msgid "Back"
 msgstr "Voltar"
 
@@ -402,6 +402,7 @@ msgstr "Bloquear estas contas?"
 msgid "Block this List"
 msgstr "Bloquear esta Lista"
 
+#: src/view/com/lists/ListCard.tsx:109
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:57
 msgid "Blocked"
 msgstr "Bloqueado"
@@ -503,15 +504,6 @@ msgstr "Câmera"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "Só pode conter letras, números, espaços, traços e sublinhados. Deve ter pelo menos 4 caracteres, mas não mais de 32 caracteres."
 
-#: src/view/com/modals/Confirm.tsx:88
-#: src/view/com/modals/Confirm.tsx:91
-#: src/view/com/modals/CreateOrEditList.tsx:293
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:227
-msgctxt "action"
-msgid "Cancel"
-msgstr "Cancelar"
-
 #: src/view/com/composer/Composer.tsx:300
 #: src/view/com/composer/Composer.tsx:305
 #: src/view/com/modals/ChangeEmail.tsx:218
@@ -530,8 +522,17 @@ msgstr "Cancelar"
 msgid "Cancel"
 msgstr "Cancelar"
 
+#: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
+#: src/view/com/modals/CreateOrEditList.tsx:293
+#: src/view/com/modals/DeleteAccount.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:230
+msgctxt "action"
+msgid "Cancel"
+msgstr "Cancelar"
+
 #: src/view/com/modals/DeleteAccount.tsx:148
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:226
 msgid "Cancel account deletion"
 msgstr "Cancelar exclusão da conta"
 
@@ -703,18 +704,18 @@ msgstr "Escreva posts de até {MAX_GRAPHEME_LENGTH} caracteres"
 msgid "Compose reply"
 msgstr "Responder"
 
-#: src/view/com/modals/Confirm.tsx:75
-#: src/view/com/modals/Confirm.tsx:78
-msgctxt "action"
-msgid "Confirm"
-msgstr "Confirmar"
-
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:231
 #: src/view/com/modals/VerifyEmail.tsx:233
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+msgctxt "action"
 msgid "Confirm"
 msgstr "Confirmar"
 
@@ -727,7 +728,7 @@ msgstr "Confirmar Alterações"
 msgid "Confirm content language settings"
 msgstr "Confirmar configurações de idioma de conteúdo"
 
-#: src/view/com/modals/DeleteAccount.tsx:213
+#: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Confirm delete account"
 msgstr "Confirmar a exclusão da conta"
 
@@ -919,7 +920,7 @@ msgstr "Excluir senha de aplicativo"
 msgid "Delete List"
 msgstr "Excluir Lista"
 
-#: src/view/com/modals/DeleteAccount.tsx:216
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Delete my account"
 msgstr "Excluir minha conta"
 
@@ -1633,7 +1634,7 @@ msgstr "Insira o nome da senha de app"
 msgid "Input new password"
 msgstr "Insira a nova senha"
 
-#: src/view/com/modals/DeleteAccount.tsx:196
+#: src/view/com/modals/DeleteAccount.tsx:199
 msgid "Input password for account deletion"
 msgstr "Insira a senha para deletar a conta"
 
@@ -2033,6 +2034,10 @@ msgstr "Silenciar esta lista"
 msgid "Mute thread"
 msgstr "Silenciar thread"
 
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr "Silenciada"
+
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "Contas silenciadas"
@@ -2143,11 +2148,6 @@ msgstr "Nova lista de usuários"
 msgid "Newest replies first"
 msgstr "Respostas mais recentes primeiro"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-msgctxt "action"
-msgid "Next"
-msgstr "Próximo"
-
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:178
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:188
@@ -2155,6 +2155,11 @@ msgstr "Próximo"
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:158
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:168
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+msgid "Next"
+msgstr "Próximo"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
+msgctxt "action"
 msgid "Next"
 msgstr "Próximo"
 
@@ -2416,7 +2421,7 @@ msgstr "Página não encontrada"
 #: src/view/com/auth/create/Step2.tsx:132
 #: src/view/com/auth/login/LoginForm.tsx:223
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:132
-#: src/view/com/modals/DeleteAccount.tsx:195
+#: src/view/com/modals/DeleteAccount.tsx:198
 msgid "Password"
 msgstr "Senha"
 
@@ -2494,7 +2499,7 @@ msgstr "Por favor, insira um nome único para esta Senha de Aplicativo ou use no
 msgid "Please enter your email."
 msgstr "Por favor, digite o seu email."
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:187
 msgid "Please enter your password as well:"
 msgstr "Por favor, digite sua senha também:"
 
@@ -3349,8 +3354,8 @@ msgid "Subscribe to this list"
 msgstr "Inscreva-se nesta lista"
 
 #: src/view/com/lists/ListCard.tsx:101
-msgid "Subscribed"
-msgstr "Inscrito"
+#~ msgid "Subscribed"
+#~ msgstr "Inscrito"
 
 #: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
@@ -3484,7 +3489,7 @@ msgstr "Tivemos um problema ao contatar o servidor deste feed"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Tivemos um problema ao carregar notificações. Toque aqui para tentar de novo."
 
-#: src/view/com/posts/Feed.tsx:261
+#: src/view/com/posts/Feed.tsx:263
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Tivemos um problema ao carregar posts. Toque aqui para tentar de novo."
 
@@ -3649,7 +3654,7 @@ msgstr "Desbloquear lista"
 
 #: src/view/screens/ProfileList.tsx:469
 msgid "Un-mute list"
-msgstr "Desmutar lista"
+msgstr "Dessilenciar lista"
 
 #: src/view/com/auth/create/CreateAccount.tsx:65
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
@@ -3658,13 +3663,13 @@ msgstr "Desmutar lista"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Não foi possível entrar em contato com seu serviço. Por favor, verifique sua conexão à internet."
 
-#: src/view/com/profile/ProfileHeader.tsx:475
-msgctxt "action"
+#: src/view/com/profile/ProfileHeader.tsx:472
+#: src/view/screens/ProfileList.tsx:568
 msgid "Unblock"
 msgstr "Desbloquear"
 
-#: src/view/com/profile/ProfileHeader.tsx:472
-#: src/view/screens/ProfileList.tsx:568
+#: src/view/com/profile/ProfileHeader.tsx:475
+msgctxt "action"
 msgid "Unblock"
 msgstr "Desbloquear"
 
@@ -3699,15 +3704,15 @@ msgstr "Remover curtida"
 
 #: src/view/screens/ProfileList.tsx:575
 msgid "Unmute"
-msgstr "Desmutar"
+msgstr "Dessilenciar"
 
 #: src/view/com/profile/ProfileHeader.tsx:373
 msgid "Unmute Account"
-msgstr "Desmutar conta"
+msgstr "Dessilenciar conta"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:169
 msgid "Unmute thread"
-msgstr "Desmutar thread"
+msgstr "Dessilenciar thread"
 
 #: src/view/screens/ProfileFeed.tsx:362
 #: src/view/screens/ProfileList.tsx:559
@@ -3876,6 +3881,10 @@ msgstr "Visitar Site"
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
 msgstr "Avisar"
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from"
+msgstr "Não temos mais posts de quem você segue. Aqui estão os mais novos de"
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
