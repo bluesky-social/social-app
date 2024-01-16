@@ -160,7 +160,7 @@ export function Component({}: {}) {
             {/* TODO: Update this label to be more concise */}
             <Text
               type="lg"
-              style={styles.description}
+              style={[pal.text, styles.description]}
               nativeID="confirmationCode">
               <Trans>
                 Check your inbox for an email with the confirmation code to
@@ -180,7 +180,10 @@ export function Component({}: {}) {
                 msg`Input confirmation code for account deletion`,
               )}
             />
-            <Text type="lg" style={styles.description} nativeID="password">
+            <Text
+              type="lg"
+              style={[pal.text, styles.description]}
+              nativeID="password">
               <Trans>Please enter your password as well:</Trans>
             </Text>
             <TextInput
