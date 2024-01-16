@@ -272,7 +272,8 @@ export function usePinnedFeedsInfos(): {
                   },
                 })
               } catch (e) {
-                logger.warn(`usePinnedFeedsInfos: failed to fetch ${uri}`, {
+                // expected failure
+                logger.info(`usePinnedFeedsInfos: failed to fetch ${uri}`, {
                   error: e,
                 })
               }
