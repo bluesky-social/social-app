@@ -45,7 +45,9 @@ import {
   useOnboardingDispatch,
 } from '#/state/shell'
 import {
+  useDataSaverEnabled,
   useRequireAltTextEnabled,
+  useSetDataSaverEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
 import {
@@ -153,6 +155,8 @@ export function SettingsScreen({}: Props) {
   const setRequireAltTextEnabled = useSetRequireAltTextEnabled()
   const inAppBrowserPref = useInAppBrowser()
   const setUseInAppBrowser = useSetInAppBrowser()
+  const dataSaverEnabled = useDataSaverEnabled()
+  const setDataSaverEnabled = useSetDataSaverEnabled()
   const onboardingDispatch = useOnboardingDispatch()
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
@@ -482,6 +486,15 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Set color theme to dark`)}
             />
           </View>
+        </View>
+        <View style={[pal.view, styles.toggleCard]}>
+          <ToggleButton
+            type="default-light"
+            label={_(msg`Enable data saving mode`)}
+            labelType="lg"
+            isSelected={dataSaverEnabled}
+            onPress={() => setDataSaverEnabled(!dataSaverEnabled)}
+          />
         </View>
         <View style={styles.spacer20} />
 
