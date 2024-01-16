@@ -389,7 +389,7 @@ msgstr "Regresar"
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
-msgstr "Conceptos básicos"
+msgstr "Primarios"
 
 #: src/view/com/auth/create/Step2.tsx:156 
 #: src/view/com/modals/BirthDateSettings.tsx:73
