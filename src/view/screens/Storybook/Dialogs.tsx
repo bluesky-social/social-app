@@ -12,7 +12,7 @@ export function Dialogs() {
   const prompt = Prompt.usePromptControl()
 
   return (
-    <>
+    <View style={[a.gap_md]}>
       <Button
         variant="outline"
         color="secondary"
@@ -34,10 +34,10 @@ export function Dialogs() {
       </Button>
 
       <Prompt.Outer control={prompt}>
-        <Prompt.Title>Are you sure?</Prompt.Title>
+        <Prompt.Title>This is a prompt</Prompt.Title>
         <Prompt.Description>
-          This action cannot be undone. This action cannot be undone. This
-          action cannot be undone.
+          This is a generic prompt component. It accepts a title and a
+          description, as well as two actions.
         </Prompt.Description>
         <Prompt.Actions>
           <Prompt.Cancel>Cancel</Prompt.Cancel>
@@ -55,7 +55,9 @@ export function Dialogs() {
           accessibilityLabelledBy="dialog-title">
           <View style={[a.relative, a.gap_md, a.w_full]}>
             <H3 nativeID="dialog-title">Dialog</H3>
-            <P nativeID="dialog-description">Description</P>
+            <P nativeID="dialog-description">
+              A scrollable dialog with an input within it.
+            </P>
             <Dialog.InputText
               testID=""
               value=""
@@ -79,6 +81,6 @@ export function Dialogs() {
           </View>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
-    </>
+    </View>
   )
 }

@@ -53,6 +53,7 @@ export function Storybook() {
               Dark
             </Button>
           </View>
+          <Dialogs />
 
           <ThemeProvider theme="light">
             <Theming />
@@ -70,7 +71,6 @@ export function Storybook() {
           <Buttons />
           <Links />
           <Forms />
-          <Dialogs />
           <Breakpoints />
         </View>
       </CenteredView>
