@@ -110,6 +110,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     },
     hiddenPosts: defaults.hiddenPosts,
     externalEmbeds: defaults.externalEmbeds,
+    dataSaverEnabled: defaults.dataSaverEnabled,
   }
 }
 
