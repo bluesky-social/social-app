@@ -29,6 +29,7 @@ import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
+import {DataSaverHider} from './DataSaverHider'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -108,6 +109,9 @@ export function PostEmbeds({
         alt: img.alt,
         aspectRatio: img.aspectRatio,
       }))
+
+      const thumbs = embed.images.map(img => img.thumb)
+
       const _openLightbox = (index: number) => {
         openLightbox(new ImagesLightbox(items, index))
       }
@@ -120,35 +124,41 @@ export function PostEmbeds({
       if (images.length === 1) {
         const {alt, thumb, aspectRatio} = images[0]
         return (
-          <View style={[styles.imagesContainer, style]}>
-            <AutoSizedImage
-              alt={alt}
-              uri={thumb}
-              dimensionsHint={aspectRatio}
-              onPress={() => _openLightbox(0)}
-              onPressIn={() => onPressIn(0)}
-              style={[styles.singleImage]}>
-              {alt === '' ? null : (
-                <View style={styles.altContainer}>
-                  <Text style={styles.alt} accessible={false}>
-                    ALT
-                  </Text>
-                </View>
-              )}
-            </AutoSizedImage>
-          </View>
+          <DataSaverHider thumbs={thumbs}>
+            <View style={[styles.imagesContainer, style]}>
+              <AutoSizedImage
+                alt={alt}
+                uri={thumb}
+                dimensionsHint={aspectRatio}
+                onPress={() => _openLightbox(0)}
+                onPressIn={() => onPressIn(0)}
+                style={[styles.singleImage]}>
+                {alt === '' ? null : (
+                  <View style={styles.altContainer}>
+                    <Text style={styles.alt} accessible={false}>
+                      ALT
+                    </Text>
+                  </View>
+                )}
+              </AutoSizedImage>
+            </View>
+          </DataSaverHider>
         )
       }
 
       return (
-        <View style={[styles.imagesContainer, style]}>
-          <ImageLayoutGrid
-            images={embed.images}
-            onPress={_openLightbox}
-            onPressIn={onPressIn}
-            style={embed.images.length === 1 ? [styles.singleImage] : undefined}
-          />
-        </View>
+        <DataSaverHider thumbs={thumbs}>
+          <View style={[styles.imagesContainer, style]}>
+            <ImageLayoutGrid
+              images={embed.images}
+              onPress={_openLightbox}
+              onPressIn={onPressIn}
+              style={
+                embed.images.length === 1 ? [styles.singleImage] : undefined
+              }
+            />
+          </View>
+        </DataSaverHider>
       )
     }
   }

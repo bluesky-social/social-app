@@ -54,6 +54,7 @@ export const schema = z.object({
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
+  dataSaverEnabled: z.boolean(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -86,4 +87,5 @@ export const defaults: Schema = {
   },
   hiddenPosts: [],
   useInAppBrowser: undefined,
+  dataSaverEnabled: false,
 }
