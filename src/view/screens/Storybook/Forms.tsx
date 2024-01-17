@@ -163,15 +163,6 @@ export function Forms() {
               <Toggle.Switch />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>
-
-            <Button
-              variant="solid"
-              color="primary"
-              size="small"
-              label="Reset"
-              onPress={() => setToggleGroupAValues(['a'])}>
-              Reset
-            </Button>
           </View>
         </Toggle.Group>
 
@@ -234,6 +225,19 @@ export function Forms() {
           </View>
         </Toggle.Group>
       </View>
+
+      <Button
+        variant="gradient"
+        color="gradient_nordic"
+        size="small"
+        label="Reset all toggles"
+        onPress={() => {
+          setToggleGroupAValues(['a'])
+          setToggleGroupBValues(['a', 'b'])
+          setToggleGroupCValues(['a'])
+        }}>
+        Reset all toggles
+      </Button>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
         <H3>ToggleButton</H3>

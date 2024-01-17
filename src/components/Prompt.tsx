@@ -1,5 +1,7 @@
 import React from 'react'
 import {View, PressableProps} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a} from '#/alf'
 import {H4, P} from '#/components/Typography'
@@ -80,13 +82,14 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 export function Cancel({
   children,
 }: React.PropsWithChildren<{onPress?: PressableProps['onPress']}>) {
+  const {_} = useLingui()
   const {close} = Dialog.useDialogContext()
   return (
     <Button
       variant="solid"
       color="secondary"
       size="small"
-      label="Cancel"
+      label={_(msg`Cancel`)}
       onPress={close}>
       {children}
     </Button>
@@ -97,6 +100,7 @@ export function Action({
   children,
   onPress,
 }: React.PropsWithChildren<{onPress?: () => void}>) {
+  const {_} = useLingui()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
     close()
@@ -107,7 +111,7 @@ export function Action({
       variant="solid"
       color="primary"
       size="small"
-      label="Confirm"
+      label={_(msg`Confirm`)}
       onPress={handleOnPress}>
       {children}
     </Button>

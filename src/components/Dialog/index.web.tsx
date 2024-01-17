@@ -2,6 +2,8 @@ import React, {useImperativeHandle} from 'react'
 import {View, TouchableWithoutFeedback} from 'react-native'
 import {FocusScope} from '@tamagui/focus-scope'
 import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -22,6 +24,7 @@ export function Outer({
   onClose,
   children,
 }: React.PropsWithChildren<DialogOuterProps>) {
+  const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
@@ -74,7 +77,7 @@ export function Outer({
           <Context.Provider value={context}>
             <TouchableWithoutFeedback
               accessibilityHint={undefined}
-              accessibilityLabel="Close active dialog"
+              accessibilityLabel={_(msg`Close active dialog`)}
               onPress={close}>
               <View
                 style={[
@@ -170,6 +173,7 @@ export function Handle() {
 }
 
 export function Close() {
+  const {_} = useLingui()
   const t = useTheme()
   const {close} = useDialogContext()
   return (
@@ -182,10 +186,7 @@ export function Close() {
           right: a.pr_lg.paddingRight,
         },
       ]}>
-      <Button
-        onPress={close}
-        accessibilityLabel="Close dialog"
-        accessibilityHint="Clicking this button will close the current dialog.">
+      <Button onPress={close} label={_(msg`Close active dialog`)}>
         {() => (
           <View
             style={[
