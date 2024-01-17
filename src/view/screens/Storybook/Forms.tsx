@@ -9,8 +9,11 @@ import {InputGroup} from '#/components/forms/InputGroup'
 import {Logo} from '#/view/icons/Logo'
 import Toggle from '#/components/forms/Toggle'
 import ToggleButton from '#/components/forms/ToggleButton'
+import {Button} from '#/components/Button'
 
 export function Forms() {
+  const [toggleGroupValues, setToggleGroupValues] = React.useState(['a'])
+
   return (
     <View style={[a.gap_4xl, a.align_start]}>
       <H1>Forms</H1>
@@ -135,85 +138,98 @@ export function Forms() {
           type="checkbox"
           maxSelections={2}
           values={['a', 'b']}
-          onChange={e => console.log(e)}
-          style={[a.gap_sm]}>
-          <Toggle.Item name="a" label="Click me">
-            <Toggle.Checkbox />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="b" label="Click me">
-            <Toggle.Checkbox />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="c" label="Click me">
-            <Toggle.Checkbox />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="d" disabled label="Click me">
-            <Toggle.Checkbox />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="e" hasError label="Click me">
-            <Toggle.Checkbox />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
+          onChange={e => console.log(e)}>
+          <View style={[a.gap_md]}>
+            <Toggle.Item name="a" label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="b" label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="c" label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="d" disabled label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="e" hasError label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+          </View>
         </Toggle.Group>
 
         <Toggle.Group
           label="Toggle"
           type="checkbox"
           maxSelections={2}
-          values={['a']}
-          onChange={e => console.log(e)}
-          style={[a.gap_sm]}>
-          <Toggle.Item name="a" label="Click me">
-            <Toggle.Switch />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="b" label="Click me">
-            <Toggle.Switch />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="c" label="Click me">
-            <Toggle.Switch />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="d" disabled label="Click me">
-            <Toggle.Switch />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="e" hasError label="Click me">
-            <Toggle.Switch />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
+          values={toggleGroupValues}
+          onChange={setToggleGroupValues}>
+          <View style={[a.gap_md]}>
+            <Toggle.Item name="a" label="Click me">
+              <Toggle.Switch />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="b" label="Click me">
+              <Toggle.Switch />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="c" label="Click me">
+              <Toggle.Switch />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="d" disabled label="Click me">
+              <Toggle.Switch />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="e" hasError label="Click me">
+              <Toggle.Switch />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+
+            <Button
+              variant="solid"
+              color="primary"
+              size="small"
+              accessibilityLabel="Reset"
+              accessibilityHint="Reset"
+              onPress={() => setToggleGroupValues(['a'])}>
+              Reset
+            </Button>
+          </View>
         </Toggle.Group>
 
         <Toggle.Group
           label="Toggle"
           type="radio"
           values={['a']}
-          onChange={e => console.log(e)}
-          style={[a.gap_sm]}>
-          <Toggle.Item name="a" label="Click me">
-            <Toggle.Radio />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="b" label="Click me">
-            <Toggle.Radio />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="c" label="Click me">
-            <Toggle.Radio />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="d" disabled label="Click me">
-            <Toggle.Radio />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
-          <Toggle.Item name="e" hasError label="Click me">
-            <Toggle.Radio />
-            <Toggle.Label>Click me</Toggle.Label>
-          </Toggle.Item>
+          onChange={e => console.log(e)}>
+          <View style={[a.gap_md]}>
+            <Toggle.Item name="a" label="Click me">
+              <Toggle.Radio />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="b" label="Click me">
+              <Toggle.Radio />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="c" label="Click me">
+              <Toggle.Radio />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="d" disabled label="Click me">
+              <Toggle.Radio />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="e" hasError label="Click me">
+              <Toggle.Radio />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+          </View>
         </Toggle.Group>
       </View>
 

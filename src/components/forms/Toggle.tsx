@@ -4,7 +4,6 @@ import {Pressable, PressableProps, View, ViewStyle} from 'react-native'
 import {useTheme, atoms as a, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {StyleProp} from 'react-native'
 
 type ItemState = {
   name: string
@@ -47,7 +46,6 @@ export type GroupProps = React.PropsWithChildren<{
   disabled?: boolean
   onChange: (value: string[]) => void
   label: string
-  style?: StyleProp<ViewStyle>
 }>
 
 export type ItemProps = Omit<
@@ -66,22 +64,15 @@ export type ItemProps = Omit<
 
 function Group({
   children,
-  values: initialValues,
+  values: providedValues,
   onChange,
   disabled = false,
   type = 'checkbox',
   maxSelections,
-  style,
   label,
 }: GroupProps) {
-  if (!initialValues) {
-    throw new Error(`Don't forget to pass in 'values' to your Toggle.Group`)
-  }
-
   const groupRole = type === 'radio' ? 'radiogroup' : undefined
-  const [values, setValues] = React.useState<string[]>(
-    type === 'radio' ? initialValues.slice(0, 1) : initialValues,
-  )
+  const values = type === 'radio' ? providedValues.slice(0, 1) : providedValues
   const [maxReached, setMaxReached] = React.useState(false)
 
   const setFieldValue = React.useCallback<
@@ -89,20 +80,15 @@ function Group({
   >(
     ({name, value}) => {
       if (type === 'checkbox') {
-        setValues(s => {
-          const state = s.filter(v => v !== name)
-          return value ? state.concat(name) : state
-        })
+        const pruned = values.filter(v => v !== name)
+        const next = value ? pruned.concat(name) : pruned
+        onChange(next)
       } else {
-        setValues([name])
+        onChange([name])
       }
     },
-    [type, setValues],
+    [type, onChange, values],
   )
-
-  React.useEffect(() => {
-    onChange(values)
-  }, [values, onChange])
 
   React.useEffect(() => {
     if (type === 'checkbox') {
@@ -137,7 +123,6 @@ function Group({
     <GroupContext.Provider value={context}>
       <View
         role={groupRole}
-        style={style} // TODO
         {...(groupRole === 'radiogroup'
           ? {
               'aria-label': label,
