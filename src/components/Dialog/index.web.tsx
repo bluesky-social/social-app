@@ -73,7 +73,8 @@ export function Outer({
         <Portal>
           <Context.Provider value={context}>
             <TouchableWithoutFeedback
-              accessibilityRole="button"
+              accessibilityHint={undefined}
+              accessibilityLabel="Close active dialog"
               onPress={close}>
               <View
                 style={[
@@ -129,7 +130,7 @@ export function Inner({
   return (
     <FocusScope loop enabled trapped>
       <Animated.View
-        aria-modal
+        role="dialog"
         aria-role="dialog"
         aria-label={label}
         aria-labelledby={accessibilityLabelledBy}

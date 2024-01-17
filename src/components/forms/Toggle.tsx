@@ -196,6 +196,7 @@ function Item({
   return (
     <ItemContext.Provider value={state}>
       <Pressable
+        accessibilityHint={undefined} // optional
         {...rest}
         disabled={disabled}
         aria-disabled={disabled ?? false}
@@ -209,7 +210,6 @@ function Item({
           selected: selected,
         }}
         accessibilityLabel={label}
-        accessibilityHint={undefined}
         onPress={onPress}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}

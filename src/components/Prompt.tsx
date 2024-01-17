@@ -86,8 +86,7 @@ export function Cancel({
       variant="solid"
       color="secondary"
       size="small"
-      accessibilityLabel="Cancel"
-      accessibilityHint="Cancel this action"
+      label="Cancel"
       onPress={close}>
       {children}
     </Button>
@@ -108,8 +107,7 @@ export function Action({
       variant="solid"
       color="primary"
       size="small"
-      accessibilityLabel="Confirm"
-      accessibilityHint="Confirm this action"
+      label="Confirm"
       onPress={handleOnPress}>
       {children}
     </Button>

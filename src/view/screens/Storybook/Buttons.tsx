@@ -19,8 +19,7 @@ export function Buttons() {
                   variant={variant as ButtonVariant}
                   color={color as ButtonColor}
                   size="large"
-                  accessibilityLabel="Click here"
-                  accessibilityHint="Opens something">
+                  label="Click here">
                   Button
                 </Button>
                 <Button
@@ -28,8 +27,7 @@ export function Buttons() {
                   variant={variant as ButtonVariant}
                   color={color as ButtonColor}
                   size="large"
-                  accessibilityLabel="Click here"
-                  accessibilityHint="Opens something">
+                  label="Click here">
                   Button
                 </Button>
               </React.Fragment>
@@ -46,8 +44,7 @@ export function Buttons() {
                     variant="gradient"
                     color={name as ButtonColor}
                     size="large"
-                    accessibilityLabel="Click here"
-                    accessibilityHint="Opens something">
+                    label="Click here">
                     Button
                   </Button>
                   <Button
@@ -55,8 +52,7 @@ export function Buttons() {
                     variant="gradient"
                     color={name as ButtonColor}
                     size="large"
-                    accessibilityLabel="Click here"
-                    accessibilityHint="Opens something">
+                    label="Click here">
                     Button
                   </Button>
                 </React.Fragment>
@@ -71,8 +67,7 @@ export function Buttons() {
                     variant="gradient"
                     color={name as ButtonColor}
                     size="large"
-                    accessibilityLabel="Click here"
-                    accessibilityHint="Opens something">
+                    label="Click here">
                     Button
                   </Button>
                   <Button
@@ -80,8 +75,7 @@ export function Buttons() {
                     variant="gradient"
                     color={name as ButtonColor}
                     size="large"
-                    accessibilityLabel="Click here"
-                    accessibilityHint="Opens something">
+                    label="Click here">
                     Button
                   </Button>
                 </React.Fragment>

@@ -168,8 +168,7 @@ export function Forms() {
               variant="solid"
               color="primary"
               size="small"
-              accessibilityLabel="Reset"
-              accessibilityHint="Reset"
+              label="Reset"
               onPress={() => setToggleGroupAValues(['a'])}>
               Reset
             </Button>

@@ -13,31 +13,27 @@ export function Links() {
 
       <View style={[a.gap_md, a.align_start]}>
         <Link
-          accessibilityLabel="Click here"
-          accessibilityHint="Opens something"
+          label="Click here"
           to="https://blueskyweb.xyz"
           warnOnMismatchingTextChild
           style={[a.text_md]}>
           External
         </Link>
         <Link
-          accessibilityLabel="Click here"
-          accessibilityHint="Opens something"
+          label="Click here"
           to="https://blueskyweb.xyz"
           style={[a.text_md]}>
           <H3>External with custom children</H3>
         </Link>
         <Link
-          accessibilityLabel="Click here"
-          accessibilityHint="Opens something"
+          label="Click here"
           to="https://blueskyweb.xyz"
           warnOnMismatchingTextChild
           style={[a.text_md]}>
           https://blueskyweb.xyz
         </Link>
         <Link
-          accessibilityLabel="Click here"
-          accessibilityHint="Opens something"
+          label="Click here"
           to="https://bsky.app/profile/bsky.app"
           warnOnMismatchingTextChild
           style={[a.text_md]}>
@@ -45,8 +41,7 @@ export function Links() {
         </Link>
 
         <Link
-          accessibilityLabel="Click here"
-          accessibilityHint="Opens something"
+          label="Click here"
           variant="solid"
           color="primary"
           size="large"

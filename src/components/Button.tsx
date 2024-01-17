@@ -38,10 +38,8 @@ export type VariantProps = {
   size?: ButtonSize
 }
 
-export type ButtonProps = Omit<
-  PressableProps,
-  'children' | 'style' | 'accessibilityLabel' | 'accessibilityHint'
-> &
+export type ButtonProps = Pick<PressableProps, 'disabled' | 'onPress'> &
+  AccessibilityProps &
   VariantProps & {
     children:
       | ((props: {
@@ -56,8 +54,7 @@ export type ButtonProps = Omit<
         }) => React.ReactNode)
       | React.ReactNode
       | string
-    accessibilityLabel: Required<AccessibilityProps>['accessibilityLabel']
-    accessibilityHint: Required<AccessibilityProps>['accessibilityHint']
+    label: string
   }
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
@@ -66,8 +63,7 @@ export function Button({
   variant,
   color,
   size,
-  accessibilityLabel,
-  accessibilityHint,
+  label,
   disabled = false,
   ...rest
 }: ButtonProps) {
@@ -325,11 +321,11 @@ export function Button({
   return (
     <Pressable
       role="button"
+      accessibilityHint={undefined} // optional
       {...rest}
-      aria-label={accessibilityLabel}
+      aria-label={label}
       aria-pressed={state.pressed}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityHint={accessibilityHint}
+      accessibilityLabel={label}
       disabled={disabled || false}
       accessibilityState={{
         disabled: disabled || false,
