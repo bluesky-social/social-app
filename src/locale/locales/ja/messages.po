@@ -339,7 +339,7 @@ msgstr "本当によろしいですか？これは元に戻せません。"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:65
 msgid "Are you writing in <0>{0}</0>?"
-msgstr ""
+msgstr "<0>{0}</0>で書かれた投稿ですか？"
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -586,7 +586,7 @@ msgstr "メールアドレスを変更"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Change post language to {0}"
-msgstr ""
+msgstr "投稿の言語を{0}に変更します"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -1562,7 +1562,7 @@ msgstr "ホスティングプロバイダーのアドレス"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
-msgstr ""
+msgstr "このリンクをどのように開きますか？"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
@@ -2025,7 +2025,7 @@ msgstr "スレッドをミュート"
 
 #: src/view/com/lists/ListCard.tsx:101
 msgid "Muted"
-msgstr ""
+msgstr "ミュートされています"
 
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
@@ -2275,7 +2275,7 @@ msgstr "絵文字を入力"
 
 #: src/view/screens/Settings.tsx:678
 msgid "Open links with in-app browser"
-msgstr ""
+msgstr "アプリ内ブラウザーでリンクを開く"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -3740,12 +3740,12 @@ msgstr "デフォルトプロバイダーを使用"
 #: src/view/com/modals/InAppBrowserConsent.tsx:56
 #: src/view/com/modals/InAppBrowserConsent.tsx:58
 msgid "Use in-app browser"
-msgstr ""
+msgstr "アプリ内ブラウザーを使用"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:66
 #: src/view/com/modals/InAppBrowserConsent.tsx:68
 msgid "Use my default browser"
-msgstr ""
+msgstr "デフォルトのブラウザーを使用"
 
 #: src/view/com/modals/AddAppPasswords.tsx:154
 msgid "Use this to sign into the other app along with your handle."
@@ -3870,7 +3870,7 @@ msgstr "警告"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from"
-msgstr ""
+msgstr "あなたのフォロー中のユーザーの投稿がなくなりました。以下のフィード内の最新の投稿を表示します："
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
@@ -4038,7 +4038,7 @@ msgstr "生年月日"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:47
 msgid "Your choice will be saved, but can be changed later in settings."
-msgstr ""
+msgstr "ここで選択した内容は保存されますが、後から設定で変更できます。"
 
 #: src/view/com/auth/create/state.ts:102
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
