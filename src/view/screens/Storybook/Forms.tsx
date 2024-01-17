@@ -12,7 +12,9 @@ import ToggleButton from '#/components/forms/ToggleButton'
 import {Button} from '#/components/Button'
 
 export function Forms() {
-  const [toggleGroupValues, setToggleGroupValues] = React.useState(['a'])
+  const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
+  const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
+  const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>
@@ -137,38 +139,8 @@ export function Forms() {
           label="Toggle"
           type="checkbox"
           maxSelections={2}
-          values={['a', 'b']}
-          onChange={e => console.log(e)}>
-          <View style={[a.gap_md]}>
-            <Toggle.Item name="a" label="Click me">
-              <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
-            </Toggle.Item>
-            <Toggle.Item name="b" label="Click me">
-              <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
-            </Toggle.Item>
-            <Toggle.Item name="c" label="Click me">
-              <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
-            </Toggle.Item>
-            <Toggle.Item name="d" disabled label="Click me">
-              <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
-            </Toggle.Item>
-            <Toggle.Item name="e" hasError label="Click me">
-              <Toggle.Checkbox />
-              <Toggle.Label>Click me</Toggle.Label>
-            </Toggle.Item>
-          </View>
-        </Toggle.Group>
-
-        <Toggle.Group
-          label="Toggle"
-          type="checkbox"
-          maxSelections={2}
-          values={toggleGroupValues}
-          onChange={setToggleGroupValues}>
+          values={toggleGroupAValues}
+          onChange={setToggleGroupAValues}>
           <View style={[a.gap_md]}>
             <Toggle.Item name="a" label="Click me">
               <Toggle.Switch />
@@ -197,7 +169,7 @@ export function Forms() {
               size="small"
               accessibilityLabel="Reset"
               accessibilityHint="Reset"
-              onPress={() => setToggleGroupValues(['a'])}>
+              onPress={() => setToggleGroupAValues(['a'])}>
               Reset
             </Button>
           </View>
@@ -205,9 +177,39 @@ export function Forms() {
 
         <Toggle.Group
           label="Toggle"
+          type="checkbox"
+          maxSelections={2}
+          values={toggleGroupBValues}
+          onChange={setToggleGroupBValues}>
+          <View style={[a.gap_md]}>
+            <Toggle.Item name="a" label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="b" label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="c" label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="d" disabled label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+            <Toggle.Item name="e" hasError label="Click me">
+              <Toggle.Checkbox />
+              <Toggle.Label>Click me</Toggle.Label>
+            </Toggle.Item>
+          </View>
+        </Toggle.Group>
+
+        <Toggle.Group
+          label="Toggle"
           type="radio"
-          values={['a']}
-          onChange={e => console.log(e)}>
+          values={toggleGroupCValues}
+          onChange={setToggleGroupCValues}>
           <View style={[a.gap_md]}>
             <Toggle.Item name="a" label="Click me">
               <Toggle.Radio />

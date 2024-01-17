@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, PressableProps, View, ViewStyle} from 'react-native'
+import {Pressable, View, ViewStyle} from 'react-native'
 
 import {useTheme, atoms as a, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -48,14 +48,12 @@ export type GroupProps = React.PropsWithChildren<{
   label: string
 }>
 
-export type ItemProps = Omit<
-  PressableProps,
-  'children' | 'style' | 'onPress' | 'role'
-> & {
+export type ItemProps = {
   type?: 'radio' | 'checkbox'
   name: string
   label: string
   value?: boolean
+  disabled?: boolean
   onChange?: (selected: boolean) => void
   hasError?: boolean
   style?: (state: ItemState) => ViewStyle
@@ -314,7 +312,7 @@ function createSharedToggleStyles({
 
   return {
     baseStyles: base,
-    baseHoverStyles: baseHover,
+    baseHoverStyles: disabled ? [] : baseHover,
     indicatorStyles: indicator,
   }
 }
