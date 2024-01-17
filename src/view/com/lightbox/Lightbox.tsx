@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {LayoutAnimation, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import ImageView from './ImageViewing'
 import {shareImageModal, saveImageToMediaLibrary} from 'lib/media/manip'
@@ -110,7 +110,13 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
             style={[s.gray3]}
             numberOfLines={isAltExpanded ? undefined : 3}
             selectable
-            onPress={() => setAltExpanded(prev => !prev)}>
+            onPress={() => {
+              LayoutAnimation.configureNext({
+                duration: 300,
+                update: {type: 'spring', springDamping: 0.7},
+              })
+              setAltExpanded(prev => !prev)
+            }}>
             {altText}
           </Text>
         </View>

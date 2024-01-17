@@ -59,12 +59,22 @@ class ExpoUITextView: ExpoView {
     }
   }
 
+  // Just return the subviews
   override func reactSubviews() -> [UIView]! {
     return subviews
   }
 
-  override func didMoveToWindow() {
+  // Get children on update
+  override func didUpdateReactSubviews() {
     self.getTextChildren()
+  }
+
+  // For animation issues
+  // See: https://github.com/facebook/react-native/blob/258d8e51b451b221e557dad4647cbd210fe37392/packages/react-native/Libraries/Text/Text/RCTTextView.mm#L66
+  override func reactSetFrame(_ frame: CGRect) {
+    UIView.performWithoutAnimation {
+      super.reactSetFrame(frame)
+    }
   }
 
   override func layoutSubviews() {
