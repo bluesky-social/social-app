@@ -28,6 +28,21 @@ interface TextInputProps {
 
 export const textInputWebEmitter = new EventEmitter()
 
+const MENTION_AUTOCOMPLETE_RE = /(?<=^|\s)@([a-zA-Z0-9-.]+)$/
+const TRIM_MENTION_RE = /[.]+$/
+
+const enum Suggestion {
+  MENTION,
+}
+
+interface MatchedSuggestion {
+  type: Suggestion
+  range: Range | undefined
+  index: number
+  length: number
+  query: string
+}
+
 export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
   function TextInputImpl(
     {
@@ -45,7 +60,8 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     const overlayRef = React.useRef<HTMLDivElement>(null)
     const inputRef = React.useRef<HTMLTextAreaElement>(null)
 
-    const [_cursor, setCursor] = React.useState<number>()
+    const [cursor, setCursor] = React.useState<number>()
+    const [_suggestion, setSuggestion] = React.useState<MatchedSuggestion>()
 
     React.useImperativeHandle(ref, () => ({
       focus: () => inputRef.current?.focus(),
@@ -55,6 +71,56 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         return undefined
       },
     }))
+
+    React.useEffect(() => {
+      if (cursor == null) {
+        setSuggestion(undefined)
+        return
+      }
+
+      const text = richtext.text
+      const candidate = text.length === cursor ? text : text.slice(0, cursor)
+
+      let match: RegExpExecArray | null
+      let type: Suggestion
+
+      if ((match = MENTION_AUTOCOMPLETE_RE.exec(candidate))) {
+        type = Suggestion.MENTION
+      } else {
+        setSuggestion(undefined)
+        return
+      }
+
+      const overlay = overlayRef.current!
+
+      const start = match.index!
+      const length = match[0].length
+
+      const matched = match[1].toLowerCase()
+
+      const rangeStart = findNodePosition(overlay, start)
+      const rangeEnd = findNodePosition(overlay, start + length)
+
+      let range: Range | undefined
+      if (rangeStart && rangeEnd) {
+        range = new Range()
+        range.setStart(rangeStart.node, rangeStart.position)
+        range.setEnd(rangeEnd.node, rangeEnd.position)
+      }
+
+      const nextSuggestion: MatchedSuggestion = {
+        type: type,
+        range: range,
+        index: start,
+        length: length,
+        query:
+          type === Suggestion.MENTION
+            ? matched.replace(TRIM_MENTION_RE, '')
+            : matched,
+      }
+
+      setSuggestion(nextSuggestion)
+    }, [richtext, cursor, overlayRef, setSuggestion])
 
     const textOverlay = React.useMemo(() => {
       return (
@@ -166,3 +232,26 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     )
   },
 )
+
+const findNodePosition = (
+  node: Node,
+  position: number,
+): {node: Node; position: number} | undefined => {
+  if (node.nodeType === Node.TEXT_NODE) {
+    return {node, position}
+  }
+
+  const children = node.childNodes
+  for (let idx = 0, len = children.length; idx < len; idx++) {
+    const child = children[idx]
+    const textContentLength = child.textContent!.length
+
+    if (position <= textContentLength!) {
+      return findNodePosition(child, position)
+    }
+
+    position -= textContentLength!
+  }
+
+  return
+}
