@@ -30,6 +30,8 @@ import {useSession} from '#/state/session'
 import {STALE} from '#/state/queries'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
+import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -265,6 +267,12 @@ let Feed = ({
         )
       } else if (item === LOADING_ITEM) {
         return <PostFeedLoadingPlaceholder />
+      } else if (item.rootUri === FALLBACK_MARKER_POST.post.uri) {
+        // HACK
+        // tell the user we fell back to discover
+        // see home.ts (feed api) for more info
+        // -prf
+        return <DiscoverFallbackHeader />
       }
       return <FeedSlice slice={item} />
     },

@@ -373,11 +373,6 @@ msgstr ""
 #~ msgid "Ask apps to limit the visibility of my account"
 #~ msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:400
-msgctxt "action"
-msgid "Back"
-msgstr ""
-
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:170
@@ -389,6 +384,11 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:450
 #: src/view/com/profile/ProfileHeader.tsx:688
 #: src/view/com/util/ViewHeader.tsx:81
+msgid "Back"
+msgstr ""
+
+#: src/view/com/post-thread/PostThread.tsx:400
+msgctxt "action"
 msgid "Back"
 msgstr ""
 
@@ -426,6 +426,7 @@ msgstr ""
 msgid "Block this List"
 msgstr ""
 
+#: src/view/com/lists/ListCard.tsx:109
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:57
 msgid "Blocked"
 msgstr ""
@@ -528,15 +529,6 @@ msgstr ""
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr ""
 
-#: src/view/com/modals/Confirm.tsx:88
-#: src/view/com/modals/Confirm.tsx:91
-#: src/view/com/modals/CreateOrEditList.tsx:293
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:227
-msgctxt "action"
-msgid "Cancel"
-msgstr ""
-
 #: src/view/com/composer/Composer.tsx:300
 #: src/view/com/composer/Composer.tsx:305
 #: src/view/com/modals/ChangeEmail.tsx:218
@@ -555,8 +547,17 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
+#: src/view/com/modals/CreateOrEditList.tsx:293
+#: src/view/com/modals/DeleteAccount.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:230
+msgctxt "action"
+msgid "Cancel"
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:148
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:226
 msgid "Cancel account deletion"
 msgstr ""
 
@@ -736,18 +737,18 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/modals/Confirm.tsx:75
-#: src/view/com/modals/Confirm.tsx:78
-msgctxt "action"
-msgid "Confirm"
-msgstr ""
-
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:231
 #: src/view/com/modals/VerifyEmail.tsx:233
 #: src/view/screens/PreferencesHomeFeed.tsx:308
 #: src/view/screens/PreferencesThreads.tsx:159
+msgid "Confirm"
+msgstr ""
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+msgctxt "action"
 msgid "Confirm"
 msgstr ""
 
@@ -760,7 +761,7 @@ msgstr ""
 msgid "Confirm content language settings"
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:213
+#: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Confirm delete account"
 msgstr ""
 
@@ -952,7 +953,7 @@ msgstr ""
 msgid "Delete List"
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:216
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Delete my account"
 msgstr ""
 
@@ -1673,7 +1674,7 @@ msgstr ""
 msgid "Input new password"
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:196
+#: src/view/com/modals/DeleteAccount.tsx:199
 msgid "Input password for account deletion"
 msgstr ""
 
@@ -2075,6 +2076,10 @@ msgstr ""
 msgid "Mute thread"
 msgstr ""
 
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr ""
@@ -2189,11 +2194,6 @@ msgstr ""
 msgid "Newest replies first"
 msgstr ""
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-msgctxt "action"
-msgid "Next"
-msgstr ""
-
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:178
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:188
@@ -2201,6 +2201,11 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:158
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:168
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+msgid "Next"
+msgstr ""
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
+msgctxt "action"
 msgid "Next"
 msgstr ""
 
@@ -2477,7 +2482,7 @@ msgstr ""
 #: src/view/com/auth/create/Step2.tsx:132
 #: src/view/com/auth/login/LoginForm.tsx:223
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:132
-#: src/view/com/modals/DeleteAccount.tsx:195
+#: src/view/com/modals/DeleteAccount.tsx:198
 msgid "Password"
 msgstr ""
 
@@ -2555,7 +2560,7 @@ msgstr ""
 msgid "Please enter your email."
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:187
 msgid "Please enter your password as well:"
 msgstr ""
 
@@ -3422,8 +3427,8 @@ msgid "Subscribe to this list"
 msgstr ""
 
 #: src/view/com/lists/ListCard.tsx:101
-msgid "Subscribed"
-msgstr ""
+#~ msgid "Subscribed"
+#~ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
@@ -3557,7 +3562,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/view/com/posts/Feed.tsx:261
+#: src/view/com/posts/Feed.tsx:263
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -3735,13 +3740,13 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
-#: src/view/com/profile/ProfileHeader.tsx:475
-msgctxt "action"
+#: src/view/com/profile/ProfileHeader.tsx:472
+#: src/view/screens/ProfileList.tsx:568
 msgid "Unblock"
 msgstr ""
 
-#: src/view/com/profile/ProfileHeader.tsx:472
-#: src/view/screens/ProfileList.tsx:568
+#: src/view/com/profile/ProfileHeader.tsx:475
+msgctxt "action"
 msgid "Unblock"
 msgstr ""
 
@@ -3956,6 +3961,10 @@ msgstr ""
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
+msgstr ""
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from"
 msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:48
