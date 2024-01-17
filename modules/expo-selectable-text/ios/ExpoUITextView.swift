@@ -137,14 +137,17 @@ class ExpoUITextView: ExpoView {
 
     let text = textView.attributedText.string
 
-    return textChildren.first(where: { child in
+    for child in self.textChildren {
       let range = text.range(of: child.text ?? "")
 
       if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
-        return charIndex >= lowerBound.utf16Offset(in: text) && charIndex <= upperBound.utf16Offset(in: text)
+        if charIndex >= lowerBound.utf16Offset(in: text) && charIndex <= upperBound.utf16Offset(in: text) {
+          return child
+        }
       }
-      return false
-    })
+    }
+
+    return nil
   }
 
   // Get the children. Always use getTextChildren() so that we ensure the correct order of views
