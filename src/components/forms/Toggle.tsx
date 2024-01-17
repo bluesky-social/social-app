@@ -60,6 +60,10 @@ export type ItemProps = {
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
 }
 
+export function useItemContext() {
+  return React.useContext(ItemContext)
+}
+
 function Group({
   children,
   values: providedValues,
@@ -228,7 +232,7 @@ function Item({
 
 function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const {disabled} = React.useContext(ItemContext)
+  const {disabled} = useItemContext()
   return (
     <Text
       style={[
@@ -319,8 +323,7 @@ function createSharedToggleStyles({
 
 function Checkbox() {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, hasError} =
-    React.useContext(ItemContext)
+  const {selected, hovered, focused, disabled, hasError} = useItemContext()
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
@@ -368,8 +371,7 @@ function Checkbox() {
 
 function Switch() {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, hasError} =
-    React.useContext(ItemContext)
+  const {selected, hovered, focused, disabled, hasError} = useItemContext()
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,

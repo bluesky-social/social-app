@@ -15,6 +15,7 @@ export function Forms() {
   const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
   const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
   const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
+  const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>
@@ -240,8 +241,8 @@ export function Forms() {
 
         <ToggleButton.Group
           label="Preferences"
-          values={['warn']}
-          onChange={e => console.log(e)}>
+          values={toggleGroupDValues}
+          onChange={setToggleGroupDValues}>
           <ToggleButton.Button name="hide" label="Hide">
             Hide
           </ToggleButton.Button>

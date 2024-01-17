@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, AccessibilityProps} from 'react-native'
+import {View, AccessibilityProps, TextStyle, ViewStyle} from 'react-native'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -7,6 +7,7 @@ import {Text} from '#/components/Typography'
 import Toggle, {
   GroupProps as BaseGroupProps,
   ItemProps as BaseItemProps,
+  useItemContext,
 } from '#/components/forms/Toggle'
 
 export type ItemProps = Omit<BaseItemProps, 'style' | 'role' | 'children'> &
@@ -36,39 +37,88 @@ export function Group({children, multiple, ...props}: GroupProps) {
 }
 
 export function Button({children, ...props}: ItemProps) {
-  const t = useTheme()
   return (
     <Toggle.Item {...props}>
-      {state => (
-        <View
-          style={[
-            a.px_lg,
-            a.py_md,
-            t.atoms.bg,
-            t.atoms.border,
-            {
-              borderLeftWidth: 1,
-              marginLeft: -1, // TODO yuck
-              backgroundColor: state.selected ? t.palette.black : undefined,
-            },
-          ]}>
-          {typeof children === 'string' ? (
-            <Text
-              style={[
-                a.text_center,
-                a.font_bold,
-                state.selected
-                  ? t.atoms.text_inverted
-                  : t.atoms.text_contrast_500,
-              ]}>
-              {children}
-            </Text>
-          ) : (
-            children
-          )}
-        </View>
-      )}
+      <ButtonInner>{children}</ButtonInner>
     </Toggle.Item>
+  )
+}
+
+function ButtonInner({children}: React.PropsWithChildren<{}>) {
+  const t = useTheme()
+  const state = useItemContext()
+
+  const {baseStyles, hoverStyles, activeStyles, textStyles} =
+    React.useMemo(() => {
+      const base: ViewStyle[] = []
+      const hover: ViewStyle[] = []
+      const active: ViewStyle[] = []
+      const text: TextStyle[] = []
+
+      hover.push(t.atoms.bg_contrast_100)
+
+      if (state.selected) {
+        active.push({
+          backgroundColor: t.palette.contrast_800,
+        })
+        text.push(t.atoms.text_inverted)
+        hover.push({
+          backgroundColor: t.palette.contrast_800,
+        })
+
+        if (state.disabled) {
+          active.push({
+            backgroundColor: t.palette.contrast_500,
+          })
+        }
+      }
+
+      if (state.disabled) {
+        base.push({
+          backgroundColor: t.palette.contrast_100,
+        })
+        text.push({
+          opacity: 0.5,
+        })
+      }
+
+      return {
+        baseStyles: base,
+        hoverStyles: hover,
+        activeStyles: active,
+        textStyles: text,
+      }
+    }, [t, state])
+
+  return (
+    <View
+      style={[
+        a.px_lg,
+        a.py_md,
+        t.atoms.bg,
+        t.atoms.border,
+        {
+          borderLeftWidth: 1,
+          marginLeft: -1,
+        },
+        baseStyles,
+        activeStyles,
+        (state.hovered || state.focused || state.pressed) && hoverStyles,
+      ]}>
+      {typeof children === 'string' ? (
+        <Text
+          style={[
+            a.text_center,
+            a.font_bold,
+            t.atoms.text_contrast_500,
+            textStyles,
+          ]}>
+          {children}
+        </Text>
+      ) : (
+        children
+      )}
+    </View>
   )
 }
 
