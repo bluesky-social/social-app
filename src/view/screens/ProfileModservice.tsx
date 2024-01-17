@@ -38,7 +38,6 @@ import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {ModServiceHeader} from '../com/moderation/ModServiceHeader'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {ModServiceGuidelines} from '../com/moderation/ModServiceGuidelines'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileModservice'>
 export function ProfileModserviceScreen(props: Props) {
@@ -257,7 +256,6 @@ export function ProfileModserviceScreenInner({
         </View>
         <ModServicePrefs />
         <View style={{height: 20}} />
-        <ModServiceGuidelines />
       </ScrollView>
     </View>
   )
