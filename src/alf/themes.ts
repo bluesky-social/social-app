@@ -152,7 +152,7 @@ export const light = {
       backgroundColor: lightPalette.contrast_300,
     },
     border: {
-      borderColor: lightPalette.contrast_100,
+      borderColor: lightPalette.contrast_200,
     },
     border_contrast: {
       borderColor: lightPalette.contrast_400,

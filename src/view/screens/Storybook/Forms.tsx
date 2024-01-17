@@ -8,6 +8,7 @@ import {InputDate, utils} from '#/components/forms/InputDate'
 import {InputGroup} from '#/components/forms/InputGroup'
 import {Logo} from '#/view/icons/Logo'
 import Toggle from '#/components/forms/Toggle'
+import ToggleButton from '#/components/forms/ToggleButton'
 
 export function Forms() {
   return (
@@ -125,87 +126,109 @@ export function Forms() {
         <H3>Toggles</H3>
 
         <Toggle.Group
-          role="checkbox"
+          label="Toggle"
+          type="checkbox"
           maxSelections={2}
           values={['a', 'b']}
           onChange={e => console.log(e)}
           style={[a.gap_sm]}>
-          <Toggle.Item name="a">
+          <Toggle.Item name="a" label="Click me">
             <Toggle.Checkbox />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="b">
+          <Toggle.Item name="b" label="Click me">
             <Toggle.Checkbox />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="c">
+          <Toggle.Item name="c" label="Click me">
             <Toggle.Checkbox />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="d" disabled>
+          <Toggle.Item name="d" disabled label="Click me">
             <Toggle.Checkbox />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="e" hasError>
+          <Toggle.Item name="e" hasError label="Click me">
             <Toggle.Checkbox />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
         </Toggle.Group>
 
         <Toggle.Group
-          role="checkbox"
+          label="Toggle"
+          type="checkbox"
           maxSelections={2}
           values={['a']}
           onChange={e => console.log(e)}
           style={[a.gap_sm]}>
-          <Toggle.Item name="a">
+          <Toggle.Item name="a" label="Click me">
             <Toggle.Switch />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="b">
+          <Toggle.Item name="b" label="Click me">
             <Toggle.Switch />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="c">
+          <Toggle.Item name="c" label="Click me">
             <Toggle.Switch />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="d" disabled>
+          <Toggle.Item name="d" disabled label="Click me">
             <Toggle.Switch />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="e" hasError>
+          <Toggle.Item name="e" hasError label="Click me">
             <Toggle.Switch />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
         </Toggle.Group>
 
         <Toggle.Group
-          role="radio"
+          label="Toggle"
+          type="radio"
           values={['a']}
           onChange={e => console.log(e)}
           style={[a.gap_sm]}>
-          <Toggle.Item name="a">
+          <Toggle.Item name="a" label="Click me">
             <Toggle.Radio />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="b">
+          <Toggle.Item name="b" label="Click me">
             <Toggle.Radio />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="c">
+          <Toggle.Item name="c" label="Click me">
             <Toggle.Radio />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="d" disabled>
+          <Toggle.Item name="d" disabled label="Click me">
             <Toggle.Radio />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
-          <Toggle.Item name="e" hasError>
+          <Toggle.Item name="e" hasError label="Click me">
             <Toggle.Radio />
             <Toggle.Label>Click me</Toggle.Label>
           </Toggle.Item>
         </Toggle.Group>
+      </View>
+
+      <View style={[a.gap_md, a.align_start, a.w_full]}>
+        <H3>ToggleButton</H3>
+
+        <ToggleButton.Group
+          label="Preferences"
+          values={['warn']}
+          onChange={e => console.log(e)}>
+          <ToggleButton.Button name="hide" label="Hide">
+            Hide
+          </ToggleButton.Button>
+          <ToggleButton.Button name="warn" label="Warn">
+            Warn
+          </ToggleButton.Button>
+          <ToggleButton.Button name="show" label="Show">
+            Show
+          </ToggleButton.Button>
+        </ToggleButton.Group>
       </View>
     </View>
   )

@@ -5,12 +5,10 @@ import {useTheme, atoms as a, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {StyleProp} from 'react-native'
-import {AccessibilityRole} from 'react-native'
 
 type ItemState = {
-  id: string
   name: string
-  value: boolean
+  selected: boolean
   disabled: boolean
   hasError: boolean
   hovered: boolean
@@ -19,9 +17,8 @@ type ItemState = {
 }
 
 const ItemContext = React.createContext<ItemState>({
-  id: '',
   name: '',
-  value: false,
+  selected: false,
   disabled: false,
   hasError: false,
   hovered: false,
@@ -32,15 +29,32 @@ const ItemContext = React.createContext<ItemState>({
 const GroupContext = React.createContext<{
   values: string[]
   disabled: boolean
-  role?: 'radio' | 'checkbox'
+  type: 'radio' | 'checkbox'
+  setFieldValue: (props: {name: string; value: boolean}) => void
 }>({
+  type: 'checkbox',
   values: [],
   disabled: false,
-  role: 'checkbox',
+  setFieldValue: () => {},
 })
 
-type ItemProps = Omit<PressableProps, 'children' | 'style' | 'onPress'> & {
+export type GroupProps = React.PropsWithChildren<{
+  type?: 'radio' | 'checkbox'
+  values: string[]
+  maxSelections?: number
+  disabled?: boolean
+  onChange: (value: string[]) => void
+  label: string
+  style?: StyleProp<ViewStyle>
+}>
+
+export type ItemProps = Omit<
+  PressableProps,
+  'children' | 'style' | 'onPress' | 'role'
+> & {
+  type?: 'radio' | 'checkbox'
   name: string
+  label: string
   value?: boolean
   onChange?: ({name, value}: {name: string; value: boolean}) => void
   hasError?: boolean
@@ -48,17 +62,132 @@ type ItemProps = Omit<PressableProps, 'children' | 'style' | 'onPress'> & {
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
 }
 
+function Group({
+  children,
+  values: initialValues,
+  onChange,
+  disabled = false,
+  type = 'checkbox',
+  maxSelections,
+  style,
+  label,
+}: GroupProps) {
+  if (!initialValues) {
+    throw new Error(`Don't forget to pass in 'values' to your Toggle.Group`)
+  }
+
+  const groupRole = type === 'radio' ? 'radiogroup' : undefined
+  const [values, setValues] = React.useState<string[]>(
+    type === 'radio' ? initialValues.slice(0, 1) : initialValues,
+  )
+  const [maxReached, setMaxReached] = React.useState(false)
+
+  const setFieldValue = React.useCallback<
+    Exclude<ItemProps['onChange'], undefined>
+  >(
+    ({name, value}) => {
+      if (type === 'checkbox') {
+        setValues(s => {
+          const state = s.filter(v => v !== name)
+          return value ? state.concat(name) : state
+        })
+      } else {
+        setValues([name])
+      }
+    },
+    [type, setValues],
+  )
+
+  React.useEffect(() => {
+    onChange(values)
+  }, [values, onChange])
+
+  React.useEffect(() => {
+    if (type === 'checkbox') {
+      if (
+        maxSelections &&
+        values.length >= maxSelections &&
+        maxReached === false
+      ) {
+        setMaxReached(true)
+      } else if (
+        maxSelections &&
+        values.length < maxSelections &&
+        maxReached === true
+      ) {
+        setMaxReached(false)
+      }
+    }
+  }, [type, values.length, maxSelections, maxReached, setMaxReached])
+
+  const context = React.useMemo(
+    () => ({
+      values,
+      type,
+      disabled,
+      setFieldValue,
+    }),
+    [values, disabled, type, setFieldValue],
+  )
+
+  return (
+    <GroupContext.Provider value={context}>
+      <View
+        role={groupRole}
+        style={style} // TODO
+        {...(groupRole === 'radiogroup'
+          ? {
+              'aria-label': label,
+              accessibilityLabel: label,
+              accessibilityRole: groupRole,
+            }
+          : {})}>
+        {React.Children.map(children, child => {
+          if (!React.isValidElement(child)) return null
+
+          const isSelected = values.includes(child.props.name)
+          let isDisabled = disabled || child.props.disabled
+
+          if (maxReached && !isSelected) {
+            isDisabled = true
+          }
+
+          return React.isValidElement(child) ? (
+            <React.Fragment key={child.props.name}>
+              {React.cloneElement(child, {
+                // @ts-ignore TODO figure out children types
+                disabled: isDisabled,
+                type: type === 'radio' ? 'radio' : 'checkbox',
+                value: isSelected,
+                onChange: setFieldValue,
+              })}
+            </React.Fragment>
+          ) : null
+        })}
+      </View>
+    </GroupContext.Provider>
+  )
+}
+
 function Item({
   children,
   name,
   value = false,
-  disabled,
+  disabled: itemDisabled = false,
   onChange,
   hasError,
   style,
-  role,
+  type = 'checkbox',
+  label,
+  ...rest
 }: ItemProps) {
-  const labelId = React.useId()
+  // context can be empty if used outside a Group
+  const {
+    values: selectedValues,
+    type: groupType,
+    disabled: groupDisabled,
+    setFieldValue,
+  } = React.useContext(GroupContext)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -71,39 +200,46 @@ function Item({
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
+  const role = groupType === 'radio' ? 'radio' : type
+  const selected = selectedValues.includes(name) || !!value
+  const disabled = groupDisabled || itemDisabled
+
   const onPress = React.useCallback(() => {
     const next = !value
-    onChange?.({name, value: next})
-  }, [name, value, onChange])
+    setFieldValue({name, value: next})
+    onChange?.({name, value: next}) // TODO don't use confusing method
+  }, [name, value, onChange, setFieldValue])
 
   const state = React.useMemo(
     () => ({
-      id: labelId,
       name,
-      value,
+      selected,
       disabled: disabled ?? false,
       hasError: hasError ?? false,
       hovered,
       pressed,
       focused,
     }),
-    [labelId, name, value, disabled, hovered, pressed, focused, hasError],
+    [name, selected, disabled, hovered, pressed, focused, hasError],
   )
 
   return (
     <ItemContext.Provider value={state}>
       <Pressable
+        {...rest}
         disabled={disabled}
         aria-disabled={disabled ?? false}
-        aria-checked={value}
-        aria-labelledby={labelId}
+        aria-checked={selected}
         aria-invalid={hasError}
+        aria-label={label}
         role={role}
-        accessibilityRole={role as AccessibilityRole}
+        accessibilityRole={role}
         accessibilityState={{
           disabled: disabled ?? false,
-          selected: value,
+          selected: selected,
         }}
+        accessibilityLabel={label}
+        accessibilityHint={undefined}
         onPress={onPress}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}
@@ -124,102 +260,11 @@ function Item({
   )
 }
 
-function Group({
-  children,
-  values: initialValues,
-  onChange,
-  disabled,
-  role = 'checkbox',
-  maxSelections,
-  style,
-}: React.PropsWithChildren<{
-  values: string[]
-  onChange: (value: string[]) => void
-  disabled?: boolean
-  role?: 'radio' | 'checkbox'
-  maxSelections?: number
-  style?: StyleProp<ViewStyle>
-}>) {
-  const _disabled = disabled ?? false
-  const [values, setValues] = React.useState<string[]>(
-    role === 'radio' ? initialValues.slice(0, 1) : initialValues,
-  )
-  const [maxReached, setMaxReached] = React.useState(false)
-
-  const itemOnChange = React.useCallback<
-    Exclude<ItemProps['onChange'], undefined>
-  >(
-    ({name, value}) => {
-      if (role === 'checkbox') {
-        setValues(s => {
-          const state = s.filter(v => v !== name)
-          return value ? state.concat(name) : state
-        })
-      } else {
-        setValues([name])
-      }
-    },
-    [role, setValues],
-  )
-
-  React.useEffect(() => {
-    onChange(values)
-  }, [values, onChange])
-
-  React.useEffect(() => {
-    if (role === 'checkbox') {
-      if (
-        maxSelections &&
-        values.length >= maxSelections &&
-        maxReached === false
-      ) {
-        setMaxReached(true)
-      } else if (
-        maxSelections &&
-        values.length < maxSelections &&
-        maxReached === true
-      ) {
-        setMaxReached(false)
-      }
-    }
-  }, [role, values.length, maxSelections, maxReached, setMaxReached])
-
-  return (
-    <GroupContext.Provider value={{values, disabled: _disabled, role}}>
-      <View role={role === 'radio' ? 'radiogroup' : undefined} style={style}>
-        {React.Children.map(children, child => {
-          if (!React.isValidElement(child)) return null
-
-          const isSelected = values.includes(child.props.name)
-          let isDisabled = _disabled || child.props.disabled
-
-          if (maxReached && !isSelected) {
-            isDisabled = true
-          }
-
-          return React.isValidElement(child) ? (
-            <React.Fragment key={child.props.name}>
-              {React.cloneElement(child, {
-                // @ts-ignore TODO figure out children types
-                disabled: isDisabled,
-                role: role === 'radio' ? 'radio' : 'checkbox',
-                value: isSelected,
-                onChange: itemOnChange,
-              })}
-            </React.Fragment>
-          ) : null
-        })}
-      </View>
-    </GroupContext.Provider>
-  )
-}
-
 function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const {id, disabled} = React.useContext(ItemContext)
+  const {disabled} = React.useContext(ItemContext)
   return (
     <Text
-      nativeID={id}
       style={[
         a.font_bold,
         {
@@ -236,12 +281,12 @@ function createSharedToggleStyles({
   theme: t,
   hovered,
   focused,
-  value,
+  selected,
   disabled,
   hasError,
 }: {
   theme: ReturnType<typeof useTheme>
-  value: boolean
+  selected: boolean
   hovered: boolean
   focused: boolean
   disabled: boolean
@@ -251,7 +296,7 @@ function createSharedToggleStyles({
   const baseHover: ViewStyle[] = []
   const indicator: ViewStyle[] = []
 
-  if (value) {
+  if (selected) {
     base.push({
       backgroundColor:
         t.name === 'light' ? t.palette.primary_25 : t.palette.primary_900,
@@ -308,14 +353,14 @@ function createSharedToggleStyles({
 
 function Checkbox() {
   const t = useTheme()
-  const {value, hovered, focused, disabled, hasError} =
+  const {selected, hovered, focused, disabled, hasError} =
     React.useContext(ItemContext)
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
       hovered,
       focused,
-      value,
+      selected,
       disabled,
       hasError,
     })
@@ -330,19 +375,19 @@ function Checkbox() {
         {
           height: 20,
           width: 20,
-          backgroundColor: value ? t.palette.primary_500 : undefined,
-          borderColor: value ? t.palette.primary_500 : undefined,
+          backgroundColor: selected ? t.palette.primary_500 : undefined,
+          borderColor: selected ? t.palette.primary_500 : undefined,
         },
         baseStyles,
         hovered || focused ? baseHoverStyles : {},
       ]}>
-      {value ? (
+      {selected ? (
         <View
           style={[
             a.absolute,
             a.rounded_2xs,
             {height: 12, width: 12},
-            value
+            selected
               ? {
                   backgroundColor: t.palette.primary_500,
                 }
@@ -357,14 +402,14 @@ function Checkbox() {
 
 function Switch() {
   const t = useTheme()
-  const {value, hovered, focused, disabled, hasError} =
+  const {selected, hovered, focused, disabled, hasError} =
     React.useContext(ItemContext)
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
       hovered,
       focused,
-      value,
+      selected,
       disabled,
       hasError,
     })
@@ -394,7 +439,7 @@ function Switch() {
             left: 3,
             backgroundColor: t.palette.contrast_400,
           },
-          value
+          selected
             ? {
                 backgroundColor: t.palette.primary_500,
                 left: 13,
@@ -409,14 +454,14 @@ function Switch() {
 
 function Radio() {
   const t = useTheme()
-  const {value, hovered, focused, disabled, hasError} =
+  const {selected, hovered, focused, disabled, hasError} =
     React.useContext(ItemContext)
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
       hovered,
       focused,
-      value,
+      selected,
       disabled,
       hasError,
     })
@@ -431,19 +476,19 @@ function Radio() {
         {
           height: 20,
           width: 20,
-          backgroundColor: value ? t.palette.primary_500 : undefined,
-          borderColor: value ? t.palette.primary_500 : undefined,
+          backgroundColor: selected ? t.palette.primary_500 : undefined,
+          borderColor: selected ? t.palette.primary_500 : undefined,
         },
         baseStyles,
         hovered || focused ? baseHoverStyles : {},
       ]}>
-      {value ? (
+      {selected ? (
         <View
           style={[
             a.absolute,
             a.rounded_full,
             {height: 12, width: 12},
-            value
+            selected
               ? {
                   backgroundColor: t.palette.primary_500,
                 }
