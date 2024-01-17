@@ -36,10 +36,6 @@ public class ExpoUITextViewModule: Module {
       }
       Prop("numberOfLines") { (view: ExpoUITextView, prop: Int?) in
         view.textView.textContainer.maximumNumberOfLines = prop ?? 0
-
-        if view.textView.attributedText != nil {
-          view.setText()
-        }
       }
       Prop("ellipsizeMode") { (view: ExpoUITextView, prop: EllipsizeMode) in
         view.textView.textContainer.lineBreakMode = prop.toLineBreakMode()

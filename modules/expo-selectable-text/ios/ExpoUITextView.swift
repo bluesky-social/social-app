@@ -54,9 +54,11 @@ class ExpoUITextView: ExpoView {
 
   // Do the same whenever subviews are removed
   override func removeReactSubview(_ subview: UIView!) {
-    if subview.isKind(of: ExpoUITextViewChild.self) {
-      subview.removeFromSuperview()
-    }
+    subview.removeFromSuperview()
+  }
+
+  override func didSetProps(_ changedProps: [String]!) {
+    self.getTextChildren()
   }
 
   // Just return the subviews
