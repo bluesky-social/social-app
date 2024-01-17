@@ -125,6 +125,11 @@ export function Forms() {
       <View style={[a.gap_md, a.align_start, a.w_full]}>
         <H3>Toggles</H3>
 
+        <Toggle.Item name="a" label="Click me">
+          <Toggle.Checkbox />
+          <Toggle.Label>Uncontrolled toggle</Toggle.Label>
+        </Toggle.Item>
+
         <Toggle.Group
           label="Toggle"
           type="checkbox"

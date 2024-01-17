@@ -30,11 +30,13 @@ const GroupContext = React.createContext<{
   values: string[]
   disabled: boolean
   type: 'radio' | 'checkbox'
+  maxSelectionsReached: boolean
   setFieldValue: (props: {name: string; value: boolean}) => void
 }>({
   type: 'checkbox',
   values: [],
   disabled: false,
+  maxSelectionsReached: false,
   setFieldValue: () => {},
 })
 
@@ -56,7 +58,7 @@ export type ItemProps = Omit<
   name: string
   label: string
   value?: boolean
-  onChange?: ({name, value}: {name: string; value: boolean}) => void
+  onChange?: (selected: boolean) => void
   hasError?: boolean
   style?: (state: ItemState) => ViewStyle
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
@@ -83,7 +85,7 @@ function Group({
   const [maxReached, setMaxReached] = React.useState(false)
 
   const setFieldValue = React.useCallback<
-    Exclude<ItemProps['onChange'], undefined>
+    (props: {name: string; value: boolean}) => void
   >(
     ({name, value}) => {
       if (type === 'checkbox') {
@@ -125,9 +127,10 @@ function Group({
       values,
       type,
       disabled,
+      maxSelectionsReached: maxReached,
       setFieldValue,
     }),
-    [values, disabled, type, setFieldValue],
+    [values, disabled, type, maxReached, setFieldValue],
   )
 
   return (
@@ -142,28 +145,7 @@ function Group({
               accessibilityRole: groupRole,
             }
           : {})}>
-        {React.Children.map(children, child => {
-          if (!React.isValidElement(child)) return null
-
-          const isSelected = values.includes(child.props.name)
-          let isDisabled = disabled || child.props.disabled
-
-          if (maxReached && !isSelected) {
-            isDisabled = true
-          }
-
-          return React.isValidElement(child) ? (
-            <React.Fragment key={child.props.name}>
-              {React.cloneElement(child, {
-                // @ts-ignore TODO figure out children types
-                disabled: isDisabled,
-                type: type === 'radio' ? 'radio' : 'checkbox',
-                value: isSelected,
-                onChange: setFieldValue,
-              })}
-            </React.Fragment>
-          ) : null
-        })}
+        {children}
       </View>
     </GroupContext.Provider>
   )
@@ -181,12 +163,12 @@ function Item({
   label,
   ...rest
 }: ItemProps) {
-  // context can be empty if used outside a Group
   const {
     values: selectedValues,
     type: groupType,
     disabled: groupDisabled,
     setFieldValue,
+    maxSelectionsReached,
   } = React.useContext(GroupContext)
   const {
     state: hovered,
@@ -202,13 +184,14 @@ function Item({
 
   const role = groupType === 'radio' ? 'radio' : type
   const selected = selectedValues.includes(name) || !!value
-  const disabled = groupDisabled || itemDisabled
+  const disabled =
+    groupDisabled || itemDisabled || (!selected && maxSelectionsReached)
 
   const onPress = React.useCallback(() => {
-    const next = !value
+    const next = !selected
     setFieldValue({name, value: next})
-    onChange?.({name, value: next}) // TODO don't use confusing method
-  }, [name, value, onChange, setFieldValue])
+    onChange?.(next)
+  }, [name, selected, onChange, setFieldValue])
 
   const state = React.useMemo(
     () => ({
