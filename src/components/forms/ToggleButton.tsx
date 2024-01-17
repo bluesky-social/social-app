@@ -55,7 +55,9 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
       const active: ViewStyle[] = []
       const text: TextStyle[] = []
 
-      hover.push(t.atoms.bg_contrast_100)
+      hover.push(
+        t.name === 'light' ? t.atoms.bg_contrast_100 : t.atoms.bg_contrast_25,
+      )
 
       if (state.selected) {
         active.push({
