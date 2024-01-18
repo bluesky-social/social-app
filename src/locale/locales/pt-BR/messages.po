@@ -8,9 +8,9 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-15 18:00\n"
+"PO-Revision-Date: 2024-01-18 15:00\n"
 "Last-Translator: gildaswise\n"
-"Language-Team: maisondasilva, gildaswise\n"
+"Language-Team: maisondasilva, gildaswise, gleydson\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -496,7 +496,8 @@ msgid "by you"
 msgstr "por você"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:60
-#: src/view/com/util/UserAvatar.tsx:221 src/view/com/util/UserBanner.tsx:38
+#: src/view/com/util/UserAvatar.tsx:221 
+#: src/view/com/util/UserBanner.tsx:38
 msgid "Camera"
 msgstr "Câmera"
 
@@ -1304,7 +1305,8 @@ msgstr "Feed offline"
 msgid "Feed Preferences"
 msgstr "Preferências de Feeds"
 
-#: src/view/shell/desktop/RightNav.tsx:73 src/view/shell/Drawer.tsx:311
+#: src/view/shell/desktop/RightNav.tsx:73 
+#: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "Comentários"
 
@@ -1439,7 +1441,8 @@ msgstr "Esqueci"
 msgid "Forgot password"
 msgstr "Esqueci a senha"
 
-#: src/view/com/auth/login/Login.tsx:127 src/view/com/auth/login/Login.tsx:143
+#: src/view/com/auth/login/Login.tsx:127 
+#: src/view/com/auth/login/Login.tsx:143
 msgid "Forgot Password"
 msgstr "Esqueci a Senha"
 
@@ -1457,7 +1460,8 @@ msgstr "Galeria"
 msgid "Get Started"
 msgstr "Vamos começar"
 
-#: src/view/com/auth/LoggedOut.tsx:81 src/view/com/auth/LoggedOut.tsx:82
+#: src/view/com/auth/LoggedOut.tsx:81 
+#: src/view/com/auth/LoggedOut.tsx:82
 #: src/view/com/util/moderation/ScreenHider.tsx:123
 #: src/view/shell/desktop/LeftNav.tsx:104
 msgid "Go back"
@@ -1480,7 +1484,8 @@ msgstr "Próximo"
 msgid "Handle"
 msgstr "Usuário"
 
-#: src/view/shell/desktop/RightNav.tsx:102 src/view/shell/Drawer.tsx:321
+#: src/view/shell/desktop/RightNav.tsx:102 
+#: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "Ajuda"
 
@@ -1551,7 +1556,8 @@ msgstr "Hmm, estamos com problemas para encontrar este feed. Ele pode ter sido e
 
 #: src/Navigation.tsx:432
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
-#: src/view/shell/desktop/LeftNav.tsx:306 src/view/shell/Drawer.tsx:398
+#: src/view/shell/desktop/LeftNav.tsx:306 
+#: src/view/shell/Drawer.tsx:398
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
 msgstr "Página Inicial"
@@ -1567,7 +1573,8 @@ msgstr "Preferências da Página Inicial"
 msgid "Hosting provider"
 msgstr "Provedor de hospedagem"
 
-#: src/view/com/auth/create/Step1.tsx:76 src/view/com/auth/create/Step1.tsx:81
+#: src/view/com/auth/create/Step1.tsx:76 
+#: src/view/com/auth/create/Step1.tsx:81
 msgid "Hosting provider address"
 msgstr "Endereço do provedor de hospedagem"
 
@@ -1603,7 +1610,8 @@ msgstr "Imagem"
 msgid "Image alt text"
 msgstr "Texto alternativo da imagem"
 
-#: src/view/com/util/UserAvatar.tsx:308 src/view/com/util/UserBanner.tsx:116
+#: src/view/com/util/UserAvatar.tsx:308 
+#: src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
 msgstr "Opções de imagem"
 
@@ -1710,7 +1718,8 @@ msgstr "Empregos"
 msgid "Join the waitlist"
 msgstr "Junte-se à lista de espera"
 
-#: src/view/com/auth/create/Step2.tsx:86 src/view/com/auth/create/Step2.tsx:90
+#: src/view/com/auth/create/Step2.tsx:86 
+#: src/view/com/auth/create/Step2.tsx:90
 msgid "Join the waitlist."
 msgstr "Junte-se à lista de espera."
 
@@ -1778,7 +1787,8 @@ msgstr "Armazenamento limpo, você precisa reiniciar o app agora."
 msgid "Let's get your password reset!"
 msgstr "Vamos redefinir sua senha!"
 
-#: src/view/com/util/UserAvatar.tsx:245 src/view/com/util/UserBanner.tsx:60
+#: src/view/com/util/UserAvatar.tsx:24
+#: src/view/com/util/UserBanner.tsx:60
 msgid "Library"
 msgstr "Biblioteca"
 
@@ -2249,7 +2259,8 @@ msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limit
 #: src/view/screens/Notifications.tsx:113
 #: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
-#: src/view/shell/desktop/LeftNav.tsx:361 src/view/shell/Drawer.tsx:435
+#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/Drawer.tsx:435
 #: src/view/shell/Drawer.tsx:436
 msgid "Notifications"
 msgstr "Notificações"
@@ -2423,7 +2434,8 @@ msgstr "Outro serviço"
 msgid "Other..."
 msgstr "Outro..."
 
-#: src/view/screens/NotFound.tsx:42 src/view/screens/NotFound.tsx:45
+#: src/view/screens/NotFound.tsx:42 
+#: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "Página não encontrada"
 
@@ -2973,8 +2985,10 @@ msgstr "Ir para o topo"
 #: src/view/screens/Search/Search.tsx:559
 #: src/view/screens/Search/Search.tsx:572
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
-#: src/view/shell/desktop/LeftNav.tsx:324 src/view/shell/desktop/Search.tsx:161
-#: src/view/shell/desktop/Search.tsx:170 src/view/shell/Drawer.tsx:362
+#: src/view/shell/desktop/LeftNav.tsx:324 
+#: src/view/shell/desktop/Search.tsx:161
+#: src/view/shell/desktop/Search.tsx:170 
+#: src/view/shell/Drawer.tsx:362
 #: src/view/shell/Drawer.tsx:363
 msgid "Search"
 msgstr "Buscar"
@@ -3051,7 +3065,8 @@ msgstr "Enviar Email"
 #~ msgid "Send Email"
 #~ msgstr "Enviar Email"
 
-#: src/view/shell/Drawer.tsx:295 src/view/shell/Drawer.tsx:316
+#: src/view/shell/Drawer.tsx:295
+#: src/view/shell/Drawer.tsx:316
 msgid "Send feedback"
 msgstr "Enviar comentários"
 
@@ -3235,14 +3250,16 @@ msgid "Shows posts from {0} in your feed"
 msgstr "Mostra posts de {0} no seu feed"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
-#: src/view/com/auth/login/Login.tsx:98 src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/login/Login.tsx:98 
+#: src/view/com/auth/SplashScreen.tsx:54
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:177
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:178
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:180
-#: src/view/shell/NavSignupCard.tsx:58 src/view/shell/NavSignupCard.tsx:59
+#: src/view/shell/NavSignupCard.tsx:58
+#: src/view/shell/NavSignupCard.tsx:59
 msgid "Sign in"
 msgstr "Fazer login"
 
@@ -3278,7 +3295,8 @@ msgstr "Sair"
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:167
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:168
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:170
-#: src/view/shell/NavSignupCard.tsx:49 src/view/shell/NavSignupCard.tsx:50
+#: src/view/shell/NavSignupCard.tsx:49 
+#: src/view/shell/NavSignupCard.tsx:50
 #: src/view/shell/NavSignupCard.tsx:52
 msgid "Sign up"
 msgstr "Inscrever-se"
@@ -3331,7 +3349,8 @@ msgstr "Classificar respostas de um post por:"
 msgid "Square"
 msgstr "Quadrado"
 
-#: src/view/com/auth/create/Step1.tsx:90 src/view/com/modals/ServerInput.tsx:62
+#: src/view/com/auth/create/Step1.tsx:90 
+#: src/view/com/modals/ServerInput.tsx:62
 msgid "Staging"
 msgstr "Staging"
 
@@ -4121,12 +4140,6 @@ msgstr "Seu perfil"
 msgid "Your user handle"
 msgstr "Seu usuário"
 
-#~ msgid "- end of feed -"
-#~ msgstr "- fim do feed -"
-
-#~ msgid ". This warning is only available for posts with media attached."
-#~ msgstr ". Este aviso só aparece em posts com imagens."
-
 #: src/view/com/composer/Composer.tsx:266
 msgid "Your reply has been published"
 msgstr "Sua resposta foi publicada"
@@ -4134,3 +4147,9 @@ msgstr "Sua resposta foi publicada"
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
 msgstr "Seu identificador de usuário"
+
+#~ msgid "- end of feed -"
+#~ msgstr "- fim do feed -"
+
+#~ msgid ". This warning is only available for posts with media attached."
+#~ msgstr ". Este aviso só aparece em posts com imagens."
