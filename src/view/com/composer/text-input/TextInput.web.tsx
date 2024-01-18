@@ -7,7 +7,6 @@ import TextareaAutosize from 'react-textarea-autosize'
 
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
-import './web/styles/style.css'
 import {Emoji} from './web/EmojiPicker.web'
 import {
   Autocomplete,
