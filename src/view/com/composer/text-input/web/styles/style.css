@@ -4,6 +4,12 @@
   width: 100%;
   position: relative;
 }
+.rt-editor-light {
+  --rt-caret-color: #000000;
+}
+.rt-editor-dark {
+  --rt-caret-color: #ffffff;
+}
 
 .rt-overlay {
   position: absolute;
@@ -21,7 +27,7 @@
 }
 
 .rt-input {
-  caret-color: #fff;
+  caret-color: var(--rt-caret-color);
   color: transparent;
   font: inherit;
   line-height: inherit;

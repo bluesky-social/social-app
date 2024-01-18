@@ -9,6 +9,8 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import './web/styles/style.css'
 
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+
 interface TextInputRef {
   focus: () => void
   blur: () => void
@@ -59,6 +61,8 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
   ) {
     const overlayRef = React.useRef<HTMLDivElement>(null)
     const inputRef = React.useRef<HTMLTextAreaElement>(null)
+
+    const modeClass = useColorSchemeStyle('rt-editor-light', 'rt-editor-dark')
 
     const [cursor, setCursor] = React.useState<number>()
     const [_suggestion, setSuggestion] = React.useState<MatchedSuggestion>()
@@ -220,7 +224,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     }, [inputRef, handleInputSelection])
 
     return (
-      <div className="rt-editor">
+      <div className={`rt-editor ` + modeClass}>
         <div ref={overlayRef} className="rt-overlay">
           {textOverlay}
         </div>
