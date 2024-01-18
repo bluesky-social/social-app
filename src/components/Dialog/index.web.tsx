@@ -12,10 +12,11 @@ import {Button} from '#/components/Button'
 
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context, useDialogContext} from '#/components/Dialog/context'
+import TextField from '#/components/forms/TextField'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
-export {InputText} from '#/components/forms/InputText'
+export const Input = TextField.Input
 
 const stopPropagation = (e: any) => e.stopPropagation()
 

@@ -7,7 +7,7 @@ export type Props = {
   fill?: PathProps['fill']
   style?: TextProps['style']
   size?: keyof typeof sizes
-} & Omit<SvgProps, 'style'>
+} & Omit<SvgProps, 'style' | 'size'>
 
 export const sizes = {
   xs: 12,
