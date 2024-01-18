@@ -3562,7 +3562,7 @@ msgstr "Este conteúdo não é visível sem uma conta Bluesky."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "Este feed está muito tráfego e está temporariamente indisponível. Por favor, tente novamente mais tarde."
+msgstr "Este feed está recebendo muito tráfego e está temporariamente indisponível. Por favor, tente novamente mais tarde."
 
 #: src/view/screens/Profile.tsx:392
 #: src/view/screens/ProfileFeed.tsx:484
