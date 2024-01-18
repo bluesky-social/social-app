@@ -2,8 +2,16 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {Button, ButtonVariant, ButtonColor} from '#/components/Button'
+import {
+  Button,
+  ButtonVariant,
+  ButtonColor,
+  ButtonIcon,
+  ButtonText,
+} from '#/components/Button'
 import {H1} from '#/components/Typography'
+import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/ArrowTopRight'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 
 export function Buttons() {
   return (
@@ -83,6 +91,33 @@ export function Buttons() {
             )}
           </View>
         </View>
+
+        <Button
+          variant="gradient"
+          color="gradient_sky"
+          size="large"
+          label="Link out">
+          <ButtonText>Link out</ButtonText>
+          <ButtonIcon icon={ArrowTopRight} />
+        </Button>
+
+        <Button
+          variant="gradient"
+          color="gradient_sky"
+          size="small"
+          label="Link out">
+          <ButtonText>Link out</ButtonText>
+          <ButtonIcon icon={ArrowTopRight} />
+        </Button>
+
+        <Button
+          variant="gradient"
+          color="gradient_sky"
+          size="small"
+          label="Link out">
+          <ButtonIcon icon={Globe} />
+          <ButtonText>See the world</ButtonText>
+        </Button>
       </View>
     </View>
   )

@@ -6,10 +6,14 @@ import {
   TextProps,
   ViewStyle,
   AccessibilityProps,
+  View,
+  TextStyle,
+  StyleSheet,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useTheme, atoms, tokens, web, native} from '#/alf'
+import {useTheme, atoms as a, tokens, web, native} from '#/alf'
+import {Props as SVGIconProps} from '#/components/icons/common'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -38,25 +42,32 @@ export type VariantProps = {
   size?: ButtonSize
 }
 
-export type ButtonProps = Pick<PressableProps, 'disabled' | 'onPress'> &
-  AccessibilityProps &
-  VariantProps & {
-    children:
-      | ((props: {
-          state: {
-            pressed: boolean
-            hovered: boolean
-            focused: boolean
-          }
-          props: VariantProps & {
-            disabled?: boolean
-          }
-        }) => React.ReactNode)
-      | React.ReactNode
-      | string
-    label: string
-  }
+export type ButtonProps = React.PropsWithChildren<
+  Pick<PressableProps, 'disabled' | 'onPress'> &
+    AccessibilityProps &
+    VariantProps & {
+      label: string
+    }
+>
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+
+const Context = React.createContext<
+  VariantProps & {
+    hovered: boolean
+    focused: boolean
+    pressed: boolean
+    disabled: boolean
+  }
+>({
+  hovered: false,
+  focused: false,
+  pressed: false,
+  disabled: false,
+})
+
+export function useButtonContext() {
+  return React.useContext(Context)
+}
 
 export function Button({
   children,
@@ -131,21 +142,21 @@ export function Button({
           })
         }
       } else if (variant === 'outline') {
-        baseStyles.push(atoms.border, t.atoms.bg, {
+        baseStyles.push(a.border, t.atoms.bg, {
           borderWidth: 1,
         })
 
         if (!disabled) {
-          baseStyles.push(atoms.border, {
+          baseStyles.push(a.border, {
             borderColor: tokens.color.blue_500,
           })
-          hoverStyles.push(atoms.border, {
+          hoverStyles.push(a.border, {
             backgroundColor: light
               ? t.palette.primary_100
               : t.palette.primary_900,
           })
         } else {
-          baseStyles.push(atoms.border, {
+          baseStyles.push(a.border, {
             borderColor: light ? tokens.color.blue_200 : tokens.color.blue_900,
           })
         }
@@ -180,17 +191,17 @@ export function Button({
           })
         }
       } else if (variant === 'outline') {
-        baseStyles.push(atoms.border, t.atoms.bg, {
+        baseStyles.push(a.border, t.atoms.bg, {
           borderWidth: 1,
         })
 
         if (!disabled) {
-          baseStyles.push(atoms.border, {
+          baseStyles.push(a.border, {
             borderColor: light ? tokens.color.gray_500 : tokens.color.gray_500,
           })
-          hoverStyles.push(atoms.border, t.atoms.bg_contrast_50)
+          hoverStyles.push(a.border, t.atoms.bg_contrast_50)
         } else {
-          baseStyles.push(atoms.border, {
+          baseStyles.push(a.border, {
             borderColor: light ? tokens.color.gray_200 : tokens.color.gray_800,
           })
         }
@@ -219,19 +230,19 @@ export function Button({
           })
         }
       } else if (variant === 'outline') {
-        baseStyles.push(atoms.border, t.atoms.bg, {
+        baseStyles.push(a.border, t.atoms.bg, {
           borderWidth: 1,
         })
 
         if (!disabled) {
-          baseStyles.push(atoms.border, {
+          baseStyles.push(a.border, {
             borderColor: t.palette.negative_600,
           })
-          hoverStyles.push(atoms.border, {
+          hoverStyles.push(a.border, {
             backgroundColor: light ? t.palette.negative_50 : '#2D0614', // darker red
           })
         } else {
-          baseStyles.push(atoms.border, {
+          baseStyles.push(a.border, {
             borderColor: light
               ? t.palette.negative_200
               : t.palette.negative_900,
@@ -248,19 +259,9 @@ export function Button({
     }
 
     if (size === 'large') {
-      baseStyles.push(
-        {paddingVertical: 15},
-        atoms.px_2xl,
-        atoms.rounded_sm,
-        atoms.gap_sm,
-      )
+      baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_sm)
     } else if (size === 'small') {
-      baseStyles.push(
-        {paddingVertical: 9},
-        atoms.px_md,
-        atoms.rounded_sm,
-        atoms.gap_xs,
-      )
+      baseStyles.push({paddingVertical: 9}, a.px_md, a.rounded_sm, a.gap_sm)
     }
 
     return {
@@ -305,15 +306,13 @@ export function Button({
       }
     }, [variant, color])
 
-  const childProps = React.useMemo(
+  const context = React.useMemo(
     () => ({
-      state,
-      props: {
-        variant,
-        color,
-        size,
-        disabled: disabled || false,
-      },
+      ...state,
+      variant,
+      color,
+      size,
+      disabled: disabled || false,
     }),
     [state, variant, color, size, disabled],
   )
@@ -331,9 +330,9 @@ export function Button({
         disabled: disabled || false,
       }}
       style={[
-        atoms.flex_row,
-        atoms.align_center,
-        atoms.overflow_hidden,
+        a.flex_row,
+        a.align_center,
+        a.overflow_hidden,
         ...baseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
@@ -354,39 +353,25 @@ export function Button({
           locations={gradientLocations}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
-          style={[atoms.absolute, atoms.inset_0]}
+          style={[a.absolute, a.inset_0]}
         />
       )}
-      {typeof children === 'string' ? (
-        <ButtonText
-          variant={variant}
-          color={color}
-          size={size}
-          disabled={disabled || false}>
-          {children}
-        </ButtonText>
-      ) : typeof children === 'function' ? (
-        children(childProps)
-      ) : (
-        children
-      )}
+      <Context.Provider value={context}>
+        {typeof children === 'string' ? (
+          <ButtonText>{children}</ButtonText>
+        ) : (
+          children
+        )}
+      </Context.Provider>
     </Pressable>
   )
 }
 
-export function ButtonText({
-  children,
-  style,
-  variant,
-  color,
-  size,
-  disabled,
-  ...rest
-}: ButtonTextProps) {
+export function useSharedButtonTextStyles() {
   const t = useTheme()
-
-  const textStyles = React.useMemo(() => {
-    const baseStyles = []
+  const {color, variant, disabled, size} = useButtonContext()
+  return React.useMemo(() => {
+    const baseStyles: TextStyle[] = []
     const light = t.name === 'light'
 
     if (color === 'primary') {
@@ -473,26 +458,46 @@ export function ButtonText({
 
     if (size === 'large') {
       baseStyles.push(
-        atoms.text_md,
+        a.text_md,
         web({paddingBottom: 1}),
         native({marginTop: 2}),
       )
     } else {
       baseStyles.push(
-        atoms.text_md,
+        a.text_md,
         web({paddingBottom: 1}),
         native({marginTop: 2}),
       )
     }
 
-    return baseStyles
+    return StyleSheet.flatten(baseStyles)
   }, [t, variant, color, size, disabled])
+}
+
+export function ButtonText({children, style, ...rest}: ButtonTextProps) {
+  const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text
-      {...rest}
-      style={[atoms.font_bold, atoms.text_center, ...textStyles, style]}>
+    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
       {children}
     </Text>
+  )
+}
+
+export function ButtonIcon({
+  icon: Comp,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+}) {
+  const {size} = useButtonContext()
+  const textStyles = useSharedButtonTextStyles()
+
+  return (
+    <View style={[a.z_20]}>
+      <Comp
+        size={size === 'large' ? 'md' : 'sm'}
+        style={[{color: textStyles.color, pointerEvents: 'none'}]}
+      />
+    </View>
   )
 }

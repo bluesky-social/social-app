@@ -13,27 +13,21 @@ export function Links() {
 
       <View style={[a.gap_md, a.align_start]}>
         <Link
-          label="Click here"
           to="https://blueskyweb.xyz"
           warnOnMismatchingTextChild
           style={[a.text_md]}>
           External
         </Link>
-        <Link
-          label="Click here"
-          to="https://blueskyweb.xyz"
-          style={[a.text_md]}>
+        <Link to="https://blueskyweb.xyz" style={[a.text_md]}>
           <H3>External with custom children</H3>
         </Link>
         <Link
-          label="Click here"
           to="https://blueskyweb.xyz"
           warnOnMismatchingTextChild
-          style={[a.text_md]}>
+          style={[a.text_lg]}>
           https://blueskyweb.xyz
         </Link>
         <Link
-          label="Click here"
           to="https://bsky.app/profile/bsky.app"
           warnOnMismatchingTextChild
           style={[a.text_md]}>
@@ -41,12 +35,12 @@ export function Links() {
         </Link>
 
         <Link
-          label="Click here"
           variant="solid"
           color="primary"
           size="large"
+          label="View @bsky.app's profile"
           to="https://bsky.app/profile/bsky.app">
-          {({props}) => <ButtonText {...props}>Link as a button</ButtonText>}
+          <ButtonText>Link as a button</ButtonText>
         </Link>
       </View>
     </View>

@@ -14,8 +14,8 @@ import {
 import {sanitizeUrl} from '@braintree/sanitize-url'
 
 import {isWeb} from '#/platform/detection'
-import {useTheme, web} from '#/alf'
-import {Button, ButtonProps} from '#/components/Button'
+import {useTheme, web, flatten} from '#/alf'
+import {Button, ButtonProps, useButtonContext} from '#/components/Button'
 import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
@@ -25,7 +25,10 @@ import {
 import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
 
-export type LinkProps = Omit<ButtonProps, 'style' | 'onPress' | 'disabled'> & {
+export type LinkProps = Omit<
+  ButtonProps,
+  'style' | 'onPress' | 'disabled' | 'label'
+> & {
   /**
    * `TextStyle` to apply to the anchor element itself. Does not apply to any children.
    */
@@ -39,6 +42,7 @@ export type LinkProps = Omit<ButtonProps, 'style' | 'onPress' | 'disabled'> & {
    * works for Links with children that are strings i.e. text links.
    */
   warnOnMismatchingTextChild?: boolean
+  label?: ButtonProps['label']
 } & Pick<Parameters<typeof useLinkProps<AllNavigatorParams>>[0], 'to'>
 
 /**
@@ -52,12 +56,11 @@ export type LinkProps = Omit<ButtonProps, 'style' | 'onPress' | 'disabled'> & {
 export function Link({
   children,
   to,
-  style,
   action = 'push',
   warnOnMismatchingTextChild,
+  style,
   ...rest
 }: LinkProps) {
-  const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {href} = useLinkProps<AllNavigatorParams>({
     to:
@@ -67,12 +70,12 @@ export function Link({
   const {openModal, closeModal} = useModalControls()
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
-      const label = typeof children === 'string' ? children : ''
+      const stringChildren = typeof children === 'string' ? children : ''
       const requiresWarning = Boolean(
         warnOnMismatchingTextChild &&
-          label &&
+          stringChildren &&
           isExternal &&
-          linkRequiresWarning(href, label),
+          linkRequiresWarning(href, stringChildren),
       )
 
       if (requiresWarning) {
@@ -80,7 +83,7 @@ export function Link({
 
         openModal({
           name: 'link-warning',
-          text: label,
+          text: stringChildren,
           href: href,
         })
       } else {
@@ -139,6 +142,7 @@ export function Link({
 
   return (
     <Button
+      label={href}
       {...rest}
       role="link"
       accessibilityRole="link"
@@ -154,21 +158,34 @@ export function Link({
           noUnderline: '1',
         },
       })}>
-      {typeof children === 'string'
-        ? ({state}) => (
-            <Text
-              style={[
-                style,
-                {color: t.palette.primary_500},
-                state.hovered && {
-                  textDecorationLine: 'underline',
-                  textDecorationColor: t.palette.primary_500,
-                },
-              ]}>
-              {children as string}
-            </Text>
-          )
-        : children}
+      {typeof children === 'string' ? (
+        <LinkText style={style}>{children}</LinkText>
+      ) : (
+        children
+      )}
     </Button>
+  )
+}
+
+function LinkText({
+  children,
+  style,
+}: React.PropsWithChildren<{
+  style?: StyleProp<TextStyle>
+}>) {
+  const t = useTheme()
+  const {hovered} = useButtonContext()
+  return (
+    <Text
+      style={[
+        {color: t.palette.primary_500},
+        hovered && {
+          textDecorationLine: 'underline',
+          textDecorationColor: t.palette.primary_500,
+        },
+        flatten(style),
+      ]}>
+      {children as string}
+    </Text>
   )
 }
