@@ -94,7 +94,7 @@ function Root({children, isInvalid = false}: RootProps) {
             paddingVertical: 14,
           },
         ]}
-        onPressIn={() => inputRef.current?.focus()}
+        onPress={() => inputRef.current?.focus()}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}>
         {children}
@@ -103,7 +103,7 @@ function Root({children, isInvalid = false}: RootProps) {
   )
 }
 
-function useSharedInputStyles() {
+export function useSharedInputStyles() {
   const t = useTheme()
   return React.useMemo(() => {
     const hover: ViewStyle[] = [
@@ -228,6 +228,15 @@ export function createInput(Component: typeof TextInput) {
 
 const Input = createInput(TextInput)
 
+function Label({children}: React.PropsWithChildren<{}>) {
+  const t = useTheme()
+  return (
+    <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_600, a.mb_sm]}>
+      {children}
+    </Text>
+  )
+}
+
 function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   const t = useTheme()
   const ctx = React.useContext(Context)
@@ -266,7 +275,7 @@ function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
       <Comp
         size="md"
         style={[
-          {color: t.palette.contrast_500},
+          {color: t.palette.contrast_500, pointerEvents: 'none'},
           ctx.hovered ? hover : {},
           ctx.focused ? focus : {},
           ctx.isInvalid && ctx.hovered ? errorHover : {},
@@ -317,6 +326,7 @@ function Suffix({
 export default {
   Root,
   Input,
+  Label,
   Icon,
   Suffix,
 }

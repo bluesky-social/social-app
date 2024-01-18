@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {H1, H3} from '#/components/Typography'
 import TextField from '#/components/forms/TextField'
-import {InputDate, utils} from '#/components/forms/InputDate'
+import {DateField} from '#/components/forms/DateField'
 import Toggle from '#/components/forms/Toggle'
 import ToggleButton from '#/components/forms/ToggleButton'
 import {Button} from '#/components/Button'
@@ -17,6 +17,7 @@ export function Forms() {
   const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
 
   const [value, setValue] = React.useState('')
+  const [date, setDate] = React.useState('2001-01-01')
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>
@@ -51,16 +52,13 @@ export function Forms() {
         </TextField.Root>
 
         <H3>InputDate</H3>
-        <InputDate
+        <DateField
           testID="date"
-          value={'2001-01-01'}
-          onChange={date => console.log(date)}
-          label="Input"
-        />
-        <InputDate
-          testID="date"
-          value={utils.toSimpleDateString(new Date())}
-          onChange={date => console.log(date)}
+          value={date}
+          onChange={date => {
+            console.log(date)
+            setDate(date)
+          }}
           label="Input"
         />
       </View>
