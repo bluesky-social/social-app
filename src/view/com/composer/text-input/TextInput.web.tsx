@@ -8,6 +8,7 @@ import TextareaAutosize from 'react-textarea-autosize'
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import './web/styles/style.css'
+import {Emoji} from './web/EmojiPicker.web'
 
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 
@@ -233,10 +234,19 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         handleInputSelection()
       }
 
+      const handleEmojiInsert = (emoji: Emoji) => {
+        // execCommand('insertText') is the only way to insert text without
+        // destroying undo/redo history
+        textInput.focus()
+        document.execCommand('insertText', false, emoji.native)
+      }
+
       document.addEventListener('selectionchange', handleSelectionChange)
+      textInputWebEmitter.addListener('emoji-inserted', handleEmojiInsert)
 
       return () => {
         document.removeEventListener('selectionchange', handleSelectionChange)
+        textInputWebEmitter.removeListener('emoji-inserted', handleEmojiInsert)
       }
     }, [inputRef, handleInputSelection])
 
