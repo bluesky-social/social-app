@@ -145,7 +145,7 @@ export function Step1({
                   autoCapitalize="none"
                   autoComplete="off"
                   autoCorrect={false}
-                  autoFocus={true}
+                  autoFocus={!uiState.isInviteCodeRequired}
                 />
               </View>
 
