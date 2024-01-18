@@ -4148,6 +4148,80 @@ msgstr "Sua resposta foi publicada"
 msgid "Your user handle"
 msgstr "Seu identificador de usuário"
 
+#: src/view/screens/Moderation.tsx:205
+#~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
+#~ msgstr "Seu perfil e conta não serão visíveis para qualquer pessoa utilizando o app Bluesky sem uma conta, ou para pessoas que têm conta mas estão deslogadas. Habilitar esta opção não torna a sua conta privada."
+
+#: src/view/screens/Moderation.tsx:220
+#~ msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
+#~ msgstr "Seu perfil e seu conteúdo não serão visíveis para qualquer pessoa utilizando o app Bluesky sem uma conta. Habilitar esta opção não torna a sua conta privada."
+
+#: src/view/screens/Moderation.tsx:220
+#~ msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
+#~ msgstr "Seu perfil e posts não serão visíveis para qualquer pessoa utilizando o app ou site do Bluesky sem uma conta logada."
+
+#: src/view/screens/Moderation.tsx:227
+#~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
+#~ msgstr "Nota: Aplicativos de terceiros que mostram conteúdo do Bluesky podem não respeitar esta opção."
+
+#: src/view/com/modals/SelfLabel.tsx:136
+#~ msgid "Not Applicable"
+#~ msgstr "Não Aplicável"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:99
+#~ msgid "We're sorry, but this content is not viewable without a Bluesky account."
+#~ msgstr "Desculpe, mas este conteúdo não é visível sem uma conta do Bluesky."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:105
+#~ msgid "We're sorry, but this feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
+#~ msgstr "Desculpe, mas este feed está recebendo muito tráfego e está temporariamente indisponível. Por favor, tente novamente mais tarde."
+
+#: src/view/com/threadgate/WhoCanReply.tsx:115
+#~ msgid "Users followed by <0/>"
+#~ msgstr "Usuários seguidos por <0/>"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+#~ msgid "This {0} has been labeled."
+#~ msgstr "Este {0} foi reportado."
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:73
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:50
+#~ msgid "Recommended"
+#~ msgstr "Recomendados"
+
+#: src/view/screens/Moderation.tsx:134
+#~ msgid "My Account"
+#~ msgstr "Minha Conta"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:65
+#~ msgid "Choose your"
+#~ msgstr "Escolha seu"
+
+#: src/view/com/modals/AltImage.tsx:123
+#~ msgid "Cancel add image alt text"
+#~ msgstr "Cancelar adição de texto alternativo da imagem"
+
+#: src/view/com/modals/AppealLabel.tsx:65
+#~ msgid "Appeal Decision"
+#~ msgstr "Contestar Decisão"
+
+#: src/view/com/modals/ListAddUser.tsx:142
+#: src/view/shell/desktop/Search.tsx:112
+#~ msgid "No results found for {0}"
+#~ msgstr "Nenhum resultado encontrado para {0}"
+
+#: src/view/com/modals/AddAppPasswords.tsx:132
+#~ msgid "<0>Here is your app password.</0> Use this to sign into the other app along with your handle."
+#~ msgstr "<0>Aqui está sua senha de aplicativo.</0> Use-a com seu usuário para logar em outro aplicativo."
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: This setting may not be respected by third-party apps that display Bluesky content.</0>"
+#~ msgstr "<0>Nota: Esta opção pode não ser respeitada por aplicativos de terceiro que mostram conteúdo do Bluesky.</0>"
+
+#: src/view/screens/Moderation.tsx:212
+#~ msgid "<0>Note: Your profile and posts will remain publicly available. Third-party apps that display Bluesky content may not respect this setting.</0>"
+#~ msgstr "<0>Nota: Seu perfil e posts continuarão públicos. Aplicativos de terceiros que mostram conteúdo do Bluesky podem não respeitar esta opção."
+
 #~ msgid "- end of feed -"
 #~ msgstr "- fim do feed -"
 
