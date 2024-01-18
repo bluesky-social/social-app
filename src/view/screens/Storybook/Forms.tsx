@@ -3,10 +3,8 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {H1, H3} from '#/components/Typography'
-import {InputText} from '#/components/forms/InputText'
 import TextField from '#/components/forms/TextField'
 import {InputDate, utils} from '#/components/forms/InputDate'
-import {InputGroup} from '#/components/forms/InputGroup'
 import Toggle from '#/components/forms/Toggle'
 import ToggleButton from '#/components/forms/ToggleButton'
 import {Button} from '#/components/Button'
@@ -65,33 +63,6 @@ export function Forms() {
           onChange={date => console.log(date)}
           label="Input"
         />
-      </View>
-
-      <View style={[a.gap_md, a.align_start, a.w_full]}>
-        <H3>InputGroup (WIP)</H3>
-        <InputGroup>
-          <InputText
-            testID="input"
-            label="Input"
-            placeholder="Type here"
-            value=""
-            onChange={text => console.log(text)}
-          />
-          <InputText
-            testID="input"
-            label="Input"
-            placeholder="Type here"
-            value=""
-            onChange={text => console.log(text)}
-          />
-          <InputText
-            testID="input"
-            label="Input"
-            placeholder="Type here"
-            value=""
-            onChange={text => console.log(text)}
-          />
-        </InputGroup>
       </View>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
