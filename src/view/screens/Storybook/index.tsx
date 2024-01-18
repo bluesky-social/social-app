@@ -30,8 +30,7 @@ export function Storybook() {
               variant="outline"
               color="primary"
               size="small"
-              accessibilityLabel='Set theme to "system"'
-              accessibilityHint="Set theme to system default"
+              label='Set theme to "system"'
               onPress={() => setColorMode('system')}>
               System
             </Button>
@@ -39,8 +38,7 @@ export function Storybook() {
               variant="solid"
               color="secondary"
               size="small"
-              accessibilityLabel='Set theme to "system"'
-              accessibilityHint="Set theme to system default"
+              label='Set theme to "system"'
               onPress={() => setColorMode('light')}>
               Light
             </Button>
@@ -48,8 +46,7 @@ export function Storybook() {
               variant="solid"
               color="secondary"
               size="small"
-              accessibilityLabel='Set theme to "system"'
-              accessibilityHint="Set theme to system default"
+              label='Set theme to "system"'
               onPress={() => setColorMode('dark')}>
               Dark
             </Button>

@@ -3,10 +3,10 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {H1, H3} from '#/components/Typography'
-import TextField from '#/components/forms/TextField'
+import * as TextField from '#/components/forms/TextField'
 import {DateField, Label} from '#/components/forms/DateField'
-import Toggle from '#/components/forms/Toggle'
-import ToggleButton from '#/components/forms/ToggleButton'
+import * as Toggle from '#/components/forms/Toggle'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Button} from '#/components/Button'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 
@@ -113,7 +113,7 @@ export function Forms() {
               <Toggle.Switch />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>
-            <Toggle.Item name="e" hasError label="Click me">
+            <Toggle.Item name="e" isInvalid label="Click me">
               <Toggle.Switch />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>
@@ -143,7 +143,7 @@ export function Forms() {
               <Toggle.Checkbox />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>
-            <Toggle.Item name="e" hasError label="Click me">
+            <Toggle.Item name="e" isInvalid label="Click me">
               <Toggle.Checkbox />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>
@@ -172,7 +172,7 @@ export function Forms() {
               <Toggle.Radio />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>
-            <Toggle.Item name="e" hasError label="Click me">
+            <Toggle.Item name="e" isInvalid label="Click me">
               <Toggle.Radio />
               <Toggle.Label>Click me</Toggle.Label>
             </Toggle.Item>

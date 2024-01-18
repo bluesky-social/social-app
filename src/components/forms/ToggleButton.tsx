@@ -4,17 +4,13 @@ import {View, AccessibilityProps, TextStyle, ViewStyle} from 'react-native'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
-import Toggle, {
-  GroupProps as BaseGroupProps,
-  ItemProps as BaseItemProps,
-  useItemContext,
-} from '#/components/forms/Toggle'
+import * as Toggle from '#/components/forms/Toggle'
 
-export type ItemProps = Omit<BaseItemProps, 'style' | 'role' | 'children'> &
+export type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps &
   React.PropsWithChildren<{}>
 
-export type GroupProps = Omit<BaseGroupProps, 'style' | 'type'> & {
+export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean
 }
 
@@ -46,7 +42,7 @@ export function Button({children, ...props}: ItemProps) {
 
 function ButtonInner({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const state = useItemContext()
+  const state = Toggle.useItemContext()
 
   const {baseStyles, hoverStyles, activeStyles, textStyles} =
     React.useMemo(() => {
@@ -122,9 +118,4 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
       )}
     </View>
   )
-}
-
-export default {
-  Group,
-  Button,
 }

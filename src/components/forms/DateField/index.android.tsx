@@ -7,7 +7,7 @@ import DateTimePicker, {
 import {useTheme, atoms} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import TextField, {useSharedInputStyles} from '#/components/forms/TextField'
+import * as TextField from '#/components/forms/TextField'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
 
 import {DateFieldProps} from '#/components/forms/DateField/types'
@@ -35,7 +35,8 @@ export function DateField({
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const {chromeFocus, chromeError, chromeErrorHover} = useSharedInputStyles()
+  const {chromeFocus, chromeError, chromeErrorHover} =
+    TextField.useSharedInputStyles()
 
   const onChangeInternal = React.useCallback<
     Required<DateTimePickerProps>['onChange']

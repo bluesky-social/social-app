@@ -3,7 +3,7 @@ import {TextInput, TextInputProps, StyleSheet} from 'react-native'
 // @ts-ignore
 import {unstable_createElement} from 'react-native-web'
 
-import TextField, {createInput} from '#/components/forms/TextField'
+import * as TextField from '#/components/forms/TextField'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import {DateFieldProps} from '#/components/forms/DateField/types'
 
@@ -29,7 +29,7 @@ const InputBase = React.forwardRef<HTMLInputElement, TextInputProps>(
 
 InputBase.displayName = 'InputBase'
 
-const Input = createInput(InputBase as unknown as typeof TextInput)
+const Input = TextField.createInput(InputBase as unknown as typeof TextInput)
 
 export function DateField({
   value,

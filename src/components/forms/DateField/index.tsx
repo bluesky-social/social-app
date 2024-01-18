@@ -5,7 +5,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker'
 
 import {useTheme, atoms} from '#/alf'
-import TextField from '#/components/forms/TextField'
+import * as TextField from '#/components/forms/TextField'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import {DateFieldProps} from '#/components/forms/DateField/types'
 

@@ -38,7 +38,7 @@ const Context = React.createContext<{
 
 export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
 
-function Root({children, isInvalid = false}: RootProps) {
+export function Root({children, isInvalid = false}: RootProps) {
   const inputRef = React.useRef<TextInput>(null)
   const rootRef = React.useRef<View>(null)
   const {
@@ -226,9 +226,9 @@ export function createInput(Component: typeof TextInput) {
   }
 }
 
-const Input = createInput(TextInput)
+export const Input = createInput(TextInput)
 
-function Label({children}: React.PropsWithChildren<{}>) {
+export function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   return (
     <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_600, a.mb_sm]}>
@@ -237,7 +237,7 @@ function Label({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
+export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   const t = useTheme()
   const ctx = React.useContext(Context)
   const {hover, focus, errorHover, errorFocus} = React.useMemo(() => {
@@ -286,7 +286,7 @@ function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   )
 }
 
-function Suffix({
+export function Suffix({
   children,
   label,
   accessibilityHint,
@@ -321,12 +321,4 @@ function Suffix({
       {children}
     </Text>
   )
-}
-
-export default {
-  Root,
-  Input,
-  Label,
-  Icon,
-  Suffix,
 }

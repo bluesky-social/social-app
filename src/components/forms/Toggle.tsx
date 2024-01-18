@@ -5,11 +5,11 @@ import {useTheme, atoms as a, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
-type ItemState = {
+export type ItemState = {
   name: string
   selected: boolean
   disabled: boolean
-  hasError: boolean
+  isInvalid: boolean
   hovered: boolean
   pressed: boolean
   focused: boolean
@@ -19,7 +19,7 @@ const ItemContext = React.createContext<ItemState>({
   name: '',
   selected: false,
   disabled: false,
-  hasError: false,
+  isInvalid: false,
   hovered: false,
   pressed: false,
   focused: false,
@@ -55,7 +55,7 @@ export type ItemProps = {
   value?: boolean
   disabled?: boolean
   onChange?: (selected: boolean) => void
-  hasError?: boolean
+  isInvalid?: boolean
   style?: (state: ItemState) => ViewStyle
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
 }
@@ -64,7 +64,7 @@ export function useItemContext() {
   return React.useContext(ItemContext)
 }
 
-function Group({
+export function Group({
   children,
   values: providedValues,
   onChange,
@@ -138,13 +138,13 @@ function Group({
   )
 }
 
-function Item({
+export function Item({
   children,
   name,
   value = false,
   disabled: itemDisabled = false,
   onChange,
-  hasError,
+  isInvalid,
   style,
   type = 'checkbox',
   label,
@@ -185,12 +185,12 @@ function Item({
       name,
       selected,
       disabled: disabled ?? false,
-      hasError: hasError ?? false,
+      isInvalid: isInvalid ?? false,
       hovered,
       pressed,
       focused,
     }),
-    [name, selected, disabled, hovered, pressed, focused, hasError],
+    [name, selected, disabled, hovered, pressed, focused, isInvalid],
   )
 
   return (
@@ -201,7 +201,7 @@ function Item({
         disabled={disabled}
         aria-disabled={disabled ?? false}
         aria-checked={selected}
-        aria-invalid={hasError}
+        aria-invalid={isInvalid}
         aria-label={label}
         role={role}
         accessibilityRole={role}
@@ -230,7 +230,7 @@ function Item({
   )
 }
 
-function Label({children}: React.PropsWithChildren<{}>) {
+export function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {disabled} = useItemContext()
   return (
@@ -247,20 +247,20 @@ function Label({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-function createSharedToggleStyles({
+export function createSharedToggleStyles({
   theme: t,
   hovered,
   focused,
   selected,
   disabled,
-  hasError,
+  isInvalid,
 }: {
   theme: ReturnType<typeof useTheme>
   selected: boolean
   hovered: boolean
   focused: boolean
   disabled: boolean
-  hasError: boolean
+  isInvalid: boolean
 }) {
   const base: ViewStyle[] = []
   const baseHover: ViewStyle[] = []
@@ -290,7 +290,7 @@ function createSharedToggleStyles({
     }
   }
 
-  if (hasError) {
+  if (isInvalid) {
     base.push({
       backgroundColor:
         t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
@@ -321,9 +321,9 @@ function createSharedToggleStyles({
   }
 }
 
-function Checkbox() {
+export function Checkbox() {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, hasError} = useItemContext()
+  const {selected, hovered, focused, disabled, isInvalid} = useItemContext()
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
@@ -331,7 +331,7 @@ function Checkbox() {
       focused,
       selected,
       disabled,
-      hasError,
+      isInvalid,
     })
   return (
     <View
@@ -369,9 +369,9 @@ function Checkbox() {
   )
 }
 
-function Switch() {
+export function Switch() {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, hasError} = useItemContext()
+  const {selected, hovered, focused, disabled, isInvalid} = useItemContext()
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
       theme: t,
@@ -379,7 +379,7 @@ function Switch() {
       focused,
       selected,
       disabled,
-      hasError,
+      isInvalid,
     })
   return (
     <View
@@ -420,9 +420,9 @@ function Switch() {
   )
 }
 
-function Radio() {
+export function Radio() {
   const t = useTheme()
-  const {selected, hovered, focused, disabled, hasError} =
+  const {selected, hovered, focused, disabled, isInvalid} =
     React.useContext(ItemContext)
   const {baseStyles, baseHoverStyles, indicatorStyles} =
     createSharedToggleStyles({
@@ -431,7 +431,7 @@ function Radio() {
       focused,
       selected,
       disabled,
-      hasError,
+      isInvalid,
     })
   return (
     <View
@@ -467,13 +467,4 @@ function Radio() {
       ) : null}
     </View>
   )
-}
-
-export default {
-  Item,
-  Checkbox,
-  Label,
-  Switch,
-  Radio,
-  Group,
 }
