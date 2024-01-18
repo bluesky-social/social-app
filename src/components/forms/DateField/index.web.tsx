@@ -4,10 +4,10 @@ import {TextInput, TextInputProps, StyleSheet} from 'react-native'
 import {unstable_createElement} from 'react-native-web'
 
 import TextField, {createInput} from '#/components/forms/TextField'
+import {toSimpleDateString} from '#/components/forms/DateField/utils'
+import {DateFieldProps} from '#/components/forms/DateField/types'
 
-import {toSimpleDateString} from '#/components/forms/InputDate/utils'
-
-export * as utils from '#/components/forms/InputDate/utils'
+export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label
 
 const InputBase = React.forwardRef<HTMLInputElement, TextInputProps>(
@@ -33,37 +33,30 @@ const Input = createInput(InputBase as unknown as typeof TextInput)
 
 export function DateField({
   value,
-  onChange,
+  onChangeDate,
   label,
   isInvalid,
   testID,
-}: {
-  value: string
-  onChange: (value: string) => void
-  label: string
-  isInvalid?: boolean
-  testID?: string
-}) {
+}: DateFieldProps) {
   const handleOnChange = React.useCallback(
     (e: any) => {
       const date = e.target.valueAsDate || e.target.value
 
       if (date) {
         const formatted = toSimpleDateString(date)
-        onChange(formatted)
+        onChangeDate(formatted)
       }
     },
-    [onChange],
+    [onChangeDate],
   )
 
   return (
-    <TextField.Root>
+    <TextField.Root isInvalid={isInvalid}>
       <Input
         value={value}
         label={label}
         onChange={handleOnChange}
         onChangeText={() => {}}
-        isInvalid={isInvalid}
         testID={testID}
       />
     </TextField.Root>

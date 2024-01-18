@@ -215,8 +215,8 @@ export function createInput(Component: typeof TextInput) {
             {borderColor: 'transparent', borderWidth: 2},
             ctx.hovered ? chromeHover : {},
             ctx.focused ? chromeFocus : {},
-            ctx.isInvalid ? chromeError : {},
-            ctx.isInvalid && (ctx.hovered || ctx.focused)
+            ctx.isInvalid || isInvalid ? chromeError : {},
+            (ctx.isInvalid || isInvalid) && (ctx.hovered || ctx.focused)
               ? chromeErrorHover
               : {},
           ]}

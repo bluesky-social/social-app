@@ -1,10 +1,7 @@
-import {TextInputProps} from 'react-native'
-
-import {BaseProps} from '#/components/forms/types'
-
-export type InputDateProps = BaseProps & {
-  /**
-   * **NOTE:** Available only on web
-   */
-  autoFocus?: TextInputProps['autoFocus']
+export type DateFieldProps = {
+  value: string
+  onChangeDate: (date: string) => void
+  label: string
+  isInvalid?: boolean
+  testID?: string
 }

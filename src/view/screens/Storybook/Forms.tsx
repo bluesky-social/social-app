@@ -41,7 +41,7 @@ export function Forms() {
           />
         </TextField.Root>
 
-        <View>
+        <View style={[a.w_full]}>
           <TextField.Label>Text field</TextField.Label>
           <TextField.Root>
             <TextField.Icon icon={Globe} />
@@ -54,14 +54,26 @@ export function Forms() {
           </TextField.Root>
         </View>
 
+        <View style={[a.w_full]}>
+          <TextField.Label>Textarea</TextField.Label>
+          <TextField.Input
+            multiline
+            numberOfLines={4}
+            value={value}
+            onChangeText={setValue}
+            label="Text field"
+          />
+        </View>
+
         <H3>DateField</H3>
 
-        <View>
+        <View style={[a.w_full]}>
           <Label>Date</Label>
           <DateField
+            isInvalid
             testID="date"
             value={date}
-            onChange={date => {
+            onChangeDate={date => {
               console.log(date)
               setDate(date)
             }}

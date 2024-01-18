@@ -1,69 +1,41 @@
 import React from 'react'
-import {View, TextStyle, Pressable} from 'react-native'
+import {View, Pressable} from 'react-native'
 import DateTimePicker, {
   BaseProps as DateTimePickerProps,
 } from '@react-native-community/datetimepicker'
 
-import {Logo} from '#/view/icons/Logo'
-import {useTheme, atoms, tokens} from '#/alf'
+import {useTheme, atoms} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import TextField, {useSharedInputStyles} from '#/components/forms/TextField'
+import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
 
-import {InputDateProps} from '#/components/forms/InputDate/types'
+import {DateFieldProps} from '#/components/forms/DateField/types'
 import {
   localizeDate,
   toSimpleDateString,
-} from '#/components/forms/InputDate/utils'
+} from '#/components/forms/DateField/utils'
 
-export * as utils from '#/components/forms/InputDate/utils'
+export * as utils from '#/components/forms/DateField/utils'
+export const Label = TextField.Label
 
-export function InputDate({
-  value: initialValue,
-  onChange,
-  testID,
+export function DateField({
+  value,
+  onChangeDate,
   label,
-  hasError,
-  accessibilityLabel,
-  accessibilityHint,
-  ...props
-}: InputDateProps) {
-  const labelId = React.useId()
+  isInvalid,
+  testID,
+}: DateFieldProps) {
   const t = useTheme()
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState(initialValue)
+  const {
+    state: pressed,
+    onIn: onPressIn,
+    onOut: onPressOut,
+  } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
-  const {inputStyles, iconStyles} = React.useMemo(() => {
-    const input: TextStyle[] = [
-      {
-        paddingLeft: 40,
-      },
-    ]
-    const icon: TextStyle[] = []
-
-    if (hasError) {
-      input.push({
-        borderColor: tokens.color.red_200,
-      })
-      icon.push({
-        color: tokens.color.red_400,
-      })
-    }
-
-    if (focused) {
-      input.push({
-        borderColor: t.atoms.border_contrast.borderColor,
-      })
-
-      if (hasError) {
-        input.push({
-          borderColor: tokens.color.red_500,
-        })
-      }
-    }
-
-    return {inputStyles: input, iconStyles: icon}
-  }, [t, focused, hasError])
+  const {chromeFocus, chromeError, chromeErrorHover} = useSharedInputStyles()
 
   const onChangeInternal = React.useCallback<
     Required<DateTimePickerProps>['onChange']
@@ -73,75 +45,53 @@ export function InputDate({
 
       if (date) {
         const formatted = toSimpleDateString(date)
-        onChange(formatted)
-        setValue(formatted)
+        onChangeDate(formatted)
       }
     },
-    [onChange, setOpen, setValue],
+    [onChangeDate, setOpen],
   )
 
   return (
     <View style={[atoms.relative, atoms.w_full]}>
-      {label && (
-        <Text
-          nativeID={labelId}
-          style={[
-            atoms.text_sm,
-            atoms.font_bold,
-            t.atoms.text_contrast_600,
-            atoms.mb_sm,
-          ]}>
-          {label}
-        </Text>
-      )}
-
       <Pressable
-        {...props}
-        aria-labelledby={labelId}
         aria-label={label}
-        accessibilityLabelledBy={labelId}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityHint={accessibilityHint}
+        accessibilityLabel={label}
+        accessibilityHint={undefined}
         onPress={() => setOpen(true)}
+        onPressIn={onPressIn}
+        onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
         style={[
           {
-            paddingTop: atoms.pt_md.paddingTop + 2,
+            paddingTop: 16,
+            paddingBottom: 16,
+            borderColor: 'transparent',
+            borderWidth: 2,
           },
+          atoms.flex_row,
+          atoms.flex_1,
           atoms.w_full,
           atoms.px_lg,
-          atoms.pb_md,
           atoms.rounded_sm,
-          t.atoms.bg_contrast_100,
-          ...inputStyles,
+          t.atoms.bg_contrast_50,
+          focused || pressed ? chromeFocus : {},
+          isInvalid ? chromeError : {},
+          isInvalid && (focused || pressed) ? chromeErrorHover : {},
         ]}>
-        <Text style={[atoms.text_md, t.atoms.text]}>{localizeDate(value)}</Text>
-      </Pressable>
+        <TextField.Icon icon={CalendarDays} />
 
-      <View
-        style={[
-          atoms.absolute,
-          atoms.inset_0,
-          atoms.align_center,
-          atoms.justify_center,
-          atoms.pl_md,
-          {right: 'auto'},
-        ]}>
-        <Logo
-          style={[
-            {color: t.atoms.border_contrast.borderColor},
-            {
-              width: 20,
-              pointerEvents: 'none',
-            },
-            ...iconStyles,
-          ]}
-        />
-      </View>
+        <Text
+          style={[atoms.text_md, atoms.pl_xs, t.atoms.text, {paddingTop: 3}]}>
+          {localizeDate(value)}
+        </Text>
+      </Pressable>
 
       {open && (
         <DateTimePicker
+          aria-label={label}
+          accessibilityLabel={label}
+          accessibilityHint={undefined}
           testID={`${testID}-datepicker`}
           mode="date"
           timeZoneName={'Etc/UTC'}
@@ -150,10 +100,6 @@ export function InputDate({
           themeVariant={t.name === 'dark' ? 'dark' : 'light'}
           value={new Date(value)}
           onChange={onChangeInternal}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityHint={accessibilityHint}
-          aria-labelledby={labelId}
-          aria-label={label}
         />
       )}
     </View>

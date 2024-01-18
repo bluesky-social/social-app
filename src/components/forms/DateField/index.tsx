@@ -5,11 +5,11 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker'
 
 import {useTheme, atoms} from '#/alf'
-import {toSimpleDateString} from '#/components/forms/InputDate/utils'
-import {InputDateProps} from '#/components/forms/InputDate/types'
 import TextField from '#/components/forms/TextField'
+import {toSimpleDateString} from '#/components/forms/DateField/utils'
+import {DateFieldProps} from '#/components/forms/DateField/types'
 
-export * as utils from '#/components/forms/InputDate/utils'
+export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label
 
 /**
@@ -20,43 +20,36 @@ export const Label = TextField.Label
  * `utils.toSimpleDateString(Date)` export of this file.
  */
 export function DateField({
-  value: initialValue,
-  onChange,
+  value,
+  onChangeDate,
   testID,
   label,
-  accessibilityLabel,
-  accessibilityHint,
-}: InputDateProps) {
-  const labelId = React.useId()
+}: DateFieldProps) {
   const t = useTheme()
-  const [value, setValue] = React.useState(initialValue)
 
   const onChangeInternal = React.useCallback(
     (event: DateTimePickerEvent, date: Date | undefined) => {
       if (date) {
         const formatted = toSimpleDateString(date)
-        onChange(formatted)
-        setValue(formatted)
+        onChangeDate(formatted)
       }
     },
-    [onChange],
+    [onChangeDate],
   )
 
   return (
     <View style={[atoms.relative, atoms.w_full]}>
       <DateTimePicker
+        aria-label={label}
+        accessibilityLabel={label}
+        accessibilityHint={undefined}
         testID={`${testID}-datepicker`}
         mode="date"
         timeZoneName={'Etc/UTC'}
         display="spinner"
-        // @ts-ignore applies in iOS only -prf
         themeVariant={t.name === 'dark' ? 'dark' : 'light'}
         value={new Date(value)}
         onChange={onChangeInternal}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityHint={accessibilityHint}
-        aria-labelledby={labelId}
-        aria-label={label}
       />
     </View>
   )
