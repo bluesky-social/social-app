@@ -25,7 +25,7 @@ interface TextInputProps {
   suggestedLinks: Set<string>
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  onPressPublish: () => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
@@ -55,7 +55,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       suggestedLinks,
       setRichText,
       onPhotoPasted,
-      // onPressPublish,
+      onPressPublish,
       onSuggestedLinksChanged,
       // onError,
     },
@@ -224,9 +224,12 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
 
         if (key === 'Backspace') {
           setTimeout(handleInputSelection, 0)
+        } else if (key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
+          ev.preventDefault()
+          onPressPublish()
         }
       },
-      [handleInputSelection],
+      [handleInputSelection, onPressPublish],
     )
 
     const handlePaste = React.useCallback(
