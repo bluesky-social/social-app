@@ -11,6 +11,7 @@ import './web/styles/style.css'
 import {Emoji} from './web/EmojiPicker.web'
 
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {blobToDataUri, isUriImage} from 'lib/media/util'
 
 interface TextInputRef {
   focus: () => void
@@ -53,7 +54,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       placeholder,
       suggestedLinks,
       setRichText,
-      // onPhotoPasted,
+      onPhotoPasted,
       // onPressPublish,
       onSuggestedLinksChanged,
       // onError,
@@ -228,6 +229,36 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       [handleInputSelection],
     )
 
+    const handlePaste = React.useCallback(
+      (ev: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        const items = ev.clipboardData?.items ?? []
+
+        for (let idx = 0, len = items.length; idx < len; idx++) {
+          const item = items[idx]
+
+          if (item.kind === 'file' && item.type.startsWith('image/')) {
+            const file = item.getAsFile()
+
+            if (file) {
+              blobToDataUri(file).then(onPhotoPasted, console.error)
+            }
+          }
+
+          if (item.type === 'text/plain') {
+            item.getAsString(async str => {
+              if (isUriImage(str)) {
+                const response = await fetch(str)
+                const blob = await response.blob()
+
+                blobToDataUri(blob).then(onPhotoPasted, console.error)
+              }
+            })
+          }
+        }
+      },
+      [onPhotoPasted],
+    )
+
     React.useLayoutEffect(() => {
       const textInput = inputRef.current!
 
@@ -266,6 +297,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           // value={richtext.text}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          onPaste={handlePaste}
           className="rt-input"
           placeholder={placeholder}
           minRows={6}
