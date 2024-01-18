@@ -4,7 +4,9 @@ class ExpoUITextView: ExpoView {
   var textView: UITextView
   var textChildren: [ExpoUITextViewChild] = [] {
     didSet {
-      self.setText()
+      if textChildren != oldValue {
+        self.setText()
+      }
     }
   }
 
@@ -27,8 +29,14 @@ class ExpoUITextView: ExpoView {
     textView.textContainerInset = UIEdgeInsets.zero
     textView.textContainer.lineFragmentPadding = 0
 
-    super.init(appContext: appContext)
+    // Restrain to bounds
+    textView.clipsToBounds = true
 
+    super.init(appContext: appContext)
+    // Keep this view also within bounds
+    self.clipsToBounds = true
+
+    // Add the textview
     addSubview(textView)
 
     // Configure the tap gesture recognizer
@@ -58,7 +66,7 @@ class ExpoUITextView: ExpoView {
   }
 
   override func didSetProps(_ changedProps: [String]!) {
-    self.getTextChildren()
+    self.setText()
   }
 
   // Just return the subviews
@@ -68,7 +76,12 @@ class ExpoUITextView: ExpoView {
 
   // Get children on update
   override func didUpdateReactSubviews() {
-    self.getTextChildren()
+    self.updateChildren()
+  }
+
+  // Update the text whenever the DynamicType size changes
+  @objc func preferredContentSizeChanged(_ notification: Notification) {
+    self.setText()
   }
 
   // For animation issues
@@ -80,14 +93,11 @@ class ExpoUITextView: ExpoView {
   }
 
   override func layoutSubviews() {
-    // Get the width from the bounds
-    let maxWidth = bounds.width
-    // Calculate the size of the text
-    let sizeThatFits = textView.sizeThatFits(CGSize(width: maxWidth, height: CGFloat(MAXFLOAT)))
-    let size = CGSize(width: maxWidth, height: sizeThatFits.height)
-
-    // Set the textview's frame
+    // Get the right size
+    let height = textView.sizeThatFits(CGSize(width: bounds.width, height: CGFloat(MAXFLOAT))).height
+    let size = CGSize(width: bounds.width, height: height)
     textView.frame.size = size
+    // Set the textview's frame
     self.appContext?.reactBridge?.uiManager.setSize(size, for: self)
 
     // Get each line and call onTextLayout
@@ -105,10 +115,6 @@ class ExpoUITextView: ExpoView {
     ])
   }
 
-  @objc func preferredContentSizeChanged(_ notification: Notification) {
-    self.setText()
-  }
-
   @IBAction func callOnPress(_ sender: UITapGestureRecognizer) -> Void {
     // If we find a child, then call onPress
     if let child = getPressed(sender) {
@@ -119,6 +125,16 @@ class ExpoUITextView: ExpoView {
         textView.selectedTextRange = nil
       }
     }
+  }
+
+  // Get the children. Always use getTextChildren() so that we ensure the correct order of views
+  func updateChildren() -> Void {
+    self.textChildren = self.reactSubviews().filter { view in
+      if view.isKind(of: ExpoUITextViewChild.self) {
+        return true
+      }
+      return false
+    } as! [ExpoUITextViewChild]
   }
 
   // Try to get the pressed segment
@@ -150,20 +166,6 @@ class ExpoUITextView: ExpoView {
     }
 
     return nil
-  }
-
-  // Get the children. Always use getTextChildren() so that we ensure the correct order of views
-  func getTextChildren() -> Void {
-    var children: [ExpoUITextViewChild] = []
-
-    self.reactSubviews().forEach { view in
-      if view.isKind(of: ExpoUITextViewChild.self) {
-        children.append(view as! ExpoUITextViewChild)
-      }
-    }
-
-    // Save the children for our onPress handler
-    self.textChildren = children
   }
 
   func setText() -> Void {
@@ -227,7 +229,6 @@ class ExpoUITextView: ExpoView {
 
     textView.attributedText = finalAttributedString
     textView.selectedTextRange = nil
-
     self.setNeedsLayout()
   }
 }
