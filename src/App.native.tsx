@@ -27,6 +27,7 @@ import {queryClient} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as DialogStateProvider} from 'state/dialogs'
 import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
@@ -115,13 +116,15 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
-                      <PortalProvider>
-                        <InnerApp />
-                      </PortalProvider>
-                    </I18nProvider>
-                  </LightboxStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <I18nProvider>
+                        <PortalProvider>
+                          <InnerApp />
+                        </PortalProvider>
+                      </I18nProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>

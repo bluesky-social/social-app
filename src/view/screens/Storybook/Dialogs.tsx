@@ -6,10 +6,12 @@ import {Button} from '#/components/Button'
 import {H3, P} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import {useDialogStateControlContext} from '#/state/dialogs'
 
 export function Dialogs() {
   const control = Dialog.useDialogControl()
   const prompt = Prompt.usePromptControl()
+  const {closeAllDialogs} = useDialogStateControlContext()
 
   return (
     <View style={[a.gap_md]}>
@@ -17,7 +19,10 @@ export function Dialogs() {
         variant="outline"
         color="secondary"
         size="small"
-        onPress={() => control.open()}
+        onPress={() => {
+          control.open()
+          prompt.open()
+        }}
         label="Open basic dialog">
         Open basic dialog
       </Button>
@@ -57,6 +62,15 @@ export function Dialogs() {
               A scrollable dialog with an input within it.
             </P>
             <Dialog.Input value="" onChangeText={() => {}} label="Type here" />
+
+            <Button
+              variant="outline"
+              color="secondary"
+              size="small"
+              onPress={closeAllDialogs}
+              label="Close all dialogs">
+              Close all dialogs
+            </Button>
             <View style={{height: 1000}} />
             <View style={[a.flex_row, a.justify_end]}>
               <Button

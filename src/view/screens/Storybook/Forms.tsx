@@ -70,7 +70,6 @@ export function Forms() {
         <View style={[a.w_full]}>
           <Label>Date</Label>
           <DateField
-            isInvalid
             testID="date"
             value={date}
             onChangeDate={date => {
