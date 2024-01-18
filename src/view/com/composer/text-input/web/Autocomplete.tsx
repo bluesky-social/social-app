@@ -1,201 +1,163 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from 'react'
+import React from 'react'
+import ReactDOM from 'react-dom'
 import {Pressable, StyleSheet, View} from 'react-native'
-import {ReactRenderer} from '@tiptap/react'
-import tippy, {Instance as TippyInstance} from 'tippy.js'
+
 import {
-  SuggestionOptions,
-  SuggestionProps,
-  SuggestionKeyDownProps,
-} from '@tiptap/suggestion'
-import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useGrapheme} from '../hooks/useGrapheme'
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  useFloating,
+} from '@floating-ui/react-dom'
 import {Trans} from '@lingui/macro'
 
-interface MentionListRef {
-  onKeyDown: (props: SuggestionKeyDownProps) => boolean
+import {useGrapheme} from '../hooks/useGrapheme'
+
+import {usePalette} from 'lib/hooks/usePalette'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {Text} from 'view/com/util/text/Text'
+import {useActorAutocompleteQuery} from 'state/queries/actor-autocomplete'
+
+export interface MatchedSuggestion {
+  type: 'mention'
+  range: Range | undefined
+  index: number
+  length: number
+  query: string
 }
 
-export function createSuggestion({
-  autocomplete,
-}: {
-  autocomplete: ActorAutocompleteFn
-}): Omit<SuggestionOptions, 'editor'> {
-  return {
-    async items({query}) {
-      const suggestions = await autocomplete({query})
-      return suggestions.slice(0, 8)
-    },
-
-    render: () => {
-      let component: ReactRenderer<MentionListRef> | undefined
-      let popup: TippyInstance[] | undefined
-
-      return {
-        onStart: props => {
-          component = new ReactRenderer(MentionList, {
-            props,
-            editor: props.editor,
-          })
-
-          if (!props.clientRect) {
-            return
-          }
-
-          // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
-          popup = tippy('body', {
-            getReferenceClientRect: props.clientRect,
-            appendTo: () => document.body,
-            content: component.element,
-            showOnCreate: true,
-            interactive: true,
-            trigger: 'manual',
-            placement: 'bottom-start',
-          })
-        },
-
-        onUpdate(props) {
-          component?.updateProps(props)
-
-          if (!props.clientRect) {
-            return
-          }
-
-          popup?.[0]?.setProps({
-            // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
-            getReferenceClientRect: props.clientRect,
-          })
-        },
-
-        onKeyDown(props) {
-          if (props.event.key === 'Escape') {
-            popup?.[0]?.hide()
-
-            return true
-          }
-
-          return component?.ref?.onKeyDown(props) || false
-        },
-
-        onExit() {
-          popup?.[0]?.destroy()
-          component?.destroy()
-        },
-      }
-    },
-  }
+interface AutocompleteProps {
+  match: MatchedSuggestion | undefined
+  onSelect: (match: MatchedSuggestion, handle: string) => void
 }
 
-const MentionList = forwardRef<MentionListRef, SuggestionProps>(
-  function MentionListImpl(props: SuggestionProps, ref) {
-    const [selectedIndex, setSelectedIndex] = useState(0)
-    const pal = usePalette('default')
-    const {getGraphemeString} = useGrapheme()
+export interface AutocompleteRef {
+  handleKeyDown: (ev: React.KeyboardEvent<HTMLTextAreaElement>) => void
+}
 
-    const selectItem = (index: number) => {
-      const item = props.items[index]
+export const Autocomplete = React.forwardRef<
+  AutocompleteRef,
+  AutocompleteProps
+>(function AutocompleteImpl({match, onSelect}, ref) {
+  const pal = usePalette('default')
+  const {getGraphemeString} = useGrapheme()
 
-      if (item) {
-        props.command({id: item.handle})
-      }
-    }
+  const {refs, floatingStyles} = useFloating({
+    elements: {reference: match?.range},
+    placement: 'bottom-start',
+    middleware: [
+      shift({padding: 12}),
+      flip({padding: 12}),
+      offset({mainAxis: 4}),
+    ],
+    whileElementsMounted: autoUpdate,
+  })
 
-    const upHandler = () => {
-      setSelectedIndex(
-        (selectedIndex + props.items.length - 1) % props.items.length,
-      )
-    }
+  const seenMatch = React.useRef<MatchedSuggestion>()
+  const {data: items, isFetching} = useActorAutocompleteQuery(
+    match ? match.query : '',
+  )
 
-    const downHandler = () => {
-      setSelectedIndex((selectedIndex + 1) % props.items.length)
-    }
+  const [hidden, setHidden] = React.useState(false)
+  const [cursor, setCursor] = React.useState(0)
 
-    const enterHandler = () => {
-      selectItem(selectedIndex)
-    }
-
-    useEffect(() => setSelectedIndex(0), [props.items])
-
-    useImperativeHandle(ref, () => ({
-      onKeyDown: ({event}) => {
-        if (event.key === 'ArrowUp') {
-          upHandler()
-          return true
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      handleKeyDown: ev => {
+        if (hidden || !match || !items || items.length < 1) {
+          return
         }
 
-        if (event.key === 'ArrowDown') {
-          downHandler()
-          return true
-        }
+        const key = ev.key
 
-        if (event.key === 'Enter' || event.key === 'Tab') {
-          enterHandler()
-          return true
-        }
+        if (key === 'ArrowUp') {
+          ev.preventDefault()
+          setCursor(cursor <= 0 ? items.length - 1 : cursor - 1)
+        } else if (key === 'ArrowDown') {
+          ev.preventDefault()
+          setCursor((cursor >= items.length - 1 ? -1 : cursor) + 1)
+        } else if (key === 'Enter') {
+          const item = items[cursor]
 
-        return false
+          ev.preventDefault()
+          onSelect(match, item.handle)
+        } else if (key === 'Escape') {
+          ev.preventDefault()
+          ev.stopPropagation()
+
+          setHidden(true)
+        }
       },
-    }))
+    }),
+    [hidden, match, items, cursor, setHidden, onSelect],
+  )
 
-    const {items} = props
+  if (seenMatch.current !== match) {
+    seenMatch.current = match
+    setHidden(false)
+    setCursor(0)
 
-    return (
-      <div className="items">
-        <View style={[pal.borderDark, pal.view, styles.container]}>
-          {items.length > 0 ? (
-            items.map((item, index) => {
-              const {name: displayName} = getGraphemeString(
-                item.displayName ?? item.handle,
-                30, // Heuristic value; can be modified
-              )
-              const isSelected = selectedIndex === index
+    return null
+  }
 
-              return (
-                <Pressable
-                  key={item.handle}
-                  style={[
-                    isSelected ? pal.viewLight : undefined,
-                    pal.borderDark,
-                    styles.mentionContainer,
-                    index === 0
-                      ? styles.firstMention
-                      : index === items.length - 1
-                      ? styles.lastMention
-                      : undefined,
-                  ]}
-                  onPress={() => {
-                    selectItem(index)
-                  }}
-                  accessibilityRole="button">
-                  <View style={styles.avatarAndDisplayName}>
-                    <UserAvatar avatar={item.avatar ?? null} size={26} />
-                    <Text style={pal.text} numberOfLines={1}>
-                      {displayName}
-                    </Text>
-                  </View>
-                  <Text type="xs" style={pal.textLight} numberOfLines={1}>
-                    @{item.handle}
+  if (hidden || !match) {
+    return null
+  }
+
+  return ReactDOM.createPortal(
+    <div
+      ref={refs.setFloating}
+      style={floatingStyles}
+      className="rt-autocomplete">
+      <View style={[pal.borderDark, pal.view, styles.container]}>
+        {items && items.length > 0 ? (
+          items.slice(0, 8).map((item, index) => {
+            const {name: displayName} = getGraphemeString(
+              item.displayName ?? item.handle,
+              30, // Heuristic value; can be modified
+            )
+            const isSelected = cursor === index
+
+            return (
+              <Pressable
+                key={item.handle}
+                style={[
+                  isSelected ? pal.viewLight : undefined,
+                  pal.borderDark,
+                  styles.mentionContainer,
+                  index === 0
+                    ? styles.firstMention
+                    : index === items.length - 1
+                    ? styles.lastMention
+                    : undefined,
+                ]}
+                onPress={() => {
+                  onSelect(match!, item.handle)
+                }}
+                accessibilityRole="button">
+                <View style={styles.avatarAndDisplayName}>
+                  <UserAvatar avatar={item.avatar ?? null} size={26} />
+                  <Text style={pal.text} numberOfLines={1}>
+                    {displayName}
                   </Text>
-                </Pressable>
-              )
-            })
-          ) : (
-            <Text type="sm" style={[pal.text, styles.noResult]}>
-              <Trans>No result</Trans>
-            </Text>
-          )}
-        </View>
-      </div>
-    )
-  },
-)
+                </View>
+                <Text type="xs" style={pal.textLight} numberOfLines={1}>
+                  @{item.handle}
+                </Text>
+              </Pressable>
+            )
+          })
+        ) : (
+          <Text type="sm" style={[pal.text, styles.noResult]}>
+            {isFetching ? <Trans>Loading...</Trans> : <Trans>No result</Trans>}
+          </Text>
+        )}
+      </View>
+    </div>,
+    document.body,
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

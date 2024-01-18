@@ -9,6 +9,11 @@ import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 
 import './web/styles/style.css'
 import {Emoji} from './web/EmojiPicker.web'
+import {
+  Autocomplete,
+  AutocompleteRef,
+  MatchedSuggestion,
+} from './web/Autocomplete'
 
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {blobToDataUri, isUriImage} from 'lib/media/util'
@@ -35,18 +40,6 @@ export const textInputWebEmitter = new EventEmitter()
 const MENTION_AUTOCOMPLETE_RE = /(?<=^|\s)@([a-zA-Z0-9-.]+)$/
 const TRIM_MENTION_RE = /[.]+$/
 
-const enum Suggestion {
-  MENTION,
-}
-
-interface MatchedSuggestion {
-  type: Suggestion
-  range: Range | undefined
-  index: number
-  length: number
-  query: string
-}
-
 export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
   function TextInputImpl(
     {
@@ -63,11 +56,12 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
   ) {
     const overlayRef = React.useRef<HTMLDivElement>(null)
     const inputRef = React.useRef<HTMLTextAreaElement>(null)
+    const autocompleteRef = React.useRef<AutocompleteRef>(null)
 
     const modeClass = useColorSchemeStyle('rt-editor-light', 'rt-editor-dark')
 
     const [cursor, setCursor] = React.useState<number>()
-    const [_suggestion, setSuggestion] = React.useState<MatchedSuggestion>()
+    const [suggestion, setSuggestion] = React.useState<MatchedSuggestion>()
 
     React.useImperativeHandle(
       ref,
@@ -105,10 +99,10 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       const candidate = text.length === cursor ? text : text.slice(0, cursor)
 
       let match: RegExpExecArray | null
-      let type: Suggestion
+      let type: MatchedSuggestion['type']
 
       if ((match = MENTION_AUTOCOMPLETE_RE.exec(candidate))) {
-        type = Suggestion.MENTION
+        type = 'mention'
       } else {
         setSuggestion(undefined)
         return
@@ -137,9 +131,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         index: start,
         length: length,
         query:
-          type === Suggestion.MENTION
-            ? matched.replace(TRIM_MENTION_RE, '')
-            : matched,
+          type === 'mention' ? matched.replace(TRIM_MENTION_RE, '') : matched,
       }
 
       setSuggestion(nextSuggestion)
@@ -227,9 +219,11 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         } else if (key === 'Enter' && (ev.ctrlKey || ev.metaKey)) {
           ev.preventDefault()
           onPressPublish()
+        } else {
+          autocompleteRef.current?.handleKeyDown(ev)
         }
       },
-      [handleInputSelection, onPressPublish],
+      [autocompleteRef, handleInputSelection, onPressPublish],
     )
 
     const handlePaste = React.useCallback(
@@ -260,6 +254,27 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         }
       },
       [onPhotoPasted],
+    )
+
+    const acceptSuggestion = React.useCallback(
+      (match: MatchedSuggestion, res: string) => {
+        let text: string
+
+        if (match.type === 'mention') {
+          text = `@${res} `
+        } else {
+          return
+        }
+
+        const input = inputRef.current!
+
+        input.focus()
+        input.selectionStart = match.index
+        input.selectionEnd = match.index + match.length
+
+        document.execCommand('insertText', false, text)
+      },
+      [inputRef],
     )
 
     React.useLayoutEffect(() => {
@@ -304,6 +319,12 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           className="rt-input"
           placeholder={placeholder}
           minRows={6}
+        />
+
+        <Autocomplete
+          ref={autocompleteRef}
+          match={suggestion}
+          onSelect={acceptSuggestion}
         />
       </div>
     )

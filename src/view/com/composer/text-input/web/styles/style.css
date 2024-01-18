@@ -49,3 +49,7 @@
   padding: 5px;
   margin: 0 0 10px 8px;
 }
+
+.rt-autocomplete {
+  z-index: 3;
+}
