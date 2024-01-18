@@ -158,7 +158,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
                   `rt-segment ` +
                   (!isLink ? `rt-segment-text` : `rt-segment-link`)
                 }>
-                {segment.text}
+                {segment.text || '\u200b'}
               </span>
             )
           })}
