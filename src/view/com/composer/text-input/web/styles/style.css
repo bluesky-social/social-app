@@ -2,6 +2,7 @@
   font-size: 18px;
   line-height: 24px;
   width: 100%;
+  margin: 0 0 10px 8px;
   position: relative;
 }
 .rt-editor-light {
@@ -50,7 +51,6 @@
 .rt-overlay,
 .rt-input {
   padding: 5px;
-  margin: 0 0 10px 8px;
 }
 
 .rt-autocomplete {
