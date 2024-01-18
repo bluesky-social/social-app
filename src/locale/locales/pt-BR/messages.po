@@ -173,7 +173,7 @@ msgstr "Adicionar texto alternativo"
 #: src/view/screens/AppPasswords.tsx:143
 #: src/view/screens/AppPasswords.tsx:156
 msgid "Add App Password"
-msgstr "Adicionhar Senha de Aplicativo"
+msgstr "Adicionar Senha de Aplicativo"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
