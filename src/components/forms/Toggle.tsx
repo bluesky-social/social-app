@@ -247,6 +247,7 @@ export function Label({children}: React.PropsWithChildren<{}>) {
   )
 }
 
+// TODO(eric) refactor to memoize styles without knowledge of state
 export function createSharedToggleStyles({
   theme: t,
   hovered,
