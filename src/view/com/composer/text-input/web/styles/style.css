@@ -39,6 +39,9 @@
   z-index: 1;
   resize: none;
 }
+.rt-input:focus {
+  outline: none;
+}
 .rt-input::placeholder {
   color: #878788;
   opacity: 1;

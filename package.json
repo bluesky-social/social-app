@@ -72,18 +72,6 @@
     "@segment/sovran-react-native": "^0.4.5",
     "@sentry/react-native": "5.5.0",
     "@tanstack/react-query": "^5.8.1",
-    "@tiptap/core": "^2.0.0-beta.220",
-    "@tiptap/extension-document": "^2.0.0-beta.220",
-    "@tiptap/extension-hard-break": "^2.0.3",
-    "@tiptap/extension-history": "^2.0.3",
-    "@tiptap/extension-mention": "^2.0.0-beta.220",
-    "@tiptap/extension-paragraph": "^2.0.0-beta.220",
-    "@tiptap/extension-placeholder": "^2.0.0-beta.220",
-    "@tiptap/extension-text": "^2.0.0-beta.220",
-    "@tiptap/html": "^2.1.11",
-    "@tiptap/pm": "^2.0.0-beta.220",
-    "@tiptap/react": "^2.0.0-beta.220",
-    "@tiptap/suggestion": "^2.0.0-beta.220",
     "@types/node": "^18.16.2",
     "@zxing/text-encoding": "^0.9.0",
     "array.prototype.findlast": "^1.2.3",
@@ -171,7 +159,6 @@
     "react-textarea-autosize": "^8.5.3",
     "rn-fetch-blob": "^0.12.0",
     "sentry-expo": "~7.0.1",
-    "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "use-deep-compare": "^1.1.0",
     "zeego": "^1.6.2",
@@ -245,8 +232,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "resolutions": {
-    "@types/react": "^18",
-    "**/zeed-dom": "0.10.9"
+    "@types/react": "^18"
   },
   "jest": {
     "preset": "jest-expo/ios",
