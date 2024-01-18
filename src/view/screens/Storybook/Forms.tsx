@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import {H1, H3} from '#/components/Typography'
 import TextField from '#/components/forms/TextField'
-import {DateField} from '#/components/forms/DateField'
+import {DateField, Label} from '#/components/forms/DateField'
 import Toggle from '#/components/forms/Toggle'
 import ToggleButton from '#/components/forms/ToggleButton'
 import {Button} from '#/components/Button'
@@ -41,26 +41,33 @@ export function Forms() {
           />
         </TextField.Root>
 
-        <TextField.Root>
-          <TextField.Icon icon={Globe} />
-          <TextField.Input
-            value={value}
-            onChangeText={setValue}
-            label="Text field"
-          />
-          <TextField.Suffix label="@gmail.com">@gmail.com</TextField.Suffix>
-        </TextField.Root>
+        <View>
+          <TextField.Label>Text field</TextField.Label>
+          <TextField.Root>
+            <TextField.Icon icon={Globe} />
+            <TextField.Input
+              value={value}
+              onChangeText={setValue}
+              label="Text field"
+            />
+            <TextField.Suffix label="@gmail.com">@gmail.com</TextField.Suffix>
+          </TextField.Root>
+        </View>
 
-        <H3>InputDate</H3>
-        <DateField
-          testID="date"
-          value={date}
-          onChange={date => {
-            console.log(date)
-            setDate(date)
-          }}
-          label="Input"
-        />
+        <H3>DateField</H3>
+
+        <View>
+          <Label>Date</Label>
+          <DateField
+            testID="date"
+            value={date}
+            onChange={date => {
+              console.log(date)
+              setDate(date)
+            }}
+            label="Input"
+          />
+        </View>
       </View>
 
       <View style={[a.gap_md, a.align_start, a.w_full]}>
