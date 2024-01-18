@@ -67,14 +67,31 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     const [cursor, setCursor] = React.useState<number>()
     const [_suggestion, setSuggestion] = React.useState<MatchedSuggestion>()
 
-    React.useImperativeHandle(ref, () => ({
-      focus: () => inputRef.current?.focus(),
-      blur: () => inputRef.current?.blur(),
-      getCursorPosition: () => {
-        // TODO
-        return undefined
-      },
-    }))
+    React.useImperativeHandle(
+      ref,
+      () => ({
+        focus: () => inputRef.current?.focus(),
+        blur: () => inputRef.current?.blur(),
+        getCursorPosition: () => {
+          const input = inputRef.current!
+          const overlay = overlayRef.current!
+
+          const rangeStart = findNodePosition(overlay, input.selectionStart)
+          const rangeEnd = findNodePosition(overlay, input.selectionEnd)
+
+          if (!rangeStart || !rangeEnd) {
+            return undefined
+          }
+
+          const range = new Range()
+          range.setStart(rangeStart.node, rangeStart.position)
+          range.setEnd(rangeEnd.node, rangeEnd.position)
+
+          return range.getBoundingClientRect()
+        },
+      }),
+      [inputRef, overlayRef],
+    )
 
     React.useEffect(() => {
       if (cursor == null) {
