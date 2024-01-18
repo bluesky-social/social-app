@@ -159,7 +159,12 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
                   `rt-segment ` +
                   (!isLink ? `rt-segment-text` : `rt-segment-link`)
                 }>
-                {segment.text || '\u200b'}
+                {
+                  // We need React to commit a text node to DOM so we can select
+                  // it for `getCursorPosition` above, without it, we can't open
+                  // the emoji picker on an empty input.
+                  segment.text || '\u200b'
+                }
               </span>
             )
           })}
