@@ -141,7 +141,7 @@ msgstr "Conta desbloqueada"
 
 #: src/view/com/profile/ProfileHeader.tsx:273
 msgid "Account unmuted"
-msgstr "Conta desmutada"
+msgstr "Conta dessilenciada"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
@@ -878,7 +878,7 @@ msgstr "Criado por você"
 
 #: src/view/com/composer/Composer.tsx:448
 msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "Cria uma prévia com miniatura. A prévia vai para {url}"
+msgstr "Cria uma prévia com miniatura. A prévia faz um link para {url}"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
@@ -891,7 +891,7 @@ msgstr "Configurar mídia de sites externos."
 
 #: src/view/screens/Settings.tsx:687
 msgid "Danger Zone"
-msgstr "Zona de Perigo"
+msgstr "Zona Perigosa"
 
 #: src/view/screens/Settings.tsx:479
 msgid "Dark"
@@ -945,7 +945,7 @@ msgstr "Excluir este post?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:66
 msgid "Deleted"
-msgstr "Deletado"
+msgstr "Excluído"
 
 #: src/view/com/post-thread/PostThread.tsx:246
 msgid "Deleted post."
@@ -1046,11 +1046,11 @@ msgstr "ex. Alice Roberts"
 
 #: src/view/com/modals/EditProfile.tsx:203
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "ex. Artista, amo cachorros e ler."
+msgstr "ex. Artista, amo cachorros, e leitora ávida."
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "e.g. Great Posters"
-msgstr "ex. Perfis que eu gosto"
+msgstr "ex. Perfis Legais"
 
 #: src/view/com/modals/CreateOrEditList.tsx:226
 msgid "e.g. Spammers"
@@ -1058,11 +1058,11 @@ msgstr "ex. Chatos"
 
 #: src/view/com/modals/CreateOrEditList.tsx:246
 msgid "e.g. The posters who never miss."
-msgstr "ex. Os perfis que eu mais gosto"
+msgstr "ex. Os perfis que eu mais gosto."
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "ex. Perfis que enchem o saco"
+msgstr "ex. Perfis que enchem o saco."
 
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -1382,7 +1382,7 @@ msgstr "Seguir {0}"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr "Siga alguns usuários para começar. Mais usuários podem ser recomendados com base em quem você acha interessante."
+msgstr "Comece seguindo alguns usuários. Mais usuários podem ser recomendados com base em quem você acha interessante."
 
 #: src/view/com/profile/ProfileCard.tsx:194
 msgid "Followed by {0}"
@@ -1431,7 +1431,7 @@ msgstr "Por motivos de segurança, precisamos enviar um código de confirmação
 
 #: src/view/com/modals/AddAppPasswords.tsx:211
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "Por motivos de segurança, você não poderá ver isto novamente. Se você perder esta senha, precisará gerar uma nova."
+msgstr "Por motivos de segurança, você não poderá ver esta senha novamente. Se você perder esta senha, precisará gerar uma nova."
 
 #: src/view/com/auth/login/LoginForm.tsx:238
 msgid "Forgot"
@@ -1696,7 +1696,7 @@ msgstr "Convite"
 
 #: src/view/com/auth/create/state.ts:136
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr "Convite não aceito. Verifique se você o inseriu corretamente e tente novamente."
+msgstr "Convite inválido. Verifique se você o inseriu corretamente e tente novamente."
 
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: {0} available"
@@ -1712,7 +1712,7 @@ msgstr "Convites: 1 disponível"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 msgid "Jobs"
-msgstr "Empregos"
+msgstr "Carreiras"
 
 #: src/view/com/modals/Waitlist.tsx:67
 msgid "Join the waitlist"
@@ -1876,7 +1876,7 @@ msgstr "Lista desbloqueada"
 
 #: src/view/screens/ProfileList.tsx:301
 msgid "List unmuted"
-msgstr "Lista desmutada"
+msgstr "Lista dessilenciada"
 
 #: src/Navigation.tsx:111
 #: src/view/screens/Profile.tsx:166
