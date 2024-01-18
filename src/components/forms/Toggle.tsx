@@ -1,7 +1,7 @@
 import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
-import {useTheme, atoms as a, web} from '#/alf'
+import {useTheme, atoms as a, web, native} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
@@ -241,6 +241,9 @@ export function Label({children}: React.PropsWithChildren<{}>) {
           userSelect: 'none',
           color: disabled ? t.palette.contrast_400 : t.palette.contrast_600,
         },
+        native({
+          paddingTop: 3,
+        }),
       ]}>
       {children}
     </Text>
@@ -345,8 +348,6 @@ export function Checkbox() {
         {
           height: 20,
           width: 20,
-          backgroundColor: selected ? t.palette.primary_500 : undefined,
-          borderColor: selected ? t.palette.primary_500 : undefined,
         },
         baseStyles,
         hovered || focused ? baseHoverStyles : {},
@@ -445,8 +446,6 @@ export function Radio() {
         {
           height: 20,
           width: 20,
-          backgroundColor: selected ? t.palette.primary_500 : undefined,
-          borderColor: selected ? t.palette.primary_500 : undefined,
         },
         baseStyles,
         hovered || focused ? baseHoverStyles : {},

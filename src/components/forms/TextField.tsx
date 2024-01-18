@@ -201,7 +201,10 @@ export function createInput(Component: typeof TextInput) {
             a.text_md,
             t.atoms.text,
             a.px_xs,
-            {lineHeight: a.text_md.lineHeight * 1.1875},
+            {
+              lineHeight: a.text_md.lineHeight * 1.1875,
+              textAlignVertical: 'top',
+            },
           ]}
         />
 
