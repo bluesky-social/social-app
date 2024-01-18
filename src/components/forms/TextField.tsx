@@ -149,78 +149,84 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   isInvalid?: boolean
 }
 
-function Input({
-  label,
-  placeholder,
-  value,
-  onChangeText,
-  isInvalid,
-  ...rest
-}: InputProps) {
-  const t = useTheme()
-  const ctx = React.useContext(Context)
-  const withinRoot = Boolean(ctx.inputRef)
+export function createInput(Component: typeof TextInput) {
+  return function Input({
+    label,
+    placeholder,
+    value,
+    onChangeText,
+    isInvalid,
+    ...rest
+  }: InputProps) {
+    const t = useTheme()
+    const ctx = React.useContext(Context)
+    const withinRoot = Boolean(ctx.inputRef)
 
-  const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
-    useSharedInputStyles()
+    const {chromeHover, chromeFocus, chromeError, chromeErrorHover} =
+      useSharedInputStyles()
 
-  if (!withinRoot) {
+    if (!withinRoot) {
+      return (
+        <Root isInvalid={isInvalid}>
+          <Input
+            label={label}
+            placeholder={placeholder}
+            value={value}
+            onChangeText={onChangeText}
+            isInvalid={isInvalid}
+            {...rest}
+          />
+        </Root>
+      )
+    }
+
     return (
-      <Root isInvalid={isInvalid}>
-        <Input
-          label={label}
-          placeholder={placeholder}
+      <>
+        <Component
+          accessibilityHint={undefined}
+          {...rest}
+          aria-label={label}
+          accessibilityLabel={label}
+          ref={ctx.inputRef}
           value={value}
           onChangeText={onChangeText}
-          isInvalid={isInvalid}
-          {...rest}
+          onFocus={ctx.onFocus}
+          onBlur={ctx.onBlur}
+          placeholder={placeholder || label}
+          placeholderTextColor={t.palette.contrast_500}
+          style={[
+            a.relative,
+            a.z_20,
+            a.flex_1,
+            a.text_md,
+            t.atoms.text,
+            a.px_xs,
+            {lineHeight: a.text_md.lineHeight * 1.1875},
+          ]}
         />
-      </Root>
+
+        <View
+          style={[
+            a.z_10,
+            a.absolute,
+            a.inset_0,
+            a.rounded_sm,
+            t.atoms.bg_contrast_50,
+            {borderColor: 'transparent', borderWidth: 2},
+            ctx.hovered ? chromeHover : {},
+            ctx.focused ? chromeFocus : {},
+            ctx.isInvalid ? chromeError : {},
+            ctx.isInvalid && (ctx.hovered || ctx.focused)
+              ? chromeErrorHover
+              : {},
+          ]}
+        />
+      </>
     )
   }
-
-  return (
-    <>
-      <TextInput
-        accessibilityHint={undefined}
-        {...rest}
-        aria-label={label}
-        accessibilityLabel={label}
-        ref={ctx.inputRef}
-        value={value}
-        onChangeText={onChangeText}
-        onFocus={ctx.onFocus}
-        onBlur={ctx.onBlur}
-        placeholder={placeholder || label}
-        placeholderTextColor={t.palette.contrast_500}
-        style={[
-          a.relative,
-          a.z_20,
-          a.flex_1,
-          a.text_md,
-          t.atoms.text,
-          a.px_xs,
-          {lineHeight: a.text_md.lineHeight * 1.1875},
-        ]}
-      />
-
-      <View
-        style={[
-          a.z_10,
-          a.absolute,
-          a.inset_0,
-          a.rounded_sm,
-          t.atoms.bg_contrast_50,
-          {borderColor: 'transparent', borderWidth: 2},
-          ctx.hovered ? chromeHover : {},
-          ctx.focused ? chromeFocus : {},
-          ctx.isInvalid ? chromeError : {},
-          ctx.isInvalid && (ctx.hovered || ctx.focused) ? chromeErrorHover : {},
-        ]}
-      />
-    </>
-  )
 }
+
+const Input = createInput(TextInput)
 
 function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
   const t = useTheme()

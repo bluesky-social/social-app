@@ -18,8 +18,7 @@ export function Dialogs() {
         color="secondary"
         size="small"
         onPress={() => control.open()}
-        accessibilityLabel="Open basic dialog"
-        accessibilityHint="Open basic dialog">
+        label="Open basic dialog">
         Open basic dialog
       </Button>
 
@@ -28,8 +27,7 @@ export function Dialogs() {
         color="primary"
         size="small"
         onPress={() => prompt.open()}
-        accessibilityLabel="Open prompt"
-        accessibilityHint="Open prompt">
+        label="Open prompt">
         Open prompt
       </Button>
 
@@ -58,14 +56,7 @@ export function Dialogs() {
             <P nativeID="dialog-description">
               A scrollable dialog with an input within it.
             </P>
-            <Dialog.InputText
-              testID=""
-              value=""
-              onChange={() => {}}
-              placeholder="Type here"
-              accessibilityLabel="Type"
-              accessibilityHint="Type"
-            />
+            <Dialog.Input value="" onChangeText={() => {}} label="Type here" />
             <View style={{height: 1000}} />
             <View style={[a.flex_row, a.justify_end]}>
               <Button
@@ -73,8 +64,7 @@ export function Dialogs() {
                 color="primary"
                 size="small"
                 onPress={() => control.close()}
-                accessibilityLabel="Open basic dialog"
-                accessibilityHint="Open basic dialog">
+                label="Open basic dialog">
                 Close basic dialog
               </Button>
             </View>
