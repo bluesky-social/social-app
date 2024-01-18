@@ -67,6 +67,7 @@ export function Step1({
       <StepHeader uiState={uiState} title={_(msg`Your account`)}>
         <View>
           <Button
+            testID="selectServiceButton"
             type="default"
             style={{
               aspectRatio: 1,

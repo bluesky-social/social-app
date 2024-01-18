@@ -1,7 +1,7 @@
 import net from 'net'
 import path from 'path'
 import fs from 'fs'
-import {TestNetwork} from '@atproto/dev-env'
+import {TestNetwork, TestPds} from '@atproto/dev-env'
 import {AtUri, BskyAgent} from '@atproto/api'
 
 export interface TestUser {
@@ -55,19 +55,36 @@ class StringIdGenerator {
 const ids = new StringIdGenerator()
 
 export async function createServer(
-  {inviteRequired}: {inviteRequired: boolean} = {inviteRequired: false},
+  {
+    inviteRequired,
+    phoneRequired,
+  }: {inviteRequired: boolean; phoneRequired: boolean} = {
+    inviteRequired: false,
+    phoneRequired: false,
+  },
 ): Promise<TestPDS> {
-  const port = await getPort()
+  const port = 3000
   const port2 = await getPort(port + 1)
   const port3 = await getPort(port2 + 1)
   const pdsUrl = `http://localhost:${port}`
   const id = ids.next()
 
+  const phoneParams = phoneRequired
+    ? {
+        phoneVerificationRequired: true,
+        twilioAccountSid: 'ACXXXXXXX',
+        twilioAuthToken: 'AUTH',
+        twilioServiceSid: 'VAXXXXXXXX',
+      }
+    : {}
+
   const testNet = await TestNetwork.create({
     pds: {
       port,
       hostname: 'localhost',
+      dbPostgresSchema: `pds_${id}`,
       inviteRequired,
+      ...phoneParams,
     },
     bsky: {
       dbPostgresSchema: `bsky_${id}`,
@@ -76,6 +93,7 @@ export async function createServer(
     },
     plc: {port: port2},
   })
+  mockTwilio(testNet.pds)
 
   const pic = fs.readFileSync(
     path.join(__dirname, '..', 'assets', 'default-avatar.png'),
@@ -144,6 +162,8 @@ class Mocker {
       email,
       handle: name + '.test',
       password: 'hunter2',
+      verificationPhone: '1234567890',
+      verificationCode: '000000',
     })
     await agent.upsertProfile(async () => {
       const blob = await agent.uploadBlob(this.pic, {
@@ -429,4 +449,16 @@ async function getPort(start = 3000) {
     }
   }
   throw new Error('Unable to find an available port')
+}
+
+export const mockTwilio = (pds: TestPds) => {
+  if (!pds.ctx.twilio) return
+
+  pds.ctx.twilio.sendCode = async (_number: string) => {
+    // do nothing
+  }
+
+  pds.ctx.twilio.verifyCode = async (_number: string, code: string) => {
+    return code === '000000'
+  }
 }

@@ -86,6 +86,7 @@ export function Step2({
               <ActivityIndicator />
             ) : (
               <Button
+                testID="requestCodeBtn"
                 type="primary"
                 label={_(msg`Request code`)}
                 labelStyle={isMobile ? [s.flex1, s.textCenter, s.f17] : []}
