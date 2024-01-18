@@ -41,7 +41,7 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   suggestedLinks: Set<string>
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
   onPhotoPasted: (uri: string) => void
-  onPressPublish: (richtext: RichText) => Promise<void>
+  onPressPublish: () => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
 }
