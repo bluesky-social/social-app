@@ -2272,7 +2272,7 @@ msgstr "Respostas mais antigas primeiro"
 
 #: src/view/screens/Settings.tsx:236
 msgid "Onboarding reset"
-msgstr "Restar tutoriais"
+msgstr "Resetar tutoriais"
 
 #: src/view/com/composer/Composer.tsx:375
 msgid "One or more images is missing alt text."
