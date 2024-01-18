@@ -7,7 +7,7 @@ import {
   LayoutChangeEvent,
 } from 'react-native'
 
-import {useTheme, atoms, web, tokens} from '#/alf'
+import {useTheme, atoms as a, web, tokens} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
@@ -15,7 +15,7 @@ import {BaseProps} from '#/components/forms/types'
 
 type Props = BaseProps &
   Omit<TextInputProps, 'placeholder'> & {
-    placeholder: Required<TextInputProps>['placeholder']
+    placeholder?: Required<TextInputProps>['placeholder']
     icon?: React.FunctionComponent<any>
     suffix?: React.FunctionComponent<any>
   }
@@ -25,8 +25,6 @@ export function createTextInput(Input: typeof TextInput) {
     value: initialValue,
     onChange,
     testID,
-    accessibilityLabel,
-    accessibilityHint,
     label,
     hasError,
     icon: Icon,
@@ -146,21 +144,22 @@ export function createTextInput(Input: typeof TextInput) {
     )
 
     return (
-      <View style={[atoms.relative, atoms.w_full]}>
+      <View style={[a.relative, a.w_full]}>
         {label && (
           <Text
             nativeID={labelId}
             style={[
-              atoms.text_sm,
-              atoms.font_bold,
+              a.text_sm,
+              a.font_bold,
               t.atoms.text_contrast_600,
-              atoms.mb_sm,
+              a.mb_sm,
             ]}>
             {label}
           </Text>
         )}
 
         <Input
+          accessibilityHint={undefined}
           {...props}
           value={value}
           testID={testID}
@@ -168,8 +167,7 @@ export function createTextInput(Input: typeof TextInput) {
           aria-label={label}
           aria-invalid={hasError}
           aria-placeholder={props.placeholder}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityHint={accessibilityHint}
+          accessibilityLabel={label}
           placeholderTextColor={t.atoms.text_contrast_400.color}
           onFocus={onFocus}
           onBlur={onBlur}
@@ -180,17 +178,17 @@ export function createTextInput(Input: typeof TextInput) {
           })}
           style={[
             t.atoms.bg_contrast_50,
-            atoms.w_full,
-            atoms.px_lg,
-            atoms.py_md,
-            atoms.rounded_sm,
-            atoms.text_md,
+            a.w_full,
+            a.px_lg,
+            a.py_md,
+            a.rounded_sm,
+            a.text_md,
             t.atoms.text,
             web({
-              paddingTop: atoms.pt_md.paddingTop - 1,
+              paddingTop: a.pt_md.paddingTop - 1,
             }),
             {borderColor: 'transparent', paddingRight: suffixPadding},
-            {borderWidth: 2, lineHeight: atoms.text_md.lineHeight * 1.1875},
+            {borderWidth: 2, lineHeight: a.text_md.lineHeight * 1.1875},
             ...inputBaseStyles,
             ...(hovered ? inputHoverStyles : []),
             ...(focused ? inputFocusStyles : []),
@@ -201,11 +199,11 @@ export function createTextInput(Input: typeof TextInput) {
         {Icon && (
           <View
             style={[
-              atoms.absolute,
-              atoms.inset_0,
-              atoms.align_center,
-              atoms.justify_center,
-              atoms.pl_md,
+              a.absolute,
+              a.inset_0,
+              a.align_center,
+              a.justify_center,
+              a.pl_md,
               {right: 'auto'},
             ]}>
             <Icon
@@ -232,11 +230,11 @@ export function createTextInput(Input: typeof TextInput) {
           <View
             onLayout={handleSuffixLayout}
             style={[
-              atoms.absolute,
-              atoms.inset_0,
-              atoms.align_center,
-              atoms.justify_center,
-              atoms.pr_lg,
+              a.absolute,
+              a.inset_0,
+              a.align_center,
+              a.justify_center,
+              a.pr_lg,
               {left: 'auto'},
             ]}>
             <Suffix />

@@ -14,7 +14,9 @@ export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
         // @ts-ignore it's fiiiiine
         ref={ref}
         viewBox="0 0 24 24"
-        style={[{width: size}, style]}>
+        width={size}
+        height={size}
+        style={[style]}>
         <Path
           fill={fill}
           fill-rule="evenodd"

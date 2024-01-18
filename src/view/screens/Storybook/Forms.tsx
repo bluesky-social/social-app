@@ -2,20 +2,23 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
-import {Text, H1, H3} from '#/components/Typography'
+import {H1, H3} from '#/components/Typography'
 import {InputText} from '#/components/forms/InputText'
+import TextField from '#/components/forms/TextField'
 import {InputDate, utils} from '#/components/forms/InputDate'
 import {InputGroup} from '#/components/forms/InputGroup'
-import {Logo} from '#/view/icons/Logo'
 import Toggle from '#/components/forms/Toggle'
 import ToggleButton from '#/components/forms/ToggleButton'
 import {Button} from '#/components/Button'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 
 export function Forms() {
   const [toggleGroupAValues, setToggleGroupAValues] = React.useState(['a'])
   const [toggleGroupBValues, setToggleGroupBValues] = React.useState(['a', 'b'])
   const [toggleGroupCValues, setToggleGroupCValues] = React.useState(['a', 'b'])
   const [toggleGroupDValues, setToggleGroupDValues] = React.useState(['warn'])
+
+  const [value, setValue] = React.useState('')
 
   return (
     <View style={[a.gap_4xl, a.align_start]}>
@@ -24,77 +27,43 @@ export function Forms() {
       <View style={[a.gap_md, a.align_start, a.w_full]}>
         <H3>InputText</H3>
 
-        <InputText
-          testID="input"
-          accessibilityLabel="Input"
-          accessibilityHint="Enter some text"
-          placeholder="Type here"
-          value=""
-          onChange={text => console.log(text)}
+        <TextField.Input
+          value={value}
+          onChangeText={setValue}
+          label="Text field"
         />
-        <InputText
-          hasError
-          testID="input"
-          accessibilityLabel="Input"
-          accessibilityHint="Enter some text"
-          placeholder="Type here"
-          value="Test initial value"
-          onChange={text => console.log(text)}
-        />
-        <InputText
-          hasError
-          testID="input"
-          accessibilityLabel="Input"
-          accessibilityHint="Enter some text"
-          placeholder="Type here"
-          value="Test initial value"
-          onChange={text => console.log(text)}
-          icon={Logo}
-        />
-        <InputText
-          testID="input"
-          accessibilityLabel="Input"
-          accessibilityHint="Enter some text"
-          placeholder="Type here"
-          value=""
-          onChange={text => console.log(text)}
-          icon={Logo}
-        />
-        <InputText
-          testID="input"
-          accessibilityLabel="Input"
-          accessibilityHint="Enter some text"
-          placeholder="Type here"
-          value=""
-          onChange={text => console.log(text)}
-          icon={Logo}
-          suffix={() => <Text>.bksy.social</Text>}
-        />
-        <InputText
-          multiline
-          numberOfLines={3}
-          testID="input"
-          accessibilityLabel="Input"
-          accessibilityHint="Enter some text"
-          placeholder="Type here"
-          value=""
-          onChange={text => console.log(text)}
-        />
+
+        <TextField.Root>
+          <TextField.Icon icon={Globe} />
+          <TextField.Input
+            value={value}
+            onChangeText={setValue}
+            label="Text field"
+          />
+        </TextField.Root>
+
+        <TextField.Root>
+          <TextField.Icon icon={Globe} />
+          <TextField.Input
+            value={value}
+            onChangeText={setValue}
+            label="Text field"
+          />
+          <TextField.Suffix label="@gmail.com">@gmail.com</TextField.Suffix>
+        </TextField.Root>
 
         <H3>InputDate</H3>
         <InputDate
           testID="date"
           value={'2001-01-01'}
           onChange={date => console.log(date)}
-          accessibilityLabel="Date"
-          accessibilityHint="Enter a date"
+          label="Input"
         />
         <InputDate
           testID="date"
           value={utils.toSimpleDateString(new Date())}
           onChange={date => console.log(date)}
-          accessibilityLabel="Date"
-          accessibilityHint="Enter a date"
+          label="Input"
         />
       </View>
 
@@ -103,24 +72,21 @@ export function Forms() {
         <InputGroup>
           <InputText
             testID="input"
-            accessibilityLabel="Input"
-            accessibilityHint="Enter some text"
+            label="Input"
             placeholder="Type here"
             value=""
             onChange={text => console.log(text)}
           />
           <InputText
             testID="input"
-            accessibilityLabel="Input"
-            accessibilityHint="Enter some text"
+            label="Input"
             placeholder="Type here"
             value=""
             onChange={text => console.log(text)}
           />
           <InputText
             testID="input"
-            accessibilityLabel="Input"
-            accessibilityHint="Enter some text"
+            label="Input"
             placeholder="Type here"
             value=""
             onChange={text => console.log(text)}
