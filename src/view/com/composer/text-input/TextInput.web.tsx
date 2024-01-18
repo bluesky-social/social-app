@@ -161,6 +161,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         newRt.detectFacetsWithoutResolution()
 
         setRichText(newRt)
+        handleInputSelection()
 
         // Gather suggested links
         {
@@ -181,7 +182,12 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           }
         }
       },
-      [setRichText, suggestedLinks, onSuggestedLinksChanged],
+      [
+        setRichText,
+        suggestedLinks,
+        onSuggestedLinksChanged,
+        handleInputSelection,
+      ],
     )
 
     const handleKeyDown = React.useCallback(
