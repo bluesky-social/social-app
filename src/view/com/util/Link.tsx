@@ -306,6 +306,8 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   )
 })
 
+const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/']
+
 // NOTE
 // we can't use the onPress given by useLinkProps because it will
 // match most paths to the HomeTab routes while we actually want to
@@ -350,7 +352,12 @@ function onPressInner(
 
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
-    if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
+    if (
+      newTab ||
+      href.startsWith('http') ||
+      href.startsWith('mailto') ||
+      EXEMPT_PATHS.some(path => href.startsWith(path))
+    ) {
       openLink(href)
     } else {
       closeModal() // close any active modals

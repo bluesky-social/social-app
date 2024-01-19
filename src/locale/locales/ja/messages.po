@@ -345,11 +345,6 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr "芸術的または性的ではないヌード。"
 
-#: src/view/com/post-thread/PostThread.tsx:400
-msgctxt "action"
-msgid "Back"
-msgstr ""
-
 #: src/view/com/auth/create/CreateAccount.tsx:141
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:170
@@ -363,6 +358,11 @@ msgstr ""
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "戻る"
+
+#: src/view/com/post-thread/PostThread.tsx:400
+msgctxt "action"
+msgid "Back"
+msgstr ""
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
@@ -398,6 +398,7 @@ msgstr "これらのアカウントをブロックしますか？"
 msgid "Block this List"
 msgstr ""
 
+#: src/view/com/lists/ListCard.tsx:109
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:57
 msgid "Blocked"
 msgstr ""
@@ -500,15 +501,6 @@ msgstr "カメラ"
 msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
 msgstr "文字、数字、スペース、ハイフン、およびアンダースコアのみが使用可能です。長さは4文字以上32文字以下である必要があります。"
 
-#: src/view/com/modals/Confirm.tsx:88
-#: src/view/com/modals/Confirm.tsx:91
-#: src/view/com/modals/CreateOrEditList.tsx:293
-#: src/view/com/modals/DeleteAccount.tsx:152
-#: src/view/com/modals/DeleteAccount.tsx:227
-msgctxt "action"
-msgid "Cancel"
-msgstr ""
-
 #: src/view/com/composer/Composer.tsx:300
 #: src/view/com/composer/Composer.tsx:305
 #: src/view/com/modals/ChangeEmail.tsx:218
@@ -527,8 +519,17 @@ msgstr ""
 msgid "Cancel"
 msgstr "キャンセル"
 
+#: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
+#: src/view/com/modals/CreateOrEditList.tsx:293
+#: src/view/com/modals/DeleteAccount.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:230
+msgctxt "action"
+msgid "Cancel"
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:148
-#: src/view/com/modals/DeleteAccount.tsx:223
+#: src/view/com/modals/DeleteAccount.tsx:226
 msgid "Cancel account deletion"
 msgstr "アカウントの削除をキャンセル"
 
@@ -704,12 +705,6 @@ msgstr ""
 msgid "Compose reply"
 msgstr "返信を作成"
 
-#: src/view/com/modals/Confirm.tsx:75
-#: src/view/com/modals/Confirm.tsx:78
-msgctxt "action"
-msgid "Confirm"
-msgstr ""
-
 #: src/view/com/modals/AppealLabel.tsx:98
 #: src/view/com/modals/SelfLabel.tsx:154
 #: src/view/com/modals/VerifyEmail.tsx:231
@@ -718,6 +713,12 @@ msgstr ""
 #: src/view/screens/PreferencesThreads.tsx:159
 msgid "Confirm"
 msgstr "確認"
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+msgctxt "action"
+msgid "Confirm"
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:193
 #: src/view/com/modals/ChangeEmail.tsx:195
@@ -728,7 +729,7 @@ msgstr "変更を確認"
 msgid "Confirm content language settings"
 msgstr "コンテンツの言語設定を確認"
 
-#: src/view/com/modals/DeleteAccount.tsx:213
+#: src/view/com/modals/DeleteAccount.tsx:216
 msgid "Confirm delete account"
 msgstr "アカウントの削除を確認"
 
@@ -920,7 +921,7 @@ msgstr "アプリパスワードを削除"
 msgid "Delete List"
 msgstr "リストを削除"
 
-#: src/view/com/modals/DeleteAccount.tsx:216
+#: src/view/com/modals/DeleteAccount.tsx:219
 msgid "Delete my account"
 msgstr "マイアカウントを削除"
 
@@ -1624,7 +1625,7 @@ msgstr ""
 msgid "Input new password"
 msgstr ""
 
-#: src/view/com/modals/DeleteAccount.tsx:196
+#: src/view/com/modals/DeleteAccount.tsx:199
 msgid "Input password for account deletion"
 msgstr ""
 
@@ -2022,6 +2023,10 @@ msgstr ""
 msgid "Mute thread"
 msgstr "スレッドをミュート"
 
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr ""
+
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
 msgstr "ミュート中のアカウント"
@@ -2132,11 +2137,6 @@ msgstr ""
 msgid "Newest replies first"
 msgstr "新しい順に返信を表示"
 
-#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
-msgctxt "action"
-msgid "Next"
-msgstr ""
-
 #: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:178
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:188
@@ -2146,6 +2146,11 @@ msgstr ""
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
 msgid "Next"
 msgstr "次へ"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
+msgctxt "action"
+msgid "Next"
+msgstr ""
 
 #: src/view/com/lightbox/Lightbox.web.tsx:142
 msgid "Next image"
@@ -2407,7 +2412,7 @@ msgstr "ページが見つかりません"
 #: src/view/com/auth/create/Step2.tsx:132
 #: src/view/com/auth/login/LoginForm.tsx:223
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:132
-#: src/view/com/modals/DeleteAccount.tsx:195
+#: src/view/com/modals/DeleteAccount.tsx:198
 msgid "Password"
 msgstr "パスワード"
 
@@ -2485,7 +2490,7 @@ msgstr "このアプリパスワードに固有の名前を入力するか、ラ
 msgid "Please enter your email."
 msgstr "メールアドレスを入力してください。"
 
-#: src/view/com/modals/DeleteAccount.tsx:184
+#: src/view/com/modals/DeleteAccount.tsx:187
 msgid "Please enter your password as well:"
 msgstr "パスワードも入力してください："
 
@@ -3331,8 +3336,8 @@ msgid "Subscribe to this list"
 msgstr "このリストに登録"
 
 #: src/view/com/lists/ListCard.tsx:101
-msgid "Subscribed"
-msgstr ""
+#~ msgid "Subscribed"
+#~ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:362
 msgid "Suggested Follows"
@@ -3466,7 +3471,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/view/com/posts/Feed.tsx:261
+#: src/view/com/posts/Feed.tsx:263
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -3644,15 +3649,15 @@ msgstr "リストでのミュートを解除"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "あなたのサービスに接続できません。インターネットの接続を確認してください。"
 
-#: src/view/com/profile/ProfileHeader.tsx:475
-msgctxt "action"
-msgid "Unblock"
-msgstr ""
-
 #: src/view/com/profile/ProfileHeader.tsx:472
 #: src/view/screens/ProfileList.tsx:568
 msgid "Unblock"
 msgstr "ブロックを解除"
+
+#: src/view/com/profile/ProfileHeader.tsx:475
+msgctxt "action"
+msgid "Unblock"
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:308
 #: src/view/com/profile/ProfileHeader.tsx:392
@@ -3861,6 +3866,10 @@ msgstr "サイトへアクセス"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
+msgstr ""
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from"
 msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:48

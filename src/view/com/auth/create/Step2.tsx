@@ -1,39 +1,28 @@
 import React from 'react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
-import {CreateAccountState, CreateAccountDispatch, is18} from './state'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
+import {
+  CreateAccountState,
+  CreateAccountDispatch,
+  requestVerificationCode,
+} from './state'
 import {Text} from 'view/com/util/text/Text'
-import {DateInput} from 'view/com/util/forms/DateInput'
 import {StepHeader} from './StepHeader'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
-import {Policies} from './Policies'
+import {Button} from '../../util/forms/Button'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
-import {logger} from '#/logger'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import parsePhoneNumber from 'libphonenumber-js'
 
-function sanitizeDate(date: Date): Date {
-  if (!date || date.toString() === 'Invalid Date') {
-    logger.error(`Create account: handled invalid date for birthDate`, {
-      hasDate: !!date,
-    })
-    return new Date()
-  }
-  return date
-}
-
-/** STEP 2: Your account
- * @field Invite code or waitlist
- * @field Email address
- * @field Email address
- * @field Email address
- * @field Password
- * @field Birth date
- * @readonly Terms of service & privacy policy
- */
 export function Step2({
   uiState,
   uiDispatch,
@@ -43,130 +32,155 @@ export function Step2({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {openModal} = useModalControls()
+  const {isMobile} = useWebMediaQueries()
 
-  const onPressWaitlist = React.useCallback(() => {
-    openModal({name: 'waitlist'})
-  }, [openModal])
+  const onPressRequest = React.useCallback(() => {
+    if (
+      uiState.verificationPhone.length >= 9 &&
+      parsePhoneNumber(uiState.verificationPhone, 'US')
+    ) {
+      requestVerificationCode({uiState, uiDispatch, _})
+    } else {
+      uiDispatch({
+        type: 'set-error',
+        value: _(
+          msg`There's something wrong with this number. Please include your country and/or area code!`,
+        ),
+      })
+    }
+  }, [uiState, uiDispatch, _])
 
-  const birthDate = React.useMemo(() => {
-    return sanitizeDate(uiState.birthDate)
-  }, [uiState.birthDate])
+  const onPressRetry = React.useCallback(() => {
+    uiDispatch({type: 'set-has-requested-verification-code', value: false})
+  }, [uiDispatch])
+
+  const phoneNumberFormatted = React.useMemo(
+    () =>
+      uiState.hasRequestedVerificationCode
+        ? parsePhoneNumber(
+            uiState.verificationPhone,
+            'US',
+          )?.formatInternational()
+        : '',
+    [uiState.hasRequestedVerificationCode, uiState.verificationPhone],
+  )
 
   return (
     <View>
-      <StepHeader step="2" title={_(msg`Your account`)} />
+      <StepHeader uiState={uiState} title={_(msg`SMS verification`)} />
 
-      {uiState.isInviteCodeRequired && (
-        <View style={s.pb20}>
-          <Text type="md-medium" style={[pal.text, s.mb2]}>
-            <Trans>Invite code</Trans>
-          </Text>
-          <TextInput
-            testID="inviteCodeInput"
-            icon="ticket"
-            placeholder={_(msg`Required for this provider`)}
-            value={uiState.inviteCode}
-            editable
-            onChange={value => uiDispatch({type: 'set-invite-code', value})}
-            accessibilityLabel={_(msg`Invite code`)}
-            accessibilityHint={_(msg`Input invite code to proceed`)}
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-          />
-        </View>
-      )}
+      {!uiState.hasRequestedVerificationCode ? (
+        <>
+          <View style={s.pb20}>
+            <Text
+              type="md-medium"
+              style={[pal.text, s.mb2]}
+              nativeID="phoneNumber">
+              <Trans>Phone number</Trans>
+            </Text>
+            <TextInput
+              testID="phoneInput"
+              icon="phone"
+              placeholder={_(msg`Enter your phone number`)}
+              value={uiState.verificationPhone}
+              editable
+              onChange={value =>
+                uiDispatch({type: 'set-verification-phone', value})
+              }
+              accessibilityLabel={_(msg`Email`)}
+              accessibilityHint={_(
+                msg`Input phone number for SMS verification`,
+              )}
+              accessibilityLabelledBy="phoneNumber"
+              keyboardType="phone-pad"
+              autoCapitalize="none"
+              autoComplete="tel"
+              autoCorrect={false}
+              autoFocus={true}
+            />
+            <Text type="sm" style={[pal.textLight, s.mt5]}>
+              <Trans>
+                Please enter a phone number that can receive SMS text messages.
+              </Trans>
+            </Text>
+          </View>
 
-      {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
-        <Text style={[s.alignBaseline, pal.text]}>
-          <Trans>Don't have an invite code?</Trans>{' '}
-          <TouchableWithoutFeedback
-            onPress={onPressWaitlist}
-            accessibilityLabel={_(msg`Join the waitlist.`)}
-            accessibilityHint="">
-            <View style={styles.touchable}>
-              <Text style={pal.link}>
-                <Trans>Join the waitlist.</Trans>
-              </Text>
-            </View>
-          </TouchableWithoutFeedback>
-        </Text>
+          <View style={isMobile ? {} : {flexDirection: 'row'}}>
+            {uiState.isProcessing ? (
+              <ActivityIndicator />
+            ) : (
+              <Button
+                testID="requestCodeBtn"
+                type="primary"
+                label={_(msg`Request code`)}
+                labelStyle={isMobile ? [s.flex1, s.textCenter, s.f17] : []}
+                style={
+                  isMobile ? {paddingVertical: 12, paddingHorizontal: 20} : {}
+                }
+                onPress={onPressRequest}
+              />
+            )}
+          </View>
+        </>
       ) : (
         <>
           <View style={s.pb20}>
-            <Text type="md-medium" style={[pal.text, s.mb2]} nativeID="email">
-              <Trans>Email address</Trans>
-            </Text>
+            <View
+              style={[
+                s.flexRow,
+                s.mb5,
+                s.alignCenter,
+                {justifyContent: 'space-between'},
+              ]}>
+              <Text
+                type="md-medium"
+                style={pal.text}
+                nativeID="verificationCode">
+                <Trans>Verification code</Trans>{' '}
+              </Text>
+              <TouchableWithoutFeedback
+                onPress={onPressRetry}
+                accessibilityLabel={_(msg`Retry.`)}
+                accessibilityHint="">
+                <View style={styles.touchable}>
+                  <Text
+                    type="md-medium"
+                    style={pal.link}
+                    nativeID="verificationCode">
+                    <Trans>Retry</Trans>
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
             <TextInput
-              testID="emailInput"
-              icon="envelope"
-              placeholder={_(msg`Enter your email address`)}
-              value={uiState.email}
+              testID="codeInput"
+              icon="hashtag"
+              placeholder={_(msg`XXXXXX`)}
+              value={uiState.verificationCode}
               editable
-              onChange={value => uiDispatch({type: 'set-email', value})}
+              onChange={value =>
+                uiDispatch({type: 'set-verification-code', value})
+              }
               accessibilityLabel={_(msg`Email`)}
-              accessibilityHint={_(msg`Input email for Bluesky waitlist`)}
-              accessibilityLabelledBy="email"
+              accessibilityHint={_(
+                msg`Input the verification code we have texted to you`,
+              )}
+              accessibilityLabelledBy="verificationCode"
+              keyboardType="phone-pad"
               autoCapitalize="none"
-              autoComplete="off"
+              autoComplete="one-time-code"
+              textContentType="oneTimeCode"
               autoCorrect={false}
+              autoFocus={true}
             />
-          </View>
-
-          <View style={s.pb20}>
-            <Text
-              type="md-medium"
-              style={[pal.text, s.mb2]}
-              nativeID="password">
-              <Trans>Password</Trans>
+            <Text type="sm" style={[pal.textLight, s.mt5]}>
+              <Trans>Please enter the verification code sent to</Trans>{' '}
+              {phoneNumberFormatted}.
             </Text>
-            <TextInput
-              testID="passwordInput"
-              icon="lock"
-              placeholder={_(msg`Choose your password`)}
-              value={uiState.password}
-              editable
-              secureTextEntry
-              onChange={value => uiDispatch({type: 'set-password', value})}
-              accessibilityLabel={_(msg`Password`)}
-              accessibilityHint={_(msg`Set password`)}
-              accessibilityLabelledBy="password"
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-            />
           </View>
-
-          <View style={s.pb20}>
-            <Text
-              type="md-medium"
-              style={[pal.text, s.mb2]}
-              nativeID="birthDate">
-              <Trans>Your birth date</Trans>
-            </Text>
-            <DateInput
-              handleAsUTC
-              testID="birthdayInput"
-              value={birthDate}
-              onChange={value => uiDispatch({type: 'set-birth-date', value})}
-              buttonType="default-light"
-              buttonStyle={[pal.border, styles.dateInputButton]}
-              buttonLabelType="lg"
-              accessibilityLabel={_(msg`Birthday`)}
-              accessibilityHint={_(msg`Enter your birth date`)}
-              accessibilityLabelledBy="birthDate"
-            />
-          </View>
-
-          {uiState.serviceDescription && (
-            <Policies
-              serviceDescription={uiState.serviceDescription}
-              needsGuardian={!is18(uiState)}
-            />
-          )}
         </>
       )}
+
       {uiState.error ? (
         <ErrorMessage message={uiState.error} style={styles.error} />
       ) : undefined}
@@ -178,11 +192,6 @@ const styles = StyleSheet.create({
   error: {
     borderRadius: 6,
     marginTop: 10,
-  },
-  dateInputButton: {
-    borderWidth: 1,
-    borderRadius: 6,
-    paddingVertical: 14,
   },
   // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
   touchable: {

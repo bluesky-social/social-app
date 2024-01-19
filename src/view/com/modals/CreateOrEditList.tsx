@@ -182,19 +182,17 @@ export function Component({
         ]}
         testID="createOrEditListModal">
         <Text style={[styles.title, pal.text]}>
-          <Trans>
-            {isCurateList ? (
-              list ? (
-                <Trans>Edit User List</Trans>
-              ) : (
-                <Trans>New User List</Trans>
-              )
-            ) : list ? (
-              <Trans>Edit Moderation List</Trans>
+          {isCurateList ? (
+            list ? (
+              <Trans>Edit User List</Trans>
             ) : (
-              <Trans>New Moderation List</Trans>
-            )}
-          </Trans>
+              <Trans>New User List</Trans>
+            )
+          ) : list ? (
+            <Trans>Edit Moderation List</Trans>
+          ) : (
+            <Trans>New Moderation List</Trans>
+          )}
         </Text>
         {error !== '' && (
           <View style={styles.errorContainer}>
