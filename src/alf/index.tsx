@@ -5,6 +5,7 @@ import * as themes from '#/alf/themes'
 export * as tokens from '#/alf/tokens'
 export {atoms} from '#/alf/atoms'
 export * from '#/alf/util/platform'
+export * from '#/alf/util/flatten'
 
 type BreakpointName = keyof typeof breakpoints
 

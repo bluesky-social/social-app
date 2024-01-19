@@ -43,30 +43,49 @@
         scrollbar-gutter: stable both-edges;
       }
 
+      /* Remove autofill styles on Webkit */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover, 
+      input:-webkit-autofill:focus,
+      textarea:-webkit-autofill,
+      textarea:-webkit-autofill:hover,
+      textarea:-webkit-autofill:focus,
+      select:-webkit-autofill,
+      select:-webkit-autofill:hover,
+      select:-webkit-autofill:focus {
+        border: 0;
+        -webkit-text-fill-color: transparent;
+        -webkit-box-shadow: none;
+      }
+      /* Force left-align date/time inputs on iOS mobile */
+      input::-webkit-date-and-time-value {
+        text-align: left;
+      }
+
       /* Color theming */
       :root {
         --text: black;
         --background: white;
-        --backgroundLight: #F3F3F8;
+        --backgroundLight: hsl(211, 20%, 95%);
       }
       html.colorMode--dark {
         --text: white;
-        --background: black;
-        --backgroundLight: #26272D;
+        --background: hsl(211, 20%, 4%);
+        --backgroundLight: hsl(211, 20%, 10%);
         color-scheme: dark;
       }
       @media (prefers-color-scheme: light) {
         html.colorMode--system {
           --text: black;
           --background: white;
-          --backgroundLight: #F3F3F8;
+          --backgroundLight: hsl(211, 20%, 95%);
         }
       }
       @media (prefers-color-scheme: dark) {
         html.colorMode--system {
           --text: white;
-          --background: black;
-          --backgroundLight: #26272D;
+          --background: hsl(211, 20%, 4%);
+          --backgroundLight: hsl(211, 20%, 10%);
           color-scheme: dark;
         }
       }

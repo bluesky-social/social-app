@@ -62,7 +62,7 @@ import {ProfileListScreen} from './view/screens/ProfileList'
 import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
-import {DebugScreen} from './view/screens/DebugNew'
+import {Storybook} from './view/screens/Storybook'
 import {LogScreen} from './view/screens/Log'
 import {SupportScreen} from './view/screens/Support'
 import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
@@ -145,7 +145,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Profile"
         getComponent={() => ProfileScreen}
         options={({route}) => ({
-          title: title(msg`@${route.params.name}`),
+          title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
           animation: 'none',
         })}
       />
@@ -201,8 +201,8 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       />
       <Stack.Screen
         name="Debug"
-        getComponent={() => DebugScreen}
-        options={{title: title(msg`Debug`), requireAuth: true}}
+        getComponent={() => Storybook}
+        options={{title: title(msg`Storybook`), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"
