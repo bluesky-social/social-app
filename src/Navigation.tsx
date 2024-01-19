@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -77,7 +76,6 @@ import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbed
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
-import {colors} from 'lib/styles'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
