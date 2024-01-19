@@ -2051,7 +2051,7 @@ msgstr "Selanjutnya"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:142
 msgid "Next image"
-msgstr "Gambar berikutnyaBerikutnya"
+msgstr "Gambar berikutnya"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:129
 #: src/view/screens/PreferencesHomeFeed.tsx:200
