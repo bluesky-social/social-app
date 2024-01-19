@@ -10,8 +10,9 @@ import {
   AccessibilityProps,
 } from 'react-native'
 
+import {HITSLOP_20} from 'lib/constants'
 import {isWeb} from '#/platform/detection'
-import {useTheme, atoms as a, web, tokens} from '#/alf'
+import {useTheme, atoms as a, web, tokens, android} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -95,7 +96,11 @@ export function Root({children, isInvalid = false}: RootProps) {
           },
         ]}
         // onPressIn/out don't work on android web
-        onPress={() => inputRef.current?.focus()}
+        onPress={e => {
+          e.preventDefault()
+          e.stopPropagation()
+          inputRef.current?.focus()
+        }}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}>
         {children}
@@ -195,6 +200,7 @@ export function createInput(Component: typeof TextInput) {
           onBlur={ctx.onBlur}
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
+          hitSlop={HITSLOP_20}
           style={[
             a.relative,
             a.z_20,
@@ -202,9 +208,12 @@ export function createInput(Component: typeof TextInput) {
             a.text_md,
             t.atoms.text,
             a.px_xs,
+            android({
+              paddingBottom: 2,
+            }),
             {
               lineHeight: a.text_md.lineHeight * 1.1875,
-              textAlignVertical: 'top',
+              textAlignVertical: rest.multiline ? 'top' : undefined,
             },
           ]}
         />

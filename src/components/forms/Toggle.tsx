@@ -1,6 +1,7 @@
 import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
+import {HITSLOP_10} from 'lib/constants'
 import {useTheme, atoms as a, web, native} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -197,6 +198,7 @@ export function Item({
     <ItemContext.Provider value={state}>
       <Pressable
         accessibilityHint={undefined} // optional
+        hitSlop={HITSLOP_10}
         {...rest}
         disabled={disabled}
         aria-disabled={disabled ?? false}
