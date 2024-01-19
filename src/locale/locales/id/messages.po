@@ -1025,7 +1025,7 @@ msgstr "Tiap kode hanya berlaku sekali. Anda akan mendapatkan tambahan kode unda
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
 msgid "Edit"
-msgstr "Edit"
+msgstr "Ubah"
 
 #: src/view/com/composer/photos/Gallery.tsx:144
 #: src/view/com/modals/EditImage.tsx:207
