@@ -137,30 +137,25 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     }, [richtext, cursor, overlayRef, setSuggestion])
 
     const textOverlay = React.useMemo(() => {
-      return (
-        <div className="rt-overlay-inner">
-          {Array.from(richtext.segments(), (segment, index) => {
-            const isLink = segment.facet
-              ? !AppBskyRichtextFacet.isTag(segment.facet.features[0])
-              : false
+      let html = ''
 
-            return (
-              <span
-                key={index}
-                className={
-                  `rt-segment ` +
-                  (!isLink ? `rt-segment-text` : `rt-segment-link`)
-                }>
-                {
-                  // We need React to commit a text node to DOM so we can select
-                  // it for `getCursorPosition` above, without it, we can't open
-                  // the emoji picker on an empty input.
-                  segment.text || '\u200b'
-                }
-              </span>
-            )
-          })}
-        </div>
+      for (const segment of richtext.segments()) {
+        const isLink = segment.facet
+          ? !AppBskyRichtextFacet.isTag(segment.facet.features[0])
+          : false
+
+        const klass =
+          `rt-segment ` + (!isLink ? `rt-segment-text` : `rt-segment-link`)
+        const text = escape(segment.text, false) || '&#x200B;'
+
+        html += `<span class="${klass}">${text}</span>`
+      }
+
+      return (
+        <div
+          dangerouslySetInnerHTML={{__html: html}}
+          className="rt-overlay-inner"
+        />
       )
     }, [richtext])
 
@@ -351,4 +346,20 @@ const findNodePosition = (
   }
 
   return
+}
+
+const escape = (str: string, attr: boolean) => {
+  let escaped = ''
+  let last = 0
+
+  for (let idx = 0, len = str.length; idx < len; idx++) {
+    const char = str.charCodeAt(idx)
+
+    if (char === 38 || (attr ? char === 34 : char === 60)) {
+      escaped += str.substring(last, idx) + ('&#' + char + ';')
+      last = idx + 1
+    }
+  }
+
+  return escaped + str.substring(last)
 }
