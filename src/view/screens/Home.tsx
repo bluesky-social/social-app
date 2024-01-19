@@ -173,10 +173,6 @@ function HomeScreenReady({
     return <FollowingEmptyState />
   }, [])
 
-  const renderFollowingEndOfFeed = React.useCallback(() => {
-    return <FollowingEndOfFeed />
-  }, [])
-
   const renderCustomFeedEmptyState = React.useCallback(() => {
     return <CustomFeedEmptyState />
   }, [])
@@ -197,7 +193,7 @@ function HomeScreenReady({
         feed="home"
         feedParams={homeFeedParams}
         renderEmptyState={renderFollowingEmptyState}
-        renderEndOfFeed={renderFollowingEndOfFeed}
+        renderEndOfFeed={FollowingEndOfFeed}
       />
       {customFeeds.map((f, index) => {
         return (
