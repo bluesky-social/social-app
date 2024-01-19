@@ -89,13 +89,11 @@ class RNUITextViewShadow: RCTShadowView {
       }
       let scaledFontSize = self.allowsFontScaling ?
         UIFontMetrics.default.scaledValue(for: child.fontSize) : child.fontSize
+      let font = UIFont.systemFont(ofSize: scaledFontSize, weight: child.getFontWeight())
 
       // Set some generic attributes that don't need ranges
       let attributes: [NSAttributedString.Key:Any] = [
-        .font: UIFont.systemFont(
-          ofSize: scaledFontSize,
-          weight: child.getFontWeight()
-        ),
+        .font: font,
         .foregroundColor: child.color,
       ]
 
@@ -104,15 +102,20 @@ class RNUITextViewShadow: RCTShadowView {
 
       // Set the paragraph style attributes if necessary
       let paragraphStyle = NSMutableParagraphStyle()
-      paragraphStyle.minimumLineHeight = child.lineHeight
-      paragraphStyle.maximumLineHeight = child.lineHeight
-      string.addAttribute(
-        NSAttributedString.Key.paragraphStyle,
-        value: paragraphStyle,
-        range: NSMakeRange(0, string.length)
-      )
+      if child.lineHeight != 0.0 {
+        paragraphStyle.minimumLineHeight = child.lineHeight
+        paragraphStyle.maximumLineHeight = child.lineHeight
+        string.addAttribute(
+          NSAttributedString.Key.paragraphStyle,
+          value: paragraphStyle,
+          range: NSMakeRange(0, string.length)
+        )
 
-      self.lineHeight = child.lineHeight
+        // Store that height
+        self.lineHeight = child.lineHeight
+      } else {
+        self.lineHeight = font.lineHeight
+      }
 
       finalAttributedString.append(string)
     }
@@ -123,9 +126,22 @@ class RNUITextViewShadow: RCTShadowView {
 
   // Create a YGSize based on the max width
   func getNeededSize(maxWidth: Float) -> YGSize {
+    // Create the max size and figure out the size of the entire text
     let maxSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(MAXFLOAT))
     let textSize = self.attributedText.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, context: nil)
-    self.frameSize = textSize.size
-    return YGSize(width: Float(textSize.width), height: Float(textSize.height))
+
+    // Figure out how many total lines there are
+    let totalLines = Int(ceil(textSize.height / self.lineHeight))
+
+    // Default to the text size
+    var neededSize: CGSize = textSize.size
+
+    // If the total lines > max number, return size with the max
+    if self.numberOfLines != 0, totalLines > self.numberOfLines {
+      neededSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(CGFloat(self.numberOfLines) * self.lineHeight))
+    }
+
+    self.frameSize = neededSize
+    return YGSize(width: Float(neededSize.width), height: Float(neededSize.height))
   }
 }
