@@ -23,6 +23,10 @@ export function useWebScrollRestoration() {
       if (state.focusedKey) {
         // Remember where we were for later.
         state.scrollYs.set(state.focusedKey, window.scrollY)
+        // TODO: Strictly speaking, this is a leak. We never clean up.
+        // This is because I'm not sure when it's appropriate to clean it up.
+        // It doesn't seem like popstate is enough because it can still Forward-Back again.
+        // Maybe we should use sessionStorage. Or check what Next.js is doing?
       }
     }
     // We want to intercept any push/pop/replace *before* the re-render.
@@ -36,9 +40,6 @@ export function useWebScrollRestoration() {
 
   const screenListeners = useMemo(
     () => ({
-      beforeRemove(e: EventArg<'beforeRemove', boolean | undefined, unknown>) {
-        state.scrollYs.delete(e.target)
-      },
       focus(e: EventArg<'focus', boolean | undefined, unknown>) {
         const scrollY = state.scrollYs.get(e.target) ?? 0
         window.scrollTo(0, scrollY)
