@@ -15,6 +15,16 @@ class RNUITextViewChildShadow: RCTShadowView {
     return true
   }
 
+  override func didSetProps(_ changedProps: [String]!) {
+    guard let superview = self.superview as? RNUITextViewShadow else {
+      return
+    }
+
+    if !YGNodeIsDirty(superview.yogaNode) {
+      superview.setAttributedText()
+    }
+  }
+
   func getFontWeight() -> UIFont.Weight {
     switch self.fontWeight {
     case "bold":

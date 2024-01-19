@@ -1,10 +1,18 @@
 class RNUITextViewShadow: RCTShadowView {
   // Props
-  @objc var numberOfLines: Int = 0
+  @objc var numberOfLines: Int = 0 {
+    didSet {
+      if !YGNodeIsDirty(self.yogaNode) {
+        self.setAttributedText()
+      }
+    }
+  }
   @objc var allowsFontScaling: Bool = true
 
   var attributedText: NSAttributedString = NSAttributedString()
   var frameSize: CGSize = CGSize()
+
+  var lineHeight: CGFloat = 0
 
   var bridge: RCTBridge
 
@@ -104,31 +112,20 @@ class RNUITextViewShadow: RCTShadowView {
         range: NSMakeRange(0, string.length)
       )
 
+      self.lineHeight = child.lineHeight
+
       finalAttributedString.append(string)
     }
 
     self.attributedText = finalAttributedString
+    self.dirtyLayout()
   }
 
   // Create a YGSize based on the max width
   func getNeededSize(maxWidth: Float) -> YGSize {
-
-    // Create a temporary textview
-    let textView = UITextView()
-    textView.attributedText = self.attributedText
-    textView.textContainer.lineFragmentPadding = 0
-    textView.textContainer.maximumNumberOfLines = self.numberOfLines
-    textView.textContainerInset = .zero
-    textView.isScrollEnabled = false
-
-    // Get the max size for sizeThatFits
     let maxSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(MAXFLOAT))
-
-    // Get the max height
-    let height = textView.sizeThatFits(maxSize).height
-
-    // Save the frame size and return the YGSize
-    self.frameSize = CGSize(width: CGFloat(maxWidth), height: height)
-    return YGSize(width: Float(maxWidth), height: Float(height))
+    let textSize = self.attributedText.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, context: nil)
+    self.frameSize = textSize.size
+    return YGSize(width: Float(textSize.width), height: Float(textSize.height))
   }
 }
