@@ -3184,7 +3184,7 @@ msgstr "Disarankan untuk Anda"
 
 #: src/view/com/modals/SelfLabel.tsx:95
 msgid "Suggestive"
-msgstr "Menyarankan"
+msgstr "Sugestif"
 
 #: src/Navigation.tsx:214 src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
