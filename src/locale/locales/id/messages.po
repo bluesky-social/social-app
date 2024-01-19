@@ -1307,7 +1307,7 @@ msgstr "Balik secara horizontal"
 
 #: src/view/com/modals/EditImage.tsx:120 src/view/com/modals/EditImage.tsx:287
 msgid "Flip vertically"
-msgstr "Balikkan vertikal"
+msgstr "Balik secara vertikal"
 
 #: src/view/com/profile/FollowButton.tsx:64
 msgctxt "action"
