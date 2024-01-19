@@ -1178,7 +1178,7 @@ msgstr "Carrega més publicacions"
 
 #: src/view/screens/Notifications.tsx:148
 msgid "Load new notifications"
-msgstr "Carrega noves  notificacions"
+msgstr "Carrega noves notificacions"
 
 #: src/view/com/feeds/FeedPage.tsx:189
 msgid "Load new posts"
@@ -1407,7 +1407,7 @@ msgstr "Falta el text alternatiu a una o més imatges."
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
-msgstr "Només {0} pot respondre."
+msgstr "Només {0} poden respondre."
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1838,7 +1838,7 @@ msgstr "Selecciona quins idiomes vols que incloguin els canals a què estàs sub
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
-msgstr "Seleccioneu l'idioma de l'aplicació perquè el text predeterminat es mostri en aquesta"
+msgstr "Selecciona l'idioma de l'aplicació perquè el text predeterminat es mostri en aquesta"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
