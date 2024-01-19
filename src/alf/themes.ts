@@ -171,7 +171,7 @@ export const light = {
       backgroundColor: lightPalette.contrast_300,
     },
     border: {
-      borderColor: lightPalette.contrast_200,
+      borderColor: lightPalette.contrast_100,
     },
     border_contrast: {
       borderColor: lightPalette.contrast_400,
@@ -278,7 +278,7 @@ export const dark: Theme = {
       color: darkPalette.black,
     },
     bg: {
-      backgroundColor: darkPalette.contrast_25,
+      backgroundColor: darkPalette.black,
     },
     bg_contrast_25: {
       backgroundColor: darkPalette.contrast_50,
