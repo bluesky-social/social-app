@@ -35,13 +35,35 @@ export const MATCH_HANDLE =
 export function SearchLinkCard({
   label,
   to,
+  onPress,
   style,
 }: {
   label: string
-  to: string
+  to?: string
+  onPress?: () => void
   style?: ViewStyle
 }) {
   const pal = usePalette('default')
+
+  const inner = (
+    <View
+      style={[pal.border, {paddingVertical: 16, paddingHorizontal: 12}, style]}>
+      <Text type="md" style={[pal.text]}>
+        {label}
+      </Text>
+    </View>
+  )
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        accessibilityLabel={label}
+        accessibilityHint="">
+        {inner}
+      </TouchableOpacity>
+    )
+  }
 
   return (
     <Link href={to} asAnchor anchorNoUnderline>

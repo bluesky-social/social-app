@@ -48,7 +48,7 @@ import {
   SearchProfileCard,
 } from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 
@@ -626,7 +626,12 @@ export function SearchScreen(
               keyboardDismissMode="on-drag">
               <SearchLinkCard
                 label={_(msg`Search for "${query}"`)}
-                to={`/search?q=${encodeURIComponent(query)}`}
+                onPress={isNative ? onSubmit : undefined}
+                to={
+                  isNative
+                    ? undefined
+                    : `/search?q=${encodeURIComponent(query)}`
+                }
                 style={{borderBottomWidth: 1}}
               />
 
