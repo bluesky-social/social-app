@@ -175,7 +175,8 @@ function Separator({i, length}: {i: number; length: number}) {
   if (i === length - 2) {
     return (
       <>
-        {length > 2 ? ',' : ''}<Trans>{' '}and{' '}</Trans>
+        {length > 2 ? ',' : ''}
+        <Trans> and </Trans>
       </>
     )
   }
