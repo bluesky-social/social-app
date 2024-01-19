@@ -70,6 +70,7 @@
     "@segment/analytics-react-native": "^2.10.1",
     "@segment/sovran-react-native": "^0.4.5",
     "@sentry/react-native": "5.5.0",
+    "@tamagui/focus-scope": "^1.84.1",
     "@tanstack/react-query": "^5.8.1",
     "@tiptap/core": "^2.0.0-beta.220",
     "@tiptap/extension-document": "^2.0.0-beta.220",

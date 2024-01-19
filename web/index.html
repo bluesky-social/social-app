@@ -43,6 +43,25 @@
         height: calc(100% + env(safe-area-inset-top));
       }
 
+      /* Remove autofill styles on Webkit */
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover, 
+      input:-webkit-autofill:focus,
+      textarea:-webkit-autofill,
+      textarea:-webkit-autofill:hover,
+      textarea:-webkit-autofill:focus,
+      select:-webkit-autofill,
+      select:-webkit-autofill:hover,
+      select:-webkit-autofill:focus {
+        border: 0;
+        -webkit-text-fill-color: transparent;
+        -webkit-box-shadow: none;
+      }
+      /* Force left-align date/time inputs on iOS mobile */
+      input::-webkit-date-and-time-value {
+        text-align: left;
+      }
+
       /* Color theming */
       :root {
         --text: black;
