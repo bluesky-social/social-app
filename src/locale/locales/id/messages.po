@@ -835,7 +835,7 @@ msgstr "Dibuat oleh Anda"
 
 #: src/view/com/composer/Composer.tsx:448
 msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "Buat kartu dengan gambar mini. Tautan kartu ke {url}"
+msgstr "Buat kartu dengan gambar kecil. Tautan kartu ke {url}"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
