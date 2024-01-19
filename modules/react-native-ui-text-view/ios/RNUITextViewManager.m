@@ -5,13 +5,8 @@ RCT_REMAP_SHADOW_PROPERTY(numberOfLines, numberOfLines, NSInteger)
 RCT_REMAP_SHADOW_PROPERTY(ellipsizeMode, ellipsizeMode, NSString)
 RCT_REMAP_SHADOW_PROPERTY(allowsFontScaling, allowsFontScaling, BOOL)
 
-//RCT_REMAP_SHADOW_PROPERTY(numberOfLines, numberOfLines, NSInteger)
-//RCT_REMAP_SHADOW_PROPERTY(ellipsizeMode, ellipsizeMode, NSLineBreakMode)
-//RCT_REMAP_SHADOW_PROPERTY(adjustsFontSizeToFit, adjustsFontSizeToFit, BOOL)
-
-//RCT_EXPORT_SHADOW_PROPERTY(onTextLayout, RCTDirectEventBlock)
-//
-//RCT_EXPORT_VIEW_PROPERTY(selectable, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(onTextLayout, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(selectable, BOOL)
 
 @end
 

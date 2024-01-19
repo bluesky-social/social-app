@@ -1,7 +1,7 @@
 // We want all of our props to be available in the child's shadow view so we
 // can create the attributed text before mount and calculate the needed size
 // for the view.
-class RNUITextViewChildShadowView: RCTShadowView {
+class RNUITextViewChildShadow: RCTShadowView {
   @objc var text: String = ""
   @objc var color: UIColor = .black
   @objc var fontSize: CGFloat = 16.0

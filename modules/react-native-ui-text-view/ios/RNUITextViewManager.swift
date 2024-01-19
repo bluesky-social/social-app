@@ -12,7 +12,7 @@ class RNUITextViewManager: RCTViewManager {
 
   override func shadowView() -> RCTShadowView {
     // Pass the bridge to the shadow view
-    return RNUITextViewShadowView(bridge: self.bridge)
+    return RNUITextViewShadow(bridge: self.bridge)
   }
 }
 
@@ -27,6 +27,6 @@ class RNUITextViewChildManager: RCTViewManager {
   }
 
   override func shadowView() -> RCTShadowView {
-    return RNUITextViewChildShadowView()
+    return RNUITextViewChildShadow()
   }
 }

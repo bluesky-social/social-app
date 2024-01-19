@@ -1,4 +1,4 @@
-class RNUITextViewShadowView: RCTShadowView {
+class RNUITextViewShadow: RCTShadowView {
   // Props
   @objc var numberOfLines: Int = 0
   @objc var ellipsizeMode: Int = 0
@@ -16,7 +16,7 @@ class RNUITextViewShadowView: RCTShadowView {
     // We need to set a custom measure func here to calculate the height correctly
     YGNodeSetMeasureFunc(self.yogaNode) { node, width, widthMode, height, heightMode in
       // Get the shadowview and determine the needed size to set
-      let shadowView = Unmanaged<RNUITextViewShadowView>.fromOpaque(YGNodeGetContext(node)).takeUnretainedValue()
+      let shadowView = Unmanaged<RNUITextViewShadow>.fromOpaque(YGNodeGetContext(node)).takeUnretainedValue()
       return shadowView.getNeededSize(maxWidth: width)
     }
 
@@ -40,7 +40,7 @@ class RNUITextViewShadowView: RCTShadowView {
 
   // We only need to insert text children
   override func insertReactSubview(_ subview: RCTShadowView!, at atIndex: Int) {
-    if subview.isKind(of: RNUITextViewChildShadowView.self) {
+    if subview.isKind(of: RNUITextViewChildShadow.self) {
       super.insertReactSubview(subview, at: atIndex)
     }
   }
@@ -77,7 +77,7 @@ class RNUITextViewShadowView: RCTShadowView {
     let finalAttributedString = NSMutableAttributedString()
 
     self.reactSubviews().forEach { child in
-      guard let child = child as? RNUITextViewChildShadowView else {
+      guard let child = child as? RNUITextViewChildShadow else {
         return
       }
       let scaledFontSize = self.allowsFontScaling ?
