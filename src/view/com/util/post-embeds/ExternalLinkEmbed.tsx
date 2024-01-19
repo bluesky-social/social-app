@@ -32,7 +32,7 @@ export const ExternalLinkEmbed = ({
     <View style={styles.container}>
       {link.thumb && !embedPlayerParams ? (
         <Image
-          style={{height: isMobile ? 180 : 250, width: '100%'}}
+          style={{aspectRatio: 1.91}}
           source={{uri: link.thumb}}
           accessibilityIgnoresInvertColors
         />
