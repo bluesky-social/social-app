@@ -21,6 +21,7 @@ import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import parsePhoneNumber from 'libphonenumber-js'
 
 export function Step2({
   uiState,
@@ -34,12 +35,35 @@ export function Step2({
   const {isMobile} = useWebMediaQueries()
 
   const onPressRequest = React.useCallback(() => {
-    requestVerificationCode({uiState, uiDispatch, _})
+    if (
+      uiState.verificationPhone.length >= 9 &&
+      parsePhoneNumber(uiState.verificationPhone, 'US')
+    ) {
+      requestVerificationCode({uiState, uiDispatch, _})
+    } else {
+      uiDispatch({
+        type: 'set-error',
+        value: _(
+          msg`There's something wrong with this number. Please include your country and/or area code!`,
+        ),
+      })
+    }
   }, [uiState, uiDispatch, _])
 
   const onPressRetry = React.useCallback(() => {
     uiDispatch({type: 'set-has-requested-verification-code', value: false})
   }, [uiDispatch])
+
+  const phoneNumberFormatted = React.useMemo(
+    () =>
+      uiState.hasRequestedVerificationCode
+        ? parsePhoneNumber(
+            uiState.verificationPhone,
+            'US',
+          )?.formatInternational()
+        : '',
+    [uiState.hasRequestedVerificationCode, uiState.verificationPhone],
+  )
 
   return (
     <View>
@@ -151,7 +175,7 @@ export function Step2({
             />
             <Text type="sm" style={[pal.textLight, s.mt5]}>
               <Trans>Please enter the verification code sent to</Trans>{' '}
-              {uiState.verificationPhone}.
+              {phoneNumberFormatted}.
             </Text>
           </View>
         </>

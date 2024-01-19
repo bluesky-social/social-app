@@ -14,6 +14,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {DispatchContext as OnboardingDispatchContext} from '#/state/shell/onboarding'
 import {ApiContext as SessionApiContext} from '#/state/session'
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import parsePhoneNumber from 'libphonenumber-js'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
@@ -96,12 +97,17 @@ export async function requestVerificationCode({
   uiDispatch: CreateAccountDispatch
   _: I18nContext['_']
 }) {
+  const phoneNumber = parsePhoneNumber(uiState.verificationPhone, 'US')?.number
+  if (!phoneNumber) {
+    return
+  }
   uiDispatch({type: 'set-error', value: ''})
   uiDispatch({type: 'set-processing', value: true})
+  uiDispatch({type: 'set-verification-phone', value: phoneNumber})
   try {
     const agent = new BskyAgent({service: uiState.serviceUrl})
     await agent.com.atproto.temp.requestPhoneVerification({
-      phoneNumber: uiState.verificationPhone,
+      phoneNumber,
     })
     uiDispatch({type: 'set-has-requested-verification-code', value: true})
   } catch (e: any) {
