@@ -1303,7 +1303,7 @@ msgstr "Atur utasan diskusi."
 
 #: src/view/com/modals/EditImage.tsx:115
 msgid "Flip horizontal"
-msgstr "Balikkan horizontal"
+msgstr "Balik secara horizontal"
 
 #: src/view/com/modals/EditImage.tsx:120 src/view/com/modals/EditImage.tsx:287
 msgid "Flip vertically"
