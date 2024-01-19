@@ -42,9 +42,13 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {SearchResultCard} from '#/view/shell/desktop/Search'
+import {
+  MATCH_HANDLE,
+  SearchLinkCard,
+  SearchProfileCard,
+} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 
@@ -509,6 +513,11 @@ export function SearchScreen(
     onPressCancelSearch()
   }, [onPressCancelSearch])
 
+  const queryMaybeHandle = React.useMemo(() => {
+    const match = MATCH_HANDLE.exec(query)
+    return match && match[1]
+  }, [query])
+
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
@@ -615,18 +624,31 @@ export function SearchScreen(
               dataSet={{stableGutters: '1'}}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
-              {searchResults.length ? (
-                searchResults.map((item, i) => (
-                  <SearchResultCard
-                    key={item.did}
-                    profile={item}
-                    moderation={moderateProfile(item, moderationOpts)}
-                    style={i === 0 ? {borderTopWidth: 0} : {}}
-                  />
-                ))
-              ) : (
-                <EmptyState message={_(msg`No results found for ${query}`)} />
-              )}
+              <SearchLinkCard
+                label={_(msg`Search for "${query}"`)}
+                onPress={isNative ? onSubmit : undefined}
+                to={
+                  isNative
+                    ? undefined
+                    : `/search?q=${encodeURIComponent(query)}`
+                }
+                style={{borderBottomWidth: 1}}
+              />
+
+              {queryMaybeHandle ? (
+                <SearchLinkCard
+                  label={_(msg`Go to @${queryMaybeHandle}`)}
+                  to={`/profile/${queryMaybeHandle}`}
+                />
+              ) : null}
+
+              {searchResults.map(item => (
+                <SearchProfileCard
+                  key={item.did}
+                  profile={item}
+                  moderation={moderateProfile(item, moderationOpts)}
+                />
+              ))}
 
               <View style={{height: 200}} />
             </ScrollView>
