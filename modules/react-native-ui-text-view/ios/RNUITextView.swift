@@ -62,6 +62,7 @@ class RNUITextView: UIView {
     self.textView.frame.size = size
     self.textView.textContainer.maximumNumberOfLines = numberOfLines
     self.textView.attributedText = string
+    self.textView.selectedTextRange = nil
 
     if let onTextLayout = self.onTextLayout {
       var lines: [String] = []
@@ -107,16 +108,15 @@ class RNUITextView: UIView {
       fractionOfDistanceBetweenInsertionPoints: nil
     )
 
-    for child in self.subviews {
-      guard let child = child as? RNUITextViewChild, let text = child.text else {
-        continue
-      }
+    for child in self.reactSubviews() {
+      if let child = child as? RNUITextViewChild, let childText = child.text {
+        let fullText = self.textView.attributedText.string
+        let range = fullText.range(of: childText)
 
-      let range = text.range(of: text)
-
-      if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
-        if charIndex >= lowerBound.utf16Offset(in: text) && charIndex <= upperBound.utf16Offset(in: text) {
-          return child
+        if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
+          if charIndex >= lowerBound.utf16Offset(in: fullText) && charIndex <= upperBound.utf16Offset(in: fullText) {
+            return child
+          }
         }
       }
     }

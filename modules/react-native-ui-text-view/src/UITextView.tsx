@@ -33,7 +33,9 @@ export function UITextView({style, children, ...rest}: TextProps) {
           {...textDefaults}
           {...rest}
           ellipsizeMode={rest.ellipsizeMode ?? rest.lineBreakMode ?? 'tail'}
-          style={[{flex: 1}, flattenedStyle]}>
+          style={[{flex: 1}, flattenedStyle]}
+          onPress={undefined} // We want these to go to the children only
+          onLongPress={undefined}>
           {React.Children.toArray(children).map((c, index) => {
             if (React.isValidElement(c)) {
               return c
