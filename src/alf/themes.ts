@@ -9,8 +9,8 @@ export type ReadonlyPalette = typeof lightPalette
 export type Palette = Mutable<ReadonlyPalette>
 
 export const lightPalette = {
-  white: tokens.color.white,
-  black: tokens.color.black,
+  white: tokens.color.gray_0,
+  black: tokens.color.gray_1000,
 
   contrast_25: tokens.color.gray_25,
   contrast_50: tokens.color.gray_50,
@@ -23,6 +23,8 @@ export const lightPalette = {
   contrast_700: tokens.color.gray_700,
   contrast_800: tokens.color.gray_800,
   contrast_900: tokens.color.gray_900,
+  contrast_950: tokens.color.gray_950,
+  contrast_975: tokens.color.gray_975,
 
   primary_25: tokens.color.blue_25,
   primary_50: tokens.color.blue_50,
@@ -35,6 +37,8 @@ export const lightPalette = {
   primary_700: tokens.color.blue_700,
   primary_800: tokens.color.blue_800,
   primary_900: tokens.color.blue_900,
+  primary_950: tokens.color.blue_950,
+  primary_975: tokens.color.blue_975,
 
   positive_25: tokens.color.green_25,
   positive_50: tokens.color.green_50,
@@ -47,6 +51,8 @@ export const lightPalette = {
   positive_700: tokens.color.green_700,
   positive_800: tokens.color.green_800,
   positive_900: tokens.color.green_900,
+  positive_950: tokens.color.green_950,
+  positive_975: tokens.color.green_975,
 
   negative_25: tokens.color.red_25,
   negative_50: tokens.color.red_50,
@@ -59,23 +65,27 @@ export const lightPalette = {
   negative_700: tokens.color.red_700,
   negative_800: tokens.color.red_800,
   negative_900: tokens.color.red_900,
+  negative_950: tokens.color.red_950,
+  negative_975: tokens.color.red_975,
 } as const
 
 export const darkPalette: Palette = {
-  white: tokens.color.white,
-  black: tokens.color.black,
+  white: tokens.color.gray_0,
+  black: tokens.color.gray_1000,
 
-  contrast_25: tokens.color.gray_900,
-  contrast_50: tokens.color.gray_800,
-  contrast_100: tokens.color.gray_700,
-  contrast_200: tokens.color.gray_600,
-  contrast_300: tokens.color.gray_500,
-  contrast_400: tokens.color.gray_400,
-  contrast_500: tokens.color.gray_300,
-  contrast_600: tokens.color.gray_200,
-  contrast_700: tokens.color.gray_100,
-  contrast_800: tokens.color.gray_50,
-  contrast_900: tokens.color.gray_25,
+  contrast_25: tokens.color.gray_975,
+  contrast_50: tokens.color.gray_950,
+  contrast_100: tokens.color.gray_900,
+  contrast_200: tokens.color.gray_800,
+  contrast_300: tokens.color.gray_700,
+  contrast_400: tokens.color.gray_600,
+  contrast_500: tokens.color.gray_500,
+  contrast_600: tokens.color.gray_400,
+  contrast_700: tokens.color.gray_300,
+  contrast_800: tokens.color.gray_200,
+  contrast_900: tokens.color.gray_100,
+  contrast_950: tokens.color.gray_50,
+  contrast_975: tokens.color.gray_25,
 
   primary_25: tokens.color.blue_25,
   primary_50: tokens.color.blue_50,
@@ -88,6 +98,8 @@ export const darkPalette: Palette = {
   primary_700: tokens.color.blue_700,
   primary_800: tokens.color.blue_800,
   primary_900: tokens.color.blue_900,
+  primary_950: tokens.color.blue_950,
+  primary_975: tokens.color.blue_975,
 
   positive_25: tokens.color.green_25,
   positive_50: tokens.color.green_50,
@@ -100,6 +112,8 @@ export const darkPalette: Palette = {
   positive_700: tokens.color.green_700,
   positive_800: tokens.color.green_800,
   positive_900: tokens.color.green_900,
+  positive_950: tokens.color.green_950,
+  positive_975: tokens.color.green_975,
 
   negative_25: tokens.color.red_25,
   negative_50: tokens.color.red_50,
@@ -112,6 +126,8 @@ export const darkPalette: Palette = {
   negative_700: tokens.color.red_700,
   negative_800: tokens.color.red_800,
   negative_900: tokens.color.red_900,
+  negative_950: tokens.color.red_950,
+  negative_975: tokens.color.red_975,
 } as const
 
 export const light = {
@@ -120,6 +136,9 @@ export const light = {
   atoms: {
     text: {
       color: lightPalette.black,
+    },
+    text_contrast_700: {
+      color: lightPalette.contrast_700,
     },
     text_contrast_600: {
       color: lightPalette.contrast_600,
@@ -179,6 +198,73 @@ export const dim: Theme = {
     text: {
       color: darkPalette.white,
     },
+    text_contrast_700: {
+      color: darkPalette.contrast_800,
+    },
+    text_contrast_600: {
+      color: darkPalette.contrast_700,
+    },
+    text_contrast_500: {
+      color: darkPalette.contrast_600,
+    },
+    text_contrast_400: {
+      color: darkPalette.contrast_500,
+    },
+    text_inverted: {
+      color: darkPalette.black,
+    },
+    bg: {
+      backgroundColor: darkPalette.contrast_50,
+    },
+    bg_contrast_25: {
+      backgroundColor: darkPalette.contrast_100,
+    },
+    bg_contrast_50: {
+      backgroundColor: darkPalette.contrast_200,
+    },
+    bg_contrast_100: {
+      backgroundColor: darkPalette.contrast_300,
+    },
+    bg_contrast_200: {
+      backgroundColor: darkPalette.contrast_400,
+    },
+    bg_contrast_300: {
+      backgroundColor: darkPalette.contrast_500,
+    },
+    border: {
+      borderColor: darkPalette.contrast_200,
+    },
+    border_contrast: {
+      borderColor: darkPalette.contrast_400,
+    },
+    shadow_sm: {
+      ...atoms.shadow_sm,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+    shadow_md: {
+      ...atoms.shadow_md,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+    shadow_lg: {
+      ...atoms.shadow_lg,
+      shadowOpacity: 0.7,
+      shadowColor: tokens.color.trueBlack,
+    },
+  },
+}
+
+export const dark: Theme = {
+  name: 'dark',
+  palette: darkPalette,
+  atoms: {
+    text: {
+      color: darkPalette.white,
+    },
+    text_contrast_700: {
+      color: darkPalette.contrast_700,
+    },
     text_contrast_600: {
       color: darkPalette.contrast_600,
     },
@@ -210,68 +296,7 @@ export const dim: Theme = {
       backgroundColor: darkPalette.contrast_400,
     },
     border: {
-      borderColor: darkPalette.contrast_50,
-    },
-    border_contrast: {
-      borderColor: darkPalette.contrast_300,
-    },
-    shadow_sm: {
-      ...atoms.shadow_sm,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-    shadow_md: {
-      ...atoms.shadow_md,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-    shadow_lg: {
-      ...atoms.shadow_lg,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-  },
-}
-
-export const dark: Theme = {
-  name: 'dark',
-  palette: darkPalette,
-  atoms: {
-    text: {
-      color: darkPalette.white,
-    },
-    text_contrast_600: {
-      color: darkPalette.contrast_600,
-    },
-    text_contrast_500: {
-      color: darkPalette.contrast_500,
-    },
-    text_contrast_400: {
-      color: darkPalette.contrast_400,
-    },
-    text_inverted: {
-      color: darkPalette.black,
-    },
-    bg: {
-      backgroundColor: darkPalette.black,
-    },
-    bg_contrast_25: {
-      backgroundColor: darkPalette.contrast_25,
-    },
-    bg_contrast_50: {
-      backgroundColor: darkPalette.contrast_50,
-    },
-    bg_contrast_100: {
-      backgroundColor: darkPalette.contrast_100,
-    },
-    bg_contrast_200: {
-      backgroundColor: darkPalette.contrast_200,
-    },
-    bg_contrast_300: {
-      backgroundColor: darkPalette.contrast_300,
-    },
-    border: {
-      borderColor: darkPalette.contrast_50,
+      borderColor: darkPalette.contrast_100,
     },
     border_contrast: {
       borderColor: darkPalette.contrast_300,

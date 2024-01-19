@@ -9,6 +9,9 @@ export function Palette() {
     <View style={[a.gap_md]}>
       <View style={[a.flex_row, a.gap_md]}>
         <View
+          style={[a.flex_1, {height: 60, backgroundColor: tokens.color.gray_0}]}
+        />
+        <View
           style={[
             a.flex_1,
             {height: 60, backgroundColor: tokens.color.gray_25},
@@ -72,6 +75,24 @@ export function Palette() {
           style={[
             a.flex_1,
             {height: 60, backgroundColor: tokens.color.gray_900},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.gray_950},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.gray_975},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.gray_1000},
           ]}
         />
       </View>
@@ -143,6 +164,18 @@ export function Palette() {
             {height: 60, backgroundColor: tokens.color.blue_900},
           ]}
         />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.blue_950},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.blue_975},
+          ]}
+        />
       </View>
       <View style={[a.flex_row, a.gap_md]}>
         <View
@@ -211,6 +244,18 @@ export function Palette() {
             {height: 60, backgroundColor: tokens.color.green_900},
           ]}
         />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.green_950},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.green_975},
+          ]}
+        />
       </View>
       <View style={[a.flex_row, a.gap_md]}>
         <View
@@ -271,6 +316,18 @@ export function Palette() {
           style={[
             a.flex_1,
             {height: 60, backgroundColor: tokens.color.red_900},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.red_950},
+          ]}
+        />
+        <View
+          style={[
+            a.flex_1,
+            {height: 60, backgroundColor: tokens.color.red_975},
           ]}
         />
       </View>

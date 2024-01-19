@@ -55,7 +55,7 @@ export function Title({children}: React.PropsWithChildren<{}>) {
   return (
     <H4
       nativeID={titleId}
-      style={[a.font_bold, t.atoms.text_contrast_600, a.pb_sm]}>
+      style={[a.font_bold, t.atoms.text_contrast_700, a.pb_sm]}>
       {children}
     </H4>
   )

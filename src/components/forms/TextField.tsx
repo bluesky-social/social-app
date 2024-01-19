@@ -94,6 +94,7 @@ export function Root({children, isInvalid = false}: RootProps) {
             paddingVertical: 14,
           },
         ]}
+        // onPressIn/out don't work on android web
         onPress={() => inputRef.current?.focus()}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}>
@@ -214,7 +215,7 @@ export function createInput(Component: typeof TextInput) {
             a.absolute,
             a.inset_0,
             a.rounded_sm,
-            t.atoms.bg_contrast_50,
+            t.atoms.bg_contrast_25,
             {borderColor: 'transparent', borderWidth: 2},
             ctx.hovered ? chromeHover : {},
             ctx.focused ? chromeFocus : {},

@@ -152,8 +152,8 @@ export function Button({
           })
           hoverStyles.push(a.border, {
             backgroundColor: light
-              ? t.palette.primary_100
-              : t.palette.primary_900,
+              ? t.palette.primary_50
+              : t.palette.primary_950,
           })
         } else {
           baseStyles.push(a.border, {
@@ -175,19 +175,19 @@ export function Button({
         if (!disabled) {
           baseStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_200
-              : tokens.color.gray_800,
+              ? tokens.color.gray_100
+              : tokens.color.gray_900,
           })
           hoverStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_300
-              : tokens.color.gray_900,
+              ? tokens.color.gray_200
+              : tokens.color.gray_950,
           })
         } else {
           baseStyles.push({
             backgroundColor: light
               ? tokens.color.gray_300
-              : tokens.color.gray_900,
+              : tokens.color.gray_950,
           })
         }
       } else if (variant === 'outline') {
@@ -211,7 +211,7 @@ export function Button({
           hoverStyles.push({
             backgroundColor: light
               ? tokens.color.gray_100
-              : tokens.color.gray_800,
+              : tokens.color.gray_900,
           })
         }
       }
@@ -219,14 +219,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: t.palette.negative_500,
+            backgroundColor: t.palette.negative_400,
           })
           hoverStyles.push({
-            backgroundColor: t.palette.negative_600,
+            backgroundColor: t.palette.negative_500,
           })
         } else {
           baseStyles.push({
-            backgroundColor: t.palette.negative_700,
+            backgroundColor: t.palette.negative_600,
           })
         }
       } else if (variant === 'outline') {
@@ -236,10 +236,12 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: t.palette.negative_600,
+            borderColor: t.palette.negative_400,
           })
           hoverStyles.push(a.border, {
-            backgroundColor: light ? t.palette.negative_50 : '#2D0614', // darker red
+            backgroundColor: light
+              ? t.palette.negative_50
+              : t.palette.negative_975,
           })
         } else {
           baseStyles.push(a.border, {
@@ -252,7 +254,9 @@ export function Button({
         if (!disabled) {
           baseStyles.push(t.atoms.bg)
           hoverStyles.push({
-            backgroundColor: light ? t.palette.negative_50 : '#2D0614', // darker red
+            backgroundColor: light
+              ? t.palette.negative_100
+              : t.palette.negative_950,
           })
         }
       }
@@ -437,15 +441,15 @@ export function useSharedButtonTextStyles() {
         }
       } else if (variant === 'outline') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_500})
+          baseStyles.push({color: t.palette.negative_400})
         } else {
-          baseStyles.push({color: t.palette.negative_500, opacity: 0.5})
+          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
-          baseStyles.push({color: t.palette.negative_500})
+          baseStyles.push({color: t.palette.negative_400})
         } else {
-          baseStyles.push({color: t.palette.negative_500, opacity: 0.5})
+          baseStyles.push({color: t.palette.negative_400, opacity: 0.5})
         }
       }
     } else {

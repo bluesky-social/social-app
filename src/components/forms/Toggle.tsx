@@ -288,7 +288,8 @@ export function createSharedToggleStyles({
   } else {
     if (hovered || focused) {
       baseHover.push({
-        backgroundColor: t.palette.contrast_50,
+        backgroundColor:
+          t.name === 'light' ? t.palette.contrast_50 : t.palette.contrast_100,
         borderColor: t.palette.contrast_500,
       })
     }
@@ -313,8 +314,8 @@ export function createSharedToggleStyles({
 
   if (disabled) {
     base.push({
-      backgroundColor: t.palette.contrast_200,
-      borderColor: t.palette.contrast_300,
+      backgroundColor: t.palette.contrast_100,
+      borderColor: t.palette.contrast_400,
     })
   }
 
