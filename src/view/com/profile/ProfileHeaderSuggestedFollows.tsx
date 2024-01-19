@@ -39,18 +39,14 @@ export function ProfileHeaderSuggestedFollows({
     did: actorDid,
   })
   return (
-    <View
-      style={{paddingVertical: OUTER_PADDING, height: TOTAL_HEIGHT}}
-      pointerEvents="box-none">
+    <View style={{paddingVertical: OUTER_PADDING, height: TOTAL_HEIGHT}}>
       <View
-        pointerEvents="box-none"
         style={{
           backgroundColor: pal.viewLight.backgroundColor,
           height: '100%',
           paddingTop: INNER_PADDING / 2,
         }}>
         <View
-          pointerEvents="box-none"
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',

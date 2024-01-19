@@ -242,12 +242,8 @@ let PagerTabBar = ({
     ],
   }))
   return (
-    <Animated.View
-      pointerEvents="box-none"
-      style={[styles.tabBarMobile, headerTransform]}>
-      <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
-        {renderHeader?.()}
-      </View>
+    <Animated.View style={[styles.tabBarMobile, headerTransform]}>
+      <View onLayout={onHeaderOnlyLayout}>{renderHeader?.()}</View>
       <View
         onLayout={onTabBarLayout}
         style={{

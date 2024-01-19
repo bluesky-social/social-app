@@ -442,12 +442,10 @@ let ProfileHeaderLoaded = ({
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
-    <View style={pal.view} pointerEvents="box-none">
-      <View pointerEvents="none">
-        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
-      </View>
-      <View style={styles.content} pointerEvents="box-none">
-        <View style={[styles.buttonsLine]} pointerEvents="box-none">
+    <View style={pal.view}>
+      <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+      <View style={styles.content}>
+        <View style={[styles.buttonsLine]}>
           {isMe ? (
             <TouchableOpacity
               testID="profileHeaderEditProfileButton"
@@ -567,7 +565,7 @@ let ProfileHeaderLoaded = ({
             </NativeDropdown>
           ) : undefined}
         </View>
-        <View pointerEvents="none">
+        <View>
           <Text
             testID="profileHeaderDisplayName"
             type="title-2xl"
@@ -578,7 +576,7 @@ let ProfileHeaderLoaded = ({
             )}
           </Text>
         </View>
-        <View style={styles.handleLine} pointerEvents="none">
+        <View style={styles.handleLine}>
           {profile.viewer?.followedBy && !blockHide ? (
             <View style={[styles.pill, pal.btn, s.mr5]}>
               <Text type="xs" style={[pal.text]}>
@@ -599,7 +597,7 @@ let ProfileHeaderLoaded = ({
         </View>
         {!blockHide && (
           <>
-            <View style={styles.metricsLine} pointerEvents="box-none">
+            <View style={styles.metricsLine}>
               <Link
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
@@ -648,7 +646,7 @@ let ProfileHeaderLoaded = ({
               </Text>
             </View>
             {descriptionRT && !moderation.profile.blur ? (
-              <View pointerEvents={isNative ? 'auto' : 'none'}>
+              <View>
                 <RichText
                   testID="profileHeaderDescription"
                   style={[styles.description, pal.text]}
