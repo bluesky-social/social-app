@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   scrollView: {
-    // flex: 1,
+    flex: 1,
     paddingHorizontal: 15,
   },
   textInputLayout: {
