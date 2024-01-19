@@ -22,7 +22,6 @@ import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
 import {useLightboxControls, ImagesLightbox} from '#/state/lightbox'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ExternalLinkEmbed} from './ExternalLinkEmbed'
 import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
@@ -51,7 +50,6 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
-  const {isMobile} = useWebMediaQueries()
 
   // quote post with media
   // =
@@ -129,10 +127,7 @@ export function PostEmbeds({
               dimensionsHint={aspectRatio}
               onPress={() => _openLightbox(0)}
               onPressIn={() => onPressIn(0)}
-              style={[
-                styles.singleImage,
-                isMobile && styles.singleImageMobile,
-              ]}>
+              style={[styles.singleImage]}>
               {alt === '' ? null : (
                 <View style={styles.altContainer}>
                   <Text style={styles.alt} accessible={false}>
@@ -151,11 +146,7 @@ export function PostEmbeds({
             images={embed.images}
             onPress={_openLightbox}
             onPressIn={onPressIn}
-            style={
-              embed.images.length === 1
-                ? [styles.singleImage, isMobile && styles.singleImageMobile]
-                : undefined
-            }
+            style={embed.images.length === 1 ? [styles.singleImage] : undefined}
           />
         </View>
       )
@@ -188,10 +179,6 @@ const styles = StyleSheet.create({
   },
   singleImage: {
     borderRadius: 8,
-    maxHeight: 1000,
-  },
-  singleImageMobile: {
-    maxHeight: 500,
   },
   extOuter: {
     borderWidth: 1,

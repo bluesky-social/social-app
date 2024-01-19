@@ -25,7 +25,7 @@ export function Step3({
   const {_} = useLingui()
   return (
     <View>
-      <StepHeader step="3" title={_(msg`Your user handle`)} />
+      <StepHeader uiState={uiState} title={_(msg`Your user handle`)} />
       <View style={s.pb10}>
         <TextInput
           testID="handleInput"

@@ -18,6 +18,7 @@ import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
+import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
@@ -338,7 +339,11 @@ function createApi(
   feedTuners: FeedTunerFn[],
 ) {
   if (feedDesc === 'home') {
-    return new MergeFeedAPI(params, feedTuners)
+    if (params.mergeFeedEnabled) {
+      return new MergeFeedAPI(params, feedTuners)
+    } else {
+      return new HomeFeedAPI()
+    }
   } else if (feedDesc === 'following') {
     return new FollowingFeedAPI()
   } else if (feedDesc.startsWith('author')) {

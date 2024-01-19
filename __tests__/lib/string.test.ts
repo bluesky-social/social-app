@@ -463,44 +463,44 @@ describe('parseEmbedPlayerFromUrl', () => {
       type: 'youtube_video',
       source: 'youtube',
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
     {
       type: 'youtube_short',
       source: 'youtubeShorts',
       hideDetails: true,
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
       playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1',
+        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
     },
 
     undefined,
