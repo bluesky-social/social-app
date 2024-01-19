@@ -3,10 +3,15 @@ class RNUITextView: UIView {
 
   @objc var numberOfLines: Int = 0 {
     didSet {
-      print(numberOfLines)
       textView.textContainer.maximumNumberOfLines = numberOfLines
     }
   }
+  @objc var selectable: Bool = true {
+    didSet {
+      textView.isSelectable = selectable
+    }
+  }
+  @objc var onTextLayout: RCTDirectEventBlock?
 
   override init(frame: CGRect) {
     if #available(iOS 16.0, *) {
@@ -52,6 +57,21 @@ class RNUITextView: UIView {
     self.textView.frame.size = size
     self.textView.textContainer.maximumNumberOfLines = numberOfLines
     self.textView.attributedText = string
+
+    if let onTextLayout = self.onTextLayout {
+      var lines: [String] = []
+      textView.layoutManager.enumerateLineFragments(
+        forGlyphRange: NSRange(location: 0, length: textView.attributedText.length))
+      { (rect, usedRect, textContainer, glyphRange, stop) in
+        let characterRange = self.textView.layoutManager.characterRange(forGlyphRange: glyphRange, actualGlyphRange: nil)
+        let line = (self.textView.text as NSString).substring(with: characterRange)
+        lines.append(line)
+      }
+
+      onTextLayout([
+        "lines": lines
+      ])
+    }
   }
 
   @IBAction func callOnPress(_ sender: UITapGestureRecognizer) -> Void {
@@ -81,8 +101,6 @@ class RNUITextView: UIView {
       in: textView.textContainer,
       fractionOfDistanceBetweenInsertionPoints: nil
     )
-
-    let text = textView.attributedText.string
 
     for child in self.subviews {
       guard let child = child as? RNUITextViewChild, let text = child.text else {

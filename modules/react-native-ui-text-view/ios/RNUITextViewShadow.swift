@@ -105,24 +105,6 @@ class RNUITextViewShadow: RCTShadowView {
         range: NSMakeRange(0, string.length)
       )
 
-//      if let textDecorationLine = child.textDecorationLine {
-//        if textDecorationLine == .underline || textDecorationLine == .underlineLineThrough {
-//          string.addAttribute(
-//            NSAttributedString.Key.underlineStyle,
-//            value: NSUnderlineStyle.single.rawValue,
-//            range: NSMakeRange(0, string.length)
-//          )
-//        }
-//
-//        if textDecorationLine == .lineThrough || textDecorationLine == .underlineLineThrough {
-//          string.addAttribute(
-//            NSAttributedString.Key.strikethroughStyle,
-//            value: NSUnderlineStyle.single.rawValue,
-//            range: NSMakeRange(0, string.length)
-//          )
-//        }
-//      }
-
       finalAttributedString.append(string)
     }
 
