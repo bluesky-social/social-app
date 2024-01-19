@@ -96,11 +96,7 @@ export function Root({children, isInvalid = false}: RootProps) {
           },
         ]}
         // onPressIn/out don't work on android web
-        onPress={e => {
-          e.preventDefault()
-          e.stopPropagation()
-          inputRef.current?.focus()
-        }}
+        onPress={() => inputRef.current?.focus()}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}>
         {children}
@@ -214,6 +210,7 @@ export function createInput(Component: typeof TextInput) {
             {
               lineHeight: a.text_md.lineHeight * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
+              minHeight: rest.multiline ? 60 : undefined,
             },
           ]}
         />
