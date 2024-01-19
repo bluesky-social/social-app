@@ -150,9 +150,8 @@ export function Step2({
               autoFocus={true}
             />
             <Text type="sm" style={[pal.textLight, s.mt5]}>
-              <Trans>
-                Please enter the verification code you have been texted.
-              </Trans>
+              <Trans>Please enter the verification code sent to</Trans>{' '}
+              {uiState.verificationPhone}.
             </Text>
           </View>
         </>
