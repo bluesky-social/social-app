@@ -24,4 +24,7 @@ RCT_REMAP_SHADOW_PROPERTY(fontWeight, fontWeight, NSString)
 RCT_REMAP_SHADOW_PROPERTY(letterSpacing, letterSpacing, CGFloat)
 RCT_REMAP_SHADOW_PROPERTY(lineHeight, lineHeight, CGFloat)
 RCT_REMAP_SHADOW_PROPERTY(pointerEvents, pointerEvents, NSString)
+
+RCT_EXPORT_VIEW_PROPERTY(text, NSString)
+RCT_EXPORT_VIEW_PROPERTY(onPress, RCTBubblingEventBlock)
 @end

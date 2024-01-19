@@ -13,7 +13,7 @@ const textDefaults: TextProps = {
   selectable: true,
 }
 
-export function UITextView({style, children, onPress, ...rest}: TextProps) {
+export function UITextView({style, children, ...rest}: TextProps) {
   const [isAncestor, rootStyle] = useTextAncestorContext()
 
   // Flatten the styles, and apply the root styles when needed
@@ -39,7 +39,6 @@ export function UITextView({style, children, onPress, ...rest}: TextProps) {
                   key={index}
                   style={flattenedStyle}
                   text={c}
-                  onTextPress={onPress}
                   {...rest}
                 />
               )
@@ -60,7 +59,6 @@ export function UITextView({style, children, onPress, ...rest}: TextProps) {
                 key={index}
                 style={flattenedStyle}
                 text={c}
-                onTextPress={onPress}
                 {...rest}
               />
             )
