@@ -76,8 +76,7 @@ export const Policies = ({
       1,
       0,
       <Text key="and" style={pal.textLight}>
-        {' '}
-        <Trans>and</Trans>{' '}
+        <Trans>{' '}and{' '}</Trans>
       </Text>,
     )
   }
