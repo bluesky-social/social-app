@@ -68,7 +68,7 @@ export function parseEmbedPlayerFromUrl(
   // youtube
   if (urlp.hostname === 'youtu.be') {
     const videoId = urlp.pathname.split('/')[1]
-    const seek = urlp.searchParams.get('t') ?? 0
+    const seek = encodeURIComponent(urlp.searchParams.get('t') ?? 0)
     if (videoId) {
       return {
         type: 'youtube_video',
@@ -85,7 +85,7 @@ export function parseEmbedPlayerFromUrl(
     const [_, page, shortVideoId] = urlp.pathname.split('/')
     const videoId =
       page === 'shorts' ? shortVideoId : (urlp.searchParams.get('v') as string)
-    const seek = urlp.searchParams.get('t') ?? 0
+    const seek = encodeURIComponent(urlp.searchParams.get('t') ?? 0)
 
     if (videoId) {
       return {
