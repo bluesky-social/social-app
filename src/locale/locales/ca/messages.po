@@ -59,7 +59,7 @@ msgstr "<0>Segueix alguns</0><1>usuaris</1><2>recomanats</2>"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
-msgstr "S'ha aplicat una advertència de contingut a {0}"
+msgstr "S'ha aplicat una advertència de contingut a {0}."
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -444,7 +444,7 @@ msgstr "Tria els algoritmes que potenciaran la teva experiència amb els canals 
 
 #: src/view/com/auth/create/Step2.tsx:127
 msgid "Choose your password"
-msgstr "Tria la teva contrasenya."
+msgstr "Tria la teva contrasenya"
 
 #: src/view/screens/Settings.tsx:694
 msgid "Clear all legacy storage data"
@@ -777,7 +777,7 @@ msgstr "Correu:"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:138
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "Activa aquesta opció per veure només les respostes entre els comptes que segueixes"
+msgstr "Activa aquesta opció per veure només les respostes entre els comptes que segueixes."
 
 #: src/view/screens/Profile.tsx:426
 msgid "End of feed"
@@ -872,7 +872,7 @@ msgstr "Ajusta el contingut que es veu a la teva pantalla d'inici."
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
-msgstr "Ajusta els fils de discussió."
+msgstr "Ajusta els fils de debat."
 
 #: src/view/com/profile/ProfileHeader.tsx:538
 msgid "Follow"
@@ -1127,7 +1127,7 @@ msgstr "Més informació sobre què és públic a Bluesky."
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
-msgstr "Deixa'ls tots sense marcar per veure tots els idiomes"
+msgstr "Deixa'ls tots sense marcar per veure tots els idiomes."
 
 #: src/view/com/modals/LinkWarning.tsx:49
 msgid "Leaving Bluesky"
@@ -1178,7 +1178,7 @@ msgstr "Carrega més publicacions"
 
 #: src/view/screens/Notifications.tsx:148
 msgid "Load new notifications"
-msgstr "Carrega noves  notificacions"
+msgstr "Carrega noves notificacions"
 
 #: src/view/com/feeds/FeedPage.tsx:189
 msgid "Load new posts"
@@ -1268,7 +1268,7 @@ msgstr "Vols silenciar aquests comptes?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Mute thread"
-msgstr "Silencia el fil de discussió"
+msgstr "Silencia el fil de debat"
 
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
@@ -1407,7 +1407,7 @@ msgstr "Falta el text alternatiu a una o més imatges."
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
-msgstr "Només {0} pot respondre."
+msgstr "Només {0} poden respondre."
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:76
 msgid "Open navigation"
@@ -1452,7 +1452,7 @@ msgstr "Obre la pàgina de registres del sistema"
 
 #: src/view/screens/Settings.tsx:494
 msgid "Opens the threads preferences"
-msgstr "Obre les preferències dels fils de discussió"
+msgstr "Obre les preferències dels fils de debat"
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
@@ -1682,7 +1682,7 @@ msgstr "Respostes"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
-msgstr "Les respostes a aquest fil de discussió estan deshabilitades"
+msgstr "Les respostes a aquest fil de debat estan deshabilitades"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:135
 msgid "Reply Filters"
@@ -1838,7 +1838,7 @@ msgstr "Selecciona quins idiomes vols que incloguin els canals a què estàs sub
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
-msgstr "Seleccioneu l'idioma de l'aplicació perquè el text predeterminat es mostri en aquesta"
+msgstr "Selecciona l'idioma de l'aplicació perquè el text predeterminat es mostri en aquesta"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -1883,7 +1883,7 @@ msgstr "Posa \"No\" a aquesta opció per amagar totes les republicacions del teu
 
 #: src/view/screens/PreferencesThreads.tsx:116
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "Posa \"Sí\" a aquesta opció per mostrar les respostes en vista de fil de discussió. Aquesta és una opció experimental."
+msgstr "Posa \"Sí\" a aquesta opció per mostrar les respostes en vista de fil de debat. Aquesta és una opció experimental."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:252
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
@@ -2156,16 +2156,16 @@ msgstr "Aquesta advertència només està disponible per publicacions amb contin
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:178
 msgid "This will hide this post from your feeds."
-msgstr "Això amagarà aquesta publicació dels teus canals"
+msgstr "Això amagarà aquesta publicació dels teus canals."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:503
 msgid "Thread Preferences"
-msgstr "Preferències dels fils de discussió"
+msgstr "Preferències dels fils de debat"
 
 #: src/view/screens/PreferencesThreads.tsx:113
 msgid "Threaded Mode"
-msgstr "Mode fils de discussió"
+msgstr "Mode fils de debat"
 
 #: src/view/com/util/forms/DropdownButton.tsx:230
 msgid "Toggle dropdown"
@@ -2223,7 +2223,7 @@ msgstr "Deixa de silenciar el compte"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:157
 msgid "Unmute thread"
-msgstr "Deixa de silenciar el fil de discussió"
+msgstr "Deixa de silenciar el fil de debat"
 
 #: src/view/screens/ProfileList.tsx:441
 msgid "Unpin moderation list"
