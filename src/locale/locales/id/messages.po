@@ -1016,7 +1016,7 @@ msgstr "contoh: Pemoster yang selalu tepat sasaran."
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "contoh: Si pengguna yang suka membalas dengan iklan."
+msgstr "contoh: Pengguna yang membalas dengan iklan secara berulang."
 
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
