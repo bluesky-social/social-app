@@ -2277,7 +2277,7 @@ msgstr "Opsi {0} dari {numItems}"
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
-msgstr "Atau gabungkan opsi-opsi ini:"
+msgstr "Atau gabungkan opsi-opsi berikut:"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
