@@ -1,10 +1,5 @@
 /* eslint-env detox/detox */
 
-/**
- * This test is being skipped until we can resolve the detox crash issue
- * with the side drawer.
- */
-
 import {describe, beforeAll, it} from '@jest/globals'
 import {expect} from 'detox'
 import {openApp, loginAsAlice, createServer} from '../util'
@@ -31,12 +26,12 @@ describe('invite-codes', () => {
     await element(by.id('e2eOpenLoggedOutView')).tap()
     await element(by.id('createAccountButton')).tap()
     await device.takeScreenshot('1- opened create account screen')
-    await element(by.id('otherServerBtn')).tap()
+    await element(by.id('selectServiceButton')).tap()
     await device.takeScreenshot('2- selected other server')
-    await element(by.id('customServerInput')).clearText()
-    await element(by.id('customServerInput')).typeText(service)
+    await element(by.id('customServerTextInput')).typeText(service)
+    await element(by.id('customServerTextInput')).tapReturnKey()
+    await element(by.id('customServerSelectBtn')).tap()
     await device.takeScreenshot('3- input test server URL')
-    await element(by.id('nextBtn')).tap()
     await element(by.id('inviteCodeInput')).typeText(inviteCode)
     await element(by.id('emailInput')).typeText('example@test.com')
     await element(by.id('passwordInput')).typeText('hunter2')

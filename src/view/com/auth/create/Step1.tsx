@@ -1,25 +1,38 @@
 import React from 'react'
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {
+  ActivityIndicator,
+  Keyboard,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
+import {CreateAccountState, CreateAccountDispatch, is18} from './state'
 import {Text} from 'view/com/util/text/Text'
+import {DateInput} from 'view/com/util/forms/DateInput'
 import {StepHeader} from './StepHeader'
-import {CreateAccountState, CreateAccountDispatch} from './state'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
-import {HelpTip} from '../util/HelpTip'
+import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
-import {Button} from 'view/com/util/forms/Button'
+import {Button} from '../../util/forms/Button'
+import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {msg, Trans} from '@lingui/macro'
+import {isWeb} from 'platform/detection'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {logger} from '#/logger'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
-import {LOCAL_DEV_SERVICE, STAGING_SERVICE, PROD_SERVICE} from 'lib/constants'
-import {LOGIN_INCLUDE_DEV_SERVERS} from 'lib/build-flags'
+function sanitizeDate(date: Date): Date {
+  if (!date || date.toString() === 'Invalid Date') {
+    logger.error(`Create account: handled invalid date for birthDate`, {
+      hasDate: !!date,
+    })
+    return new Date()
+  }
+  return date
+}
 
-/** STEP 1: Your hosting provider
- * @field Bluesky (default)
- * @field Other (staging, local dev, your own PDS, etc.)
- */
 export function Step1({
   uiState,
   uiDispatch,
@@ -28,136 +41,175 @@ export function Step1({
   uiDispatch: CreateAccountDispatch
 }) {
   const pal = usePalette('default')
-  const [isDefaultSelected, setIsDefaultSelected] = React.useState(true)
   const {_} = useLingui()
+  const {openModal} = useModalControls()
 
-  const onPressDefault = React.useCallback(() => {
-    setIsDefaultSelected(true)
-    uiDispatch({type: 'set-service-url', value: PROD_SERVICE})
-  }, [setIsDefaultSelected, uiDispatch])
+  const onPressSelectService = React.useCallback(() => {
+    openModal({
+      name: 'server-input',
+      initialService: uiState.serviceUrl,
+      onSelect: (url: string) =>
+        uiDispatch({type: 'set-service-url', value: url}),
+    })
+    Keyboard.dismiss()
+  }, [uiDispatch, uiState.serviceUrl, openModal])
 
-  const onPressOther = React.useCallback(() => {
-    setIsDefaultSelected(false)
-    uiDispatch({type: 'set-service-url', value: 'https://'})
-  }, [setIsDefaultSelected, uiDispatch])
+  const onPressWaitlist = React.useCallback(() => {
+    openModal({name: 'waitlist'})
+  }, [openModal])
 
-  const onChangeServiceUrl = React.useCallback(
-    (v: string) => {
-      uiDispatch({type: 'set-service-url', value: v})
-    },
-    [uiDispatch],
-  )
+  const birthDate = React.useMemo(() => {
+    return sanitizeDate(uiState.birthDate)
+  }, [uiState.birthDate])
 
   return (
     <View>
-      <StepHeader step="1" title={_(msg`Your hosting provider`)} />
-      <Text style={[pal.text, s.mb10]}>
-        <Trans>This is the service that keeps you online.</Trans>
-      </Text>
-      <Option
-        testID="blueskyServerBtn"
-        isSelected={isDefaultSelected}
-        label="Bluesky"
-        help="&nbsp;(default)"
-        onPress={onPressDefault}
-      />
-      <Option
-        testID="otherServerBtn"
-        isSelected={!isDefaultSelected}
-        label="Other"
-        onPress={onPressOther}>
-        <View style={styles.otherForm}>
-          <Text nativeID="addressProvider" style={[pal.text, s.mb5]}>
-            <Trans>Enter the address of your provider:</Trans>
-          </Text>
-          <TextInput
-            testID="customServerInput"
-            icon="globe"
-            placeholder={_(msg`Hosting provider address`)}
-            value={uiState.serviceUrl}
-            editable
-            onChange={onChangeServiceUrl}
-            accessibilityHint={_(msg`Input hosting provider address`)}
-            accessibilityLabel={_(msg`Hosting provider address`)}
-            accessibilityLabelledBy="addressProvider"
-          />
-          {LOGIN_INCLUDE_DEV_SERVERS && (
-            <View style={[s.flexRow, s.mt10]}>
-              <Button
-                testID="stagingServerBtn"
-                type="default"
-                style={s.mr5}
-                label={_(msg`Staging`)}
-                onPress={() => onChangeServiceUrl(STAGING_SERVICE)}
-              />
-              <Button
-                testID="localDevServerBtn"
-                type="default"
-                label={_(msg`Dev Server`)}
-                onPress={() => onChangeServiceUrl(LOCAL_DEV_SERVICE)}
+      <StepHeader uiState={uiState} title={_(msg`Your account`)}>
+        <View>
+          <Button
+            testID="selectServiceButton"
+            type="default"
+            style={{
+              aspectRatio: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            accessibilityLabel={_(msg`Select service`)}
+            accessibilityHint={_(msg`Sets server for the Bluesky client`)}
+            onPress={onPressSelectService}>
+            <FontAwesomeIcon icon="server" size={21} />
+          </Button>
+        </View>
+      </StepHeader>
+
+      {!uiState.serviceDescription ? (
+        <ActivityIndicator />
+      ) : (
+        <>
+          {uiState.isInviteCodeRequired && (
+            <View style={s.pb20}>
+              <Text type="md-medium" style={[pal.text, s.mb2]}>
+                <Trans>Invite code</Trans>
+              </Text>
+              <TextInput
+                testID="inviteCodeInput"
+                icon="ticket"
+                placeholder={_(msg`Required for this provider`)}
+                value={uiState.inviteCode}
+                editable
+                onChange={value => uiDispatch({type: 'set-invite-code', value})}
+                accessibilityLabel={_(msg`Invite code`)}
+                accessibilityHint={_(msg`Input invite code to proceed`)}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect={false}
+                autoFocus={true}
               />
             </View>
           )}
-        </View>
-      </Option>
+
+          {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
+            <View style={[s.flexRow, s.alignCenter]}>
+              <Text style={pal.text}>
+                <Trans>Don't have an invite code?</Trans>{' '}
+              </Text>
+              <TouchableWithoutFeedback
+                onPress={onPressWaitlist}
+                accessibilityLabel={_(msg`Join the waitlist.`)}
+                accessibilityHint="">
+                <View style={styles.touchable}>
+                  <Text style={pal.link}>
+                    <Trans>Join the waitlist.</Trans>
+                  </Text>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          ) : (
+            <>
+              <View style={s.pb20}>
+                <Text
+                  type="md-medium"
+                  style={[pal.text, s.mb2]}
+                  nativeID="email">
+                  <Trans>Email address</Trans>
+                </Text>
+                <TextInput
+                  testID="emailInput"
+                  icon="envelope"
+                  placeholder={_(msg`Enter your email address`)}
+                  value={uiState.email}
+                  editable
+                  onChange={value => uiDispatch({type: 'set-email', value})}
+                  accessibilityLabel={_(msg`Email`)}
+                  accessibilityHint={_(msg`Input email for Bluesky account`)}
+                  accessibilityLabelledBy="email"
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  autoFocus={!uiState.isInviteCodeRequired}
+                />
+              </View>
+
+              <View style={s.pb20}>
+                <Text
+                  type="md-medium"
+                  style={[pal.text, s.mb2]}
+                  nativeID="password">
+                  <Trans>Password</Trans>
+                </Text>
+                <TextInput
+                  testID="passwordInput"
+                  icon="lock"
+                  placeholder={_(msg`Choose your password`)}
+                  value={uiState.password}
+                  editable
+                  secureTextEntry
+                  onChange={value => uiDispatch({type: 'set-password', value})}
+                  accessibilityLabel={_(msg`Password`)}
+                  accessibilityHint={_(msg`Set password`)}
+                  accessibilityLabelledBy="password"
+                  autoCapitalize="none"
+                  autoComplete="off"
+                  autoCorrect={false}
+                />
+              </View>
+
+              <View style={s.pb20}>
+                <Text
+                  type="md-medium"
+                  style={[pal.text, s.mb2]}
+                  nativeID="birthDate">
+                  <Trans>Your birth date</Trans>
+                </Text>
+                <DateInput
+                  handleAsUTC
+                  testID="birthdayInput"
+                  value={birthDate}
+                  onChange={value =>
+                    uiDispatch({type: 'set-birth-date', value})
+                  }
+                  buttonType="default-light"
+                  buttonStyle={[pal.border, styles.dateInputButton]}
+                  buttonLabelType="lg"
+                  accessibilityLabel={_(msg`Birthday`)}
+                  accessibilityHint={_(msg`Enter your birth date`)}
+                  accessibilityLabelledBy="birthDate"
+                />
+              </View>
+
+              {uiState.serviceDescription && (
+                <Policies
+                  serviceDescription={uiState.serviceDescription}
+                  needsGuardian={!is18(uiState)}
+                />
+              )}
+            </>
+          )}
+        </>
+      )}
       {uiState.error ? (
         <ErrorMessage message={uiState.error} style={styles.error} />
-      ) : (
-        <HelpTip text={_(msg`You can change hosting providers at any time.`)} />
-      )}
-    </View>
-  )
-}
-
-function Option({
-  children,
-  isSelected,
-  label,
-  help,
-  onPress,
-  testID,
-}: React.PropsWithChildren<{
-  isSelected: boolean
-  label: string
-  help?: string
-  onPress: () => void
-  testID?: string
-}>) {
-  const theme = useTheme()
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const circleFillStyle = React.useMemo(
-    () => ({
-      backgroundColor: theme.palette.primary.background,
-    }),
-    [theme],
-  )
-
-  return (
-    <View style={[styles.option, pal.border]}>
-      <TouchableWithoutFeedback
-        onPress={onPress}
-        testID={testID}
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityHint={_(msg`Sets hosting provider to ${label}`)}>
-        <View style={styles.optionHeading}>
-          <View style={[styles.circle, pal.border]}>
-            {isSelected ? (
-              <View style={[circleFillStyle, styles.circleFill]} />
-            ) : undefined}
-          </View>
-          <Text type="xl" style={pal.text}>
-            {label}
-            {help ? (
-              <Text type="xl" style={pal.textLight}>
-                {help}
-              </Text>
-            ) : undefined}
-          </Text>
-        </View>
-      </TouchableWithoutFeedback>
-      {isSelected && children}
+      ) : undefined}
     </View>
   )
 }
@@ -165,34 +217,15 @@ function Option({
 const styles = StyleSheet.create({
   error: {
     borderRadius: 6,
+    marginTop: 10,
   },
-
-  option: {
+  dateInputButton: {
     borderWidth: 1,
     borderRadius: 6,
-    marginBottom: 10,
+    paddingVertical: 14,
   },
-  optionHeading: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
-  },
-  circle: {
-    width: 26,
-    height: 26,
-    borderRadius: 15,
-    padding: 4,
-    borderWidth: 1,
-    marginRight: 10,
-  },
-  circleFill: {
-    width: 16,
-    height: 16,
-    borderRadius: 10,
-  },
-
-  otherForm: {
-    paddingBottom: 10,
-    paddingHorizontal: 12,
+  // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
+  touchable: {
+    ...(isWeb && {cursor: 'pointer'}),
   },
 })
