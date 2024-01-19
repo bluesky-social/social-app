@@ -506,7 +506,9 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text
+      {...rest}
+      style={[a.w_full, a.font_bold, a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
