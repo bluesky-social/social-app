@@ -144,7 +144,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Profile"
         getComponent={() => ProfileScreen}
         options={({route}) => ({
-          title: title(msg`@${route.params.name}`),
+          title: bskyTitle(`@${route.params.name}`, unreadCountLabel),
           animation: 'none',
         })}
       />

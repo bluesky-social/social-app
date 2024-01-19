@@ -291,7 +291,7 @@ export function SettingsScreen({}: Props) {
         ]}>
         <View style={{flex: 1}}>
           <Text type="title-lg" style={[pal.text, {fontWeight: 'bold'}]}>
-            <Trans>{_(msg`Settings`)}</Trans>
+            <Trans>Settings</Trans>
           </Text>
         </View>
       </SimpleViewHeader>
