@@ -9,10 +9,11 @@ import {
   View,
   TextStyle,
   StyleSheet,
+  StyleProp,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useTheme, atoms as a, tokens, web, native} from '#/alf'
+import {useTheme, atoms as a, tokens, web, native, flatten} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
@@ -52,6 +53,7 @@ export type ButtonProps = React.PropsWithChildren<
     AccessibilityProps &
     VariantProps & {
       label: string
+      style?: StyleProp<ViewStyle>
     }
 >
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
@@ -82,6 +84,7 @@ export function Button({
   shape = 'default',
   label,
   disabled = false,
+  style,
   ...rest
 }: ButtonProps) {
   const t = useTheme()
@@ -354,6 +357,7 @@ export function Button({
         disabled: disabled || false,
       }}
       style={[
+        flatten(style),
         a.flex_row,
         a.align_center,
         a.overflow_hidden,
