@@ -56,7 +56,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         }
       }
     },
-    [headerHeight, mode, setMode, startDragOffset, startMode],
+    [startDragOffset, startMode, setMode, mode, headerHeight],
   )
 
   const onScroll = useCallback(
