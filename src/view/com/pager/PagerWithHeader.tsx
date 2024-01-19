@@ -126,6 +126,23 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       [scrollRefs],
     )
 
+    const pagerRef = React.useRef(null)
+    React.useImperativeHandle(ref, () => ({
+      setPage: (index: number) => pagerRef.current?.setPage(index),
+      scrollTo: dy => {
+        'worklet'
+        const forcedScrollY = scrollY.value + dy
+        scrollY.value = forcedScrollY
+        lastForcedScrollY.value = forcedScrollY
+        const refs = scrollRefs.value
+        for (let i = 0; i < refs.length; i++) {
+          if (refs[i] != null) {
+            scrollTo(refs[i], 0, forcedScrollY, false)
+          }
+        }
+      },
+    }))
+
     const lastForcedScrollY = useSharedValue(0)
     const adjustScrollForOtherPages = () => {
       'worklet'
@@ -178,7 +195,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
 
     return (
       <Pager
-        ref={ref}
+        ref={pagerRef}
         testID={testID}
         initialPage={initialPage}
         onPageSelected={onPageSelectedInner}

@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -68,6 +69,7 @@ export function ProfileHeader({
   moderation,
   hideBackButton = false,
   isProfilePreview,
+  onPan,
 }: Props) {
   const pal = usePalette('default')
 
@@ -98,6 +100,7 @@ export function ProfileHeader({
       moderation={moderation}
       hideBackButton={hideBackButton}
       isProfilePreview={isProfilePreview}
+      onPan={onPan}
     />
   )
 }
@@ -114,6 +117,7 @@ let ProfileHeaderLoaded = ({
   moderation,
   hideBackButton = false,
   isProfilePreview,
+  onPan,
 }: LoadedProps): React.ReactNode => {
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
@@ -441,273 +445,296 @@ let ProfileHeaderLoaded = ({
   const followers = formatCount(profile.followersCount || 0)
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
+  const pan = Gesture.Pan()
+    .activeOffsetY([-10, 10])
+    .failOffsetX([-10, 10])
+    .maxPointers(1)
+    .onUpdate(e => {
+      onPan(e)
+    })
+    .onEnd(e => {
+      onPan(null)
+    })
+
   return (
-    <View style={pal.view}>
-      <UserBanner banner={profile.banner} moderation={moderation.avatar} />
-      <View style={styles.content}>
-        <View style={[styles.buttonsLine]}>
-          {isMe ? (
-            <TouchableOpacity
-              testID="profileHeaderEditProfileButton"
-              onPress={onPressEditProfile}
-              style={[styles.btn, styles.mainBtn, pal.btn]}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Edit profile`)}
-              accessibilityHint={_(
-                msg`Opens editor for profile display name, avatar, background image, and description`,
-              )}>
-              <Text type="button" style={pal.text}>
-                <Trans>Edit Profile</Trans>
-              </Text>
-            </TouchableOpacity>
-          ) : profile.viewer?.blocking ? (
-            profile.viewer?.blockingByList ? null : (
+    <GestureDetector gesture={pan}>
+      <View style={pal.view}>
+        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+        <View style={styles.content}>
+          <View style={[styles.buttonsLine]}>
+            {isMe ? (
               <TouchableOpacity
-                testID="unblockBtn"
-                onPress={onPressUnblockAccount}
+                testID="profileHeaderEditProfileButton"
+                onPress={onPressEditProfile}
                 style={[styles.btn, styles.mainBtn, pal.btn]}
                 accessibilityRole="button"
-                accessibilityLabel={_(msg`Unblock`)}
-                accessibilityHint="">
-                <Text type="button" style={[pal.text, s.bold]}>
-                  <Trans context="action">Unblock</Trans>
+                accessibilityLabel={_(msg`Edit profile`)}
+                accessibilityHint={_(
+                  msg`Opens editor for profile display name, avatar, background image, and description`,
+                )}>
+                <Text type="button" style={pal.text}>
+                  <Trans>Edit Profile</Trans>
                 </Text>
               </TouchableOpacity>
-            )
-          ) : !profile.viewer?.blockedBy ? (
-            <>
-              {!isProfilePreview && hasSession && (
+            ) : profile.viewer?.blocking ? (
+              profile.viewer?.blockingByList ? null : (
                 <TouchableOpacity
-                  testID="suggestedFollowsBtn"
-                  onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
-                  style={[
-                    styles.btn,
-                    styles.mainBtn,
-                    pal.btn,
-                    {
-                      paddingHorizontal: 10,
-                      backgroundColor: showSuggestedFollows
-                        ? pal.colors.text
-                        : pal.colors.backgroundLight,
-                    },
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(
-                    msg`Show follows similar to ${profile.handle}`,
-                  )}
-                  accessibilityHint={_(
-                    msg`Shows a list of users similar to this user.`,
-                  )}>
-                  <FontAwesomeIcon
-                    icon="user-plus"
-                    style={[
-                      pal.text,
-                      {
-                        color: showSuggestedFollows
-                          ? pal.textInverted.color
-                          : pal.text.color,
-                      },
-                    ]}
-                    size={14}
-                  />
-                </TouchableOpacity>
-              )}
-
-              {profile.viewer?.following ? (
-                <TouchableOpacity
-                  testID="unfollowBtn"
-                  onPress={onPressUnfollow}
+                  testID="unblockBtn"
+                  onPress={onPressUnblockAccount}
                   style={[styles.btn, styles.mainBtn, pal.btn]}
                   accessibilityRole="button"
-                  accessibilityLabel={_(msg`Unfollow ${profile.handle}`)}
-                  accessibilityHint={_(
-                    msg`Hides posts from ${profile.handle} in your feed`,
-                  )}>
-                  <FontAwesomeIcon
-                    icon="check"
-                    style={[pal.text, s.mr5]}
-                    size={14}
-                  />
-                  <Text type="button" style={pal.text}>
-                    <Trans>Following</Trans>
+                  accessibilityLabel={_(msg`Unblock`)}
+                  accessibilityHint="">
+                  <Text type="button" style={[pal.text, s.bold]}>
+                    <Trans context="action">Unblock</Trans>
                   </Text>
                 </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  testID="followBtn"
-                  onPress={onPressFollow}
-                  style={[styles.btn, styles.mainBtn, palInverted.view]}
-                  accessibilityRole="button"
-                  accessibilityLabel={_(msg`Follow ${profile.handle}`)}
-                  accessibilityHint={_(
-                    msg`Shows posts from ${profile.handle} in your feed`,
-                  )}>
+              )
+            ) : !profile.viewer?.blockedBy ? (
+              <>
+                {!isProfilePreview && hasSession && (
+                  <TouchableOpacity
+                    testID="suggestedFollowsBtn"
+                    onPress={() =>
+                      setShowSuggestedFollows(!showSuggestedFollows)
+                    }
+                    style={[
+                      styles.btn,
+                      styles.mainBtn,
+                      pal.btn,
+                      {
+                        paddingHorizontal: 10,
+                        backgroundColor: showSuggestedFollows
+                          ? pal.colors.text
+                          : pal.colors.backgroundLight,
+                      },
+                    ]}
+                    accessibilityRole="button"
+                    accessibilityLabel={_(
+                      msg`Show follows similar to ${profile.handle}`,
+                    )}
+                    accessibilityHint={_(
+                      msg`Shows a list of users similar to this user.`,
+                    )}>
+                    <FontAwesomeIcon
+                      icon="user-plus"
+                      style={[
+                        pal.text,
+                        {
+                          color: showSuggestedFollows
+                            ? pal.textInverted.color
+                            : pal.text.color,
+                        },
+                      ]}
+                      size={14}
+                    />
+                  </TouchableOpacity>
+                )}
+
+                {profile.viewer?.following ? (
+                  <TouchableOpacity
+                    testID="unfollowBtn"
+                    onPress={onPressUnfollow}
+                    style={[styles.btn, styles.mainBtn, pal.btn]}
+                    accessibilityRole="button"
+                    accessibilityLabel={_(msg`Unfollow ${profile.handle}`)}
+                    accessibilityHint={_(
+                      msg`Hides posts from ${profile.handle} in your feed`,
+                    )}>
+                    <FontAwesomeIcon
+                      icon="check"
+                      style={[pal.text, s.mr5]}
+                      size={14}
+                    />
+                    <Text type="button" style={pal.text}>
+                      <Trans>Following</Trans>
+                    </Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    testID="followBtn"
+                    onPress={onPressFollow}
+                    style={[styles.btn, styles.mainBtn, palInverted.view]}
+                    accessibilityRole="button"
+                    accessibilityLabel={_(msg`Follow ${profile.handle}`)}
+                    accessibilityHint={_(
+                      msg`Shows posts from ${profile.handle} in your feed`,
+                    )}>
+                    <FontAwesomeIcon
+                      icon="plus"
+                      style={[palInverted.text, s.mr5]}
+                    />
+                    <Text type="button" style={[palInverted.text, s.bold]}>
+                      <Trans>Follow</Trans>
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            ) : null}
+            {dropdownItems?.length ? (
+              <NativeDropdown
+                testID="profileHeaderDropdownBtn"
+                items={dropdownItems}
+                accessibilityLabel={_(msg`More options`)}
+                accessibilityHint="">
+                <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
                   <FontAwesomeIcon
-                    icon="plus"
-                    style={[palInverted.text, s.mr5]}
+                    icon="ellipsis"
+                    size={20}
+                    style={[pal.text]}
                   />
-                  <Text type="button" style={[palInverted.text, s.bold]}>
-                    <Trans>Follow</Trans>
-                  </Text>
-                </TouchableOpacity>
+                </View>
+              </NativeDropdown>
+            ) : undefined}
+          </View>
+          <View>
+            <Text
+              testID="profileHeaderDisplayName"
+              type="title-2xl"
+              style={[pal.text, styles.title]}>
+              {sanitizeDisplayName(
+                profile.displayName || sanitizeHandle(profile.handle),
+                moderation.profile,
               )}
-            </>
-          ) : null}
-          {dropdownItems?.length ? (
-            <NativeDropdown
-              testID="profileHeaderDropdownBtn"
-              items={dropdownItems}
-              accessibilityLabel={_(msg`More options`)}
-              accessibilityHint="">
-              <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
-                <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.text]} />
-              </View>
-            </NativeDropdown>
-          ) : undefined}
-        </View>
-        <View>
-          <Text
-            testID="profileHeaderDisplayName"
-            type="title-2xl"
-            style={[pal.text, styles.title]}>
-            {sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
-            )}
-          </Text>
-        </View>
-        <View style={styles.handleLine}>
-          {profile.viewer?.followedBy && !blockHide ? (
-            <View style={[styles.pill, pal.btn, s.mr5]}>
-              <Text type="xs" style={[pal.text]}>
-                <Trans>Follows you</Trans>
-              </Text>
-            </View>
-          ) : undefined}
-          <ThemedText
-            type={invalidHandle ? 'xs' : 'md'}
-            fg={invalidHandle ? 'error' : 'light'}
-            border={invalidHandle ? 'error' : undefined}
-            style={[
-              invalidHandle ? styles.invalidHandle : undefined,
-              styles.handle,
-            ]}>
-            {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
-          </ThemedText>
-        </View>
-        {!blockHide && (
-          <>
-            <View style={styles.metricsLine}>
-              <Link
-                testID="profileHeaderFollowersButton"
-                style={[s.flexRow, s.mr10]}
-                href={makeProfileLink(profile, 'followers')}
-                onPressOut={() =>
-                  track(`ProfileHeader:FollowersButtonClicked`, {
-                    handle: profile.handle,
-                  })
-                }
-                asAnchor
-                accessibilityLabel={`${followers} ${pluralizedFollowers}`}
-                accessibilityHint={_(msg`Opens followers list`)}>
-                <Text type="md" style={[s.bold, pal.text]}>
-                  {followers}{' '}
+            </Text>
+          </View>
+          <View style={styles.handleLine}>
+            {profile.viewer?.followedBy && !blockHide ? (
+              <View style={[styles.pill, pal.btn, s.mr5]}>
+                <Text type="xs" style={[pal.text]}>
+                  <Trans>Follows you</Trans>
                 </Text>
-                <Text type="md" style={[pal.textLight]}>
-                  {pluralizedFollowers}
-                </Text>
-              </Link>
-              <Link
-                testID="profileHeaderFollowsButton"
-                style={[s.flexRow, s.mr10]}
-                href={makeProfileLink(profile, 'follows')}
-                onPressOut={() =>
-                  track(`ProfileHeader:FollowsButtonClicked`, {
-                    handle: profile.handle,
-                  })
-                }
-                asAnchor
-                accessibilityLabel={_(msg`${following} following`)}
-                accessibilityHint={_(msg`Opens following list`)}>
-                <Trans>
-                  <Text type="md" style={[s.bold, pal.text]}>
-                    {following}{' '}
-                  </Text>
-                  <Text type="md" style={[pal.textLight]}>
-                    following
-                  </Text>
-                </Trans>
-              </Link>
-              <Text type="md" style={[s.bold, pal.text]}>
-                {formatCount(profile.postsCount || 0)}{' '}
-                <Text type="md" style={[pal.textLight]}>
-                  {pluralize(profile.postsCount || 0, 'post')}
-                </Text>
-              </Text>
-            </View>
-            {descriptionRT && !moderation.profile.blur ? (
-              <View>
-                <RichText
-                  testID="profileHeaderDescription"
-                  style={[styles.description, pal.text]}
-                  numberOfLines={15}
-                  richText={descriptionRT}
-                />
               </View>
             ) : undefined}
-          </>
-        )}
-        <ProfileHeaderAlerts moderation={moderation} />
-        {isMe && (
-          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
-        )}
-      </View>
+            <ThemedText
+              type={invalidHandle ? 'xs' : 'md'}
+              fg={invalidHandle ? 'error' : 'light'}
+              border={invalidHandle ? 'error' : undefined}
+              style={[
+                invalidHandle ? styles.invalidHandle : undefined,
+                styles.handle,
+              ]}>
+              {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
+            </ThemedText>
+          </View>
+          {!blockHide && (
+            <>
+              <View style={styles.metricsLine}>
+                <Link
+                  testID="profileHeaderFollowersButton"
+                  style={[s.flexRow, s.mr10]}
+                  href={makeProfileLink(profile, 'followers')}
+                  onPressOut={() =>
+                    track(`ProfileHeader:FollowersButtonClicked`, {
+                      handle: profile.handle,
+                    })
+                  }
+                  asAnchor
+                  accessibilityLabel={`${followers} ${pluralizedFollowers}`}
+                  accessibilityHint={_(msg`Opens followers list`)}>
+                  <Text type="md" style={[s.bold, pal.text]}>
+                    {followers}{' '}
+                  </Text>
+                  <Text type="md" style={[pal.textLight]}>
+                    {pluralizedFollowers}
+                  </Text>
+                </Link>
+                <Link
+                  testID="profileHeaderFollowsButton"
+                  style={[s.flexRow, s.mr10]}
+                  href={makeProfileLink(profile, 'follows')}
+                  onPressOut={() =>
+                    track(`ProfileHeader:FollowsButtonClicked`, {
+                      handle: profile.handle,
+                    })
+                  }
+                  asAnchor
+                  accessibilityLabel={_(msg`${following} following`)}
+                  accessibilityHint={_(msg`Opens following list`)}>
+                  <Trans>
+                    <Text type="md" style={[s.bold, pal.text]}>
+                      {following}{' '}
+                    </Text>
+                    <Text type="md" style={[pal.textLight]}>
+                      following
+                    </Text>
+                  </Trans>
+                </Link>
+                <Text type="md" style={[s.bold, pal.text]}>
+                  {formatCount(profile.postsCount || 0)}{' '}
+                  <Text type="md" style={[pal.textLight]}>
+                    {pluralize(profile.postsCount || 0, 'post')}
+                  </Text>
+                </Text>
+              </View>
+              {descriptionRT && !moderation.profile.blur ? (
+                <View>
+                  <RichText
+                    testID="profileHeaderDescription"
+                    style={[styles.description, pal.text]}
+                    numberOfLines={15}
+                    richText={descriptionRT}
+                  />
+                </View>
+              ) : undefined}
+            </>
+          )}
+          <ProfileHeaderAlerts moderation={moderation} />
+          {isMe && (
+            <LabelInfo details={{did: profile.did}} labels={profile.labels} />
+          )}
+        </View>
 
-      {!isProfilePreview && showSuggestedFollows && (
-        <ProfileHeaderSuggestedFollows
-          actorDid={profile.did}
-          requestDismiss={() => {
-            if (showSuggestedFollows) {
-              setShowSuggestedFollows(false)
-            } else {
-              track('ProfileHeader:SuggestedFollowsOpened')
-              setShowSuggestedFollows(true)
-            }
-          }}
-        />
-      )}
+        {!isProfilePreview && showSuggestedFollows && (
+          <ProfileHeaderSuggestedFollows
+            actorDid={profile.did}
+            requestDismiss={() => {
+              if (showSuggestedFollows) {
+                setShowSuggestedFollows(false)
+              } else {
+                track('ProfileHeader:SuggestedFollowsOpened')
+                setShowSuggestedFollows(true)
+              }
+            }}
+          />
+        )}
 
-      {!isDesktop && !hideBackButton && (
+        {!isDesktop && !hideBackButton && (
+          <TouchableWithoutFeedback
+            testID="profileHeaderBackBtn"
+            onPress={onPressBack}
+            hitSlop={BACK_HITSLOP}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Back`)}
+            accessibilityHint="">
+            <View style={styles.backBtnWrapper}>
+              <BlurView style={styles.backBtn} blurType="dark">
+                <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+              </BlurView>
+            </View>
+          </TouchableWithoutFeedback>
+        )}
         <TouchableWithoutFeedback
-          testID="profileHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
+          testID="profileHeaderAviButton"
+          onPress={onPressAvi}
+          accessibilityRole="image"
+          accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
           accessibilityHint="">
-          <View style={styles.backBtnWrapper}>
-            <BlurView style={styles.backBtn} blurType="dark">
-              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-            </BlurView>
+          <View
+            style={[
+              pal.view,
+              {borderColor: pal.colors.background},
+              styles.avi,
+            ]}>
+            <UserAvatar
+              size={80}
+              avatar={profile.avatar}
+              moderation={moderation.avatar}
+            />
           </View>
         </TouchableWithoutFeedback>
-      )}
-      <TouchableWithoutFeedback
-        testID="profileHeaderAviButton"
-        onPress={onPressAvi}
-        accessibilityRole="image"
-        accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
-        accessibilityHint="">
-        <View
-          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <UserAvatar
-            size={80}
-            avatar={profile.avatar}
-            moderation={moderation.avatar}
-          />
-        </View>
-      </TouchableWithoutFeedback>
-    </View>
+      </View>
+    </GestureDetector>
   )
 }
 ProfileHeaderLoaded = memo(ProfileHeaderLoaded)

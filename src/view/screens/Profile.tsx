@@ -40,6 +40,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {useSharedValue} from 'react-native-reanimated'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -254,16 +255,35 @@ function ProfileScreenLoaded({
 
   // rendering
   // =
+  let scrollHeader = () => {
+    'worklet'
+  }
+  React.useEffect(() => {
+    scrollHeader = pageRef.current.scrollTo
+  })
 
+  const lastTranslationY = useSharedValue(0)
   const renderHeader = React.useCallback(() => {
     return (
       <ProfileHeader
         profile={profile}
         moderation={moderation}
         hideBackButton={hideBackButton}
+        onPan={e => {
+          'worklet'
+          // console.log()
+          if (e) {
+            scrollHeader(lastTranslationY.value - e.translationY)
+            lastTranslationY.value = e.translationY
+          } else {
+            lastTranslationY.value = 0
+          }
+        }}
       />
     )
   }, [profile, moderation, hideBackButton])
+
+  const pageRef = React.useRef(null)
 
   return (
     <ScreenHider
@@ -272,6 +292,7 @@ function ProfileScreenLoaded({
       screenDescription="profile"
       moderation={moderation.account}>
       <PagerWithHeader
+        ref={pageRef}
         testID="profilePager"
         isHeaderReady={true}
         items={sectionTitles}
