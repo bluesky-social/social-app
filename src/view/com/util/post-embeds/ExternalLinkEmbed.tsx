@@ -32,7 +32,7 @@ export const ExternalLinkEmbed = ({
     <View style={styles.container}>
       {link.thumb && !embedPlayerParams ? (
         <Image
-          style={{height: isMobile ? 150 : 250, width: '100%'}}
+          style={{height: isMobile ? 180 : 250, width: '100%'}}
           source={{uri: link.thumb}}
           accessibilityIgnoresInvertColors
         />
@@ -51,10 +51,7 @@ export const ExternalLinkEmbed = ({
           {toNiceDomain(link.uri)}
         </Text>
         {!embedPlayerParams?.isGif && (
-          <Text
-            type="lg-bold"
-            numberOfLines={link.thumb ? 2 : 3}
-            style={[pal.text]}>
+          <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
             {link.title || link.uri}
           </Text>
         )}
