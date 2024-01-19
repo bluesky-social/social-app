@@ -1,7 +1,5 @@
 @objc(RNUITextViewManager)
 class RNUITextViewManager: RCTViewManager {
-  var textStorage = NSTextStorage()
-
   override func view() -> (RNUITextView) {
     return RNUITextView()
   }

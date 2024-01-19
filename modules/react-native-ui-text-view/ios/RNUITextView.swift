@@ -11,6 +11,11 @@ class RNUITextView: UIView {
       textView.isSelectable = selectable
     }
   }
+  @objc var ellipsizeMode: String = "tail" {
+    didSet {
+      textView.textContainer.lineBreakMode = self.getLineBreakMode()
+    }
+  }
   @objc var onTextLayout: RCTDirectEventBlock?
 
   override init(frame: CGRect) {
@@ -117,5 +122,20 @@ class RNUITextView: UIView {
     }
 
     return nil
+  }
+
+  func getLineBreakMode() -> NSLineBreakMode {
+    switch self.ellipsizeMode {
+    case "head":
+      return .byTruncatingHead
+    case "middle":
+      return .byTruncatingMiddle
+    case "tail":
+      return .byTruncatingTail
+    case "clip":
+      return .byClipping
+    default:
+      return .byTruncatingTail
+    }
   }
 }

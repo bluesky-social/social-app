@@ -1,7 +1,6 @@
 class RNUITextViewShadow: RCTShadowView {
   // Props
   @objc var numberOfLines: Int = 0
-  @objc var ellipsizeMode: Int = 0
   @objc var allowsFontScaling: Bool = true
 
   var attributedText: NSAttributedString = NSAttributedString()
