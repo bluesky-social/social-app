@@ -1,4 +1,5 @@
 import React from 'react'
+import {StyleSheet, TextProps} from 'react-native'
 import Svg, {
   Path,
   Defs,
@@ -14,12 +15,14 @@ const ratio = 57 / 64
 
 type Props = {
   fill?: PathProps['fill']
-} & SvgProps
+  style?: TextProps['style']
+} & Omit<SvgProps, 'style'>
 
 export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
   const {fill, ...rest} = props
   const gradient = fill === 'sky'
-  const _fill = gradient ? 'url(#sky)' : fill || colors.blue3
+  const styles = StyleSheet.flatten(props.style)
+  const _fill = gradient ? 'url(#sky)' : fill || styles?.color || colors.blue3
   // @ts-ignore it's fiiiiine
   const size = parseInt(rest.width || 32)
   return (
@@ -29,7 +32,7 @@ export const Logo = React.forwardRef(function LogoImpl(props: Props, ref) {
       ref={ref}
       viewBox="0 0 64 57"
       {...rest}
-      style={{width: size, height: size * ratio}}>
+      style={[{width: size, height: size * ratio}, styles]}>
       {gradient && (
         <Defs>
           <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">

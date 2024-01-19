@@ -8,6 +8,7 @@ import {RootSiblingParent} from 'react-native-root-siblings'
 import 'view/icons'
 
 import {ThemeProvider as Alf} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {init as initPersistedState} from '#/state/persisted'
 import {useColorMode} from 'state/shell'
 import {Shell} from 'view/shell/index'
@@ -16,6 +17,7 @@ import {ThemeProvider} from 'lib/ThemeContext'
 import {queryClient} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as DialogStateProvider} from 'state/dialogs'
 import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
 import {Provider as InvitesStateProvider} from 'state/invites'
@@ -29,7 +31,7 @@ import {
 } from 'state/session'
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
-import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import {Provider as PortalProvider} from '#/components/Portal'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
@@ -92,11 +94,15 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <LightboxStateProvider>
-                    <I18nProvider>
-                      <InnerApp />
-                    </I18nProvider>
-                  </LightboxStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <I18nProvider>
+                        <PortalProvider>
+                          <InnerApp />
+                        </PortalProvider>
+                      </I18nProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>

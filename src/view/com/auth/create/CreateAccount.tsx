@@ -22,12 +22,13 @@ import {
   useSetSaveFeedsMutation,
   DEFAULT_PROD_FEEDS,
 } from '#/state/queries/preferences'
-import {IS_PROD} from '#/lib/constants'
+import {FEEDBACK_FORM_URL, IS_PROD} from '#/lib/constants'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {TextLink} from '../../util/Link'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
@@ -117,7 +118,7 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
 
   return (
     <LoggedOutLayout
-      leadin={`Step ${uiState.step}`}
+      leadin=""
       title={_(msg`Create Account`)}
       description={_(msg`We're so excited to have you join us!`)}>
       <ScrollView testID="createAccount" style={pal.view}>
@@ -176,6 +177,27 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
             </>
           ) : undefined}
         </View>
+
+        <View style={styles.stepContainer}>
+          <View
+            style={[
+              s.flexRow,
+              s.alignCenter,
+              pal.viewLight,
+              {borderRadius: 8, paddingHorizontal: 14, paddingVertical: 12},
+            ]}>
+            <Text type="md" style={pal.textLight}>
+              <Trans>Having trouble?</Trans>{' '}
+            </Text>
+            <TextLink
+              type="md"
+              style={pal.link}
+              text={_(msg`Contact support`)}
+              href={FEEDBACK_FORM_URL({email: uiState.email})}
+            />
+          </View>
+        </View>
+
         <View style={{height: isTabletOrDesktop ? 50 : 400}} />
       </ScrollView>
     </LoggedOutLayout>

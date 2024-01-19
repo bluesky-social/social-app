@@ -27,15 +27,15 @@ export function DiscoverFallbackHeader() {
       <View style={{flex: 1}}>
         <Text type="md" style={pal.text}>
           <Trans>
-            We ran out of posts from your follows. Here's the latest from
-          </Trans>{' '}
-          <TextLink
-            type="md-medium"
-            href="/profile/bsky.app/feed/whats-hot"
-            text="Discover"
-            style={pal.link}
-          />
-          .
+            We ran out of posts from your follows. Here's the latest from{' '}
+            <TextLink
+              type="md-medium"
+              href="/profile/bsky.app/feed/whats-hot"
+              text="Discover"
+              style={pal.link}
+            />
+            .
+          </Trans>
         </Text>
       </View>
     </View>
