@@ -71,7 +71,7 @@
       html.colorMode--dark {
         --text: white;
         --background: hsl(211, 20%, 4%);
-        --backgroundLight: hsl(211, 20%, 10%);
+        --backgroundLight: hsl(211, 20%, 20%);
         color-scheme: dark;
       }
       @media (prefers-color-scheme: light) {
@@ -85,9 +85,13 @@
         html.colorMode--system {
           --text: white;
           --background: hsl(211, 20%, 4%);
-          --backgroundLight: hsl(211, 20%, 10%);
+          --backgroundLight: hsl(211, 20%, 20%);
           color-scheme: dark;
         }
+      }
+
+      ::selection {
+        background-color: var(--backgroundLight);
       }
 
       body {
