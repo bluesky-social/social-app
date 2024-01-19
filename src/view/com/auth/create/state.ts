@@ -2,6 +2,7 @@ import {useReducer} from 'react'
 import {
   ComAtprotoServerDescribeServer,
   ComAtprotoServerCreateAccount,
+  BskyAgent,
 } from '@atproto/api'
 import {I18nContext, useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
@@ -13,6 +14,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {DispatchContext as OnboardingDispatchContext} from '#/state/shell/onboarding'
 import {ApiContext as SessionApiContext} from '#/state/session'
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import parsePhoneNumber from 'libphonenumber-js'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
@@ -27,6 +29,9 @@ export type CreateAccountAction =
   | {type: 'set-invite-code'; value: string}
   | {type: 'set-email'; value: string}
   | {type: 'set-password'; value: string}
+  | {type: 'set-verification-phone'; value: string}
+  | {type: 'set-verification-code'; value: string}
+  | {type: 'set-has-requested-verification-code'; value: boolean}
   | {type: 'set-handle'; value: string}
   | {type: 'set-birth-date'; value: Date}
   | {type: 'next'}
@@ -43,6 +48,9 @@ export interface CreateAccountState {
   inviteCode: string
   email: string
   password: string
+  verificationPhone: string
+  verificationCode: string
+  hasRequestedVerificationCode: boolean
   handle: string
   birthDate: Date
 
@@ -50,6 +58,7 @@ export interface CreateAccountState {
   canBack: boolean
   canNext: boolean
   isInviteCodeRequired: boolean
+  isPhoneVerificationRequired: boolean
 }
 
 export type CreateAccountDispatch = (action: CreateAccountAction) => void
@@ -66,13 +75,49 @@ export function useCreateAccount() {
     inviteCode: '',
     email: '',
     password: '',
+    verificationPhone: '',
+    verificationCode: '',
+    hasRequestedVerificationCode: false,
     handle: '',
     birthDate: DEFAULT_DATE,
 
     canBack: false,
     canNext: false,
     isInviteCodeRequired: false,
+    isPhoneVerificationRequired: false,
   })
+}
+
+export async function requestVerificationCode({
+  uiState,
+  uiDispatch,
+  _,
+}: {
+  uiState: CreateAccountState
+  uiDispatch: CreateAccountDispatch
+  _: I18nContext['_']
+}) {
+  const phoneNumber = parsePhoneNumber(uiState.verificationPhone, 'US')?.number
+  if (!phoneNumber) {
+    return
+  }
+  uiDispatch({type: 'set-error', value: ''})
+  uiDispatch({type: 'set-processing', value: true})
+  uiDispatch({type: 'set-verification-phone', value: phoneNumber})
+  try {
+    const agent = new BskyAgent({service: uiState.serviceUrl})
+    await agent.com.atproto.temp.requestPhoneVerification({
+      phoneNumber,
+    })
+    uiDispatch({type: 'set-has-requested-verification-code', value: true})
+  } catch (e: any) {
+    logger.error(
+      `Failed to request sms verification code (${e.status} status)`,
+      {error: e},
+    )
+    uiDispatch({type: 'set-error', value: cleanError(e.toString())})
+  }
+  uiDispatch({type: 'set-processing', value: false})
 }
 
 export async function submit({
@@ -89,24 +134,34 @@ export async function submit({
   _: I18nContext['_']
 }) {
   if (!uiState.email) {
-    uiDispatch({type: 'set-step', value: 2})
+    uiDispatch({type: 'set-step', value: 1})
     return uiDispatch({
       type: 'set-error',
       value: _(msg`Please enter your email.`),
     })
   }
   if (!EmailValidator.validate(uiState.email)) {
-    uiDispatch({type: 'set-step', value: 2})
+    uiDispatch({type: 'set-step', value: 1})
     return uiDispatch({
       type: 'set-error',
       value: _(msg`Your email appears to be invalid.`),
     })
   }
   if (!uiState.password) {
-    uiDispatch({type: 'set-step', value: 2})
+    uiDispatch({type: 'set-step', value: 1})
     return uiDispatch({
       type: 'set-error',
       value: _(msg`Please choose your password.`),
+    })
+  }
+  if (
+    uiState.isPhoneVerificationRequired &&
+    (!uiState.verificationPhone || !uiState.verificationCode)
+  ) {
+    uiDispatch({type: 'set-step', value: 2})
+    return uiDispatch({
+      type: 'set-error',
+      value: _(msg`Please enter the code you received by SMS.`),
     })
   }
   if (!uiState.handle) {
@@ -127,6 +182,8 @@ export async function submit({
       handle: createFullHandle(uiState.handle, uiState.userDomain),
       password: uiState.password,
       inviteCode: uiState.inviteCode.trim(),
+      verificationPhone: uiState.verificationPhone.trim(),
+      verificationCode: uiState.verificationCode.trim(),
     })
   } catch (e: any) {
     onboardingDispatch({type: 'skip'}) // undo starting the onboard
@@ -135,6 +192,9 @@ export async function submit({
       errMsg = _(
         msg`Invite code not accepted. Check that you input it correctly and try again.`,
       )
+      uiDispatch({type: 'set-step', value: 1})
+    } else if (e.error === 'InvalidPhoneVerification') {
+      uiDispatch({type: 'set-step', value: 2})
     }
 
     if ([400, 429].includes(e.status)) {
@@ -201,6 +261,19 @@ function createReducer({_}: {_: I18nContext['_']}) {
       case 'set-password': {
         return compute({...state, password: action.value})
       }
+      case 'set-verification-phone': {
+        return compute({
+          ...state,
+          verificationPhone: action.value,
+          hasRequestedVerificationCode: false,
+        })
+      }
+      case 'set-verification-code': {
+        return compute({...state, verificationCode: action.value.trim()})
+      }
+      case 'set-has-requested-verification-code': {
+        return compute({...state, hasRequestedVerificationCode: action.value})
+      }
       case 'set-handle': {
         return compute({...state, handle: action.value})
       }
@@ -208,7 +281,7 @@ function createReducer({_}: {_: I18nContext['_']}) {
         return compute({...state, birthDate: action.value})
       }
       case 'next': {
-        if (state.step === 2) {
+        if (state.step === 1) {
           if (!is13(state)) {
             return compute({
               ...state,
@@ -218,10 +291,18 @@ function createReducer({_}: {_: I18nContext['_']}) {
             })
           }
         }
-        return compute({...state, error: '', step: state.step + 1})
+        let increment = 1
+        if (state.step === 1 && !state.isPhoneVerificationRequired) {
+          increment = 2
+        }
+        return compute({...state, error: '', step: state.step + increment})
       }
       case 'back': {
-        return compute({...state, error: '', step: state.step - 1})
+        let decrement = 1
+        if (state.step === 3 && !state.isPhoneVerificationRequired) {
+          decrement = 2
+        }
+        return compute({...state, error: '', step: state.step - decrement})
       }
     }
   }
@@ -230,12 +311,16 @@ function createReducer({_}: {_: I18nContext['_']}) {
 function compute(state: CreateAccountState): CreateAccountState {
   let canNext = true
   if (state.step === 1) {
-    canNext = !!state.serviceDescription
-  } else if (state.step === 2) {
     canNext =
+      !!state.serviceDescription &&
       (!state.isInviteCodeRequired || !!state.inviteCode) &&
       !!state.email &&
       !!state.password
+  } else if (state.step === 2) {
+    canNext =
+      !state.isPhoneVerificationRequired ||
+      (!!state.verificationPhone &&
+        isValidVerificationCode(state.verificationCode))
   } else if (state.step === 3) {
     canNext = !!state.handle
   }
@@ -244,5 +329,11 @@ function compute(state: CreateAccountState): CreateAccountState {
     canBack: state.step > 1,
     canNext,
     isInviteCodeRequired: !!state.serviceDescription?.inviteCodeRequired,
+    isPhoneVerificationRequired:
+      !!state.serviceDescription?.phoneVerificationRequired,
   }
+}
+
+function isValidVerificationCode(str: string): boolean {
+  return /[0-9]{6}/.test(str)
 }

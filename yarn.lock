@@ -48,10 +48,10 @@
     typed-emitter "^2.1.0"
     zod "^3.21.4"
 
-"@atproto/api@^0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.8.0.tgz#57ef1f6292d05ba851e3acec575139cfc4fd7a7a"
-  integrity sha512-FgPOoij/PAEa0YoLKqj5NFYBvysdyb13gtS2XpJOdIvUZ2KehMlTrtj7g0AR78pRfME2jJjIgmAw6qpmSsjSTw==
+"@atproto/api@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.9.1.tgz#0b28baefa4af32bc4c05715b8641656f332546c6"
+  integrity sha512-DHPc/dGgpf8sgPlfR9meIAk7s4YMll0g7HTq/W/LeaaaY0T6d3ZAtrgvjIU1aKCp5WNzTfzrmz0LIHIX46FHHw==
   dependencies:
     "@atproto/common-web" "^0.2.3"
     "@atproto/lexicon" "^0.3.1"
@@ -15074,6 +15074,11 @@ levn@^0.4.1:
   dependencies:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
+
+libphonenumber-js@^1.10.53:
+  version "1.10.53"
+  resolved "https://registry.yarnpkg.com/libphonenumber-js/-/libphonenumber-js-1.10.53.tgz#8dbfe1355ef1a3d8e13b8d92849f7db7ebddc98f"
+  integrity sha512-sDTnnqlWK4vH4AlDQuswz3n4Hx7bIQWTpIcScJX+Sp7St3LXHmfiax/ZFfyYxHmkdCvydOLSuvtAO/XpXiSySw==
 
 lie@3.1.1:
   version "3.1.1"

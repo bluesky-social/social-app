@@ -8,7 +8,7 @@ describe('invite-codes', () => {
   let service: string
   let inviteCode = ''
   beforeAll(async () => {
-    service = await createServer('?users&invite')
+    service = await createServer('?users&invite&phone')
     await openApp({permissions: {notifications: 'YES'}})
   })
 
@@ -37,8 +37,14 @@ describe('invite-codes', () => {
     await element(by.id('passwordInput')).typeText('hunter2')
     await device.takeScreenshot('4- entered account details')
     await element(by.id('nextBtn')).tap()
+    await element(by.id('phoneInput')).typeText('5558675309')
+    await element(by.id('requestCodeBtn')).tap()
+    await device.takeScreenshot('5- requested code')
+    await element(by.id('codeInput')).typeText('000000')
+    await device.takeScreenshot('6- entered code')
+    await element(by.id('nextBtn')).tap()
     await element(by.id('handleInput')).typeText('e2e-test')
-    await device.takeScreenshot('4- entered handle')
+    await device.takeScreenshot('7- entered handle')
     await element(by.id('nextBtn')).tap()
     await expect(element(by.id('welcomeOnboarding'))).toBeVisible()
     await element(by.id('continueBtn')).tap()

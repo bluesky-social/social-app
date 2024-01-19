@@ -39,7 +39,7 @@
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android"
   },
   "dependencies": {
-    "@atproto/api": "^0.8.0",
+    "@atproto/api": "^0.9.1",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
@@ -120,6 +120,7 @@
     "js-sha256": "^0.9.0",
     "jwt-decode": "^4.0.0",
     "lande": "^1.0.10",
+    "libphonenumber-js": "^1.10.53",
     "lodash.chunk": "^4.2.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
