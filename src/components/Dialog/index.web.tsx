@@ -6,12 +6,10 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
-import {Text} from '#/components/Typography'
 import {Portal} from '#/components/Portal'
-import {Button} from '#/components/Button'
 
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
-import {Context, useDialogContext} from '#/components/Dialog/context'
+import {Context} from '#/components/Dialog/context'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -172,38 +170,25 @@ export function Handle() {
   return null
 }
 
-export function Close() {
-  const {_} = useLingui()
-  const t = useTheme()
-  const {close} = useDialogContext()
-  return (
-    <View
-      style={[
-        a.absolute,
-        a.z_10,
-        {
-          top: a.pt_lg.paddingTop,
-          right: a.pr_lg.paddingRight,
-        },
-      ]}>
-      <Button onPress={close} label={_(msg`Close active dialog`)}>
-        {() => (
-          <View
-            style={[
-              a.justify_center,
-              a.align_center,
-              a.rounded_full,
-              t.atoms.bg_contrast_200,
-              {
-                pointerEvents: 'none',
-                height: 32,
-                width: 32,
-              },
-            ]}>
-            <Text>X</Text>
-          </View>
-        )}
-      </Button>
-    </View>
-  )
-}
+/**
+ * TODO(eric) unused rn
+ */
+// export function Close() {
+//   const {_} = useLingui()
+//   const t = useTheme()
+//   const {close} = useDialogContext()
+//   return (
+//     <View
+//       style={[
+//         a.absolute,
+//         a.z_10,
+//         {
+//           top: a.pt_lg.paddingTop,
+//           right: a.pr_lg.paddingRight,
+//         },
+//       ]}>
+//       <Button onPress={close} label={_(msg`Close active dialog`)}>
+//       </Button>
+//     </View>
+//   )
+// }
