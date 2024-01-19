@@ -1517,7 +1517,7 @@ msgstr "Saya punya domain sendiri"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:158
 msgid "If alt text is long, toggles alt text expanded state"
-msgstr "Jika teks alt panjang, mengalihkan status teks alt yang diperluas"
+msgstr "Jika teks alt panjang, alihkan status teks alt yang diperluas"
 
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
