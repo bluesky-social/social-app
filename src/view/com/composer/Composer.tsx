@@ -81,6 +81,7 @@ export const ComposePost = observer(function ComposePost({
   const pal = usePalette('default')
   const {isDesktop, isMobile} = useWebMediaQueries()
   const {_} = useLingui()
+  const scrollViewRef = useRef<ScrollView>(null)
   const requireAltTextEnabled = useRequireAltTextEnabled()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
@@ -268,6 +269,11 @@ export const ComposePost = observer(function ComposePost({
     )
   }
 
+  const onScrollViewContentSizeChange = useCallback(
+    () => scrollViewRef.current?.scrollToEnd({animated: true}),
+    [],
+  )
+
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
@@ -389,6 +395,8 @@ export const ComposePost = observer(function ComposePost({
           </View>
         )}
         <ScrollView
+          ref={scrollViewRef}
+          onContentSizeChange={onScrollViewContentSizeChange}
           style={styles.scrollView}
           keyboardShouldPersistTaps="always">
           {replyTo ? <ComposerReplyTo replyTo={replyTo} /> : undefined}
@@ -540,7 +548,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   scrollView: {
-    flex: 1,
+    // flex: 1,
     paddingHorizontal: 15,
   },
   textInputLayout: {
