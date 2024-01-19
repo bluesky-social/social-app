@@ -8,9 +8,9 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-18 15:00\n"
-"Last-Translator: gildaswise\n"
-"Language-Team: maisondasilva, gildaswise, gleydson\n"
+"PO-Revision-Date: 2024-01-19 10:00\n"
+"Last-Translator: faeriarum\n"
+"Language-Team: maisondasilva, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -156,7 +156,7 @@ msgstr "Adicionar um aviso de conteúdo"
 
 #: src/view/screens/ProfileList.tsx:781
 msgid "Add a user to this list"
-msgstr "Adicionar um usuário nesta lista"
+msgstr "Adicionar um usuário a esta lista"
 
 #: src/view/screens/Settings.tsx:383
 #: src/view/screens/Settings.tsx:392
@@ -228,7 +228,7 @@ msgstr "Conteúdo Adulto"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:137
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "Conteúdo adulto só pode ser habilitado na Web: <0/>."
+msgstr "Conteúdo adulto só pode ser habilitado no site: <0/>."
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -274,15 +274,15 @@ msgstr "Idioma do aplicativo"
 
 #: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
-msgstr "Senha de Aplicativo deletada"
+msgstr "Senha de Aplicativo excluída"
 
 #: src/view/com/modals/AddAppPasswords.tsx:133
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "Nome de Senha de Aplicativo só pode conter letras, números, traços e sublinhados."
+msgstr "O nome da Senha de Aplicativo só pode conter letras, números, traços e sublinhados."
 
 #: src/view/com/modals/AddAppPasswords.tsx:98
 msgid "App Password names must be at least 4 characters long."
-msgstr "Nome de Senha de Aplicativo precisa ter no mínimo 4 caracteres."
+msgstr "O nome da Senha de Aplicativo precisa ter no mínimo 4 caracteres."
 
 #: src/view/screens/Settings.tsx:641
 msgid "App password settings"
@@ -457,11 +457,11 @@ msgstr "Bluesky é público."
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "O Bluesky usa convites para criar uma comunidade mais saudável. Se você não conhece ninguém com um convite, você pode se inscrever na lista de espera e logo enviaremos um."
+msgstr "O Bluesky usa convites para criar uma comunidade mais saudável. Se você não conhece ninguém que tenha um convite, inscreva-se na lista de espera e em breve enviaremos um para você."
 
 #: src/view/screens/Moderation.tsx:225
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
-msgstr "O Bluesky não mostrará seu perfil e publicações para usuários desconectados. Outros aplicativos não podem honrar esta solicitação. Isso não torna a sua conta privada."
+msgstr "O Bluesky não mostrará seu perfil e publicações para usuários desconectados. Outros aplicativos podem não honrar esta solicitação. Isso não torna a sua conta privada."
 
 #: src/view/com/modals/ServerInput.tsx:78
 msgid "Bluesky.Social"
@@ -594,7 +594,7 @@ msgstr "Altere o Seu Email"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "Confira alguns feeds recomendados. Toque em + para adicioná-los a sua lista de feeds fixados."
+msgstr "Confira alguns feeds recomendados. Toque em + para adicioná-los à sua lista de feeds fixados."
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
@@ -602,7 +602,7 @@ msgstr "Confira alguns usuários recomendados. Siga-os para ver usuários semelh
 
 #: src/view/com/modals/DeleteAccount.tsx:165
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Verifique sua caixa de entrada para um email com o código de confirmação abaixo:"
+msgstr "Verifique em sua caixa de entrada um e-mail com o código de confirmação abaixo:"
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
@@ -632,7 +632,7 @@ msgstr "Limpar todos os dados de armazenamento legados"
 
 #: src/view/screens/Settings.tsx:770
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "Limpar todos os dados de armazenamento legados (reinicie após isso)"
+msgstr "Limpar todos os dados de armazenamento legados (reinicie em seguida)"
 
 #: src/view/screens/Settings.tsx:779
 #: src/view/screens/Settings.tsx:780
@@ -641,7 +641,7 @@ msgstr "Limpar todos os dados de armazenamento"
 
 #: src/view/screens/Settings.tsx:782
 msgid "Clear all storage data (restart after this)"
-msgstr "Limpar todos os dados de armazenamento (reiniciar após isso)"
+msgstr "Limpar todos os dados de armazenamento (reinicie em seguida)"
 
 #: src/view/com/util/forms/SearchInput.tsx:74
 #: src/view/screens/Search/Search.tsx:583
@@ -751,7 +751,7 @@ msgstr "Código de confirmação"
 
 #: src/view/com/modals/Waitlist.tsx:120
 msgid "Confirms signing up {email} to the waitlist"
-msgstr "Confirma {email} para a lista de espera"
+msgstr "Confirma adição de {email} à lista de espera"
 
 #: src/view/com/auth/create/CreateAccount.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:275
@@ -980,7 +980,7 @@ msgstr "Descartar rascunho"
 
 #: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "Desencorajar aplicativos de mostrar minha conta para usuários deslogados"
+msgstr "Desencorajar aplicativos a mostrar minha conta para usuários deslogados"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
@@ -1005,7 +1005,7 @@ msgstr "Domínio verificado!"
 
 #: src/view/com/auth/create/Step2.tsx:83
 msgid "Don't have an invite code?"
-msgstr "Não tem um convite?"
+msgstr "Não possui um convite?"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
 #: src/view/com/modals/EditImage.tsx:333
@@ -1046,7 +1046,7 @@ msgstr "ex. Alice Roberts"
 
 #: src/view/com/modals/EditProfile.tsx:203
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "ex. Artista, amo cachorros, e leitora ávida."
+msgstr "ex. Artista, amo cachorros, leitora ávida."
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "e.g. Great Posters"
@@ -1125,29 +1125,29 @@ msgstr "Editar sua descrição"
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #: src/view/com/auth/create/Step2.tsx:99
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:143
 msgid "Email address"
-msgstr "Endereço de email"
+msgstr "Endereço de e-mail"
 
 #: src/view/com/modals/ChangeEmail.tsx:56
 #: src/view/com/modals/ChangeEmail.tsx:88
 msgid "Email updated"
-msgstr "Email atualizado"
+msgstr "E-mail atualizado"
 
 #: src/view/com/modals/ChangeEmail.tsx:111
 msgid "Email Updated"
-msgstr "Email Atualizado"
+msgstr "E-mail Atualizado"
 
 #: src/view/com/modals/VerifyEmail.tsx:78
 msgid "Email verified"
-msgstr "Email verificado"
+msgstr "E-mail verificado"
 
 #: src/view/screens/Settings.tsx:312
 msgid "Email:"
-msgstr "Email:"
+msgstr "E-mail:"
 
 #: src/view/com/modals/EmbedConsent.tsx:113
 msgid "Enable {0} only"
@@ -1167,7 +1167,7 @@ msgstr "Habilitar mídia para"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "Ative esta configuração para apenas ver respostas entre as pessoas que você segue."
+msgstr "Ative esta configuração para ver respostas apenas entre as pessoas que você segue."
 
 #: src/view/screens/Profile.tsx:427
 msgid "End of feed"
@@ -1191,7 +1191,7 @@ msgstr "Digite o domínio que você deseja usar"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:103
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Digite o email que você usou para criar a sua conta. Nós lhe enviaremos um \"código de redefinição\" para que você possa definir uma nova senha."
+msgstr "Digite o e-mail que você usou para criar a sua conta. Nós lhe enviaremos um \"código de redefinição\" para que você possa definir uma nova senha."
 
 #: src/view/com/auth/create/Step2.tsx:157
 #: src/view/com/modals/BirthDateSettings.tsx:74
@@ -1200,19 +1200,19 @@ msgstr "Insira seu aniversário"
 
 #: src/view/com/modals/Waitlist.tsx:78
 msgid "Enter your email"
-msgstr "Insira seu email"
+msgstr "Insira seu e-mail"
 
 #: src/view/com/auth/create/Step2.tsx:104
 msgid "Enter your email address"
-msgstr "Insira seu endereço de email"
+msgstr "Insira seu endereço de e-mail"
 
 #: src/view/com/modals/ChangeEmail.tsx:41
 msgid "Enter your new email above"
-msgstr "Insira o novo email acima"
+msgstr "Insira o novo e-mail acima"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
-msgstr "Digite seu novo endereço de email abaixo."
+msgstr "Digite seu novo endereço de e-mail abaixo."
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
@@ -1250,7 +1250,7 @@ msgstr "Expandir texto alternativo"
 #: src/view/com/composer/ComposerReplyTo.tsx:81
 #: src/view/com/composer/ComposerReplyTo.tsx:84
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Mostrar ou esconder o post que você está respondendo"
+msgstr "Mostrar ou esconder o post a que você está respondendo"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
@@ -1282,7 +1282,7 @@ msgstr "Não foi possível criar a lista. Por favor tente novamente."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:86
 msgid "Failed to delete post, please try again"
-msgstr "Não foi possível deletar o post, por favor tente novamente."
+msgstr "Não foi possível excluir o post, por favor tente novamente."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1427,11 +1427,11 @@ msgstr "Segue Você"
 
 #: src/view/com/modals/DeleteAccount.tsx:107
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "Por motivos de segurança, precisamos enviar um código de confirmação para seu endereço de email."
+msgstr "Por motivos de segurança, precisamos enviar um código de confirmação para seu endereço de e-mail."
 
 #: src/view/com/modals/AddAppPasswords.tsx:211
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "Por motivos de segurança, você não poderá ver esta senha novamente. Se você perder esta senha, precisará gerar uma nova."
+msgstr "Por motivos de segurança, você não poderá ver esta senha novamente. Se você perder esta senha, terá que gerar uma nova."
 
 #: src/view/com/auth/login/LoginForm.tsx:238
 msgid "Forgot"
@@ -1528,15 +1528,15 @@ msgstr "Esconder posts de {0} no seu feed"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 #~ msgid "Hmm, some kind of issue occured when contacting the feed server. Please let the feed owner know about this issue."
-#~ msgstr "Hmm, ocorreu algum tipo de problema ao entrar em contato com o servidor deste feed. Por favor, avise o criador do feed sobre este problema."
+#~ msgstr "Hmm, ocorreu algum problema ao entrar em contato com o servidor deste feed. Por favor, avise o criador do feed sobre este problema."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "Hmm, ocorreu algum tipo de problema ao entrar em contato com o servidor deste feed. Por favor, avise o criador do feed sobre este problema."
+msgstr "Hmm, ocorreu algum problema ao entrar em contato com o servidor deste feed. Por favor, avise o criador do feed sobre este problema."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "Hmm, o servidor do feed parece estar mal configurado. Por favor, deixe o criador do feed saber sobre este problema."
+msgstr "Hmm, o servidor do feed parece estar mal configurado. Por favor, avise o criador do feed sobre este problema."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
@@ -1622,15 +1622,15 @@ msgstr "Opções de imagem"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:110
 msgid "Input code sent to your email for password reset"
-msgstr "Insira o código enviado para o seu email para redefinir sua senha"
+msgstr "Insira o código enviado para o seu e-mail para redefinir sua senha"
 
 #: src/view/com/modals/DeleteAccount.tsx:180
 msgid "Input confirmation code for account deletion"
-msgstr "Insira o código de confirmação para deletar sua conta"
+msgstr "Insira o código de confirmação para excluir sua conta"
 
 #: src/view/com/auth/create/Step2.tsx:109
 msgid "Input email for Bluesky waitlist"
-msgstr "Insira o email para entrar na lista de espera do Bluesky"
+msgstr "Insira o e-mail para entrar na lista de espera do Bluesky"
 
 #: src/view/com/auth/create/Step1.tsx:80
 msgid "Input hosting provider address"
@@ -1642,7 +1642,7 @@ msgstr "Insira o convite para continuar"
 
 #: src/view/com/modals/AddAppPasswords.tsx:182
 msgid "Input name for app password"
-msgstr "Insira o nome da senha de app"
+msgstr "Insira um nome para a senha de aplicativo"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:133
 msgid "Input new password"
@@ -1650,7 +1650,7 @@ msgstr "Insira a nova senha"
 
 #: src/view/com/modals/DeleteAccount.tsx:199
 msgid "Input password for account deletion"
-msgstr "Insira a senha para deletar a conta"
+msgstr "Insira a senha para excluir a conta"
 
 #: src/view/com/auth/login/LoginForm.tsx:227
 msgid "Input the password tied to {identifier}"
@@ -1658,11 +1658,11 @@ msgstr "Insira a senha da conta {identifier}"
 
 #: src/view/com/auth/login/LoginForm.tsx:194
 msgid "Input the username or email address you used at signup"
-msgstr "Insira o usuário ou email que você cadastrou"
+msgstr "Insira o usuário ou e-mail que você cadastrou"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
-msgstr "Insira o email para entrar na lista de espera do Bluesky"
+msgstr "Insira seu e-mail para entrar na lista de espera do Bluesky"
 
 #: src/view/com/auth/login/LoginForm.tsx:226
 msgid "Input your password"
@@ -1860,7 +1860,7 @@ msgstr "Lista por {0}"
 
 #: src/view/screens/ProfileList.tsx:367
 msgid "List deleted"
-msgstr "Lista deletada"
+msgstr "Lista excluída"
 
 #: src/view/screens/ProfileList.tsx:282
 msgid "List muted"
@@ -1928,7 +1928,7 @@ msgstr "Fazer login em uma conta que não está listada"
 
 #: src/view/screens/ProfileFeed.tsx:472
 #~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
-#~ msgstr "Parece que este feed só está disponível para usuários com uma conta do Bluesky. Por favor, cadastre-se ou logue para ver este feed!"
+#~ msgstr "Parece que este feed só está disponível para usuários com uma conta do Bluesky. Por favor, cadastre-se ou entre para ver este feed!"
 
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Make sure this is where you intend to go!"
@@ -2069,7 +2069,7 @@ msgstr "Contas Silenciadas"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Contas silenciadas tem seus posts removidos do seu feed e das suas notificações. Suas contas silenciadas são completamente privadas."
+msgstr "Contas silenciadas não aparecem no seu feed ou nas suas notificações. Suas contas silenciadas são completamente privadas."
 
 #: src/view/screens/ProfileList.tsx:276
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2113,7 +2113,7 @@ msgstr "Navega para seu perfil"
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
 msgid "Never load embeds from {0}"
-msgstr "Nunca carregue anexos de {0}"
+msgstr "Nunca carregar anexos de {0}"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
@@ -2249,11 +2249,11 @@ msgstr "Agora não"
 
 #: src/view/screens/Moderation.tsx:227
 #~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
-#~ msgstr "Nota: o Bluesky é uma rede aberta e pública. Habilitar esta configuração não tornará seu perfil privado ou limitar os usuários logados de verem os seus posts. Esta configuração só limita a visibilidade dos posts nos apps oficiais do Bluesky; aplicativos de terceiros podem não respeitá-la e poderão mostrar seu conteúdo para usuários deslogados."
+#~ msgstr "Nota: o Bluesky é uma rede aberta e pública. Habilitar esta configuração não tornará seu perfil privado nem impedirá os usuários logados de verem os seus posts. Esta configuração só limita a visibilidade dos posts nos apps oficiais do Bluesky; aplicativos de terceiros podem não respeitá-la e poderão mostrar seu conteúdo para usuários deslogados."
 
 #: src/view/screens/Moderation.tsx:232
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limita somente a visibilidade do seu conteúdo no site e aplicativo do Bluesky, e outros aplicativos podem não respeitar esta configuração. Seu conteúdo ainda pode ser exibido para usuários deslogados por outros aplicativos e sites."
+msgstr "Nota: o Bluesky é uma rede aberta e pública. Esta configuração limita somente a visibilidade do seu conteúdo no site e aplicativo do Bluesky, e outros aplicativos podem não respeitar esta configuração. Seu conteúdo ainda poderá ser exibido para usuários deslogados por outros aplicativos e sites."
 
 #: src/Navigation.tsx:447
 #: src/view/screens/Notifications.tsx:113
@@ -2346,7 +2346,7 @@ msgstr "Abre a galeria de fotos do dispositivo"
 
 #: src/view/com/profile/ProfileHeader.tsx:459
 msgid "Opens editor for profile display name, avatar, background image, and description"
-msgstr "Abre o editor para o nome, avatar, banner e descrição do perfil"
+msgstr "Abre o editor de nome, avatar, banner e descrição do perfil"
 
 #: src/view/screens/Settings.tsx:615
 msgid "Opens external embeds settings"
@@ -2372,7 +2372,7 @@ msgstr "Abre a lista de códigos de convite"
 
 #: src/view/screens/Settings.tsx:696
 msgid "Opens modal for account deletion confirmation. Requires email code."
-msgstr "Abre modal para confirmar deleção de conta. Requer código de verificação."
+msgstr "Abre modal para confirmar exclusão de conta. Requer código de verificação."
 
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Opens modal for using custom domain"
@@ -2384,7 +2384,7 @@ msgstr "Abre configurações de moderação"
 
 #: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Opens password reset form"
-msgstr "Abre o formulário de redefinir senha"
+msgstr "Abre o formulário de redefinição de senha"
 
 #: src/view/screens/Feeds.tsx:335
 msgid "Opens screen to edit Saved Feeds"
@@ -2507,7 +2507,7 @@ msgstr "Por favor, escolha sua senha."
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "Por favor, confirme seu email antes de alterá-lo. Este é um requisito temporário enquanto ferramentas de atualização de email são adicionadas, e em breve será removido."
+msgstr "Por favor, confirme seu e-mail antes de alterá-lo. Este é um requisito temporário enquanto ferramentas de atualização de e-mail são adicionadas, e em breve será removido."
 
 #: src/view/com/modals/AddAppPasswords.tsx:89
 msgid "Please enter a name for your app password. All spaces is not allowed."
@@ -2519,7 +2519,7 @@ msgstr "Por favor, insira um nome único para esta Senha de Aplicativo ou use no
 
 #: src/view/com/auth/create/state.ts:95
 msgid "Please enter your email."
-msgstr "Por favor, digite o seu email."
+msgstr "Por favor, digite o seu e-mail."
 
 #: src/view/com/modals/DeleteAccount.tsx:187
 msgid "Please enter your password as well:"
@@ -2537,7 +2537,7 @@ msgstr "Por favor, diga-nos por que você acha que este aviso de conteúdo foi a
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
-msgstr "Por favor, verifique seu email"
+msgstr "Por favor, verifique seu e-mail"
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -2577,7 +2577,7 @@ msgstr "Post por @{0}"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:82
 msgid "Post deleted"
-msgstr "Post removido"
+msgstr "Post excluído"
 
 #: src/view/com/post-thread/PostThread.tsx:382
 msgid "Post hidden"
@@ -2649,7 +2649,7 @@ msgstr "Perfil atualizado"
 
 #: src/view/screens/Settings.tsx:882
 msgid "Protect your account by verifying your email."
-msgstr "Proteja a sua conta verificando o seu email."
+msgstr "Proteja a sua conta verificando o seu e-mail."
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -2740,7 +2740,7 @@ msgstr "Remover visualização da imagem"
 
 #: src/view/com/modals/Repost.tsx:47
 msgid "Remove repost"
-msgstr "Remover repost"
+msgstr "Desfazer repost"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 msgid "Remove this feed from my feeds?"
@@ -2852,7 +2852,7 @@ msgstr "Solicitar Alteração"
 
 #: src/view/screens/Moderation.tsx:188
 #~ msgid "Request to limit the visibility of my account"
-#~ msgstr "Exigir visibilidade limitada da minha conta"
+#~ msgstr "Exigir limitação de visibilidade da minha conta"
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
@@ -2873,7 +2873,7 @@ msgstr "Redefinir tutoriais"
 
 #: src/view/screens/Settings.tsx:760
 msgid "Reset onboarding state"
-msgstr "Redefinir estado de integração"
+msgstr "Redefinir tutoriais"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:100
 msgid "Reset password"
@@ -2889,7 +2889,7 @@ msgstr "Redefinir configurações"
 
 #: src/view/screens/Settings.tsx:758
 msgid "Resets the onboarding state"
-msgstr "Redefine o estado de tutorial"
+msgstr "Redefine tutoriais"
 
 #: src/view/screens/Settings.tsx:748
 msgid "Resets the preferences state"
@@ -2897,7 +2897,7 @@ msgstr "Redefine as configurações"
 
 #: src/view/com/auth/login/LoginForm.tsx:266
 msgid "Retries login"
-msgstr "Tenta logar novamente"
+msgstr "Tenta entrar novamente"
 
 #: src/view/com/util/error/ErrorMessage.tsx:57
 #: src/view/com/util/error/ErrorScreen.tsx:67
@@ -2970,7 +2970,7 @@ msgstr "Salva todas as alterações"
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
-msgstr "Salvar mudança de usuário para {handle}"
+msgstr "Salva mudança de usuário para {handle}"
 
 #: src/view/screens/ProfileList.tsx:833
 msgid "Scroll to top"
@@ -3037,7 +3037,7 @@ msgstr "Selecionar serviço"
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "Selecione quais idiomas você deseja ver nos seus feeds. Se nenhum for selecionado, todas os idiomas serão exibidos."
+msgstr "Selecione quais idiomas você deseja ver nos seus feeds. Se nenhum for selecionado, todos os idiomas serão exibidos."
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
@@ -3050,16 +3050,16 @@ msgstr "Selecione seu idioma preferido para as traduções no seu feed."
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
 msgid "Send Confirmation Email"
-msgstr "Enviar Email de Confirmação"
+msgstr "Enviar E-mail de Confirmação"
 
 #: src/view/com/modals/DeleteAccount.tsx:127
 msgid "Send email"
-msgstr "Enviar email"
+msgstr "Enviar e-mail"
 
 #: src/view/com/modals/DeleteAccount.tsx:140
 msgctxt "action"
 msgid "Send Email"
-msgstr "Enviar Email"
+msgstr "Enviar E-mail"
 
 #: src/view/com/modals/DeleteAccount.tsx:138
 #~ msgid "Send Email"
@@ -3076,11 +3076,11 @@ msgstr "Denunciar"
 
 #: src/view/com/modals/DeleteAccount.tsx:129
 msgid "Sends email with confirmation code for account deletion"
-msgstr "Envia o email com o código de confirmação para deletar a conta"
+msgstr "Envia o e-mail com o código de confirmação para excluir a conta"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:306
 msgid "Set {value} for {labelGroup} content moderation policy"
-msgstr "Define {value} para o filtro de moderação {labelGroup}"
+msgstr "Definir {value} para o filtro de moderação {labelGroup}"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:155
 #: src/view/com/modals/ContentFilteringSettings.tsx:174
@@ -3090,19 +3090,19 @@ msgstr "Definir Idade"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "Define o tema de cor para escuro"
+msgstr "Definir o tema de cor para escuro"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
-msgstr "Define o tema de cor para claro"
+msgstr "Definir o tema de cor para claro"
 
 #: src/view/screens/Settings.tsx:469
 msgid "Set color theme to system setting"
-msgstr "Define o tema para acompanhar o sistema"
+msgstr "Definir o tema para acompanhar o sistema"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:78
 msgid "Set new password"
-msgstr "Defina uma nova senha"
+msgstr "Definir uma nova senha"
 
 #: src/view/com/auth/create/Step2.tsx:133
 msgid "Set password"
@@ -3134,7 +3134,7 @@ msgstr "Configura o usuário no Bluesky"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:153
 msgid "Sets email for password reset"
-msgstr "Configura o email para recuperação de senha"
+msgstr "Configura o e-mail para recuperação de senha"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:118
 msgid "Sets hosting provider for password reset"
@@ -3331,11 +3331,11 @@ msgstr "Algo deu errado e meio que não sabemos o que houve."
 
 #: src/view/com/modals/Waitlist.tsx:51
 msgid "Something went wrong. Check your email and try again."
-msgstr "Algo deu errado. Verifique seu email e tente novamente."
+msgstr "Algo deu errado. Verifique seu e-mail e tente novamente."
 
 #: src/App.native.tsx:57
 msgid "Sorry! Your session expired. Please log in again."
-msgstr "Opa! Sua sessão expirou. Por favor, logue novamente."
+msgstr "Opa! Sua sessão expirou. Por favor, entre novamente."
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
@@ -3476,7 +3476,7 @@ msgstr "A Política de Privacidade foi movida para <0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "O formulário de suporte foi movido. Se você precisa de ajuda, <0/> ou visite {HELP_DESK_URL} para entrar em contato conosco."
+msgstr "O formulário de suporte foi movido. Se precisar de ajuda, <0/> ou visite {HELP_DESK_URL} para entrar em contato conosco."
 
 #: src/view/screens/Support.tsx:36
 #~ msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
@@ -3577,7 +3577,7 @@ msgstr "Este conteúdo não está disponível porque um dos usuários bloqueou o
 
 #: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "This content is not viewable without a Bluesky account."
-msgstr "Este conteúdo não é visível sem uma conta Bluesky."
+msgstr "Este conteúdo não é visível sem uma conta do Bluesky."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -3599,7 +3599,7 @@ msgstr "Esta informação não é compartilhada com outros usuários."
 
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "Isso é importante caso você precise alterar seu email ou redefinir sua senha."
+msgstr "Isso é importante caso você precise alterar seu e-mail ou redefinir sua senha."
 
 #: src/view/com/auth/create/Step1.tsx:55
 msgid "This is the service that keeps you online."
@@ -3729,7 +3729,7 @@ msgstr "Infelizmente, você não atende aos requisitos para criar uma conta."
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:189
 msgid "Unlike"
-msgstr "Remover curtida"
+msgstr "Descurtir"
 
 #: src/view/screens/ProfileList.tsx:575
 msgid "Unmute"
@@ -3848,7 +3848,7 @@ msgstr "Listas de Usuários"
 #: src/view/com/auth/login/LoginForm.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:192
 msgid "Username or email address"
-msgstr "Nome de usuário ou endereço de email"
+msgstr "Nome de usuário ou endereço de e-mail"
 
 #: src/view/screens/ProfileList.tsx:775
 msgid "Users"
@@ -3864,11 +3864,11 @@ msgstr "Usuários em \"{0}\""
 
 #: src/view/screens/Settings.tsx:843
 msgid "Verify email"
-msgstr "Verificar email"
+msgstr "Verificar e-mail"
 
 #: src/view/screens/Settings.tsx:868
 msgid "Verify my email"
-msgstr "Verificar meu email"
+msgstr "Verificar meu e-mail"
 
 #: src/view/screens/Settings.tsx:877
 msgid "Verify My Email"
@@ -3877,11 +3877,11 @@ msgstr "Verificar Meu Email"
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
-msgstr "Verificar Novo Email"
+msgstr "Verificar Novo E-mail"
 
 #: src/view/com/modals/VerifyEmail.tsx:103
 msgid "Verify Your Email"
-msgstr "Verificar Seu Email"
+msgstr "Verificar Seu E-mail"
 
 #: src/view/com/profile/ProfileHeader.tsx:701
 msgid "View {0}'s avatar"
@@ -3921,11 +3921,11 @@ msgstr "Avaliaremos sua contestação o quanto antes."
 
 #: src/view/com/auth/create/CreateAccount.tsx:122
 msgid "We're so excited to have you join us!"
-msgstr "Estamos muito felizes que você veio!"
+msgstr "Estamos muito felizes em recebê-lo!"
 
 #: src/view/screens/ProfileList.tsx:83
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "Tivemos um problema para exibir esta lista. Se continuar acontecendo, contate o criador da lista: @{handleOrDid}."
+msgstr "Tivemos um problema ao exibir esta lista. Se continuar acontecendo, contate o criador da lista: @{handleOrDid}."
 
 #: src/view/screens/Search/Search.tsx:243
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -4000,7 +4000,7 @@ msgstr "Agora você pode entrar com a sua nova senha."
 
 #: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "Você ainda não tem nenhum convite! Nós lhe enviaremos alguns quando você estiver no Bluesky por mais um pouco de tempo."
+msgstr "Você ainda não tem nenhum convite! Nós lhe enviaremos alguns quando você estiver há mais tempo no Bluesky."
 
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
@@ -4061,7 +4061,7 @@ msgstr "Você vai receber notificações desta thread"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Você receberá um email com um \"código de redefinição\". Digite esse código aqui, e então digite sua nova senha."
+msgstr "Você receberá um e-mail com um \"código de redefinição\". Digite esse código aqui, e então digite sua nova senha."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -4073,7 +4073,7 @@ msgstr "Sua conta"
 
 #: src/view/com/modals/DeleteAccount.tsx:65
 msgid "Your account has been deleted"
-msgstr "Sua conta foi deletada"
+msgstr "Sua conta foi excluída"
 
 #: src/view/com/auth/create/Step2.tsx:146
 msgid "Your birth date"
@@ -4081,24 +4081,24 @@ msgstr "Sua data de nascimento"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:47
 msgid "Your choice will be saved, but can be changed later in settings."
-msgstr "Sua escolha será salva, mas você pode trocar depois nas configurações"
+msgstr "Sua escolha será salva, mas você pode trocá-la nas configurações depois"
 
 #: src/view/com/auth/create/state.ts:102
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 msgid "Your email appears to be invalid."
-msgstr "Seu email parece ser inválido."
+msgstr "Seu e-mail parece ser inválido."
 
 #: src/view/com/modals/Waitlist.tsx:109
 msgid "Your email has been saved! We'll be in touch soon."
-msgstr "Seu email foi salvo! Logo entraremos em contato."
+msgstr "Seu e-mail foi salvo! Logo entraremos em contato."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "Seu email foi atualizado mas não foi verificado. Como próximo passo, por favor verifique seu novo email."
+msgstr "Seu e-mail foi atualizado mas não foi verificado. Como próximo passo, por favor verifique seu novo e-mail."
 
 #: src/view/com/modals/VerifyEmail.tsx:114
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr "Seu email ainda não foi verificado. Esta é uma etapa importante de segurança que recomendamos."
+msgstr "Seu e-mail ainda não foi verificado. Esta é uma etapa importante de segurança que recomendamos."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
@@ -4129,7 +4129,7 @@ msgstr "Seu post foi publicado"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "Suas postagens, curtidas e blocos são públicos. Usuários silenciados são privados."
+msgstr "Suas postagens, curtidas e bloqueios são públicos. Silenciamentos são privados."
 
 #: src/view/com/modals/SwitchAccount.tsx:84
 #: src/view/screens/Settings.tsx:125
@@ -4150,15 +4150,15 @@ msgstr "Seu identificador de usuário"
 
 #: src/view/screens/Moderation.tsx:205
 #~ msgid "Your profile and account will not be visible to anyone visiting the Bluesky app without an account, or to account holders who are not logged in. Enabling this will not make your profile private."
-#~ msgstr "Seu perfil e conta não serão visíveis para qualquer pessoa utilizando o app Bluesky sem uma conta, ou para pessoas que têm conta mas estão deslogadas. Habilitar esta opção não torna a sua conta privada."
+#~ msgstr "Seu perfil e conta não serão visíveis para pessoas utilizando o app Bluesky sem uma conta, ou para pessoas que têm conta mas estão deslogadas. Habilitar esta opção não torna a sua conta privada."
 
 #: src/view/screens/Moderation.tsx:220
 #~ msgid "Your profile and content will not be visible to anyone visiting the Bluesky app without an account. Enabling this will not make your profile private."
-#~ msgstr "Seu perfil e seu conteúdo não serão visíveis para qualquer pessoa utilizando o app Bluesky sem uma conta. Habilitar esta opção não torna a sua conta privada."
+#~ msgstr "Seu perfil e seu conteúdo não serão visíveis para pessoas utilizando o app Bluesky sem uma conta. Habilitar esta opção não torna a sua conta privada."
 
 #: src/view/screens/Moderation.tsx:220
 #~ msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
-#~ msgstr "Seu perfil e posts não serão visíveis para qualquer pessoa utilizando o app ou site do Bluesky sem uma conta logada."
+#~ msgstr "Seu perfil e posts não serão visíveis para pessoas utilizando o app ou site do Bluesky sem uma conta logada."
 
 #: src/view/screens/Moderation.tsx:227
 #~ msgid "Note: Third-party apps that display Bluesky content may not respect this setting."
