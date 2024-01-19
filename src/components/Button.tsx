@@ -27,6 +27,7 @@ export type ButtonColor =
   | 'gradient_nordic'
   | 'gradient_bonfire'
 export type ButtonSize = 'small' | 'large'
+export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
@@ -40,6 +41,10 @@ export type VariantProps = {
    * The size of the button
    */
   size?: ButtonSize
+  /**
+   * The shape of the button
+   */
+  shape?: ButtonShape
 }
 
 export type ButtonProps = React.PropsWithChildren<
@@ -74,6 +79,7 @@ export function Button({
   variant,
   color,
   size,
+  shape = 'default',
   label,
   disabled = false,
   ...rest
@@ -262,10 +268,24 @@ export function Button({
       }
     }
 
-    if (size === 'large') {
-      baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_sm)
-    } else if (size === 'small') {
-      baseStyles.push({paddingVertical: 9}, a.px_md, a.rounded_sm, a.gap_sm)
+    if (shape === 'default') {
+      if (size === 'large') {
+        baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_sm)
+      } else if (size === 'small') {
+        baseStyles.push({paddingVertical: 9}, a.px_md, a.rounded_sm, a.gap_sm)
+      }
+    } else if (shape === 'round' || shape === 'square') {
+      if (size === 'large') {
+        baseStyles.push(a.p_lg)
+      } else if (size === 'small') {
+        baseStyles.push(a.p_md)
+      }
+
+      if (shape === 'round') {
+        baseStyles.push(a.rounded_full)
+      } else if (shape === 'square') {
+        baseStyles.push(a.rounded_sm)
+      }
     }
 
     return {
@@ -278,7 +298,7 @@ export function Button({
         } as ViewStyle,
       ],
     }
-  }, [t, variant, color, size, disabled])
+  }, [t, variant, color, size, shape, disabled])
 
   const {gradientColors, gradientHoverColors, gradientLocations} =
     React.useMemo(() => {

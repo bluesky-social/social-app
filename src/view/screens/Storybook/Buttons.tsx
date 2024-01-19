@@ -11,6 +11,7 @@ import {
 } from '#/components/Button'
 import {H1} from '#/components/Typography'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/ArrowTopRight'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 
 export function Buttons() {
@@ -91,7 +92,9 @@ export function Buttons() {
             )}
           </View>
         </View>
+      </View>
 
+      <View style={[a.flex_row, a.gap_md, a.align_start]}>
         <Button
           variant="gradient"
           color="gradient_sky"
@@ -117,6 +120,76 @@ export function Buttons() {
           label="Link out">
           <ButtonIcon icon={Globe} />
           <ButtonText>See the world</ButtonText>
+        </Button>
+      </View>
+
+      <View style={[a.flex_row, a.gap_md, a.align_start]}>
+        <Button
+          variant="solid"
+          color="primary"
+          size="large"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="gradient"
+          color="gradient_sunset"
+          size="small"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="outline"
+          color="primary"
+          size="large"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="ghost"
+          color="primary"
+          size="small"
+          shape="round"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+      </View>
+
+      <View style={[a.flex_row, a.gap_md, a.align_start]}>
+        <Button
+          variant="solid"
+          color="primary"
+          size="large"
+          shape="square"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="gradient"
+          color="gradient_sunset"
+          size="small"
+          shape="square"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="outline"
+          color="primary"
+          size="large"
+          shape="square"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+        <Button
+          variant="ghost"
+          color="primary"
+          size="small"
+          shape="square"
+          label="Link out">
+          <ButtonIcon icon={ChevronLeft} />
         </Button>
       </View>
     </View>
