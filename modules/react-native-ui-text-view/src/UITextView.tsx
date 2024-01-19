@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TextProps, ViewStyle} from 'react-native'
+import {Platform, StyleSheet, TextProps, ViewStyle} from 'react-native'
 import {RNUITextView, RNUITextViewChild} from './index'
 
 const TextAncestorContext = React.createContext<[boolean, ViewStyle]>([
@@ -21,6 +21,10 @@ export function UITextView({style, children, ...rest}: TextProps) {
     () => StyleSheet.flatten([rootStyle, style]),
     [rootStyle, style],
   )
+
+  if (Platform.OS !== 'ios') {
+    throw new Error('UITextView is only available on iOS')
+  }
 
   if (!isAncestor) {
     return (

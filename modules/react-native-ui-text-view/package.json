@@ -1,9 +1,8 @@
 {
   "name": "react-native-ui-text-view",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "UITextView in React Native on iOS",
   "main": "src/index",
-  "author": " <> ()",
-  "license": "UNLICENSED",
-  "homepage": "#readme"
+  "license": "MIT",
+  "homepage": "https://github.com/bluesky-social/social-app/modules/react-native-ui-text-view"
 }
