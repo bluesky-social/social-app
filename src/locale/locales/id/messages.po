@@ -1038,7 +1038,7 @@ msgstr "Edit detail daftar"
 
 #: src/view/com/modals/CreateOrEditList.tsx:193
 msgid "Edit Moderation List"
-msgstr "Edit Daftar Moderasi"
+msgstr "Ubah Daftar Moderasi"
 
 #: src/Navigation.tsx:244 src/view/screens/Feeds.tsx:371
 #: src/view/screens/SavedFeeds.tsx:84
