@@ -188,12 +188,12 @@ msgstr "Contrasenyes de l'aplicació"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Appeal content warning"
-msgstr "Afegeix una advertència de contingut"
+msgstr "Advertència d'apel·lació sobre el contingut"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Content Warning"
-msgstr "Afegeix una advertència de contingut"
-Apel·lació d'advertència sobre el contingut
+msgstr "Advertència d'apel·lació sobre el contingut"
+
 #: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
 msgstr "Apel·la aquesta decisió"
