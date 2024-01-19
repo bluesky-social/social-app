@@ -36,11 +36,9 @@ function ShellInner() {
 
   return (
     <>
-      <>
-        <ErrorBoundary>
-          <FlatNavigator />
-        </ErrorBoundary>
-      </>
+      <ErrorBoundary>
+        <FlatNavigator />
+      </ErrorBoundary>
       <Composer winHeight={0} />
       <ModalsContainer />
       <Lightbox />
