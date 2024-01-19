@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     position: 'fixed',
     top: 10,
     // @ts-ignore web only
-    right: 'calc(50vw + 312px)',
+    left: 'calc(50vw - 300px - 220px - 20px)',
     width: 220,
     // @ts-ignore web only
     maxHeight: 'calc(100vh - 10px)',

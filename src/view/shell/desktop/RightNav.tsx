@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     // @ts-ignore web only
     position: 'fixed',
     // @ts-ignore web only
-    left: 'calc(50vw + 320px)',
+    left: 'calc(50vw + 300px + 20px)',
     width: 300,
     maxHeight: '100%',
     overflowY: 'auto',
