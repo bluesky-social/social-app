@@ -554,7 +554,7 @@ msgstr "핸들 변경"
 
 #: src/view/com/modals/VerifyEmail.tsx:147
 msgid "Change my email"
-msgstr "내 이메일 변경"
+msgstr "내 이메일 변경하기"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Change post language to {0}"
@@ -3787,11 +3787,11 @@ msgstr "이메일 인증"
 
 #: src/view/screens/Settings.tsx:868
 msgid "Verify my email"
-msgstr "내 이메일 인증"
+msgstr "내 이메일 인증하기"
 
 #: src/view/screens/Settings.tsx:877
 msgid "Verify My Email"
-msgstr "내 이메일 인증"
+msgstr "내 이메일 인증하기"
 
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
