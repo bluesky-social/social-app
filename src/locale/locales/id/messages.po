@@ -900,7 +900,7 @@ msgstr "Hapus postingan ini?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:66
 msgid "Deleted"
-msgstr "Hapus"
+msgstr "Dihapus"
 
 #: src/view/com/post-thread/PostThread.tsx:246
 msgid "Deleted post."
