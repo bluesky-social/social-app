@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {StyleSheet} from 'react-native'
 import {
   NavigationContainer,
   createNavigationContainerRef,
@@ -25,7 +24,6 @@ import {
 import {BottomBar} from './view/shell/bottom-bar/BottomBar'
 import {buildStateObject} from 'lib/routes/helpers'
 import {State, RouteParams} from 'lib/routes/types'
-import {colors} from 'lib/styles'
 import {isAndroid, isNative} from 'platform/detection'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
@@ -299,7 +297,7 @@ function TabsNavigator() {
 }
 
 function HomeTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const pal = usePalette('default')
 
   return (
     <HomeTab.Navigator
@@ -309,7 +307,7 @@ function HomeTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle,
+        contentStyle: pal.view,
       }}>
       <HomeTab.Screen
         name="Home"
@@ -322,7 +320,7 @@ function HomeTabNavigator() {
 }
 
 function SearchTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const pal = usePalette('default')
   return (
     <SearchTab.Navigator
       screenOptions={{
@@ -331,7 +329,7 @@ function SearchTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle,
+        contentStyle: pal.view,
       }}>
       <SearchTab.Screen name="Search" getComponent={() => SearchScreen} />
       {commonScreens(SearchTab as typeof HomeTab)}
@@ -340,7 +338,7 @@ function SearchTabNavigator() {
 }
 
 function FeedsTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const pal = usePalette('default')
   return (
     <FeedsTab.Navigator
       screenOptions={{
@@ -349,7 +347,7 @@ function FeedsTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle,
+        contentStyle: pal.view,
       }}>
       <FeedsTab.Screen
         name="Feeds"
@@ -362,7 +360,7 @@ function FeedsTabNavigator() {
 }
 
 function NotificationsTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const pal = usePalette('default')
   return (
     <NotificationsTab.Navigator
       screenOptions={{
@@ -371,7 +369,7 @@ function NotificationsTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle,
+        contentStyle: pal.view,
       }}>
       <NotificationsTab.Screen
         name="Notifications"
@@ -384,7 +382,7 @@ function NotificationsTabNavigator() {
 }
 
 function MyProfileTabNavigator() {
-  const contentStyle = useColorSchemeStyle(styles.bgLight, styles.bgDark)
+  const pal = usePalette('default')
   return (
     <MyProfileTab.Navigator
       screenOptions={{
@@ -393,7 +391,7 @@ function MyProfileTabNavigator() {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle,
+        contentStyle: pal.view,
       }}>
       <MyProfileTab.Screen
         // @ts-ignore // TODO: fix this broken type in ProfileScreen
@@ -424,7 +422,7 @@ const FlatNavigator = () => {
         fullScreenGestureEnabled: true,
         headerShown: false,
         animationDuration: 250,
-        contentStyle: [pal.view],
+        contentStyle: pal.view,
       }}>
       <Flat.Screen
         name="Home"
@@ -619,15 +617,6 @@ function handleLink(url: string) {
     navigate(name, params)
   }
 }
-
-const styles = StyleSheet.create({
-  bgDark: {
-    backgroundColor: colors.black,
-  },
-  bgLight: {
-    backgroundColor: colors.white,
-  },
-})
 
 let didInit = false
 function logModuleInitTime() {
