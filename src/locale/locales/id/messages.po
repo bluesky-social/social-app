@@ -2204,7 +2204,7 @@ msgstr "Membuka galeri foto perangkat"
 
 #: src/view/com/profile/ProfileHeader.tsx:459
 msgid "Opens editor for profile display name, avatar, background image, and description"
-msgstr "Buka editor untuk nama tampilan profil, avatar, gambar latar belakang, dan deskripsi"
+msgstr "Membuka editor untuk nama tampilan profil, avatar, gambar latar belakang, dan deskripsi"
 
 #: src/view/screens/Settings.tsx:615
 msgid "Opens external embeds settings"
