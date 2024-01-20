@@ -2723,7 +2723,7 @@ msgstr "Reset status preferensi"
 
 #: src/view/com/auth/login/LoginForm.tsx:266
 msgid "Retries login"
-msgstr "Coba masuk kembali"
+msgstr "Mencoba masuk kembali"
 
 #: src/view/com/util/error/ErrorMessage.tsx:57
 #: src/view/com/util/error/ErrorScreen.tsx:67
