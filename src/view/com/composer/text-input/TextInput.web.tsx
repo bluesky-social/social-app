@@ -123,20 +123,17 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       event.preventDefault()
       setIsDropping(false)
     }
-    const handleDragOver = (event: DragEvent) => {
-      event.preventDefault()
-    }
 
     document.body.addEventListener('drop', handleDrop)
     document.body.addEventListener('dragenter', handleDragEnter)
+    document.body.addEventListener('dragover', handleDragEnter)
     document.body.addEventListener('dragleave', handleDragLeave)
-    document.body.addEventListener('dragover', handleDragOver)
 
     return () => {
       document.body.removeEventListener('drop', handleDrop)
       document.body.removeEventListener('dragenter', handleDragEnter)
+      document.body.removeEventListener('dragover', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
-      document.body.removeEventListener('dragover', handleDragOver)
     }
   }, [setIsDropping])
 
