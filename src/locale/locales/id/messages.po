@@ -3136,7 +3136,7 @@ msgstr "Urutkan Balasan"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr "Urutkan balasan ke pos yang sama berdasarkan:"
+msgstr "Urutkan balasan ke postingan yang sama berdasarkan:"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
