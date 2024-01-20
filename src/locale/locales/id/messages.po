@@ -2229,7 +2229,7 @@ msgstr "Buka daftar kode undangan"
 
 #: src/view/screens/Settings.tsx:696
 msgid "Opens modal for account deletion confirmation. Requires email code."
-msgstr "Buka modal untuk konfirmasi penghapusan akun. Membutuhkan kode email."
+msgstr "Membuka modal untuk konfirmasi penghapusan akun. Membutuhkan kode email."
 
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Opens modal for using custom domain"
