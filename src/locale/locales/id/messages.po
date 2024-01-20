@@ -2711,7 +2711,7 @@ msgstr "Setel ulang preferensi"
 
 #: src/view/screens/Settings.tsx:750
 msgid "Reset preferences state"
-msgstr "Setel ulang status preferensi"
+msgstr "Atur ulang status preferensi"
 
 #: src/view/screens/Settings.tsx:758
 msgid "Resets the onboarding state"
