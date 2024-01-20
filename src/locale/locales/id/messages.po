@@ -2141,7 +2141,7 @@ msgstr "Balasan terlama terlebih dahulu"
 
 #: src/view/screens/Settings.tsx:236
 msgid "Onboarding reset"
-msgstr "Reset orientasi"
+msgstr "Atur ulang orientasi"
 
 #: src/view/com/composer/Composer.tsx:375
 msgid "One or more images is missing alt text."
