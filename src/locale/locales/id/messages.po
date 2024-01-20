@@ -2188,7 +2188,7 @@ msgstr "Membuka daftar pengguna yang diperluas dalam notifikasi ini"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:61
 msgid "Opens camera on device"
-msgstr "Buka kamera pada perangkat"
+msgstr "Membuka kamera pada perangkat"
 
 #: src/view/com/composer/Prompt.tsx:25
 msgid "Opens composer"
