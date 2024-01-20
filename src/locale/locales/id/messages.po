@@ -2184,7 +2184,7 @@ msgstr "Membuka detail tambahan untuk entri debug"
 
 #: src/view/com/notifications/FeedItem.tsx:352
 msgid "Opens an expanded list of users in this notification"
-msgstr "Buka daftar pengguna yang diperluas dalam notifikasi ini"
+msgstr "Membuka daftar pengguna yang diperluas dalam notifikasi ini"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:61
 msgid "Opens camera on device"
