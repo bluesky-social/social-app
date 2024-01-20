@@ -2245,7 +2245,7 @@ msgstr "Buka formulir pengaturan ulang kata sandi"
 
 #: src/view/screens/Feeds.tsx:335
 msgid "Opens screen to edit Saved Feeds"
-msgstr "Buka layar untuk mengedit Umpan Tersimpan"
+msgstr "Membuka layar untuk mengedit Umpan Tersimpan"
 
 #: src/view/screens/Settings.tsx:542
 msgid "Opens screen with all saved feeds"
