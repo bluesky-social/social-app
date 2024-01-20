@@ -298,10 +298,11 @@ const styles = StyleSheet.create({
     boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
     padding: 8,
     borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 16,
   },
   dropText: {
-    padding: 32,
+    paddingVertical: 44,
+    paddingHorizontal: 36,
     borderStyle: 'dashed',
     borderRadius: 8,
     borderWidth: 2,
