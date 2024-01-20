@@ -2196,7 +2196,7 @@ msgstr "Buka komposer"
 
 #: src/view/screens/Settings.tsx:561
 msgid "Opens configurable language settings"
-msgstr "Buka pengaturan bahasa yang dapat dikonfigurasi"
+msgstr "Membuka pengaturan bahasa yang dapat dikonfigurasi"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:44
 msgid "Opens device photo gallery"
