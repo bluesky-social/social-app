@@ -2516,7 +2516,7 @@ msgstr "Kutip postingan"
 #: src/view/com/modals/Repost.tsx:70
 msgctxt "action"
 msgid "Quote Post"
-msgstr "Kutipan Postingan"
+msgstr "Kutip Postingan"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
