@@ -2225,7 +2225,7 @@ msgstr "Membuka daftar kode undangan"
 #: src/view/com/modals/InviteCodes.tsx:172
 #: src/view/shell/desktop/RightNav.tsx:156 src/view/shell/Drawer.tsx:643
 msgid "Opens list of invite codes"
-msgstr "Buka daftar kode undangan"
+msgstr "Membuka daftar kode undangan"
 
 #: src/view/screens/Settings.tsx:696
 msgid "Opens modal for account deletion confirmation. Requires email code."
