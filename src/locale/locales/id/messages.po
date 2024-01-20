@@ -1202,7 +1202,7 @@ msgstr "Tampilkan teks alt"
 #: src/view/com/composer/ComposerReplyTo.tsx:81
 #: src/view/com/composer/ComposerReplyTo.tsx:84
 msgid "Expand or collapse the full post you are replying to"
-msgstr "Membentangkan atau menciutkan postingan lengkap yang Anda balas"
+msgstr "Bentangkan atau ciutkan postingan lengkap yang Anda balas"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
