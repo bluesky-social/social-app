@@ -2176,7 +2176,7 @@ msgstr "Buka halaman buku cerita"
 
 #: src/view/com/util/forms/DropdownButton.tsx:147
 msgid "Opens {numItems} options"
-msgstr "Buka opsi {numItems}"
+msgstr "Membuka opsi {numItems}"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
