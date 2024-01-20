@@ -1067,11 +1067,11 @@ msgstr "Edit Daftar Pengguna"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Edit your display name"
-msgstr "Edit nama tampilan Anda"
+msgstr "Ubah nama tampilan Anda"
 
 #: src/view/com/modals/EditProfile.tsx:211
 msgid "Edit your profile description"
-msgstr "Edit deskripsi profil Anda"
+msgstr "Ubah deskripsi profil Anda"
 
 #: src/view/com/auth/create/Step2.tsx:108
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:152
