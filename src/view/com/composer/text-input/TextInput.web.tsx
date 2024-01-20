@@ -111,24 +111,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       event.preventDefault()
       setIsDropping(false)
     }
-    const handleDragOver = (event: DragEvent) => {
+    const handleDragEnter = (event: DragEvent) => {
       const transfer = event.dataTransfer
+
+      event.preventDefault()
       if (transfer && transfer.types.includes('Files')) {
         setIsDropping(true)
       }
     }
-    const handleDragLeave = (_event: DragEvent) => {
+    const handleDragLeave = (event: DragEvent) => {
+      event.preventDefault()
       setIsDropping(false)
+    }
+    const handleDragOver = (event: DragEvent) => {
+      event.preventDefault()
     }
 
     document.body.addEventListener('drop', handleDrop)
-    document.body.addEventListener('dragover', handleDragOver)
+    document.body.addEventListener('dragenter', handleDragEnter)
     document.body.addEventListener('dragleave', handleDragLeave)
+    document.body.addEventListener('dragover', handleDragOver)
 
     return () => {
       document.body.removeEventListener('drop', handleDrop)
-      document.body.removeEventListener('dragover', handleDragOver)
+      document.body.removeEventListener('dragenter', handleDragEnter)
       document.body.removeEventListener('dragleave', handleDragLeave)
+      document.body.removeEventListener('dragover', handleDragOver)
     }
   }, [setIsDropping])
 
