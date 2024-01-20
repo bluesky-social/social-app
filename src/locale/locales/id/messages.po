@@ -2572,7 +2572,7 @@ msgstr "Hapus pratinjau gambar"
 
 #: src/view/com/modals/Repost.tsx:47
 msgid "Remove repost"
-msgstr "Hapus posting ulang"
+msgstr "Hapus postingan ulang"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 msgid "Remove this feed from my feeds?"
