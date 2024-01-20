@@ -3521,7 +3521,7 @@ msgstr "Lepas sematan daftar moderasi"
 
 #: src/view/screens/ProfileFeed.tsx:354
 msgid "Unsave"
-msgstr "Tidak simpan"
+msgstr "Batal simpan"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:54
 msgid "Update {displayName} in Lists"
