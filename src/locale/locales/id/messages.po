@@ -2208,7 +2208,7 @@ msgstr "Membuka editor untuk nama tampilan profil, avatar, gambar latar belakang
 
 #: src/view/screens/Settings.tsx:615
 msgid "Opens external embeds settings"
-msgstr "Buka pengaturan penyematan eksternal"
+msgstr "Membuka pengaturan penyematan eksternal"
 
 #: src/view/com/profile/ProfileHeader.tsx:614
 msgid "Opens followers list"
