@@ -1922,7 +1922,7 @@ msgstr "Bisukan akun ini?"
 
 #: src/view/screens/ProfileList.tsx:278
 msgid "Mute this List"
-msgstr "Membisukan Daftar ini"
+msgstr "Bisukan Daftar ini"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:169
 msgid "Mute thread"
