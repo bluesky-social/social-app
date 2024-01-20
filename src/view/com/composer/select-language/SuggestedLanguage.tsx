@@ -28,10 +28,11 @@ export function SuggestedLanguage({text}: {text: string}) {
   useEffect(() => {
     const textTrimmed = text.trim()
 
+    setSuggestedLanguage(undefined)
+
     // Don't run the language model on small posts, the results are likely
     // to be inaccurate anyway.
     if (textTrimmed.length < 40) {
-      setSuggestedLanguage(undefined)
       return
     }
 
