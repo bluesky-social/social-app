@@ -649,7 +649,7 @@ msgstr "Menutup peringatan pembaruan kata sandi"
 
 #: src/view/com/composer/Composer.tsx:302
 msgid "Closes post composer and discards post draft"
-msgstr "Tutup penyusun pos dan membuang draf pos"
+msgstr "Menutup penyusun postingan dan membuang draf"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
 msgid "Closes viewer for header image"
