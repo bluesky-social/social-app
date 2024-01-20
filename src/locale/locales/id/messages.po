@@ -2216,7 +2216,7 @@ msgstr "Membuka daftar pengikut"
 
 #: src/view/com/profile/ProfileHeader.tsx:633
 msgid "Opens following list"
-msgstr "Buka daftar berikut"
+msgstr "Membuka daftar mengikuti"
 
 #: src/view/screens/Settings.tsx:412
 msgid "Opens invite code list"
