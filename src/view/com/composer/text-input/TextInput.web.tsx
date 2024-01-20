@@ -9,7 +9,7 @@ import Hardbreak from '@tiptap/extension-hard-break'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
-import {Text} from '@tiptap/extension-text'
+import {Text as TiptapText} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -19,6 +19,10 @@ import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {Portal} from '#/components/Portal'
+import {Text} from '../../util/text/Text'
+import {Trans} from '@lingui/macro'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 export interface TextInputRef {
   focus: () => void
@@ -73,7 +77,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       Placeholder.configure({
         placeholder,
       }),
-      Text,
+      TiptapText,
       History,
       Hardbreak,
     ],
@@ -92,6 +96,41 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
     }
   }, [onPhotoPasted])
+
+  React.useEffect(() => {
+    const handleDrop = (event: DragEvent) => {
+      const transfer = event.dataTransfer
+      if (transfer) {
+        const items = transfer.items
+
+        getImageFromUri(items, (uri: string) => {
+          textInputWebEmitter.emit('photo-pasted', uri)
+        })
+      }
+
+      event.preventDefault()
+      setIsDropping(false)
+    }
+    const handleDragOver = (event: DragEvent) => {
+      const transfer = event.dataTransfer
+      if (transfer && transfer.types.includes('Files')) {
+        setIsDropping(true)
+      }
+    }
+    const handleDragLeave = (_event: DragEvent) => {
+      setIsDropping(false)
+    }
+
+    document.body.addEventListener('drop', handleDrop)
+    document.body.addEventListener('dragover', handleDragOver)
+    document.body.addEventListener('dragleave', handleDragLeave)
+
+    return () => {
+      document.body.removeEventListener('drop', handleDrop)
+      document.body.removeEventListener('dragover', handleDragOver)
+      document.body.removeEventListener('dragleave', handleDragLeave)
+    }
+  }, [setIsDropping])
 
   const editor = useEditor(
     {
@@ -116,32 +155,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             textInputWebEmitter.emit('publish')
             return true
           }
-        },
-        handleDOMEvents: {
-          dragover: (_, event) => {
-            const transfer = event.dataTransfer
-            if (transfer && transfer.types.includes('Files')) {
-              setIsDropping(true)
-            }
-          },
-          dragleave: (_, _event) => {
-            setIsDropping(false)
-          },
-          drop: (_, event) => {
-            const transfer = event.dataTransfer
-            if (transfer) {
-              const items = transfer.items
-
-              if (items.length > 0) {
-                event.preventDefault()
-                getImageFromUri(items, (uri: string) => {
-                  textInputWebEmitter.emit('photo-pasted', uri)
-                })
-              }
-            }
-
-            setIsDropping(false)
-          },
         },
       },
       content: generateJSON(richtext.text.toString(), extensions),
@@ -208,13 +221,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   }))
 
   return (
-    <View style={styles.container}>
-      <EditorContent editor={editor} />
+    <>
+      <View style={styles.container}>
+        <EditorContent editor={editor} />
+      </View>
 
       {isDropping && (
-        <View style={[{borderColor: pal.colors.link}, styles.dropContainer]} />
+        <Portal>
+          <Animated.View
+            style={styles.dropContainer}
+            entering={FadeIn.duration(80)}
+            exiting={FadeOut.duration(80)}>
+            <View style={[pal.view, pal.border, styles.dropModal]}>
+              <Text
+                type="lg"
+                style={[
+                  pal.text,
+                  {borderColor: pal.colors.borderDark},
+                  styles.dropText,
+                ]}>
+                <Trans>Drop to add images</Trans>
+              </Text>
+            </View>
+          </Animated.View>
+        </Portal>
       )}
-    </View>
+    </>
   )
 })
 
@@ -246,15 +278,29 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   dropContainer: {
+    backgroundColor: '#0007',
     pointerEvents: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
     position: 'absolute',
-    borderWidth: 4,
-    borderRadius: 8,
-    borderStyle: 'dashed',
+    padding: 16,
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  dropModal: {
+    // @ts-ignore web only
+    boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  dropText: {
+    padding: 32,
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    borderWidth: 2,
   },
 })
 
