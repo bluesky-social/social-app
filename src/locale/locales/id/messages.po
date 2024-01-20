@@ -128,7 +128,7 @@ msgstr "Akun dihapus dari akses cepat"
 
 #: src/view/com/profile/ProfileHeader.tsx:315
 msgid "Account unblocked"
-msgstr "Akun tidak diblokir"
+msgstr "Akun batal diblokir"
 
 #: src/view/com/profile/ProfileHeader.tsx:273
 msgid "Account unmuted"
