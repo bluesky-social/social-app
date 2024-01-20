@@ -18,6 +18,7 @@ import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {usePalette} from '#/lib/hooks/usePalette'
 
 export interface TextInputRef {
   focus: () => void
@@ -53,7 +54,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 ) {
   const autocomplete = useActorAutocompleteFn()
 
+  const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+
+  const [isDropping, setIsDropping] = React.useState(false)
+
   const extensions = React.useMemo(
     () => [
       Document,
@@ -111,6 +116,32 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             textInputWebEmitter.emit('publish')
             return true
           }
+        },
+        handleDOMEvents: {
+          dragover: (_, event) => {
+            const transfer = event.dataTransfer
+            if (transfer && transfer.types.includes('Files')) {
+              setIsDropping(true)
+            }
+          },
+          dragleave: (_, _event) => {
+            setIsDropping(false)
+          },
+          drop: (_, event) => {
+            const transfer = event.dataTransfer
+            if (transfer) {
+              const items = transfer.items
+
+              if (items.length > 0) {
+                event.preventDefault()
+                getImageFromUri(items, (uri: string) => {
+                  textInputWebEmitter.emit('photo-pasted', uri)
+                })
+              }
+            }
+
+            setIsDropping(false)
+          },
         },
       },
       content: generateJSON(richtext.text.toString(), extensions),
@@ -179,6 +210,10 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   return (
     <View style={styles.container}>
       <EditorContent editor={editor} />
+
+      {isDropping && (
+        <View style={[{borderColor: pal.colors.link}, styles.dropContainer]} />
+      )}
     </View>
   )
 })
@@ -210,6 +245,17 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginBottom: 10,
   },
+  dropContainer: {
+    pointerEvents: 'none',
+    position: 'absolute',
+    borderWidth: 4,
+    borderRadius: 8,
+    borderStyle: 'dashed',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
 })
 
 function getImageFromUri(
@@ -218,25 +264,24 @@ function getImageFromUri(
 ) {
   for (let index = 0; index < items.length; index++) {
     const item = items[index]
-    const {kind, type} = item
+    const type = item.type
 
     if (type === 'text/plain') {
       item.getAsString(async itemString => {
         if (isUriImage(itemString)) {
           const response = await fetch(itemString)
           const blob = await response.blob()
-          blobToDataUri(blob).then(callback, err => console.error(err))
+
+          if (blob.type.startsWith('image/')) {
+            blobToDataUri(blob).then(callback, err => console.error(err))
+          }
         }
       })
-    }
-
-    if (kind === 'file') {
+    } else if (type.startsWith('image/')) {
       const file = item.getAsFile()
 
-      if (file instanceof Blob) {
-        blobToDataUri(new Blob([file], {type: item.type})).then(callback, err =>
-          console.error(err),
-        )
+      if (file) {
+        blobToDataUri(file).then(callback, err => console.error(err))
       }
     }
   }
