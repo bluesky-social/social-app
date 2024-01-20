@@ -653,7 +653,7 @@ msgstr "Menutup penyusun postingan dan membuang draf"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
 msgid "Closes viewer for header image"
-msgstr "Tutup penampil untuk gambar header"
+msgstr "Menutup penampil untuk gambar header"
 
 #: src/view/com/notifications/FeedItem.tsx:321
 msgid "Collapses list of users for a given notification"
