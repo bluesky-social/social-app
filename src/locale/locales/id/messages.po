@@ -1457,7 +1457,7 @@ msgstr "Sembunyikan daftar pengguna"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 msgid "Hides posts from {0} in your feed"
-msgstr "Sembunyikan postingan dari {0} di feed Anda"
+msgstr "Menyembunyikan postingan dari {0} di feed Anda"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
