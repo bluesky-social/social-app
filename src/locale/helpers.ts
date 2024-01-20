@@ -17,6 +17,11 @@ export function code2ToCode3(lang: string): string {
 
 export function code3ToCode2(lang: string): string {
   if (lang.length === 3) {
+    // Chinese Mandarin
+    if (lang === 'cmn') {
+      return 'zh'
+    }
+
     return LANGUAGES_MAP_CODE3[lang]?.code2 || lang
   }
   return lang
@@ -24,6 +29,11 @@ export function code3ToCode2(lang: string): string {
 
 export function code3ToCode2Strict(lang: string): string | undefined {
   if (lang.length === 3) {
+    // Chinese Mandarin
+    if (lang === 'cmn') {
+      return 'zh'
+    }
+
     return LANGUAGES_MAP_CODE3[lang]?.code2
   }
 
