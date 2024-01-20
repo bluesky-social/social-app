@@ -2695,7 +2695,7 @@ msgstr "Kode reset"
 
 #: src/view/screens/Settings.tsx:757
 msgid "Reset onboarding"
-msgstr "Atur ulang orientasi"
+msgstr "Atur ulang onboarding"
 
 #: src/view/screens/Settings.tsx:760
 msgid "Reset onboarding state"
