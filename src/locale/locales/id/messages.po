@@ -2192,7 +2192,7 @@ msgstr "Buka kamera pada perangkat"
 
 #: src/view/com/composer/Prompt.tsx:25
 msgid "Opens composer"
-msgstr "Buka komposer"
+msgstr "Membuka penyusun postingan"
 
 #: src/view/screens/Settings.tsx:561
 msgid "Opens configurable language settings"
