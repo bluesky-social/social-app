@@ -235,11 +235,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
             <View style={[pal.view, pal.border, styles.dropModal]}>
               <Text
                 type="lg"
-                style={[
-                  pal.text,
-                  {borderColor: pal.colors.borderDark},
-                  styles.dropText,
-                ]}>
+                style={[pal.text, pal.borderDark, styles.dropText]}>
                 <Trans>Drop to add images</Trans>
               </Text>
             </View>
