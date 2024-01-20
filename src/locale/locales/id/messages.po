@@ -2490,7 +2490,7 @@ msgstr "Amankan akun Anda dengan memverifikasi email Anda."
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "Publik, daftar yang dapat dibagikan oleh pengguna untuk dibisukan atau diblokir secara massal."
+msgstr "Daftar publik yang dapat dibagikan oleh pengguna untuk dibisukan atau diblokir secara massal."
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
