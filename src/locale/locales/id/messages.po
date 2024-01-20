@@ -1012,7 +1012,7 @@ msgstr "contoh: Spammer"
 
 #: src/view/com/modals/CreateOrEditList.tsx:246
 msgid "e.g. The posters who never miss."
-msgstr "contoh: Pemoster yang selalu tepat sasaran."
+msgstr "contoh: Pemosting yang selalu tepat sasaran."
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "e.g. Users that repeatedly reply with ads."
