@@ -2507,7 +2507,7 @@ msgstr "Publikasikan balasan"
 #: src/view/com/modals/Repost.tsx:65
 msgctxt "action"
 msgid "Quote post"
-msgstr "Kutipan posting"
+msgstr "Kutip postingan"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
