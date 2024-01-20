@@ -2212,7 +2212,7 @@ msgstr "Membuka pengaturan penyematan eksternal"
 
 #: src/view/com/profile/ProfileHeader.tsx:614
 msgid "Opens followers list"
-msgstr "Buka daftar pengikut"
+msgstr "Membuka daftar pengikut"
 
 #: src/view/com/profile/ProfileHeader.tsx:633
 msgid "Opens following list"
