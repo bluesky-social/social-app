@@ -3,6 +3,19 @@ import {Text as RNText, TextProps} from 'react-native'
 
 import {useTheme, atoms, web, flatten} from '#/alf'
 
+/**
+ * Util to calculate lineHeight from a text size atom and a leading atom
+ *
+ * Example:
+ *   `leading(atoms.text_md, atoms.leading_normal)` // => 24
+ */
+export function leading<
+  Size extends {fontSize: number},
+  Leading extends {lineHeight: number},
+>(textSize: Size, leading: Leading) {
+  return (textSize.fontSize || atoms.text_md.fontSize) * leading.lineHeight
+}
+
 export function Text({style, ...rest}: TextProps) {
   const t = useTheme()
   return <RNText style={[atoms.text_sm, t.atoms.text, style]} {...rest} />
@@ -111,9 +124,11 @@ export function P({style, ...rest}: TextProps) {
       role: 'paragraph',
     }) || {}
   const _style = flatten(style)
-  const lineHeight =
-    (_style?.lineHeight || atoms.text_md.lineHeight) *
-    atoms.leading_normal.lineHeight
+  const lineHeight = leading(
+    // @ts-ignore
+    _style?.fontSize ? _style : atoms.text_md,
+    atoms.leading_normal,
+  )
   return (
     <RNText
       {...attr}

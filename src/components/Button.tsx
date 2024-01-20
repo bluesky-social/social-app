@@ -273,15 +273,15 @@ export function Button({
 
     if (shape === 'default') {
       if (size === 'large') {
-        baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_sm)
+        baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
         baseStyles.push({paddingVertical: 9}, a.px_md, a.rounded_sm, a.gap_sm)
       }
     } else if (shape === 'round' || shape === 'square') {
       if (size === 'large') {
-        baseStyles.push(a.p_lg)
+        baseStyles.push({padding: 15})
       } else if (size === 'small') {
-        baseStyles.push(a.p_md)
+        baseStyles.push({padding: 10})
       }
 
       if (shape === 'round') {
@@ -360,6 +360,7 @@ export function Button({
         flatten(style),
         a.flex_row,
         a.align_center,
+        a.justify_center,
         a.overflow_hidden,
         ...baseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
@@ -506,9 +507,7 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text
-      {...rest}
-      style={[a.w_full, a.font_bold, a.text_center, textStyles, style]}>
+    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
       {children}
     </Text>
   )
@@ -519,11 +518,11 @@ export function ButtonIcon({
 }: {
   icon: React.ComponentType<SVGIconProps>
 }) {
-  const {size} = useButtonContext()
+  const {size, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <View style={[a.z_20]}>
+    <View style={[a.z_20, {marginTop: -1, opacity: disabled ? 0.7 : 1}]}>
       <Comp
         size={size === 'large' ? 'md' : 'sm'}
         style={[{color: textStyles.color, pointerEvents: 'none'}]}

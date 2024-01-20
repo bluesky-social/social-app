@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {PWI_ENABLED} from '#/lib/build-flags'
+import {PWI_ENABLED, NEW_ONBOARDING_ENABLED} from '#/lib/build-flags'
 
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
@@ -37,6 +37,7 @@ import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {Onboarding} from '../com/auth/Onboarding'
+import {Onboarding as NewOnboarding} from '#/screens/Onboarding'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
@@ -107,7 +108,11 @@ function NativeStackNavigator({
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   if (onboardingState.isActive) {
-    return <Onboarding />
+    if (NEW_ONBOARDING_ENABLED) {
+      return <NewOnboarding />
+    } else {
+      return <Onboarding />
+    }
   }
   const newDescriptors: typeof descriptors = {}
   for (let key in descriptors) {

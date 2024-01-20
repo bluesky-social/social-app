@@ -104,6 +104,9 @@ export const atoms = {
   flex: {
     display: 'flex',
   },
+  flex_col: {
+    flexDirection: 'column',
+  },
   flex_row: {
     flexDirection: 'row',
   },
@@ -188,6 +191,9 @@ export const atoms = {
     lineHeight: tokens.fontSize._5xl,
   },
   leading_tight: {
+    lineHeight: 1.15,
+  },
+  leading_snug: {
     lineHeight: 1.25,
   },
   leading_normal: {
