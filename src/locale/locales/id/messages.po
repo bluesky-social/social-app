@@ -2180,7 +2180,7 @@ msgstr "Membuka opsi {numItems}"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
-msgstr "Buka detail tambahan untuk entri debug"
+msgstr "Membuka detail tambahan untuk entri debug"
 
 #: src/view/com/notifications/FeedItem.tsx:352
 msgid "Opens an expanded list of users in this notification"
