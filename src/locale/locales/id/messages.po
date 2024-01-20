@@ -2707,7 +2707,7 @@ msgstr "Reset kata sandi"
 
 #: src/view/screens/Settings.tsx:747
 msgid "Reset preferences"
-msgstr "Setel ulang preferensi"
+msgstr "Atur ulang preferensi"
 
 #: src/view/screens/Settings.tsx:750
 msgid "Reset preferences state"
