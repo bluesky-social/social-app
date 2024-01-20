@@ -2241,7 +2241,7 @@ msgstr "Buka pengaturan moderasi"
 
 #: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Opens password reset form"
-msgstr "Buka formulir pengaturan ulang kata sandi"
+msgstr "Membuka formulir pengaturan ulang kata sandi"
 
 #: src/view/screens/Feeds.tsx:335
 msgid "Opens screen to edit Saved Feeds"
