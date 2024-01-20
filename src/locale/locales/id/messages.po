@@ -2894,7 +2894,7 @@ msgstr "Atur Usia"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "Atur tema ke gelap"
+msgstr "Atur tema menjadi gelap"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
