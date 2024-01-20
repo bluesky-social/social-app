@@ -2220,7 +2220,7 @@ msgstr "Membuka daftar mengikuti"
 
 #: src/view/screens/Settings.tsx:412
 msgid "Opens invite code list"
-msgstr "Buka daftar kode undangan"
+msgstr "Membuka daftar kode undangan"
 
 #: src/view/com/modals/InviteCodes.tsx:172
 #: src/view/shell/desktop/RightNav.tsx:156 src/view/shell/Drawer.tsx:643
