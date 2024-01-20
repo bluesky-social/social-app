@@ -1501,7 +1501,7 @@ msgstr "Alamat provider hosting"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
-msgstr "Bagaimana kita harus membuka tautan ini?"
+msgstr "Bagaimana kami harus membuka tautan ini?"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
