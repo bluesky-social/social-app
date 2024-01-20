@@ -645,7 +645,7 @@ msgstr "Menutup bilah navigasi bawah"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:39
 msgid "Closes password update alert"
-msgstr "Tutup peringatan pembaruan kata sandi"
+msgstr "Menutup peringatan pembaruan kata sandi"
 
 #: src/view/com/composer/Composer.tsx:302
 msgid "Closes post composer and discards post draft"
