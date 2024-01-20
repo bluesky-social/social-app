@@ -36,11 +36,13 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   UsePreferencesQueryResponse,
+  useModerationOpts,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {isNative} from '#/platform/detection'
 import {logger} from '#/logger'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
@@ -79,14 +81,30 @@ export function PostThread({
     data: thread,
   } = usePostThreadQuery(uri)
   const {data: preferences} = usePreferencesQuery()
+
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
+  const moderationOpts = useModerationOpts()
+  const isNoPwi = React.useMemo(() => {
+    const mod =
+      rootPost && moderationOpts
+        ? moderatePost(rootPost, moderationOpts)
+        : undefined
+
+    const cause = mod?.content.cause
+
+    return cause
+      ? cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated'
+      : false
+  }, [rootPost, moderationOpts])
+
   useSetTitle(
-    rootPost &&
-      `${sanitizeDisplayName(
-        rootPost.author.displayName || `@${rootPost.author.handle}`,
-      )}: "${rootPostRecord?.text}"`,
+    rootPost && !isNoPwi
+      ? `${sanitizeDisplayName(
+          rootPost.author.displayName || `@${rootPost.author.handle}`,
+        )}: "${rootPostRecord!.text}"`
+      : '',
   )
   useEffect(() => {
     if (rootPost) {
