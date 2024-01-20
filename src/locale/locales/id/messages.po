@@ -1004,7 +1004,7 @@ msgstr "contoh: Seniman, penyayang anjing, dan pembaca yang rajin."
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "e.g. Great Posters"
-msgstr "contoh: Pemoster keren"
+msgstr "contoh: Pemosting keren"
 
 #: src/view/com/modals/CreateOrEditList.tsx:226
 msgid "e.g. Spammers"
