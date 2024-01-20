@@ -275,7 +275,7 @@ msgstr "앱 비밀번호 설정"
 msgid "App passwords"
 msgstr "앱 비밀번호"
 
-#: src/Navigation.tsx:239
+#: src/Navigation.tsx:237
 #: src/view/screens/AppPasswords.tsx:187
 msgid "App Passwords"
 msgstr "앱 비밀번호"
@@ -378,7 +378,7 @@ msgid "Block this List"
 msgstr "이 리스트 차단"
 
 #: src/view/com/lists/ListCard.tsx:109
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:57
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:60
 msgid "Blocked"
 msgstr "차단됨"
 
@@ -386,7 +386,7 @@ msgstr "차단됨"
 msgid "Blocked accounts"
 msgstr "차단한 계정"
 
-#: src/Navigation.tsx:131
+#: src/Navigation.tsx:129
 #: src/view/screens/ModerationBlockedAccounts.tsx:107
 msgid "Blocked Accounts"
 msgstr "차단한 계정"
@@ -668,7 +668,7 @@ msgstr "헤더 이미지 뷰어를 닫습니다"
 msgid "Collapses list of users for a given notification"
 msgstr "이 알림에 대한 사용자 목록을 축소합니다"
 
-#: src/Navigation.tsx:229
+#: src/Navigation.tsx:227
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "Community Guidelines"
 msgstr "커뮤니티 가이드라인"
@@ -803,7 +803,7 @@ msgstr "프로필 링크 복사"
 msgid "Copy post text"
 msgstr "게시물 텍스트 복사"
 
-#: src/Navigation.tsx:234
+#: src/Navigation.tsx:232
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
 msgstr "저작권 정책"
@@ -815,6 +815,10 @@ msgstr "피드를 불러올 수 없습니다"
 #: src/view/screens/ProfileList.tsx:867
 msgid "Could not load list"
 msgstr "리스트를 불러올 수 없습니다"
+
+#: src/view/com/auth/create/Step2.tsx:89
+msgid "Country"
+msgstr "국가"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:46
@@ -914,7 +918,7 @@ msgstr "게시물 삭제"
 msgid "Delete this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
-#: src/view/com/util/post-embeds/QuoteEmbed.tsx:66
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:69
 msgid "Deleted"
 msgstr "삭제됨"
 
@@ -1053,7 +1057,7 @@ msgstr "리스트 세부 정보 편집"
 msgid "Edit Moderation List"
 msgstr "검토 리스트 편집"
 
-#: src/Navigation.tsx:244
+#: src/Navigation.tsx:242
 #: src/view/screens/Feeds.tsx:371
 #: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
@@ -1088,8 +1092,8 @@ msgid "Edit your profile description"
 msgstr "내 프로필 설명 편집"
 
 #: src/view/com/auth/create/Step1.tsx:143
-#: src/view/com/auth/create/Step2.tsx:90
-#: src/view/com/auth/create/Step2.tsx:164
+#: src/view/com/auth/create/Step2.tsx:192
+#: src/view/com/auth/create/Step2.tsx:266
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:152
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
@@ -1179,7 +1183,7 @@ msgstr "새 이메일을 입력하세요"
 msgid "Enter your new email address below."
 msgstr "아래에 새 이메일 주소를 입력하세요."
 
-#: src/view/com/auth/create/Step2.tsx:84
+#: src/view/com/auth/create/Step2.tsx:186
 msgid "Enter your phone number"
 msgstr "전화번호를 입력하세요"
 
@@ -1230,7 +1234,7 @@ msgstr "외부 미디어"
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
 msgstr "외부 미디어는 웹사이트가 나와 내 기기에 대한 정보를 수집하도록 할 수 있습니다. \"재생\" 버튼을 누르기 전까지는 어떠한 정보도 전송되거나 요청되지 않습니다."
 
-#: src/Navigation.tsx:260
+#: src/Navigation.tsx:258
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
 #: src/view/screens/Settings.tsx:623
 msgid "External Media Preferences"
@@ -1258,7 +1262,7 @@ msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 msgid "Failed to load recommended feeds"
 msgstr "추천 피드를 불러오지 못했습니다"
 
-#: src/Navigation.tsx:194
+#: src/Navigation.tsx:192
 msgid "Feed"
 msgstr "피드"
 
@@ -1279,7 +1283,7 @@ msgstr "피드 설정"
 msgid "Feedback"
 msgstr "피드백"
 
-#: src/Navigation.tsx:442
+#: src/Navigation.tsx:440
 #: src/view/screens/Feeds.tsx:479
 #: src/view/screens/Profile.tsx:165
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
@@ -1516,7 +1520,7 @@ msgstr "피드 서버에서 잘못된 응답을 보냈습니다. 피드 소유�
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
 msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었을 수 있습니다."
 
-#: src/Navigation.tsx:432
+#: src/Navigation.tsx:430
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
 #: src/view/shell/desktop/LeftNav.tsx:306
 #: src/view/shell/Drawer.tsx:401
@@ -1524,7 +1528,7 @@ msgstr "이 피드를 찾는 데 문제가 있습니다. 피드가 삭제되었�
 msgid "Home"
 msgstr "홈"
 
-#: src/Navigation.tsx:249
+#: src/Navigation.tsx:247
 #: src/view/com/pager/FeedsTabBarMobile.tsx:117
 #: src/view/screens/PreferencesHomeFeed.tsx:104
 #: src/view/screens/Settings.tsx:509
@@ -1600,7 +1604,7 @@ msgstr "새 비밀번호를 입력합니다"
 msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
-#: src/view/com/auth/create/Step2.tsx:92
+#: src/view/com/auth/create/Step2.tsx:194
 msgid "Input phone number for SMS verification"
 msgstr "SMS 인증에 사용할 전화번호를 입력합니다"
 
@@ -1612,7 +1616,7 @@ msgstr "{identifier}에 연결된 비밀번호를 입력합니다"
 msgid "Input the username or email address you used at signup"
 msgstr "가입 시 사용한 사용자 이름 또는 이메일 주소를 입력합니다"
 
-#: src/view/com/auth/create/Step2.tsx:166
+#: src/view/com/auth/create/Step2.tsx:268
 msgid "Input the verification code we have texted to you"
 msgstr "문자 메시지로 전송된 인증 코드를 입력합니다"
 
@@ -1650,7 +1654,7 @@ msgstr "친구 초대하기"
 msgid "Invite code"
 msgstr "초대 코드"
 
-#: src/view/com/auth/create/state.ts:193
+#: src/view/com/auth/create/state.ts:199
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "초대 코드가 올바르지 않습니다. 코드를 올바르게 입력했는지 확인한 후 다시 시도하세요."
 
@@ -1691,7 +1695,7 @@ msgstr "언어 선택"
 msgid "Language settings"
 msgstr "언어 설정"
 
-#: src/Navigation.tsx:141
+#: src/Navigation.tsx:139
 #: src/view/screens/LanguageSettings.tsx:89
 msgid "Language Settings"
 msgstr "언어 설정"
@@ -1760,7 +1764,7 @@ msgstr "좋아요"
 msgid "Like this feed"
 msgstr "이 피드에 좋아요 표시"
 
-#: src/Navigation.tsx:199
+#: src/Navigation.tsx:197
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked by"
@@ -1790,7 +1794,7 @@ msgstr "좋아요"
 msgid "Likes on this post"
 msgstr "이 게시물을 좋아요 표시합니다"
 
-#: src/Navigation.tsx:168
+#: src/Navigation.tsx:166
 msgid "List"
 msgstr "리스트"
 
@@ -1826,7 +1830,7 @@ msgstr "리스트 차단 해제됨"
 msgid "List unmuted"
 msgstr "리스트 언뮤트됨"
 
-#: src/Navigation.tsx:111
+#: src/Navigation.tsx:109
 #: src/view/screens/Profile.tsx:166
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:495
@@ -1858,7 +1862,7 @@ msgstr "불러오는 중…"
 msgid "Local dev server"
 msgstr "로컬 개발 서버"
 
-#: src/Navigation.tsx:209
+#: src/Navigation.tsx:207
 msgid "Log"
 msgstr "로그"
 
@@ -1895,7 +1899,7 @@ msgstr "메뉴"
 msgid "Message from server: {0}"
 msgstr "서버에서 보낸 메시지: {0}"
 
-#: src/Navigation.tsx:116
+#: src/Navigation.tsx:114
 #: src/view/screens/Moderation.tsx:64
 #: src/view/screens/Settings.tsx:591
 #: src/view/shell/desktop/LeftNav.tsx:397
@@ -1931,7 +1935,7 @@ msgstr "검토 리스트 업데이트됨"
 msgid "Moderation lists"
 msgstr "검토 리스트"
 
-#: src/Navigation.tsx:121
+#: src/Navigation.tsx:119
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
 msgstr "검토 리스트"
@@ -1994,7 +1998,7 @@ msgstr "뮤트됨"
 msgid "Muted accounts"
 msgstr "뮤트한 계정"
 
-#: src/Navigation.tsx:126
+#: src/Navigation.tsx:124
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
 msgstr "뮤트한 계정"
@@ -2164,7 +2168,7 @@ msgstr "없음"
 msgid "Not Applicable."
 msgstr "해당 없음."
 
-#: src/Navigation.tsx:106
+#: src/Navigation.tsx:104
 msgid "Not Found"
 msgstr "찾을 수 없음"
 
@@ -2177,7 +2181,7 @@ msgstr "나중에 하기"
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "참고: Bluesky는 개방형 공개 네트워크입니다. 이 설정은 Bluesky 앱과 웹사이트에서만 내 콘텐츠가 표시되는 것을 제한하며, 다른 앱에서는 이 설정을 준수하지 않을 수 있습니다. 다른 앱과 웹사이트에서는 로그아웃한 사용자에게 내 콘텐츠가 계속 표시될 수 있습니다."
 
-#: src/Navigation.tsx:447
+#: src/Navigation.tsx:445
 #: src/view/screens/Notifications.tsx:113
 #: src/view/screens/Notifications.tsx:137
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
@@ -2191,7 +2195,7 @@ msgstr "알림"
 msgid "Nudity"
 msgstr "노출"
 
-#: src/view/com/util/ErrorBoundary.tsx:34
+#: src/view/com/util/ErrorBoundary.tsx:35
 msgid "Oh no!"
 msgstr "안 돼!"
 
@@ -2377,11 +2381,11 @@ msgstr "비밀번호 변경됨"
 msgid "Password updated!"
 msgstr "비밀번호 변경됨"
 
-#: src/Navigation.tsx:162
+#: src/Navigation.tsx:160
 msgid "People followed by @{0}"
 msgstr "@{0} 님이 팔로우한 사람들"
 
-#: src/Navigation.tsx:155
+#: src/Navigation.tsx:153
 msgid "People following @{0}"
 msgstr "@{0} 님을 팔로우하는 사람들"
 
@@ -2393,7 +2397,7 @@ msgstr "앨범에 접근할 수 있는 권한이 필요합니다."
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
 msgstr "앨범에 접근할 수 있는 권한이 거부되었습니다. 시스템 설정에서 활성화하세요."
 
-#: src/view/com/auth/create/Step2.tsx:79
+#: src/view/com/auth/create/Step2.tsx:181
 msgid "Phone number"
 msgstr "전화번호"
 
@@ -2423,11 +2427,11 @@ msgstr "동영상 재생"
 msgid "Plays the GIF"
 msgstr "GIF를 재생합니다"
 
-#: src/view/com/auth/create/state.ts:171
+#: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
 msgstr "핸들을 입력하세요."
 
-#: src/view/com/auth/create/state.ts:154
+#: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
 msgstr "비밀번호를 입력하세요."
 
@@ -2439,7 +2443,7 @@ msgstr "이메일을 변경하기 전에 이메일을 확인해 주세요. 이�
 msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "앱 비밀번호의 이름을 입력하세요. 모든 공백 문자는 허용되지 않습니다."
 
-#: src/view/com/auth/create/Step2.tsx:102
+#: src/view/com/auth/create/Step2.tsx:204
 msgid "Please enter a phone number that can receive SMS text messages."
 msgstr "SMS 문자 메시지를 받을 수 있는 휴대폰 번호를 입력하세요."
 
@@ -2447,15 +2451,15 @@ msgstr "SMS 문자 메시지를 받을 수 있는 휴대폰 번호를 입력하�
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "이 앱 비밀번호에 대해 고유한 이름을 입력하거나 무작위로 생성된 이름을 사용합니다."
 
-#: src/view/com/auth/create/state.ts:164
+#: src/view/com/auth/create/state.ts:170
 msgid "Please enter the code you received by SMS."
 msgstr "SMS로 받은 코드를 입력하세요."
 
-#: src/view/com/auth/create/Step2.tsx:177
-msgid "Please enter the verification code sent to"
-msgstr ""
+#: src/view/com/auth/create/Step2.tsx:279
+msgid "Please enter the verification code sent to {phoneNumberFormatted}."
+msgstr "{phoneNumberFormatted}(으)로 보내진 인증 코드를 입력하세요."
 
-#: src/view/com/auth/create/state.ts:140
+#: src/view/com/auth/create/state.ts:146
 msgid "Please enter your email."
 msgstr "이메일을 입력하세요."
 
@@ -2496,9 +2500,9 @@ msgstr "게시물"
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
-#: src/Navigation.tsx:174
-#: src/Navigation.tsx:181
-#: src/Navigation.tsx:188
+#: src/Navigation.tsx:172
+#: src/Navigation.tsx:179
+#: src/Navigation.tsx:186
 msgid "Post by @{0}"
 msgstr "@{0} 님의 게시물"
 
@@ -2551,7 +2555,7 @@ msgstr "내 팔로우 먼저 표시"
 msgid "Privacy"
 msgstr "개인정보"
 
-#: src/Navigation.tsx:219
+#: src/Navigation.tsx:217
 #: src/view/screens/PrivacyPolicy.tsx:29
 #: src/view/screens/Settings.tsx:824
 #: src/view/shell/Drawer.tsx:265
@@ -2753,6 +2757,10 @@ msgid "Reposted by"
 msgstr "재게시한 계정"
 
 #: src/view/com/posts/FeedItem.tsx:206
+msgid "Reposted by {0}"
+msgstr "{0} 님이 재게시함"
+
+#: src/view/com/posts/FeedItem.tsx:206
 msgid "Reposted by {0})"
 msgstr "{0} 님이 재게시함"
 
@@ -2773,7 +2781,7 @@ msgstr "이 게시물의 재게시"
 msgid "Request Change"
 msgstr "변경 요청"
 
-#: src/view/com/auth/create/Step2.tsx:115
+#: src/view/com/auth/create/Step2.tsx:217
 msgid "Request code"
 msgstr "코드 요청"
 
@@ -2829,7 +2837,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 
 #: src/view/com/auth/create/CreateAccount.tsx:164
 #: src/view/com/auth/create/CreateAccount.tsx:168
-#: src/view/com/auth/create/Step2.tsx:150
+#: src/view/com/auth/create/Step2.tsx:252
 #: src/view/com/auth/login/LoginForm.tsx:265
 #: src/view/com/auth/login/LoginForm.tsx:268
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -2837,7 +2845,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 msgid "Retry"
 msgstr "다시 시도"
 
-#: src/view/com/auth/create/Step2.tsx:143
+#: src/view/com/auth/create/Step2.tsx:245
 msgid "Retry."
 msgstr "다시 시도하기"
 
@@ -2896,7 +2904,7 @@ msgstr "핸들을 {handle}(으)로 변경합니다"
 msgid "Scroll to top"
 msgstr "맨 위로 스크롤"
 
-#: src/Navigation.tsx:437
+#: src/Navigation.tsx:435
 #: src/view/com/auth/LoggedOut.tsx:122
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:53
@@ -2964,6 +2972,10 @@ msgstr "구독하는 피드에 포함할 언어를 선택합니다. 선택하지
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
 msgstr "앱에 표시되는 기본 텍스트 언어를 선택합니다."
+
+#: src/view/com/auth/create/Step2.tsx:153
+msgid "Select your phone's country"
+msgstr "전화번호 국가 선택"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3063,7 +3075,7 @@ msgstr "비밀번호 재설정을 위한 호스팅 제공자를 설정합니다"
 msgid "Sets server for the Bluesky client"
 msgstr "Bluesky 클라이언트를 위한 서버를 설정합니다"
 
-#: src/Navigation.tsx:136
+#: src/Navigation.tsx:134
 #: src/view/screens/Settings.tsx:294
 #: src/view/shell/desktop/LeftNav.tsx:433
 #: src/view/shell/Drawer.tsx:570
@@ -3236,7 +3248,7 @@ msgstr "Bluesky에서 {0}을(를) 로그아웃합니다"
 msgid "Skip"
 msgstr "건너뛰기"
 
-#: src/view/com/auth/create/Step2.tsx:70
+#: src/view/com/auth/create/Step2.tsx:80
 msgid "SMS verification"
 msgstr "SMS 인증"
 
@@ -3280,7 +3292,7 @@ msgstr "{numSteps}단계 중 {0}단계"
 msgid "Storage cleared, you need to restart the app now."
 msgstr "스토리지가 지워졌으며 지금 앱을 다시 시작해야 합니다."
 
-#: src/Navigation.tsx:204
+#: src/Navigation.tsx:202
 #: src/view/screens/Settings.tsx:740
 msgid "Storybook"
 msgstr "스토리북"
@@ -3309,7 +3321,7 @@ msgstr "나를 위한 추천"
 msgid "Suggestive"
 msgstr "외설적"
 
-#: src/Navigation.tsx:214
+#: src/Navigation.tsx:212
 #: src/view/screens/Support.tsx:30
 #: src/view/screens/Support.tsx:33
 msgid "Support"
@@ -3353,7 +3365,7 @@ msgstr "탭하여 전체 크기로 봅니다"
 msgid "Terms"
 msgstr "이용약관"
 
-#: src/Navigation.tsx:224
+#: src/Navigation.tsx:222
 #: src/view/screens/Settings.tsx:818
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:259
@@ -3462,13 +3474,13 @@ msgstr "문제가 발생했습니다! {0}"
 msgid "There was an issue. Please check your internet connection and try again."
 msgstr "문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
 
-#: src/view/com/util/ErrorBoundary.tsx:35
+#: src/view/com/util/ErrorBoundary.tsx:36
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
 msgstr "애플리케이션에 예기치 않은 문제가 발생했습니다. 이런 일이 발생하면 저희에게 알려주세요!"
 
-#: src/view/com/auth/create/Step2.tsx:47
-msgid "There's something wrong with this number. Please include your country and/or area code!"
-msgstr "잘못된 번호입니다. 국가 및 지역 번호를 입력하세요."
+#: src/view/com/auth/create/Step2.tsx:53
+msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
+msgstr "잘못된 번호입니다. 국가를 선택하고 전체 전화번호를 입력하세요."
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -3557,7 +3569,7 @@ msgstr "스레드 설정"
 msgid "Threaded Mode"
 msgstr "스레드 모드"
 
-#: src/Navigation.tsx:254
+#: src/Navigation.tsx:252
 msgid "Threads Preferences"
 msgstr "스레드 설정"
 
@@ -3626,7 +3638,7 @@ msgstr "언팔로우"
 msgid "Unfollow {0}"
 msgstr "{0} 님을 언팔로우"
 
-#: src/view/com/auth/create/state.ts:289
+#: src/view/com/auth/create/state.ts:298
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr "아쉽지만 계정을 만들 수 있는 요건을 충족하지 못했습니다."
 
@@ -3765,7 +3777,7 @@ msgstr "<0/> 님이 팔로우한 사용자"
 msgid "Users in \"{0}\""
 msgstr "\"{0}\"에 있는 사용자"
 
-#: src/view/com/auth/create/Step2.tsx:139
+#: src/view/com/auth/create/Step2.tsx:241
 msgid "Verification code"
 msgstr "인증 코드"
 
@@ -3881,7 +3893,7 @@ msgstr "게시물 작성"
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
-#: src/view/com/auth/create/Step2.tsx:158
+#: src/view/com/auth/create/Step2.tsx:260
 msgid "XXXXXX"
 msgstr "XXXXXX"
 
@@ -3990,7 +4002,7 @@ msgstr "생년월일"
 msgid "Your choice will be saved, but can be changed later in settings."
 msgstr "선택 사항은 저장되며 나중에 설정에서 변경할 수 있습니다."
 
-#: src/view/com/auth/create/state.ts:147
+#: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 msgid "Your email appears to be invalid."
 msgstr "이메일이 잘못된 것 같습니다."
