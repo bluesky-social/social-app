@@ -1180,7 +1180,7 @@ msgstr "Semua orang"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "Proses perubahan hendle keluar"
+msgstr "Keluar dari proses perubahan handle"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:113
 msgid "Exits image view"
