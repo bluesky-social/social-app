@@ -241,7 +241,7 @@ msgstr "Teks alt menjelaskan gambar untuk pengguna tunanetra dan pengguna dengan
 
 #: src/view/com/modals/VerifyEmail.tsx:124
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "Email telah dikirim ke {0}. Email tersebut menyertakan kode konfirmasi yang dapat Anda masukkan di bawah ini."
+msgstr "Email telah dikirim ke {0}. Email tersebut berisi kode konfirmasi yang dapat Anda masukkan di bawah ini."
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
