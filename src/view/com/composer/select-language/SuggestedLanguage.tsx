@@ -45,7 +45,7 @@ export function SuggestedLanguage({text}: {text: string}) {
       setSuggestedLanguage(
         result.length > 0 ? code3ToCode2Strict(result[0][0]) : undefined,
       )
-    }, 1500)
+    }, 800)
 
     return () => clearTimeout(timeout)
   }, [text])
