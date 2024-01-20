@@ -132,7 +132,7 @@ msgstr "Akun batal diblokir"
 
 #: src/view/com/profile/ProfileHeader.tsx:273
 msgid "Account unmuted"
-msgstr "Akun tidak dibisukan"
+msgstr "Akun batal dibisukan"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
