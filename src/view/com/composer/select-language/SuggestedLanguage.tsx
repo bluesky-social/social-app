@@ -18,10 +18,6 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 
-// fallbacks for safari
-const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
-const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
-
 export function SuggestedLanguage({text}: {text: string}) {
   const [suggestedLanguage, setSuggestedLanguage] = useState<string>()
   const langPrefs = useLanguagePrefs()
@@ -39,7 +35,7 @@ export function SuggestedLanguage({text}: {text: string}) {
       return
     }
 
-    const idle = onIdle(() => {
+    const timeout = setTimeout(() => {
       // Only select languages that have a high confidence and convert to code2
       const result = lande(textTrimmed).filter(
         ([lang, value]) => value >= 0.97 && code3ToCode2Strict(lang),
@@ -48,9 +44,9 @@ export function SuggestedLanguage({text}: {text: string}) {
       setSuggestedLanguage(
         result.length > 0 ? code3ToCode2Strict(result[0][0]) : undefined,
       )
-    })
+    }, 1500)
 
-    return () => cancelIdle(idle)
+    return () => clearTimeout(timeout)
   }, [text])
 
   return suggestedLanguage &&
