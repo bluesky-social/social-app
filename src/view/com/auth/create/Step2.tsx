@@ -5,6 +5,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+import RNPickerSelect from 'react-native-picker-select'
 import {
   CreateAccountState,
   CreateAccountDispatch,
@@ -17,11 +18,16 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
 import {Button} from '../../util/forms/Button'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import parsePhoneNumber from 'libphonenumber-js'
+import {COUNTRY_CODES} from '#/lib/country-codes'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 
 export function Step2({
   uiState,
@@ -37,14 +43,14 @@ export function Step2({
   const onPressRequest = React.useCallback(() => {
     if (
       uiState.verificationPhone.length >= 9 &&
-      parsePhoneNumber(uiState.verificationPhone, 'US')
+      parsePhoneNumber(uiState.verificationPhone, uiState.phoneCountry)
     ) {
       requestVerificationCode({uiState, uiDispatch, _})
     } else {
       uiDispatch({
         type: 'set-error',
         value: _(
-          msg`There's something wrong with this number. Please include your country and/or area code!`,
+          msg`There's something wrong with this number. Please choose your country and enter your full phone number!`,
         ),
       })
     }
@@ -59,10 +65,14 @@ export function Step2({
       uiState.hasRequestedVerificationCode
         ? parsePhoneNumber(
             uiState.verificationPhone,
-            'US',
+            uiState.phoneCountry,
           )?.formatInternational()
         : '',
-    [uiState.hasRequestedVerificationCode, uiState.verificationPhone],
+    [
+      uiState.hasRequestedVerificationCode,
+      uiState.verificationPhone,
+      uiState.phoneCountry,
+    ],
   )
 
   return (
@@ -71,6 +81,98 @@ export function Step2({
 
       {!uiState.hasRequestedVerificationCode ? (
         <>
+          <View style={s.pb10}>
+            <Text
+              type="md-medium"
+              style={[pal.text, s.mb2]}
+              nativeID="phoneCountry">
+              <Trans>Country</Trans>
+            </Text>
+            <View
+              style={[
+                {position: 'relative'},
+                isAndroid && {
+                  borderWidth: 1,
+                  borderColor: pal.border.borderColor,
+                  borderRadius: 4,
+                },
+              ]}>
+              <RNPickerSelect
+                placeholder={{}}
+                value={uiState.phoneCountry}
+                onValueChange={value =>
+                  uiDispatch({type: 'set-phone-country', value})
+                }
+                items={COUNTRY_CODES.filter(l => Boolean(l.code2)).map(l => ({
+                  label: l.name,
+                  value: l.code2,
+                  key: l.code2,
+                }))}
+                style={{
+                  inputAndroid: {
+                    backgroundColor: pal.view.backgroundColor,
+                    color: pal.text.color,
+                    fontSize: 21,
+                    letterSpacing: 0.5,
+                    fontWeight: '500',
+                    paddingHorizontal: 14,
+                    paddingVertical: 8,
+                    borderRadius: 4,
+                  },
+                  inputIOS: {
+                    backgroundColor: pal.view.backgroundColor,
+                    color: pal.text.color,
+                    fontSize: 14,
+                    letterSpacing: 0.5,
+                    fontWeight: '500',
+                    paddingHorizontal: 14,
+                    paddingVertical: 8,
+                    borderWidth: 1,
+                    borderColor: pal.border.borderColor,
+                    borderRadius: 4,
+                  },
+                  inputWeb: {
+                    // @ts-ignore web only
+                    cursor: 'pointer',
+                    '-moz-appearance': 'none',
+                    '-webkit-appearance': 'none',
+                    appearance: 'none',
+                    outline: 0,
+                    borderWidth: 1,
+                    borderColor: pal.border.borderColor,
+                    backgroundColor: pal.view.backgroundColor,
+                    color: pal.text.color,
+                    fontSize: 14,
+                    letterSpacing: 0.5,
+                    fontWeight: '500',
+                    paddingHorizontal: 14,
+                    paddingVertical: 8,
+                    borderRadius: 4,
+                  },
+                }}
+                accessibilityLabel={_(msg`Select your phone's country`)}
+                accessibilityHint=""
+                accessibilityLabelledBy="phoneCountry"
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 1,
+                  right: 1,
+                  bottom: 1,
+                  width: 40,
+                  pointerEvents: 'none',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <FontAwesomeIcon
+                  icon="chevron-down"
+                  style={pal.text as FontAwesomeIconStyle}
+                />
+              </View>
+            </View>
+          </View>
+
           <View style={s.pb20}>
             <Text
               type="md-medium"
