@@ -3310,7 +3310,7 @@ msgstr "Ada masalah saat mengambil daftar Anda. Ketuk di sini untuk mencoba lagi
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
-msgstr "Ada masalah dalam menyinkronkan preferensi Anda dengan server"
+msgstr "Ada masalah saat mensinkronkan preferensi Anda dengan server"
 
 #: src/view/screens/AppPasswords.tsx:66
 msgid "There was an issue with fetching your app passwords"
