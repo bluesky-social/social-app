@@ -3344,7 +3344,7 @@ msgstr "Akun ini mewajibkan pengguna untuk masuk agar bisa melihat profilnya."
 
 #: src/view/com/modals/EmbedConsent.tsx:68
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "Konten ini dihosting oleh {0}. Apakah Anda ingin mengaktifkan media eksternal?"
+msgstr "Konten ini disediakan oleh {0}. Apakah Anda ingin mengaktifkan media eksternal?"
 
 #: src/view/com/modals/ModerationDetails.tsx:67
 msgid "This content is not available because one of the users involved has blocked the other."
