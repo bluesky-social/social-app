@@ -3592,7 +3592,7 @@ msgstr "Daftar pengguna dengan {0}"
 
 #: src/view/screens/ProfileList.tsx:741
 msgid "User list by <0/>"
-msgstr "Daftar pengguna berdasarkan <0/>"
+msgstr "Daftar pengguna oleh<0/>"
 
 #: src/view/com/lists/ListCard.tsx:82
 #: src/view/com/modals/UserAddRemoveLists.tsx:180
