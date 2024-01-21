@@ -2333,7 +2333,7 @@ msgstr "Gambar yang ditujukan untuk orang dewasa."
 
 #: src/view/screens/ProfileFeed.tsx:362 src/view/screens/ProfileList.tsx:559
 msgid "Pin to home"
-msgstr "Pin ke beranda"
+msgstr "Sematkan ke beranda"
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
