@@ -63,7 +63,11 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   const onPressMask = () => {
-    if (modal.name === 'crop-image' || modal.name === 'edit-image') {
+    if (
+      modal.name === 'crop-image' ||
+      modal.name === 'edit-image' ||
+      modal.name === 'alt-text-image'
+    ) {
       return // dont close on mask presses during crop
     }
     closeModal()

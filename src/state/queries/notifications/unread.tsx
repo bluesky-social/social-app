@@ -167,7 +167,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
           broadcast.postMessage({event: unreadCountStr})
         } catch (e) {
-          logger.error('Failed to check unread notifications', {error: e})
+          logger.warn('Failed to check unread notifications', {error: e})
         }
       },
 
