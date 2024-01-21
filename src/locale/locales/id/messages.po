@@ -460,7 +460,7 @@ msgstr "Tombol dinonaktifkan. Masukkan domain khusus untuk melanjutkan."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
-msgstr "oleh -"
+msgstr "oleh —"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
 msgid "by {0}"
