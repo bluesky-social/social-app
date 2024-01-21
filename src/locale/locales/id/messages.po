@@ -3684,7 +3684,7 @@ msgstr "Kami kehabisan postingan dari para pengikut Anda. Inilah yang terbaru da
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
-msgstr "Kami akan segera memeriksa banding Anda."
+msgstr "Kami akan segera memeriksa permohonan banding Anda."
 
 #: src/view/com/auth/create/CreateAccount.tsx:122
 msgid "We're so excited to have you join us!"
