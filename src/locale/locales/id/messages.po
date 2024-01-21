@@ -3550,7 +3550,7 @@ msgstr "Gunakan layanan bawaan"
 #: src/view/com/modals/InAppBrowserConsent.tsx:56
 #: src/view/com/modals/InAppBrowserConsent.tsx:58
 msgid "Use in-app browser"
-msgstr "Gunakan browser dalam aplikasi"
+msgstr "Gunakan peramban dalam aplikasi"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:66
 #: src/view/com/modals/InAppBrowserConsent.tsx:68
