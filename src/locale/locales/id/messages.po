@@ -2890,7 +2890,7 @@ msgstr "Tetapkan {value} untuk kebijakan moderasi konten {labelGroup}"
 #: src/view/com/modals/ContentFilteringSettings.tsx:174
 msgctxt "action"
 msgid "Set Age"
-msgstr "Atur Usia"
+msgstr "Tetapkan Usia"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
