@@ -3588,7 +3588,7 @@ msgstr "Handle pengguna"
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:182
 msgid "User list by {0}"
-msgstr "Daftar pengguna dengan {0}"
+msgstr "Daftar pengguna oleh {0}"
 
 #: src/view/screens/ProfileList.tsx:741
 msgid "User list by <0/>"
