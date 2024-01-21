@@ -43,9 +43,9 @@ module.exports = function () {
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
+      name: 'bluesky testing',
       slug: 'bluesky',
-      scheme: 'bluesky',
+      scheme: 'blueskytesting',
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',
@@ -57,7 +57,7 @@ module.exports = function () {
       ios: {
         buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'com.haileyok.blueskytesting',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -114,11 +114,6 @@ module.exports = function () {
       web: {
         favicon: './assets/favicon.png',
       },
-      updates: {
-        enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
-      },
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -136,12 +131,6 @@ module.exports = function () {
             },
           },
         ],
-        [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
-          },
-        ],
         './plugins/withAndroidManifestPlugin.js',
         './plugins/shareExtension/build/withShareExtensionIos.js',
       ].filter(Boolean),
@@ -149,22 +138,6 @@ module.exports = function () {
         eas: {
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
-      },
-      hooks: {
-        postPublish: [
-          /*
-           * @see https://docs.expo.dev/guides/using-sentry/#app-configuration
-           */
-          {
-            file: 'sentry-expo/upload-sourcemaps',
-            config: {
-              organization: 'blueskyweb',
-              project: 'react-native',
-              release: VERSION,
-              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
-            },
-          },
-        ],
       },
     },
   }

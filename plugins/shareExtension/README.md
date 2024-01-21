@@ -10,4 +10,4 @@ This plugin handles moving the necessary files into their respective iOS and And
 
 ## Credits
 
-Adapted from https://github.com/andrew-levy/react-native-safari-extension.
+Adapted from https://github.com/andrew-levy/react-native-safari-extension and https://github.com/timedtext/expo-config-plugin-ios-share-extension/blob/master/src/withShareExtensionXcodeTarget.ts
