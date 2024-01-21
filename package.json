@@ -37,7 +37,7 @@
     "intl:extract": "lingui extract",
     "intl:compile": "lingui compile",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
-    "updateExtensions": "./bin/updateExtensions.sh",
+    "update-extensions": "./bin/updateExtensions.sh",
     "build-plugins": "cd plugins/shareExtension && tsc ./*.ts --outDir ./build && cd ../.."
   },
   "dependencies": {

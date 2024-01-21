@@ -2,6 +2,8 @@ import UIKit
 import UniformTypeIdentifiers
 
 class ShareViewController: UIViewController {
+  let appScheme = Bundle.main.object(forInfoDictionaryKey: "MainAppScheme") as? String ?? "bluesky"
+
   // Don't freeze
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
@@ -35,7 +37,7 @@ class ShareViewController: UIViewController {
       if let data = try await item.loadItem(forTypeIdentifier: "public.text") as? String {
         // Try to get the text
         if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-           let url = URL(string: "bluesky://createPost?text=\(encoded)")
+           let url = URL(string: "\(self.appScheme)://createPost?text=\(encoded)")
         {
           // Open bluesky
           _ = self.openURL(url)
@@ -52,7 +54,7 @@ class ShareViewController: UIViewController {
       if let data = try await item.loadItem(forTypeIdentifier: "public.url") as? URL {
         // Get the url and open bluesky
         if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-           let url = URL(string: "bluesky://createPost?text=\(encoded)")
+           let url = URL(string: "\(self.appScheme)://createPost?text=\(encoded)")
         {
           // open bluesky
           _ = self.openURL(url)
@@ -102,7 +104,7 @@ class ShareViewController: UIViewController {
 
     if valid,
        let encoded = imageUris.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-       let url = URL(string: "bluesky://createPost?imageUris=\(encoded)")
+       let url = URL(string: "\(self.appScheme)://createPost?imageUris=\(encoded)")
     {
       _ = openURL(url)
     }
