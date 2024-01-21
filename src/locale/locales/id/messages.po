@@ -1756,7 +1756,7 @@ msgstr "Daftar diblokir"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:231
 msgid "List by {0}"
-msgstr "Daftar dengan {0}"
+msgstr "Daftar oleh {0}"
 
 #: src/view/screens/ProfileList.tsx:367
 msgid "List deleted"
