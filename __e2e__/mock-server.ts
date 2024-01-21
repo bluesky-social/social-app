@@ -14,7 +14,8 @@ async function main() {
       await server?.close()
       console.log('Starting new server')
       const inviteRequired = url?.query && 'invite' in url.query
-      server = await createServer({inviteRequired})
+      const phoneRequired = url?.query && 'phone' in url.query
+      server = await createServer({inviteRequired, phoneRequired})
       console.log('Listening at', server.pdsUrl)
       if (url?.query) {
         if ('users' in url.query) {

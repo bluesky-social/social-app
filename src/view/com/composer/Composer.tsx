@@ -45,6 +45,7 @@ import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {LabelsBtn} from './labels/LabelsBtn'
 import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -73,7 +74,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
-  const {activeModals} = useModals()
+  const {isModalActive, activeModals} = useModals()
   const {openModal, closeModal} = useModalControls()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
@@ -175,11 +176,11 @@ export const ComposePost = observer(function ComposePost({
     [onPressCancel],
   )
   useEffect(() => {
-    if (isWeb) {
+    if (isWeb && !isModalActive) {
       window.addEventListener('keydown', onEscape)
       return () => window.removeEventListener('keydown', onEscape)
     }
-  }, [onEscape])
+  }, [onEscape, isModalActive])
 
   const onPressAddLinkCard = useCallback(
     (uri: string) => {
@@ -454,6 +455,7 @@ export const ComposePost = observer(function ComposePost({
               ))}
           </View>
         ) : null}
+        <SuggestedLanguage text={richtext.text} />
         <View style={[pal.border, styles.bottomBar]}>
           {canSelectImages ? (
             <>

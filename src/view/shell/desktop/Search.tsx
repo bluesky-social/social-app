@@ -29,13 +29,63 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useModerationOpts} from '#/state/queries/preferences'
 
-export function SearchResultCard({
-  profile,
+export const MATCH_HANDLE =
+  /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/
+
+export function SearchLinkCard({
+  label,
+  to,
+  onPress,
   style,
+}: {
+  label: string
+  to?: string
+  onPress?: () => void
+  style?: ViewStyle
+}) {
+  const pal = usePalette('default')
+
+  const inner = (
+    <View
+      style={[pal.border, {paddingVertical: 16, paddingHorizontal: 12}, style]}>
+      <Text type="md" style={[pal.text]}>
+        {label}
+      </Text>
+    </View>
+  )
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        accessibilityLabel={label}
+        accessibilityHint="">
+        {inner}
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <Link href={to} asAnchor anchorNoUnderline>
+      <View
+        style={[
+          pal.border,
+          {paddingVertical: 16, paddingHorizontal: 12},
+          style,
+        ]}>
+        <Text type="md" style={[pal.text]}>
+          {label}
+        </Text>
+      </View>
+    </Link>
+  )
+}
+
+export function SearchProfileCard({
+  profile,
   moderation,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
-  style: ViewStyle
   moderation: ProfileModeration
 }) {
   const pal = usePalette('default')
@@ -50,9 +100,7 @@ export function SearchResultCard({
       <View
         style={[
           pal.border,
-          style,
           {
-            borderTopWidth: 1,
             flexDirection: 'row',
             alignItems: 'center',
             gap: 12,
@@ -147,6 +195,11 @@ export function DesktopSearch() {
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }, [query, navigation, setSearchResults])
 
+  const queryMaybeHandle = React.useMemo(() => {
+    const match = MATCH_HANDLE.exec(query)
+    return match && match[1]
+  }, [query])
+
   return (
     <View style={[styles.container, pal.view]}>
       <View
@@ -198,22 +251,26 @@ export function DesktopSearch() {
             </View>
           ) : (
             <>
-              {searchResults.length ? (
-                searchResults.map((item, i) => (
-                  <SearchResultCard
-                    key={item.did}
-                    profile={item}
-                    moderation={moderateProfile(item, moderationOpts)}
-                    style={i === 0 ? {borderTopWidth: 0} : {}}
-                  />
-                ))
-              ) : (
-                <View>
-                  <Text style={[pal.textLight, styles.noResults]}>
-                    <Trans>No results found for {query}</Trans>
-                  </Text>
-                </View>
-              )}
+              <SearchLinkCard
+                label={_(msg`Search for "${query}"`)}
+                to={`/search?q=${encodeURIComponent(query)}`}
+                style={{borderBottomWidth: 1}}
+              />
+
+              {queryMaybeHandle ? (
+                <SearchLinkCard
+                  label={_(msg`Go to @${queryMaybeHandle}`)}
+                  to={`/profile/${queryMaybeHandle}`}
+                />
+              ) : null}
+
+              {searchResults.map(item => (
+                <SearchProfileCard
+                  key={item.did}
+                  profile={item}
+                  moderation={moderateProfile(item, moderationOpts)}
+                />
+              ))}
             </>
           )}
         </View>

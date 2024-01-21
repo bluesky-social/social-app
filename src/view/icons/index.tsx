@@ -52,6 +52,7 @@ import {faGear} from '@fortawesome/free-solid-svg-icons/faGear'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faHand} from '@fortawesome/free-solid-svg-icons/faHand'
 import {faHand as farHand} from '@fortawesome/free-regular-svg-icons/faHand'
+import {faHashtag} from '@fortawesome/free-solid-svg-icons/faHashtag'
 import {faHeart} from '@fortawesome/free-regular-svg-icons/faHeart'
 import {faHeart as fasHeart} from '@fortawesome/free-solid-svg-icons/faHeart'
 import {faHouse} from '@fortawesome/free-solid-svg-icons/faHouse'
@@ -71,6 +72,7 @@ import {faPaste} from '@fortawesome/free-regular-svg-icons/faPaste'
 import {faPen} from '@fortawesome/free-solid-svg-icons/faPen'
 import {faPenNib} from '@fortawesome/free-solid-svg-icons/faPenNib'
 import {faPenToSquare} from '@fortawesome/free-solid-svg-icons/faPenToSquare'
+import {faPhone} from '@fortawesome/free-solid-svg-icons/faPhone'
 import {faPlay} from '@fortawesome/free-solid-svg-icons/faPlay'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faQuoteLeft} from '@fortawesome/free-solid-svg-icons/faQuoteLeft'
@@ -78,6 +80,7 @@ import {faReply} from '@fortawesome/free-solid-svg-icons/faReply'
 import {faRetweet} from '@fortawesome/free-solid-svg-icons/faRetweet'
 import {faRss} from '@fortawesome/free-solid-svg-icons/faRss'
 import {faSatelliteDish} from '@fortawesome/free-solid-svg-icons/faSatelliteDish'
+import {faServer} from '@fortawesome/free-solid-svg-icons/faServer'
 import {faShare} from '@fortawesome/free-solid-svg-icons/faShare'
 import {faShareFromSquare} from '@fortawesome/free-solid-svg-icons/faShareFromSquare'
 import {faShield} from '@fortawesome/free-solid-svg-icons/faShield'
@@ -153,6 +156,7 @@ library.add(
   faGlobe,
   faHand,
   farHand,
+  faHashtag,
   faHeart,
   fasHeart,
   faHouse,
@@ -172,6 +176,7 @@ library.add(
   faPen,
   faPenNib,
   faPenToSquare,
+  faPhone,
   faPlay,
   faPlus,
   faQuoteLeft,
@@ -179,6 +184,7 @@ library.add(
   faRetweet,
   faRss,
   faSatelliteDish,
+  faServer,
   faShare,
   faShareFromSquare,
   faShield,

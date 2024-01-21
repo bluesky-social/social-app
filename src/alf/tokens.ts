@@ -1,79 +1,95 @@
 const BLUE_HUE = 211
-const GRAYSCALE_SATURATION = 22
+const RED_HUE = 346
+const GREEN_HUE = 152
 
 export const color = {
-  white: '#FFFFFF',
+  trueBlack: '#000000',
 
-  gray_0: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 100%)`,
-  gray_100: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 95%)`,
-  gray_200: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 85%)`,
-  gray_300: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 75%)`,
-  gray_400: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 65%)`,
-  gray_500: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 55%)`,
-  gray_600: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 45%)`,
-  gray_700: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 35%)`,
-  gray_800: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 25%)`,
-  gray_900: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 15%)`,
-  gray_1000: `hsl(${BLUE_HUE}, ${GRAYSCALE_SATURATION}%, 5%)`,
+  gray_0: `hsl(${BLUE_HUE}, 20%, 100%)`,
+  gray_25: `hsl(${BLUE_HUE}, 20%, 97%)`,
+  gray_50: `hsl(${BLUE_HUE}, 20%, 95%)`,
+  gray_100: `hsl(${BLUE_HUE}, 20%, 90%)`,
+  gray_200: `hsl(${BLUE_HUE}, 20%, 80%)`,
+  gray_300: `hsl(${BLUE_HUE}, 20%, 70%)`,
+  gray_400: `hsl(${BLUE_HUE}, 20%, 60%)`,
+  gray_500: `hsl(${BLUE_HUE}, 20%, 50%)`,
+  gray_600: `hsl(${BLUE_HUE}, 20%, 42%)`,
+  gray_700: `hsl(${BLUE_HUE}, 20%, 34%)`,
+  gray_800: `hsl(${BLUE_HUE}, 20%, 26%)`,
+  gray_900: `hsl(${BLUE_HUE}, 20%, 18%)`,
+  gray_950: `hsl(${BLUE_HUE}, 20%, 10%)`,
+  gray_975: `hsl(${BLUE_HUE}, 20%, 7%)`,
+  gray_1000: `hsl(${BLUE_HUE}, 20%, 4%)`,
 
-  blue_0: `hsl(${BLUE_HUE}, 99%, 100%)`,
-  blue_100: `hsl(${BLUE_HUE}, 99%, 93%)`,
-  blue_200: `hsl(${BLUE_HUE}, 99%, 83%)`,
-  blue_300: `hsl(${BLUE_HUE}, 99%, 73%)`,
-  blue_400: `hsl(${BLUE_HUE}, 99%, 63%)`,
+  blue_25: `hsl(${BLUE_HUE}, 99%, 97%)`,
+  blue_50: `hsl(${BLUE_HUE}, 99%, 95%)`,
+  blue_100: `hsl(${BLUE_HUE}, 99%, 90%)`,
+  blue_200: `hsl(${BLUE_HUE}, 99%, 80%)`,
+  blue_300: `hsl(${BLUE_HUE}, 99%, 70%)`,
+  blue_400: `hsl(${BLUE_HUE}, 99%, 60%)`,
   blue_500: `hsl(${BLUE_HUE}, 99%, 53%)`,
-  blue_600: `hsl(${BLUE_HUE}, 99%, 43%)`,
-  blue_700: `hsl(${BLUE_HUE}, 99%, 33%)`,
-  blue_800: `hsl(${BLUE_HUE}, 99%, 23%)`,
-  blue_900: `hsl(${BLUE_HUE}, 99%, 13%)`,
-  blue_1000: `hsl(${BLUE_HUE}, 99%, 8%)`,
+  blue_600: `hsl(${BLUE_HUE}, 99%, 42%)`,
+  blue_700: `hsl(${BLUE_HUE}, 99%, 34%)`,
+  blue_800: `hsl(${BLUE_HUE}, 99%, 26%)`,
+  blue_900: `hsl(${BLUE_HUE}, 99%, 18%)`,
+  blue_950: `hsl(${BLUE_HUE}, 99%, 10%)`,
+  blue_975: `hsl(${BLUE_HUE}, 99%, 7%)`,
 
-  green_0: `hsl(130, 60%, 100%)`,
-  green_100: `hsl(130, 60%, 95%)`,
-  green_200: `hsl(130, 60%, 85%)`,
-  green_300: `hsl(130, 60%, 75%)`,
-  green_400: `hsl(130, 60%, 65%)`,
-  green_500: `hsl(130, 60%, 55%)`,
-  green_600: `hsl(130, 60%, 45%)`,
-  green_700: `hsl(130, 60%, 35%)`,
-  green_800: `hsl(130, 60%, 25%)`,
-  green_900: `hsl(130, 60%, 15%)`,
-  green_1000: `hsl(130, 60%, 5%)`,
+  green_25: `hsl(${GREEN_HUE}, 82%, 97%)`,
+  green_50: `hsl(${GREEN_HUE}, 82%, 95%)`,
+  green_100: `hsl(${GREEN_HUE}, 82%, 90%)`,
+  green_200: `hsl(${GREEN_HUE}, 82%, 80%)`,
+  green_300: `hsl(${GREEN_HUE}, 82%, 70%)`,
+  green_400: `hsl(${GREEN_HUE}, 82%, 60%)`,
+  green_500: `hsl(${GREEN_HUE}, 82%, 50%)`,
+  green_600: `hsl(${GREEN_HUE}, 82%, 42%)`,
+  green_700: `hsl(${GREEN_HUE}, 82%, 34%)`,
+  green_800: `hsl(${GREEN_HUE}, 82%, 26%)`,
+  green_900: `hsl(${GREEN_HUE}, 82%, 18%)`,
+  green_950: `hsl(${GREEN_HUE}, 82%, 10%)`,
+  green_975: `hsl(${GREEN_HUE}, 82%, 7%)`,
 
-  red_0: `hsl(349, 96%, 100%)`,
-  red_100: `hsl(349, 96%, 95%)`,
-  red_200: `hsl(349, 96%, 85%)`,
-  red_300: `hsl(349, 96%, 75%)`,
-  red_400: `hsl(349, 96%, 65%)`,
-  red_500: `hsl(349, 96%, 55%)`,
-  red_600: `hsl(349, 96%, 45%)`,
-  red_700: `hsl(349, 96%, 35%)`,
-  red_800: `hsl(349, 96%, 25%)`,
-  red_900: `hsl(349, 96%, 15%)`,
-  red_1000: `hsl(349, 96%, 5%)`,
+  red_25: `hsl(${RED_HUE}, 91%, 97%)`,
+  red_50: `hsl(${RED_HUE}, 91%, 95%)`,
+  red_100: `hsl(${RED_HUE}, 91%, 90%)`,
+  red_200: `hsl(${RED_HUE}, 91%, 80%)`,
+  red_300: `hsl(${RED_HUE}, 91%, 70%)`,
+  red_400: `hsl(${RED_HUE}, 91%, 60%)`,
+  red_500: `hsl(${RED_HUE}, 91%, 50%)`,
+  red_600: `hsl(${RED_HUE}, 91%, 42%)`,
+  red_700: `hsl(${RED_HUE}, 91%, 34%)`,
+  red_800: `hsl(${RED_HUE}, 91%, 26%)`,
+  red_900: `hsl(${RED_HUE}, 91%, 18%)`,
+  red_950: `hsl(${RED_HUE}, 91%, 10%)`,
+  red_975: `hsl(${RED_HUE}, 91%, 7%)`,
 } as const
 
 export const space = {
-  xxs: 2,
+  _2xs: 2,
   xs: 4,
   sm: 8,
   md: 12,
-  lg: 18,
-  xl: 24,
-  xxl: 32,
+  lg: 16,
+  xl: 20,
+  _2xl: 24,
+  _3xl: 28,
+  _4xl: 32,
+  _5xl: 40,
 } as const
 
 export const fontSize = {
-  xxs: 10,
+  _2xs: 10,
   xs: 12,
   sm: 14,
   md: 16,
   lg: 18,
-  xl: 22,
-  xxl: 26,
+  xl: 20,
+  _2xl: 22,
+  _3xl: 26,
+  _4xl: 32,
+  _5xl: 40,
 } as const
 
-// TODO test
 export const lineHeight = {
   none: 1,
   normal: 1.5,
@@ -81,6 +97,8 @@ export const lineHeight = {
 } as const
 
 export const borderRadius = {
+  _2xs: 2,
+  xs: 4,
   sm: 8,
   md: 12,
   full: 999,
@@ -90,6 +108,56 @@ export const fontWeight = {
   normal: '400',
   semibold: '600',
   bold: '900',
+} as const
+
+export const gradients = {
+  sky: {
+    values: [
+      [0, '#0A7AFF'],
+      [1, '#59B9FF'],
+    ],
+    hover_value: '#0A7AFF',
+  },
+  midnight: {
+    values: [
+      [0, '#022C5E'],
+      [1, '#4079BC'],
+    ],
+    hover_value: '#022C5E',
+  },
+  sunrise: {
+    values: [
+      [0, '#4E90AE'],
+      [0.4, '#AEA3AB'],
+      [0.8, '#E6A98F'],
+      [1, '#F3A84C'],
+    ],
+    hover_value: '#AEA3AB',
+  },
+  sunset: {
+    values: [
+      [0, '#6772AF'],
+      [0.6, '#B88BB6'],
+      [1, '#FFA6AC'],
+    ],
+    hover_value: '#B88BB6',
+  },
+  nordic: {
+    values: [
+      [0, '#083367'],
+      [1, '#9EE8C1'],
+    ],
+    hover_value: '#3A7085',
+  },
+  bonfire: {
+    values: [
+      [0, '#203E4E'],
+      [0.4, '#755B62'],
+      [0.8, '#CD7765'],
+      [1, '#EF956E'],
+    ],
+    hover_value: '#755B62',
+  },
 } as const
 
 export type Color = keyof typeof color
