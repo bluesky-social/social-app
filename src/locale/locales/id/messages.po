@@ -1728,7 +1728,7 @@ msgstr "Disukai oleh {likeCount} {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 msgid "liked your custom feed{0}"
-msgstr "menyukai umpan khusus Anda{0}"
+msgstr "menyukai feed Anda{0}"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
