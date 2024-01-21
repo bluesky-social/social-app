@@ -237,7 +237,7 @@ msgstr "Teks alt"
 
 #: src/view/com/composer/photos/Gallery.tsx:209
 msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
-msgstr "Teks alt menjelaskan gambar untuk pengguna tunanetra dan pengguna dengan penglihatan rendah, dan membantu memberikan konteks kepada semua orang."
+msgstr "Teks alt menjelaskan gambar untuk pengguna tunanetra dan pengguna dengan penglihatan rendah, serta membantu memberikan konteks kepada semua orang."
 
 #: src/view/com/modals/VerifyEmail.tsx:124
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
