@@ -3870,7 +3870,7 @@ msgstr "警告"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from"
-msgstr "あなたのフォロー中のユーザーの投稿がなくなりました。以下のフィード内の最新の投稿を表示します："
+msgstr "あなたのフォロー中のユーザーの投稿を読み終わりました。以下のフィード内の最新の投稿を表示します："
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
