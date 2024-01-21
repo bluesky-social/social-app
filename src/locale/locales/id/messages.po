@@ -3680,7 +3680,7 @@ msgstr "Peringatkan"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from"
-msgstr "Kami kehabisan postingan dari para pengikut Anda. Inilah yang terbaru dari"
+msgstr "Kami kehabisan postingan dari akun yang Anda ikuti. Inilah yang terbaru dari"
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
