@@ -42,7 +42,7 @@ var plist_1 = require("@expo/plist");
 var path = require("path");
 var fs = require("fs");
 var withExtensionInfoPlist = function (config, _a) {
-    var extensionName = _a.extensionName, controllerName = _a.controllerName;
+    var extensionName = _a.extensionName;
     return (0, config_plugins_1.withInfoPlist)(config, function (config) { return __awaiter(void 0, void 0, void 0, function () {
         var plistPath, targetPath, extPlist;
         return __generator(this, function (_a) {

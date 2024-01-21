@@ -1,16 +1,15 @@
-import {ConfigPlugin, InfoPlist, withInfoPlist} from '@expo/config-plugins'
+import {ConfigPlugin, withInfoPlist} from '@expo/config-plugins'
 import plist from '@expo/plist'
 import * as path from 'path'
 import * as fs from 'fs'
 
 interface Params {
   extensionName: string
-  controllerName: string
 }
 
 export const withExtensionInfoPlist: ConfigPlugin<Params> = (
   config,
-  {extensionName, controllerName},
+  {extensionName},
 ) => {
   return withInfoPlist(config, async config => {
     const plistPath = path.join(
