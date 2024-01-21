@@ -8,9 +8,11 @@ const SHARE_EXTENSION_NAME = 'Share-with-Bluesky'
 //
 // const IOS_TARGET_DIRECTORY = './ios/'
 
-export const withShareExtensionIos: ConfigPlugin = config => {
+const withShareExtensionIos: ConfigPlugin = config => {
   return withPlugins(config, [
     withAppEntitlements,
-    [withExtensionEntitlements, {folderName: SHARE_EXTENSION_NAME}],
+    [withExtensionEntitlements, {extensionName: SHARE_EXTENSION_NAME}],
   ])
 }
+
+export default withShareExtensionIos

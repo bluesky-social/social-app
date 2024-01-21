@@ -4,13 +4,14 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 export const withExtensionEntitlements: ConfigPlugin<{
-  folderName: string
-}> = (config, {folderName}) => {
+  extensionName: string
+}> = (config, {extensionName}) => {
   return withInfoPlist(config, config => {
     const extensionEntitlementsPath = path.join(
       config.modRequest.projectRoot,
-      folderName,
-      `${folderName}.entitlements`,
+      'ios',
+      extensionName,
+      `${extensionName}.entitlements`,
     )
     const entitilementsFileExists = fs.existsSync(extensionEntitlementsPath)
 

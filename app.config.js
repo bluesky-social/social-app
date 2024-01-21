@@ -143,7 +143,7 @@ module.exports = function () {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
-        './plugins/shareExtension/build/withShareExtensionIos.ts',
+        './plugins/shareExtension/build/withShareExtensionIos.js',
       ].filter(Boolean),
       extra: {
         eas: {
