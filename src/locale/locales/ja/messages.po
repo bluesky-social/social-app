@@ -655,7 +655,7 @@ msgstr "こちらをクリック"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
-msgstr ""
+msgstr "アクティブなダイアログを閉じる"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
@@ -760,7 +760,7 @@ msgstr "接続中..."
 
 #: src/view/com/auth/create/CreateAccount.tsx:195
 msgid "Contact support"
-msgstr ""
+msgstr "サポートに連絡"
 
 #: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
@@ -847,7 +847,7 @@ msgstr "リストのロードに失敗しました"
 
 #: src/view/com/auth/create/Step2.tsx:89
 msgid "Country"
-msgstr ""
+msgstr "国"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:46
@@ -1226,7 +1226,7 @@ msgstr "以下に新しいメールアドレスを入力してください。"
 
 #: src/view/com/auth/create/Step2.tsx:186
 msgid "Enter your phone number"
-msgstr ""
+msgstr "電話番号を入力"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
@@ -1487,7 +1487,7 @@ msgstr "戻る"
 #: src/view/screens/Search/Search.tsx:640
 #: src/view/shell/desktop/Search.tsx:262
 msgid "Go to @{queryMaybeHandle}"
-msgstr ""
+msgstr "@{queryMaybeHandle}へ"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:185
 #: src/view/com/auth/login/LoginForm.tsx:285
@@ -1501,7 +1501,7 @@ msgstr "ハンドル"
 
 #: src/view/com/auth/create/CreateAccount.tsx:190
 msgid "Having trouble?"
-msgstr ""
+msgstr "何か問題が発生しましたか？"
 
 #: src/view/shell/desktop/RightNav.tsx:102
 #: src/view/shell/Drawer.tsx:324
@@ -1636,7 +1636,7 @@ msgstr "アカウント削除のために確認コードを入力"
 
 #: src/view/com/auth/create/Step1.tsx:144
 msgid "Input email for Bluesky account"
-msgstr ""
+msgstr "Blueskyアカウント用のメールアドレスを入力してください"
 
 #: src/view/com/auth/create/Step2.tsx:109
 #~ msgid "Input email for Bluesky waitlist"
@@ -1664,7 +1664,7 @@ msgstr "アカウント削除のためにパスワードを入力"
 
 #: src/view/com/auth/create/Step2.tsx:194
 msgid "Input phone number for SMS verification"
-msgstr ""
+msgstr "SMS認証に用いる電話番号を入力"
 
 #: src/view/com/auth/login/LoginForm.tsx:227
 msgid "Input the password tied to {identifier}"
@@ -1676,7 +1676,7 @@ msgstr "サインアップ時に使用したユーザー名またはメールア
 
 #: src/view/com/auth/create/Step2.tsx:268
 msgid "Input the verification code we have texted to you"
-msgstr ""
+msgstr "テキストメッセージで送られてきた認証コードを入力してください"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -2481,7 +2481,7 @@ msgstr "カメラへのアクセスが拒否されました。システムの設
 
 #: src/view/com/auth/create/Step2.tsx:181
 msgid "Phone number"
-msgstr ""
+msgstr "電話番号"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -2527,7 +2527,7 @@ msgstr "アプリパスワードにつける名前を入力してください。
 
 #: src/view/com/auth/create/Step2.tsx:204
 msgid "Please enter a phone number that can receive SMS text messages."
-msgstr ""
+msgstr "SMSでテキストメッセージを受け取れる電話番号を入力してください。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:144
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
@@ -2535,11 +2535,11 @@ msgstr "このアプリパスワードに固有の名前を入力するか、ラ
 
 #: src/view/com/auth/create/state.ts:170
 msgid "Please enter the code you received by SMS."
-msgstr ""
+msgstr "SMSで受け取ったコードを入力してください。"
 
 #: src/view/com/auth/create/Step2.tsx:279
 msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-msgstr ""
+msgstr "{phoneNumberFormatted}に送った認証コードを入力してください。"
 
 #: src/view/com/auth/create/state.ts:146
 msgid "Please enter your email."
@@ -2876,7 +2876,7 @@ msgstr "変更を要求"
 
 #: src/view/com/auth/create/Step2.tsx:217
 msgid "Request code"
-msgstr ""
+msgstr "コードをリクエスト"
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
@@ -2940,7 +2940,7 @@ msgstr "再試行"
 
 #: src/view/com/auth/create/Step2.tsx:245
 msgid "Retry."
-msgstr ""
+msgstr "再試行"
 
 #: src/view/screens/ProfileList.tsx:877
 msgid "Return to previous page"
@@ -3017,7 +3017,7 @@ msgstr "検索"
 #: src/view/screens/Search/Search.tsx:628
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
-msgstr ""
+msgstr "「{query}」を検索"
 
 #: src/view/screens/Search/Search.tsx:390
 #~ msgid "Search for posts and users."
@@ -3072,7 +3072,7 @@ msgstr "アプリに表示されるデフォルトのテキストの言語を選
 
 #: src/view/com/auth/create/Step2.tsx:153
 msgid "Select your phone's country"
-msgstr ""
+msgstr "電話番号が登録されている国を選択"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3355,7 +3355,7 @@ msgstr "スキップ"
 
 #: src/view/com/auth/create/Step2.tsx:80
 msgid "SMS verification"
-msgstr ""
+msgstr "SMS認証"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 msgid "Something went wrong and we're not sure what."
@@ -3391,7 +3391,7 @@ msgstr "ステータスページ"
 
 #: src/view/com/auth/create/StepHeader.tsx:22
 msgid "Step {0} of {numSteps}"
-msgstr ""
+msgstr "{numSteps}個中{0}個目のステップ"
 
 #: src/view/com/auth/create/StepHeader.tsx:15
 #~ msgid "Step {step} of 3"
@@ -3597,7 +3597,7 @@ msgstr "アプリケーションに予期しない問題が発生しました。
 
 #: src/view/com/auth/create/Step2.tsx:53
 msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-msgstr ""
+msgstr "この電話番号は正しくありません。登録されている国を選択し、電話番号を省略せずに入力してください！"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 #~ msgid "This {0} has been labeled."
@@ -3908,7 +3908,7 @@ msgstr "{0}のユーザー"
 
 #: src/view/com/auth/create/Step2.tsx:241
 msgid "Verification code"
-msgstr ""
+msgstr "認証コード"
 
 #: src/view/screens/Settings.tsx:843
 msgid "Verify email"
@@ -3965,7 +3965,7 @@ msgstr "警告"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr ""
+msgstr "あなたのフォロー中のユーザーの投稿を読み終わりました。フィード<0/>内の最新の投稿を表示します。"
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
@@ -4028,7 +4028,7 @@ msgstr "返信を書く"
 
 #: src/view/com/auth/create/Step2.tsx:260
 msgid "XXXXXX"
-msgstr ""
+msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 #: src/view/screens/PreferencesHomeFeed.tsx:129
