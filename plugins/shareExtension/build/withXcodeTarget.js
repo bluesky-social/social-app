@@ -13,13 +13,11 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.withXcodeTarget = void 0;
 var config_plugins_1 = require("@expo/config-plugins");
-var path = require("path");
 var withXcodeTarget = function (config, _a) {
     var extensionName = _a.extensionName, controllerName = _a.controllerName;
+    // @ts-ignore
     return (0, config_plugins_1.withXcodeProject)(config, function (config) {
         var _a, _b, _c;
-        var extensionsPath = path.join(config.modRequest.projectRoot, 'extensions', extensionName);
-        var targetPath = path.join(config.modRequest.platformProjectRoot, extensionName);
         var proj = config.modResults;
         if (((_a = proj.getFirstProject().firstProject.targets) === null || _a === void 0 ? void 0 : _a.length) > 1)
             return true;
@@ -28,15 +26,15 @@ var withXcodeTarget = function (config, _a) {
         var commonBuildSettings = {
             ASSETCATALOG_COMPILER_APPICON_NAME: 'AppIcon',
             CLANG_ENABLE_MODULES: 'YES',
-            CODE_SIGN_ENTITLEMENTS: "../".concat(extensionName, "/").concat(extensionName, ".entitlements"),
+            CODE_SIGN_ENTITLEMENTS: "".concat(extensionName, "/").concat(extensionName, ".entitlements"),
             CURRENT_PROJECT_VERSION: "\"".concat((_b = config.ios) === null || _b === void 0 ? void 0 : _b.buildNumber, "\""),
-            INFOPLIST_FILE: "../".concat(extensionName, "/Info.plist"),
+            INFOPLIST_FILE: "".concat(extensionName, "/Info.plist"),
             MARKETING_VERSION: "\"".concat(config.version, "\""),
             PRODUCT_BUNDLE_IDENTIFIER: "".concat((_c = config.ios) === null || _c === void 0 ? void 0 : _c.bundleIdentifier, ".").concat(extensionName),
             PRODUCT_NAME: extensionName,
             TARGETED_DEVICE_FAMILY: '"1,2"',
             SWIFT_VERSION: '5.0',
-            IPHONEOS_DEPLOYMENT_TARGET: '13.4.1',
+            IPHONEOS_DEPLOYMENT_TARGET: '13.4',
             VERSIONING_SYSTEM: 'apple-generic',
         };
         var buildConfigurationsList = [
@@ -62,7 +60,7 @@ var withXcodeTarget = function (config, _a) {
                 ATTRIBUTES: ['RemoveHeadersOnCopy'],
             },
             includeIndex: 0,
-            path: "".concat(extensionName, ".appex"),
+            path: "".concat(extensionName, "/").concat(extensionName, ".appex"),
             sourceTree: 'BUILD_PRODUCTS_DIR',
         };
         proj.addToPbxFileReferenceSection(productFile);
@@ -89,7 +87,7 @@ var withXcodeTarget = function (config, _a) {
             proj.pbxProjectSection()[proj.getFirstProject().uuid].attributes.TargetAttributes = {};
         }
         proj.pbxProjectSection()[proj.getFirstProject().uuid].attributes.TargetAttributes[target.uuid] = {
-            CreatedOnToolsVersion: '13.4.1',
+            CreatedOnToolsVersion: '13.4',
         };
         if (!proj.hash.project.objects.PBXTargetDependency) {
             proj.hash.project.objects.PBXTargetDependency = {};
@@ -98,15 +96,18 @@ var withXcodeTarget = function (config, _a) {
             proj.hash.project.objects.PBXContainerItemProxy = {};
         }
         proj.addTargetDependency(proj.getFirstTarget().uuid, [target.uuid]);
-        var buildPath = "\"\"";
+        var buildPath = "\"".concat(extensionName, "/\"");
         // Sources build phase
-        var sourcesBuildPhaseUuid = proj.addBuildPhase(["".concat(extensionName, ".swift")], 'PBXSourcesBuildPhase', groupName, targetUuid, 'app_extension', buildPath).uuid;
+        proj.addBuildPhase(["".concat(extensionName, "/").concat(controllerName, ".swift")], 'PBXSourcesBuildPhase', groupName, targetUuid, 'app_extension', buildPath);
         // Copy files build phase
-        var copyFilesBuildPhaseUuid = proj.addBuildPhase([productFile.path], 'PBXCopyFilesBuildPhase', groupName, proj.getFirstTarget().uuid, 'app_extension', buildPath).uuid;
+        proj.addBuildPhase([productFile.path], 'PBXCopyFilesBuildPhase', groupName, proj.getFirstTarget().uuid, 'app_extension', buildPath);
         // Frameworks build phase
-        var frameworksBuildPhaseUuid = proj.addBuildPhase([], 'PBXFrameworksBuildPhase', groupName, targetUuid, 'app_extension', buildPath).uuid;
+        proj.addBuildPhase([], 'PBXFrameworksBuildPhase', groupName, targetUuid, 'app_extension', buildPath);
         // Add PBX group
-        var pbxGroupUuid = proj.addPbxGroup(['Info.plist', "".concat(extensionName, ".swift")], extensionName, "../".concat(extensionName)).uuid;
+        var pbxGroupUuid = proj.addPbxGroup([
+            "".concat(extensionName, "/Info.plist"),
+            "".concat(extensionName, "/").concat(controllerName, ".swift"),
+        ], extensionName, "".concat(config.modRequest.platformProjectRoot, "/").concat(extensionName)).uuid;
         // Add PBXGroup to top level group
         var groups = proj.hash.project.objects.PBXGroup;
         if (pbxGroupUuid) {

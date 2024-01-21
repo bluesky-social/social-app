@@ -1,6 +1,4 @@
 import {ConfigPlugin, withXcodeProject} from '@expo/config-plugins'
-import * as fs from 'fs'
-import * as path from 'path'
 
 interface Params {
   extensionName: string
@@ -11,17 +9,8 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
   config,
   {extensionName, controllerName},
 ) => {
+  // @ts-ignore
   return withXcodeProject(config, config => {
-    const extensionsPath = path.join(
-      config.modRequest.projectRoot,
-      'extensions',
-      extensionName,
-    )
-    const targetPath = path.join(
-      config.modRequest.platformProjectRoot,
-      extensionName,
-    )
-
     const proj = config.modResults
 
     if (proj.getFirstProject().firstProject.targets?.length > 1) return true
@@ -31,15 +20,15 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
     const commonBuildSettings: any = {
       ASSETCATALOG_COMPILER_APPICON_NAME: 'AppIcon',
       CLANG_ENABLE_MODULES: 'YES',
-      CODE_SIGN_ENTITLEMENTS: `../${extensionName}/${extensionName}.entitlements`,
+      CODE_SIGN_ENTITLEMENTS: `${extensionName}/${extensionName}.entitlements`,
       CURRENT_PROJECT_VERSION: `"${config.ios?.buildNumber}"`,
-      INFOPLIST_FILE: `../${extensionName}/Info.plist`,
+      INFOPLIST_FILE: `${extensionName}/Info.plist`,
       MARKETING_VERSION: `"${config.version}"`,
       PRODUCT_BUNDLE_IDENTIFIER: `${config.ios?.bundleIdentifier}.${extensionName}`,
       PRODUCT_NAME: extensionName,
       TARGETED_DEVICE_FAMILY: '"1,2"',
       SWIFT_VERSION: '5.0',
-      IPHONEOS_DEPLOYMENT_TARGET: '13.4.1',
+      IPHONEOS_DEPLOYMENT_TARGET: '13.4',
       VERSIONING_SYSTEM: 'apple-generic',
     }
 
@@ -75,7 +64,7 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
         ATTRIBUTES: ['RemoveHeadersOnCopy'],
       },
       includeIndex: 0,
-      path: `${extensionName}.appex`,
+      path: `${extensionName}/${extensionName}.appex`,
       sourceTree: 'BUILD_PRODUCTS_DIR',
     }
 
@@ -111,7 +100,7 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
     proj.pbxProjectSection()[
       proj.getFirstProject().uuid
     ].attributes.TargetAttributes[target.uuid] = {
-      CreatedOnToolsVersion: '13.4.1',
+      CreatedOnToolsVersion: '13.4',
     }
 
     if (!proj.hash.project.objects.PBXTargetDependency) {
@@ -123,11 +112,19 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
 
     proj.addTargetDependency(proj.getFirstTarget().uuid, [target.uuid])
 
-    const buildPath = `""`
+    const buildPath = `"${extensionName}/"`
+
+    /**
+     * HELLO LOOK AT ME SEE ME SENPAI
+     *
+     * If pod installs ever break, it could be because of this. I'm not sure if this is actually the correct way to go
+     * about this, as there are various RN bug reports and Expo bug reports about the file names here. For now, it works
+     * fine though!!
+     */
 
     // Sources build phase
-    const {uuid: sourcesBuildPhaseUuid} = proj.addBuildPhase(
-      [`${extensionName}.swift`],
+    proj.addBuildPhase(
+      [`${extensionName}/${controllerName}.swift`],
       'PBXSourcesBuildPhase',
       groupName,
       targetUuid,
@@ -136,7 +133,7 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
     )
 
     // Copy files build phase
-    const {uuid: copyFilesBuildPhaseUuid} = proj.addBuildPhase(
+    proj.addBuildPhase(
       [productFile.path],
       'PBXCopyFilesBuildPhase',
       groupName,
@@ -146,7 +143,7 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
     )
 
     // Frameworks build phase
-    const {uuid: frameworksBuildPhaseUuid} = proj.addBuildPhase(
+    proj.addBuildPhase(
       [],
       'PBXFrameworksBuildPhase',
       groupName,
@@ -157,9 +154,12 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
 
     // Add PBX group
     const {uuid: pbxGroupUuid} = proj.addPbxGroup(
-      ['Info.plist', `${extensionName}.swift`],
+      [
+        `${extensionName}/Info.plist`,
+        `${extensionName}/${controllerName}.swift`,
+      ],
       extensionName,
-      `../${extensionName}`,
+      `${config.modRequest.platformProjectRoot}/${extensionName}`,
     )
 
     // Add PBXGroup to top level group
