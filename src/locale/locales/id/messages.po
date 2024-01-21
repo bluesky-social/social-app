@@ -3555,7 +3555,7 @@ msgstr "Gunakan browser dalam aplikasi"
 #: src/view/com/modals/InAppBrowserConsent.tsx:66
 #: src/view/com/modals/InAppBrowserConsent.tsx:68
 msgid "Use my default browser"
-msgstr "Gunakan browser default saya"
+msgstr "Gunakan peramban bawaan saya"
 
 #: src/view/com/modals/AddAppPasswords.tsx:154
 msgid "Use this to sign into the other app along with your handle."
