@@ -112,7 +112,7 @@ msgstr "Akun dibisukan"
 
 #: src/view/com/modals/ModerationDetails.tsx:86
 msgid "Account Muted"
-msgstr "Akun dibisukan"
+msgstr "Akun Dibisukan"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
