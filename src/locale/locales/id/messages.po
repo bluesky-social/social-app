@@ -3513,7 +3513,7 @@ msgstr "Bunyikan utasan"
 
 #: src/view/screens/ProfileFeed.tsx:362 src/view/screens/ProfileList.tsx:559
 msgid "Unpin"
-msgstr "Lepas pin"
+msgstr "Lepas sematan"
 
 #: src/view/screens/ProfileList.tsx:452
 msgid "Unpin moderation list"
