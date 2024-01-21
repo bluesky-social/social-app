@@ -3112,7 +3112,7 @@ msgstr "Masuk sebagai @{0}"
 
 #: src/view/com/modals/SwitchAccount.tsx:66
 msgid "Signs {0} out of Bluesky"
-msgstr "Keluar {0} dari Bluesky"
+msgstr "Mengeluarkan {0} dari Bluesky"
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
 msgid "Skip"
