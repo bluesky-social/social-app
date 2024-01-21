@@ -36,7 +36,7 @@ class ShareViewController: UIViewController {
     do {
       if let data = try await item.loadItem(forTypeIdentifier: "public.text") as? String {
         // Try to get the text
-        if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+        if let encoded = data.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
            let url = URL(string: "\(self.appScheme)://?compose=true&text=\(encoded)")
         {
           // Open bluesky
@@ -53,7 +53,7 @@ class ShareViewController: UIViewController {
     do {
       if let data = try await item.loadItem(forTypeIdentifier: "public.url") as? URL {
         // Get the url and open bluesky
-        if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+        if let encoded = data.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
            let url = URL(string: "\(self.appScheme)://?compose=true&text=\(encoded)")
         {
           // open bluesky
@@ -103,7 +103,7 @@ class ShareViewController: UIViewController {
     }
 
     if valid,
-       let encoded = imageUris.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+       let encoded = imageUris.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
        let url = URL(string: "\(self.appScheme)://?compose=true&imageUris=\(encoded)")
     {
       _ = openURL(url)
