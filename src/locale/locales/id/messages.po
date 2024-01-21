@@ -116,7 +116,7 @@ msgstr "Akun dibisukan"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "Akun Dibisukan berdasarkan Daftar"
+msgstr "Akun Dibisukan Berdasarkan Daftar"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
