@@ -97,6 +97,13 @@ var withXcodeTarget = function (config, _a) {
         }
         proj.addTargetDependency(proj.getFirstTarget().uuid, [target.uuid]);
         var buildPath = "\"".concat(extensionName, "/\"");
+        /**
+         * HELLO LOOK AT ME SEE ME SENPAI
+         *
+         * If pod installs ever break, it could be because of this. I'm not sure if this is actually the correct way to go
+         * about this, as there are various RN bug reports and Expo bug reports about the file names here. For now, it works
+         * fine though!!
+         */
         // Sources build phase
         proj.addBuildPhase(["".concat(extensionName, "/").concat(controllerName, ".swift")], 'PBXSourcesBuildPhase', groupName, targetUuid, 'app_extension', buildPath);
         // Copy files build phase
@@ -107,7 +114,7 @@ var withXcodeTarget = function (config, _a) {
         var pbxGroupUuid = proj.addPbxGroup([
             "".concat(extensionName, "/Info.plist"),
             "".concat(extensionName, "/").concat(controllerName, ".swift"),
-        ], extensionName, "".concat(config.modRequest.platformProjectRoot, "/").concat(extensionName)).uuid;
+        ], extensionName, "\"\"").uuid;
         // Add PBXGroup to top level group
         var groups = proj.hash.project.objects.PBXGroup;
         if (pbxGroupUuid) {

@@ -159,7 +159,7 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
         `${extensionName}/${controllerName}.swift`,
       ],
       extensionName,
-      `${config.modRequest.platformProjectRoot}/${extensionName}`,
+      `""`,
     )
 
     // Add PBXGroup to top level group
