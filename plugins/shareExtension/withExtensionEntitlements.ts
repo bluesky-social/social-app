@@ -1,7 +1,7 @@
 import {ConfigPlugin, withInfoPlist} from '@expo/config-plugins'
 import plist from '@expo/plist'
-import path from 'path'
-import fs from 'fs'
+import * as path from 'path'
+import * as fs from 'fs'
 
 export const withExtensionEntitlements: ConfigPlugin<{
   folderName: string
