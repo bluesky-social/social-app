@@ -11,7 +11,7 @@ export const withExtensionInfoPlist: ConfigPlugin<Params> = (
   config,
   {extensionName},
 ) => {
-  return withInfoPlist(config, async config => {
+  return withInfoPlist(config, config => {
     const plistPath = path.join(
       config.modRequest.projectRoot,
       'extensions',

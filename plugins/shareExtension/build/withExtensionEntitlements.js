@@ -18,7 +18,9 @@ var withExtensionEntitlements = function (config, _a) {
                 "group.".concat((_a = config.ios) === null || _a === void 0 ? void 0 : _a.bundleIdentifier),
             ],
         };
-        fs.mkdirSync(path.dirname(extensionEntitlementsPath), { recursive: true });
+        fs.mkdirSync(path.dirname(extensionEntitlementsPath), {
+            recursive: true,
+        });
         fs.writeFileSync(extensionEntitlementsPath, plist_1.default.build(shareExtensionEntitlements));
         return config;
     });

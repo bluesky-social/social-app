@@ -22,7 +22,9 @@ export const withExtensionEntitlements: ConfigPlugin<{
       ],
     }
 
-    fs.mkdirSync(path.dirname(extensionEntitlementsPath), {recursive: true})
+    fs.mkdirSync(path.dirname(extensionEntitlementsPath), {
+      recursive: true,
+    })
     fs.writeFileSync(
       extensionEntitlementsPath,
       plist.build(shareExtensionEntitlements),
