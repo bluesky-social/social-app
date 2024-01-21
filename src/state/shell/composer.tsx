@@ -34,7 +34,7 @@ export interface ComposerOpts {
   mention?: string // handle of user to mention
   openPicker?: (pos: DOMRect | undefined) => void
   text?: string
-  imageUris?: string[]
+  imageUris?: {uri: string; width: number; height: number}[]
 }
 
 type StateContext = ComposerOpts | undefined

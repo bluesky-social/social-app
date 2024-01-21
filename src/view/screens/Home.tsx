@@ -135,12 +135,19 @@ function HomeScreenReady({
 
   React.useEffect(() => {
     if (route.params?.compose) {
+      // Get the params
       const {text, imageUris: imageUrisStr} = route.params
-      let imageUris: string[] | undefined
+
+      // Parse and create array if on native
+      let imageUris: {uri: string; width: number; height: number}[] | undefined
       if (isNative) {
-        imageUris = imageUrisStr?.split(',')
+        imageUris = imageUrisStr?.split(',').map(part => {
+          const [uri, width, height] = part.split('|')
+          return {uri, width: Number(width), height: Number(height)}
+        })
       }
 
+      // Open the composer
       setTimeout(() => {
         openComposer({text, imageUris})
       }, 500)

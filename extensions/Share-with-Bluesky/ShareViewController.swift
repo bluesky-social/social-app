@@ -91,7 +91,24 @@ class ShareViewController: UIViewController {
     for (index, item) in items.enumerated() {
       do {
         if let data = try await item.loadItem(forTypeIdentifier: "public.image") as? URL {
-          imageUris.append(data.absoluteString)
+          // Now we need to duplicate this image, since we don't have access to the outgoing temp directory
+          // We also will get the image dimensions here, sinze RN makes it difficult to get those dimensions for local files
+          let ext = data.absoluteString.split(separator: ".").last ?? "jpeg" // Keep swift happy
+          let data = try Data(contentsOf: data)
+          let image = UIImage(data: data)
+
+          if let dir = FileManager()
+            .containerURL(
+              forSecurityApplicationGroupIdentifier: "group.\(Bundle.main.bundleIdentifier?.replacingOccurrences(of: ".Share-with-Bluesky", with: "") ?? "")"),
+             let image = image
+          {
+            let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).\(ext)"
+            if let newUri = URL(string: filePath) {
+              // Write the data
+              try data.write(to: newUri)
+              imageUris.append("\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)")
+            }
+          }
 
           if index < items.count - 1 {
             imageUris.append(",")

@@ -115,7 +115,10 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const gallery = useMemo(() => new GalleryModel(), [])
+  const gallery = useMemo(
+    () => new GalleryModel(initImageUris),
+    [initImageUris],
+  )
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
