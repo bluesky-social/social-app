@@ -1000,7 +1000,7 @@ msgstr "contoh: Alice Roberts"
 
 #: src/view/com/modals/EditProfile.tsx:203
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "contoh: Seniman, penyayang anjing, dan pembaca yang rajin."
+msgstr "contoh: Seniman, penyayang anjing, dan pembaca setia."
 
 #: src/view/com/modals/CreateOrEditList.tsx:225
 msgid "e.g. Great Posters"
