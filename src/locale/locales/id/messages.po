@@ -2337,7 +2337,7 @@ msgstr "Pin ke beranda"
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
-msgstr "Feed Terpin"
+msgstr "Feed Tersemat"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
 msgid "Play {0}"
