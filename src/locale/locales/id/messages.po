@@ -3271,7 +3271,7 @@ msgstr "Ada masalah saat menghubungi server, silakan periksa koneksi internet An
 
 #: src/view/com/posts/FeedErrorMessage.tsx:139
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "Ada masalah dalam menghapus feed ini. Periksa koneksi internet Anda dan coba lagi."
+msgstr "Ada masalah saat menghapus feed ini. Periksa koneksi internet Anda dan coba lagi."
 
 #: src/view/screens/ProfileFeed.tsx:218
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
