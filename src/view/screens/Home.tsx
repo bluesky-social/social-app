@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, ActivityIndicator, StyleSheet} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
+import {RouteProp, useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
@@ -10,7 +10,11 @@ import {FeedsTabBar} from '../com/pager/FeedsTabBar'
 import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
-import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
+import {
+  useSetMinimalShellMode,
+  useSetDrawerSwipeDisabled,
+  useComposerControls,
+} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {usePinnedFeedsInfos, FeedSourceInfo} from '#/state/queries/feed'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
@@ -19,6 +23,7 @@ import {useSession} from '#/state/session'
 import {loadString, saveString} from '#/lib/storage'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
+import {isNative} from 'platform/detection'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -70,14 +75,17 @@ function HomeScreenReady({
   preferences,
   pinnedFeeds,
   initialPage,
+  route,
 }: Props & {
   preferences: UsePreferencesQueryResponse
   pinnedFeeds: FeedSourceInfo[]
   initialPage: string
+  route: RouteProp<HomeTabNavigatorParams, 'Home'>
 }) {
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const {openComposer} = useComposerControls()
   const [selectedPage, setSelectedPage] = React.useState<string>(initialPage)
 
   /**
@@ -124,6 +132,20 @@ function HomeScreenReady({
       }
     }, [setDrawerSwipeDisabled, selectedPageIndex, setMinimalShellMode]),
   )
+
+  React.useEffect(() => {
+    if (route.params?.compose) {
+      const {text, imageUris: imageUrisStr} = route.params
+      let imageUris: string[] | undefined
+      if (isNative) {
+        imageUris = imageUrisStr?.split(',')
+      }
+
+      setTimeout(() => {
+        openComposer({text, imageUris})
+      }, 500)
+    }
+  }, [openComposer, route.params])
 
   const onPageSelected = React.useCallback(
     (index: number) => {

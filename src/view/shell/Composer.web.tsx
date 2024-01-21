@@ -8,7 +8,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   EmojiPicker,
   EmojiPickerState,
-} from 'view/com/composer/text-input/web/EmojiPicker.web.tsx'
+} from 'view/com/composer/text-input/web/EmojiPicker.web'
 
 const BOTTOM_BAR_HEIGHT = 61
 
@@ -66,6 +66,7 @@ export function Composer({}: {winHeight: number}) {
           onPost={state.onPost}
           mention={state.mention}
           openPicker={onOpenPicker}
+          text={state.text}
         />
       </Animated.View>
       <EmojiPicker state={pickerState} close={onClosePicker} />

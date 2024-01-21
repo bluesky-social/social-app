@@ -455,7 +455,8 @@ const FlatNavigator = () => {
  */
 
 const LINKING = {
-  prefixes: ['bsky://', 'https://bsky.app'],
+  // TODO remove this
+  prefixes: ['blueskytesting://', 'bsky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
@@ -613,6 +614,8 @@ function handleLink(url: string) {
       navigate(name, params)
     }
   } else {
+    console.log('intent')
+    console.log(path)
     // @ts-ignore matchPath doesnt give us type-checked output -prf
     navigate(name, params)
   }

@@ -71,6 +71,8 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
   openPicker,
+  text: initText,
+  imageUris: initImageUris,
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -89,9 +91,12 @@ export const ComposePost = observer(function ComposePost({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
+  console.log(initText)
   const [richtext, setRichText] = useState(
     new RichText({
-      text: initMention
+      text: initText
+        ? initText
+        : initMention
         ? insertMentionAt(
             `@${initMention}`,
             initMention.length + 1,

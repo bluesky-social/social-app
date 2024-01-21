@@ -33,6 +33,7 @@ export type CommonNavigatorParams = {
   PreferencesHomeFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
+  OpenComposer: {text: string; imageUris: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -44,7 +45,7 @@ export type BottomTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
-  Home: undefined
+  Home: {compose?: string; text?: string; imageUris?: string}
 }
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
@@ -64,7 +65,7 @@ export type MyProfileTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
-  Home: undefined
+  Home: {compose?: string; text?: string; imageUris?: string}
   Search: {q?: string}
   Feeds: undefined
   Notifications: undefined
