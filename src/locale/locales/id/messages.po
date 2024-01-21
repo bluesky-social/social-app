@@ -2594,7 +2594,7 @@ msgstr "Dihapus dari feed saya"
 
 #: src/view/com/composer/ExternalEmbed.tsx:71
 msgid "Removes default thumbnail from {0}"
-msgstr "Menghapus gambar pra tinjau default dari {0}"
+msgstr "Menghapus gambar pra tinjau bawaan dari {0}"
 
 #: src/view/screens/Profile.tsx:162
 msgid "Replies"
