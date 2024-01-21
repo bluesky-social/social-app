@@ -8,8 +8,7 @@ export const withExtensionEntitlements: ConfigPlugin<{
 }> = (config, {extensionName}) => {
   return withInfoPlist(config, config => {
     const extensionEntitlementsPath = path.join(
-      config.modRequest.projectRoot,
-      'ios',
+      config.modRequest.platformProjectRoot,
       extensionName,
       `${extensionName}.entitlements`,
     )
@@ -17,7 +16,7 @@ export const withExtensionEntitlements: ConfigPlugin<{
 
     if (entitilementsFileExists) return config
 
-    const safariExtensionEntitlements: Record<string, string | string[]> = {
+    const shareExtensionEntitlements: Record<string, string | string[]> = {
       'com.apple.security.application-groups': [
         `group.${config.ios?.bundleIdentifier}`,
       ],
@@ -26,7 +25,7 @@ export const withExtensionEntitlements: ConfigPlugin<{
     fs.mkdirSync(path.dirname(extensionEntitlementsPath), {recursive: true})
     fs.writeFileSync(
       extensionEntitlementsPath,
-      plist.build(safariExtensionEntitlements),
+      plist.build(shareExtensionEntitlements),
     )
 
     return config
