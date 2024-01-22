@@ -8,8 +8,8 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-01-22 10:00\n"
-"Last-Translator: faeriarum\n"
+"PO-Revision-Date: 2024-01-22 12:00\n"
+"Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -655,7 +655,7 @@ msgstr "clique aqui"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
-msgstr ""
+msgstr "Fechar janela ativa"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
@@ -766,7 +766,7 @@ msgstr "Conectando..."
 
 #: src/view/com/auth/create/CreateAccount.tsx:195
 msgid "Contact support"
-msgstr ""
+msgstr "Contatar suporte"
 
 #: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
@@ -853,7 +853,7 @@ msgstr "Não foi possível carregar a lista"
 
 #: src/view/com/auth/create/Step2.tsx:89
 msgid "Country"
-msgstr ""
+msgstr "País"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:46
@@ -1216,15 +1216,15 @@ msgstr "Insira seu aniversário"
 
 #: src/view/com/modals/Waitlist.tsx:78
 msgid "Enter your email"
-msgstr "Insira seu e-mail"
+msgstr "Digite seu e-mail"
 
 #: src/view/com/auth/create/Step1.tsx:139
 msgid "Enter your email address"
-msgstr "Insira seu endereço de e-mail"
+msgstr "Digite seu endereço de e-mail"
 
 #: src/view/com/modals/ChangeEmail.tsx:41
 msgid "Enter your new email above"
-msgstr "Insira o novo e-mail acima"
+msgstr "Digite o novo e-mail acima"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
@@ -1232,7 +1232,7 @@ msgstr "Digite seu novo endereço de e-mail abaixo."
 
 #: src/view/com/auth/create/Step2.tsx:186
 msgid "Enter your phone number"
-msgstr ""
+msgstr "Digite seu número de telefone"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
@@ -1497,7 +1497,7 @@ msgstr "Voltar"
 #: src/view/screens/Search/Search.tsx:640
 #: src/view/shell/desktop/Search.tsx:262
 msgid "Go to @{queryMaybeHandle}"
-msgstr ""
+msgstr "Ir para @{queryMaybleHandle}"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:185
 #: src/view/com/auth/login/LoginForm.tsx:285
@@ -1687,7 +1687,7 @@ msgstr "Insira a senha para excluir a conta"
 
 #: src/view/com/auth/create/Step2.tsx:194
 msgid "Input phone number for SMS verification"
-msgstr ""
+msgstr "Insira o número de telefone para verificação via SMS"
 
 #: src/view/com/auth/login/LoginForm.tsx:227
 msgid "Input the password tied to {identifier}"
@@ -1699,7 +1699,7 @@ msgstr "Insira o usuário ou e-mail que você cadastrou"
 
 #: src/view/com/auth/create/Step2.tsx:268
 msgid "Input the verification code we have texted to you"
-msgstr ""
+msgstr "Insira o código de verificação que enviamos para você"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -2512,7 +2512,7 @@ msgstr "A permissão de galeria foi recusada. Por favor, habilite-a nas configur
 
 #: src/view/com/auth/create/Step2.tsx:181
 msgid "Phone number"
-msgstr ""
+msgstr "Número de telefone"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -2558,7 +2558,7 @@ msgstr "Por favor, insira um nome para a sua Senha de Aplicativo."
 
 #: src/view/com/auth/create/Step2.tsx:204
 msgid "Please enter a phone number that can receive SMS text messages."
-msgstr ""
+msgstr "Por favor, insira um número de telefone que possa receber mensagens SMS."
 
 #: src/view/com/modals/AddAppPasswords.tsx:144
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
@@ -2566,11 +2566,11 @@ msgstr "Por favor, insira um nome único para esta Senha de Aplicativo ou use no
 
 #: src/view/com/auth/create/state.ts:170
 msgid "Please enter the code you received by SMS."
-msgstr ""
+msgstr "Por favor, digite o código recebido via SMS."
 
 #: src/view/com/auth/create/Step2.tsx:279
 msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-msgstr ""
+msgstr "Por favor, digite o código de verificação enviado para {phoneNumberFormatted}."
 
 #: src/view/com/auth/create/state.ts:146
 msgid "Please enter your email."
@@ -2907,7 +2907,7 @@ msgstr "Solicitar Alteração"
 
 #: src/view/com/auth/create/Step2.tsx:217
 msgid "Request code"
-msgstr ""
+msgstr "Solicitar código"
 
 #: src/view/screens/Moderation.tsx:188
 #~ msgid "Request to limit the visibility of my account"
@@ -2979,7 +2979,7 @@ msgstr "Tente novamente"
 
 #: src/view/com/auth/create/Step2.tsx:245
 msgid "Retry."
-msgstr ""
+msgstr "Tentar novamente."
 
 #: src/view/screens/ProfileList.tsx:877
 msgid "Return to previous page"
@@ -3060,7 +3060,7 @@ msgstr "Buscar"
 #: src/view/screens/Search/Search.tsx:628
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
-msgstr ""
+msgstr "Pesquisar por \"{query}\""
 
 #: src/view/screens/Search/Search.tsx:390
 #~ msgid "Search for posts and users."
@@ -3115,7 +3115,7 @@ msgstr "Selecione o idioma do seu aplicativo"
 
 #: src/view/com/auth/create/Step2.tsx:153
 msgid "Select your phone's country"
-msgstr ""
+msgstr "Selecione o país do número de telefone"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3402,7 +3402,7 @@ msgstr "Pular"
 
 #: src/view/com/auth/create/Step2.tsx:80
 msgid "SMS verification"
-msgstr ""
+msgstr "Verificação por SMS"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 msgid "Something went wrong and we're not sure what."
@@ -3442,7 +3442,7 @@ msgstr "Passo {0} de {numSteps}"
 
 #: src/view/com/auth/create/StepHeader.tsx:15
 #~ msgid "Step {step} of 3"
-#~ msgstr ""
+#~ msgstr "Passo {step} de 3"
 
 #: src/view/screens/Settings.tsx:276
 msgid "Storage cleared, you need to restart the app now."
@@ -3955,7 +3955,7 @@ msgstr "Usuários em \"{0}\""
 
 #: src/view/com/auth/create/Step2.tsx:241
 msgid "Verification code"
-msgstr ""
+msgstr "Código de verificação"
 
 #: src/view/screens/Settings.tsx:843
 msgid "Verify email"
@@ -4075,7 +4075,7 @@ msgstr "Escreva sua resposta"
 
 #: src/view/com/auth/create/Step2.tsx:260
 msgid "XXXXXX"
-msgstr ""
+msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
 #: src/view/screens/PreferencesHomeFeed.tsx:129
