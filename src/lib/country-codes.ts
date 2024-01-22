@@ -236,7 +236,10 @@ export const COUNTRY_CODES: CountryCodeMap[] = [
   {code2: 'UG', name: 'Uganda (+256)'},
   {code2: 'UA', name: 'Ukraine (+380)'},
   {code2: 'AE', name: 'United Arab Emirates (+971)'},
-  {code2: 'GB', name: 'United Kingdom of Great Britain and Northern Ireland (+44)'},
+  {
+    code2: 'GB',
+    name: 'United Kingdom of Great Britain and Northern Ireland (+44)',
+  },
   {code2: 'US', name: 'United States of America (+1)'},
   {code2: 'UY', name: 'Uruguay (+598)'},
   {code2: 'UZ', name: 'Uzbekistan (+998)'},
