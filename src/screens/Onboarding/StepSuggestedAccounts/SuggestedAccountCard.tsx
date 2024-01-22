@@ -16,16 +16,17 @@ export function SuggestedAccountCard({
   const ctx = useItemContext()
 
   const styles = React.useMemo(() => {
+    const light = t.name === 'light'
     const base: ViewStyle[] = [t.atoms.bg_contrast_25]
-    const hover: ViewStyle[] = [t.atoms.bg_contrast_50]
+    const hover: ViewStyle[] = [t.atoms.bg_contrast_100]
     const selected: ViewStyle[] = [
       {
-        backgroundColor: t.palette.primary_975,
+        backgroundColor: light ? t.palette.primary_25 : t.palette.primary_975,
       },
     ]
     const selectedHover: ViewStyle[] = [
       {
-        backgroundColor: t.palette.primary_950,
+        backgroundColor: light ? t.palette.primary_50 : t.palette.primary_950,
       },
     ]
     const checkboxBase: ViewStyle[] = [t.atoms.bg_contrast_25]
@@ -37,7 +38,7 @@ export function SuggestedAccountCard({
     const avatarBase: ViewStyle[] = [t.atoms.bg_contrast_100]
     const avatarSelected: ViewStyle[] = [
       {
-        backgroundColor: t.palette.primary_900,
+        backgroundColor: light ? t.palette.primary_100 : t.palette.primary_900,
       },
     ]
 
@@ -102,7 +103,7 @@ export function SuggestedAccountCard({
               height: 28,
             },
           ]}>
-          {ctx.selected && <Check size="sm" style={[t.atoms.text]} />}
+          {ctx.selected && <Check size="sm" fill={t.palette.white} />}
         </View>
       </View>
     </View>
