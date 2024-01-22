@@ -9,6 +9,7 @@ import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
 import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
 import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
 import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
+import {StepFinished} from '#/screens/Onboarding/StepFinished'
 
 // TODO lock focus?
 export function Onboarding() {
@@ -27,6 +28,7 @@ export function Onboarding() {
             {state.activeStep === 'followingFeed' && <StepFollowingFeed />}
             {state.activeStep === 'algoFeeds' && <StepAlgoFeeds />}
             {state.activeStep === 'topicalFeeds' && <StepTopicalFeeds />}
+            {state.activeStep === 'finished' && <StepFinished />}
           </Layout>
         </Context.Provider>
       </OnboardingControls.Provider>

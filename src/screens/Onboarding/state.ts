@@ -11,6 +11,7 @@ export type OnboardingState = {
     | 'followingFeed'
     | 'algoFeeds'
     | 'topicalFeeds'
+    | 'finished'
   activeStepIndex: number
   suggestedAccountHandles: string[]
 }
@@ -29,7 +30,7 @@ export type OnboardingAction =
 
 export const initialState: OnboardingState = {
   hasPrev: false,
-  totalSteps: 5,
+  totalSteps: 6,
   activeStep: 'interests',
   activeStepIndex: 1,
 
@@ -65,6 +66,9 @@ export function reducer(
       } else if (s.activeStep === 'algoFeeds') {
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
+      } else if (s.activeStep === 'topicalFeeds') {
+        next.activeStep = 'finished'
+        next.activeStepIndex = 6
       }
       break
     }
@@ -81,6 +85,9 @@ export function reducer(
       } else if (s.activeStep === 'topicalFeeds') {
         next.activeStep = 'algoFeeds'
         next.activeStepIndex = 4
+      } else if (s.activeStep === 'finished') {
+        next.activeStep = 'topicalFeeds'
+        next.activeStepIndex = 5
       }
       break
     }
