@@ -21,10 +21,16 @@ import {SuggestedAccountCard} from '#/screens/Onboarding/StepSuggestedAccounts/S
 
 export function Inner({
   profiles,
+  onSelect,
 }: {
   profiles: AppBskyActorDefs.ProfileViewDetailed[]
+  onSelect: (dids: string[]) => void
 }) {
   const [dids, setDids] = React.useState<string[]>(profiles.map(p => p.did))
+
+  React.useEffect(() => {
+    onSelect(dids)
+  }, [dids, onSelect])
 
   return (
     <Toggle.Group
@@ -50,6 +56,16 @@ export function StepSuggestedAccounts() {
   const {isLoading, isError, data} = useProfilesQuery({
     handles: state.suggestedAccountHandles,
   })
+  const [dids, setDids] = React.useState<string[]>([])
+  const [saving, setSaving] = React.useState(false)
+
+  const handleBulkFollow = React.useCallback(async () => {
+    setSaving(true)
+    console.log('saving', dids)
+    await new Promise(y => setTimeout(y, 1000))
+    setSaving(false)
+    dispatch({type: 'next'})
+  }, [dids, setSaving, dispatch])
 
   return (
     <View style={[a.align_start]}>
@@ -71,25 +87,26 @@ export function StepSuggestedAccounts() {
 
       <View style={[a.w_full, a.pt_xl]}>
         {isLoading ? (
-          <Loader />
+          <Loader size="xl" />
         ) : isError || !data ? (
           <Text>Error</Text>
         ) : (
-          <Inner profiles={data.profiles} />
+          <Inner profiles={data.profiles} onSelect={setDids} />
         )}
       </View>
 
       <OnboardingControls.Portal>
         <View style={[a.gap_md, gtMobile ? a.flex_row : a.flex_col]}>
           <Button
+            disabled={dids.length === 0}
             key={state.activeStep} // remove focus state on nav
             variant="gradient"
             color="gradient_sky"
             size="large"
             label="Continue setting up your account"
-            onPress={() => dispatch({type: 'next'})}>
+            onPress={handleBulkFollow}>
             <ButtonText>Follow All</ButtonText>
-            <ButtonIcon icon={Plus} />
+            <ButtonIcon icon={saving ? Loader : Plus} />
           </Button>
           <Button
             key={state.activeStep + '2'} // remove focus state on nav
