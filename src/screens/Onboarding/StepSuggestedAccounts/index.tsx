@@ -99,7 +99,6 @@ export function StepSuggestedAccounts() {
         <View style={[a.gap_md, gtMobile ? a.flex_row : a.flex_col]}>
           <Button
             disabled={dids.length === 0}
-            key={state.activeStep} // remove focus state on nav
             variant="gradient"
             color="gradient_sky"
             size="large"
@@ -109,7 +108,6 @@ export function StepSuggestedAccounts() {
             <ButtonIcon icon={saving ? Loader : Plus} />
           </Button>
           <Button
-            key={state.activeStep + '2'} // remove focus state on nav
             variant="outline"
             color="secondary"
             size="large"
