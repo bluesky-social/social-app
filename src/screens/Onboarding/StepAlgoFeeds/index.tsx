@@ -7,9 +7,8 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {Text, H3} from '#/components/Typography'
+import {Text, H3, P} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
-import {RichText} from '#/components/RichText'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -127,7 +126,7 @@ function PrimaryFeedButtonInner({
               ]}>
               @{feed.creatorHandle}
             </Text>
-            <RichText value={config.description} />
+            <P>{config.description}</P>
           </View>
         </View>
       </View>
