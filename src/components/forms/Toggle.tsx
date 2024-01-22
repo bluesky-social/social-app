@@ -125,6 +125,7 @@ export function Group({
   return (
     <GroupContext.Provider value={context}>
       <View
+        style={[a.w_full]}
         role={groupRole}
         {...(groupRole === 'radiogroup'
           ? {

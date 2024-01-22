@@ -21,7 +21,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import {ScrollView} from '#/view/com/util/Views'
 import {createPortalGroup} from '#/components/Portal'
 
-import {Context} from '#/screens/Onboarding/context'
+import {Context} from '#/screens/Onboarding/state'
 
 const COL_WIDTH = 500
 

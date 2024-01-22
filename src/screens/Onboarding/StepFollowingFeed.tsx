@@ -5,7 +5,7 @@ import {atoms as a} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 
-import {Context} from '#/screens/Onboarding/context'
+import {Context} from '#/screens/Onboarding/state'
 import {
   Title,
   Description,
