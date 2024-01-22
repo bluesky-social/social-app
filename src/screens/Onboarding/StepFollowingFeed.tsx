@@ -4,6 +4,8 @@ import {View} from 'react-native'
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {H5, Text} from '#/components/Typography'
+import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 
 import {Context} from '#/screens/Onboarding/state'
@@ -16,8 +18,6 @@ import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from 'state/queries/preferences'
-import {H5, Text} from '#/components/Typography'
-import {Divider} from '#/components/Divider'
 
 export function StepFollowingFeed() {
   const {state, dispatch} = React.useContext(Context)
