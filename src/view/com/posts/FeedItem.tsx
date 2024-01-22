@@ -211,7 +211,7 @@ let FeedItemInner = ({
               title={_(
                 msg`Reposted by ${sanitizeDisplayName(
                   reason.by.displayName || reason.by.handle,
-                )})`,
+                )}`,
               )}>
               <FontAwesomeIcon
                 icon="retweet"

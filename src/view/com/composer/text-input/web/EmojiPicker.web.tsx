@@ -121,7 +121,8 @@ export function EmojiPicker({state, close}: IProps) {
 
 const styles = StyleSheet.create({
   mask: {
-    position: 'absolute',
+    // @ts-ignore web ony
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,

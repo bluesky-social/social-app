@@ -3,6 +3,7 @@ import {TouchableWithoutFeedback, StyleSheet, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 import {useModals, useModalControls} from '#/state/modals'
 import type {Modal as ModalIface} from '#/state/modals'
@@ -38,6 +39,7 @@ import * as EmbedConsentModal from './EmbedConsent'
 
 export function ModalsContainer() {
   const {isModalActive, activeModals} = useModals()
+  useWebBodyScrollLock(isModalActive)
 
   if (!isModalActive) {
     return null
@@ -166,7 +168,8 @@ function Modal({modal}: {modal: ModalIface}) {
 
 const styles = StyleSheet.create({
   mask: {
-    position: 'absolute',
+    // @ts-ignore
+    position: 'fixed',
     top: 0,
     left: 0,
     width: '100%',
