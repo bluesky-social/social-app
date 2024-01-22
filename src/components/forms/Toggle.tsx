@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, TextStyle, View, ViewStyle} from 'react-native'
+import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
 import {useTheme, atoms as a, web, native} from '#/alf'
@@ -233,10 +233,7 @@ export function Item({
   )
 }
 
-export function Label({
-  children,
-  style = [],
-}: React.PropsWithChildren<{style?: TextStyle[]}>) {
+export function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {disabled} = useItemContext()
   return (
@@ -250,7 +247,6 @@ export function Label({
         native({
           paddingTop: 3,
         }),
-        ...style,
       ]}>
       {children}
     </Text>
