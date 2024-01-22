@@ -18,7 +18,6 @@ import Animated, {
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {TabBar} from './TabBar'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ListMethods} from '../util/List'
 import {ScrollProvider} from '#/lib/ScrollContext'
@@ -235,7 +234,6 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
 }): React.ReactNode => {
-  const {isMobile} = useWebMediaQueries()
   const headerTransform = useAnimatedStyle(() => ({
     transform: [
       {
@@ -246,10 +244,7 @@ let PagerTabBar = ({
   return (
     <Animated.View
       pointerEvents="box-none"
-      style={[
-        isMobile ? styles.tabBarMobile : styles.tabBarDesktop,
-        headerTransform,
-      ]}>
+      style={[styles.tabBarMobile, headerTransform]}>
       <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
         {renderHeader?.()}
       </View>
@@ -324,14 +319,6 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
-  },
-  tabBarDesktop: {
-    position: 'absolute',
-    zIndex: 1,
-    top: 0,
-    // @ts-ignore Web only -prf
-    left: 'calc(50% - 299px)',
-    width: 598,
   },
 })
 
