@@ -169,5 +169,9 @@ export function Description({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
-  return <P style={[t.atoms.text_contrast_700, flatten(style)]}>{children}</P>
+  return (
+    <P style={[t.atoms.text_contrast_700, {maxWidth: 400}, flatten(style)]}>
+      {children}
+    </P>
+  )
 }

@@ -77,7 +77,8 @@ export function StepInterests() {
 
       <Title>What are your interests?</Title>
       <Description>
-        We'll use this to help customize your experience.
+        We'll use this to help customize your experience. Select at least 3
+        interests.
       </Description>
 
       <View style={[a.pt_2xl]}>
@@ -100,7 +101,7 @@ export function StepInterests() {
 
       <OnboardingControls.Portal>
         <Button
-          disabled={saving}
+          disabled={saving || interests.length < 3}
           key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"
