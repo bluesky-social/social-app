@@ -4,6 +4,9 @@ export const atoms = {
   /*
    * Positioning
    */
+  fixed: {
+    position: 'fixed',
+  },
   absolute: {
     position: 'absolute',
   },
@@ -32,6 +35,10 @@ export const atoms = {
     zIndex: 50,
   },
 
+  overflow_hidden: {
+    overflow: 'hidden',
+  },
+
   /*
    * Width
    */
@@ -45,6 +52,12 @@ export const atoms = {
   /*
    * Border radius
    */
+  rounded_2xs: {
+    borderRadius: tokens.borderRadius._2xs,
+  },
+  rounded_xs: {
+    borderRadius: tokens.borderRadius.xs,
+  },
   rounded_sm: {
     borderRadius: tokens.borderRadius.sm,
   },
@@ -58,8 +71,8 @@ export const atoms = {
   /*
    * Flex
    */
-  gap_xxs: {
-    gap: tokens.space.xxs,
+  gap_2xs: {
+    gap: tokens.space._2xs,
   },
   gap_xs: {
     gap: tokens.space.xs,
@@ -76,8 +89,17 @@ export const atoms = {
   gap_xl: {
     gap: tokens.space.xl,
   },
-  gap_xxl: {
-    gap: tokens.space.xxl,
+  gap_2xl: {
+    gap: tokens.space._2xl,
+  },
+  gap_3xl: {
+    gap: tokens.space._3xl,
+  },
+  gap_4xl: {
+    gap: tokens.space._4xl,
+  },
+  gap_5xl: {
+    gap: tokens.space._5xl,
   },
   flex: {
     display: 'flex',
@@ -125,9 +147,9 @@ export const atoms = {
   text_right: {
     textAlign: 'right',
   },
-  text_xxs: {
-    fontSize: tokens.fontSize.xxs,
-    lineHeight: tokens.fontSize.xxs,
+  text_2xs: {
+    fontSize: tokens.fontSize._2xs,
+    lineHeight: tokens.fontSize._2xs,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
@@ -149,9 +171,21 @@ export const atoms = {
     fontSize: tokens.fontSize.xl,
     lineHeight: tokens.fontSize.xl,
   },
-  text_xxl: {
-    fontSize: tokens.fontSize.xxl,
-    lineHeight: tokens.fontSize.xxl,
+  text_2xl: {
+    fontSize: tokens.fontSize._2xl,
+    lineHeight: tokens.fontSize._2xl,
+  },
+  text_3xl: {
+    fontSize: tokens.fontSize._3xl,
+    lineHeight: tokens.fontSize._3xl,
+  },
+  text_4xl: {
+    fontSize: tokens.fontSize._4xl,
+    lineHeight: tokens.fontSize._4xl,
+  },
+  text_5xl: {
+    fontSize: tokens.fontSize._5xl,
+    lineHeight: tokens.fontSize._5xl,
   },
   leading_tight: {
     lineHeight: 1.25,
@@ -162,11 +196,8 @@ export const atoms = {
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
   },
-  font_semibold: {
-    fontWeight: tokens.fontWeight.semibold,
-  },
   font_bold: {
-    fontWeight: tokens.fontWeight.bold,
+    fontWeight: tokens.fontWeight.semibold,
   },
 
   /*
@@ -183,10 +214,29 @@ export const atoms = {
   },
 
   /*
+   * Shadow
+   */
+  shadow_sm: {
+    shadowRadius: 8,
+    shadowOpacity: 0.1,
+    elevation: 8,
+  },
+  shadow_md: {
+    shadowRadius: 16,
+    shadowOpacity: 0.1,
+    elevation: 16,
+  },
+  shadow_lg: {
+    shadowRadius: 32,
+    shadowOpacity: 0.1,
+    elevation: 24,
+  },
+
+  /*
    * Padding
    */
-  p_xxs: {
-    padding: tokens.space.xxs,
+  p_2xs: {
+    padding: tokens.space._2xs,
   },
   p_xs: {
     padding: tokens.space.xs,
@@ -203,12 +253,21 @@ export const atoms = {
   p_xl: {
     padding: tokens.space.xl,
   },
-  p_xxl: {
-    padding: tokens.space.xxl,
+  p_2xl: {
+    padding: tokens.space._2xl,
   },
-  px_xxs: {
-    paddingLeft: tokens.space.xxs,
-    paddingRight: tokens.space.xxs,
+  p_3xl: {
+    padding: tokens.space._3xl,
+  },
+  p_4xl: {
+    padding: tokens.space._4xl,
+  },
+  p_5xl: {
+    padding: tokens.space._5xl,
+  },
+  px_2xs: {
+    paddingLeft: tokens.space._2xs,
+    paddingRight: tokens.space._2xs,
   },
   px_xs: {
     paddingLeft: tokens.space.xs,
@@ -230,13 +289,25 @@ export const atoms = {
     paddingLeft: tokens.space.xl,
     paddingRight: tokens.space.xl,
   },
-  px_xxl: {
-    paddingLeft: tokens.space.xxl,
-    paddingRight: tokens.space.xxl,
+  px_2xl: {
+    paddingLeft: tokens.space._2xl,
+    paddingRight: tokens.space._2xl,
   },
-  py_xxs: {
-    paddingTop: tokens.space.xxs,
-    paddingBottom: tokens.space.xxs,
+  px_3xl: {
+    paddingLeft: tokens.space._3xl,
+    paddingRight: tokens.space._3xl,
+  },
+  px_4xl: {
+    paddingLeft: tokens.space._4xl,
+    paddingRight: tokens.space._4xl,
+  },
+  px_5xl: {
+    paddingLeft: tokens.space._5xl,
+    paddingRight: tokens.space._5xl,
+  },
+  py_2xs: {
+    paddingTop: tokens.space._2xs,
+    paddingBottom: tokens.space._2xs,
   },
   py_xs: {
     paddingTop: tokens.space.xs,
@@ -258,12 +329,24 @@ export const atoms = {
     paddingTop: tokens.space.xl,
     paddingBottom: tokens.space.xl,
   },
-  py_xxl: {
-    paddingTop: tokens.space.xxl,
-    paddingBottom: tokens.space.xxl,
+  py_2xl: {
+    paddingTop: tokens.space._2xl,
+    paddingBottom: tokens.space._2xl,
   },
-  pt_xxs: {
-    paddingTop: tokens.space.xxs,
+  py_3xl: {
+    paddingTop: tokens.space._3xl,
+    paddingBottom: tokens.space._3xl,
+  },
+  py_4xl: {
+    paddingTop: tokens.space._4xl,
+    paddingBottom: tokens.space._4xl,
+  },
+  py_5xl: {
+    paddingTop: tokens.space._5xl,
+    paddingBottom: tokens.space._5xl,
+  },
+  pt_2xs: {
+    paddingTop: tokens.space._2xs,
   },
   pt_xs: {
     paddingTop: tokens.space.xs,
@@ -280,11 +363,20 @@ export const atoms = {
   pt_xl: {
     paddingTop: tokens.space.xl,
   },
-  pt_xxl: {
-    paddingTop: tokens.space.xxl,
+  pt_2xl: {
+    paddingTop: tokens.space._2xl,
   },
-  pb_xxs: {
-    paddingBottom: tokens.space.xxs,
+  pt_3xl: {
+    paddingTop: tokens.space._3xl,
+  },
+  pt_4xl: {
+    paddingTop: tokens.space._4xl,
+  },
+  pt_5xl: {
+    paddingTop: tokens.space._5xl,
+  },
+  pb_2xs: {
+    paddingBottom: tokens.space._2xs,
   },
   pb_xs: {
     paddingBottom: tokens.space.xs,
@@ -301,11 +393,20 @@ export const atoms = {
   pb_xl: {
     paddingBottom: tokens.space.xl,
   },
-  pb_xxl: {
-    paddingBottom: tokens.space.xxl,
+  pb_2xl: {
+    paddingBottom: tokens.space._2xl,
   },
-  pl_xxs: {
-    paddingLeft: tokens.space.xxs,
+  pb_3xl: {
+    paddingBottom: tokens.space._3xl,
+  },
+  pb_4xl: {
+    paddingBottom: tokens.space._4xl,
+  },
+  pb_5xl: {
+    paddingBottom: tokens.space._5xl,
+  },
+  pl_2xs: {
+    paddingLeft: tokens.space._2xs,
   },
   pl_xs: {
     paddingLeft: tokens.space.xs,
@@ -322,11 +423,20 @@ export const atoms = {
   pl_xl: {
     paddingLeft: tokens.space.xl,
   },
-  pl_xxl: {
-    paddingLeft: tokens.space.xxl,
+  pl_2xl: {
+    paddingLeft: tokens.space._2xl,
   },
-  pr_xxs: {
-    paddingRight: tokens.space.xxs,
+  pl_3xl: {
+    paddingLeft: tokens.space._3xl,
+  },
+  pl_4xl: {
+    paddingLeft: tokens.space._4xl,
+  },
+  pl_5xl: {
+    paddingLeft: tokens.space._5xl,
+  },
+  pr_2xs: {
+    paddingRight: tokens.space._2xs,
   },
   pr_xs: {
     paddingRight: tokens.space.xs,
@@ -343,15 +453,24 @@ export const atoms = {
   pr_xl: {
     paddingRight: tokens.space.xl,
   },
-  pr_xxl: {
-    paddingRight: tokens.space.xxl,
+  pr_2xl: {
+    paddingRight: tokens.space._2xl,
+  },
+  pr_3xl: {
+    paddingRight: tokens.space._3xl,
+  },
+  pr_4xl: {
+    paddingRight: tokens.space._4xl,
+  },
+  pr_5xl: {
+    paddingRight: tokens.space._5xl,
   },
 
   /*
    * Margin
    */
-  m_xxs: {
-    margin: tokens.space.xxs,
+  m_2xs: {
+    margin: tokens.space._2xs,
   },
   m_xs: {
     margin: tokens.space.xs,
@@ -368,12 +487,21 @@ export const atoms = {
   m_xl: {
     margin: tokens.space.xl,
   },
-  m_xxl: {
-    margin: tokens.space.xxl,
+  m_2xl: {
+    margin: tokens.space._2xl,
   },
-  mx_xxs: {
-    marginLeft: tokens.space.xxs,
-    marginRight: tokens.space.xxs,
+  m_3xl: {
+    margin: tokens.space._3xl,
+  },
+  m_4xl: {
+    margin: tokens.space._4xl,
+  },
+  m_5xl: {
+    margin: tokens.space._5xl,
+  },
+  mx_2xs: {
+    marginLeft: tokens.space._2xs,
+    marginRight: tokens.space._2xs,
   },
   mx_xs: {
     marginLeft: tokens.space.xs,
@@ -395,13 +523,25 @@ export const atoms = {
     marginLeft: tokens.space.xl,
     marginRight: tokens.space.xl,
   },
-  mx_xxl: {
-    marginLeft: tokens.space.xxl,
-    marginRight: tokens.space.xxl,
+  mx_2xl: {
+    marginLeft: tokens.space._2xl,
+    marginRight: tokens.space._2xl,
   },
-  my_xxs: {
-    marginTop: tokens.space.xxs,
-    marginBottom: tokens.space.xxs,
+  mx_3xl: {
+    marginLeft: tokens.space._3xl,
+    marginRight: tokens.space._3xl,
+  },
+  mx_4xl: {
+    marginLeft: tokens.space._4xl,
+    marginRight: tokens.space._4xl,
+  },
+  mx_5xl: {
+    marginLeft: tokens.space._5xl,
+    marginRight: tokens.space._5xl,
+  },
+  my_2xs: {
+    marginTop: tokens.space._2xs,
+    marginBottom: tokens.space._2xs,
   },
   my_xs: {
     marginTop: tokens.space.xs,
@@ -423,12 +563,24 @@ export const atoms = {
     marginTop: tokens.space.xl,
     marginBottom: tokens.space.xl,
   },
-  my_xxl: {
-    marginTop: tokens.space.xxl,
-    marginBottom: tokens.space.xxl,
+  my_2xl: {
+    marginTop: tokens.space._2xl,
+    marginBottom: tokens.space._2xl,
   },
-  mt_xxs: {
-    marginTop: tokens.space.xxs,
+  my_3xl: {
+    marginTop: tokens.space._3xl,
+    marginBottom: tokens.space._3xl,
+  },
+  my_4xl: {
+    marginTop: tokens.space._4xl,
+    marginBottom: tokens.space._4xl,
+  },
+  my_5xl: {
+    marginTop: tokens.space._5xl,
+    marginBottom: tokens.space._5xl,
+  },
+  mt_2xs: {
+    marginTop: tokens.space._2xs,
   },
   mt_xs: {
     marginTop: tokens.space.xs,
@@ -445,11 +597,20 @@ export const atoms = {
   mt_xl: {
     marginTop: tokens.space.xl,
   },
-  mt_xxl: {
-    marginTop: tokens.space.xxl,
+  mt_2xl: {
+    marginTop: tokens.space._2xl,
   },
-  mb_xxs: {
-    marginBottom: tokens.space.xxs,
+  mt_3xl: {
+    marginTop: tokens.space._3xl,
+  },
+  mt_4xl: {
+    marginTop: tokens.space._4xl,
+  },
+  mt_5xl: {
+    marginTop: tokens.space._5xl,
+  },
+  mb_2xs: {
+    marginBottom: tokens.space._2xs,
   },
   mb_xs: {
     marginBottom: tokens.space.xs,
@@ -466,11 +627,20 @@ export const atoms = {
   mb_xl: {
     marginBottom: tokens.space.xl,
   },
-  mb_xxl: {
-    marginBottom: tokens.space.xxl,
+  mb_2xl: {
+    marginBottom: tokens.space._2xl,
   },
-  ml_xxs: {
-    marginLeft: tokens.space.xxs,
+  mb_3xl: {
+    marginBottom: tokens.space._3xl,
+  },
+  mb_4xl: {
+    marginBottom: tokens.space._4xl,
+  },
+  mb_5xl: {
+    marginBottom: tokens.space._5xl,
+  },
+  ml_2xs: {
+    marginLeft: tokens.space._2xs,
   },
   ml_xs: {
     marginLeft: tokens.space.xs,
@@ -487,11 +657,20 @@ export const atoms = {
   ml_xl: {
     marginLeft: tokens.space.xl,
   },
-  ml_xxl: {
-    marginLeft: tokens.space.xxl,
+  ml_2xl: {
+    marginLeft: tokens.space._2xl,
   },
-  mr_xxs: {
-    marginRight: tokens.space.xxs,
+  ml_3xl: {
+    marginLeft: tokens.space._3xl,
+  },
+  ml_4xl: {
+    marginLeft: tokens.space._4xl,
+  },
+  ml_5xl: {
+    marginLeft: tokens.space._5xl,
+  },
+  mr_2xs: {
+    marginRight: tokens.space._2xs,
   },
   mr_xs: {
     marginRight: tokens.space.xs,
@@ -508,7 +687,16 @@ export const atoms = {
   mr_xl: {
     marginRight: tokens.space.xl,
   },
-  mr_xxl: {
-    marginRight: tokens.space.xxl,
+  mr_2xl: {
+    marginRight: tokens.space._2xl,
+  },
+  mr_3xl: {
+    marginRight: tokens.space._3xl,
+  },
+  mr_4xl: {
+    marginRight: tokens.space._4xl,
+  },
+  mr_5xl: {
+    marginRight: tokens.space._5xl,
   },
 } as const

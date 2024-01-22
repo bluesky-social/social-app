@@ -18,6 +18,7 @@ export function RichText({
   style,
   numberOfLines,
   lang,
+  noLinks,
 }: {
   testID?: string
   type?: TypographyVariant
@@ -26,6 +27,7 @@ export function RichText({
   style?: StyleProp<TextStyle>
   numberOfLines?: number
   lang?: string
+  noLinks?: boolean
 }) {
   const theme = useTheme()
   const pal = usePalette('default')
@@ -77,7 +79,11 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
-    if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
+    if (
+      !noLinks &&
+      mention &&
+      AppBskyRichtextFacet.validateMention(mention).success
+    ) {
       els.push(
         <TextLink
           key={key}
@@ -89,17 +95,21 @@ export function RichText({
         />,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-      els.push(
-        <TextLink
-          key={key}
-          type={type}
-          text={toShortUrl(segment.text)}
-          href={link.uri}
-          style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
-          dataSet={WORD_WRAP}
-          warnOnMismatchingLabel
-        />,
-      )
+      if (noLinks) {
+        els.push(toShortUrl(segment.text))
+      } else {
+        els.push(
+          <TextLink
+            key={key}
+            type={type}
+            text={toShortUrl(segment.text)}
+            href={link.uri}
+            style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
+            dataSet={WORD_WRAP}
+            warnOnMismatchingLabel
+          />,
+        )
+      }
     } else {
       els.push(segment.text)
     }

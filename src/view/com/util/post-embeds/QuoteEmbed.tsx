@@ -7,6 +7,7 @@ import {
   AppBskyEmbedRecordWithMedia,
   ModerationUI,
   AppBskyEmbedExternal,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {PostMeta} from '../PostMeta'
@@ -19,6 +20,7 @@ import {PostAlerts} from '../moderation/PostAlerts'
 import {makeProfileLink} from 'lib/routes/links'
 import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
+import {RichText} from 'view/com/util/text/RichText'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -43,6 +45,7 @@ export function MaybeQuoteEmbed({
           uri: embed.record.uri,
           indexedAt: embed.record.indexedAt,
           text: embed.record.value.text,
+          facets: embed.record.value.facets,
           embeds: embed.record.embeds,
         }}
         moderation={moderation}
@@ -84,9 +87,12 @@ export function QuoteEmbed({
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
-  const isEmpty = React.useMemo(
-    () => quote.text.trim().length === 0,
-    [quote.text],
+  const richText = React.useMemo(
+    () =>
+      quote.text.trim()
+        ? new RichTextAPI({text: quote.text, facets: quote.facets})
+        : undefined,
+    [quote.text, quote.facets],
   )
   const embed = React.useMemo(() => {
     const e = quote.embeds?.[0]
@@ -117,10 +123,14 @@ export function QuoteEmbed({
       {moderation ? (
         <PostAlerts moderation={moderation} style={styles.alert} />
       ) : null}
-      {!isEmpty ? (
-        <Text type="post-text" style={pal.text} numberOfLines={20}>
-          {quote.text}
-        </Text>
+      {richText ? (
+        <RichText
+          richText={richText}
+          type="post-text"
+          style={pal.text}
+          numberOfLines={20}
+          noLinks
+        />
       ) : null}
       {embed && <PostEmbeds embed={embed} moderation={{}} />}
     </Link>

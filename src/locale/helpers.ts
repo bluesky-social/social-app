@@ -137,6 +137,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.pt_BR
       case 'uk':
         return AppLanguage.uk
+      case 'ca':
+        return AppLanguage.ca
       default:
         continue
     }
