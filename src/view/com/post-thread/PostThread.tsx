@@ -157,7 +157,11 @@ function PostThreadLoaded({
   const posts = React.useMemo(() => {
     let arr = [TOP_COMPONENT].concat(
       Array.from(
-        flattenThreadSkeleton(sortThread(thread, threadViewPrefs), hasSession),
+        flattenThreadSkeleton(
+          sortThread(thread, threadViewPrefs),
+          hasSession,
+          treeView,
+        ),
       ),
     )
     if (arr.length > maxVisible) {
@@ -167,7 +171,7 @@ function PostThreadLoaded({
       arr.push(BOTTOM_COMPONENT)
     }
     return arr
-  }, [thread, maxVisible, threadViewPrefs, hasSession])
+  }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
 
   /**
    * NOTE
@@ -486,10 +490,11 @@ function isThreadPost(v: unknown): v is ThreadPost {
 function* flattenThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
+  treeView: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
     if (node.parent) {
-      yield* flattenThreadSkeleton(node.parent, hasSession)
+      yield* flattenThreadSkeleton(node.parent, hasSession, treeView)
     } else if (node.ctx.isParentLoading) {
       yield PARENT_SPINNER
     }
@@ -502,7 +507,10 @@ function* flattenThreadSkeleton(
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply, hasSession)
+        yield* flattenThreadSkeleton(reply, hasSession, treeView)
+        if (!treeView && !node.ctx.isHighlightedPost) {
+          break
+        }
       }
     } else if (node.ctx.isChildLoading) {
       yield CHILD_SPINNER
