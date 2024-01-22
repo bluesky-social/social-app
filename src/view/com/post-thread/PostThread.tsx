@@ -139,7 +139,7 @@ function PostThreadLoaded({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {isTablet, isDesktop} = useWebMediaQueries()
+  const {isTablet, isDesktop, isTabletOrMobile} = useWebMediaQueries()
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
@@ -197,17 +197,35 @@ function PostThreadLoaded({
 
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
-      highlightedPostRef.current?.measure(
-        (_x, _y, _width, _height, _pageX, pageY) => {
-          ref.current?.scrollToOffset({
-            animated: false,
-            offset: pageY - (isDesktop ? 0 : 50),
-          })
-        },
-      )
+      function onMeasure(pageY: number) {
+        let spinnerHeight = 0
+        if (isDesktop) {
+          spinnerHeight = 40
+        } else if (isTabletOrMobile) {
+          spinnerHeight = 82
+        }
+        ref.current?.scrollToOffset({
+          animated: false,
+          offset: pageY - spinnerHeight,
+        })
+      }
+      if (isNative) {
+        highlightedPostRef.current?.measure(
+          (_x, _y, _width, _height, _pageX, pageY) => {
+            onMeasure(pageY)
+          },
+        )
+      } else {
+        // Measure synchronously to avoid a layout jump.
+        const domNode = highlightedPostRef.current
+        if (domNode) {
+          const pageY = (domNode as any as Element).getBoundingClientRect().top
+          onMeasure(pageY)
+        }
+      }
       needsScrollAdjustment.current = false
     }
-  }, [thread, isDesktop])
+  }, [thread, isDesktop, isTabletOrMobile])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)

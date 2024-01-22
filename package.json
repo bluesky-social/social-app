@@ -206,6 +206,7 @@
     "@types/lodash.shuffle": "^4.2.7",
     "@types/psl": "^1.1.1",
     "@types/react-avatar-editor": "^13.0.0",
+    "@types/react-dom": "^18.2.18",
     "@types/react-responsive": "^8.0.5",
     "@types/react-test-renderer": "^17.0.1",
     "@typescript-eslint/eslint-plugin": "^5.48.2",

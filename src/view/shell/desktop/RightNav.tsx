@@ -177,9 +177,10 @@ function InviteCodes() {
 
 const styles = StyleSheet.create({
   rightNav: {
-    position: 'absolute',
     // @ts-ignore web only
-    left: 'calc(50vw + 320px)',
+    position: 'fixed',
+    // @ts-ignore web only
+    left: 'calc(50vw + 300px + 20px)',
     width: 300,
     maxHeight: '100%',
     overflowY: 'auto',
