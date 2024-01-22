@@ -302,8 +302,10 @@ function PostThreadLoaded({
         // -prf
         return (
           <View
+            // @ts-ignore web-only
             style={{
-              height: 400,
+              // Leave enough space below that the scroll doesn't jump
+              height: isNative ? 400 : '100vh',
               borderTopWidth: 1,
               borderColor: pal.colors.border,
             }}
