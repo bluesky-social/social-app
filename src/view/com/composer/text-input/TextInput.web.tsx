@@ -283,7 +283,8 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'absolute',
+    // @ts-ignore web only -prf
+    position: 'fixed',
     padding: 16,
     top: 0,
     bottom: 0,
@@ -315,6 +316,7 @@ function getImageFromUri(
     const type = item.type
 
     if (type === 'text/plain') {
+      console.log('hit')
       item.getAsString(async itemString => {
         if (isUriImage(itemString)) {
           const response = await fetch(itemString)
