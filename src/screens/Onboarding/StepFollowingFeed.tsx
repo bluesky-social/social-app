@@ -1,5 +1,5 @@
 import React from 'react'
-import {TextStyle, View} from 'react-native'
+import {View} from 'react-native'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -24,16 +24,8 @@ export function StepFollowingFeed() {
   const {state, dispatch} = React.useContext(Context)
 
   const {data: preferences} = usePreferencesQuery()
-  const {mutate: setFeedViewPrefs, variables} =
+  const {mutate: setFeedViewPref, variables} =
     useSetFeedViewPreferencesMutation()
-
-  const styles = React.useMemo(() => {
-    const labelStyle: TextStyle[] = [a.text_md, a.font_bold]
-
-    return {
-      labelStyle,
-    }
-  }, [])
 
   const showReplies = !(
     variables?.hideReplies ?? preferences?.feedViewPrefs.hideReplies
@@ -69,13 +61,15 @@ export function StepFollowingFeed() {
           label="Show replies in Following"
           value={showReplies}
           onChange={v => {
-            setFeedViewPrefs({
+            setFeedViewPref({
               hideReplies: !v,
             })
           }}>
           <View
             style={[a.flex_row, a.w_full, a.justify_between, a.align_center]}>
-            <Text style={styles.labelStyle}>Show replies in Following</Text>
+            <Text style={[a.text_md, a.font_bold]}>
+              Show replies in Following
+            </Text>
             <Toggle.Switch />
           </View>
         </Toggle.Item>
@@ -87,13 +81,15 @@ export function StepFollowingFeed() {
           label="Show reposts in Following"
           value={showReposts}
           onChange={v => {
-            setFeedViewPrefs({
+            setFeedViewPref({
               hideReposts: !v,
             })
           }}>
           <View
             style={[a.flex_row, a.w_full, a.justify_between, a.align_center]}>
-            <Text style={styles.labelStyle}>Show reposts in Following</Text>
+            <Text style={[a.text_md, a.font_bold]}>
+              Show reposts in Following
+            </Text>
             <Toggle.Switch />
           </View>
         </Toggle.Item>
@@ -105,13 +101,15 @@ export function StepFollowingFeed() {
           label="Show quotes in Following"
           value={showQuotes}
           onChange={v => {
-            setFeedViewPrefs({
+            setFeedViewPref({
               hideQuotePosts: !v,
             })
           }}>
           <View
             style={[a.flex_row, a.w_full, a.justify_between, a.align_center]}>
-            <Text style={styles.labelStyle}>Show quotes in Following</Text>
+            <Text style={[a.text_md, a.font_bold]}>
+              Show quotes in Following
+            </Text>
             <Toggle.Switch />
           </View>
         </Toggle.Item>
