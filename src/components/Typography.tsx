@@ -10,7 +10,7 @@ import {useTheme, atoms, web, flatten} from '#/alf'
  *   `leading(atoms.text_md, atoms.leading_normal)` // => 24
  */
 export function leading<
-  Size extends {fontSize: number},
+  Size extends {fontSize?: number},
   Leading extends {lineHeight: number},
 >(textSize: Size, leading: Leading) {
   return (textSize.fontSize || atoms.text_md.fontSize) * leading.lineHeight
