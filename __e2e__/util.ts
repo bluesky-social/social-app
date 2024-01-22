@@ -105,7 +105,7 @@ async function openAppForDebugBuild(platform: string, opts: any) {
   await sleep(3000)
 }
 
-export async function createServer(path = '') {
+export async function createServer(path = ''): Promise<string> {
   return new Promise(function (resolve, reject) {
     var req = http.request(
       {

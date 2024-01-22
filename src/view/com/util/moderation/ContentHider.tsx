@@ -94,7 +94,7 @@ export function ContentHider({
             <ShieldExclamation size={18} style={pal.textLight} />
           )}
         </Pressable>
-        <Text type="md" style={pal.text}>
+        <Text type="md" style={[pal.text, {flex: 1}]} numberOfLines={2}>
           {desc.name}
         </Text>
         <View style={styles.showBtn}>
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   cover: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 6,
     borderRadius: 8,
     marginTop: 4,
     paddingVertical: 14,

@@ -44,6 +44,8 @@ export type ApiContext = {
     password: string
     handle: string
     inviteCode?: string
+    verificationPhone?: string
+    verificationCode?: string
   }) => Promise<void>
   login: (props: {
     service: string
@@ -203,7 +205,15 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [setStateAndPersist, queryClient])
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
-    async ({service, email, password, handle, inviteCode}: any) => {
+    async ({
+      service,
+      email,
+      password,
+      handle,
+      inviteCode,
+      verificationPhone,
+      verificationCode,
+    }: any) => {
       logger.info(`session: creating account`, {
         service,
         handle,
@@ -217,6 +227,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         password,
         email,
         inviteCode,
+        verificationPhone,
+        verificationCode,
       })
 
       if (!agent.session) {

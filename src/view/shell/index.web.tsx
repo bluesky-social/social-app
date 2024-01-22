@@ -15,6 +15,7 @@ import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
+import {Outlet as PortalOutlet} from '#/components/Portal'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -41,6 +42,7 @@ function ShellInner() {
       </View>
       <Composer winHeight={0} />
       <ModalsContainer />
+      <PortalOutlet />
       <Lightbox />
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
