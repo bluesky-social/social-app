@@ -1,6 +1,6 @@
 import {Dimensions, StyleProp, StyleSheet, TextStyle} from 'react-native'
 import {Theme, TypographyVariant} from './ThemeContext'
-import {isMobileWeb} from 'platform/detection'
+import {isWeb} from 'platform/detection'
 
 // 1 is lightest, 2 is light, 3 is mid, 4 is dark, 5 is darkest
 export const colors = {
@@ -175,7 +175,7 @@ export const s = StyleSheet.create({
   // dimensions
   w100pct: {width: '100%'},
   h100pct: {height: '100%'},
-  hContentRegion: isMobileWeb ? {flex: 1} : {height: '100%'},
+  hContentRegion: isWeb ? {minHeight: '100%'} : {height: '100%'},
   window: {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,

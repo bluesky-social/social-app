@@ -1,4 +1,4 @@
-import React, {memo, startTransition} from 'react'
+import React, {memo} from 'react'
 import {FlatListProps, RefreshControl} from 'react-native'
 import {FlatList_INTERNAL} from './Views'
 import {addStyle} from 'lib/styles'
@@ -39,9 +39,7 @@ function ListImpl<ItemT>(
   const pal = usePalette('default')
 
   function handleScrolledDownChange(didScrollDown: boolean) {
-    startTransition(() => {
-      onScrolledDownChange?.(didScrollDown)
-    })
+    onScrolledDownChange?.(didScrollDown)
   }
 
   const scrollHandler = useAnimatedScrollHandler({

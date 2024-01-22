@@ -12,6 +12,10 @@ export const styles = StyleSheet.create({
     paddingLeft: 5,
     paddingRight: 10,
   },
+  bottomBarWeb: {
+    // @ts-ignore web-only
+    position: 'fixed',
+  },
   ctrl: {
     flex: 1,
     paddingTop: 13,

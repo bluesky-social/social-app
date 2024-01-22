@@ -334,7 +334,9 @@ export function SearchScreenInner({
         tabBarPosition="top"
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <CenteredView sideBorders style={pal.border}>
+          <CenteredView
+            sideBorders
+            style={[pal.border, pal.view, styles.tabBarContainer]}>
             <TabBar items={SECTIONS_LOGGEDIN} {...props} />
           </CenteredView>
         )}
@@ -375,7 +377,9 @@ export function SearchScreenInner({
       tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <CenteredView sideBorders style={pal.border}>
+        <CenteredView
+          sideBorders
+          style={[pal.border, pal.view, styles.tabBarContainer]}>
           <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
         </CenteredView>
       )}
@@ -466,6 +470,7 @@ export function SearchScreen(
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
   const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
     textInput.current?.blur()
     setQuery('')
     setShowAutocompleteResults(false)
@@ -473,11 +478,13 @@ export function SearchScreen(
       clearTimeout(searchDebounceTimeout.current)
   }, [textInput])
   const onPressClearQuery = React.useCallback(() => {
+    scrollToTopWeb()
     setQuery('')
     setShowAutocompleteResults(false)
   }, [setQuery])
   const onChangeText = React.useCallback(
     async (text: string) => {
+      scrollToTopWeb()
       setQuery(text)
 
       if (text.length > 0) {
@@ -506,10 +513,12 @@ export function SearchScreen(
     [setQuery, search, setSearchResults],
   )
   const onSubmit = React.useCallback(() => {
+    scrollToTopWeb()
     setShowAutocompleteResults(false)
   }, [setShowAutocompleteResults])
 
   const onSoftReset = React.useCallback(() => {
+    scrollToTopWeb()
     onPressCancelSearch()
   }, [onPressCancelSearch])
 
@@ -526,11 +535,12 @@ export function SearchScreen(
   )
 
   return (
-    <View style={{flex: 1}}>
+    <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
         style={[
           styles.header,
           pal.border,
+          pal.view,
           isTabletOrDesktop && {paddingTop: 10},
         ]}
         sideBorders={isTabletOrDesktop}>
@@ -661,12 +671,25 @@ export function SearchScreen(
   )
 }
 
+function scrollToTopWeb() {
+  if (isWeb) {
+    window.scrollTo(0, 0)
+  }
+}
+
+const HEADER_HEIGHT = 50
+
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
+    height: HEADER_HEIGHT,
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: 0,
+    zIndex: 1,
   },
   headerMenuBtn: {
     width: 30,
@@ -695,5 +718,11 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+  },
+  tabBarContainer: {
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: isWeb ? HEADER_HEIGHT : 0,
+    zIndex: 1,
   },
 })

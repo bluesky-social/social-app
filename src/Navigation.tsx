@@ -39,6 +39,7 @@ import {
   setEmailConfirmationRequested,
 } from './state/shell/reminders'
 import {init as initAnalytics} from './lib/analytics/analytics'
+import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
 
 import {HomeScreen} from './view/screens/Home'
 import {SearchScreen} from './view/screens/Search'
@@ -413,10 +414,12 @@ function MyProfileTabNavigator() {
 const FlatNavigator = () => {
   const pal = usePalette('default')
   const numUnread = useUnreadNotifications()
-
+  const screenListeners = useWebScrollRestoration()
   const title = (page: MessageDescriptor) => bskyTitle(i18n._(page), numUnread)
+
   return (
     <Flat.Navigator
+      screenListeners={screenListeners}
       screenOptions={{
         gestureEnabled: true,
         fullScreenGestureEnabled: true,
