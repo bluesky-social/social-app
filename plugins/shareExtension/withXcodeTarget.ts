@@ -10,6 +10,7 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
   {extensionName, controllerName},
 ) => {
   // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 

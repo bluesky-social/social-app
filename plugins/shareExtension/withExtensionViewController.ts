@@ -11,6 +11,7 @@ export const withExtensionViewController: ConfigPlugin<Params> = (
   config,
   {controllerName, extensionName},
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   return withXcodeProject(config, config => {
     const controllerPath = path.join(
       config.modRequest.projectRoot,

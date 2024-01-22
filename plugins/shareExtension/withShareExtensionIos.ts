@@ -10,6 +10,7 @@ const SHARE_EXTENSION_CONTROLLER_NAME = 'ShareViewController'
 
 const withShareExtensionIos: ConfigPlugin = config => {
   return withPlugins(config, [
+    // IOS
     withAppEntitlements,
     [
       withExtensionEntitlements,

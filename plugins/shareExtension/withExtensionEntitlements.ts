@@ -6,15 +6,13 @@ import * as fs from 'fs'
 export const withExtensionEntitlements: ConfigPlugin<{
   extensionName: string
 }> = (config, {extensionName}) => {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   return withInfoPlist(config, config => {
     const extensionEntitlementsPath = path.join(
       config.modRequest.platformProjectRoot,
       extensionName,
       `${extensionName}.entitlements`,
     )
-    const entitilementsFileExists = fs.existsSync(extensionEntitlementsPath)
-
-    if (entitilementsFileExists) return config
 
     const shareExtensionEntitlements: Record<string, string | string[]> = {
       'com.apple.security.application-groups': [

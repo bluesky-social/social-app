@@ -11,6 +11,7 @@ export const withExtensionInfoPlist: ConfigPlugin<Params> = (
   config,
   {extensionName},
 ) => {
+  // eslint-disable-next-line @typescript-eslint/no-shadow
   return withInfoPlist(config, config => {
     const plistPath = path.join(
       config.modRequest.projectRoot,
