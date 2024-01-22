@@ -17,10 +17,9 @@ import {
   useSetFeedViewPreferencesMutation,
 } from 'state/queries/preferences'
 import {H5, Text} from '#/components/Typography'
+import {Divider} from '#/components/Divider'
 
 export function StepFollowingFeed() {
-  const t = useTheme()
-
   const {state, dispatch} = React.useContext(Context)
 
   const {data: preferences} = usePreferencesQuery()
@@ -53,9 +52,7 @@ export function StepFollowingFeed() {
       </Description>
 
       <View style={[a.gap_lg, a.w_full]}>
-        <View
-          style={{borderTopWidth: 1, borderTopColor: t.palette.contrast_100}}
-        />
+        <Divider />
         <Toggle.Item
           name="Show Replies"
           label="Show replies in Following"
@@ -73,9 +70,7 @@ export function StepFollowingFeed() {
             <Toggle.Switch />
           </View>
         </Toggle.Item>
-        <View
-          style={{borderTopWidth: 1, borderTopColor: t.palette.contrast_100}}
-        />
+        <Divider />
         <Toggle.Item
           name="Show Reposts"
           label="Show reposts in Following"
@@ -93,9 +88,7 @@ export function StepFollowingFeed() {
             <Toggle.Switch />
           </View>
         </Toggle.Item>
-        <View
-          style={{borderTopWidth: 1, borderTopColor: t.palette.contrast_100}}
-        />
+        <Divider />
         <Toggle.Item
           name="Show Quotes"
           label="Show quotes in Following"
@@ -113,9 +106,7 @@ export function StepFollowingFeed() {
             <Toggle.Switch />
           </View>
         </Toggle.Item>
-        <View
-          style={{borderTopWidth: 1, borderTopColor: t.palette.contrast_100}}
-        />
+        <Divider />
       </View>
 
       <OnboardingControls.Portal>
