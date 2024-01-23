@@ -52,6 +52,7 @@ import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {augmentSearchQuery} from '#/lib/strings/helpers'
 
 function Loader() {
   const pal = usePalette('default')
@@ -318,8 +319,12 @@ export function SearchScreenInner({
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const {isDesktop} = useWebMediaQueries()
+
+  const augmentedQuery = React.useMemo(() => {
+    return augmentSearchQuery(query || '', {did: currentAccount?.did})
+  }, [query, currentAccount])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -343,7 +348,7 @@ export function SearchScreenInner({
         )}
         initialPage={0}>
         <View>
-          <SearchScreenPostResults query={query} />
+          <SearchScreenPostResults query={augmentedQuery} />
         </View>
         <View>
           <SearchScreenUserResults query={query} />
