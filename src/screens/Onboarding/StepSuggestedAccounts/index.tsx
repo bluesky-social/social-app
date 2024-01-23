@@ -1,6 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -10,6 +12,7 @@ import {Text} from '#/components/Typography'
 import {useProfilesQuery} from '#/state/queries/profile'
 import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
+import {useModerationOpts} from '#/state/queries/preferences'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -17,17 +20,23 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {SuggestedAccountCard} from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
+import {
+  SuggestedAccountCard,
+  SuggestedAccountCardPlaceholder,
+} from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
 
 export function Inner({
   profiles,
   onSelect,
+  moderationOpts,
 }: {
   profiles: AppBskyActorDefs.ProfileViewDetailed[]
   onSelect: (dids: string[]) => void
+  moderationOpts: ReturnType<typeof useModerationOpts>
 }) {
+  const {_} = useLingui()
   const [dids, setDids] = React.useState<string[]>(profiles.map(p => p.did))
 
   React.useEffect(() => {
@@ -38,13 +47,16 @@ export function Inner({
     <Toggle.Group
       values={dids}
       onChange={setDids}
-      label="Select accounts to follow">
+      label={_(msg`Select some accounts below to follow`)}>
       {profiles.map(profile => (
         <Toggle.Item
           key={profile.did}
           name={profile.did}
-          label={`Follow ${profile.handle}`}>
-          <SuggestedAccountCard profile={profile} />
+          label={_(msg`Follow ${profile.handle}`)}>
+          <SuggestedAccountCard
+            profile={profile}
+            moderationOpts={moderationOpts}
+          />
         </Toggle.Item>
       ))}
     </Toggle.Group>
@@ -52,6 +64,7 @@ export function Inner({
 }
 
 export function StepSuggestedAccounts() {
+  const {_} = useLingui()
   const t = useTheme()
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
@@ -60,7 +73,13 @@ export function StepSuggestedAccounts() {
     state.interestsStepResults.apiResponse.suggestedAccountDids,
     state.interestsStepResults.apiResponse.suggestedAccountDids.default,
   )
-  const {isLoading, isError, data, error} = useProfilesQuery({
+  const moderationOpts = useModerationOpts()
+  const {
+    isLoading: isProfilesLoading,
+    isError,
+    data,
+    error,
+  } = useProfilesQuery({
     handles: suggestedDids,
   })
   const [dids, setDids] = React.useState<string[]>([])
@@ -91,6 +110,8 @@ export function StepSuggestedAccounts() {
     dispatch({type: 'next'})
   }, [dispatch])
 
+  const isLoading = isProfilesLoading && moderationOpts
+
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <View
@@ -106,16 +127,34 @@ export function StepSuggestedAccounts() {
         <At size="xl" fill={t.palette.primary_500} />
       </View>
 
-      <Title>Here are some accounts for your to follow:</Title>
-      <Description>Based on your interests: {interestsText}</Description>
+      <Title>
+        <Trans>Here are some accounts for your to follow</Trans>
+      </Title>
+      <Description>
+        {state.interestsStepResults.selectedInterests.length ? (
+          <Trans>Based on your interest in {interestsText}</Trans>
+        ) : (
+          <Trans>These are popular accounts you might like.</Trans>
+        )}
+      </Description>
 
       <View style={[a.w_full, a.pt_xl]}>
         {isLoading ? (
-          <Loader size="xl" />
+          <View>
+            {Array(10)
+              .fill(0)
+              .map((_, i) => (
+                <SuggestedAccountCardPlaceholder key={i} />
+              ))}
+          </View>
         ) : isError || !data ? (
           <Text>{error?.toString()}</Text>
         ) : (
-          <Inner profiles={data.profiles} onSelect={setDids} />
+          <Inner
+            profiles={data.profiles}
+            onSelect={setDids}
+            moderationOpts={moderationOpts}
+          />
         )}
       </View>
 
@@ -126,7 +165,9 @@ export function StepSuggestedAccounts() {
             variant="gradient"
             color="gradient_sky"
             size="large"
-            label="Continue setting up your account"
+            label={_(
+              msg`Follow selected accounts and continue to then next step`,
+            )}
             onPress={handleContinue}>
             <ButtonText>Follow All</ButtonText>
             <ButtonIcon icon={saving ? Loader : Plus} />
@@ -135,7 +176,9 @@ export function StepSuggestedAccounts() {
             variant="outline"
             color="secondary"
             size="large"
-            label="Continue setting up your account"
+            label={_(
+              msg`Continue to the next step without following any accounts`,
+            )}
             onPress={handleSkip}>
             Skip
           </Button>
