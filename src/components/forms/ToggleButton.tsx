@@ -95,7 +95,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           borderLeftWidth: 1,
           marginLeft: -1,
         },
-        a.px_lg,
+        a.px_md,
         a.py_md,
         native({
           paddingTop: 14,
