@@ -44,7 +44,14 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   }, [state])
 
   return (
-    <View style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
+    <View
+      aria-modal
+      role="dialog"
+      aria-role="dialog"
+      aria-label="Set up your account"
+      accessibilityLabel="Set up your account"
+      accessibilityHint="This onboarding flow will help you set up your account."
+      style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {IS_DEV && (
         <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
           <Button
@@ -93,6 +100,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}>
         <View
+          aria-modal
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View style={[a.w_full, a.align_center, a.pt_5xl]}>
