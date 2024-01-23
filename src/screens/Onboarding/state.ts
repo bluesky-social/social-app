@@ -31,8 +31,8 @@ export type OnboardingAction =
 export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 6,
-  activeStep: 'interests',
-  activeStepIndex: 1,
+  activeStep: 'algoFeeds',
+  activeStepIndex: 4,
 
   // result of interests step
   suggestedAccountHandles: [],
