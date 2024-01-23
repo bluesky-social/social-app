@@ -11,6 +11,7 @@ export type OnboardingState = {
     | 'followingFeed'
     | 'algoFeeds'
     | 'topicalFeeds'
+    | 'moderation'
     | 'finished'
   activeStepIndex: number
 
@@ -81,8 +82,11 @@ export function reducer(
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
       } else if (s.activeStep === 'topicalFeeds') {
-        next.activeStep = 'finished'
+        next.activeStep = 'moderation'
         next.activeStepIndex = 6
+      } else if (s.activeStep === 'moderation') {
+        next.activeStep = 'finished'
+        next.activeStepIndex = 7
       }
       break
     }
@@ -99,9 +103,12 @@ export function reducer(
       } else if (s.activeStep === 'topicalFeeds') {
         next.activeStep = 'algoFeeds'
         next.activeStepIndex = 4
-      } else if (s.activeStep === 'finished') {
+      } else if (s.activeStep === 'moderation') {
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
+      } else if (s.activeStep === 'finished') {
+        next.activeStep = 'moderation'
+        next.activeStepIndex = 6
       }
       break
     }
