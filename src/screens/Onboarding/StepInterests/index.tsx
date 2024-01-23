@@ -16,8 +16,8 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {
-  INTERESTS as INTEREST_OPTIONS,
-  InterestItem,
+  API_RESPONSE,
+  INTEREST_TO_DISPLAY_NAME,
 } from '#/screens/Onboarding/StepInterests/data'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 
@@ -27,41 +27,21 @@ export function StepInterests() {
   const {state, dispatch} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
-    state.interestsStepResults.interests.map(i => i.name),
+    state.interestsStepResults.selectedInterests.map(i => i),
   )
 
   const saveInterests = React.useCallback(async () => {
     setSaving(true)
 
     try {
-      const {
-        data: {accounts, feeds},
-      } = {
-        data: {
-          accounts: [
-            'did:plc:oky5czdrnfjpqslsw2a5iclo',
-            'did:plc:z72i7hdynmk6r22z27h6tvur',
-          ],
-          feeds: [
-            'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science',
-            'at://did:plc:y7crv2yh74s7qhmtx3mvbgv5/app.bsky.feed.generator/art-new',
-          ],
-        },
-      }
-
-      // TODO save interests, get response
+      // TODO get response
 
       // done
       setSaving(false)
       dispatch({
         type: 'setInterestsStepResults',
-        interests: interests
-          .map(i => {
-            return INTEREST_OPTIONS.find(o => o.name === i)
-          })
-          .filter(Boolean) as InterestItem[],
-        accountDids: accounts,
-        feedUris: feeds,
+        apiResponse: API_RESPONSE,
+        selectedInterests: interests,
       })
       dispatch({type: 'next'})
     } catch (e: any) {
@@ -97,11 +77,11 @@ export function StepInterests() {
           onChange={setInterests}
           label="Select your interests">
           <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
-            {INTEREST_OPTIONS.map(interest => (
+            {API_RESPONSE.interests.map(interest => (
               <Toggle.Item
-                key={interest.name}
-                name={interest.name}
-                label={interest.title}>
+                key={interest}
+                name={interest}
+                label={INTEREST_TO_DISPLAY_NAME[interest]}>
                 <InterestButton interest={interest} />
               </Toggle.Item>
             ))}

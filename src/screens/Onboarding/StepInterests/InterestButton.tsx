@@ -5,9 +5,9 @@ import {useTheme, atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
-import {InterestItem} from '#/screens/Onboarding/StepInterests/data'
+import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 
-export function InterestButton({interest}: {interest: InterestItem}) {
+export function InterestButton({interest}: {interest: string}) {
   const t = useTheme()
   const ctx = Toggle.useItemContext()
 
@@ -71,7 +71,7 @@ export function InterestButton({interest}: {interest: InterestItem}) {
           a.font_bold,
           ctx.selected ? styles.textSelected : {},
         ]}>
-        {interest.title}
+        {INTEREST_TO_DISPLAY_NAME[interest]}
       </Text>
     </View>
   )

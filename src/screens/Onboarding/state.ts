@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {logger} from '#/logger'
-import {InterestItem} from '#/screens/Onboarding/StepInterests/data'
+import {API_RESPONSE} from '#/screens/Onboarding/StepInterests/data'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -17,9 +17,8 @@ export type OnboardingState = {
   activeStepIndex: number
 
   interestsStepResults: {
-    interests: InterestItem[]
-    accountDids: string[]
-    feedUris: string[]
+    selectedInterests: string[]
+    apiResponse: typeof API_RESPONSE
   }
   suggestedAccountsStepResults: {
     accountDids: string[]
@@ -44,9 +43,8 @@ export type OnboardingAction =
     }
   | {
       type: 'setInterestsStepResults'
-      interests: InterestItem[]
-      accountDids: string[]
-      feedUris: string[]
+      selectedInterests: string[]
+      apiResponse: typeof API_RESPONSE
     }
   | {
       type: 'setSuggestedAccountsStepResults'
@@ -68,9 +66,8 @@ export const initialState: OnboardingState = {
   activeStepIndex: 1,
 
   interestsStepResults: {
-    interests: [],
-    accountDids: [],
-    feedUris: [],
+    selectedInterests: [],
+    apiResponse: API_RESPONSE,
   },
   suggestedAccountsStepResults: {
     accountDids: [],
@@ -87,7 +84,7 @@ export const Context = React.createContext<{
   state: OnboardingState
   dispatch: React.Dispatch<OnboardingAction>
 }>({
-  state: initialState,
+  state: {...initialState},
   dispatch: () => {},
 })
 
@@ -148,9 +145,8 @@ export function reducer(
     }
     case 'setInterestsStepResults': {
       next.interestsStepResults = {
-        interests: a.interests,
-        accountDids: a.accountDids,
-        feedUris: a.feedUris,
+        selectedInterests: a.selectedInterests,
+        apiResponse: a.apiResponse,
       }
       break
     }

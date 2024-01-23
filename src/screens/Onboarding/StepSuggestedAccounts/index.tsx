@@ -18,6 +18,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {SuggestedAccountCard} from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
+import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 
 export function Inner({
   profiles,
@@ -54,15 +55,18 @@ export function StepSuggestedAccounts() {
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {isLoading, isError, data, error} = useProfilesQuery({
-    handles: state.interestsStepResults.accountDids,
+    handles:
+      state.interestsStepResults.apiResponse.suggestedAccountDids.default,
   })
   const [dids, setDids] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
 
   const interestsText = React.useMemo(() => {
-    const i = state.interestsStepResults.interests.map(i => i.title)
+    const i = state.interestsStepResults.selectedInterests.map(
+      i => INTEREST_TO_DISPLAY_NAME[i],
+    )
     return i.join(', ')
-  }, [state.interestsStepResults.interests])
+  }, [state.interestsStepResults.selectedInterests])
 
   const handleBulkFollow = React.useCallback(async () => {
     setSaving(true)
