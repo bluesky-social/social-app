@@ -25,7 +25,6 @@ import {
 export type FeedConfig = {
   default: boolean
   uri: string
-  description: string
   gradient?: typeof tokens.gradients.midnight | typeof tokens.gradients.summer
 }
 
@@ -33,13 +32,11 @@ const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: true,
     uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
-    description: ``,
     gradient: tokens.gradients.summer,
   },
   {
     default: false,
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
-    description: ``,
     gradient: tokens.gradients.midnight,
   },
 ]
@@ -48,17 +45,14 @@ const SECONDARY_FEEDS: FeedConfig[] = [
   {
     default: false,
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends',
-    description: ``,
   },
   {
     default: false,
     uri: 'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq',
-    description: ``,
   },
   {
     default: false,
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/best-of-follows',
-    description: ``,
   },
 ]
 
@@ -129,7 +123,7 @@ export function StepAlgoFeeds() {
 
       <OnboardingControls.Portal>
         <Button
-          disabled={primaryFeedUris.length === 0}
+          disabled={saving || primaryFeedUris.length === 0}
           key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"

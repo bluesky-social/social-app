@@ -17,10 +17,7 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {
-  INTERESTS as INTEREST_OPTIONS,
-  TEMP_ACCOUNT_MAPPING,
-} from '#/screens/Onboarding/StepInterests/data'
+import {INTERESTS as INTEREST_OPTIONS} from '#/screens/Onboarding/StepInterests/data'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 
 export function StepInterests() {
@@ -35,14 +32,21 @@ export function StepInterests() {
 
     try {
       const {
-        data: {accounts},
-      } = {data: {accounts: interests.map(i => TEMP_ACCOUNT_MAPPING[i]).flat()}}
-      const suggestedAccounts = Array.from(new Set(accounts))
+        data: {accounts, feeds},
+      } = {
+        data: {
+          accounts: ['jay.bsky.team', 'bsky.app'],
+          feeds: [
+            'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science',
+            'at://did:plc:y7crv2yh74s7qhmtx3mvbgv5/app.bsky.feed.generator/art-new',
+          ],
+        },
+      }
 
       // wait max 2s for query to finish
       await Promise.race([
         await query.prefetchQuery({
-          queryKey: profilesQueryKey(suggestedAccounts),
+          queryKey: profilesQueryKey(accounts),
         }),
         await new Promise(y => setTimeout(y, 2000)),
       ])
@@ -50,8 +54,12 @@ export function StepInterests() {
       // done
       setSaving(false)
       dispatch({
-        type: 'setSuggestedAccountHandles',
-        suggestedAccountHandles: suggestedAccounts,
+        type: 'setInterestsStepResults',
+        interests: interests.map(i => {
+          return INTEREST_OPTIONS.find(o => o.name === i)!.title
+        }),
+        suggestedAccountHandles: accounts,
+        suggestedFeedUris: feeds,
       })
       dispatch({type: 'next'})
     } catch (e: any) {

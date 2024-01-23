@@ -13,7 +13,13 @@ export type OnboardingState = {
     | 'topicalFeeds'
     | 'finished'
   activeStepIndex: number
-  suggestedAccountHandles: string[]
+
+  // result of interest step
+  interestsStepResults: {
+    interests: string[]
+    suggestedAccountHandles: string[]
+    suggestedFeedUris: string[]
+  }
 }
 
 export type OnboardingAction =
@@ -24,18 +30,23 @@ export type OnboardingAction =
       type: 'prev'
     }
   | {
-      type: 'setSuggestedAccountHandles'
+      type: 'setInterestsStepResults'
+      interests: string[]
       suggestedAccountHandles: string[]
+      suggestedFeedUris: string[]
     }
 
 export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 6,
-  activeStep: 'algoFeeds',
-  activeStepIndex: 4,
+  activeStep: 'interests',
+  activeStepIndex: 1,
 
-  // result of interests step
-  suggestedAccountHandles: [],
+  interestsStepResults: {
+    interests: [],
+    suggestedAccountHandles: [],
+    suggestedFeedUris: [],
+  },
 }
 
 export const Context = React.createContext<{
@@ -91,8 +102,12 @@ export function reducer(
       }
       break
     }
-    case 'setSuggestedAccountHandles': {
-      next.suggestedAccountHandles = a.suggestedAccountHandles
+    case 'setInterestsStepResults': {
+      next.interestsStepResults = {
+        interests: a.interests,
+        suggestedAccountHandles: a.suggestedAccountHandles,
+        suggestedFeedUris: a.suggestedFeedUris,
+      }
       break
     }
   }

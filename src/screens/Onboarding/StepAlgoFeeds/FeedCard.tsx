@@ -6,7 +6,7 @@ import {Image} from 'expo-image'
 import {useTheme, atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {Text, H3, P} from '#/components/Typography'
+import {Text, H3} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
 import {RichText} from '#/components/RichText'
 
@@ -174,13 +174,7 @@ export function PrimaryFeedCard({config}: {config: FeedConfig}) {
   )
 }
 
-function FeedCardInner({
-  feed,
-  config,
-}: {
-  feed: FeedSourceInfo
-  config: FeedConfig
-}) {
+function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
   const t = useTheme()
   const ctx = Toggle.useItemContext()
 
@@ -260,7 +254,6 @@ function FeedCardInner({
               ]}>
               @{feed.creatorHandle}
             </Text>
-            <P>{config.description}</P>
           </View>
 
           <View
