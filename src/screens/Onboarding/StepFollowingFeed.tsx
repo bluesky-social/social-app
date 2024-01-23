@@ -1,10 +1,13 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {H5, Text} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
 
@@ -20,8 +23,10 @@ import {
 } from 'state/queries/preferences'
 
 export function StepFollowingFeed() {
+  const {_} = useLingui()
+  const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const {state, dispatch} = React.useContext(Context)
+  const {dispatch} = React.useContext(Context)
 
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setFeedViewPref, variables} =
@@ -40,104 +45,120 @@ export function StepFollowingFeed() {
   return (
     // Hack for now to move the image container up
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View style={[a.w_full, a.gap_sm, a.mb_xl]}>
-        <HeaderListItem>Newest</HeaderListItem>
-        <HeaderListItem />
-        <HeaderListItem>Oldest</HeaderListItem>
+      <View
+        style={[
+          a.p_lg,
+          a.mb_3xl,
+          a.rounded_full,
+          {
+            backgroundColor:
+              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
+          },
+        ]}>
+        <ListMagnifyingGlass size="xl" fill={t.palette.primary_500} />
       </View>
 
-      <Title>Your default feed is "Following"</Title>
-      <Description style={[a.mb_xl]}>
-        It only show posts from the people your follow, in the order they were
-        posted.
+      <Title>
+        <Trans>Your default feed is "Following"</Trans>
+      </Title>
+      <Description style={[a.mb_md]}>
+        <Trans>
+          It only show posts from the people your follow, in the order they were
+          posted.
+        </Trans>
+      </Description>
+      <Description style={[a.mb_2xl]}>
+        <Trans>
+          Customize your default Following feed experience below. You can fine
+          tune these settings later.
+        </Trans>
       </Description>
 
-      <View style={[a.gap_lg, a.w_full]}>
-        <Divider />
+      <View style={[a.w_full]}>
         <Toggle.Item
-          name="Show Replies"
-          label="Show replies in Following"
+          name="Show Replies" // no need to translate
+          label={_(msg`Show replies in Following feed`)}
           value={showReplies}
-          onChange={v => {
+          onChange={() => {
             setFeedViewPref({
-              hideReplies: !v,
+              hideReplies: showReplies,
             })
           }}>
           <View
-            style={[a.flex_row, a.w_full, a.justify_between, a.align_center]}>
+            style={[
+              a.flex_row,
+              a.w_full,
+              a.py_lg,
+              a.justify_between,
+              a.align_center,
+            ]}>
             <Text style={[a.text_md, a.font_bold]}>
-              Show replies in Following
+              <Trans>Show replies in Following</Trans>
             </Text>
             <Toggle.Switch />
           </View>
         </Toggle.Item>
         <Divider />
         <Toggle.Item
-          name="Show Reposts"
-          label="Show reposts in Following"
+          name="Show Reposts" // no need to translate
+          label={_(msg`Show re-posts in Following feed`)}
           value={showReposts}
-          onChange={v => {
+          onChange={() => {
             setFeedViewPref({
-              hideReposts: !v,
+              hideReposts: showReposts,
             })
           }}>
           <View
-            style={[a.flex_row, a.w_full, a.justify_between, a.align_center]}>
+            style={[
+              a.flex_row,
+              a.w_full,
+              a.py_lg,
+              a.justify_between,
+              a.align_center,
+            ]}>
             <Text style={[a.text_md, a.font_bold]}>
-              Show reposts in Following
+              <Trans>Show reposts in Following</Trans>
             </Text>
             <Toggle.Switch />
           </View>
         </Toggle.Item>
         <Divider />
         <Toggle.Item
-          name="Show Quotes"
-          label="Show quotes in Following"
+          name="Show Quotes" // no need to translate
+          label={_(msg`Show quote-posts in Following feed`)}
           value={showQuotes}
-          onChange={v => {
+          onChange={() => {
             setFeedViewPref({
-              hideQuotePosts: !v,
+              hideQuotePosts: showQuotes,
             })
           }}>
           <View
-            style={[a.flex_row, a.w_full, a.justify_between, a.align_center]}>
+            style={[
+              a.flex_row,
+              a.w_full,
+              a.py_lg,
+              a.justify_between,
+              a.align_center,
+            ]}>
             <Text style={[a.text_md, a.font_bold]}>
-              Show quotes in Following
+              <Trans>Show quotes in Following</Trans>
             </Text>
             <Toggle.Switch />
           </View>
         </Toggle.Item>
-        <Divider />
       </View>
 
       <OnboardingControls.Portal>
         <Button
-          key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"
           size="large"
-          label="Continue setting up your account"
+          label={_(msg`Continue to next step`)}
           onPress={() => dispatch({type: 'next'})}>
           <ButtonText>Continue</ButtonText>
           <ButtonIcon icon={ChevronRight} />
         </Button>
       </OnboardingControls.Portal>
-    </View>
-  )
-}
-
-// Just a placeholder for now, if you use an image instead
-function HeaderListItem({children}: React.PropsWithChildren<{}>) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.w_full,
-        a.justify_center,
-        a.p_xl, // Adjust when you have an arrow svg, or just use an image for all of these...
-        {height: 70, backgroundColor: t.palette.contrast_50, borderRadius: 12},
-      ]}>
-      {children && <H5>{children}</H5>}
     </View>
   )
 }
