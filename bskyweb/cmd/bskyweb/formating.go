@@ -49,5 +49,9 @@ func ExpandPostText(post *appbsky.FeedPost) string {
 			postText = fmt.Sprintf("%s\n%s", postText, externalURI)
 		}
 	}
+	// TODO: could embed the actual post text?
+	if post.Embed != nil && (post.Embed.EmbedRecord != nil || post.Embed.EmbedRecordWithMedia != nil) {
+		postText = fmt.Sprintf("%s\n\n[contains quote post or other embeded content]", postText)
+	}
 	return postText
 }
