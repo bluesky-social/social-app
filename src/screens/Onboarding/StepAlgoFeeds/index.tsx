@@ -1,8 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {usePinFeedMutation} from '#/state/queries/preferences'
-
 import {atoms as a, tokens, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -64,24 +62,18 @@ export function StepAlgoFeeds() {
   )
   const [secondaryFeedUris, setSeconaryFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: pinFeed} = usePinFeedMutation()
 
   const saveFeeds = React.useCallback(async () => {
     setSaving(true)
 
     const uris = primaryFeedUris.concat(secondaryFeedUris)
+    dispatch({type: 'setAlgoFeedsStepResults', feedUris: uris})
 
-    for (const uri of uris) {
-      try {
-        await pinFeed({uri})
-      } catch (e) {
-        // TODO not critical here?
-      }
-    }
+    await new Promise(y => setTimeout(y, 1000))
 
     setSaving(false)
     dispatch({type: 'next'})
-  }, [primaryFeedUris, secondaryFeedUris, dispatch, pinFeed])
+  }, [primaryFeedUris, secondaryFeedUris, dispatch])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

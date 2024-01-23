@@ -1,8 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {usePinFeedMutation} from '#/state/queries/preferences'
-
 import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -23,7 +21,6 @@ export function StepTopicalFeeds() {
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: pinFeed} = usePinFeedMutation()
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.interests
@@ -33,17 +30,13 @@ export function StepTopicalFeeds() {
   const saveFeeds = React.useCallback(async () => {
     setSaving(true)
 
-    for (const uri of selectedFeedUris) {
-      try {
-        await pinFeed({uri})
-      } catch (e) {
-        // TODO not critical here?
-      }
-    }
+    dispatch({type: 'setTopicalFeedsStepResults', feedUris: selectedFeedUris})
+
+    await new Promise(y => setTimeout(y, 1000))
 
     setSaving(false)
     dispatch({type: 'next'})
-  }, [selectedFeedUris, dispatch, pinFeed])
+  }, [selectedFeedUris, dispatch])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
@@ -61,7 +54,7 @@ export function StepTopicalFeeds() {
           values={selectedFeedUris}
           onChange={setSelectedFeedUris}
           label="Select your primary algorithmic feeds">
-          {state.interestsStepResults.suggestedFeedUris.map(uri => (
+          {state.interestsStepResults.feedUris.map(uri => (
             <FeedCard key={uri} config={{default: false, uri}} />
           ))}
         </Toggle.Group>

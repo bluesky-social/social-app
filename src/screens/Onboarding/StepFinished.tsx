@@ -2,10 +2,11 @@ import React from 'react'
 import {View} from 'react-native'
 
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
+import {Loader} from '#/components/Loader'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -19,11 +20,18 @@ export function StepFinished() {
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
+  const [saving, setSaving] = React.useState(false)
 
-  const finishOnboarding = React.useCallback(() => {
+  const finishOnboarding = React.useCallback(async () => {
+    setSaving(true)
+
+    console.log(state)
+    await new Promise(y => setTimeout(y, 1000))
+
+    setSaving(false)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
-  }, [dispatch, onboardDispatch])
+  }, [state, dispatch, onboardDispatch, setSaving])
 
   return (
     // Hack
@@ -80,13 +88,17 @@ export function StepFinished() {
 
       <OnboardingControls.Portal>
         <Button
+          disabled={saving}
           key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"
           size="large"
           label="Continue setting up your account"
           onPress={finishOnboarding}>
-          <ButtonText>Let's go!</ButtonText>
+          <ButtonText>
+            {saving ? `Finalizing your account` : `Ready? Let's go!`}
+          </ButtonText>
+          {saving && <ButtonIcon icon={Loader} />}
         </Button>
       </OnboardingControls.Portal>
     </View>

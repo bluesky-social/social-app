@@ -1,6 +1,5 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
@@ -9,7 +8,6 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
-import {profilesQueryKey} from '#/state/queries/profile'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -17,16 +15,20 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {INTERESTS as INTEREST_OPTIONS} from '#/screens/Onboarding/StepInterests/data'
+import {
+  INTERESTS as INTEREST_OPTIONS,
+  InterestItem,
+} from '#/screens/Onboarding/StepInterests/data'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 
 export function StepInterests() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const query = useQueryClient()
   const {state, dispatch} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
-  const [interests, setInterests] = React.useState<string[]>([])
+  const [interests, setInterests] = React.useState<string[]>(
+    state.interestsStepResults.interests.map(i => i.name),
+  )
 
   const saveInterests = React.useCallback(async () => {
     setSaving(true)
@@ -36,7 +38,10 @@ export function StepInterests() {
         data: {accounts, feeds},
       } = {
         data: {
-          accounts: ['jay.bsky.team', 'bsky.app'],
+          accounts: [
+            'did:plc:oky5czdrnfjpqslsw2a5iclo',
+            'did:plc:z72i7hdynmk6r22z27h6tvur',
+          ],
           feeds: [
             'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science',
             'at://did:plc:y7crv2yh74s7qhmtx3mvbgv5/app.bsky.feed.generator/art-new',
@@ -44,30 +49,26 @@ export function StepInterests() {
         },
       }
 
-      // wait max 2s for query to finish
-      await Promise.race([
-        await query.prefetchQuery({
-          queryKey: profilesQueryKey(accounts),
-        }),
-        await new Promise(y => setTimeout(y, 2000)),
-      ])
+      // TODO save interests, get response
 
       // done
       setSaving(false)
       dispatch({
         type: 'setInterestsStepResults',
-        interests: interests.map(i => {
-          return INTEREST_OPTIONS.find(o => o.name === i)!.title
-        }),
-        suggestedAccountHandles: accounts,
-        suggestedFeedUris: feeds,
+        interests: interests
+          .map(i => {
+            return INTEREST_OPTIONS.find(o => o.name === i)
+          })
+          .filter(Boolean) as InterestItem[],
+        accountDids: accounts,
+        feedUris: feeds,
       })
       dispatch({type: 'next'})
     } catch (e: any) {
       logger.info(`onboading: error saving interests`)
       logger.error(e)
     }
-  }, [interests, setSaving, dispatch, query])
+  }, [interests, setSaving, dispatch])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

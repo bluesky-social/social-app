@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {logger} from '#/logger'
+import {InterestItem} from '#/screens/Onboarding/StepInterests/data'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -15,11 +16,19 @@ export type OnboardingState = {
     | 'finished'
   activeStepIndex: number
 
-  // result of interest step
   interestsStepResults: {
-    interests: string[]
-    suggestedAccountHandles: string[]
-    suggestedFeedUris: string[]
+    interests: InterestItem[]
+    accountDids: string[]
+    feedUris: string[]
+  }
+  suggestedAccountsStepResults: {
+    accountDids: string[]
+  }
+  algoFeedsStepResults: {
+    feedUris: string[]
+  }
+  topicalFeedsStepResults: {
+    feedUris: string[]
   }
 }
 
@@ -35,21 +44,42 @@ export type OnboardingAction =
     }
   | {
       type: 'setInterestsStepResults'
-      interests: string[]
-      suggestedAccountHandles: string[]
-      suggestedFeedUris: string[]
+      interests: InterestItem[]
+      accountDids: string[]
+      feedUris: string[]
+    }
+  | {
+      type: 'setSuggestedAccountsStepResults'
+      accountDids: string[]
+    }
+  | {
+      type: 'setAlgoFeedsStepResults'
+      feedUris: string[]
+    }
+  | {
+      type: 'setTopicalFeedsStepResults'
+      feedUris: string[]
     }
 
 export const initialState: OnboardingState = {
   hasPrev: false,
-  totalSteps: 6,
+  totalSteps: 7,
   activeStep: 'interests',
   activeStepIndex: 1,
 
   interestsStepResults: {
     interests: [],
-    suggestedAccountHandles: [],
-    suggestedFeedUris: [],
+    accountDids: [],
+    feedUris: [],
+  },
+  suggestedAccountsStepResults: {
+    accountDids: [],
+  },
+  algoFeedsStepResults: {
+    feedUris: [],
+  },
+  topicalFeedsStepResults: {
+    feedUris: [],
   },
 }
 
@@ -119,8 +149,26 @@ export function reducer(
     case 'setInterestsStepResults': {
       next.interestsStepResults = {
         interests: a.interests,
-        suggestedAccountHandles: a.suggestedAccountHandles,
-        suggestedFeedUris: a.suggestedFeedUris,
+        accountDids: a.accountDids,
+        feedUris: a.feedUris,
+      }
+      break
+    }
+    case 'setSuggestedAccountsStepResults': {
+      next.suggestedAccountsStepResults = {
+        accountDids: a.accountDids,
+      }
+      break
+    }
+    case 'setAlgoFeedsStepResults': {
+      next.algoFeedsStepResults = {
+        feedUris: a.feedUris,
+      }
+      break
+    }
+    case 'setTopicalFeedsStepResults': {
+      next.topicalFeedsStepResults = {
+        feedUris: a.feedUris,
       }
       break
     }

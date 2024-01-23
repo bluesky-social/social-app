@@ -53,21 +53,21 @@ export function StepSuggestedAccounts() {
   const t = useTheme()
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
-  const {isLoading, isError, data} = useProfilesQuery({
-    handles: state.interestsStepResults.suggestedAccountHandles,
+  const {isLoading, isError, data, error} = useProfilesQuery({
+    handles: state.interestsStepResults.accountDids,
   })
   const [dids, setDids] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
 
   const interestsText = React.useMemo(() => {
-    const i = state.interestsStepResults.interests
+    const i = state.interestsStepResults.interests.map(i => i.title)
     return i.join(', ')
   }, [state.interestsStepResults.interests])
 
   const handleBulkFollow = React.useCallback(async () => {
     setSaving(true)
-    console.log('saving', dids)
     await new Promise(y => setTimeout(y, 1000))
+    dispatch({type: 'setSuggestedAccountsStepResults', accountDids: dids})
     setSaving(false)
     dispatch({type: 'next'})
   }, [dids, setSaving, dispatch])
@@ -94,7 +94,7 @@ export function StepSuggestedAccounts() {
         {isLoading ? (
           <Loader size="xl" />
         ) : isError || !data ? (
-          <Text>Error</Text>
+          <Text>{error?.toString()}</Text>
         ) : (
           <Inner profiles={data.profiles} onSelect={setDids} />
         )}
