@@ -59,7 +59,6 @@ export function H1({style, ...rest}: TextProps) {
       {...attr}
       {...rest}
       style={normalizeTextStyles([
-        {lineHeight: atoms.text_5xl.fontSize},
         atoms.text_5xl,
         atoms.font_bold,
         t.atoms.text,
@@ -81,7 +80,6 @@ export function H2({style, ...rest}: TextProps) {
       {...attr}
       {...rest}
       style={normalizeTextStyles([
-        {lineHeight: atoms.text_4xl.fontSize},
         atoms.text_4xl,
         atoms.font_bold,
         t.atoms.text,
@@ -103,7 +101,6 @@ export function H3({style, ...rest}: TextProps) {
       {...attr}
       {...rest}
       style={normalizeTextStyles([
-        {lineHeight: atoms.text_3xl.fontSize},
         atoms.text_3xl,
         atoms.font_bold,
         t.atoms.text,
@@ -125,7 +122,6 @@ export function H4({style, ...rest}: TextProps) {
       {...attr}
       {...rest}
       style={normalizeTextStyles([
-        {lineHeight: atoms.text_2xl.fontSize},
         atoms.text_2xl,
         atoms.font_bold,
         t.atoms.text,
@@ -147,7 +143,6 @@ export function H5({style, ...rest}: TextProps) {
       {...attr}
       {...rest}
       style={normalizeTextStyles([
-        {lineHeight: atoms.text_xl.fontSize},
         atoms.text_xl,
         atoms.font_bold,
         t.atoms.text,
@@ -169,7 +164,6 @@ export function H6({style, ...rest}: TextProps) {
       {...attr}
       {...rest}
       style={normalizeTextStyles([
-        {lineHeight: atoms.text_lg.fontSize},
         atoms.text_lg,
         atoms.font_bold,
         t.atoms.text,
