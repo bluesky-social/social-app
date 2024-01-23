@@ -2,6 +2,8 @@ import React from 'react'
 import {View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {Image} from 'expo-image'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 import {useTheme, atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -159,6 +161,7 @@ function PrimaryFeedCardInner({
 }
 
 export function PrimaryFeedCard({config}: {config: FeedConfig}) {
+  const {_} = useLingui()
   const {data: feed} = useFeedSourceInfoQuery({uri: config.uri})
 
   return !feed ? (
@@ -168,7 +171,7 @@ export function PrimaryFeedCard({config}: {config: FeedConfig}) {
   ) : (
     <Toggle.Item
       name={feed.uri}
-      label={`Subscribe to the ${feed.displayName} feed`}>
+      label={_(msg`Subscribe to the ${feed.displayName} feed`)}>
       <PrimaryFeedCardInner config={config} feed={feed} />
     </Toggle.Item>
   )
@@ -296,6 +299,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
 }
 
 export function FeedCard({config}: {config: FeedConfig}) {
+  const {_} = useLingui()
   const {data: feed} = useFeedSourceInfoQuery({uri: config.uri})
 
   return !feed ? (
@@ -305,7 +309,7 @@ export function FeedCard({config}: {config: FeedConfig}) {
   ) : (
     <Toggle.Item
       name={feed.uri}
-      label={`Subscribe to the ${feed.displayName} feed`}>
+      label={_(msg`Subscribe to the ${feed.displayName} feed`)}>
       <FeedCardInner config={config} feed={feed} />
     </Toggle.Item>
   )

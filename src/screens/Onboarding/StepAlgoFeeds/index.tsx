@@ -1,13 +1,16 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, tokens, useBreakpoints} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {Divider} from '#/components/Divider'
 import {Loader} from '#/components/Loader'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -55,6 +58,8 @@ const SECONDARY_FEEDS: FeedConfig[] = [
 ]
 
 export function StepAlgoFeeds() {
+  const {_} = useLingui()
+  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [primaryFeedUris, setPrimaryFeedUris] = React.useState<string[]>(
@@ -77,20 +82,44 @@ export function StepAlgoFeeds() {
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <Title>Choose your algorithmic feeds</Title>
+      <View
+        style={[
+          a.p_lg,
+          a.mb_3xl,
+          a.rounded_full,
+          {
+            backgroundColor:
+              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
+          },
+        ]}>
+        <ListSparkle size="xl" fill={t.palette.primary_500} />
+      </View>
+
+      <Title>
+        <Trans>Choose your algorithmic feeds</Trans>
+      </Title>
+      <Description style={[a.pb_md]}>
+        <Trans>
+          Feeds are created by users and can give you entirely new experiences.
+          At Bluesky, you get to choose your algorithm.
+        </Trans>
+      </Description>
       <Description>
-        Feeds are created by users and can give you entirely new experiences.
+        <Trans>
+          We recommend selecting one primary algorithmic feed and as many
+          secondary algorithmic feeds as you like.
+        </Trans>
       </Description>
 
-      <Text style={[a.font_bold, a.pt_2xl, a.pb_sm]}>
-        Select at least one primary algorithmic feed:
+      <Text style={[a.font_bold, a.pt_3xl, a.pb_sm, t.atoms.text_contrast_400]}>
+        <Trans>Primary algorithmic feeds</Trans>
       </Text>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group
           values={primaryFeedUris}
           onChange={setPrimaryFeedUris}
-          label="Select your primary algorithmic feeds">
+          label={_(msg`Select your primary algorithmic feeds`)}>
           {PRIMARY_FEEDS.map(config => (
             <PrimaryFeedCard key={config.uri} config={config} />
           ))}
@@ -99,15 +128,15 @@ export function StepAlgoFeeds() {
 
       <Divider />
 
-      <Text style={[a.font_bold, a.pt_2xl, a.pb_sm]}>
-        And select as many secondary algorithmic feeds as you like:
+      <Text style={[a.font_bold, a.pt_3xl, a.pb_sm, t.atoms.text_contrast_400]}>
+        <Trans>Secondary algorithmic feeds</Trans>
       </Text>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group
           values={secondaryFeedUris}
           onChange={setSeconaryFeedUris}
-          label="Select your secondary algorithmic feeds">
+          label={_(msg`Select your secondary algorithmic feeds`)}>
           {SECONDARY_FEEDS.map(config => (
             <FeedCard key={config.uri} config={config} />
           ))}
@@ -121,7 +150,7 @@ export function StepAlgoFeeds() {
           variant="gradient"
           color="gradient_sky"
           size="large"
-          label="Continue setting up your account"
+          label={_(msg`Continue to the next step`)}
           onPress={saveFeeds}>
           <ButtonText>Continue</ButtonText>
           <ButtonIcon icon={saving ? Loader : ChevronRight} />
