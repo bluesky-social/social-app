@@ -52,6 +52,8 @@ export function Storybook() {
             </Button>
           </View>
 
+          <Typography />
+
           <ThemeProvider theme="light">
             <Theming />
           </ThemeProvider>
@@ -62,7 +64,6 @@ export function Storybook() {
             <Theming />
           </ThemeProvider>
 
-          <Typography />
           <Spacing />
           <Shadows />
           <Buttons />
