@@ -40,7 +40,7 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {logger} from '#/logger'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
@@ -400,6 +400,7 @@ function PostThreadLoaded({
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      removeClippedSubviews={isAndroid ? false : undefined}
     />
   )
 }
