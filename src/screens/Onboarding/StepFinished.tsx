@@ -7,6 +7,8 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
+import {usePinFeedMutation} from '#/state/queries/preferences'
+import {useProfileFollowMutation} from '#/state/queries/profile'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -21,17 +23,48 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
+  const {mutateAsync: pinFeed} = usePinFeedMutation()
+  const {mutateAsync: follow} = useProfileFollowMutation()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
-    console.log(state)
-    await new Promise(y => setTimeout(y, 1000))
+    const {
+      interestsStepResults,
+      suggestedAccountsStepResults,
+      algoFeedsStepResults,
+      topicalFeedsStepResults,
+    } = state
+    const {selectedInterests} = interestsStepResults
+
+    await Promise.all([
+      () => {
+        console.log('selectedInterests', selectedInterests)
+      },
+      // parallel
+      ...suggestedAccountsStepResults.accountDids.map(did =>
+        follow({did}).catch(() => {}),
+      ),
+      // serial
+      new Promise<void>(async y => {
+        for (const uri of algoFeedsStepResults.feedUris) {
+          await pinFeed({uri}).catch(() => {})
+        }
+        y()
+      }),
+      // serial
+      new Promise<void>(async y => {
+        for (const uri of topicalFeedsStepResults.feedUris) {
+          await pinFeed({uri}).catch(() => {})
+        }
+        y()
+      }),
+    ])
 
     setSaving(false)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
-  }, [state, dispatch, onboardDispatch, setSaving])
+  }, [state, dispatch, onboardDispatch, setSaving, follow, pinFeed])
 
   return (
     // Hack
