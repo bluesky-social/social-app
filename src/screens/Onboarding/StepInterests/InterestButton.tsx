@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, ViewStyle, TextStyle} from 'react-native'
 
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, native} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 
@@ -69,6 +69,7 @@ export function InterestButton({interest}: {interest: string}) {
             color: t.palette.contrast_900,
           },
           a.font_bold,
+          native({paddingTop: 2}),
           ctx.selected ? styles.textSelected : {},
         ]}>
         {INTEREST_TO_DISPLAY_NAME[interest]}

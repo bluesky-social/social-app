@@ -43,6 +43,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
     }
   }, [state])
 
+  const paddingTop = gtMobile ? a.py_5xl : a.py_lg
+
   return (
     <View
       aria-modal
@@ -76,7 +78,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             a.z_20,
             a.px_xl,
             {
-              top: a.py_5xl.paddingTop + insets.top,
+              top: paddingTop.paddingTop + insets.top,
             },
           ]}>
           <View style={[a.w_full, a.align_start, {maxWidth: COL_WIDTH}]}>
@@ -100,10 +102,9 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}>
         <View
-          aria-modal
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
-            <View style={[a.w_full, a.align_center, a.pt_5xl]}>
+            <View style={[a.w_full, a.align_center, paddingTop]}>
               <View
                 style={[
                   a.flex_row,

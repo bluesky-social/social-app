@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {logger} from '#/logger'
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
@@ -62,13 +62,12 @@ export function StepInterests() {
               t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
           },
         ]}>
-        <At size="xl" fill={t.palette.primary_500} />
+        <Hashtag size="xl" fill={t.palette.primary_500} />
       </View>
 
       <Title>What are your interests?</Title>
       <Description>
-        We'll use this to help customize your experience. Select at least 3
-        interests.
+        We'll use this to help customize your experience.
       </Description>
 
       <View style={[a.pt_2xl]}>
