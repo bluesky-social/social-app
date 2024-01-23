@@ -21,9 +21,9 @@
   {% else %}
   <meta property="og:title" content="@{{ postView.Author.Handle }}">
   {% endif -%}
-  {%- if postView.Record.Val.Text %}
-  <meta name="description" content="{{ postView.Record.Val.Text }}">
-  <meta property="og:description" content="{{ postView.Record.Val.Text }}">
+  {%- if postText %}
+  <meta name="description" content="{{ postText }}">
+  <meta property="og:description" content="{{ postText }}">
   {% endif -%}
   {%- if imgThumbUrls %}
   {% for imgThumbUrl in imgThumbUrls %}
@@ -47,7 +47,7 @@
   <p id="bsky_display_name">{{ postView.Author.DisplayName }}</p>
   <p id="bsky_handle">{{ postView.Author.Handle }}</p>
   <p id="bsky_did">{{ postView.Author.Did }}</p>
-  <p id="bsky_post_text">{{ postView.Record.Val.Text }}</p>
+  <p id="bsky_post_text">{{ postText }}</p>
   <p id="bsky_post_indexedat">{{ postView.IndexedAt }}</p>
 </div>
 {% endif -%}
