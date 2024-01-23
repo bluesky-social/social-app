@@ -30,6 +30,9 @@ export type OnboardingAction =
       type: 'prev'
     }
   | {
+      type: 'finish'
+    }
+  | {
       type: 'setInterestsStepResults'
       interests: string[]
       suggestedAccountHandles: string[]
@@ -61,7 +64,7 @@ export function reducer(
   s: OnboardingState,
   a: OnboardingAction,
 ): OnboardingState {
-  const next = s
+  let next = s
 
   switch (a.type) {
     case 'next': {
@@ -100,6 +103,10 @@ export function reducer(
         next.activeStep = 'topicalFeeds'
         next.activeStepIndex = 5
       }
+      break
+    }
+    case 'finish': {
+      next = initialState
       break
     }
     case 'setInterestsStepResults': {

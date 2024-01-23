@@ -3,7 +3,7 @@ import {View} from 'react-native'
 
 import {usePinFeedMutation} from '#/state/queries/preferences'
 
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, tokens, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
@@ -57,6 +57,7 @@ const SECONDARY_FEEDS: FeedConfig[] = [
 ]
 
 export function StepAlgoFeeds() {
+  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [primaryFeedUris, setPrimaryFeedUris] = React.useState<string[]>(
     PRIMARY_FEEDS.map(f => (f.default ? f.uri : '')).filter(Boolean),
@@ -83,7 +84,7 @@ export function StepAlgoFeeds() {
   }, [primaryFeedUris, secondaryFeedUris, dispatch, pinFeed])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <Title>Choose your algorithmic feeds</Title>
       <Description>
         Feeds are created by users and can give you entirely new experiences.

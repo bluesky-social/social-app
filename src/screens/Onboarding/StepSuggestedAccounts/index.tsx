@@ -73,7 +73,7 @@ export function StepSuggestedAccounts() {
   }, [dids, setSaving, dispatch])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <View
         style={[
           a.p_lg,

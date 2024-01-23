@@ -3,7 +3,7 @@ import {View} from 'react-native'
 
 import {usePinFeedMutation} from '#/state/queries/preferences'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
@@ -19,6 +19,7 @@ import {
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 
 export function StepTopicalFeeds() {
+  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
@@ -45,7 +46,7 @@ export function StepTopicalFeeds() {
   }, [selectedFeedUris, dispatch, pinFeed])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <Title>Feeds can be topic based as well!</Title>
       <Description>
         Here are some topical feeds based on your interests: {interestsText}

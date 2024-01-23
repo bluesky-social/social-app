@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -22,6 +22,7 @@ import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 
 export function StepInterests() {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const query = useQueryClient()
   const {state, dispatch} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
@@ -69,7 +70,7 @@ export function StepInterests() {
   }, [interests, setSaving, dispatch, query])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <View
         style={[
           a.p_lg,
