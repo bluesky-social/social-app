@@ -51,6 +51,7 @@ import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 function Loader() {
   const pal = usePalette('default')
@@ -464,11 +465,28 @@ export function SearchScreen(
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [showAutocompleteResults, setShowAutocompleteResults] =
     React.useState(false)
+  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+
+  React.useEffect(() => {
+    const loadSearchHistory = async () => {
+      try {
+        const history = await AsyncStorage.getItem('searchHistory')
+        if (history !== null) {
+          setSearchHistory(JSON.parse(history))
+        }
+      } catch (e: any) {
+        logger.error('Failed to load search history', e)
+      }
+    }
+
+    loadSearchHistory()
+  }, [])
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
+
   const onPressCancelSearch = React.useCallback(() => {
     scrollToTopWeb()
     textInput.current?.blur()
@@ -477,22 +495,26 @@ export function SearchScreen(
     if (searchDebounceTimeout.current)
       clearTimeout(searchDebounceTimeout.current)
   }, [textInput])
+
   const onPressClearQuery = React.useCallback(() => {
     scrollToTopWeb()
     setQuery('')
     setShowAutocompleteResults(false)
   }, [setQuery])
+
   const onChangeText = React.useCallback(
     async (text: string) => {
       scrollToTopWeb()
+
       setQuery(text)
 
       if (text.length > 0) {
         setIsFetching(true)
         setShowAutocompleteResults(true)
 
-        if (searchDebounceTimeout.current)
+        if (searchDebounceTimeout.current) {
           clearTimeout(searchDebounceTimeout.current)
+        }
 
         searchDebounceTimeout.current = setTimeout(async () => {
           const results = await search({query: text, limit: 30})
@@ -503,8 +525,9 @@ export function SearchScreen(
           }
         }, 300)
       } else {
-        if (searchDebounceTimeout.current)
+        if (searchDebounceTimeout.current) {
           clearTimeout(searchDebounceTimeout.current)
+        }
         setSearchResults([])
         setIsFetching(false)
         setShowAutocompleteResults(false)
@@ -512,10 +535,36 @@ export function SearchScreen(
     },
     [setQuery, search, setSearchResults],
   )
+
+  const updateSearchHistory = React.useCallback(
+    async (newQuery: string) => {
+      newQuery = newQuery.trim()
+      if (newQuery && !searchHistory.includes(newQuery)) {
+        let newHistory = [newQuery, ...searchHistory]
+
+        if (newHistory.length > 5) {
+          newHistory = newHistory.slice(0, 5)
+        }
+
+        setSearchHistory(newHistory)
+        try {
+          await AsyncStorage.setItem(
+            'searchHistory',
+            JSON.stringify(newHistory),
+          )
+        } catch (e: any) {
+          logger.error('Failed to save search history', e)
+        }
+      }
+    },
+    [searchHistory, setSearchHistory],
+  )
+
   const onSubmit = React.useCallback(() => {
     scrollToTopWeb()
     setShowAutocompleteResults(false)
-  }, [setShowAutocompleteResults])
+    updateSearchHistory(query)
+  }, [query, setShowAutocompleteResults, updateSearchHistory])
 
   const onSoftReset = React.useCallback(() => {
     scrollToTopWeb()
@@ -533,6 +582,21 @@ export function SearchScreen(
       return listenSoftReset(onSoftReset)
     }, [onSoftReset, setMinimalShellMode]),
   )
+
+  const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
+    setQuery(item)
+    onSubmit()
+  }
+
+  const handleRemoveHistoryItem = (itemToRemove: string) => {
+    const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
+    setSearchHistory(updatedHistory)
+    AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
+      e => {
+        logger.error('Failed to update search history', e)
+      },
+    )
+  }
 
   return (
     <View style={isWeb ? null : {flex: 1}}>
@@ -581,7 +645,12 @@ export function SearchScreen(
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
-            onBlur={() => setInputIsFocused(false)}
+            onBlur={() => {
+              // HACK
+              // give 100ms to not stop click handlers in the search history
+              // -prf
+              setTimeout(() => setInputIsFocused(false), 100)
+            }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             autoFocus={false}
@@ -623,9 +692,9 @@ export function SearchScreen(
         ) : undefined}
       </CenteredView>
 
-      {showAutocompleteResults && moderationOpts ? (
+      {showAutocompleteResults ? (
         <>
-          {isFetching ? (
+          {isFetching || !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
@@ -664,6 +733,42 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
+      ) : !query && inputIsFocused ? (
+        <CenteredView
+          sideBorders={isTabletOrDesktop}
+          // @ts-ignore web only -prf
+          style={{
+            height: isWeb ? '100vh' : undefined,
+          }}>
+          <View style={styles.searchHistoryContainer}>
+            {searchHistory.length > 0 && (
+              <View style={styles.searchHistoryContent}>
+                <Text style={[pal.text, styles.searchHistoryTitle]}>
+                  Recent Searches
+                </Text>
+                {searchHistory.map((historyItem, index) => (
+                  <View key={index} style={styles.historyItemContainer}>
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={() => handleHistoryItemClick(historyItem)}
+                      style={styles.historyItem}>
+                      <Text style={pal.text}>{historyItem}</Text>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={() => handleRemoveHistoryItem(historyItem)}>
+                      <FontAwesomeIcon
+                        icon="xmark"
+                        size={16}
+                        style={pal.textLight as FontAwesomeIconStyle}
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        </CenteredView>
       ) : (
         <SearchScreenInner query={query} />
       )}
@@ -724,5 +829,25 @@ const styles = StyleSheet.create({
     position: isWeb ? 'sticky' : '',
     top: isWeb ? HEADER_HEIGHT : 0,
     zIndex: 1,
+  },
+  searchHistoryContainer: {
+    width: '100%',
+    paddingHorizontal: 12,
+  },
+  searchHistoryContent: {
+    padding: 10,
+    borderRadius: 8,
+  },
+  searchHistoryTitle: {
+    fontWeight: 'bold',
+  },
+  historyItem: {
+    paddingVertical: 8,
+  },
+  historyItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
   },
 })
