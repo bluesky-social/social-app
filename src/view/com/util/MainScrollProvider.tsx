@@ -1,9 +1,10 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useEffect} from 'react'
+import EventEmitter from 'eventemitter3'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {NativeScrollEvent} from 'react-native'
 import {useSetMinimalShellMode, useMinimalShellMode} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {isNative} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 import {useSharedValue, interpolate} from 'react-native-reanimated'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
@@ -19,6 +20,15 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = useSetMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
+
+  useEffect(() => {
+    if (isWeb) {
+      return listenToForcedWindowScroll(() => {
+        startDragOffset.value = null
+        startMode.value = null
+      })
+    }
+  })
 
   const onBeginDrag = useCallback(
     (e: NativeScrollEvent) => {
@@ -99,4 +109,27 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       {children}
     </ScrollProvider>
   )
+}
+
+const emitter = new EventEmitter()
+
+if (isWeb) {
+  const originalScroll = window.scroll
+  window.scroll = function () {
+    emitter.emit('forced-scroll')
+    return originalScroll.apply(this, arguments as any)
+  }
+
+  const originalScrollTo = window.scrollTo
+  window.scrollTo = function () {
+    emitter.emit('forced-scroll')
+    return originalScrollTo.apply(this, arguments as any)
+  }
+}
+
+function listenToForcedWindowScroll(listener: () => void) {
+  emitter.addListener('forced-scroll', listener)
+  return () => {
+    emitter.removeListener('forced-scroll', listener)
+  }
 }

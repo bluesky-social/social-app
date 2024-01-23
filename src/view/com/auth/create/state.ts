@@ -14,7 +14,7 @@ import {cleanError} from '#/lib/strings/errors'
 import {DispatchContext as OnboardingDispatchContext} from '#/state/shell/onboarding'
 import {ApiContext as SessionApiContext} from '#/state/session'
 import {DEFAULT_SERVICE} from '#/lib/constants'
-import parsePhoneNumber from 'libphonenumber-js'
+import parsePhoneNumber, {CountryCode} from 'libphonenumber-js'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
@@ -29,6 +29,7 @@ export type CreateAccountAction =
   | {type: 'set-invite-code'; value: string}
   | {type: 'set-email'; value: string}
   | {type: 'set-password'; value: string}
+  | {type: 'set-phone-country'; value: CountryCode}
   | {type: 'set-verification-phone'; value: string}
   | {type: 'set-verification-code'; value: string}
   | {type: 'set-has-requested-verification-code'; value: boolean}
@@ -48,6 +49,7 @@ export interface CreateAccountState {
   inviteCode: string
   email: string
   password: string
+  phoneCountry: CountryCode
   verificationPhone: string
   verificationCode: string
   hasRequestedVerificationCode: boolean
@@ -75,6 +77,7 @@ export function useCreateAccount() {
     inviteCode: '',
     email: '',
     password: '',
+    phoneCountry: 'US',
     verificationPhone: '',
     verificationCode: '',
     hasRequestedVerificationCode: false,
@@ -97,7 +100,10 @@ export async function requestVerificationCode({
   uiDispatch: CreateAccountDispatch
   _: I18nContext['_']
 }) {
-  const phoneNumber = parsePhoneNumber(uiState.verificationPhone, 'US')?.number
+  const phoneNumber = parsePhoneNumber(
+    uiState.verificationPhone,
+    uiState.phoneCountry,
+  )?.number
   if (!phoneNumber) {
     return
   }
@@ -260,6 +266,9 @@ function createReducer({_}: {_: I18nContext['_']}) {
       }
       case 'set-password': {
         return compute({...state, password: action.value})
+      }
+      case 'set-phone-country': {
+        return compute({...state, phoneCountry: action.value})
       }
       case 'set-verification-phone': {
         return compute({
