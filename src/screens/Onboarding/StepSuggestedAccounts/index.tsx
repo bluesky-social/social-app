@@ -54,10 +54,15 @@ export function StepSuggestedAccounts() {
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const {isLoading, isError, data} = useProfilesQuery({
-    handles: state.suggestedAccountHandles,
+    handles: state.interestsStepResults.suggestedAccountHandles,
   })
   const [dids, setDids] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
+
+  const interestsText = React.useMemo(() => {
+    const i = state.interestsStepResults.interests
+    return i.join(', ')
+  }, [state.interestsStepResults.interests])
 
   const handleBulkFollow = React.useCallback(async () => {
     setSaving(true)
@@ -68,7 +73,7 @@ export function StepSuggestedAccounts() {
   }, [dids, setSaving, dispatch])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <View
         style={[
           a.p_lg,
@@ -83,7 +88,7 @@ export function StepSuggestedAccounts() {
       </View>
 
       <Title>Here are some accounts for your to follow:</Title>
-      <Description>Based on your interest in Pets and Books.</Description>
+      <Description>Based on your interests: {interestsText}</Description>
 
       <View style={[a.w_full, a.pt_xl]}>
         {isLoading ? (

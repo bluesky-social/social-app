@@ -14,7 +14,13 @@ export type OnboardingState = {
     | 'moderation'
     | 'finished'
   activeStepIndex: number
-  suggestedAccountHandles: string[]
+
+  // result of interest step
+  interestsStepResults: {
+    interests: string[]
+    suggestedAccountHandles: string[]
+    suggestedFeedUris: string[]
+  }
 }
 
 export type OnboardingAction =
@@ -25,8 +31,13 @@ export type OnboardingAction =
       type: 'prev'
     }
   | {
-      type: 'setSuggestedAccountHandles'
+      type: 'finish'
+    }
+  | {
+      type: 'setInterestsStepResults'
+      interests: string[]
       suggestedAccountHandles: string[]
+      suggestedFeedUris: string[]
     }
 
 export const initialState: OnboardingState = {
@@ -35,8 +46,11 @@ export const initialState: OnboardingState = {
   activeStep: 'interests',
   activeStepIndex: 1,
 
-  // result of interests step
-  suggestedAccountHandles: [],
+  interestsStepResults: {
+    interests: [],
+    suggestedAccountHandles: [],
+    suggestedFeedUris: [],
+  },
 }
 
 export const Context = React.createContext<{
@@ -51,7 +65,7 @@ export function reducer(
   s: OnboardingState,
   a: OnboardingAction,
 ): OnboardingState {
-  const next = s
+  let next = s
 
   switch (a.type) {
     case 'next': {
@@ -98,8 +112,16 @@ export function reducer(
       }
       break
     }
-    case 'setSuggestedAccountHandles': {
-      next.suggestedAccountHandles = a.suggestedAccountHandles
+    case 'finish': {
+      next = initialState
+      break
+    }
+    case 'setInterestsStepResults': {
+      next.interestsStepResults = {
+        interests: a.interests,
+        suggestedAccountHandles: a.suggestedAccountHandles,
+        suggestedFeedUris: a.suggestedFeedUris,
+      }
       break
     }
   }

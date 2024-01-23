@@ -706,7 +706,7 @@ function ExpandedPostDetails({
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
-          <Text style={[pal.textLight, s.ml5, s.mr5]}>•</Text>
+          <Text style={pal.textLight}> &middot; </Text>
           <Link href={translatorUrl} title={_(msg`Translate`)}>
             <Text style={pal.link}>
               <Trans>Translate</Trans>

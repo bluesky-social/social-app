@@ -6,6 +6,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {clamp} from 'lib/numbers'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {isWeb} from '#/platform/detection'
 import Animated from 'react-native-reanimated'
 
 export interface FABProps
@@ -64,7 +65,8 @@ const styles = StyleSheet.create({
     borderRadius: 35,
   },
   outer: {
-    position: 'absolute',
+    // @ts-ignore web-only
+    position: isWeb ? 'fixed' : 'absolute',
     zIndex: 1,
   },
   inner: {

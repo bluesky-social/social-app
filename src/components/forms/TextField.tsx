@@ -208,7 +208,7 @@ export function createInput(Component: typeof TextInput) {
               paddingBottom: 2,
             }),
             {
-              lineHeight: a.text_md.lineHeight * 1.1875,
+              lineHeight: a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 60 : undefined,
             },

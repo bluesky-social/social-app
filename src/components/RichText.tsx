@@ -1,9 +1,9 @@
 import React from 'react'
 import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
 
-import {atoms as a, TextStyleProp, flatten} from '#/alf'
-import {Link} from '#/components/Link'
-import {Text, leading} from '#/components/Typography'
+import {atoms as a, TextStyleProp} from '#/alf'
+import {InlineLink} from '#/components/Link'
+import {Text} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {getAgent} from '#/state/session'
 
@@ -12,22 +12,13 @@ const WORD_WRAP = {wordWrap: 1}
 export function RichText({
   testID,
   value,
-  style: styleProp,
+  style,
   numberOfLines,
 }: TextStyleProp & {
   value: RichTextAPI | string
   testID?: string
   numberOfLines?: number
 }) {
-  const styles = React.useMemo(() => {
-    const s = flatten(styleProp)
-    const lineHeight = leading(s.fontSize ? s : a.text_md, a.leading_normal)
-
-    return {
-      ...s,
-      lineHeight,
-    }
-  }, [styleProp])
   const detected = React.useRef(false)
   const [richText, setRichText] = React.useState<RichTextAPI>(
     value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
@@ -68,7 +59,7 @@ export function RichText({
     return (
       <Text
         testID={testID}
-        style={styles}
+        style={[a.leading_normal, style]}
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
@@ -85,26 +76,26 @@ export function RichText({
     const mention = segment.mention
     if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
       els.push(
-        <Link
+        <InlineLink
           key={key}
           to={`/profile/${mention.did}`}
-          style={[styles, {pointerEvents: 'auto'}]}
+          style={[a.leading_normal, style, {pointerEvents: 'auto'}]}
           // @ts-ignore TODO
           dataSet={WORD_WRAP}>
           {segment.text}
-        </Link>,
+        </InlineLink>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
       els.push(
-        <Link
+        <InlineLink
           key={key}
           to={link.uri}
-          style={[styles, {pointerEvents: 'auto'}]}
+          style={[a.leading_normal, style, {pointerEvents: 'auto'}]}
           // @ts-ignore TODO
           dataSet={WORD_WRAP}
           warnOnMismatchingLabel>
           {toShortUrl(segment.text)}
-        </Link>,
+        </InlineLink>,
       )
     } else {
       els.push(segment.text)
@@ -115,7 +106,7 @@ export function RichText({
   return (
     <Text
       testID={testID}
-      style={styles}
+      style={[a.leading_normal, style]}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>

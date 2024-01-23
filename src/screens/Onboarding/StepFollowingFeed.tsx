@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {H5, Text} from '#/components/Typography'
@@ -20,6 +20,7 @@ import {
 } from 'state/queries/preferences'
 
 export function StepFollowingFeed() {
+  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
 
   const {data: preferences} = usePreferencesQuery()
@@ -38,7 +39,7 @@ export function StepFollowingFeed() {
 
   return (
     // Hack for now to move the image container up
-    <View style={[a.align_start, {marginTop: -80}]}>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <View style={[a.w_full, a.gap_sm, a.mb_xl]}>
         <HeaderListItem>Newest</HeaderListItem>
         <HeaderListItem />

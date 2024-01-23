@@ -33,6 +33,15 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
   const {state, dispatch} = React.useContext(Context)
+  const scrollview = React.useRef<ScrollView>(null)
+  const prevActiveStep = React.useRef<string>(state.activeStep)
+
+  React.useEffect(() => {
+    if (state.activeStep !== prevActiveStep.current) {
+      prevActiveStep.current = state.activeStep
+      scrollview.current?.scrollTo({y: 0, animated: false})
+    }
+  }, [state])
 
   return (
     <View style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
@@ -80,6 +89,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       )}
 
       <ScrollView
+        ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
         contentContainerStyle={{borderWidth: 0}}>
         <View
@@ -115,7 +125,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </View>
             </View>
 
-            <View style={[a.w_full, a.mb_5xl, {paddingTop: 120}]}>
+            <View style={[a.w_full, a.mb_5xl]}>
               {children}
 
               {isWeb && gtMobile && (
@@ -124,6 +134,8 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                 </View>
               )}
             </View>
+
+            <View style={{height: 200}} />
           </View>
         </View>
       </ScrollView>
@@ -169,9 +181,5 @@ export function Description({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
-  return (
-    <P style={[t.atoms.text_contrast_700, {maxWidth: 400}, flatten(style)]}>
-      {children}
-    </P>
-  )
+  return <P style={[t.atoms.text_contrast_700, flatten(style)]}>{children}</P>
 }

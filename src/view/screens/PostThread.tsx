@@ -25,6 +25,7 @@ import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {CenteredView} from '../com/util/Views'
 import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
+import {isWeb} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {
@@ -112,7 +113,8 @@ export function PostThreadScreen({route}: Props) {
 
 const styles = StyleSheet.create({
   prompt: {
-    position: 'absolute',
+    // @ts-ignore web-only
+    position: isWeb ? 'fixed' : 'absolute',
     left: 0,
     right: 0,
   },

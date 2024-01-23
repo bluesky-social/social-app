@@ -29,22 +29,13 @@ export const ExternalLinkEmbed = ({
   }, [link.uri, externalEmbedPrefs])
 
   return (
-    <View style={{flexDirection: 'column'}}>
+    <View style={styles.container}>
       {link.thumb && !embedPlayerParams ? (
-        <View
-          style={{
-            borderTopLeftRadius: 6,
-            borderTopRightRadius: 6,
-            width: '100%',
-            height: isMobile ? 200 : 300,
-            overflow: 'hidden',
-          }}>
-          <Image
-            style={styles.extImage}
-            source={{uri: link.thumb}}
-            accessibilityIgnoresInvertColors
-          />
-        </View>
+        <Image
+          style={{aspectRatio: 1.91}}
+          source={{uri: link.thumb}}
+          accessibilityIgnoresInvertColors
+        />
       ) : undefined}
       {(embedPlayerParams?.isGif && (
         <ExternalGifEmbed link={link} params={embedPlayerParams} />
@@ -52,12 +43,7 @@ export const ExternalLinkEmbed = ({
         (embedPlayerParams && (
           <ExternalPlayer link={link} params={embedPlayerParams} />
         ))}
-      <View
-        style={{
-          paddingHorizontal: isMobile ? 10 : 14,
-          paddingTop: 8,
-          paddingBottom: 10,
-        }}>
+      <View style={[styles.info, {paddingHorizontal: isMobile ? 10 : 14}]}>
         <Text
           type="sm"
           numberOfLines={1}
@@ -65,14 +51,14 @@ export const ExternalLinkEmbed = ({
           {toNiceDomain(link.uri)}
         </Text>
         {!embedPlayerParams?.isGif && (
-          <Text type="lg-bold" numberOfLines={4} style={[pal.text]}>
+          <Text type="lg-bold" numberOfLines={3} style={[pal.text]}>
             {link.title || link.uri}
           </Text>
         )}
         {link.description && !embedPlayerParams?.hideDetails ? (
           <Text
             type="md"
-            numberOfLines={4}
+            numberOfLines={link.thumb ? 2 : 4}
             style={[pal.text, styles.extDescription]}>
             {link.description}
           </Text>
@@ -83,8 +69,16 @@ export const ExternalLinkEmbed = ({
 }
 
 const styles = StyleSheet.create({
-  extImage: {
-    flex: 1,
+  container: {
+    flexDirection: 'column',
+    borderRadius: 6,
+    overflow: 'hidden',
+  },
+  info: {
+    width: '100%',
+    bottom: 0,
+    paddingTop: 8,
+    paddingBottom: 10,
   },
   extUri: {
     marginTop: 2,

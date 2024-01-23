@@ -14,6 +14,7 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {useSetDrawerOpen} from '#/state/shell'
+import {isWeb} from '#/platform/detection'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -47,7 +48,14 @@ export function SimpleViewHeader({
 
   const Container = isMobile ? View : CenteredView
   return (
-    <Container style={[styles.header, isMobile && styles.headerMobile, style]}>
+    <Container
+      style={[
+        styles.header,
+        isMobile && styles.headerMobile,
+        isWeb && styles.headerWeb,
+        pal.view,
+        style,
+      ]}>
       {showBackButton ? (
         <TouchableOpacity
           testID="viewHeaderDrawerBtn"
@@ -88,6 +96,12 @@ const styles = StyleSheet.create({
   headerMobile: {
     paddingHorizontal: 12,
     paddingVertical: 10,
+  },
+  headerWeb: {
+    // @ts-ignore web-only
+    position: 'sticky',
+    top: 0,
+    zIndex: 1,
   },
   backBtn: {
     width: 30,
