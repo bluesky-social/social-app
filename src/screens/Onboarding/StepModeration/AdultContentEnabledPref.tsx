@@ -4,10 +4,10 @@ import {
   usePreferencesSetAdultContentMutation,
 } from 'state/queries/preferences'
 import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 import React from 'react'
 import {isIOS, isNative} from 'platform/detection'
 import * as Toast from 'view/com/util/Toast'
-import {msg, Trans} from '@lingui/macro'
 import {logger} from '#/logger'
 import * as Prompt from '#/components/Prompt'
 import {View} from 'react-native'

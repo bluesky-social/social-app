@@ -12,7 +12,6 @@ import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
 import {StepModeration} from '#/screens/Onboarding/StepModeration'
 
-// TODO lock focus?
 export function Onboarding() {
   const [state, dispatch] = React.useReducer(reducer, {...initialState})
 

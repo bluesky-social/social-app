@@ -1,5 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
@@ -22,6 +24,7 @@ import {
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
 
 export function StepInterests() {
+  const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
@@ -34,9 +37,6 @@ export function StepInterests() {
     setSaving(true)
 
     try {
-      // TODO get response
-
-      // done
       setSaving(false)
       dispatch({
         type: 'setInterestsStepResults',
@@ -65,16 +65,18 @@ export function StepInterests() {
         <Hashtag size="xl" fill={t.palette.primary_500} />
       </View>
 
-      <Title>What are your interests?</Title>
+      <Title>
+        <Trans>What are your interests?</Trans>
+      </Title>
       <Description>
-        We'll use this to help customize your experience.
+        <Trans>We'll use this to help customize your experience.</Trans>
       </Description>
 
       <View style={[a.pt_2xl]}>
         <Toggle.Group
           values={interests}
           onChange={setInterests}
-          label="Select your interests">
+          label={_(msg`Select your interests from the options below`)}>
           <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
             {API_RESPONSE.interests.map(interest => (
               <Toggle.Item
@@ -91,11 +93,10 @@ export function StepInterests() {
       <OnboardingControls.Portal>
         <Button
           disabled={saving}
-          key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"
           size="large"
-          label="Continue setting up your account"
+          label={_(msg`Continue to next step`)}
           onPress={saveInterests}>
           <ButtonText>Continue</ButtonText>
           <ButtonIcon icon={saving ? Loader : ChevronRight} />

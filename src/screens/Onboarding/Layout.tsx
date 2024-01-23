@@ -1,6 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 import {IS_DEV} from '#/env'
 import {isWeb} from '#/platform/detection'
@@ -28,6 +30,7 @@ const COL_WIDTH = 500
 export const OnboardingControls = createPortalGroup()
 
 export function Layout({children}: React.PropsWithChildren<{}>) {
+  const {_} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
@@ -44,15 +47,18 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   }, [state])
 
   const paddingTop = gtMobile ? a.py_5xl : a.py_lg
+  const dialogLabel = _(msg`Set up your account`)
 
   return (
     <View
       aria-modal
       role="dialog"
       aria-role="dialog"
-      aria-label="Set up your account"
-      accessibilityLabel="Set up your account"
-      accessibilityHint="This onboarding flow will help you set up your account."
+      aria-label={dialogLabel}
+      accessibilityLabel={dialogLabel}
+      accessibilityHint={_(
+        msg`The following steps will help customize your Bluesky experience.`,
+      )}
       style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {IS_DEV && (
         <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
@@ -61,6 +67,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             color="negative"
             size="small"
             onPress={() => onboardDispatch({type: 'skip'})}
+            // DEV ONLY
             label="Clear onboarding state">
             Clear
           </Button>
@@ -88,7 +95,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               color="secondary"
               size="small"
               shape="round"
-              label="Go back"
+              label={_(msg`Go back to previous step`)}
               style={[a.absolute, t.atoms.shadow_sm]}
               onPress={() => dispatch({type: 'prev'})}>
               <ButtonIcon icon={ChevronLeft} />
