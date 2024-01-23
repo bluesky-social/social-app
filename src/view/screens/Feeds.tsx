@@ -348,8 +348,7 @@ export function FeedsScreen(_props: Props) {
     (focus: boolean) => {
       if (focus && searchBarIndex > -1) {
         if (isNative) {
-          // native implementation supports scrollToIndex
-          // which seems a bit more reliable than guessing scrollToOffset
+          // scrollToIndex scrolls the exact right amount, so use if available
           listRef.current?.scrollToIndex({
             index: searchBarIndex,
             animated: true,
