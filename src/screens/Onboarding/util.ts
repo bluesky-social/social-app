@@ -27,7 +27,7 @@ export function aggregateInterestItems(
   const results = Array.from(new Set(all))
 
   if (results.length < 10) {
-    results.concat(shuffle(fallbackItems))
+    results.push(...shuffle(fallbackItems))
   }
 
   return results.slice(0, 10)

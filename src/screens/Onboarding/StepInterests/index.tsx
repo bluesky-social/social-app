@@ -91,7 +91,7 @@ export function StepInterests() {
 
       <OnboardingControls.Portal>
         <Button
-          disabled={saving || interests.length < 3}
+          disabled={saving}
           key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"
