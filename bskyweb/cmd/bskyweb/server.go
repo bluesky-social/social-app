@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"slices"
 	"strings"
 	"syscall"
 	"time"
@@ -353,51 +352,14 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
-	data["postText"] = expandPostLinks(postView)
+	if postView.Record != nil {
+		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
+		if ok {
+			data["postText"] = ExpandPostText(postRecord)
+		}
+	}
 
 	return c.Render(http.StatusOK, "post.html", data)
-}
-
-// function to expand shortened links in rich text back to full urls, replacing shortened urls in
-// social card meta tags and the noscript output. this essentially reverses the effect
-// of shortenLinks() in src/lib/strings/rich-text-manip.ts
-func expandPostLinks(postView *appbsky.FeedDefs_PostView) string {
-	if postView.Record != nil {
-		rec := postView.Record.Val.(*appbsky.FeedPost)
-		postText := rec.Text
-		var charsAdded int64 = 0
-		// iterate over facets, check if they're link facets, and if found, grab the uri
-		for _, facet := range rec.Facets {
-			linkUri := ""
-			if slices.ContainsFunc(facet.Features, func(feat *appbsky.RichtextFacet_Features_Elem) bool {
-				if feat.RichtextFacet_Link != nil && feat.RichtextFacet_Link.LexiconTypeID == "app.bsky.richtext.facet#link" {
-					linkUri = feat.RichtextFacet_Link.Uri
-					// only expand uris that have been shortened (as opposed to those with non-uri anchor text)
-					if int64(len(postText)) >= facet.Index.ByteEnd+charsAdded &&
-						strings.HasSuffix(postText[facet.Index.ByteStart+charsAdded:facet.Index.ByteEnd+charsAdded], "...") &&
-						strings.Contains(linkUri, postText[facet.Index.ByteStart+charsAdded:(facet.Index.ByteEnd+charsAdded)-3]) {
-						return true
-					}
-				}
-				return false
-			}) {
-				// replace the shortened uri with the full length one from the facet using utf8 byte offsets
-				if int64(len(postText)) >= facet.Index.ByteEnd+charsAdded {
-					postText = postText[0:facet.Index.ByteStart+charsAdded] + linkUri + postText[facet.Index.ByteEnd+charsAdded:]
-					charsAdded += int64(len(linkUri)) - (facet.Index.ByteEnd - facet.Index.ByteStart)
-				}
-			}
-		}
-		// if the post has an embeded link and its url doesn't already appear in postText, append it to
-		// the end to avoid social cards with missing links
-		if postView.Embed != nil &&
-			postView.Embed.EmbedExternal_View != nil &&
-			!strings.Contains(postText, postView.Embed.EmbedExternal_View.External.Uri) {
-			postText = fmt.Sprintf("%s\n%s", postText, postView.Embed.EmbedExternal_View.External.Uri)
-		}
-		return postText
-	}
-	return ""
 }
 
 func (srv *Server) WebProfile(c echo.Context) error {
