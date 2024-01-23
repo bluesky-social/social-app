@@ -5,20 +5,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
-
-import {Context} from '#/screens/Onboarding/state'
-import {
-  Title,
-  Description,
-  OnboardingControls,
-} from '#/screens/Onboarding/Layout'
-import {
-  CONFIGURABLE_LABEL_GROUPS,
-  ConfigurableLabelGroup,
-  configurableLabelGroups,
-  usePreferencesQuery,
-  usePreferencesSetContentLabelMutation,
-} from 'state/queries/preferences'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {LabelPreference} from '@atproto/api'
 import {isNative} from 'platform/detection'
@@ -26,13 +12,27 @@ import {Trans} from '@lingui/macro'
 import {TextLink} from 'view/com/util/Link'
 import {Divider} from '#/components/Divider'
 
+import {Context} from '#/screens/Onboarding/state'
+import {
+  Title,
+  Description,
+  OnboardingControls,
+} from '#/screens/Onboarding/Layout'
+
+import {
+  CONFIGURABLE_LABEL_GROUPS,
+  ConfigurableLabelGroup,
+  configurableLabelGroups,
+  usePreferencesQuery,
+  usePreferencesSetContentLabelMutation,
+} from 'state/queries/preferences'
+
 export function StepModeration() {
   const t = useTheme()
 
   const {state, dispatch} = React.useContext(Context)
 
   return (
-    // Hack for now to move the image container up
     <View style={[a.align_start]}>
       <Title>You have control</Title>
       <Description style={[a.mb_xl]}>
@@ -41,7 +41,7 @@ export function StepModeration() {
       </Description>
 
       {isNative && (
-        <View style={[a.mb_xl]}>
+        <View style={[a.mb_sm]}>
           {/* TODO remove this line height when we can control it */}
           <Text style={[t.atoms.text_contrast_700, {lineHeight: 18}]}>
             <Trans>
