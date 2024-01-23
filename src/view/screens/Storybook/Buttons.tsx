@@ -94,14 +94,14 @@ export function Buttons() {
         </View>
       </View>
 
-      <View style={[a.flex_row, a.gap_md, a.align_start]}>
+      <View style={[a.flex_wrap, a.gap_md, a.align_start]}>
         <Button
           variant="gradient"
           color="gradient_sky"
           size="large"
           label="Link out">
           <ButtonText>Link out</ButtonText>
-          <ButtonIcon icon={ArrowTopRight} />
+          <ButtonIcon icon={ArrowTopRight} position="right" />
         </Button>
 
         <Button
@@ -110,7 +110,7 @@ export function Buttons() {
           size="small"
           label="Link out">
           <ButtonText>Link out</ButtonText>
-          <ButtonIcon icon={ArrowTopRight} />
+          <ButtonIcon icon={ArrowTopRight} position="right" />
         </Button>
 
         <Button
@@ -118,8 +118,16 @@ export function Buttons() {
           color="gradient_sky"
           size="small"
           label="Link out">
-          <ButtonIcon icon={Globe} />
-          <ButtonText>See the world</ButtonText>
+          <ButtonText>Link xxxxxx</ButtonText>
+        </Button>
+
+        <Button
+          variant="gradient"
+          color="gradient_sky"
+          size="small"
+          label="Link out">
+          <ButtonIcon icon={Globe} position="left" />
+          <ButtonText>Link out</ButtonText>
         </Button>
       </View>
 

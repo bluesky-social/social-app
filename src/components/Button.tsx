@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useTheme, atoms as a, tokens, web, native, flatten} from '#/alf'
+import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
@@ -275,13 +275,17 @@ export function Button({
       if (size === 'large') {
         baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
-        baseStyles.push({paddingVertical: 9}, a.px_md, a.rounded_sm, a.gap_sm)
+        baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
       }
     } else if (shape === 'round' || shape === 'square') {
       if (size === 'large') {
-        baseStyles.push({padding: 15})
+        if (shape === 'round') {
+          baseStyles.push({height: 54, width: 54})
+        } else {
+          baseStyles.push({height: 50, width: 50})
+        }
       } else if (size === 'small') {
-        baseStyles.push({padding: 10})
+        baseStyles.push({height: 40, width: 40})
       }
 
       if (shape === 'round') {
@@ -488,14 +492,14 @@ export function useSharedButtonTextStyles() {
     if (size === 'large') {
       baseStyles.push(
         a.text_md,
-        web({paddingBottom: 1}),
-        native({marginTop: 2}),
+        android({paddingBottom: 1}),
+        // native({marginTop: 2}),
       )
     } else {
       baseStyles.push(
-        a.text_md,
-        web({paddingBottom: 1}),
-        native({marginTop: 2}),
+        a.text_sm,
+        android({paddingBottom: 1}),
+        // native({marginTop: 2}),
       )
     }
 
@@ -515,14 +519,24 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 
 export function ButtonIcon({
   icon: Comp,
+  position,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  position?: 'left' | 'right'
 }) {
   const {size, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <View style={[a.z_20, {marginTop: -1, opacity: disabled ? 0.7 : 1}]}>
+    <View
+      style={[
+        a.z_20,
+        {
+          opacity: disabled ? 0.7 : 1,
+          marginLeft: position === 'left' ? -2 : 0,
+          marginRight: position === 'right' ? -2 : 0,
+        },
+      ]}>
       <Comp
         size={size === 'large' ? 'md' : 'sm'}
         style={[{color: textStyles.color, pointerEvents: 'none'}]}
