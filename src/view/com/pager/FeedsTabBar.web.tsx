@@ -117,7 +117,7 @@ function FeedsTabBarTablet(
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
     <Animated.View
-      style={[pal.view, styles.tabBar, headerMinimalShellTransform]}
+      style={[pal.view, pal.border, styles.tabBar, headerMinimalShellTransform]}
       onLayout={e => {
         headerHeight.value = e.nativeEvent.layout.height
       }}>
@@ -134,13 +134,16 @@ function FeedsTabBarTablet(
 
 const styles = StyleSheet.create({
   tabBar: {
-    position: 'absolute',
+    // @ts-ignore Web only
+    position: 'sticky',
     zIndex: 1,
     // @ts-ignore Web only -prf
-    left: 'calc(50% - 299px)',
-    width: 598,
+    left: 'calc(50% - 300px)',
+    width: 600,
     top: 0,
     flexDirection: 'row',
     alignItems: 'center',
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
   },
 })

@@ -1,13 +1,17 @@
 import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
+  ImageStyle,
   TouchableOpacity,
   TouchableWithoutFeedback,
   StyleSheet,
   View,
   Pressable,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 import {colors, s} from 'lib/styles'
 import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 import {Text} from '../util/text/Text'
@@ -19,6 +23,7 @@ import {
   ImagesLightbox,
   ProfileImageLightbox,
 } from '#/state/lightbox'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 interface Img {
   uri: string
@@ -28,8 +33,10 @@ interface Img {
 export function Lightbox() {
   const {activeLightbox} = useLightbox()
   const {closeLightbox} = useLightboxControls()
+  const isActive = !!activeLightbox
+  useWebBodyScrollLock(isActive)
 
-  if (!activeLightbox) {
+  if (!isActive) {
     return null
   }
 
@@ -116,7 +123,7 @@ function LightboxInner({
           <Image
             accessibilityIgnoresInvertColors
             source={imgs[index]}
-            style={styles.image}
+            style={styles.image as ImageStyle}
             accessibilityLabel={imgs[index].alt}
             accessibilityHint=""
           />
@@ -129,7 +136,7 @@ function LightboxInner({
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-left"
-                style={styles.icon}
+                style={styles.icon as FontAwesomeIconStyle}
                 size={40}
               />
             </TouchableOpacity>
@@ -143,7 +150,7 @@ function LightboxInner({
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-right"
-                style={styles.icon}
+                style={styles.icon as FontAwesomeIconStyle}
                 size={40}
               />
             </TouchableOpacity>
@@ -178,7 +185,8 @@ function LightboxInner({
 
 const styles = StyleSheet.create({
   mask: {
-    position: 'absolute',
+    // @ts-ignore
+    position: 'fixed',
     top: 0,
     left: 0,
     width: '100%',

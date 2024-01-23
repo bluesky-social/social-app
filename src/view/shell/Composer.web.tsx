@@ -5,6 +5,7 @@ import {ComposePost} from '../com/composer/Composer'
 import {useComposerState} from 'state/shell/composer'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {
   EmojiPicker,
   EmojiPickerState,
@@ -16,6 +17,8 @@ export function Composer({}: {winHeight: number}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const state = useComposerState()
+  const isActive = !!state
+  useWebBodyScrollLock(isActive)
 
   const [pickerState, setPickerState] = React.useState<EmojiPickerState>({
     isOpen: false,
@@ -40,7 +43,7 @@ export function Composer({}: {winHeight: number}) {
   // rendering
   // =
 
-  if (!state) {
+  if (!isActive) {
     return <View />
   }
 
@@ -75,7 +78,8 @@ export function Composer({}: {winHeight: number}) {
 
 const styles = StyleSheet.create({
   mask: {
-    position: 'absolute',
+    // @ts-ignore
+    position: 'fixed',
     top: 0,
     left: 0,
     width: '100%',
