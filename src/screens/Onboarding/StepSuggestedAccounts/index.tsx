@@ -19,6 +19,7 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {SuggestedAccountCard} from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
+import {aggregateInterestItems} from '#/screens/Onboarding/util'
 
 export function Inner({
   profiles,
@@ -54,9 +55,13 @@ export function StepSuggestedAccounts() {
   const t = useTheme()
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
+  const suggestedDids = aggregateInterestItems(
+    state.interestsStepResults.selectedInterests,
+    state.interestsStepResults.apiResponse.suggestedAccountDids,
+    state.interestsStepResults.apiResponse.suggestedAccountDids.default,
+  )
   const {isLoading, isError, data, error} = useProfilesQuery({
-    handles:
-      state.interestsStepResults.apiResponse.suggestedAccountDids.default,
+    handles: suggestedDids,
   })
   const [dids, setDids] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
@@ -68,13 +73,23 @@ export function StepSuggestedAccounts() {
     return i.join(', ')
   }, [state.interestsStepResults.selectedInterests])
 
-  const handleBulkFollow = React.useCallback(async () => {
+  const handleContinue = React.useCallback(async () => {
     setSaving(true)
-    await new Promise(y => setTimeout(y, 1000))
-    dispatch({type: 'setSuggestedAccountsStepResults', accountDids: dids})
+
+    if (dids.length) {
+      await new Promise(y => setTimeout(y, 1000))
+      dispatch({type: 'setSuggestedAccountsStepResults', accountDids: dids})
+    }
+
     setSaving(false)
     dispatch({type: 'next'})
   }, [dids, setSaving, dispatch])
+
+  const handleSkip = React.useCallback(() => {
+    // if a user comes back and clicks skip, erase follows
+    dispatch({type: 'setSuggestedAccountsStepResults', accountDids: []})
+    dispatch({type: 'next'})
+  }, [dispatch])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
@@ -112,7 +127,7 @@ export function StepSuggestedAccounts() {
             color="gradient_sky"
             size="large"
             label="Continue setting up your account"
-            onPress={handleBulkFollow}>
+            onPress={handleContinue}>
             <ButtonText>Follow All</ButtonText>
             <ButtonIcon icon={saving ? Loader : Plus} />
           </Button>
@@ -121,7 +136,7 @@ export function StepSuggestedAccounts() {
             color="secondary"
             size="large"
             label="Continue setting up your account"
-            onPress={() => dispatch({type: 'next'})}>
+            onPress={handleSkip}>
             Skip
           </Button>
         </View>

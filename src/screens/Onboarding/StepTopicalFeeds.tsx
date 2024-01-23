@@ -16,12 +16,18 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
+import {aggregateInterestItems} from '#/screens/Onboarding/util'
 
 export function StepTopicalFeeds() {
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
+  const suggestedFeedUris = aggregateInterestItems(
+    state.interestsStepResults.selectedInterests,
+    state.interestsStepResults.apiResponse.suggestedFeedUris,
+    state.interestsStepResults.apiResponse.suggestedFeedUris.default,
+  )
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.selectedInterests.map(
@@ -57,7 +63,7 @@ export function StepTopicalFeeds() {
           values={selectedFeedUris}
           onChange={setSelectedFeedUris}
           label="Select your primary algorithmic feeds">
-          {state.interestsStepResults.apiResponse.feedUris.default.map(uri => (
+          {suggestedFeedUris.map(uri => (
             <FeedCard key={uri} config={{default: false, uri}} />
           ))}
         </Toggle.Group>

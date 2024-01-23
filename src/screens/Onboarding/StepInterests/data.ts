@@ -30,7 +30,7 @@ export const API_RESPONSE: {
   suggestedAccountDids: {
     [key: string]: string[]
   }
-  feedUris: {
+  suggestedFeedUris: {
     [key: string]: string[]
   }
 } = {
@@ -60,7 +60,7 @@ export const API_RESPONSE: {
     food: ['bsky.app', 'jay.bsky.team'],
     cooking: ['bsky.app', 'jay.bsky.team'],
   },
-  feedUris: {
+  suggestedFeedUris: {
     default: [
       'at://did:plc:jfhpnnst6flqway4eaeqzj2a/app.bsky.feed.generator/for-science',
       'at://did:plc:y7crv2yh74s7qhmtx3mvbgv5/app.bsky.feed.generator/art-new',
