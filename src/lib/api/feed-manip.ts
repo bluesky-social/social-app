@@ -168,14 +168,22 @@ export class FeedTuner {
 
         const selfReplyUri = getSelfReplyUri(item)
         if (selfReplyUri) {
-          const parent = slices.find(item2 =>
-            item2.isNextInThread(selfReplyUri),
+          const index = slices.findIndex(slice =>
+            slice.isNextInThread(selfReplyUri),
           )
-          if (parent) {
+
+          if (index !== -1) {
+            const parent = slices[index]
+
             parent.insert(item)
+
+            slices.splice(index, 1)
+            slices.unshift(parent)
+
             continue
           }
         }
+
         slices.unshift(new FeedViewPostsSlice([item]))
       }
     }
