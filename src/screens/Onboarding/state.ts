@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {ApiResponseMap} from '#/screens/Onboarding/StepInterests/data'
+import {logger} from '#/logger'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -155,7 +156,9 @@ export function reducer(
     }
     case 'setSuggestedAccountsStepResults': {
       next.suggestedAccountsStepResults = {
-        accountDids: a.accountDids,
+        accountDids: next.suggestedAccountsStepResults.accountDids.concat(
+          a.accountDids,
+        ),
       }
       break
     }
@@ -177,6 +180,18 @@ export function reducer(
     ...next,
     hasPrev: next.activeStep !== 'interests',
   }
+
+  logger.debug(`onboarding`, {
+    hasPrev: state.hasPrev,
+    activeStep: state.activeStep,
+    activeStepIndex: state.activeStepIndex,
+    interestsStepResults: {
+      selectedInterests: state.interestsStepResults.selectedInterests,
+    },
+    suggestedAccountsStepResults: state.suggestedAccountsStepResults,
+    algoFeedsStepResults: state.algoFeedsStepResults,
+    topicalFeedsStepResults: state.topicalFeedsStepResults,
+  })
 
   return state
 }
