@@ -2,13 +2,13 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {logger} from '#/logger'
-import {s} from 'lib/styles'
 import {cleanError} from '#/lib/strings/errors'
 
 export function ProfileFollows({name}: {name: string}) {
@@ -63,13 +63,7 @@ export function ProfileFollows({name}: {name: string}) {
   )
 
   if (isFetchingDid || !isFetched) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
 
   // error

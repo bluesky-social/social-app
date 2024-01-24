@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react'
-import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
@@ -13,6 +13,7 @@ import {Text} from 'view/com/util/text/Text'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {EmptyState} from 'view/com/util/EmptyState'
+import {LoadingScreen} from 'view/com/util/LoadingScreen'
 import {RichText} from 'view/com/util/text/RichText'
 import {Button} from 'view/com/util/forms/Button'
 import {TextLink} from 'view/com/util/Link'
@@ -97,11 +98,7 @@ export function ProfileListScreen(props: Props) {
   return resolvedUri && list ? (
     <ProfileListScreenLoaded {...props} uri={resolvedUri.uri} list={list} />
   ) : (
-    <CenteredView>
-      <View style={s.p20}>
-        <ActivityIndicator size="large" />
-      </View>
-    </CenteredView>
+    <LoadingScreen />
   )
 }
 

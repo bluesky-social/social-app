@@ -6,7 +6,7 @@ import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {logger} from '#/logger'
-import {s} from 'lib/styles'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {usePostLikedByQuery} from '#/state/queries/post-liked-by'
 import {cleanError} from '#/lib/strings/errors'
@@ -61,13 +61,7 @@ export function PostLikedBy({uri}: {uri: string}) {
   }, [])
 
   if (isFetchingResolvedUri || !isFetched) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
 
   // error
