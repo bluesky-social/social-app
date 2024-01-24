@@ -9,6 +9,7 @@ import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
 import {
   Description,
@@ -18,12 +19,14 @@ import {
 import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
+import {Loader} from '#/components/Loader'
 
 export function StepModeration() {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
+  const {data: preferences} = usePreferencesQuery()
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
@@ -50,17 +53,25 @@ export function StepModeration() {
         </Trans>
       </Description>
 
-      <AdultContentEnabledPref />
+      {!preferences ? (
+        <View style={[a.pt_md]}>
+          <Loader size="xl" />
+        </View>
+      ) : (
+        <>
+          <AdultContentEnabledPref />
 
-      <View style={[a.gap_sm, a.w_full]}>
-        {configurableLabelGroups.map((g, index) => (
-          <React.Fragment key={index}>
-            {index === 0 && <Divider />}
-            <ModerationOption labelGroup={g} />
-            <Divider />
-          </React.Fragment>
-        ))}
-      </View>
+          <View style={[a.gap_sm, a.w_full]}>
+            {configurableLabelGroups.map((g, index) => (
+              <React.Fragment key={index}>
+                {index === 0 && <Divider />}
+                <ModerationOption labelGroup={g} />
+                <Divider />
+              </React.Fragment>
+            ))}
+          </View>
+        </>
+      )}
 
       <OnboardingControls.Portal>
         <Button

@@ -1,17 +1,20 @@
+import React, {useState} from 'react'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
+import {View} from 'react-native'
+
 import {
   UsePreferencesQueryResponse,
   usePreferencesSetBirthDateMutation,
 } from 'state/queries/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {useLingui} from '@lingui/react'
-import React, {useState} from 'react'
+import {atoms as a} from '#/alf'
 import {logger} from '#/logger'
 import * as Prompt from '#/components/Prompt'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {cleanError} from 'lib/strings/errors'
 import {DateInput} from 'view/com/util/forms/DateInput'
-import {msg} from '@lingui/macro'
-import {ActivityIndicator, View} from 'react-native'
+import {Loader} from '#/components/Loader'
+import {ButtonIcon, ButtonText} from '#/components/Button'
 
 export function SetAgeDialog({
   preferences,
@@ -20,7 +23,6 @@ export function SetAgeDialog({
   preferences?: UsePreferencesQueryResponse
   prompt: any
 }) {
-  const t = useTheme()
   const {_} = useLingui()
 
   const {
@@ -43,9 +45,11 @@ export function SetAgeDialog({
 
   return (
     <Prompt.Outer control={prompt}>
-      <Prompt.Title>Add your birth date</Prompt.Title>
+      <Prompt.Title>
+        <Trans>Add your birth date</Trans>
+      </Prompt.Title>
       <Prompt.Description>
-        This information is not shared publicly.
+        <Trans>This information is not shared publicly.</Trans>
       </Prompt.Description>
 
       {isError ? <ErrorMessage message={cleanError(error)} /> : undefined}
@@ -64,16 +68,17 @@ export function SetAgeDialog({
       </View>
 
       <Prompt.Actions>
-        {isPending ? (
-          <View>
-            <ActivityIndicator color={t.palette.primary_500} />
-          </View>
-        ) : (
-          <>
-            <Prompt.Cancel onPress={prompt.close}>Cancel</Prompt.Cancel>
-            <Prompt.Action onPress={onSave}>Save</Prompt.Action>
-          </>
-        )}
+        <Prompt.Cancel onPress={prompt.close}>
+          <ButtonText>
+            <Trans>Cancel</Trans>
+          </ButtonText>
+        </Prompt.Cancel>
+        <Prompt.Action onPress={onSave}>
+          <ButtonText>
+            <Trans>Save</Trans>
+          </ButtonText>
+          {isPending && <ButtonIcon icon={Loader} position="right" />}
+        </Prompt.Action>
       </Prompt.Actions>
     </Prompt.Outer>
   )
