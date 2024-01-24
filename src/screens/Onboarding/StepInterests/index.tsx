@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -22,10 +22,10 @@ import {
   INTEREST_TO_DISPLAY_NAME,
 } from '#/screens/Onboarding/StepInterests/data'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepInterests() {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
@@ -52,18 +52,7 @@ export function StepInterests() {
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View
-        style={[
-          a.p_lg,
-          a.mb_3xl,
-          a.rounded_full,
-          {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-          },
-        ]}>
-        <Hashtag size="xl" fill={t.palette.primary_500} />
-      </View>
+      <IconCircle icon={Hashtag} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>What are your interests?</Trans>

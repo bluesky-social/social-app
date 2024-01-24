@@ -22,6 +22,7 @@ import {
   FeedCard,
   PrimaryFeedCard,
 } from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export type FeedConfig = {
   default: boolean
@@ -82,18 +83,7 @@ export function StepAlgoFeeds() {
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View
-        style={[
-          a.p_lg,
-          a.mb_3xl,
-          a.rounded_full,
-          {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-          },
-        ]}>
-        <ListSparkle size="xl" fill={t.palette.primary_500} />
-      </View>
+      <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>Choose your algorithmic feeds</Trans>

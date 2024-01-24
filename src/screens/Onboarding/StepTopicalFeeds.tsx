@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -19,10 +19,10 @@ import {
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
@@ -53,18 +53,7 @@ export function StepTopicalFeeds() {
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View
-        style={[
-          a.p_lg,
-          a.mb_3xl,
-          a.rounded_full,
-          {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-          },
-        ]}>
-        <ListMagnifyingGlass size="xl" fill={t.palette.primary_500} />
-      </View>
+      <IconCircle icon={ListMagnifyingGlass} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>Feeds can be topic based as well!</Trans>

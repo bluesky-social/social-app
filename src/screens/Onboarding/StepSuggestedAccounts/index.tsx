@@ -4,7 +4,7 @@ import {AppBskyActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -26,6 +26,7 @@ import {
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function Inner({
   profiles,
@@ -65,7 +66,6 @@ export function Inner({
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
-  const t = useTheme()
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const suggestedDids = aggregateInterestItems(
@@ -114,18 +114,7 @@ export function StepSuggestedAccounts() {
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View
-        style={[
-          a.p_lg,
-          a.mb_3xl,
-          a.rounded_full,
-          {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-          },
-        ]}>
-        <At size="xl" fill={t.palette.primary_500} />
-      </View>
+      <IconCircle icon={At} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>Here are some accounts for your to follow</Trans>

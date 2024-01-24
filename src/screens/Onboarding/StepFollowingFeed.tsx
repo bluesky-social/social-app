@@ -3,9 +3,9 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {Divider} from '#/components/Divider'
@@ -21,10 +21,10 @@ import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from 'state/queries/preferences'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepFollowingFeed() {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {dispatch} = React.useContext(Context)
 
@@ -45,18 +45,7 @@ export function StepFollowingFeed() {
   return (
     // Hack for now to move the image container up
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View
-        style={[
-          a.p_lg,
-          a.mb_3xl,
-          a.rounded_full,
-          {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-          },
-        ]}>
-        <ListMagnifyingGlass size="xl" fill={t.palette.primary_500} />
-      </View>
+      <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>Your default feed is "Following"</Trans>

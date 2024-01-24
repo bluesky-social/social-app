@@ -3,7 +3,10 @@ import {View} from 'react-native'
 
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
+import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
@@ -16,6 +19,7 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepFinished() {
   const t = useTheme()
@@ -67,28 +71,17 @@ export function StepFinished() {
   }, [state, dispatch, onboardDispatch, setSaving, follow, pinFeed])
 
   return (
-    // Hack
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      {/* Placeholder */}
-      <View
-        style={[
-          a.w_full,
-          a.justify_center,
-          a.align_center,
-          a.mb_xl,
-          {backgroundColor: t.palette.contrast_50, height: 100},
-        ]}>
-        <Text style={a.text_md}>Picture a happy face being here maybe :)</Text>
-      </View>
+      <IconCircle icon={Check} style={[a.mb_2xl]} />
 
       <Title>You're ready to go!</Title>
-      <Description style={{maxWidth: 340}}>
+      <Description>
         We hope you have a wonderful time. Remember, Bluesky is:
       </Description>
 
-      <View style={[a.my_4xl, a.gap_xl]}>
-        <View style={[a.flex_row, a.w_full, a.gap_lg]}>
-          <AtCircle />
+      <View style={[a.pt_5xl, a.gap_3xl]}>
+        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
+          <IconCircle icon={Growth} size="lg" style={{width: 48, height: 48}} />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>Public</Text>
             <Text
@@ -97,8 +90,8 @@ export function StepFinished() {
             </Text>
           </View>
         </View>
-        <View style={[a.flex_row, a.w_full, a.gap_lg]}>
-          <AtCircle />
+        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
+          <IconCircle icon={News} size="lg" style={{width: 48, height: 48}} />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>Open</Text>
             <Text
@@ -107,8 +100,12 @@ export function StepFinished() {
             </Text>
           </View>
         </View>
-        <View style={[a.flex_row, a.w_full, a.gap_lg]}>
-          <AtCircle />
+        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
+          <IconCircle
+            icon={Trending}
+            size="lg"
+            style={{width: 48, height: 48}}
+          />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>Flexible</Text>
             <Text
@@ -134,25 +131,6 @@ export function StepFinished() {
           {saving && <ButtonIcon icon={Loader} />}
         </Button>
       </OnboardingControls.Portal>
-    </View>
-  )
-}
-
-function AtCircle() {
-  const t = useTheme()
-
-  return (
-    <View
-      style={[
-        a.p_sm,
-        a.mb_3xl,
-        a.rounded_full,
-        {
-          backgroundColor:
-            t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-        },
-      ]}>
-      <At size="xl" fill={t.palette.primary_500} />
     </View>
   )
 }

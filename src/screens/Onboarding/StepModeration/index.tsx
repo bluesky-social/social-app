@@ -3,13 +3,14 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {configurableLabelGroups} from 'state/queries/preferences'
 import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {usePreferencesQuery} from '#/state/queries/preferences'
+import {Loader} from '#/components/Loader'
 
 import {
   Description,
@@ -19,29 +20,17 @@ import {
 import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
-import {Loader} from '#/components/Loader'
+import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepModeration() {
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
-      <View
-        style={[
-          a.p_lg,
-          a.mb_3xl,
-          a.rounded_full,
-          {
-            backgroundColor:
-              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
-          },
-        ]}>
-        <EyeSlash size="xl" fill={t.palette.primary_500} />
-      </View>
+      <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>You are in control</Trans>
