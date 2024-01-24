@@ -35,6 +35,7 @@ import {
 } from '#/state/shell/logged-out'
 import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
+import {Deactivated} from '#/screens/Deactivated'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {Onboarding} from '../com/auth/Onboarding'
 
@@ -104,8 +105,7 @@ function NativeStackNavigator({
     return <LoggedOut />
   }
   if (hasSession && currentAccount?.deactivated) {
-    // TODO: account deactivated view
-    return <View style={{backgroundColor: 'red', width: 100, height: 100}} />
+    return <Deactivated />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
