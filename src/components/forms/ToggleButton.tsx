@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, AccessibilityProps, TextStyle, ViewStyle} from 'react-native'
 
-import {atoms as a, useTheme, native, web} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 
 import * as Toggle from '#/components/forms/Toggle'
@@ -35,7 +35,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
 
 export function Button({children, ...props}: ItemProps) {
   return (
-    <Toggle.Item {...props}>
+    <Toggle.Item {...props} style={[a.flex_grow]}>
       <ButtonInner>{children}</ButtonInner>
     </Toggle.Item>
   )
@@ -96,9 +96,9 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           borderLeftWidth: 1,
           marginLeft: -1,
         },
-        web(a.px_md),
-        native(a.px_sm),
+        a.flex_1,
         a.py_md,
+        a.px_sm,
         t.atoms.bg,
         t.atoms.border,
         baseStyles,
