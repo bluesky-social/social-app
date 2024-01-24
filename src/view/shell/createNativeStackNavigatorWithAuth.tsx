@@ -92,7 +92,7 @@ function NativeStackNavigator({
   )
 
   // --- our custom logic starts here ---
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
@@ -102,6 +102,10 @@ function NativeStackNavigator({
   const {isMobile} = useWebMediaQueries()
   if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
     return <LoggedOut />
+  }
+  if (hasSession && currentAccount?.deactivated) {
+    // TODO: account deactivated view
+    return <View style={{backgroundColor: 'red', width: 100, height: 100}} />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
