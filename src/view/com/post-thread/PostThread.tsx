@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {List, ListMethods} from '../util/List'
 import {
   FontAwesomeIcon,
@@ -125,13 +126,7 @@ export function PostThread({
     return <PostThreadBlocked />
   }
   if (!thread || isLoading || !preferences) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
   return (
     <PostThreadLoaded

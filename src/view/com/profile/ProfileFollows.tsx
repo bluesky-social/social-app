@@ -2,6 +2,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -62,11 +63,7 @@ export function ProfileFollows({name}: {name: string}) {
   )
 
   if (isFetchingDid || !isFetched) {
-    return (
-      <CenteredView>
-        <ActivityIndicator />
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
 
   // error
