@@ -9,7 +9,7 @@ import Hardbreak from '@tiptap/extension-hard-break'
 import {Mention} from '@tiptap/extension-mention'
 import {Paragraph} from '@tiptap/extension-paragraph'
 import {Placeholder} from '@tiptap/extension-placeholder'
-import {Text} from '@tiptap/extension-text'
+import {Text as TiptapText} from '@tiptap/extension-text'
 import isEqual from 'lodash.isequal'
 import {createSuggestion} from './web/Autocomplete'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
@@ -18,6 +18,11 @@ import {Emoji} from './web/EmojiPicker.web'
 import {LinkDecorator} from './web/LinkDecorator'
 import {generateJSON} from '@tiptap/html'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {Portal} from '#/components/Portal'
+import {Text} from '../../util/text/Text'
+import {Trans} from '@lingui/macro'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
 
 export interface TextInputRef {
   focus: () => void
@@ -53,7 +58,11 @@ export const TextInput = React.forwardRef(function TextInputImpl(
 ) {
   const autocomplete = useActorAutocompleteFn()
 
+  const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
+
+  const [isDropping, setIsDropping] = React.useState(false)
+
   const extensions = React.useMemo(
     () => [
       Document,
@@ -68,7 +77,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       Placeholder.configure({
         placeholder,
       }),
-      Text,
+      TiptapText,
       History,
       Hardbreak,
     ],
@@ -87,6 +96,46 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
     }
   }, [onPhotoPasted])
+
+  React.useEffect(() => {
+    const handleDrop = (event: DragEvent) => {
+      const transfer = event.dataTransfer
+      if (transfer) {
+        const items = transfer.items
+
+        getImageFromUri(items, (uri: string) => {
+          textInputWebEmitter.emit('photo-pasted', uri)
+        })
+      }
+
+      event.preventDefault()
+      setIsDropping(false)
+    }
+    const handleDragEnter = (event: DragEvent) => {
+      const transfer = event.dataTransfer
+
+      event.preventDefault()
+      if (transfer && transfer.types.includes('Files')) {
+        setIsDropping(true)
+      }
+    }
+    const handleDragLeave = (event: DragEvent) => {
+      event.preventDefault()
+      setIsDropping(false)
+    }
+
+    document.body.addEventListener('drop', handleDrop)
+    document.body.addEventListener('dragenter', handleDragEnter)
+    document.body.addEventListener('dragover', handleDragEnter)
+    document.body.addEventListener('dragleave', handleDragLeave)
+
+    return () => {
+      document.body.removeEventListener('drop', handleDrop)
+      document.body.removeEventListener('dragenter', handleDragEnter)
+      document.body.removeEventListener('dragover', handleDragEnter)
+      document.body.removeEventListener('dragleave', handleDragLeave)
+    }
+  }, [setIsDropping])
 
   const editor = useEditor(
     {
@@ -177,9 +226,28 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   }))
 
   return (
-    <View style={styles.container}>
-      <EditorContent editor={editor} />
-    </View>
+    <>
+      <View style={styles.container}>
+        <EditorContent editor={editor} />
+      </View>
+
+      {isDropping && (
+        <Portal>
+          <Animated.View
+            style={styles.dropContainer}
+            entering={FadeIn.duration(80)}
+            exiting={FadeOut.duration(80)}>
+            <View style={[pal.view, pal.border, styles.dropModal]}>
+              <Text
+                type="lg"
+                style={[pal.text, pal.borderDark, styles.dropText]}>
+                <Trans>Drop to add images</Trans>
+              </Text>
+            </View>
+          </Animated.View>
+        </Portal>
+      )}
+    </>
   )
 })
 
@@ -210,6 +278,33 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     marginBottom: 10,
   },
+  dropContainer: {
+    backgroundColor: '#0007',
+    pointerEvents: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // @ts-ignore web only -prf
+    position: 'fixed',
+    padding: 16,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  dropModal: {
+    // @ts-ignore web only
+    boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 16,
+  },
+  dropText: {
+    paddingVertical: 44,
+    paddingHorizontal: 36,
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    borderWidth: 2,
+  },
 })
 
 function getImageFromUri(
@@ -218,25 +313,25 @@ function getImageFromUri(
 ) {
   for (let index = 0; index < items.length; index++) {
     const item = items[index]
-    const {kind, type} = item
+    const type = item.type
 
     if (type === 'text/plain') {
+      console.log('hit')
       item.getAsString(async itemString => {
         if (isUriImage(itemString)) {
           const response = await fetch(itemString)
           const blob = await response.blob()
-          blobToDataUri(blob).then(callback, err => console.error(err))
+
+          if (blob.type.startsWith('image/')) {
+            blobToDataUri(blob).then(callback, err => console.error(err))
+          }
         }
       })
-    }
-
-    if (kind === 'file') {
+    } else if (type.startsWith('image/')) {
       const file = item.getAsFile()
 
-      if (file instanceof Blob) {
-        blobToDataUri(new Blob([file], {type: item.type})).then(callback, err =>
-          console.error(err),
-        )
+      if (file) {
+        blobToDataUri(file).then(callback, err => console.error(err))
       }
     }
   }

@@ -1,7 +1,7 @@
 import {AppBskyRichtextFacet, RichText} from '@atproto/api'
 import {linkRequiresWarning} from './url-helpers'
 
-export function richTextToString(rt: RichText): string {
+export function richTextToString(rt: RichText, loose: boolean): string {
   const {text, facets} = rt
 
   if (!facets?.length) {
@@ -19,7 +19,7 @@ export function richTextToString(rt: RichText): string {
 
       const requiresWarning = linkRequiresWarning(href, text)
 
-      result += !requiresWarning ? href : `[${text}](${href})`
+      result += !requiresWarning ? href : loose ? `[${text}](${href})` : text
     } else {
       result += segment.text
     }
