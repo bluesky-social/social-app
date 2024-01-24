@@ -230,7 +230,7 @@ let PostDropdownBtn = ({
       label: 'separator',
     },
     hasSession && {
-      label: 'Mute Account',
+      label: 'Mute account',
       onPress: onMuteUser,
       testID: 'postDropdownMuteUserBtn',
       icon: {
@@ -243,7 +243,7 @@ let PostDropdownBtn = ({
     },
     hasSession &&
       !isAuthor && {
-        label: _(msg`Block Account`),
+        label: _(msg`lock account`),
         onPress: onBlockUser,
         testID: 'postDropdownBlockUserBtn',
         icon: {
