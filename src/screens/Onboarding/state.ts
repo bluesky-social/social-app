@@ -62,7 +62,7 @@ export type OnboardingAction =
 export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 7,
-  activeStep: 'interests',
+  activeStep: 'moderation',
   activeStepIndex: 1,
 
   interestsStepResults: {

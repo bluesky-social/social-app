@@ -2,7 +2,7 @@ import {
   UsePreferencesQueryResponse,
   usePreferencesSetBirthDateMutation,
 } from 'state/queries/preferences'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useLingui} from '@lingui/react'
 import React, {useState} from 'react'
 import {logger} from '#/logger'
@@ -43,9 +43,14 @@ export function SetAgeDialog({
 
   return (
     <Prompt.Outer control={prompt}>
-      <Prompt.Title>Set your age</Prompt.Title>
+      <Prompt.Title>Add your birth date</Prompt.Title>
       <Prompt.Description>
-        {isError ? <ErrorMessage message={cleanError(error)} /> : undefined}
+        This information is not shared publicly.
+      </Prompt.Description>
+
+      {isError ? <ErrorMessage message={cleanError(error)} /> : undefined}
+
+      <View style={[a.pb_xl]}>
         <DateInput
           handleAsUTC
           testID="birthdayInput"
@@ -56,7 +61,8 @@ export function SetAgeDialog({
           accessibilityHint={_(msg`Enter your birth date`)}
           accessibilityLabelledBy="birthDate"
         />
-      </Prompt.Description>
+      </View>
+
       <Prompt.Actions>
         {isPending ? (
           <View>
@@ -65,7 +71,7 @@ export function SetAgeDialog({
         ) : (
           <>
             <Prompt.Cancel onPress={prompt.close}>Cancel</Prompt.Cancel>
-            <Prompt.Action onPress={onSave}>Confirm</Prompt.Action>
+            <Prompt.Action onPress={onSave}>Save</Prompt.Action>
           </>
         )}
       </Prompt.Actions>

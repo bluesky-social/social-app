@@ -1,28 +1,53 @@
-import {atoms as a} from '#/alf'
 import React from 'react'
-import {Context} from '#/screens/Onboarding/state'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
+
+import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {configurableLabelGroups} from 'state/queries/preferences'
+import {Divider} from '#/components/Divider'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+
 import {
   Description,
   OnboardingControls,
   Title,
 } from '#/screens/Onboarding/Layout'
-import {configurableLabelGroups} from 'state/queries/preferences'
-import {Divider} from '#/components/Divider'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
+import {Context} from '#/screens/Onboarding/state'
 
 export function StepModeration() {
+  const {_} = useLingui()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
 
   return (
-    <View style={[a.align_start]}>
-      <Title>You have control</Title>
+    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+      <View
+        style={[
+          a.p_lg,
+          a.mb_3xl,
+          a.rounded_full,
+          {
+            backgroundColor:
+              t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
+          },
+        ]}>
+        <EyeSlash size="xl" fill={t.palette.primary_500} />
+      </View>
+
+      <Title>
+        <Trans>You are in control</Trans>
+      </Title>
       <Description style={[a.mb_xl]}>
-        Select the types of content that you want to see, and we'll handle the
-        rest.
+        <Trans>
+          Select the types of content that you want to see (or not see), and
+          we'll handle the rest.
+        </Trans>
       </Description>
 
       <AdultContentEnabledPref />
@@ -43,10 +68,10 @@ export function StepModeration() {
           variant="gradient"
           color="gradient_sky"
           size="large"
-          label="Continue setting up your account"
+          label={_(msg`Continue to next step`)}
           onPress={() => dispatch({type: 'next'})}>
           <ButtonText>Continue</ButtonText>
-          <ButtonIcon icon={ChevronRight} />
+          <ButtonIcon icon={ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>
     </View>

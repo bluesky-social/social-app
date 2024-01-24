@@ -99,7 +99,7 @@ export function StepInterests() {
           label={_(msg`Continue to next step`)}
           onPress={saveInterests}>
           <ButtonText>Continue</ButtonText>
-          <ButtonIcon icon={saving ? Loader : ChevronRight} />
+          <ButtonIcon icon={saving ? Loader : ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>
     </View>
