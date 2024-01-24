@@ -6,6 +6,7 @@ import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {logger} from '#/logger'
+import {s} from 'lib/styles'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
 import {cleanError} from '#/lib/strings/errors'
@@ -63,7 +64,9 @@ export function PostRepostedBy({uri}: {uri: string}) {
   if (isFetchingResolvedUri || !isFetched) {
     return (
       <CenteredView>
-        <ActivityIndicator />
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
       </CenteredView>
     )
   }

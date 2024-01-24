@@ -8,6 +8,7 @@ import {ProfileCardWithFollowBtn} from './ProfileCard'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {logger} from '#/logger'
+import {s} from 'lib/styles'
 import {cleanError} from '#/lib/strings/errors'
 
 export function ProfileFollowers({name}: {name: string}) {
@@ -64,7 +65,9 @@ export function ProfileFollowers({name}: {name: string}) {
   if (isFetchingDid || !isFetched) {
     return (
       <CenteredView>
-        <ActivityIndicator />
+        <View style={s.p20}>
+          <ActivityIndicator size="large" />
+        </View>
       </CenteredView>
     )
   }
