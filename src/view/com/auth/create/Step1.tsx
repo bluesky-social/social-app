@@ -77,7 +77,7 @@ export function Step1({
             accessibilityLabel={_(msg`Select service`)}
             accessibilityHint={_(msg`Sets server for the Bluesky client`)}
             onPress={onPressSelectService}>
-            <FontAwesomeIcon icon="server" size={21} />
+            <FontAwesomeIcon icon="server" size={21} color={pal.colors.text} />
           </Button>
         </View>
       </StepHeader>
