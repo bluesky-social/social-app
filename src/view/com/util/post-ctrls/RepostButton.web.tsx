@@ -76,12 +76,12 @@ export const RepostButton = ({
           : defaultControlColor) as StyleProp<ViewStyle>,
       ]}>
       <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
-      {typeof repostCount !== 'undefined' ? (
+      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
         <Text
           testID="repostCount"
           type={isReposted ? 'md-bold' : 'md'}
           style={styles.repostCount}>
-          {repostCount ?? 0}
+          {repostCount}
         </Text>
       ) : undefined}
     </View>

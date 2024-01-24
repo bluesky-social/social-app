@@ -165,7 +165,7 @@ let PostCtrls = ({
           strokeWidth={3}
           size={big ? 20 : 15}
         />
-        {typeof post.replyCount !== 'undefined' ? (
+        {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
           <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
             {post.replyCount}
           </Text>
@@ -199,7 +199,7 @@ let PostCtrls = ({
             size={big ? 20 : 16}
           />
         )}
-        {typeof post.likeCount !== 'undefined' ? (
+        {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
           <Text
             testID="likeCount"
             style={

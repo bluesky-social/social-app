@@ -71,7 +71,7 @@ let RepostButton = ({
         strokeWidth={2.4}
         size={big ? 24 : 20}
       />
-      {typeof repostCount !== 'undefined' ? (
+      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
         <Text
           testID="repostCount"
           style={
