@@ -35,7 +35,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
 
 export function Button({children, ...props}: ItemProps) {
   return (
-    <Toggle.Item {...props} style={[a.flex_1]}>
+    <Toggle.Item {...props}>
       <ButtonInner>{children}</ButtonInner>
     </Toggle.Item>
   )
@@ -96,7 +96,6 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           borderLeftWidth: 1,
           marginLeft: -1,
         },
-        a.flex_1,
         a.px_md,
         a.py_md,
         native({
