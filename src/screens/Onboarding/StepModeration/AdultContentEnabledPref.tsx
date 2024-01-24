@@ -43,55 +43,9 @@ export function AdultContentEnabledPref() {
 
   const prompt = Prompt.usePromptControl()
 
-  return (
-    <View style={[a.w_full]}>
-      {isNative ? (
-        <View
-          style={[
-            a.flex_row,
-            a.flex_wrap,
-            a.gap_sm,
-            a.px_md,
-            a.py_sm,
-            a.rounded_sm,
-            a.mb_md,
-            t.atoms.bg_contrast_50,
-          ]}>
-          <CircleInfo size="sm" fill={t.palette.contrast_500} />
-          <Text style={[t.atoms.text_contrast_700, {paddingTop: 1}]}>
-            <Trans>
-              Adult content can only be enabled via the Web at{' '}
-              <InlineLink to="https://bsky.app">bsky.app</InlineLink>.
-            </Trans>
-          </Text>
-        </View>
-      ) : typeof preferences?.birthDate === 'undefined' ? (
-        <View
-          style={[
-            a.flex_row,
-            a.align_center,
-            a.justify_between,
-            a.px_lg,
-            a.py_md,
-            a.rounded_sm,
-            a.mb_md,
-            t.atoms.bg_contrast_25,
-          ]}>
-          <Text style={[a.font_bold]}>
-            <Trans>Confirm your age to enable adult content.</Trans>
-          </Text>
-          <Button
-            variant="solid"
-            color="negative"
-            size="small"
-            label={_(
-              msg`Click here to add your birth date and confirm your age`,
-            )}
-            onPress={prompt.open}>
-            <ButtonText>Set birth date</ButtonText>
-          </Button>
-        </View>
-      ) : (preferences?.userAge || 0) >= 18 ? (
+  if (preferences?.userAge && preferences.userAge >= 18 && !isNative) {
+    return (
+      <View style={[a.w_full]}>
         <Toggle.Item
           name="Show Quotes"
           label="Show quotes in Following"
@@ -109,18 +63,52 @@ export function AdultContentEnabledPref() {
             <Toggle.Switch />
           </View>
         </Toggle.Item>
+      </View>
+    )
+  }
+
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.px_md,
+        a.py_sm,
+        a.rounded_sm,
+        a.mb_md,
+        t.atoms.bg_contrast_50,
+      ]}>
+      {isNative ? (
+        <>
+          <CircleInfo size="sm" fill={t.palette.contrast_500} />
+          <Text style={[a.flex_1, t.atoms.text_contrast_700, {paddingTop: 1}]}>
+            <Trans>
+              Adult content can only be enabled via the Web at{' '}
+              <InlineLink to="https://bsky.app">bsky.app</InlineLink>.
+            </Trans>
+          </Text>
+        </>
+      ) : typeof preferences?.birthDate === 'undefined' ? (
+        <>
+          <Text style={[a.flex_1, a.font_bold]}>
+            <Trans>Confirm your age to enable adult content.</Trans>
+          </Text>
+          <Button
+            variant="solid"
+            color="negative"
+            size="small"
+            label={_(
+              msg`Click here to add your birth date and confirm your age`,
+            )}
+            onPress={prompt.open}>
+            <ButtonText>Set birth date</ButtonText>
+          </Button>
+        </>
       ) : (
-        <View
-          style={[
-            a.flex_row,
-            t.atoms.bg_contrast_25,
-            a.align_center,
-            a.justify_between,
-            a.px_md,
-            a.py_md,
-            {borderRadius: 8},
-          ]}>
-          <Text style={[a.font_bold]}>
+        <>
+          <Text style={[a.flex_1, a.font_bold]}>
             <Trans>
               You must be 18 years or older to enable adult content.
             </Trans>
@@ -133,7 +121,7 @@ export function AdultContentEnabledPref() {
             onPress={prompt.open}>
             <ButtonText>Set Age</ButtonText>
           </Button>
-        </View>
+        </>
       )}
 
       <SetAgeDialog prompt={prompt} preferences={preferences} />
