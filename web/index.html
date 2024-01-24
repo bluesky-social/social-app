@@ -44,9 +44,11 @@
       }
 
       /* Remove autofill styles on Webkit */
+      input:auto-fill,
       input:-webkit-autofill,
-      input:-webkit-autofill:hover, 
+      input:-webkit-autofill:hover,
       input:-webkit-autofill:focus,
+      input:-internal-autofill-selected,
       textarea:-webkit-autofill,
       textarea:-webkit-autofill:hover,
       textarea:-webkit-autofill:focus,
@@ -54,6 +56,7 @@
       select:-webkit-autofill:hover,
       select:-webkit-autofill:focus {
         border: 0;
+        background-color: transparent;
         -webkit-text-fill-color: transparent;
         -webkit-box-shadow: none;
       }
