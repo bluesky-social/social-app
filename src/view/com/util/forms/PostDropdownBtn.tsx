@@ -30,6 +30,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {getAgent} from '#/state/session'
 
 let PostDropdownBtn = ({
   testID,
@@ -118,6 +119,31 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
+  const onMuteUser = React.useCallback(async () => {
+    try {
+      const agent = getAgent()
+      await agent.mute(postAuthor.did)
+      Toast.show(`User ${postAuthor.did} has been muted`)
+    } catch (error) {
+      console.error('Error muting user:', error)
+      Toast.show('Error muting user')
+    }
+  }, [postAuthor.did])
+
+  const onBlockUser = React.useCallback(async () => {
+    try {
+      const agent = getAgent()
+      await agent.app.bsky.graph.block.create(
+        {repo: currentAccount?.did},
+        {subject: postAuthor.did, createdAt: new Date().toISOString()},
+      )
+      Toast.show(`User ${postAuthor.did} has been blocked`)
+    } catch (error) {
+      console.error('Error blocking user:', error)
+      Toast.show('Error blocking user')
+    }
+  }, [postAuthor.did, currentAccount?.did])
+
   const dropdownItems: NativeDropdownItem[] = [
     {
       label: _(msg`Translate`),
@@ -198,6 +224,34 @@ let PostDropdownBtn = ({
           },
           android: 'ic_menu_delete',
           web: ['far', 'eye-slash'],
+        },
+      },
+    {
+      label: 'separator',
+    },
+    hasSession && {
+      label: 'Mute Account',
+      onPress: onMuteUser,
+      testID: 'postDropdownMuteUserBtn',
+      icon: {
+        ios: {
+          name: 'speaker.slash',
+        },
+        android: 'ic_lock_silent_mode',
+        web: 'comment-slash',
+      },
+    },
+    hasSession &&
+      !isAuthor && {
+        label: _(msg`Block Account`),
+        onPress: onBlockUser,
+        testID: 'postDropdownBlockUserBtn',
+        icon: {
+          ios: {
+            name: 'person.fill.xmark',
+          },
+          android: 'ic_menu_close_clear_cancel',
+          web: 'user-slash',
         },
       },
     {
