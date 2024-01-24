@@ -61,7 +61,7 @@ export function ListsScreen({}: Props) {
             <Trans>Public, shareable lists which can drive feeds.</Trans>
           </Text>
         </View>
-        <View>
+        <View style={[{marginLeft: 18}, isMobile && {marginLeft: 12}]}>
           <Button
             testID="newUserListBtn"
             type="default"
