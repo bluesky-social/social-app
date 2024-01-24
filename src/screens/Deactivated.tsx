@@ -10,6 +10,7 @@ import {Text} from '#/components/Typography'
 import {isWeb} from '#/platform/detection'
 import {H2, P} from '#/components/Typography'
 import {ScrollView} from '#/view/com/util/Views'
+import {Group3_Stroke2_Corner0_Rounded as Group3} from '#/components/icons/Group3'
 
 const COL_WIDTH = 500
 
@@ -51,16 +52,8 @@ export function Deactivated() {
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             {/* Placeholder */}
             <View
-              style={[
-                a.w_full,
-                a.justify_center,
-                a.align_center,
-                a.mb_xl,
-                {backgroundColor: t.palette.contrast_50, height: 100},
-              ]}>
-              <Text style={a.text_md}>
-                Picture a sweating butterfly being here maybe :)
-              </Text>
+              style={[a.w_full, a.justify_center, a.align_center, a.mt_4xl]}>
+              <Group3 fill="none" stroke={t.palette.contrast_900} width={120} />
             </View>
 
             <H2 style={[a.pb_sm]}>
