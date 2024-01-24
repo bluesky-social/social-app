@@ -1,7 +1,6 @@
 import React from 'react'
 
-import {logger} from '#/logger'
-import {API_RESPONSE} from '#/screens/Onboarding/StepInterests/data'
+import {ApiResponseMap} from '#/screens/Onboarding/StepInterests/data'
 
 export type OnboardingState = {
   hasPrev: boolean
@@ -18,7 +17,7 @@ export type OnboardingState = {
 
   interestsStepResults: {
     selectedInterests: string[]
-    apiResponse: typeof API_RESPONSE
+    apiResponse: ApiResponseMap
   }
   suggestedAccountsStepResults: {
     accountDids: string[]
@@ -44,7 +43,7 @@ export type OnboardingAction =
   | {
       type: 'setInterestsStepResults'
       selectedInterests: string[]
-      apiResponse: typeof API_RESPONSE
+      apiResponse: ApiResponseMap
     }
   | {
       type: 'setSuggestedAccountsStepResults'
@@ -67,7 +66,11 @@ export const initialState: OnboardingState = {
 
   interestsStepResults: {
     selectedInterests: [],
-    apiResponse: API_RESPONSE,
+    apiResponse: {
+      interests: [],
+      suggestedAccountDids: {},
+      suggestedFeedUris: {},
+    },
   },
   suggestedAccountsStepResults: {
     accountDids: [],
@@ -174,8 +177,6 @@ export function reducer(
     ...next,
     hasPrev: next.activeStep !== 'interests',
   }
-
-  logger.debug(`onboarding`, state)
 
   return state
 }

@@ -26,9 +26,9 @@ export function aggregateInterestItems(
   const all = interests.map(i => map[i]).flat()
   const results = Array.from(new Set(all))
 
-  if (results.length < 10) {
+  if (results.length < 20) {
     results.push(...shuffle(fallbackItems))
   }
 
-  return results.slice(0, 10)
+  return Array.from(new Set(results)).slice(0, 20)
 }

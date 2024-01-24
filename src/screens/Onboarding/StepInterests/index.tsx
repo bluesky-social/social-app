@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useQuery} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
@@ -10,6 +11,7 @@ import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Has
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
+import {getAgent} from '#/state/session'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -18,7 +20,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {
-  API_RESPONSE,
+  ApiResponseMap,
   INTEREST_TO_DISPLAY_NAME,
 } from '#/screens/Onboarding/StepInterests/data'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
@@ -32,6 +34,45 @@ export function StepInterests() {
   const [interests, setInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
   )
+  const {isLoading, data} = useQuery({
+    queryKey: ['interests'],
+    queryFn: async () => {
+      const {data} = await getAgent().app.bsky.unspecced.getTaggedSuggestions()
+      return data.suggestions.reduce(
+        (agg, s) => {
+          const {tag, subject, subjectType} = s
+          const isDefault = tag === 'default'
+
+          if (!agg.interests.includes(tag) && !isDefault) {
+            agg.interests.push(tag)
+          }
+
+          if (subjectType === 'user') {
+            agg.suggestedAccountDids[tag] = agg.suggestedAccountDids[tag] || []
+            agg.suggestedAccountDids[tag].push(subject)
+          }
+
+          if (subjectType === 'feed') {
+            // agg all feeds into defaults
+            if (isDefault) {
+              agg.suggestedFeedUris[tag] = agg.suggestedFeedUris[tag] || []
+            } else {
+              agg.suggestedFeedUris[tag] = agg.suggestedFeedUris[tag] || []
+              agg.suggestedFeedUris[tag].push(subject)
+              agg.suggestedFeedUris.default.push(subject)
+            }
+          }
+
+          return agg
+        },
+        {
+          interests: [],
+          suggestedAccountDids: {},
+          suggestedFeedUris: {},
+        } as ApiResponseMap,
+      )
+    },
+  })
 
   const saveInterests = React.useCallback(async () => {
     setSaving(true)
@@ -40,7 +81,7 @@ export function StepInterests() {
       setSaving(false)
       dispatch({
         type: 'setInterestsStepResults',
-        apiResponse: API_RESPONSE,
+        apiResponse: data!,
         selectedInterests: interests,
       })
       dispatch({type: 'next'})
@@ -48,7 +89,7 @@ export function StepInterests() {
       logger.info(`onboading: error saving interests`)
       logger.error(e)
     }
-  }, [interests, setSaving, dispatch])
+  }, [interests, data, setSaving, dispatch])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
@@ -62,26 +103,30 @@ export function StepInterests() {
       </Description>
 
       <View style={[a.pt_2xl]}>
-        <Toggle.Group
-          values={interests}
-          onChange={setInterests}
-          label={_(msg`Select your interests from the options below`)}>
-          <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
-            {API_RESPONSE.interests.map(interest => (
-              <Toggle.Item
-                key={interest}
-                name={interest}
-                label={INTEREST_TO_DISPLAY_NAME[interest]}>
-                <InterestButton interest={interest} />
-              </Toggle.Item>
-            ))}
-          </View>
-        </Toggle.Group>
+        {isLoading || !data ? (
+          <Loader size="xl" />
+        ) : (
+          <Toggle.Group
+            values={interests}
+            onChange={setInterests}
+            label={_(msg`Select your interests from the options below`)}>
+            <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+              {data.interests.map(interest => (
+                <Toggle.Item
+                  key={interest}
+                  name={interest}
+                  label={INTEREST_TO_DISPLAY_NAME[interest]}>
+                  <InterestButton interest={interest} />
+                </Toggle.Item>
+              ))}
+            </View>
+          </Toggle.Group>
+        )}
       </View>
 
       <OnboardingControls.Portal>
         <Button
-          disabled={saving}
+          disabled={saving || !data}
           variant="gradient"
           color="gradient_sky"
           size="large"

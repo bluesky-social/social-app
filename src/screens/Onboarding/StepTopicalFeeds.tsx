@@ -27,11 +27,13 @@ export function StepTopicalFeeds() {
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
-  const suggestedFeedUris = aggregateInterestItems(
-    state.interestsStepResults.selectedInterests,
-    state.interestsStepResults.apiResponse.suggestedFeedUris,
-    state.interestsStepResults.apiResponse.suggestedFeedUris.default,
-  )
+  const suggestedFeedUris = React.useMemo(() => {
+    return aggregateInterestItems(
+      state.interestsStepResults.selectedInterests,
+      state.interestsStepResults.apiResponse.suggestedFeedUris,
+      state.interestsStepResults.apiResponse.suggestedFeedUris.default,
+    )
+  }, [state.interestsStepResults])
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.selectedInterests.map(

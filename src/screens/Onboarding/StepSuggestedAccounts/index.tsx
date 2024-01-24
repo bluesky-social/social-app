@@ -68,11 +68,13 @@ export function StepSuggestedAccounts() {
   const {_} = useLingui()
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
-  const suggestedDids = aggregateInterestItems(
-    state.interestsStepResults.selectedInterests,
-    state.interestsStepResults.apiResponse.suggestedAccountDids,
-    state.interestsStepResults.apiResponse.suggestedAccountDids.default,
-  )
+  const suggestedDids = React.useMemo(() => {
+    return aggregateInterestItems(
+      state.interestsStepResults.selectedInterests,
+      state.interestsStepResults.apiResponse.suggestedAccountDids,
+      state.interestsStepResults.apiResponse.suggestedAccountDids.default,
+    )
+  }, [state.interestsStepResults])
   const moderationOpts = useModerationOpts()
   const {
     isLoading: isProfilesLoading,

@@ -26,18 +26,18 @@ function PrimaryFeedCardInner({
 
   const styles = React.useMemo(
     () => ({
-      active: [t.atoms.bg_contrast_50],
+      active: [t.atoms.bg_contrast_25],
       selected: [
         a.shadow_md,
         {
           backgroundColor:
-            t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
+            t.name === 'light' ? t.palette.primary_50 : t.palette.primary_950,
         },
       ],
       selectedHover: [
         {
           backgroundColor:
-            t.name === 'light' ? t.palette.primary_50 : t.palette.primary_900,
+            t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
         },
       ],
       textSelected: [{color: t.palette.white}],
@@ -58,7 +58,7 @@ function PrimaryFeedCardInner({
         a.p_md,
         a.rounded_md,
         a.overflow_hidden,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         (ctx.hovered || ctx.focused || ctx.pressed) && styles.active,
         ctx.selected && styles.selected,
         ctx.selected &&
@@ -178,17 +178,17 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
 
   const styles = React.useMemo(
     () => ({
-      active: [t.atoms.bg_contrast_50],
+      active: [t.atoms.bg_contrast_25],
       selected: [
         {
           backgroundColor:
-            t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
+            t.name === 'light' ? t.palette.primary_50 : t.palette.primary_950,
         },
       ],
       selectedHover: [
         {
           backgroundColor:
-            t.name === 'light' ? t.palette.primary_50 : t.palette.primary_900,
+            t.name === 'light' ? t.palette.primary_25 : t.palette.primary_975,
         },
       ],
       textSelected: [],
@@ -209,7 +209,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
         a.p_md,
         a.rounded_md,
         a.overflow_hidden,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         (ctx.hovered || ctx.focused || ctx.pressed) && styles.active,
         ctx.selected && styles.selected,
         ctx.selected &&
@@ -258,7 +258,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
             a.justify_center,
             a.align_center,
             a.rounded_sm,
-            t.atoms.bg_contrast_25,
+            t.atoms.bg,
             ctx.selected && styles.checkboxSelected,
             {
               width: 28,
@@ -297,13 +297,13 @@ export function FeedCard({config}: {config: FeedConfig}) {
 
   return !feed ? (
     <FeedCardPlaceholder />
-  ) : (
+  ) : feed.avatar ? (
     <Toggle.Item
       name={feed.uri}
       label={_(msg`Subscribe to the ${feed.displayName} feed`)}>
       <FeedCardInner config={config} feed={feed} />
     </Toggle.Item>
-  )
+  ) : null
 }
 
 export function FeedCardPlaceholder({primary}: {primary?: boolean}) {

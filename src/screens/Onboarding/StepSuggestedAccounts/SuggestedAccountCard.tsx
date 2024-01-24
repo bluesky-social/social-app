@@ -22,19 +22,19 @@ export function SuggestedAccountCard({
 
   const styles = React.useMemo(() => {
     const light = t.name === 'light'
-    const base: ViewStyle[] = [t.atoms.bg_contrast_25]
-    const hover: ViewStyle[] = [t.atoms.bg_contrast_50]
+    const base: ViewStyle[] = [t.atoms.bg_contrast_50]
+    const hover: ViewStyle[] = [t.atoms.bg_contrast_25]
     const selected: ViewStyle[] = [
-      {
-        backgroundColor: light ? t.palette.primary_25 : t.palette.primary_975,
-      },
-    ]
-    const selectedHover: ViewStyle[] = [
       {
         backgroundColor: light ? t.palette.primary_50 : t.palette.primary_950,
       },
     ]
-    const checkboxBase: ViewStyle[] = [t.atoms.bg_contrast_25]
+    const selectedHover: ViewStyle[] = [
+      {
+        backgroundColor: light ? t.palette.primary_25 : t.palette.primary_975,
+      },
+    ]
+    const checkboxBase: ViewStyle[] = [t.atoms.bg]
     const checkboxSelected: ViewStyle[] = [
       {
         backgroundColor: t.palette.primary_500,

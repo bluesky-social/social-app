@@ -56,6 +56,14 @@ const SECONDARY_FEEDS: FeedConfig[] = [
     default: false,
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/best-of-follows',
   },
+  {
+    default: false,
+    uri: 'at://did:plc:tenurhgjptubkk5zf5qhi3og/app.bsky.feed.generator/catch-up',
+  },
+  {
+    default: false,
+    uri: 'at://did:plc:q6gjnaw2blty4crticxkmujt/app.bsky.feed.generator/at-bangers',
+  },
 ]
 
 export function StepAlgoFeeds() {
