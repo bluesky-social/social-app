@@ -111,7 +111,7 @@ export function StepAlgoFeeds() {
         </Trans>
       </Description>
 
-      <Text style={[a.font_bold, a.pt_3xl, a.pb_sm, t.atoms.text_contrast_400]}>
+      <Text style={[a.font_bold, a.pt_3xl, a.pb_md, t.atoms.text_contrast_400]}>
         <Trans>Primary algorithmic feeds</Trans>
       </Text>
 
@@ -120,15 +120,17 @@ export function StepAlgoFeeds() {
           values={primaryFeedUris}
           onChange={setPrimaryFeedUris}
           label={_(msg`Select your primary algorithmic feeds`)}>
-          {PRIMARY_FEEDS.map(config => (
-            <PrimaryFeedCard key={config.uri} config={config} />
-          ))}
+          <View style={[a.gap_md]}>
+            {PRIMARY_FEEDS.map(config => (
+              <PrimaryFeedCard key={config.uri} config={config} />
+            ))}
+          </View>
         </Toggle.Group>
       </View>
 
       <Divider />
 
-      <Text style={[a.font_bold, a.pt_3xl, a.pb_sm, t.atoms.text_contrast_400]}>
+      <Text style={[a.font_bold, a.pt_3xl, a.pb_md, t.atoms.text_contrast_400]}>
         <Trans>Secondary algorithmic feeds</Trans>
       </Text>
 
@@ -137,9 +139,11 @@ export function StepAlgoFeeds() {
           values={secondaryFeedUris}
           onChange={setSeconaryFeedUris}
           label={_(msg`Select your secondary algorithmic feeds`)}>
-          {SECONDARY_FEEDS.map(config => (
-            <FeedCard key={config.uri} config={config} />
-          ))}
+          <View style={[a.gap_md]}>
+            {SECONDARY_FEEDS.map(config => (
+              <FeedCard key={config.uri} config={config} />
+            ))}
+          </View>
         </Toggle.Group>
       </View>
 

@@ -88,9 +88,11 @@ export function StepTopicalFeeds() {
           values={selectedFeedUris}
           onChange={setSelectedFeedUris}
           label={_(msg`Select topical feeds to follow from the list below`)}>
-          {suggestedFeedUris.map(uri => (
-            <FeedCard key={uri} config={{default: false, uri}} />
-          ))}
+          <View style={[a.gap_md]}>
+            {suggestedFeedUris.map(uri => (
+              <FeedCard key={uri} config={{default: false, uri}} />
+            ))}
+          </View>
         </Toggle.Group>
       </View>
 
