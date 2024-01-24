@@ -104,7 +104,7 @@ let PostDropdownBtn = ({
   }, [rootUri, toggleThreadMute, _])
 
   const onCopyPostText = React.useCallback(() => {
-    const str = richTextToString(richText)
+    const str = richTextToString(richText, true)
 
     Clipboard.setString(str)
     Toast.show(_(msg`Copied to clipboard`))
