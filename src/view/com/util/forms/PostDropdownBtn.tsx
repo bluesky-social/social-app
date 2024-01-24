@@ -243,7 +243,7 @@ let PostDropdownBtn = ({
     },
     hasSession &&
       !isAuthor && {
-        label: _(msg`lock account`),
+        label: _(msg`Block account`),
         onPress: onBlockUser,
         testID: 'postDropdownBlockUserBtn',
         icon: {
