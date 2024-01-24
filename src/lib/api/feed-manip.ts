@@ -177,8 +177,11 @@ export class FeedTuner {
 
             parent.insert(item)
 
-            slices.splice(index, 1)
-            slices.unshift(parent)
+            // If our slice isn't currently on the top, reinsert it to the top.
+            if (index !== 0) {
+              slices.splice(index, 1)
+              slices.unshift(parent)
+            }
 
             continue
           }
