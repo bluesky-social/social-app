@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, AccessibilityProps, TextStyle, ViewStyle} from 'react-native'
 
-import {atoms as a, useTheme, native} from '#/alf'
+import {atoms as a, useTheme, native, web} from '#/alf'
 import {Text} from '#/components/Typography'
 
 import * as Toggle from '#/components/forms/Toggle'
@@ -96,11 +96,9 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           borderLeftWidth: 1,
           marginLeft: -1,
         },
-        a.px_md,
+        web(a.px_md),
+        native(a.px_sm),
         a.py_md,
-        native({
-          paddingTop: 14,
-        }),
         t.atoms.bg,
         t.atoms.border,
         baseStyles,
