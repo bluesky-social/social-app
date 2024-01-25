@@ -171,13 +171,15 @@ let PostCtrls = ({
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      <RepostButton
-        big={big}
-        isReposted={!!post.viewer?.repost}
-        repostCount={post.repostCount}
-        onRepost={onRepost}
-        onQuote={onQuote}
-      />
+      <View style={[styles.ctrl, !big && styles.ctrlPad]}>
+        <RepostButton
+          big={big}
+          isReposted={!!post.viewer?.repost}
+          repostCount={post.repostCount}
+          onRepost={onRepost}
+          onQuote={onQuote}
+        />
+      </View>
       <TouchableOpacity
         testID="likeBtn"
         style={[styles.ctrl, !big && styles.ctrlPad]}
@@ -237,6 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   ctrl: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
