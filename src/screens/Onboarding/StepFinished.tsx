@@ -1,5 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
@@ -28,6 +30,7 @@ import {
 } from '#/screens/Onboarding/util'
 
 export function StepFinished() {
+  const {_} = useLingui()
   const t = useTheme()
   const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
@@ -84,29 +87,37 @@ export function StepFinished() {
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
-      <Title>You're ready to go!</Title>
+      <Title>
+        <Trans>You're ready to go!</Trans>
+      </Title>
       <Description>
-        We hope you have a wonderful time. Remember, Bluesky is:
+        <Trans>We hope you have a wonderful time. Remember, Bluesky is:</Trans>
       </Description>
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
           <IconCircle icon={Growth} size="lg" style={{width: 48, height: 48}} />
           <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_lg]}>Public</Text>
+            <Text style={[a.font_bold, a.text_lg]}>
+              <Trans>Public</Trans>
+            </Text>
             <Text
               style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
-              Your posts, likes, and blocks are public. Mutes are private.
+              <Trans>
+                Your posts, likes, and blocks are public. Mutes are private.
+              </Trans>
             </Text>
           </View>
         </View>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
           <IconCircle icon={News} size="lg" style={{width: 48, height: 48}} />
           <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_lg]}>Open</Text>
+            <Text style={[a.font_bold, a.text_lg]}>
+              <Trans>Open</Trans>
+            </Text>
             <Text
               style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
-              Never lose access to your followers and data.
+              <Trans>Never lose access to your followers and data.</Trans>
             </Text>
           </View>
         </View>
@@ -117,10 +128,12 @@ export function StepFinished() {
             style={{width: 48, height: 48}}
           />
           <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_lg]}>Flexible</Text>
+            <Text style={[a.font_bold, a.text_lg]}>
+              <Trans>Flexible</Trans>
+            </Text>
             <Text
               style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
-              Choose the algorithms that power your custom feeds.
+              <Trans>Choose the algorithms that power your custom feeds.</Trans>
             </Text>
           </View>
         </View>
@@ -133,12 +146,16 @@ export function StepFinished() {
           variant="gradient"
           color="gradient_sky"
           size="large"
-          label="Continue setting up your account"
+          label={_(msg`Complete onboarding and start using your account`)}
           onPress={finishOnboarding}>
           <ButtonText>
-            {saving ? `Finalizing your account` : `Ready? Let's go!`}
+            {saving ? (
+              <Trans>Finalizing your account</Trans>
+            ) : (
+              <Trans>Ready? Let's go!</Trans>
+            )}
           </ButtonText>
-          {saving && <ButtonIcon icon={Loader} />}
+          {saving && <ButtonIcon icon={Loader} position="right" />}
         </Button>
       </OnboardingControls.Portal>
     </View>

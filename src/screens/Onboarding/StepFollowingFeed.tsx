@@ -155,8 +155,10 @@ export function StepFollowingFeed() {
           size="large"
           label={_(msg`Continue to next step`)}
           onPress={onContinue}>
-          <ButtonText>Continue</ButtonText>
-          <ButtonIcon icon={ChevronRight} />
+          <ButtonText>
+            <Trans>Continue</Trans>
+          </ButtonText>
+          <ButtonIcon icon={ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>
     </View>

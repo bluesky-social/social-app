@@ -164,8 +164,10 @@ export function StepAlgoFeeds() {
           size="large"
           label={_(msg`Continue to the next step`)}
           onPress={saveFeeds}>
-          <ButtonText>Continue</ButtonText>
-          <ButtonIcon icon={saving ? Loader : ChevronRight} />
+          <ButtonText>
+            <Trans>Continue</Trans>
+          </ButtonText>
+          <ButtonIcon icon={saving ? Loader : ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>
     </View>

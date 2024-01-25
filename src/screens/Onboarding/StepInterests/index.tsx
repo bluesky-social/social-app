@@ -221,7 +221,9 @@ export function StepInterests() {
               size="large"
               label={_(msg`Retry`)}
               onPress={() => refetch()}>
-              <ButtonText>Retry</ButtonText>
+              <ButtonText>
+                <Trans>Retry</Trans>
+              </ButtonText>
               <ButtonIcon icon={ArrowRotateCounterClockwise} position="right" />
             </Button>
             <Button
@@ -230,7 +232,9 @@ export function StepInterests() {
               size="large"
               label={_(msg`Skip this flow`)}
               onPress={skipOnboarding}>
-              <ButtonText>Skip</ButtonText>
+              <ButtonText>
+                <Trans>Skip</Trans>
+              </ButtonText>
             </Button>
           </View>
         ) : (
@@ -241,7 +245,9 @@ export function StepInterests() {
             size="large"
             label={_(msg`Continue to next step`)}
             onPress={saveInterests}>
-            <ButtonText>Continue</ButtonText>
+            <ButtonText>
+              <Trans>Continue</Trans>
+            </ButtonText>
             <ButtonIcon
               icon={saving ? Loader : ChevronRight}
               position="right"

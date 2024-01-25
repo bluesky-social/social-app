@@ -81,7 +81,9 @@ export function StepModeration() {
           size="large"
           label={_(msg`Continue to next step`)}
           onPress={onContinue}>
-          <ButtonText>Continue</ButtonText>
+          <ButtonText>
+            <Trans>Continue</Trans>
+          </ButtonText>
           <ButtonIcon icon={ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>

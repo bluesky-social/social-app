@@ -103,8 +103,10 @@ export function StepTopicalFeeds() {
           size="large"
           label={_(msg`Continue to next step`)}
           onPress={saveFeeds}>
-          <ButtonText>Continue</ButtonText>
-          <ButtonIcon icon={saving ? Loader : ChevronRight} />
+          <ButtonText>
+            <Trans>Continue</Trans>
+          </ButtonText>
+          <ButtonIcon icon={saving ? Loader : ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>
     </View>

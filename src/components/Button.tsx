@@ -490,17 +490,9 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(
-        a.text_md,
-        android({paddingBottom: 1}),
-        // native({marginTop: 2}),
-      )
+      baseStyles.push(a.text_md, android({paddingBottom: 1}))
     } else {
-      baseStyles.push(
-        a.text_sm,
-        android({paddingBottom: 1}),
-        // native({marginTop: 2}),
-      )
+      baseStyles.push(a.text_sm, android({paddingBottom: 1}))
     }
 
     return StyleSheet.flatten(baseStyles)

@@ -168,8 +168,10 @@ export function StepSuggestedAccounts() {
               msg`Follow selected accounts and continue to then next step`,
             )}
             onPress={handleContinue}>
-            <ButtonText>Follow All</ButtonText>
-            <ButtonIcon icon={saving ? Loader : Plus} />
+            <ButtonText>
+              <Trans>Follow All</Trans>
+            </ButtonText>
+            <ButtonIcon icon={saving ? Loader : Plus} position="right" />
           </Button>
           <Button
             variant="outline"
@@ -179,7 +181,9 @@ export function StepSuggestedAccounts() {
               msg`Continue to the next step without following any accounts`,
             )}
             onPress={handleSkip}>
-            Skip
+            <ButtonText>
+              <Trans>Skip</Trans>
+            </ButtonText>
           </Button>
         </View>
       </OnboardingControls.Portal>
