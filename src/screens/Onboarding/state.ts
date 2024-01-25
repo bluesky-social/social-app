@@ -170,7 +170,7 @@ export function reducer(
     }
     case 'setTopicalFeedsStepResults': {
       next.topicalFeedsStepResults = {
-        feedUris: a.feedUris,
+        feedUris: next.topicalFeedsStepResults.feedUris.concat(a.feedUris),
       }
       break
     }
