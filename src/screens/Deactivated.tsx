@@ -3,14 +3,20 @@ import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useOnboardingDispatch} from '#/state/shell'
+import {getAgent, useSessionApi} from '#/state/session'
+import {logger} from '#/logger'
+import {pluralize} from '#/lib/strings/helpers'
 
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {isWeb} from '#/platform/detection'
 import {H2, P} from '#/components/Typography'
 import {ScrollView} from '#/view/com/util/Views'
 import {Group3_Stroke2_Corner0_Rounded as Group3} from '#/components/icons/Group3'
+import {Loader} from '#/components/Loader'
+import * as Toast from 'view/com/util/Toast'
 
 const COL_WIDTH = 500
 
@@ -19,8 +25,46 @@ export function Deactivated() {
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
+  const onboardingDispatch = useOnboardingDispatch()
+  const {logout} = useSessionApi()
 
-  const dialogLabel = _(msg`You're in line`)
+  const [isProcessing, setProcessing] = React.useState(false)
+  const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(
+    undefined,
+  )
+  const [placeInQueue, setPlaceInQueue] = React.useState<number | undefined>(
+    undefined,
+  )
+
+  const checkStatus = React.useCallback(async () => {
+    setProcessing(true)
+    try {
+      const res = await getAgent().com.atproto.temp.checkSignupQueue()
+      if (res.data.activated) {
+        // ready to go, exchange the access token for a usable one and kick off onboarding
+        await getAgent().refreshSession()
+        Toast.show(_(msg`Your account is ready!`))
+        onboardingDispatch({type: 'start'})
+      } else {
+        // not ready, update UI
+        Toast.show(_(msg`Not ready yet!`))
+        setEstimatedTime(msToString(res.data.estimatedTimeMs))
+        if (typeof res.data.placeInQueue !== 'undefined') {
+          setPlaceInQueue(Math.max(res.data.placeInQueue, 1))
+        }
+      }
+    } catch (e: any) {
+      logger.error('Failed to check signup queue', {err: e.toString()})
+    } finally {
+      setProcessing(false)
+    }
+  }, [setProcessing, setEstimatedTime, setPlaceInQueue, onboardingDispatch, _])
+
+  React.useEffect(() => {
+    checkStatus()
+    const interval = setInterval(checkStatus, 60e3)
+    return () => clearInterval(interval)
+  }, [checkStatus])
 
   const checkBtn = (
     <Button
@@ -28,10 +72,12 @@ export function Deactivated() {
       color="primary"
       size="large"
       label={_(msg`Check my status`)}
-      onPress={() => {}}>
+      onPress={checkStatus}
+      disabled={isProcessing}>
       <ButtonText>
         <Trans>Check my status</Trans>
       </ButtonText>
+      {isProcessing && <ButtonIcon icon={Loader} />}
     </Button>
   )
 
@@ -40,8 +86,8 @@ export function Deactivated() {
       aria-modal
       role="dialog"
       aria-role="dialog"
-      aria-label={dialogLabel}
-      accessibilityLabel={dialogLabel}
+      aria-label={_(msg`You're in line`)}
+      accessibilityLabel={_(msg`You're in line`)}
       accessibilityHint=""
       style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       <ScrollView
@@ -50,7 +96,6 @@ export function Deactivated() {
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
-            {/* Placeholder */}
             <View
               style={[a.w_full, a.justify_center, a.align_center, a.mt_4xl]}>
               <Group3 fill="none" stroke={t.palette.contrast_900} width={120} />
@@ -67,21 +112,24 @@ export function Deactivated() {
             </P>
 
             <View
-              style={[
-                // a.border,
-                a.rounded_md,
-                // t.atoms.border,
-                a.p_2xl,
-                a.mt_2xl,
-                t.atoms.bg_contrast_50,
-              ]}>
+              style={[a.rounded_sm, a.p_2xl, a.mt_2xl, t.atoms.bg_contrast_50]}>
               <P style={[]}>
                 <Text style={[a.font_bold, a.text_md]}>
-                  <Trans>You are number 10 in line.</Trans>{' '}
+                  {typeof placeInQueue === 'number' ? (
+                    <Trans>You are number {placeInQueue} in line.</Trans>
+                  ) : (
+                    <Trans>You are in line.</Trans>
+                  )}{' '}
                 </Text>
-                <Trans>
-                  We estimate 15 more minutes until your account is ready.
-                </Trans>
+                {estimatedTime ? (
+                  <Trans>
+                    We estimate {estimatedTime} until your account is ready.
+                  </Trans>
+                ) : (
+                  <Trans>
+                    We will let you know when your account is ready.
+                  </Trans>
+                )}
               </P>
             </View>
 
@@ -90,8 +138,8 @@ export function Deactivated() {
                 <Button
                   variant="ghost"
                   size="large"
-                  label={_(msg`Check my status`)}
-                  onPress={() => {}}>
+                  label={_(msg`Log out`)}
+                  onPress={logout}>
                   <ButtonText style={[{color: t.palette.primary_500}]}>
                     <Trans>Log out</Trans>
                   </ButtonText>
@@ -119,8 +167,8 @@ export function Deactivated() {
             <Button
               variant="ghost"
               size="large"
-              label={_(msg`Check my status`)}
-              onPress={() => {}}>
+              label={_(msg`Log out`)}
+              onPress={logout}>
               <ButtonText style={[{color: t.palette.primary_500}]}>
                 <Trans>Log out</Trans>
               </ButtonText>
@@ -130,4 +178,22 @@ export function Deactivated() {
       )}
     </View>
   )
+}
+
+function msToString(ms: number | undefined): string | undefined {
+  if (ms && ms > 0) {
+    const estimatedTimeMins = Math.ceil(ms / 60e3)
+    if (estimatedTimeMins > 59) {
+      const estimatedTimeHrs = Math.round(estimatedTimeMins / 60)
+      if (estimatedTimeHrs > 6) {
+        // dont even bother
+        return undefined
+      }
+      // hours
+      return `${estimatedTimeHrs} ${pluralize(estimatedTimeHrs, 'hour')}`
+    }
+    // minutes
+    return `${estimatedTimeMins} ${pluralize(estimatedTimeMins, 'minute')}`
+  }
+  return undefined
 }
