@@ -34,7 +34,7 @@ export function StepTopicalFeeds() {
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedFeedUris,
       state.interestsStepResults.apiResponse.suggestedFeedUris.default,
-    )
+    ).slice(0, 10)
   }, [state.interestsStepResults])
 
   const interestsText = React.useMemo(() => {

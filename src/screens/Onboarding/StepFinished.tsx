@@ -53,16 +53,20 @@ export function StepFinished() {
 
     try {
       await Promise.all([
-        getAgent().setInterestsPref({onboardingTags: selectedInterests}),
         bulkWriteFollows(suggestedAccountsStepResults.accountDids),
-        saveFeeds({
-          saved: selectedFeeds,
-          pinned: selectedFeeds,
-        }),
+        // these must be serial
+        (async () => {
+          await getAgent().setInterestsPref({tags: selectedInterests})
+          await saveFeeds({
+            saved: selectedFeeds,
+            pinned: selectedFeeds,
+          })
+        })(),
       ])
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
+      // don't alert the user, just let them into their account
     }
 
     setSaving(false)
