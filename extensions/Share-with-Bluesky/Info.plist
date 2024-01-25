@@ -15,7 +15,7 @@
           <key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
           <integer>1</integer>
           <key>NSExtensionActivationSupportsImageWithMaxCount</key>
-          <integer>4</integer>
+          <integer>10</integer>
         </dict>
       </dict>
       <key>NSExtensionPointIdentifier</key>

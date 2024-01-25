@@ -67,28 +67,18 @@ class ShareViewController: UIViewController {
   }
 
   private func handleImages(items: [NSItemProvider]) async -> Void {
-    // Verify that they are all images and that there are not more than four, just in case
-    guard items.count <= 4 else {
-      self.completeRequest()
-      return
+    let firstFourItems: [NSItemProvider]
+    if items.count < 4 {
+      firstFourItems = items
+    } else {
+      firstFourItems = Array(items[0...3])
     }
 
-    // Check them all
     var valid = true
-    items.forEach { item in
-      if !item.hasItemConformingToTypeIdentifier("public.image") {
-        valid = false
-      }
-    }
-    if !valid {
-      self.completeRequest()
-      return
-    }
-
     // Build a string
     var imageUris = ""
 
-    for (index, item) in items.enumerated() {
+    for (index, item) in firstFourItems.enumerated() {
       var imageUriInfo: String? = nil
 
       do {
