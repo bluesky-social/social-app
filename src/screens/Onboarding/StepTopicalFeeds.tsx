@@ -9,6 +9,7 @@ import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -23,6 +24,7 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
+  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
@@ -47,11 +49,16 @@ export function StepTopicalFeeds() {
 
     dispatch({type: 'setTopicalFeedsStepResults', feedUris: selectedFeedUris})
 
-    await new Promise(y => setTimeout(y, 1000))
-
     setSaving(false)
     dispatch({type: 'next'})
-  }, [selectedFeedUris, dispatch])
+    track('OnboardingV2:StepTopicalFeeds:End', {
+      selectedFeeds: selectedFeedUris,
+    })
+  }, [selectedFeedUris, dispatch, track])
+
+  React.useEffect(() => {
+    track('OnboardingV2:StepTopicalFeeds:Start')
+  }, [track])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

@@ -13,6 +13,7 @@ import {useProfilesQuery} from '#/state/queries/profile'
 import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -66,6 +67,7 @@ export function Inner({
 
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
+  const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const suggestedDids = React.useMemo(() => {
@@ -98,13 +100,15 @@ export function StepSuggestedAccounts() {
     setSaving(true)
 
     if (dids.length) {
-      await new Promise(y => setTimeout(y, 1000))
       dispatch({type: 'setSuggestedAccountsStepResults', accountDids: dids})
     }
 
     setSaving(false)
     dispatch({type: 'next'})
-  }, [dids, setSaving, dispatch])
+    track('OnboardingV2:StepSuggestedAccounts:Start', {
+      selectedAccountsLength: dids.length,
+    })
+  }, [dids, setSaving, dispatch, track])
 
   const handleSkip = React.useCallback(() => {
     // if a user comes back and clicks skip, erase follows
@@ -113,6 +117,10 @@ export function StepSuggestedAccounts() {
   }, [dispatch])
 
   const isLoading = isProfilesLoading && moderationOpts
+
+  React.useEffect(() => {
+    track('OnboardingV2:StepSuggestedAccounts:Start')
+  }, [track])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

@@ -11,6 +11,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {
   Description,
@@ -24,9 +25,19 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepModeration() {
   const {_} = useLingui()
+  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
+
+  const onContinue = React.useCallback(() => {
+    dispatch({type: 'next'})
+    track('OnboardingV2:StepModeration:End')
+  }, [track, dispatch])
+
+  React.useEffect(() => {
+    track('OnboardingV2:StepModeration:Start')
+  }, [track])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
@@ -69,7 +80,7 @@ export function StepModeration() {
           color="gradient_sky"
           size="large"
           label={_(msg`Continue to next step`)}
-          onPress={() => dispatch({type: 'next'})}>
+          onPress={onContinue}>
           <ButtonText>Continue</ButtonText>
           <ButtonIcon icon={ChevronRight} position="right" />
         </Button>

@@ -11,6 +11,7 @@ import {Text} from '#/components/Typography'
 import {Divider} from '#/components/Divider'
 import {Loader} from '#/components/Loader'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -68,6 +69,7 @@ const SECONDARY_FEEDS: FeedConfig[] = [
 
 export function StepAlgoFeeds() {
   const {_} = useLingui()
+  const {track} = useAnalytics()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
@@ -83,11 +85,17 @@ export function StepAlgoFeeds() {
     const uris = primaryFeedUris.concat(secondaryFeedUris)
     dispatch({type: 'setAlgoFeedsStepResults', feedUris: uris})
 
-    await new Promise(y => setTimeout(y, 1000))
-
     setSaving(false)
     dispatch({type: 'next'})
-  }, [primaryFeedUris, secondaryFeedUris, dispatch])
+    track('OnboardingV2:StepAlgoFeeds:End', {
+      selectedPrimaryFeeds: primaryFeedUris,
+      selectedSecondaryFeeds: secondaryFeedUris,
+    })
+  }, [primaryFeedUris, secondaryFeedUris, dispatch, track])
+
+  React.useEffect(() => {
+    track('OnboardingV2:StepAlgoFeeds:Start')
+  }, [track])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

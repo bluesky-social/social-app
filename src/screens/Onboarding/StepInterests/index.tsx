@@ -12,6 +12,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
 import {getAgent} from '#/state/session'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -28,6 +29,7 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepInterests() {
   const {_} = useLingui()
+  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
@@ -85,11 +87,20 @@ export function StepInterests() {
         selectedInterests: interests,
       })
       dispatch({type: 'next'})
+
+      track('OnboardingV2:StepInterests:End', {
+        selectedInterestsLength: interests.length,
+      })
     } catch (e: any) {
       logger.info(`onboading: error saving interests`)
       logger.error(e)
     }
-  }, [interests, data, setSaving, dispatch])
+  }, [interests, data, setSaving, dispatch, track])
+
+  React.useEffect(() => {
+    track('OnboardingV2:Begin')
+    track('OnboardingV2:StepInterests:Start')
+  }, [track])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

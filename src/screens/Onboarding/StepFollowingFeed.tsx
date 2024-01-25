@@ -10,6 +10,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {Divider} from '#/components/Divider'
 import * as Toggle from '#/components/forms/Toggle'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -25,6 +26,7 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepFollowingFeed() {
   const {_} = useLingui()
+  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {dispatch} = React.useContext(Context)
 
@@ -41,6 +43,15 @@ export function StepFollowingFeed() {
   const showQuotes = !(
     variables?.hideQuotePosts ?? preferences?.feedViewPrefs.hideQuotePosts
   )
+
+  const onContinue = React.useCallback(() => {
+    dispatch({type: 'next'})
+    track('OnboardingV2:StepFollowingFeed:End')
+  }, [track, dispatch])
+
+  React.useEffect(() => {
+    track('OnboardingV2:StepFollowingFeed:Start')
+  }, [track])
 
   return (
     // Hack for now to move the image container up
@@ -143,7 +154,7 @@ export function StepFollowingFeed() {
           color="gradient_sky"
           size="large"
           label={_(msg`Continue to next step`)}
-          onPress={() => dispatch({type: 'next'})}>
+          onPress={onContinue}>
           <ButtonText>Continue</ButtonText>
           <ButtonIcon icon={ChevronRight} />
         </Button>

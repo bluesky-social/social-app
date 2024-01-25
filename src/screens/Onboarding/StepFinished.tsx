@@ -13,6 +13,7 @@ import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
 import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -28,6 +29,7 @@ import {
 
 export function StepFinished() {
   const t = useTheme()
+  const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
@@ -66,7 +68,13 @@ export function StepFinished() {
     setSaving(false)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds])
+    track('OnboardingV2:StepFinished:End')
+    track('OnboardingV2:Complete')
+  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+
+  React.useEffect(() => {
+    track('OnboardingV2:StepFinished:Start')
+  }, [track])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>

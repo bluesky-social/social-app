@@ -131,6 +131,32 @@ interface TrackPropertiesMap {
   'Onboarding:Reset': {}
   'Onboarding:SuggestedFollowFollowed': {}
   'Onboarding:CustomFeedAdded': {}
+  // Onboarding v2
+  'OnboardingV2:Begin': {}
+  'OnboardingV2:StepInterests:Start': {}
+  'OnboardingV2:StepInterests:End': {
+    selectedInterestsLength: number
+  }
+  'OnboardingV2:StepSuggestedAccounts:Start': {}
+  'OnboardingV2:StepSuggestedAccounts:End': {
+    selectedAccountsLength: number
+  }
+  'OnboardingV2:StepFollowingFeed:Start': {}
+  'OnboardingV2:StepFollowingFeed:End': {}
+  'OnboardingV2:StepAlgoFeeds:Start': {}
+  'OnboardingV2:StepAlgoFeeds:End': {
+    selectedPrimaryFeeds: string[]
+    selectedSecondaryFeeds: string[]
+  }
+  'OnboardingV2:StepTopicalFeeds:Start': {}
+  'OnboardingV2:StepTopicalFeeds:End': {
+    selectedFeeds: string[]
+  }
+  'OnboardingV2:StepModeration:Start': {}
+  'OnboardingV2:StepModeration:End': {}
+  'OnboardingV2:StepFinished:Start': {}
+  'OnboardingV2:StepFinished:End': {}
+  'OnboardingV2:Complete': {}
 }
 
 interface ScreenPropertiesMap {
