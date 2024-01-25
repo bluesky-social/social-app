@@ -152,7 +152,7 @@ function PostThreadLoaded({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {isTablet, isDesktop, isTabletOrMobile} = useWebMediaQueries()
+  const {isTablet, isMobile, isDesktop, isTabletOrMobile} = useWebMediaQueries()
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
@@ -271,7 +271,7 @@ function PostThreadLoaded({
       } else if (item === REPLY_PROMPT && hasSession) {
         return (
           <View>
-            {isDesktop && <ComposePrompt onPressCompose={onPressReply} />}
+            {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
           </View>
         )
       } else if (item === DELETED) {
@@ -362,7 +362,7 @@ function PostThreadLoaded({
     [
       hasSession,
       isTablet,
-      isDesktop,
+      isMobile,
       onPressReply,
       pal.border,
       pal.viewLight,
