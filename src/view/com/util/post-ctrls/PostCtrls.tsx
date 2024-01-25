@@ -73,20 +73,17 @@ let PostCtrls = ({
       postLikeMutation.mutate({
         uri: post.uri,
         cid: post.cid,
-        likeCount: post.likeCount || 0,
       })
     } else {
       postUnlikeMutation.mutate({
         postUri: post.uri,
         likeUri: post.viewer.like,
-        likeCount: post.likeCount || 0,
       })
     }
   }, [
     post.viewer?.like,
     post.uri,
     post.cid,
-    post.likeCount,
     postLikeMutation,
     postUnlikeMutation,
   ])
@@ -98,20 +95,17 @@ let PostCtrls = ({
       postRepostMutation.mutate({
         uri: post.uri,
         cid: post.cid,
-        repostCount: post.repostCount || 0,
       })
     } else {
       postUnrepostMutation.mutate({
         postUri: post.uri,
         repostUri: post.viewer.repost,
-        repostCount: post.repostCount || 0,
       })
     }
   }, [
     post.uri,
     post.cid,
     post.viewer?.repost,
-    post.repostCount,
     closeModal,
     postRepostMutation,
     postUnrepostMutation,
