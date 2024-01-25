@@ -89,32 +89,29 @@ class ShareViewController: UIViewController {
     var imageUris = ""
 
     for (index, item) in items.enumerated() {
+      var imageUriInfo: String? = nil
+
       do {
-        if let data = try await item.loadItem(forTypeIdentifier: "public.image") as? URL {
+        if let dataUri = try await item.loadItem(forTypeIdentifier: "public.image") as? URL {
           // Now we need to duplicate this image, since we don't have access to the outgoing temp directory
           // We also will get the image dimensions here, sinze RN makes it difficult to get those dimensions for local files
-          let ext = data.absoluteString.split(separator: ".").last ?? "jpeg" // Keep swift happy
-          let data = try Data(contentsOf: data)
+          let data = try Data(contentsOf: dataUri)
           let image = UIImage(data: data)
-
-          if let dir = FileManager()
-            .containerURL(
-              forSecurityApplicationGroupIdentifier: "group.\(Bundle.main.bundleIdentifier?.replacingOccurrences(of: ".Share-with-Bluesky", with: "") ?? "")"),
-             let image = image
-          {
-            let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).\(ext)"
-            if let newUri = URL(string: filePath) {
-              // Write the data
-              try data.write(to: newUri)
-              imageUris.append("\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)")
-            }
-          }
-
-          if index < items.count - 1 {
-            imageUris.append(",")
-          }
+          imageUriInfo = saveImageWithInfo(image)
+        } else if let image = try await item.loadItem(forTypeIdentifier: "public.image") as? UIImage {
+          imageUriInfo = saveImageWithInfo(image)
         }
       } catch {
+        valid = false
+      }
+
+      // If we got data back, add it on
+      if let imageUriInfo = imageUriInfo {
+        imageUris.append(imageUriInfo)
+        if index < items.count - 1 {
+          imageUris.append(",")
+        }
+      } else {
         valid = false
       }
     }
@@ -127,6 +124,36 @@ class ShareViewController: UIViewController {
     }
 
     self.completeRequest()
+  }
+
+  private func saveImageWithInfo(_ image: UIImage?) -> String? {
+    guard let image = image else {
+      return nil
+    }
+
+    do {
+      // Try to get the app group directory
+      if let dir = FileManager()
+        .containerURL(
+          forSecurityApplicationGroupIdentifier: "group.\(Bundle.main.bundleIdentifier?.replacingOccurrences(of: ".Share-with-Bluesky", with: "") ?? "")")
+      {
+        // Create the filepath
+        let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).jpeg"
+
+        // Try to create a new URI and create the JPEG data
+        if let newUri = URL(string: filePath),
+           let jpegData = image.jpegData(compressionQuality: 1)
+        {
+          // Write the data and return the info
+          try jpegData.write(to: newUri)
+          return "\(newUri.absoluteString)|\(image.size.width)|\(image.size.height)"
+        }
+      }
+    } catch {
+      return nil
+    }
+
+    return nil
   }
 
   private func completeRequest() -> Void {
