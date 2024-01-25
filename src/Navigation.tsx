@@ -90,8 +90,6 @@ const MyProfileTab =
 const Flat = createNativeStackNavigatorWithAuth<FlatNavigatorParams>()
 const Tab = createBottomTabNavigator<BottomTabNavigatorParams>()
 
-const APP_SCHEME = process.env.EXPO_PUBLIC_SCHEME ?? 'bluesky'
-
 /**
  * These "common screens" are reused across stacks.
  */
@@ -460,7 +458,7 @@ const FlatNavigator = () => {
  */
 
 const LINKING = {
-  prefixes: [`${APP_SCHEME}://`, 'bsky://', 'https://bsky.app'],
+  prefixes: ['bluesky://', 'bsky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
