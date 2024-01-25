@@ -10,7 +10,7 @@ const withExtensionViewController = (
   return withXcodeProject(config, config => {
     const controllerPath = path.join(
       config.modRequest.projectRoot,
-      'extensions',
+      'modules',
       extensionName,
       `${controllerName}.swift`,
     )

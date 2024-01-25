@@ -8,7 +8,7 @@ const withExtensionInfoPlist = (config, {extensionName}) => {
   return withInfoPlist(config, config => {
     const plistPath = path.join(
       config.modRequest.projectRoot,
-      'extensions',
+      'modules',
       extensionName,
       'Info.plist',
     )
