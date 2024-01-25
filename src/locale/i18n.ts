@@ -3,8 +3,7 @@ import {i18n} from '@lingui/core'
 
 import {useLanguagePrefs} from '#/state/preferences'
 import {messages as messagesEn} from '#/locale/locales/en/messages'
-// DISABLED until this translation is fixed -prf
-// import {messages as messagesDe} from '#/locale/locales/de/messages'
+import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesId} from '#/locale/locales/id/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
@@ -23,11 +22,10 @@ import {AppLanguage} from '#/locale/languages'
  */
 export async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
-    // DISABLED until this translation is fixed -prf
-    // case AppLanguage.de: {
-    //   i18n.loadAndActivate({locale, messages: messagesDe})
-    //   break
-    // }
+    case AppLanguage.de: {
+      i18n.loadAndActivate({locale, messages: messagesDe})
+      break
+    }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
       break

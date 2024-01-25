@@ -210,18 +210,9 @@ function useHeaderOffset() {
   const {isDesktop, isTablet} = useWebMediaQueries()
   const {fontScale} = useWindowDimensions()
   const {hasSession} = useSession()
-
-  if (isDesktop) {
+  if (isDesktop || isTablet) {
     return 0
   }
-  if (isTablet) {
-    if (hasSession) {
-      return 50
-    } else {
-      return 0
-    }
-  }
-
   if (hasSession) {
     const navBarPad = 16
     const navBarText = 21 * fontScale

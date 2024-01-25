@@ -6,8 +6,7 @@ interface Language {
 
 export enum AppLanguage {
   en = 'en',
-  // DISABLED until this translation is fixed -prf
-  // de = 'de',
+  de = 'de',
   es = 'es',
   fr = 'fr',
   hi = 'hi',
@@ -26,8 +25,7 @@ interface AppLanguageConfig {
 
 export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
-  // DISABLED until this translation is fixed -prf
-  // {code2: AppLanguage.de, name: 'Deutsch'},
+  {code2: AppLanguage.de, name: 'Deutsch'},
   {code2: AppLanguage.es, name: 'Español'},
   {code2: AppLanguage.fr, name: 'Français'},
   {code2: AppLanguage.hi, name: 'हिंदी'},

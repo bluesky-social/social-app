@@ -64,7 +64,8 @@ export function show(text: string, icon: FontAwesomeProps['icon'] = 'check') {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
+    // @ts-ignore web only
+    position: 'fixed',
     left: 20,
     bottom: 20,
     // @ts-ignore web only

@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {List, ListMethods} from '../util/List'
 import {
   FontAwesomeIcon,
@@ -36,11 +37,13 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   UsePreferencesQueryResponse,
+  useModerationOpts,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {logger} from '#/logger'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
 
@@ -79,14 +82,30 @@ export function PostThread({
     data: thread,
   } = usePostThreadQuery(uri)
   const {data: preferences} = usePreferencesQuery()
+
   const rootPost = thread?.type === 'post' ? thread.post : undefined
   const rootPostRecord = thread?.type === 'post' ? thread.record : undefined
 
+  const moderationOpts = useModerationOpts()
+  const isNoPwi = React.useMemo(() => {
+    const mod =
+      rootPost && moderationOpts
+        ? moderatePost(rootPost, moderationOpts)
+        : undefined
+
+    const cause = mod?.content.cause
+
+    return cause
+      ? cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated'
+      : false
+  }, [rootPost, moderationOpts])
+
   useSetTitle(
-    rootPost &&
-      `${sanitizeDisplayName(
-        rootPost.author.displayName || `@${rootPost.author.handle}`,
-      )}: "${rootPostRecord?.text}"`,
+    rootPost && !isNoPwi
+      ? `${sanitizeDisplayName(
+          rootPost.author.displayName || `@${rootPost.author.handle}`,
+        )}: "${rootPostRecord!.text}"`
+      : '',
   )
   useEffect(() => {
     if (rootPost) {
@@ -107,13 +126,7 @@ export function PostThread({
     return <PostThreadBlocked />
   }
   if (!thread || isLoading || !preferences) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
   return (
     <PostThreadLoaded
@@ -139,7 +152,7 @@ function PostThreadLoaded({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {isTablet, isDesktop} = useWebMediaQueries()
+  const {isTablet, isDesktop, isTabletOrMobile} = useWebMediaQueries()
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
@@ -157,7 +170,11 @@ function PostThreadLoaded({
   const posts = React.useMemo(() => {
     let arr = [TOP_COMPONENT].concat(
       Array.from(
-        flattenThreadSkeleton(sortThread(thread, threadViewPrefs), hasSession),
+        flattenThreadSkeleton(
+          sortThread(thread, threadViewPrefs),
+          hasSession,
+          treeView,
+        ),
       ),
     )
     if (arr.length > maxVisible) {
@@ -167,7 +184,7 @@ function PostThreadLoaded({
       arr.push(BOTTOM_COMPONENT)
     }
     return arr
-  }, [thread, maxVisible, threadViewPrefs, hasSession])
+  }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
 
   /**
    * NOTE
@@ -197,17 +214,35 @@ function PostThreadLoaded({
 
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
-      highlightedPostRef.current?.measure(
-        (_x, _y, _width, _height, _pageX, pageY) => {
-          ref.current?.scrollToOffset({
-            animated: false,
-            offset: pageY - (isDesktop ? 0 : 50),
-          })
-        },
-      )
+      function onMeasure(pageY: number) {
+        let spinnerHeight = 0
+        if (isDesktop) {
+          spinnerHeight = 40
+        } else if (isTabletOrMobile) {
+          spinnerHeight = 82
+        }
+        ref.current?.scrollToOffset({
+          animated: false,
+          offset: pageY - spinnerHeight,
+        })
+      }
+      if (isNative) {
+        highlightedPostRef.current?.measure(
+          (_x, _y, _width, _height, _pageX, pageY) => {
+            onMeasure(pageY)
+          },
+        )
+      } else {
+        // Measure synchronously to avoid a layout jump.
+        const domNode = highlightedPostRef.current
+        if (domNode) {
+          const pageY = (domNode as any as Element).getBoundingClientRect().top
+          onMeasure(pageY)
+        }
+      }
       needsScrollAdjustment.current = false
     }
-  }, [thread, isDesktop])
+  }, [thread, isDesktop, isTabletOrMobile])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)
@@ -280,8 +315,10 @@ function PostThreadLoaded({
         // -prf
         return (
           <View
+            // @ts-ignore web-only
             style={{
-              height: 400,
+              // Leave enough space below that the scroll doesn't jump
+              height: isNative ? 400 : '100vh',
               borderTopWidth: 1,
               borderColor: pal.colors.border,
             }}
@@ -358,6 +395,7 @@ function PostThreadLoaded({
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      removeClippedSubviews={isAndroid ? false : undefined}
     />
   )
 }
@@ -468,10 +506,11 @@ function isThreadPost(v: unknown): v is ThreadPost {
 function* flattenThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
+  treeView: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
     if (node.parent) {
-      yield* flattenThreadSkeleton(node.parent, hasSession)
+      yield* flattenThreadSkeleton(node.parent, hasSession, treeView)
     } else if (node.ctx.isParentLoading) {
       yield PARENT_SPINNER
     }
@@ -484,7 +523,10 @@ function* flattenThreadSkeleton(
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply, hasSession)
+        yield* flattenThreadSkeleton(reply, hasSession, treeView)
+        if (!treeView && !node.ctx.isHighlightedPost) {
+          break
+        }
       }
     } else if (node.ctx.isChildLoading) {
       yield CHILD_SPINNER

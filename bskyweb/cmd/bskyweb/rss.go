@@ -96,7 +96,10 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		if err != nil {
 			return err
 		}
-		rec := p.Post.Record.Val.(*appbsky.FeedPost)
+		rec, ok := p.Post.Record.Val.(*appbsky.FeedPost)
+		if !ok {
+			continue
+		}
 		// only top-level posts in RSS (no replies)
 		if rec.Reply != nil {
 			continue
@@ -108,7 +111,7 @@ func (srv *Server) WebProfileRSS(c echo.Context) error {
 		}
 		posts = append(posts, Item{
 			Link:        fmt.Sprintf("https://%s/profile/%s/post/%s", req.Host, pv.Handle, aturi.RecordKey().String()),
-			Description: rec.Text,
+			Description: ExpandPostText(rec),
 			PubDate:     pubDate,
 			GUID: ItemGUID{
 				Value:   aturi.String(),

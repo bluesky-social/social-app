@@ -205,7 +205,7 @@ let FeedItemInner = ({
               title={_(
                 msg`Reposted by ${sanitizeDisplayName(
                   reason.by.displayName || reason.by.handle,
-                )})`,
+                )}`,
               )}>
               <FontAwesomeIcon
                 icon="retweet"
@@ -289,7 +289,7 @@ let FeedItemInner = ({
                     type="md"
                     did={replyAuthorDid}
                     attr="displayName"
-                    style={[pal.textLight, s.ml2]}
+                    style={[pal.textLight]}
                   />
                 </Trans>
               </Text>

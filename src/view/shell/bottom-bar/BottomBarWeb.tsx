@@ -57,6 +57,7 @@ export function BottomBarWeb() {
     <Animated.View
       style={[
         styles.bottomBar,
+        styles.bottomBarWeb,
         pal.view,
         pal.border,
         {paddingBottom: clamp(safeAreaInsets.bottom, 15, 30)},
