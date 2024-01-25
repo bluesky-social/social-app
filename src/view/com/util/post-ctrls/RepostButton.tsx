@@ -93,9 +93,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  controlPad: {
-    padding: 5,
-  },
   reposted: {
     color: colors.green3,
   },
