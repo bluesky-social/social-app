@@ -136,9 +136,6 @@ function createPersistSessionHandler(
 
     logger.info(`session: persistSession`, {
       event,
-      did: refreshedAccount.did,
-      handle: refreshedAccount.handle,
-      service: refreshedAccount.service,
     })
 
     if (expired) {
@@ -214,10 +211,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       verificationPhone,
       verificationCode,
     }: any) => {
-      logger.info(`session: creating account`, {
-        service,
-        handle,
-      })
+      logger.info(`session: creating account`)
       track('Try Create Account')
 
       const agent = new BskyAgent({service})
@@ -265,14 +259,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       queryClient.clear()
       upsertAccount(account)
 
-      logger.debug(
-        `session: created account`,
-        {
-          service,
-          handle,
-        },
-        logger.DebugContext.session,
-      )
+      logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
     },
     [upsertAccount, queryClient, clearCurrentAccount],
@@ -280,14 +267,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const login = React.useCallback<ApiContext['login']>(
     async ({service, identifier, password}) => {
-      logger.debug(
-        `session: login`,
-        {
-          service,
-          identifier,
-        },
-        logger.DebugContext.session,
-      )
+      logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
 
@@ -321,14 +301,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       queryClient.clear()
       upsertAccount(account)
 
-      logger.debug(
-        `session: logged in`,
-        {
-          service,
-          identifier,
-        },
-        logger.DebugContext.session,
-      )
+      logger.debug(`session: logged in`, {}, logger.DebugContext.session)
 
       track('Sign In', {resumedSession: false})
     },
@@ -352,14 +325,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
-      logger.debug(
-        `session: initSession`,
-        {
-          did: account.did,
-          handle: account.handle,
-        },
-        logger.DebugContext.session,
-      )
+      logger.debug(`session: initSession`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({
         service: account.service,
@@ -418,7 +384,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
              * we handle that failure via `createPersistSessionHandler`
              */
             logger.info(`session: resumeSessionWithFreshAccount failed`, {
-              error: e,
+              message: e,
             })
 
             __globalAgent = PUBLIC_BSKY_AGENT
@@ -437,7 +403,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
            * we handle that failure via `createPersistSessionHandler`
            */
           logger.info(`session: resumeSessionWithFreshAccount failed`, {
-            error: e,
+            message: e,
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
@@ -479,7 +445,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           await initSession(account)
         }
       } catch (e) {
-        logger.error(`session: resumeSession failed`, {error: e})
+        logger.error(`session: resumeSession failed`, {message: e})
       } finally {
         setState(s => ({
           ...s,
@@ -595,10 +561,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       } else if (!session.currentAccount && state.currentAccount) {
         logger.debug(
           `session: persisted onUpdate, logging out`,
-          {
-            did: state.currentAccount?.did,
-            handle: state.currentAccount?.handle,
-          },
+          {},
           logger.DebugContext.session,
         )
 

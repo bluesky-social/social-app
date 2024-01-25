@@ -200,7 +200,7 @@ let ProfileHeaderLoaded = ({
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
-          logger.error('Failed to follow', {error: String(e)})
+          logger.error('Failed to follow', {message: String(e)})
           Toast.show(_(msg`There was an issue! ${e.toString()}`))
         }
       }
@@ -221,7 +221,7 @@ let ProfileHeaderLoaded = ({
         )
       } catch (e: any) {
         if (e?.name !== 'AbortError') {
-          logger.error('Failed to unfollow', {error: String(e)})
+          logger.error('Failed to unfollow', {message: String(e)})
           Toast.show(_(msg`There was an issue! ${e.toString()}`))
         }
       }
@@ -260,7 +260,7 @@ let ProfileHeaderLoaded = ({
       Toast.show(_(msg`Account muted`))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        logger.error('Failed to mute account', {error: e})
+        logger.error('Failed to mute account', {message: e})
         Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
@@ -273,7 +273,7 @@ let ProfileHeaderLoaded = ({
       Toast.show(_(msg`Account unmuted`))
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        logger.error('Failed to unmute account', {error: e})
+        logger.error('Failed to unmute account', {message: e})
         Toast.show(_(msg`There was an issue! ${e.toString()}`))
       }
     }
@@ -293,7 +293,7 @@ let ProfileHeaderLoaded = ({
           Toast.show(_(msg`Account blocked`))
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
-            logger.error('Failed to block account', {error: e})
+            logger.error('Failed to block account', {message: e})
             Toast.show(_(msg`There was an issue! ${e.toString()}`))
           }
         }
@@ -315,7 +315,7 @@ let ProfileHeaderLoaded = ({
           Toast.show(_(msg`Account unblocked`))
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
-            logger.error('Failed to unblock account', {error: e})
+            logger.error('Failed to unblock account', {message: e})
             Toast.show(_(msg`There was an issue! ${e.toString()}`))
           }
         }

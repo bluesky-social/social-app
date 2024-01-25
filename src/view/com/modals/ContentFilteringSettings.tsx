@@ -125,7 +125,7 @@ function AdultContentEnabledPref() {
       Toast.show(
         _(msg`There was an issue syncing your preferences with the server`),
       )
-      logger.error('Failed to update preferences with server', {error: e})
+      logger.error('Failed to update preferences with server', {message: e})
     }
   }, [variables, preferences, mutate, _])
 
