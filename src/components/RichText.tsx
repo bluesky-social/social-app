@@ -22,7 +22,7 @@ export function RichText({
   disableLinks?: boolean
 }) {
   const detected = React.useRef(false)
-  const [richText, setRichText] = React.useState<RichTextAPI>(
+  const [richText, setRichText] = React.useState<RichTextAPI>(() =>
     value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
   )
 
@@ -42,7 +42,7 @@ export function RichText({
   const {text, facets} = richText
 
   if (!facets?.length) {
-    if (/^\p{Extended_Pictographic}+$/u.test(text) && text.length <= 5) {
+    if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
       return (
         <Text
           testID={testID}
