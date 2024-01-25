@@ -165,19 +165,21 @@ let PostCtrls = ({
           strokeWidth={3}
           size={big ? 20 : 15}
         />
-        {typeof post.replyCount !== 'undefined' ? (
+        {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
           <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
             {post.replyCount}
           </Text>
         ) : undefined}
       </TouchableOpacity>
-      <RepostButton
-        big={big}
-        isReposted={!!post.viewer?.repost}
-        repostCount={post.repostCount}
-        onRepost={onRepost}
-        onQuote={onQuote}
-      />
+      <View style={[styles.ctrl, !big && styles.ctrlPad]}>
+        <RepostButton
+          big={big}
+          isReposted={!!post.viewer?.repost}
+          repostCount={post.repostCount}
+          onRepost={onRepost}
+          onQuote={onQuote}
+        />
+      </View>
       <TouchableOpacity
         testID="likeBtn"
         style={[styles.ctrl, !big && styles.ctrlPad]}
@@ -199,7 +201,7 @@ let PostCtrls = ({
             size={big ? 20 : 16}
           />
         )}
-        {typeof post.likeCount !== 'undefined' ? (
+        {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
           <Text
             testID="likeCount"
             style={
@@ -237,6 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   ctrl: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
