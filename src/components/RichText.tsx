@@ -15,18 +15,23 @@ export function RichText({
   style,
   numberOfLines,
   disableLinks,
+  resolveFacets = false,
 }: TextStyleProp & {
   value: RichTextAPI | string
   testID?: string
   numberOfLines?: number
   disableLinks?: boolean
+  resolveFacets?: boolean
 }) {
   const detected = React.useRef(false)
   const [richText, setRichText] = React.useState<RichTextAPI>(() =>
     value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
   )
+  const styles = [a.leading_normal, style]
 
   React.useEffect(() => {
+    if (!resolveFacets) return
+
     async function detectFacets() {
       const rt = new RichTextAPI({text: richText.text})
       await rt.detectFacets(getAgent())
@@ -37,7 +42,7 @@ export function RichText({
       detected.current = true
       detectFacets()
     }
-  }, [richText, setRichText])
+  }, [richText, setRichText, resolveFacets])
 
   const {text, facets} = richText
 
@@ -61,7 +66,7 @@ export function RichText({
     return (
       <Text
         testID={testID}
-        style={[a.leading_normal, style]}
+        style={styles}
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
@@ -85,7 +90,7 @@ export function RichText({
         <InlineLink
           key={key}
           to={`/profile/${mention.did}`}
-          style={[a.leading_normal, style, {pointerEvents: 'auto'}]}
+          style={[...styles, {pointerEvents: 'auto'}]}
           // @ts-ignore TODO
           dataSet={WORD_WRAP}>
           {segment.text}
@@ -99,7 +104,7 @@ export function RichText({
           <InlineLink
             key={key}
             to={link.uri}
-            style={[a.leading_normal, style, {pointerEvents: 'auto'}]}
+            style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
             dataSet={WORD_WRAP}
             warnOnMismatchingLabel>
@@ -116,7 +121,7 @@ export function RichText({
   return (
     <Text
       testID={testID}
-      style={[a.leading_normal, style]}
+      style={styles}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
