@@ -151,6 +151,7 @@ function PrimaryFeedCardInner({
         <RichText
           value={feed.description}
           style={[ctx.selected && t.atoms.text_inverted]}
+          disableLinks
         />
       </View>
     </View>
@@ -285,7 +286,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
       />
 
       <View style={[a.pt_md]}>
-        <RichText value={feed.description} />
+        <RichText value={feed.description} disableLinks />
       </View>
     </View>
   )

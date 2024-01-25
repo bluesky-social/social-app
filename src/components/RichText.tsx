@@ -14,10 +14,12 @@ export function RichText({
   value,
   style,
   numberOfLines,
+  disableLinks,
 }: TextStyleProp & {
   value: RichTextAPI | string
   testID?: string
   numberOfLines?: number
+  disableLinks?: boolean
 }) {
   const detected = React.useRef(false)
   const [richText, setRichText] = React.useState<RichTextAPI>(
@@ -74,7 +76,11 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
-    if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
+    if (
+      mention &&
+      AppBskyRichtextFacet.validateMention(mention).success &&
+      !disableLinks
+    ) {
       els.push(
         <InlineLink
           key={key}
@@ -86,17 +92,21 @@ export function RichText({
         </InlineLink>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-      els.push(
-        <InlineLink
-          key={key}
-          to={link.uri}
-          style={[a.leading_normal, style, {pointerEvents: 'auto'}]}
-          // @ts-ignore TODO
-          dataSet={WORD_WRAP}
-          warnOnMismatchingLabel>
-          {toShortUrl(segment.text)}
-        </InlineLink>,
-      )
+      if (disableLinks) {
+        els.push(toShortUrl(segment.text))
+      } else {
+        els.push(
+          <InlineLink
+            key={key}
+            to={link.uri}
+            style={[a.leading_normal, style, {pointerEvents: 'auto'}]}
+            // @ts-ignore TODO
+            dataSet={WORD_WRAP}
+            warnOnMismatchingLabel>
+            {toShortUrl(segment.text)}
+          </InlineLink>,
+        )
+      }
     } else {
       els.push(segment.text)
     }
