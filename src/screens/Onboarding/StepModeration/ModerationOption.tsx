@@ -58,7 +58,9 @@ export function ModerationOption({
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
         {!preferences?.adultContentEnabled && groupInfo.isAdultImagery ? (
-          <Text style={[a.font_bold]}>{labels.hide}</Text>
+          <View style={[a.justify_center, {minHeight: 40}]}>
+            <Text style={[a.font_bold]}>{labels.hide}</Text>
+          </View>
         ) : (
           <ToggleButton.Group
             label={_(
