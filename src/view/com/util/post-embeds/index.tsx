@@ -6,7 +6,6 @@ import {
   ViewStyle,
   Text,
   InteractionManager,
-  Share,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
@@ -30,7 +29,8 @@ import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
-import {isAndroid, isIOS} from '#/platform/detection'
+import {isNative} from '#/platform/detection'
+import {shareUrl} from '#/lib/sharing'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -58,12 +58,8 @@ export function PostEmbeds({
     : null
 
   const onShareExternal = useCallback(() => {
-    if (externalUri) {
-      if (isIOS) {
-        Share.share({url: externalUri})
-      } else if (isAndroid) {
-        Share.share({message: externalUri})
-      }
+    if (externalUri && isNative) {
+      shareUrl(externalUri)
     }
   }, [externalUri])
 
