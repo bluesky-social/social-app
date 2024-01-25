@@ -140,7 +140,7 @@ function PrimaryFeedCardInner({
           },
           a.mt_md,
           a.w_full,
-          t.atoms.border,
+          t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
           ctx.selected && {
             borderTopColor: t.palette.white,
           },
@@ -150,7 +150,13 @@ function PrimaryFeedCardInner({
       <View style={[a.pt_md]}>
         <RichText
           value={feed.description}
-          style={[a.text_md, ctx.selected && t.atoms.text_inverted]}
+          style={[
+            a.text_md,
+            ctx.selected &&
+              (t.name === 'light'
+                ? t.atoms.text_inverted
+                : {color: t.palette.white}),
+          ]}
           disableLinks
         />
       </View>
@@ -278,7 +284,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
           },
           a.mt_md,
           a.w_full,
-          t.atoms.border,
+          t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
           ctx.selected && {
             borderTopColor: t.palette.primary_200,
           },
