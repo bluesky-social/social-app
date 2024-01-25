@@ -618,8 +618,6 @@ function handleLink(url: string) {
       navigate(name, params)
     }
   } else {
-    console.log('intent')
-    console.log(path)
     // @ts-ignore matchPath doesnt give us type-checked output -prf
     navigate(name, params)
   }

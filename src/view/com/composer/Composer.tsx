@@ -91,7 +91,6 @@ export const ComposePost = observer(function ComposePost({
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
   const [error, setError] = useState('')
-  console.log(initText)
   const [richtext, setRichText] = useState(
     new RichText({
       text: initText
