@@ -22,10 +22,8 @@ import {Haptics} from 'lib/haptics'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 import {useModalControls} from '#/state/modals'
 import {
-  usePostLikeMutation,
-  usePostUnlikeMutation,
-  usePostRepostMutation,
-  usePostUnrepostMutation,
+  usePostLikeMutationQueue,
+  usePostRepostMutationQueue,
 } from '#/state/queries/post'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
@@ -54,10 +52,8 @@ let PostCtrls = ({
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
-  const postLikeMutation = usePostLikeMutation()
-  const postUnlikeMutation = usePostUnlikeMutation()
-  const postRepostMutation = usePostRepostMutation()
-  const postUnrepostMutation = usePostUnrepostMutation()
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post)
+  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post)
   const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(
@@ -68,48 +64,35 @@ let PostCtrls = ({
   ) as StyleProp<ViewStyle>
 
   const onPressToggleLike = React.useCallback(async () => {
-    if (!post.viewer?.like) {
-      Haptics.default()
-      postLikeMutation.mutate({
-        uri: post.uri,
-        cid: post.cid,
-      })
-    } else {
-      postUnlikeMutation.mutate({
-        postUri: post.uri,
-        likeUri: post.viewer.like,
-      })
+    try {
+      if (!post.viewer?.like) {
+        Haptics.default()
+        await queueLike()
+      } else {
+        await queueUnlike()
+      }
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
     }
-  }, [
-    post.viewer?.like,
-    post.uri,
-    post.cid,
-    postLikeMutation,
-    postUnlikeMutation,
-  ])
+  }, [post.viewer?.like, queueLike, queueUnlike])
 
-  const onRepost = useCallback(() => {
+  const onRepost = useCallback(async () => {
     closeModal()
-    if (!post.viewer?.repost) {
-      Haptics.default()
-      postRepostMutation.mutate({
-        uri: post.uri,
-        cid: post.cid,
-      })
-    } else {
-      postUnrepostMutation.mutate({
-        postUri: post.uri,
-        repostUri: post.viewer.repost,
-      })
+    try {
+      if (!post.viewer?.repost) {
+        Haptics.default()
+        await queueRepost()
+      } else {
+        await queueUnrepost()
+      }
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
     }
-  }, [
-    post.uri,
-    post.cid,
-    post.viewer?.repost,
-    closeModal,
-    postRepostMutation,
-    postUnrepostMutation,
-  ])
+  }, [post.viewer?.repost, queueRepost, queueUnrepost, closeModal])
 
   const onQuote = useCallback(() => {
     closeModal()
