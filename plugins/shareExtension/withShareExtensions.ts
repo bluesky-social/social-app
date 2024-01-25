@@ -4,11 +4,12 @@ import {withXcodeTarget} from './withXcodeTarget'
 import {withExtensionEntitlements} from './withExtensionEntitlements'
 import {withExtensionInfoPlist} from './withExtensionInfoPlist'
 import {withExtensionViewController} from './withExtensionViewController'
+import {withIntentFilters} from './withIntentFilters'
 
 const SHARE_EXTENSION_NAME = 'Share-with-Bluesky'
 const SHARE_EXTENSION_CONTROLLER_NAME = 'ShareViewController'
 
-const withShareExtensionIos: ConfigPlugin = config => {
+const withShareExtensions: ConfigPlugin = config => {
   return withPlugins(config, [
     // IOS
     withAppEntitlements,
@@ -38,7 +39,9 @@ const withShareExtensionIos: ConfigPlugin = config => {
         controllerName: SHARE_EXTENSION_CONTROLLER_NAME,
       },
     ],
+    // Android
+    withIntentFilters,
   ])
 }
 
-export default withShareExtensionIos
+export default withShareExtensions

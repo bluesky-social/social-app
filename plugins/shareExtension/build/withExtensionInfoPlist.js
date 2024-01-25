@@ -7,6 +7,7 @@ var path = require("path");
 var fs = require("fs");
 var withExtensionInfoPlist = function (config, _a) {
     var extensionName = _a.extensionName;
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     return (0, config_plugins_1.withInfoPlist)(config, function (config) {
         var plistPath = path.join(config.modRequest.projectRoot, 'extensions', extensionName, 'Info.plist');
         var targetPath = path.join(config.modRequest.platformProjectRoot, extensionName, 'Info.plist');

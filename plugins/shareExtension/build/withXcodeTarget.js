@@ -4,7 +4,7 @@ exports.withXcodeTarget = void 0;
 var config_plugins_1 = require("@expo/config-plugins");
 var withXcodeTarget = function (config, _a) {
     var extensionName = _a.extensionName, controllerName = _a.controllerName;
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     return (0, config_plugins_1.withXcodeProject)(config, function (config) {
         var _a, _b;
         var pbxProject = config.modResults;

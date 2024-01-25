@@ -9,7 +9,7 @@ var withExtensionViewController_1 = require("./withExtensionViewController");
 var withIntentFilters_1 = require("./withIntentFilters");
 var SHARE_EXTENSION_NAME = 'Share-with-Bluesky';
 var SHARE_EXTENSION_CONTROLLER_NAME = 'ShareViewController';
-var withShareExtensionIos = function (config) {
+var withShareExtensions = function (config) {
     return (0, config_plugins_1.withPlugins)(config, [
         // IOS
         withAppEntitlements_1.withAppEntitlements,
@@ -43,4 +43,4 @@ var withShareExtensionIos = function (config) {
         withIntentFilters_1.withIntentFilters,
     ]);
 };
-exports.default = withShareExtensionIos;
+exports.default = withShareExtensions;

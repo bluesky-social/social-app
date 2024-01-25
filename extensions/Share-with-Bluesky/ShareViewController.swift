@@ -1,5 +1,4 @@
 import UIKit
-import UniformTypeIdentifiers
 
 class ShareViewController: UIViewController {
   let appScheme = Bundle.main.object(forInfoDictionaryKey: "MainAppScheme") as? String ?? "bluesky"
