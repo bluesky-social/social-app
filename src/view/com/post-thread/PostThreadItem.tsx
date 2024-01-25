@@ -248,10 +248,9 @@ let PostThreadItemLoaded = ({
           </View>
         )}
 
-        <Link
+        <View
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
-          noFeedback
           accessible={false}>
           <PostSandboxWarning />
           <View style={styles.layout}>
@@ -370,6 +369,7 @@ let PostThreadItemLoaded = ({
                     richText={richText}
                     lineHeight={1.3}
                     style={s.flex1}
+                    selectable
                   />
                 </View>
               ) : undefined}
@@ -445,7 +445,7 @@ let PostThreadItemLoaded = ({
               />
             </View>
           </View>
-        </Link>
+        </View>
         <WhoCanReply post={post} />
       </>
     )

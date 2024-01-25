@@ -175,7 +175,8 @@
     "tlds": "^1.234.0",
     "use-deep-compare": "^1.1.0",
     "zeego": "^1.6.2",
-    "zod": "^3.20.2"
+    "zod": "^3.20.2",
+    "react-native-ui-text-view": "link:./modules/react-native-ui-text-view"
   },
   "devDependencies": {
     "@atproto/dev-env": "^0.2.19",

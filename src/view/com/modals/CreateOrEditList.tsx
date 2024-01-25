@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {AppBskyGraphDefs} from '@atproto/api'
+import {
+  AppBskyGraphDefs,
+  AppBskyRichtextFacet,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
@@ -30,6 +34,9 @@ import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {getAgent} from '#/state/session'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo
@@ -68,11 +75,41 @@ export function Component({
 
   const [isProcessing, setProcessing] = useState<boolean>(false)
   const [name, setName] = useState<string>(list?.name || '')
-  const [description, setDescription] = useState<string>(
-    list?.description || '',
-  )
+
+  const [descriptionRt, setDescriptionRt] = useState<RichTextAPI>(() => {
+    const text = list?.description
+    const facets = list?.descriptionFacets
+
+    if (!text || !facets) {
+      return new RichTextAPI({text: text || ''})
+    }
+
+    // We want to be working with a blank state here, so let's get the
+    // serialized version and turn it back into a RichText
+    const serialized = richTextToString(new RichTextAPI({text, facets}), false)
+
+    const richText = new RichTextAPI({text: serialized})
+    richText.detectFacetsWithoutResolution()
+
+    return richText
+  })
+  const graphemeLength = useMemo(() => {
+    return shortenLinks(descriptionRt).graphemeLength
+  }, [descriptionRt])
+  const isDescriptionOver = graphemeLength > MAX_DESCRIPTION
+
   const [avatar, setAvatar] = useState<string | undefined>(list?.avatar)
   const [newAvatar, setNewAvatar] = useState<RNImage | undefined | null>()
+
+  const onDescriptionChange = useCallback(
+    (newText: string) => {
+      const richText = new RichTextAPI({text: newText})
+      richText.detectFacetsWithoutResolution()
+
+      setDescriptionRt(richText)
+    },
+    [setDescriptionRt],
+  )
 
   const onPressCancel = useCallback(() => {
     closeModal()
@@ -113,11 +150,31 @@ export function Component({
       setError('')
     }
     try {
+      let richText = new RichTextAPI(
+        {text: descriptionRt.text.trimEnd()},
+        {cleanNewlines: true},
+      )
+
+      await richText.detectFacets(getAgent())
+      richText = shortenLinks(richText)
+
+      // filter out any mention facets that didn't map to a user
+      richText.facets = richText.facets?.filter(facet => {
+        const mention = facet.features.find(feature =>
+          AppBskyRichtextFacet.isMention(feature),
+        )
+        if (mention && !mention.did) {
+          return false
+        }
+        return true
+      })
+
       if (list) {
         await listMetadataMutation.mutateAsync({
           uri: list.uri,
           name: nameTrimmed,
-          description: description.trim(),
+          description: richText.text,
+          descriptionFacets: richText.facets,
           avatar: newAvatar,
         })
         Toast.show(
@@ -130,7 +187,8 @@ export function Component({
         const res = await listCreateMutation.mutateAsync({
           purpose: activePurpose,
           name,
-          description,
+          description: richText.text,
+          descriptionFacets: richText.facets,
           avatar: newAvatar,
         })
         Toast.show(
@@ -163,7 +221,7 @@ export function Component({
     activePurpose,
     isCurateList,
     name,
-    description,
+    descriptionRt,
     newAvatar,
     list,
     listMetadataMutation,
@@ -212,9 +270,11 @@ export function Component({
         </View>
         <View style={styles.form}>
           <View>
-            <Text style={[styles.label, pal.text]} nativeID="list-name">
-              <Trans>List Name</Trans>
-            </Text>
+            <View style={styles.labelWrapper}>
+              <Text style={[styles.label, pal.text]} nativeID="list-name">
+                <Trans>List Name</Trans>
+              </Text>
+            </View>
             <TextInput
               testID="editNameInput"
               style={[styles.textInput, pal.border, pal.text]}
@@ -233,9 +293,17 @@ export function Component({
             />
           </View>
           <View style={s.pb10}>
-            <Text style={[styles.label, pal.text]} nativeID="list-description">
-              <Trans>Description</Trans>
-            </Text>
+            <View style={styles.labelWrapper}>
+              <Text
+                style={[styles.label, pal.text]}
+                nativeID="list-description">
+                <Trans>Description</Trans>
+              </Text>
+              <Text
+                style={[!isDescriptionOver ? pal.textLight : s.red3, s.f13]}>
+                {graphemeLength}/{MAX_DESCRIPTION}
+              </Text>
+            </View>
             <TextInput
               testID="editDescriptionInput"
               style={[styles.textArea, pal.border, pal.text]}
@@ -247,8 +315,8 @@ export function Component({
               placeholderTextColor={colors.gray4}
               keyboardAppearance={theme.colorScheme}
               multiline
-              value={description}
-              onChangeText={v => setDescription(enforceLen(v, MAX_DESCRIPTION))}
+              value={descriptionRt.text}
+              onChangeText={onDescriptionChange}
               accessible={true}
               accessibilityLabel={_(msg`Description`)}
               accessibilityHint=""
@@ -262,7 +330,8 @@ export function Component({
           ) : (
             <TouchableOpacity
               testID="saveBtn"
-              style={s.mt10}
+              style={[s.mt10, isDescriptionOver && s.dimmed]}
+              disabled={isDescriptionOver}
               onPress={onPressSave}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Save`)}
@@ -271,7 +340,7 @@ export function Component({
                 colors={[gradients.blueLight.start, gradients.blueLight.end]}
                 start={{x: 0, y: 0}}
                 end={{x: 1, y: 1}}
-                style={[styles.btn]}>
+                style={styles.btn}>
                 <Text style={[s.white, s.bold]}>
                   <Trans context="action">Save</Trans>
                 </Text>
@@ -305,11 +374,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 18,
   },
-  label: {
-    fontWeight: 'bold',
+  labelWrapper: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingHorizontal: 4,
     paddingBottom: 4,
     marginTop: 20,
+  },
+  label: {
+    fontWeight: 'bold',
   },
   form: {
     paddingHorizontal: 6,

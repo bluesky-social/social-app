@@ -289,7 +289,7 @@ let FeedItemInner = ({
                     type="md"
                     did={replyAuthorDid}
                     attr="displayName"
-                    style={[pal.textLight, s.ml2]}
+                    style={[pal.textLight]}
                   />
                 </Trans>
               </Text>

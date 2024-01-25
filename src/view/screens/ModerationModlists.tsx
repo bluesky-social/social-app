@@ -63,7 +63,7 @@ export function ModerationModlistsScreen({}: Props) {
             </Trans>
           </Text>
         </View>
-        <View>
+        <View style={[{marginLeft: 18}, isMobile && {marginLeft: 12}]}>
           <Button
             testID="newModListBtn"
             type="default"

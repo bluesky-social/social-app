@@ -24,7 +24,7 @@ export const PostLikedByScreen = ({route}: Props) => {
 
   return (
     <View>
-      <ViewHeader title={_(msg`Liked by`)} />
+      <ViewHeader title={_(msg`Liked By`)} />
       <PostLikedByComponent uri={uri} />
     </View>
   )
