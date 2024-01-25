@@ -28,9 +28,11 @@ export function Typography() {
       <Text style={[a.text_2xs]}>atoms.text_2xs</Text>
 
       <RichText
+        resolveFacets
         value={`This is rich text. It can have mentions like @bsky.app or links like https://blueskyweb.xyz`}
       />
       <RichText
+        resolveFacets
         value={`This is rich text. It can have mentions like @bsky.app or links like https://blueskyweb.xyz`}
         style={[a.text_xl]}
       />
