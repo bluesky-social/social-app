@@ -59,13 +59,12 @@ export function usePostLikeMutation() {
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
-    {uri: string; cid: string; likeCount: number} // the post's uri, cid, and likes
+    {uri: string; cid: string} // the post's uri and cid
   >({
     mutationFn: post => getAgent().like(post.uri, post.cid),
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.uri, {
-        likeCount: variables.likeCount + 1,
         likeUri: 'pending',
       })
     },
@@ -79,7 +78,6 @@ export function usePostLikeMutation() {
     onError(error, variables) {
       // revert the optimistic update
       updatePostShadow(variables.uri, {
-        likeCount: variables.likeCount,
         likeUri: undefined,
       })
     },
@@ -87,11 +85,7 @@ export function usePostLikeMutation() {
 }
 
 export function usePostUnlikeMutation() {
-  return useMutation<
-    void,
-    Error,
-    {postUri: string; likeUri: string; likeCount: number}
-  >({
+  return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: async ({likeUri}) => {
       await getAgent().deleteLike(likeUri)
       track('Post:Unlike')
@@ -99,14 +93,12 @@ export function usePostUnlikeMutation() {
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.postUri, {
-        likeCount: variables.likeCount - 1,
         likeUri: undefined,
       })
     },
     onError(error, variables) {
       // revert the optimistic update
       updatePostShadow(variables.postUri, {
-        likeCount: variables.likeCount,
         likeUri: variables.likeUri,
       })
     },
@@ -117,13 +109,12 @@ export function usePostRepostMutation() {
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
-    {uri: string; cid: string; repostCount: number} // the post's uri, cid, and reposts
+    {uri: string; cid: string} // the post's uri and cid
   >({
     mutationFn: post => getAgent().repost(post.uri, post.cid),
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.uri, {
-        repostCount: variables.repostCount + 1,
         repostUri: 'pending',
       })
     },
@@ -137,7 +128,6 @@ export function usePostRepostMutation() {
     onError(error, variables) {
       // revert the optimistic update
       updatePostShadow(variables.uri, {
-        repostCount: variables.repostCount,
         repostUri: undefined,
       })
     },
@@ -145,11 +135,7 @@ export function usePostRepostMutation() {
 }
 
 export function usePostUnrepostMutation() {
-  return useMutation<
-    void,
-    Error,
-    {postUri: string; repostUri: string; repostCount: number}
-  >({
+  return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: async ({repostUri}) => {
       await getAgent().deleteRepost(repostUri)
       track('Post:Unrepost')
@@ -157,14 +143,12 @@ export function usePostUnrepostMutation() {
     onMutate(variables) {
       // optimistically update the post-shadow
       updatePostShadow(variables.postUri, {
-        repostCount: variables.repostCount - 1,
         repostUri: undefined,
       })
     },
     onError(error, variables) {
       // revert the optimistic update
       updatePostShadow(variables.postUri, {
-        repostCount: variables.repostCount,
         repostUri: variables.repostUri,
       })
     },
