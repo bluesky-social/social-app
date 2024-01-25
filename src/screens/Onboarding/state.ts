@@ -96,7 +96,7 @@ export function reducer(
   s: OnboardingState,
   a: OnboardingAction,
 ): OnboardingState {
-  let next = s
+  let next = {...s}
 
   switch (a.type) {
     case 'next': {
@@ -192,6 +192,10 @@ export function reducer(
     algoFeedsStepResults: state.algoFeedsStepResults,
     topicalFeedsStepResults: state.topicalFeedsStepResults,
   })
+
+  if (s.activeStep !== state.activeStep) {
+    logger.info(`onboarding: step changed`, {activeStep: state.activeStep})
+  }
 
   return state
 }

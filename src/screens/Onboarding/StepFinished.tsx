@@ -1,6 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
+import {logger} from '#/logger'
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
@@ -47,14 +48,19 @@ export function StepFinished() {
       ...topicalFeedsStepResults.feedUris,
     ]
 
-    await Promise.all([
-      () => console.log(selectedInterests),
-      bulkWriteFollows(suggestedAccountsStepResults.accountDids),
-      saveFeeds({
-        saved: selectedFeeds,
-        pinned: selectedFeeds,
-      }),
-    ])
+    try {
+      await Promise.all([
+        () => console.log(selectedInterests),
+        bulkWriteFollows(suggestedAccountsStepResults.accountDids),
+        saveFeeds({
+          saved: selectedFeeds,
+          pinned: selectedFeeds,
+        }),
+      ])
+    } catch (e: any) {
+      logger.info(`onboarding: bulk save failed`)
+      logger.error(e)
+    }
 
     setSaving(false)
     dispatch({type: 'finish'})
