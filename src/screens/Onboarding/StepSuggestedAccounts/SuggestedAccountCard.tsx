@@ -78,7 +78,7 @@ export function SuggestedAccountCard({
             (ctx.hovered || ctx.focused || ctx.pressed) &&
             styles.selectedHover,
         ]}>
-        <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <View style={[a.flex_row, a.flex_1, a.align_center, a.gap_md]}>
           <View
             style={[
               {width: 48, height: 48},
@@ -93,8 +93,8 @@ export function SuggestedAccountCard({
               moderation={moderation.avatar}
             />
           </View>
-          <View>
-            <Text style={[a.font_bold, a.text_md, a.pb_xs]}>
+          <View style={[a.flex_1]}>
+            <Text style={[a.font_bold, a.text_md, a.pb_xs]} numberOfLines={1}>
               {profile.displayName}
             </Text>
             <Text style={[t.atoms.text_contrast_600]}>{profile.handle}</Text>
