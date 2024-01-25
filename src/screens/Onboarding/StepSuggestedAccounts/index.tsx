@@ -50,17 +50,19 @@ export function Inner({
       values={dids}
       onChange={setDids}
       label={_(msg`Select some accounts below to follow`)}>
-      {profiles.map(profile => (
-        <Toggle.Item
-          key={profile.did}
-          name={profile.did}
-          label={_(msg`Follow ${profile.handle}`)}>
-          <SuggestedAccountCard
-            profile={profile}
-            moderationOpts={moderationOpts}
-          />
-        </Toggle.Item>
-      ))}
+      <View style={[a.gap_md]}>
+        {profiles.map(profile => (
+          <Toggle.Item
+            key={profile.did}
+            name={profile.did}
+            label={_(msg`Follow ${profile.handle}`)}>
+            <SuggestedAccountCard
+              profile={profile}
+              moderationOpts={moderationOpts}
+            />
+          </Toggle.Item>
+        ))}
+      </View>
     </Toggle.Group>
   )
 }
@@ -139,7 +141,7 @@ export function StepSuggestedAccounts() {
 
       <View style={[a.w_full, a.pt_xl]}>
         {isLoading ? (
-          <View>
+          <View style={[a.gap_md]}>
             {Array(10)
               .fill(0)
               .map((_, i) => (

@@ -8,6 +8,7 @@ import {useItemContext} from '#/components/forms/Toggle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {RichText} from '#/components/RichText'
 
 export function SuggestedAccountCard({
   profile,
@@ -60,24 +61,21 @@ export function SuggestedAccountCard({
   }, [t])
 
   return (
-    <View style={[a.w_full, a.py_xs]}>
-      <View
-        style={[
-          a.w_full,
-          a.flex_row,
-          a.justify_between,
-          a.align_center,
-          a.p_md,
-          a.pr_lg,
-          a.gap_xl,
-          a.rounded_md,
-          styles.base,
-          (ctx.hovered || ctx.focused || ctx.pressed) && styles.hover,
-          ctx.selected && styles.selected,
-          ctx.selected &&
-            (ctx.hovered || ctx.focused || ctx.pressed) &&
-            styles.selectedHover,
-        ]}>
+    <View
+      style={[
+        a.w_full,
+        a.p_md,
+        a.pr_lg,
+        a.gap_md,
+        a.rounded_md,
+        styles.base,
+        (ctx.hovered || ctx.focused || ctx.pressed) && styles.hover,
+        ctx.selected && styles.selected,
+        ctx.selected &&
+          (ctx.hovered || ctx.focused || ctx.pressed) &&
+          styles.selectedHover,
+      ]}>
+      <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_lg]}>
         <View style={[a.flex_row, a.flex_1, a.align_center, a.gap_md]}>
           <View
             style={[
@@ -116,6 +114,30 @@ export function SuggestedAccountCard({
           {ctx.selected && <Check size="sm" fill={t.palette.white} />}
         </View>
       </View>
+
+      {profile.description && (
+        <>
+          <View
+            style={[
+              {
+                opacity: ctx.selected ? 0.3 : 1,
+                borderTopWidth: 1,
+              },
+              a.w_full,
+              t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
+              ctx.selected && {
+                borderTopColor: t.palette.primary_200,
+              },
+            ]}
+          />
+
+          <RichText
+            value={profile.description}
+            disableLinks
+            numberOfLines={2}
+          />
+        </>
+      )}
     </View>
   )
 }
@@ -123,44 +145,42 @@ export function SuggestedAccountCard({
 export function SuggestedAccountCardPlaceholder() {
   const t = useTheme()
   return (
-    <View style={[a.w_full, a.py_xs]}>
-      <View
-        style={[
-          a.w_full,
-          a.flex_row,
-          a.justify_between,
-          a.align_center,
-          a.p_md,
-          a.pr_lg,
-          a.gap_xl,
-          a.rounded_md,
-          t.atoms.bg_contrast_25,
-        ]}>
-        <View style={[a.flex_row, a.align_center, a.gap_md]}>
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.justify_between,
+        a.align_center,
+        a.p_md,
+        a.pr_lg,
+        a.gap_xl,
+        a.rounded_md,
+        t.atoms.bg_contrast_25,
+      ]}>
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <View
+          style={[
+            {width: 48, height: 48},
+            a.relative,
+            a.rounded_full,
+            t.atoms.bg_contrast_100,
+          ]}
+        />
+        <View style={[a.gap_xs]}>
           <View
             style={[
-              {width: 48, height: 48},
-              a.relative,
-              a.rounded_full,
+              {width: 100, height: 16},
+              a.rounded_sm,
               t.atoms.bg_contrast_100,
             ]}
           />
-          <View style={[a.gap_xs]}>
-            <View
-              style={[
-                {width: 100, height: 16},
-                a.rounded_sm,
-                t.atoms.bg_contrast_100,
-              ]}
-            />
-            <View
-              style={[
-                {width: 60, height: 12},
-                a.rounded_sm,
-                t.atoms.bg_contrast_100,
-              ]}
-            />
-          </View>
+          <View
+            style={[
+              {width: 60, height: 12},
+              a.rounded_sm,
+              t.atoms.bg_contrast_100,
+            ]}
+          />
         </View>
       </View>
     </View>
