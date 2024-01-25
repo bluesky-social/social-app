@@ -12,6 +12,7 @@ import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
 import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {getAgent} from '#/state/session'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -50,7 +51,7 @@ export function StepFinished() {
 
     try {
       await Promise.all([
-        () => console.log(selectedInterests),
+        getAgent().setInterestsPref({onboardingTags: selectedInterests}),
         bulkWriteFollows(suggestedAccountsStepResults.accountDids),
         saveFeeds({
           saved: selectedFeeds,
