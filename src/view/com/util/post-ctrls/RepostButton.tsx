@@ -53,7 +53,7 @@ let RepostButton = ({
       onPress={() => {
         requireAuth(() => onPressToggleRepostWrapper())
       }}
-      style={[styles.container]}
+      style={[styles.btn, !big && styles.btnPad]}
       accessibilityRole="button"
       accessibilityLabel={`${
         isReposted
@@ -89,9 +89,15 @@ RepostButton = memo(RepostButton)
 export {RepostButton}
 
 const styles = StyleSheet.create({
-  container: {
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  btnPad: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   reposted: {
     color: colors.green3,
