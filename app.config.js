@@ -45,6 +45,8 @@ module.exports = function () {
       version: VERSION,
       name: 'Bluesky',
       slug: 'bluesky',
+      // If modifying the scheme for local builds, you should also add `EXPO_PUBLIC_SCHEME=<your scheme>` to .env if
+      // you want deep linking/sharing to work
       scheme: 'bluesky',
       owner: 'blueskysocial',
       runtimeVersion: {
