@@ -89,7 +89,9 @@ export function StepAlgoFeeds() {
     dispatch({type: 'next'})
     track('OnboardingV2:StepAlgoFeeds:End', {
       selectedPrimaryFeeds: primaryFeedUris,
+      selectedPrimaryFeedsLength: primaryFeedUris.length,
       selectedSecondaryFeeds: secondaryFeedUris,
+      selectedSecondaryFeedsLength: secondaryFeedUris.length,
     })
   }, [primaryFeedUris, secondaryFeedUris, dispatch, track])
 

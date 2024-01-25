@@ -53,6 +53,7 @@ export function StepTopicalFeeds() {
     dispatch({type: 'next'})
     track('OnboardingV2:StepTopicalFeeds:End', {
       selectedFeeds: selectedFeedUris,
+      selectedFeedsLength: selectedFeedUris.length,
     })
   }, [selectedFeedUris, dispatch, track])
 

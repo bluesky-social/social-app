@@ -89,6 +89,7 @@ export function StepInterests() {
       dispatch({type: 'next'})
 
       track('OnboardingV2:StepInterests:End', {
+        selectedInterests: interests,
         selectedInterestsLength: interests.length,
       })
     } catch (e: any) {

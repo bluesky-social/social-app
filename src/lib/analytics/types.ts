@@ -135,6 +135,7 @@ interface TrackPropertiesMap {
   'OnboardingV2:Begin': {}
   'OnboardingV2:StepInterests:Start': {}
   'OnboardingV2:StepInterests:End': {
+    selectedInterests: string[]
     selectedInterestsLength: number
   }
   'OnboardingV2:StepSuggestedAccounts:Start': {}
@@ -146,11 +147,14 @@ interface TrackPropertiesMap {
   'OnboardingV2:StepAlgoFeeds:Start': {}
   'OnboardingV2:StepAlgoFeeds:End': {
     selectedPrimaryFeeds: string[]
+    selectedPrimaryFeedsLength: number
     selectedSecondaryFeeds: string[]
+    selectedSecondaryFeedsLength: number
   }
   'OnboardingV2:StepTopicalFeeds:Start': {}
   'OnboardingV2:StepTopicalFeeds:End': {
     selectedFeeds: string[]
+    selectedFeedsLength: number
   }
   'OnboardingV2:StepModeration:Start': {}
   'OnboardingV2:StepModeration:End': {}
