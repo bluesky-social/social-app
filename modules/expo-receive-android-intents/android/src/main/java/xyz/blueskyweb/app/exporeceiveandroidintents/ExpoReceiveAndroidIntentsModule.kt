@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import androidx.core.net.toUri
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
@@ -14,8 +13,6 @@ import java.io.FileOutputStream
 import java.net.URLEncoder
 
 class ExpoReceiveAndroidIntentsModule : Module() {
-  var scheme: String? = null
-
   override fun definition() = ModuleDefinition {
     Name("ExpoReceiveAndroidIntents")
 
@@ -67,13 +64,11 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   private fun handleImagesIntent(intent: Intent) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)?.let {
-        val uris = it.filterIsInstance<Uri>()
-        handleImageIntents(uris)
+        handleImageIntents(it.filterIsInstance<Uri>().take(4))
       }
     } else {
       intent.getParcelableArrayListExtra<Uri>(Intent.EXTRA_STREAM)?.let {
-        val uris = it.filterIsInstance<Uri>()
-        handleImageIntents(uris)
+        handleImageIntents(it.filterIsInstance<Uri>().take(4))
       }
     }
   }
@@ -92,8 +87,6 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     }
 
     val encoded = URLEncoder.encode(allParams, "UTF-8")
-
-    scheme?.let { Log.d("EXPPP", it) }
 
     "blueskytesting://?compose=true&imageUris=${encoded}".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
