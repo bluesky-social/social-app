@@ -202,12 +202,7 @@ export function useProfileFollowMutationQueue(
   return [queueFollow, queueUnfollow]
 }
 
-/**
- * DO NOT USE DIRECTLY. Use `useProfileFollowMutationQueue` instead.
- *
- * Unless you have a good reason.
- */
-export function useProfileFollowMutation() {
+function useProfileFollowMutation() {
   return useMutation<
     {uri: string; cid: string},
     Error,
