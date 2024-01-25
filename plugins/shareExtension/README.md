@@ -1,12 +1,21 @@
 # Share extension plugin for Expo
 
-This plugin handles moving the necessary files into their respective iOS and Android targets.
+This plugin handles moving the necessary files into their respective iOS and Android targets and updating the build
+phases, plists, manifests, etc.
 
 ## Steps
 
-1. Add the app group to the main project
-2. Add the app group to the extension
-3. 
+### ios
+
+1. Update entitlements
+2. Set the app group to group.<identifier>
+3. Add the extension plist
+4. Add the view controller
+5. Update the xcode project's build phases
+
+### android
+
+1. Update the manifest with the intents the app can receive
 
 ## Credits
 
