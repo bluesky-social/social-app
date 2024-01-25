@@ -1,12 +1,10 @@
-import {ConfigPlugin, withInfoPlist} from '@expo/config-plugins'
-import plist from '@expo/plist'
-import * as path from 'path'
-import * as fs from 'fs'
+const {withInfoPlist} = require('@expo/config-plugins')
+const plist = require('@expo/plist')
+const path = require('path')
+const fs = require('fs')
 
-export const withExtensionEntitlements: ConfigPlugin<{
-  extensionName: string
-}> = (config, {extensionName}) => {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
+const withExtensionEntitlements = (config, {extensionName}) => {
+  // eslint-disable-next-line no-shadow
   return withInfoPlist(config, config => {
     const extensionEntitlementsPath = path.join(
       config.modRequest.platformProjectRoot,
@@ -14,7 +12,7 @@ export const withExtensionEntitlements: ConfigPlugin<{
       `${extensionName}.entitlements`,
     )
 
-    const shareExtensionEntitlements: Record<string, string | string[]> = {
+    const shareExtensionEntitlements = {
       'com.apple.security.application-groups': [
         `group.${config.ios?.bundleIdentifier}`,
       ],
@@ -25,9 +23,11 @@ export const withExtensionEntitlements: ConfigPlugin<{
     })
     fs.writeFileSync(
       extensionEntitlementsPath,
-      plist.build(shareExtensionEntitlements),
+      plist.default.build(shareExtensionEntitlements),
     )
 
     return config
   })
 }
+
+module.exports = {withExtensionEntitlements}

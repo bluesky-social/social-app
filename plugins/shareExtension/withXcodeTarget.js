@@ -1,15 +1,7 @@
-import {ConfigPlugin, withXcodeProject} from '@expo/config-plugins'
+const {withXcodeProject} = require('@expo/config-plugins')
 
-interface Params {
-  extensionName: string
-  controllerName: string
-}
-
-export const withXcodeTarget: ConfigPlugin<Params> = (
-  config,
-  {extensionName, controllerName},
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
+const withXcodeTarget = (config, {extensionName, controllerName}) => {
+  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 
@@ -59,3 +51,5 @@ export const withXcodeTarget: ConfigPlugin<Params> = (
     return config
   })
 }
+
+module.exports = {withXcodeTarget}

@@ -1,17 +1,10 @@
-import {ConfigPlugin, withInfoPlist} from '@expo/config-plugins'
-import plist from '@expo/plist'
-import * as path from 'path'
-import * as fs from 'fs'
+const {withInfoPlist} = require('@expo/config-plugins')
+const plist = require('@expo/plist')
+const path = require('path')
+const fs = require('fs')
 
-interface Params {
-  extensionName: string
-}
-
-export const withExtensionInfoPlist: ConfigPlugin<Params> = (
-  config,
-  {extensionName},
-) => {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
+const withExtensionInfoPlist = (config, {extensionName}) => {
+  // eslint-disable-next-line no-shadow
   return withInfoPlist(config, config => {
     const plistPath = path.join(
       config.modRequest.projectRoot,
@@ -25,7 +18,7 @@ export const withExtensionInfoPlist: ConfigPlugin<Params> = (
       'Info.plist',
     )
 
-    const extPlist = plist.parse(fs.readFileSync(plistPath).toString())
+    const extPlist = plist.default.parse(fs.readFileSync(plistPath).toString())
 
     extPlist.MainAppScheme = config.scheme
     extPlist.CFBundleName = '$(PRODUCT_NAME)'
@@ -37,8 +30,10 @@ export const withExtensionInfoPlist: ConfigPlugin<Params> = (
     extPlist.CFBundleShortVersionString = '$(MARKETING_VERSION)'
 
     fs.mkdirSync(path.dirname(targetPath), {recursive: true})
-    fs.writeFileSync(targetPath, plist.build(extPlist))
+    fs.writeFileSync(targetPath, plist.default.build(extPlist))
 
     return config
   })
 }
+
+module.exports = {withExtensionInfoPlist}

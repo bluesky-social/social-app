@@ -1,7 +1,7 @@
-import {ConfigPlugin, withAndroidManifest} from '@expo/config-plugins'
+const {withAndroidManifest} = require('@expo/config-plugins')
 
-export const withIntentFilters: ConfigPlugin = config => {
-  // eslint-disable-next-line @typescript-eslint/no-shadow
+const withIntentFilters = config => {
+  // eslint-disable-next-line no-shadow
   return withAndroidManifest(config, config => {
     const intents = [
       {
@@ -85,3 +85,5 @@ export const withIntentFilters: ConfigPlugin = config => {
     return config
   })
 }
+
+module.exports = {withIntentFilters}

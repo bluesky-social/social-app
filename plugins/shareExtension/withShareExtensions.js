@@ -1,15 +1,15 @@
-import {ConfigPlugin, withPlugins} from '@expo/config-plugins'
-import {withAppEntitlements} from './withAppEntitlements'
-import {withXcodeTarget} from './withXcodeTarget'
-import {withExtensionEntitlements} from './withExtensionEntitlements'
-import {withExtensionInfoPlist} from './withExtensionInfoPlist'
-import {withExtensionViewController} from './withExtensionViewController'
-import {withIntentFilters} from './withIntentFilters'
+const {withPlugins} = require('@expo/config-plugins')
+const {withAppEntitlements} = require('./withAppEntitlements')
+const {withXcodeTarget} = require('./withXcodeTarget')
+const {withExtensionEntitlements} = require('./withExtensionEntitlements')
+const {withExtensionInfoPlist} = require('./withExtensionInfoPlist')
+const {withExtensionViewController} = require('./withExtensionViewController')
+const {withIntentFilters} = require('./withIntentFilters')
 
 const SHARE_EXTENSION_NAME = 'Share-with-Bluesky'
 const SHARE_EXTENSION_CONTROLLER_NAME = 'ShareViewController'
 
-const withShareExtensions: ConfigPlugin = config => {
+const withShareExtensions = config => {
   return withPlugins(config, [
     // IOS
     withAppEntitlements,
@@ -44,4 +44,4 @@ const withShareExtensions: ConfigPlugin = config => {
   ])
 }
 
-export default withShareExtensions
+module.exports = withShareExtensions
