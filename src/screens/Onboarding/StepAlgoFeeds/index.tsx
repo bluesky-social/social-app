@@ -28,14 +28,14 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 export type FeedConfig = {
   default: boolean
   uri: string
-  gradient?: typeof tokens.gradients.midnight | typeof tokens.gradients.summer
+  gradient?: typeof tokens.gradients.midnight | typeof tokens.gradients.nordic
 }
 
 const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: true,
     uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
-    gradient: tokens.gradients.summer,
+    gradient: tokens.gradients.nordic,
   },
   {
     default: false,
@@ -155,7 +155,7 @@ export function StepAlgoFeeds() {
 
       <OnboardingControls.Portal>
         <Button
-          disabled={saving || primaryFeedUris.length === 0}
+          disabled={saving}
           key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"

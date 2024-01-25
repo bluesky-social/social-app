@@ -55,7 +55,7 @@ function PrimaryFeedCardInner({
       style={[
         a.relative,
         a.w_full,
-        a.p_md,
+        a.p_lg,
         a.rounded_md,
         a.overflow_hidden,
         t.atoms.bg_contrast_50,
@@ -106,7 +106,7 @@ function PrimaryFeedCardInner({
           <Text
             style={[
               {opacity: 0.6},
-              a.text_sm,
+              a.text_md,
               a.py_xs,
               ctx.selected && styles.textSelected,
             ]}>
@@ -150,7 +150,7 @@ function PrimaryFeedCardInner({
       <View style={[a.pt_md]}>
         <RichText
           value={feed.description}
-          style={[ctx.selected && t.atoms.text_inverted]}
+          style={[a.text_md, ctx.selected && t.atoms.text_inverted]}
           disableLinks
         />
       </View>
