@@ -366,6 +366,7 @@ export function Button({
         a.align_center,
         a.justify_center,
         a.overflow_hidden,
+        a.justify_center,
         ...baseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),

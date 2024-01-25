@@ -116,7 +116,8 @@ function LightboxFooter({imageIndex}: {imageIndex: number}) {
                 update: {type: 'spring', springDamping: 0.7},
               })
               setAltExpanded(prev => !prev)
-            }}>
+            }}
+            onLongPress={() => {}}>
             {altText}
           </Text>
         </View>
