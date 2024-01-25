@@ -119,7 +119,7 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const onMuteUser = React.useCallback(async () => {
+  const onMuteAccount = React.useCallback(async () => {
     try {
       const agent = getAgent()
       await agent.mute(postAuthor.did)
@@ -130,7 +130,7 @@ let PostDropdownBtn = ({
     }
   }, [postAuthor.did])
 
-  const onBlockUser = React.useCallback(async () => {
+  const onBlockAccount = React.useCallback(async () => {
     try {
       const agent = getAgent()
       await agent.app.bsky.graph.block.create(
@@ -229,23 +229,24 @@ let PostDropdownBtn = ({
     {
       label: 'separator',
     },
-    hasSession && {
-      label: 'Mute account',
-      onPress: onMuteUser,
-      testID: 'postDropdownMuteUserBtn',
-      icon: {
-        ios: {
-          name: 'speaker.slash',
+    hasSession &&
+      !isAuthor && {
+        label: 'Mute account',
+        onPress: onMuteAccount,
+        testID: 'postDropdownMuteAccountBtn',
+        icon: {
+          ios: {
+            name: 'speaker.slash',
+          },
+          android: 'ic_lock_silent_mode',
+          web: 'comment-slash',
         },
-        android: 'ic_lock_silent_mode',
-        web: 'comment-slash',
       },
-    },
     hasSession &&
       !isAuthor && {
         label: _(msg`Block account`),
-        onPress: onBlockUser,
-        testID: 'postDropdownBlockUserBtn',
+        onPress: onBlockAccount,
+        testID: 'postDropdownBlockAccountBtn',
         icon: {
           ios: {
             name: 'person.fill.xmark',
@@ -254,9 +255,10 @@ let PostDropdownBtn = ({
           web: 'user-slash',
         },
       },
-    {
-      label: 'separator',
-    },
+    hasSession &&
+      !isAuthor && {
+        label: 'separator',
+      },
     !isAuthor &&
       hasSession && {
         label: _(msg`Report post`),
