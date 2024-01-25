@@ -4,7 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 import {useOnboardingDispatch} from '#/state/shell'
-import {getAgent, useSessionApi} from '#/state/session'
+import {getAgent, isSessionDeactivated, useSessionApi} from '#/state/session'
 import {logger} from '#/logger'
 import {pluralize} from '#/lib/strings/helpers'
 
@@ -16,9 +16,8 @@ import {H2, P} from '#/components/Typography'
 import {ScrollView} from '#/view/com/util/Views'
 import {Group3_Stroke2_Corner0_Rounded as Group3} from '#/components/icons/Group3'
 import {Loader} from '#/components/Loader'
-import * as Toast from 'view/com/util/Toast'
 
-const COL_WIDTH = 500
+const COL_WIDTH = 400
 
 export function Deactivated() {
   const {_} = useLingui()
@@ -43,11 +42,11 @@ export function Deactivated() {
       if (res.data.activated) {
         // ready to go, exchange the access token for a usable one and kick off onboarding
         await getAgent().refreshSession()
-        Toast.show(_(msg`Your account is ready!`))
-        onboardingDispatch({type: 'start'})
+        if (!isSessionDeactivated(getAgent().session?.accessJwt)) {
+          onboardingDispatch({type: 'start'})
+        }
       } else {
         // not ready, update UI
-        Toast.show(_(msg`Not ready yet!`))
         setEstimatedTime(msToString(res.data.estimatedTimeMs))
         if (typeof res.data.placeInQueue !== 'undefined') {
           setPlaceInQueue(Math.max(res.data.placeInQueue, 1))
@@ -58,7 +57,7 @@ export function Deactivated() {
     } finally {
       setProcessing(false)
     }
-  }, [setProcessing, setEstimatedTime, setPlaceInQueue, onboardingDispatch, _])
+  }, [setProcessing, setEstimatedTime, setPlaceInQueue, onboardingDispatch])
 
   React.useEffect(() => {
     checkStatus()
@@ -94,7 +93,7 @@ export function Deactivated() {
         style={[a.h_full, a.w_full]}
         contentContainerStyle={{borderWidth: 0}}>
         <View
-          style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
+          style={[a.flex_row, a.justify_center, gtMobile ? a.pt_4xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View
               style={[a.w_full, a.justify_center, a.align_center, a.mt_4xl]}>
@@ -112,15 +111,25 @@ export function Deactivated() {
             </P>
 
             <View
-              style={[a.rounded_sm, a.p_2xl, a.mt_2xl, t.atoms.bg_contrast_50]}>
-              <P style={[]}>
-                <Text style={[a.font_bold, a.text_md]}>
-                  {typeof placeInQueue === 'number' ? (
-                    <Trans>You are number {placeInQueue} in line.</Trans>
-                  ) : (
-                    <Trans>You are in line.</Trans>
-                  )}{' '}
+              style={[
+                a.rounded_sm,
+                a.px_2xl,
+                a.py_4xl,
+                a.mt_2xl,
+                t.atoms.bg_contrast_50,
+              ]}>
+              {typeof placeInQueue === 'number' && (
+                <Text
+                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
+                  {placeInQueue}
                 </Text>
+              )}
+              <P style={[a.text_center]}>
+                {typeof placeInQueue === 'number' ? (
+                  <Trans>left to go.</Trans>
+                ) : (
+                  <Trans>You are in line.</Trans>
+                )}{' '}
                 {estimatedTime ? (
                   <Trans>
                     We estimate {estimatedTime} until your account is ready.

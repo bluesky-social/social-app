@@ -706,7 +706,7 @@ export function useRequireAuth() {
   )
 }
 
-function isSessionDeactivated(accessJwt: string | undefined) {
+export function isSessionDeactivated(accessJwt: string | undefined) {
   if (accessJwt) {
     const sessData = jwtDecode(accessJwt)
     return (
