@@ -19,8 +19,6 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     OnNewIntent {
       handleIntent(it)
     }
-
-    Events("onIntentReceived")
   }
 
   private fun handleIntent(intent: Intent?) {
