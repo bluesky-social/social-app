@@ -1,3 +1,8 @@
+import {AppBskyGraphFollow, AppBskyGraphGetFollows} from '@atproto/api'
+
+import {until} from '#/lib/async/until'
+import {getAgent} from '#/state/session'
+
 function shuffle(array: any) {
   let currentIndex = array.length,
     randomIndex
@@ -47,4 +52,61 @@ export function aggregateInterestItems(
 
   // dedupe and return 20
   return Array.from(new Set(results)).slice(0, 20)
+}
+
+export async function bulkWriteFollows(dids: string[]) {
+  const session = getAgent().session
+
+  if (!session) {
+    throw new Error(`bulkWriteFollows failed: no session`)
+  }
+
+  const followRecords: AppBskyGraphFollow.Record[] = dids.map(did => {
+    return {
+      $type: 'app.bsky.graph.follow',
+      subject: did,
+      createdAt: new Date().toISOString(),
+    }
+  })
+  const followWrites = followRecords.map(r => ({
+    $type: 'com.atproto.repo.applyWrites#create',
+    collection: 'app.bsky.graph.follow',
+    value: r,
+  }))
+
+  await getAgent().com.atproto.repo.applyWrites({
+    repo: session.did,
+    writes: followWrites,
+  })
+  await whenFollowsIndexed(session.did, res => !!res.data.follows.length)
+}
+
+async function whenFollowsIndexed(
+  actor: string,
+  fn: (res: AppBskyGraphGetFollows.Response) => boolean,
+) {
+  await until(
+    5, // 5 tries
+    1e3, // 1s delay between tries
+    fn,
+    () =>
+      getAgent().app.bsky.graph.getFollows({
+        actor,
+        limit: 1,
+      }),
+  )
+}
+
+/**
+ * Kinda hacky, but we want For Your or Discover to appear as the first pinned
+ * feed after Following
+ */
+export function sortPrimaryAlgorithmFeeds(uris: string[]) {
+  return uris.sort(uri => {
+    return uri.includes('the-algorithm')
+      ? -1
+      : uri.includes('whats-hot')
+      ? 0
+      : 1
+  })
 }

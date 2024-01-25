@@ -10,8 +10,7 @@ import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
-import {usePinFeedMutation} from '#/state/queries/preferences'
-import {useProfileFollowMutation} from '#/state/queries/profile'
+import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -20,6 +19,10 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {
+  bulkWriteFollows,
+  sortPrimaryAlgorithmFeeds,
+} from '#/screens/Onboarding/util'
 
 export function StepFinished() {
   const t = useTheme()
@@ -27,8 +30,7 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: pinFeed} = usePinFeedMutation()
-  const {mutateAsync: follow} = useProfileFollowMutation()
+  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
@@ -40,35 +42,24 @@ export function StepFinished() {
       topicalFeedsStepResults,
     } = state
     const {selectedInterests} = interestsStepResults
+    const selectedFeeds = [
+      ...sortPrimaryAlgorithmFeeds(algoFeedsStepResults.feedUris),
+      ...topicalFeedsStepResults.feedUris,
+    ]
 
     await Promise.all([
-      () => {
-        console.log('selectedInterests', selectedInterests)
-      },
-      // parallel
-      ...suggestedAccountsStepResults.accountDids.map(did =>
-        follow({did}).catch(() => {}),
-      ),
-      // serial
-      new Promise<void>(async y => {
-        for (const uri of algoFeedsStepResults.feedUris) {
-          await pinFeed({uri}).catch(() => {})
-        }
-        y()
-      }),
-      // serial
-      new Promise<void>(async y => {
-        for (const uri of topicalFeedsStepResults.feedUris) {
-          await pinFeed({uri}).catch(() => {})
-        }
-        y()
+      () => console.log(selectedInterests),
+      bulkWriteFollows(suggestedAccountsStepResults.accountDids),
+      saveFeeds({
+        saved: selectedFeeds,
+        pinned: selectedFeeds,
       }),
     ])
 
     setSaving(false)
     dispatch({type: 'finish'})
     onboardDispatch({type: 'finish'})
-  }, [state, dispatch, onboardDispatch, setSaving, follow, pinFeed])
+  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds])
 
   return (
     <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
