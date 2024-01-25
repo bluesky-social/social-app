@@ -42,7 +42,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   private fun handleTextIntent(intent: Intent) {
     intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
       val encoded = URLEncoder.encode(it, "UTF-8")
-      "blueskytesting://?compose=true&text=${encoded}".toUri().let { uri ->
+      "bluesky://?compose=true&text=${encoded}".toUri().let { uri ->
         val newIntent = Intent(Intent.ACTION_VIEW, uri)
         appContext.currentActivity?.startActivity(newIntent)
       }
@@ -88,7 +88,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
     val encoded = URLEncoder.encode(allParams, "UTF-8")
 
-    "blueskytesting://?compose=true&imageUris=${encoded}".toUri().let {
+    "bluesky://?compose=true&imageUris=${encoded}".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }
