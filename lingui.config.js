@@ -9,6 +9,7 @@ module.exports = {
     'id',
     'ja',
     'ko',
+    'pl',
     'pt-BR',
     'uk',
     'ca',

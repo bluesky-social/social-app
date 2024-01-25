@@ -62,6 +62,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesCa})
       break
     }
+    case AppLanguage.pl: {
+      i18n.loadAndActivate({locale, messages: messagesEn})
+      break
+    }
     default: {
       i18n.loadAndActivate({locale, messages: messagesEn})
       break
