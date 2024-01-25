@@ -138,6 +138,7 @@ interface TrackPropertiesMap {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+  'OnboardingV2:StepInterests:Error': {}
   'OnboardingV2:StepSuggestedAccounts:Start': {}
   'OnboardingV2:StepSuggestedAccounts:End': {
     selectedAccountsLength: number
@@ -161,6 +162,7 @@ interface TrackPropertiesMap {
   'OnboardingV2:StepFinished:Start': {}
   'OnboardingV2:StepFinished:End': {}
   'OnboardingV2:Complete': {}
+  'OnboardingV2:Skip': {}
 }
 
 interface ScreenPropertiesMap {
