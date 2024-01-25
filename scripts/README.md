@@ -2,4 +2,4 @@
 
 ## updateExtensions.sh
 
-Updates the extensions in `/extensions` with the current iOS/Android project changes.
+Updates the extensions in `/modules` with the current iOS/Android project changes.
