@@ -309,7 +309,7 @@ function PostThreadLoaded({
         )
       } else if (item === CHILD_SPINNER) {
         return (
-          <View style={styles.childSpinner}>
+          <View style={[pal.border, styles.childSpinner]}>
             <ActivityIndicator />
           </View>
         )
@@ -554,6 +554,8 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
   },
   childSpinner: {
+    borderTopWidth: 1,
+    paddingTop: 40,
     paddingBottom: 200,
   },
 })
