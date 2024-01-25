@@ -301,7 +301,7 @@ function PostThreadLoaded({
             // @ts-ignore web-only
             style={{
               // Leave enough space below that the scroll doesn't jump
-              height: isNative ? 600 : 'calc(100vh)',
+              height: isNative ? 600 : '100vh',
               borderTopWidth: 1,
               borderColor: pal.colors.border,
             }}
