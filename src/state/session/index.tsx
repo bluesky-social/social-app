@@ -710,7 +710,7 @@ function isSessionDeactivated(accessJwt: string | undefined) {
   if (accessJwt) {
     const sessData = jwtDecode(accessJwt)
     return (
-      hasProp(sessData, 'scope') && sessData.scope === 'com.atproto.deactived'
+      hasProp(sessData, 'scope') && sessData.scope === 'com.atproto.deactivated'
     )
   }
   return false
