@@ -412,6 +412,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         queryClient.clear()
         upsertAccount(account)
 
+        if (prevSession.deactivated) {
+          // don't attempt to resume
+          // use will be taken to the deactivated screen
+          logger.info(`session: reusing session for deactivated account`)
+          return
+        }
+
         // Intentionally not awaited to unblock the UI:
         resumeSessionWithFreshAccount()
           .then(freshAccount => {
