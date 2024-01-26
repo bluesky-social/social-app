@@ -57,6 +57,23 @@ export function useProfilesQuery({handles}: {handles: string[]}) {
   })
 }
 
+export function usePrefetchProfileQuery() {
+  const queryClient = useQueryClient()
+  const prefetchProfileQuery = useCallback(
+    (did: string) => {
+      queryClient.prefetchQuery({
+        queryKey: RQKEY(did),
+        queryFn: async () => {
+          const res = await getAgent().getProfile({actor: did || ''})
+          return res.data
+        },
+      })
+    },
+    [queryClient],
+  )
+  return prefetchProfileQuery
+}
+
 interface ProfileUpdateParams {
   profile: AppBskyActorDefs.ProfileView
   updates:
