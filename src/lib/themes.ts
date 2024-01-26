@@ -344,7 +344,6 @@ export const oledTheme: Theme = {
     default: {
       ...darkTheme.palette.default,
       background: oledPalette.black,
-      textInverted: oledPalette.black,
     },
   },
 }
