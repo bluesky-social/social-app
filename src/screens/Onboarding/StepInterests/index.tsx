@@ -142,7 +142,7 @@ export function StepInterests() {
   )
 
   return (
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle
         icon={isError ? EmojiSad : Hashtag}
         style={[

@@ -3,12 +3,11 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
-import {Divider} from '#/components/Divider'
 import {Loader} from '#/components/Loader'
 import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {useAnalytics} from '#/lib/analytics/analytics'
@@ -19,10 +18,7 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {
-  FeedCard,
-  PrimaryFeedCard,
-} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
+import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export type FeedConfig = {
@@ -35,7 +31,7 @@ const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: true,
     uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
-    gradient: tokens.gradients.nordic,
+    gradient: tokens.gradients.midnight,
   },
   {
     default: false,
@@ -47,11 +43,11 @@ const PRIMARY_FEEDS: FeedConfig[] = [
 const SECONDARY_FEEDS: FeedConfig[] = [
   {
     default: false,
-    uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends',
+    uri: 'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq',
   },
   {
     default: false,
-    uri: 'at://did:plc:vpkhqolt662uhesyj6nxm7ys/app.bsky.feed.generator/infreq',
+    uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/with-friends',
   },
   {
     default: false,
@@ -71,7 +67,6 @@ export function StepAlgoFeeds() {
   const {_} = useLingui()
   const {track} = useAnalytics()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [primaryFeedUris, setPrimaryFeedUris] = React.useState<string[]>(
     PRIMARY_FEEDS.map(f => (f.default ? f.uri : '')).filter(Boolean),
@@ -100,53 +95,43 @@ export function StepAlgoFeeds() {
   }, [track])
 
   return (
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>Choose your algorithmic feeds</Trans>
       </Title>
-      <Description style={[a.pb_md]}>
-        <Trans>
-          Feeds are created by users and can give you entirely new experiences.
-          At Bluesky, you get to choose your algorithm.
-        </Trans>
-      </Description>
       <Description>
         <Trans>
-          We recommend selecting one primary algorithmic feed and as many
-          secondary algorithmic feeds as you like.
+          Feeds are created by users and can give you entirely new experiences.
         </Trans>
       </Description>
-
-      <Text style={[a.font_bold, a.pt_3xl, a.pb_md, t.atoms.text_contrast_400]}>
-        <Trans>Primary algorithmic feeds</Trans>
-      </Text>
 
       <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group
           values={primaryFeedUris}
           onChange={setPrimaryFeedUris}
           label={_(msg`Select your primary algorithmic feeds`)}>
-          <View style={[a.gap_md]}>
-            {PRIMARY_FEEDS.map(config => (
-              <PrimaryFeedCard key={config.uri} config={config} />
-            ))}
-          </View>
+          <Text
+            style={[a.text_md, a.pt_4xl, a.pb_md, t.atoms.text_contrast_700]}>
+            <Trans>We recommend "For You" by Skygaze:</Trans>
+          </Text>
+          <FeedCard config={PRIMARY_FEEDS[0]} />
+          <Text
+            style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
+            <Trans>Or you can try our "Discover" algorithm:</Trans>
+          </Text>
+          <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
-      </View>
 
-      <Divider />
-
-      <Text style={[a.font_bold, a.pt_3xl, a.pb_md, t.atoms.text_contrast_400]}>
-        <Trans>Secondary algorithmic feeds</Trans>
-      </Text>
-
-      <View style={[a.w_full, a.pb_2xl]}>
         <Toggle.Group
           values={secondaryFeedUris}
           onChange={setSeconaryFeedUris}
           label={_(msg`Select your secondary algorithmic feeds`)}>
+          <Text
+            style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
+            <Trans>There are many feeds to try:</Trans>
+          </Text>
           <View style={[a.gap_md]}>
             {SECONDARY_FEEDS.map(config => (
               <FeedCard key={config.uri} config={config} />

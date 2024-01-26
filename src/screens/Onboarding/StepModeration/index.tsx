@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {configurableLabelGroups} from 'state/queries/preferences'
 import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -26,7 +26,6 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 export function StepModeration() {
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
 
@@ -40,7 +39,7 @@ export function StepModeration() {
   }, [track])
 
   return (
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
       <Title>

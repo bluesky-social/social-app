@@ -59,7 +59,13 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       accessibilityHint={_(
         msg`The following steps will help customize your Bluesky experience.`,
       )}
-      style={[a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
+      style={[
+        // @ts-ignore web only -prf
+        isWeb ? a.fixed : a.absolute,
+        a.inset_0,
+        a.flex_1,
+        t.atoms.bg,
+      ]}>
       {IS_DEV && (
         <View style={[a.absolute, a.p_xl, a.z_10, {right: 0, top: insets.top}]}>
           <Button
@@ -74,7 +80,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         </View>
       )}
 
-      {state.hasPrev && (
+      {!gtMobile && state.hasPrev && (
         <View
           style={[
             web(a.fixed),
@@ -85,7 +91,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             a.z_20,
             a.px_xl,
             {
-              top: paddingTop.paddingTop + insets.top,
+              top: paddingTop.paddingTop + insets.top - 1,
             },
           ]}>
           <View style={[a.w_full, a.align_start, {maxWidth: COL_WIDTH}]}>
@@ -96,7 +102,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               size="small"
               shape="round"
               label={_(msg`Go back to previous step`)}
-              style={[a.absolute, t.atoms.shadow_sm]}
+              style={[a.absolute]}
               onPress={() => dispatch({type: 'prev'})}>
               <ButtonIcon icon={ChevronLeft} />
             </Button>
@@ -107,7 +113,9 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       <ScrollView
         ref={scrollview}
         style={[a.h_full, a.w_full, {paddingTop: insets.top}]}
-        contentContainerStyle={{borderWidth: 0}}>
+        contentContainerStyle={{borderWidth: 0}}
+        // @ts-ignore web only --prf
+        dataSet={{'stable-gutters': 1}}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
@@ -141,14 +149,9 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               </View>
             </View>
 
-            <View style={[a.w_full, a.mb_5xl]}>
+            <View
+              style={[a.w_full, a.mb_5xl, {paddingTop: gtMobile ? 20 : 40}]}>
               {children}
-
-              {isWeb && gtMobile && (
-                <View style={[a.w_full, a.flex_row, a.justify_end, a.pt_5xl]}>
-                  <OnboardingControls.Outlet />
-                </View>
-              )}
             </View>
 
             <View style={{height: 200}} />
@@ -156,20 +159,47 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         </View>
       </ScrollView>
 
-      {(!isWeb || !gtMobile) && (
+      <View
+        style={[
+          // @ts-ignore web only -prf
+          isWeb ? a.fixed : a.absolute,
+          {bottom: 0, left: 0, right: 0},
+          t.atoms.bg,
+          t.atoms.border,
+          a.border_t,
+          a.align_center,
+          gtMobile ? a.px_5xl : a.px_xl,
+          isWeb
+            ? a.py_2xl
+            : {
+                paddingTop: a.pt_lg.paddingTop,
+                paddingBottom: insets.bottom,
+              },
+        ]}>
         <View
           style={[
-            a.align_center,
-            gtMobile ? a.px_5xl : a.px_xl,
-            {
-              paddingBottom: Math.max(insets.bottom, a.pb_5xl.paddingBottom),
-            },
+            a.w_full,
+            {maxWidth: COL_WIDTH},
+            gtMobile && [a.flex_row, a.justify_between],
           ]}>
-          <View style={[a.w_full, {maxWidth: COL_WIDTH}]}>
-            <OnboardingControls.Outlet />
-          </View>
+          {gtMobile &&
+            (state.hasPrev ? (
+              <Button
+                key={state.activeStep} // remove focus state on nav
+                variant="solid"
+                color="secondary"
+                size="large"
+                shape="round"
+                label={_(msg`Go back to previous step`)}
+                onPress={() => dispatch({type: 'prev'})}>
+                <ButtonIcon icon={ChevronLeft} />
+              </Button>
+            ) : (
+              <View style={{height: 54}} />
+            ))}
+          <OnboardingControls.Outlet />
         </View>
-      )}
+      </View>
     </View>
   )
 }

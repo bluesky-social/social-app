@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -25,7 +25,6 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 export function StepTopicalFeeds() {
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
@@ -62,11 +61,11 @@ export function StepTopicalFeeds() {
   }, [track])
 
   return (
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={ListMagnifyingGlass} style={[a.mb_2xl]} />
 
       <Title>
-        <Trans>Feeds can be topic based as well!</Trans>
+        <Trans>Feeds can be topical as well!</Trans>
       </Title>
       <Description>
         {state.interestsStepResults.selectedInterests.length ? (

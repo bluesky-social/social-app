@@ -125,7 +125,7 @@ export function StepSuggestedAccounts() {
   }, [track])
 
   return (
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
       <Title>
@@ -160,7 +160,11 @@ export function StepSuggestedAccounts() {
       </View>
 
       <OnboardingControls.Portal>
-        <View style={[a.gap_md, gtMobile ? a.flex_row : a.flex_col]}>
+        <View
+          style={[
+            a.gap_md,
+            gtMobile ? {flexDirection: 'row-reverse'} : a.flex_col,
+          ]}>
           <Button
             disabled={dids.length === 0}
             variant="gradient"
@@ -176,7 +180,7 @@ export function StepSuggestedAccounts() {
             <ButtonIcon icon={saving ? Loader : Plus} position="right" />
           </Button>
           <Button
-            variant="outline"
+            variant="solid"
             color="secondary"
             size="large"
             label={_(

@@ -184,18 +184,18 @@ export function Button({
         if (!disabled) {
           baseStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_100
+              ? tokens.color.gray_50
               : tokens.color.gray_900,
           })
           hoverStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_200
+              ? tokens.color.gray_100
               : tokens.color.gray_950,
           })
         } else {
           baseStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_300
+              ? tokens.color.gray_200
               : tokens.color.gray_950,
           })
         }
@@ -206,7 +206,7 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: light ? tokens.color.gray_500 : tokens.color.gray_500,
+            borderColor: light ? tokens.color.gray_300 : tokens.color.gray_700,
           })
           hoverStyles.push(a.border, t.atoms.bg_contrast_50)
         } else {

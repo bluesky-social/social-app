@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -27,7 +27,6 @@ import {IconCircle} from '#/screens/Onboarding/IconCircle'
 export function StepFollowingFeed() {
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {gtMobile} = useBreakpoints()
   const {dispatch} = React.useContext(Context)
 
   const {data: preferences} = usePreferencesQuery()
@@ -55,23 +54,14 @@ export function StepFollowingFeed() {
 
   return (
     // Hack for now to move the image container up
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>Your default feed is "Following"</Trans>
       </Title>
       <Description style={[a.mb_md]}>
-        <Trans>
-          It only show posts from the people your follow, in the order they were
-          posted.
-        </Trans>
-      </Description>
-      <Description style={[a.mb_2xl]}>
-        <Trans>
-          Customize your default Following feed experience below. You can fine
-          tune these settings later.
-        </Trans>
+        <Trans>It show posts from the people your follow as they happen.</Trans>
       </Description>
 
       <View style={[a.w_full]}>
@@ -147,6 +137,10 @@ export function StepFollowingFeed() {
           </View>
         </Toggle.Item>
       </View>
+
+      <Description style={[a.mt_lg]}>
+        <Trans>You can change these settings later.</Trans>
+      </Description>
 
       <OnboardingControls.Portal>
         <Button

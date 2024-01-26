@@ -114,22 +114,19 @@ function PrimaryFeedCardInner({
           </Text>
         </View>
 
-        {ctx.selected && (
-          <View
-            style={[
-              {
-                width: 28,
-                height: 28,
-              },
-              a.justify_center,
-              a.align_center,
-              a.rounded_sm,
-              a.border,
-              ctx.selected && styles.checkboxSelected,
-            ]}>
-            {ctx.selected && <Check size="sm" fill={t.palette.white} />}
-          </View>
-        )}
+        <View
+          style={[
+            {
+              width: 28,
+              height: 28,
+            },
+            a.justify_center,
+            a.align_center,
+            a.rounded_sm,
+            ctx.selected ? [a.border, styles.checkboxSelected] : t.atoms.bg,
+          ]}>
+          {ctx.selected && <Check size="sm" fill={t.palette.white} />}
+        </View>
       </View>
 
       <View

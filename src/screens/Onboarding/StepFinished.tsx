@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -33,7 +33,6 @@ export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
   const {track} = useAnalytics()
-  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
@@ -84,7 +83,7 @@ export function StepFinished() {
   }, [track])
 
   return (
-    <View style={[a.align_start, {paddingTop: gtMobile ? 100 : 60}]}>
+    <View style={[a.align_start]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
       <Title>
@@ -149,11 +148,7 @@ export function StepFinished() {
           label={_(msg`Complete onboarding and start using your account`)}
           onPress={finishOnboarding}>
           <ButtonText>
-            {saving ? (
-              <Trans>Finalizing your account</Trans>
-            ) : (
-              <Trans>Ready? Let's go!</Trans>
-            )}
+            {saving ? <Trans>Finalizing</Trans> : <Trans>Let's go!</Trans>}
           </ButtonText>
           {saving && <ButtonIcon icon={Loader} position="right" />}
         </Button>
