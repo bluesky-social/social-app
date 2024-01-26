@@ -22,7 +22,7 @@ import {
   useSetSaveFeedsMutation,
   DEFAULT_PROD_FEEDS,
 } from '#/state/queries/preferences'
-import {FEEDBACK_FORM_URL, IS_PROD} from '#/lib/constants'
+import {FEEDBACK_FORM_URL, HITSLOP_10, IS_PROD} from '#/lib/constants'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
@@ -137,7 +137,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
           <TouchableOpacity
             onPress={onPressBackInner}
             testID="backBtn"
-            accessibilityRole="button">
+            accessibilityRole="button"
+            hitSlop={HITSLOP_10}>
             <Text type="xl" style={pal.link}>
               <Trans>Back</Trans>
             </Text>
@@ -147,7 +148,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
             <TouchableOpacity
               testID="nextBtn"
               onPress={onPressNext}
-              accessibilityRole="button">
+              accessibilityRole="button"
+              hitSlop={HITSLOP_10}>
               {uiState.isProcessing ? (
                 <ActivityIndicator />
               ) : (
@@ -163,7 +165,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
               accessibilityRole="button"
               accessibilityLabel={_(msg`Retry`)}
               accessibilityHint=""
-              accessibilityLiveRegion="polite">
+              accessibilityLiveRegion="polite"
+              hitSlop={HITSLOP_10}>
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 <Trans>Retry</Trans>
               </Text>
