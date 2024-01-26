@@ -179,7 +179,7 @@
     "react-native-ui-text-view": "link:./modules/react-native-ui-text-view"
   },
   "devDependencies": {
-    "@atproto/dev-env": "^0.2.19",
+    "@atproto/dev-env": "^0.2.28",
     "@babel/core": "^7.23.2",
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
