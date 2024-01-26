@@ -121,7 +121,11 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
       leadin=""
       title={_(msg`Create Account`)}
       description={_(msg`We're so excited to have you join us!`)}>
-      <ScrollView testID="createAccount" style={pal.view}>
+      <ScrollView
+        testID="createAccount"
+        style={pal.view}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag">
         <View style={styles.stepContainer}>
           {uiState.step === 1 && (
             <Step1 uiState={uiState} uiDispatch={uiDispatch} />
