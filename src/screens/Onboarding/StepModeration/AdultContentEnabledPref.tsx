@@ -11,11 +11,8 @@ import {
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
-import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
-import {Button, ButtonText} from '#/components/Button'
-import {SetAgeDialog} from '#/screens/Onboarding/StepModeration/SetAgeDialog'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 
@@ -61,8 +58,6 @@ export function AdultContentEnabledPref() {
       logger.error('Failed to update preferences with server', {error: e})
     }
   }, [variables, preferences, mutate, _])
-
-  const prompt = Prompt.usePromptControl()
 
   if (!preferences) return null
 
@@ -133,26 +128,8 @@ export function AdultContentEnabledPref() {
           </Card>
         )
       }
-    } else {
-      return (
-        <Card>
-          <Text style={[a.flex_1, t.atoms.text_contrast_700, a.leading_snug]}>
-            <Trans>Confirm your age to enable adult content.</Trans>
-          </Text>
-          <Button
-            variant="solid"
-            color="negative"
-            size="small"
-            label={_(
-              msg`Click here to add your birth date and confirm your age`,
-            )}
-            onPress={prompt.open}>
-            <ButtonText>Set birth date</ButtonText>
-          </Button>
-
-          <SetAgeDialog prompt={prompt} preferences={preferences} />
-        </Card>
-      )
     }
+
+    return null
   }
 }
