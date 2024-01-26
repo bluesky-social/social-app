@@ -22,6 +22,7 @@ import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
 import * as EditImageModal from './EditImage'
 import * as ChangeHandleModal from './ChangeHandle'
+import * as ExportRepositoryModal from './ExportRepository'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
@@ -105,6 +106,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ThreadgateModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
+  } else if (modal.name === 'export-repository') {
+    element = <ExportRepositoryModal.Component {...modal} />
   } else if (modal.name === 'waitlist') {
     element = <WaitlistModal.Component />
   } else if (modal.name === 'invite-codes') {

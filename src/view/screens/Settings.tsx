@@ -214,6 +214,13 @@ export function SettingsScreen({}: Props) {
     })
   }, [track, queryClient, openModal, currentAccount])
 
+  const onPressExportRepository = React.useCallback(() => {
+    track('Settings:ExportRepositoryButtonClicked')
+    openModal({
+      name: 'export-repository',
+    })
+  }, [track, openModal])
+
   const onPressInviteCodes = React.useCallback(() => {
     track('Settings:InvitecodesButtonClicked')
     openModal({name: 'invite-codes'})
@@ -759,6 +766,29 @@ export function SettingsScreen({}: Props) {
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Developer Tools</Trans>
         </Text>
+        <TouchableOpacity
+          testID="exportRepositoryBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressExportRepository}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Export repository`)}
+          accessibilityHint={_(
+            msg`Download Bluesky account data (repository)`,
+          )}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="at"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text} numberOfLines={1}>
+            <Trans>Export repository</Trans>
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[pal.view, styles.linkCardNoIcon]}
           onPress={onPressSystemLog}
