@@ -119,7 +119,7 @@ msgstr "Compte silenciat"
 
 #: src/view/com/modals/ModerationDetails.tsx:86
 msgid "Account Muted"
-msgstr "Compte Silenciat"
+msgstr "Compte silenciat"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
@@ -1043,27 +1043,27 @@ msgstr "Fes doble toc per iniciar la sessió"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
-msgstr "p.e. Jordi Guix"
+msgstr "p.ex. Jordi Guix"
 
 #: src/view/com/modals/EditProfile.tsx:203
 msgid "e.g. Artist, dog-lover, and avid reader."
-msgstr "p.e. Artista, amant dels gossos i amant de la lectura."
+msgstr "p.ex. Artista, amant dels gossos i amant de la lectura."
 
 #: src/view/com/modals/CreateOrEditList.tsx:223
 msgid "e.g. Great Posters"
-msgstr "p.e. Gent interessant"
+msgstr "p.ex. Gent interessant"
 
 #: src/view/com/modals/CreateOrEditList.tsx:224
 msgid "e.g. Spammers"
-msgstr "p.e. Spammers"
+msgstr "p.ex. Spammers"
 
 #: src/view/com/modals/CreateOrEditList.tsx:244
 msgid "e.g. The posters who never miss."
-msgstr "p.e. Els que mai fallen"
+msgstr "p.ex. Els que mai fallen"
 
 #: src/view/com/modals/CreateOrEditList.tsx:245
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "p.e. Usuaris que sempre responen amb anuncis"
+msgstr "p.ex. Usuaris que sempre responen amb anuncis"
 
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -2200,8 +2200,8 @@ msgid "No result"
 msgstr "Cap resultat"
 
 #: src/view/screens/Feeds.tsx:456
-msgid "No results found for \"{query}\
-msgstr "No s'han trobat resultats per \"{query}\
+msgid "No results found for \"{query}\""
+msgstr "No s'han trobat resultats per \"{query}\""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:272
@@ -2293,7 +2293,7 @@ msgstr "Obre la navegació"
 
 #: src/view/screens/Settings.tsx:737
 msgid "Open storybook page"
-msgstr Obre la pàgina de l'historial
+msgstr Obre la pàgina de l'historial"
 
 #: src/view/com/util/forms/DropdownButton.tsx:147
 msgid "Opens {numItems} options"
@@ -2444,7 +2444,7 @@ msgstr "Oersones seguint a @{0}"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
-msgstr "Cal permís per accedir al carret de la càmera. "
+msgstr "Cal permís per accedir al carret de la càmera."
 
 #: src/view/com/lightbox/Lightbox.tsx:72
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
@@ -2985,8 +2985,8 @@ msgstr "Cerca"
 
 #: src/view/screens/Search/Search.tsx:628
 #: src/view/shell/desktop/Search.tsx:255
-msgid "Search for \"{query}\
-msgstr "Cerca per \"{query}\
+msgid "Search for \"{query}\""
+msgstr "Cerca per \"{query}\""
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
@@ -3587,7 +3587,7 @@ msgstr "Aquest canal està buit!"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr Aquest canal està buit! Necessites seguir més usuaris o modificar la teva configuració d'idiomes"
+msgstr "Aquest canal està buit! Necessites seguir més usuaris o modificar la teva configuració d'idiomes"
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
@@ -3855,8 +3855,8 @@ msgid "users followed by <0/>"
 msgstr "usuaris seguits per <0/>"
 
 #: src/view/com/modals/Threadgate.tsx:106
-msgid "Users in \"{0}\
-msgstr "Usuaris a «{0}»"
+msgid "Users in \"{0}\""
+msgstr "Usuaris a \"{0}\""
 
 #: src/view/com/auth/create/Step2.tsx:241
 msgid "Verification code"
@@ -3909,7 +3909,7 @@ msgstr "Visita el lloc web"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
-msgstr "Arverteix"
+msgstr "Adverteix"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -4031,7 +4031,7 @@ msgstr "Has bloquejat aquest usuari. No pots veure el seu contingut."
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
-msgstr "Has silenciat aquest usuari"
+msgstr "Has silenciat aquest usuari."
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:136
 msgid "You have no feeds."
