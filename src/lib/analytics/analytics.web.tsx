@@ -3,7 +3,7 @@ import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
 import {Browser} from 'sentry-expo'
 
-import {TrackEvent, AnalyticsMethods} from './types'
+import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 import {useSession, SessionAccount} from '#/state/session'
 import {logger} from '#/logger'
 
@@ -29,20 +29,30 @@ function getClient(): SegmentClient {
   return segmentClient
 }
 
-export const track: TrackEvent = async (...args) => {
-  await getClient().track(...args)
+export const track = async <E extends keyof TrackPropertiesMap>(
+  event: E,
+  properties?: TrackPropertiesMap[E],
+) => {
+  await getClient().track(event, properties)
 }
 
-export function useAnalytics(): AnalyticsMethods {
+export function useAnalytics() {
   const {hasSession} = useSession()
+
   return React.useMemo(() => {
     if (hasSession) {
       return {
-        async screen(...args) {
-          await getClient().screen(...args)
+        async screen<E extends keyof ScreenPropertiesMap>(
+          event: E,
+          properties?: ScreenPropertiesMap[E],
+        ) {
+          await getClient().screen(event, properties)
         },
-        async track(...args) {
-          await getClient().track(...args)
+        async track<E extends keyof TrackPropertiesMap>(
+          event: E,
+          properties?: TrackPropertiesMap[E],
+        ) {
+          await getClient().track(event, properties)
         },
       }
     }

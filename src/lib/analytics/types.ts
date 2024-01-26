@@ -1,14 +1,4 @@
-export type TrackEvent = (
-  event: keyof TrackPropertiesMap,
-  properties?: TrackPropertiesMap[keyof TrackPropertiesMap],
-) => Promise<void>
-
-export type ScreenEvent = (
-  name: keyof ScreenPropertiesMap,
-  properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
-) => Promise<void>
-
-interface TrackPropertiesMap {
+export type TrackPropertiesMap = {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
@@ -16,7 +6,7 @@ interface TrackPropertiesMap {
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
-  'Create Post': {imageCount: string} // CAN BE SERVER
+  'Create Post': {imageCount: string | number} // CAN BE SERVER
   'Composer:PastedPhotos': {}
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
@@ -108,15 +98,15 @@ interface TrackPropertiesMap {
   'CustomFeed:Share': {}
   'CustomFeed:Pin': {
     uri: string
-    name: string
+    name?: string
   }
   'CustomFeed:Unpin': {
     uri: string
-    name: string
+    name?: string
   }
   'CustomFeed:Reorder': {
     uri: string
-    name: string
+    name?: string
     index: number
   }
   'CustomFeed:LoadMore': {}
@@ -165,7 +155,7 @@ interface TrackPropertiesMap {
   'OnboardingV2:Skip': {}
 }
 
-interface ScreenPropertiesMap {
+export type ScreenPropertiesMap = {
   Login: {}
   CreateAccount: {}
   'Choose Account': {}
@@ -183,9 +173,4 @@ interface ScreenPropertiesMap {
   BlockedAccounts: {}
   MutedAccounts: {}
   SavedFeeds: {}
-}
-
-export type AnalyticsMethods = {
-  screen: ScreenEvent
-  track: TrackEvent
 }
