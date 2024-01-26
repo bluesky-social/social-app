@@ -68,11 +68,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             </>
           }
           href={makeProfileLink(opts.author)}
-          onPointerEnter={() => {
-            if (isWeb) {
-              prefetchProfileQuery(opts.author.did)
-            }
-          }}
+          onPointerEnter={
+            isWeb ? () => prefetchProfileQuery(opts.author.did) : undefined
+          }
         />
       </View>
       {!isAndroid && (
