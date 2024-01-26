@@ -61,7 +61,7 @@ export function StepFollowingFeed() {
         <Trans>Your default feed is "Following"</Trans>
       </Title>
       <Description style={[a.mb_md]}>
-        <Trans>It show posts from the people your follow as they happen.</Trans>
+        <Trans>It shows posts from the people you follow as they happen.</Trans>
       </Description>
 
       <View style={[a.w_full]}>
