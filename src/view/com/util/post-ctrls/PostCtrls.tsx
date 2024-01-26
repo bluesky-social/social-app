@@ -149,7 +149,7 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={[styles.ctrl]}>
+      <View style={styles.ctrl}>
         <RepostButton
           big={big}
           isReposted={!!post.viewer?.repost}
@@ -194,19 +194,19 @@ let PostCtrls = ({
         </TouchableOpacity>
       </View>
       {big ? undefined : (
-        <PostDropdownBtn
-          testID="postDropdownBtn"
-          postAuthor={post.author}
-          postCid={post.cid}
-          postUri={post.uri}
-          record={record}
-          richText={richText}
-          showAppealLabelItem={showAppealLabelItem}
-          style={styles.btnPad}
-        />
+        <View style={styles.ctrl}>
+          <PostDropdownBtn
+            testID="postDropdownBtn"
+            postAuthor={post.author}
+            postCid={post.cid}
+            postUri={post.uri}
+            record={record}
+            richText={richText}
+            showAppealLabelItem={showAppealLabelItem}
+            style={styles.btnPad}
+          />
+        </View>
       )}
-      {/* used for adding pad to the right side */}
-      <View />
     </View>
   )
 }
