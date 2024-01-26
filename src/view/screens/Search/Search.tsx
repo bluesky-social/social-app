@@ -337,7 +337,6 @@ export function SearchScreenInner({
   if (hasSession) {
     return query ? (
       <Pager
-        tabBarPosition="top"
         onPageSelected={onPageSelected}
         renderTabBar={props => (
           <CenteredView
@@ -380,7 +379,6 @@ export function SearchScreenInner({
 
   return query ? (
     <Pager
-      tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
         <CenteredView
