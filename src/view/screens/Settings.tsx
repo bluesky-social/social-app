@@ -486,31 +486,36 @@ export function SettingsScreen({}: Props) {
 
         <View style={styles.spacer20} />
 
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Dark Theme</Trans>
-        </Text>
-        <View>
-          <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
-            <SelectableBtn
-              selected={!darkTheme || darkTheme === 'dark'}
-              label={_(msg`Default`)}
-              left
-              onSelect={() => setDarkTheme('dark')}
-              accessibilityHint={_(
-                msg`Set dark theme to the default dark theme`,
-              )}
-            />
-            <SelectableBtn
-              selected={darkTheme === 'oled'}
-              label={_(msg`OLED`)}
-              right
-              onSelect={() => setDarkTheme('oled')}
-              accessibilityHint={_(msg`Set dark theme to the OLD dark theme`)}
-            />
-          </View>
-        </View>
-
-        <View style={styles.spacer20} />
+        {colorMode !== 'light' && (
+          <>
+            <Text type="xl-bold" style={[pal.text, styles.heading]}>
+              <Trans>Dark Theme</Trans>
+            </Text>
+            <View>
+              <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
+                <SelectableBtn
+                  selected={!darkTheme || darkTheme === 'dark'}
+                  label={_(msg`Default`)}
+                  left
+                  onSelect={() => setDarkTheme('dark')}
+                  accessibilityHint={_(
+                    msg`Set dark theme to the default dark theme`,
+                  )}
+                />
+                <SelectableBtn
+                  selected={darkTheme === 'oled'}
+                  label={_(msg`OLED`)}
+                  right
+                  onSelect={() => setDarkTheme('oled')}
+                  accessibilityHint={_(
+                    msg`Set dark theme to the OLD dark theme`,
+                  )}
+                />
+              </View>
+            </View>
+            <View style={styles.spacer20} />
+          </>
+        )}
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Basics</Trans>
