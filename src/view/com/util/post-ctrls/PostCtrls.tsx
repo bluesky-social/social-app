@@ -203,8 +203,6 @@ let PostCtrls = ({
         showAppealLabelItem={showAppealLabelItem}
         style={styles.btnPad}
       />
-      {/* used for adding pad to the right side */}
-      <View />
     </View>
   )
 }
