@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 
 import {atoms as a, useTheme, ThemeProvider} from '#/alf'
-import {useSetColorMode} from '#/state/shell'
+import {useSetThemePrefs} from '#/state/shell'
 import {Button} from '#/components/Button'
 
 import {Theming} from './Theming'
@@ -19,7 +19,7 @@ import {Icons} from './Icons'
 
 export function Storybook() {
   const t = useTheme()
-  const setColorMode = useSetColorMode()
+  const {setColorMode, setDarkTheme} = useSetThemePrefs()
 
   return (
     <ScrollView>
@@ -47,8 +47,22 @@ export function Storybook() {
               color="secondary"
               size="small"
               label='Set theme to "system"'
-              onPress={() => setColorMode('dark')}>
+              onPress={() => {
+                setColorMode('dark')
+                setDarkTheme('dark')
+              }}>
               Dark
+            </Button>
+            <Button
+              variant="solid"
+              color="secondary"
+              size="small"
+              label='Set theme to "system"'
+              onPress={() => {
+                setColorMode('dark')
+                setDarkTheme('oled')
+              }}>
+              OLED
             </Button>
           </View>
 
