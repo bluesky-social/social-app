@@ -630,7 +630,7 @@ msgstr "Altere o Seu Email"
 #: src/screens/Deactivated.tsx:73
 #: src/screens/Deactivated.tsx:77
 msgid "Check my status"
-msgstr "Checar meu status"
+msgstr "Verificar minha situação"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
