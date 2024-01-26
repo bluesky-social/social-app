@@ -144,7 +144,7 @@ export function Step1({
                   accessibilityHint={_(msg`Input email for Bluesky account`)}
                   accessibilityLabelledBy="email"
                   autoCapitalize="none"
-                  autoComplete="off"
+                  autoComplete="email"
                   autoCorrect={false}
                   autoFocus={!uiState.isInviteCodeRequired}
                 />
@@ -169,7 +169,7 @@ export function Step1({
                   accessibilityHint={_(msg`Set password`)}
                   accessibilityLabelledBy="password"
                   autoCapitalize="none"
-                  autoComplete="off"
+                  autoComplete="new-password"
                   autoCorrect={false}
                 />
               </View>
