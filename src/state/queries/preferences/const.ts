@@ -48,4 +48,5 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
+  interests: {tags: []},
 }
