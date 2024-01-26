@@ -10,7 +10,6 @@ import 'view/icons'
 import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {init as initPersistedState} from '#/state/persisted'
-import {useThemePrefs} from 'state/shell'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
@@ -36,8 +35,7 @@ import {Provider as PortalProvider} from '#/components/Portal'
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
-  const {colorMode} = useThemePrefs()
-  const theme = useColorModeTheme(colorMode)
+  const theme = useColorModeTheme()
 
   // init
   useEffect(() => {
