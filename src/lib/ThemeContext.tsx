@@ -1,6 +1,7 @@
 import React, {ReactNode, createContext, useContext} from 'react'
 import {TextStyle, ViewStyle} from 'react-native'
 import {darkTheme, defaultTheme, oledTheme} from './themes'
+import {ThemeName} from '#/alf/themes'
 
 export type ColorScheme = 'light' | 'dark'
 
@@ -79,14 +80,14 @@ export interface Theme {
 
 export interface ThemeProviderProps {
   children?: ReactNode
-  theme: 'light' | 'dark' | 'oled'
+  theme: ThemeName
 }
 
 export const ThemeContext = createContext<Theme>(defaultTheme)
 
 export const useTheme = () => useContext(ThemeContext)
 
-function getTheme(theme: 'light' | 'dark' | 'oled' | null) {
+function getTheme(theme: ThemeName) {
   switch (theme) {
     case 'light':
       return defaultTheme

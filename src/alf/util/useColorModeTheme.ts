@@ -3,8 +3,9 @@ import {useColorScheme} from 'react-native'
 
 import {useThemePrefs} from 'state/shell'
 import {isWeb} from 'platform/detection'
+import {ThemeName} from '#/alf/themes'
 
-export function useColorModeTheme(): 'light' | 'dark' | 'oled' {
+export function useColorModeTheme(): ThemeName {
   const colorScheme = useColorScheme()
   const {colorMode, darkTheme} = useThemePrefs()
 
@@ -23,7 +24,7 @@ export function useColorModeTheme(): 'light' | 'dark' | 'oled' {
   }, [colorMode, darkTheme, colorScheme])
 }
 
-function updateDocument(theme: string) {
+function updateDocument(theme: ThemeName) {
   if (isWeb && typeof window !== 'undefined') {
     const html = window.document.documentElement
     // remove any other color mode classes
