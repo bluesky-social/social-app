@@ -35,6 +35,7 @@ import {
 } from '#/state/shell/logged-out'
 import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
+import {Deactivated} from '#/screens/Deactivated'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {Onboarding} from '../com/auth/Onboarding'
 
@@ -92,7 +93,7 @@ function NativeStackNavigator({
   )
 
   // --- our custom logic starts here ---
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
@@ -102,6 +103,9 @@ function NativeStackNavigator({
   const {isMobile} = useWebMediaQueries()
   if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
     return <LoggedOut />
+  }
+  if (hasSession && currentAccount?.deactivated) {
+    return <Deactivated />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />

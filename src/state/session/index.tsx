@@ -12,6 +12,7 @@ import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
+import {hasProp} from '#/lib/type-guards'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -125,6 +126,7 @@ function createPersistSessionHandler(
       handle: session?.handle || account.handle,
       email: session?.email || account.email,
       emailConfirmed: session?.emailConfirmed || account.emailConfirmed,
+      deactivated: isSessionDeactivated(session?.accessJwt),
 
       /*
        * Tokens are undefined if the session expires, or if creation fails for
@@ -136,6 +138,7 @@ function createPersistSessionHandler(
 
     logger.info(`session: persistSession`, {
       event,
+      deactivated: refreshedAccount.deactivated,
     })
 
     if (expired) {
@@ -229,11 +232,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         throw new Error(`session: createAccount failed to establish a session`)
       }
 
-      /*dont await*/ agent.upsertProfile(_existing => {
-        return {
-          displayName: handle,
-        }
-      })
+      const deactivated = isSessionDeactivated(agent.session.accessJwt)
+      if (!deactivated) {
+        /*dont await*/ agent.upsertProfile(_existing => {
+          return {
+            displayName: handle,
+          }
+        })
+      }
 
       const account: SessionAccount = {
         service: agent.service.toString(),
@@ -243,6 +249,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         emailConfirmed: false,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
+        deactivated,
       }
 
       agent.setPersistSessionHandler(
@@ -285,6 +292,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         emailConfirmed: agent.session.emailConfirmed || false,
         refreshJwt: agent.session.refreshJwt,
         accessJwt: agent.session.accessJwt,
+        deactivated: isSessionDeactivated(agent.session.accessJwt),
       }
 
       agent.setPersistSessionHandler(
@@ -358,6 +366,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshJwt: account.refreshJwt || '',
         did: account.did,
         handle: account.handle,
+        deactivated:
+          isSessionDeactivated(account.accessJwt) || account.deactivated,
       }
 
       if (canReusePrevSession) {
@@ -367,6 +377,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         __globalAgent = agent
         queryClient.clear()
         upsertAccount(account)
+
+        if (prevSession.deactivated) {
+          // don't attempt to resume
+          // use will be taken to the deactivated screen
+          logger.info(`session: reusing session for deactivated account`)
+          return
+        }
 
         // Intentionally not awaited to unblock the UI:
         resumeSessionWithFreshAccount()
@@ -432,6 +449,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           emailConfirmed: agent.session.emailConfirmed || false,
           refreshJwt: agent.session.refreshJwt,
           accessJwt: agent.session.accessJwt,
+          deactivated: isSessionDeactivated(agent.session.accessJwt),
         }
       }
     },
@@ -649,4 +667,14 @@ export function useRequireAuth() {
     },
     [hasSession, setShowLoggedOut, closeAll],
   )
+}
+
+export function isSessionDeactivated(accessJwt: string | undefined) {
+  if (accessJwt) {
+    const sessData = jwtDecode(accessJwt)
+    return (
+      hasProp(sessData, 'scope') && sessData.scope === 'com.atproto.deactivated'
+    )
+  }
+  return false
 }

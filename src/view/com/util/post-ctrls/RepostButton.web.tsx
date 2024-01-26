@@ -69,7 +69,8 @@ export const RepostButton = ({
   const inner = (
     <View
       style={[
-        styles.container,
+        styles.btn,
+        !big && styles.btnPad,
         (isReposted
           ? styles.reposted
           : defaultControlColor) as StyleProp<ViewStyle>,
@@ -109,10 +110,16 @@ export const RepostButton = ({
 }
 
 const styles = StyleSheet.create({
-  container: {
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+  },
+  btnPad: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   reposted: {
     color: colors.green3,
