@@ -73,7 +73,7 @@ export function Feed({
       await checkUnread({invalidate: true})
     } catch (err) {
       logger.error('Failed to refresh notifications feed', {
-        error: err,
+        message: err,
       })
     } finally {
       setIsPTRing(false)
@@ -86,7 +86,7 @@ export function Feed({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more notifications', {error: err})
+      logger.error('Failed to load more notifications', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 

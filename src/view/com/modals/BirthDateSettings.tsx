@@ -43,7 +43,7 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
       await setBirthDate({birthDate: date})
       closeModal()
     } catch (e) {
-      logger.error(`setBirthDate failed`, {error: e})
+      logger.error(`setBirthDate failed`, {message: e})
     }
   }, [date, setBirthDate, closeModal])
 

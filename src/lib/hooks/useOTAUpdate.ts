@@ -36,7 +36,7 @@ export function useOTAUpdate() {
       showUpdatePopup()
     } catch (e) {
       logger.error('useOTAUpdate: Error while checking for update', {
-        error: e,
+        message: e,
       })
     }
   }, [showUpdatePopup])

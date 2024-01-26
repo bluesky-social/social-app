@@ -69,7 +69,7 @@ export function MyLists({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh lists', {error: err})
+      logger.error('Failed to refresh lists', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, track, setIsPTRing])

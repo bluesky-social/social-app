@@ -238,7 +238,7 @@ function PostThreadLoaded({
     try {
       await onRefresh()
     } catch (err) {
-      logger.error('Failed to refresh posts thread', {error: err})
+      logger.error('Failed to refresh posts thread', {message: err})
     }
     setIsPTRing(false)
   }, [setIsPTRing, onRefresh])

@@ -82,7 +82,7 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`Post deleted`))
       },
       e => {
-        logger.error('Failed to delete post', {error: e})
+        logger.error('Failed to delete post', {message: e})
         Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
@@ -99,7 +99,7 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
-      logger.error('Failed to toggle thread mute', {error: e})
+      logger.error('Failed to toggle thread mute', {message: e})
     }
   }, [rootUri, toggleThreadMute, _])
 
