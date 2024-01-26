@@ -508,7 +508,7 @@ export function SettingsScreen({}: Props) {
                   right
                   onSelect={() => setDarkTheme('oled')}
                   accessibilityHint={_(
-                    msg`Set dark theme to the OLD dark theme`,
+                    msg`Set dark theme to the OLED dark theme`,
                   )}
                 />
               </View>
