@@ -24,6 +24,7 @@ import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (did: string) => ['profile', did]
+export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {currentAccount} = useSession()
@@ -42,6 +43,17 @@ export function useProfileQuery({did}: {did: string | undefined}) {
       return res.data
     },
     enabled: !!did,
+  })
+}
+
+export function useProfilesQuery({handles}: {handles: string[]}) {
+  return useQuery({
+    staleTime: STALE.MINUTES.FIVE,
+    queryKey: profilesQueryKey(handles),
+    queryFn: async () => {
+      const res = await getAgent().getProfiles({actors: handles})
+      return res.data
+    },
   })
 }
 

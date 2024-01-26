@@ -40,26 +40,7 @@
         /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
         -webkit-text-size-adjust: 100%;
         height: calc(100% + env(safe-area-inset-top));
-        scrollbar-gutter: stable;
-      }
-
-      /* Remove autofill styles on Webkit */
-      input:-webkit-autofill,
-      input:-webkit-autofill:hover, 
-      input:-webkit-autofill:focus,
-      textarea:-webkit-autofill,
-      textarea:-webkit-autofill:hover,
-      textarea:-webkit-autofill:focus,
-      select:-webkit-autofill,
-      select:-webkit-autofill:hover,
-      select:-webkit-autofill:focus {
-        border: 0;
-        -webkit-text-fill-color: transparent;
-        -webkit-box-shadow: none;
-      }
-      /* Force left-align date/time inputs on iOS mobile */
-      input::-webkit-date-and-time-value {
-        text-align: left;
+        scrollbar-gutter: stable both-edges;
       }
 
       /* Color theming */
@@ -71,7 +52,7 @@
       html.colorMode--dark {
         --text: white;
         --background: hsl(211, 20%, 4%);
-        --backgroundLight: hsl(211, 20%, 10%);
+        --backgroundLight: hsl(211, 20%, 20%);
         color-scheme: dark;
       }
       @media (prefers-color-scheme: light) {
@@ -85,9 +66,31 @@
         html.colorMode--system {
           --text: white;
           --background: hsl(211, 20%, 4%);
-          --backgroundLight: hsl(211, 20%, 10%);
+          --backgroundLight: hsl(211, 20%, 20%);
           color-scheme: dark;
         }
+      }
+
+      ::selection {
+        background-color: var(--backgroundLight);
+      }
+
+      /* Remove autofill styles on Webkit */
+      input:autofill,
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active{
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: var(--text);
+          transition: background-color 5000s ease-in-out 0s;
+          box-shadow: inset 0 0 20px 20px var(--background);
+          background: var(--background);
+          color: var(--text);
+      }
+      /* Force left-align date/time inputs on iOS mobile */
+      input::-webkit-date-and-time-value {
+        text-align: left;
       }
 
       body {
