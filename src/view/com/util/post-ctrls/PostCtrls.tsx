@@ -149,7 +149,7 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={[styles.ctrl]}>
+      <View style={styles.ctrl}>
         <RepostButton
           big={big}
           isReposted={!!post.viewer?.repost}
@@ -193,16 +193,18 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <PostDropdownBtn
-        testID="postDropdownBtn"
-        postAuthor={post.author}
-        postCid={post.cid}
-        postUri={post.uri}
-        record={record}
-        richText={richText}
-        showAppealLabelItem={showAppealLabelItem}
-        style={styles.btnPad}
-      />
+      <View style={styles.ctrl}>
+        <PostDropdownBtn
+          testID="postDropdownBtn"
+          postAuthor={post.author}
+          postCid={post.cid}
+          postUri={post.uri}
+          record={record}
+          richText={richText}
+          showAppealLabelItem={showAppealLabelItem}
+          style={styles.btnPad}
+        />
+      </View>
     </View>
   )
 }

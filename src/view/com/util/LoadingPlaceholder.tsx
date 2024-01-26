@@ -88,7 +88,7 @@ export function PostLoadingPlaceholder({
               strokeWidth={3}
             />
           </View>
-          <View style={{width: 30, height: 30}} />
+          <View style={styles.postCtrl} />
         </View>
       </View>
     </View>
