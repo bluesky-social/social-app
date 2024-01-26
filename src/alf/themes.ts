@@ -329,6 +329,9 @@ export const oled: Theme = {
   name: 'oled',
   atoms: {
     ...dark.atoms,
+    text_inverted: {
+      color: oledPalette.black,
+    },
     bg: {
       backgroundColor: oledPalette.black,
     },

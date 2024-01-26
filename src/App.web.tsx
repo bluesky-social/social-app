@@ -55,7 +55,7 @@ function InnerApp() {
         key={currentAccount?.did}>
         <LoggedOutViewProvider>
           <UnreadNotifsProvider>
-            <ThemeProvider theme={colorMode}>
+            <ThemeProvider theme={theme}>
               {/* All components should be within this provider */}
               <RootSiblingParent>
                 <SafeAreaProvider>

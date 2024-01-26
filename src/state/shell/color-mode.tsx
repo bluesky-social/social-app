@@ -13,7 +13,7 @@ type SetContext = {
 
 const stateContext = React.createContext<StateContext>({
   colorMode: 'system',
-  darkTheme: 'default',
+  darkTheme: 'dark',
 })
 const setContext = React.createContext<SetContext>({} as SetContext)
 
@@ -25,7 +25,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     (_colorMode: persisted.Schema['colorMode']) => {
       setColorMode(_colorMode)
       persisted.write('colorMode', _colorMode)
-      updateDocument(_colorMode)
+      updateDocument(_colorMode, persisted.get('darkTheme'))
     },
     [setColorMode],
   )
@@ -34,6 +34,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     (_darkTheme: persisted.Schema['darkTheme']) => {
       setDarkTheme(_darkTheme)
       persisted.write('darkTheme', _darkTheme)
+      updateDocument(persisted.get('colorMode'), _darkTheme)
     },
     [setDarkTheme],
   )
@@ -43,7 +44,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return persisted.onUpdate(() => {
       setColorModeWrapped(persisted.get('colorMode'))
       setDarkThemeWrapped(persisted.get('darkTheme'))
-      updateDocument(persisted.get('colorMode'))
+      updateDocument(persisted.get('colorMode'), persisted.get('darkTheme'))
     })
   }, [setColorModeWrapped, setDarkThemeWrapped])
 
@@ -68,11 +69,16 @@ export function useSetThemePrefs() {
   return React.useContext(setContext)
 }
 
-function updateDocument(colorMode: string) {
+function updateDocument(colorMode: string, theme?: string) {
   if (isWeb && typeof window !== 'undefined') {
     const html = window.document.documentElement
     // remove any other color mode classes
-    html.className = html.className.replace(/colorMode--\w+/g, '')
+    html.className = html.className.replace(/(colorMode|theme)--\w+/g, '')
+
     html.classList.add(`colorMode--${colorMode}`)
+
+    if (colorMode === 'dark') {
+      html.classList.add(`theme--${theme}`)
+    }
   }
 }
