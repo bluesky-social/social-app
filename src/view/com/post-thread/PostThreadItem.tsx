@@ -23,7 +23,6 @@ import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostDropdownBtn} from '../util/forms/PostDropdownBtn'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
@@ -42,7 +41,6 @@ import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
-import {useSession} from '#/state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 
 export function PostThreadItem({
@@ -161,7 +159,6 @@ let PostThreadItemLoaded = ({
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
   const {openComposer} = useComposerControls()
-  const {currentAccount} = useSession()
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
@@ -187,9 +184,6 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
-  const isModeratedPost =
-    moderation.decisions.post.cause?.type === 'label' &&
-    moderation.decisions.post.cause.label.src !== currentAccount?.did
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -335,23 +329,6 @@ let PostThreadItemLoaded = ({
                 </Link>
               </View>
             </View>
-            <PostDropdownBtn
-              testID="postDropdownBtn"
-              postAuthor={post.author}
-              postCid={post.cid}
-              postUri={post.uri}
-              record={record}
-              richText={richText}
-              showAppealLabelItem={
-                post.author.did === currentAccount?.did && isModeratedPost
-              }
-              style={{
-                paddingVertical: 6,
-                paddingHorizontal: 10,
-                marginLeft: 'auto',
-                width: 40,
-              }}
-            />
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
             <ContentHider

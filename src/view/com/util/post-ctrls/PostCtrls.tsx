@@ -193,18 +193,16 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      {big ? undefined : (
-        <PostDropdownBtn
-          testID="postDropdownBtn"
-          postAuthor={post.author}
-          postCid={post.cid}
-          postUri={post.uri}
-          record={record}
-          richText={richText}
-          showAppealLabelItem={showAppealLabelItem}
-          style={styles.btnPad}
-        />
-      )}
+      <PostDropdownBtn
+        testID="postDropdownBtn"
+        postAuthor={post.author}
+        postCid={post.cid}
+        postUri={post.uri}
+        record={record}
+        richText={richText}
+        showAppealLabelItem={showAppealLabelItem}
+        style={styles.btnPad}
+      />
       {/* used for adding pad to the right side */}
       <View />
     </View>
