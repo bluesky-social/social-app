@@ -15,6 +15,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {List, ListRef} from '../util/List'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {usePalette} from '#/lib/hooks/usePalette'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -32,6 +33,7 @@ export function Feed({
   ListHeaderComponent?: () => JSX.Element
 }) {
   const [isPTRing, setIsPTRing] = React.useState(false)
+  const pal = usePalette('default')
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -118,11 +120,15 @@ export function Feed({
           />
         )
       } else if (item === LOADING_ITEM) {
-        return <NotificationFeedLoadingPlaceholder />
+        return (
+          <View style={[pal.border, {borderTopWidth: 1}]}>
+            <NotificationFeedLoadingPlaceholder />
+          </View>
+        )
       }
       return <FeedItem item={item} moderationOpts={moderationOpts!} />
     },
-    [onPressRetryLoadMore, moderationOpts, _],
+    [onPressRetryLoadMore, moderationOpts, _, pal.border],
   )
 
   const FeedFooter = React.useCallback(
