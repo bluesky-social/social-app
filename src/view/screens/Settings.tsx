@@ -40,8 +40,8 @@ import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
 import {
   useSetMinimalShellMode,
-  useColorMode,
-  useSetColorMode,
+  useThemePrefs,
+  useSetThemePrefs,
   useOnboardingDispatch,
 } from '#/state/shell'
 import {
@@ -144,8 +144,8 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
-  const colorMode = useColorMode()
-  const setColorMode = useSetColorMode()
+  const {colorMode, darkTheme} = useThemePrefs()
+  const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -465,7 +465,7 @@ export function SettingsScreen({}: Props) {
               selected={colorMode === 'system'}
               label={_(msg`System`)}
               left
-              onSelect={() => setColorMode('system')}
+              onSelect={() => 'system'}
               accessibilityHint={_(msg`Set color theme to system setting`)}
             />
             <SelectableBtn
@@ -483,6 +483,33 @@ export function SettingsScreen({}: Props) {
             />
           </View>
         </View>
+
+        <View style={styles.spacer20} />
+
+        <Text type="xl-bold" style={[pal.text, styles.heading]}>
+          <Trans>Dark Theme</Trans>
+        </Text>
+        <View>
+          <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
+            <SelectableBtn
+              selected={!darkTheme || darkTheme === 'default'}
+              label={_(msg`Default`)}
+              left
+              onSelect={() => setDarkTheme('default')}
+              accessibilityHint={_(
+                msg`Set dark theme to the default dark theme`,
+              )}
+            />
+            <SelectableBtn
+              selected={darkTheme === 'oled'}
+              label={_(msg`OLED`)}
+              right
+              onSelect={() => setDarkTheme('oled')}
+              accessibilityHint={_(msg`Set dark theme to the OLD dark theme`)}
+            />
+          </View>
+        </View>
+
         <View style={styles.spacer20} />
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>

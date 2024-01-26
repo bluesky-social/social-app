@@ -69,6 +69,7 @@ const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
+    darkTheme: defaults.darkTheme,
     session: {
       accounts: legacy.session?.accounts || defaults.session.accounts,
       currentAccount:
