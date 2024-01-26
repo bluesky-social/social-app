@@ -465,7 +465,7 @@ export function SettingsScreen({}: Props) {
               selected={colorMode === 'system'}
               label={_(msg`System`)}
               left
-              onSelect={() => 'system'}
+              onSelect={() => setColorMode('system')}
               accessibilityHint={_(msg`Set color theme to system setting`)}
             />
             <SelectableBtn

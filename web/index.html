@@ -68,33 +68,23 @@
         --background: white;
         --backgroundLight: hsl(211, 20%, 95%);
       }
-      html.colorMode--dark {
-        --text: white;
-        --backgroundLight: hsl(211, 20%, 10%);
-        color-scheme: dark;
-      }
 
-      html.theme--dark {
-          --background: hsl(211, 20%, 4%);
-      }
-      html.theme--oled {
-          --background: black;
-      }
-
-      @media (prefers-color-scheme: light) {
-        html.colorMode--system {
+      html.theme--light {
           --text: black;
           --background: white;
           --backgroundLight: hsl(211, 20%, 95%);
-        }
       }
-      @media (prefers-color-scheme: dark) {
-        html.colorMode--system {
+      html.theme--dark {
           --text: white;
           --background: hsl(211, 20%, 4%);
           --backgroundLight: hsl(211, 20%, 10%);
           color-scheme: dark;
-        }
+      }
+      html.theme--oled {
+          --text: white;
+          --background: black;
+          --backgroundLight: hsl(211, 20%, 10%);
+          color-scheme: dark;
       }
 
       body {
