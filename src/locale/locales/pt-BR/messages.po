@@ -1436,7 +1436,7 @@ msgstr "Os feeds são algoritmos personalizados que os usuários com um pouco de
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:68
 msgid "Feeds can be topical as well!"
-msgstr "Feeds podem ser de tópicos também!"
+msgstr "Feeds podem ser de assuntos específicos também!"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
