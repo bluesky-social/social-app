@@ -129,7 +129,7 @@ export function StepSuggestedAccounts() {
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
       <Title>
-        <Trans>Here are some accounts for your to follow</Trans>
+        <Trans>Here are some accounts for you to follow</Trans>
       </Title>
       <Description>
         {state.interestsStepResults.selectedInterests.length ? (
@@ -171,7 +171,7 @@ export function StepSuggestedAccounts() {
             color="gradient_sky"
             size="large"
             label={_(
-              msg`Follow selected accounts and continue to then next step`,
+              msg`Follow selected accounts and continue to the next step`,
             )}
             onPress={handleContinue}>
             <ButtonText>
