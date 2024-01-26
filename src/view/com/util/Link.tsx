@@ -47,6 +47,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   asAnchor?: boolean
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
+  onPointerEnter?: () => void
 }
 
 export const Link = memo(function Link({
@@ -264,6 +265,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   accessibilityHint?: string
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
+  onPointerEnter?: () => void
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
