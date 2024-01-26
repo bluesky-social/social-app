@@ -24,6 +24,7 @@ import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (did: string) => ['profile', did]
+export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {currentAccount} = useSession()
@@ -43,6 +44,34 @@ export function useProfileQuery({did}: {did: string | undefined}) {
     },
     enabled: !!did,
   })
+}
+
+export function useProfilesQuery({handles}: {handles: string[]}) {
+  return useQuery({
+    staleTime: STALE.MINUTES.FIVE,
+    queryKey: profilesQueryKey(handles),
+    queryFn: async () => {
+      const res = await getAgent().getProfiles({actors: handles})
+      return res.data
+    },
+  })
+}
+
+export function usePrefetchProfileQuery() {
+  const queryClient = useQueryClient()
+  const prefetchProfileQuery = useCallback(
+    (did: string) => {
+      queryClient.prefetchQuery({
+        queryKey: RQKEY(did),
+        queryFn: async () => {
+          const res = await getAgent().getProfile({actor: did || ''})
+          return res.data
+        },
+      })
+    },
+    [queryClient],
+  )
+  return prefetchProfileQuery
 }
 
 interface ProfileUpdateParams {

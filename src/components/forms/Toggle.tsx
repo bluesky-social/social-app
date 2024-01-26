@@ -2,7 +2,7 @@ import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
-import {useTheme, atoms as a, web, native} from '#/alf'
+import {useTheme, atoms as a, web, native, flatten, ViewStyleProp} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
@@ -49,7 +49,7 @@ export type GroupProps = React.PropsWithChildren<{
   label: string
 }>
 
-export type ItemProps = {
+export type ItemProps = ViewStyleProp & {
   type?: 'radio' | 'checkbox'
   name: string
   label: string
@@ -57,7 +57,6 @@ export type ItemProps = {
   disabled?: boolean
   onChange?: (selected: boolean) => void
   isInvalid?: boolean
-  style?: (state: ItemState) => ViewStyle
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
 }
 
@@ -125,6 +124,7 @@ export function Group({
   return (
     <GroupContext.Provider value={context}>
       <View
+        style={[a.w_full]}
         role={groupRole}
         {...(groupRole === 'radiogroup'
           ? {
@@ -224,7 +224,7 @@ export function Item({
           a.align_center,
           a.gap_sm,
           focused ? web({outline: 'none'}) : {},
-          style?.(state),
+          flatten(style),
         ]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>

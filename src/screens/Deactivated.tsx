@@ -14,8 +14,8 @@ import {Text} from '#/components/Typography'
 import {isWeb} from '#/platform/detection'
 import {H2, P} from '#/components/Typography'
 import {ScrollView} from '#/view/com/util/Views'
-import {Group3_Stroke2_Corner0_Rounded as Group3} from '#/components/icons/Group3'
 import {Loader} from '#/components/Loader'
+import {Logo} from '#/view/icons/Logo'
 
 const COL_WIDTH = 400
 
@@ -96,8 +96,8 @@ export function Deactivated() {
           style={[a.flex_row, a.justify_center, gtMobile ? a.pt_4xl : a.px_xl]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View
-              style={[a.w_full, a.justify_center, a.align_center, a.mt_4xl]}>
-              <Group3 fill="none" stroke={t.palette.contrast_900} width={120} />
+              style={[a.w_full, a.justify_center, a.align_center, a.my_4xl]}>
+              <Logo width={120} />
             </View>
 
             <H2 style={[a.pb_sm]}>
@@ -105,8 +105,8 @@ export function Deactivated() {
             </H2>
             <P style={[t.atoms.text_contrast_700]}>
               <Trans>
-                There's been a rush of new users! We'll activate your account as
-                soon as we can.
+                There's been a rush of new users to Bluesky! We'll activate your
+                account as soon as we can.
               </Trans>
             </P>
 

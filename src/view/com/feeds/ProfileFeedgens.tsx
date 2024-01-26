@@ -103,7 +103,7 @@ export const ProfileFeedgens = React.forwardRef<
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh feeds', {error: err})
+      logger.error('Failed to refresh feeds', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -114,7 +114,7 @@ export const ProfileFeedgens = React.forwardRef<
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more feeds', {error: err})
+      logger.error('Failed to load more feeds', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 

@@ -103,7 +103,7 @@ export function ListMembers({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh lists', {error: err})
+      logger.error('Failed to refresh lists', {message: err})
     }
     setIsRefreshing(false)
   }, [refetch, track, setIsRefreshing])
@@ -114,7 +114,7 @@ export function ListMembers({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more lists', {error: err})
+      logger.error('Failed to load more lists', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 
