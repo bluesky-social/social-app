@@ -17,7 +17,7 @@ import {ThemeProvider as Alf} from '#/alf'
 import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {init as initPersistedState} from '#/state/persisted'
 import {listenSessionDropped} from './state/events'
-import {useColorMode} from 'state/shell'
+import {useThemePrefs} from 'state/shell'
 import {ThemeProvider} from 'lib/ThemeContext'
 import {s} from 'lib/styles'
 import {Shell} from 'view/shell'
@@ -49,7 +49,7 @@ import {useLingui} from '@lingui/react'
 SplashScreen.preventAutoHideAsync()
 
 function InnerApp() {
-  const colorMode = useColorMode()
+  const {colorMode} = useThemePrefs()
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme(colorMode)
