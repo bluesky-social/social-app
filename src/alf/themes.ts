@@ -2,7 +2,7 @@ import * as tokens from '#/alf/tokens'
 import type {Mutable} from '#/alf/types'
 import {atoms} from '#/alf/atoms'
 
-export type ThemeName = 'light' | 'dim' | 'dark'
+export type ThemeName = 'light' | 'dim' | 'dark' | 'oled'
 export type ReadonlyTheme = typeof light
 export type Theme = Mutable<ReadonlyTheme>
 export type ReadonlyPalette = typeof lightPalette
@@ -128,6 +128,11 @@ export const darkPalette: Palette = {
   negative_900: tokens.color.red_900,
   negative_950: tokens.color.red_950,
   negative_975: tokens.color.red_975,
+} as const
+
+export const oledPalette: Palette = {
+  ...darkPalette,
+  black: tokens.color.trueBlack,
 } as const
 
 export const light = {
@@ -315,6 +320,17 @@ export const dark: Theme = {
       ...atoms.shadow_lg,
       shadowOpacity: 0.7,
       shadowColor: tokens.color.trueBlack,
+    },
+  },
+}
+
+export const oled: Theme = {
+  ...dark,
+  name: 'oled',
+  atoms: {
+    ...dark.atoms,
+    bg: {
+      backgroundColor: oledPalette.black,
     },
   },
 }
