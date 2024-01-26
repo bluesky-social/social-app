@@ -603,8 +603,8 @@ msgid "Check your inbox for an email with the confirmation code to enter below:"
 msgstr "Comprova el teu correu per rebre el codi de confirmació i entra'l aquí sota:"
 
 #: src/view/com/modals/Threadgate.tsx:72
-msgid "Choose \"Everybody\" or \"Nobody\
-msgstr "Tria \"Tothom\" or \"Ningú\
+msgid "Choose \"Everybody\" or \"Nobody\""
+msgstr "Tria \"Tothom\" or \"Ningú\""
 
 #: src/view/screens/Settings.tsx:663
 msgid "Choose a new Bluesky username or create"
@@ -748,7 +748,7 @@ msgstr "Codi de confirmació"
 
 #: src/view/com/modals/Waitlist.tsx:120
 msgid "Confirms signing up {email} to the waitlist"
-msgstr "Confirma afegir {enail} a la llista d'espera"
+msgstr "Confirma afegir {email} a la llista d'espera"
 
 #: src/view/com/auth/create/CreateAccount.tsx:175
 #: src/view/com/auth/login/LoginForm.tsx:275
