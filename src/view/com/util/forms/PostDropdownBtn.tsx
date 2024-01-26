@@ -27,10 +27,9 @@ import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {getAgent} from '#/state/session'
 
 let PostDropdownBtn = ({
   testID,
