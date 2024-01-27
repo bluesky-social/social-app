@@ -107,7 +107,7 @@ export function StepSuggestedAccounts() {
 
     setSaving(false)
     dispatch({type: 'next'})
-    track('OnboardingV2:StepSuggestedAccounts:Start', {
+    track('OnboardingV2:StepSuggestedAccounts:End', {
       selectedAccountsLength: dids.length,
     })
   }, [dids, setSaving, dispatch, track])
