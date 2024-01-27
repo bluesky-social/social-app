@@ -119,7 +119,7 @@ export function StepAlgoFeeds() {
           <FeedCard config={PRIMARY_FEEDS[0]} />
           <Text
             style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
-            <Trans>Or you can try our "Discover" algorithm:</Trans>
+            <Trans>You can also try our "Discover" algorithm:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
