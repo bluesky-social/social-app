@@ -2,11 +2,10 @@ import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
+import {msg, plural, Trans} from '@lingui/macro'
 import {useOnboardingDispatch} from '#/state/shell'
 import {getAgent, isSessionDeactivated, useSessionApi} from '#/state/session'
 import {logger} from '#/logger'
-import {pluralize} from '#/lib/strings/helpers'
 
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -199,10 +198,16 @@ function msToString(ms: number | undefined): string | undefined {
         return undefined
       }
       // hours
-      return `${estimatedTimeHrs} ${pluralize(estimatedTimeHrs, 'hour')}`
+      return `${estimatedTimeHrs} ${plural(estimatedTimeHrs, {
+        one: 'hour',
+        other: 'hours',
+      })}`
     }
     // minutes
-    return `${estimatedTimeMins} ${pluralize(estimatedTimeMins, 'minute')}`
+    return `${estimatedTimeMins} ${plural(estimatedTimeMins, {
+      one: 'minute',
+      other: 'minutes',
+    })}`
   }
   return undefined
 }
