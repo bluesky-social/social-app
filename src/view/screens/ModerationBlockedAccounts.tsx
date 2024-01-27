@@ -66,7 +66,7 @@ export function ModerationBlockedAccounts({}: Props) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh my muted accounts', {error: err})
+      logger.error('Failed to refresh my muted accounts', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -77,7 +77,7 @@ export function ModerationBlockedAccounts({}: Props) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more of my muted accounts', {error: err})
+      logger.error('Failed to load more of my muted accounts', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 

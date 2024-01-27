@@ -106,7 +106,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       try {
         await refetch()
       } catch (err) {
-        logger.error('Failed to refresh lists', {error: err})
+        logger.error('Failed to refresh lists', {message: err})
       }
       setIsPTRing(false)
     }, [refetch, track, setIsPTRing])
@@ -118,7 +118,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       try {
         await fetchNextPage()
       } catch (err) {
-        logger.error('Failed to load more lists', {error: err})
+        logger.error('Failed to load more lists', {message: err})
       }
     }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 

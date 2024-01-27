@@ -9,10 +9,11 @@ import {
   View,
   TextStyle,
   StyleSheet,
+  StyleProp,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {useTheme, atoms as a, tokens, web, native} from '#/alf'
+import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
@@ -27,6 +28,7 @@ export type ButtonColor =
   | 'gradient_nordic'
   | 'gradient_bonfire'
 export type ButtonSize = 'small' | 'large'
+export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
@@ -40,6 +42,10 @@ export type VariantProps = {
    * The size of the button
    */
   size?: ButtonSize
+  /**
+   * The shape of the button
+   */
+  shape?: ButtonShape
 }
 
 export type ButtonProps = React.PropsWithChildren<
@@ -47,6 +53,7 @@ export type ButtonProps = React.PropsWithChildren<
     AccessibilityProps &
     VariantProps & {
       label: string
+      style?: StyleProp<ViewStyle>
     }
 >
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
@@ -74,8 +81,10 @@ export function Button({
   variant,
   color,
   size,
+  shape = 'default',
   label,
   disabled = false,
+  style,
   ...rest
 }: ButtonProps) {
   const t = useTheme()
@@ -175,18 +184,18 @@ export function Button({
         if (!disabled) {
           baseStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_100
+              ? tokens.color.gray_50
               : tokens.color.gray_900,
           })
           hoverStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_200
+              ? tokens.color.gray_100
               : tokens.color.gray_950,
           })
         } else {
           baseStyles.push({
             backgroundColor: light
-              ? tokens.color.gray_300
+              ? tokens.color.gray_200
               : tokens.color.gray_950,
           })
         }
@@ -197,7 +206,7 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: light ? tokens.color.gray_500 : tokens.color.gray_500,
+            borderColor: light ? tokens.color.gray_300 : tokens.color.gray_700,
           })
           hoverStyles.push(a.border, t.atoms.bg_contrast_50)
         } else {
@@ -262,10 +271,28 @@ export function Button({
       }
     }
 
-    if (size === 'large') {
-      baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_sm)
-    } else if (size === 'small') {
-      baseStyles.push({paddingVertical: 9}, a.px_md, a.rounded_sm, a.gap_sm)
+    if (shape === 'default') {
+      if (size === 'large') {
+        baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
+      } else if (size === 'small') {
+        baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
+      }
+    } else if (shape === 'round' || shape === 'square') {
+      if (size === 'large') {
+        if (shape === 'round') {
+          baseStyles.push({height: 54, width: 54})
+        } else {
+          baseStyles.push({height: 50, width: 50})
+        }
+      } else if (size === 'small') {
+        baseStyles.push({height: 40, width: 40})
+      }
+
+      if (shape === 'round') {
+        baseStyles.push(a.rounded_full)
+      } else if (shape === 'square') {
+        baseStyles.push(a.rounded_sm)
+      }
     }
 
     return {
@@ -278,7 +305,7 @@ export function Button({
         } as ViewStyle,
       ],
     }
-  }, [t, variant, color, size, disabled])
+  }, [t, variant, color, size, shape, disabled])
 
   const {gradientColors, gradientHoverColors, gradientLocations} =
     React.useMemo(() => {
@@ -334,9 +361,12 @@ export function Button({
         disabled: disabled || false,
       }}
       style={[
+        flatten(style),
         a.flex_row,
         a.align_center,
+        a.justify_center,
         a.overflow_hidden,
+        a.justify_center,
         ...baseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
@@ -461,17 +491,9 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(
-        a.text_md,
-        web({paddingBottom: 1}),
-        native({marginTop: 2}),
-      )
+      baseStyles.push(a.text_md, android({paddingBottom: 1}))
     } else {
-      baseStyles.push(
-        a.text_md,
-        web({paddingBottom: 1}),
-        native({marginTop: 2}),
-      )
+      baseStyles.push(a.text_sm, android({paddingBottom: 1}))
     }
 
     return StyleSheet.flatten(baseStyles)
@@ -490,14 +512,24 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 
 export function ButtonIcon({
   icon: Comp,
+  position,
 }: {
   icon: React.ComponentType<SVGIconProps>
+  position?: 'left' | 'right'
 }) {
-  const {size} = useButtonContext()
+  const {size, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <View style={[a.z_20]}>
+    <View
+      style={[
+        a.z_20,
+        {
+          opacity: disabled ? 0.7 : 1,
+          marginLeft: position === 'left' ? -2 : 0,
+          marginRight: position === 'right' ? -2 : 0,
+        },
+      ]}>
       <Comp
         size={size === 'large' ? 'md' : 'sm'}
         style={[{color: textStyles.color, pointerEvents: 'none'}]}

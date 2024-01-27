@@ -127,34 +127,6 @@ export async function migrate() {
     const newData = await read()
     const alreadyMigrated = Boolean(newData)
 
-    /* TODO BEGIN DEBUG — remove this eventually */
-    try {
-      if (rawLegacyData) {
-        const legacy = JSON.parse(rawLegacyData) as Partial<LegacySchema>
-        logger.info(`persisted state: debug legacy data`, {
-          hasExistingLoggedInAccount: Boolean(legacy?.session?.data),
-          numberOfExistingAccounts: legacy?.session?.accounts?.length,
-          foundExistingCurrentAccount: Boolean(
-            legacy.session?.accounts?.find(
-              a => a.did === legacy.session?.data?.did,
-            ),
-          ),
-        })
-        logger.info(`persisted state: debug new data`, {
-          hasNewData: Boolean(newData),
-          hasExistingLoggedInAccount: Boolean(newData?.session?.currentAccount),
-          numberOfExistingAccounts: newData?.session?.accounts?.length,
-          existingAccountMatchesLegacy: Boolean(
-            newData?.session?.currentAccount?.did ===
-              legacy?.session?.data?.did,
-          ),
-        })
-      }
-    } catch (e: any) {
-      logger.error(e, {message: `persisted state: legacy debugging failed`})
-    }
-    /* TODO END DEBUG */
-
     if (!alreadyMigrated && rawLegacyData) {
       logger.info('persisted state: migrating legacy storage')
 
@@ -167,7 +139,7 @@ export async function migrate() {
         logger.info('persisted state: migrated legacy storage')
       } else {
         logger.error('persisted state: legacy data failed validation', {
-          error: validate.error,
+          message: validate.error,
         })
       }
     } else {
@@ -185,7 +157,7 @@ export async function clearLegacyStorage() {
     await AsyncStorage.removeItem(DEPRECATED_ROOT_STATE_STORAGE_KEY)
   } catch (e: any) {
     logger.error(`persisted legacy store: failed to clear`, {
-      error: e.toString(),
+      message: e.toString(),
     })
   }
 }

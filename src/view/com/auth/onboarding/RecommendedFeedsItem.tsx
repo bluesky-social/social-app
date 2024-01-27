@@ -55,7 +55,7 @@ export function RecommendedFeedsItem({
         resetRemoveFeed()
       } catch (e) {
         Toast.show(_(msg`There was an issue contacting your server`))
-        logger.error('Failed to unsave feed', {error: e})
+        logger.error('Failed to unsave feed', {message: e})
       }
     } else {
       try {
@@ -64,7 +64,7 @@ export function RecommendedFeedsItem({
         track('Onboarding:CustomFeedAdded')
       } catch (e) {
         Toast.show(_(msg`There was an issue contacting your server`))
-        logger.error('Failed to pin feed', {error: e})
+        logger.error('Failed to pin feed', {message: e})
       }
     }
   }

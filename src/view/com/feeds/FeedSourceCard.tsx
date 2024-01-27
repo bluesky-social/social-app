@@ -110,7 +110,7 @@ export function FeedSourceCardLoaded({
             Toast.show(_(msg`Removed from my feeds`))
           } catch (e) {
             Toast.show(_(msg`There was an issue contacting your server`))
-            logger.error('Failed to unsave feed', {error: e})
+            logger.error('Failed to unsave feed', {message: e})
           }
         },
       })
@@ -124,7 +124,7 @@ export function FeedSourceCardLoaded({
         Toast.show(_(msg`Added to my feeds`))
       } catch (e) {
         Toast.show(_(msg`There was an issue contacting your server`))
-        logger.error('Failed to save feed', {error: e})
+        logger.error('Failed to save feed', {message: e})
       }
     }
   }, [isSaved, openModal, feed, removeFeed, saveFeed, _, pinOnSave, pinFeed])
@@ -179,7 +179,7 @@ export function FeedSourceCardLoaded({
                     Toast.show(
                       _(msg`There was an issue contacting your server`),
                     )
-                    logger.error('Failed to unsave feed', {error: e})
+                    logger.error('Failed to unsave feed', {message: e})
                   }
                 },
               })

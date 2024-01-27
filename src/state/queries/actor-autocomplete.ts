@@ -75,7 +75,7 @@ export function useActorAutocompleteFn() {
           })
         } catch (e) {
           logger.error('useActorSearch: searchActorsTypeahead failed', {
-            error: e,
+            message: e,
           })
         }
       }

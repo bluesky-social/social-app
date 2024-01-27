@@ -2,6 +2,7 @@ import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
@@ -40,7 +41,7 @@ export function ProfileFollowers({name}: {name: string}) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh followers', {error: err})
+      logger.error('Failed to refresh followers', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -50,7 +51,7 @@ export function ProfileFollowers({name}: {name: string}) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more followers', {error: err})
+      logger.error('Failed to load more followers', {message: err})
     }
   }
 
@@ -62,11 +63,7 @@ export function ProfileFollowers({name}: {name: string}) {
   )
 
   if (isFetchingDid || !isFetched) {
-    return (
-      <CenteredView>
-        <ActivityIndicator />
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
 
   // error

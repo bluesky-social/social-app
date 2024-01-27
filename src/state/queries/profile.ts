@@ -24,6 +24,7 @@ import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (did: string) => ['profile', did]
+export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {currentAccount} = useSession()
@@ -43,6 +44,34 @@ export function useProfileQuery({did}: {did: string | undefined}) {
     },
     enabled: !!did,
   })
+}
+
+export function useProfilesQuery({handles}: {handles: string[]}) {
+  return useQuery({
+    staleTime: STALE.MINUTES.FIVE,
+    queryKey: profilesQueryKey(handles),
+    queryFn: async () => {
+      const res = await getAgent().getProfiles({actors: handles})
+      return res.data
+    },
+  })
+}
+
+export function usePrefetchProfileQuery() {
+  const queryClient = useQueryClient()
+  const prefetchProfileQuery = useCallback(
+    (did: string) => {
+      queryClient.prefetchQuery({
+        queryKey: RQKEY(did),
+        queryFn: async () => {
+          const res = await getAgent().getProfile({actor: did || ''})
+          return res.data
+        },
+      })
+    },
+    [queryClient],
+  )
+  return prefetchProfileQuery
 }
 
 interface ProfileUpdateParams {
@@ -149,7 +178,6 @@ export function useProfileFollowMutationQueue(
       if (shouldFollow) {
         const {uri} = await followMutation.mutateAsync({
           did,
-          skipOptimistic: true,
         })
         return uri
       } else {
@@ -157,7 +185,6 @@ export function useProfileFollowMutationQueue(
           await unfollowMutation.mutateAsync({
             did,
             followUri: prevFollowingUri,
-            skipOptimistic: true,
           })
         }
         return undefined
@@ -191,67 +218,21 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation() {
-  return useMutation<
-    {uri: string; cid: string},
-    Error,
-    {did: string; skipOptimistic?: boolean}
-  >({
+  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       return await getAgent().follow(did)
     },
-    onMutate(variables) {
-      if (!variables.skipOptimistic) {
-        // optimistically update
-        updateProfileShadow(variables.did, {
-          followingUri: 'pending',
-        })
-      }
-    },
     onSuccess(data, variables) {
-      if (!variables.skipOptimistic) {
-        // finalize
-        updateProfileShadow(variables.did, {
-          followingUri: data.uri,
-        })
-        track('Profile:Follow', {username: variables.did})
-      }
-    },
-    onError(error, variables) {
-      if (!variables.skipOptimistic) {
-        // revert the optimistic update
-        updateProfileShadow(variables.did, {
-          followingUri: undefined,
-        })
-      }
+      track('Profile:Follow', {username: variables.did})
     },
   })
 }
 
 function useProfileUnfollowMutation() {
-  return useMutation<
-    void,
-    Error,
-    {did: string; followUri: string; skipOptimistic?: boolean}
-  >({
+  return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
       track('Profile:Unfollow', {username: followUri})
       return await getAgent().deleteFollow(followUri)
-    },
-    onMutate(variables) {
-      if (!variables.skipOptimistic) {
-        // optimistically update
-        updateProfileShadow(variables.did, {
-          followingUri: undefined,
-        })
-      }
-    },
-    onError(error, variables) {
-      if (!variables.skipOptimistic) {
-        // revert the optimistic update
-        updateProfileShadow(variables.did, {
-          followingUri: variables.followUri,
-        })
-      }
     },
   })
 }
@@ -270,13 +251,11 @@ export function useProfileMuteMutationQueue(
       if (shouldMute) {
         await muteMutation.mutateAsync({
           did,
-          skipOptimistic: true,
         })
         return true
       } else {
         await unmuteMutation.mutateAsync({
           did,
-          skipOptimistic: true,
         })
         return false
       }
@@ -308,56 +287,24 @@ export function useProfileMuteMutationQueue(
 
 function useProfileMuteMutation() {
   const queryClient = useQueryClient()
-  return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
+  return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await getAgent().mute(did)
     },
-    onMutate(variables) {
-      if (!variables.skipOptimistic) {
-        // optimistically update
-        updateProfileShadow(variables.did, {
-          muted: true,
-        })
-      }
-    },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
-    },
-    onError(error, variables) {
-      if (!variables.skipOptimistic) {
-        // revert the optimistic update
-        updateProfileShadow(variables.did, {
-          muted: false,
-        })
-      }
     },
   })
 }
 
 function useProfileUnmuteMutation() {
   const queryClient = useQueryClient()
-  return useMutation<void, Error, {did: string; skipOptimistic?: boolean}>({
+  return useMutation<void, Error, {did: string}>({
     mutationFn: async ({did}) => {
       await getAgent().unmute(did)
     },
-    onMutate(variables) {
-      if (!variables.skipOptimistic) {
-        // optimistically update
-        updateProfileShadow(variables.did, {
-          muted: false,
-        })
-      }
-    },
     onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
-    },
-    onError(error, variables) {
-      if (!variables.skipOptimistic) {
-        // revert the optimistic update
-        updateProfileShadow(variables.did, {
-          muted: true,
-        })
-      }
     },
   })
 }
@@ -376,7 +323,6 @@ export function useProfileBlockMutationQueue(
       if (shouldFollow) {
         const {uri} = await blockMutation.mutateAsync({
           did,
-          skipOptimistic: true,
         })
         return uri
       } else {
@@ -384,7 +330,6 @@ export function useProfileBlockMutationQueue(
           await unblockMutation.mutateAsync({
             did,
             blockUri: prevBlockUri,
-            skipOptimistic: true,
           })
         }
         return undefined
@@ -420,11 +365,7 @@ export function useProfileBlockMutationQueue(
 function useProfileBlockMutation() {
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
-  return useMutation<
-    {uri: string; cid: string},
-    Error,
-    {did: string; skipOptimistic?: boolean}
-  >({
+  return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -434,41 +375,15 @@ function useProfileBlockMutation() {
         {subject: did, createdAt: new Date().toISOString()},
       )
     },
-    onMutate(variables) {
-      if (!variables.skipOptimistic) {
-        // optimistically update
-        updateProfileShadow(variables.did, {
-          blockingUri: 'pending',
-        })
-      }
-    },
-    onSuccess(data, variables) {
-      if (!variables.skipOptimistic) {
-        // finalize
-        updateProfileShadow(variables.did, {
-          blockingUri: data.uri,
-        })
-      }
+    onSuccess() {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
-    },
-    onError(error, variables) {
-      if (!variables.skipOptimistic) {
-        // revert the optimistic update
-        updateProfileShadow(variables.did, {
-          blockingUri: undefined,
-        })
-      }
     },
   })
 }
 
 function useProfileUnblockMutation() {
   const {currentAccount} = useSession()
-  return useMutation<
-    void,
-    Error,
-    {did: string; blockUri: string; skipOptimistic?: boolean}
-  >({
+  return useMutation<void, Error, {did: string; blockUri: string}>({
     mutationFn: async ({blockUri}) => {
       if (!currentAccount) {
         throw new Error('Not signed in')
@@ -478,22 +393,6 @@ function useProfileUnblockMutation() {
         repo: currentAccount.did,
         rkey,
       })
-    },
-    onMutate(variables) {
-      if (!variables.skipOptimistic) {
-        // optimistically update
-        updateProfileShadow(variables.did, {
-          blockingUri: undefined,
-        })
-      }
-    },
-    onError(error, variables) {
-      if (!variables.skipOptimistic) {
-        // revert the optimistic update
-        updateProfileShadow(variables.did, {
-          blockingUri: variables.blockUri,
-        })
-      }
     },
   })
 }
