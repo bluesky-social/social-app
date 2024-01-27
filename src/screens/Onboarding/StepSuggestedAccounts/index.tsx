@@ -135,7 +135,7 @@ export function StepSuggestedAccounts() {
         {state.interestsStepResults.selectedInterests.length ? (
           <Trans>Based on your interest in {interestsText}</Trans>
         ) : (
-          <Trans>These are some popular accounts you might like:</Trans>
+          <Trans>These are popular accounts you might like:</Trans>
         )}
       </Description>
 
