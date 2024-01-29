@@ -103,7 +103,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               {replyTo.text}
             </Text>
           </View>
-          {images && replyTo.moderation?.embed.blur && (
+          {images && !replyTo.moderation?.embed.blur && (
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>
