@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-29 08:01+0800\n"
+"POT-Creation-Date: 2024-01-29 23:06+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: \n"
+"Language-Team: Frudrax Cheng, Simon Chan\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,7 +63,7 @@ msgstr "<0>欢迎来到</0><1>Bluesky</1>"
 
 #: src/view/com/profile/ProfileHeader.tsx:597
 msgid "⚠Invalid Handle"
-msgstr "⚠无效的头衔"
+msgstr "⚠无效的用户识别符"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -149,7 +149,7 @@ msgstr "添加替代文字"
 #: src/view/screens/AppPasswords.tsx:102 src/view/screens/AppPasswords.tsx:143
 #: src/view/screens/AppPasswords.tsx:156
 msgid "Add App Password"
-msgstr "添加应用密码"
+msgstr "添加App专用密码"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
@@ -236,7 +236,7 @@ msgstr "一封电子邮件已发送至 {0}。请查阅邮件内容并复制验�
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封电子邮件已发送至先前填写的邮件 {0}。请查阅邮件内容并复制验证码至下方。"
+msgstr "一封电子邮件已发送至先前填写的邮箱 {0}。请查阅邮件内容并复制验证码至下方。"
 
 #: src/view/com/profile/FollowButton.tsx:30
 #: src/view/com/profile/FollowButton.tsx:40
@@ -254,27 +254,27 @@ msgstr "应用语言"
 
 #: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
-msgstr "应用密码已删除"
+msgstr "App专用密码已删除"
 
 #: src/view/com/modals/AddAppPasswords.tsx:133
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "应用密码只能包含字母、数字、空格、破折号及下划线。"
+msgstr "App专用密码只能包含字母、数字、空格、破折号及下划线。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:98
 msgid "App Password names must be at least 4 characters long."
-msgstr "应用密码必须至少为 4 个字符。"
+msgstr "App专用密码必须至少为 4 个字符。"
 
 #: src/view/screens/Settings.tsx:641
 msgid "App password settings"
-msgstr "应用密码设置"
+msgstr "App专用密码设置"
 
 #: src/view/screens/Settings.tsx:650
 msgid "App passwords"
-msgstr "应用密码"
+msgstr "App专用密码"
 
 #: src/Navigation.tsx:238 src/view/screens/AppPasswords.tsx:187
 msgid "App Passwords"
-msgstr "应用密码"
+msgstr "App专用密码"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:248
 msgid "Appeal content warning"
@@ -298,7 +298,7 @@ msgstr "外观"
 
 #: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "你确定要删除这条应用密码 \"{name}\"？"
+msgstr "你确定要删除这条App专用密码 \"{name}\"？"
 
 #: src/view/com/composer/Composer.tsx:143
 msgid "Are you sure you'd like to discard this draft?"
@@ -404,7 +404,7 @@ msgstr "已屏蔽帖子。"
 
 #: src/view/screens/ProfileList.tsx:314
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
-msgstr "屏蔽是公开的。被屏蔽的账户无法在你的帖子中回复、提及你或以其他方式与你互动。"
+msgstr "屏蔽是公共性的。被屏蔽的账户无法在你的帖子中回复、提及你或以其他方式与你互动。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
 msgid "Blog"
@@ -508,7 +508,7 @@ msgstr "撤销账户删除申请"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "撤销修改头衔"
+msgstr "撤销修改用户识别符"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -538,15 +538,15 @@ msgstr "更改"
 
 #: src/view/screens/Settings.tsx:662 src/view/screens/Settings.tsx:671
 msgid "Change handle"
-msgstr "更改头衔"
+msgstr "更改用户识别符"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
 msgid "Change Handle"
-msgstr "更改头衔"
+msgstr "更改用户识别符"
 
 #: src/view/com/modals/VerifyEmail.tsx:147
 msgid "Change my email"
-msgstr "更改邮件"
+msgstr "更改我的邮箱地址"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
 msgid "Change post language to {0}"
@@ -554,7 +554,7 @@ msgstr "更改帖子的发布语言至 {0}"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
-msgstr "更改邮件"
+msgstr "更改你的邮箱地址"
 
 #: src/screens/Deactivated.tsx:73 src/screens/Deactivated.tsx:77
 msgid "Check my status"
@@ -570,7 +570,7 @@ msgstr "查看一些推荐的用户。关注他们还将推荐相似的用户。
 
 #: src/view/com/modals/DeleteAccount.tsx:165
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "查看发送至你电子邮件的确认邮件，并在下方输入收到的验证码："
+msgstr "查看发送至你电子邮箱的确认邮件，并在下方输入收到的验证码："
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
@@ -808,7 +808,7 @@ msgstr "已复制至剪贴板"
 
 #: src/view/com/modals/AddAppPasswords.tsx:191
 msgid "Copies app password"
-msgstr "已复制应用密码"
+msgstr "已复制App专用密码"
 
 #: src/view/com/modals/AddAppPasswords.tsx:190
 msgid "Copy"
@@ -862,7 +862,7 @@ msgstr "创建账户"
 
 #: src/view/com/modals/AddAppPasswords.tsx:228
 msgid "Create App Password"
-msgstr "创建应用密码"
+msgstr "创建App专用密码"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
 #: src/view/com/auth/SplashScreen.tsx:43
@@ -920,7 +920,7 @@ msgstr "删除账号"
 
 #: src/view/screens/AppPasswords.tsx:222 src/view/screens/AppPasswords.tsx:242
 msgid "Delete app password"
-msgstr "删除应用密码"
+msgstr "删除App专用密码"
 
 #: src/view/screens/ProfileList.tsx:360 src/view/screens/ProfileList.tsx:420
 msgid "Delete List"
@@ -1123,29 +1123,29 @@ msgstr "编辑你的账户描述"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:152
 #: src/view/com/modals/ChangeEmail.tsx:141 src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
-msgstr "电子邮件"
+msgstr "电子邮箱"
 
 #: src/view/com/auth/create/Step1.tsx:134
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:143
 msgid "Email address"
-msgstr "电子邮件"
+msgstr "邮件地址"
 
 #: src/view/com/modals/ChangeEmail.tsx:56
 #: src/view/com/modals/ChangeEmail.tsx:88
 msgid "Email updated"
-msgstr "电子邮件已更新"
+msgstr "电子邮箱已更新"
 
 #: src/view/com/modals/ChangeEmail.tsx:111
 msgid "Email Updated"
-msgstr "电子邮件已更新"
+msgstr "电子邮箱已更新"
 
 #: src/view/com/modals/VerifyEmail.tsx:78
 msgid "Email verified"
-msgstr "电子邮件已验证"
+msgstr "电子邮箱已验证"
 
 #: src/view/screens/Settings.tsx:312
 msgid "Email:"
-msgstr "电子邮件："
+msgstr "电子邮箱："
 
 #: src/view/com/modals/EmbedConsent.tsx:113
 msgid "Enable {0} only"
@@ -1178,7 +1178,7 @@ msgstr "结束信息源"
 
 #: src/view/com/modals/AddAppPasswords.tsx:165
 msgid "Enter a name for this App Password"
-msgstr "为此应用密码命名"
+msgstr "为此App专用密码命名"
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
@@ -1190,7 +1190,7 @@ msgstr "输入你想使用的域名"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:103
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "输入你用于创建账户的电子邮件。我们将向你发送重置码，以便你重新设置密码。"
+msgstr "输入你用于创建账户的电子邮箱。我们将向你发送重置码，以便你重新设置密码。"
 
 #: src/view/com/auth/create/Step1.tsx:195
 #: src/view/com/modals/BirthDateSettings.tsx:74
@@ -1199,19 +1199,19 @@ msgstr "输入你的出生日期"
 
 #: src/view/com/modals/Waitlist.tsx:78
 msgid "Enter your email"
-msgstr "输入你的电子邮件"
+msgstr "输入你的电子邮箱"
 
 #: src/view/com/auth/create/Step1.tsx:139
 msgid "Enter your email address"
-msgstr "输入你的电子邮件"
+msgstr "输入你的电子邮箱"
 
 #: src/view/com/modals/ChangeEmail.tsx:41
 msgid "Enter your new email above"
-msgstr "在上方输入你新的电子邮件"
+msgstr "请在上方输入你新的电子邮箱"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
-msgstr "在下方输入你新的电子邮件。"
+msgstr "请在下方输入你新的电子邮箱。"
 
 #: src/view/com/auth/create/Step2.tsx:187
 msgid "Enter your phone number"
@@ -1231,7 +1231,7 @@ msgstr "所有人"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "退出修改头衔流程"
+msgstr "退出修改用户识别符流程"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -1276,7 +1276,7 @@ msgstr "外部媒体设置"
 #: src/view/com/modals/AddAppPasswords.tsx:114
 #: src/view/com/modals/AddAppPasswords.tsx:118
 msgid "Failed to create app password."
-msgstr "无法创建应用密码。"
+msgstr "无法创建App专用密码。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -1441,7 +1441,7 @@ msgstr "已关注"
 
 #: src/view/com/modals/DeleteAccount.tsx:107
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "出于安全原因，我们需要向你的电子邮件发送验证码。"
+msgstr "出于安全原因，我们需要向你的电子邮箱发送验证码。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:211
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
@@ -1500,7 +1500,7 @@ msgstr "转到下一个"
 
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
-msgstr "头衔"
+msgstr "用户识别符"
 
 #: src/view/com/auth/create/CreateAccount.tsx:197
 msgid "Having trouble?"
@@ -1524,7 +1524,7 @@ msgstr "这里是一些基于你兴趣所推荐的信息源供你挑选：{inter
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
-msgstr "这里是你的应用密码。"
+msgstr "这里是你的App专用密码。"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:219
 #: src/view/com/notifications/FeedItem.tsx:327
@@ -1634,7 +1634,7 @@ msgstr "图片选项"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:110
 msgid "Input code sent to your email for password reset"
-msgstr "输入发送到你电子邮件的验证码以重置密码"
+msgstr "输入发送到你电子邮箱的验证码以重置密码"
 
 #: src/view/com/modals/DeleteAccount.tsx:180
 msgid "Input confirmation code for account deletion"
@@ -1642,7 +1642,7 @@ msgstr "输入删除用户的验证码"
 
 #: src/view/com/auth/create/Step1.tsx:144
 msgid "Input email for Bluesky account"
-msgstr "输入Bluesky账户的电子邮件"
+msgstr "输入Bluesky账户的电子邮箱"
 
 #: src/view/com/auth/create/Step1.tsx:102
 msgid "Input invite code to proceed"
@@ -1650,7 +1650,7 @@ msgstr "输入邀请码以继续"
 
 #: src/view/com/modals/AddAppPasswords.tsx:182
 msgid "Input name for app password"
-msgstr "输入应用密码名称"
+msgstr "输入App专用密码名称"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:133
 msgid "Input new password"
@@ -1670,7 +1670,7 @@ msgstr "输入与 {identifier} 关联的密码"
 
 #: src/view/com/auth/login/LoginForm.tsx:194
 msgid "Input the username or email address you used at signup"
-msgstr "输入注册时使用的用户名或电子邮件"
+msgstr "输入注册时使用的用户名或电子邮箱"
 
 #: src/view/com/auth/create/Step2.tsx:270
 msgid "Input the verification code we have texted to you"
@@ -1678,7 +1678,7 @@ msgstr "输入收到的短信验证码"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
-msgstr "输入电子邮件以加入Bluesky候补列表"
+msgstr "输入你的电子邮箱以加入Bluesky候补列表"
 
 #: src/view/com/auth/login/LoginForm.tsx:226
 msgid "Input your password"
@@ -1686,7 +1686,7 @@ msgstr "输入你的密码"
 
 #: src/view/com/auth/create/Step3.tsx:42
 msgid "Input your user handle"
-msgstr "输入你的用户头衔"
+msgstr "输入你的用户用户识别符"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:229
 msgid "Invalid or unsupported post record"
@@ -2364,7 +2364,7 @@ msgstr "打开邀请码列表"
 
 #: src/view/screens/Settings.tsx:696
 msgid "Opens modal for account deletion confirmation. Requires email code."
-msgstr "打开用户删除确认界面，需要电子邮件验证码。"
+msgstr "打开用户删除确认界面，需要电子邮箱接收验证码。"
 
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Opens modal for using custom domain"
@@ -2388,7 +2388,7 @@ msgstr "打开包含所有已保存信息源的界面"
 
 #: src/view/screens/Settings.tsx:642
 msgid "Opens the app password settings page"
-msgstr "打开应用密码设置页"
+msgstr "打开App专用密码设置页"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Opens the home feed preferences"
@@ -2501,7 +2501,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "请选择你的头衔。"
+msgstr "请选择你的用户识别符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
@@ -2509,11 +2509,11 @@ msgstr "请选择你的密码。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "更改前请先确认你的电子邮件。这是添加电子邮件更新工具的临时要求，此限制将很快被移除。"
+msgstr "更改前请先确认你的电子邮箱。这是添加电子邮箱更新工具的临时要求，此限制将很快被移除。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:89
 msgid "Please enter a name for your app password. All spaces is not allowed."
-msgstr "请输入应用密码的名称，不允许使用空格。"
+msgstr "请输入App专用密码的名称，不允许使用空格。"
 
 #: src/view/com/auth/create/Step2.tsx:205
 msgid "Please enter a phone number that can receive SMS text messages."
@@ -2521,7 +2521,7 @@ msgstr "请输入可以接收短信的手机号码。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:144
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
-msgstr "请输入此应用密码的唯一名称，或使用我们提供的随机生成名称。"
+msgstr "请输入此App专用密码的唯一名称，或使用我们提供的随机生成名称。"
 
 #: src/view/com/auth/create/state.ts:170
 msgid "Please enter the code you received by SMS."
@@ -2533,7 +2533,7 @@ msgstr "请输入发送到 {phoneNumberFormatted} 的验证码。"
 
 #: src/view/com/auth/create/state.ts:146
 msgid "Please enter your email."
-msgstr "请输入你的电子邮件。"
+msgstr "请输入你的电子邮箱。"
 
 #: src/view/com/modals/DeleteAccount.tsx:187
 msgid "Please enter your password as well:"
@@ -2546,7 +2546,7 @@ msgstr "请告诉我们你认为此内容警告被错误设置的原因！"
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
-msgstr "请验证你的电子邮件"
+msgstr "请验证你的电子邮箱"
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -2644,7 +2644,7 @@ msgstr "资料已更新"
 
 #: src/view/screens/Settings.tsx:882
 msgid "Protect your account by verifying your email."
-msgstr "通过验证电子邮件来保护你的账户。"
+msgstr "通过验证电子邮箱来保护你的账户。"
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
@@ -2944,7 +2944,7 @@ msgstr "保存更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:170
 msgid "Save handle change"
-msgstr "保存新的头衔"
+msgstr "保存新的用户识别符"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:144
 msgid "Save image crop"
@@ -2960,7 +2960,7 @@ msgstr "保存个人资料中所做的变更"
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
-msgstr "保存头衔更改至 {handle}"
+msgstr "保存用户识别符更改至 {handle}"
 
 #: src/view/screens/ProfileList.tsx:830
 msgid "Scroll to top"
@@ -3148,7 +3148,7 @@ msgstr "设置Bluesky用户名"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:153
 msgid "Sets email for password reset"
-msgstr "设置用于重置密码的电子邮件"
+msgstr "设置用于重置密码的电子邮箱"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:118
 msgid "Sets hosting provider for password reset"
@@ -3366,7 +3366,7 @@ msgstr "出了点问题，原因不明。"
 
 #: src/view/com/modals/Waitlist.tsx:51
 msgid "Something went wrong. Check your email and try again."
-msgstr "出了点问题，请检查你的电子邮件并重试。"
+msgstr "出了点问题，请检查你的电子邮箱并重试。"
 
 #: src/App.native.tsx:62
 msgid "Sorry! Your session expired. Please log in again."
@@ -3570,7 +3570,7 @@ msgstr "与服务器同步首选项时出现问题"
 
 #: src/view/screens/AppPasswords.tsx:66
 msgid "There was an issue with fetching your app passwords"
-msgstr "获取应用密码时出现问题"
+msgstr "获取App专用密码时出现问题"
 
 #: src/view/com/profile/ProfileHeader.tsx:204
 #: src/view/com/profile/ProfileHeader.tsx:225
@@ -3641,7 +3641,7 @@ msgstr "此信息不与其他用户共享。"
 
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "这很重要，以防你将来需要更改电子邮件或重置密码。"
+msgstr "这很重要，以防你将来需要更改电子邮箱或重置密码。"
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -3823,7 +3823,7 @@ msgstr "使用系统默认浏览器"
 
 #: src/view/com/modals/AddAppPasswords.tsx:154
 msgid "Use this to sign into the other app along with your handle."
-msgstr "使用这个和你的头衔一起登录其他应用。"
+msgstr "使用这个和你的用户识别符一起登录其他应用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
@@ -3847,7 +3847,7 @@ msgstr "用户屏蔽了你"
 
 #: src/view/com/auth/create/Step3.tsx:41
 msgid "User handle"
-msgstr "用户头衔"
+msgstr "用户用户识别符"
 
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:182
@@ -3879,7 +3879,7 @@ msgstr "用户列表"
 #: src/view/com/auth/login/LoginForm.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:192
 msgid "Username or email address"
-msgstr "用户名或电子邮件"
+msgstr "用户名或电子邮箱"
 
 #: src/view/screens/ProfileList.tsx:772
 msgid "Users"
@@ -3895,28 +3895,28 @@ msgstr "“{0}”中的用户"
 
 #: src/view/com/auth/create/Step2.tsx:242
 msgid "Verification code"
-msgstr "养正吗"
+msgstr "验证码"
 
 #: src/view/screens/Settings.tsx:843
 msgid "Verify email"
-msgstr "验证邮件"
+msgstr "验证邮箱"
 
 #: src/view/screens/Settings.tsx:868
 msgid "Verify my email"
-msgstr "验证邮件"
+msgstr "验证我的邮箱"
 
 #: src/view/screens/Settings.tsx:877
 msgid "Verify My Email"
-msgstr "验证邮件"
+msgstr "验证我的邮箱"
 
 #: src/view/com/modals/ChangeEmail.tsx:205
 #: src/view/com/modals/ChangeEmail.tsx:207
 msgid "Verify New Email"
-msgstr "验证新的邮件"
+msgstr "验证新的邮箱"
 
 #: src/view/com/modals/VerifyEmail.tsx:103
 msgid "Verify Your Email"
-msgstr "验证你的邮件"
+msgstr "验证你的邮箱"
 
 #: src/view/com/profile/ProfileHeader.tsx:701
 msgid "View {0}'s avatar"
@@ -4114,7 +4114,7 @@ msgstr "你还没有屏蔽任何账号。要屏蔽账号，请转到其个人资
 
 #: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "你尚未创建任何应用密码，可以通过点击下面的按钮来创建一个。"
+msgstr "你尚未创建任何App专用密码，可以通过点击下面的按钮来创建一个。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
@@ -4176,19 +4176,19 @@ msgstr "你的默认信息源为\"关注\""
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 msgid "Your email appears to be invalid."
-msgstr "你的电子邮件似乎无效。"
+msgstr "你的电子邮箱似乎无效。"
 
 #: src/view/com/modals/Waitlist.tsx:109
 msgid "Your email has been saved! We'll be in touch soon."
-msgstr "你的电子邮件已保存！我们将很快联系。"
+msgstr "你的电子邮箱已保存！我们将很快联系你。"
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "你的电子邮件已更新但尚未验证。作为下一步，请验证你的新电子邮件。"
+msgstr "你的电子邮箱已更新但尚未验证。作为下一步，请验证你的新电子邮件。"
 
 #: src/view/com/modals/VerifyEmail.tsx:114
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr "你的电子邮件尚未验证。这是一个重要的安全步骤，我们建议你完成验证。"
+msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我们建议你完成验证。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
@@ -4196,16 +4196,16 @@ msgstr "你的关注信息源为空！关注更多用户去看看他们发了什
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
-msgstr "你的完整头衔将为"
+msgstr "你的完整用户识别符将为"
 
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "你的完整头衔将为 <0>@{0}</0>"
+msgstr "你的完整用户识别符将为 <0>@{0}</0>"
 
 #: src/view/screens/Settings.tsx:430 src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:660
 msgid "Your invite codes are hidden when logged in using an App Password"
-msgstr "在使用应用密码登录时，你的邀请码将被隐藏"
+msgstr "在使用App专用密码登录时，你的邀请码将被隐藏"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
@@ -4227,4 +4227,4 @@ msgstr "你的回复已发送"
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
-msgstr "你的用户头衔"
+msgstr "你的用户用户识别符"
