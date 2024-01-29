@@ -216,10 +216,11 @@ let PostThreadItemLoaded = ({
           avatar: post.author.avatar,
         },
         embed: post.embed,
+        moderation,
       },
       onPost: onPostReply,
     })
-  }, [openComposer, post, record, onPostReply])
+  }, [openComposer, post, record, onPostReply, moderation])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
