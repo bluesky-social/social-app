@@ -31,7 +31,6 @@ export interface ComposerOptsQuote {
     avatar?: string
   }
   embeds?: AppBskyEmbedRecord.ViewRecord['embeds']
-  moderation?: PostModeration
 }
 export interface ComposerOpts {
   replyTo?: ComposerOptsPostRef
