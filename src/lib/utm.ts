@@ -1,3 +1,11 @@
+/**
+ * Resources
+ *
+ * Overview: https://developers.google.com/analytics/devguides/collection/protocol/v1/reference#required
+ * Param reference: https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
+ * UTM reference: https://support.google.com/analytics/answer/10917952
+ */
+
 import React from 'react'
 import {nanoid} from 'nanoid/non-secure'
 import * as Linking from 'expo-linking'
@@ -78,7 +86,8 @@ export function emitEvent() {
   const payload = new URLSearchParams(params).toString()
   const url = new URL('/collect', 'https://www.google-analytics.com')
   url.searchParams.set('payload_data', encodeURIComponent(payload))
-  url.searchParams.set('z', Date.now().toString() + '-' + nanoid()) // TODO
+  // cache-buster param
+  url.searchParams.set('z', Date.now().toString() + '-' + nanoid())
 
   fetch(url.toString()).catch(() => {})
 }
