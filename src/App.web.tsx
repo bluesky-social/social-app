@@ -32,12 +32,14 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {useUTMSetup} from '#/lib/utm'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
   const {resumeSession} = useSessionApi()
   const colorMode = useColorMode()
   const theme = useColorModeTheme(colorMode)
+  useUTMSetup()
 
   // init
   useEffect(() => {
