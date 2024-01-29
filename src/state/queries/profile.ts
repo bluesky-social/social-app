@@ -26,7 +26,6 @@ import {track} from '#/lib/analytics/analytics'
 export const RQKEY = (did: string = '') => ['profile', did] as const
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
-
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {currentAccount} = useSession()
   const isCurrentAccount = did === currentAccount?.did
@@ -377,7 +376,7 @@ function useProfileBlockMutation() {
       )
     },
     onSuccess() {
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED})
     },
   })
 }
