@@ -142,6 +142,14 @@ export const gradients = {
     ],
     hover_value: '#B88BB6',
   },
+  summer: {
+    values: [
+      [0, '#FF6A56'],
+      [0.3, '#FF9156'],
+      [1, '#FFDD87'],
+    ],
+    hover_value: '#FF9156',
+  },
   nordic: {
     values: [
       [0, '#083367'],

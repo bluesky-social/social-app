@@ -1,10 +1,8 @@
 import React from 'react'
 import {
-  Text,
-  TextStyle,
-  StyleProp,
   GestureResponderEvent,
   Linking,
+  TouchableWithoutFeedback,
 } from 'react-native'
 import {
   useLinkProps,
@@ -13,9 +11,10 @@ import {
 } from '@react-navigation/native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {isWeb} from '#/platform/detection'
-import {useTheme, web, flatten} from '#/alf'
-import {Button, ButtonProps, useButtonContext} from '#/components/Button'
+import {useTheme, web, flatten, TextStyleProp} from '#/alf'
+import {Button, ButtonProps} from '#/components/Button'
 import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
@@ -24,43 +23,39 @@ import {
 } from '#/lib/strings/url-helpers'
 import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
+import {Text} from '#/components/Typography'
 
-export type LinkProps = Omit<
-  ButtonProps,
-  'style' | 'onPress' | 'disabled' | 'label'
+/**
+ * Only available within a `Link`, since that inherits from `Button`.
+ * `InlineLink` provides no context.
+ */
+export {useButtonContext as useLinkContext} from '#/components/Button'
+
+type BaseLinkProps = Pick<
+  Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
+  'to'
 > & {
-  /**
-   * `TextStyle` to apply to the anchor element itself. Does not apply to any children.
-   */
-  style?: StyleProp<TextStyle>
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
    */
   action?: 'push' | 'replace' | 'navigate'
+
   /**
-   * If true, will warn the user if the link text does not match the href. Only
-   * works for Links with children that are strings i.e. text links.
+   * If true, will warn the user if the link text does not match the href.
+   *
+   * Note: atm this only works for `InlineLink`s with a string child.
    */
   warnOnMismatchingTextChild?: boolean
-  label?: ButtonProps['label']
-} & Pick<Parameters<typeof useLinkProps<AllNavigatorParams>>[0], 'to'>
+}
 
-/**
- * A interactive element that renders as a `<a>` tag on the web. On mobile it
- * will translate the `href` to navigator screens and params and dispatch a
- * navigation action.
- *
- * Intended to behave as a web anchor tag. For more complex routing, use a
- * `Button`.
- */
-export function Link({
-  children,
+export function useLink({
   to,
+  displayText,
   action = 'push',
   warnOnMismatchingTextChild,
-  style,
-  ...rest
-}: LinkProps) {
+}: BaseLinkProps & {
+  displayText: string
+}) {
   const navigation = useNavigation<NavigationProp>()
   const {href} = useLinkProps<AllNavigatorParams>({
     to:
@@ -68,14 +63,14 @@ export function Link({
   })
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
+
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
-      const stringChildren = typeof children === 'string' ? children : ''
       const requiresWarning = Boolean(
         warnOnMismatchingTextChild &&
-          stringChildren &&
+          displayText &&
           isExternal &&
-          linkRequiresWarning(href, stringChildren),
+          linkRequiresWarning(href, displayText),
       )
 
       if (requiresWarning) {
@@ -83,7 +78,7 @@ export function Link({
 
         openModal({
           name: 'link-warning',
-          text: stringChildren,
+          text: displayText,
           href: href,
         })
       } else {
@@ -134,11 +129,41 @@ export function Link({
       warnOnMismatchingTextChild,
       navigation,
       action,
-      children,
+      displayText,
       closeModal,
       openModal,
     ],
   )
+
+  return {
+    isExternal,
+    href,
+    onPress,
+  }
+}
+
+export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
+  Omit<ButtonProps, 'style' | 'onPress' | 'disabled' | 'label'> & {
+    /**
+     * Label for a11y. Defaults to the href.
+     */
+    label?: string
+  }
+
+/**
+ * A interactive element that renders as a `<a>` tag on the web. On mobile it
+ * will translate the `href` to navigator screens and params and dispatch a
+ * navigation action.
+ *
+ * Intended to behave as a web anchor tag. For more complex routing, use a
+ * `Button`.
+ */
+export function Link({children, to, action = 'push', ...rest}: LinkProps) {
+  const {href, isExternal, onPress} = useLink({
+    to,
+    displayText: typeof children === 'string' ? children : '',
+    action,
+  })
 
   return (
     <Button
@@ -158,34 +183,81 @@ export function Link({
           noUnderline: '1',
         },
       })}>
-      {typeof children === 'string' ? (
-        <LinkText style={style}>{children}</LinkText>
-      ) : (
-        children
-      )}
+      {children}
     </Button>
   )
 }
 
-function LinkText({
+export type InlineLinkProps = React.PropsWithChildren<
+  BaseLinkProps &
+    TextStyleProp & {
+      /**
+       * Label for a11y. Defaults to the href.
+       */
+      label?: string
+    }
+>
+
+export function InlineLink({
   children,
+  to,
+  action = 'push',
+  warnOnMismatchingTextChild,
   style,
-}: React.PropsWithChildren<{
-  style?: StyleProp<TextStyle>
-}>) {
+  ...rest
+}: InlineLinkProps) {
   const t = useTheme()
-  const {hovered} = useButtonContext()
+  const stringChildren = typeof children === 'string'
+  const {href, isExternal, onPress} = useLink({
+    to,
+    displayText: stringChildren ? children : '',
+    action,
+    warnOnMismatchingTextChild,
+  })
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {
+    state: pressed,
+    onIn: onPressIn,
+    onOut: onPressOut,
+  } = useInteractionState()
+
   return (
-    <Text
-      style={[
-        {color: t.palette.primary_500},
-        hovered && {
-          textDecorationLine: 'underline',
-          textDecorationColor: t.palette.primary_500,
-        },
-        flatten(style),
-      ]}>
-      {children as string}
-    </Text>
+    <TouchableWithoutFeedback
+      accessibilityRole="button"
+      onPress={onPress}
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      onFocus={onFocus}
+      onBlur={onBlur}>
+      <Text
+        label={href}
+        {...rest}
+        style={[
+          {color: t.palette.primary_500},
+          (focused || pressed) && {
+            outline: 0,
+            textDecorationLine: 'underline',
+            textDecorationColor: t.palette.primary_500,
+          },
+          flatten(style),
+        ]}
+        role="link"
+        accessibilityRole="link"
+        href={href}
+        {...web({
+          hrefAttrs: {
+            target: isExternal ? 'blank' : undefined,
+            rel: isExternal ? 'noopener noreferrer' : undefined,
+          },
+          dataSet: stringChildren
+            ? {}
+            : {
+                // default to no underline, apply this ourselves
+                noUnderline: '1',
+              },
+        })}>
+        {children}
+      </Text>
+    </TouchableWithoutFeedback>
   )
 }

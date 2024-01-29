@@ -104,6 +104,9 @@ export const atoms = {
   flex: {
     display: 'flex',
   },
+  flex_col: {
+    flexDirection: 'column',
+  },
   flex_row: {
     flexDirection: 'row',
   },
@@ -149,45 +152,38 @@ export const atoms = {
   },
   text_2xs: {
     fontSize: tokens.fontSize._2xs,
-    lineHeight: tokens.fontSize._2xs,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
-    lineHeight: tokens.fontSize.xs,
   },
   text_sm: {
     fontSize: tokens.fontSize.sm,
-    lineHeight: tokens.fontSize.sm,
   },
   text_md: {
     fontSize: tokens.fontSize.md,
-    lineHeight: tokens.fontSize.md,
   },
   text_lg: {
     fontSize: tokens.fontSize.lg,
-    lineHeight: tokens.fontSize.lg,
   },
   text_xl: {
     fontSize: tokens.fontSize.xl,
-    lineHeight: tokens.fontSize.xl,
   },
   text_2xl: {
     fontSize: tokens.fontSize._2xl,
-    lineHeight: tokens.fontSize._2xl,
   },
   text_3xl: {
     fontSize: tokens.fontSize._3xl,
-    lineHeight: tokens.fontSize._3xl,
   },
   text_4xl: {
     fontSize: tokens.fontSize._4xl,
-    lineHeight: tokens.fontSize._4xl,
   },
   text_5xl: {
     fontSize: tokens.fontSize._5xl,
-    lineHeight: tokens.fontSize._5xl,
   },
   leading_tight: {
+    lineHeight: 1.15,
+  },
+  leading_snug: {
     lineHeight: 1.25,
   },
   leading_normal: {

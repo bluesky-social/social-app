@@ -209,7 +209,7 @@ export function ProfileFeedScreenInner({
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up update feeds', {error: err})
+      logger.error('Failed up update feeds', {message: err})
     }
   }, [
     feedInfo,
@@ -234,7 +234,7 @@ export function ProfileFeedScreenInner({
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
 
@@ -549,7 +549,7 @@ function AboutSection({
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up toggle like', {error: err})
+      logger.error('Failed up toggle like', {message: err})
     }
   }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
 

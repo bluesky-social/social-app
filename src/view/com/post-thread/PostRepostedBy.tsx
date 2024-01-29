@@ -40,7 +40,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh reposts', {error: err})
+      logger.error('Failed to refresh reposts', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -50,7 +50,7 @@ export function PostRepostedBy({uri}: {uri: string}) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more reposts', {error: err})
+      logger.error('Failed to load more reposts', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 

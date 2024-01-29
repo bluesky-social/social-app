@@ -40,7 +40,7 @@ export async function requestPermissionsAndRegisterToken(
       logger.DebugContext.notifications,
     )
   } catch (error) {
-    logger.error('Notifications: Failed to set push token', {error})
+    logger.error('Notifications: Failed to set push token', {message: error})
   }
 }
 
@@ -71,7 +71,7 @@ export function registerTokenChangeHandler(
         logger.DebugContext.notifications,
       )
     } catch (error) {
-      logger.error('Notifications: Failed to set push token', {error})
+      logger.error('Notifications: Failed to set push token', {message: error})
     }
   })
   return () => {

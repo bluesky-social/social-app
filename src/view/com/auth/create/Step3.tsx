@@ -33,6 +33,9 @@ export function Step3({
           placeholder="e.g. alice"
           value={uiState.handle}
           editable
+          autoFocus
+          autoComplete="off"
+          autoCorrect={false}
           onChange={value => uiDispatch({type: 'set-handle', value})}
           // TODO: Add explicit text label
           accessibilityLabel={_(msg`User handle`)}

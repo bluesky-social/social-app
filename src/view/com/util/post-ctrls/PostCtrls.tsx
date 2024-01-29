@@ -22,10 +22,8 @@ import {Haptics} from 'lib/haptics'
 import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
 import {useModalControls} from '#/state/modals'
 import {
-  usePostLikeMutation,
-  usePostUnlikeMutation,
-  usePostRepostMutation,
-  usePostUnrepostMutation,
+  usePostLikeMutationQueue,
+  usePostRepostMutationQueue,
 } from '#/state/queries/post'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
@@ -54,10 +52,8 @@ let PostCtrls = ({
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
-  const postLikeMutation = usePostLikeMutation()
-  const postUnlikeMutation = usePostUnlikeMutation()
-  const postRepostMutation = usePostRepostMutation()
-  const postUnrepostMutation = usePostUnrepostMutation()
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post)
+  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post)
   const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(
@@ -68,54 +64,35 @@ let PostCtrls = ({
   ) as StyleProp<ViewStyle>
 
   const onPressToggleLike = React.useCallback(async () => {
-    if (!post.viewer?.like) {
-      Haptics.default()
-      postLikeMutation.mutate({
-        uri: post.uri,
-        cid: post.cid,
-        likeCount: post.likeCount || 0,
-      })
-    } else {
-      postUnlikeMutation.mutate({
-        postUri: post.uri,
-        likeUri: post.viewer.like,
-        likeCount: post.likeCount || 0,
-      })
+    try {
+      if (!post.viewer?.like) {
+        Haptics.default()
+        await queueLike()
+      } else {
+        await queueUnlike()
+      }
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
     }
-  }, [
-    post.viewer?.like,
-    post.uri,
-    post.cid,
-    post.likeCount,
-    postLikeMutation,
-    postUnlikeMutation,
-  ])
+  }, [post.viewer?.like, queueLike, queueUnlike])
 
-  const onRepost = useCallback(() => {
+  const onRepost = useCallback(async () => {
     closeModal()
-    if (!post.viewer?.repost) {
-      Haptics.default()
-      postRepostMutation.mutate({
-        uri: post.uri,
-        cid: post.cid,
-        repostCount: post.repostCount || 0,
-      })
-    } else {
-      postUnrepostMutation.mutate({
-        postUri: post.uri,
-        repostUri: post.viewer.repost,
-        repostCount: post.repostCount || 0,
-      })
+    try {
+      if (!post.viewer?.repost) {
+        Haptics.default()
+        await queueRepost()
+      } else {
+        await queueUnrepost()
+      }
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
     }
-  }, [
-    post.uri,
-    post.cid,
-    post.viewer?.repost,
-    post.repostCount,
-    closeModal,
-    postRepostMutation,
-    postUnrepostMutation,
-  ])
+  }, [post.viewer?.repost, queueRepost, queueUnrepost, closeModal])
 
   const onQuote = useCallback(() => {
     closeModal()
@@ -141,37 +118,38 @@ let PostCtrls = ({
 
   return (
     <View style={[styles.ctrls, style]}>
-      <TouchableOpacity
-        testID="replyBtn"
+      <View
         style={[
           styles.ctrl,
-          !big && styles.ctrlPad,
-          {paddingLeft: 0},
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
-        ]}
-        onPress={() => {
-          if (!post.viewer?.replyDisabled) {
-            requireAuth(() => onPressReply())
-          }
-        }}
-        accessibilityRole="button"
-        accessibilityLabel={`Reply (${post.replyCount} ${
-          post.replyCount === 1 ? 'reply' : 'replies'
-        })`}
-        accessibilityHint=""
-        hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-        <CommentBottomArrow
-          style={[defaultCtrlColor, big ? s.mt2 : styles.mt1]}
-          strokeWidth={3}
-          size={big ? 20 : 15}
-        />
-        {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
-          <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
-            {post.replyCount}
-          </Text>
-        ) : undefined}
-      </TouchableOpacity>
-      <View style={[styles.ctrl, !big && styles.ctrlPad]}>
+        ]}>
+        <TouchableOpacity
+          testID="replyBtn"
+          style={[styles.btn, !big && styles.btnPad, {paddingLeft: 0}]}
+          onPress={() => {
+            if (!post.viewer?.replyDisabled) {
+              requireAuth(() => onPressReply())
+            }
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={`Reply (${post.replyCount} ${
+            post.replyCount === 1 ? 'reply' : 'replies'
+          })`}
+          accessibilityHint=""
+          hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+          <CommentBottomArrow
+            style={[defaultCtrlColor, big ? s.mt2 : styles.mt1]}
+            strokeWidth={3}
+            size={big ? 20 : 15}
+          />
+          {typeof post.replyCount !== 'undefined' && post.replyCount > 0 ? (
+            <Text style={[defaultCtrlColor, s.ml5, s.f15]}>
+              {post.replyCount}
+            </Text>
+          ) : undefined}
+        </TouchableOpacity>
+      </View>
+      <View style={styles.ctrl}>
         <RepostButton
           big={big}
           isReposted={!!post.viewer?.repost}
@@ -180,53 +158,55 @@ let PostCtrls = ({
           onQuote={onQuote}
         />
       </View>
-      <TouchableOpacity
-        testID="likeBtn"
-        style={[styles.ctrl, !big && styles.ctrlPad]}
-        onPress={() => {
-          requireAuth(() => onPressToggleLike())
-        }}
-        accessibilityRole="button"
-        accessibilityLabel={`${
-          post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-        } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
-        accessibilityHint=""
-        hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-        {post.viewer?.like ? (
-          <HeartIconSolid style={s.likeColor} size={big ? 22 : 16} />
-        ) : (
-          <HeartIcon
-            style={[defaultCtrlColor, big ? styles.mt1 : undefined]}
-            strokeWidth={3}
-            size={big ? 20 : 16}
-          />
-        )}
-        {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
-          <Text
-            testID="likeCount"
-            style={
-              post.viewer?.like
-                ? [s.bold, s.likeColor, s.f15, s.ml5]
-                : [defaultCtrlColor, s.f15, s.ml5]
-            }>
-            {post.likeCount}
-          </Text>
-        ) : undefined}
-      </TouchableOpacity>
+      <View style={styles.ctrl}>
+        <TouchableOpacity
+          testID="likeBtn"
+          style={[styles.btn, !big && styles.btnPad]}
+          onPress={() => {
+            requireAuth(() => onPressToggleLike())
+          }}
+          accessibilityRole="button"
+          accessibilityLabel={`${
+            post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
+          } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+          accessibilityHint=""
+          hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+          {post.viewer?.like ? (
+            <HeartIconSolid style={s.likeColor} size={big ? 22 : 16} />
+          ) : (
+            <HeartIcon
+              style={[defaultCtrlColor, big ? styles.mt1 : undefined]}
+              strokeWidth={3}
+              size={big ? 20 : 16}
+            />
+          )}
+          {typeof post.likeCount !== 'undefined' && post.likeCount > 0 ? (
+            <Text
+              testID="likeCount"
+              style={
+                post.viewer?.like
+                  ? [s.bold, s.likeColor, s.f15, s.ml5]
+                  : [defaultCtrlColor, s.f15, s.ml5]
+              }>
+              {post.likeCount}
+            </Text>
+          ) : undefined}
+        </TouchableOpacity>
+      </View>
       {big ? undefined : (
-        <PostDropdownBtn
-          testID="postDropdownBtn"
-          postAuthor={post.author}
-          postCid={post.cid}
-          postUri={post.uri}
-          record={record}
-          richText={richText}
-          showAppealLabelItem={showAppealLabelItem}
-          style={styles.ctrlPad}
-        />
+        <View style={styles.ctrl}>
+          <PostDropdownBtn
+            testID="postDropdownBtn"
+            postAuthor={post.author}
+            postCid={post.cid}
+            postUri={post.uri}
+            record={record}
+            richText={richText}
+            showAppealLabelItem={showAppealLabelItem}
+            style={styles.btnPad}
+          />
+        </View>
       )}
-      {/* used for adding pad to the right side */}
-      <View />
     </View>
   )
 }
@@ -237,13 +217,17 @@ const styles = StyleSheet.create({
   ctrls: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   ctrl: {
     flex: 1,
+    alignItems: 'flex-start',
+  },
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  ctrlPad: {
+  btnPad: {
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 5,
