@@ -59,10 +59,7 @@ export type FeedSourceListInfo = {
 
 export type FeedSourceInfo = FeedSourceFeedInfo | FeedSourceListInfo
 
-export const feedSourceInfoQueryKey = ({uri}: {uri: string}) => [
-  'getFeedSourceInfo',
-  uri,
-]
+export const RQKEY = (uri: string) => ['getFeedSourceInfo', uri] as const
 
 const feedSourceNSIDs = {
   feed: 'app.bsky.feed.generator',
@@ -141,7 +138,7 @@ export function useFeedSourceInfoQuery({uri}: {uri: string}) {
 
   return useQuery({
     staleTime: STALE.INFINITY,
-    queryKey: feedSourceInfoQueryKey({uri}),
+    queryKey: RQKEY(uri),
     queryFn: async () => {
       let view: FeedSourceInfo
 
@@ -239,9 +236,7 @@ export function usePinnedFeedsInfos(): {
       const reqs = []
 
       for (const uri of uris) {
-        const cached = queryClient.getQueryData<FeedSourceInfo>(
-          feedSourceInfoQueryKey({uri}),
-        )
+        const cached = queryClient.getQueryData<FeedSourceInfo>(RQKEY(uri))
 
         if (cached) {
           reqs.push(cached)
@@ -252,7 +247,7 @@ export function usePinnedFeedsInfos(): {
               try {
                 return await queryClient.fetchQuery({
                   staleTime: STALE.SECONDS.FIFTEEN,
-                  queryKey: feedSourceInfoQueryKey({uri}),
+                  queryKey: RQKEY(uri),
                   queryFn: async () => {
                     const type = getFeedTypeFromUri(uri)
 

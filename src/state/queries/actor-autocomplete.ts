@@ -18,7 +18,8 @@ const DEFAULT_MOD_OPTS = getModerationOpts({
   preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
 })
 
-export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
+export const RQKEY = (prefix: string = '') =>
+  ['actor-autocomplete', prefix] as const
 
 export function useActorAutocompleteQuery(prefix: string) {
   const {data: follows, isFetching} = useMyFollowsQuery()
@@ -28,7 +29,7 @@ export function useActorAutocompleteQuery(prefix: string) {
 
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(prefix || ''),
+    queryKey: RQKEY(prefix),
     async queryFn() {
       const res = prefix
         ? await getAgent().searchActorsTypeahead({
@@ -66,7 +67,7 @@ export function useActorAutocompleteFn() {
         try {
           res = await queryClient.fetchQuery({
             staleTime: STALE.MINUTES.ONE,
-            queryKey: RQKEY(query || ''),
+            queryKey: RQKEY(query),
             queryFn: () =>
               getAgent().searchActorsTypeahead({
                 term: query,

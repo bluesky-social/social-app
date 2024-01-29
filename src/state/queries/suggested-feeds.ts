@@ -4,7 +4,7 @@ import {AppBskyFeedGetSuggestedFeeds} from '@atproto/api'
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
-export const suggestedFeedsQueryKey = ['suggestedFeeds']
+export const RQKEY = ['suggestedFeeds']
 
 export function useSuggestedFeedsQuery() {
   return useInfiniteQuery<
@@ -15,7 +15,7 @@ export function useSuggestedFeedsQuery() {
     string | undefined
   >({
     staleTime: STALE.HOURS.ONE,
-    queryKey: suggestedFeedsQueryKey,
+    queryKey: RQKEY,
     queryFn: async ({pageParam}) => {
       const res = await getAgent().app.bsky.feed.getSuggestedFeeds({
         limit: 10,

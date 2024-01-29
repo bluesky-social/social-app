@@ -18,11 +18,9 @@ import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
 
-const suggestedFollowsQueryKey = ['suggested-follows']
-const suggestedFollowsByActorQueryKey = (did: string) => [
-  'suggested-follows-by-actor',
-  did,
-]
+const suggestedFollowsQueryKey = ['suggested-follows'] as const
+const suggestedFollowsByActorQueryKey = (did: string) =>
+  ['suggested-follows-by-actor', did] as const
 
 export function useSuggestedFollowsQuery() {
   const {currentAccount} = useSession()
@@ -124,7 +122,7 @@ function* findAllProfilesInSuggestedFollowsQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyActorGetSuggestions.OutputSchema>
   >({
-    queryKey: ['suggested-follows'],
+    queryKey: suggestedFollowsQueryKey,
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
@@ -147,7 +145,7 @@ function* findAllProfilesInSuggestedFollowsByActorQueryData(
   const queryDatas =
     queryClient.getQueriesData<AppBskyGraphGetSuggestedFollowsByActor.OutputSchema>(
       {
-        queryKey: ['suggested-follows-by-actor'],
+        queryKey: suggestedFollowsByActorQueryKey(''),
       },
     )
   for (const [_queryKey, queryData] of queryDatas) {

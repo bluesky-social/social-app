@@ -5,7 +5,8 @@ import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 import {ThreadNode} from './post-thread'
 
-export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
+export const RQKEY = (didOrHandle: string = '') =>
+  ['resolved-did', didOrHandle] as const
 
 type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
 export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
@@ -24,7 +25,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 export function useResolveDidQuery(didOrHandle: string | undefined) {
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,
-    queryKey: RQKEY(didOrHandle || ''),
+    queryKey: RQKEY(didOrHandle),
     async queryFn() {
       if (!didOrHandle) {
         return ''

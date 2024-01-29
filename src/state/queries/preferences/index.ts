@@ -25,14 +25,14 @@ export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/const'
 
-export const preferencesQueryKey = ['getPreferences']
+export const RQKEY = ['getPreferences'] as const
 
 export function usePreferencesQuery() {
   return useQuery({
     staleTime: STALE.SECONDS.FIFTEEN,
     structuralSharing: true,
     refetchOnWindowFocus: true,
-    queryKey: preferencesQueryKey,
+    queryKey: RQKEY,
     queryFn: async () => {
       const agent = getAgent()
 
@@ -121,7 +121,7 @@ export function useClearPreferencesMutation() {
       await getAgent().app.bsky.actor.putPreferences({preferences: []})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -139,7 +139,7 @@ export function usePreferencesSetContentLabelMutation() {
       await getAgent().setContentLabelPref(labelGroup, visibility)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -153,7 +153,7 @@ export function usePreferencesSetAdultContentMutation() {
       await getAgent().setAdultContentEnabled(enabled)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -167,7 +167,7 @@ export function usePreferencesSetBirthDateMutation() {
       await getAgent().setPersonalDetails({birthDate})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -181,7 +181,7 @@ export function useSetFeedViewPreferencesMutation() {
       await getAgent().setFeedViewPrefs('home', prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -195,7 +195,7 @@ export function useSetThreadViewPreferencesMutation() {
       await getAgent().setThreadViewPrefs(prefs)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -213,7 +213,7 @@ export function useSetSaveFeedsMutation() {
       await getAgent().setSavedFeeds(saved, pinned)
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -228,7 +228,7 @@ export function useSaveFeedMutation() {
       track('CustomFeed:Save')
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -243,7 +243,7 @@ export function useRemoveFeedMutation() {
       track('CustomFeed:Unsave')
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -258,7 +258,7 @@ export function usePinFeedMutation() {
       track('CustomFeed:Pin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })
@@ -273,7 +273,7 @@ export function useUnpinFeedMutation() {
       track('CustomFeed:Unpin', {uri})
       // triggers a refetch
       await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
+        queryKey: RQKEY,
       })
     },
   })

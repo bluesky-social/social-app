@@ -8,7 +8,7 @@ import {
 
 import {getAgent} from '#/state/session'
 
-export const RQKEY = () => ['my-blocked-accounts']
+export const RQKEY = ['my-blocked-accounts'] as const
 type RQPageParam = string | undefined
 
 export function useMyBlockedAccountsQuery() {
@@ -19,7 +19,7 @@ export function useMyBlockedAccountsQuery() {
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(),
+    queryKey: RQKEY,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().app.bsky.graph.getBlocks({
         limit: 30,

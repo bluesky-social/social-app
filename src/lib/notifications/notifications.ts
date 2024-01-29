@@ -123,7 +123,7 @@ export function init(queryClient: QueryClient) {
         logger.DebugContext.notifications,
       )
       track('Notificatons:OpenApp')
-      truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
+      truncateAndInvalidate(queryClient, RQKEY_NOTIFS)
       resetToTab('NotificationsTab') // open notifications tab
     }
   })

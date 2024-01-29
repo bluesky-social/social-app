@@ -52,9 +52,8 @@ export interface FeedParams {
 
 type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
 
-export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
-  return ['post-feed', feedDesc, params || {}]
-}
+export const RQKEY = (feedDesc: FeedDescriptor, params?: FeedParams) =>
+  ['post-feed', feedDesc, params || {}] as const
 
 export interface FeedPostSliceItem {
   _reactKey: string

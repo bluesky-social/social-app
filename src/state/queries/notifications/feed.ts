@@ -39,9 +39,7 @@ const PAGE_SIZE = 30
 
 type RQPageParam = string | undefined
 
-export function RQKEY() {
-  return ['notification-feed']
-}
+export const RQKEY = ['notification-feed'] as const
 
 export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   const queryClient = useQueryClient()
@@ -59,7 +57,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
     RQPageParam
   >({
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(),
+    queryKey: RQKEY,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       let page
       if (!pageParam) {
@@ -153,7 +151,7 @@ export function* findAllPostsInQueryData(
   uri: string,
 ): Generator<AppBskyFeedDefs.PostView, void> {
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
-    queryKey: ['notification-feed'],
+    queryKey: RQKEY,
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

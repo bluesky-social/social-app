@@ -26,7 +26,7 @@ const SANITY_PAGE_LIMIT = 1000
 const PAGE_SIZE = 100
 // ...which comes 100,000k list members
 
-export const RQKEY = () => ['list-memberships']
+export const RQKEY = ['list-memberships'] as const
 
 export interface ListMembersip {
   membershipUri: string
@@ -41,7 +41,7 @@ export function useDangerousListMembershipsQuery() {
   const {currentAccount} = useSession()
   return useQuery<ListMembersip[]>({
     staleTime: STALE.MINUTES.FIVE,
-    queryKey: RQKEY(),
+    queryKey: RQKEY,
     async queryFn() {
       if (!currentAccount) {
         return []
@@ -116,7 +116,7 @@ export function useListMembershipAddMutation() {
     },
     onSuccess(data, variables) {
       // manually update the cache; a refetch is too expensive
-      let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY())
+      let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY)
       if (memberships) {
         memberships = memberships
           // avoid dups
@@ -133,7 +133,7 @@ export function useListMembershipAddMutation() {
               membershipUri: data.uri,
             },
           ])
-        queryClient.setQueryData(RQKEY(), memberships)
+        queryClient.setQueryData(RQKEY, memberships)
       }
       // invalidate the members queries (used for rendering the listings)
       // use a timeout to wait for the appview (see above)
@@ -170,7 +170,7 @@ export function useListMembershipRemoveMutation() {
     },
     onSuccess(data, variables) {
       // manually update the cache; a refetch is too expensive
-      let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY())
+      let memberships = queryClient.getQueryData<ListMembersip[]>(RQKEY)
       if (memberships) {
         memberships = memberships.filter(
           m =>
@@ -179,7 +179,7 @@ export function useListMembershipRemoveMutation() {
               m.listUri === variables.listUri
             ),
         )
-        queryClient.setQueryData(RQKEY(), memberships)
+        queryClient.setQueryData(RQKEY, memberships)
       }
       // invalidate the members queries (used for rendering the listings)
       // use a timeout to wait for the appview (see above)

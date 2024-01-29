@@ -23,7 +23,7 @@ import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
 
-export const RQKEY = (did: string) => ['profile', did]
+export const RQKEY = (did: string = '') => ['profile', did] as const
 
 export function useProfileQuery({did}: {did: string | undefined}) {
   const {currentAccount} = useSession()
@@ -36,7 +36,7 @@ export function useProfileQuery({did}: {did: string | undefined}) {
     // -prf
     staleTime: isCurrentAccount ? STALE.SECONDS.THIRTY : STALE.MINUTES.FIVE,
     refetchOnWindowFocus: true,
-    queryKey: RQKEY(did || ''),
+    queryKey: RQKEY(did),
     queryFn: async () => {
       const res = await getAgent().getProfile({actor: did || ''})
       return res.data
@@ -321,7 +321,7 @@ function useProfileMuteMutation() {
       }
     },
     onSuccess() {
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED})
     },
     onError(error, variables) {
       if (!variables.skipOptimistic) {
@@ -349,7 +349,7 @@ function useProfileUnmuteMutation() {
       }
     },
     onSuccess() {
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED()})
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_MUTED})
     },
     onError(error, variables) {
       if (!variables.skipOptimistic) {
@@ -449,7 +449,7 @@ function useProfileBlockMutation() {
           blockingUri: data.uri,
         })
       }
-      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED})
     },
     onError(error, variables) {
       if (!variables.skipOptimistic) {
@@ -516,7 +516,7 @@ export function* findAllProfilesInQueryData(
 ): Generator<AppBskyActorDefs.ProfileViewDetailed, void> {
   const queryDatas =
     queryClient.getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
-      queryKey: ['profile'],
+      queryKey: RQKEY(),
     })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {

@@ -12,7 +12,7 @@ import {STALE} from '#/state/queries'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-export const RQKEY = (uri: string) => ['list-members', uri]
+export const RQKEY = (uri?: string) => ['list-members', uri] as const
 
 export function useListMembersQuery(uri: string) {
   return useInfiniteQuery<
@@ -44,7 +44,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetList.OutputSchema>
   >({
-    queryKey: ['list-members'],
+    queryKey: RQKEY(),
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {

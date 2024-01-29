@@ -5,7 +5,7 @@ import {getAgent} from '#/state/session'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-export const RQKEY = (did: string) => ['profile-lists', did]
+export const RQKEY = (did: string) => ['profile-lists', did] as const
 
 export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const enabled = opts?.enabled !== false
