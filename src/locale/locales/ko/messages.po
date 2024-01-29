@@ -1429,7 +1429,7 @@ msgid "Follow All"
 msgstr "모두 팔로우"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-msgid "Follow selected accounts and continue to then next step"
+msgid "Follow selected accounts and continue to the next step"
 msgstr "선택한 계정을 팔로우하고 다음 단계를 계속 진행합니다"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
@@ -1552,7 +1552,7 @@ msgid "Help"
 msgstr "도움말"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-msgid "Here are some accounts for your to follow"
+msgid "Here are some accounts for you to follow"
 msgstr "팔로우할 만한 계정"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:77
@@ -1772,7 +1772,7 @@ msgid "Invite codes: 1 available"
 msgstr "초대 코드: 1개 사용 가능"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
-msgid "It show posts from the people your follow as they happen."
+msgid "It shows posts from the people you follow as they happen."
 msgstr "내가 팔로우하는 사람들의 게시물이 올라오는 대로 표시됩니다."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
@@ -2483,10 +2483,6 @@ msgstr "{numItems}개 중 {0}번째 옵션"
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
 msgstr "또는 다음 옵션을 결합하세요:"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-msgid "Or you can try our \"Discover\" algorithm:"
-msgstr "또는 \"Discover\" 알고리즘을 사용해 보세요:"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -3298,7 +3294,7 @@ msgstr "{0} 임베드 표시"
 msgid "Show follows similar to {0}"
 msgstr "{0} 님과 비슷한 팔로우 표시"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:575
+#: src/view/com/post-thread/PostThreadItem.tsx:569
 #: src/view/com/post/Post.tsx:196
 #: src/view/com/posts/FeedItem.tsx:362
 msgid "Show More"
@@ -3704,8 +3700,8 @@ msgid "There's something wrong with this number. Please choose your country and 
 msgstr "잘못된 번호입니다. 국가를 선택하고 전체 전화번호를 입력하세요."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-msgid "These are popular accounts you might like."
-msgstr "내가 좋아할 만한 인기 계정입니다."
+msgid "These are popular accounts you might like:"
+msgstr "내가 좋아할 만한 인기 계정입니다:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -3806,8 +3802,8 @@ msgstr "드롭다운 열기 및 닫기"
 msgid "Transformations"
 msgstr "변형"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:716
-#: src/view/com/post-thread/PostThreadItem.tsx:718
+#: src/view/com/post-thread/PostThreadItem.tsx:710
+#: src/view/com/post-thread/PostThreadItem.tsx:712
 #: src/view/com/util/forms/PostDropdownBtn.tsx:123
 msgid "Translate"
 msgstr "번역"
@@ -4174,6 +4170,10 @@ msgstr "대기 중입니다."
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "팔로우할 새로운 맞춤 피드를 찾을 수도 있습니다."
 
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
+msgid "You can also try our \"Discover\" algorithm:"
+msgstr "\"Discover\" 알고리즘을 사용해 볼 수도 있습니다:"
+
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
 msgstr "이 설정은 나중에 변경할 수 있습니다."
@@ -4323,13 +4323,13 @@ msgstr "앱 비밀번호를 사용하여 로그인하면 초대 코드가 숨겨
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
-msgstr "내 게시물을 게시했습니다"
+msgstr "게시물을 게시했습니다"
 
 #: src/screens/Onboarding/StepFinished.tsx:105
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "내 게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
+msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
 #: src/view/com/modals/SwitchAccount.tsx:84
 #: src/view/screens/Settings.tsx:125
