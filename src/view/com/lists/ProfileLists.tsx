@@ -182,7 +182,9 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           refreshing={isPTRing}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
-          contentContainerStyle={isNative && styles.container}
+          contentContainerStyle={
+            isNative && {paddingBottom: headerOffset + 100}
+          }
           indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
           removeClippedSubviews={true}
           // @ts-ignore our .web version only -prf
@@ -197,8 +199,5 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 18,
-  },
-  container: {
-    paddingBottom: 600,
   },
 })

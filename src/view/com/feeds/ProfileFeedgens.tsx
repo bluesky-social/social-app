@@ -180,7 +180,7 @@ export const ProfileFeedgens = React.forwardRef<
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        ListFooterComponent={<View style={styles.container} />}
+        contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf
@@ -194,8 +194,5 @@ export const ProfileFeedgens = React.forwardRef<
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 18,
-  },
-  container: {
-    height: 600,
   },
 })
