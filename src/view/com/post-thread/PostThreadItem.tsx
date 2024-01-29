@@ -250,13 +250,7 @@ let PostThreadItemLoaded = ({
 
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
-          style={[
-            styles.outer,
-            styles.outerHighlighted,
-            rootUri === post.uri && styles.outerHighlightedRoot,
-            pal.border,
-            pal.view,
-          ]}
+          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
           accessible={false}>
           <PostSandboxWarning />
           <View style={styles.layout}>
@@ -732,14 +726,9 @@ const useStyles = () => {
       paddingLeft: 8,
     },
     outerHighlighted: {
-      borderTopWidth: 0,
-      paddingTop: 4,
+      paddingTop: 16,
       paddingLeft: 8,
       paddingRight: 8,
-    },
-    outerHighlightedRoot: {
-      borderTopWidth: 1,
-      paddingTop: 16,
     },
     noTopBorder: {
       borderTopWidth: 0,

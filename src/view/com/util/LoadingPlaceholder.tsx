@@ -67,28 +67,36 @@ export function PostLoadingPlaceholder({
         <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
         <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 11}} />
         <View style={styles.postCtrls}>
-          <View style={[styles.postCtrl, {paddingLeft: 0}]}>
-            <CommentBottomArrow
-              style={[{color: theme.palette.default.icon, marginTop: 1}]}
-              strokeWidth={3}
-              size={15}
-            />
+          <View style={styles.postCtrl}>
+            <View style={[styles.postBtn, {paddingLeft: 0}]}>
+              <CommentBottomArrow
+                style={[{color: theme.palette.default.icon, marginTop: 1}]}
+                strokeWidth={3}
+                size={15}
+              />
+            </View>
           </View>
           <View style={styles.postCtrl}>
-            <RepostIcon
-              style={{color: theme.palette.default.icon}}
-              strokeWidth={3}
-              size={20}
-            />
+            <View style={styles.postBtn}>
+              <RepostIcon
+                style={{color: theme.palette.default.icon}}
+                strokeWidth={3}
+                size={20}
+              />
+            </View>
           </View>
           <View style={styles.postCtrl}>
-            <HeartIcon
-              style={{color: theme.palette.default.icon} as ViewStyle}
-              size={16}
-              strokeWidth={3}
-            />
+            <View style={styles.postBtn}>
+              <HeartIcon
+                style={{color: theme.palette.default.icon} as ViewStyle}
+                size={16}
+                strokeWidth={3}
+              />
+            </View>
           </View>
-          <View style={{width: 30, height: 30}} />
+          <View style={styles.postCtrl}>
+            <View style={styles.postBtn} />
+          </View>
         </View>
       </View>
     </View>
@@ -279,6 +287,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   postCtrl: {
+    flex: 1,
+  },
+  postBtn: {
     padding: 5,
     flex: 1,
     flexDirection: 'row',
