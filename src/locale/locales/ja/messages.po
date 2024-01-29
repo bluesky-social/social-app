@@ -370,7 +370,7 @@ msgstr "戻る"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr "あなたの興味がある「{interestsText}」に基づく"
+msgstr "あなたが興味のある「{interestsText}」に基づいています"
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
@@ -632,7 +632,7 @@ msgstr "サービスを選択"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "あなたのカスタムフィードを強化するアルゴリズムを選択します。"
+msgstr "カスタムフィードのアルゴリズムを選択できます。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
@@ -641,7 +641,7 @@ msgstr "カスタムフィードを使用してあなたの体験を強化する
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:102
 msgid "Choose your algorithmic feeds"
-msgstr "あなたのアルゴリズムのフィードを選択"
+msgstr "あなたのフィードのアルゴリズムを選択"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -1406,7 +1406,7 @@ msgstr "フィードはユーザーがプログラミングの専門知識を持
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:68
 msgid "Feeds can be topical as well!"
-msgstr "フィードは話題性もあります！"
+msgstr "話題性のフィードもあります！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
@@ -1440,7 +1440,7 @@ msgstr "ディスカッションスレッドを微調整します。"
 
 #: src/screens/Onboarding/StepFinished.tsx:131
 msgid "Flexible"
-msgstr "柔軟性"
+msgstr "柔軟です"
 
 #: src/view/com/modals/EditImage.tsx:115
 msgid "Flip horizontal"
@@ -1606,7 +1606,7 @@ msgstr "人気のあるフィードを紹介します。好きなだけフォロ
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:72
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "あなたが興味のある「{interestsText}」に基づくフィードを紹介します。好きなだけフォローすることができます。"
+msgstr "あなたが興味のある「{interestsText}」に基づいてフィードを紹介します。好きなだけフォローすることができます。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
@@ -2445,7 +2445,7 @@ msgstr "おっと！"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
-msgstr "開く"
+msgstr "開かれています"
 
 #: src/view/com/composer/Composer.tsx:470
 #: src/view/com/composer/Composer.tsx:471
@@ -2823,7 +2823,7 @@ msgstr "メールアドレスを確認してアカウントを保護します。
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
-msgstr "公開"
+msgstr "公開されています"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -3228,7 +3228,7 @@ msgstr "次のアカウントを選択してフォローしてください"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:49
 msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-msgstr "表示したい（表示したくない）コンテンツの種類を選択してください。あとは私たちがやります。"
+msgstr "表示したい（表示したくない）コンテンツの種類を選択してください。あとは私たちにお任せください。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:88
 msgid "Select topical feeds to follow from the list below"
@@ -3256,11 +3256,11 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:114
 msgid "Select your primary algorithmic feeds"
-msgstr "1番目のアルゴリズムのフィードを選択してください"
+msgstr "1番目のフィードのアルゴリズムを選択してください"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:130
 msgid "Select your secondary algorithmic feeds"
-msgstr "2番目のアルゴリズムのフィードを選択してください"
+msgstr "2番目のフィードのアルゴリズムを選択してください"
 
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
@@ -3752,7 +3752,7 @@ msgstr "サービス規約は移動しました"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
 msgid "There are many feeds to try:"
-msgstr "試せるフィードがたくさんあります："
+msgstr "他にもたくさんのフィードを試すことができます"
 
 #: src/view/screens/ProfileFeed.tsx:549
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -4219,7 +4219,7 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
 msgid "We recommend \"For You\" by Skygaze:"
-msgstr "Skygazeによる「For You」フィードをおすすめしています："
+msgstr "Skygazeによる「For You」フィードをおすすめしています"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:136
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
