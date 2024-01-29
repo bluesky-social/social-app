@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dimensions, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import {List, ListRef} from '../util/List'
 import {FeedSourceCardLoaded} from './FeedSourceCard'
@@ -180,9 +180,7 @@ export const ProfileFeedgens = React.forwardRef<
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
+        ListFooterComponent={<View style={styles.container} />}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf
@@ -196,5 +194,8 @@ export const ProfileFeedgens = React.forwardRef<
 const styles = StyleSheet.create({
   item: {
     paddingHorizontal: 18,
+  },
+  container: {
+    height: 600,
   },
 })
