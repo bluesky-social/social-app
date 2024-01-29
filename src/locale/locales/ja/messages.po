@@ -228,11 +228,11 @@ msgstr "成人向けコンテンツ"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:137
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "成人向けコンテンツを有効にするには、ウェブで<0/>にアクセスする必要があります。"
+msgstr "成人向けコンテンツは<0/>のウェブからのみ有効化できます。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "成人向けコンテンツを有効にするには、ウェブで<0>bsky.app</0>にアクセスする必要があります。"
+msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブからのみ有効化できます。"
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -641,7 +641,7 @@ msgstr "カスタムフィードを使用してあなたの体験を強化する
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:102
 msgid "Choose your algorithmic feeds"
-msgstr "あなたのフィードのアルゴリズムを選択"
+msgstr "フィードのアルゴリズムを選択"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -737,7 +737,7 @@ msgstr "返信を作成"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr "このカテゴリのコンテンツフィルタリングを設定する： {0}"
+msgstr "このカテゴリのコンテンツフィルタリングを設定： {0}"
 
 #: src/components/Prompt.tsx:114
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -1406,7 +1406,7 @@ msgstr "フィードはユーザーがプログラミングの専門知識を持
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:68
 msgid "Feeds can be topical as well!"
-msgstr "話題性のフィードもあります！"
+msgstr "フィードは話題にもなります！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
@@ -1467,7 +1467,7 @@ msgstr "{0}をフォロー"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:178
 msgid "Follow All"
-msgstr "アカウントをフォロー"
+msgstr "すべてのアカウントをフォロー"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 msgid "Follow selected accounts and continue to the next step"
@@ -1911,7 +1911,7 @@ msgstr "Blueskyから離れる"
 
 #: src/screens/Deactivated.tsx:129
 msgid "left to go."
-msgstr "あと少し。"
+msgstr "あと少しです。"
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
@@ -2580,7 +2580,7 @@ msgstr "または以下のオプションを組み合わせてください："
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
 #~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr "または「Discover」アルゴリズムを試すことができます"
+#~ msgstr "または我々の「Discover」アルゴリズムを試すことができます："
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -3236,7 +3236,7 @@ msgstr "次のアカウントを選択してフォローしてください"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:49
 msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-msgstr "表示したい（表示したくない）コンテンツの種類を選択してください。あとは私たちにお任せください。"
+msgstr "表示したい（または表示したくない）コンテンツの種類を選択してください。あとは私たちにお任せください。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:88
 msgid "Select topical feeds to follow from the list below"
@@ -3736,7 +3736,7 @@ msgstr "著作権ポリシーは<0/>に移動しました"
 
 #: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "次の手順であなたのBluesky体験をカスタマイズできます。"
+msgstr "次の手順であなたのBlueskyでの体験をカスタマイズできます。"
 
 #: src/view/com/post-thread/PostThread.tsx:458
 msgid "The post may have been deleted."
@@ -3760,7 +3760,7 @@ msgstr "サービス規約は移動しました"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
 msgid "There are many feeds to try:"
-msgstr "他にもたくさんのフィードを試すことができます"
+msgstr "試せるフィードはたくさんあります："
 
 #: src/view/screens/ProfileFeed.tsx:549
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -4231,7 +4231,7 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
 msgid "We recommend \"For You\" by Skygaze:"
-msgstr "Skygazeによる「For You」フィードをおすすめしています"
+msgstr "Skygazeによる「For You」フィードがおすすめ："
 
 #: src/screens/Onboarding/StepInterests/index.tsx:136
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -4337,7 +4337,7 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
 msgid "You can also try our \"Discover\" algorithm:"
-msgstr "「Discover」アルゴリズムを試すことができます"
+msgstr "我々の「Discover」アルゴリズムを試すことができます："
 
 #: src/view/com/auth/create/Step1.tsx:106
 #~ msgid "You can change hosting providers at any time."
