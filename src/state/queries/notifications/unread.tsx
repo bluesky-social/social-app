@@ -136,7 +136,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
             // only fetch subjects when the page is going to be used
             // in the notifications query, otherwise skip it
-            fetchAdditionalData: !!invalidate,
+            fetchAdditionalData: true,
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =

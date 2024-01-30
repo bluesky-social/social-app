@@ -223,27 +223,21 @@ function getSubjectUri(
 }
 
 export function isThreadMuted(item: FeedNotification, threadMutes: string[]) {
-  const {record} = item.notification
+  // If we have a subject we can just use that
+  if (item.subject) {
+    const r = item.subject.record as AppBskyFeedPost.Record
 
-  // We only need to check if it's a post
-  if (AppBskyFeedPost.isRecord(record)) {
-    // If the thread is muted
-    if (record.reply && threadMutes.includes(record.reply.root.uri)) {
+    if (
+      AppBskyEmbedRecord.isMain(r.embed) &&
+      threadMutes.includes(r.embed.record.uri)
+    ) {
       return true
-    }
-    // If it's a quote...
-    else if (
-      AppBskyEmbedRecord.isMain(record.embed) &&
-      threadMutes.includes(record.embed.record.uri)
+    } else if (
+      (r.reply && threadMutes.includes(r.reply.root.uri)) ||
+      (item.subject.uri && threadMutes.includes(item.subject.uri))
     ) {
       return true
     }
-  } else if (
-    AppBskyFeedRepost.isRecord(record) &&
-    threadMutes.includes(record.subject.uri)
-  ) {
-    // Same if it's a repost
-    return true
   }
 
   return false
