@@ -27,12 +27,12 @@ export function Component({did}: {did: string}) {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isFetching: isFetchingProfile,
+    isLoading,
   } = useProfileQuery({
     did: did,
   })
 
-  if (isFetchingProfile || !moderationOpts) {
+  if (isLoading || !moderationOpts) {
     return (
       <CenteredView style={[pal.view, s.flex1]}>
         <ProfileHeader
