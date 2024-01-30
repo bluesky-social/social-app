@@ -27,16 +27,19 @@ import {queryClient} from '#/lib/react-query'
 export const RQKEY = (did: string) => ['profile', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
-export function useProfileQuery({did}: {did: string | undefined}) {
-  const {currentAccount} = useSession()
-  const isCurrentAccount = did === currentAccount?.did
-
+export function useProfileQuery({
+  did,
+  dontInvalidate,
+}: {
+  did: string | undefined
+  dontInvalidate?: boolean
+}) {
   return useQuery({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
     // -prf
-    staleTime: isCurrentAccount ? STALE.SECONDS.THIRTY : STALE.MINUTES.FIVE,
+    staleTime: dontInvalidate ? STALE.INFINITY : STALE.SECONDS.FIFTEEN,
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
