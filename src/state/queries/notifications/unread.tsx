@@ -5,7 +5,11 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
 import {useQueryClient} from '@tanstack/react-query'
-import {AppBskyFeedPost} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  AppBskyFeedPost,
+  AppBskyFeedRepost,
+} from '@atproto/api'
 import BroadcastChannel from '#/lib/broadcast'
 import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences'
@@ -217,10 +221,27 @@ function countUnread(page: FeedPage, threadMutes: string[]) {
 
 function isMuted(item: FeedNotification, threadMutes: string[]) {
   const {record} = item.notification
-  // Check that the thread isn't muted (if applicable)
-  return !!(
-    AppBskyFeedPost.isRecord(record) &&
-    record.reply &&
-    threadMutes.includes(record.reply.root.uri)
-  )
+
+  // We only need to check if it's a post
+  if (AppBskyFeedPost.isRecord(record)) {
+    // If the thread is muted
+    if (record.reply && threadMutes.includes(record.reply.root.uri)) {
+      return true
+    }
+    // If it's a quote...
+    else if (
+      AppBskyEmbedRecord.isMain(record.embed) &&
+      threadMutes.includes(record.embed.record.uri)
+    ) {
+      return true
+    }
+  } else if (
+    AppBskyFeedRepost.isRecord(record) &&
+    threadMutes.includes(record.subject.uri)
+  ) {
+    // Same if it's a repost
+    return true
+  }
+
+  return false
 }
