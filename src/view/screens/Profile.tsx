@@ -21,12 +21,12 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {
+  FeedDescriptor,
   resetProfilePostsQueries,
-  useProfileQuery,
-} from '#/state/queries/profile'
+} from '#/state/queries/post-feed'
+import {useResolveDidQuery} from '#/state/queries/resolve-uri'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
