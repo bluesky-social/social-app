@@ -10,6 +10,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {capitalize} from '#/lib/strings/capitalize'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -18,14 +19,13 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
-import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
   const suggestedFeedUris = React.useMemo(() => {
@@ -38,10 +38,10 @@ export function StepTopicalFeeds() {
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.selectedInterests.map(
-      i => INTEREST_TO_DISPLAY_NAME[i],
+      i => interestsDisplayNames[i] || capitalize(i),
     )
     return i.join(', ')
-  }, [state.interestsStepResults.selectedInterests])
+  }, [state.interestsStepResults.selectedInterests, interestsDisplayNames])
 
   const saveFeeds = React.useCallback(async () => {
     setSaving(true)
