@@ -199,7 +199,6 @@ export function useUnreadNotificationsApi() {
 function countUnread(page: FeedPage) {
   let num = 0
   for (const item of page.items) {
-    // Filter out counts
     if (!item.notification.isRead) {
       num++
     }
