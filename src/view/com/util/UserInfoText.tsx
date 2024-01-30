@@ -29,7 +29,7 @@ export function UserInfoText({
   attr = attr || 'handle'
   failed = failed || 'user'
 
-  const {data: profile, isError} = useProfileQuery({did})
+  const {data: profile, isError} = useProfileQuery({did, dontInvalidate: true})
 
   let inner
   if (isError) {
