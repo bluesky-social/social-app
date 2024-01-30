@@ -23,6 +23,7 @@ import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {Trans} from '@lingui/macro'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {useMutedWords} from '#/state/muted-words'
 
 export interface TextInputRef {
   focus: () => void
@@ -57,12 +58,15 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   ref,
 ) {
   const autocomplete = useActorAutocompleteFn()
+  const mutedWords = useMutedWords()
+  console.log('Muted Words in TextInput:', mutedWords)
 
   const pal = usePalette('default')
   const modeClass = useColorSchemeStyle('ProseMirror-light', 'ProseMirror-dark')
 
   const [isDropping, setIsDropping] = React.useState(false)
 
+  console.log('Muted Words:', mutedWords)
   const extensions = React.useMemo(
     () => [
       Document,
@@ -71,7 +75,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
         HTMLAttributes: {
           class: 'mention',
         },
-        suggestion: createSuggestion({autocomplete}),
+        suggestion: createSuggestion({autocomplete, mutedWords}),
       }),
       Paragraph,
       Placeholder.configure({
@@ -81,7 +85,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
       History,
       Hardbreak,
     ],
-    [autocomplete, placeholder],
+    [autocomplete, mutedWords, placeholder],
   )
 
   React.useEffect(() => {

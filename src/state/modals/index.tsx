@@ -150,6 +150,10 @@ export interface ContentFilteringSettingsModal {
   name: 'content-filtering-settings'
 }
 
+export interface MutedWordsModal {
+  name: 'muted-words-settings'
+}
+
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -213,6 +217,7 @@ export type Modal =
   | ModerationDetailsModal
   | ReportModal
   | AppealLabelModal
+  | MutedWordsModal
 
   // Lists
   | CreateOrEditListModal

@@ -18,6 +18,7 @@ import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useGrapheme} from '../hooks/useGrapheme'
 import {Trans} from '@lingui/macro'
+import {containsMutedWordRecursive} from '#/state/muted-words'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -25,13 +26,29 @@ interface MentionListRef {
 
 export function createSuggestion({
   autocomplete,
+  mutedWords,
 }: {
   autocomplete: ActorAutocompleteFn
+  mutedWords: string[]
 }): Omit<SuggestionOptions, 'editor'> {
   return {
     async items({query}) {
-      const suggestions = await autocomplete({query})
-      return suggestions.slice(0, 8)
+      let suggestions = await autocomplete({query})
+      console.log('Autocomplete suggestions (before filter):', suggestions)
+
+      suggestions = suggestions.filter(suggestion => {
+        const handleMuted = suggestion.handle
+          ? containsMutedWordRecursive(suggestion.handle, mutedWords)
+          : false
+        const displayNameMuted = suggestion.displayName
+          ? containsMutedWordRecursive(suggestion.displayName, mutedWords)
+          : false
+
+        return !(handleMuted && displayNameMuted)
+      })
+
+      console.log('Autocomplete suggestions (after filter):', suggestions)
+      return suggestions
     },
 
     render: () => {

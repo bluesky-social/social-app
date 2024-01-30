@@ -28,6 +28,7 @@ import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
+import * as MutedWordsSettingsModal from './MutedWordsSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
@@ -138,6 +139,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <LinkWarningModal.Component {...modal} />
   } else if (modal.name === 'embed-consent') {
     element = <EmbedConsentModal.Component {...modal} />
+  } else if (modal.name === 'muted-words-settings') {
+    element = <MutedWordsSettingsModal.Component />
   } else {
     return null
   }

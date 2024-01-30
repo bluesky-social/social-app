@@ -53,6 +53,7 @@ import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {containsMutedWordRecursive, useMutedWords} from '#/state/muted-words'
 
 function Loader() {
   const pal = usePalette('default')
@@ -190,6 +191,7 @@ type SearchResultSlice =
 
 function SearchScreenPostResults({query}: {query: string}) {
   const {_} = useLingui()
+  const mutedWords = useMutedWords()
   const [isPTR, setIsPTR] = React.useState(false)
   const {
     isFetched,
@@ -213,8 +215,11 @@ function SearchScreenPostResults({query}: {query: string}) {
   }, [isFetching, error, hasNextPage, fetchNextPage])
 
   const posts = React.useMemo(() => {
-    return results?.pages.flatMap(page => page.posts) || []
-  }, [results])
+    const allPosts = results?.pages.flatMap(page => page.posts) || []
+    return allPosts.filter(
+      post => !containsMutedWordRecursive(post, mutedWords),
+    )
+  }, [results, mutedWords])
   const items = React.useMemo(() => {
     let temp: SearchResultSlice[] = []
 
@@ -284,12 +289,20 @@ function SearchScreenPostResults({query}: {query: string}) {
 function SearchScreenUserResults({query}: {query: string}) {
   const {_} = useLingui()
   const {data: results, isFetched} = useActorSearch(query)
+  const mutedWords = useMutedWords()
 
-  return isFetched && results ? (
+  const filteredResults = React.useMemo(() => {
+    if (!results) return undefined
+    return results.filter(
+      profile => !containsMutedWordRecursive(profile, mutedWords),
+    )
+  }, [results, mutedWords])
+
+  return isFetched && filteredResults ? (
     <>
-      {results.length ? (
+      {filteredResults.length ? (
         <List
-          data={results}
+          data={filteredResults}
           renderItem={({item}) => (
             <ProfileCardWithFollowBtn profile={item} noBg />
           )}
@@ -507,10 +520,11 @@ export function SearchScreen(
     setShowAutocompleteResults(false)
   }, [setQuery])
 
+  const mutedWords = useMutedWords()
+
   const onChangeText = React.useCallback(
     async (text: string) => {
       scrollToTopWeb()
-
       setQuery(text)
 
       if (text.length > 0) {
@@ -524,8 +538,27 @@ export function SearchScreen(
         searchDebounceTimeout.current = setTimeout(async () => {
           const results = await search({query: text, limit: 30})
 
-          if (results) {
-            setSearchResults(results)
+          const filteredResults = results.filter(result => {
+            const isMutedHandle = containsMutedWordRecursive(
+              result.handle,
+              mutedWords,
+            )
+            const isMutedBio = containsMutedWordRecursive(
+              result.bio,
+              mutedWords,
+            )
+            const isMutedDisplayName = containsMutedWordRecursive(
+              result.displayName,
+              mutedWords,
+            )
+            console.log(
+              `Result ${result.handle}: isMutedHandle=${isMutedHandle}, isMutedBio=${isMutedBio}, isMutedDisplayName=${isMutedDisplayName}`,
+            )
+            return !isMutedHandle && !isMutedBio && !isMutedDisplayName
+          })
+
+          if (filteredResults) {
+            setSearchResults(filteredResults)
             setIsFetching(false)
           }
         }, 300)
@@ -538,7 +571,7 @@ export function SearchScreen(
         setShowAutocompleteResults(false)
       }
     },
-    [setQuery, search, setSearchResults],
+    [setQuery, search, setSearchResults, mutedWords],
   )
 
   const updateSearchHistory = React.useCallback(

@@ -32,6 +32,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
+import {containsMutedWordRecursive, useMutedWords} from '#/state/muted-words'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -87,6 +88,7 @@ let Feed = ({
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
+  const mutedWords = useMutedWords()
 
   const opts = React.useMemo(
     () => ({enabled, ignoreFilterFor}),
@@ -206,6 +208,22 @@ let Feed = ({
     return arr
   }, [isFetched, isError, isEmpty, data])
 
+  const filteredFeedItems = React.useMemo(() => {
+    return feedItems.filter(item => {
+      const itemContainsMutedWords = containsMutedWordRecursive(
+        item,
+        mutedWords,
+      )
+
+      const embedContainsMutedWords = containsMutedWordRecursive(
+        item.embed,
+        mutedWords,
+      )
+
+      return !itemContainsMutedWords && !embedContainsMutedWords
+    })
+  }, [feedItems, mutedWords])
+
   // events
   // =
 
@@ -306,7 +324,7 @@ let Feed = ({
       <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
-        data={feedItems}
+        data={filteredFeedItems}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListFooterComponent={FeedFooter}

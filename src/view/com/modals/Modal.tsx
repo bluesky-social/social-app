@@ -30,6 +30,7 @@ import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
+import * as MutedWordsSettingsModal from './MutedWordsSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
@@ -154,6 +155,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'content-filtering-settings') {
     snapPoints = ContentFilteringSettingsModal.snapPoints
     element = <ContentFilteringSettingsModal.Component />
+  } else if (activeModal?.name === 'muted-words-settings') {
+    snapPoints = MutedWordsSettingsModal.snapPoints
+    element = <MutedWordsSettingsModal.Component />
   } else if (activeModal?.name === 'content-languages-settings') {
     snapPoints = ContentLanguagesSettingsModal.snapPoints
     element = <ContentLanguagesSettingsModal.Component />

@@ -5,13 +5,18 @@ import {migrate} from '#/state/persisted/legacy'
 import * as store from '#/state/persisted/store'
 import BroadcastChannel from '#/lib/broadcast'
 
+type MutedWordsKey = `mutedWords-${string}`
+type ExtendedSchema = Schema & Record<MutedWordsKey, string[]>
+
 export type {Schema, PersistedAccount} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
 const broadcast = new BroadcastChannel('BSKY_BROADCAST_CHANNEL')
 const UPDATE_EVENT = 'BSKY_UPDATE'
 
-let _state: Schema = defaults
+let _state: ExtendedSchema = {
+  ...defaults,
+}
 const _emitter = new EventEmitter()
 
 /**
@@ -41,13 +46,13 @@ export async function init() {
   }
 }
 
-export function get<K extends keyof Schema>(key: K): Schema[K] {
-  return _state[key]
+export function get<K extends keyof ExtendedSchema>(key: K): ExtendedSchema[K] {
+  return _state[key] as ExtendedSchema[K]
 }
 
-export async function write<K extends keyof Schema>(
+export async function write<K extends keyof ExtendedSchema>(
   key: K,
-  value: Schema[K],
+  value: ExtendedSchema[K],
 ): Promise<void> {
   try {
     _state[key] = value

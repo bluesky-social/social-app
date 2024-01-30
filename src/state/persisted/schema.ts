@@ -2,6 +2,7 @@ import {z} from 'zod'
 import {deviceLocales} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const
+const mutedWordsSchema = z.array(z.string()).optional()
 
 // only data needed for rendering account page
 const accountSchema = z.object({
@@ -12,6 +13,7 @@ const accountSchema = z.object({
   emailConfirmed: z.boolean().optional(),
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
+  mutedWords: mutedWordsSchema,
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 
@@ -46,6 +48,7 @@ export const schema = z.object({
     })
     .optional(),
   mutedThreads: z.array(z.string()), // should move to server
+  mutedWords: mutedWordsSchema, // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
@@ -78,6 +81,7 @@ export const defaults: Schema = {
   requireAltTextEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
+  mutedWords: [],
   invites: {
     copiedInvites: [],
   },

@@ -12,6 +12,7 @@ export const router = new Router({
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
+  ModerationMutedWords: '/moderation/muted-words',
   Profile: '/profile/:name',
   ProfileFollowers: '/profile/:name/followers',
   ProfileFollows: '/profile/:name/follows',

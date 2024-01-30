@@ -53,6 +53,10 @@ export function ModerationScreen({}: Props) {
     openModal({name: 'content-filtering-settings'})
   }, [track, openModal])
 
+  const onPressMutedWords = React.useCallback(() => {
+    openModal({name: 'muted-words-settings'})
+  }, [openModal])
+
   return (
     <CenteredView
       style={[
@@ -123,6 +127,23 @@ export function ModerationScreen({}: Props) {
             <Trans>Blocked accounts</Trans>
           </Text>
         </Link>
+        <TouchableOpacity
+          testID="mutedWordsBtn"
+          style={[styles.linkCard, pal.view]}
+          onPress={onPressMutedWords}
+          accessibilityRole="tab"
+          accessibilityHint="Muted words settings"
+          accessibilityLabel="">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="ban"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Muted words</Trans>
+          </Text>
+        </TouchableOpacity>
         <Text
           type="xl-bold"
           style={[

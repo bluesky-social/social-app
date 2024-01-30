@@ -15,6 +15,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {List, ListRef} from '../util/List'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {containsMutedWordRecursive, useMutedWords} from '#/state/muted-words'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -32,6 +33,7 @@ export function Feed({
   ListHeaderComponent?: () => JSX.Element
 }) {
   const [isPTRing, setIsPTRing] = React.useState(false)
+  const mutedWords = useMutedWords()
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -39,33 +41,12 @@ export function Feed({
   const {
     data,
     isFetching,
-    isFetched,
     isError,
     error,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
   } = useNotificationFeedQuery({enabled: !!moderationOpts})
-  const isEmpty = !isFetching && !data?.pages[0]?.items.length
-
-  const items = React.useMemo(() => {
-    let arr: any[] = []
-    if (isFetched) {
-      if (isEmpty) {
-        arr = arr.concat([EMPTY_FEED_ITEM])
-      } else if (data) {
-        for (const page of data?.pages) {
-          arr = arr.concat(page.items)
-        }
-      }
-      if (isError && !isEmpty) {
-        arr = arr.concat([LOAD_MORE_ERROR_ITEM])
-      }
-    } else {
-      arr.push(LOADING_ITEM)
-    }
-    return arr
-  }, [isFetched, isError, isEmpty, data])
 
   const onRefresh = React.useCallback(async () => {
     try {
@@ -137,6 +118,16 @@ export function Feed({
     [isFetchingNextPage],
   )
 
+  const filteredNotifications = React.useMemo(() => {
+    return (
+      data?.pages?.flatMap(page =>
+        page.items.filter(
+          item => !containsMutedWordRecursive(item, mutedWords),
+        ),
+      ) || []
+    )
+  }, [data, mutedWords])
+
   return (
     <View style={s.hContentRegion}>
       {error && (
@@ -150,7 +141,7 @@ export function Feed({
       <List
         testID="notifsFeed"
         ref={scrollElRef}
-        data={items}
+        data={filteredNotifications}
         keyExtractor={item => item._reactKey}
         renderItem={renderItem}
         ListHeaderComponent={ListHeaderComponent}

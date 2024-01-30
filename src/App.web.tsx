@@ -20,6 +20,7 @@ import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as DialogStateProvider} from 'state/dialogs'
 import {Provider as LightboxStateProvider} from 'state/lightbox'
 import {Provider as MutedThreadsProvider} from 'state/muted-threads'
+import {Provider as MutedWordsProvider} from 'state/muted-words'
 import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
@@ -91,21 +92,23 @@ function App() {
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
-            <MutedThreadsProvider>
-              <InvitesStateProvider>
-                <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
-                </ModalStateProvider>
-              </InvitesStateProvider>
-            </MutedThreadsProvider>
+            <MutedWordsProvider>
+              <MutedThreadsProvider>
+                <InvitesStateProvider>
+                  <ModalStateProvider>
+                    <DialogStateProvider>
+                      <LightboxStateProvider>
+                        <I18nProvider>
+                          <PortalProvider>
+                            <InnerApp />
+                          </PortalProvider>
+                        </I18nProvider>
+                      </LightboxStateProvider>
+                    </DialogStateProvider>
+                  </ModalStateProvider>
+                </InvitesStateProvider>
+              </MutedThreadsProvider>
+            </MutedWordsProvider>
           </PrefsStateProvider>
         </ShellStateProvider>
       </SessionProvider>
