@@ -1156,7 +1156,7 @@ msgstr "电子邮箱"
 #: src/view/com/auth/create/Step1.tsx:134
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:143
 msgid "Email address"
-msgstr "邮件地址"
+msgstr "邮箱地址"
 
 #: src/view/com/modals/ChangeEmail.tsx:56
 #: src/view/com/modals/ChangeEmail.tsx:88
