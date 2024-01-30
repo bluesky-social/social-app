@@ -206,8 +206,15 @@ function getSubjectUri(
   type: NotificationType,
   notif: AppBskyNotificationListNotifications.Notification,
 ): string | undefined {
-  if (type === 'reply' || type === 'quote' || type === 'mention') {
+  if (type === 'reply' || type === 'mention') {
     return notif.uri
+  } else if (type === 'quote') {
+    if (
+      AppBskyFeedPost.isRecord(notif.record) &&
+      AppBskyEmbedRecord.isMain(notif.record.embed)
+    ) {
+      return notif.record.embed.record.uri
+    }
   } else if (type === 'post-like' || type === 'repost') {
     if (
       AppBskyFeedRepost.isRecord(notif.record) ||
@@ -222,20 +229,36 @@ function getSubjectUri(
   }
 }
 
-export function isThreadMuted(item: FeedNotification, threadMutes: string[]) {
-  // If we have a subject we can just use that
-  if (item.subject) {
-    const r = item.subject.record as AppBskyFeedPost.Record
-
+export function isThreadMuted(notif: FeedNotification, threadMutes: string[]) {
+  // If there's a subject we want to use that. This will always work on the notifications tab
+  if (notif.subject) {
+    const record = notif.subject.record as AppBskyFeedPost.Record
+    // Check for a quote record
     if (
-      AppBskyEmbedRecord.isMain(r.embed) &&
-      threadMutes.includes(r.embed.record.uri)
+      (record.reply && threadMutes.includes(record.reply.root.uri)) ||
+      (notif.subject.uri && threadMutes.includes(notif.subject.uri))
     ) {
       return true
+    }
+  } else {
+    // Otherwise we just do the best that we can
+    const record = notif.notification.record
+    if (AppBskyFeedPost.isRecord(record)) {
+      if (record.reply && threadMutes.includes(record.reply.root.uri)) {
+        // We can always filter replies
+        return true
+      } else if (
+        AppBskyEmbedRecord.isMain(record.embed) &&
+        threadMutes.includes(record.embed.record.uri)
+      ) {
+        // We can also filter quotes if the quoted post is the root
+        return true
+      }
     } else if (
-      (r.reply && threadMutes.includes(r.reply.root.uri)) ||
-      (item.subject.uri && threadMutes.includes(item.subject.uri))
+      AppBskyFeedRepost.isRecord(record) &&
+      threadMutes.includes(record.subject.uri)
     ) {
+      // Finally we can filter reposts, again if the post is the root
       return true
     }
   }
