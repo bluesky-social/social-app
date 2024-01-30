@@ -39,7 +39,6 @@ export function Component({image}: Props) {
   const {closeModal} = useModalControls()
   const inputRef = React.useRef<RNTextInput>(null)
   const scrollViewRef = React.useRef<RNScrollView>(null)
-
   const keyboardShown = useIsKeyboardVisible()
 
   // Autofocus hack when we open the modal. We have to wait for the animation to complete first
@@ -52,7 +51,7 @@ export function Component({image}: Props) {
   // We'd rather be at the bottom here so that we can easily dismiss the modal instead of having to scroll
   // (especially on android, it acts weird)
   React.useEffect(() => {
-    if (keyboardShown) {
+    if (keyboardShown[0]) {
       scrollViewRef.current?.scrollToEnd()
     }
   }, [keyboardShown])
