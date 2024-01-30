@@ -47,6 +47,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   asAnchor?: boolean
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
+  onPointerEnter?: () => void
 }
 
 export const Link = memo(function Link({
@@ -264,6 +265,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   accessibilityHint?: string
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
+  onPointerEnter?: () => void
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   testID,
@@ -305,6 +307,8 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
     </Text>
   )
 })
+
+const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/']
 
 // NOTE
 // we can't use the onPress given by useLinkProps because it will
@@ -350,7 +354,12 @@ function onPressInner(
 
   if (shouldHandle) {
     href = convertBskyAppUrlIfNeeded(href)
-    if (newTab || href.startsWith('http') || href.startsWith('mailto')) {
+    if (
+      newTab ||
+      href.startsWith('http') ||
+      href.startsWith('mailto') ||
+      EXEMPT_PATHS.some(path => href.startsWith(path))
+    ) {
       openLink(href)
     } else {
       closeModal() // close any active modals

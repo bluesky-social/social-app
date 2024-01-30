@@ -1,4 +1,8 @@
 import React from 'react'
+import {StyleSheet, View} from 'react-native'
+import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+
+import {Trans} from '@lingui/macro'
 
 import {EventEmitter} from 'eventemitter3'
 import isEqual from 'lodash.isequal'
@@ -15,7 +19,11 @@ import {
 } from './web/Autocomplete'
 
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {usePalette} from 'lib/hooks/usePalette'
 import {blobToDataUri, isUriImage} from 'lib/media/util'
+
+import {Portal} from '#/components/Portal'
+import {Text} from '../../util/text/Text'
 
 interface TextInputRef {
   focus: () => void
@@ -58,9 +66,12 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     const autocompleteRef = React.useRef<AutocompleteRef>(null)
 
     const modeClass = useColorSchemeStyle('rt-editor-light', 'rt-editor-dark')
+    const pal = usePalette('default')
 
     const [cursor, setCursor] = React.useState<number>()
     const [suggestion, setSuggestion] = React.useState<MatchedSuggestion>()
+
+    const [isDropping, setIsDropping] = React.useState(false)
 
     React.useImperativeHandle(
       ref,
@@ -87,6 +98,46 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       }),
       [inputRef, overlayRef],
     )
+
+    React.useEffect(() => {
+      const handleDrop = (event: DragEvent) => {
+        const transfer = event.dataTransfer
+        if (transfer) {
+          const items = transfer.items
+
+          getImageFromUri(items, (uri: string) => {
+            textInputWebEmitter.emit('photo-pasted', uri)
+          })
+        }
+
+        event.preventDefault()
+        setIsDropping(false)
+      }
+      const handleDragEnter = (event: DragEvent) => {
+        const transfer = event.dataTransfer
+
+        event.preventDefault()
+        if (transfer && transfer.types.includes('Files')) {
+          setIsDropping(true)
+        }
+      }
+      const handleDragLeave = (event: DragEvent) => {
+        event.preventDefault()
+        setIsDropping(false)
+      }
+
+      document.body.addEventListener('drop', handleDrop)
+      document.body.addEventListener('dragenter', handleDragEnter)
+      document.body.addEventListener('dragover', handleDragEnter)
+      document.body.addEventListener('dragleave', handleDragLeave)
+
+      return () => {
+        document.body.removeEventListener('drop', handleDrop)
+        document.body.removeEventListener('dragenter', handleDragEnter)
+        document.body.removeEventListener('dragover', handleDragEnter)
+        document.body.removeEventListener('dragleave', handleDragLeave)
+      }
+    }, [setIsDropping])
 
     React.useEffect(() => {
       if (cursor == null) {
@@ -320,10 +371,57 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
           match={suggestion}
           onSelect={acceptSuggestion}
         />
+
+        {isDropping && (
+          <Portal>
+            <Animated.View
+              style={styles.dropContainer}
+              entering={FadeIn.duration(80)}
+              exiting={FadeOut.duration(80)}>
+              <View style={[pal.view, pal.border, styles.dropModal]}>
+                <Text
+                  type="lg"
+                  style={[pal.text, pal.borderDark, styles.dropText]}>
+                  <Trans>Drop to add images</Trans>
+                </Text>
+              </View>
+            </Animated.View>
+          </Portal>
+        )}
       </div>
     )
   },
 )
+
+const styles = StyleSheet.create({
+  dropContainer: {
+    backgroundColor: '#0007',
+    pointerEvents: 'none',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // @ts-ignore web only -prf
+    position: 'fixed',
+    padding: 16,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  dropModal: {
+    // @ts-ignore web only
+    boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 16,
+  },
+  dropText: {
+    paddingVertical: 44,
+    paddingHorizontal: 36,
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    borderWidth: 2,
+  },
+})
 
 const findNodePosition = (
   node: Node,
@@ -362,4 +460,34 @@ const escape = (str: string, attr: boolean) => {
   }
 
   return escaped + str.substring(last)
+}
+
+function getImageFromUri(
+  items: DataTransferItemList,
+  callback: (uri: string) => void,
+) {
+  for (let index = 0; index < items.length; index++) {
+    const item = items[index]
+    const type = item.type
+
+    if (type === 'text/plain') {
+      console.log('hit')
+      item.getAsString(async itemString => {
+        if (isUriImage(itemString)) {
+          const response = await fetch(itemString)
+          const blob = await response.blob()
+
+          if (blob.type.startsWith('image/')) {
+            blobToDataUri(blob).then(callback, err => console.error(err))
+          }
+        }
+      })
+    } else if (type.startsWith('image/')) {
+      const file = item.getAsFile()
+
+      if (file) {
+        blobToDataUri(file).then(callback, err => console.error(err))
+      }
+    }
+  }
 }

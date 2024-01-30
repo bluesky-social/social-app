@@ -18,6 +18,7 @@ import {POST_IMG_MAX} from 'lib/constants'
 import {logger} from '#/logger'
 import {getAgent} from '#/state/session'
 import {useGetPost} from '#/state/queries/post'
+import {useFetchDid} from '#/state/queries/handle'
 
 export function useExternalLinkFetch({
   setQuote,
@@ -28,6 +29,7 @@ export function useExternalLinkFetch({
     undefined,
   )
   const getPost = useGetPost()
+  const fetchDid = useFetchDid()
 
   useEffect(() => {
     let aborted = false
@@ -49,13 +51,13 @@ export function useExternalLinkFetch({
           },
           err => {
             logger.error('Failed to fetch post for quote embedding', {
-              error: err.toString(),
+              message: err.toString(),
             })
             setExtLink(undefined)
           },
         )
       } else if (isBskyCustomFeedUrl(extLink.uri)) {
-        getFeedAsEmbed(getAgent(), extLink.uri).then(
+        getFeedAsEmbed(getAgent(), fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -68,12 +70,12 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            logger.error('Failed to fetch feed for embedding', {error: err})
+            logger.error('Failed to fetch feed for embedding', {message: err})
             setExtLink(undefined)
           },
         )
       } else if (isBskyListUrl(extLink.uri)) {
-        getListAsEmbed(getAgent(), extLink.uri).then(
+        getListAsEmbed(getAgent(), fetchDid, extLink.uri).then(
           ({embed, meta}) => {
             if (aborted) {
               return
@@ -86,7 +88,7 @@ export function useExternalLinkFetch({
             })
           },
           err => {
-            logger.error('Failed to fetch list for embedding', {error: err})
+            logger.error('Failed to fetch list for embedding', {message: err})
             setExtLink(undefined)
           },
         )
@@ -133,7 +135,7 @@ export function useExternalLinkFetch({
       })
     }
     return cleanup
-  }, [extLink, setQuote, getPost])
+  }, [extLink, setQuote, getPost, fetchDid])
 
   return {extLink, setExtLink}
 }

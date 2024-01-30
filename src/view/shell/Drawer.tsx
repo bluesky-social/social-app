@@ -53,6 +53,8 @@ import {useInviteCodesQuery} from '#/state/queries/invites'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {TextLink} from '../com/util/Link'
 
+import {useTheme as useAlfTheme} from '#/alf'
+
 let DrawerProfileCard = ({
   account,
   onPressProfile,
@@ -106,6 +108,7 @@ export {DrawerProfileCard}
 
 let DrawerContent = ({}: {}): React.ReactNode => {
   const theme = useTheme()
+  const t = useAlfTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
@@ -208,7 +211,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
       testID="drawer"
       style={[
         styles.view,
-        theme.colorScheme === 'light' ? pal.view : styles.viewDarkMode,
+        theme.colorScheme === 'light' ? pal.view : t.atoms.bg_contrast_25,
       ]}>
       <SafeAreaView style={s.flex1}>
         <ScrollView style={styles.main}>

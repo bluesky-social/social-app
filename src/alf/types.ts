@@ -1,3 +1,5 @@
+import {StyleProp, ViewStyle, TextStyle} from 'react-native'
+
 type LiteralToCommon<T extends PropertyKey> = T extends number
   ? number
   : T extends string
@@ -13,4 +15,12 @@ export type Mutable<T> = {
   -readonly [K in keyof T]: T[K] extends PropertyKey
     ? LiteralToCommon<T[K]>
     : Mutable<T[K]>
+}
+
+export type TextStyleProp = {
+  style?: StyleProp<TextStyle>
+}
+
+export type ViewStyleProp = {
+  style?: StyleProp<ViewStyle>
 }

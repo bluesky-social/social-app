@@ -17,6 +17,7 @@ export interface PagerRef {
 export interface RenderTabBarFnProps {
   selectedPage: number
   onSelect?: (index: number) => void
+  tabBarAnchor?: JSX.Element | null | undefined // Ignored on native.
 }
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
 

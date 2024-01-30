@@ -5,6 +5,7 @@ import {LikelyType, LinkMeta} from './link-meta'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
 import {ComposerOptsQuote} from 'state/shell/composer'
 import {useGetPost} from '#/state/queries/post'
+import {useFetchDid} from '#/state/queries/handle'
 
 // TODO
 // import {Home} from 'view/screens/Home'
@@ -120,11 +121,13 @@ export async function getPostAsQuote(
 
 export async function getFeedAsEmbed(
   agent: BskyAgent,
+  fetchDid: ReturnType<typeof useFetchDid>,
   url: string,
 ): Promise<apilib.ExternalEmbedDraft> {
   url = convertBskyAppUrlIfNeeded(url)
-  const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-  const feed = makeRecordUri(user, 'app.bsky.feed.generator', rkey)
+  const [_0, handleOrDid, _1, rkey] = url.split('/').filter(Boolean)
+  const did = await fetchDid(handleOrDid)
+  const feed = makeRecordUri(did, 'app.bsky.feed.generator', rkey)
   const res = await agent.app.bsky.feed.getFeedGenerator({feed})
   return {
     isLoading: false,
@@ -146,11 +149,13 @@ export async function getFeedAsEmbed(
 
 export async function getListAsEmbed(
   agent: BskyAgent,
+  fetchDid: ReturnType<typeof useFetchDid>,
   url: string,
 ): Promise<apilib.ExternalEmbedDraft> {
   url = convertBskyAppUrlIfNeeded(url)
-  const [_0, user, _1, rkey] = url.split('/').filter(Boolean)
-  const list = makeRecordUri(user, 'app.bsky.graph.list', rkey)
+  const [_0, handleOrDid, _1, rkey] = url.split('/').filter(Boolean)
+  const did = await fetchDid(handleOrDid)
+  const list = makeRecordUri(did, 'app.bsky.graph.list', rkey)
   const res = await agent.app.bsky.graph.getList({list})
   return {
     isLoading: false,

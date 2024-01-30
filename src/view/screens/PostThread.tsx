@@ -5,7 +5,6 @@ import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
-import {ViewHeader} from '../com/util/ViewHeader'
 import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
 import {s} from 'lib/styles'
@@ -18,18 +17,16 @@ import {clamp} from 'lodash'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {CenteredView} from '../com/util/Views'
 import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
+import {isWeb} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {
   const queryClient = useQueryClient()
-  const {_} = useLingui()
   const {hasSession} = useSession()
   const {fabMinimalShellTransform} = useMinimalShellMode()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -78,9 +75,6 @@ export function PostThreadScreen({route}: Props) {
 
   return (
     <View style={s.hContentRegion}>
-      {isMobile && (
-        <ViewHeader title={_(msg({message: 'Post', context: 'description'}))} />
-      )}
       <View style={s.flex1}>
         {uriError ? (
           <CenteredView>
@@ -112,7 +106,8 @@ export function PostThreadScreen({route}: Props) {
 
 const styles = StyleSheet.create({
   prompt: {
-    position: 'absolute',
+    // @ts-ignore web-only
+    position: isWeb ? 'fixed' : 'absolute',
     left: 0,
     right: 0,
   },

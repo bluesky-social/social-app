@@ -6,6 +6,7 @@ import {List} from '../util/List'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {logger} from '#/logger'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {usePostLikedByQuery} from '#/state/queries/post-liked-by'
 import {cleanError} from '#/lib/strings/errors'
@@ -39,7 +40,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh likes', {error: err})
+      logger.error('Failed to refresh likes', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -49,7 +50,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more likes', {error: err})
+      logger.error('Failed to load more likes', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
@@ -60,11 +61,7 @@ export function PostLikedBy({uri}: {uri: string}) {
   }, [])
 
   if (isFetchingResolvedUri || !isFetched) {
-    return (
-      <CenteredView>
-        <ActivityIndicator />
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
 
   // error

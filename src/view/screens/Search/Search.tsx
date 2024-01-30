@@ -42,11 +42,17 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {MagnifyingGlassIcon} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {SearchResultCard} from '#/view/shell/desktop/Search'
+import {
+  MATCH_HANDLE,
+  SearchLinkCard,
+  SearchProfileCard,
+} from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
-import {isWeb} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {augmentSearchQuery} from '#/lib/strings/helpers'
 
 function Loader() {
   const pal = usePalette('default')
@@ -83,9 +89,7 @@ function EmptyState({message, error}: {message: string; error?: string}) {
         },
       ]}>
       <View style={[pal.viewLight, {padding: 18, borderRadius: 8}]}>
-        <Text style={[pal.text]}>
-          <Trans>{message}</Trans>
-        </Text>
+        <Text style={[pal.text]}>{message}</Text>
 
         {error && (
           <>
@@ -149,7 +153,7 @@ function SearchScreenSuggestedFollows() {
       getSuggestions()
     } catch (e) {
       logger.error(`SearchScreenSuggestedFollows: failed to get suggestions`, {
-        error: e,
+        message: e,
       })
     }
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
@@ -315,8 +319,12 @@ export function SearchScreenInner({
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const {isDesktop} = useWebMediaQueries()
+
+  const augmentedQuery = React.useMemo(() => {
+    return augmentSearchQuery(query || '', {did: currentAccount?.did})
+  }, [query, currentAccount])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -332,13 +340,15 @@ export function SearchScreenInner({
         tabBarPosition="top"
         onPageSelected={onPageSelected}
         renderTabBar={props => (
-          <CenteredView sideBorders style={pal.border}>
+          <CenteredView
+            sideBorders
+            style={[pal.border, pal.view, styles.tabBarContainer]}>
             <TabBar items={SECTIONS_LOGGEDIN} {...props} />
           </CenteredView>
         )}
         initialPage={0}>
         <View>
-          <SearchScreenPostResults query={query} />
+          <SearchScreenPostResults query={augmentedQuery} />
         </View>
         <View>
           <SearchScreenUserResults query={query} />
@@ -373,7 +383,9 @@ export function SearchScreenInner({
       tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
-        <CenteredView sideBorders style={pal.border}>
+        <CenteredView
+          sideBorders
+          style={[pal.border, pal.view, styles.tabBarContainer]}>
           <TabBar items={SECTIONS_LOGGEDOUT} {...props} />
         </CenteredView>
       )}
@@ -458,32 +470,56 @@ export function SearchScreen(
   const [inputIsFocused, setInputIsFocused] = React.useState(false)
   const [showAutocompleteResults, setShowAutocompleteResults] =
     React.useState(false)
+  const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+
+  React.useEffect(() => {
+    const loadSearchHistory = async () => {
+      try {
+        const history = await AsyncStorage.getItem('searchHistory')
+        if (history !== null) {
+          setSearchHistory(JSON.parse(history))
+        }
+      } catch (e: any) {
+        logger.error('Failed to load search history', {message: e})
+      }
+    }
+
+    loadSearchHistory()
+  }, [])
 
   const onPressMenu = React.useCallback(() => {
     track('ViewHeader:MenuButtonClicked')
     setDrawerOpen(true)
   }, [track, setDrawerOpen])
+
   const onPressCancelSearch = React.useCallback(() => {
+    scrollToTopWeb()
     textInput.current?.blur()
     setQuery('')
     setShowAutocompleteResults(false)
     if (searchDebounceTimeout.current)
       clearTimeout(searchDebounceTimeout.current)
   }, [textInput])
+
   const onPressClearQuery = React.useCallback(() => {
+    scrollToTopWeb()
     setQuery('')
     setShowAutocompleteResults(false)
   }, [setQuery])
+
   const onChangeText = React.useCallback(
     async (text: string) => {
+      scrollToTopWeb()
+
       setQuery(text)
 
       if (text.length > 0) {
         setIsFetching(true)
         setShowAutocompleteResults(true)
 
-        if (searchDebounceTimeout.current)
+        if (searchDebounceTimeout.current) {
           clearTimeout(searchDebounceTimeout.current)
+        }
 
         searchDebounceTimeout.current = setTimeout(async () => {
           const results = await search({query: text, limit: 30})
@@ -494,8 +530,9 @@ export function SearchScreen(
           }
         }, 300)
       } else {
-        if (searchDebounceTimeout.current)
+        if (searchDebounceTimeout.current) {
           clearTimeout(searchDebounceTimeout.current)
+        }
         setSearchResults([])
         setIsFetching(false)
         setShowAutocompleteResults(false)
@@ -503,13 +540,46 @@ export function SearchScreen(
     },
     [setQuery, search, setSearchResults],
   )
+
+  const updateSearchHistory = React.useCallback(
+    async (newQuery: string) => {
+      newQuery = newQuery.trim()
+      if (newQuery && !searchHistory.includes(newQuery)) {
+        let newHistory = [newQuery, ...searchHistory]
+
+        if (newHistory.length > 5) {
+          newHistory = newHistory.slice(0, 5)
+        }
+
+        setSearchHistory(newHistory)
+        try {
+          await AsyncStorage.setItem(
+            'searchHistory',
+            JSON.stringify(newHistory),
+          )
+        } catch (e: any) {
+          logger.error('Failed to save search history', {message: e})
+        }
+      }
+    },
+    [searchHistory, setSearchHistory],
+  )
+
   const onSubmit = React.useCallback(() => {
+    scrollToTopWeb()
     setShowAutocompleteResults(false)
-  }, [setShowAutocompleteResults])
+    updateSearchHistory(query)
+  }, [query, setShowAutocompleteResults, updateSearchHistory])
 
   const onSoftReset = React.useCallback(() => {
+    scrollToTopWeb()
     onPressCancelSearch()
   }, [onPressCancelSearch])
+
+  const queryMaybeHandle = React.useMemo(() => {
+    const match = MATCH_HANDLE.exec(query)
+    return match && match[1]
+  }, [query])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -518,12 +588,28 @@ export function SearchScreen(
     }, [onSoftReset, setMinimalShellMode]),
   )
 
+  const handleHistoryItemClick = (item: React.SetStateAction<string>) => {
+    setQuery(item)
+    onSubmit()
+  }
+
+  const handleRemoveHistoryItem = (itemToRemove: string) => {
+    const updatedHistory = searchHistory.filter(item => item !== itemToRemove)
+    setSearchHistory(updatedHistory)
+    AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
+      e => {
+        logger.error('Failed to update search history', {message: e})
+      },
+    )
+  }
+
   return (
-    <View style={{flex: 1}}>
+    <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
         style={[
           styles.header,
           pal.border,
+          pal.view,
           isTabletOrDesktop && {paddingTop: 10},
         ]}
         sideBorders={isTabletOrDesktop}>
@@ -564,7 +650,12 @@ export function SearchScreen(
             style={[pal.text, styles.headerSearchInput]}
             keyboardAppearance={theme.colorScheme}
             onFocus={() => setInputIsFocused(true)}
-            onBlur={() => setInputIsFocused(false)}
+            onBlur={() => {
+              // HACK
+              // give 100ms to not stop click handlers in the search history
+              // -prf
+              setTimeout(() => setInputIsFocused(false), 100)
+            }}
             onChangeText={onChangeText}
             onSubmitEditing={onSubmit}
             autoFocus={false}
@@ -606,9 +697,9 @@ export function SearchScreen(
         ) : undefined}
       </CenteredView>
 
-      {showAutocompleteResults && moderationOpts ? (
+      {showAutocompleteResults ? (
         <>
-          {isFetching ? (
+          {isFetching || !moderationOpts ? (
             <Loader />
           ) : (
             <ScrollView
@@ -617,23 +708,72 @@ export function SearchScreen(
               dataSet={{stableGutters: '1'}}
               keyboardShouldPersistTaps="handled"
               keyboardDismissMode="on-drag">
-              {searchResults.length ? (
-                searchResults.map((item, i) => (
-                  <SearchResultCard
-                    key={item.did}
-                    profile={item}
-                    moderation={moderateProfile(item, moderationOpts)}
-                    style={i === 0 ? {borderTopWidth: 0} : {}}
-                  />
-                ))
-              ) : (
-                <EmptyState message={_(msg`No results found for ${query}`)} />
-              )}
+              <SearchLinkCard
+                label={_(msg`Search for "${query}"`)}
+                onPress={isNative ? onSubmit : undefined}
+                to={
+                  isNative
+                    ? undefined
+                    : `/search?q=${encodeURIComponent(query)}`
+                }
+                style={{borderBottomWidth: 1}}
+              />
+
+              {queryMaybeHandle ? (
+                <SearchLinkCard
+                  label={_(msg`Go to @${queryMaybeHandle}`)}
+                  to={`/profile/${queryMaybeHandle}`}
+                />
+              ) : null}
+
+              {searchResults.map(item => (
+                <SearchProfileCard
+                  key={item.did}
+                  profile={item}
+                  moderation={moderateProfile(item, moderationOpts)}
+                />
+              ))}
 
               <View style={{height: 200}} />
             </ScrollView>
           )}
         </>
+      ) : !query && inputIsFocused ? (
+        <CenteredView
+          sideBorders={isTabletOrDesktop}
+          // @ts-ignore web only -prf
+          style={{
+            height: isWeb ? '100vh' : undefined,
+          }}>
+          <View style={styles.searchHistoryContainer}>
+            {searchHistory.length > 0 && (
+              <View style={styles.searchHistoryContent}>
+                <Text style={[pal.text, styles.searchHistoryTitle]}>
+                  Recent Searches
+                </Text>
+                {searchHistory.map((historyItem, index) => (
+                  <View key={index} style={styles.historyItemContainer}>
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={() => handleHistoryItemClick(historyItem)}
+                      style={styles.historyItem}>
+                      <Text style={pal.text}>{historyItem}</Text>
+                    </Pressable>
+                    <Pressable
+                      accessibilityRole="button"
+                      onPress={() => handleRemoveHistoryItem(historyItem)}>
+                      <FontAwesomeIcon
+                        icon="xmark"
+                        size={16}
+                        style={pal.textLight as FontAwesomeIconStyle}
+                      />
+                    </Pressable>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        </CenteredView>
       ) : (
         <SearchScreenInner query={query} />
       )}
@@ -641,12 +781,25 @@ export function SearchScreen(
   )
 }
 
+function scrollToTopWeb() {
+  if (isWeb) {
+    window.scrollTo(0, 0)
+  }
+}
+
+const HEADER_HEIGHT = 50
+
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 4,
+    height: HEADER_HEIGHT,
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: 0,
+    zIndex: 1,
   },
   headerMenuBtn: {
     width: 30,
@@ -675,5 +828,31 @@ const styles = StyleSheet.create({
   },
   headerCancelBtn: {
     paddingLeft: 10,
+  },
+  tabBarContainer: {
+    // @ts-ignore web only
+    position: isWeb ? 'sticky' : '',
+    top: isWeb ? HEADER_HEIGHT : 0,
+    zIndex: 1,
+  },
+  searchHistoryContainer: {
+    width: '100%',
+    paddingHorizontal: 12,
+  },
+  searchHistoryContent: {
+    padding: 10,
+    borderRadius: 8,
+  },
+  searchHistoryTitle: {
+    fontWeight: 'bold',
+  },
+  historyItem: {
+    paddingVertical: 8,
+  },
+  historyItemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
   },
 })

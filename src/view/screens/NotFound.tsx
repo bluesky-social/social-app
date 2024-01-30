@@ -39,7 +39,7 @@ export const NotFoundScreen = () => {
 
   return (
     <View testID="notFoundView" style={pal.view}>
-      <ViewHeader title={_(msg`Page not found`)} />
+      <ViewHeader title={_(msg`Page Not Found`)} />
       <View style={styles.container}>
         <Text type="title-2xl" style={[pal.text, s.mb10]}>
           <Trans>Page not found</Trans>

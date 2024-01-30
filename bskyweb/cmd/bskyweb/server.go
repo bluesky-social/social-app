@@ -336,13 +336,29 @@ func (srv *Server) WebPost(c echo.Context) error {
 	postView := tpv.Thread.FeedDefs_ThreadViewPost.Post
 	data["postView"] = postView
 	data["requestURI"] = fmt.Sprintf("https://%s%s", req.Host, req.URL.Path)
-	if postView.Embed != nil && postView.Embed.EmbedImages_View != nil {
-		var thumbUrls []string
-		for i := range postView.Embed.EmbedImages_View.Images {
-			thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
+	if postView.Embed != nil {
+		if postView.Embed.EmbedImages_View != nil {
+			var thumbUrls []string
+			for i := range postView.Embed.EmbedImages_View.Images {
+				thumbUrls = append(thumbUrls, postView.Embed.EmbedImages_View.Images[i].Thumb)
+			}
+			data["imgThumbUrls"] = thumbUrls
+		} else if postView.Embed.EmbedRecordWithMedia_View != nil && postView.Embed.EmbedRecordWithMedia_View.Media != nil && postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View != nil {
+			var thumbUrls []string
+			for i := range postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images {
+				thumbUrls = append(thumbUrls, postView.Embed.EmbedRecordWithMedia_View.Media.EmbedImages_View.Images[i].Thumb)
+			}
+			data["imgThumbUrls"] = thumbUrls
 		}
-		data["imgThumbUrls"] = thumbUrls
 	}
+
+	if postView.Record != nil {
+		postRecord, ok := postView.Record.Val.(*appbsky.FeedPost)
+		if ok {
+			data["postText"] = ExpandPostText(postRecord)
+		}
+	}
+
 	return c.Render(http.StatusOK, "post.html", data)
 }
 

@@ -217,6 +217,7 @@ export const TextInput = forwardRef(function TextInputImpl(
         autoFocus={true}
         allowFontScaling
         multiline
+        scrollEnabled={false}
         numberOfLines={4}
         style={[
           pal.text,

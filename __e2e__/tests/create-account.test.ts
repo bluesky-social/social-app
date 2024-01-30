@@ -16,14 +16,12 @@ describe('Create account', () => {
 
     await element(by.id('createAccountButton')).tap()
     await device.takeScreenshot('1- opened create account screen')
-    await element(by.id('otherServerBtn')).tap()
+    await element(by.id('selectServiceButton')).tap()
     await device.takeScreenshot('2- selected other server')
-    await element(by.id('customServerInput')).clearText()
-    await element(by.id('customServerInput')).typeText(service)
+    await element(by.id('customServerTextInput')).typeText(service)
+    await element(by.id('customServerTextInput')).tapReturnKey()
+    await element(by.id('customServerSelectBtn')).tap()
     await device.takeScreenshot('3- input test server URL')
-
-    await element(by.id('nextBtn')).tap()
-
     await element(by.id('emailInput')).typeText('example@test.com')
     await element(by.id('passwordInput')).typeText('hunter2')
     await device.takeScreenshot('4- entered account details')
@@ -31,7 +29,7 @@ describe('Create account', () => {
     await element(by.id('nextBtn')).tap()
 
     await element(by.id('handleInput')).typeText('e2e-test')
-    await device.takeScreenshot('4- entered handle')
+    await device.takeScreenshot('5- entered handle')
 
     await element(by.id('nextBtn')).tap()
 
