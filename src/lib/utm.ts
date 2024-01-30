@@ -41,8 +41,10 @@ async function upsertParams(params: Record<string, any>) {
 export function handleIncomingURL(url: string) {
   const {searchParams} = new URL(url, 'http://throwaway.com')
   const params = Object.fromEntries(
-    Array.from(searchParams.entries()).filter(([key]) =>
-      key.startsWith('utm_'),
+    Array.from(searchParams.entries()).filter(
+      ([key]) =>
+        // TODO handle others?
+        key.startsWith('utm_') || key === 'gclid' || key === 'dclid',
     ),
   )
 
