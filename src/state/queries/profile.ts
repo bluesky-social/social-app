@@ -17,12 +17,12 @@ import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {Shadow} from '#/state/cache/types'
+import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
-import {queryClient} from '#/lib/react-query'
 
 export const RQKEY = (did: string) => ['profile', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
@@ -433,16 +433,4 @@ export function* findAllProfilesInQueryData(
       yield queryData
     }
   }
-}
-
-export function resetProfilePostsQueries(did: string, timeout = 0) {
-  setTimeout(() => {
-    queryClient.resetQueries({
-      predicate: query =>
-        !!(
-          query.queryKey[0] === 'post-feed' &&
-          (query.queryKey[1] as string)?.includes(did)
-        ),
-    })
-  }, timeout)
 }
