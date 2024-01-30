@@ -99,6 +99,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       [inputRef, overlayRef],
     )
 
+    // Sets up an event listener for photo-pasted
     React.useEffect(() => {
       textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
       return () => {
@@ -106,6 +107,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       }
     }, [onPhotoPasted])
 
+    // Image drag-and-drop functionality
     React.useEffect(() => {
       const handleDrop = (event: DragEvent) => {
         const transfer = event.dataTransfer
@@ -146,6 +148,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
       }
     }, [setIsDropping])
 
+    // Mention autocompletion functionality
     React.useEffect(() => {
       if (cursor == null) {
         setSuggestion(undefined)
