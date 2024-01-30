@@ -23,7 +23,10 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useProfileQuery} from '#/state/queries/profile'
+import {
+  resetProfilePostsQueries,
+  useProfileQuery,
+} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
@@ -73,6 +76,13 @@ export function ProfileScreen({route}: Props) {
       refetchProfile()
     }
   }, [resolveError, refetchDid, refetchProfile])
+
+  // When we open the profile, we want to reset the posts query if we are blocked.
+  React.useEffect(() => {
+    if (resolvedDid && profile?.viewer?.blockedBy) {
+      resetProfilePostsQueries(resolvedDid)
+    }
+  }, [profile?.viewer?.blockedBy, resolvedDid])
 
   if (isInitialLoadingDid || isInitialLoadingProfile || !moderationOpts) {
     return (

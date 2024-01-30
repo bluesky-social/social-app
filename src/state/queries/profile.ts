@@ -22,6 +22,7 @@ import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
+import {queryClient} from '#/lib/react-query'
 
 export const RQKEY = (did: string) => ['profile', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
@@ -375,8 +376,9 @@ function useProfileBlockMutation() {
         {subject: did, createdAt: new Date().toISOString()},
       )
     },
-    onSuccess() {
+    onSuccess(_, {did}) {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      resetProfilePostsQueries(did, 1000)
     },
   })
 }
@@ -393,6 +395,9 @@ function useProfileUnblockMutation() {
         repo: currentAccount.did,
         rkey,
       })
+    },
+    onSuccess(_, {did}) {
+      resetProfilePostsQueries(did, 1000)
     },
   })
 }
@@ -425,4 +430,16 @@ export function* findAllProfilesInQueryData(
       yield queryData
     }
   }
+}
+
+export function resetProfilePostsQueries(did: string, timeout = 0) {
+  setTimeout(() => {
+    queryClient.resetQueries({
+      predicate: query =>
+        !!(
+          query.queryKey[0] === 'post-feed' &&
+          (query.queryKey[1] as string)?.includes(did)
+        ),
+    })
+  }, timeout)
 }
