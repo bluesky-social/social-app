@@ -6,6 +6,7 @@ import {
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
+  AppBskyEmbedRecord,
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import chunk from 'lodash.chunk'
@@ -221,10 +222,29 @@ function getSubjectUri(
   }
 }
 
-function isThreadMuted(notif: FeedNotification, mutes: string[]): boolean {
-  if (!notif.subject) {
-    return false
+export function isThreadMuted(item: FeedNotification, threadMutes: string[]) {
+  const {record} = item.notification
+
+  // We only need to check if it's a post
+  if (AppBskyFeedPost.isRecord(record)) {
+    // If the thread is muted
+    if (record.reply && threadMutes.includes(record.reply.root.uri)) {
+      return true
+    }
+    // If it's a quote...
+    else if (
+      AppBskyEmbedRecord.isMain(record.embed) &&
+      threadMutes.includes(record.embed.record.uri)
+    ) {
+      return true
+    }
+  } else if (
+    AppBskyFeedRepost.isRecord(record) &&
+    threadMutes.includes(record.subject.uri)
+  ) {
+    // Same if it's a repost
+    return true
   }
-  const record = notif.subject.record as AppBskyFeedPost.Record // assured in fetchSubjects()
-  return mutes.includes(record.reply?.root.uri || notif.subject.uri)
+
+  return false
 }

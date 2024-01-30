@@ -5,16 +5,11 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
 import {useQueryClient} from '@tanstack/react-query'
-import {
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
-  AppBskyFeedRepost,
-} from '@atproto/api'
 import BroadcastChannel from '#/lib/broadcast'
 import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences'
 import {fetchPage} from './util'
-import {CachedFeedPage, FeedNotification, FeedPage} from './types'
+import {CachedFeedPage, FeedPage} from './types'
 import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -143,7 +138,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
           })
-          const unreadCount = countUnread(page, threadMutes)
+          const unreadCount = countUnread(page)
           const unreadCountStr =
             unreadCount >= 30
               ? '30+'
@@ -201,47 +196,20 @@ export function useUnreadNotificationsApi() {
   return React.useContext(apiContext)
 }
 
-function countUnread(page: FeedPage, threadMutes: string[]) {
+function countUnread(page: FeedPage) {
   let num = 0
   for (const item of page.items) {
     // Filter out counts
-    if (!item.notification.isRead && !isMuted(item, threadMutes)) {
+    if (!item.notification.isRead) {
       num++
     }
     if (item.additional) {
       for (const item2 of item.additional) {
-        if (!item2.isRead && !isMuted(item, threadMutes)) {
+        if (!item2.isRead) {
           num++
         }
       }
     }
   }
   return num
-}
-
-function isMuted(item: FeedNotification, threadMutes: string[]) {
-  const {record} = item.notification
-
-  // We only need to check if it's a post
-  if (AppBskyFeedPost.isRecord(record)) {
-    // If the thread is muted
-    if (record.reply && threadMutes.includes(record.reply.root.uri)) {
-      return true
-    }
-    // If it's a quote...
-    else if (
-      AppBskyEmbedRecord.isMain(record.embed) &&
-      threadMutes.includes(record.embed.record.uri)
-    ) {
-      return true
-    }
-  } else if (
-    AppBskyFeedRepost.isRecord(record) &&
-    threadMutes.includes(record.subject.uri)
-  ) {
-    // Same if it's a repost
-    return true
-  }
-
-  return false
 }
