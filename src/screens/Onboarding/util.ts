@@ -31,7 +31,15 @@ export function aggregateInterestItems(
   const selected = interests.length
   const all = interests
     .map(i => {
-      const suggestions = shuffle(map[i])
+      // suggestions from server
+      const rawSuggestions = map[i]
+
+      // safeguard against a missing interest->suggestion mapping
+      if (!rawSuggestions || !rawSuggestions.length) {
+        return []
+      }
+
+      const suggestions = shuffle(rawSuggestions)
 
       if (selected === 1) {
         return suggestions // return all
