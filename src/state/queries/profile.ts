@@ -29,17 +29,17 @@ export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({
   did,
-  dontInvalidate,
+  staleTime = STALE.SECONDS.FIFTEEN,
 }: {
   did: string | undefined
-  dontInvalidate?: boolean
+  staleTime?: number
 }) {
   return useQuery({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
     // -prf
-    staleTime: dontInvalidate ? STALE.INFINITY : STALE.SECONDS.FIFTEEN,
+    staleTime,
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
