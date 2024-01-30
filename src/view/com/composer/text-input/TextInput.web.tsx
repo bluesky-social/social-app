@@ -351,6 +351,7 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
         <TextareaAutosize
           ref={inputRef}
           // value={richtext.text}
+          autoFocus
           onChange={handleChange}
           onKeyDown={handleKeyDown}
           onPaste={handlePaste}
