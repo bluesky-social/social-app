@@ -100,6 +100,13 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
     )
 
     React.useEffect(() => {
+      textInputWebEmitter.addListener('photo-pasted', onPhotoPasted)
+      return () => {
+        textInputWebEmitter.removeListener('photo-pasted', onPhotoPasted)
+      }
+    }, [onPhotoPasted])
+
+    React.useEffect(() => {
       const handleDrop = (event: DragEvent) => {
         const transfer = event.dataTransfer
         if (transfer) {
@@ -273,32 +280,15 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
 
     const handlePaste = React.useCallback(
       (ev: React.ClipboardEvent<HTMLTextAreaElement>) => {
-        const items = ev.clipboardData?.items ?? []
+        const transfer = ev.clipboardData
 
-        for (let idx = 0, len = items.length; idx < len; idx++) {
-          const item = items[idx]
-
-          if (item.kind === 'file' && item.type.startsWith('image/')) {
-            const file = item.getAsFile()
-
-            if (file) {
-              blobToDataUri(file).then(onPhotoPasted, console.error)
-            }
-          }
-
-          if (item.type === 'text/plain') {
-            item.getAsString(async str => {
-              if (isUriImage(str)) {
-                const response = await fetch(str)
-                const blob = await response.blob()
-
-                blobToDataUri(blob).then(onPhotoPasted, console.error)
-              }
-            })
-          }
+        if (transfer) {
+          getImageFromUri(transfer.items, (uri: string) => {
+            textInputWebEmitter.emit('photo-pasted', uri)
+          })
         }
       },
-      [onPhotoPasted],
+      [],
     )
 
     const acceptSuggestion = React.useCallback(
