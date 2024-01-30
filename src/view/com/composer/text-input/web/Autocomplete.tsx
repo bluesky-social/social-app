@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import {Pressable, StyleSheet, View} from 'react-native'
 
 import {
@@ -12,6 +11,8 @@ import {
 import {Trans} from '@lingui/macro'
 
 import {useGrapheme} from '../hooks/useGrapheme'
+
+import {Portal} from '#/components/Portal'
 
 import {usePalette} from 'lib/hooks/usePalette'
 import {UserAvatar} from 'view/com/util/UserAvatar'
@@ -105,57 +106,62 @@ export const Autocomplete = React.forwardRef<
     return null
   }
 
-  return ReactDOM.createPortal(
-    <div
-      ref={refs.setFloating}
-      style={floatingStyles}
-      className="rt-autocomplete">
-      <View style={[pal.borderDark, pal.view, styles.container]}>
-        {items && items.length > 0 ? (
-          items.slice(0, 8).map((item, index) => {
-            const {name: displayName} = getGraphemeString(
-              item.displayName ?? item.handle,
-              30, // Heuristic value; can be modified
-            )
-            const isSelected = cursor === index
+  return (
+    <Portal>
+      <div
+        ref={refs.setFloating}
+        style={floatingStyles}
+        className="rt-autocomplete">
+        <View style={[pal.borderDark, pal.view, styles.container]}>
+          {items && items.length > 0 ? (
+            items.slice(0, 8).map((item, index) => {
+              const {name: displayName} = getGraphemeString(
+                item.displayName ?? item.handle,
+                30, // Heuristic value; can be modified
+              )
+              const isSelected = cursor === index
 
-            return (
-              <Pressable
-                key={item.handle}
-                style={[
-                  isSelected ? pal.viewLight : undefined,
-                  pal.borderDark,
-                  styles.mentionContainer,
-                  index === 0
-                    ? styles.firstMention
-                    : index === items.length - 1
-                    ? styles.lastMention
-                    : undefined,
-                ]}
-                onPress={() => {
-                  onSelect(match!, item.handle)
-                }}
-                accessibilityRole="button">
-                <View style={styles.avatarAndDisplayName}>
-                  <UserAvatar avatar={item.avatar ?? null} size={26} />
-                  <Text style={pal.text} numberOfLines={1}>
-                    {displayName}
+              return (
+                <Pressable
+                  key={item.handle}
+                  style={[
+                    isSelected ? pal.viewLight : undefined,
+                    pal.borderDark,
+                    styles.mentionContainer,
+                    index === 0
+                      ? styles.firstMention
+                      : index === items.length - 1
+                      ? styles.lastMention
+                      : undefined,
+                  ]}
+                  onPress={() => {
+                    onSelect(match!, item.handle)
+                  }}
+                  accessibilityRole="button">
+                  <View style={styles.avatarAndDisplayName}>
+                    <UserAvatar avatar={item.avatar ?? null} size={26} />
+                    <Text style={pal.text} numberOfLines={1}>
+                      {displayName}
+                    </Text>
+                  </View>
+                  <Text type="xs" style={pal.textLight} numberOfLines={1}>
+                    @{item.handle}
                   </Text>
-                </View>
-                <Text type="xs" style={pal.textLight} numberOfLines={1}>
-                  @{item.handle}
-                </Text>
-              </Pressable>
-            )
-          })
-        ) : (
-          <Text type="sm" style={[pal.text, styles.noResult]}>
-            {isFetching ? <Trans>Loading...</Trans> : <Trans>No result</Trans>}
-          </Text>
-        )}
-      </View>
-    </div>,
-    document.body,
+                </Pressable>
+              )
+            })
+          ) : (
+            <Text type="sm" style={[pal.text, styles.noResult]}>
+              {isFetching ? (
+                <Trans>Loading...</Trans>
+              ) : (
+                <Trans>No result</Trans>
+              )}
+            </Text>
+          )}
+        </View>
+      </div>
+    </Portal>
   )
 })
 
