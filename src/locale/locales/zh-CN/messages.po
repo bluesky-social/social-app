@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-01-30 11:42+0800\n"
+"POT-Creation-Date: 2024-01-30 13:30+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -65,7 +65,7 @@ msgstr "<0>欢迎来到</0><1>Bluesky</1>"
 
 #: src/view/com/profile/ProfileHeader.tsx:597
 msgid "⚠Invalid Handle"
-msgstr "⚠无效的用户识别符"
+msgstr "⚠无效的昵称"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -523,7 +523,7 @@ msgstr "撤销账户删除申请"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "撤销修改用户识别符"
+msgstr "撤销修改昵称"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -554,11 +554,11 @@ msgstr "更改"
 #: src/view/screens/Settings.tsx:662
 #: src/view/screens/Settings.tsx:671
 msgid "Change handle"
-msgstr "更改用户识别符"
+msgstr "更改昵称"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
 msgid "Change Handle"
-msgstr "更改用户识别符"
+msgstr "更改昵称"
 
 #: src/view/com/modals/VerifyEmail.tsx:147
 msgid "Change my email"
@@ -1259,7 +1259,7 @@ msgstr "所有人"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "退出修改用户识别符流程"
+msgstr "退出修改昵称流程"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -1540,7 +1540,7 @@ msgstr "转到下一个"
 
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
-msgstr "用户识别符"
+msgstr "昵称"
 
 #: src/view/com/auth/create/CreateAccount.tsx:197
 msgid "Having trouble?"
@@ -1731,7 +1731,7 @@ msgstr "输入你的密码"
 
 #: src/view/com/auth/create/Step3.tsx:42
 msgid "Input your user handle"
-msgstr "输入你的用户用户识别符"
+msgstr "输入你的用户昵称"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:229
 msgid "Invalid or unsupported post record"
@@ -2317,7 +2317,7 @@ msgstr "注意：Bluesky 是一个开放的公共网络。此设置项仅限制�
 #: src/view/shell/Drawer.tsx:438
 #: src/view/shell/Drawer.tsx:439
 msgid "Notifications"
-msgstr "统治"
+msgstr "通知"
 
 #: src/view/com/modals/SelfLabel.tsx:103
 msgid "Nudity"
@@ -2572,7 +2572,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "请选择你的用户识别符。"
+msgstr "请选择你的昵称。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
@@ -3026,7 +3026,7 @@ msgstr "保存更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:170
 msgid "Save handle change"
-msgstr "保存新的用户识别符"
+msgstr "保存新的昵称"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:144
 msgid "Save image crop"
@@ -3042,7 +3042,7 @@ msgstr "保存个人资料中所做的变更"
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
-msgstr "保存用户识别符更改至 {handle}"
+msgstr "保存昵称更改至 {handle}"
 
 #: src/view/screens/ProfileList.tsx:830
 msgid "Scroll to top"
@@ -3932,7 +3932,7 @@ msgstr "使用系统默认浏览器"
 
 #: src/view/com/modals/AddAppPasswords.tsx:154
 msgid "Use this to sign into the other app along with your handle."
-msgstr "使用这个和你的用户识别符一起登录其他应用。"
+msgstr "使用这个和你的昵称一起登录其他应用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
@@ -3956,7 +3956,7 @@ msgstr "用户屏蔽了你"
 
 #: src/view/com/auth/create/Step3.tsx:41
 msgid "User handle"
-msgstr "用户用户识别符"
+msgstr "用户昵称"
 
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:182
@@ -4309,11 +4309,11 @@ msgstr "你的关注信息流为空！关注更多用户去看看他们发了什
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
-msgstr "你的完整用户识别符将为"
+msgstr "你的完整昵称将修改为"
 
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "你的完整用户识别符将为 <0>@{0}</0>"
+msgstr "你的完整昵称将修改为 <0>@{0}</0>"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137
@@ -4342,4 +4342,4 @@ msgstr "你的回复已发送"
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
-msgstr "你的用户用户识别符"
+msgstr "你的用户昵称"
