@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-01-30 00:46+0800\n"
+"POT-Creation-Date: 2024-01-30 11:42+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Simon Chan\n"
+"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -53,7 +53,7 @@ msgstr "<0>{following} </0><1>正在关注</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>选择你</0><1>推荐的</1><2>信息源</2>"
+msgstr "<0>选择你</0><1>推荐的</1><2>信息流</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
@@ -108,7 +108,7 @@ msgstr "已静音账户"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "来自列表的已静音账户"
+msgstr "账户已被列表静音"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
@@ -156,7 +156,7 @@ msgstr "添加替代文字"
 #: src/view/screens/AppPasswords.tsx:143
 #: src/view/screens/AppPasswords.tsx:156
 msgid "Add App Password"
-msgstr "添加App专用密码"
+msgstr "添加 App 专用密码"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
@@ -165,7 +165,7 @@ msgstr "添加细节"
 
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details to report"
-msgstr "在反馈中添加细节"
+msgstr "补充反馈详细内容"
 
 #: src/view/com/composer/Composer.tsx:446
 msgid "Add link card"
@@ -186,7 +186,7 @@ msgstr "添加至列表"
 #: src/view/com/feeds/FeedSourceCard.tsx:243
 #: src/view/screens/ProfileFeed.tsx:272
 msgid "Add to my feeds"
-msgstr "添加至自定义信息源"
+msgstr "添加至自定义信息流"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
 msgid "Added"
@@ -199,11 +199,11 @@ msgstr "添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "添加至自定义信息源"
+msgstr "添加至自定义信息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "调整回复中需要具有的点赞数才会在你的信息源中显示。"
+msgstr "调整回复中需要具有的点赞数才会在你的信息流中显示。"
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -261,28 +261,28 @@ msgstr "应用语言"
 
 #: src/view/screens/AppPasswords.tsx:228
 msgid "App password deleted"
-msgstr "App专用密码已删除"
+msgstr "App 专用密码已删除"
 
 #: src/view/com/modals/AddAppPasswords.tsx:133
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "App专用密码只能包含字母、数字、空格、破折号及下划线。"
+msgstr "App 专用密码只能包含字母、数字、空格、破折号及下划线。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:98
 msgid "App Password names must be at least 4 characters long."
-msgstr "App专用密码必须至少为 4 个字符。"
+msgstr "App 专用密码必须至少为 4 个字符。"
 
 #: src/view/screens/Settings.tsx:641
 msgid "App password settings"
-msgstr "App专用密码设置"
+msgstr "App 专用密码设置"
 
 #: src/view/screens/Settings.tsx:650
 msgid "App passwords"
-msgstr "App专用密码"
+msgstr "App 专用密码"
 
 #: src/Navigation.tsx:238
 #: src/view/screens/AppPasswords.tsx:187
 msgid "App Passwords"
-msgstr "App专用密码"
+msgstr "App 专用密码"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:248
 msgid "Appeal content warning"
@@ -306,7 +306,7 @@ msgstr "外观"
 
 #: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "你确定要删除这条App专用密码 \"{name}\"？"
+msgstr "你确定要删除这条 App 专用密码 \"{name}\"？"
 
 #: src/view/com/composer/Composer.tsx:143
 msgid "Are you sure you'd like to discard this draft?"
@@ -579,7 +579,7 @@ msgstr "检查我的状态"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "查看一些推荐的信息源。点击 + 去将他们添加到你的固定信息源列表中。"
+msgstr "查看一些推荐的信息流。点击 + 去将他们添加到你的固定信息流列表中。"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
@@ -603,16 +603,16 @@ msgstr "选择服务"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "选择支持你的自定义信息源的算法。"
+msgstr "选择支持你的自定义信息流的算法。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr "选择可改进你自定义信息源的算法。"
+msgstr "选择可改进你自定义信息流的算法。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:102
 msgid "Choose your algorithmic feeds"
-msgstr "选择你的信息源算法"
+msgstr "选择你的信息流算法"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -830,7 +830,7 @@ msgstr "已复制至剪贴板"
 
 #: src/view/com/modals/AddAppPasswords.tsx:191
 msgid "Copies app password"
-msgstr "已复制App专用密码"
+msgstr "已复制 App 专用密码"
 
 #: src/view/com/modals/AddAppPasswords.tsx:190
 msgid "Copy"
@@ -859,7 +859,7 @@ msgstr "版权许可"
 
 #: src/view/screens/ProfileFeed.tsx:96
 msgid "Could not load feed"
-msgstr "无法加载信息源"
+msgstr "无法加载信息流"
 
 #: src/view/screens/ProfileList.tsx:864
 msgid "Could not load list"
@@ -877,7 +877,7 @@ msgstr "创建新的账户"
 
 #: src/view/screens/Settings.tsx:384
 msgid "Create a new Bluesky account"
-msgstr "创建新的Bluesky账户"
+msgstr "创建新的 Bluesky 账户"
 
 #: src/view/com/auth/create/CreateAccount.tsx:122
 msgid "Create Account"
@@ -885,7 +885,7 @@ msgstr "创建账户"
 
 #: src/view/com/modals/AddAppPasswords.tsx:228
 msgid "Create App Password"
-msgstr "创建App专用密码"
+msgstr "创建 App 专用密码"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
 #: src/view/com/auth/SplashScreen.tsx:43
@@ -915,7 +915,7 @@ msgstr "自定义域名"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
-msgstr "自定义来自外部站点的媒体。"
+msgstr "自定义外部站点的媒体。"
 
 #: src/view/screens/Settings.tsx:687
 msgid "Danger Zone"
@@ -944,7 +944,7 @@ msgstr "删除账号"
 #: src/view/screens/AppPasswords.tsx:222
 #: src/view/screens/AppPasswords.tsx:242
 msgid "Delete app password"
-msgstr "删除App专用密码"
+msgstr "删除 App 专用密码"
 
 #: src/view/screens/ProfileList.tsx:360
 #: src/view/screens/ProfileList.tsx:420
@@ -1005,11 +1005,11 @@ msgstr "阻止应用向未登录用户显示我的账户"
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
-msgstr "探索新的自定义信息源"
+msgstr "探索新的自定义信息流"
 
 #: src/view/screens/Feeds.tsx:440
 msgid "Discover new feeds"
-msgstr "探索新的信息源"
+msgstr "探索新的信息流"
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1114,7 +1114,7 @@ msgstr "编辑管理员列表"
 #: src/view/screens/Feeds.tsx:402
 #: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
-msgstr "编辑自定义信息源"
+msgstr "编辑自定义信息流"
 
 #: src/view/com/modals/EditProfile.tsx:152
 msgid "Edit my profile"
@@ -1130,7 +1130,7 @@ msgstr "编辑资料"
 
 #: src/view/screens/Feeds.tsx:336
 msgid "Edit Saved Feeds"
-msgstr "编辑保存的信息源"
+msgstr "编辑保存的信息流"
 
 #: src/view/com/modals/CreateOrEditList.tsx:245
 msgid "Edit User List"
@@ -1186,7 +1186,7 @@ msgstr "启用成人内容"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:95
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:96
 msgid "Enable adult content in your feeds"
-msgstr "在你的信息源中启用成人内容"
+msgstr "在你的信息流中启用成人内容"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
@@ -1202,11 +1202,11 @@ msgstr "启用此设置以仅查看你关注的人之间的回复。"
 
 #: src/view/screens/Profile.tsx:427
 msgid "End of feed"
-msgstr "结束信息源"
+msgstr "结束信息流"
 
 #: src/view/com/modals/AddAppPasswords.tsx:165
 msgid "Enter a name for this App Password"
-msgstr "为此App专用密码命名"
+msgstr "为此 App 专用密码命名"
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
@@ -1305,7 +1305,7 @@ msgstr "外部媒体设置"
 #: src/view/com/modals/AddAppPasswords.tsx:114
 #: src/view/com/modals/AddAppPasswords.tsx:118
 msgid "Failed to create app password."
-msgstr "无法创建App专用密码。"
+msgstr "无法创建 App 专用密码。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -1318,23 +1318,23 @@ msgstr "无法删除帖子，请重试"
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
 msgid "Failed to load recommended feeds"
-msgstr "无法加载推荐信息源"
+msgstr "无法加载推荐信息流"
 
 #: src/Navigation.tsx:193
 msgid "Feed"
-msgstr "信息源"
+msgstr "信息流"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:229
 msgid "Feed by {0}"
-msgstr "信息源由 {0} 创建"
+msgstr "信息流由 {0} 创建"
 
 #: src/view/screens/Feeds.tsx:595
 msgid "Feed offline"
-msgstr "信息源已离线"
+msgstr "信息流已离线"
 
 #: src/view/com/feeds/FeedPage.tsx:143
 msgid "Feed Preferences"
-msgstr "信息源首选项"
+msgstr "信息流首选项"
 
 #: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:314
@@ -1349,23 +1349,23 @@ msgstr "反馈"
 #: src/view/shell/Drawer.tsx:479
 #: src/view/shell/Drawer.tsx:480
 msgid "Feeds"
-msgstr "信息源"
+msgstr "信息流"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:105
 msgid "Feeds are created by users and can give you entirely new experiences."
-msgstr "信息源由用户创建，可为你带来不一样的体验。"
+msgstr "信息流由用户创建，可为你带来不一样的体验。"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "信息源由用户创建并管理。选择一些你感兴趣的信息源。"
+msgstr "信息流由用户创建并管理。选择一些你感兴趣的信息流。"
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "创建信息源要求一些编程基础。查看 <0/> 以获取详情。"
+msgstr "创建信息流要求一些编程基础。查看 <0/> 以获取详情。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:68
 msgid "Feeds can be topical as well!"
-msgstr "信息源也可以是话题性的！"
+msgstr "信息流也可以是话题性的！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
@@ -1379,7 +1379,7 @@ msgstr "寻找一些账户关注"
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find users on Bluesky"
-msgstr "寻找一些正在使用Bluesky的用户"
+msgstr "寻找一些正在使用 Bluesky 的用户"
 
 #: src/view/screens/Search/Search.tsx:437
 msgid "Find users with the search tool on the right"
@@ -1557,15 +1557,15 @@ msgstr "这里是一些推荐关注的用户"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:77
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr "这里是一些流行的信息源供你挑选。"
+msgstr "这里是一些流行的信息流供你挑选。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:72
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "这里是一些基于你兴趣所推荐的信息源供你挑选：{interestsText}。"
+msgstr "这里是一些基于你兴趣所推荐的信息流供你挑选：{interestsText}。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
-msgstr "这里是你的App专用密码。"
+msgstr "这里是你的 App 专用密码。"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:219
 #: src/view/com/notifications/FeedItem.tsx:327
@@ -1599,27 +1599,27 @@ msgstr "隐藏用户列表"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 msgid "Hides posts from {0} in your feed"
-msgstr "在你的信息源中隐藏来自 {0} 的帖子"
+msgstr "在你的信息流中隐藏来自 {0} 的帖子"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "连接信息源服务器出现问题，请联系信息源的维护者反馈此问题。"
+msgstr "连接信息流服务器出现问题，请联系信息流的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "信息源服务器似乎配置错误，请联系信息源的维护者反馈此问题。"
+msgstr "信息流服务器似乎配置错误，请联系信息流的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "信息源服务器似乎已下线，请联系信息源的维护者反馈此问题。"
+msgstr "信息流服务器似乎已下线，请联系信息流的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "信息源服务器返回错误的响应，请联系信息源的维护者反馈此问题。"
+msgstr "信息流服务器返回错误的响应，请联系信息流的维护者反馈此问题。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:96
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "我们无法找到该信息源，似乎已被删除。"
+msgstr "我们无法找到该信息流，似乎已被删除。"
 
 #: src/Navigation.tsx:433
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
@@ -1634,7 +1634,7 @@ msgstr "主页"
 #: src/view/screens/PreferencesHomeFeed.tsx:104
 #: src/view/screens/Settings.tsx:509
 msgid "Home Feed Preferences"
-msgstr "主页信息源首选项"
+msgstr "主页信息流首选项"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:116
 msgid "Hosting provider"
@@ -1687,7 +1687,7 @@ msgstr "输入删除用户的验证码"
 
 #: src/view/com/auth/create/Step1.tsx:144
 msgid "Input email for Bluesky account"
-msgstr "输入Bluesky账户的电子邮箱"
+msgstr "输入 Bluesky 账户的电子邮箱"
 
 #: src/view/com/auth/create/Step1.tsx:102
 msgid "Input invite code to proceed"
@@ -1695,7 +1695,7 @@ msgstr "输入邀请码以继续"
 
 #: src/view/com/modals/AddAppPasswords.tsx:182
 msgid "Input name for app password"
-msgstr "输入App专用密码名称"
+msgstr "输入 App 专用密码名称"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:133
 msgid "Input new password"
@@ -1723,7 +1723,7 @@ msgstr "输入收到的短信验证码"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
-msgstr "输入你的电子邮箱以加入Bluesky候补列表"
+msgstr "输入你的电子邮箱以加入 Bluesky 候补列表"
 
 #: src/view/com/auth/login/LoginForm.tsx:226
 msgid "Input your password"
@@ -1833,7 +1833,7 @@ msgstr "了解关于这个警告的更多详情"
 
 #: src/view/screens/Moderation.tsx:242
 msgid "Learn more about what is public on Bluesky."
-msgstr "了解有关Bluesky公开内容的更多详情。"
+msgstr "了解有关 Bluesky 公开内容的更多详情。"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -1841,7 +1841,7 @@ msgstr "全部不选中以查看任何语言。"
 
 #: src/view/com/modals/LinkWarning.tsx:51
 msgid "Leaving Bluesky"
-msgstr "离开Bluesky"
+msgstr "离开 Bluesky"
 
 #: src/screens/Deactivated.tsx:129
 msgid "left to go."
@@ -1875,7 +1875,7 @@ msgstr "点赞"
 
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "Like this feed"
-msgstr "点赞这个信息源"
+msgstr "点赞这个信息流"
 
 #: src/Navigation.tsx:198
 msgid "Liked by"
@@ -1896,11 +1896,11 @@ msgstr "{likeCount} {0} 点赞"
 
 #: src/view/com/notifications/FeedItem.tsx:172
 msgid "liked your custom feed"
-msgstr "点赞你的自定义信息源"
+msgstr "点赞你的自定义信息流"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 msgid "liked your custom feed '{0}'"
-msgstr "点赞你的自定义信息源 '{0}'"
+msgstr "点赞你的自定义信息流 '{0}'"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
@@ -2077,7 +2077,7 @@ msgstr "管理员选择对内容设置一般警告。"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
-msgstr "更多信息源"
+msgstr "更多信息流"
 
 #: src/view/com/profile/ProfileHeader.tsx:562
 #: src/view/screens/ProfileFeed.tsx:362
@@ -2144,7 +2144,7 @@ msgstr "我的生日"
 
 #: src/view/screens/Feeds.tsx:398
 msgid "My Feeds"
-msgstr "自定义信息源"
+msgstr "自定义信息流"
 
 #: src/view/shell/desktop/LeftNav.tsx:65
 msgid "My Profile"
@@ -2152,7 +2152,7 @@ msgstr "个人资料"
 
 #: src/view/screens/Settings.tsx:548
 msgid "My Saved Feeds"
-msgstr "我保存的信息源"
+msgstr "我保存的信息流"
 
 #: src/view/com/modals/AddAppPasswords.tsx:181
 #: src/view/com/modals/CreateOrEditList.tsx:290
@@ -2307,7 +2307,7 @@ msgstr "不是现在"
 
 #: src/view/screens/Moderation.tsx:232
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky是一个开放的公共网络。此设置项仅限制你的内容在Bluesky应用和网站上的可见性，其他应用可能不尊从此设置项，仍可能会向未登录的用户显示你的动态。"
+msgstr "注意：Bluesky 是一个开放的公共网络。此设置项仅限制你的内容在 Bluesky 应用和网站上的可见性，其他应用可能不尊从此设置项，仍可能会向未登录的用户显示你的动态。"
 
 #: src/Navigation.tsx:448
 #: src/view/screens/Notifications.tsx:113
@@ -2450,19 +2450,19 @@ msgstr "打开密码重置申请"
 
 #: src/view/screens/Feeds.tsx:337
 msgid "Opens screen to edit Saved Feeds"
-msgstr "打开用于编辑已保存信息源的界面"
+msgstr "打开用于编辑已保存信息流的界面"
 
 #: src/view/screens/Settings.tsx:542
 msgid "Opens screen with all saved feeds"
-msgstr "打开包含所有已保存信息源的界面"
+msgstr "打开包含所有已保存信息流的界面"
 
 #: src/view/screens/Settings.tsx:642
 msgid "Opens the app password settings page"
-msgstr "打开App专用密码设置页"
+msgstr "打开 App 专用密码设置页"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Opens the home feed preferences"
-msgstr "打开主页信息源首选项"
+msgstr "打开主页信息流首选项"
 
 #: src/view/screens/Settings.tsx:738
 msgid "Opens the storybook page"
@@ -2555,7 +2555,7 @@ msgstr "固定到主页"
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
-msgstr "固定信息源列表"
+msgstr "固定信息流列表"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
 msgid "Play {0}"
@@ -2584,7 +2584,7 @@ msgstr "更改前请先确认你的电子邮箱。这是添加电子邮箱更新
 
 #: src/view/com/modals/AddAppPasswords.tsx:89
 msgid "Please enter a name for your app password. All spaces is not allowed."
-msgstr "请输入App专用密码的名称，不允许使用空格。"
+msgstr "请输入 App 专用密码的名称，不允许使用空格。"
 
 #: src/view/com/auth/create/Step2.tsx:205
 msgid "Please enter a phone number that can receive SMS text messages."
@@ -2592,7 +2592,7 @@ msgstr "请输入可以接收短信的手机号码。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:144
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
-msgstr "请输入此App专用密码的唯一名称，或使用我们提供的随机生成名称。"
+msgstr "请输入此 App 专用密码的唯一名称，或使用我们提供的随机生成名称。"
 
 #: src/view/com/auth/create/state.ts:170
 msgid "Please enter the code you received by SMS."
@@ -2734,7 +2734,7 @@ msgstr "公开且可共享的批量静音或屏蔽列表。"
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "公开且可共享的列表，可作为信息源使用。"
+msgstr "公开且可共享的列表，可作为信息流使用。"
 
 #: src/view/com/composer/Composer.tsx:335
 msgid "Publish post"
@@ -2768,7 +2768,7 @@ msgstr "比率"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
 msgid "Recommended Feeds"
-msgstr "推荐信息源"
+msgstr "推荐信息流"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:180
 msgid "Recommended Users"
@@ -2784,7 +2784,7 @@ msgstr "删除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:106
 msgid "Remove {0} from my feeds?"
-msgstr "将 {0} 从自定义信息源中移除？"
+msgstr "将 {0} 从自定义信息流中移除？"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -2793,7 +2793,7 @@ msgstr "删除账号"
 #: src/view/com/posts/FeedErrorMessage.tsx:131
 #: src/view/com/posts/FeedErrorMessage.tsx:166
 msgid "Remove feed"
-msgstr "删除信息源"
+msgstr "删除信息流"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:105
 #: src/view/com/feeds/FeedSourceCard.tsx:167
@@ -2801,7 +2801,7 @@ msgstr "删除信息源"
 #: src/view/com/feeds/FeedSourceCard.tsx:243
 #: src/view/screens/ProfileFeed.tsx:272
 msgid "Remove from my feeds"
-msgstr "从自定义信息源中删除"
+msgstr "从自定义信息流中删除"
 
 #: src/view/com/composer/photos/Gallery.tsx:167
 msgid "Remove image"
@@ -2817,11 +2817,11 @@ msgstr "删除转发"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 msgid "Remove this feed from my feeds?"
-msgstr "将这个信息源从自定义信息源列表中删除？"
+msgstr "将这个信息流从自定义信息流列表中删除？"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:132
 msgid "Remove this feed from your saved feeds?"
-msgstr "将这个信息源从保存的信息源列表中删除？"
+msgstr "将这个信息流从保存的信息流列表中删除？"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:136
@@ -2831,7 +2831,7 @@ msgstr "从列表中删除"
 #: src/view/com/feeds/FeedSourceCard.tsx:111
 #: src/view/com/feeds/FeedSourceCard.tsx:178
 msgid "Removed from my feeds"
-msgstr "从自定义信息源中删除"
+msgstr "从自定义信息流中删除"
 
 #: src/view/com/composer/ExternalEmbed.tsx:71
 msgid "Removes default thumbnail from {0}"
@@ -2870,7 +2870,7 @@ msgstr "举报账户"
 
 #: src/view/screens/ProfileFeed.tsx:292
 msgid "Report feed"
-msgstr "举报信息源"
+msgstr "举报信息流"
 
 #: src/view/screens/ProfileList.tsx:434
 msgid "Report List"
@@ -3034,7 +3034,7 @@ msgstr "保存图片裁切"
 
 #: src/view/screens/SavedFeeds.tsx:122
 msgid "Saved Feeds"
-msgstr "已保存信息源"
+msgstr "已保存信息流"
 
 #: src/view/com/modals/EditProfile.tsx:225
 msgid "Saves any changes to your profile"
@@ -3094,7 +3094,7 @@ msgstr "选择 {item}"
 
 #: src/view/com/modals/ServerInput.tsx:75
 msgid "Select Bluesky Social"
-msgstr "选择Bluesky Social"
+msgstr "选择 Bluesky Social"
 
 #: src/view/com/auth/login/Login.tsx:117
 msgid "Select from an existing account"
@@ -3119,11 +3119,11 @@ msgstr "选择你想看到（或不想看到）的内容类型，剩下的由我
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:88
 msgid "Select topical feeds to follow from the list below"
-msgstr "从下面的列表中选择要关注的专题信息源"
+msgstr "从下面的列表中选择要关注的专题信息流"
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "选择你希望订阅信息源中所包含的语言。如果未选择任何语言，将默认显示所有语言。"
+msgstr "选择你希望订阅信息流中所包含的语言。如果未选择任何语言，将默认显示所有语言。"
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
@@ -3139,15 +3139,15 @@ msgstr "选择你的电话区号"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
-msgstr "选择你在订阅信息源中希望进行翻译的目标首选语言。"
+msgstr "选择你在订阅信息流中希望进行翻译的目标首选语言。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:114
 msgid "Select your primary algorithmic feeds"
-msgstr "选择你的主要算法信息源"
+msgstr "选择你的信息流主要算法"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:130
 msgid "Select your secondary algorithmic feeds"
-msgstr "选择你的次要算法信息源"
+msgstr "选择你的信息流次要算法"
 
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
@@ -3208,15 +3208,15 @@ msgstr "设置密码"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "将此设置项设为“否”以隐藏来自订阅信息源的所有引用帖子，转发仍将可见。"
+msgstr "将此设置项设为“否”以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "将此设置项设为“否”以隐藏来自订阅信息源的所有回复。"
+msgstr "将此设置项设为“否”以隐藏来自订阅信息流的所有回复。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "将此设置项设为“否”以隐藏来自订阅信息源的所有转发。"
+msgstr "将此设置项设为“否”以隐藏来自订阅信息流的所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
@@ -3224,7 +3224,7 @@ msgstr "将此设置项设为“是”以在分层视图中显示回复。这是
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "将此设置项设为“是”以在关注信息源中显示已保存信息源的样例。这是一个实验性功能。"
+msgstr "将此设置项设为“是”以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -3232,7 +3232,7 @@ msgstr "设置你的账户"
 
 #: src/view/com/modals/ChangeHandle.tsx:266
 msgid "Sets Bluesky username"
-msgstr "设置Bluesky用户名"
+msgstr "设置 Bluesky 用户名"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:153
 msgid "Sets email for password reset"
@@ -3245,7 +3245,7 @@ msgstr "设置用于密码重置的托管提供商信息"
 #: src/view/com/auth/create/Step1.tsx:78
 #: src/view/com/auth/login/LoginForm.tsx:148
 msgid "Sets server for the Bluesky client"
-msgstr "设置Bluesky客户端的服务器"
+msgstr "设置 Bluesky 客户端的服务器"
 
 #: src/Navigation.tsx:135
 #: src/view/screens/Settings.tsx:294
@@ -3272,7 +3272,7 @@ msgstr "分享"
 
 #: src/view/screens/ProfileFeed.tsx:304
 msgid "Share feed"
-msgstr "分享信息源"
+msgstr "分享信息流"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:40
 #: src/view/com/modals/ContentFilteringSettings.tsx:261
@@ -3306,7 +3306,7 @@ msgstr "显示更多"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:258
 msgid "Show Posts from My Feeds"
-msgstr "在自定义信息源中显示帖子"
+msgstr "在自定义信息流中显示帖子"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:222
 msgid "Show Quote Posts"
@@ -3314,7 +3314,7 @@ msgstr "显示引用帖子"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "在关注信息源中显示引用"
+msgstr "在关注信息流中显示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
@@ -3322,7 +3322,7 @@ msgstr "在关注中显示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr "在关注信息源中显示转发"
+msgstr "在关注信息流中显示转发"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
@@ -3338,7 +3338,7 @@ msgstr "在关注中显示回复"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr "在关注信息源中显示回复"
+msgstr "在关注信息流中显示回复"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3367,7 +3367,7 @@ msgstr "显示与该用户相似的用户列表。"
 
 #: src/view/com/profile/ProfileHeader.tsx:545
 msgid "Shows posts from {0} in your feed"
-msgstr "在你的信息源中显示来自 {0} 的帖子"
+msgstr "在你的信息流中显示来自 {0} 的帖子"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
@@ -3439,7 +3439,7 @@ msgstr "以 @{0} 身份登录"
 
 #: src/view/com/modals/SwitchAccount.tsx:66
 msgid "Signs {0} out of Bluesky"
-msgstr "从 {0} 登出Bluesky"
+msgstr "从 {0} 登出 Bluesky"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:236
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:191
@@ -3511,7 +3511,7 @@ msgstr "订阅"
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:173
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
 msgid "Subscribe to the {0} feed"
-msgstr "订阅 {0} 信息源"
+msgstr "订阅 {0} 信息流"
 
 #: src/view/screens/ProfileList.tsx:579
 msgid "Subscribe to this list"
@@ -3599,7 +3599,7 @@ msgstr "版权许可已迁移至 <0/>"
 
 #: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "以下步骤将帮助定制你的Bluesky体验。"
+msgstr "以下步骤将帮助定制你的 Bluesky 体验。"
 
 #: src/view/com/post-thread/PostThread.tsx:458
 msgid "The post may have been deleted."
@@ -3619,7 +3619,7 @@ msgstr "服务条款已迁移至"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
 msgid "There are many feeds to try:"
-msgstr "这里有些信息源你可以尝试："
+msgstr "这里有些信息流你可以尝试："
 
 #: src/view/screens/ProfileFeed.tsx:549
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -3627,11 +3627,11 @@ msgstr "连接至服务器时出现问题，请检查你的互联网连接并重
 
 #: src/view/com/posts/FeedErrorMessage.tsx:139
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "删除信息源时出现问题，请检查你的互联网连接并重试。"
+msgstr "删除信息流时出现问题，请检查你的互联网连接并重试。"
 
 #: src/view/screens/ProfileFeed.tsx:209
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新信息源时出现问题，请检查你的互联网连接并重试。"
+msgstr "更新信息流时出现问题，请检查你的互联网连接并重试。"
 
 #: src/view/screens/ProfileFeed.tsx:236
 #: src/view/screens/ProfileList.tsx:263
@@ -3673,7 +3673,7 @@ msgstr "与服务器同步首选项时出现问题"
 
 #: src/view/screens/AppPasswords.tsx:66
 msgid "There was an issue with fetching your app passwords"
-msgstr "获取App专用密码时出现问题"
+msgstr "获取 App 专用密码时出现问题"
 
 #: src/view/com/profile/ProfileHeader.tsx:204
 #: src/view/com/profile/ProfileHeader.tsx:225
@@ -3697,7 +3697,7 @@ msgstr "\"应用发生意外错误，请联系我们进行错误反馈！"
 
 #: src/screens/Deactivated.tsx:107
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Bluesky迎来了大量新用户！我们将尽快激活你的账户。"
+msgstr "Bluesky 迎来了大量新用户！我们将尽快激活你的账户。"
 
 #: src/view/com/auth/create/Step2.tsx:54
 msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
@@ -3725,21 +3725,21 @@ msgstr "由于其中一个用户屏蔽了另一个用户，此内容不可用。
 
 #: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "This content is not viewable without a Bluesky account."
-msgstr "没有Bluesky帐户，无法查看此内容。"
+msgstr "没有 Bluesky 账户，无法查看此内容。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "该信息源当前使用人数较多，服务暂时不可用。请稍后再试。"
+msgstr "该信息流当前使用人数较多，服务暂时不可用。请稍后再试。"
 
 #: src/view/screens/Profile.tsx:392
 #: src/view/screens/ProfileFeed.tsx:475
 #: src/view/screens/ProfileList.tsx:636
 msgid "This feed is empty!"
-msgstr "该信息源为空！"
+msgstr "该信息流为空！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "该信息源为空！你或许需要先关注更多的人或检查你的语言设置。"
+msgstr "该信息流为空！你或许需要先关注更多的人或检查你的语言设置。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
@@ -3783,7 +3783,7 @@ msgstr "此警告仅适用于附带媒体的帖子。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:190
 msgid "This will hide this post from your feeds."
-msgstr "这将在你的信息源中隐藏此帖子。"
+msgstr "这将在你的信息流中隐藏此帖子。"
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:531
@@ -3865,7 +3865,7 @@ msgstr "取关 {0}"
 
 #: src/view/com/auth/create/state.ts:300
 msgid "Unfortunately, you do not meet the requirements to create an account."
-msgstr "不幸的是，你不符合创建账户的要求。"
+msgstr "很遗憾，你不符合创建账户的要求。"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:170
 msgid "Unlike"
@@ -3914,7 +3914,7 @@ msgstr "将文本文件上传至："
 
 #: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用应用程序密码登录到其他Bluesky客户端，而无需对其授予你账户或密码的完全访问权限。"
+msgstr "使用应用程序密码登录到其他 Bluesky 客户端，而无需对其授予你账户或密码的完全访问权限。"
 
 #: src/view/com/modals/ChangeHandle.tsx:515
 msgid "Use default provider"
@@ -4062,7 +4062,7 @@ msgstr "我们估计还需要 {estimatedTime} 才能完成你的账户准备。"
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky是："
+msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -4078,7 +4078,7 @@ msgstr "我们无法连接到互联网，请重试以继续设置你的账户。
 
 #: src/screens/Deactivated.tsx:138
 msgid "We will let you know when your account is ready."
-msgstr "我们会在你的帐户准备好时通知你。"
+msgstr "我们会在你的账户准备好时通知你。"
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
@@ -4127,7 +4127,7 @@ msgstr "这个帖子中使用了哪些语言？"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "你想在算法信息源中看到哪些语言？"
+msgstr "你想在算法信息流中看到哪些语言？"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
@@ -4172,7 +4172,7 @@ msgstr "轮到你了。"
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你也可以探索新的自定义信息源来关注。"
+msgstr "你也可以探索新的自定义信息流来关注。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4185,19 +4185,19 @@ msgstr "你现在可以使用新密码登录。"
 
 #: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "你目前还没有邀请码！当你持续使用Bluesky一段时间后，我们将提供一些新的邀请码给你。"
+msgstr "你目前还没有邀请码！当你持续使用 Bluesky 一段时间后，我们将提供一些新的邀请码给你。"
 
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
-msgstr "你目前还没有任何固定的信息源。"
+msgstr "你目前还没有任何固定的信息流。"
 
 #: src/view/screens/Feeds.tsx:418
 msgid "You don't have any saved feeds!"
-msgstr "你目前还没有任何保存的信息源！"
+msgstr "你目前还没有任何保存的信息流！"
 
 #: src/view/screens/SavedFeeds.tsx:135
 msgid "You don't have any saved feeds."
-msgstr "你目前还没有任何保存的信息源。"
+msgstr "你目前还没有任何保存的信息流。"
 
 #: src/view/com/post-thread/PostThread.tsx:406
 msgid "You have blocked the author or you have been blocked by the author."
@@ -4213,7 +4213,7 @@ msgstr "你已静音这个用户。"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:136
 msgid "You have no feeds."
-msgstr "你没有订阅信息源。"
+msgstr "你没有订阅信息流。"
 
 #: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:140
@@ -4226,7 +4226,7 @@ msgstr "你还没有屏蔽任何账号。要屏蔽账号，请转到其个人资
 
 #: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "你尚未创建任何App专用密码，可以通过点击下面的按钮来创建一个。"
+msgstr "你尚未创建任何 App 专用密码，可以通过点击下面的按钮来创建一个。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
@@ -4264,7 +4264,7 @@ msgstr "你已设置完成！"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已经浏览完你的订阅信息源啦！寻找一些更多的账号关注吧。"
+msgstr "你已经浏览完你的订阅信息流啦！寻找一些更多的账号关注吧。"
 
 #: src/view/com/auth/create/Step1.tsx:67
 msgid "Your account"
@@ -4284,7 +4284,7 @@ msgstr "你的选择将被保存，但可以稍后在设置中更改。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr "你的默认信息源为\"关注\""
+msgstr "你的默认信息流为\"关注\""
 
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4305,7 +4305,7 @@ msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的关注信息源为空！关注更多用户去看看他们发了什么什么。"
+msgstr "你的关注信息流为空！关注更多用户去看看他们发了什么什么。"
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
@@ -4319,7 +4319,7 @@ msgstr "你的完整用户识别符将为 <0>@{0}</0>"
 #: src/view/shell/desktop/RightNav.tsx:137
 #: src/view/shell/Drawer.tsx:660
 msgid "Your invite codes are hidden when logged in using an App Password"
-msgstr "在使用App专用密码登录时，你的邀请码将被隐藏"
+msgstr "在使用 App 专用密码登录时，你的邀请码将被隐藏"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
