@@ -15,12 +15,12 @@ import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
 
-export const RQKEY = (uri: string) => ['list', uri]
+export const RQKEY = (uri: string = '') => ['list', uri]
 
 export function useListQuery(uri?: string) {
   return useQuery<AppBskyGraphDefs.ListView, Error>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(uri || ''),
+    queryKey: RQKEY(uri),
     async queryFn() {
       if (!uri) {
         throw new Error('URI not provided')

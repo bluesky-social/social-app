@@ -4,12 +4,12 @@ import {QueryClient, useQuery} from '@tanstack/react-query'
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 
-export const RQKEY = (prefix: string) => ['actor-search', prefix]
+export const RQKEY = (prefix: string = '') => ['actor-search', prefix] as const
 
 export function useActorSearch(prefix: string) {
   return useQuery<AppBskyActorDefs.ProfileView[]>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(prefix || ''),
+    queryKey: RQKEY(prefix),
     async queryFn() {
       const res = await getAgent().searchActors({
         term: prefix,
@@ -26,7 +26,7 @@ export function* findAllProfilesInQueryData(
 ) {
   const queryDatas = queryClient.getQueriesData<AppBskyActorDefs.ProfileView[]>(
     {
-      queryKey: ['actor-search'],
+      queryKey: RQKEY(),
     },
   )
   for (const [_queryKey, queryData] of queryDatas) {

@@ -11,7 +11,7 @@ import {getAgent} from '#/state/session'
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-export const RQKEY = (did: string) => ['profile-followers', did]
+export const RQKEY = (did: string = '') => ['profile-followers', did] as const
 
 export function useProfileFollowersQuery(did: string | undefined) {
   return useInfiniteQuery<
@@ -21,7 +21,7 @@ export function useProfileFollowersQuery(did: string | undefined) {
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(did || ''),
+    queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().app.bsky.graph.getFollowers({
         actor: did || '',
@@ -43,7 +43,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetFollowers.OutputSchema>
   >({
-    queryKey: ['profile-followers'],
+    queryKey: RQKEY(),
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

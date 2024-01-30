@@ -8,7 +8,7 @@ import {
 
 import {getAgent} from '#/state/session'
 
-export const RQKEY = () => ['my-muted-accounts']
+export const RQKEY = ['my-muted-accounts'] as const
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
@@ -19,7 +19,7 @@ export function useMyMutedAccountsQuery() {
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(),
+    queryKey: RQKEY,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().app.bsky.graph.getMutes({
         limit: 30,

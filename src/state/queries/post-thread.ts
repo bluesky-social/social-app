@@ -13,7 +13,7 @@ import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/
 import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
 import {getEmbeddedPost} from './util'
 
-export const RQKEY = (uri: string) => ['post-thread', uri]
+export const RQKEY = (uri: string = '') => ['post-thread', uri] as const
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
 
 export interface ThreadCtx {
@@ -66,7 +66,7 @@ export function usePostThreadQuery(uri: string | undefined) {
   const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
-    queryKey: RQKEY(uri || ''),
+    queryKey: RQKEY(uri),
     async queryFn() {
       const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {

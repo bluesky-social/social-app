@@ -13,7 +13,7 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
-export const RQKEY = (did: string) => ['profile-follows', did]
+export const RQKEY = (did: string = '') => ['profile-follows', did] as const
 
 export function useProfileFollowsQuery(did: string | undefined) {
   return useInfiniteQuery<
@@ -24,7 +24,7 @@ export function useProfileFollowsQuery(did: string | undefined) {
     RQPageParam
   >({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(did || ''),
+    queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().app.bsky.graph.getFollows({
         actor: did || '',
@@ -46,7 +46,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyGraphGetFollows.OutputSchema>
   >({
-    queryKey: ['profile-follows'],
+    queryKey: RQKEY(),
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

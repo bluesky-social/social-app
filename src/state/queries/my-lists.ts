@@ -10,7 +10,7 @@ export type MyListsFilter =
   | 'curate'
   | 'mod'
   | 'all-including-subscribed'
-export const RQKEY = (filter: MyListsFilter) => ['my-lists', filter]
+export const RQKEY = (filter?: MyListsFilter) => ['my-lists', filter] as const
 
 export function useMyListsQuery(filter: MyListsFilter) {
   const {currentAccount} = useSession()
@@ -91,6 +91,6 @@ export function invalidate(qc: QueryClient, filter?: MyListsFilter) {
   if (filter) {
     qc.invalidateQueries({queryKey: RQKEY(filter)})
   } else {
-    qc.invalidateQueries({queryKey: ['my-lists']})
+    qc.invalidateQueries({queryKey: RQKEY()})
   }
 }

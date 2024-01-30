@@ -12,7 +12,8 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
-export const RQKEY = (resolvedUri: string) => ['post-liked-by', resolvedUri]
+export const RQKEY = (resolvedUri: string = '') =>
+  ['post-liked-by', resolvedUri] as const
 
 export function usePostLikedByQuery(resolvedUri: string | undefined) {
   return useInfiniteQuery<
@@ -22,7 +23,7 @@ export function usePostLikedByQuery(resolvedUri: string | undefined) {
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(resolvedUri || ''),
+    queryKey: RQKEY(resolvedUri),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       const res = await getAgent().getLikes({
         uri: resolvedUri || '',
@@ -44,7 +45,7 @@ export function* findAllProfilesInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedGetLikes.OutputSchema>
   >({
-    queryKey: ['post-liked-by'],
+    queryKey: RQKEY(),
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

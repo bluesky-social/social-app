@@ -9,10 +9,7 @@ import {
 import {getAgent} from '#/state/session'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
-const searchPostsQueryKey = ({query}: {query: string}) => [
-  'search-posts',
-  query,
-]
+const RQKEY = (query: string = '') => ['search-posts', query] as const
 
 export function useSearchPostsQuery({query}: {query: string}) {
   return useInfiniteQuery<
@@ -22,7 +19,7 @@ export function useSearchPostsQuery({query}: {query: string}) {
     QueryKey,
     string | undefined
   >({
-    queryKey: searchPostsQueryKey({query}),
+    queryKey: RQKEY(query),
     queryFn: async ({pageParam}) => {
       const res = await getAgent().app.bsky.feed.searchPosts({
         q: query,
@@ -43,7 +40,7 @@ export function* findAllPostsInQueryData(
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<AppBskyFeedSearchPosts.OutputSchema>
   >({
-    queryKey: ['search-posts'],
+    queryKey: RQKEY(),
   })
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {

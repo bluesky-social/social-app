@@ -7,11 +7,11 @@ import {updatePostShadow} from '#/state/cache/post-shadow'
 import {track} from '#/lib/analytics/analytics'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 
-export const RQKEY = (postUri: string) => ['post', postUri]
+export const RQKEY = (postUri: string = '') => ['post', postUri] as const
 
 export function usePostQuery(uri: string | undefined) {
   return useQuery<AppBskyFeedDefs.PostView>({
-    queryKey: RQKEY(uri || ''),
+    queryKey: RQKEY(uri),
     async queryFn() {
       const res = await getAgent().getPosts({uris: [uri!]})
       if (res.success && res.data.posts[0]) {
@@ -29,7 +29,7 @@ export function useGetPost() {
   return useCallback(
     async ({uri}: {uri: string}) => {
       return queryClient.fetchQuery({
-        queryKey: RQKEY(uri || ''),
+        queryKey: RQKEY(uri),
         async queryFn() {
           const urip = new AtUri(uri)
 

@@ -13,10 +13,13 @@ export type InviteCodesQueryResponse = Exclude<
   ReturnType<typeof useInviteCodesQuery>['data'],
   undefined
 >
+
+const RQKEY = ['inviteCodes'] as const
+
 export function useInviteCodesQuery() {
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
-    queryKey: ['inviteCodes'],
+    queryKey: RQKEY,
     queryFn: async () => {
       const res = await getAgent()
         .com.atproto.server.getAccountInviteCodes({})

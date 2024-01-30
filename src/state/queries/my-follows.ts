@@ -8,13 +8,13 @@ const SANITY_PAGE_LIMIT = 1000
 const PAGE_SIZE = 100
 // ...which comes 10,000k follows
 
-export const RQKEY = () => ['my-follows']
+export const RQKEY = ['my-follows'] as const
 
 export function useMyFollowsQuery() {
   const {currentAccount} = useSession()
   return useQuery<AppBskyActorDefs.ProfileViewBasic[]>({
     staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(),
+    queryKey: RQKEY,
     async queryFn() {
       if (!currentAccount) {
         return []

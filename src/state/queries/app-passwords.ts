@@ -4,12 +4,12 @@ import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
 import {STALE} from '#/state/queries'
 import {getAgent} from '../session'
 
-export const RQKEY = () => ['app-passwords']
+export const RQKEY = ['app-passwords'] as const
 
 export function useAppPasswordsQuery() {
   return useQuery({
     staleTime: STALE.MINUTES.FIVE,
-    queryKey: RQKEY(),
+    queryKey: RQKEY,
     queryFn: async () => {
       const res = await getAgent().com.atproto.server.listAppPasswords({})
       return res.data.passwords
@@ -33,7 +33,7 @@ export function useAppPasswordCreateMutation() {
     },
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: RQKEY(),
+        queryKey: RQKEY,
       })
     },
   })
@@ -49,7 +49,7 @@ export function useAppPasswordDeleteMutation() {
     },
     onSuccess() {
       queryClient.invalidateQueries({
-        queryKey: RQKEY(),
+        queryKey: RQKEY,
       })
     },
   })
