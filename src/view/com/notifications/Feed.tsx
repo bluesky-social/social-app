@@ -16,6 +16,7 @@ import {List, ListRef} from '../util/List'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {containsMutedWordRecursive, useMutedWords} from '#/state/muted-words'
+import {usePalette} from '#/lib/hooks/usePalette'
 
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
 const LOAD_MORE_ERROR_ITEM = {_reactKey: '__load_more_error__'}
@@ -34,6 +35,7 @@ export function Feed({
 }) {
   const [isPTRing, setIsPTRing] = React.useState(false)
   const mutedWords = useMutedWords()
+  const pal = usePalette('default')
 
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
@@ -54,7 +56,7 @@ export function Feed({
       await checkUnread({invalidate: true})
     } catch (err) {
       logger.error('Failed to refresh notifications feed', {
-        error: err,
+        message: err,
       })
     } finally {
       setIsPTRing(false)
@@ -67,7 +69,7 @@ export function Feed({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more notifications', {error: err})
+      logger.error('Failed to load more notifications', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
@@ -99,11 +101,15 @@ export function Feed({
           />
         )
       } else if (item === LOADING_ITEM) {
-        return <NotificationFeedLoadingPlaceholder />
+        return (
+          <View style={[pal.border, {borderTopWidth: 1}]}>
+            <NotificationFeedLoadingPlaceholder />
+          </View>
+        )
       }
       return <FeedItem item={item} moderationOpts={moderationOpts!} />
     },
-    [onPressRetryLoadMore, moderationOpts, _],
+    [onPressRetryLoadMore, moderationOpts, _, pal.border],
   )
 
   const FeedFooter = React.useCallback(

@@ -135,7 +135,7 @@ export function RecommendedFollows({next}: Props) {
           }
         } catch (e) {
           logger.error('RecommendedFollows: failed to get suggestions', {
-            error: e,
+            message: e,
           })
         }
       }

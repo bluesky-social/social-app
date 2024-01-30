@@ -40,7 +40,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh likes', {error: err})
+      logger.error('Failed to refresh likes', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -50,7 +50,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more likes', {error: err})
+      logger.error('Failed to load more likes', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 

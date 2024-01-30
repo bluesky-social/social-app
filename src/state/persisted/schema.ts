@@ -14,6 +14,7 @@ const accountSchema = z.object({
   refreshJwt: z.string().optional(), // optional because it can expire
   accessJwt: z.string().optional(), // optional because it can expire
   mutedWords: mutedWordsSchema,
+  deactivated: z.boolean().optional(),
 })
 export type PersistedAccount = z.infer<typeof accountSchema>
 

@@ -261,7 +261,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [list.uri, isPinned, pinFeed, unpinFeed, _])
 

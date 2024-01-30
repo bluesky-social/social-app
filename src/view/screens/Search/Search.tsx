@@ -154,7 +154,7 @@ function SearchScreenSuggestedFollows() {
       getSuggestions()
     } catch (e) {
       logger.error(`SearchScreenSuggestedFollows: failed to get suggestions`, {
-        error: e,
+        message: e,
       })
     }
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
@@ -493,7 +493,7 @@ export function SearchScreen(
           setSearchHistory(JSON.parse(history))
         }
       } catch (e: any) {
-        logger.error('Failed to load search history', e)
+        logger.error('Failed to load search history', {message: e})
       }
     }
 
@@ -591,7 +591,7 @@ export function SearchScreen(
             JSON.stringify(newHistory),
           )
         } catch (e: any) {
-          logger.error('Failed to save search history', e)
+          logger.error('Failed to save search history', {message: e})
         }
       }
     },
@@ -631,7 +631,7 @@ export function SearchScreen(
     setSearchHistory(updatedHistory)
     AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
       e => {
-        logger.error('Failed to update search history', e)
+        logger.error('Failed to update search history', {message: e})
       },
     )
   }
