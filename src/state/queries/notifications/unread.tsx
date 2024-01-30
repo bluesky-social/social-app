@@ -5,11 +5,12 @@
 import React from 'react'
 import * as Notifications from 'expo-notifications'
 import {useQueryClient} from '@tanstack/react-query'
+import {AppBskyFeedPost} from '@atproto/api'
 import BroadcastChannel from '#/lib/broadcast'
 import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '../preferences'
 import {fetchPage} from './util'
-import {CachedFeedPage, FeedPage} from './types'
+import {CachedFeedPage, FeedNotification, FeedPage} from './types'
 import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
@@ -138,7 +139,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
           })
-          const unreadCount = countUnread(page)
+          const unreadCount = countUnread(page, threadMutes)
           const unreadCountStr =
             unreadCount >= 30
               ? '30+'
@@ -196,19 +197,30 @@ export function useUnreadNotificationsApi() {
   return React.useContext(apiContext)
 }
 
-function countUnread(page: FeedPage) {
+function countUnread(page: FeedPage, threadMutes: string[]) {
   let num = 0
   for (const item of page.items) {
-    if (!item.notification.isRead) {
+    // Filter out counts
+    if (!item.notification.isRead && !isMuted(item, threadMutes)) {
       num++
     }
     if (item.additional) {
       for (const item2 of item.additional) {
-        if (!item2.isRead) {
+        if (!item2.isRead && !isMuted(item, threadMutes)) {
           num++
         }
       }
     }
   }
   return num
+}
+
+function isMuted(item: FeedNotification, threadMutes: string[]) {
+  const {record} = item.notification
+  // Check that the thread isn't muted (if applicable)
+  return !!(
+    AppBskyFeedPost.isRecord(record) &&
+    record.reply &&
+    threadMutes.includes(record.reply.root.uri)
+  )
 }
