@@ -58,13 +58,13 @@ export function ProfileScreen({route}: Props) {
     data: resolvedDid,
     error: resolveError,
     refetch: refetchDid,
-    isInitialLoading: isInitialLoadingDid,
+    isLoading: isLoadingDid,
   } = useResolveDidQuery(name)
   const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isInitialLoading: isInitialLoadingProfile,
+    isLoading: isLoadingProfile,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -84,7 +84,7 @@ export function ProfileScreen({route}: Props) {
     }
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
-  if (isInitialLoadingDid || isInitialLoadingProfile || !moderationOpts) {
+  if (isLoadingDid || isLoadingProfile || !moderationOpts) {
     return (
       <CenteredView>
         <ProfileHeader
