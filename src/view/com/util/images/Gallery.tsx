@@ -4,6 +4,7 @@ import {StyleSheet, Text, Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {isWeb} from 'platform/detection'
 
 type EventFunction = (index: number) => void
 
@@ -70,8 +71,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
-    left: 8,
-    bottom: 8,
+    left: isWeb ? 8 : 5,
+    bottom: isWeb ? 8 : 5,
   },
   alt: {
     color: 'white',
