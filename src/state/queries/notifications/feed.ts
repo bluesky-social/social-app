@@ -78,7 +78,7 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
       }
 
       // if the first page has an unread, mark all read
-      if (!pageParam && page.items[0] && !page.items[0].notification.isRead) {
+      if (!pageParam) {
         unreads.markAllRead()
       }
 
