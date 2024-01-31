@@ -22,7 +22,6 @@ import Svg, {Path, SvgProps} from 'react-native-svg'
 
 import {isAndroid} from '#/platform/detection'
 import {useColorMode} from 'state/shell'
-import {colors} from '#/lib/styles'
 
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
@@ -212,7 +211,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                   },
                 ]}>
                 <AnimatedLogo
-                  fill={isDarkMode ? colors.blue3 : '#fff'}
+                  fill="#fff"
                   style={[{opacity: 0}, logoAnimations]}
                 />
               </Animated.View>
@@ -233,17 +232,14 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                     transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
                   },
                 ]}>
-                <AnimatedLogo
-                  fill={isDarkMode ? colors.blue3 : '#fff'}
-                  style={[logoAnimations]}
-                />
+                <AnimatedLogo fill="#fff" style={[logoAnimations]} />
               </Animated.View>
             }>
             {!isAnimationComplete && (
               <View
                 style={[
                   StyleSheet.absoluteFillObject,
-                  {backgroundColor: isDarkMode ? colors.blue3 : '#fff'},
+                  {backgroundColor: '#fff'},
                 ]}
               />
             )}
