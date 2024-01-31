@@ -17,8 +17,10 @@ import * as ToggleButton from '#/components/forms/ToggleButton'
 
 export function ModerationOption({
   labelGroup,
+  isMounted,
 }: {
   labelGroup: ConfigurableLabelGroup
+  isMounted: React.MutableRefObject<boolean>
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -52,7 +54,7 @@ export function ModerationOption({
         a.align_center,
       ]}
       layout={Layout.easing(Easing.ease).duration(200)}
-      entering={groupInfo.isAdultImagery ? FadeIn : undefined}>
+      entering={isMounted.current ? FadeIn : undefined}>
       <View style={[a.gap_xs, {width: '50%'}]}>
         <Text style={[a.font_bold]}>{groupInfo.title}</Text>
         <Text style={[t.atoms.text_contrast_700, a.leading_snug]}>

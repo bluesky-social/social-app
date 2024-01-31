@@ -11,7 +11,6 @@ import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import * as Prompt from '#/components/Prompt'
-import {InlineLink} from '#/components/Link'
 import {UseMutateFunction} from '@tanstack/react-query'
 import {isIOS} from 'platform/detection'
 
@@ -109,13 +108,9 @@ export function AdultContentEnabledPref({
       <Prompt.Outer control={prompt}>
         <Prompt.Title>Adult Content</Prompt.Title>
         <Prompt.Description>
-          {/* TODO Update this to provide info about why you can't enable on ios */}
           <Trans>
-            Adult content can only be enabled via the Web at{' '}
-            <InlineLink style={[a.leading_snug]} to="https://bsky.app">
-              bsky.app
-            </InlineLink>
-            .
+            Due to Apple policies, adult content can only be enabled on the web
+            after completing sign up.
           </Trans>
         </Prompt.Description>
         <Prompt.Actions>

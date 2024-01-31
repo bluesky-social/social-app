@@ -43,6 +43,13 @@ export function StepModeration() {
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetAdultContentMutation()
 
+  // We need to know if the screen is mounted so we know if we want to run entering animations
+  // https://github.com/software-mansion/react-native-reanimated/discussions/2513
+  const isMounted = React.useRef(false)
+  React.useLayoutEffect(() => {
+    isMounted.current = true
+  }, [])
+
   const adultContentEnabled = !!(
     (variables && variables.enabled) ||
     (!variables && preferences?.adultContentEnabled)
@@ -83,7 +90,7 @@ export function StepModeration() {
               configurableAdultLabelGroups.map((g, index) => (
                 <React.Fragment key={index}>
                   {index === 0 && <AnimatedDivider />}
-                  <ModerationOption labelGroup={g} />
+                  <ModerationOption labelGroup={g} isMounted={isMounted} />
                   <AnimatedDivider />
                 </React.Fragment>
               ))}
@@ -91,7 +98,7 @@ export function StepModeration() {
             {configurableOtherLabelGroups.map((g, index) => (
               <React.Fragment key={index}>
                 {!adultContentEnabled && index === 0 && <AnimatedDivider />}
-                <ModerationOption labelGroup={g} />
+                <ModerationOption labelGroup={g} isMounted={isMounted} />
                 <AnimatedDivider />
               </React.Fragment>
             ))}
