@@ -34,6 +34,11 @@ export function StepModeration() {
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetAdultContentMutation()
 
+  const adultContentEnabled = !!(
+    (variables && variables.enabled) ||
+    (!variables && preferences?.adultContentEnabled)
+  )
+
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
     track('OnboardingV2:StepModeration:End')
@@ -65,8 +70,7 @@ export function StepModeration() {
           <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {((variables && variables.enabled) ||
-              preferences.adultContentEnabled) &&
+            {adultContentEnabled &&
               configurableAdultLabelGroups.map((g, index) => (
                 <React.Fragment key={index}>
                   {index === 0 && <Divider />}
@@ -77,7 +81,7 @@ export function StepModeration() {
 
             {configurableOtherLabelGroups.map((g, index) => (
               <React.Fragment key={index}>
-                {!preferences.adultContentEnabled && index === 0 && <Divider />}
+                {!adultContentEnabled && index === 0 && <Divider />}
                 <ModerationOption labelGroup={g} />
                 <Divider />
               </React.Fragment>

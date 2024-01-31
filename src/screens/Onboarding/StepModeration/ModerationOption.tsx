@@ -57,28 +57,22 @@ export function ModerationOption({
         </Text>
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
-        {!preferences?.adultContentEnabled && groupInfo.isAdultImagery ? (
-          <View style={[a.justify_center, {minHeight: 40}]}>
-            <Text style={[a.font_bold]}>{labels.hide}</Text>
-          </View>
-        ) : (
-          <ToggleButton.Group
-            label={_(
-              msg`Configure content filtering setting for category: ${groupInfo.title.toLowerCase()}`,
-            )}
-            values={[visibility ?? 'hide']}
-            onChange={onChange}>
-            <ToggleButton.Button name="hide" label={labels.hide}>
-              {labels.hide}
-            </ToggleButton.Button>
-            <ToggleButton.Button name="warn" label={labels.warn}>
-              {labels.warn}
-            </ToggleButton.Button>
-            <ToggleButton.Button name="ignore" label={labels.show}>
-              {labels.show}
-            </ToggleButton.Button>
-          </ToggleButton.Group>
-        )}
+        <ToggleButton.Group
+          label={_(
+            msg`Configure content filtering setting for category: ${groupInfo.title.toLowerCase()}`,
+          )}
+          values={[visibility ?? 'hide']}
+          onChange={onChange}>
+          <ToggleButton.Button name="hide" label={labels.hide}>
+            {labels.hide}
+          </ToggleButton.Button>
+          <ToggleButton.Button name="warn" label={labels.warn}>
+            {labels.warn}
+          </ToggleButton.Button>
+          <ToggleButton.Button name="ignore" label={labels.show}>
+            {labels.show}
+          </ToggleButton.Button>
+        </ToggleButton.Group>
       </View>
     </View>
   )
