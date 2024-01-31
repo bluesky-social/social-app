@@ -67,14 +67,16 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
-        page = await fetchPage({
-          limit: PAGE_SIZE,
-          cursor: pageParam,
-          queryClient,
-          moderationOpts,
-          threadMutes,
-          fetchAdditionalData: true,
-        })
+        page = (
+          await fetchPage({
+            limit: PAGE_SIZE,
+            cursor: pageParam,
+            queryClient,
+            moderationOpts,
+            threadMutes,
+            fetchAdditionalData: true,
+          })
+        ).page
       }
 
       // if the first page has an unread, mark all read

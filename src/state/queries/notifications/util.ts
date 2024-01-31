@@ -36,11 +36,12 @@ export async function fetchPage({
   moderationOpts: ModerationOpts | undefined
   threadMutes: string[]
   fetchAdditionalData: boolean
-}): Promise<FeedPage> {
+}): Promise<{page: FeedPage; indexedAt: string | undefined}> {
   const res = await getAgent().listNotifications({
     limit,
     cursor,
   })
+  const indexedAt = res.data.notifications[0]?.indexedAt
 
   // filter out notifs by mod rules
   const notifs = res.data.notifications.filter(
@@ -75,9 +76,12 @@ export async function fetchPage({
   }
 
   return {
-    cursor: res.data.cursor,
-    seenAt,
-    items: notifsGrouped,
+    page: {
+      cursor: res.data.cursor,
+      seenAt,
+      items: notifsGrouped,
+    },
+    indexedAt,
   }
 }
 
