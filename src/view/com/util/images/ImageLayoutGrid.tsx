@@ -48,10 +48,10 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 3:
       return (
         <View style={styles.flexRow}>
-          <View style={{flex: 2, aspectRatio: isWeb ? 1 : undefined}}>
+          <View style={styles.threeSingle}>
             <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
-          <View style={{flex: 1, gap: !isWeb ? IMAGE_GAP : undefined}}>
+          <View style={styles.threeDouble}>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
@@ -94,6 +94,9 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
 const IMAGE_GAP = 5
 
 const styles = StyleSheet.create({
+  flexRow: {flexDirection: 'row', gap: !isWeb ? IMAGE_GAP : undefined},
+  smallItem: {flex: 1, aspectRatio: 1},
+
   container: isWeb
     ? {
         marginHorizontal: -IMAGE_GAP / 2,
@@ -102,11 +105,17 @@ const styles = StyleSheet.create({
     : {
         gap: IMAGE_GAP,
       },
-  flexRow: {flexDirection: 'row', gap: !isWeb ? IMAGE_GAP : undefined},
-  smallItem: {flex: 1, aspectRatio: 1},
   image: isWeb
     ? {
         margin: IMAGE_GAP / 2,
       }
     : {},
+  threeSingle: {
+    flex: 1,
+    gap: isWeb ? undefined : IMAGE_GAP,
+  },
+  threeDouble: {
+    flex: 1,
+    gap: isWeb ? undefined : IMAGE_GAP,
+  },
 })
