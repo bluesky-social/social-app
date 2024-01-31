@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import Animated, {Easing, Layout} from 'react-native-reanimated'
 
 import {atoms as a} from '#/alf'
 import {
@@ -26,6 +27,14 @@ import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOp
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
+
+function AnimatedDivider() {
+  return (
+    <Animated.View layout={Layout.easing(Easing.ease).duration(200)}>
+      <Divider />
+    </Animated.View>
+  )
+}
 
 export function StepModeration() {
   const {_} = useLingui()
@@ -73,17 +82,17 @@ export function StepModeration() {
             {adultContentEnabled &&
               configurableAdultLabelGroups.map((g, index) => (
                 <React.Fragment key={index}>
-                  {index === 0 && <Divider />}
+                  {index === 0 && <AnimatedDivider />}
                   <ModerationOption labelGroup={g} />
-                  <Divider />
+                  <AnimatedDivider />
                 </React.Fragment>
               ))}
 
             {configurableOtherLabelGroups.map((g, index) => (
               <React.Fragment key={index}>
-                {!adultContentEnabled && index === 0 && <Divider />}
+                {!adultContentEnabled && index === 0 && <AnimatedDivider />}
                 <ModerationOption labelGroup={g} />
-                <Divider />
+                <AnimatedDivider />
               </React.Fragment>
             ))}
           </View>

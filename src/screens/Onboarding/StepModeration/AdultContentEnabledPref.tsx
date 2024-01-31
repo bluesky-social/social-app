@@ -1,5 +1,5 @@
 import React from 'react'
-import {LayoutAnimation, View} from 'react-native'
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
@@ -49,7 +49,6 @@ export function AdultContentEnabledPref({
   const {data: preferences} = usePreferencesQuery()
 
   const onToggleAdultContent = React.useCallback(async () => {
-    // TODO re-enable this
     // if (isIOS) {
     //   prompt.open()
     //   return
@@ -59,7 +58,10 @@ export function AdultContentEnabledPref({
       mutate({
         enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
       })
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+      // if (isAndroid) {
+      //   UIManager.setLayoutAnimationEnabledExperimental(true)
+      // }
+      // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     } catch (e) {
       Toast.show(
         _(msg`There was an issue syncing your preferences with the server`),

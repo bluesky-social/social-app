@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import Animated, {Easing, Layout, FadeIn} from 'react-native-reanimated'
 
 import {
   CONFIGURABLE_LABEL_GROUPS,
@@ -41,7 +42,7 @@ export function ModerationOption({
   }
 
   return (
-    <View
+    <Animated.View
       style={[
         a.flex_row,
         a.justify_between,
@@ -49,7 +50,9 @@ export function ModerationOption({
         a.py_xs,
         a.px_xs,
         a.align_center,
-      ]}>
+      ]}
+      layout={Layout.easing(Easing.ease).duration(200)}
+      entering={groupInfo.isAdultImagery ? FadeIn : undefined}>
       <View style={[a.gap_xs, {width: '50%'}]}>
         <Text style={[a.font_bold]}>{groupInfo.title}</Text>
         <Text style={[t.atoms.text_contrast_700, a.leading_snug]}>
@@ -74,6 +77,6 @@ export function ModerationOption({
           </ToggleButton.Button>
         </ToggleButton.Group>
       </View>
-    </View>
+    </Animated.View>
   )
 }
