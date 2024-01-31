@@ -1406,7 +1406,7 @@ msgstr "フィードはユーザーがプログラミングの専門知識を持
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:68
 msgid "Feeds can be topical as well!"
-msgstr "フィードは話題にもなります！"
+msgstr "フィードには特定の話題に焦点を当てたものもあります！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
