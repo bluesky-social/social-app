@@ -21,14 +21,6 @@ msgstr ""
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
-#: src/view/com/modals/Repost.tsx:44
-#~ msgid "{0}"
-#~ msgstr ""
-
-#: src/view/com/modals/CreateOrEditList.tsx:176
-#~ msgid "{0} {purposeLabel} List"
-#~ msgstr "{0} {purposeLabel} Liste"
-
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
 msgstr ""
@@ -46,10 +38,6 @@ msgstr "{invitesAvailable} Einladungscode verfügbar"
 #: src/view/shell/Drawer.tsx:666
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable} Einladungscodes verfügbar"
-
-#: src/view/screens/Search/Search.tsx:87
-#~ msgid "{message}"
-#~ msgstr ""
 
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
@@ -545,10 +533,6 @@ msgstr "Abbrechen"
 msgid "Cancel account deletion"
 msgstr "Konto-Löschung abbrechen"
 
-#: src/view/com/modals/AltImage.tsx:123
-#~ msgid "Cancel add image alt text"
-#~ msgstr ""
-
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
 msgstr ""
@@ -577,11 +561,7 @@ msgstr "Anmeldung zur Warteliste abbrechen"
 #: src/view/screens/Settings.tsx:334
 msgctxt "action"
 msgid "Change"
-msgstr ""
-
-#: src/view/screens/Settings.tsx:306
-#~ msgid "Change"
-#~ msgstr "Ändern"
+msgstr "Ändern"
 
 #: src/view/screens/Settings.tsx:662
 #: src/view/screens/Settings.tsx:671
@@ -1034,10 +1014,6 @@ msgstr "Gelöschter Beitrag."
 msgid "Description"
 msgstr "Beschreibung"
 
-#: src/view/com/auth/create/Step1.tsx:96
-#~ msgid "Dev Server"
-#~ msgstr "Entwicklungsserver"
-
 #: src/view/screens/Settings.tsx:711
 msgid "Developer Tools"
 msgstr "Entwickler-Tools"
@@ -1272,10 +1248,6 @@ msgstr ""
 msgid "Enter Confirmation Code"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:71
-#~ msgid "Enter the address of your provider:"
-#~ msgstr "Gib die Adresse deines Anbieters ein:"
-
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
 msgstr "Gib die Domain ein, die du verwenden möchtest"
@@ -1500,10 +1472,6 @@ msgstr ""
 msgid "Follow selected accounts and continue to the next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-#~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "Folge einigen Nutzern, um loszulegen. Wir können dir weitere Nutzer empfehlen, je nachdem, wen du interessant findest."
@@ -1527,10 +1495,6 @@ msgstr ""
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "Follower"
-
-#: src/view/com/profile/ProfileHeader.tsx:624
-#~ msgid "following"
-#~ msgstr "Folge ich"
 
 #: src/view/com/profile/ProfileHeader.tsx:534
 #: src/view/screens/ProfileFollows.tsx:25
@@ -1635,10 +1599,6 @@ msgstr "Hilfe"
 msgid "Here are some accounts for you to follow"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-#~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
 msgstr ""
@@ -1723,10 +1683,6 @@ msgstr "Home-Feed-Einstellungen"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:116
 msgid "Hosting provider"
 msgstr "Hosting-Anbieter"
-
-#: src/view/com/auth/create/Step1.tsx:NaN
-#~ msgid "Hosting provider address"
-#~ msgstr "Adresse des Hosting-Anbieters"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
@@ -1990,10 +1946,6 @@ msgstr ""
 msgid "liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed '{0}'"
-#~ msgstr ""
-
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
 msgstr ""
@@ -2114,13 +2066,9 @@ msgstr "Erwähnte Benutzer"
 msgid "Menu"
 msgstr "Menü"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:194
-#~ msgid "Message from server"
-#~ msgstr "Nachricht vom Server"
-
 #: src/view/com/posts/FeedErrorMessage.tsx:197
 msgid "Message from server: {0}"
-msgstr ""
+msgstr "Nachricht vom Server: {0}"
 
 #: src/Navigation.tsx:115
 #: src/view/screens/Moderation.tsx:64
@@ -2318,11 +2266,7 @@ msgstr "Neuer Beitrag"
 #: src/view/shell/desktop/LeftNav.tsx:258
 msgctxt "action"
 msgid "New Post"
-msgstr ""
-
-#: src/view/shell/desktop/LeftNav.tsx:257
-#~ msgid "New Post"
-#~ msgstr "Neuer Beitrag"
+msgstr "Neuer Beitrag"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
@@ -2592,10 +2536,6 @@ msgstr ""
 msgid "Or combine these options:"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-#~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr ""
-
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "Anderes Konto"
@@ -2752,13 +2692,7 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:251
 msgctxt "description"
 msgid "Post"
-msgstr ""
-
-#: src/view/com/composer/Composer.tsx:341
-#: src/view/com/post-thread/PostThread.tsx:225
-#: src/view/screens/PostThread.tsx:80
-#~ msgid "Post"
-#~ msgstr "Beitrag"
+msgstr "Beitrag"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:177
 msgid "Post by {0}"
@@ -2869,7 +2803,7 @@ msgstr ""
 #: src/view/com/modals/Repost.tsx:65
 msgctxt "action"
 msgid "Quote post"
-msgstr ""
+msgstr "Beitrag zitieren"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
@@ -2878,11 +2812,7 @@ msgstr "Beitrag zitieren"
 #: src/view/com/modals/Repost.tsx:70
 msgctxt "action"
 msgid "Quote Post"
-msgstr ""
-
-#: src/view/com/modals/Repost.tsx:56
-#~ msgid "Quote Post"
-#~ msgstr "Beitrag zitieren"
+msgstr "Beitrag zitieren"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -3023,10 +2953,6 @@ msgstr "Erneut veröffentlichen"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
 msgstr ""
-
-#: src/view/screens/PostRepostedBy.tsx:27
-#~ msgid "Reposted by"
-#~ msgstr ""
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
@@ -3295,11 +3221,7 @@ msgstr "E-Mail senden"
 #: src/view/com/modals/DeleteAccount.tsx:140
 msgctxt "action"
 msgid "Send Email"
-msgstr ""
-
-#: src/view/com/modals/DeleteAccount.tsx:138
-#~ msgid "Send Email"
-#~ msgstr "E-Mail senden"
+msgstr "E-Mail senden"
 
 #: src/view/shell/Drawer.tsx:298
 #: src/view/shell/Drawer.tsx:319
@@ -3761,11 +3683,7 @@ msgstr "Die Datenschutzerklärung wurde nach <0/> verschoben"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr ""
-
-#: src/view/screens/Support.tsx:36
-#~ msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-#~ msgstr "Das Support-Formular wurde verschoben. Wenn du Hilfe benötigst, wende dich bitte an<0/> oder besuche {HELP_DESK_URL}, um mit uns Kontakt aufzunehmen."
+msgstr "Das Support-Formular wurde verschoben. Wenn du Hilfe benötigst, wende dich bitte an <0/> oder besuche {HELP_DESK_URL}, um mit uns Kontakt aufzunehmen."
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -3861,10 +3779,6 @@ msgstr ""
 msgid "These are popular accounts you might like:"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-#~ msgid "These are popular accounts you might like."
-#~ msgstr ""
-
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
 msgstr ""
@@ -3906,10 +3820,6 @@ msgstr "Diese Informationen werden nicht an andere Nutzer weitergegeben."
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Das ist wichtig für den Fall, dass du mal deine E-Mail ändern oder dein Passwort zurücksetzen musst."
-
-#: src/view/com/auth/create/Step1.tsx:55
-#~ msgid "This is the service that keeps you online."
-#~ msgstr "Das ist der Dienst, der dich online hält."
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -3977,11 +3887,7 @@ msgstr "Übersetzen"
 #: src/view/com/util/error/ErrorScreen.tsx:75
 msgctxt "action"
 msgid "Try again"
-msgstr ""
-
-#: src/view/com/util/error/ErrorScreen.tsx:73
-#~ msgid "Try again"
-#~ msgstr "Erneut versuchen"
+msgstr "Erneut versuchen"
 
 #: src/view/screens/ProfileList.tsx:481
 msgid "Un-block list"
@@ -4352,10 +4258,6 @@ msgstr ""
 msgid "You can also try our \"Discover\" algorithm:"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:106
-#~ msgid "You can change hosting providers at any time."
-#~ msgstr "Du kannst den Hosting-Anbieter jederzeit wechseln."
-
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
 msgstr ""
@@ -4496,10 +4398,6 @@ msgstr ""
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:53
-#~ msgid "Your hosting provider"
-#~ msgstr "Dein Hosting-Anbieter"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137
