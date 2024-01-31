@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-01-31 14:30+0800\n"
+"POT-Creation-Date: 2024-01-31 20:50+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1472,10 +1472,6 @@ msgstr "关注所有"
 msgid "Follow selected accounts and continue to the next step"
 msgstr "关注选择的用户并继续下一步"
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-#~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr "关注选择的用户并继续下一步"
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "关注一些用户以开始，我们可以根据你感兴趣的用户向你推荐更多类似用户。"
@@ -1602,10 +1598,6 @@ msgstr "帮助"
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Here are some accounts for you to follow"
 msgstr "这里是一些推荐关注的用户"
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-#~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
@@ -1953,10 +1945,6 @@ msgstr "{likeCount} {0} 点赞"
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
 msgstr "点赞你的自定义信息流"
-
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed '{0}'"
-#~ msgstr "点赞你的自定义信息流 '{0}'"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
@@ -2547,10 +2535,6 @@ msgstr "第 {0} 个选项，共 {numItems} 个"
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
 msgstr "或者选择组合这些选项："
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-#~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr "或者你可以尝试我们的“发现”算法："
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -3794,10 +3778,6 @@ msgstr "电话号码有误，请选择电话区号并输入完整的电话号码
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
 msgstr "这里是一些受欢迎的账号，你可能会喜欢："
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-#~ msgid "These are popular accounts you might like."
-#~ msgstr "这里是一些受欢迎的账号，你可能会喜欢。"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
