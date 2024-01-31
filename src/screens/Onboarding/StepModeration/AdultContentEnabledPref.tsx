@@ -13,6 +13,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import * as Prompt from '#/components/Prompt'
 import {InlineLink} from '#/components/Link'
 import {UseMutateFunction} from '@tanstack/react-query'
+import {isIOS} from 'platform/detection'
 
 function Card({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
@@ -49,19 +50,15 @@ export function AdultContentEnabledPref({
   const {data: preferences} = usePreferencesQuery()
 
   const onToggleAdultContent = React.useCallback(async () => {
-    // if (isIOS) {
-    //   prompt.open()
-    //   return
-    // }
+    if (isIOS) {
+      prompt.open()
+      return
+    }
 
     try {
       mutate({
         enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
       })
-      // if (isAndroid) {
-      //   UIManager.setLayoutAnimationEnabledExperimental(true)
-      // }
-      // LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     } catch (e) {
       Toast.show(
         _(msg`There was an issue syncing your preferences with the server`),
