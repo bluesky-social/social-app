@@ -228,11 +228,11 @@ msgstr "成人向けコンテンツ"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:137
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "成人向けコンテンツは<0/>のウェブからのみ有効化できます。"
+msgstr "成人向けコンテンツはウェブ(<0/>)からのみ有効化できます。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "成人向けコンテンツは<0>bsky.app</0>のウェブからのみ有効化できます。"
+msgstr "成人向けコンテンツはウェブ(<0>bsky.app</0>)からのみ有効化できます。"
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -370,7 +370,7 @@ msgstr "戻る"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr "あなたが興味のある「{interestsText}」に基づいています。"
+msgstr "「{interestsText}」への興味に基づいたおすすめです。"
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
@@ -1394,7 +1394,7 @@ msgstr "フィード"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:105
 msgid "Feeds are created by users and can give you entirely new experiences."
-msgstr "フィードはユーザーによって作成され、あなたに全く新しい体験をもたらします。"
+msgstr "さまざまなユーザーが作成したフィードを使えば、全く新しい体験ができます。"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
@@ -1614,7 +1614,7 @@ msgstr "人気のあるフィードを紹介します。好きなだけフォロ
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:72
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "あなたが興味のある「{interestsText}」に基づいてフィードを紹介します。好きなだけフォローすることができます。"
+msgstr "「{interestsText}」への興味に基づいたおすすめです。好きなだけフォローすることができます。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
@@ -3349,7 +3349,7 @@ msgstr "スレッド表示で返信を表示するには、この設定を「は
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "保存されたフィードから投稿を抽出してフォロー中フィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
+msgstr "保存されたフィードから投稿を抽出してFollowingフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -3443,15 +3443,15 @@ msgstr "引用を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "フォロー中フィードで引用を表示"
+msgstr "Followingフィードで引用を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr "フォロー中フィードで引用を表示"
+msgstr "Followingフィードで引用を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr "フォロー中フィードでリポストを表示"
+msgstr "Followingフィードでリポストを表示"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
@@ -3463,11 +3463,11 @@ msgstr "自分がフォローしているユーザーからの返信を、他の
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr "フォロー中フィードで返信を表示"
+msgstr "Followingフィードで返信を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr "フォロー中フィードで返信を表示"
+msgstr "Followingフィードで返信を表示"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3479,7 +3479,7 @@ msgstr "リポストを表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr "フォロー中フィードでリポストを表示"
+msgstr "Followingフィードでリポストを表示"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -4453,7 +4453,7 @@ msgstr "ここで選択した内容は保存されますが、後から設定で
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr "あなたのデフォルトフィードはフォロー中です"
+msgstr "あなたのデフォルトフィードは「Following」です"
 
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4474,7 +4474,7 @@ msgstr "メールアドレスはまだ確認されていません。これは、
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "フォロー中フィードは空です！もっと多くのユーザーをフォローして、近況を確認しましょう。"
+msgstr "Followingフィードは空です！もっと多くのユーザーをフォローして、近況を確認しましょう。"
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
