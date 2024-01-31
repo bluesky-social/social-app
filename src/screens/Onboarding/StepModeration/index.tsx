@@ -7,6 +7,7 @@ import {atoms as a} from '#/alf'
 import {
   configurableAdultLabelGroups,
   configurableOtherLabelGroups,
+  usePreferencesSetAdultContentMutation,
 } from 'state/queries/preferences'
 import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -31,6 +32,7 @@ export function StepModeration() {
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
+  const {mutate, variables} = usePreferencesSetAdultContentMutation()
 
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
@@ -60,10 +62,11 @@ export function StepModeration() {
         </View>
       ) : (
         <>
-          <AdultContentEnabledPref />
+          <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {preferences.adultContentEnabled &&
+            {((variables && variables.enabled) ||
+              preferences.adultContentEnabled) &&
               configurableAdultLabelGroups.map((g, index) => (
                 <React.Fragment key={index}>
                   {index === 0 && <Divider />}
