@@ -43,12 +43,11 @@ export function StepModeration() {
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
       <Title>
-        <Trans>You are in control</Trans>
+        <Trans>You're in control</Trans>
       </Title>
       <Description style={[a.mb_xl]}>
         <Trans>
-          Select the types of content that you want to see (or not see), and
-          we'll handle the rest.
+          Select what you want to see (or not see), and we’ll handle the rest.
         </Trans>
       </Description>
 
