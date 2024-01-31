@@ -21,15 +21,6 @@ msgstr ""
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr "{0, plural, one {# invite code available} other {# invite codes available}}"
 
-#: src/view/com/modals/CreateOrEditList.tsx:185
-#: src/view/screens/Settings.tsx:294
-#~ msgid "{0}"
-#~ msgstr "{0}"
-
-#: src/view/com/modals/CreateOrEditList.tsx:176
-#~ msgid "{0} {purposeLabel} List"
-#~ msgstr "Lista {purposeLabel} {0}"
-
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
 msgstr ""
@@ -48,17 +39,9 @@ msgstr "{invitesAvailable} código de invitación disponible"
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable} códigos de invitación disponibles"
 
-#: src/view/screens/Search/Search.tsx:87
-#~ msgid "{message}"
-#~ msgstr "{message}"
-
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
 msgstr ""
-
-#: src/Navigation.tsx:147
-#~ msgid "@{0}"
-#~ msgstr ""
 
 #: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
@@ -550,10 +533,6 @@ msgstr ""
 msgid "Cancel account deletion"
 msgstr "Cancelar la eliminación de la cuenta"
 
-#: src/view/com/modals/AltImage.tsx:123
-#~ msgid "Cancel add image alt text"
-#~ msgstr "Cancelar añadir texto alternativo a la imagen"
-
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
 msgstr "Cancelar identificador de cambio"
@@ -582,11 +561,7 @@ msgstr "Cancelar la inscripción en la lista de espera"
 #: src/view/screens/Settings.tsx:334
 msgctxt "action"
 msgid "Change"
-msgstr ""
-
-#: src/view/screens/Settings.tsx:306
-#~ msgid "Change"
-#~ msgstr "Cambiar"
+msgstr "Cambiar"
 
 #: src/view/screens/Settings.tsx:662
 #: src/view/screens/Settings.tsx:671
@@ -986,10 +961,6 @@ msgstr ""
 msgid "Dark mode"
 msgstr ""
 
-#: src/Navigation.tsx:204
-#~ msgid "Debug"
-#~ msgstr ""
-
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
 msgstr ""
@@ -1042,10 +1013,6 @@ msgstr "Se borró la publicación."
 #: src/view/com/modals/EditProfile.tsx:210
 msgid "Description"
 msgstr "Descripción"
-
-#: src/view/com/auth/create/Step1.tsx:96
-#~ msgid "Dev Server"
-#~ msgstr "Servidor de desarrollo"
 
 #: src/view/screens/Settings.tsx:711
 msgid "Developer Tools"
@@ -1281,10 +1248,6 @@ msgstr ""
 msgid "Enter Confirmation Code"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:71
-#~ msgid "Enter the address of your provider:"
-#~ msgstr "Introduce la dirección de tu proveedor:"
-
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
 msgstr "Introduce el dominio que quieres utilizar"
@@ -1509,10 +1472,6 @@ msgstr ""
 msgid "Follow selected accounts and continue to the next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-#~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "Sigue a algunos usuarios para empezar. Podemos recomendarte más usuarios en función de los que te parezcan interesantes."
@@ -1536,10 +1495,6 @@ msgstr ""
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "Seguidores"
-
-#: src/view/com/profile/ProfileHeader.tsx:624
-#~ msgid "following"
-#~ msgstr "siguiendo"
 
 #: src/view/com/profile/ProfileHeader.tsx:534
 #: src/view/screens/ProfileFollows.tsx:25
@@ -1644,10 +1599,6 @@ msgstr "Ayuda"
 msgid "Here are some accounts for you to follow"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-#~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
 msgstr ""
@@ -1733,11 +1684,6 @@ msgstr "Preferencias de noticias de la página inicial"
 msgid "Hosting provider"
 msgstr "Proveedor de alojamiento"
 
-#: src/view/com/auth/create/Step1.tsx:76
-#: src/view/com/auth/create/Step1.tsx:81
-#~ msgid "Hosting provider address"
-#~ msgstr "Dirección del proveedor de alojamiento"
-
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
 msgstr ""
@@ -1786,14 +1732,6 @@ msgstr ""
 #: src/view/com/auth/create/Step1.tsx:144
 msgid "Input email for Bluesky account"
 msgstr ""
-
-#: src/view/com/auth/create/Step2.tsx:109
-#~ msgid "Input email for Bluesky waitlist"
-#~ msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:80
-#~ msgid "Input hosting provider address"
-#~ msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:102
 msgid "Input invite code to proceed"
@@ -2008,14 +1946,6 @@ msgstr ""
 msgid "liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed '{0}'"
-#~ msgstr ""
-
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed{0}"
-#~ msgstr ""
-
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
 msgstr ""
@@ -2136,13 +2066,9 @@ msgstr "Usuarios mencionados"
 msgid "Menu"
 msgstr "Menú"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:194
-#~ msgid "Message from server"
-#~ msgstr "Mensaje del servidor"
-
 #: src/view/com/posts/FeedErrorMessage.tsx:197
 msgid "Message from server: {0}"
-msgstr ""
+msgstr "Mensaje del servidor: {0}"
 
 #: src/Navigation.tsx:115
 #: src/view/screens/Moderation.tsx:64
@@ -2340,11 +2266,7 @@ msgstr "Publicación nueva"
 #: src/view/shell/desktop/LeftNav.tsx:258
 msgctxt "action"
 msgid "New Post"
-msgstr ""
-
-#: src/view/shell/desktop/LeftNav.tsx:258
-#~ msgid "New Post"
-#~ msgstr "Publicación nueva"
+msgstr "Publicación nueva"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
@@ -2614,10 +2536,6 @@ msgstr ""
 msgid "Or combine these options:"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-#~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr ""
-
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "Otra cuenta"
@@ -2774,13 +2692,7 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:251
 msgctxt "description"
 msgid "Post"
-msgstr ""
-
-#: src/view/com/composer/Composer.tsx:346
-#: src/view/com/post-thread/PostThread.tsx:225
-#: src/view/screens/PostThread.tsx:80
-#~ msgid "Post"
-#~ msgstr "Publicación"
+msgstr "Publicación"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:177
 msgid "Post by {0}"
@@ -2891,7 +2803,7 @@ msgstr ""
 #: src/view/com/modals/Repost.tsx:65
 msgctxt "action"
 msgid "Quote post"
-msgstr ""
+msgstr "Citar una publicación"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
@@ -2900,11 +2812,7 @@ msgstr "Citar una publicación"
 #: src/view/com/modals/Repost.tsx:70
 msgctxt "action"
 msgid "Quote Post"
-msgstr ""
-
-#: src/view/com/modals/Repost.tsx:56
-#~ msgid "Quote Post"
-#~ msgstr "Citar una publicación"
+msgstr "Citar una publicación"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -3047,24 +2955,16 @@ msgid "Repost or quote post"
 msgstr "Volver a publicar o citar publicación"
 
 #: src/view/screens/PostRepostedBy.tsx:27
-#~ msgid "Reposted by"
-#~ msgstr "Vuelto a publicar por"
-
-#: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr ""
+msgstr "Vuelto a publicar por"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
-msgstr ""
-
-#: src/view/com/posts/FeedItem.tsx:206
-#~ msgid "Reposted by {0})"
-#~ msgstr ""
+msgstr "Vuelto a publicar por {0}"
 
 #: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0/>"
-msgstr ""
+msgstr "Vuelto a publicar por <0/>"
 
 #: src/view/com/notifications/FeedItem.tsx:162
 msgid "reposted your post"
@@ -3321,11 +3221,7 @@ msgstr "Enviar el mensaje"
 #: src/view/com/modals/DeleteAccount.tsx:140
 msgctxt "action"
 msgid "Send Email"
-msgstr ""
-
-#: src/view/com/modals/DeleteAccount.tsx:138
-#~ msgid "Send Email"
-#~ msgstr "Enviar el mensaje"
+msgstr "Enviar el mensaje"
 
 #: src/view/shell/Drawer.tsx:298
 #: src/view/shell/Drawer.tsx:319
@@ -3405,10 +3301,6 @@ msgstr ""
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:118
 msgid "Sets hosting provider for password reset"
 msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:143
-#~ msgid "Sets hosting provider to {label}"
-#~ msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:78
 #: src/view/com/auth/login/LoginForm.tsx:148
@@ -3667,10 +3559,6 @@ msgstr "Página de estado"
 msgid "Step {0} of {numSteps}"
 msgstr ""
 
-#: src/view/com/auth/create/StepHeader.tsx:15
-#~ msgid "Step {step} of 3"
-#~ msgstr ""
-
 #: src/view/screens/Settings.tsx:276
 msgid "Storage cleared, you need to restart the app now."
 msgstr ""
@@ -3696,10 +3584,6 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:579
 msgid "Subscribe to this list"
 msgstr "Suscribirse a esta lista"
-
-#: src/view/com/lists/ListCard.tsx:101
-#~ msgid "Subscribed"
-#~ msgstr ""
 
 #: src/view/screens/Search/Search.tsx:372
 msgid "Suggested Follows"
@@ -3799,11 +3683,7 @@ msgstr "La Política de privacidad se ha trasladado a <0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr ""
-
-#: src/view/screens/Support.tsx:36
-#~ msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-#~ msgstr "Se ha movido el formulario de soporte. Si necesitas ayuda, por favor<0/> o visita {HELP_DESK_URL} para ponerte en contacto con nosotros."
+msgstr "Se ha movido el formulario de soporte. Si necesitas ayuda, por favor <0/> o visita {HELP_DESK_URL} para ponerte en contacto con nosotros."
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -3899,10 +3779,6 @@ msgstr ""
 msgid "These are popular accounts you might like:"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-#~ msgid "These are popular accounts you might like."
-#~ msgstr ""
-
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
 msgstr "Esta {screenDescription} ha sido marcada:"
@@ -3944,10 +3820,6 @@ msgstr "Esta información no se comparte con otros usuarios."
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Esto es importante por si alguna vez necesitas cambiar tu correo electrónico o restablecer tu contraseña."
-
-#: src/view/com/auth/create/Step1.tsx:55
-#~ msgid "This is the service that keeps you online."
-#~ msgstr "Es el servicio que te mantiene en línea."
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -4015,11 +3887,7 @@ msgstr "Traducir"
 #: src/view/com/util/error/ErrorScreen.tsx:75
 msgctxt "action"
 msgid "Try again"
-msgstr ""
-
-#: src/view/com/util/error/ErrorScreen.tsx:73
-#~ msgid "Try again"
-#~ msgstr "Intentar nuevamente"
+msgstr "Intentar nuevamente"
 
 #: src/view/screens/ProfileList.tsx:481
 msgid "Un-block list"
@@ -4273,10 +4141,6 @@ msgid "We hope you have a wonderful time. Remember, Bluesky is:"
 msgstr ""
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
-#~ msgid "We ran out of posts from your follows. Here's the latest from"
-#~ msgstr ""
-
-#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
@@ -4393,10 +4257,6 @@ msgstr ""
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
 msgid "You can also try our \"Discover\" algorithm:"
 msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:106
-#~ msgid "You can change hosting providers at any time."
-#~ msgstr "Puedes cambiar de proveedor de alojamiento en cualquier momento."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4538,10 +4398,6 @@ msgstr "Tu identificador completo será"
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:53
-#~ msgid "Your hosting provider"
-#~ msgstr "Tu proveedor de alojamiento"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137
