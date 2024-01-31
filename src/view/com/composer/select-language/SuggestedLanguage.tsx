@@ -23,7 +23,9 @@ const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))
 const cancelIdle = globalThis.cancelIdleCallback || clearTimeout
 
 export function SuggestedLanguage({text}: {text: string}) {
-  const [suggestedLanguage, setSuggestedLanguage] = useState<string>()
+  const [suggestedLanguage, setSuggestedLanguage] = useState<
+    string | undefined
+  >()
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const pal = usePalette('default')
@@ -40,14 +42,7 @@ export function SuggestedLanguage({text}: {text: string}) {
     }
 
     const idle = onIdle(() => {
-      // Only select languages that have a high confidence and convert to code2
-      const result = lande(textTrimmed).filter(
-        ([lang, value]) => value >= 0.97 && code3ToCode2Strict(lang),
-      )
-
-      setSuggestedLanguage(
-        result.length > 0 ? code3ToCode2Strict(result[0][0]) : undefined,
-      )
+      setSuggestedLanguage(guessLanguage(textTrimmed))
     })
 
     return () => cancelIdle(idle)
@@ -99,3 +94,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 })
+
+/**
+ * This function is using the lande language model to attempt to detect the language
+ * We want to only make suggestions when we feel a high degree of certainty
+ * The magic numbers are based on debugging sessions against some test strings
+ */
+function guessLanguage(text: string): string | undefined {
+  const scores = lande(text).filter(([_lang, value]) => value >= 0.0002)
+  // if the model has multiple items with a score higher than 0.0002, it isn't certain enough
+  if (scores.length !== 1) {
+    return undefined
+  }
+  const [lang, value] = scores[0]
+  // if the model doesn't give a score of 0.97 or above, it isn't certain enough
+  if (value < 0.97) {
+    return undefined
+  }
+  return code3ToCode2Strict(lang)
+}
