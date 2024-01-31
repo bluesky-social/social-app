@@ -201,7 +201,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
               bottomLogoAnimation,
               {
                 position: 'absolute',
-                bottom: insets.bottom,
+                bottom: insets.bottom + 40,
                 left: 0,
                 right: 0,
                 alignItems: 'center',
