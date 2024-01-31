@@ -91,8 +91,8 @@ web-build/
 
 
 # Android & iOS folders
-android/
-ios/
+/android/
+/ios/
 
 # environment variables
 .env

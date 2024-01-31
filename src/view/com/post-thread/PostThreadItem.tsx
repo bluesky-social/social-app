@@ -40,6 +40,7 @@ import {useLingui} from '@lingui/react'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useComposerControls} from '#/state/shell/composer'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
@@ -216,10 +217,11 @@ let PostThreadItemLoaded = ({
           avatar: post.author.avatar,
         },
         embed: post.embed,
+        moderation,
       },
       onPost: onPostReply,
     })
-  }, [openComposer, post, record, onPostReply])
+  }, [openComposer, post, record, onPostReply, moderation])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)
@@ -701,17 +703,23 @@ function ExpandedPostDetails({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const openLink = useOpenLink()
+  const onTranslatePress = React.useCallback(
+    () => openLink(translatorUrl),
+    [openLink, translatorUrl],
+  )
   return (
     <View style={[s.flexRow, s.mt2, s.mb10]}>
       <Text style={pal.textLight}>{niceDate(post.indexedAt)}</Text>
       {needsTranslation && (
         <>
           <Text style={pal.textLight}> &middot; </Text>
-          <Link href={translatorUrl} title={_(msg`Translate`)}>
-            <Text style={pal.link}>
-              <Trans>Translate</Trans>
-            </Text>
-          </Link>
+          <Text
+            style={pal.link}
+            title={_(msg`Translate`)}
+            onPress={onTranslatePress}>
+            <Trans>Translate</Trans>
+          </Text>
         </>
       )}
     </View>
@@ -768,6 +776,7 @@ const useStyles = () => {
     },
     postTextLargeContainer: {
       paddingHorizontal: 0,
+      paddingRight: 0,
       paddingBottom: 10,
     },
     translateLink: {
