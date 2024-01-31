@@ -51,7 +51,7 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
           <View style={{flex: 2, aspectRatio: isWeb ? 1 : undefined}}>
             <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
-          <View style={{flex: 1, gap: !isWeb ? 5 : undefined}}>
+          <View style={{flex: 1, gap: !isWeb ? IMAGE_GAP : undefined}}>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
