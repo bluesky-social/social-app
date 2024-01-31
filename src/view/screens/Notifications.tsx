@@ -27,6 +27,7 @@ import {
 import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
 import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isNative} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<
@@ -38,7 +39,6 @@ export function NotificationsScreen({}: Props) {
   const setMinimalShellMode = useSetMinimalShellMode()
   const [isScrolledDown, setIsScrolledDown] = React.useState(false)
   const scrollElRef = React.useRef<ListMethods>(null)
-  const checkLatestRef = React.useRef<() => void | null>()
   const {screen} = useAnalytics()
   const pal = usePalette('default')
   const {isDesktop} = useWebMediaQueries()
@@ -66,12 +66,19 @@ export function NotificationsScreen({}: Props) {
     }
   }, [scrollToTop, queryClient, unreadApi, hasNew])
 
-  const onFocusCheckLatest = React.useCallback(() => {
+  const onFocusCheckLatest = useNonReactiveCallback(() => {
     // on focus, check for latest, but only invalidate if the user
     // isnt scrolled down to avoid moving content underneath them
-    unreadApi.checkUnread({invalidate: !isScrolledDown})
-  }, [unreadApi, isScrolledDown])
-  checkLatestRef.current = onFocusCheckLatest
+    let currentIsScrolledDown
+    if (isNative) {
+      currentIsScrolledDown = isScrolledDown
+    } else {
+      // On the web, this isn't always updated in time so
+      // we're just going to look it up synchronously.
+      currentIsScrolledDown = window.scrollY > 200
+    }
+    unreadApi.checkUnread({invalidate: !currentIsScrolledDown})
+  })
 
   // on-visible setup
   // =
@@ -80,8 +87,8 @@ export function NotificationsScreen({}: Props) {
       setMinimalShellMode(false)
       logger.debug('NotificationsScreen: Focus')
       screen('Notifications')
-      checkLatestRef.current?.()
-    }, [screen, setMinimalShellMode]),
+      onFocusCheckLatest()
+    }, [screen, setMinimalShellMode, onFocusCheckLatest]),
   )
   React.useEffect(() => {
     if (!isScreenFocused) {
