@@ -117,7 +117,7 @@ msgstr "ऐप का एक नया संस्करण उपलब्ध 
 msgid "Access navigation links and settings"
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:83
+#: src/view/com/pager/FeedsTabBarMobile.tsx:89
 msgid "Access profile and other navigation links"
 msgstr ""
 
@@ -165,7 +165,7 @@ msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
-#: src/view/com/modals/UserAddRemoveLists.tsx:203
+#: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/screens/ProfileList.tsx:788
 msgid "Add"
 msgstr "ऐड करो"
@@ -185,7 +185,7 @@ msgstr "अकाउंट जोड़ें"
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
-#: src/view/com/modals/AltImage.tsx:93
+#: src/view/com/modals/AltImage.tsx:115
 msgid "Add alt text"
 msgstr "इस फ़ोटो में विवरण जोड़ें"
 
@@ -230,7 +230,7 @@ msgid "Added"
 msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
-#: src/view/com/modals/UserAddRemoveLists.tsx:128
+#: src/view/com/modals/UserAddRemoveLists.tsx:144
 msgid "Added to list"
 msgstr ""
 
@@ -287,10 +287,14 @@ msgstr "{0} को ईमेल भेजा गया है। इसमें
 msgid "An issue occurred, please try again."
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:238
+#: src/view/com/notifications/FeedItem.tsx:236
 #: src/view/com/threadgate/WhoCanReply.tsx:178
 msgid "and"
 msgstr "और"
+
+#: src/screens/Onboarding/index.tsx:32
+msgid "Animals"
+msgstr ""
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
@@ -321,7 +325,7 @@ msgstr "ऐप पासवर्ड"
 msgid "App Passwords"
 msgstr "ऐप पासवर्ड"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:248
+#: src/view/com/util/forms/PostDropdownBtn.tsx:250
 msgid "Appeal content warning"
 msgstr ""
 
@@ -361,12 +365,16 @@ msgstr "क्या आप वाकई इस ड्राफ्ट को ह
 msgid "Are you sure?"
 msgstr "क्या आप वास्तव में इसे करना चाहते हैं?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:231
+#: src/view/com/util/forms/PostDropdownBtn.tsx:233
 msgid "Are you sure? This cannot be undone."
 msgstr "क्या आप वास्तव में इसे करना चाहते हैं? इसे असंपादित नहीं किया जा सकता है।"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:65
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:26
+msgid "Art"
 msgstr ""
 
 #: src/view/com/modals/SelfLabel.tsx:123
@@ -499,6 +507,10 @@ msgstr ""
 msgid "Bluesky.Social"
 msgstr "Bluesky.Social"
 
+#: src/screens/Onboarding/index.tsx:33
+msgid "Books"
+msgstr ""
+
 #: src/view/screens/Settings.tsx:792
 msgid "Build version {0} {1}"
 msgstr "Build version {0} {1}"
@@ -621,7 +633,7 @@ msgstr "हैंडल बदलें"
 msgid "Change my email"
 msgstr "मेरा ईमेल बदलें"
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:78
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
 msgstr ""
 
@@ -667,7 +679,7 @@ msgstr ""
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "उन एल्गोरिदम का चयन करें जो कस्टम फीड्स के साथ अपने अनुभव को शक्ति देते हैं।।"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:102
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your algorithmic feeds"
 msgstr ""
 
@@ -700,6 +712,10 @@ msgstr "खोज क्वेरी साफ़ करें"
 
 #: src/view/screens/Support.tsx:40
 msgid "click here"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:35
+msgid "Climate"
 msgstr ""
 
 #: src/components/Dialog/index.web.tsx:78
@@ -742,8 +758,16 @@ msgstr ""
 msgid "Closes viewer for header image"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:319
+#: src/view/com/notifications/FeedItem.tsx:317
 msgid "Collapses list of users for a given notification"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:41
+msgid "Comedy"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:27
+msgid "Comics"
 msgstr ""
 
 #: src/Navigation.tsx:228
@@ -845,29 +869,33 @@ msgstr "सामग्री चेतावनी"
 msgid "Content warnings"
 msgstr "सामग्री चेतावनी"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:153
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:154
 #: src/screens/Onboarding/StepFollowingFeed.tsx:153
-#: src/screens/Onboarding/StepInterests/index.tsx:249
+#: src/screens/Onboarding/StepInterests/index.tsx:248
 #: src/screens/Onboarding/StepModeration/index.tsx:84
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:106
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:108
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
 msgid "Continue"
 msgstr "आगे बढ़ें"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:150
-#: src/screens/Onboarding/StepInterests/index.tsx:246
+#: src/screens/Onboarding/StepInterests/index.tsx:245
 #: src/screens/Onboarding/StepModeration/index.tsx:81
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:103
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:105
 msgid "Continue to next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:150
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:151
 msgid "Continue to the next step"
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
 msgid "Continue to the next step without following any accounts"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:44
+msgid "Cooking"
 msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:197
@@ -881,7 +909,7 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:75
 #: src/view/com/modals/InviteCodes.tsx:152
-#: src/view/com/util/forms/PostDropdownBtn.tsx:110
+#: src/view/com/util/forms/PostDropdownBtn.tsx:112
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -897,7 +925,7 @@ msgstr "कॉपी"
 msgid "Copy link to list"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:151
+#: src/view/com/util/forms/PostDropdownBtn.tsx:153
 msgid "Copy link to post"
 msgstr ""
 
@@ -905,7 +933,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:137
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
 msgid "Copy post text"
 msgstr "पोस्ट टेक्स्ट कॉपी करें"
 
@@ -965,6 +993,10 @@ msgstr ""
 msgid "Creates a card with a thumbnail. The card links to {url}"
 msgstr ""
 
+#: src/screens/Onboarding/index.tsx:29
+msgid "Culture"
+msgstr ""
+
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
 msgid "Custom domain"
@@ -1020,11 +1052,11 @@ msgstr "मेरा खाता हटाएं"
 msgid "Delete my account…"
 msgstr "मेरा खाता हटाएं…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:226
+#: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
 msgstr "पोस्ट को हटाएं"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:230
+#: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Delete this post?"
 msgstr "इस पोस्ट को डीलीट करें?"
 
@@ -1072,7 +1104,7 @@ msgstr ""
 msgid "Discover new custom feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:440
+#: src/view/screens/Feeds.tsx:441
 msgid "Discover new feeds"
 msgstr "नए फ़ीड की खोज करें"
 
@@ -1098,15 +1130,15 @@ msgstr ""
 #: src/view/com/modals/SelfLabel.tsx:157
 #: src/view/com/modals/Threadgate.tsx:129
 #: src/view/com/modals/Threadgate.tsx:132
-#: src/view/com/modals/UserAddRemoveLists.tsx:79
-#: src/view/com/modals/UserAddRemoveLists.tsx:82
+#: src/view/com/modals/UserAddRemoveLists.tsx:95
+#: src/view/com/modals/UserAddRemoveLists.tsx:98
 #: src/view/screens/PreferencesThreads.tsx:162
 msgctxt "action"
 msgid "Done"
 msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:228
-#: src/view/com/modals/AltImage.tsx:115
+#: src/view/com/modals/AltImage.tsx:138
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
@@ -1176,7 +1208,7 @@ msgid "Edit Moderation List"
 msgstr ""
 
 #: src/Navigation.tsx:243
-#: src/view/screens/Feeds.tsx:402
+#: src/view/screens/Feeds.tsx:403
 #: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
 msgstr "मेरी फ़ीड संपादित करें"
@@ -1193,7 +1225,7 @@ msgstr "मेरी प्रोफ़ाइल संपादित करे
 msgid "Edit Profile"
 msgstr "मेरी प्रोफ़ाइल संपादित करें"
 
-#: src/view/screens/Feeds.tsx:336
+#: src/view/screens/Feeds.tsx:337
 msgid "Edit Saved Feeds"
 msgstr "एडिट सेव्ड फीड"
 
@@ -1207,6 +1239,10 @@ msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:211
 msgid "Edit your profile description"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:34
+msgid "Education"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:143
@@ -1265,7 +1301,7 @@ msgstr ""
 msgid "Enable this setting to only see replies between people you follow."
 msgstr "इस सेटिंग को केवल उन लोगों के बीच जवाब देखने में सक्षम करें जिन्हें आप फॉलो करते हैं।।"
 
-#: src/view/screens/Profile.tsx:427
+#: src/view/screens/Profile.tsx:437
 msgid "End of feed"
 msgstr ""
 
@@ -1380,7 +1416,7 @@ msgstr ""
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:86
+#: src/view/com/util/forms/PostDropdownBtn.tsx:88
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -1397,7 +1433,7 @@ msgstr ""
 msgid "Feed by {0}"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:595
+#: src/view/screens/Feeds.tsx:597
 msgid "Feed offline"
 msgstr "फ़ीड ऑफ़लाइन है"
 
@@ -1411,8 +1447,8 @@ msgid "Feedback"
 msgstr "प्रतिक्रिया"
 
 #: src/Navigation.tsx:443
-#: src/view/screens/Feeds.tsx:513
-#: src/view/screens/Profile.tsx:165
+#: src/view/screens/Feeds.tsx:514
+#: src/view/screens/Profile.tsx:175
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
 #: src/view/shell/Drawer.tsx:479
@@ -1420,7 +1456,7 @@ msgstr "प्रतिक्रिया"
 msgid "Feeds"
 msgstr "सभी फ़ीड"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:105
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Feeds are created by users and can give you entirely new experiences."
 msgstr ""
 
@@ -1432,7 +1468,7 @@ msgstr "सामग्री को व्यवस्थित करने �
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
 msgstr "फ़ीड कस्टम एल्गोरिदम हैं जिन्हें उपयोगकर्ता थोड़ी कोडिंग विशेषज्ञता के साथ बनाते हैं। <0/> अधिक जानकारी के लिए."
 
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:68
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:70
 msgid "Feeds can be topical as well!"
 msgstr ""
 
@@ -1466,6 +1502,10 @@ msgstr "अपने मुख्य फ़ीड की स्क्रीन �
 msgid "Fine-tune the discussion threads."
 msgstr "चर्चा धागे को ठीक-ट्यून करें।।"
 
+#: src/screens/Onboarding/index.tsx:38
+msgid "Fitness"
+msgstr ""
+
 #: src/screens/Onboarding/StepFinished.tsx:131
 msgid "Flexible"
 msgstr ""
@@ -1498,8 +1538,12 @@ msgid "Follow All"
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-msgid "Follow selected accounts and continue to then next step"
+msgid "Follow selected accounts and continue to the next step"
 msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
+#~ msgid "Follow selected accounts and continue to then next step"
+#~ msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -1546,6 +1590,10 @@ msgstr "यह यूजर आपका फ़ोलो करता है"
 msgid "Follows You"
 msgstr ""
 
+#: src/screens/Onboarding/index.tsx:43
+msgid "Food"
+msgstr ""
+
 #: src/view/com/modals/DeleteAccount.tsx:107
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
 msgstr "सुरक्षा कारणों के लिए, हमें आपके ईमेल पते पर एक OTP कोड भेजने की आवश्यकता होगी।।"
@@ -1567,7 +1615,7 @@ msgstr "पासवर्ड भूल गए"
 msgid "Forgot Password"
 msgstr "पासवर्ड भूल गए"
 
-#: src/view/com/posts/FeedItem.tsx:188
+#: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -1625,26 +1673,24 @@ msgid "Help"
 msgstr "सहायता"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-msgid "Here are some accounts for your to follow"
+msgid "Here are some accounts for you to follow"
 msgstr ""
 
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:77
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
+#~ msgid "Here are some accounts for your to follow"
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
 msgstr ""
 
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:72
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:74
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
 msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
 msgstr "यहां आपका ऐप पासवर्ड है."
-
-#: src/view/com/modals/ContentFilteringSettings.tsx:219
-#: src/view/com/notifications/FeedItem.tsx:327
-msgctxt "action"
-msgid "Hide"
-msgstr ""
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:38
 #: src/view/com/modals/ContentFilteringSettings.tsx:246
@@ -1653,7 +1699,13 @@ msgstr ""
 msgid "Hide"
 msgstr "इसे छिपाएं"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:185
+#: src/view/com/modals/ContentFilteringSettings.tsx:219
+#: src/view/com/notifications/FeedItem.tsx:325
+msgctxt "action"
+msgid "Hide"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
 msgid "Hide post"
 msgstr ""
 
@@ -1662,11 +1714,11 @@ msgstr ""
 msgid "Hide the content"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:189
+#: src/view/com/util/forms/PostDropdownBtn.tsx:191
 msgid "Hide this post?"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:317
+#: src/view/com/notifications/FeedItem.tsx:315
 msgid "Hide user list"
 msgstr "उपयोगकर्ता सूची छुपाएँ"
 
@@ -1711,7 +1763,7 @@ msgid "Home"
 msgstr "होम फीड"
 
 #: src/Navigation.tsx:248
-#: src/view/com/pager/FeedsTabBarMobile.tsx:117
+#: src/view/com/pager/FeedsTabBarMobile.tsx:123
 #: src/view/screens/PreferencesHomeFeed.tsx:104
 #: src/view/screens/Settings.tsx:509
 msgid "Home Feed Preferences"
@@ -1750,11 +1802,11 @@ msgstr ""
 msgid "If none are selected, suitable for all ages."
 msgstr "यदि किसी को चुना जाता है, तो सभी उम्र के लिए उपयुक्त है।।"
 
-#: src/view/com/util/images/Gallery.tsx:37
+#: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
 msgstr ""
 
-#: src/view/com/modals/AltImage.tsx:97
+#: src/view/com/modals/AltImage.tsx:119
 msgid "Image alt text"
 msgstr "छवि alt पाठ"
 
@@ -1832,7 +1884,7 @@ msgstr ""
 msgid "Input your user handle"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:229
+#: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Invalid or unsupported post record"
 msgstr ""
 
@@ -1890,6 +1942,10 @@ msgstr "प्रतीक्षा सूची में शामिल ह�
 #: src/view/com/modals/Waitlist.tsx:128
 msgid "Join Waitlist"
 msgstr "वेटरलिस्ट में शामिल हों"
+
+#: src/screens/Onboarding/index.tsx:24
+msgid "Journalism"
+msgstr ""
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:104
 msgid "Language selection"
@@ -1993,13 +2049,13 @@ msgstr ""
 msgid "Liked by {likeCount} {0}"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:172
+#: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
 msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:171
-msgid "liked your custom feed '{0}'"
-msgstr ""
+#~ msgid "liked your custom feed '{0}'"
+#~ msgstr ""
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed{0}"
@@ -2009,11 +2065,11 @@ msgstr ""
 msgid "liked your post"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:164
+#: src/view/screens/Profile.tsx:174
 msgid "Likes"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:184
+#: src/view/com/post-thread/PostThreadItem.tsx:185
 msgid "Likes on this post"
 msgstr ""
 
@@ -2062,7 +2118,7 @@ msgid "List unmuted"
 msgstr ""
 
 #: src/Navigation.tsx:110
-#: src/view/screens/Profile.tsx:166
+#: src/view/screens/Profile.tsx:176
 #: src/view/shell/desktop/LeftNav.tsx:379
 #: src/view/shell/Drawer.tsx:495
 #: src/view/shell/Drawer.tsx:496
@@ -2074,12 +2130,12 @@ msgstr "सूची"
 msgid "Load more posts"
 msgstr "अधिक पोस्ट लोड करें"
 
-#: src/view/screens/Notifications.tsx:148
+#: src/view/screens/Notifications.tsx:155
 msgid "Load new notifications"
 msgstr "नई सूचनाएं लोड करें"
 
 #: src/view/com/feeds/FeedPage.tsx:190
-#: src/view/screens/Profile.tsx:412
+#: src/view/screens/Profile.tsx:422
 #: src/view/screens/ProfileFeed.tsx:494
 #: src/view/screens/ProfileList.tsx:656
 msgid "Load new posts"
@@ -2124,7 +2180,7 @@ msgstr "उस खाते में लॉग इन करें जो स�
 msgid "Make sure this is where you intend to go!"
 msgstr "यह सुनिश्चित करने के लिए कि आप कहाँ जाना चाहते हैं!"
 
-#: src/view/screens/Profile.tsx:163
+#: src/view/screens/Profile.tsx:173
 msgid "Media"
 msgstr ""
 
@@ -2159,7 +2215,7 @@ msgid "Moderation"
 msgstr "मॉडरेशन"
 
 #: src/view/com/lists/ListCard.tsx:92
-#: src/view/com/modals/UserAddRemoveLists.tsx:190
+#: src/view/com/modals/UserAddRemoveLists.tsx:206
 msgid "Moderation list by {0}"
 msgstr ""
 
@@ -2168,7 +2224,7 @@ msgid "Moderation list by <0/>"
 msgstr ""
 
 #: src/view/com/lists/ListCard.tsx:90
-#: src/view/com/modals/UserAddRemoveLists.tsx:188
+#: src/view/com/modals/UserAddRemoveLists.tsx:204
 #: src/view/screens/ProfileList.tsx:748
 msgid "Moderation list by you"
 msgstr ""
@@ -2208,7 +2264,7 @@ msgstr "अधिक फ़ीड"
 msgid "More options"
 msgstr "अधिक विकल्प"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:268
+#: src/view/com/util/forms/PostDropdownBtn.tsx:270
 msgid "More post options"
 msgstr "पोस्ट विकल्प"
 
@@ -2236,7 +2292,7 @@ msgstr "इन खातों को म्यूट करें?"
 msgid "Mute this List"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:169
+#: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Mute thread"
 msgstr "थ्रेड म्यूट करें"
 
@@ -2269,7 +2325,7 @@ msgstr "म्यूट करना निजी है. म्यूट कि
 msgid "My Birthday"
 msgstr "जन्मदिन"
 
-#: src/view/screens/Feeds.tsx:398
+#: src/view/screens/Feeds.tsx:399
 msgid "My Feeds"
 msgstr "मेरी फ़ीड"
 
@@ -2288,6 +2344,10 @@ msgstr "नाम"
 
 #: src/view/com/modals/CreateOrEditList.tsx:145
 msgid "Name is required"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:25
+msgid "Nature"
 msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:186
@@ -2333,8 +2393,8 @@ msgctxt "action"
 msgid "New post"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:546
-#: src/view/screens/Profile.tsx:354
+#: src/view/screens/Feeds.tsx:547
+#: src/view/screens/Profile.tsx:364
 #: src/view/screens/ProfileFeed.tsx:432
 #: src/view/screens/ProfileList.tsx:194
 #: src/view/screens/ProfileList.tsx:222
@@ -2357,6 +2417,10 @@ msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:23
+msgid "News"
 msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:161
@@ -2405,7 +2469,7 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:489
+#: src/view/screens/Feeds.tsx:490
 msgid "No results found for \"{query}\""
 msgstr "\"{query}\" के लिए कोई परिणाम नहीं मिला"
 
@@ -2458,8 +2522,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/Navigation.tsx:448
-#: src/view/screens/Notifications.tsx:113
-#: src/view/screens/Notifications.tsx:137
+#: src/view/screens/Notifications.tsx:120
+#: src/view/screens/Notifications.tsx:144
 #: src/view/shell/bottom-bar/BottomBar.tsx:205
 #: src/view/shell/desktop/LeftNav.tsx:361
 #: src/view/shell/Drawer.tsx:438
@@ -2475,7 +2539,7 @@ msgstr ""
 msgid "Oh no!"
 msgstr "अरे नहीं!"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:131
+#: src/screens/Onboarding/StepInterests/index.tsx:128
 msgid "Oh no! Something went wrong."
 msgstr ""
 
@@ -2518,7 +2582,7 @@ msgstr ""
 msgid "Open links with in-app browser"
 msgstr ""
 
-#: src/view/com/pager/FeedsTabBarMobile.tsx:81
+#: src/view/com/pager/FeedsTabBarMobile.tsx:87
 msgid "Open navigation"
 msgstr "ओपन नेविगेशन"
 
@@ -2534,7 +2598,7 @@ msgstr ""
 msgid "Opens additional details for a debug entry"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:350
+#: src/view/com/notifications/FeedItem.tsx:348
 msgid "Opens an expanded list of users in this notification"
 msgstr ""
 
@@ -2596,7 +2660,7 @@ msgstr "मॉडरेशन सेटिंग्स खोलें"
 msgid "Opens password reset form"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:337
+#: src/view/screens/Feeds.tsx:338
 msgid "Opens screen to edit Saved Feeds"
 msgstr ""
 
@@ -2633,8 +2697,8 @@ msgid "Or combine these options:"
 msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-msgid "Or you can try our \"Discover\" algorithm:"
-msgstr ""
+#~ msgid "Or you can try our \"Discover\" algorithm:"
+#~ msgstr ""
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -2686,6 +2750,10 @@ msgstr ""
 
 #: src/view/com/lightbox/Lightbox.tsx:72
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:31
+msgid "Pets"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:182
@@ -2776,6 +2844,10 @@ msgstr ""
 msgid "Please wait for your link card to finish loading"
 msgstr ""
 
+#: src/screens/Onboarding/index.tsx:37
+msgid "Politics"
+msgstr ""
+
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
 msgstr ""
@@ -2797,7 +2869,7 @@ msgstr ""
 #~ msgid "Post"
 #~ msgstr "पोस्ट"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:176
+#: src/view/com/post-thread/PostThreadItem.tsx:177
 msgid "Post by {0}"
 msgstr ""
 
@@ -2807,7 +2879,7 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:82
+#: src/view/com/util/forms/PostDropdownBtn.tsx:84
 msgid "Post deleted"
 msgstr ""
 
@@ -2827,7 +2899,7 @@ msgstr "पोस्ट भाषा"
 msgid "Post not found"
 msgstr "पोस्ट नहीं मिला"
 
-#: src/view/screens/Profile.tsx:161
+#: src/view/screens/Profile.tsx:171
 msgid "Posts"
 msgstr ""
 
@@ -2944,7 +3016,7 @@ msgstr "अनुशंसित लोग"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
-#: src/view/com/modals/UserAddRemoveLists.tsx:203
+#: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/com/util/UserAvatar.tsx:282
 #: src/view/com/util/UserBanner.tsx:89
 msgid "Remove"
@@ -2992,7 +3064,7 @@ msgid "Remove this feed from your saved feeds?"
 msgstr "इस फ़ीड को सहेजे गए फ़ीड से हटा दें?"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
-#: src/view/com/modals/UserAddRemoveLists.tsx:136
+#: src/view/com/modals/UserAddRemoveLists.tsx:152
 msgid "Removed from list"
 msgstr ""
 
@@ -3005,7 +3077,7 @@ msgstr ""
 msgid "Removes default thumbnail from {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:162
+#: src/view/screens/Profile.tsx:172
 msgid "Replies"
 msgstr ""
 
@@ -3022,8 +3094,8 @@ msgstr ""
 msgid "Reply Filters"
 msgstr "फिल्टर"
 
-#: src/view/com/post/Post.tsx:165
-#: src/view/com/posts/FeedItem.tsx:286
+#: src/view/com/post/Post.tsx:166
+#: src/view/com/posts/FeedItem.tsx:287
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr ""
@@ -3045,7 +3117,7 @@ msgid "Report List"
 msgstr "रिपोर्ट सूची"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:208
+#: src/view/com/util/forms/PostDropdownBtn.tsx:210
 msgid "Report post"
 msgstr "रिपोर्ट पोस्ट"
 
@@ -3074,7 +3146,7 @@ msgstr "पोस्ट दोबारा पोस्ट करें या �
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:206
+#: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
 msgstr ""
 
@@ -3082,7 +3154,7 @@ msgstr ""
 #~ msgid "Reposted by {0})"
 #~ msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:223
+#: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0/>"
 msgstr ""
 
@@ -3090,7 +3162,7 @@ msgstr ""
 msgid "reposted your post"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:189
+#: src/view/com/post-thread/PostThreadItem.tsx:190
 msgid "Reposts of this post"
 msgstr ""
 
@@ -3157,8 +3229,8 @@ msgstr ""
 msgid "Retries the last action, which errored out"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:222
-#: src/screens/Onboarding/StepInterests/index.tsx:225
+#: src/screens/Onboarding/StepInterests/index.tsx:221
+#: src/screens/Onboarding/StepInterests/index.tsx:224
 #: src/view/com/auth/create/CreateAccount.tsx:170
 #: src/view/com/auth/create/CreateAccount.tsx:175
 #: src/view/com/auth/create/Step2.tsx:254
@@ -3200,7 +3272,7 @@ msgstr ""
 msgid "Save"
 msgstr "सेव करो"
 
-#: src/view/com/modals/AltImage.tsx:106
+#: src/view/com/modals/AltImage.tsx:129
 msgid "Save alt text"
 msgstr "सेव ऑल्ट टेक्स्ट"
 
@@ -3230,6 +3302,10 @@ msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:36
+msgid "Science"
 msgstr ""
 
 #: src/view/screens/ProfileList.tsx:830
@@ -3309,7 +3385,7 @@ msgstr ""
 msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
 msgstr ""
 
-#: src/screens/Onboarding/StepTopicalFeeds.tsx:88
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
 msgstr ""
 
@@ -3321,7 +3397,7 @@ msgstr "चुनें कि आप अपनी सदस्यता वा�
 msgid "Select your app language for the default text to display in the app"
 msgstr "ऐप में प्रदर्शित होने वाले डिफ़ॉल्ट टेक्स्ट के लिए अपनी ऐप भाषा चुनें"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:199
+#: src/screens/Onboarding/StepInterests/index.tsx:196
 msgid "Select your interests from the options below"
 msgstr ""
 
@@ -3333,11 +3409,11 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr "अपने फ़ीड में अनुवाद के लिए अपनी पसंदीदा भाषा चुनें।"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:114
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:115
 msgid "Select your primary algorithmic feeds"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:130
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:131
 msgid "Select your secondary algorithmic feeds"
 msgstr ""
 
@@ -3465,7 +3541,7 @@ msgid "Share"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:342
-#: src/view/com/util/forms/PostDropdownBtn.tsx:151
+#: src/view/com/util/forms/PostDropdownBtn.tsx:153
 #: src/view/screens/ProfileList.tsx:393
 msgid "Share"
 msgstr "शेयर"
@@ -3502,9 +3578,9 @@ msgstr ""
 msgid "Show follows similar to {0}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:569
-#: src/view/com/post/Post.tsx:196
-#: src/view/com/posts/FeedItem.tsx:362
+#: src/view/com/post-thread/PostThreadItem.tsx:571
+#: src/view/com/post/Post.tsx:197
+#: src/view/com/posts/FeedItem.tsx:363
 msgid "Show More"
 msgstr ""
 
@@ -3561,7 +3637,7 @@ msgstr ""
 msgid "Show the content"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:348
+#: src/view/com/notifications/FeedItem.tsx:346
 msgid "Show users"
 msgstr "लोग दिखाएँ"
 
@@ -3645,18 +3721,22 @@ msgstr ""
 msgid "Signs {0} out of Bluesky"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:236
+#: src/screens/Onboarding/StepInterests/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:191
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
 msgid "Skip"
 msgstr "स्किप"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:233
+#: src/screens/Onboarding/StepInterests/index.tsx:232
 msgid "Skip this flow"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:81
 msgid "SMS verification"
+msgstr ""
+
+#: src/screens/Onboarding/index.tsx:40
+msgid "Software Dev"
 msgstr ""
 
 #: src/view/com/modals/ProfilePreview.tsx:62
@@ -3678,6 +3758,10 @@ msgstr "उत्तर क्रमबद्ध करें"
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
 msgstr "उसी पोस्ट के उत्तरों को इस प्रकार क्रमबद्ध करें:"
+
+#: src/screens/Onboarding/index.tsx:30
+msgid "Sports"
+msgstr ""
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -3781,6 +3865,10 @@ msgstr "लंबा"
 msgid "Tap to view fully"
 msgstr ""
 
+#: src/screens/Onboarding/index.tsx:39
+msgid "Tech"
+msgstr ""
+
 #: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
 msgstr "शर्तें"
@@ -3833,7 +3921,7 @@ msgstr ""
 msgid "The Terms of Service have been moved to"
 msgstr "सेवा की शर्तों को स्थानांतरित कर दिया गया है"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:133
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
 msgid "There are many feeds to try:"
 msgstr ""
 
@@ -3920,8 +4008,12 @@ msgid "There's something wrong with this number. Please choose your country and 
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-msgid "These are popular accounts you might like."
+msgid "These are popular accounts you might like:"
 msgstr ""
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
+#~ msgid "These are popular accounts you might like."
+#~ msgstr ""
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 #~ msgid "This {0} has been labeled."
@@ -3951,7 +4043,7 @@ msgstr ""
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:392
+#: src/view/screens/Profile.tsx:402
 #: src/view/screens/ProfileFeed.tsx:475
 #: src/view/screens/ProfileList.tsx:636
 msgid "This feed is empty!"
@@ -3985,7 +4077,7 @@ msgstr ""
 msgid "This name is already in use"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:123
+#: src/view/com/post-thread/PostThreadItem.tsx:124
 msgid "This post has been deleted."
 msgstr "इस पोस्ट को हटा दिया गया है।।"
 
@@ -4005,7 +4097,7 @@ msgstr ""
 msgid "This warning is only available for posts with media attached."
 msgstr "यह चेतावनी केवल मीडिया संलग्न पोस्ट के लिए उपलब्ध है।"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:190
+#: src/view/com/util/forms/PostDropdownBtn.tsx:192
 msgid "This will hide this post from your feeds."
 msgstr ""
 
@@ -4030,9 +4122,9 @@ msgstr "ड्रॉपडाउन टॉगल करें"
 msgid "Transformations"
 msgstr "परिवर्तन"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:710
-#: src/view/com/post-thread/PostThreadItem.tsx:712
-#: src/view/com/util/forms/PostDropdownBtn.tsx:123
+#: src/view/com/post-thread/PostThreadItem.tsx:719
+#: src/view/com/post-thread/PostThreadItem.tsx:721
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Translate"
 msgstr "अनुवाद"
 
@@ -4107,7 +4199,7 @@ msgstr ""
 msgid "Unmute Account"
 msgstr "अनम्यूट खाता"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:169
+#: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Unmute thread"
 msgstr "थ्रेड को अनम्यूट करें"
 
@@ -4124,7 +4216,7 @@ msgstr ""
 msgid "Unsave"
 msgstr ""
 
-#: src/view/com/modals/UserAddRemoveLists.tsx:54
+#: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
 msgstr "सूची में {displayName} अद्यतन करें"
 
@@ -4187,7 +4279,7 @@ msgid "User handle"
 msgstr "यूजर हैंडल"
 
 #: src/view/com/lists/ListCard.tsx:84
-#: src/view/com/modals/UserAddRemoveLists.tsx:182
+#: src/view/com/modals/UserAddRemoveLists.tsx:198
 msgid "User list by {0}"
 msgstr ""
 
@@ -4196,7 +4288,7 @@ msgid "User list by <0/>"
 msgstr ""
 
 #: src/view/com/lists/ListCard.tsx:82
-#: src/view/com/modals/UserAddRemoveLists.tsx:180
+#: src/view/com/modals/UserAddRemoveLists.tsx:196
 #: src/view/screens/ProfileList.tsx:736
 msgid "User list by you"
 msgstr ""
@@ -4259,6 +4351,10 @@ msgstr "नया ईमेल सत्यापित करें"
 msgid "Verify Your Email"
 msgstr ""
 
+#: src/screens/Onboarding/index.tsx:42
+msgid "Video Games"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:701
 msgid "View {0}'s avatar"
 msgstr ""
@@ -4304,11 +4400,11 @@ msgstr ""
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:117
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
 msgid "We recommend \"For You\" by Skygaze:"
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:136
+#: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr ""
 
@@ -4320,7 +4416,7 @@ msgstr ""
 msgid "We'll look into your appeal promptly."
 msgstr ""
 
-#: src/screens/Onboarding/StepInterests/index.tsx:141
+#: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "We'll use this to help customize your experience."
 msgstr ""
 
@@ -4352,7 +4448,7 @@ msgstr "हम क्षमा चाहते हैं! हमें वह �
 msgid "Welcome to <0>Bluesky</0>"
 msgstr "<0>Bluesky</0> में आपका स्वागत है"
 
-#: src/screens/Onboarding/StepInterests/index.tsx:133
+#: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
 msgstr ""
 
@@ -4395,11 +4491,15 @@ msgstr "पोस्ट लिखो"
 msgid "Write your reply"
 msgstr "अपना जवाब दें"
 
+#: src/screens/Onboarding/index.tsx:28
+msgid "Writers"
+msgstr ""
+
 #: src/view/com/auth/create/Step2.tsx:262
 msgid "XXXXXX"
 msgstr ""
 
-#: src/view/com/composer/select-language/SuggestedLanguage.tsx:82
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesHomeFeed.tsx:129
 #: src/view/screens/PreferencesHomeFeed.tsx:201
 #: src/view/screens/PreferencesHomeFeed.tsx:236
@@ -4420,6 +4520,10 @@ msgstr ""
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
+msgid "You can also try our \"Discover\" algorithm:"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:106
@@ -4443,7 +4547,7 @@ msgstr "आपके पास अभी तक कोई आमंत्रण 
 msgid "You don't have any pinned feeds."
 msgstr "आपके पास कोई पिन किया हुआ फ़ीड नहीं है."
 
-#: src/view/screens/Feeds.tsx:418
+#: src/view/screens/Feeds.tsx:419
 msgid "You don't have any saved feeds!"
 msgstr ""
 
@@ -4492,11 +4596,11 @@ msgstr ""
 msgid "You must be 18 years or older to enable adult content"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:96
+#: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:99
+#: src/view/com/util/forms/PostDropdownBtn.tsx:101
 msgid "You will now receive notifications for this thread"
 msgstr ""
 

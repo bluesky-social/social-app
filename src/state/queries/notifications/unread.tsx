@@ -127,7 +127,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           }
 
           // count
-          const page = await fetchPage({
+          const {page, indexedAt: lastIndexed} = await fetchPage({
             cursor: undefined,
             limit: 40,
             queryClient,
@@ -151,12 +151,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // track last sync
           const now = new Date()
-          const lastIndexed =
-            page.items[0] && new Date(page.items[0].notification.indexedAt)
+          const lastIndexedDate = lastIndexed
+            ? new Date(lastIndexed)
+            : undefined
           cacheRef.current = {
             usableInFeed: !!invalidate, // will be used immediately
             data: page,
-            syncedAt: !lastIndexed || now > lastIndexed ? now : lastIndexed,
+            syncedAt:
+              !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
             unreadCount,
           }
 

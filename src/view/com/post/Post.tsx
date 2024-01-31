@@ -122,9 +122,10 @@ function PostInner({
           avatar: post.author.avatar,
         },
         embed: post.embed,
+        moderation,
       },
     })
-  }, [openComposer, post, record])
+  }, [openComposer, post, record, moderation])
 
   const onPressShowMore = React.useCallback(() => {
     setLimitLines(false)

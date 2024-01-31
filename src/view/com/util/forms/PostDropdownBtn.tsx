@@ -1,5 +1,5 @@
 import React, {memo} from 'react'
-import {Linking, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
@@ -24,6 +24,7 @@ import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -61,6 +62,7 @@ let PostDropdownBtn = ({
   const postDeleteMutation = usePostDeleteMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
+  const openLink = useOpenLink()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -111,8 +113,8 @@ let PostDropdownBtn = ({
   }, [_, richText])
 
   const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
+    openLink(translatorUrl)
+  }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
