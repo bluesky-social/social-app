@@ -116,7 +116,7 @@ export function StepFinished() {
             </Text>
             <Text
               style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
-              <Trans>Never lose access to your followers and data.</Trans>
+              <Trans>Never lose access to your followers or data.</Trans>
             </Text>
           </View>
         </View>
