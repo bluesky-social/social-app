@@ -1,6 +1,7 @@
 import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
+  GestureResponderEvent,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -80,21 +81,22 @@ export function DropdownButton({
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
 
-  const onPress = () => {
+  const onPress = (e: GestureResponderEvent) => {
     const ref = ref1.current || ref2.current
+    const {height: winHeight} = Dimensions.get('window')
+    const pressY = e.nativeEvent.pageY
     ref?.measure(
       (
         _x: number,
         _y: number,
         width: number,
-        height: number,
+        _height: number,
         pageX: number,
-        pageY: number,
+        _pageY: number,
       ) => {
         if (!menuWidth) {
           menuWidth = 200
         }
-        const winHeight = Dimensions.get('window').height
         let estimatedMenuHeight = 0
         for (const item of items) {
           if (item && isSep(item)) {
@@ -108,7 +110,9 @@ export function DropdownButton({
         const newX = openToRight
           ? pageX + width + rightOffset
           : pageX + width - menuWidth
-        let newY = pageY + height + bottomOffset
+
+        // Add a bit of additional room
+        let newY = pressY + bottomOffset + 20
         if (openUpwards || newY + estimatedMenuHeight > winHeight) {
           newY -= estimatedMenuHeight
         }
@@ -220,6 +224,11 @@ const DropdownItems = ({
     theme.colorScheme === 'dark' ? pal.borderDark : pal.border
 
   const numItems = items.filter(isBtn).length
+
+  /*
+   * We need to take into account the scroll offset when displaying the button...
+   *
+   */
 
   // TODO: Refactor dropdown components to:
   // - (On web, if not handled by React Native) use semantic <select />
