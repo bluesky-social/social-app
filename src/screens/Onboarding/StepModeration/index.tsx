@@ -4,7 +4,10 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {atoms as a} from '#/alf'
-import {configurableLabelGroups} from 'state/queries/preferences'
+import {
+  configurableAdultLabelGroups,
+  configurableOtherLabelGroups,
+} from 'state/queries/preferences'
 import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -60,9 +63,18 @@ export function StepModeration() {
           <AdultContentEnabledPref />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {configurableLabelGroups.map((g, index) => (
+            {preferences.adultContentEnabled &&
+              configurableAdultLabelGroups.map((g, index) => (
+                <React.Fragment key={index}>
+                  {index === 0 && <Divider />}
+                  <ModerationOption labelGroup={g} />
+                  <Divider />
+                </React.Fragment>
+              ))}
+
+            {configurableOtherLabelGroups.map((g, index) => (
               <React.Fragment key={index}>
-                {index === 0 && <Divider />}
+                {!preferences.adultContentEnabled && index === 0 && <Divider />}
                 <ModerationOption labelGroup={g} />
                 <Divider />
               </React.Fragment>
