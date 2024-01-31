@@ -1,5 +1,10 @@
 import React, {useCallback} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from 'react-native'
 import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
@@ -10,7 +15,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid} from 'platform/detection'
+import {isWeb, isAndroid, isMobileWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
@@ -41,12 +46,23 @@ export function Component({
 }) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
+  const {height: screenHeight} = useWindowDimensions()
   const {_} = useLingui()
   const {data: memberships} = useDangerousListMembershipsQuery()
 
   const onPressDone = useCallback(() => {
     closeModal()
   }, [closeModal])
+
+  const listStyle = React.useMemo(() => {
+    if (isMobileWeb) {
+      return [pal.border, {height: screenHeight / 2}]
+    } else if (isWeb) {
+      return [pal.border, {height: screenHeight / 1.5}]
+    }
+
+    return [pal.border, {flex: 1}]
+  }, [pal.border, screenHeight])
 
   return (
     <View testID="userAddRemoveListsModal" style={s.hContentRegion}>
@@ -68,7 +84,7 @@ export function Component({
             onRemove={onRemove}
           />
         )}
-        style={[styles.list, pal.border]}
+        style={listStyle}
       />
       <View style={[styles.btns, pal.border]}>
         <Button
