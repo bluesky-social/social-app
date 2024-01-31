@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {UseMutateFunction} from '@tanstack/react-query'
 
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
@@ -11,8 +12,7 @@ import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import * as Prompt from '#/components/Prompt'
-import {UseMutateFunction} from '@tanstack/react-query'
-import {isIOS} from 'platform/detection'
+import {isIOS} from '#/platform/detection'
 
 function Card({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
