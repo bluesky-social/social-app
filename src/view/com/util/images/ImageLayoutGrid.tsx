@@ -111,8 +111,8 @@ const styles = StyleSheet.create({
       }
     : {},
   threeSingle: {
-    flex: 1,
-    gap: isWeb ? undefined : IMAGE_GAP,
+    flex: 2,
+    aspectRatio: isWeb ? 1 : undefined,
   },
   threeDouble: {
     flex: 1,
