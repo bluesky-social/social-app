@@ -71,6 +71,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 3,
     position: 'absolute',
+    // Related to margin/gap hack. This keeps the alt label in the same position
+    // on all platforms
     left: isWeb ? 8 : 5,
     bottom: isWeb ? 8 : 5,
   },
