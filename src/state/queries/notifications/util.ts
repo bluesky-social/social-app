@@ -111,8 +111,6 @@ function shouldFilterNotif(
       return true
     }
   }
-  // TODO: thread muting is not being applied
-  // (this requires fetching the post)
   return false
 }
 
