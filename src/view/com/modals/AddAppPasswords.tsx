@@ -62,7 +62,8 @@ export function Component({}: {}) {
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {data: passwords} = useAppPasswordsQuery()
-  const createMutation = useAppPasswordCreateMutation()
+  const {mutateAsync: mutateAppPassword, isPending} =
+    useAppPasswordCreateMutation()
   const [name, setName] = useState(
     shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
   )
@@ -107,7 +108,7 @@ export function Component({}: {}) {
     }
 
     try {
-      const newPassword = await createMutation.mutateAsync({name})
+      const newPassword = await mutateAppPassword({name})
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
@@ -136,6 +137,17 @@ export function Component({}: {}) {
     }
   }
 
+  const textInputRef = React.useCallback((node: TextInput | null) => {
+    if (!node) {
+      return
+    }
+
+    // `selectTextOnFocus` isn't working with `autoFocus={true}` or without a timeout going.
+    setTimeout(() => {
+      node.focus()
+    }, 0)
+  }, [])
+
   return (
     <View style={[styles.container, pal.view]} testID="addAppPasswordsModal">
       <View>
@@ -145,6 +157,7 @@ export function Component({}: {}) {
               Please enter a unique name for this App Password or use our
               randomly generated one.
             </Trans>
+            asdq42
           </Text>
         ) : (
           <Text type="lg" style={[pal.text]}>
@@ -159,6 +172,7 @@ export function Component({}: {}) {
         {!appPassword ? (
           <View style={[pal.btn, styles.textInputWrapper]}>
             <TextInput
+              ref={textInputRef}
               style={[styles.input, pal.text]}
               onChangeText={_onChangeText}
               value={name}
@@ -167,16 +181,12 @@ export function Component({}: {}) {
               autoCorrect={false}
               autoComplete="off"
               autoCapitalize="none"
-              autoFocus={true}
               maxLength={32}
               selectTextOnFocus={true}
-              multiline={true} // need this to be true otherwise selectTextOnFocus doesn't work
-              numberOfLines={1} // hack for multiline so only one line shows (android)
-              scrollEnabled={false} // hack for multiline so only one line shows (ios)
-              blurOnSubmit={true} // hack for multiline so it submits
-              editable={!appPassword}
+              blurOnSubmit={true}
+              editable={!isPending}
               returnKeyType="done"
-              onEndEditing={createAppPassword}
+              onSubmitEditing={createAppPassword}
               accessible={true}
               accessibilityLabel={_(msg`Name`)}
               accessibilityHint={_(msg`Input name for app password`)}
