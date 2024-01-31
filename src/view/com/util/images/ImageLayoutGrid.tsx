@@ -89,14 +89,14 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   }
 }
 
-// This is used to compute margins (rather than flexbox gap) due to Yoga bugs:
+// On web we use margin to calculate gap, as aspectRatio does not properly size
+// all images on web. On native though we cannot rely on margin, since the
+// negative margin interferes with the swipe controls on pagers.
 // https://github.com/facebook/yoga/issues/1418
+// https://github.com/bluesky-social/social-app/issues/2601
 const IMAGE_GAP = 5
 
 const styles = StyleSheet.create({
-  flexRow: {flexDirection: 'row', gap: !isWeb ? IMAGE_GAP : undefined},
-  smallItem: {flex: 1, aspectRatio: 1},
-
   container: isWeb
     ? {
         marginHorizontal: -IMAGE_GAP / 2,
@@ -105,6 +105,11 @@ const styles = StyleSheet.create({
     : {
         gap: IMAGE_GAP,
       },
+  flexRow: {
+    flexDirection: 'row',
+    gap: isWeb ? undefined : IMAGE_GAP,
+  },
+  smallItem: {flex: 1, aspectRatio: 1},
   image: isWeb
     ? {
         margin: IMAGE_GAP / 2,
