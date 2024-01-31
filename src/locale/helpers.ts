@@ -48,44 +48,40 @@ export function codeToLanguageName(lang: string): string {
 export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
 ): string | undefined {
+  const record = post.record
+
   let candidates: string[] = []
-  let postText: string = ''
-  if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
-    postText = post.record.text
+  let text: string = ''
+
+  if (AppBskyFeedPost.isRecord(record)) {
+    if (hasProp(record, 'text') && typeof record.text === 'string') {
+      text = record.text.trim()
+    }
+
+    if (hasProp(record, 'langs') && Array.isArray(record.langs)) {
+      candidates = record.langs
+    }
   }
 
-  if (
-    AppBskyFeedPost.isRecord(post.record) &&
-    hasProp(post.record, 'langs') &&
-    Array.isArray(post.record.langs)
-  ) {
-    candidates = post.record.langs
-  }
-
-  // if there's only one declared language, use that
-  if (candidates?.length === 1) {
+  // If there's only one declared language, use that
+  if (candidates.length === 1) {
     return candidates[0]
   }
 
-  // no text? can't determine
-  if (postText.trim().length === 0) {
+  // If there's no text, we can't determine the language
+  if (text.length === 0) {
     return undefined
   }
 
-  // run the language model
-  let langsProbabilityMap = lande(postText)
+  const hasMultiple = candidates.length > 1
+  const probabilities = lande(text).filter(([code, probability]) => {
+    // - Uncertain languages tend to hover around 0.0002, so skip over them
+    // - If we have multiple candidates, narrow it down to that
+    return probability >= 0.0002 && (!hasMultiple || candidates.includes(code))
+  })
 
-  // filter down using declared languages
-  if (candidates?.length) {
-    langsProbabilityMap = langsProbabilityMap.filter(
-      ([lang, _probability]: [string, number]) => {
-        return candidates.includes(code3ToCode2(lang))
-      },
-    )
-  }
-
-  if (langsProbabilityMap[0]) {
-    return code3ToCode2(langsProbabilityMap[0][0])
+  if (probabilities.length !== 0) {
+    return code3ToCode2(probabilities[0][0])
   }
 }
 
