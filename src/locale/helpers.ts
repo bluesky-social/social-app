@@ -17,7 +17,11 @@ export function code2ToCode3(lang: string): string {
 
 export function code3ToCode2(lang: string): string {
   if (lang.length === 3) {
-    // Chinese Mandarin
+    // `zh` is actually mapped to 16 3-letter language codes, but we can only
+    // ever map it to one which is currently `chi` (macrolanguage). We only need
+    // the `cmn` specifically because that's what `lande` will return.
+    // https://en.wikipedia.org/wiki/ISO_639_macrolanguage#zho
+    // https://github.com/fabiospampinato/lande#languages
     if (lang === 'cmn') {
       return 'zh'
     }
@@ -29,7 +33,7 @@ export function code3ToCode2(lang: string): string {
 
 export function code3ToCode2Strict(lang: string): string | undefined {
   if (lang.length === 3) {
-    // Chinese Mandarin
+    // See the comment above for details
     if (lang === 'cmn') {
       return 'zh'
     }
