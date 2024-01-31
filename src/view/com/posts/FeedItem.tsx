@@ -135,9 +135,10 @@ let FeedItemInner = ({
           avatar: post.author.avatar,
         },
         embed: post.embed,
+        moderation,
       },
     })
-  }, [post, record, openComposer])
+  }, [post, record, openComposer, moderation])
 
   const outerStyles = [
     styles.outer,
