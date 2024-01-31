@@ -121,7 +121,7 @@ export function StepAlgoFeeds() {
           <FeedCard config={PRIMARY_FEEDS[0]} />
           <Text
             style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
-            <Trans>And you'll also like "For You" by Skygaze:</Trans>
+            <Trans>We also think you'll like "For You" by Skygaze:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
