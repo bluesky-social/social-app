@@ -21,11 +21,6 @@ msgstr "(pas d’e-mail)"
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr "{0, plural, one {# code d’invitation disponible} other {# codes d’invitations disponibles}}"
 
-#: src/view/com/modals/CreateOrEditList.tsx:185
-#: src/view/screens/Settings.tsx:294
-#~ msgid "{0}"
-#~ msgstr "{0}"
-
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
 msgstr "{following} abonnements"
@@ -51,10 +46,6 @@ msgstr "{invitesAvailable} codes d’invitation disponibles"
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
 msgstr "{numUnreadNotifications} non lus"
-
-#: src/Navigation.tsx:147
-#~ msgid "@{0}"
-#~ msgstr "@{0}"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
@@ -974,10 +965,6 @@ msgstr "Sombre"
 msgid "Dark mode"
 msgstr "Mode sombre"
 
-#: src/Navigation.tsx:204
-#~ msgid "Debug"
-#~ msgstr "Débug"
-
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
 msgstr "Panneau de débug"
@@ -1030,10 +1017,6 @@ msgstr "Post supprimé."
 #: src/view/com/modals/EditProfile.tsx:210
 msgid "Description"
 msgstr "Description"
-
-#: src/view/com/auth/create/Step1.tsx:96
-#~ msgid "Dev Server"
-#~ msgstr "Serveur de dév"
 
 #: src/view/screens/Settings.tsx:711
 msgid "Developer Tools"
@@ -1269,10 +1252,6 @@ msgstr "Entrer un nom pour ce mot de passe d’application"
 msgid "Enter Confirmation Code"
 msgstr "Entrer un code de confirmation"
 
-#: src/view/com/auth/create/Step1.tsx:71
-#~ msgid "Enter the address of your provider:"
-#~ msgstr "Saisissez l’adresse de votre hébergeur :"
-
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
 msgstr "Entrez le domaine que vous voulez utiliser"
@@ -1497,10 +1476,6 @@ msgstr ""
 msgid "Follow selected accounts and continue to the next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-#~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "Suivez quelques comptes pour commencer. Nous pouvons vous recommander d’autres comptes en fonction des personnes qui vous intéressent."
@@ -1628,10 +1603,6 @@ msgstr "Aide"
 msgid "Here are some accounts for you to follow"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-#~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
 msgstr ""
@@ -1717,11 +1688,6 @@ msgstr "Préférences de fils d’actu de l’accueil"
 msgid "Hosting provider"
 msgstr "Hébergeur"
 
-#: src/view/com/auth/create/Step1.tsx:76
-#: src/view/com/auth/create/Step1.tsx:81
-#~ msgid "Hosting provider address"
-#~ msgstr "Adresse de l’hébergeur"
-
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
 msgstr ""
@@ -1770,14 +1736,6 @@ msgstr "Entrez le code de confirmation pour supprimer le compte"
 #: src/view/com/auth/create/Step1.tsx:144
 msgid "Input email for Bluesky account"
 msgstr ""
-
-#: src/view/com/auth/create/Step2.tsx:109
-#~ msgid "Input email for Bluesky waitlist"
-#~ msgstr "Entrez l’e-mail pour la liste d’attente de Bluesky"
-
-#: src/view/com/auth/create/Step1.tsx:80
-#~ msgid "Input hosting provider address"
-#~ msgstr "Entrez l’adresse de l’hébergeur"
 
 #: src/view/com/auth/create/Step1.tsx:102
 msgid "Input invite code to proceed"
@@ -1990,15 +1948,7 @@ msgstr "Liké par {likeCount} {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
-msgstr ""
-
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed '{0}'"
-#~ msgstr ""
-
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed{0}"
-#~ msgstr "liké votre fil d’actu personnalisé{0}"
+msgstr "liké votre fil d’actu personnalisé"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
@@ -2590,10 +2540,6 @@ msgstr "Option {0} sur {numItems}"
 msgid "Or combine these options:"
 msgstr "Ou une combinaison de ces options :"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-#~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr ""
-
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "Autre compte"
@@ -2707,10 +2653,6 @@ msgstr "Veuillez saisir un nom unique pour le mot de passe de l’application ou
 #: src/view/com/auth/create/state.ts:170
 msgid "Please enter the code you received by SMS."
 msgstr ""
-
-#: src/view/com/auth/create/Step2.tsx:177
-#~ msgid "Please enter the verification code sent to"
-#~ msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:281
 msgid "Please enter the verification code sent to {phoneNumberFormatted}."
@@ -3017,20 +2959,12 @@ msgid "Repost or quote post"
 msgstr "Republier ou citer"
 
 #: src/view/screens/PostRepostedBy.tsx:27
-#~ msgid "Reposted by"
-#~ msgstr "Republié par"
-
-#: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr ""
+msgstr "Republié par"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
-msgstr ""
-
-#: src/view/com/posts/FeedItem.tsx:206
-#~ msgid "Reposted by {0})"
-#~ msgstr "Republié par {0})"
+msgstr "Republié par {0}"
 
 #: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0/>"
@@ -3372,10 +3306,6 @@ msgstr "Définit l’e-mail pour la réinitialisation du mot de passe"
 msgid "Sets hosting provider for password reset"
 msgstr "Définit l’hébergeur pour la réinitialisation du mot de passe"
 
-#: src/view/com/auth/create/Step1.tsx:143
-#~ msgid "Sets hosting provider to {label}"
-#~ msgstr "Définit l’hébergeur à {label}"
-
 #: src/view/com/auth/create/Step1.tsx:78
 #: src/view/com/auth/login/LoginForm.tsx:148
 msgid "Sets server for the Bluesky client"
@@ -3631,11 +3561,7 @@ msgstr "État du service"
 
 #: src/view/com/auth/create/StepHeader.tsx:22
 msgid "Step {0} of {numSteps}"
-msgstr ""
-
-#: src/view/com/auth/create/StepHeader.tsx:15
-#~ msgid "Step {step} of 3"
-#~ msgstr "Étape {step} sur 3"
+msgstr "Étape {step} sur {numSteps}"
 
 #: src/view/screens/Settings.tsx:276
 msgid "Storage cleared, you need to restart the app now."
@@ -3662,10 +3588,6 @@ msgstr ""
 #: src/view/screens/ProfileList.tsx:579
 msgid "Subscribe to this list"
 msgstr "S’abonner à cette liste"
-
-#: src/view/com/lists/ListCard.tsx:101
-#~ msgid "Subscribed"
-#~ msgstr "Abonné·e"
 
 #: src/view/screens/Search/Search.tsx:372
 msgid "Suggested Follows"
@@ -3857,17 +3779,9 @@ msgstr ""
 msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
 msgstr ""
 
-#: src/view/com/auth/create/Step2.tsx:47
-#~ msgid "There's something wrong with this number. Please include your country and/or area code!"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
 msgstr ""
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-#~ msgid "These are popular accounts you might like."
-#~ msgstr ""
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -3910,10 +3824,6 @@ msgstr "Ces informations ne sont pas partagées avec d’autres personnes."
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Ceci est important au cas où vous auriez besoin de changer d’e-mail ou de réinitialiser votre mot de passe."
-
-#: src/view/com/auth/create/Step1.tsx:55
-#~ msgid "This is the service that keeps you online."
-#~ msgstr "C’est le service qui vous permet de rester en ligne."
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -4352,10 +4262,6 @@ msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à
 msgid "You can also try our \"Discover\" algorithm:"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:106
-#~ msgid "You can change hosting providers at any time."
-#~ msgstr "Vous pouvez changer d’hébergeur à tout moment."
-
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
 msgstr ""
@@ -4496,10 +4402,6 @@ msgstr "Votre nom complet sera"
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Votre pseudo complet sera <0>@{0}</0>"
-
-#: src/view/com/auth/create/Step1.tsx:53
-#~ msgid "Your hosting provider"
-#~ msgstr "Votre hébergeur"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137
