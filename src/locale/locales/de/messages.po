@@ -561,7 +561,7 @@ msgstr "Anmeldung zur Warteliste abbrechen"
 #: src/view/screens/Settings.tsx:334
 msgctxt "action"
 msgid "Change"
-msgstr ""
+msgstr "Ändern"
 
 #: src/view/screens/Settings.tsx:662
 #: src/view/screens/Settings.tsx:671
@@ -2068,7 +2068,7 @@ msgstr "Menü"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:197
 msgid "Message from server: {0}"
-msgstr ""
+msgstr "Nachricht vom Server: {0}"
 
 #: src/Navigation.tsx:115
 #: src/view/screens/Moderation.tsx:64
@@ -2266,7 +2266,7 @@ msgstr "Neuer Beitrag"
 #: src/view/shell/desktop/LeftNav.tsx:258
 msgctxt "action"
 msgid "New Post"
-msgstr ""
+msgstr "Neuer Beitrag"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
@@ -2692,7 +2692,7 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:251
 msgctxt "description"
 msgid "Post"
-msgstr ""
+msgstr "Beitrag"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:177
 msgid "Post by {0}"
@@ -2803,7 +2803,7 @@ msgstr ""
 #: src/view/com/modals/Repost.tsx:65
 msgctxt "action"
 msgid "Quote post"
-msgstr ""
+msgstr "Beitrag zitieren"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
@@ -2812,7 +2812,7 @@ msgstr "Beitrag zitieren"
 #: src/view/com/modals/Repost.tsx:70
 msgctxt "action"
 msgid "Quote Post"
-msgstr ""
+msgstr "Beitrag zitieren"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -3221,7 +3221,7 @@ msgstr "E-Mail senden"
 #: src/view/com/modals/DeleteAccount.tsx:140
 msgctxt "action"
 msgid "Send Email"
-msgstr ""
+msgstr "E-Mail senden"
 
 #: src/view/shell/Drawer.tsx:298
 #: src/view/shell/Drawer.tsx:319
@@ -3683,7 +3683,7 @@ msgstr "Die Datenschutzerklärung wurde nach <0/> verschoben"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr ""
+msgstr "Das Support-Formular wurde verschoben. Wenn du Hilfe benötigst, wende dich bitte an <0/> oder besuche {HELP_DESK_URL}, um mit uns Kontakt aufzunehmen."
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
@@ -3887,7 +3887,7 @@ msgstr "Übersetzen"
 #: src/view/com/util/error/ErrorScreen.tsx:75
 msgctxt "action"
 msgid "Try again"
-msgstr ""
+msgstr "Erneut versuchen"
 
 #: src/view/screens/ProfileList.tsx:481
 msgid "Un-block list"
