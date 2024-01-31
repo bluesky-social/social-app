@@ -233,11 +233,6 @@ const DropdownItems = ({
 
   const numItems = items.filter(isBtn).length
 
-  /*
-   * We need to take into account the scroll offset when displaying the button...
-   *
-   */
-
   // TODO: Refactor dropdown components to:
   // - (On web, if not handled by React Native) use semantic <select />
   // and <option /> elements for keyboard navigation out of the box
