@@ -206,15 +206,8 @@ function getSubjectUri(
   type: NotificationType,
   notif: AppBskyNotificationListNotifications.Notification,
 ): string | undefined {
-  if (type === 'reply' || type === 'mention') {
+  if (type === 'reply' || type === 'quote' || type === 'mention') {
     return notif.uri
-  } else if (type === 'quote') {
-    if (
-      AppBskyFeedPost.isRecord(notif.record) &&
-      AppBskyEmbedRecord.isMain(notif.record.embed)
-    ) {
-      return notif.record.embed.record.uri
-    }
   } else if (type === 'post-like' || type === 'repost') {
     if (
       AppBskyFeedRepost.isRecord(notif.record) ||
@@ -237,6 +230,11 @@ export function isThreadMuted(notif: FeedNotification, threadMutes: string[]) {
     if (
       (record.reply && threadMutes.includes(record.reply.root.uri)) ||
       (notif.subject.uri && threadMutes.includes(notif.subject.uri))
+    ) {
+      return true
+    } else if (
+      AppBskyEmbedRecord.isMain(record.embed) &&
+      threadMutes.includes(record.embed.record.uri)
     ) {
       return true
     }
