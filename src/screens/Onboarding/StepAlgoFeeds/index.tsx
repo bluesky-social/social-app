@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
+import {IS_PROD} from '#/env'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -29,7 +30,7 @@ export type FeedConfig = {
 
 const PRIMARY_FEEDS: FeedConfig[] = [
   {
-    default: true,
+    default: IS_PROD, // these feeds are only available in prod
     uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
     gradient: tokens.gradients.midnight,
   },
