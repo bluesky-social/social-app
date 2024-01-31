@@ -14,6 +14,7 @@ import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {capitalize} from '#/lib/strings/capitalize'
 
 import {Context} from '#/screens/Onboarding/state'
 import {
@@ -25,7 +26,6 @@ import {
   SuggestedAccountCard,
   SuggestedAccountCardPlaceholder,
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
-import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
@@ -70,7 +70,7 @@ export function Inner({
 export function StepSuggestedAccounts() {
   const {_} = useLingui()
   const {track} = useAnalytics()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const {gtMobile} = useBreakpoints()
   const suggestedDids = React.useMemo(() => {
     return aggregateInterestItems(
@@ -93,10 +93,10 @@ export function StepSuggestedAccounts() {
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.selectedInterests.map(
-      i => INTEREST_TO_DISPLAY_NAME[i],
+      i => interestsDisplayNames[i] || capitalize(i),
     )
     return i.join(', ')
-  }, [state.interestsStepResults.selectedInterests])
+  }, [state.interestsStepResults.selectedInterests, interestsDisplayNames])
 
   const handleContinue = React.useCallback(async () => {
     setSaving(true)
@@ -129,13 +129,13 @@ export function StepSuggestedAccounts() {
       <IconCircle icon={At} style={[a.mb_2xl]} />
 
       <Title>
-        <Trans>Here are some accounts for your to follow</Trans>
+        <Trans>Here are some accounts for you to follow</Trans>
       </Title>
       <Description>
         {state.interestsStepResults.selectedInterests.length ? (
           <Trans>Based on your interest in {interestsText}</Trans>
         ) : (
-          <Trans>These are popular accounts you might like.</Trans>
+          <Trans>These are popular accounts you might like:</Trans>
         )}
       </Description>
 
@@ -171,7 +171,7 @@ export function StepSuggestedAccounts() {
             color="gradient_sky"
             size="large"
             label={_(
-              msg`Follow selected accounts and continue to then next step`,
+              msg`Follow selected accounts and continue to the next step`,
             )}
             onPress={handleContinue}>
             <ButtonText>
