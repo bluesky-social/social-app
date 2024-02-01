@@ -218,8 +218,8 @@ msgid "Adult content can only be enabled via the Web at <0/>."
 msgstr "Le contenu pour adultes ne peut être activé que via le Web à <0/>."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+#~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
+#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -627,7 +627,11 @@ msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "Choisissez les algorithmes qui alimentent votre expérience avec des fils d’actualité personnalisés."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
-msgid "Choose your algorithmic feeds"
+#~ msgid "Choose your algorithmic feeds"
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
+msgid "Choose your main feeds"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:163
@@ -816,10 +820,10 @@ msgstr "Avertissement sur le contenu"
 msgid "Content warnings"
 msgstr "Avertissements sur le contenu"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:154
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:155
 #: src/screens/Onboarding/StepFollowingFeed.tsx:153
 #: src/screens/Onboarding/StepInterests/index.tsx:248
-#: src/screens/Onboarding/StepModeration/index.tsx:84
+#: src/screens/Onboarding/StepModeration/index.tsx:118
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:108
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
@@ -828,12 +832,12 @@ msgstr "Continuer"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:245
-#: src/screens/Onboarding/StepModeration/index.tsx:81
+#: src/screens/Onboarding/StepModeration/index.tsx:115
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:105
 msgid "Continue to next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:151
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:152
 msgid "Continue to the next step"
 msgstr ""
 
@@ -1100,6 +1104,10 @@ msgstr "Tapotez deux fois pour vous connecter"
 msgid "Drop to add images"
 msgstr ""
 
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
+msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
+msgstr ""
+
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
 msgstr "ex. Alice Dupont"
@@ -1223,8 +1231,8 @@ msgstr "Activer {0} uniquement"
 msgid "Enable Adult Content"
 msgstr "Activer le contenu pour adultes"
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:95
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:96
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
 msgstr ""
 
@@ -1392,7 +1400,11 @@ msgid "Feeds"
 msgstr "Fil d’actu"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-msgid "Feeds are created by users and can give you entirely new experiences."
+#~ msgid "Feeds are created by users and can give you entirely new experiences."
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
@@ -1615,16 +1627,16 @@ msgstr ""
 msgid "Here is your app password."
 msgstr "Voici le mot de passe de votre appli."
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:219
-#: src/view/com/notifications/FeedItem.tsx:325
-msgctxt "action"
-msgid "Hide"
-msgstr "Cacher"
-
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:38
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:41
 #: src/view/com/modals/ContentFilteringSettings.tsx:246
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/com/util/moderation/PostHider.tsx:108
+msgid "Hide"
+msgstr "Cacher"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:219
+#: src/view/com/notifications/FeedItem.tsx:325
+msgctxt "action"
 msgid "Hide"
 msgstr "Cacher"
 
@@ -2230,11 +2242,14 @@ msgstr "Navigue vers votre profil"
 msgid "Never load embeds from {0}"
 msgstr "Ne jamais charger les contenus intégrés de {0}"
 
-#: src/screens/Onboarding/StepFinished.tsx:119
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "Ne perdez jamais l’accès à vos followers et à vos données."
+
+#: src/screens/Onboarding/StepFinished.tsx:119
+msgid "Never lose access to your followers or data."
+msgstr ""
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -3178,11 +3193,15 @@ msgid "Select some accounts below to follow"
 msgstr ""
 
 #: src/screens/Onboarding/StepModeration/index.tsx:49
-msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-msgstr ""
+#~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/index.tsx:75
+msgid "Select what you want to see (or not see), and we’ll handle the rest."
 msgstr ""
 
 #: src/view/screens/LanguageSettings.tsx:281
@@ -3205,11 +3224,11 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr "Sélectionnez votre langue préférée pour traduire votre fils d’actu."
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:115
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:131
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:132
 msgid "Select your secondary algorithmic feeds"
 msgstr ""
 
@@ -3338,7 +3357,7 @@ msgstr "Partager"
 msgid "Share feed"
 msgstr "Partager le fil d’actu"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:40
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:43
 #: src/view/com/modals/ContentFilteringSettings.tsx:261
 #: src/view/com/util/moderation/ContentHider.tsx:107
 #: src/view/com/util/moderation/PostHider.tsx:108
@@ -3693,7 +3712,7 @@ msgstr "Le formulaire d’assistance a été déplacé. Si vous avez besoin d’
 msgid "The Terms of Service have been moved to"
 msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:135
 msgid "There are many feeds to try:"
 msgstr ""
 
@@ -3742,7 +3761,7 @@ msgstr "Il y a eu un problème lors de la récupération de la liste. Appuyez ic
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "Il y a eu un problème lors de la récupération de vos listes. Appuyez ici pour réessayer."
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:56
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:63
 #: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
 msgstr "Il y a eu un problème de synchronisation de vos préférences avec le serveur"
@@ -4131,10 +4150,14 @@ msgstr "Afficher l’avatar"
 msgid "Visit Site"
 msgstr "Visiter le site"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:39
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:42
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
 msgstr "Avertir"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
+msgid "We also think you'll like \"For You\" by Skygaze:"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4149,7 +4172,11 @@ msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
-msgid "We recommend \"For You\" by Skygaze:"
+#~ msgid "We recommend \"For You\" by Skygaze:"
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
+msgid "We recommend our \"Discover\" feed:"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
@@ -4246,8 +4273,8 @@ msgid "Yes"
 msgstr "Oui"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:46
-msgid "You are in control"
-msgstr ""
+#~ msgid "You are in control"
+#~ msgstr ""
 
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
@@ -4259,8 +4286,8 @@ msgid "You can also discover new Custom Feeds to follow."
 msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à suivre."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
-msgid "You can also try our \"Discover\" algorithm:"
-msgstr ""
+#~ msgid "You can also try our \"Discover\" algorithm:"
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4324,7 +4351,7 @@ msgstr "Vous n’avez encore masqué aucun compte. Pour désactiver un compte, a
 msgid "You must be 18 or older to enable adult content."
 msgstr "Vous devez avoir 18 ans ou plus pour activer le contenu pour adultes."
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:124
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
 msgstr ""
 
@@ -4339,6 +4366,10 @@ msgstr "Vous recevrez désormais des notifications pour ce fil de discussion"
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Vous recevrez un e-mail contenant un « code de réinitialisation » Saisissez ce code ici, puis votre nouveau mot de passe."
+
+#: src/screens/Onboarding/StepModeration/index.tsx:72
+msgid "You're in control"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:89
