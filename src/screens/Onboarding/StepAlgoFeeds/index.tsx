@@ -104,8 +104,8 @@ export function StepAlgoFeeds() {
       </Title>
       <Description>
         <Trans>
-          Feeds are created by users and organizations. They offer you varied
-          experiences and suggest content you may like using algorithms.
+          Custom feeds built by the community bring you new experiences and help
+          you find the content you love.
         </Trans>
       </Description>
 
