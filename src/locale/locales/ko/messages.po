@@ -1062,7 +1062,7 @@ msgstr "두 번 탭하여 로그인합니다"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:244
 msgid "Drop to add images"
-msgstr "드룹하여 이미지 추가"
+msgstr "드롭하여 이미지 추가"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
