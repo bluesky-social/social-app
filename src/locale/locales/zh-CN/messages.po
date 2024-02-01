@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-01-31 20:50+0800\n"
+"POT-Creation-Date: 2024-02-01 09:20+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -212,10 +212,6 @@ msgstr "成人内容"
 #: src/view/com/modals/ContentFilteringSettings.tsx:137
 msgid "Adult content can only be enabled via the Web at <0/>."
 msgstr "要显示成人内容，你必须访问网页端上的<0/>。"
-
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr "要显示成人内容，你必须访问网页端上的<0>bsky.app</0>."
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -623,8 +619,8 @@ msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "选择可改进你自定义信息流的算法。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
-msgid "Choose your algorithmic feeds"
-msgstr "选择你的信息流算法"
+msgid "Choose your main feeds"
+msgstr "选择你的首选信息流"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -812,10 +808,10 @@ msgstr "内容警告"
 msgid "Content warnings"
 msgstr "内容警告"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:154
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:155
 #: src/screens/Onboarding/StepFollowingFeed.tsx:153
 #: src/screens/Onboarding/StepInterests/index.tsx:248
-#: src/screens/Onboarding/StepModeration/index.tsx:84
+#: src/screens/Onboarding/StepModeration/index.tsx:118
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:108
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
@@ -824,12 +820,12 @@ msgstr "继续"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:245
-#: src/screens/Onboarding/StepModeration/index.tsx:81
+#: src/screens/Onboarding/StepModeration/index.tsx:115
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:105
 msgid "Continue to next step"
 msgstr "继续下一步"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:151
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:152
 msgid "Continue to the next step"
 msgstr "继续下一步"
 
@@ -1096,6 +1092,10 @@ msgstr "双击以登录"
 msgid "Drop to add images"
 msgstr "拖放即可添加图片"
 
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
+msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
+msgstr "受 Apple 政策限制，成人内容只能在完成注册后在网页端启用显示"
+
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
 msgstr "例：张蓝天"
@@ -1219,8 +1219,8 @@ msgstr "仅启用 {0}"
 msgid "Enable Adult Content"
 msgstr "启用成人内容"
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:95
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:96
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
 msgstr "在你的信息流中启用成人内容"
 
@@ -1326,7 +1326,7 @@ msgstr "外部媒体"
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒体可能允许网站收集有关你和你设备的有关信息。在你按下“查看”按钮之前，将不会发送或请求任何外部信息。"
+msgstr "外部媒体可能允许网站收集有关你和你设备的有关信息。在你按下\"查看\"按钮之前，将不会发送或请求任何外部信息。"
 
 #: src/Navigation.tsx:259
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
@@ -1388,8 +1388,8 @@ msgid "Feeds"
 msgstr "信息流"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-msgid "Feeds are created by users and can give you entirely new experiences."
-msgstr "信息流由用户创建，可为你带来不一样的体验。"
+msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
+msgstr "信息流由用户和组织创建，结合算法为你推荐可能喜欢的内容，可为你带来不一样的体验。"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
@@ -1611,7 +1611,7 @@ msgstr "这里是一些基于你兴趣所推荐的信息流供你挑选：{inter
 msgid "Here is your app password."
 msgstr "这里是你的 App 专用密码。"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:38
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:41
 #: src/view/com/modals/ContentFilteringSettings.tsx:246
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/com/util/moderation/PostHider.tsx:108
@@ -2226,11 +2226,14 @@ msgstr "转到个人资料"
 msgid "Never load embeds from {0}"
 msgstr "请勿加载来自 {0} 的嵌入内容"
 
-#: src/screens/Onboarding/StepFinished.tsx:119
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "永远不会失去对你的关注者和数据的访问。"
+
+#: src/screens/Onboarding/StepFinished.tsx:119
+msgid "Never lose access to your followers or data."
+msgstr "永远不会失去对你的关注者或数据的访问。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -3173,13 +3176,13 @@ msgstr "选择服务"
 msgid "Select some accounts below to follow"
 msgstr "选择以下一些账户进行关注"
 
-#: src/screens/Onboarding/StepModeration/index.tsx:49
-msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-msgstr "选择你想看到（或不想看到）的内容类型，剩下的由我们来处理。"
-
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
 msgstr "从下面的列表中选择要关注的专题信息流"
+
+#: src/screens/Onboarding/StepModeration/index.tsx:75
+msgid "Select what you want to see (or not see), and we’ll handle the rest."
+msgstr "选择你想看到（或不想看到）的内容，剩下的由我们来处理。"
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -3201,11 +3204,11 @@ msgstr "选择你的电话区号"
 msgid "Select your preferred language for translations in your feed."
 msgstr "选择你在订阅信息流中希望进行翻译的目标首选语言。"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:115
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
 msgstr "选择你的信息流主要算法"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:131
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:132
 msgid "Select your secondary algorithmic feeds"
 msgstr "选择你的信息流次要算法"
 
@@ -3268,23 +3271,23 @@ msgstr "设置密码"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "将此设置项设为“否”以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
+msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "将此设置项设为“否”以隐藏来自订阅信息流的所有回复。"
+msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有回复。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "将此设置项设为“否”以隐藏来自订阅信息流的所有转发。"
+msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "将此设置项设为“是”以在分层视图中显示回复。这是一个实验性功能。"
+msgstr "将此设置项设为\"是\"以在分层视图中显示回复。这是一个实验性功能。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "将此设置项设为“是”以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
+msgstr "将此设置项设为\"是\"以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -3334,7 +3337,7 @@ msgstr "分享"
 msgid "Share feed"
 msgstr "分享信息流"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:40
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:43
 #: src/view/com/modals/ContentFilteringSettings.tsx:261
 #: src/view/com/util/moderation/ContentHider.tsx:107
 #: src/view/com/util/moderation/PostHider.tsx:108
@@ -3689,7 +3692,7 @@ msgstr "支持表单已移动位置。如果你需要帮助，请点击<0/>或�
 msgid "The Terms of Service have been moved to"
 msgstr "服务条款已迁移至"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:135
 msgid "There are many feeds to try:"
 msgstr "这里有些信息流你可以尝试："
 
@@ -3738,7 +3741,7 @@ msgstr "刷新列表时出现问题，点击重试。"
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr "刷新列表时出现问题，点击重试。"
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:56
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:63
 #: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
 msgstr "与服务器同步首选项时出现问题"
@@ -4072,7 +4075,7 @@ msgstr "关注 <0/> 的用户"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
-msgstr "“{0}”中的用户"
+msgstr "\"{0}\"中的用户"
 
 #: src/view/com/auth/create/Step2.tsx:242
 msgid "Verification code"
@@ -4127,10 +4130,14 @@ msgstr "查看头像"
 msgid "Visit Site"
 msgstr "访问网站"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:39
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:42
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
 msgstr "警告"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
+msgid "We also think you'll like \"For You\" by Skygaze:"
+msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\""
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4144,9 +4151,9 @@ msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "我们已经看完了你关注的帖子。这是来自 <0/> 的最新消息。"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
-msgid "We recommend \"For You\" by Skygaze:"
-msgstr "我们推荐 Skygaze 所维护的 \"For You\"："
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
+msgid "We recommend our \"Discover\" feed:"
+msgstr "我们推荐我们的 \"Discover\" 信息流"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -4241,10 +4248,6 @@ msgstr "XXXXXX"
 msgid "Yes"
 msgstr "是的"
 
-#: src/screens/Onboarding/StepModeration/index.tsx:46
-msgid "You are in control"
-msgstr "你尽在掌控"
-
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
 msgstr "轮到你了。"
@@ -4253,10 +4256,6 @@ msgstr "轮到你了。"
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "你也可以探索新的自定义信息流来关注。"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
-msgid "You can also try our \"Discover\" algorithm:"
-msgstr "你也可以尝试我们的“发现”算法："
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4320,7 +4319,7 @@ msgstr "你还没有静音任何账号。要静音账号，请转到其个人资
 msgid "You must be 18 or older to enable adult content."
 msgstr "你必须年满18岁及以上才能启用成人内容。"
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:124
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
 msgstr "你必须年满18岁及以上才能启用成人内容"
 
@@ -4335,6 +4334,10 @@ msgstr "你将收到这条讨论串的通知"
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "你将收到一封带有重置代码的电子邮件。请在此输入该重置代码，然后输入你的新密码。"
+
+#: src/screens/Onboarding/StepModeration/index.tsx:72
+msgid "You're in control"
+msgstr "你尽在掌控"
 
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:89
