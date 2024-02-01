@@ -684,8 +684,29 @@ export function SettingsScreen({}: Props) {
         )}
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Danger Zone</Trans>
+          <Trans>Account</Trans>
         </Text>
+        <TouchableOpacity
+          testID="changePasswordBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Change password`)}
+          accessibilityHint={_(msg`Change your Bluesky password`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="at"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text} numberOfLines={1}>
+            <Trans>Change Password</Trans>
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}
