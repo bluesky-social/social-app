@@ -21,14 +21,6 @@ msgstr ""
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
 msgstr ""
 
-#: src/view/com/modals/Repost.tsx:44
-#~ msgid "{0}"
-#~ msgstr ""
-
-#: src/view/com/modals/CreateOrEditList.tsx:176
-#~ msgid "{0} {purposeLabel} List"
-#~ msgstr "{0} {purposeLabel} Liste"
-
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
 msgstr ""
@@ -46,10 +38,6 @@ msgstr "{invitesAvailable} Einladungscode verfügbar"
 #: src/view/shell/Drawer.tsx:666
 msgid "{invitesAvailable} invite codes available"
 msgstr "{invitesAvailable} Einladungscodes verfügbar"
-
-#: src/view/screens/Search/Search.tsx:87
-#~ msgid "{message}"
-#~ msgstr ""
 
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
@@ -226,8 +214,8 @@ msgid "Adult content can only be enabled via the Web at <0/>."
 msgstr ""
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-msgstr ""
+#~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
+#~ msgstr ""
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -545,10 +533,6 @@ msgstr "Abbrechen"
 msgid "Cancel account deletion"
 msgstr "Konto-Löschung abbrechen"
 
-#: src/view/com/modals/AltImage.tsx:123
-#~ msgid "Cancel add image alt text"
-#~ msgstr ""
-
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
 msgstr ""
@@ -577,11 +561,7 @@ msgstr "Anmeldung zur Warteliste abbrechen"
 #: src/view/screens/Settings.tsx:334
 msgctxt "action"
 msgid "Change"
-msgstr ""
-
-#: src/view/screens/Settings.tsx:306
-#~ msgid "Change"
-#~ msgstr "Ändern"
+msgstr "Ändern"
 
 #: src/view/screens/Settings.tsx:662
 #: src/view/screens/Settings.tsx:671
@@ -643,7 +623,11 @@ msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
-msgid "Choose your algorithmic feeds"
+#~ msgid "Choose your algorithmic feeds"
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
+msgid "Choose your main feeds"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:163
@@ -832,10 +816,10 @@ msgstr "Inhaltswarnung"
 msgid "Content warnings"
 msgstr "Inhaltswarnungen"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:154
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:155
 #: src/screens/Onboarding/StepFollowingFeed.tsx:153
 #: src/screens/Onboarding/StepInterests/index.tsx:248
-#: src/screens/Onboarding/StepModeration/index.tsx:84
+#: src/screens/Onboarding/StepModeration/index.tsx:118
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:108
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
@@ -844,12 +828,12 @@ msgstr "Fortfahren"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:245
-#: src/screens/Onboarding/StepModeration/index.tsx:81
+#: src/screens/Onboarding/StepModeration/index.tsx:115
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:105
 msgid "Continue to next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:151
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:152
 msgid "Continue to the next step"
 msgstr ""
 
@@ -1034,10 +1018,6 @@ msgstr "Gelöschter Beitrag."
 msgid "Description"
 msgstr "Beschreibung"
 
-#: src/view/com/auth/create/Step1.tsx:96
-#~ msgid "Dev Server"
-#~ msgstr "Entwicklungsserver"
-
 #: src/view/screens/Settings.tsx:711
 msgid "Developer Tools"
 msgstr "Entwickler-Tools"
@@ -1118,6 +1098,10 @@ msgstr ""
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:244
 msgid "Drop to add images"
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
+msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
 msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:185
@@ -1243,8 +1227,8 @@ msgstr ""
 msgid "Enable Adult Content"
 msgstr ""
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:95
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:96
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
 msgstr ""
 
@@ -1271,10 +1255,6 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
 msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:71
-#~ msgid "Enter the address of your provider:"
-#~ msgstr "Gib die Adresse deines Anbieters ein:"
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1416,7 +1396,11 @@ msgid "Feeds"
 msgstr "Feeds"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-msgid "Feeds are created by users and can give you entirely new experiences."
+#~ msgid "Feeds are created by users and can give you entirely new experiences."
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
 msgstr ""
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
@@ -1500,10 +1484,6 @@ msgstr ""
 msgid "Follow selected accounts and continue to the next step"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-#~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
 msgstr "Folge einigen Nutzern, um loszulegen. Wir können dir weitere Nutzer empfehlen, je nachdem, wen du interessant findest."
@@ -1527,10 +1507,6 @@ msgstr ""
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "Follower"
-
-#: src/view/com/profile/ProfileHeader.tsx:624
-#~ msgid "following"
-#~ msgstr "Folge ich"
 
 #: src/view/com/profile/ProfileHeader.tsx:534
 #: src/view/screens/ProfileFollows.tsx:25
@@ -1635,10 +1611,6 @@ msgstr "Hilfe"
 msgid "Here are some accounts for you to follow"
 msgstr ""
 
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-#~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
 msgstr ""
@@ -1657,7 +1629,7 @@ msgctxt "action"
 msgid "Hide"
 msgstr ""
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:38
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:41
 #: src/view/com/modals/ContentFilteringSettings.tsx:246
 #: src/view/com/util/moderation/ContentHider.tsx:105
 #: src/view/com/util/moderation/PostHider.tsx:108
@@ -1723,10 +1695,6 @@ msgstr "Home-Feed-Einstellungen"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:116
 msgid "Hosting provider"
 msgstr "Hosting-Anbieter"
-
-#: src/view/com/auth/create/Step1.tsx:NaN
-#~ msgid "Hosting provider address"
-#~ msgstr "Adresse des Hosting-Anbieters"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
@@ -1990,10 +1958,6 @@ msgstr ""
 msgid "liked your custom feed"
 msgstr ""
 
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed '{0}'"
-#~ msgstr ""
-
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
 msgstr ""
@@ -2114,13 +2078,9 @@ msgstr "Erwähnte Benutzer"
 msgid "Menu"
 msgstr "Menü"
 
-#: src/view/com/posts/FeedErrorMessage.tsx:194
-#~ msgid "Message from server"
-#~ msgstr "Nachricht vom Server"
-
 #: src/view/com/posts/FeedErrorMessage.tsx:197
 msgid "Message from server: {0}"
-msgstr ""
+msgstr "Nachricht vom Server: {0}"
 
 #: src/Navigation.tsx:115
 #: src/view/screens/Moderation.tsx:64
@@ -2278,11 +2238,14 @@ msgstr ""
 msgid "Never load embeds from {0}"
 msgstr ""
 
-#: src/screens/Onboarding/StepFinished.tsx:119
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
 msgstr "Verliere nie den Zugriff auf deine Follower und Daten."
+
+#: src/screens/Onboarding/StepFinished.tsx:119
+msgid "Never lose access to your followers or data."
+msgstr ""
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2318,11 +2281,7 @@ msgstr "Neuer Beitrag"
 #: src/view/shell/desktop/LeftNav.tsx:258
 msgctxt "action"
 msgid "New Post"
-msgstr ""
-
-#: src/view/shell/desktop/LeftNav.tsx:257
-#~ msgid "New Post"
-#~ msgstr "Neuer Beitrag"
+msgstr "Neuer Beitrag"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
@@ -2592,10 +2551,6 @@ msgstr ""
 msgid "Or combine these options:"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-#~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr ""
-
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "Anderes Konto"
@@ -2752,13 +2707,7 @@ msgstr ""
 #: src/view/com/post-thread/PostThread.tsx:251
 msgctxt "description"
 msgid "Post"
-msgstr ""
-
-#: src/view/com/composer/Composer.tsx:341
-#: src/view/com/post-thread/PostThread.tsx:225
-#: src/view/screens/PostThread.tsx:80
-#~ msgid "Post"
-#~ msgstr "Beitrag"
+msgstr "Beitrag"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:177
 msgid "Post by {0}"
@@ -2869,7 +2818,7 @@ msgstr ""
 #: src/view/com/modals/Repost.tsx:65
 msgctxt "action"
 msgid "Quote post"
-msgstr ""
+msgstr "Beitrag zitieren"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
 msgid "Quote post"
@@ -2878,11 +2827,7 @@ msgstr "Beitrag zitieren"
 #: src/view/com/modals/Repost.tsx:70
 msgctxt "action"
 msgid "Quote Post"
-msgstr ""
-
-#: src/view/com/modals/Repost.tsx:56
-#~ msgid "Quote Post"
-#~ msgstr "Beitrag zitieren"
+msgstr "Beitrag zitieren"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
@@ -3023,10 +2968,6 @@ msgstr "Erneut veröffentlichen"
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
 msgid "Repost or quote post"
 msgstr ""
-
-#: src/view/screens/PostRepostedBy.tsx:27
-#~ msgid "Reposted by"
-#~ msgstr ""
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
@@ -3248,11 +3189,15 @@ msgid "Select some accounts below to follow"
 msgstr ""
 
 #: src/screens/Onboarding/StepModeration/index.tsx:49
-msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-msgstr ""
+#~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
+msgstr ""
+
+#: src/screens/Onboarding/StepModeration/index.tsx:75
+msgid "Select what you want to see (or not see), and we’ll handle the rest."
 msgstr ""
 
 #: src/view/screens/LanguageSettings.tsx:281
@@ -3275,11 +3220,11 @@ msgstr ""
 msgid "Select your preferred language for translations in your feed."
 msgstr "Wähle deine bevorzugte Sprache für die Übersetzungen in deinem Feed aus."
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:115
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:131
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:132
 msgid "Select your secondary algorithmic feeds"
 msgstr ""
 
@@ -3295,11 +3240,7 @@ msgstr "E-Mail senden"
 #: src/view/com/modals/DeleteAccount.tsx:140
 msgctxt "action"
 msgid "Send Email"
-msgstr ""
-
-#: src/view/com/modals/DeleteAccount.tsx:138
-#~ msgid "Send Email"
-#~ msgstr "E-Mail senden"
+msgstr "E-Mail senden"
 
 #: src/view/shell/Drawer.tsx:298
 #: src/view/shell/Drawer.tsx:319
@@ -3412,7 +3353,7 @@ msgstr "Teilen"
 msgid "Share feed"
 msgstr "Feed teilen"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:40
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:43
 #: src/view/com/modals/ContentFilteringSettings.tsx:261
 #: src/view/com/util/moderation/ContentHider.tsx:107
 #: src/view/com/util/moderation/PostHider.tsx:108
@@ -3761,17 +3702,13 @@ msgstr "Die Datenschutzerklärung wurde nach <0/> verschoben"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr ""
-
-#: src/view/screens/Support.tsx:36
-#~ msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-#~ msgstr "Das Support-Formular wurde verschoben. Wenn du Hilfe benötigst, wende dich bitte an<0/> oder besuche {HELP_DESK_URL}, um mit uns Kontakt aufzunehmen."
+msgstr "Das Support-Formular wurde verschoben. Wenn du Hilfe benötigst, wende dich bitte an <0/> oder besuche {HELP_DESK_URL}, um mit uns Kontakt aufzunehmen."
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
 msgstr ""
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:135
 msgid "There are many feeds to try:"
 msgstr ""
 
@@ -3820,7 +3757,7 @@ msgstr ""
 msgid "There was an issue fetching your lists. Tap here to try again."
 msgstr ""
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:56
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:63
 #: src/view/com/modals/ContentFilteringSettings.tsx:126
 msgid "There was an issue syncing your preferences with the server"
 msgstr ""
@@ -3860,10 +3797,6 @@ msgstr ""
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
 msgstr ""
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-#~ msgid "These are popular accounts you might like."
-#~ msgstr ""
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -3906,10 +3839,6 @@ msgstr "Diese Informationen werden nicht an andere Nutzer weitergegeben."
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
 msgstr "Das ist wichtig für den Fall, dass du mal deine E-Mail ändern oder dein Passwort zurücksetzen musst."
-
-#: src/view/com/auth/create/Step1.tsx:55
-#~ msgid "This is the service that keeps you online."
-#~ msgstr "Das ist der Dienst, der dich online hält."
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -3977,11 +3906,7 @@ msgstr "Übersetzen"
 #: src/view/com/util/error/ErrorScreen.tsx:75
 msgctxt "action"
 msgid "Try again"
-msgstr ""
-
-#: src/view/com/util/error/ErrorScreen.tsx:73
-#~ msgid "Try again"
-#~ msgstr "Erneut versuchen"
+msgstr "Erneut versuchen"
 
 #: src/view/screens/ProfileList.tsx:481
 msgid "Un-block list"
@@ -4221,9 +4146,13 @@ msgstr "Avatar ansehen"
 msgid "Visit Site"
 msgstr "Seite ansehen"
 
-#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:39
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:42
 #: src/view/com/modals/ContentFilteringSettings.tsx:254
 msgid "Warn"
+msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
+msgid "We also think you'll like \"For You\" by Skygaze:"
 msgstr ""
 
 #: src/screens/Deactivated.tsx:134
@@ -4239,7 +4168,11 @@ msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
-msgid "We recommend \"For You\" by Skygaze:"
+#~ msgid "We recommend \"For You\" by Skygaze:"
+#~ msgstr ""
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
+msgid "We recommend our \"Discover\" feed:"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
@@ -4336,8 +4269,8 @@ msgid "Yes"
 msgstr "Ja"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:46
-msgid "You are in control"
-msgstr ""
+#~ msgid "You are in control"
+#~ msgstr ""
 
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
@@ -4349,12 +4282,8 @@ msgid "You can also discover new Custom Feeds to follow."
 msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
-msgid "You can also try our \"Discover\" algorithm:"
-msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:106
-#~ msgid "You can change hosting providers at any time."
-#~ msgstr "Du kannst den Hosting-Anbieter jederzeit wechseln."
+#~ msgid "You can also try our \"Discover\" algorithm:"
+#~ msgstr ""
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4418,7 +4347,7 @@ msgstr ""
 msgid "You must be 18 or older to enable adult content."
 msgstr ""
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:124
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
 msgstr ""
 
@@ -4433,6 +4362,10 @@ msgstr ""
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
 msgstr "Du erhältst eine E-Mail mit einem \"Reset-Code\". Gib diesen Code hier ein und gib dann dein neues Passwort ein."
+
+#: src/screens/Onboarding/StepModeration/index.tsx:72
+msgid "You're in control"
+msgstr ""
 
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:89
@@ -4496,10 +4429,6 @@ msgstr ""
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr ""
-
-#: src/view/com/auth/create/Step1.tsx:53
-#~ msgid "Your hosting provider"
-#~ msgstr "Dein Hosting-Anbieter"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137

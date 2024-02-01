@@ -2,9 +2,14 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import Animated, {Easing, Layout} from 'react-native-reanimated'
 
 import {atoms as a} from '#/alf'
-import {configurableLabelGroups} from 'state/queries/preferences'
+import {
+  configurableAdultLabelGroups,
+  configurableOtherLabelGroups,
+  usePreferencesSetAdultContentMutation,
+} from 'state/queries/preferences'
 import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -23,11 +28,32 @@ import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/Adult
 import {Context} from '#/screens/Onboarding/state'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
 
+function AnimatedDivider() {
+  return (
+    <Animated.View layout={Layout.easing(Easing.ease).duration(200)}>
+      <Divider />
+    </Animated.View>
+  )
+}
+
 export function StepModeration() {
   const {_} = useLingui()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
+  const {mutate, variables} = usePreferencesSetAdultContentMutation()
+
+  // We need to know if the screen is mounted so we know if we want to run entering animations
+  // https://github.com/software-mansion/react-native-reanimated/discussions/2513
+  const isMounted = React.useRef(false)
+  React.useLayoutEffect(() => {
+    isMounted.current = true
+  }, [])
+
+  const adultContentEnabled = !!(
+    (variables && variables.enabled) ||
+    (!variables && preferences?.adultContentEnabled)
+  )
 
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
@@ -57,14 +83,23 @@ export function StepModeration() {
         </View>
       ) : (
         <>
-          <AdultContentEnabledPref />
+          <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {configurableLabelGroups.map((g, index) => (
+            {adultContentEnabled &&
+              configurableAdultLabelGroups.map((g, index) => (
+                <React.Fragment key={index}>
+                  {index === 0 && <AnimatedDivider />}
+                  <ModerationOption labelGroup={g} isMounted={isMounted} />
+                  <AnimatedDivider />
+                </React.Fragment>
+              ))}
+
+            {configurableOtherLabelGroups.map((g, index) => (
               <React.Fragment key={index}>
-                {index === 0 && <Divider />}
-                <ModerationOption labelGroup={g} />
-                <Divider />
+                {!adultContentEnabled && index === 0 && <AnimatedDivider />}
+                <ModerationOption labelGroup={g} isMounted={isMounted} />
+                <AnimatedDivider />
               </React.Fragment>
             ))}
           </View>
