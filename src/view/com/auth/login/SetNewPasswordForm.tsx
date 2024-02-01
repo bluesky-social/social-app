@@ -19,6 +19,7 @@ import {styles} from './styles'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+// Regex for base32 string
 const CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
 
 export const SetNewPasswordForm = ({
@@ -178,6 +179,7 @@ export const SetNewPasswordForm = ({
           ) : (
             <TouchableOpacity
               testID="setNewPasswordButton"
+              // Check the code before running the callback
               onPress={() => checkCode(onPressNext)}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Go to next`)}
