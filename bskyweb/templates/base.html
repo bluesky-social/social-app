@@ -40,22 +40,15 @@
     }
 
     /* Color theming */
+    /* Default will always be white */
     :root {
         --text: black;
         --background: white;
         --backgroundLight: hsl(211, 20%, 95%);
     }
-
-    /* Use @media to prevent any possible flicker of white */
-    @media (prefers-color-scheme: light) {
-        html.colorMode--system {
-            --text: black;
-            --background: white;
-            --backgroundLight: hsl(211, 20%, 95%);
-        }
-    }
+    /* This gives us a black background when system is dark and we have not loaded the theme/color scheme values in JS */
     @media (prefers-color-scheme: dark) {
-        html.colorMode--system {
+        :root {
             --text: white;
             --background: black;
             --backgroundLight: hsl(211, 20%, 20%);
