@@ -17,7 +17,7 @@ export function useColorModeTheme(): ThemeName {
       updateDocument('light')
       return 'light'
     } else {
-      const themeName = darkTheme ?? 'dark'
+      const themeName = darkTheme ?? 'dim'
       updateDocument(themeName)
       return themeName
     }
