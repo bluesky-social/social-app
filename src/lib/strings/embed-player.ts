@@ -73,7 +73,7 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'youtube_video',
         source: 'youtube',
-        playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&start=${seek}`,
+        playerUri: `https://bsky.app/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
       }
     }
   }
@@ -92,7 +92,7 @@ export function parseEmbedPlayerFromUrl(
         type: page === 'shorts' ? 'youtube_short' : 'youtube_video',
         source: page === 'shorts' ? 'youtubeShorts' : 'youtube',
         hideDetails: page === 'shorts' ? true : undefined,
-        playerUri: `https://www.youtube.com/embed/${videoId}?autoplay=1&playsinline=1&start=${seek}`,
+        playerUri: `https://bsky.app/iframe/youtube.html?videoId=${videoId}&start=${seek}`,
       }
     }
   }

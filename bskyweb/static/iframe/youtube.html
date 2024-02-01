@@ -1,4 +1,4 @@
-<!DOCTYPE html><meta name="viewport" content="width=device-width," />
+<!DOCTYPE html><meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
     body {
         margin: 0;
@@ -34,7 +34,7 @@
       height: "1000",
       videoId: url.searchParams.get('videoId'),
       playerVars: {
-        autoplay: true,
+        autoplay: 1,
         start: url.searchParams.get('start'),
         rel: 0,
         loop: 0,
@@ -42,5 +42,8 @@
         origin: url.origin
       },
     });
+  }
+  function onPlayerReady(event) {
+    event.target.playVideo();
   }
 </script>
