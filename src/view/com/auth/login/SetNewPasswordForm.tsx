@@ -19,6 +19,8 @@ import {styles} from './styles'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+const CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
+
 export const SetNewPasswordForm = ({
   error,
   serviceUrl,
@@ -71,6 +73,20 @@ export const SetNewPasswordForm = ({
     }
   }
 
+  const checkCode = (cb?: () => unknown) => {
+    // Trim the reset code
+    const fixed = resetCode.trim().toUpperCase()
+    setResetCode(fixed)
+
+    // Check that it is a valid format
+    if (!CODE_REGEX.test(fixed)) {
+      setError('The reset code you have entered is invalid.')
+    } else {
+      setError('')
+      cb?.()
+    }
+  }
+
   return (
     <>
       <View>
@@ -103,6 +119,8 @@ export const SetNewPasswordForm = ({
               autoFocus
               value={resetCode}
               onChangeText={setResetCode}
+              onFocus={() => setError('')}
+              onBlur={() => checkCode()}
               editable={!isProcessing}
               accessible={true}
               accessibilityLabel={_(msg`Reset code`)}
@@ -160,7 +178,7 @@ export const SetNewPasswordForm = ({
           ) : (
             <TouchableOpacity
               testID="setNewPasswordButton"
-              onPress={onPressNext}
+              onPress={() => checkCode(onPressNext)}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Go to next`)}
               accessibilityHint={_(msg`Navigates to the next screen`)}>
