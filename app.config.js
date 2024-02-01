@@ -91,10 +91,6 @@ module.exports = function () {
           backgroundImage: './assets/icon-android-background.png',
           backgroundColor: '#1185FE',
         },
-        notification: {
-          icon: './assets/icon-android-notification.png',
-          color: '#ffffff',
-        },
         googleServicesFile: './google-services.json',
         package: 'xyz.blueskyweb.app',
         intentFilters: [
@@ -151,7 +147,7 @@ module.exports = function () {
           {
             icon: './assets/icon-android-notification.png',
             color: '#ffffff',
-          }
+          },
         ],
         './plugins/withAndroidManifestPlugin.js',
       ].filter(Boolean),
