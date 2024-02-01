@@ -494,22 +494,18 @@ export function SettingsScreen({}: Props) {
             <View>
               <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
                 <SelectableBtn
-                  selected={!darkTheme || darkTheme === 'dark'}
-                  label={_(msg`Default`)}
+                  selected={!darkTheme || darkTheme === 'dim'}
+                  label={_(msg`Dim`)}
                   left
-                  onSelect={() => setDarkTheme('dark')}
-                  accessibilityHint={_(
-                    msg`Set dark theme to the default dark theme`,
-                  )}
+                  onSelect={() => setDarkTheme('dim')}
+                  accessibilityHint={_(msg`Set dark theme to the dim theme`)}
                 />
                 <SelectableBtn
-                  selected={darkTheme === 'oled'}
-                  label={_(msg`OLED`)}
+                  selected={darkTheme === 'dark'}
+                  label={_(msg`Dark`)}
                   right
-                  onSelect={() => setDarkTheme('oled')}
-                  accessibilityHint={_(
-                    msg`Set dark theme to the OLED dark theme`,
-                  )}
+                  onSelect={() => setDarkTheme('dark')}
+                  accessibilityHint={_(msg`Set dark theme to the dark theme`)}
                 />
               </View>
             </View>

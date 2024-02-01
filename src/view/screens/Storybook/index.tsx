@@ -38,7 +38,7 @@ export function Storybook() {
               variant="solid"
               color="secondary"
               size="small"
-              label='Set theme to "system"'
+              label='Set theme to "light"'
               onPress={() => setColorMode('light')}>
               Light
             </Button>
@@ -46,23 +46,23 @@ export function Storybook() {
               variant="solid"
               color="secondary"
               size="small"
-              label='Set theme to "system"'
+              label='Set theme to "dim"'
               onPress={() => {
                 setColorMode('dark')
-                setDarkTheme('dark')
+                setDarkTheme('dim')
               }}>
-              Dark
+              Dim
             </Button>
             <Button
               variant="solid"
               color="secondary"
               size="small"
-              label='Set theme to "system"'
+              label='Set theme to "dark"'
               onPress={() => {
                 setColorMode('dark')
-                setDarkTheme('oled')
+                setDarkTheme('dark')
               }}>
-              OLED
+              Dark
             </Button>
           </View>
 

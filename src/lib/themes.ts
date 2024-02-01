@@ -2,7 +2,7 @@ import {Platform} from 'react-native'
 import type {Theme} from './ThemeContext'
 import {colors} from './styles'
 
-import {darkPalette, lightPalette, oledPalette} from '#/alf/themes'
+import {darkPalette, lightPalette, dimPalette} from '#/alf/themes'
 
 export const defaultTheme: Theme = {
   colorScheme: 'light',
@@ -337,13 +337,13 @@ export const darkTheme: Theme = {
   },
 }
 
-export const oledTheme: Theme = {
+export const dimTheme: Theme = {
   ...darkTheme,
   palette: {
     ...darkTheme.palette,
     default: {
       ...darkTheme.palette.default,
-      background: oledPalette.black,
+      background: dimPalette.black,
     },
   },
 }
