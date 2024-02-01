@@ -1,4 +1,5 @@
-import {Dimensions, Platform} from 'react-native'
+import {Dimensions} from 'react-native'
+import {isWeb} from 'platform/detection'
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 export const embedPlayerSources = [
@@ -103,8 +104,10 @@ export function parseEmbedPlayerFromUrl(
     urlp.hostname === 'www.twitch.tv' ||
     urlp.hostname === 'm.twitch.tv'
   ) {
-    const parent =
-      Platform.OS === 'web' ? window.location.hostname : 'localhost'
+    const parent = isWeb
+      ? // @ts-ignore only for web
+        window.location.hostname
+      : 'localhost'
 
     const [_, channelOrVideo, clipOrId, id] = urlp.pathname.split('/')
 
