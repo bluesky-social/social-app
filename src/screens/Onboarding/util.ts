@@ -2,6 +2,7 @@ import {AppBskyGraphFollow, AppBskyGraphGetFollows} from '@atproto/api'
 
 import {until} from '#/lib/async/until'
 import {getAgent} from '#/state/session'
+import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
 function shuffle(array: any) {
   let currentIndex = array.length,
@@ -110,11 +111,19 @@ async function whenFollowsIndexed(
  * feed after Following
  */
 export function sortPrimaryAlgorithmFeeds(uris: string[]) {
-  return uris.sort(uri => {
-    return uri.includes('the-algorithm')
-      ? -1
-      : uri.includes('whats-hot')
-      ? 0
-      : 1
+  return uris.sort((a, b) => {
+    if (a === PRIMARY_FEEDS[0].uri) {
+      return -1
+    }
+    if (b === PRIMARY_FEEDS[0].uri) {
+      return 1
+    }
+    if (a === PRIMARY_FEEDS[1].uri) {
+      return -1
+    }
+    if (b === PRIMARY_FEEDS[1].uri) {
+      return 1
+    }
+    return a.localeCompare(b)
   })
 }
