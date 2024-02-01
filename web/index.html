@@ -50,6 +50,24 @@
         --backgroundLight: hsl(211, 20%, 95%);
       }
 
+      /* Use @media to prevent any possible flicker of white */
+      @media (prefers-color-scheme: light) {
+        html.colorMode--system {
+          --text: black;
+          --background: white;
+          --backgroundLight: hsl(211, 20%, 95%);
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        html.colorMode--system {
+          --text: white;
+          --background: black;
+          --backgroundLight: hsl(211, 20%, 20%);
+          color-scheme: dark;
+        }
+      }
+
+      /* Overwrite those preferences with the selected theme */
       html.theme--light {
           --text: black;
           --background: white;
