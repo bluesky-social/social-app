@@ -236,7 +236,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (!deactivated) {
         /*dont await*/ agent.upsertProfile(_existing => {
           return {
-            displayName: handle,
+            displayName: '',
           }
         })
       }

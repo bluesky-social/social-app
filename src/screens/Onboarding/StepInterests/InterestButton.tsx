@@ -4,11 +4,13 @@ import {View, ViewStyle, TextStyle} from 'react-native'
 import {useTheme, atoms as a, native} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
+import {capitalize} from '#/lib/strings/capitalize'
 
-import {INTEREST_TO_DISPLAY_NAME} from '#/screens/Onboarding/StepInterests/data'
+import {Context} from '#/screens/Onboarding/state'
 
 export function InterestButton({interest}: {interest: string}) {
   const t = useTheme()
+  const {interestsDisplayNames} = React.useContext(Context)
   const ctx = Toggle.useItemContext()
 
   const styles = React.useMemo(() => {
@@ -72,7 +74,7 @@ export function InterestButton({interest}: {interest: string}) {
           native({paddingTop: 2}),
           ctx.selected ? styles.textSelected : {},
         ]}>
-        {INTEREST_TO_DISPLAY_NAME[interest]}
+        {interestsDisplayNames[interest] || capitalize(interest)}
       </Text>
     </View>
   )

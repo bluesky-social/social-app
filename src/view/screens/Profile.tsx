@@ -21,7 +21,10 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  FeedDescriptor,
+  resetProfilePostsQueries,
+} from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -55,13 +58,13 @@ export function ProfileScreen({route}: Props) {
     data: resolvedDid,
     error: resolveError,
     refetch: refetchDid,
-    isInitialLoading: isInitialLoadingDid,
+    isLoading: isLoadingDid,
   } = useResolveDidQuery(name)
   const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isInitialLoading: isInitialLoadingProfile,
+    isLoading: isLoadingProfile,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -74,7 +77,14 @@ export function ProfileScreen({route}: Props) {
     }
   }, [resolveError, refetchDid, refetchProfile])
 
-  if (isInitialLoadingDid || isInitialLoadingProfile || !moderationOpts) {
+  // When we open the profile, we want to reset the posts query if we are blocked.
+  React.useEffect(() => {
+    if (resolvedDid && profile?.viewer?.blockedBy) {
+      resetProfilePostsQueries(resolvedDid)
+    }
+  }, [profile?.viewer?.blockedBy, resolvedDid])
+
+  if (isLoadingDid || isLoadingProfile || !moderationOpts) {
     return (
       <CenteredView>
         <ProfileHeader

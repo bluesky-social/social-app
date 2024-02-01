@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: quiple\n"
-"Language-Team: quiple, lens0021, HaruChanHeart\n"
+"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142

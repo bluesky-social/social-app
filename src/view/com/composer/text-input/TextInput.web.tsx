@@ -316,7 +316,6 @@ function getImageFromUri(
     const type = item.type
 
     if (type === 'text/plain') {
-      console.log('hit')
       item.getAsString(async itemString => {
         if (isUriImage(itemString)) {
           const response = await fetch(itemString)
