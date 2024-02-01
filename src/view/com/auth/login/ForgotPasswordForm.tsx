@@ -201,7 +201,7 @@ export const ForgotPasswordForm = ({
         </View>
         <View style={[s.flexRow, s.justifyCenter]}>
           <TouchableOpacity
-            testID="newPasswordButton"
+            testID="skipSendEmailButton"
             onPress={onEmailSent}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Go to next`)}
