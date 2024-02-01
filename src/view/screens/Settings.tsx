@@ -693,7 +693,7 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
+          onPress={() => openModal({name: 'change-password', loggedIn: true})}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
           accessibilityHint={_(msg`Change your Bluesky password`)}>

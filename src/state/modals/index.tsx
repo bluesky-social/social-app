@@ -171,6 +171,11 @@ export interface ChangeEmailModal {
   name: 'change-email'
 }
 
+export interface ChangePasswordModal {
+  name: 'change-password'
+  loggedIn?: boolean
+}
+
 export interface SwitchAccountModal {
   name: 'switch-account'
 }
@@ -202,6 +207,7 @@ export type Modal =
   | BirthDateSettingsModal
   | VerifyEmailModal
   | ChangeEmailModal
+  | ChangePasswordModal
   | SwitchAccountModal
 
   // Curation
