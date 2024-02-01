@@ -20,12 +20,12 @@ module.exports = function () {
   /**
    * iOS build number. Must be incremented for each TestFlight version.
    */
-  const IOS_BUILD_NUMBER = '1'
+  const IOS_BUILD_NUMBER = '3'
 
   /**
    * Android build number. Must be incremented for each release.
    */
-  const ANDROID_VERSION_CODE = 58
+  const ANDROID_VERSION_CODE = 59
 
   /**
    * Uses built-in Expo env vars

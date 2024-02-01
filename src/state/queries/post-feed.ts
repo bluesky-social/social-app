@@ -28,6 +28,7 @@ import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
+import {queryClient} from 'lib/react-query'
 
 type ActorDid = string
 type AuthorFilter =
@@ -443,4 +444,16 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   if (!somePostsPassModeration) {
     throw new Error(KnownError.FeedNSFPublic)
   }
+}
+
+export function resetProfilePostsQueries(did: string, timeout = 0) {
+  setTimeout(() => {
+    queryClient.resetQueries({
+      predicate: query =>
+        !!(
+          query.queryKey[0] === 'post-feed' &&
+          (query.queryKey[1] as string)?.includes(did)
+        ),
+    })
+  }, timeout)
 }

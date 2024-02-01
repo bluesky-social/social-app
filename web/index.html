@@ -68,10 +68,6 @@
           color-scheme: dark;
       }
 
-      ::selection {
-        background-color: var(--backgroundLight);
-      }
-
       /* Remove autofill styles on Webkit */
       input:autofill,
       input:-webkit-autofill,
@@ -100,6 +96,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -ms-overflow-style: scrollbar;
+        font-synthesis-weight: none;
       }
 
       /* Remove default link styling */

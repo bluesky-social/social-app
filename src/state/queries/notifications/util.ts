@@ -6,6 +6,7 @@ import {
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
+  AppBskyEmbedRecord,
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import chunk from 'lodash.chunk'
@@ -35,11 +36,12 @@ export async function fetchPage({
   moderationOpts: ModerationOpts | undefined
   threadMutes: string[]
   fetchAdditionalData: boolean
-}): Promise<FeedPage> {
+}): Promise<{page: FeedPage; indexedAt: string | undefined}> {
   const res = await getAgent().listNotifications({
     limit,
     cursor,
   })
+  const indexedAt = res.data.notifications[0]?.indexedAt
 
   // filter out notifs by mod rules
   const notifs = res.data.notifications.filter(
@@ -74,9 +76,12 @@ export async function fetchPage({
   }
 
   return {
-    cursor: res.data.cursor,
-    seenAt,
-    items: notifsGrouped,
+    page: {
+      cursor: res.data.cursor,
+      seenAt,
+      items: notifsGrouped,
+    },
+    indexedAt,
   }
 }
 
@@ -110,8 +115,6 @@ function shouldFilterNotif(
       return true
     }
   }
-  // TODO: thread muting is not being applied
-  // (this requires fetching the post)
   return false
 }
 
@@ -221,10 +224,44 @@ function getSubjectUri(
   }
 }
 
-function isThreadMuted(notif: FeedNotification, mutes: string[]): boolean {
-  if (!notif.subject) {
-    return false
+export function isThreadMuted(notif: FeedNotification, threadMutes: string[]) {
+  // If there's a subject we want to use that. This will always work on the notifications tab
+  if (notif.subject) {
+    const record = notif.subject.record as AppBskyFeedPost.Record
+    // Check for a quote record
+    if (
+      (record.reply && threadMutes.includes(record.reply.root.uri)) ||
+      (notif.subject.uri && threadMutes.includes(notif.subject.uri))
+    ) {
+      return true
+    } else if (
+      AppBskyEmbedRecord.isMain(record.embed) &&
+      threadMutes.includes(record.embed.record.uri)
+    ) {
+      return true
+    }
+  } else {
+    // Otherwise we just do the best that we can
+    const record = notif.notification.record
+    if (AppBskyFeedPost.isRecord(record)) {
+      if (record.reply && threadMutes.includes(record.reply.root.uri)) {
+        // We can always filter replies
+        return true
+      } else if (
+        AppBskyEmbedRecord.isMain(record.embed) &&
+        threadMutes.includes(record.embed.record.uri)
+      ) {
+        // We can also filter quotes if the quoted post is the root
+        return true
+      }
+    } else if (
+      AppBskyFeedRepost.isRecord(record) &&
+      threadMutes.includes(record.subject.uri)
+    ) {
+      // Finally we can filter reposts, again if the post is the root
+      return true
+    }
   }
-  const record = notif.subject.record as AppBskyFeedPost.Record // assured in fetchSubjects()
-  return mutes.includes(record.reply?.root.uri || notif.subject.uri)
+
+  return false
 }

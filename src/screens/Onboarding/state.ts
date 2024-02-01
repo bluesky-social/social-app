@@ -1,6 +1,5 @@
 import React from 'react'
 
-import {ApiResponseMap} from '#/screens/Onboarding/StepInterests/data'
 import {logger} from '#/logger'
 
 export type OnboardingState = {
@@ -59,6 +58,16 @@ export type OnboardingAction =
       feedUris: string[]
     }
 
+export type ApiResponseMap = {
+  interests: string[]
+  suggestedAccountDids: {
+    [key: string]: string[]
+  }
+  suggestedFeedUris: {
+    [key: string]: string[]
+  }
+}
+
 export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 7,
@@ -84,12 +93,41 @@ export const initialState: OnboardingState = {
   },
 }
 
+export const INTEREST_TO_DISPLAY_NAME_DEFAULTS: {
+  [key: string]: string
+} = {
+  news: 'News',
+  journalism: 'Journalism',
+  nature: 'Nature',
+  art: 'Art',
+  comics: 'Comics',
+  writers: 'Writers',
+  culture: 'Culture',
+  sports: 'Sports',
+  pets: 'Pets',
+  animals: 'Animals',
+  books: 'Books',
+  education: 'Education',
+  climate: 'Climate',
+  science: 'Science',
+  politics: 'Politics',
+  fitness: 'Fitness',
+  tech: 'Tech',
+  dev: 'Software Dev',
+  comedy: 'Comedy',
+  gaming: 'Video Games',
+  food: 'Food',
+  cooking: 'Cooking',
+}
+
 export const Context = React.createContext<{
   state: OnboardingState
   dispatch: React.Dispatch<OnboardingAction>
+  interestsDisplayNames: {[key: string]: string}
 }>({
   state: {...initialState},
   dispatch: () => {},
+  interestsDisplayNames: INTEREST_TO_DISPLAY_NAME_DEFAULTS,
 })
 
 export function reducer(
