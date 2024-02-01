@@ -647,7 +647,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={pal.text}>
-            <Trans>App passwords</Trans>
+            <Trans>App Passwords</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -668,7 +668,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={pal.text} numberOfLines={1}>
-            <Trans>Change handle</Trans>
+            <Trans>Change Handle</Trans>
           </Text>
         </TouchableOpacity>
         {isNative && (
@@ -703,7 +703,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={dangerText}>
-            <Trans>Delete my account…</Trans>
+            <Trans>Delete My Account…</Trans>
           </Text>
         </TouchableOpacity>
         <View style={styles.spacer20} />
