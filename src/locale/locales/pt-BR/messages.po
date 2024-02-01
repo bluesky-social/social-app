@@ -683,7 +683,7 @@ msgstr "Escolha os algoritmos que fazem sentido para você com os feeds personal
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 #~ msgid "Choose your algorithmic feeds"
-#~ msgstr "scolha seus feeds algoritmicos"
+#~ msgstr "Escolha seus feeds algoritmicos"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
