@@ -49,7 +49,6 @@ export const schema = z.object({
     })
     .optional(),
   mutedThreads: z.array(z.string()), // should move to server
-  mutedWords: mutedWordsSchema, // should move to server
   invites: z.object({
     copiedInvites: z.array(z.string()),
   }),
@@ -82,7 +81,6 @@ export const defaults: Schema = {
   requireAltTextEnabled: false,
   externalEmbeds: {},
   mutedThreads: [],
-  mutedWords: [],
   invites: {
     copiedInvites: [],
   },
