@@ -941,6 +941,10 @@ msgstr "문화"
 msgid "Custom domain"
 msgstr "사용자 지정 도메인"
 
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
+msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
+
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
 msgstr "외부 사이트 미디어를 사용자 지정합니다."
@@ -1386,10 +1390,6 @@ msgstr "피드백"
 #: src/view/shell/Drawer.tsx:480
 msgid "Feeds"
 msgstr "피드"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-msgstr "피드는 사용자 및 조직에 의해 만들어집니다. 피드는 다양한 경험을 제공하고 알고리즘을 사용하여 사용자가 좋아할 만한 콘텐츠를 추천합니다."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
