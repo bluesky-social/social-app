@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import Animated, {Easing, Layout, FadeIn} from 'react-native-reanimated'
 
 import {
   CONFIGURABLE_LABEL_GROUPS,
@@ -16,8 +17,10 @@ import * as ToggleButton from '#/components/forms/ToggleButton'
 
 export function ModerationOption({
   labelGroup,
+  isMounted,
 }: {
   labelGroup: ConfigurableLabelGroup
+  isMounted: React.MutableRefObject<boolean>
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -41,7 +44,7 @@ export function ModerationOption({
   }
 
   return (
-    <View
+    <Animated.View
       style={[
         a.flex_row,
         a.justify_between,
@@ -49,7 +52,9 @@ export function ModerationOption({
         a.py_xs,
         a.px_xs,
         a.align_center,
-      ]}>
+      ]}
+      layout={Layout.easing(Easing.ease).duration(200)}
+      entering={isMounted.current ? FadeIn : undefined}>
       <View style={[a.gap_xs, {width: '50%'}]}>
         <Text style={[a.font_bold]}>{groupInfo.title}</Text>
         <Text style={[t.atoms.text_contrast_700, a.leading_snug]}>
@@ -57,29 +62,23 @@ export function ModerationOption({
         </Text>
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
-        {!preferences?.adultContentEnabled && groupInfo.isAdultImagery ? (
-          <View style={[a.justify_center, {minHeight: 40}]}>
-            <Text style={[a.font_bold]}>{labels.hide}</Text>
-          </View>
-        ) : (
-          <ToggleButton.Group
-            label={_(
-              msg`Configure content filtering setting for category: ${groupInfo.title.toLowerCase()}`,
-            )}
-            values={[visibility ?? 'hide']}
-            onChange={onChange}>
-            <ToggleButton.Button name="hide" label={labels.hide}>
-              {labels.hide}
-            </ToggleButton.Button>
-            <ToggleButton.Button name="warn" label={labels.warn}>
-              {labels.warn}
-            </ToggleButton.Button>
-            <ToggleButton.Button name="ignore" label={labels.show}>
-              {labels.show}
-            </ToggleButton.Button>
-          </ToggleButton.Group>
-        )}
+        <ToggleButton.Group
+          label={_(
+            msg`Configure content filtering setting for category: ${groupInfo.title.toLowerCase()}`,
+          )}
+          values={[visibility ?? 'hide']}
+          onChange={onChange}>
+          <ToggleButton.Button name="hide" label={labels.hide}>
+            {labels.hide}
+          </ToggleButton.Button>
+          <ToggleButton.Button name="warn" label={labels.warn}>
+            {labels.warn}
+          </ToggleButton.Button>
+          <ToggleButton.Button name="ignore" label={labels.show}>
+            {labels.show}
+          </ToggleButton.Button>
+        </ToggleButton.Group>
       </View>
-    </View>
+    </Animated.View>
   )
 }
