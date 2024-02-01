@@ -28,7 +28,7 @@ export type FeedConfig = {
   gradient?: typeof tokens.gradients.midnight | typeof tokens.gradients.nordic
 }
 
-const PRIMARY_FEEDS: FeedConfig[] = [
+export const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: IS_PROD, // these feeds are only available in prod
     uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
