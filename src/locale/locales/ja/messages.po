@@ -1139,7 +1139,7 @@ msgstr "ドロップして画像を追加する"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr ""
+msgstr "Appleのポリシーにより、成人向けコンテンツはサインアップ完了後にウェブ上でのみ有効にすることができます。"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -2335,7 +2335,7 @@ msgstr "フォロワーやデータへのアクセスを失うことはありま
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr ""
+msgstr "フォロワーやデータへのアクセスを失うことはありません。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -3327,7 +3327,7 @@ msgstr "次のリストから話題のフィードを選択してフォローし
 
 #: src/screens/Onboarding/StepModeration/index.tsx:75
 msgid "Select what you want to see (or not see), and we’ll handle the rest."
-msgstr ""
+msgstr "見たい（または見たくない）ものを選択してください。あとは私たちにお任せください。"
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -4318,7 +4318,7 @@ msgstr "警告"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr ""
+msgstr "Skygazeによる「For You」フィードもおすすめ："
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4538,7 +4538,7 @@ msgstr "「リセットコード」が記載されたメールが届きます。
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
-msgstr ""
+msgstr "あなたがコントロールしています"
 
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:89
