@@ -195,6 +195,22 @@ export const ForgotPasswordForm = ({
             </Text>
           ) : undefined}
         </View>
+        <View
+          style={[s.flexRow, s.justifyCenter, s.alignCenter, s.mt20, s.mb20]}>
+          <View style={[pal.border, s.borderBottom1, {width: '90%'}]} />
+        </View>
+        <View style={[s.flexRow, s.justifyCenter]}>
+          <TouchableOpacity
+            testID="newPasswordButton"
+            onPress={onEmailSent}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Go to next`)}
+            accessibilityHint={_(msg`Navigates to the next screen`)}>
+            <Text type="xl" style={[pal.link, s.pr5]}>
+              <Trans>Already have a code?</Trans>
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </>
   )
