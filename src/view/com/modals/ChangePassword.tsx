@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
+import {ScrollView} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TextInput} from './util'
 import {Text} from '../util/text/Text'
@@ -13,7 +14,7 @@ import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {checkAndFormatCode} from 'lib/strings/password'
@@ -30,7 +31,7 @@ enum Stages {
   Done,
 }
 
-export const snapPoints = ['50%']
+export const snapPoints = isAndroid ? ['90%'] : ['45%']
 
 export function Component() {
   const pal = usePalette('default')
@@ -119,10 +120,13 @@ export function Component() {
 
   return (
     <SafeAreaView style={[pal.view, s.flex1]}>
-      <View
-        testID="changePasswordModal"
-        style={[s.flex1, styles.container, isMobile && styles.containerMobile]}>
-        <View style={{flexGrow: 1}}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.container,
+          isMobile && styles.containerMobile,
+        ]}
+        keyboardShouldPersistTaps="handled">
+        <View>
           <View style={styles.titleSection}>
             <Text type="title-lg" style={[pal.text, styles.title]}>
               {stage !== Stages.Done ? 'Change Password' : 'Password Changed'}
@@ -260,7 +264,7 @@ export function Component() {
             </View>
           )}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
