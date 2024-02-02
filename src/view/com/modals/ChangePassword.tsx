@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ScrollView, TextInput} from './util'
+import {TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
@@ -24,7 +24,7 @@ enum Stages {
   Done,
 }
 
-export const snapPoints = ['90%']
+export const snapPoints = ['50%']
 
 export function Component() {
   const pal = usePalette('default')
@@ -115,79 +115,85 @@ export function Component() {
 
   return (
     <SafeAreaView style={[pal.view, s.flex1]}>
-      <ScrollView
+      <View
         testID="changePasswordModal"
-        style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
-        <View style={styles.titleSection}>
-          <Text type="title-lg" style={[pal.text, styles.title]}>
-            {stage !== Stages.Done ? 'Change Password' : 'Password Changed'}
-          </Text>
-        </View>
-
-        <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-          {stage === Stages.RequestCode ? (
-            <Trans>
-              If you want to change your password, we will send you a code to
-              verify that this is your account.
-            </Trans>
-          ) : stage === Stages.ChangePassword ? (
-            <Trans>Enter the code you received to change your password.</Trans>
-          ) : (
-            <Trans>Your password has been changed successfully!</Trans>
-          )}
-        </Text>
-
-        {stage === Stages.ChangePassword && (
-          <View style={[pal.borderDark, styles.group]}>
-            <View
-              style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-              <FontAwesomeIcon
-                icon="ticket"
-                style={[pal.textLight, styles.groupContentIcon]}
-              />
-              <TextInput
-                testID="codeInput"
-                style={[pal.text, styles.textInput]}
-                placeholder="Reset code"
-                placeholderTextColor={pal.colors.textLight}
-                value={resetCode}
-                onChangeText={setResetCode}
-                onFocus={() => setError('')}
-                onBlur={onBlur}
-                accessible={true}
-                accessibilityLabel={_(msg`Reset Code`)}
-                accessibilityHint=""
-                autoCapitalize="none"
-                autoCorrect={false}
-                autoComplete="off"
-              />
-            </View>
-            <View style={[pal.borderDark, styles.groupContent]}>
-              <FontAwesomeIcon
-                icon="lock"
-                style={[pal.textLight, styles.groupContentIcon]}
-              />
-              <TextInput
-                testID="codeInput"
-                style={[pal.text, styles.textInput]}
-                placeholder="New password"
-                placeholderTextColor={pal.colors.textLight}
-                onChangeText={setNewPassword}
-                secureTextEntry
-                accessible={true}
-                accessibilityLabel={_(msg`New Password`)}
-                accessibilityHint=""
-                autoCapitalize="none"
-                autoComplete="new-password"
-              />
-            </View>
+        style={[s.flex1, styles.container, isMobile && styles.containerMobile]}>
+        <View style={{flexGrow: 1}}>
+          <View style={styles.titleSection}>
+            <Text type="title-lg" style={[pal.text, styles.title]}>
+              {stage !== Stages.Done ? 'Change Password' : 'Password Changed'}
+            </Text>
           </View>
-        )}
 
-        {error ? (
-          <ErrorMessage message={error} style={styles.error} />
-        ) : undefined}
+          <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
+            {stage === Stages.RequestCode ? (
+              <Trans>
+                If you want to change your password, we will send you a code to
+                verify that this is your account.
+              </Trans>
+            ) : stage === Stages.ChangePassword ? (
+              <Trans>
+                Enter the code you received to change your password.
+              </Trans>
+            ) : (
+              <Trans>Your password has been changed successfully!</Trans>
+            )}
+          </Text>
 
+          {stage === Stages.ChangePassword && (
+            <View style={[pal.border, styles.group]}>
+              <View style={[styles.groupContent]}>
+                <FontAwesomeIcon
+                  icon="ticket"
+                  style={[pal.textLight, styles.groupContentIcon]}
+                />
+                <TextInput
+                  testID="codeInput"
+                  style={[pal.text, styles.textInput]}
+                  placeholder="Reset code"
+                  placeholderTextColor={pal.colors.textLight}
+                  value={resetCode}
+                  onChangeText={setResetCode}
+                  onFocus={() => setError('')}
+                  onBlur={onBlur}
+                  accessible={true}
+                  accessibilityLabel={_(msg`Reset Code`)}
+                  accessibilityHint=""
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  autoComplete="off"
+                />
+              </View>
+              <View
+                style={[
+                  pal.borderDark,
+                  styles.groupContent,
+                  styles.groupBottom,
+                ]}>
+                <FontAwesomeIcon
+                  icon="lock"
+                  style={[pal.textLight, styles.groupContentIcon]}
+                />
+                <TextInput
+                  testID="codeInput"
+                  style={[pal.text, styles.textInput]}
+                  placeholder="New password"
+                  placeholderTextColor={pal.colors.textLight}
+                  onChangeText={setNewPassword}
+                  secureTextEntry
+                  accessible={true}
+                  accessibilityLabel={_(msg`New Password`)}
+                  accessibilityHint=""
+                  autoCapitalize="none"
+                  autoComplete="new-password"
+                />
+              </View>
+            </View>
+          )}
+          {error ? (
+            <ErrorMessage message={error} style={styles.error} />
+          ) : undefined}
+        </View>
         <View style={[styles.btnContainer]}>
           {isProcessing ? (
             <View style={styles.btn}>
@@ -236,12 +242,19 @@ export function Component() {
             </View>
           )}
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
+  container: {
+    justifyContent: 'space-between',
+  },
+  containerMobile: {
+    paddingHorizontal: 18,
+    paddingBottom: 35,
+  },
   titleSection: {
     paddingTop: isWeb ? 0 : 4,
     paddingBottom: isWeb ? 14 : 10,
@@ -253,23 +266,12 @@ const styles = StyleSheet.create({
   },
   error: {
     borderRadius: 6,
-    marginTop: 10,
   },
   textInput: {
     width: '100%',
-    borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
-  },
-  textInputTop: {
-    borderTopLeftRadius: 6,
-    borderTopRightRadius: 6,
-  },
-  textInputBottom: {
-    borderTopWidth: 0,
-    borderBottomLeftRadius: 6,
-    borderBottomRightRadius: 6,
   },
   btn: {
     flexDirection: 'row',
@@ -292,12 +294,11 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   groupContent: {
-    borderTopWidth: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },
-  noTopBorder: {
-    borderTopWidth: 0,
+  groupBottom: {
+    borderTopWidth: 1,
   },
   groupContentIcon: {
     marginLeft: 10,
