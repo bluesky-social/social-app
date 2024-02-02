@@ -250,15 +250,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     marginTop: 10,
   },
-  emailContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    borderWidth: 1,
-    borderRadius: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-  },
   textInput: {
     borderWidth: 1,
     paddingHorizontal: 14,
