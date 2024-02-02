@@ -173,7 +173,6 @@ export interface ChangeEmailModal {
 
 export interface ChangePasswordModal {
   name: 'change-password'
-  loggedIn?: boolean
 }
 
 export interface SwitchAccountModal {

@@ -136,7 +136,7 @@ function Modal({modal}: {modal: ModalIface}) {
   } else if (modal.name === 'change-email') {
     element = <ChangeEmailModal.Component />
   } else if (modal.name === 'change-password') {
-    element = <ChangePasswordModal.Component {...modal} />
+    element = <ChangePasswordModal.Component />
   } else if (modal.name === 'link-warning') {
     element = <LinkWarningModal.Component {...modal} />
   } else if (modal.name === 'embed-consent') {

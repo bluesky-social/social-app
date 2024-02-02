@@ -175,7 +175,7 @@ export function ModalsContainer() {
     element = <ChangeEmailModal.Component />
   } else if (activeModal?.name === 'change-password') {
     snapPoints = ChangePasswordModal.snapPoints
-    element = <ChangePasswordModal.Component {...activeModal} />
+    element = <ChangePasswordModal.Component />
   } else if (activeModal?.name === 'switch-account') {
     snapPoints = SwitchAccountModal.snapPoints
     element = <SwitchAccountModal.Component />
