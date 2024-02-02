@@ -1,5 +1,11 @@
 import React, {useState} from 'react'
-import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
+import {
+  ActivityIndicator,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {TextInput} from './util'
 import {Text} from '../util/text/Text'
@@ -138,6 +144,20 @@ export function Component() {
             )}
           </Text>
 
+          {stage === Stages.RequestCode && (
+            <View style={[s.flexRow, s.justifyCenter, s.mt10]}>
+              <TouchableOpacity
+                testID="skipSendEmailButton"
+                onPress={() => setStage(Stages.ChangePassword)}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Go to next`)}
+                accessibilityHint={_(msg`Navigates to the next screen`)}>
+                <Text type="xl" style={[pal.link, s.pr5]}>
+                  <Trans>Already have a code?</Trans>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
           {stage === Stages.ChangePassword && (
             <View style={[pal.border, styles.group]}>
               <View style={[styles.groupContent]}>
