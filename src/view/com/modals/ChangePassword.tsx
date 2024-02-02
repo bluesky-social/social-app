@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {ActivityIndicator, SafeAreaView, StyleSheet, View} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
@@ -9,13 +10,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {checkAndFormatCode} from 'lib/strings/password'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useSession, getAgent} from '#/state/session'
 import * as EmailValidator from 'email-validator'
 import {logger} from '#/logger'
-import {checkAndFormatCode} from 'lib/strings/password'
 
 enum Stages {
   RequestCode,
@@ -137,35 +138,38 @@ export function Component() {
         </Text>
 
         {stage === Stages.ChangePassword && (
-          <View style={[s.mb10]}>
-            <View>
+          <View style={[pal.borderDark, styles.group]}>
+            <View
+              style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+              <FontAwesomeIcon
+                icon="ticket"
+                style={[pal.textLight, styles.groupContentIcon]}
+              />
               <TextInput
                 testID="codeInput"
-                style={[
-                  styles.textInput,
-                  styles.textInputTop,
-                  pal.border,
-                  pal.text,
-                ]}
+                style={[pal.text, styles.textInput]}
                 placeholder="Reset code"
                 placeholderTextColor={pal.colors.textLight}
                 value={resetCode}
                 onChangeText={setResetCode}
+                onFocus={() => setError('')}
                 onBlur={onBlur}
                 accessible={true}
                 accessibilityLabel={_(msg`Reset Code`)}
                 accessibilityHint=""
                 autoCapitalize="none"
                 autoCorrect={false}
+                autoComplete="off"
+              />
+            </View>
+            <View style={[pal.borderDark, styles.groupContent]}>
+              <FontAwesomeIcon
+                icon="lock"
+                style={[pal.textLight, styles.groupContentIcon]}
               />
               <TextInput
                 testID="codeInput"
-                style={[
-                  styles.textInput,
-                  styles.textInputBottom,
-                  pal.border,
-                  pal.text,
-                ]}
+                style={[pal.text, styles.textInput]}
                 placeholder="New password"
                 placeholderTextColor={pal.colors.textLight}
                 onChangeText={setNewPassword}
@@ -174,6 +178,7 @@ export function Component() {
                 accessibilityLabel={_(msg`New Password`)}
                 accessibilityHint=""
                 autoCapitalize="none"
+                autoComplete="new-password"
               />
             </View>
           </View>
@@ -251,6 +256,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   textInput: {
+    width: '100%',
     borderWidth: 1,
     paddingHorizontal: 14,
     paddingVertical: 10,
@@ -275,5 +281,25 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     paddingTop: 20,
+  },
+  group: {
+    borderWidth: 1,
+    borderRadius: 10,
+    marginVertical: 20,
+  },
+  groupLabel: {
+    paddingHorizontal: 20,
+    paddingBottom: 5,
+  },
+  groupContent: {
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  noTopBorder: {
+    borderTopWidth: 0,
+  },
+  groupContentIcon: {
+    marginLeft: 10,
   },
 })

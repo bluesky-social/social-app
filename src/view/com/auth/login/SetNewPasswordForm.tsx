@@ -14,11 +14,11 @@ import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
+import {checkAndFormatCode} from 'lib/strings/password'
 import {logger} from '#/logger'
 import {styles} from './styles'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {checkAndFormatCode} from 'lib/strings/password'
 
 export const SetNewPasswordForm = ({
   error,
@@ -118,7 +118,7 @@ export const SetNewPasswordForm = ({
               autoCapitalize="none"
               autoCorrect={false}
               keyboardAppearance={theme.colorScheme}
-              autoFocus
+              autoComplete="off"
               value={resetCode}
               onChangeText={setResetCode}
               onFocus={() => setError('')}
@@ -143,6 +143,7 @@ export const SetNewPasswordForm = ({
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoCorrect={false}
+              autoComplete="new-password"
               keyboardAppearance={theme.colorScheme}
               secureTextEntry
               value={password}
