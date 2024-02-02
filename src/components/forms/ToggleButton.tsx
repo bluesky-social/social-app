@@ -20,6 +20,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
     <Toggle.Group type={multiple ? 'checkbox' : 'radio'} {...props}>
       <View
         style={[
+          a.w_full,
           a.flex_row,
           a.border,
           a.rounded_sm,
@@ -34,7 +35,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
 
 export function Button({children, ...props}: ItemProps) {
   return (
-    <Toggle.Item {...props}>
+    <Toggle.Item {...props} style={[a.flex_grow]}>
       <ButtonInner>{children}</ButtonInner>
     </Toggle.Item>
   )
@@ -95,11 +96,12 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           borderLeftWidth: 1,
           marginLeft: -1,
         },
-        a.px_lg,
+        a.flex_grow,
         a.py_md,
         native({
-          paddingTop: 14,
+          paddingBottom: 10,
         }),
+        a.px_sm,
         t.atoms.bg,
         t.atoms.border,
         baseStyles,

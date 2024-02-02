@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {CenteredView} from '../util/Views'
+import {LoadingScreen} from '../util/LoadingScreen'
 import {List, ListMethods} from '../util/List'
 import {
   FontAwesomeIcon,
@@ -40,14 +41,13 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isNative} from '#/platform/detection'
+import {isAndroid, isNative} from '#/platform/detection'
 import {logger} from '#/logger'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
-const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 2}
+const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 1}
 
 const TOP_COMPONENT = {_reactKey: '__top_component__'}
-const PARENT_SPINNER = {_reactKey: '__parent_spinner__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const DELETED = {_reactKey: '__deleted__'}
 const BLOCKED = {_reactKey: '__blocked__'}
@@ -58,11 +58,9 @@ const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 type YieldedItem =
   | ThreadPost
   | typeof TOP_COMPONENT
-  | typeof PARENT_SPINNER
   | typeof REPLY_PROMPT
   | typeof DELETED
   | typeof BLOCKED
-  | typeof PARENT_SPINNER
 
 export function PostThread({
   uri,
@@ -125,13 +123,7 @@ export function PostThread({
     return <PostThreadBlocked />
   }
   if (!thread || isLoading || !preferences) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
   return (
     <PostThreadLoaded
@@ -157,7 +149,7 @@ function PostThreadLoaded({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const pal = usePalette('default')
-  const {isTablet, isDesktop, isTabletOrMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
@@ -173,13 +165,11 @@ function PostThreadLoaded({
 
   // construct content
   const posts = React.useMemo(() => {
-    let arr = [TOP_COMPONENT].concat(
-      Array.from(
-        flattenThreadSkeleton(
-          sortThread(thread, threadViewPrefs),
-          hasSession,
-          treeView,
-        ),
+    let arr = Array.from(
+      flattenThreadSkeleton(
+        sortThread(thread, threadViewPrefs),
+        hasSession,
+        treeView,
       ),
     )
     if (arr.length > maxVisible) {
@@ -220,15 +210,9 @@ function PostThreadLoaded({
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
       function onMeasure(pageY: number) {
-        let spinnerHeight = 0
-        if (isDesktop) {
-          spinnerHeight = 40
-        } else if (isTabletOrMobile) {
-          spinnerHeight = 82
-        }
         ref.current?.scrollToOffset({
           animated: false,
-          offset: pageY - spinnerHeight,
+          offset: pageY,
         })
       }
       if (isNative) {
@@ -247,14 +231,14 @@ function PostThreadLoaded({
       }
       needsScrollAdjustment.current = false
     }
-  }, [thread, isDesktop, isTabletOrMobile])
+  }, [thread])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)
     try {
       await onRefresh()
     } catch (err) {
-      logger.error('Failed to refresh posts thread', {error: err})
+      logger.error('Failed to refresh posts thread', {message: err})
     }
     setIsPTRing(false)
   }, [setIsPTRing, onRefresh])
@@ -262,21 +246,15 @@ function PostThreadLoaded({
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
       if (item === TOP_COMPONENT) {
-        return isTablet ? (
+        return isTabletOrMobile ? (
           <ViewHeader
             title={_(msg({message: `Post`, context: 'description'}))}
           />
         ) : null
-      } else if (item === PARENT_SPINNER) {
-        return (
-          <View style={styles.parentSpinner}>
-            <ActivityIndicator />
-          </View>
-        )
       } else if (item === REPLY_PROMPT && hasSession) {
         return (
           <View>
-            {isDesktop && <ComposePrompt onPressCompose={onPressReply} />}
+            {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
           </View>
         )
       } else if (item === DELETED) {
@@ -323,7 +301,7 @@ function PostThreadLoaded({
             // @ts-ignore web-only
             style={{
               // Leave enough space below that the scroll doesn't jump
-              height: isNative ? 400 : '100vh',
+              height: isNative ? 600 : '100vh',
               borderTopWidth: 1,
               borderColor: pal.colors.border,
             }}
@@ -331,7 +309,7 @@ function PostThreadLoaded({
         )
       } else if (item === CHILD_SPINNER) {
         return (
-          <View style={styles.childSpinner}>
+          <View style={[pal.border, styles.childSpinner]}>
             <ActivityIndicator />
           </View>
         )
@@ -366,8 +344,8 @@ function PostThreadLoaded({
     },
     [
       hasSession,
-      isTablet,
-      isDesktop,
+      isTabletOrMobile,
+      isMobile,
       onPressReply,
       pal.border,
       pal.viewLight,
@@ -400,6 +378,7 @@ function PostThreadLoaded({
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
+      removeClippedSubviews={isAndroid ? false : undefined}
     />
   )
 }
@@ -511,12 +490,15 @@ function* flattenThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
+  isTraversingReplies: boolean = false,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
-    if (node.parent) {
-      yield* flattenThreadSkeleton(node.parent, hasSession, treeView)
-    } else if (node.ctx.isParentLoading) {
-      yield PARENT_SPINNER
+    if (!node.ctx.isParentLoading) {
+      if (node.parent) {
+        yield* flattenThreadSkeleton(node.parent, hasSession, treeView, false)
+      } else if (!isTraversingReplies) {
+        yield TOP_COMPONENT
+      }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
       return
@@ -527,7 +509,7 @@ function* flattenThreadSkeleton(
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply, hasSession, treeView)
+        yield* flattenThreadSkeleton(reply, hasSession, treeView, true)
         if (!treeView && !node.ctx.isHighlightedPost) {
           break
         }
@@ -571,10 +553,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     paddingVertical: 18,
   },
-  parentSpinner: {
-    paddingVertical: 10,
-  },
   childSpinner: {
+    borderTopWidth: 1,
+    paddingTop: 40,
     paddingBottom: 200,
   },
 })

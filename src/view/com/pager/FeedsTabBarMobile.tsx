@@ -36,11 +36,17 @@ export function FeedsTabBar(
   const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
-  const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
-  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
-  const items = showFeedsLinkInTabBar
-    ? pinnedDisplayNames.concat('Feeds ✨')
-    : pinnedDisplayNames
+
+  const items = React.useMemo(() => {
+    if (!hasSession) return []
+
+    const pinnedNames = feeds.map(f => f.displayName)
+
+    if (!hasPinnedCustom) {
+      return pinnedNames.concat('Feeds ✨')
+    }
+    return pinnedNames
+  }, [hasSession, hasPinnedCustom, feeds])
 
   const onPressFeedsLink = React.useCallback(() => {
     if (isWeb) {
@@ -53,13 +59,13 @@ export function FeedsTabBar(
 
   const onSelect = React.useCallback(
     (index: number) => {
-      if (showFeedsLinkInTabBar && index === items.length - 1) {
+      if (hasSession && !hasPinnedCustom && index === items.length - 1) {
         onPressFeedsLink()
       } else if (props.onSelect) {
         props.onSelect(index)
       }
     },
-    [items.length, onPressFeedsLink, props, showFeedsLinkInTabBar],
+    [items.length, onPressFeedsLink, props, hasSession, hasPinnedCustom],
   )
 
   const onPressAvi = React.useCallback(() => {

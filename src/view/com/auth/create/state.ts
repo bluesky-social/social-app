@@ -119,7 +119,7 @@ export async function requestVerificationCode({
   } catch (e: any) {
     logger.error(
       `Failed to request sms verification code (${e.status} status)`,
-      {error: e},
+      {message: e},
     )
     uiDispatch({type: 'set-error', value: cleanError(e.toString())})
   }
@@ -204,9 +204,11 @@ export async function submit({
     }
 
     if ([400, 429].includes(e.status)) {
-      logger.warn('Failed to create account', {error: e})
+      logger.warn('Failed to create account', {message: e})
     } else {
-      logger.error(`Failed to create account (${e.status} status)`, {error: e})
+      logger.error(`Failed to create account (${e.status} status)`, {
+        message: e,
+      })
     }
 
     uiDispatch({type: 'set-processing', value: false})

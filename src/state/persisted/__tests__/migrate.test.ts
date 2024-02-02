@@ -88,6 +88,6 @@ test('migrate: has legacy data, fails validation', async () => {
   expect(logger.error).toHaveBeenCalledWith(
     'persisted state: legacy data failed validation',
     // @ts-ignore
-    {error: validate.error},
+    {message: validate.error},
   )
 })

@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
+import {Dimensions, StyleSheet, View} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
@@ -21,6 +21,7 @@ import {RichText} from 'view/com/util/text/RichText'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {EmptyState} from 'view/com/util/EmptyState'
+import {LoadingScreen} from 'view/com/util/LoadingScreen'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
@@ -118,11 +119,7 @@ export function ProfileFeedScreen(props: Props) {
   return resolvedUri ? (
     <ProfileFeedScreenIntermediate feedUri={resolvedUri.uri} />
   ) : (
-    <CenteredView>
-      <View style={s.p20}>
-        <ActivityIndicator size="large" />
-      </View>
-    </CenteredView>
+    <LoadingScreen />
   )
 }
 
@@ -131,13 +128,7 @@ function ProfileFeedScreenIntermediate({feedUri}: {feedUri: string}) {
   const {data: info} = useFeedSourceInfoQuery({uri: feedUri})
 
   if (!preferences || !info) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
+    return <LoadingScreen />
   }
 
   return (
@@ -218,7 +209,7 @@ export function ProfileFeedScreenInner({
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up update feeds', {error: err})
+      logger.error('Failed up update feeds', {message: err})
     }
   }, [
     feedInfo,
@@ -243,7 +234,7 @@ export function ProfileFeedScreenInner({
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
 
@@ -558,7 +549,7 @@ function AboutSection({
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up toggle like', {error: err})
+      logger.error('Failed up toggle like', {message: err})
     }
   }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
 
