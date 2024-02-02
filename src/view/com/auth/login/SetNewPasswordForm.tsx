@@ -18,9 +18,7 @@ import {logger} from '#/logger'
 import {styles} from './styles'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-
-// Regex for base32 string
-const CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
+import {checkAndFormatCode} from 'lib/strings/password'
 
 export const SetNewPasswordForm = ({
   error,
@@ -49,14 +47,22 @@ export const SetNewPasswordForm = ({
   const [password, setPassword] = useState<string>('')
 
   const onPressNext = async () => {
+    // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
+    // don't get to call onBlur first
+    const formattedCode = checkAndFormatCode(resetCode)
+    // TODO Better password strength check
+    if (!formattedCode || !password) {
+      setError('You have entered an invalid code.')
+      return
+    }
+
     setError('')
     setIsProcessing(true)
 
     try {
       const agent = new BskyAgent({service: serviceUrl})
-      const token = resetCode.replace(/\s/g, '')
       await agent.com.atproto.server.resetPassword({
-        token,
+        token: formattedCode,
         password,
       })
       onPasswordSet()
@@ -74,18 +80,13 @@ export const SetNewPasswordForm = ({
     }
   }
 
-  const checkCode = (cb?: () => unknown) => {
-    // Trim the reset code
-    const fixed = resetCode.trim().toUpperCase()
-    setResetCode(fixed)
-
-    // Check that it is a valid format
-    if (!CODE_REGEX.test(fixed)) {
-      setError('The reset code you have entered is invalid.')
-    } else {
-      setError('')
-      cb?.()
+  const onBlur = () => {
+    const formattedCode = checkAndFormatCode(resetCode)
+    if (!formattedCode) {
+      setError('You have entered an invalid code.')
+      return
     }
+    setResetCode(formattedCode)
   }
 
   return (
@@ -121,7 +122,7 @@ export const SetNewPasswordForm = ({
               value={resetCode}
               onChangeText={setResetCode}
               onFocus={() => setError('')}
-              onBlur={() => checkCode()}
+              onBlur={onBlur}
               editable={!isProcessing}
               accessible={true}
               accessibilityLabel={_(msg`Reset code`)}
@@ -180,7 +181,7 @@ export const SetNewPasswordForm = ({
             <TouchableOpacity
               testID="setNewPasswordButton"
               // Check the code before running the callback
-              onPress={() => checkCode(onPressNext)}
+              onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Go to next`)}
               accessibilityHint={_(msg`Navigates to the next screen`)}>

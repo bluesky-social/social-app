@@ -4,7 +4,6 @@ import {ScrollView, TextInput} from './util'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import * as Toast from '../util/Toast'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb} from 'platform/detection'
@@ -13,36 +12,37 @@ import {cleanError, isNetworkError} from 'lib/strings/errors'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {useSession, useSessionApi, getAgent} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import * as EmailValidator from 'email-validator'
-import {BskyAgent} from '@atproto/api'
 import {logger} from '#/logger'
+import {checkAndFormatCode} from 'lib/strings/password'
 
 enum Stages {
   RequestCode,
-  ResetPassword,
+  ChangePassword,
   Done,
 }
 
 export const snapPoints = ['90%']
 
-export function Component({loggedIn = false}: {loggedIn: boolean}) {
+export function Component() {
   const pal = usePalette('default')
   const {currentAccount} = useSession()
-  const {updateCurrentAccount} = useSessionApi()
   const {_} = useLingui()
   const [stage, setStage] = useState<Stages>(Stages.RequestCode)
-  const [email, setEmail] = useState<string>(
-    loggedIn && currentAccount?.email ? currentAccount.email : '',
-  )
-  const [confirmationCode, setConfirmationCode] = useState<string>('')
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
+  const [resetCode, setResetCode] = useState<string>('')
+  const [newPassword, setNewPassword] = useState<string>('')
   const [error, setError] = useState<string>('')
   const {isMobile} = useWebMediaQueries()
-  const {openModal, closeModal} = useModalControls()
+  const {closeModal} = useModalControls()
+  const agent = getAgent()
 
   const onRequestCode = async () => {
-    if (!EmailValidator.validate(email)) {
+    if (
+      !currentAccount?.email ||
+      !EmailValidator.validate(currentAccount.email)
+    ) {
       return setError(_(msg`Your email appears to be invalid.`))
     }
 
@@ -50,13 +50,13 @@ export function Component({loggedIn = false}: {loggedIn: boolean}) {
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.requestPasswordReset({email})
-      onEmailSent()
+      await agent.com.atproto.server.requestPasswordReset({
+        email: currentAccount.email,
+      })
+      setStage(Stages.ChangePassword)
     } catch (e: any) {
       const errMsg = e.toString()
       logger.warn('Failed to request password reset', {error: e})
-      setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
           _(
@@ -66,10 +66,51 @@ export function Component({loggedIn = false}: {loggedIn: boolean}) {
       } else {
         setError(cleanError(errMsg))
       }
+    } finally {
+      setIsProcessing(false)
     }
   }
 
-  const onEmailSent = () => {}
+  const onChangePassword = async () => {
+    const formattedCode = checkAndFormatCode(resetCode)
+    // TODO Better password strength check
+    if (!formattedCode || !newPassword) {
+      setError('You have entered an invalid code.')
+      return
+    }
+
+    setError('')
+    setIsProcessing(true)
+
+    try {
+      await agent.com.atproto.server.resetPassword({
+        token: formattedCode,
+        password: newPassword,
+      })
+      setStage(Stages.Done)
+    } catch (e: any) {
+      const errMsg = e.toString()
+      logger.warn('Failed to set new password', {error: e})
+      if (isNetworkError(e)) {
+        setError(
+          'Unable to contact your service. Please check your Internet connection.',
+        )
+      } else {
+        setError(cleanError(errMsg))
+      }
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  const onBlur = () => {
+    const formattedCode = checkAndFormatCode(resetCode)
+    if (!formattedCode) {
+      setError('You have entered an invalid code.')
+      return
+    }
+    setResetCode(formattedCode)
+  }
 
   return (
     <SafeAreaView style={[pal.view, s.flex1]}>
@@ -78,64 +119,64 @@ export function Component({loggedIn = false}: {loggedIn: boolean}) {
         style={[s.flex1, isMobile && {paddingHorizontal: 18}]}>
         <View style={styles.titleSection}>
           <Text type="title-lg" style={[pal.text, styles.title]}>
-            {stage === Stages.RequestCode ? _(msg`Change Your Password`) : ''}
-            {stage === Stages.ConfirmCode ? _(msg`Security Step Required`) : ''}
-            {stage === Stages.Done ? _(msg`Email Updated`) : ''}
+            {stage !== Stages.Done ? 'Change Password' : 'Password Changed'}
           </Text>
         </View>
 
         <Text type="lg" style={[pal.textLight, {marginBottom: 10}]}>
-          {stage === Stages.RequestCode && loggedIn ? (
+          {stage === Stages.RequestCode ? (
             <Trans>
-              We'll send you a code to verify that this is your account so you
-              can set a new password.
+              If you want to change your password, we will send you a code to
+              verify that this is your account.
             </Trans>
-          ) : stage === Stages.RequestCode && !loggedIn ? (
-            <Trans>
-              Enter the email you used to create your account. We'll send you a
-              "reset code" so you can set a new password.
-            </Trans>
-          ) : stage === Stages.ResetPassword ? (
-            <Trans>
-              You will receive an email with a "reset code." Enter that code
-              here, then enter your new password.
-            </Trans>
+          ) : stage === Stages.ChangePassword ? (
+            <Trans>Enter the code you received to change your password.</Trans>
           ) : (
             <Trans>Your password has been changed successfully!</Trans>
           )}
         </Text>
 
-        {stage === Stages.InputEmail && (
-          <TextInput
-            testID="emailInput"
-            style={[styles.textInput, pal.border, pal.text]}
-            placeholder="alice@mail.com"
-            placeholderTextColor={pal.colors.textLight}
-            value={email}
-            onChangeText={setEmail}
-            accessible={true}
-            accessibilityLabel={_(msg`Email`)}
-            accessibilityHint=""
-            autoCapitalize="none"
-            autoComplete="email"
-            autoCorrect={false}
-          />
-        )}
-        {stage === Stages.ConfirmCode && (
-          <TextInput
-            testID="confirmCodeInput"
-            style={[styles.textInput, pal.border, pal.text]}
-            placeholder="XXXXX-XXXXX"
-            placeholderTextColor={pal.colors.textLight}
-            value={confirmationCode}
-            onChangeText={setConfirmationCode}
-            accessible={true}
-            accessibilityLabel={_(msg`Confirmation code`)}
-            accessibilityHint=""
-            autoCapitalize="none"
-            autoComplete="off"
-            autoCorrect={false}
-          />
+        {stage === Stages.ChangePassword && (
+          <View style={[s.mb10]}>
+            <View>
+              <TextInput
+                testID="codeInput"
+                style={[
+                  styles.textInput,
+                  styles.textInputTop,
+                  pal.border,
+                  pal.text,
+                ]}
+                placeholder="Reset code"
+                placeholderTextColor={pal.colors.textLight}
+                value={resetCode}
+                onChangeText={setResetCode}
+                onBlur={onBlur}
+                accessible={true}
+                accessibilityLabel={_(msg`Reset Code`)}
+                accessibilityHint=""
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <TextInput
+                testID="codeInput"
+                style={[
+                  styles.textInput,
+                  styles.textInputBottom,
+                  pal.border,
+                  pal.text,
+                ]}
+                placeholder="New password"
+                placeholderTextColor={pal.colors.textLight}
+                onChangeText={setNewPassword}
+                secureTextEntry
+                accessible={true}
+                accessibilityLabel={_(msg`New Password`)}
+                accessibilityHint=""
+                autoCapitalize="none"
+              />
+            </View>
+          </View>
         )}
 
         {error ? (
@@ -149,38 +190,26 @@ export function Component({loggedIn = false}: {loggedIn: boolean}) {
             </View>
           ) : (
             <View style={{gap: 6}}>
-              {stage === Stages.InputEmail && (
+              {stage === Stages.RequestCode && (
                 <Button
                   testID="requestChangeBtn"
                   type="primary"
-                  onPress={onRequestChange}
-                  accessibilityLabel={_(msg`Request Change`)}
+                  onPress={onRequestCode}
+                  accessibilityLabel={_(msg`Request Code`)}
                   accessibilityHint=""
-                  label={_(msg`Request Change`)}
+                  label={_(msg`Request Code`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
               )}
-              {stage === Stages.ConfirmCode && (
+              {stage === Stages.ChangePassword && (
                 <Button
                   testID="confirmBtn"
                   type="primary"
-                  onPress={onConfirm}
-                  accessibilityLabel={_(msg`Confirm Change`)}
+                  onPress={onChangePassword}
+                  accessibilityLabel={_(msg`Next`)}
                   accessibilityHint=""
-                  label={_(msg`Confirm Change`)}
-                  labelContainerStyle={{justifyContent: 'center', padding: 4}}
-                  labelStyle={[s.f18]}
-                />
-              )}
-              {stage === Stages.Done && (
-                <Button
-                  testID="verifyBtn"
-                  type="primary"
-                  onPress={onVerify}
-                  accessibilityLabel={_(msg`Verify New Email`)}
-                  accessibilityHint=""
-                  label={_(msg`Verify New Email`)}
+                  label={_(msg`Next`)}
                   labelContainerStyle={{justifyContent: 'center', padding: 4}}
                   labelStyle={[s.f18]}
                 />
@@ -191,9 +220,11 @@ export function Component({loggedIn = false}: {loggedIn: boolean}) {
                 onPress={() => {
                   closeModal()
                 }}
-                accessibilityLabel={_(msg`Cancel`)}
+                accessibilityLabel={
+                  stage !== Stages.Done ? _(msg`Cancel`) : _(msg`Close`)
+                }
                 accessibilityHint=""
-                label={_(msg`Cancel`)}
+                label={stage !== Stages.Done ? _(msg`Cancel`) : _(msg`Close`)}
                 labelContainerStyle={{justifyContent: 'center', padding: 4}}
                 labelStyle={[s.f18]}
               />
@@ -230,10 +261,18 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderWidth: 1,
-    borderRadius: 6,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 16,
+  },
+  textInputTop: {
+    borderTopLeftRadius: 6,
+    borderTopRightRadius: 6,
+  },
+  textInputBottom: {
+    borderTopWidth: 0,
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
   },
   btn: {
     flexDirection: 'row',
