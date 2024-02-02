@@ -1927,12 +1927,12 @@ msgstr "이 피드에 좋아요 표시"
 
 #: src/Navigation.tsx:198
 msgid "Liked by"
-msgstr "좋아요 표시한 계정"
+msgstr "좋아요 표시한 사용자"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr "좋아요 표시한 계정"
+msgstr "좋아요 표시한 사용자"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
@@ -2959,7 +2959,7 @@ msgstr "재게시 또는 게시물 인용"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr "재게시한 계정"
+msgstr "재게시한 사용자"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
