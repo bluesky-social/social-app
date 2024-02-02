@@ -6,6 +6,7 @@ import {Trans, msg} from '@lingui/macro'
 
 import type {ZxcvbnResult} from '@zxcvbn-ts/core'
 
+import {atoms as a} from '#/alf'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {Text} from './text/Text'
 
@@ -18,20 +19,15 @@ export function PasswordStrength({result}: {result: ZxcvbnResult | null}) {
   const {color, label} = getScoreInformation(score, _)
 
   return (
-    <View style={{marginTop: 8, gap: 4}}>
-      <View
-        style={{
-          flexDirection: 'row',
-          gap: 4,
-          borderRadius: 6,
-          overflow: 'hidden',
-        }}>
+    <View style={[a.mt_sm, a.gap_xs]}>
+      <View style={[a.flex_row, a.gap_xs, a.rounded_sm, a.overflow_hidden]}>
         {Array.from({length: 4}, (_, idx) => (
           <View
             key={idx}
             style={[
               {backgroundColor: score >= idx + 1 ? color : pal.colors.border},
-              {height: 4, flexGrow: 1},
+              {height: 4},
+              a.flex_grow,
             ]}
           />
         ))}
