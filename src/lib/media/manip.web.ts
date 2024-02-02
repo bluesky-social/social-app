@@ -132,6 +132,9 @@ function createResizedImage(
       ctx.drawImage(img, 0, 0, w, h)
       resolve(canvas.toDataURL('image/jpeg', quality))
     })
+    img.addEventListener('error', ev => {
+      reject(ev.error)
+    })
     img.src = dataUri
   })
 }
