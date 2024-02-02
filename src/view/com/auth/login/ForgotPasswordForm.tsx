@@ -196,9 +196,16 @@ export const ForgotPasswordForm = ({
           ) : undefined}
         </View>
         <View
-          style={[s.flexRow, s.justifyCenter, s.alignCenter, s.mt20, s.mb20]}>
-          <View style={[pal.border, s.borderBottom1, {width: '90%'}]} />
-        </View>
+          style={[
+            s.flexRow,
+            s.alignCenter,
+            s.mt20,
+            s.mb20,
+            pal.border,
+            s.borderBottom1,
+            {alignSelf: 'center', width: '90%'},
+          ]}
+        />
         <View style={[s.flexRow, s.justifyCenter]}>
           <TouchableOpacity
             testID="skipSendEmailButton"
