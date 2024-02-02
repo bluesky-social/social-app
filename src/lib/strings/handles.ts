@@ -1,3 +1,5 @@
+import {t} from '@lingui/macro'
+
 export function makeValidHandle(str: string): string {
   if (str.length > 20) {
     str = str.slice(0, 20)
@@ -17,5 +19,5 @@ export function isInvalidHandle(handle: string): boolean {
 }
 
 export function sanitizeHandle(handle: string, prefix = ''): string {
-  return isInvalidHandle(handle) ? '⚠Invalid Handle' : `${prefix}${handle}`
+  return isInvalidHandle(handle) ? t`⚠Invalid Handle` : `${prefix}${handle}`
 }
