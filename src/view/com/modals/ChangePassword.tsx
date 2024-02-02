@@ -49,7 +49,6 @@ export function Component() {
 
     setError('')
     setIsProcessing(true)
-
     try {
       await agent.com.atproto.server.requestPasswordReset({
         email: currentAccount.email,
@@ -82,7 +81,6 @@ export function Component() {
 
     setError('')
     setIsProcessing(true)
-
     try {
       await agent.com.atproto.server.resetPassword({
         token: formattedCode,
@@ -227,7 +225,7 @@ export function Component() {
               )}
               <Button
                 testID="cancelBtn"
-                type="default"
+                type={stage !== Stages.Done ? 'default' : 'primary'}
                 onPress={() => {
                   closeModal()
                 }}
