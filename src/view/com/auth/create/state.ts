@@ -15,6 +15,8 @@ import {DispatchContext as OnboardingDispatchContext} from '#/state/shell/onboar
 import {ApiContext as SessionApiContext} from '#/state/session'
 import {DEFAULT_SERVICE} from '#/lib/constants'
 import parsePhoneNumber, {CountryCode} from 'libphonenumber-js'
+import {ZxcvbnResult} from '@zxcvbn-ts/core'
+import {zxcvbn} from 'lib/strings/zxcvbn'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
@@ -59,6 +61,7 @@ export interface CreateAccountState {
   // computed
   canBack: boolean
   canNext: boolean
+  passwordStrength: ZxcvbnResult | null
   isInviteCodeRequired: boolean
   isPhoneVerificationRequired: boolean
 }
@@ -86,6 +89,7 @@ export function useCreateAccount() {
 
     canBack: false,
     canNext: false,
+    passwordStrength: null,
     isInviteCodeRequired: false,
     isPhoneVerificationRequired: false,
   })
@@ -264,10 +268,18 @@ function createReducer({_}: {_: I18nContext['_']}) {
         return compute({...state, inviteCode: action.value})
       }
       case 'set-email': {
-        return compute({...state, email: action.value})
+        return compute({
+          ...state,
+          email: action.value,
+          passwordStrength: zxcvbn(state.password, [action.value]),
+        })
       }
       case 'set-password': {
-        return compute({...state, password: action.value})
+        return compute({
+          ...state,
+          password: action.value,
+          passwordStrength: zxcvbn(action.value, [state.email]),
+        })
       }
       case 'set-phone-country': {
         return compute({...state, phoneCountry: action.value})
@@ -326,7 +338,9 @@ function compute(state: CreateAccountState): CreateAccountState {
       !!state.serviceDescription &&
       (!state.isInviteCodeRequired || !!state.inviteCode) &&
       !!state.email &&
-      !!state.password
+      !!state.password &&
+      !!state.passwordStrength &&
+      state.passwordStrength.score > 2
   } else if (state.step === 2) {
     canNext =
       !state.isPhoneVerificationRequired ||
