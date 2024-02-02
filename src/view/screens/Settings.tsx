@@ -693,13 +693,13 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          onPress={() => openModal({name: 'change-password', loggedIn: true})}
+          onPress={() => openModal({name: 'change-password'})}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
           accessibilityHint={_(msg`Change your Bluesky password`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
-              icon="at"
+              icon="lock"
               style={pal.text as FontAwesomeIconStyle}
             />
           </View>
