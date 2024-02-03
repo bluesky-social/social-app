@@ -17,17 +17,22 @@ import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {clamp} from '#/lib/numbers'
+import * as persisted from '#/state/persisted'
+import {isNative} from 'platform/detection'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const selectedPage = props.route.params?.feed || 'Following'
 
-  function onSelectPage(nextPage) {
+  function onSelectPage(nextSelectedPage) {
     const params = {}
-    if (nextPage !== 'Following') {
-      params.feed = nextPage
+    if (nextSelectedPage !== 'Following') {
+      params.feed = nextSelectedPage
     }
     props.navigation.navigate('Home', params)
+    if (isNative) {
+      persisted.write('lastSelectedFeed', nextSelectedPage)
+    }
   }
 
   const {data: preferences} = usePreferencesQuery()

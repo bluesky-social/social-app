@@ -33,6 +33,7 @@ import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
+import * as persisted from './state/persisted'
 import {useModalControls} from './state/modals'
 import {
   shouldRequestEmailConfirmation,
@@ -299,6 +300,7 @@ function TabsNavigator() {
 
 function HomeTabNavigator() {
   const pal = usePalette('default')
+  const lastSelectedFeed = persisted.get('lastSelectedFeed')
 
   return (
     <HomeTab.Navigator
@@ -314,6 +316,9 @@ function HomeTabNavigator() {
         name="Home"
         getComponent={() => HomeScreen}
         options={{requireAuth: true}}
+        initialParams={{
+          feed: lastSelectedFeed || 'Following',
+        }}
       />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
@@ -431,6 +436,8 @@ const FlatNavigator = () => {
         name="Home"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`), requireAuth: true}}
+        // On native, we'd also pass initialParams here to restore the last selected feed.
+        // We're not gonna do that on web to prevent browser tabs from clobbering each other.
       />
       <Flat.Screen
         name="Search"
