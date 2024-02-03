@@ -20,6 +20,13 @@ import {clamp} from '#/lib/numbers'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
+  const {selectedPage} = props.route.params
+  function onSelectPage(nextPage) {
+    props.navigation.navigate('Home', {
+      selectedPage: nextPage,
+    })
+  }
+
   const {data: preferences} = usePreferencesQuery()
   const {feeds: pinnedFeeds, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
@@ -29,6 +36,8 @@ export function HomeScreen(props: Props) {
         {...props}
         preferences={preferences}
         pinnedFeeds={pinnedFeeds}
+        selectedPage={selectedPage}
+        onSelectPage={onSelectPage}
       />
     )
   } else {
@@ -43,6 +52,8 @@ export function HomeScreen(props: Props) {
 function HomeScreenReady({
   preferences,
   pinnedFeeds,
+  selectedPage,
+  onSelectPage,
 }: Props & {
   preferences: UsePreferencesQueryResponse
   pinnedFeeds: FeedSourceInfo[]
@@ -50,7 +61,6 @@ function HomeScreenReady({
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const [selectedPage, setSelectedPage] = React.useState<string>('Following')
 
   /**
    * Used to ensure that we re-compute `customFeeds` AND force a re-render of
@@ -102,11 +112,11 @@ function HomeScreenReady({
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
       const page = ['Following', ...preferences.feeds.pinned][index]
-      setSelectedPage(page)
+      onSelectPage(page)
     },
     [
       setDrawerSwipeDisabled,
-      setSelectedPage,
+      onSelectPage,
       setMinimalShellMode,
       preferences.feeds.pinned,
     ],

@@ -431,6 +431,9 @@ const FlatNavigator = () => {
         name="Home"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`), requireAuth: true}}
+        initialParams={{
+          selectedPage: 'Following',
+        }}
       />
       <Flat.Screen
         name="Search"
