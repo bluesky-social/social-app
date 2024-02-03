@@ -24,14 +24,15 @@ export function DesktopFeeds() {
     <View style={[styles.container, pal.view]}>
       {feeds.map(feed => {
         const params = route.params as Record<string, string>
-        const selectedPage = params.selectedPage || 'Following'
-        const feedPage = feed.uri || 'Following'
         return (
           <FeedItem
             key={feed.uri}
-            href={`/?selectedPage=${feedPage}`}
+            href={feed.uri ? `/?feed=${feed.uri}` : '/'}
             title={feed.displayName}
-            current={route.name === 'Home' && selectedPage === feedPage}
+            current={
+              route.name === 'Home' &&
+              (params?.feed || 'Following') === (feed.uri || 'Following')
+            }
           />
         )
       })}

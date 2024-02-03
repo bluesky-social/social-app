@@ -20,11 +20,14 @@ import {clamp} from '#/lib/numbers'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
-  const {selectedPage} = props.route.params
+  const selectedPage = props.route.params?.feed || 'Following'
+
   function onSelectPage(nextPage) {
-    props.navigation.navigate('Home', {
-      selectedPage: nextPage,
-    })
+    const params = {}
+    if (nextPage !== 'Following') {
+      params.feed = nextPage
+    }
+    props.navigation.navigate('Home', params)
   }
 
   const {data: preferences} = usePreferencesQuery()

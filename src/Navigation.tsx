@@ -314,9 +314,6 @@ function HomeTabNavigator() {
         name="Home"
         getComponent={() => HomeScreen}
         options={{requireAuth: true}}
-        initialParams={{
-          selectedPage: 'Following',
-        }}
       />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
@@ -434,9 +431,6 @@ const FlatNavigator = () => {
         name="Home"
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`), requireAuth: true}}
-        initialParams={{
-          selectedPage: 'Following',
-        }}
       />
       <Flat.Screen
         name="Search"
