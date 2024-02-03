@@ -22,30 +22,19 @@ export function DesktopFeeds() {
 
   return (
     <View style={[styles.container, pal.view]}>
-      <FeedItem href="/" title="Following" current={route.name === 'Home'} />
-      {feeds
-        .filter(f => f.displayName !== 'Following')
-        .map(feed => {
-          try {
-            const params = route.params as Record<string, string>
-            const routeName =
-              feed.type === 'feed' ? 'ProfileFeed' : 'ProfileList'
-            return (
-              <FeedItem
-                key={feed.uri}
-                href={feed.route.href}
-                title={feed.displayName}
-                current={
-                  route.name === routeName &&
-                  params.name === feed.route.params.name &&
-                  params.rkey === feed.route.params.rkey
-                }
-              />
-            )
-          } catch {
-            return null
-          }
-        })}
+      {feeds.map(feed => {
+        const params = route.params as Record<string, string>
+        const selectedPage = params.selectedPage || 'Following'
+        const feedPage = feed.uri || 'Following'
+        return (
+          <FeedItem
+            key={feed.uri}
+            href={`/?selectedPage=${feedPage}`}
+            title={feed.displayName}
+            current={route.name === 'Home' && selectedPage === feedPage}
+          />
+        )
+      })}
       <View style={{paddingTop: 8, paddingBottom: 6}}>
         <TextLink
           type="lg"
