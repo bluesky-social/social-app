@@ -16,8 +16,6 @@ import {usePinnedFeedsInfos, FeedSourceInfo} from '#/state/queries/feed'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
-import {loadString, saveString} from '#/lib/storage'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
@@ -25,36 +23,12 @@ export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
   const {feeds: pinnedFeeds, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const {isDesktop} = useWebMediaQueries()
-  const [initialPage, setInitialPage] = React.useState<string | undefined>(
-    undefined,
-  )
-
-  React.useEffect(() => {
-    const loadLastActivePage = async () => {
-      try {
-        const lastActivePage =
-          (await loadString('lastActivePage')) ?? 'Following'
-        setInitialPage(lastActivePage)
-      } catch {
-        setInitialPage('Following')
-      }
-    }
-    loadLastActivePage()
-  }, [])
-
-  if (
-    preferences &&
-    pinnedFeeds &&
-    initialPage !== undefined &&
-    !isPinnedFeedsLoading
-  ) {
+  if (preferences && pinnedFeeds && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
         {...props}
         preferences={preferences}
         pinnedFeeds={pinnedFeeds}
-        initialPage={isDesktop ? 'Following' : initialPage}
       />
     )
   } else {
@@ -69,16 +43,14 @@ export function HomeScreen(props: Props) {
 function HomeScreenReady({
   preferences,
   pinnedFeeds,
-  initialPage,
 }: Props & {
   preferences: UsePreferencesQueryResponse
   pinnedFeeds: FeedSourceInfo[]
-  initialPage: string
 }) {
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const [selectedPage, setSelectedPage] = React.useState<string>(initialPage)
+  const [selectedPage, setSelectedPage] = React.useState<string>('Following')
 
   /**
    * Used to ensure that we re-compute `customFeeds` AND force a re-render of
@@ -131,7 +103,6 @@ function HomeScreenReady({
       setDrawerSwipeDisabled(index > 0)
       const page = ['Following', ...preferences.feeds.pinned][index]
       setSelectedPage(page)
-      saveString('lastActivePage', page)
     },
     [
       setDrawerSwipeDisabled,
