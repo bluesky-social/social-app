@@ -27,10 +27,10 @@ export function HomeScreen(props: Props) {
     usePinnedFeedsInfos()
   const selectedPage = props.route.params?.feed || 'Following'
   const onSelectPage = React.useCallback(
-    nextSelectedPage => {
-      const params = {}
+    (nextSelectedPage: string) => {
+      let params
       if (nextSelectedPage !== 'Following') {
-        params.feed = nextSelectedPage
+        params = {feed: nextSelectedPage}
       }
       props.navigation.navigate('Home', params)
       if (isNative) {
@@ -66,6 +66,8 @@ function HomeScreenReady({
 }: Props & {
   preferences: UsePreferencesQueryResponse
   pinnedFeeds: FeedSourceInfo[]
+  selectedPage: string
+  onSelectPage: (nextSelectedPage: string) => void
 }) {
   const {hasSession} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
