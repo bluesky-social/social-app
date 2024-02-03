@@ -314,6 +314,9 @@ function HomeTabNavigator() {
         name="Home"
         getComponent={() => HomeScreen}
         options={{requireAuth: true}}
+        initialParams={{
+          selectedPage: 'Following',
+        }}
       />
       {commonScreens(HomeTab)}
     </HomeTab.Navigator>
