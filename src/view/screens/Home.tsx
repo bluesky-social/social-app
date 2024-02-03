@@ -22,22 +22,23 @@ import {isNative} from 'platform/detection'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
-  const selectedPage = props.route.params?.feed || 'Following'
-
-  function onSelectPage(nextSelectedPage) {
-    const params = {}
-    if (nextSelectedPage !== 'Following') {
-      params.feed = nextSelectedPage
-    }
-    props.navigation.navigate('Home', params)
-    if (isNative) {
-      persisted.write('lastSelectedFeed', nextSelectedPage)
-    }
-  }
-
   const {data: preferences} = usePreferencesQuery()
   const {feeds: pinnedFeeds, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
+  const selectedPage = props.route.params?.feed || 'Following'
+  const onSelectPage = React.useCallback(
+    nextSelectedPage => {
+      const params = {}
+      if (nextSelectedPage !== 'Following') {
+        params.feed = nextSelectedPage
+      }
+      props.navigation.navigate('Home', params)
+      if (isNative) {
+        persisted.write('lastSelectedFeed', nextSelectedPage)
+      }
+    },
+    [props.navigation],
+  )
   if (preferences && pinnedFeeds && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
