@@ -134,10 +134,9 @@ function NativeStackNavigator({
     }
   }
 
-  // We want to show the bottom bar on web for both tablet and mobile break points whenever there is no session.
-  // This will display the logged out signup CTA
-  const showBottomBar =
-    (hasSession && isMobile) || (!hasSession && isTabletOrMobile)
+  // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
+  // on both tablet and mobile web so that we see the sign up CTA.
+  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
 
   return (
     <NavigationContent>
