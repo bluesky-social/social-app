@@ -42,10 +42,11 @@ export function Step2({
   const {isMobile} = useWebMediaQueries()
 
   const onPressRequest = React.useCallback(() => {
-    if (
-      uiState.verificationPhone.length >= 9 &&
-      parsePhoneNumber(uiState.verificationPhone, uiState.phoneCountry)
-    ) {
+    const phoneNumber = parsePhoneNumber(
+      uiState.verificationPhone,
+      uiState.phoneCountry,
+    );
+    if (phoneNumber.isValid()) {
       requestVerificationCode({uiState, uiDispatch, _})
     } else {
       uiDispatch({
