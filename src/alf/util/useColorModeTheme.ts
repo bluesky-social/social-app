@@ -28,7 +28,9 @@ export function useColorModeTheme(): ThemeName {
 }
 
 function updateDocument(theme: ThemeName) {
+  // @ts-ignore web only
   if (isWeb && typeof window !== 'undefined') {
+    // @ts-ignore web only
     const html = window.document.documentElement
     // remove any other color mode classes
     html.className = html.className.replace(/(theme)--\w+/g, '')
