@@ -137,7 +137,7 @@ function NativeStackNavigator({
   // We want to show the bottom bar on web for both tablet and mobile break points whenever there is no session.
   // This will display the logged out signup CTA
   const showBottomBar =
-    isWeb && ((hasSession && isMobile) || (!hasSession && isTabletOrMobile))
+    (hasSession && isMobile) || (!hasSession && isTabletOrMobile)
 
   return (
     <NavigationContent>
@@ -148,7 +148,7 @@ function NativeStackNavigator({
         descriptors={newDescriptors}
       />
       {isWeb && showBottomBar && <BottomBarWeb />}
-      {isWeb && !isMobile && (
+      {isWeb && !showBottomBar && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav routeName={activeRoute.name} />
