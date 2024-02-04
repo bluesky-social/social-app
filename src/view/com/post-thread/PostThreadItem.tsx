@@ -48,6 +48,7 @@ import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from '#/state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {LabelInfo} from 'view/com/util/moderation/LabelInfo'
 
 export function PostThreadItem({
   post,
@@ -351,6 +352,12 @@ let PostThreadItemLoaded = ({
             />
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
+            {isModeratedPost && (
+              <LabelInfo
+                details={{uri: post.uri, cid: post.cid}}
+                labels={post.labels}
+              />
+            )}
             <ContentHider
               moderation={moderation.content}
               ignoreMute
