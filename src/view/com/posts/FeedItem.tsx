@@ -113,7 +113,7 @@ let FeedItemInner = ({
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
   const isOwnPost = post.author.did === currentAccount?.did
-  const isModeratedPost = checkIsModerated(post)
+  const isModeratedPost = isOwnPost && checkIsModerated(post)
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -307,7 +307,7 @@ let FeedItemInner = ({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
-            showAppealLabelItem={isOwnPost && isModeratedPost}
+            showAppealLabelItem={isModeratedPost}
           />
         </View>
       </View>

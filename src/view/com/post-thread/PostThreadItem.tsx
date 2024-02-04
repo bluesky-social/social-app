@@ -192,7 +192,8 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
-  const isModeratedPost = checkIsModerated(post)
+  const isOwnPost = post.author.did === currentAccount?.did
+  const isModeratedPost = isOwnPost && checkIsModerated(post)
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
@@ -340,9 +341,7 @@ let PostThreadItemLoaded = ({
               postUri={post.uri}
               record={record}
               richText={richText}
-              showAppealLabelItem={
-                post.author.did === currentAccount?.did && isModeratedPost
-              }
+              showAppealLabelItem={isModeratedPost}
               style={{
                 paddingVertical: 6,
                 paddingHorizontal: 10,
