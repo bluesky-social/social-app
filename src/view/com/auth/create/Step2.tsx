@@ -46,7 +46,7 @@ export function Step2({
       uiState.verificationPhone,
       uiState.phoneCountry,
     );
-    if (phoneNumber.isValid()) {
+    if (phoneNumber && phoneNumber.isValid()) {
       requestVerificationCode({uiState, uiDispatch, _})
     } else {
       uiDispatch({
