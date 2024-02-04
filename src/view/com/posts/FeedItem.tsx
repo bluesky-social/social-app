@@ -112,8 +112,10 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const isOwnPost = post.author.did === currentAccount?.did
-  const isModeratedPost = isOwnPost && checkIsModerated(post)
+  const isModeratedPost = React.useMemo(
+    () => post.author.did === currentAccount?.did && checkIsModerated(post),
+    [post, currentAccount?.did],
+  )
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {

@@ -69,14 +69,15 @@ export function checkIsModerated(post: AppBskyFeedDefs.PostView): boolean {
   }
 
   // If there are labels on the post and none on the record, it is moderated
-  if (!Array.isArray(post.record.labels?.values)) {
+  const labelValues = post.record.labels?.values
+  if (!Array.isArray(labelValues) || labelValues.length === 0) {
     return true
   }
 
   // If there's a label that exists in the labels but not on the record, then
   // we want to be able to appeal it
   // TODO what happens with 3p-labelers?
-  const recordLabels = post.record.labels.values as SelfLabel[]
+  const recordLabels = labelValues as SelfLabel[]
   for (const label of post.labels) {
     if (!recordLabels.some(l => l.val === label.val)) {
       return true
