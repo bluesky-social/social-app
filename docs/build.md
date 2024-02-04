@@ -3,7 +3,7 @@
 ## App Build
 
 - Set up your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
-- If you're running macOS, you need to make sure you are running the correct versions of Ruby and Cocoapods:
+- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:
   - Check if you've installed Cocoapods through `homebrew`. If you have, remove it:
     - `brew info cocoapods`
     - If output says `Installed`:
