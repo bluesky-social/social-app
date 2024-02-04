@@ -37,6 +37,7 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {checkIsModerated} from 'lib/moderatePost_wrapped'
 
 export function FeedItem({
   post,
@@ -111,9 +112,8 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const isModeratedPost =
-    moderation.decisions.post.cause?.type === 'label' &&
-    moderation.decisions.post.cause.label.src !== currentAccount?.did
+  const isOwnPost = post.author.did === currentAccount?.did
+  const isModeratedPost = checkIsModerated(post)
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -307,9 +307,7 @@ let FeedItemInner = ({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
-            showAppealLabelItem={
-              post.author.did === currentAccount?.did && isModeratedPost
-            }
+            showAppealLabelItem={isOwnPost && isModeratedPost}
           />
         </View>
       </View>

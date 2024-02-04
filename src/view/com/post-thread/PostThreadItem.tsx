@@ -7,7 +7,10 @@ import {
   RichText as RichTextAPI,
   PostModeration,
 } from '@atproto/api'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {
+  checkIsModerated,
+  moderatePost_wrapped as moderatePost,
+} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Link, TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
@@ -188,9 +191,7 @@ let PostThreadItemLoaded = ({
     return makeProfileLink(post.author, 'post', urip.rkey, 'reposted-by')
   }, [post.uri, post.author])
   const repostsTitle = _(msg`Reposts of this post`)
-  const isModeratedPost =
-    moderation.decisions.post.cause?.type === 'label' &&
-    moderation.decisions.post.cause.label.src !== currentAccount?.did
+  const isModeratedPost = checkIsModerated(post)
 
   const translatorUrl = getTranslatorLink(
     record?.text || '',
