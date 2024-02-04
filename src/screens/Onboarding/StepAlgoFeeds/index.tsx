@@ -28,15 +28,15 @@ export type FeedConfig = {
   gradient?: typeof tokens.gradients.midnight | typeof tokens.gradients.nordic
 }
 
-const PRIMARY_FEEDS: FeedConfig[] = [
+export const PRIMARY_FEEDS: FeedConfig[] = [
   {
     default: IS_PROD, // these feeds are only available in prod
-    uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
+    uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
     gradient: tokens.gradients.midnight,
   },
   {
-    default: false,
-    uri: 'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot',
+    default: IS_PROD, // these feeds are only available in prod
+    uri: 'at://did:plc:wqowuobffl66jv3kpsvo7ak4/app.bsky.feed.generator/the-algorithm',
     gradient: tokens.gradients.midnight,
   },
 ]
@@ -100,11 +100,12 @@ export function StepAlgoFeeds() {
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
       <Title>
-        <Trans>Choose your algorithmic feeds</Trans>
+        <Trans>Choose your main feeds</Trans>
       </Title>
       <Description>
         <Trans>
-          Feeds are created by users and can give you entirely new experiences.
+          Custom feeds built by the community bring you new experiences and help
+          you find the content you love.
         </Trans>
       </Description>
 
@@ -115,12 +116,12 @@ export function StepAlgoFeeds() {
           label={_(msg`Select your primary algorithmic feeds`)}>
           <Text
             style={[a.text_md, a.pt_4xl, a.pb_md, t.atoms.text_contrast_700]}>
-            <Trans>We recommend "For You" by Skygaze:</Trans>
+            <Trans>We recommend our "Discover" feed:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[0]} />
           <Text
             style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
-            <Trans>You can also try our "Discover" algorithm:</Trans>
+            <Trans>We also think you'll like "For You" by Skygaze:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[1]} />
         </Toggle.Group>
