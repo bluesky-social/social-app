@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import {isIOS, isNative, isWeb} from '#/platform/detection'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useDataSaverEnabled, useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
@@ -27,6 +27,8 @@ export function ExternalGifEmbed({
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const {openModal} = useModalControls()
   const {_} = useLingui()
+
+  const dataSaverEnabled = useDataSaverEnabled()
 
   const thumbHasLoaded = React.useRef(false)
   const viewWidth = React.useRef(0)
@@ -121,23 +123,25 @@ export function ExternalGifEmbed({
           </View>
         </View>
       )}
-      <Image
-        source={{
-          uri:
-            !isPrefetched || (isWeb && !isAnimating)
-              ? link.thumb
-              : params.playerUri,
-        }} // Web uses the thumb to control playback
-        style={{flex: 1}}
-        ref={imageRef}
-        onLoad={onLoad}
-        autoplay={isAnimating}
-        contentFit="contain"
-        accessibilityIgnoresInvertColors
-        accessibilityLabel={link.title}
-        accessibilityHint={link.title}
-        cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
-      />
+      {!dataSaverEnabled || isPrefetched ? (
+        <Image
+          source={{
+            uri:
+              !isPrefetched || (isWeb && !isAnimating)
+                ? link.thumb
+                : params.playerUri,
+          }} // Web uses the thumb to control playback
+          style={{flex: 1}}
+          ref={imageRef}
+          onLoad={onLoad}
+          autoplay={isAnimating}
+          contentFit="contain"
+          accessibilityIgnoresInvertColors
+          accessibilityLabel={link.title}
+          accessibilityHint={link.title}
+          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+        />
+      ) : null}
     </Pressable>
   )
 }

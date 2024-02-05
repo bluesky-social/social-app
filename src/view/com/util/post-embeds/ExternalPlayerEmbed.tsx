@@ -25,7 +25,7 @@ import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
 import {isNative} from 'platform/detection'
 import {NavigationProp} from 'lib/routes/types'
-import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useDataSaverEnabled, useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
 
 interface ShouldStartLoadRequest {
@@ -122,6 +122,8 @@ export function ExternalPlayer({
   const windowDims = useWindowDimensions()
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
   const {openModal} = useModalControls()
+
+  const dataSaverEnabled = useDataSaverEnabled()
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
@@ -229,7 +231,7 @@ export function ExternalPlayer({
       style={{height}}
       collapsable={false}
       onLayout={onLayout}>
-      {link.thumb && (!isPlayerActive || isLoading) && (
+      {!dataSaverEnabled && link.thumb && (!isPlayerActive || isLoading) && (
         <Image
           style={[
             {
