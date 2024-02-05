@@ -43,7 +43,7 @@ export function Step3({
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
           <Trans>Your full handle will be</Trans>{' '}
-          <Text type="lg-bold" style={[pal.text, s.ml5]}>
+          <Text type="lg-bold" style={pal.text}>
             @{createFullHandle(uiState.handle, uiState.userDomain)}
           </Text>
         </Text>
