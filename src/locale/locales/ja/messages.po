@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2023-12-18 14:40+0900\n"
-"MIME-Version: 2.0\n"
+"POT-Creation-Date: 2023-11-22 17:10-0800\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: noritada\n"
+"PO-Revision-Date: 2024-01-30 19:00+0900\n"
+"Last-Translator: dolciss\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada\n"
 "Plural-Forms: \n"
 
@@ -228,11 +228,11 @@ msgstr "成人向けコンテンツ"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:137
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "成人向けコンテンツを有効にするには、ウェブで<0/>にアクセスする必要があります。"
+msgstr "成人向けコンテンツはウェブ(<0/>)からのみ有効化できます。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 #~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-#~ msgstr ""
+#~ msgstr "成人向けコンテンツはウェブ(<0>bsky.app</0>)からのみ有効化できます。"
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
@@ -378,7 +378,7 @@ msgstr "戻る"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr ""
+msgstr "「{interestsText}」への興味に基づいたおすすめです。"
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
@@ -616,7 +616,7 @@ msgstr "メールアドレスを変更"
 #: src/screens/Deactivated.tsx:73
 #: src/screens/Deactivated.tsx:77
 msgid "Check my status"
-msgstr ""
+msgstr "ステータスを確認"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
@@ -644,7 +644,7 @@ msgstr "サービスを選択"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr ""
+msgstr "カスタムフィードのアルゴリズムを選択できます。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
@@ -653,11 +653,11 @@ msgstr "カスタムフィードを使用してあなたの体験を強化する
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 #~ msgid "Choose your algorithmic feeds"
-#~ msgstr ""
+#~ msgstr "フィードのアルゴリズムを選択"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
-msgstr ""
+msgstr "メインのフィードを選択"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -753,7 +753,7 @@ msgstr "コミュニティガイドライン"
 
 #: src/screens/Onboarding/StepFinished.tsx:148
 msgid "Complete onboarding and start using your account"
-msgstr ""
+msgstr "初期設定を完了してアカウントを使い始める"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -765,7 +765,7 @@ msgstr "返信を作成"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr ""
+msgstr "このカテゴリのコンテンツフィルタリングを設定： {0}"
 
 #: src/components/Prompt.tsx:114
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -860,15 +860,15 @@ msgstr "続行"
 #: src/screens/Onboarding/StepModeration/index.tsx:115
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:105
 msgid "Continue to next step"
-msgstr ""
+msgstr "次のステップへ進む"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:152
 msgid "Continue to the next step"
-msgstr ""
+msgstr "次のステップへ進む"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
 msgid "Continue to the next step without following any accounts"
-msgstr ""
+msgstr "アカウントをフォローせずに次のステップへ進む"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
@@ -1135,11 +1135,11 @@ msgstr "ダブルタップでサインイン"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:244
 msgid "Drop to add images"
-msgstr ""
+msgstr "ドロップして画像を追加する"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr ""
+msgstr "Appleのポリシーにより、成人向けコンテンツはサインアップ完了後にウェブ上でのみ有効にすることができます。"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1267,7 +1267,7 @@ msgstr "成人向けコンテンツを有効にする"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
-msgstr ""
+msgstr "フィードで成人向けコンテンツを有効にする"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
@@ -1438,11 +1438,11 @@ msgstr "フィード"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 #~ msgid "Feeds are created by users and can give you entirely new experiences."
-#~ msgstr ""
+#~ msgstr "さまざまなユーザーが作成したフィードを使えば、全く新しい体験ができます。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-msgstr ""
+msgstr "フィードはさまざまなユーザーや組織によって作成されています。さまざまな体験や、アルゴリズムによっておすすめコンテンツを提案してくれます。"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
@@ -1454,11 +1454,11 @@ msgstr "フィードはユーザーがプログラミングの専門知識を持
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:70
 msgid "Feeds can be topical as well!"
-msgstr ""
+msgstr "フィードには特定の話題に焦点を当てたものもあります！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
-msgstr ""
+msgstr "最後に"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:47
 #: src/view/com/posts/FollowingEmptyState.tsx:57
@@ -1492,7 +1492,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepFinished.tsx:131
 msgid "Flexible"
-msgstr ""
+msgstr "柔軟です"
 
 #: src/view/com/modals/EditImage.tsx:115
 msgid "Flip horizontal"
@@ -1519,15 +1519,15 @@ msgstr "{0}をフォロー"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:178
 msgid "Follow All"
-msgstr ""
+msgstr "すべてのアカウントをフォロー"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 msgid "Follow selected accounts and continue to the next step"
-msgstr ""
+msgstr "選択したアカウントをフォローして次のステップへ進む"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 #~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr ""
+#~ msgstr "選択したアカウントをフォローして次のステップへ進む"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -1630,7 +1630,7 @@ msgstr "戻る"
 #: src/screens/Onboarding/Layout.tsx:104
 #: src/screens/Onboarding/Layout.tsx:193
 msgid "Go back to previous step"
-msgstr ""
+msgstr "前のステップに戻る"
 
 #: src/view/screens/Search/Search.tsx:724
 #: src/view/shell/desktop/Search.tsx:262
@@ -1658,19 +1658,19 @@ msgstr "ヘルプ"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Here are some accounts for you to follow"
-msgstr ""
+msgstr "あなたがフォローしそうなアカウントを紹介します"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 #~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
+#~ msgstr "あなたがフォローしそうなアカウントを紹介します"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr ""
+msgstr "人気のあるフィードを紹介します。好きなだけフォローすることができます。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:74
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr ""
+msgstr "「{interestsText}」への興味に基づいたおすすめです。好きなだけフォローすることができます。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
@@ -1895,7 +1895,7 @@ msgstr "招待コード：１個使用可能"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
-msgstr ""
+msgstr "あなたがフォローした人の投稿が随時表示されます。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 msgid "Jobs"
@@ -1971,7 +1971,7 @@ msgstr "Blueskyから離れる"
 
 #: src/screens/Deactivated.tsx:129
 msgid "left to go."
-msgstr ""
+msgstr "あと少しです。"
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
@@ -1984,7 +1984,7 @@ msgstr "パスワードをリセットしましょう！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
-msgstr ""
+msgstr "さあ始めましょう！"
 
 #: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
@@ -2010,7 +2010,7 @@ msgstr "いいねしたユーザー"
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr ""
+msgstr "いいねしたユーザー"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
@@ -2022,15 +2022,15 @@ msgstr "いいねしたユーザー：{likeCount}人"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
-msgstr ""
+msgstr "あなたのカスタムフィードがいいねされました"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed '{0}'"
-#~ msgstr ""
+#~ msgstr "あなたのカスタムフィード「{0}」がいいねされました"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed{0}"
-#~ msgstr "{0}にあなたのカスタムフィールドがいいねされました"
+#~ msgstr "{0}にあなたのカスタムフィードがいいねされました"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
@@ -2125,7 +2125,7 @@ msgstr "ログ"
 #: src/screens/Deactivated.tsx:179
 #: src/screens/Deactivated.tsx:182
 msgid "Log out"
-msgstr ""
+msgstr "ログアウト"
 
 #: src/view/screens/Moderation.tsx:134
 #~ msgid "Logged-out users"
@@ -2335,7 +2335,7 @@ msgstr "フォロワーやデータへのアクセスを失うことはありま
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr ""
+msgstr "フォロワーやデータへのアクセスを失うことはありません。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2494,7 +2494,7 @@ msgstr "ちょっと！"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:128
 msgid "Oh no! Something went wrong."
-msgstr ""
+msgstr "ちょっと！何かがおかしいです。"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
@@ -2524,7 +2524,7 @@ msgstr "おっと！"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
-msgstr ""
+msgstr "開かれています"
 
 #: src/view/com/composer/Composer.tsx:470
 #: src/view/com/composer/Composer.tsx:471
@@ -2651,7 +2651,7 @@ msgstr "または以下のオプションを組み合わせてください："
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
 #~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr ""
+#~ msgstr "または我々の「Discover」アルゴリズムを試すことができます："
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -2671,7 +2671,7 @@ msgstr "ページが見つかりません"
 
 #: src/view/screens/NotFound.tsx:42
 msgid "Page Not Found"
-msgstr ""
+msgstr "ページが見つかりません"
 
 #: src/view/com/auth/create/Step1.tsx:158
 #: src/view/com/auth/create/Step1.tsx:168
@@ -2910,7 +2910,7 @@ msgstr "メールアドレスを確認してアカウントを保護します。
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
-msgstr ""
+msgstr "公開されています"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -3092,11 +3092,11 @@ msgstr "リポストまたは引用"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr ""
+msgstr "リポストしたユーザー"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
-msgstr ""
+msgstr "{0}にリポストされた"
 
 #: src/view/com/posts/FeedItem.tsx:206
 #~ msgid "Reposted by {0})"
@@ -3315,19 +3315,19 @@ msgstr "サービスを選択"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
-msgstr ""
+msgstr "次のアカウントを選択してフォローしてください"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:49
 #~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-#~ msgstr ""
+#~ msgstr "表示したい（または表示したくない）コンテンツの種類を選択してください。あとは私たちにお任せください。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
-msgstr ""
+msgstr "次のリストから話題のフィードを選択してフォローしてください"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:75
 msgid "Select what you want to see (or not see), and we’ll handle the rest."
-msgstr ""
+msgstr "見たい（または見たくない）ものを選択してください。あとは私たちにお任せください。"
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -3339,7 +3339,7 @@ msgstr "アプリに表示されるデフォルトのテキストの言語を選
 
 #: src/screens/Onboarding/StepInterests/index.tsx:196
 msgid "Select your interests from the options below"
-msgstr ""
+msgstr "次のオプションから興味のあるものを選択してください"
 
 #: src/view/com/auth/create/Step2.tsx:154
 msgid "Select your phone's country"
@@ -3351,11 +3351,11 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
-msgstr ""
+msgstr "1番目のフィードのアルゴリズムを選択してください"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:132
 msgid "Select your secondary algorithmic feeds"
-msgstr ""
+msgstr "2番目のフィードのアルゴリズムを選択してください"
 
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
@@ -3436,11 +3436,11 @@ msgstr "スレッド表示で返信を表示するには、この設定を「は
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "保存されたフィードから投稿を抽出して「Following」フィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
+msgstr "保存されたフィードから投稿を抽出してFollowingフィードに表示するには、この設定を「はい」にします。これは実験的な機能です。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
-msgstr ""
+msgstr "アカウントを設定する"
 
 #: src/view/com/modals/ChangeHandle.tsx:266
 msgid "Sets Bluesky username"
@@ -3530,15 +3530,15 @@ msgstr "引用を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr ""
+msgstr "Followingフィードで引用を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr ""
+msgstr "Followingフィードで引用を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr ""
+msgstr "Followingフィードでリポストを表示"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
@@ -3550,11 +3550,11 @@ msgstr "自分がフォローしているユーザーからの返信を、他の
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr ""
+msgstr "Followingフィードで返信を表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr ""
+msgstr "Followingフィードで返信を表示"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3566,7 +3566,7 @@ msgstr "リポストを表示"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr ""
+msgstr "Followingフィードでリポストを表示"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -3665,7 +3665,7 @@ msgstr "スキップ"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:232
 msgid "Skip this flow"
-msgstr ""
+msgstr "この手順をスキップする"
 
 #: src/view/com/auth/create/Step2.tsx:81
 msgid "SMS verification"
@@ -3739,7 +3739,7 @@ msgstr "登録"
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:173
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
 msgid "Subscribe to the {0} feed"
-msgstr ""
+msgstr "「{0}」フィードを登録"
 
 #: src/view/screens/ProfileList.tsx:579
 msgid "Subscribe to this list"
@@ -3835,7 +3835,7 @@ msgstr "著作権ポリシーは<0/>に移動しました"
 
 #: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
-msgstr ""
+msgstr "次の手順であなたのBlueskyでの体験をカスタマイズできます。"
 
 #: src/view/com/post-thread/PostThread.tsx:458
 msgid "The post may have been deleted."
@@ -3859,7 +3859,7 @@ msgstr "サービス規約は移動しました"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:135
 msgid "There are many feeds to try:"
-msgstr ""
+msgstr "試せるフィードはたくさんあります："
 
 #: src/view/screens/ProfileFeed.tsx:549
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -3937,7 +3937,7 @@ msgstr "アプリケーションに予期しない問題が発生しました。
 
 #: src/screens/Deactivated.tsx:107
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr ""
+msgstr "Blueskyに新規ユーザーが殺到しています！できるだけ早くアカウントを有効にできるよう努めます。"
 
 #: src/view/com/auth/create/Step2.tsx:54
 msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
@@ -3945,11 +3945,11 @@ msgstr "この電話番号は正しくありません。登録されている国
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
-msgstr ""
+msgstr "これらは、あなたが好きかもしれない人気のあるアカウントです。"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 #~ msgid "These are popular accounts you might like."
-#~ msgstr ""
+#~ msgstr "これらは、あなたが好きかもしれない人気のあるアカウントです。"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 #~ msgid "This {0} has been labeled."
@@ -4318,15 +4318,15 @@ msgstr "警告"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr ""
+msgstr "Skygazeによる「For You」フィードもおすすめ："
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr ""
+msgstr "あなたのアカウントが準備できるまで{estimatedTime}ほどかかります。"
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr ""
+msgstr "素敵なひとときをお過ごしください。 覚えておいてください、Blueskyは："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 #~ msgid "We ran out of posts from your follows. Here's the latest from"
@@ -4338,19 +4338,19 @@ msgstr "あなたのフォロー中のユーザーの投稿を読み終わりま
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
 #~ msgid "We recommend \"For You\" by Skygaze:"
-#~ msgstr ""
+#~ msgstr "Skygazeによる「For You」フィードがおすすめ："
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
 msgid "We recommend our \"Discover\" feed:"
-msgstr ""
+msgstr "我々の「Discover」フィードがおすすめ："
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr ""
+msgstr "接続できませんでした。アカウントの設定を続けるためにもう一度お試しください。繰り返し失敗する場合は、この手順をスキップすることもできます。"
 
 #: src/screens/Deactivated.tsx:138
 msgid "We will let you know when your account is ready."
-msgstr ""
+msgstr "アカウントの準備ができたらお知らせします。"
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
@@ -4358,7 +4358,7 @@ msgstr "私たちはあなたの申し立てを迅速に調査します。"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "We'll use this to help customize your experience."
-msgstr ""
+msgstr "これはあなたの体験をカスタマイズするために使用されます。"
 
 #: src/view/com/auth/create/CreateAccount.tsx:123
 msgid "We're so excited to have you join us!"
@@ -4382,7 +4382,7 @@ msgstr "<0>Bluesky</0>へようこそ"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
-msgstr ""
+msgstr "何に興味がありますか？"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
@@ -4439,11 +4439,11 @@ msgstr "はい"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:46
 #~ msgid "You are in control"
-#~ msgstr ""
+#~ msgstr "あなたがコントロールしています"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
-msgstr ""
+msgstr "あなたは並んでいます。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
@@ -4452,7 +4452,7 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
 #~ msgid "You can also try our \"Discover\" algorithm:"
-#~ msgstr ""
+#~ msgstr "我々の「Discover」アルゴリズムを試すことができます："
 
 #: src/view/com/auth/create/Step1.tsx:106
 #~ msgid "You can change hosting providers at any time."
@@ -4460,7 +4460,7 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
-msgstr ""
+msgstr "これらの設定はあとで変更できます。"
 
 #: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
@@ -4522,7 +4522,7 @@ msgstr "成人向けコンテンツを有効にするには、18歳以上であ�
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
-msgstr ""
+msgstr "成人向けコンテンツを有効にするには、18歳以上である必要があります。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "You will no longer receive notifications for this thread"
@@ -4538,17 +4538,17 @@ msgstr "「リセットコード」が記載されたメールが届きます。
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
-msgstr ""
+msgstr "あなたがコントロールしています"
 
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Deactivated.tsx:104
 msgid "You're in line"
-msgstr ""
+msgstr "あなたは並んでいます。"
 
 #: src/screens/Onboarding/StepFinished.tsx:90
 msgid "You're ready to go!"
-msgstr ""
+msgstr "準備ができました！"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -4572,7 +4572,7 @@ msgstr "ここで選択した内容は保存されますが、後から設定で
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr ""
+msgstr "あなたのデフォルトフィードは「Following」です"
 
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4593,7 +4593,7 @@ msgstr "メールアドレスはまだ確認されていません。これは、
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "フォローフィードは空です！もっと多くのユーザーをフォローして、近況を確認しましょう。"
+msgstr "Followingフィードは空です！もっと多くのユーザーをフォローして、近況を確認しましょう。"
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
