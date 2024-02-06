@@ -647,7 +647,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={pal.text}>
-            <Trans>App passwords</Trans>
+            <Trans>App Passwords</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -668,7 +668,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={pal.text} numberOfLines={1}>
-            <Trans>Change handle</Trans>
+            <Trans>Change Handle</Trans>
           </Text>
         </TouchableOpacity>
         {isNative && (
@@ -684,8 +684,29 @@ export function SettingsScreen({}: Props) {
         )}
         <View style={styles.spacer20} />
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Danger Zone</Trans>
+          <Trans>Account</Trans>
         </Text>
+        <TouchableOpacity
+          testID="changePasswordBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={() => openModal({name: 'change-password'})}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Change password`)}
+          accessibilityHint={_(msg`Change your Bluesky password`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="lock"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text} numberOfLines={1}>
+            <Trans>Change Password</Trans>
+          </Text>
+        </TouchableOpacity>
         <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}
@@ -703,7 +724,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={dangerText}>
-            <Trans>Delete my account…</Trans>
+            <Trans>Delete My Account…</Trans>
           </Text>
         </TouchableOpacity>
         <View style={styles.spacer20} />
