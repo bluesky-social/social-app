@@ -169,8 +169,14 @@ function PostThreadLoaded({
     [threadViewPrefs, thread],
   )
 
+  // We need to use state rather than a memo to hold the posts, since we want to append to the existing array. Otherwise,
+  // FlatList will re-render all of the items.
   const [renderedPosts, setRenderedPosts] = React.useState<YieldedItem[]>([])
+  // We also want to keep all of the posts stored. This doesn't need to be stateful, it will only be used in the
+  // onStartReached callback
   const allPosts = React.useRef<ThreadSkeletonParts>()
+  // Keep track of what top page we are on and whether we are already preprending to avoid excessive prepends at one
+  // time
   const topPageCount = React.useRef(1)
   const isPrepending = React.useRef(false)
 
