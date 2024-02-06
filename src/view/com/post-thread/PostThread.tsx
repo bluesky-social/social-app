@@ -169,24 +169,30 @@ function PostThreadLoaded({
     [threadViewPrefs, thread],
   )
 
+  const [renderedPosts, setRenderedPosts] = React.useState<YieldedItem[]>([])
+  const allPosts = React.useRef<ThreadSkeletonParts>()
+  const topPageCount = React.useRef(1)
+  const isPrepending = React.useRef(false)
+
   // Track whether we are ready to render or not
   const readyToRender = React.useRef(false)
 
-  const posts = React.useMemo(() => {
+  React.useEffect(() => {
     const items = createThreadSkeleton(
       sortThread(thread, threadViewPrefs),
       hasSession,
       treeView,
     )
+    allPosts.current = items
 
     if (!isWeb && !readyToRender.current) {
       // Render just the highlighted post and update readyToRender so we render everything next time
       readyToRender.current = true
-      return items.highlightedPost
+      setRenderedPosts(items.highlightedPost)
     } else {
       // Build the entire array of items to render
       let arr = [
-        ...(items.parents ?? []),
+        ...(items.parents ? items.parents.slice(-10) : []),
         ...items.highlightedPost,
         ...(items.replies ?? []),
       ]
@@ -196,7 +202,7 @@ function PostThreadLoaded({
       if (arr.indexOf(CHILD_SPINNER) === -1) {
         arr.push(BOTTOM_COMPONENT)
       }
-      return arr
+      setRenderedPosts(arr)
     }
   }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
 
@@ -234,6 +240,50 @@ function PostThreadLoaded({
       needsScrollAdjustment.current = false
     }
   }, [thread])
+
+  // HACK
+  // Until we can get maintainVisibleContentPosition to work regardless of how many posts we have rendered at the
+  // top, this will simulate a "load" when we reach the top, to allow for the next items to render without jumping
+  const onStartReached = React.useCallback(() => {
+    // Get the first post. We need to get the second item in the array if the first one is the TOP_COMPONENT
+    let first = renderedPosts?.[0]
+    if (first === TOP_COMPONENT) {
+      first = renderedPosts?.[1]
+    }
+
+    // We do nothing in these situations
+    // - We are already prepending
+    // - This is not a thread post
+    // - There are no more parents to show
+    // - The top post is the highlighted post
+    if (
+      isPrepending.current ||
+      !isThreadPost(first) ||
+      !first.parent ||
+      first.ctx.isHighlightedPost
+    )
+      return
+
+    isPrepending.current = true
+    const items = allPosts.current?.parents
+    const length = items?.length
+    if (!items || !length) return
+
+    const postsToPrepend = items.slice(
+      length - 10 - topPageCount.current * 10,
+      length - topPageCount.current * 10,
+    )
+
+    setTimeout(() => {
+      if (postsToPrepend) {
+        // Append the posts
+        setRenderedPosts(prev => [...postsToPrepend, ...prev])
+        // Increment the top page count and set prepending to false
+        topPageCount.current += 1
+        isPrepending.current = false
+      }
+    }, 1000)
+  }, [renderedPosts])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)
@@ -316,11 +366,11 @@ function PostThreadLoaded({
           </View>
         )
       } else if (isThreadPost(item)) {
-        const prev = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
+        const prev = isThreadPost(renderedPosts[index - 1])
+          ? (renderedPosts[index - 1] as ThreadPost)
           : undefined
-        const next = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
+        const next = isThreadPost(renderedPosts[index - 1])
+          ? (renderedPosts[index - 1] as ThreadPost)
           : undefined
         return (
           <View
@@ -355,7 +405,7 @@ function PostThreadLoaded({
       pal.view,
       pal.text,
       pal.colors.border,
-      posts,
+      renderedPosts,
       onRefresh,
       treeView,
       _,
@@ -365,12 +415,14 @@ function PostThreadLoaded({
   return (
     <List
       ref={ref}
-      data={posts}
-      initialNumToRender={!isNative ? posts.length : undefined}
+      data={renderedPosts}
+      initialNumToRender={!isNative ? renderedPosts.length : undefined}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshing={isPTRing}
       onRefresh={onPTR}
+      // Always keep 2 pages rendered up top
+      onStartReached={onStartReached}
       style={s.hContentRegion}
       // We only run this on web, since maintainVisibleContentPosition doesn't work there
       onContentSizeChange={isWeb ? onContentSizeChange : undefined}
@@ -380,6 +432,7 @@ function PostThreadLoaded({
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
       removeClippedSubviews={isAndroid ? false : undefined}
+      overScrollMode="never"
     />
   )
 }
@@ -497,7 +550,7 @@ function* flattenThreadParents(
       if (node.parent) {
         yield* flattenThreadParents(node.parent, hasSession, treeView)
       } else {
-        yield TOP_COMPONENT
+        // yield TOP_COMPONENT
       }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
