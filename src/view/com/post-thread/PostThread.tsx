@@ -41,7 +41,7 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isAndroid, isNative} from '#/platform/detection'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {logger} from '#/logger'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
@@ -162,24 +162,77 @@ function PostThreadLoaded({
     () => !!threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
     [threadViewPrefs, thread],
   )
+  const readyToRender = React.useRef(false)
+  const [renderedPosts, setRenderedPosts] = React.useState<YieldedItem[]>([])
+
+  const threadSkeleton = React.useRef<YieldedItem[]>()
 
   // construct content
+  // const posts = React.useMemo(() => {
+  //   if (thread.type === 'post') {
+  //   }
+  //
+  //   const r = createThreadSkeleton(
+  //     sortThread(thread, threadViewPrefs),
+  //     hasSession,
+  //     treeView,
+  //   )
+  //
+  //   console.log('parents:', r.parents)
+  //   console.log('highlight:', r.highlightedPost)
+  //   console.log('replies:', r.replies)
+  //
+  //   let arr = Array.from(
+  //     flattenThreadSkeleton(
+  //       sortThread(thread, threadViewPrefs),
+  //       hasSession,
+  //       treeView,
+  //     ),
+  //   )
+  //   if (arr.length > maxVisible) {
+  //     arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
+  //   }
+  //   if (arr.indexOf(CHILD_SPINNER) === -1) {
+  //     arr.push(BOTTOM_COMPONENT)
+  //   }
+  //   return arr
+  // }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
+
   const posts = React.useMemo(() => {
-    let arr = Array.from(
-      flattenThreadSkeleton(
-        sortThread(thread, threadViewPrefs),
-        hasSession,
-        treeView,
-      ),
+    const items = createThreadSkeleton(
+      sortThread(thread, threadViewPrefs),
+      hasSession,
+      treeView,
     )
-    if (arr.length > maxVisible) {
-      arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
+
+    if (!isWeb) {
+      if (!readyToRender.current) {
+        readyToRender.current = true
+        return items.highlightedPost
+      } else {
+        let arr = [...items.parents, ...items.highlightedPost, ...items.replies]
+        if (arr.length > maxVisible) {
+          arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
+        }
+        if (arr.indexOf(CHILD_SPINNER) === -1) {
+          arr.push(BOTTOM_COMPONENT)
+        }
+        return arr
+      }
     }
-    if (arr.indexOf(CHILD_SPINNER) === -1) {
-      arr.push(BOTTOM_COMPONENT)
-    }
-    return arr
   }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
+
+  // React.useEffect(() => {
+  //   if (!readyToRender.current) {
+  //   }
+  //
+  //   const items = createThreadSkeleton(
+  //     sortThread(thread, threadViewPrefs),
+  //     hasSession,
+  //     treeView,
+  //   )
+  //   setRenderedPosts(items.highlightedPost)
+  // }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
 
   /**
    * NOTE
@@ -225,6 +278,7 @@ function PostThreadLoaded({
         // Measure synchronously to avoid a layout jump.
         const domNode = highlightedPostRef.current
         if (domNode) {
+          // @ts-ignore web only
           const pageY = (domNode as any as Element).getBoundingClientRect().top
           onMeasure(pageY)
         }
@@ -314,11 +368,11 @@ function PostThreadLoaded({
           </View>
         )
       } else if (isThreadPost(item)) {
-        const prev = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
+        const prev = isThreadPost(renderedPosts[index - 1])
+          ? (renderedPosts[index - 1] as ThreadPost)
           : undefined
-        const next = isThreadPost(posts[index - 1])
-          ? (posts[index - 1] as ThreadPost)
+        const next = isThreadPost(renderedPosts[index - 1])
+          ? (renderedPosts[index - 1] as ThreadPost)
           : undefined
         return (
           <View
@@ -353,7 +407,7 @@ function PostThreadLoaded({
       pal.view,
       pal.text,
       pal.colors.border,
-      posts,
+      renderedPosts,
       onRefresh,
       treeView,
       _,
@@ -364,17 +418,14 @@ function PostThreadLoaded({
     <List
       ref={ref}
       data={posts}
-      initialNumToRender={!isNative ? posts.length : undefined}
-      maintainVisibleContentPosition={
-        !needsScrollAdjustment.current
-          ? MAINTAIN_VISIBLE_CONTENT_POSITION
-          : undefined
-      }
+      initialNumToRender={!isNative ? renderedPosts.length : undefined}
+      maintainVisibleContentPosition={MAINTAIN_VISIBLE_CONTENT_POSITION}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshing={isPTRing}
       onRefresh={onPTR}
-      onContentSizeChange={onContentSizeChange}
+      // We only run this on web, since maintainVisibleContentPosition doesn't work there
+      // onContentSizeChange={isWeb ? onContentSizeChange : undefined}
       style={s.hContentRegion}
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
@@ -524,8 +575,79 @@ function* flattenThreadSkeleton(
   }
 }
 
-function hasPwiOptOut(node: ThreadPost) {
-  return !!node.post.author.labels?.find(l => l.val === '!no-unauthenticated')
+function* flattenThreadReplies(
+  node: ThreadNode,
+  hasSession: boolean,
+  treeView: boolean,
+): Generator<YieldedItem, void> {
+  if (node.type === 'post') {
+    if (!node.ctx.isHighlightedPost) {
+      yield node
+    }
+    if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
+      yield REPLY_PROMPT
+    }
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        yield* flattenThreadReplies(reply, hasSession, treeView)
+        if (!treeView && !node.ctx.isHighlightedPost) {
+          break
+        }
+      }
+    } else if (node.ctx.isChildLoading) {
+      yield CHILD_SPINNER
+    }
+  } else if (node.type === 'not-found') {
+    yield DELETED
+  } else if (node.type === 'blocked') {
+    yield BLOCKED
+  }
+}
+
+function* flattenThreadParents(
+  node: ThreadNode,
+  hasSession: boolean,
+  treeView: boolean,
+): Generator<YieldedItem, void> {
+  if (node.type === 'post') {
+    if (!node.ctx.isParentLoading) {
+      if (node.parent) {
+        yield* flattenThreadParents(node.parent, hasSession, treeView)
+      } else {
+        yield TOP_COMPONENT
+      }
+    }
+    if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
+      return
+    }
+    if (!node.ctx.isHighlightedPost) {
+      yield node
+    }
+  } else if (node.type === 'not-found') {
+    yield DELETED
+  } else if (node.type === 'blocked') {
+    yield BLOCKED
+  }
+}
+
+export interface ThreadSkeleton {
+  highlightedPost: YieldedItem[]
+  parents?: YieldedItem[]
+  replies?: YieldedItem[]
+}
+
+export function createThreadSkeleton(
+  node: ThreadNode,
+  hasSession: boolean,
+  treeView: boolean,
+) {
+  const skeleton: ThreadSkeleton = {
+    parents: Array.from(flattenThreadParents(node, hasSession, treeView)),
+    highlightedPost: [node as YieldedItem],
+    replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
+  }
+
+  return skeleton
 }
 
 function hasBranchingReplies(node: ThreadNode) {
@@ -539,6 +661,10 @@ function hasBranchingReplies(node: ThreadNode) {
     return hasBranchingReplies(node.replies[0])
   }
   return true
+}
+
+function hasPwiOptOut(node: ThreadPost) {
+  return !!node.post.author.labels?.find(l => l.val === '!no-unauthenticated')
 }
 
 const styles = StyleSheet.create({
