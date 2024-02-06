@@ -31,6 +31,7 @@ import {PressableWithHover} from './PressableWithHover'
 import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -104,17 +105,19 @@ export const Link = memo(function Link({
       )
     }
     return (
-      <TouchableWithoutFeedback
-        testID={testID}
-        onPress={onPress}
-        accessible={accessible}
-        accessibilityRole="link"
-        {...props}>
-        {/* @ts-ignore web only -prf */}
-        <View style={style} href={anchorHref}>
-          {children ? children : <Text>{title || 'link'}</Text>}
-        </View>
-      </TouchableWithoutFeedback>
+      <WebAuxClickWrapper>
+        <TouchableWithoutFeedback
+          testID={testID}
+          onPress={onPress}
+          accessible={accessible}
+          accessibilityRole="link"
+          {...props}>
+          {/* @ts-ignore web only -prf */}
+          <View style={style} href={anchorHref}>
+            {children ? children : <Text>{title || 'link'}</Text>}
+          </View>
+        </TouchableWithoutFeedback>
+      </WebAuxClickWrapper>
     )
   }
 
