@@ -8,7 +8,6 @@ export function checkAndFormatCode(code: string): string | false {
   // Add a dash if needed
   if (fixed.length === 10) {
     fixed = `${fixed.slice(0, 5)}-${fixed.slice(5, 10)}`
-    console.log(fixed)
   }
 
   // Check that it is a valid format
