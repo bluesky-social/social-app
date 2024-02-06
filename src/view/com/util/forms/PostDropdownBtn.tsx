@@ -30,6 +30,7 @@ import {useLingui} from '@lingui/react'
 import {useSession, getAgent} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 
 let PostDropdownBtn = ({
   testID,
@@ -118,16 +119,27 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const onMuteAccount = React.useCallback(async () => {
+  const {data: mutedAccountsData} = useMyMutedAccountsQuery()
+
+  const isAuthorMuted = mutedAccountsData?.pages.some(page =>
+    page.mutes.some(mute => mute.did === postAuthor.did),
+  )
+
+  const toggleMuteAccount = async () => {
     try {
       const agent = getAgent()
-      await agent.mute(postAuthor.did)
-      Toast.show(`User ${postAuthor.did} has been muted`)
+      if (isAuthorMuted) {
+        await agent.unmute(postAuthor.did)
+        Toast.show(`${postAuthor.handle} has been unmuted`)
+      } else {
+        await agent.mute(postAuthor.did)
+        Toast.show(`${postAuthor.handle} has been muted`)
+      }
     } catch (error) {
-      console.error('Error muting user:', error)
-      Toast.show('Error muting user')
+      console.error('Error toggling mute state for account:', error)
+      Toast.show('Error toggling mute state for account')
     }
-  }, [postAuthor.did])
+  }
 
   const onBlockAccount = React.useCallback(async () => {
     try {
@@ -136,12 +148,12 @@ let PostDropdownBtn = ({
         {repo: currentAccount?.did},
         {subject: postAuthor.did, createdAt: new Date().toISOString()},
       )
-      Toast.show(`User ${postAuthor.did} has been blocked`)
+      Toast.show(`${postAuthor.handle} has been blocked`)
     } catch (error) {
-      console.error('Error blocking user:', error)
-      Toast.show('Error blocking user')
+      console.error('Error blocking account:', error)
+      Toast.show('Error blocking account')
     }
-  }, [postAuthor.did, currentAccount?.did])
+  }, [postAuthor.handle, postAuthor.did, currentAccount?.did])
 
   const dropdownItems: NativeDropdownItem[] = [
     {
@@ -230,15 +242,15 @@ let PostDropdownBtn = ({
     },
     hasSession &&
       !isAuthor && {
-        label: 'Mute account',
-        onPress: onMuteAccount,
+        label: isAuthorMuted ? _(msg`Unmute account`) : _(msg`Mute account`),
+        onPress: toggleMuteAccount,
         testID: 'postDropdownMuteAccountBtn',
         icon: {
           ios: {
-            name: 'speaker.slash',
+            name: 'volume.slash',
           },
-          android: 'ic_lock_silent_mode',
-          web: 'comment-slash',
+          android: 'ic_menu_block',
+          web: 'user-slash',
         },
       },
     hasSession &&
