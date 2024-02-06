@@ -198,7 +198,10 @@ function PostThreadLoaded({
     } else {
       // Build the entire array of items to render
       let arr = [
-        ...(items.parents ? items.parents.slice(-15) : []),
+        // In the case of refreshes we need to take into account the page count when we load
+        ...(items.parents
+          ? items.parents.slice(-15 * topPageCount.current)
+          : []),
         ...items.highlightedPost,
         ...(items.replies ?? []),
       ]
@@ -271,7 +274,6 @@ function PostThreadLoaded({
       return
     }
 
-    isPrepending.current = true
     const items = allPosts.current?.parents
     const length = items?.length
     if (!items || !length) return
@@ -285,6 +287,8 @@ function PostThreadLoaded({
     const postsToPrepend = items.slice(startIndex, endIndex)
     if (!postsToPrepend) return
 
+    // Start prepending
+    isPrepending.current = true
     // We wait a moment both to appear like a "load" event and to let the scroll "settle"
     setTimeout(() => {
       // Append the posts
