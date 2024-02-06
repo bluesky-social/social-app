@@ -11,7 +11,6 @@ export interface RenderTabBarFnProps {
 export type RenderTabBarFn = (props: RenderTabBarFnProps) => JSX.Element
 
 interface Props {
-  tabBarPosition?: 'top' | 'bottom'
   initialPage?: number
   renderTabBar: RenderTabBarFn
   onPageSelected?: (index: number) => void
@@ -20,7 +19,6 @@ interface Props {
 export const Pager = React.forwardRef(function PagerImpl(
   {
     children,
-    tabBarPosition = 'top',
     initialPage = 0,
     renderTabBar,
     onPageSelected,
@@ -72,22 +70,16 @@ export const Pager = React.forwardRef(function PagerImpl(
 
   return (
     <View style={s.hContentRegion}>
-      {tabBarPosition === 'top' &&
-        renderTabBar({
-          selectedPage,
-          tabBarAnchor: <View ref={anchorRef} />,
-          onSelect: onTabBarSelect,
-        })}
+      {renderTabBar({
+        selectedPage,
+        tabBarAnchor: <View ref={anchorRef} />,
+        onSelect: onTabBarSelect,
+      })}
       {React.Children.map(children, (child, i) => (
         <View style={selectedPage === i ? s.flex1 : s.hidden} key={`page-${i}`}>
           {child}
         </View>
       ))}
-      {tabBarPosition === 'bottom' &&
-        renderTabBar({
-          selectedPage,
-          onSelect: onTabBarSelect,
-        })}
     </View>
   )
 })

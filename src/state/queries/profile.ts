@@ -17,6 +17,7 @@ import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {Shadow} from '#/state/cache/types'
+import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
@@ -26,16 +27,19 @@ import {track} from '#/lib/analytics/analytics'
 export const RQKEY = (did: string) => ['profile', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
-export function useProfileQuery({did}: {did: string | undefined}) {
-  const {currentAccount} = useSession()
-  const isCurrentAccount = did === currentAccount?.did
-
+export function useProfileQuery({
+  did,
+  staleTime = STALE.SECONDS.FIFTEEN,
+}: {
+  did: string | undefined
+  staleTime?: number
+}) {
   return useQuery({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
     // -prf
-    staleTime: isCurrentAccount ? STALE.SECONDS.THIRTY : STALE.MINUTES.FIVE,
+    staleTime,
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did || ''),
     queryFn: async () => {
@@ -375,8 +379,9 @@ function useProfileBlockMutation() {
         {subject: did, createdAt: new Date().toISOString()},
       )
     },
-    onSuccess() {
+    onSuccess(_, {did}) {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      resetProfilePostsQueries(did, 1000)
     },
   })
 }
@@ -393,6 +398,9 @@ function useProfileUnblockMutation() {
         repo: currentAccount.did,
         rkey,
       })
+    },
+    onSuccess(_, {did}) {
+      resetProfilePostsQueries(did, 1000)
     },
   })
 }

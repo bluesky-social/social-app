@@ -30,6 +30,7 @@ import {
   useFeedSourceInfoQuery,
   useGetPopularFeedsQuery,
   useSearchPopularFeedsMutation,
+  getAvatarTypeFromUri,
 } from '#/state/queries/feed'
 import {cleanError} from 'lib/strings/errors'
 import {useComposerControls} from '#/state/shell/composer'
@@ -555,6 +556,7 @@ function SavedFeed({feedUri}: {feedUri: string}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
+  const typeAvatar = getAvatarTypeFromUri(feedUri)
 
   if (!info)
     return (
@@ -582,7 +584,7 @@ function SavedFeed({feedUri}: {feedUri: string}) {
           />
         </View>
       ) : (
-        <UserAvatar type="algo" size={28} avatar={info.avatar} />
+        <UserAvatar type={typeAvatar} size={28} avatar={info.avatar} />
       )}
       <View
         style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>

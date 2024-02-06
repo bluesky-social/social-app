@@ -10,6 +10,7 @@ import Animated from 'react-native-reanimated'
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
 import {isWeb} from 'platform/detection'
+import {useSession} from 'state/session'
 
 export function LoadLatestBtn({
   onPress,
@@ -21,8 +22,13 @@ export function LoadLatestBtn({
   showIndicator: boolean
 }) {
   const pal = usePalette('default')
-  const {isDesktop, isTablet, isMobile} = useWebMediaQueries()
+  const {hasSession} = useSession()
+  const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
+
+  // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
+  // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
+  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
 
   return (
     <AnimatedTouchableOpacity
@@ -32,7 +38,7 @@ export function LoadLatestBtn({
         isTablet && styles.loadLatestTablet,
         pal.borderDark,
         pal.view,
-        isMobile && fabMinimalShellTransform,
+        showBottomBar && fabMinimalShellTransform,
       ]}
       onPress={onPress}
       hitSlop={HITSLOP_20}

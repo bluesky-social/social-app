@@ -184,8 +184,7 @@ function HomeScreenReady({
       initialPage={clamp(selectedPageIndex, 0, customFeeds.length)}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}
-      tabBarPosition="top">
+      renderTabBar={renderTabBar}>
       <FeedPage
         key="1"
         testID="followingFeedPage"
@@ -212,8 +211,7 @@ function HomeScreenReady({
       testID="homeScreen"
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}
-      tabBarPosition="top">
+      renderTabBar={renderTabBar}>
       <HomeLoggedOutCTA />
     </Pager>
   )

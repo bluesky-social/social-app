@@ -3,10 +3,22 @@
 ## App Build
 
 - Set up your environment [using the react native instructions](https://reactnative.dev/docs/environment-setup).
+- If you're running macOS, make sure you are running the correct versions of Ruby and Cocoapods:
+  - Check if you've installed Cocoapods through `homebrew`. If you have, remove it:
+    - `brew info cocoapods`
+    - If output says `Installed`:
+    - `brew remove cocoapods`
+  - If you have not installed `rbenv`:
+    - `brew install rbenv`
+    - `rbenv install 2.7.6`
+    - `rbenv global 2.7.6`
+    - Add `eval "$(rbenv init - zsh)"` to your `~/.zshrc`
+  - From inside the project directory:
+    - `bundler install`
 - Setup your environment [for e2e testing using detox](https://wix.github.io/Detox/docs/introduction/getting-started):
-  - yarn global add detox-cli
-  - brew tap wix/brew
-  - brew install applesimutils
+  - `yarn global add detox-cli`
+  - `brew tap wix/brew`
+  - `brew install applesimutils`
 - After initial setup:
   - Copy `google-services.json.example` to `google-services.json` or provide your own `google-services.json`. (A real firebase project is NOT required)
   - `npx expo prebuild` -> you will also need to run this anytime `app.json` or native `package.json` deps change
