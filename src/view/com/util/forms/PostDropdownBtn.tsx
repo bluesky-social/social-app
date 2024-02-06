@@ -135,8 +135,8 @@ let PostDropdownBtn = ({
         await agent.mute(postAuthor.did)
         Toast.show(`${postAuthor.handle} has been muted`)
       }
-    } catch (error) {
-      console.error('Error toggling mute state for account:', error)
+    } catch (e) {
+      logger.error('Error toggling mute state for account:', {error: e})
       Toast.show('Error toggling mute state for account')
     }
   }
@@ -149,8 +149,8 @@ let PostDropdownBtn = ({
         {subject: postAuthor.did, createdAt: new Date().toISOString()},
       )
       Toast.show(`${postAuthor.handle} has been blocked`)
-    } catch (error) {
-      console.error('Error blocking account:', error)
+    } catch (e) {
+      logger.error('Error blocking account:', {error: e})
       Toast.show('Error blocking account')
     }
   }, [postAuthor.handle, postAuthor.did, currentAccount?.did])
