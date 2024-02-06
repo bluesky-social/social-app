@@ -78,9 +78,13 @@ function Player({
   onLoad: () => void
 }) {
   // ensures we only load what's requested
+  // when it's a youtube video, we need to allow both bsky.app and youtube.com
   const onShouldStartLoadWithRequest = React.useCallback(
-    (event: ShouldStartLoadRequest) => event.url === params.playerUri,
-    [params.playerUri],
+    (event: ShouldStartLoadRequest) =>
+      event.url === params.playerUri ||
+      (params.source.startsWith('youtube') &&
+        event.url.includes('www.youtube.com')),
+    [params.playerUri, params.source],
   )
 
   // Don't show the player until it is active
