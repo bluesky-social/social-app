@@ -192,7 +192,7 @@ function PostThreadLoaded({
     } else {
       // Build the entire array of items to render
       let arr = [
-        ...(items.parents ? items.parents.slice(-10) : []),
+        ...(items.parents ? items.parents.slice(-15) : []),
         ...items.highlightedPost,
         ...(items.replies ?? []),
       ]
@@ -261,27 +261,31 @@ function PostThreadLoaded({
       !isThreadPost(first) ||
       !first.parent ||
       first.ctx.isHighlightedPost
-    )
+    ) {
       return
+    }
 
     isPrepending.current = true
     const items = allPosts.current?.parents
     const length = items?.length
     if (!items || !length) return
 
-    const postsToPrepend = items.slice(
-      length - 10 - topPageCount.current * 10,
-      length - topPageCount.current * 10,
-    )
+    // Determine the indices to slice from
+    const endIndex = length - topPageCount.current * 15
+    let startIndex = endIndex - 15
+    if (startIndex < 0) startIndex = 0
 
+    // Get the posts that we are going to append
+    const postsToPrepend = items.slice(startIndex, endIndex)
+    if (!postsToPrepend) return
+
+    // We wait a moment both to appear like a "load" event and to let the scroll "settle"
     setTimeout(() => {
-      if (postsToPrepend) {
-        // Append the posts
-        setRenderedPosts(prev => [...postsToPrepend, ...prev])
-        // Increment the top page count and set prepending to false
-        topPageCount.current += 1
-        isPrepending.current = false
-      }
+      // Append the posts
+      setRenderedPosts(prev => [...postsToPrepend, ...prev])
+      // Increment the top page count and set prepending to false
+      topPageCount.current += 1
+      isPrepending.current = false
     }, 1000)
   }, [renderedPosts])
 
