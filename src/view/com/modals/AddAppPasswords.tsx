@@ -137,17 +137,6 @@ export function Component({}: {}) {
     }
   }
 
-  const textInputRef = React.useCallback((node: TextInput | null) => {
-    if (!node) {
-      return
-    }
-
-    // `selectTextOnFocus` isn't working with `autoFocus={true}` or without a timeout going.
-    setTimeout(() => {
-      node.focus()
-    }, 0)
-  }, [])
-
   return (
     <View style={[styles.container, pal.view]} testID="addAppPasswordsModal">
       <View>
@@ -171,7 +160,6 @@ export function Component({}: {}) {
         {!appPassword ? (
           <View style={[pal.btn, styles.textInputWrapper]}>
             <TextInput
-              ref={textInputRef}
               style={[styles.input, pal.text]}
               onChangeText={_onChangeText}
               value={name}
@@ -180,6 +168,7 @@ export function Component({}: {}) {
               autoCorrect={false}
               autoComplete="off"
               autoCapitalize="none"
+              autoFocus={true}
               maxLength={32}
               selectTextOnFocus={true}
               blurOnSubmit={true}
@@ -262,7 +251,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 10,
     paddingHorizontal: 8,
-    marginTop: 6,
     fontSize: 17,
     letterSpacing: 0.25,
     fontWeight: '400',
