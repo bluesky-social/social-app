@@ -16,9 +16,9 @@ import {usePinnedFeedsInfos, FeedSourceInfo} from '#/state/queries/feed'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
-import {loadString, saveString} from '#/lib/storage'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
+import * as persisted from '#/state/persisted'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -26,29 +26,11 @@ export function HomeScreen(props: Props) {
   const {feeds: pinnedFeeds, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   const {isDesktop} = useWebMediaQueries()
-  const [initialPage, setInitialPage] = React.useState<string | undefined>(
-    undefined,
+  const [initialPage] = React.useState<string>(
+    () => persisted.get('lastSelectedHomeFeed') ?? 'Following',
   )
 
-  React.useEffect(() => {
-    const loadLastActivePage = async () => {
-      try {
-        const lastActivePage =
-          (await loadString('lastActivePage')) ?? 'Following'
-        setInitialPage(lastActivePage)
-      } catch {
-        setInitialPage('Following')
-      }
-    }
-    loadLastActivePage()
-  }, [])
-
-  if (
-    preferences &&
-    pinnedFeeds &&
-    initialPage !== undefined &&
-    !isPinnedFeedsLoading
-  ) {
+  if (preferences && pinnedFeeds && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
         {...props}
@@ -131,7 +113,7 @@ function HomeScreenReady({
       setDrawerSwipeDisabled(index > 0)
       const page = ['Following', ...preferences.feeds.pinned][index]
       setSelectedPage(page)
-      saveString('lastActivePage', page)
+      persisted.write('lastSelectedHomeFeed', page)
     },
     [
       setDrawerSwipeDisabled,
