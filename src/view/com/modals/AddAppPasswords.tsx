@@ -157,7 +157,6 @@ export function Component({}: {}) {
               Please enter a unique name for this App Password or use our
               randomly generated one.
             </Trans>
-            asdq42
           </Text>
         ) : (
           <Text type="lg" style={[pal.text]}>
