@@ -2639,7 +2639,7 @@ msgstr "Persones seguides per @{0}"
 
 #: src/Navigation.tsx:154
 msgid "People following @{0}"
-msgstr "Oersones seguint a @{0}"
+msgstr "Persones seguint a @{0}"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
