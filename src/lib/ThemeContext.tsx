@@ -1,11 +1,7 @@
 import React, {ReactNode, createContext, useContext} from 'react'
-import {
-  TextStyle,
-  useColorScheme,
-  ViewStyle,
-  ColorSchemeName,
-} from 'react-native'
-import {darkTheme, defaultTheme} from './themes'
+import {TextStyle, ViewStyle} from 'react-native'
+import {darkTheme, defaultTheme, dimTheme} from './themes'
+import {ThemeName} from '#/alf/themes'
 
 export type ColorScheme = 'light' | 'dark'
 
@@ -84,23 +80,31 @@ export interface Theme {
 
 export interface ThemeProviderProps {
   children?: ReactNode
-  theme?: 'light' | 'dark' | 'system'
+  theme: ThemeName
 }
 
 export const ThemeContext = createContext<Theme>(defaultTheme)
 
 export const useTheme = () => useContext(ThemeContext)
 
-function getTheme(theme: ColorSchemeName) {
-  return theme === 'dark' ? darkTheme : defaultTheme
+function getTheme(theme: ThemeName) {
+  switch (theme) {
+    case 'light':
+      return defaultTheme
+    case 'dim':
+      return dimTheme
+    case 'dark':
+      return darkTheme
+    default:
+      return defaultTheme
+  }
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   theme,
   children,
 }) => {
-  const colorScheme = useColorScheme()
-  const themeValue = getTheme(theme === 'system' ? colorScheme : theme)
+  const themeValue = getTheme(theme)
 
   return (
     <ThemeContext.Provider value={themeValue}>{children}</ThemeContext.Provider>

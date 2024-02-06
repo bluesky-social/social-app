@@ -40,8 +40,8 @@ import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
 import {
   useSetMinimalShellMode,
-  useColorMode,
-  useSetColorMode,
+  useThemePrefs,
+  useSetThemePrefs,
   useOnboardingDispatch,
 } from '#/state/shell'
 import {
@@ -144,8 +144,8 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const queryClient = useQueryClient()
-  const colorMode = useColorMode()
-  const setColorMode = useSetColorMode()
+  const {colorMode, darkTheme} = useThemePrefs()
+  const {setColorMode, setDarkTheme} = useSetThemePrefs()
   const pal = usePalette('default')
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -483,7 +483,35 @@ export function SettingsScreen({}: Props) {
             />
           </View>
         </View>
+
         <View style={styles.spacer20} />
+
+        {colorMode !== 'light' && (
+          <>
+            <Text type="xl-bold" style={[pal.text, styles.heading]}>
+              <Trans>Dark Theme</Trans>
+            </Text>
+            <View>
+              <View style={[styles.linkCard, pal.view, styles.selectableBtns]}>
+                <SelectableBtn
+                  selected={!darkTheme || darkTheme === 'dim'}
+                  label={_(msg`Dim`)}
+                  left
+                  onSelect={() => setDarkTheme('dim')}
+                  accessibilityHint={_(msg`Set dark theme to the dim theme`)}
+                />
+                <SelectableBtn
+                  selected={darkTheme === 'dark'}
+                  label={_(msg`Dark`)}
+                  right
+                  onSelect={() => setDarkTheme('dark')}
+                  accessibilityHint={_(msg`Set dark theme to the dark theme`)}
+                />
+              </View>
+            </View>
+            <View style={styles.spacer20} />
+          </>
+        )}
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Basics</Trans>
