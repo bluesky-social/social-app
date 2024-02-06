@@ -14,7 +14,7 @@ import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
-import {checkAndFormatCode} from 'lib/strings/password'
+import {checkAndFormatResetCode} from 'lib/strings/password'
 import {logger} from '#/logger'
 import {styles} from './styles'
 import {Trans, msg} from '@lingui/macro'
@@ -49,10 +49,14 @@ export const SetNewPasswordForm = ({
   const onPressNext = async () => {
     // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
     // don't get to call onBlur first
-    const formattedCode = checkAndFormatCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(resetCode)
     // TODO Better password strength check
     if (!formattedCode || !password) {
-      setError('You have entered an invalid code.')
+      setError(
+        _(
+          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        ),
+      )
       return
     }
 
@@ -81,9 +85,13 @@ export const SetNewPasswordForm = ({
   }
 
   const onBlur = () => {
-    const formattedCode = checkAndFormatCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(resetCode)
     if (!formattedCode) {
-      setError('You have entered an invalid code.')
+      setError(
+        _(
+          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        ),
+      )
       return
     }
     setResetCode(formattedCode)

@@ -1,7 +1,7 @@
 // Regex for base32 string for testing reset code
-const CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
+const RESET_CODE_REGEX = /^[A-Z2-7]{5}-[A-Z2-7]{5}$/
 
-export function checkAndFormatCode(code: string): string | false {
+export function checkAndFormatResetCode(code: string): string | false {
   // Trim the reset code
   let fixed = code.trim().toUpperCase()
 
@@ -11,7 +11,7 @@ export function checkAndFormatCode(code: string): string | false {
   }
 
   // Check that it is a valid format
-  if (!CODE_REGEX.test(fixed)) {
+  if (!RESET_CODE_REGEX.test(fixed)) {
     return false
   }
 

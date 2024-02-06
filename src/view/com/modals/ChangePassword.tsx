@@ -17,7 +17,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isAndroid, isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {cleanError, isNetworkError} from 'lib/strings/errors'
-import {checkAndFormatCode} from 'lib/strings/password'
+import {checkAndFormatResetCode} from 'lib/strings/password'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
@@ -79,10 +79,14 @@ export function Component() {
   }
 
   const onChangePassword = async () => {
-    const formattedCode = checkAndFormatCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(resetCode)
     // TODO Better password strength check
     if (!formattedCode || !newPassword) {
-      setError('You have entered an invalid code.')
+      setError(
+        _(
+          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        ),
+      )
       return
     }
 
@@ -110,9 +114,13 @@ export function Component() {
   }
 
   const onBlur = () => {
-    const formattedCode = checkAndFormatCode(resetCode)
+    const formattedCode = checkAndFormatResetCode(resetCode)
     if (!formattedCode) {
-      setError('You have entered an invalid code.')
+      setError(
+        _(
+          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        ),
+      )
       return
     }
     setResetCode(formattedCode)
