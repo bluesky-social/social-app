@@ -43,7 +43,7 @@ export function Step2({
 
   const onPressRequest = React.useCallback(() => {
     if (
-      uiState.verificationPhone.length >= 9 &&
+      uiState.verificationPhone.length >= 8 &&
       parsePhoneNumber(uiState.verificationPhone, uiState.phoneCountry)
     ) {
       requestVerificationCode({uiState, uiDispatch, _})
