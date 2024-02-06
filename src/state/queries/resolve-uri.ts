@@ -1,11 +1,18 @@
 import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
-import {AtUri, AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {
+  AtUri,
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyEmbedRecord,
+  AppBskyFeedPost,
+} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
-import {ThreadNode} from './post-thread'
+import {ThreadNode} from 'state/queries/post-thread'
+import {RQKEY as RQKEY_POST} from './post'
 
-export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
+export const RQKEY_DID = (didOrHandle: string) => ['resolved-did', didOrHandle]
 
 type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
 export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
@@ -24,7 +31,7 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 export function useResolveDidQuery(didOrHandle: string | undefined) {
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,
-    queryKey: RQKEY(didOrHandle || ''),
+    queryKey: RQKEY_DID(didOrHandle || ''),
     async queryFn() {
       if (!didOrHandle) {
         return ''
@@ -46,16 +53,43 @@ export function precacheProfile(
     | AppBskyActorDefs.ProfileViewBasic
     | AppBskyActorDefs.ProfileViewDetailed,
 ) {
-  queryClient.setQueryData(RQKEY(profile.handle), profile.did)
+  queryClient.setQueryData(RQKEY_DID(profile.handle), profile.did)
+}
+
+export function precacheQuoteEmbeds(queryClient: QueryClient, uris: string[]) {
+  if (uris.length === 0) return // Don't block UI with this request
+  ;(async () => {
+    const res = await getAgent().getPosts({uris})
+    if (!res.success || !res.data.posts?.[0]) return
+
+    for (const post of res.data.posts) {
+      queryClient.setQueryData(RQKEY_POST(post.uri), post)
+    }
+  })()
 }
 
 export function precacheFeedPosts(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
 ) {
+  const quoteEmbedUris: string[] = []
+
   for (const post of posts) {
+    // Precache the profile
     precacheProfile(queryClient, post.post.author)
+
+    // Precache posts in quote embeds if any
+    const embed = post.post.embed
+    if (
+      AppBskyEmbedRecord.isViewRecord(embed?.record) &&
+      AppBskyFeedPost.isRecord(embed?.record.value) &&
+      !queryClient.getQueryData(RQKEY_POST(embed.record.uri))
+    ) {
+      quoteEmbedUris.push(embed.record.uri)
+    }
   }
+
+  precacheQuoteEmbeds(queryClient, quoteEmbedUris)
 }
 
 export function precacheThreadPosts(

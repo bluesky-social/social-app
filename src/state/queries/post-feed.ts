@@ -26,9 +26,9 @@ import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
 import {queryClient} from 'lib/react-query'
+import {embedViewRecordToPostView, getEmbeddedPost} from 'state/queries/util'
 
 type ActorDid = string
 type AuthorFilter =

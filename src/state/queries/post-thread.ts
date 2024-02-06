@@ -8,6 +8,7 @@ import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
+import {findPostInQueryData as findPostInPostQueryData} from './post'
 import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
 import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
 import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
@@ -80,6 +81,12 @@ export function usePostThreadQuery(uri: string | undefined) {
     placeholderData: () => {
       if (!uri) {
         return undefined
+      }
+      {
+        const item = findPostInPostQueryData(queryClient, uri)
+        if (item) {
+          return postViewToPlaceholderThread(item)
+        }
       }
       {
         const item = findPostInQueryData(queryClient, uri)
