@@ -55,6 +55,12 @@ const CHILD_SPINNER = {_reactKey: '__child_spinner__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
 const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
+type ThreadSkeletonParts = {
+  highlightedPost: YieldedItem[]
+  parents?: YieldedItem[]
+  replies?: YieldedItem[]
+}
+
 type YieldedItem =
   | ThreadPost
   | typeof TOP_COMPONENT
@@ -162,41 +168,9 @@ function PostThreadLoaded({
     () => !!threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
     [threadViewPrefs, thread],
   )
+
+  // Track whether we are ready to render or not
   const readyToRender = React.useRef(false)
-  const [renderedPosts, setRenderedPosts] = React.useState<YieldedItem[]>([])
-
-  const threadSkeleton = React.useRef<YieldedItem[]>()
-
-  // construct content
-  // const posts = React.useMemo(() => {
-  //   if (thread.type === 'post') {
-  //   }
-  //
-  //   const r = createThreadSkeleton(
-  //     sortThread(thread, threadViewPrefs),
-  //     hasSession,
-  //     treeView,
-  //   )
-  //
-  //   console.log('parents:', r.parents)
-  //   console.log('highlight:', r.highlightedPost)
-  //   console.log('replies:', r.replies)
-  //
-  //   let arr = Array.from(
-  //     flattenThreadSkeleton(
-  //       sortThread(thread, threadViewPrefs),
-  //       hasSession,
-  //       treeView,
-  //     ),
-  //   )
-  //   if (arr.length > maxVisible) {
-  //     arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-  //   }
-  //   if (arr.indexOf(CHILD_SPINNER) === -1) {
-  //     arr.push(BOTTOM_COMPONENT)
-  //   }
-  //   return arr
-  // }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
 
   const posts = React.useMemo(() => {
     const items = createThreadSkeleton(
@@ -205,52 +179,34 @@ function PostThreadLoaded({
       treeView,
     )
 
-    if (!isWeb) {
-      if (!readyToRender.current) {
-        readyToRender.current = true
-        return items.highlightedPost
-      } else {
-        let arr = [...items.parents, ...items.highlightedPost, ...items.replies]
-        if (arr.length > maxVisible) {
-          arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-        }
-        if (arr.indexOf(CHILD_SPINNER) === -1) {
-          arr.push(BOTTOM_COMPONENT)
-        }
-        return arr
+    if (!isWeb && !readyToRender.current) {
+      // Render just the highlighted post and update readyToRender so we render everything next time
+      readyToRender.current = true
+      return items.highlightedPost
+    } else {
+      // Build the entire array of items to render
+      let arr = [
+        ...(items.parents ?? []),
+        ...items.highlightedPost,
+        ...(items.replies ?? []),
+      ]
+      if (arr.length > maxVisible) {
+        arr = [...arr.slice(0, maxVisible), LOAD_MORE]
       }
+      if (arr.indexOf(CHILD_SPINNER) === -1) {
+        arr.push(BOTTOM_COMPONENT)
+      }
+      return arr
     }
   }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
 
-  // React.useEffect(() => {
-  //   if (!readyToRender.current) {
-  //   }
-  //
-  //   const items = createThreadSkeleton(
-  //     sortThread(thread, threadViewPrefs),
-  //     hasSession,
-  //     treeView,
-  //   )
-  //   setRenderedPosts(items.highlightedPost)
-  // }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
-
   /**
    * NOTE
-   * Scroll positioning
+   * Scroll positioning on web
+   * maintainVisibleContentPosition isn't supported on web so we use this technique.
    *
-   * This callback is run if needsScrollAdjustment.current == true, which is...
-   *  - On web: always
-   *  - On native: when the placeholder cache is not being used
-   *
-   * It then only runs when viewing a reply, and the goal is to scroll the
+   * It only runs when viewing a reply, and the goal is to scroll the
    * reply into view.
-   *
-   * On native, if the placeholder cache is being used then maintainVisibleContentPosition
-   * is a more effective solution, so we use that. Otherwise, typically we're loading from
-   * the react-query cache, so we just need to immediately scroll down to the post.
-   *
-   * On desktop, maintainVisibleContentPosition isn't supported so we just always use
-   * this technique.
    *
    * -prf
    */
@@ -268,20 +224,12 @@ function PostThreadLoaded({
           offset: pageY,
         })
       }
-      if (isNative) {
-        highlightedPostRef.current?.measure(
-          (_x, _y, _width, _height, _pageX, pageY) => {
-            onMeasure(pageY)
-          },
-        )
-      } else {
-        // Measure synchronously to avoid a layout jump.
-        const domNode = highlightedPostRef.current
-        if (domNode) {
-          // @ts-ignore web only
-          const pageY = (domNode as any as Element).getBoundingClientRect().top
-          onMeasure(pageY)
-        }
+      // Measure synchronously to avoid a layout jump.
+      const domNode = highlightedPostRef.current
+      if (domNode) {
+        // @ts-ignore web only
+        const pageY = (domNode as any as Element).getBoundingClientRect().top
+        onMeasure(pageY)
       }
       needsScrollAdjustment.current = false
     }
@@ -368,11 +316,11 @@ function PostThreadLoaded({
           </View>
         )
       } else if (isThreadPost(item)) {
-        const prev = isThreadPost(renderedPosts[index - 1])
-          ? (renderedPosts[index - 1] as ThreadPost)
+        const prev = isThreadPost(posts[index - 1])
+          ? (posts[index - 1] as ThreadPost)
           : undefined
-        const next = isThreadPost(renderedPosts[index - 1])
-          ? (renderedPosts[index - 1] as ThreadPost)
+        const next = isThreadPost(posts[index - 1])
+          ? (posts[index - 1] as ThreadPost)
           : undefined
         return (
           <View
@@ -407,7 +355,7 @@ function PostThreadLoaded({
       pal.view,
       pal.text,
       pal.colors.border,
-      renderedPosts,
+      posts,
       onRefresh,
       treeView,
       _,
@@ -418,15 +366,17 @@ function PostThreadLoaded({
     <List
       ref={ref}
       data={posts}
-      initialNumToRender={!isNative ? renderedPosts.length : undefined}
-      maintainVisibleContentPosition={MAINTAIN_VISIBLE_CONTENT_POSITION}
+      initialNumToRender={!isNative ? posts.length : undefined}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshing={isPTRing}
       onRefresh={onPTR}
-      // We only run this on web, since maintainVisibleContentPosition doesn't work there
-      // onContentSizeChange={isWeb ? onContentSizeChange : undefined}
       style={s.hContentRegion}
+      // We only run this on web, since maintainVisibleContentPosition doesn't work there
+      onContentSizeChange={isWeb ? onContentSizeChange : undefined}
+      maintainVisibleContentPosition={
+        isWeb ? undefined : MAINTAIN_VISIBLE_CONTENT_POSITION
+      }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
       removeClippedSubviews={isAndroid ? false : undefined}
@@ -537,36 +487,26 @@ function isThreadPost(v: unknown): v is ThreadPost {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'post'
 }
 
-function* flattenThreadSkeleton(
+function* flattenThreadParents(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
-  isTraversingReplies: boolean = false,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
     if (!node.ctx.isParentLoading) {
       if (node.parent) {
-        yield* flattenThreadSkeleton(node.parent, hasSession, treeView, false)
-      } else if (!isTraversingReplies) {
+        yield* flattenThreadParents(node.parent, hasSession, treeView)
+      } else {
         yield TOP_COMPONENT
       }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
       return
     }
-    yield node
-    if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
-      yield REPLY_PROMPT
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply, hasSession, treeView, true)
-        if (!treeView && !node.ctx.isHighlightedPost) {
-          break
-        }
-      }
-    } else if (node.ctx.isChildLoading) {
-      yield CHILD_SPINNER
+
+    // Skip the highlighted post, that is rendered separately
+    if (!node.ctx.isHighlightedPost) {
+      yield node
     }
   } else if (node.type === 'not-found') {
     yield DELETED
@@ -575,15 +515,18 @@ function* flattenThreadSkeleton(
   }
 }
 
+// This flattens the replies to a thread
 function* flattenThreadReplies(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
+    // Skip the highlighted post, that is rendered separately
     if (!node.ctx.isHighlightedPost) {
       yield node
     }
+
     if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
       yield REPLY_PROMPT
     }
@@ -604,44 +547,12 @@ function* flattenThreadReplies(
   }
 }
 
-function* flattenThreadParents(
-  node: ThreadNode,
-  hasSession: boolean,
-  treeView: boolean,
-): Generator<YieldedItem, void> {
-  if (node.type === 'post') {
-    if (!node.ctx.isParentLoading) {
-      if (node.parent) {
-        yield* flattenThreadParents(node.parent, hasSession, treeView)
-      } else {
-        yield TOP_COMPONENT
-      }
-    }
-    if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
-      return
-    }
-    if (!node.ctx.isHighlightedPost) {
-      yield node
-    }
-  } else if (node.type === 'not-found') {
-    yield DELETED
-  } else if (node.type === 'blocked') {
-    yield BLOCKED
-  }
-}
-
-export interface ThreadSkeleton {
-  highlightedPost: YieldedItem[]
-  parents?: YieldedItem[]
-  replies?: YieldedItem[]
-}
-
 export function createThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
 ) {
-  const skeleton: ThreadSkeleton = {
+  const skeleton: ThreadSkeletonParts = {
     parents: Array.from(flattenThreadParents(node, hasSession, treeView)),
     highlightedPost: [node as YieldedItem],
     replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
