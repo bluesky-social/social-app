@@ -205,7 +205,7 @@ msgstr "Contenuto per adulti"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:137
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "I contenuti per adulti possono essere abilitati solo tramite il Web a <0/>."
+msgstr "I contenuti per adulti possono essere abilitati solo dal sito Web a <0/>."
 
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
