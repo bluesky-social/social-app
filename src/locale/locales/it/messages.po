@@ -2955,7 +2955,7 @@ msgstr "Seleziona \"No\" per nascondere tutti i post con le citazioni dal tuo fe
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "Seleziona \"No\" per occultare tutte le risposte dal tuo feed."
+msgstr "Seleziona \"No\" per nascondere tutte le risposte dal tuo feed."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
