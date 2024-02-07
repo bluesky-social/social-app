@@ -3863,7 +3863,7 @@ msgstr "Non riceverai più notifiche per questo filo di discussione"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:99
 msgid "You will now receive notifications for this thread"
-msgstr "Adesso riceverai le notifiche per questo filo di discussione"
+msgstr "Adesso riceverai le notifiche per questa discussione"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:81
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
