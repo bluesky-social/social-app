@@ -7,7 +7,7 @@ import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
 import {FeedsTabBar} from '../com/pager/FeedsTabBar'
-import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {Pager, RenderTabBarFnProps, PagerRef} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
@@ -66,9 +66,12 @@ function HomeScreenReady({
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
 
-  const pagerRef = React.useRef(null)
+  const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
   React.useLayoutEffect(() => {
+    // Since the pager is not a controlled component, adjust it imperatively
+    // if the selected index gets out of sync with what it last reported.
+    // This is supposed to only happen on the web when you use the right nav.
     if (selectedIndex !== lastPagerReportedIndexRef.current) {
       lastPagerReportedIndexRef.current = selectedIndex
       pagerRef.current?.setPage(selectedIndex)

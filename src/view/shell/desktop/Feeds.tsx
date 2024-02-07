@@ -9,6 +9,7 @@ import {msg} from '@lingui/macro'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedDescriptor} from '#/state/queries/post-feed'
+import {NavigationProp} from 'lib/routes/types'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
@@ -16,7 +17,7 @@ export function DesktopFeeds() {
   const {feeds: pinnedFeedInfos} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
-  const navigation = useNavigation()
+  const navigation = useNavigation<NavigationProp>()
   const route = useNavigationState(state => {
     if (!state) {
       return {name: 'Home'}
@@ -38,16 +39,15 @@ export function DesktopFeeds() {
         } else {
           return null
         }
-        const params = new URLSearchParams([['feed', feed]])
         return (
           <FeedItem
             key={feed}
-            href={'/?' + params}
+            href={'/?' + new URLSearchParams([['feed', feed]])}
             title={feedInfo.displayName}
             current={route.name === 'Home' && feed === selectedFeed}
             onPress={() => {
               setSelectedFeed(feed)
-              navigation.navigate({name: 'Home'})
+              navigation.navigate('Home')
             }}
           />
         )
@@ -73,6 +73,7 @@ function FeedItem({
   title: string
   href: string
   current: boolean
+  onPress: () => void
 }) {
   const pal = usePalette('default')
   return (
