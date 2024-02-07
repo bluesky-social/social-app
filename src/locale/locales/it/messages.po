@@ -3871,7 +3871,7 @@ msgstr "Riceverai un'email con un \"codice di reset\". Inserisci il codice qui, 
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Hai raggiunto la fine del tuo feed! Trova altri conti da seguire."
+msgstr "Hai raggiunto la fine del tuo feed! Trova altri account da seguire."
 
 #: src/view/com/auth/create/Step1.tsx:67
 msgid "Your account"
