@@ -205,9 +205,13 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-  {% block html_head_extra -%}{%- endblock %}
+  <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#1185fe">
+  <meta name="theme-color" content="#ffffff">
   <meta name="application-name" content="Bluesky">
   <meta name="generator" content="bskyweb">
+  <meta property="og:site_name" content="Bluesky Social" />
+
+  {% block html_head_extra -%}{%- endblock %}
 </head>
 <body>
 {%- block body_all %}
