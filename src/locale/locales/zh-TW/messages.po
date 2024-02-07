@@ -132,37 +132,37 @@ msgstr "已取消靜音帳戶"
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/screens/ProfileList.tsx:812
 msgid "Add"
-msgstr "添加"
+msgstr "新增"
 
 #: src/view/com/modals/SelfLabel.tsx:56
 msgid "Add a content warning"
-msgstr "添加內容警告"
+msgstr "新增內容警告"
 
 #: src/view/screens/ProfileList.tsx:802
 msgid "Add a user to this list"
-msgstr "將使用者添加至此清單"
+msgstr "將使用者新增至此清單"
 
 #: src/view/screens/Settings.tsx:383
 #: src/view/screens/Settings.tsx:392
 msgid "Add account"
-msgstr "添加帳戶"
+msgstr "新增帳戶"
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
 #: src/view/com/modals/AltImage.tsx:116
 msgid "Add alt text"
-msgstr "添加替代文字"
+msgstr "新增替代文字"
 
 #: src/view/screens/AppPasswords.tsx:102
 #: src/view/screens/AppPasswords.tsx:143
 #: src/view/screens/AppPasswords.tsx:156
 msgid "Add App Password"
-msgstr "添加 App 專用密碼"
+msgstr "新增 App 專用密碼"
 
 #: src/view/com/modals/report/InputIssueDetails.tsx:41
 #: src/view/com/modals/report/Modal.tsx:191
 msgid "Add details"
-msgstr "添加細節"
+msgstr "新增細節"
 
 #: src/view/com/modals/report/Modal.tsx:194
 msgid "Add details to report"
@@ -170,37 +170,37 @@ msgstr "補充回報詳細內容"
 
 #: src/view/com/composer/Composer.tsx:446
 msgid "Add link card"
-msgstr "添加連結卡片"
+msgstr "新增連結卡片"
 
 #: src/view/com/composer/Composer.tsx:451
 msgid "Add link card:"
-msgstr "添加連結卡片:"
+msgstr "新增連結卡片:"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
-msgstr "將以下 DNS 記錄添加到你的域名:"
+msgstr "將以下 DNS 紀錄新增到你的域名:"
 
 #: src/view/com/profile/ProfileHeader.tsx:357
 msgid "Add to Lists"
-msgstr "添加至清單"
+msgstr "新增至清單"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:243
 #: src/view/screens/ProfileFeed.tsx:272
 msgid "Add to my feeds"
-msgstr "添加至自訂訊息流"
+msgstr "新增至自訂訊息流"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
 msgid "Added"
-msgstr "已添加"
+msgstr "已新增"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
 msgid "Added to list"
-msgstr "添加至清單"
+msgstr "新增至清單"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "添加至自訂訊息流"
+msgstr "新增至自訂訊息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
@@ -608,7 +608,7 @@ msgstr "檢查我的狀態"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "查看一些推薦的訊息流。點擊 + 將它們添加到你的固定訊息流清單中。"
+msgstr "查看一些推薦的訊息流。點擊 + 將它們新增到你的固定訊息流清單中。"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
@@ -650,20 +650,20 @@ msgstr "選擇你的密碼"
 #: src/view/screens/Settings.tsx:816
 #: src/view/screens/Settings.tsx:817
 msgid "Clear all legacy storage data"
-msgstr "清除所有舊存儲數據"
+msgstr "清除所有舊存儲資料"
 
 #: src/view/screens/Settings.tsx:819
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "清除所有舊存儲數據（並重啟）"
+msgstr "清除所有舊存儲資料（並重啟）"
 
 #: src/view/screens/Settings.tsx:828
 #: src/view/screens/Settings.tsx:829
 msgid "Clear all storage data"
-msgstr "清除所有數據"
+msgstr "清除所有資料"
 
 #: src/view/screens/Settings.tsx:831
 msgid "Clear all storage data (restart after this)"
-msgstr "清除所有數據（並重啟）"
+msgstr "清除所有資料（並重啟）"
 
 #: src/view/com/util/forms/SearchInput.tsx:74
 #: src/view/screens/Search/Search.tsx:674
@@ -1133,7 +1133,7 @@ msgstr "雙擊以登入"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:244
 msgid "Drop to add images"
-msgstr "拖放即可添加圖片"
+msgstr "拖放即可新增圖片"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
@@ -1149,7 +1149,7 @@ msgstr "例如：藝術家、愛狗人士和狂熱讀者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:283
 msgid "e.g. Great Posters"
-msgstr "例如：優秀的發帖者"
+msgstr "例如：優秀的發貼者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Spammers"
@@ -1157,7 +1157,7 @@ msgstr "例如：垃圾內容製造者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:312
 msgid "e.g. The posters who never miss."
-msgstr "例如：絕對不容錯過的發帖者"
+msgstr "例如：絕對不容錯過的發貼者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:313
 msgid "e.g. Users that repeatedly reply with ads."
@@ -1392,7 +1392,7 @@ msgstr "創建 App 專用密碼失敗。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
-msgstr "無法創建清單。請檢查你的互聯網連線並重試。"
+msgstr "無法創建清單。請檢查你的網路連線並重試。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:88
 msgid "Failed to delete post, please try again"
@@ -1735,7 +1735,7 @@ msgstr "托管服務提供商"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
-msgstr "我們該如何打開此連結？"
+msgstr "我們該如何開啟此連結？"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
@@ -1832,7 +1832,7 @@ msgstr "輸入你的使用者識別符"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Invalid or unsupported post record"
-msgstr "無效或不支援的貼文記錄"
+msgstr "無效或不支援的貼文紀錄"
 
 #: src/view/com/auth/login/LoginForm.tsx:115
 msgid "Invalid username or password"
@@ -1950,7 +1950,7 @@ msgstr "尚未完成。"
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
-msgstr "舊存儲數據已清除，您需要立即重新啟動 App。"
+msgstr "舊存儲資料已清除，您需要立即重新啟動 App。"
 
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
@@ -2284,11 +2284,11 @@ msgstr "永不載入來自 {0} 的嵌入內容"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "永遠不會失去對您的追隨者和數據的訪問權。"
+msgstr "永遠不會失去對您的追隨者和資料的訪問權。"
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr "永遠不會失去對您的追隨者或數據的訪問權。"
+msgstr "永遠不會失去對您的追隨者或資料的訪問權。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2475,122 +2475,122 @@ msgstr "Oops！"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
-msgstr "打開"
+msgstr "開啟"
 
 #: src/view/com/composer/Composer.tsx:470
 #: src/view/com/composer/Composer.tsx:471
 msgid "Open emoji picker"
-msgstr "打開 emoji 選擇器"
+msgstr "開啟 emoji 選擇器"
 
 #: src/view/screens/Settings.tsx:706
 msgid "Open links with in-app browser"
-msgstr "在內建瀏覽器中打開連結"
+msgstr "在內建瀏覽器中開啟連結"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:87
 msgid "Open navigation"
-msgstr "打開導覽"
+msgstr "開啟導覽"
 
 #: src/view/screens/Settings.tsx:786
 msgid "Open storybook page"
-msgstr "打開故事書頁面"
+msgstr "開啟故事書頁面"
 
 #: src/view/com/util/forms/DropdownButton.tsx:154
 msgid "Opens {numItems} options"
-msgstr "打開 {numItems} 個選項"
+msgstr "開啟 {numItems} 個選項"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
-msgstr "打開調試記錄的附加詳細信息"
+msgstr "開啟調試紀錄的附加詳細信息"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "Opens an expanded list of users in this notification"
-msgstr "打開此通知中的擴展使用者清單"
+msgstr "開啟此通知中的擴展使用者清單"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:61
 msgid "Opens camera on device"
-msgstr "打開設備相機"
+msgstr "開啟設備相機"
 
 #: src/view/com/composer/Prompt.tsx:25
 msgid "Opens composer"
-msgstr "打開編輯器"
+msgstr "開啟編輯器"
 
 #: src/view/screens/Settings.tsx:589
 msgid "Opens configurable language settings"
-msgstr "打開可配置的語言設定"
+msgstr "開啟可配置的語言設定"
 
 #: src/view/com/composer/photos/SelectPhotoBtn.tsx:44
 msgid "Opens device photo gallery"
-msgstr "打開設備相冊"
+msgstr "開啟設備相冊"
 
 #: src/view/com/profile/ProfileHeader.tsx:459
 msgid "Opens editor for profile display name, avatar, background image, and description"
-msgstr "打開個人檔案（如名稱、頭像、背景圖片、描述等）編輯器"
+msgstr "開啟個人檔案（如名稱、頭像、背景圖片、描述等）編輯器"
 
 #: src/view/screens/Settings.tsx:643
 msgid "Opens external embeds settings"
-msgstr "打開外部嵌入設定"
+msgstr "開啟外部嵌入設定"
 
 #: src/view/com/profile/ProfileHeader.tsx:614
 msgid "Opens followers list"
-msgstr "打開追蹤者清單"
+msgstr "開啟追蹤者清單"
 
 #: src/view/com/profile/ProfileHeader.tsx:633
 msgid "Opens following list"
-msgstr "打開正在追蹤清單"
+msgstr "開啟正在追蹤清單"
 
 #: src/view/screens/Settings.tsx:412
 msgid "Opens invite code list"
-msgstr "打開邀請碼清單"
+msgstr "開啟邀請碼清單"
 
 #: src/view/com/modals/InviteCodes.tsx:172
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:646
 msgid "Opens list of invite codes"
-msgstr "打開邀請碼清單"
+msgstr "開啟邀請碼清單"
 
 #: src/view/screens/Settings.tsx:745
 msgid "Opens modal for account deletion confirmation. Requires email code."
-msgstr "打開用於帳戶刪除確認的彈窗。需要電子郵件驗證碼。"
+msgstr "開啟用於帳戶刪除確認的彈窗。需要電子郵件驗證碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Opens modal for using custom domain"
-msgstr "打開使用自訂網域的彈窗"
+msgstr "開啟使用自訂網域的彈窗"
 
 #: src/view/screens/Settings.tsx:614
 msgid "Opens moderation settings"
-msgstr "打開管理員設定"
+msgstr "開啟管理員設定"
 
 #: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Opens password reset form"
-msgstr "打開密碼重置表單"
+msgstr "開啟密碼重置表單"
 
 #: src/view/screens/Feeds.tsx:338
 msgid "Opens screen to edit Saved Feeds"
-msgstr "打開編輯已保存訊息流的畫面"
+msgstr "開啟編輯已保存訊息流的畫面"
 
 #: src/view/screens/Settings.tsx:570
 msgid "Opens screen with all saved feeds"
-msgstr "打開包含所有已保存訊息流的畫面"
+msgstr "開啟包含所有已保存訊息流的畫面"
 
 #: src/view/screens/Settings.tsx:670
 msgid "Opens the app password settings page"
-msgstr "打開 App 專用密碼設定頁面"
+msgstr "開啟 App 專用密碼設定頁面"
 
 #: src/view/screens/Settings.tsx:529
 msgid "Opens the home feed preferences"
-msgstr "打開主頁訊息流首選項"
+msgstr "開啟主頁訊息流首選項"
 
 #: src/view/screens/Settings.tsx:787
 msgid "Opens the storybook page"
-msgstr "打開故事書頁面"
+msgstr "開啟故事書頁面"
 
 #: src/view/screens/Settings.tsx:767
 msgid "Opens the system log page"
-msgstr "打開系統日誌界面"
+msgstr "開啟系統日誌界面"
 
 #: src/view/screens/Settings.tsx:550
 msgid "Opens the threads preferences"
-msgstr "打開討論串首選項"
+msgstr "開啟討論串首選項"
 
 #: src/view/com/util/forms/DropdownButton.tsx:280
 msgid "Option {0} of {numItems}"
@@ -2696,7 +2696,7 @@ msgstr "請選擇您的密碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "更改前請先確認您的電子郵箱。這是添加電子郵箱更新工具的臨時要求，此限制將很快被移除。"
+msgstr "更改前請先確認您的電子郵箱。這是新增電子郵箱更新工具的臨時要求，此限制將很快被移除。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:90
 msgid "Please enter a name for your app password. All spaces is not allowed."
@@ -3776,15 +3776,15 @@ msgstr "這裡有些訊息流你可以嘗試："
 
 #: src/view/screens/ProfileFeed.tsx:549
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
-msgstr "連線至伺服器時出現問題，請檢查你的互聯網連線並重試。"
+msgstr "連線至伺服器時出現問題，請檢查你的網路連線並重試。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:139
 msgid "There was an an issue removing this feed. Please check your internet connection and try again."
-msgstr "刪除訊息流時出現問題，請檢查你的互聯網連線並重試。"
+msgstr "刪除訊息流時出現問題，請檢查你的網路連線並重試。"
 
 #: src/view/screens/ProfileFeed.tsx:209
 msgid "There was an an issue updating your feeds, please check your internet connection and try again."
-msgstr "更新訊息流時出現問題，請檢查你的互聯網連線並重試。"
+msgstr "更新訊息流時出現問題，請檢查你的網路連線並重試。"
 
 #: src/view/screens/ProfileFeed.tsx:236
 #: src/view/screens/ProfileList.tsx:266
@@ -3842,7 +3842,7 @@ msgstr "發生問題了！{0}"
 #: src/view/screens/ProfileList.tsx:328
 #: src/view/screens/ProfileList.tsx:347
 msgid "There was an issue. Please check your internet connection and try again."
-msgstr "發生問題了。請檢查你的互聯網連線並重試。"
+msgstr "發生問題了。請檢查你的網路連線並重試。"
 
 #: src/view/com/util/ErrorBoundary.tsx:36
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
@@ -3916,7 +3916,7 @@ msgstr "此名称已被使用"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:124
 msgid "This post has been deleted."
-msgstr "此帖已被刪除。"
+msgstr "此貼文已被刪除。"
 
 #: src/view/com/modals/ModerationDetails.tsx:62
 msgid "This user has blocked you. You cannot view their content."
@@ -3988,7 +3988,7 @@ msgstr "取消靜音清單"
 #: src/view/com/auth/login/LoginForm.tsx:120
 #: src/view/com/modals/ChangePassword.tsx:70
 msgid "Unable to contact your service. Please check your Internet connection."
-msgstr "無法連線到服務，請檢查您的互聯網連線。"
+msgstr "無法連線到服務，請檢查您的網路連線。"
 
 #: src/view/com/profile/ProfileHeader.tsx:472
 #: src/view/screens/ProfileList.tsx:589
@@ -4240,7 +4240,7 @@ msgstr "我們推薦我們的「Discover」訊息流:"
 
 #~: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "我們無法連線到互聯網，請重試以繼續設定你的帳戶。如果仍繼續失敗，你可以選擇跳過此流程。"
+msgstr "我們無法連線到網路，請重試以繼續設定你的帳戶。如果仍繼續失敗，你可以選擇跳過此流程。"
 
 #~: src/screens/Deactivated.tsx:138
 msgid "We will let you know when your account is ready."
