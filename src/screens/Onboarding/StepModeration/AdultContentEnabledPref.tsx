@@ -85,7 +85,9 @@ export function AdultContentEnabledPref({
                 a.align_center,
                 a.py_md,
               ]}>
-              <Text style={[a.font_bold]}><Trans>Enable Adult Content</Trans></Text>
+              <Text style={[a.font_bold]}>
+                <Trans>Enable Adult Content</Trans>
+              </Text>
               <Toggle.Switch />
             </View>
           </Toggle.Item>
@@ -106,7 +108,9 @@ export function AdultContentEnabledPref({
       )}
 
       <Prompt.Outer control={prompt}>
-        <Prompt.Title><Trans>Adult Content</Trans></Prompt.Title>
+        <Prompt.Title>
+          <Trans>Adult Content</Trans>
+        </Prompt.Title>
         <Prompt.Description>
           <Trans>
             Due to Apple policies, adult content can only be enabled on the web
@@ -114,7 +118,9 @@ export function AdultContentEnabledPref({
           </Trans>
         </Prompt.Description>
         <Prompt.Actions>
-          <Prompt.Action onPress={prompt.close}><Trans>OK</Trans></Prompt.Action>
+          <Prompt.Action onPress={prompt.close}>
+            <Trans>OK</Trans>
+          </Prompt.Action>
         </Prompt.Actions>
       </Prompt.Outer>
     </>
