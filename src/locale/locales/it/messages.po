@@ -789,7 +789,7 @@ msgstr "Politica sul diritto d'autore"
 
 #: src/view/screens/ProfileFeed.tsx:95
 msgid "Could not load feed"
-msgstr "Non si è potuto caricare il feed"
+msgstr "Feed non caricato"
 
 #: src/view/screens/ProfileList.tsx:867
 msgid "Could not load list"
