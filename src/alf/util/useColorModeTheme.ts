@@ -1,5 +1,5 @@
 import React from 'react'
-import {useColorScheme} from 'react-native'
+import {ColorSchemeName, useColorScheme} from 'react-native'
 
 import {useThemePrefs} from 'state/shell'
 import {isWeb} from 'platform/detection'
@@ -10,21 +10,31 @@ export function useColorModeTheme(): ThemeName {
   const colorScheme = useColorScheme()
   const {colorMode, darkTheme} = useThemePrefs()
 
-  return React.useMemo(() => {
-    if (
-      (colorMode === 'system' && colorScheme === 'light') ||
-      colorMode === 'light'
-    ) {
-      updateDocument('light')
-      updateSystemBackground('light')
-      return 'light'
-    } else {
-      const themeName = darkTheme ?? 'dim'
-      updateDocument(themeName)
-      updateSystemBackground(themeName)
-      return themeName
-    }
-  }, [colorMode, darkTheme, colorScheme])
+  React.useLayoutEffect(() => {
+    const theme = getThemeName(colorScheme, colorMode, darkTheme)
+    updateDocument(theme)
+    updateSystemBackground(theme)
+  }, [colorMode, colorScheme, darkTheme])
+
+  return React.useMemo(
+    () => getThemeName(colorScheme, colorMode, darkTheme),
+    [colorScheme, colorMode, darkTheme],
+  )
+}
+
+function getThemeName(
+  colorScheme: ColorSchemeName,
+  colorMode: 'system' | 'light' | 'dark',
+  darkTheme?: ThemeName,
+) {
+  if (
+    (colorMode === 'system' && colorScheme === 'light') ||
+    colorMode === 'light'
+  ) {
+    return 'light'
+  } else {
+    return darkTheme ?? 'dim'
+  }
 }
 
 function updateDocument(theme: ThemeName) {
