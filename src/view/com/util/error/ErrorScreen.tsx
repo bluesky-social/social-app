@@ -12,6 +12,7 @@ import {CenteredView} from '../Views'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ViewHeader} from 'view/com/util/ViewHeader'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export function ErrorScreen({
   title,
@@ -29,12 +30,13 @@ export function ErrorScreen({
   showHeader?: boolean
 }) {
   const theme = useTheme()
+  const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const {_} = useLingui()
 
   return (
     <>
-      {showHeader && <ViewHeader title="Error" showBorder />}
+      {showHeader && isMobile && <ViewHeader title="Error" showBorder />}
       <CenteredView testID={testID} style={[styles.outer, pal.view]}>
         <View style={styles.errorIconContainer}>
           <View
