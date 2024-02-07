@@ -101,8 +101,8 @@ export function precacheFeedPosts(
         post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,
       )
 
-      const subEmbed = post.reply.parent.embed
-      handleEmbed(subEmbed)
+      const parentEmbed = post.reply.parent.embed
+      handleEmbed(parentEmbed)
     }
 
     // Finally the main post's embed
