@@ -56,7 +56,7 @@ const LOAD_MORE = {_reactKey: '__load_more__'}
 const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
 type ThreadSkeletonParts = {
-  highlightedPost: YieldedItem[]
+  highlightedPost: YieldedItem
   parents?: YieldedItem[]
   replies?: YieldedItem[]
 }
@@ -181,16 +181,28 @@ function PostThreadLoaded({
       readyToRender,
     )
 
-    // if (!isWeb && !readyToRender) {
-    //   return items.highlightedPost
-    // } else {
-    const postsToPrepend = items.parents?.slice(-(topPageCount * 15)) ?? []
+    const highlightedPost = isThreadPost(items.highlightedPost)
+      ? items.highlightedPost
+      : undefined
+
+    // Create the posts to prepend
+    let postsToPrepend = items.parents?.slice(-(topPageCount * 15)) ?? []
+    if (postsToPrepend.length > 0) {
+      // If there are any parent posts, we need to add the header here
+      postsToPrepend = [TOP_COMPONENT, ...postsToPrepend]
+    } else if (
+      postsToPrepend.length === 0 &&
+      !highlightedPost?.ctx.isParentLoading
+    ) {
+      // If there are no parents and there isn't a parent loading, then we just add the top component
+      postsToPrepend = [TOP_COMPONENT]
+    }
 
     // Build the entire array of items to render
     let arr = [
       // In the case of refreshes we need to take into account the page count when we load
       ...postsToPrepend,
-      ...items.highlightedPost,
+      items.highlightedPost,
       ...(items.replies ?? []),
     ]
     // Remove any items that shouldn't be visible right now due to view limit
@@ -564,8 +576,6 @@ function* flattenThreadParents(
           treeView,
           readyToRender,
         )
-      } else {
-        yield TOP_COMPONENT
       }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
@@ -625,7 +635,7 @@ export function createThreadSkeleton(
     parents: Array.from(
       flattenThreadParents(node, hasSession, treeView, readyToRender),
     ),
-    highlightedPost: [node as YieldedItem],
+    highlightedPost: node as YieldedItem,
     replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
   }
 
