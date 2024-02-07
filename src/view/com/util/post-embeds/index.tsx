@@ -49,7 +49,7 @@ export function PostEmbeds({
   moderationDecisions,
   style,
 }: {
-  record: {facets?: AppBskyRichtextFacet.Main[]}
+  record: {text: string; facets?: AppBskyRichtextFacet.Main[]}
   embed?: Embed
   moderation: ModerationUI
   moderationDecisions?: PostModeration['decisions']
@@ -71,19 +71,16 @@ export function PostEmbeds({
 
   const onExternalPress = useCallback(
     (e: GestureResponderEvent) => {
-      if (!externalUri) {
+      if (!externalUri || record.text.trim().length === 0) {
         return
       }
 
-      const links = record.facets?.flatMap(facet =>
+      const facets = record.facets || []
+      const links = facets.flatMap(facet =>
         facet.features.filter((feature): feature is AppBskyRichtextFacet.Link =>
           AppBskyRichtextFacet.isLink(feature),
         ),
       )
-
-      if (!links || links.length === 0) {
-        return
-      }
 
       if (!links.some(link => link.uri === externalUri)) {
         e.preventDefault()
