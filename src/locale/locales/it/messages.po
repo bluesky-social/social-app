@@ -3273,7 +3273,7 @@ msgstr "Termini di servizio"
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
-msgstr "Camp d'introducció de text"
+msgstr "Campo di testo"
 
 #: src/view/com/profile/ProfileHeader.tsx:310
 msgid "The account will be able to interact with you after unblocking."
