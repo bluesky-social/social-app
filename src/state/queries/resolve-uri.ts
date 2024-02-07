@@ -105,9 +105,7 @@ export function precacheFeedPosts(
       handleEmbed(subEmbed)
     }
 
-    // Finally the main post's quote author if it exists
-    // precacheQuoteProfile(post.post.embed)
-
+    // Finally the main post's embed
     const embed = post.post.embed
     handleEmbed(embed)
   }
