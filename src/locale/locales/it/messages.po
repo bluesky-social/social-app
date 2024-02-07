@@ -1691,7 +1691,7 @@ msgstr "Deseleziona tutte per vedere qualsiasi lingua."
 
 #: src/view/com/modals/LinkWarning.tsx:51
 msgid "Leaving Bluesky"
-msgstr "Lasciando Bluesky"
+msgstr "Stai lasciando Bluesky"
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
