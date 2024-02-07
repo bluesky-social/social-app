@@ -1464,7 +1464,7 @@ msgstr "Nasconde i post di {0} nel tuo feed"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "Si è verificato qualche tipo di problema durante il contatto con il server del feed. Informa il proprietario del feed del problema."
+msgstr "Si è verificato un problema durante il contatto con il server del feed. Informa il proprietario del feed del problema."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
