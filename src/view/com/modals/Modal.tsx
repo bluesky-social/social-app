@@ -36,6 +36,7 @@ import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
+import * as ChangePasswordModal from './ChangePassword'
 import * as SwitchAccountModal from './SwitchAccount'
 import * as LinkWarningModal from './LinkWarning'
 import * as EmbedConsentModal from './EmbedConsent'
@@ -172,6 +173,9 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'change-email') {
     snapPoints = ChangeEmailModal.snapPoints
     element = <ChangeEmailModal.Component />
+  } else if (activeModal?.name === 'change-password') {
+    snapPoints = ChangePasswordModal.snapPoints
+    element = <ChangePasswordModal.Component />
   } else if (activeModal?.name === 'switch-account') {
     snapPoints = SwitchAccountModal.snapPoints
     element = <SwitchAccountModal.Component />

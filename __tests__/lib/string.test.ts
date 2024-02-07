@@ -433,45 +433,38 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_short',
       source: 'youtubeShorts',
       hideDetails: true,
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
       type: 'youtube_video',
       source: 'youtube',
-      playerUri:
-        'https://www.youtube.com/embed/videoId?autoplay=1&playsinline=1&start=0',
+      playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
 
     undefined,
@@ -729,8 +722,6 @@ describe('parseEmbedPlayerFromUrl', () => {
       const output = outputs[i]
 
       const res = parseEmbedPlayerFromUrl(input)
-
-      console.log(input)
 
       expect(res).toEqual(output)
     }
