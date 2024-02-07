@@ -10,6 +10,7 @@ import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {NavigationProp} from 'lib/routes/types'
+import {emitSoftReset} from '#/state/events'
 
 export function DesktopFeeds() {
   const pal = usePalette('default')
@@ -48,6 +49,9 @@ export function DesktopFeeds() {
             onPress={() => {
               setSelectedFeed(feed)
               navigation.navigate('Home')
+              if (feed === selectedFeed) {
+                emitSoftReset()
+              }
             }}
           />
         )
