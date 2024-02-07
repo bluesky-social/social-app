@@ -169,51 +169,53 @@ function PostThreadLoaded({
     [threadViewPrefs, thread],
   )
 
-  // We need to use state rather than a memo to hold the posts, since we want to append to the existing array. Otherwise,
-  // FlatList will re-render all of the items.
-  const [renderedPosts, setRenderedPosts] = React.useState<YieldedItem[]>([])
-  // We also want to keep all of the posts stored. This doesn't need to be stateful, it will only be used in the
-  // onStartReached callback
-  const allPosts = React.useRef<ThreadSkeletonParts>()
-  // Keep track of what top page we are on and whether we are already preprending to avoid excessive prepends at one
-  // time
-  const topPageCount = React.useRef(1)
+  const [readyToRender, setReadyToRender] = React.useState(false)
+  const [topPageCount, setTopPageCount] = React.useState(1)
   const isPrepending = React.useRef(false)
 
-  // Track whether we are ready to render or not
-  const readyToRender = React.useRef(false)
-
-  React.useLayoutEffect(() => {
+  const posts = React.useMemo(() => {
     const items = createThreadSkeleton(
       sortThread(thread, threadViewPrefs),
       hasSession,
       treeView,
     )
-    allPosts.current = items
 
-    if (!isWeb && !readyToRender.current) {
-      // Render just the highlighted post and update readyToRender so we render everything next time
-      readyToRender.current = true
-      setRenderedPosts(items.highlightedPost)
+    if (!isWeb && !readyToRender) {
+      return items.highlightedPost
     } else {
+      const postsToPrepend = items.parents?.slice(-(topPageCount * 15)) ?? []
+
       // Build the entire array of items to render
       let arr = [
         // In the case of refreshes we need to take into account the page count when we load
-        ...(items.parents
-          ? items.parents.slice(-15 * topPageCount.current)
-          : []),
+        ...postsToPrepend,
         ...items.highlightedPost,
         ...(items.replies ?? []),
       ]
+      // Remove any items that shouldn't be visible right now due to view limit
       if (arr.length > maxVisible) {
         arr = [...arr.slice(0, maxVisible), LOAD_MORE]
       }
       if (arr.indexOf(CHILD_SPINNER) === -1) {
         arr.push(BOTTOM_COMPONENT)
       }
-      setRenderedPosts(arr)
+      return arr
     }
-  }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
+  }, [
+    thread,
+    threadViewPrefs,
+    hasSession,
+    treeView,
+    readyToRender,
+    topPageCount,
+    maxVisible,
+  ])
+
+  React.useEffect(() => {
+    if (posts.length === 1) {
+      setReadyToRender(true)
+    }
+  }, [posts])
 
   /**
    * NOTE
@@ -255,9 +257,9 @@ function PostThreadLoaded({
   // top, this will simulate a "load" when we reach the top, to allow for the next items to render without jumping
   const onStartReached = React.useCallback(() => {
     // Get the first post. We need to get the second item in the array if the first one is the TOP_COMPONENT
-    let first = renderedPosts?.[0]
+    let first = posts?.[0]
     if (first === TOP_COMPONENT) {
-      first = renderedPosts?.[1]
+      first = posts?.[1]
     }
 
     // We do nothing in these situations
@@ -274,30 +276,15 @@ function PostThreadLoaded({
       return
     }
 
-    const items = allPosts.current?.parents
-    const length = items?.length
-    if (!items || !length) return
-
-    // Determine the indices to slice from
-    const endIndex = length - topPageCount.current * 15
-    let startIndex = endIndex - 15
-    if (startIndex < 0) startIndex = 0
-
-    // Get the posts that we are going to append
-    const postsToPrepend = items.slice(startIndex, endIndex)
-    if (!postsToPrepend) return
-
     // Start prepending
     isPrepending.current = true
     // We wait a moment both to appear like a "load" event and to let the scroll "settle"
     setTimeout(() => {
-      // Append the posts
-      setRenderedPosts(prev => [...postsToPrepend, ...prev])
       // Increment the top page count and set prepending to false
-      topPageCount.current += 1
+      setTopPageCount(prev => prev + 1)
       isPrepending.current = false
     }, 750)
-  }, [renderedPosts])
+  }, [posts])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)
@@ -380,11 +367,11 @@ function PostThreadLoaded({
           </View>
         )
       } else if (isThreadPost(item)) {
-        const prev = isThreadPost(renderedPosts[index - 1])
-          ? (renderedPosts[index - 1] as ThreadPost)
+        const prev = isThreadPost(posts[index - 1])
+          ? (posts[index - 1] as ThreadPost)
           : undefined
-        const next = isThreadPost(renderedPosts[index - 1])
-          ? (renderedPosts[index - 1] as ThreadPost)
+        const next = isThreadPost(posts[index - 1])
+          ? (posts[index - 1] as ThreadPost)
           : undefined
         return (
           <View
@@ -419,7 +406,7 @@ function PostThreadLoaded({
       pal.view,
       pal.text,
       pal.colors.border,
-      renderedPosts,
+      posts,
       onRefresh,
       treeView,
       _,
@@ -429,8 +416,8 @@ function PostThreadLoaded({
   return (
     <List
       ref={ref}
-      data={renderedPosts}
-      initialNumToRender={!isNative ? renderedPosts.length : undefined}
+      data={posts}
+      initialNumToRender={!isNative ? posts.length : undefined}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
       refreshing={isPTRing}
