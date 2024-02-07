@@ -3115,7 +3115,7 @@ msgstr "Accedere a"
 #: src/view/com/modals/SwitchAccount.tsx:69 src/view/screens/Settings.tsx:107
 #: src/view/screens/Settings.tsx:110
 msgid "Sign out"
-msgstr "Disconnetta"
+msgstr "Disconnettiti"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
 #: src/view/shell/bottom-bar/BottomBar.tsx:276
