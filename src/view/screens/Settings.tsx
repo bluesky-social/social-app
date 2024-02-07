@@ -724,7 +724,9 @@ export function SettingsScreen({}: Props) {
           onPress={() => openModal({name: 'change-password'})}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
-          accessibilityHint={_(msg`Opens modal for change your Bluesky password`)}>
+          accessibilityHint={_(
+            msg`Opens modal for change your Bluesky password`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
