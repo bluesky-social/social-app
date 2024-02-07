@@ -3621,7 +3621,7 @@ msgstr "Questo utente ti blocca"
 
 #: src/view/com/auth/create/Step3.tsx:38
 msgid "User handle"
-msgstr "Nome untente"
+msgstr "Handle dell'utente"
 
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:182
