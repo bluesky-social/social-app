@@ -261,8 +261,7 @@ function PostThreadLoaded({
   // Until we can get maintainVisibleContentPosition to work regardless of how many posts we have rendered at the
   // top, this will simulate a "load" when we reach the top, to allow for the next items to render without jumping
   const onStartReached = React.useCallback(() => {
-    // Get the first post. We need to get the second item in the array if the first one is the TOP_COMPONENT
-    let first = posts?.[0]
+    const first = posts?.[0]
 
     // We do nothing in these situations
     // - We are already prepending
