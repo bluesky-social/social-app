@@ -47,7 +47,6 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 1}
 
-const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const DELETED = {_reactKey: '__deleted__'}
 const BLOCKED = {_reactKey: '__blocked__'}
@@ -63,7 +62,6 @@ type ThreadSkeletonParts = {
 
 type YieldedItem =
   | ThreadPost
-  | typeof TOP_COMPONENT
   | typeof REPLY_PROMPT
   | typeof DELETED
   | typeof BLOCKED
@@ -265,9 +263,6 @@ function PostThreadLoaded({
   const onStartReached = React.useCallback(() => {
     // Get the first post. We need to get the second item in the array if the first one is the TOP_COMPONENT
     let first = posts?.[0]
-    if (first === TOP_COMPONENT) {
-      first = posts?.[1]
-    }
 
     // We do nothing in these situations
     // - We are already prepending
@@ -285,12 +280,13 @@ function PostThreadLoaded({
 
     // Start prepending
     isPrepending.current = true
-    // We wait a moment both to appear like a "load" event and to let the scroll "settle"
+    // We wait a moment both to appear like a "load" event and to let the scroll "settle". 850ms is the sweet spot
+    // that we should be confident the scroll has settled at. Lower is slightly janky, higher is too long.
     setTimeout(() => {
       // Increment the top page count and set prepending to false
       setTopPageCount(prev => prev + 1)
       isPrepending.current = false
-    }, 750)
+    }, 850)
   }, [posts])
 
   const onPTR = React.useCallback(async () => {
@@ -305,13 +301,7 @@ function PostThreadLoaded({
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
-      if (item === TOP_COMPONENT) {
-        return isTabletOrMobile ? (
-          <ViewHeader
-            title={_(msg({message: `Post`, context: 'description'}))}
-          />
-        ) : null
-      } else if (item === REPLY_PROMPT && hasSession) {
+      if (item === REPLY_PROMPT && hasSession) {
         return (
           <View>
             {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
@@ -404,7 +394,6 @@ function PostThreadLoaded({
     },
     [
       hasSession,
-      isTabletOrMobile,
       isMobile,
       onPressReply,
       pal.border,
@@ -436,6 +425,13 @@ function PostThreadLoaded({
       onContentSizeChange={isWeb ? onContentSizeChange : undefined}
       maintainVisibleContentPosition={
         isWeb ? undefined : MAINTAIN_VISIBLE_CONTENT_POSITION
+      }
+      ListHeaderComponent={
+        isTabletOrMobile ? (
+          <ViewHeader
+            title={_(msg({message: `Post`, context: 'description'}))}
+          />
+        ) : undefined
       }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
@@ -563,8 +559,6 @@ function* flattenThreadParents(
           treeView,
           readyToRender,
         )
-      } else {
-        yield TOP_COMPONENT
       }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
