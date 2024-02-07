@@ -47,6 +47,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 1}
 
+const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
 const DELETED = {_reactKey: '__deleted__'}
 const BLOCKED = {_reactKey: '__blocked__'}
@@ -62,6 +63,7 @@ type ThreadSkeletonParts = {
 
 type YieldedItem =
   | ThreadPost
+  | typeof TOP_COMPONENT
   | typeof REPLY_PROMPT
   | typeof DELETED
   | typeof BLOCKED
@@ -220,6 +222,8 @@ function PostThreadLoaded({
     maxVisible,
   ])
 
+  React.useEffect(() => {}, [posts])
+
   /**
    * NOTE
    * Scroll positioning on web
@@ -259,13 +263,17 @@ function PostThreadLoaded({
   // Until we can get maintainVisibleContentPosition to work regardless of how many posts we have rendered at the
   // top, this will simulate a "load" when we reach the top, to allow for the next items to render without jumping
   const onStartReached = React.useCallback(() => {
-    const first = posts?.[0]
+    // Get the first post. We need to get the second item in the array if the first one is the TOP_COMPONENT
+    let first = posts?.[0]
+    if (first === TOP_COMPONENT) {
+      first = posts?.[1]
+    }
 
     // We do nothing in these situations
     // - We are already prepending
     // - This is not a thread post
     // - There are no more parents to show
-    // - The top post is the highlighted post, so that we don't automatically trigger this when showing only the highlight
+    // - The top post is the highlighted post
     if (
       isPrepending.current ||
       !isThreadPost(first) ||
@@ -298,7 +306,13 @@ function PostThreadLoaded({
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
-      if (item === REPLY_PROMPT && hasSession) {
+      if (item === TOP_COMPONENT) {
+        return isTabletOrMobile ? (
+          <ViewHeader
+            title={_(msg({message: `Post`, context: 'description'}))}
+          />
+        ) : null
+      } else if (item === REPLY_PROMPT && hasSession) {
         return (
           <View>
             {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
@@ -391,6 +405,7 @@ function PostThreadLoaded({
     },
     [
       hasSession,
+      isTabletOrMobile,
       isMobile,
       onPressReply,
       pal.border,
@@ -422,13 +437,6 @@ function PostThreadLoaded({
       onContentSizeChange={isWeb ? onContentSizeChange : undefined}
       maintainVisibleContentPosition={
         isWeb ? undefined : MAINTAIN_VISIBLE_CONTENT_POSITION
-      }
-      ListHeaderComponent={
-        isTabletOrMobile ? (
-          <ViewHeader
-            title={_(msg({message: `Post`, context: 'description'}))}
-          />
-        ) : undefined
       }
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
@@ -556,6 +564,8 @@ function* flattenThreadParents(
           treeView,
           readyToRender,
         )
+      } else {
+        yield TOP_COMPONENT
       }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
