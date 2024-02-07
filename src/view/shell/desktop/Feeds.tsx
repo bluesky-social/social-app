@@ -38,10 +38,11 @@ export function DesktopFeeds() {
         } else {
           return null
         }
+        const params = new URLSearchParams([['feed', feed]])
         return (
           <FeedItem
             key={feed}
-            href={'/'} // TODO
+            href={'/?' + params}
             title={feedInfo.displayName}
             current={route.name === 'Home' && feed === selectedFeed}
             onPress={() => {
