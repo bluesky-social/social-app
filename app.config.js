@@ -142,6 +142,13 @@ module.exports = function () {
             username: 'blueskysocial',
           },
         ],
+        [
+          'expo-notifications',
+          {
+            icon: './assets/icon-android-notification.png',
+            color: '#ffffff',
+          },
+        ],
         './plugins/withAndroidManifestPlugin.js',
       ].filter(Boolean),
       extra: {

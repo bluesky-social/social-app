@@ -14,7 +14,7 @@ export {
   useSetDrawerSwipeDisabled,
 } from './drawer-swipe-disabled'
 export {useMinimalShellMode, useSetMinimalShellMode} from './minimal-mode'
-export {useColorMode, useSetColorMode} from './color-mode'
+export {useThemePrefs, useSetThemePrefs} from './color-mode'
 export {useOnboardingState, useOnboardingDispatch} from './onboarding'
 export {useComposerState, useComposerControls} from './composer'
 export {useTickEveryMinute} from './tick-every-minute'

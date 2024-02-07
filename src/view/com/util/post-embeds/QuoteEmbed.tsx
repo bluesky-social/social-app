@@ -113,13 +113,15 @@ export function QuoteEmbed({
       hoverStyle={{borderColor: pal.colors.borderLinkHover}}
       href={itemHref}
       title={itemTitle}>
-      <PostMeta
-        author={quote.author}
-        showAvatar
-        authorHasWarning={false}
-        postHref={itemHref}
-        timestamp={quote.indexedAt}
-      />
+      <View pointerEvents="none">
+        <PostMeta
+          author={quote.author}
+          showAvatar
+          authorHasWarning={false}
+          postHref={itemHref}
+          timestamp={quote.indexedAt}
+        />
+      </View>
       {moderation ? (
         <PostAlerts moderation={moderation} style={styles.alert} />
       ) : null}

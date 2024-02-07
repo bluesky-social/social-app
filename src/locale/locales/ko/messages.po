@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: quiple\n"
-"Language-Team: quiple\n"
+"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -116,7 +116,7 @@ msgstr "계정 옵션"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:25
 msgid "Account removed from quick access"
-msgstr "퀵 액세스에서 계정 제거"
+msgstr "빠른 액세스에서 계정 제거"
 
 #: src/view/com/profile/ProfileHeader.tsx:315
 msgid "Account unblocked"
@@ -213,10 +213,6 @@ msgstr "성인 콘텐츠"
 msgid "Adult content can only be enabled via the Web at <0/>."
 msgstr "성인 콘텐츠는 <0/>에서 웹을 통해서만 활성화할 수 있습니다."
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-#~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-#~ msgstr ""
-
 #: src/view/screens/Settings.tsx:630
 msgid "Advanced"
 msgstr "고급"
@@ -257,7 +253,7 @@ msgstr "및"
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Animals"
-msgstr ""
+msgstr "동물"
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
@@ -330,7 +326,7 @@ msgstr "{0}(으)로 쓰고 있나요?"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
-msgstr ""
+msgstr "예술"
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -357,7 +353,7 @@ msgstr "뒤로"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr ""
+msgstr "{interestsText}에 대한 관심사 기반"
 
 #: src/view/screens/Settings.tsx:489
 msgid "Basics"
@@ -460,7 +456,7 @@ msgstr "Bluesky.Social"
 
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
-msgstr ""
+msgstr "책"
 
 #: src/view/screens/Settings.tsx:792
 msgid "Build version {0} {1}"
@@ -587,7 +583,7 @@ msgstr "이메일 변경"
 #: src/screens/Deactivated.tsx:73
 #: src/screens/Deactivated.tsx:77
 msgid "Check my status"
-msgstr ""
+msgstr "내 상태 확인"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
@@ -615,7 +611,7 @@ msgstr "서비스 선택"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr ""
+msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
@@ -623,12 +619,8 @@ msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "맞춤 피드를 통해 사용자 경험을 강화하는 알고리즘을 선택합니다."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
-#~ msgid "Choose your algorithmic feeds"
-#~ msgstr ""
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
-msgstr ""
+msgstr "기본 피드 선택"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -663,7 +655,7 @@ msgstr "이곳을 클릭"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
-msgstr ""
+msgstr "기후"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
@@ -711,11 +703,11 @@ msgstr "이 알림에 대한 사용자 목록을 축소합니다"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Comedy"
-msgstr ""
+msgstr "코미디"
 
 #: src/screens/Onboarding/index.tsx:27
 msgid "Comics"
-msgstr ""
+msgstr "만화"
 
 #: src/Navigation.tsx:228
 #: src/view/screens/CommunityGuidelines.tsx:32
@@ -724,7 +716,7 @@ msgstr "커뮤니티 가이드라인"
 
 #: src/screens/Onboarding/StepFinished.tsx:148
 msgid "Complete onboarding and start using your account"
-msgstr ""
+msgstr "온보딩 완료 후 계정 사용 시작"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -736,7 +728,7 @@ msgstr "답글 작성하기"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr ""
+msgstr "{0} 카테고리에 대한 콘텐츠 필터링 설정 구성"
 
 #: src/components/Prompt.tsx:114
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -831,19 +823,19 @@ msgstr "계속"
 #: src/screens/Onboarding/StepModeration/index.tsx:115
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:105
 msgid "Continue to next step"
-msgstr ""
+msgstr "다음 단계로 계속하기"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:152
 msgid "Continue to the next step"
-msgstr ""
+msgstr "다음 단계로 계속하기"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
 msgid "Continue to the next step without following any accounts"
-msgstr ""
+msgstr "계정을 팔로우하지 않고 다음 단계로 계속하기"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
-msgstr ""
+msgstr "요리"
 
 #: src/view/com/modals/AddAppPasswords.tsx:197
 #: src/view/com/modals/InviteCodes.tsx:182
@@ -942,12 +934,16 @@ msgstr "미리보기 이미지가 있는 카드를 만듭니다. 카드가 {url}
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
-msgstr ""
+msgstr "문화"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
 msgid "Custom domain"
 msgstr "사용자 지정 도메인"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
+msgstr "커뮤니티에서 구축한 맞춤 피드는 새로운 경험을 제공하고 좋아하는 콘텐츠를 찾을 수 있도록 도와줍니다."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1098,11 +1094,11 @@ msgstr "두 번 탭하여 로그인합니다"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:244
 msgid "Drop to add images"
-msgstr ""
+msgstr "드롭하여 이미지 추가"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr ""
+msgstr "Apple 정책으로 인해 성인 콘텐츠는 가입을 완료한 후에 웹에서만 사용 설정할 수 있습니다."
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1186,7 +1182,7 @@ msgstr "내 프로필 설명 편집"
 
 #: src/screens/Onboarding/index.tsx:34
 msgid "Education"
-msgstr ""
+msgstr "교육"
 
 #: src/view/com/auth/create/Step1.tsx:143
 #: src/view/com/auth/create/Step2.tsx:193
@@ -1230,7 +1226,7 @@ msgstr "성인 콘텐츠 활성화"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
-msgstr ""
+msgstr "피드에서 성인 콘텐츠 사용"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
@@ -1334,7 +1330,7 @@ msgstr "외부 미디어"
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "외부 미디어는 웹사이트가 나와 내 기기에 대한 정보를 수집하게 할 수 있습니다. \"재생\" 버튼을 누르기 전까지는 어떠한 정보도 전송되거나 요청되지 않습니다."
+msgstr "외부 미디어는 웹사이트가 나와 내 기기에 대한 정보를 수집하도록 할 수 있습니다. \"재생\" 버튼을 누르기 전까지는 어떠한 정보도 전송되거나 요청되지 않습니다."
 
 #: src/Navigation.tsx:259
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
@@ -1395,14 +1391,6 @@ msgstr "피드백"
 msgid "Feeds"
 msgstr "피드"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-#~ msgid "Feeds are created by users and can give you entirely new experiences."
-#~ msgstr ""
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-msgstr ""
-
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
 msgstr "피드는 콘텐츠를 큐레이션하기 위해 사용자에 의해 만들어집니다. 관심 있는 피드를 선택하세요."
@@ -1413,11 +1401,11 @@ msgstr "피드는 사용자가 약간의 코딩 전문 지식으로 구축할 �
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:70
 msgid "Feeds can be topical as well!"
-msgstr ""
+msgstr "피드도 화제가 될 수 있습니다!"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
-msgstr ""
+msgstr "마무리 중"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:47
 #: src/view/com/posts/FollowingEmptyState.tsx:57
@@ -1447,11 +1435,11 @@ msgstr "토론 스레드를 미세 조정합니다."
 
 #: src/screens/Onboarding/index.tsx:38
 msgid "Fitness"
-msgstr ""
+msgstr "건강"
 
 #: src/screens/Onboarding/StepFinished.tsx:131
 msgid "Flexible"
-msgstr ""
+msgstr "유연성"
 
 #: src/view/com/modals/EditImage.tsx:115
 msgid "Flip horizontal"
@@ -1478,15 +1466,11 @@ msgstr "{0} 님을 팔로우"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:178
 msgid "Follow All"
-msgstr ""
+msgstr "모두 팔로우"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 msgid "Follow selected accounts and continue to the next step"
-msgstr ""
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
-#~ msgid "Follow selected accounts and continue to then next step"
-#~ msgstr ""
+msgstr "선택한 계정을 팔로우하고 다음 단계를 계속 진행합니다"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -1531,7 +1515,7 @@ msgstr "나를 팔로우함"
 
 #: src/screens/Onboarding/index.tsx:43
 msgid "Food"
-msgstr ""
+msgstr "음식"
 
 #: src/view/com/modals/DeleteAccount.tsx:107
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -1585,7 +1569,7 @@ msgstr "뒤로"
 #: src/screens/Onboarding/Layout.tsx:104
 #: src/screens/Onboarding/Layout.tsx:193
 msgid "Go back to previous step"
-msgstr ""
+msgstr "이전 단계로 돌아가기"
 
 #: src/view/screens/Search/Search.tsx:724
 #: src/view/shell/desktop/Search.tsx:262
@@ -1613,19 +1597,15 @@ msgstr "도움말"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Here are some accounts for you to follow"
-msgstr ""
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
-#~ msgid "Here are some accounts for your to follow"
-#~ msgstr ""
+msgstr "팔로우할 만한 계정"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr ""
+msgstr "다음은 인기 있는 화제 피드입니다. 원하는 만큼 피드를 팔로우할 수 있습니다."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:74
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr ""
+msgstr "다음은 사용자의 관심사를 기반으로 한 몇 가지 주제별 피드입니다: {interestsText}. 원하는 만큼 많은 피드를 팔로우할 수 있습니다."
 
 #: src/view/com/modals/AddAppPasswords.tsx:152
 msgid "Here is your app password."
@@ -1837,7 +1817,7 @@ msgstr "초대 코드: 1개 사용 가능"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
-msgstr ""
+msgstr "내가 팔로우하는 사람들의 게시물이 올라오는 대로 표시됩니다."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 msgid "Jobs"
@@ -1858,7 +1838,7 @@ msgstr "대기자 명단 등록"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
-msgstr ""
+msgstr "저널리즘"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:104
 msgid "Language selection"
@@ -1913,7 +1893,7 @@ msgstr "Bluesky 떠나기"
 
 #: src/screens/Deactivated.tsx:129
 msgid "left to go."
-msgstr ""
+msgstr "명 남았습니다."
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
@@ -1926,7 +1906,7 @@ msgstr "비밀번호를 재설정해 봅시다!"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
-msgstr ""
+msgstr "출발!"
 
 #: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
@@ -1947,12 +1927,12 @@ msgstr "이 피드에 좋아요 표시"
 
 #: src/Navigation.tsx:198
 msgid "Liked by"
-msgstr "좋아요 표시한 계정"
+msgstr "좋아요 표시한 사용자"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr ""
+msgstr "좋아요 표시한 사용자"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
@@ -1965,10 +1945,6 @@ msgstr "{likeCount}명의 사용자가 좋아함"
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
 msgstr "님이 내 맞춤 피드를 좋아합니다"
-
-#: src/view/com/notifications/FeedItem.tsx:171
-#~ msgid "liked your custom feed '{0}'"
-#~ msgstr "님이 내 맞춤 피드 '{0}'(을)를 좋아합니다"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
@@ -2059,7 +2035,7 @@ msgstr "로그"
 #: src/screens/Deactivated.tsx:179
 #: src/screens/Deactivated.tsx:182
 msgid "Log out"
-msgstr ""
+msgstr "로그아웃"
 
 #: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
@@ -2233,7 +2209,7 @@ msgstr "이름을 입력하세요"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
-msgstr ""
+msgstr "자연"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:186
 #: src/view/com/auth/login/LoginForm.tsx:286
@@ -2257,7 +2233,7 @@ msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 않습니다."
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr ""
+msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 않습니다."
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2305,7 +2281,7 @@ msgstr "새로운 순"
 
 #: src/screens/Onboarding/index.tsx:23
 msgid "News"
-msgstr ""
+msgstr "뉴스"
 
 #: src/view/com/auth/create/CreateAccount.tsx:161
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:178
@@ -2408,7 +2384,7 @@ msgstr "안 돼!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:128
 msgid "Oh no! Something went wrong."
-msgstr ""
+msgstr "이런! 뭔가 잘못되었습니다."
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
@@ -2438,7 +2414,7 @@ msgstr "이런!"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
-msgstr ""
+msgstr "공개성"
 
 #: src/view/com/composer/Composer.tsx:470
 #: src/view/com/composer/Composer.tsx:471
@@ -2563,10 +2539,6 @@ msgstr "{numItems}개 중 {0}번째 옵션"
 msgid "Or combine these options:"
 msgstr "또는 다음 옵션을 결합하세요:"
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:122
-#~ msgid "Or you can try our \"Discover\" algorithm:"
-#~ msgstr ""
-
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "다른 계정"
@@ -2585,7 +2557,7 @@ msgstr "페이지를 찾을 수 없음"
 
 #: src/view/screens/NotFound.tsx:42
 msgid "Page Not Found"
-msgstr ""
+msgstr "페이지를 찾을 수 없음"
 
 #: src/view/com/auth/create/Step1.tsx:158
 #: src/view/com/auth/create/Step1.tsx:168
@@ -2621,7 +2593,7 @@ msgstr "앨범에 접근할 수 있는 권한이 거부되었습니다. 시스�
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
-msgstr ""
+msgstr "반려동물"
 
 #: src/view/com/auth/create/Step2.tsx:182
 msgid "Phone number"
@@ -2708,7 +2680,7 @@ msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
 #: src/screens/Onboarding/index.tsx:37
 msgid "Politics"
-msgstr ""
+msgstr "정치"
 
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
@@ -2813,15 +2785,15 @@ msgstr "이메일을 인증하여 계정을 보호하세요."
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
-msgstr ""
+msgstr "공공성"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "음소거하거나 일괄 차단할 수 있는 공개적이고 공유할 수 있는 사용자 목록입니다."
+msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가능한 사용자 목록입니다."
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "피드를 탐색할 수 있는 공개적이고 공유할 수 있는 목록입니다."
+msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
 #: src/view/com/composer/Composer.tsx:335
 msgid "Publish post"
@@ -2986,12 +2958,8 @@ msgid "Repost or quote post"
 msgstr "재게시 또는 게시물 인용"
 
 #: src/view/screens/PostRepostedBy.tsx:27
-#~ msgid "Reposted by"
-#~ msgstr "재게시한 계정"
-
-#: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr ""
+msgstr "재게시한 사용자"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
@@ -3137,7 +3105,7 @@ msgstr "핸들을 {handle}(으)로 변경합니다"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
-msgstr ""
+msgstr "과학"
 
 #: src/view/screens/ProfileList.tsx:830
 msgid "Scroll to top"
@@ -3206,19 +3174,15 @@ msgstr "서비스 선택"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
-msgstr ""
-
-#: src/screens/Onboarding/StepModeration/index.tsx:49
-#~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-#~ msgstr ""
+msgstr "아래에서 팔로우할 계정을 선택하세요"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
-msgstr ""
+msgstr "아래 목록에서 팔로우할 화제 피드를 선택하세요"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:75
 msgid "Select what you want to see (or not see), and we’ll handle the rest."
-msgstr ""
+msgstr "보고 싶거나 보고 싶지 않은 항목을 선택하면 나머지는 알아서 처리해 드립니다."
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -3230,7 +3194,7 @@ msgstr "앱에 표시되는 기본 텍스트 언어를 선택합니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:196
 msgid "Select your interests from the options below"
-msgstr ""
+msgstr "아래 옵션에서 관심사를 선택하세요"
 
 #: src/view/com/auth/create/Step2.tsx:154
 msgid "Select your phone's country"
@@ -3242,11 +3206,11 @@ msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
-msgstr ""
+msgstr "기본 알고리즘 피드를 선택하세요"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:132
 msgid "Select your secondary algorithmic feeds"
-msgstr ""
+msgstr "보조 알고리즘 피드를 선택하세요"
 
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
@@ -3327,7 +3291,7 @@ msgstr "팔로우한 피드에 저장된 피드 샘플을 표시하려면 이 �
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
-msgstr ""
+msgstr "계정 설정하기"
 
 #: src/view/com/modals/ChangeHandle.tsx:266
 msgid "Sets Bluesky username"
@@ -3413,15 +3377,15 @@ msgstr "인용 게시물 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr ""
+msgstr "팔로우 중인 피드에 인용 게시물 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr ""
+msgstr "팔로우 중인 피드에 인용 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr ""
+msgstr "팔로우 중인 피드에 재게시 표시"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
@@ -3433,11 +3397,11 @@ msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr ""
+msgstr "팔로우 중인 피드에 답글 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr ""
+msgstr "팔로우 중인 피드에 답글 표시"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3449,7 +3413,7 @@ msgstr "재게시 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr ""
+msgstr "팔로우 중인 피드에 재게시 표시"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -3548,7 +3512,7 @@ msgstr "건너뛰기"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:232
 msgid "Skip this flow"
-msgstr ""
+msgstr "이 단계 건너뛰기"
 
 #: src/view/com/auth/create/Step2.tsx:81
 msgid "SMS verification"
@@ -3556,7 +3520,7 @@ msgstr "SMS 인증"
 
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
-msgstr ""
+msgstr "소프트웨어 개발"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 msgid "Something went wrong and we're not sure what."
@@ -3580,7 +3544,7 @@ msgstr "동일한 게시물에 대한 답글을 정렬하는 기준입니다."
 
 #: src/screens/Onboarding/index.tsx:30
 msgid "Sports"
-msgstr ""
+msgstr "스포츠"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -3618,11 +3582,11 @@ msgstr "구독"
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:173
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
 msgid "Subscribe to the {0} feed"
-msgstr ""
+msgstr "{0} 피드 구독하기"
 
 #: src/view/screens/ProfileList.tsx:579
 msgid "Subscribe to this list"
-msgstr "이 리스트로 구독"
+msgstr "이 리스트 구독하기"
 
 #: src/view/screens/Search/Search.tsx:372
 msgid "Suggested Follows"
@@ -3678,7 +3642,7 @@ msgstr "탭하여 전체 크기로 봅니다"
 
 #: src/screens/Onboarding/index.tsx:39
 msgid "Tech"
-msgstr ""
+msgstr "기술"
 
 #: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
@@ -3710,7 +3674,7 @@ msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 
 #: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
-msgstr ""
+msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
 
 #: src/view/com/post-thread/PostThread.tsx:458
 msgid "The post may have been deleted."
@@ -3730,7 +3694,7 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:135
 msgid "There are many feeds to try:"
-msgstr ""
+msgstr "시도해 볼 만한 피드:"
 
 #: src/view/screens/ProfileFeed.tsx:549
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -3808,7 +3772,7 @@ msgstr "애플리케이션에 예기치 않은 문제가 발생했습니다. 이
 
 #: src/screens/Deactivated.tsx:107
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr ""
+msgstr "Bluesky에 신규 사용자가 몰리고 있습니다! 최대한 빨리 계정을 활성화해 드리겠습니다."
 
 #: src/view/com/auth/create/Step2.tsx:54
 msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
@@ -3816,11 +3780,7 @@ msgstr "잘못된 번호입니다. 국가를 선택하고 전체 전화번호를
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
-msgstr ""
-
-#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
-#~ msgid "These are popular accounts you might like."
-#~ msgstr ""
+msgstr "내가 좋아할 만한 인기 계정입니다:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
@@ -4144,7 +4104,7 @@ msgstr "이메일 인증하기"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
-msgstr ""
+msgstr "비디오 게임"
 
 #: src/view/com/profile/ProfileHeader.tsx:701
 msgid "View {0}'s avatar"
@@ -4177,35 +4137,31 @@ msgstr "경고"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr ""
+msgstr "Skygaze의 \"For You\"를 사용해 볼 수도 있습니다:"
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr ""
+msgstr "계정이 준비될 때까지 {estimatedTime}이(가) 걸릴 것으로 예상됩니다."
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr ""
+msgstr "즐거운 시간 되시기 바랍니다. Bluesky의 다음 특징을 기억하세요:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "팔로우한 사용자의 게시물이 부족합니다. 대신 <0/>의 최신 게시물을 표시합니다."
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
-#~ msgid "We recommend \"For You\" by Skygaze:"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
 msgid "We recommend our \"Discover\" feed:"
-msgstr ""
+msgstr "\"Discover\" 피드를 권장합니다:"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr ""
+msgstr "연결하지 못했습니다. 계정 설정을 계속하려면 다시 시도해 주세요. 계속 실패하면 이 과정을 건너뛸 수 있습니다."
 
 #: src/screens/Deactivated.tsx:138
 msgid "We will let you know when your account is ready."
-msgstr ""
+msgstr "계정이 준비되면 알려드리겠습니다."
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
@@ -4213,7 +4169,7 @@ msgstr "이의신청을 즉시 검토하겠습니다."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "We'll use this to help customize your experience."
-msgstr ""
+msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
 #: src/view/com/auth/create/CreateAccount.tsx:123
 msgid "We're so excited to have you join us!"
@@ -4237,7 +4193,7 @@ msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
-msgstr ""
+msgstr "관심사가 어떻게 되나요?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
@@ -4276,7 +4232,7 @@ msgstr "답글 작성하기"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
-msgstr ""
+msgstr "작가"
 
 #: src/view/com/auth/create/Step2.tsx:262
 msgid "XXXXXX"
@@ -4292,26 +4248,18 @@ msgstr "XXXXXX"
 msgid "Yes"
 msgstr "예"
 
-#: src/screens/Onboarding/StepModeration/index.tsx:46
-#~ msgid "You are in control"
-#~ msgstr ""
-
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
-msgstr ""
+msgstr "대기 중입니다."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "팔로우할 새로운 맞춤 피드를 찾을 수도 있습니다."
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
-#~ msgid "You can also try our \"Discover\" algorithm:"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
-msgstr ""
+msgstr "이 설정은 나중에 변경할 수 있습니다."
 
 #: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
@@ -4336,7 +4284,7 @@ msgstr "저장된 피드가 없습니다."
 
 #: src/view/com/post-thread/PostThread.tsx:406
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "작성자를 차단했거나 작성자가 나를 차단한 경우입니다."
+msgstr "작성자를 차단했거나 작성자가 나를 차단했습니다."
 
 #: src/view/com/modals/ModerationDetails.tsx:56
 msgid "You have blocked this user. You cannot view their content."
@@ -4373,7 +4321,7 @@ msgstr "성인 콘텐츠를 활성화하려면 18세 이상이어야 합니다."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
-msgstr ""
+msgstr "성인 콘텐츠를 사용하려면 만 18세 이상이어야 합니다."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "You will no longer receive notifications for this thread"
@@ -4389,17 +4337,17 @@ msgstr "\"재설정 코드\"가 포함된 이메일을 받게 되면 여기에 �
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
-msgstr ""
+msgstr "직접 제어하세요"
 
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:89
 #: src/screens/Deactivated.tsx:104
 msgid "You're in line"
-msgstr ""
+msgstr "대기 중입니다"
 
 #: src/screens/Onboarding/StepFinished.tsx:90
 msgid "You're ready to go!"
-msgstr ""
+msgstr "준비가 끝났습니다!"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -4423,7 +4371,7 @@ msgstr "선택 사항은 저장되며 나중에 설정에서 변경할 수 있�
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr ""
+msgstr "기본 피드는 \"팔로우 중\"입니다"
 
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4462,13 +4410,13 @@ msgstr "앱 비밀번호를 사용하여 로그인하면 초대 코드가 숨겨
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
-msgstr "내 게시물을 게시했습니다"
+msgstr "게시물을 게시했습니다"
 
 #: src/screens/Onboarding/StepFinished.tsx:105
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "내 게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
+msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은 공개되지 않습니다."
 
 #: src/view/com/modals/SwitchAccount.tsx:84
 #: src/view/screens/Settings.tsx:125

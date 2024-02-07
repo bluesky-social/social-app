@@ -21,7 +21,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, SvgProps} from 'react-native-svg'
 
 import {isAndroid} from '#/platform/detection'
-import {useColorMode} from '#/state/shell'
+import {useThemePrefs} from 'state/shell'
 import {Logotype} from '#/view/icons/Logotype'
 
 // @ts-ignore
@@ -75,7 +75,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     isLayoutReady &&
     reduceMotion !== undefined
 
-  const colorMode = useColorMode()
+  const {colorMode} = useThemePrefs()
   const colorScheme = useColorScheme()
   const themeName = colorMode === 'system' ? colorScheme : colorMode
   const isDarkMode = themeName === 'dark'

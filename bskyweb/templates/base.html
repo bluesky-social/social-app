@@ -1,13 +1,13 @@
-<!DOCTYPE html>                                                                                          
+<!DOCTYPE html>
 <html lang="en">
-<head>   
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
   <meta name="referrer" content="origin-when-cross-origin">
   <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
 
   <!-- Hello Humans! API docs at https://atproto.com -->
-  
+
   <style>
     /**
      * Extend the react-native-web reset:
@@ -40,31 +40,39 @@
     }
 
     /* Color theming */
+    /* Default will always be white */
     :root {
-      --text: black;
-      --background: white;
-      --backgroundLight: hsl(211, 20%, 95%);
-    }
-    html.colorMode--dark {
-      --text: white;
-      --background: hsl(211, 20%, 4%);
-      --backgroundLight: hsl(211, 20%, 20%);
-      color-scheme: dark;
-    }
-    @media (prefers-color-scheme: light) {
-      html.colorMode--system {
         --text: black;
         --background: white;
         --backgroundLight: hsl(211, 20%, 95%);
-      }
     }
+    /* This gives us a black background when system is dark and we have not loaded the theme/color scheme values in JS */
     @media (prefers-color-scheme: dark) {
-      html.colorMode--system {
+        :root {
+            --text: white;
+            --background: black;
+            --backgroundLight: hsl(211, 20%, 20%);
+            color-scheme: dark;
+        }
+    }
+
+    /* Overwrite those preferences with the selected theme */
+    html.theme--light {
+        --text: black;
+        --background: white;
+        --backgroundLight: hsl(211, 20%, 95%);
+    }
+    html.theme--dark {
         --text: white;
-        --background: hsl(211, 20%, 4%);
+        --background: black;
         --backgroundLight: hsl(211, 20%, 20%);
         color-scheme: dark;
-      }
+    }
+    html.theme--dim {
+        --text: white;
+        --background: hsl(211, 20%, 4%);
+        --backgroundLight: hsl(211, 20%, 10%);
+        color-scheme: dark;
     }
 
     /* Remove autofill styles on Webkit */

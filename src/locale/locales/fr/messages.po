@@ -3580,7 +3580,7 @@ msgstr "État du service"
 
 #: src/view/com/auth/create/StepHeader.tsx:22
 msgid "Step {0} of {numSteps}"
-msgstr "Étape {step} sur {numSteps}"
+msgstr "Étape {0} sur {numSteps}"
 
 #: src/view/screens/Settings.tsx:276
 msgid "Storage cleared, you need to restart the app now."
