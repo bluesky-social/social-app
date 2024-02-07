@@ -3463,7 +3463,7 @@ msgstr "Modalità discussione"
 
 #: src/Navigation.tsx:252
 msgid "Threads Preferences"
-msgstr "Preferenze per I fili di discussioni"
+msgstr "Preferenze per le discussioni"
 
 #: src/view/com/util/forms/DropdownButton.tsx:234
 msgid "Toggle dropdown"
