@@ -559,7 +559,7 @@ msgstr "Scopri alcuni utenti consigliati. Seguili per vedere utenti simili."
 
 #: src/view/com/modals/DeleteAccount.tsx:165
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Controlla la tua post in arrivo per un'e-mail con il codice di conferma da inserire di seguito:"
+msgstr "Controlla la tua posta in arrivo, dovrebbe contenere un'e-mail con il codice di conferma da inserire di seguito:"
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
