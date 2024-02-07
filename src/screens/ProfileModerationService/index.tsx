@@ -36,104 +36,90 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
-import {ModServiceHeader} from '#/view/com/moderation/ModServiceHeader'
 import {sanitizeHandle} from '#/lib/strings/handles'
 
-import { useTheme, atoms as a } from '#/alf'
+import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
+import {Loader} from '#/components/Loader'
 import {Button, ButtonText} from '#/components/Button'
-import { CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+
+import {ErrorState} from '#/screens/ProfileModerationService/ErrorState'
+import {Header} from '#/screens/ProfileModerationService/Header'
 
 // TODO
 const MIN_HEIGHT = Dimensions.get('window').height * 1.5
+// TODO loader default color
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'ProfileModservice'>
-export function ProfileModserviceScreen(props: Props) {
+export function ProfileModserviceScreen(
+  props: NativeStackScreenProps<CommonNavigatorParams, 'ProfileModservice'>,
+) {
   const t = useTheme()
-  const {name: handleOrDid} = props.route.params
-
-  const pal = usePalette('default')
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
+  const {name: handleOrDid} = props.route.params
+  const {isLoading, error, data: resolvedDid} = useResolveDidQuery(handleOrDid)
 
-  const {error, data: resolvedDid} = useResolveDidQuery(handleOrDid)
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  if (error) {
-    return (
-      <CenteredView>
-        <View style={[a.pt_2xl, a.px_xl, a.border_l, a.border_r, t.atoms.border, { 
-          minHeight: MIN_HEIGHT,
-        }]}>
-          <CircleInfo
-            width={48}
-            style={[t.atoms.text_contrast_400]}
-          />
-
-          <Text style={[a.text_xl, a.font_bold, a.pb_md, a.pt_xl]}>
-            <Trans>Hmmmm, we couldn't load that moderation service.</Trans>
-          </Text>
-          <Text style={[a.text_md, a.leading_normal, a.pb_md, t.atoms.text_contrast_700]}>
-            <Trans>This moderation service is unavailable. See below for more details. If this issue persists, contact us.</Trans>
-          </Text>
-          <View style={[a.relative, a.py_md, a.px_lg, a.rounded_md, a.mb_2xl, t.atoms.bg_contrast_25]}>
-            <Text style={[a.text_md, a.leading_normal]}>
-              Error: {error.toString()}
-            </Text>
-          </View>
-
-          <View style={{flexDirection: 'row'}}>
-            <Button
-              size='small'
-              color='secondary'
-              variant='solid'
-              label={_(msg`Go Back`)}
-              accessibilityHint="Return to previous page"
-              onPress={onPressBack}>
-              <ButtonText>
-                <Trans>Go Back</Trans>
-              </ButtonText>
-            </Button>
-          </View>
-        </View>
-      </CenteredView>
-    )
-  }
-
-  return resolvedDid ? (
-    <ProfileModservicecreenIntermediate modDid={resolvedDid} />
-  ) : (
+  return (
     <CenteredView>
-      <View style={s.p20}>
-        <ActivityIndicator size="large" />
+      <View
+        style={[
+          a.pt_2xl,
+          a.px_xl,
+          a.border_l,
+          a.border_r,
+          t.atoms.border,
+          {
+            minHeight: MIN_HEIGHT,
+          },
+        ]}>
+        {isLoading ? (
+          <View style={[a.w_full, a.align_center]}>
+            <Loader size="xl" fill={t.atoms.text.color} />
+          </View>
+        ) : resolvedDid ? (
+          <ProfileModservicecreenIntermediate modDid={resolvedDid} />
+        ) : (
+          <ErrorState
+            error={
+              error?.toString() ||
+              _(msg`Something went wrong, please try again.`)
+            }
+          />
+        )}
       </View>
     </CenteredView>
   )
 }
 
 function ProfileModservicecreenIntermediate({modDid}: {modDid: string}) {
-  const {data: preferences} = usePreferencesQuery()
-  const {data: info} = useModServiceInfoQuery({did: modDid})
+  const t = useTheme()
+  const {_} = useLingui()
+  const {
+    isLoading: isPreferencesLoading,
+    error: preferencesError,
+    data: preferences,
+  } = usePreferencesQuery()
+  const {
+    isLoading: isModServiceLoading,
+    error: modServiceError,
+    data: info,
+  } = useModServiceInfoQuery({did: modDid})
 
-  if (!preferences || !info) {
-    return (
-      <CenteredView>
-        <View style={s.p20}>
-          <ActivityIndicator size="large" />
-        </View>
-      </CenteredView>
-    )
-  }
+  const isLoading = isPreferencesLoading || isModServiceLoading
+  const error = preferencesError || modServiceError
 
-  return (
+  return isLoading ? (
+    <View style={[a.w_full, a.align_center]}>
+      <Loader size="xl" fill={t.atoms.text.color} />
+    </View>
+  ) : preferences && info ? (
     <ProfileModserviceScreenInner preferences={preferences} modInfo={info} />
+  ) : (
+    <ErrorState
+      error={
+        error?.toString() || _(msg`Something went wrong, please try again.`)
+      }
+    />
   )
 }
 
@@ -211,7 +197,7 @@ export function ProfileModserviceScreenInner({
         contentContainerStyle={{
           minHeight: Dimensions.get('window').height * 1.5,
         }}>
-        <ModServiceHeader info={modInfo} />
+        <Header info={modInfo} />
         <View
           style={[
             {
