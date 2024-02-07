@@ -167,7 +167,6 @@ let PostThreadItemLoaded = ({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const styles = useStyles()
-  const hasEngagement = post.likeCount || post.repostCount
 
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
@@ -395,48 +394,36 @@ let PostThreadItemLoaded = ({
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {hasEngagement ? (
-              <View style={[styles.expandedInfo, pal.border]}>
-                {post.repostCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={repostsHref}
-                    title={repostsTitle}>
-                    <Text
-                      testID="repostCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.repostCount)}
-                      </Text>{' '}
-                      {pluralize(post.repostCount, 'repost')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-                {post.likeCount ? (
-                  <Link
-                    style={styles.expandedInfoItem}
-                    href={likesHref}
-                    title={likesTitle}>
-                    <Text
-                      testID="likeCount-expanded"
-                      type="lg"
-                      style={pal.textLight}>
-                      <Text type="xl-bold" style={pal.text}>
-                        {formatCount(post.likeCount)}
-                      </Text>{' '}
-                      {pluralize(post.likeCount, 'like')}
-                    </Text>
-                  </Link>
-                ) : (
-                  <></>
-                )}
-              </View>
-            ) : (
-              <></>
-            )}
+            <View style={[styles.expandedInfo, pal.border]}>
+              <Link
+                style={styles.expandedInfoItem}
+                href={repostsHref}
+                title={repostsTitle}>
+                <Text
+                  testID="repostCount-expanded"
+                  type="lg"
+                  style={pal.textLight}>
+                  <Text type="xl-bold" style={pal.text}>
+                    {formatCount(post.repostCount ?? 0)}
+                  </Text>{' '}
+                  {pluralize(post.repostCount ?? 0, 'repost')}
+                </Text>
+              </Link>
+              <Link
+                style={styles.expandedInfoItem}
+                href={likesHref}
+                title={likesTitle}>
+                <Text
+                  testID="likeCount-expanded"
+                  type="lg"
+                  style={pal.textLight}>
+                  <Text type="xl-bold" style={pal.text}>
+                    {formatCount(post.likeCount ?? 0)}
+                  </Text>{' '}
+                  {pluralize(post.likeCount ?? 0, 'like')}
+                </Text>
+              </Link>
+            </View>
             <View style={[s.pl10, s.pb5]}>
               <PostCtrls
                 big
