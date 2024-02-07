@@ -101,15 +101,15 @@ msgstr "已屏蔽账户"
 
 #: src/view/com/profile/ProfileHeader.tsx:260
 msgid "Account muted"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/view/com/modals/ModerationDetails.tsx:86
 msgid "Account Muted"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "账户已被列表静音"
+msgstr "账户已被列表隐藏"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
@@ -125,7 +125,7 @@ msgstr "已取消屏蔽账户"
 
 #: src/view/com/profile/ProfileHeader.tsx:273
 msgid "Account unmuted"
-msgstr "已取消静音账户"
+msgstr "已取消隐藏账户"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
@@ -2033,7 +2033,7 @@ msgstr "列表已删除"
 
 #: src/view/screens/ProfileList.tsx:282
 msgid "List muted"
-msgstr "列表已静音"
+msgstr "列表已隐藏"
 
 #: src/view/com/modals/CreateOrEditList.tsx:275
 msgid "List Name"
@@ -2045,7 +2045,7 @@ msgstr "取消屏蔽列表"
 
 #: src/view/screens/ProfileList.tsx:301
 msgid "List unmuted"
-msgstr "取消静音列表"
+msgstr "取消隐藏列表"
 
 #: src/Navigation.tsx:110
 #: src/view/screens/Profile.tsx:176
@@ -2192,48 +2192,48 @@ msgstr "最多点赞优先"
 
 #: src/view/com/profile/ProfileHeader.tsx:374
 msgid "Mute Account"
-msgstr "静音账户"
+msgstr "隐藏账户"
 
 #: src/view/screens/ProfileList.tsx:543
 msgid "Mute accounts"
-msgstr "静音账户"
+msgstr "隐藏账户"
 
 #: src/view/screens/ProfileList.tsx:490
 msgid "Mute list"
-msgstr "静音列表"
+msgstr "隐藏列表"
 
 #: src/view/screens/ProfileList.tsx:274
 msgid "Mute these accounts?"
-msgstr "静音这些账户？"
+msgstr "隐藏这些账户？"
 
 #: src/view/screens/ProfileList.tsx:278
 msgid "Mute this List"
-msgstr "静音这个列表"
+msgstr "隐藏这个列表"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Mute thread"
-msgstr "静音讨论串"
+msgstr "隐藏讨论串"
 
 #: src/view/com/lists/ListCard.tsx:101
 msgid "Muted"
-msgstr "已经印"
+msgstr "已隐藏"
 
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/Navigation.tsx:125
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "已静音的账户将不会在你的通知或时间线中显示，被静音账户将不会收到通知。"
+msgstr "已隐藏的账户将不会在你的通知或时间线中显示，被隐藏账户将不会收到通知。"
 
 #: src/view/screens/ProfileList.tsx:276
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "被静音的账户将不会得知你已将他静音，已静音的账户将不会在你的通知或时间线中显示。"
+msgstr "被隐藏的账户将不会得知你已将他隐藏，已隐藏的账户将不会在你的通知或时间线中显示。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -2850,7 +2850,7 @@ msgstr "公开内容"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "公开且可共享的批量静音或屏蔽列表。"
+msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
@@ -3928,11 +3928,11 @@ msgstr "此用户包含在你已屏蔽的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr "此用户包含在你已静音的 <0/> 列表中。"
+msgstr "此用户包含在你已隐藏的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
-#~ msgstr "此用户包含在你已静音的 <0/> 列表中。"
+#~ msgstr "此用户包含在你已隐藏的 <0/> 列表中。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -3980,7 +3980,7 @@ msgstr "取消屏蔽列表"
 
 #: src/view/screens/ProfileList.tsx:490
 msgid "Un-mute list"
-msgstr "取消静音列表"
+msgstr "取消隐藏列表"
 
 #: src/view/com/auth/create/CreateAccount.tsx:66
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
@@ -4031,15 +4031,15 @@ msgstr "取消喜欢"
 
 #: src/view/screens/ProfileList.tsx:596
 msgid "Unmute"
-msgstr "取消静音"
+msgstr "取消隐藏"
 
 #: src/view/com/profile/ProfileHeader.tsx:373
 msgid "Unmute Account"
-msgstr "取消静音账户"
+msgstr "取消隐藏账户"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Unmute thread"
-msgstr "取消静音讨论串"
+msgstr "取消隐藏讨论串"
 
 #: src/view/screens/ProfileFeed.tsx:353
 #: src/view/screens/ProfileList.tsx:580
@@ -4382,7 +4382,7 @@ msgstr "你输入的邀请码无效。它应该长得像这样 XXXXX-XXXXX。"
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
-msgstr "你已静音这个用户。"
+msgstr "你已隐藏这个用户。"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:136
 msgid "You have no feeds."
@@ -4403,7 +4403,7 @@ msgstr "你尚未创建任何 App 专用密码，可以通过点击下面的按�
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-msgstr "你还没有静音任何账号。要静音账号，请转到其个人资料并在其账号上的菜单中选择 \"静音账号\"。"
+msgstr "你还没有隐藏任何账号。要隐藏账号，请转到其个人资料并在其账号上的菜单中选择 \"隐藏账号\"。"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:170
 msgid "You must be 18 or older to enable adult content."
@@ -4511,7 +4511,7 @@ msgstr "你的帖子已发送"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "你的帖子、点赞和屏蔽是公开可见的，而静音不可见。"
+msgstr "你的帖子、点赞和屏蔽是公开可见的，而隐藏不可见。"
 
 #: src/view/com/modals/SwitchAccount.tsx:84
 #: src/view/screens/Settings.tsx:125
