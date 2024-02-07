@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-01 09:20+0800\n"
+"POT-Creation-Date: 2024-02-07 19:20+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -65,7 +65,7 @@ msgstr "<0>欢迎来到</0><1>Bluesky</1>"
 
 #: src/view/com/profile/ProfileHeader.tsx:597
 msgid "⚠Invalid Handle"
-msgstr "⚠无效的昵称"
+msgstr "⚠无效的用户识别符"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -221,7 +221,7 @@ msgstr "详细设置"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:217
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr ""
+msgstr "已经有确认码了？"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -540,7 +540,7 @@ msgstr "撤销账户删除申请"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "撤销修改昵称"
+msgstr "撤销修改用户识别符"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -570,12 +570,12 @@ msgstr "更改"
 
 #: src/view/screens/Settings.tsx:690
 msgid "Change handle"
-msgstr "更改昵称"
+msgstr "更改用户识别符"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
 #: src/view/screens/Settings.tsx:699
 msgid "Change Handle"
-msgstr "更改昵称"
+msgstr "更改用户识别符"
 
 #: src/view/com/modals/VerifyEmail.tsx:147
 msgid "Change my email"
@@ -583,11 +583,11 @@ msgstr "更改我的邮箱地址"
 
 #: src/view/screens/Settings.tsx:726
 msgid "Change password"
-msgstr ""
+msgstr "更改密码"
 
 #: src/view/screens/Settings.tsx:735
 msgid "Change Password"
-msgstr ""
+msgstr "更改密码"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
@@ -595,7 +595,7 @@ msgstr "更改帖子的发布语言至 {0}"
 
 #: src/view/screens/Settings.tsx:727
 msgid "Change your Bluesky password"
-msgstr ""
+msgstr "更改你的 Bluesky 密码"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -681,7 +681,7 @@ msgstr "气象"
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
@@ -969,7 +969,7 @@ msgstr "自定义域名"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr ""
+msgstr "由社区构建的自定义信息流能为你带来新的体验，并帮助你找到你喜欢的内容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -982,15 +982,15 @@ msgstr "自定义外部站点的媒体。"
 #: src/view/screens/Settings.tsx:479
 #: src/view/screens/Settings.tsx:505
 msgid "Dark"
-msgstr "暗色"
+msgstr "深黑"
 
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
-msgstr "暗色模式"
+msgstr "深色模式"
 
 #: src/view/screens/Settings.tsx:492
 msgid "Dark Theme"
-msgstr ""
+msgstr "深色模式"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
@@ -1024,7 +1024,7 @@ msgstr "删除我的账户"
 
 #: src/view/screens/Settings.tsx:755
 msgid "Delete My Account…"
-msgstr ""
+msgstr "删除我的账户…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
@@ -1059,7 +1059,7 @@ msgstr "有什么想说的吗？"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr ""
+msgstr "暗淡"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -1137,7 +1137,7 @@ msgstr "拖放即可添加图片"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr "受 Apple 政策限制，成人内容只能在完成注册后在网页端启用显示"
+msgstr "受 Apple 政策限制，成人内容只能在完成注册后在网页端启用显示。"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1293,7 +1293,7 @@ msgstr "输入验证码"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr ""
+msgstr "输入你收到的确认码以更改密码。"
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1342,7 +1342,7 @@ msgstr "所有人"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "退出修改昵称流程"
+msgstr "退出修改用户识别符流程"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -1388,7 +1388,7 @@ msgstr "外部媒体设置"
 #: src/view/com/modals/AddAppPasswords.tsx:115
 #: src/view/com/modals/AddAppPasswords.tsx:119
 msgid "Failed to create app password."
-msgstr "无法创建 App 专用密码。"
+msgstr "创建 App 专用密码失败。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -1633,7 +1633,7 @@ msgstr "转到下一个"
 
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
-msgstr "昵称"
+msgstr "用户识别符"
 
 #: src/view/com/auth/create/CreateAccount.tsx:197
 msgid "Having trouble?"
@@ -1759,7 +1759,7 @@ msgstr "若不勾选，则默认为全年龄向。"
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr ""
+msgstr "如果你需要更改密码，我们将向你发送一个确认码以验证这是你的账户。"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -1828,7 +1828,7 @@ msgstr "输入你的密码"
 
 #: src/view/com/auth/create/Step3.tsx:42
 msgid "Input your user handle"
-msgstr "输入你的用户昵称"
+msgstr "输入你的用户识别符"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Invalid or unsupported post record"
@@ -2309,7 +2309,7 @@ msgstr "新密码"
 
 #: src/view/com/modals/ChangePassword.tsx:215
 msgid "New Password"
-msgstr ""
+msgstr "新密码"
 
 #: src/view/com/feeds/FeedPage.tsx:201
 msgctxt "action"
@@ -2398,7 +2398,7 @@ msgstr "未找到\"{query}\"的结果"
 #: src/view/screens/Search/Search.tsx:280
 #: src/view/screens/Search/Search.tsx:308
 msgid "No results found for {query}"
-msgstr "未找到{query}的结果"
+msgstr "未找到 {query} 的结果"
 
 #: src/view/com/modals/EmbedConsent.tsx:129
 msgid "No thanks"
@@ -2480,7 +2480,7 @@ msgstr "打开"
 #: src/view/com/composer/Composer.tsx:470
 #: src/view/com/composer/Composer.tsx:471
 msgid "Open emoji picker"
-msgstr "打开emoji选择器"
+msgstr "打开 emoji 选择器"
 
 #: src/view/screens/Settings.tsx:706
 msgid "Open links with in-app browser"
@@ -2688,7 +2688,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "请选择你的昵称。"
+msgstr "请选择你的用户识别符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
@@ -3050,7 +3050,7 @@ msgstr "请求码"
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
-msgstr ""
+msgstr "确认码"
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
@@ -3067,7 +3067,7 @@ msgstr "重置码"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr ""
+msgstr "重置代码"
 
 #: src/view/screens/Settings.tsx:806
 msgid "Reset onboarding"
@@ -3155,7 +3155,7 @@ msgstr "保存更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:170
 msgid "Save handle change"
-msgstr "保存新的昵称"
+msgstr "保存新的用户识别符"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:144
 msgid "Save image crop"
@@ -3171,7 +3171,7 @@ msgstr "保存个人资料中所做的变更"
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
-msgstr "保存昵称更改至 {handle}"
+msgstr "保存用户识别符更改至 {handle}"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
@@ -3321,7 +3321,7 @@ msgstr "设置年龄"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "设置主题为暗色模式"
+msgstr "设置主题为深色模式"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
@@ -3333,11 +3333,11 @@ msgstr "设置主题跟随系统设置"
 
 #: src/view/screens/Settings.tsx:508
 msgid "Set dark theme to the dark theme"
-msgstr ""
+msgstr "设置深色模式至深黑"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Set dark theme to the dim theme"
-msgstr ""
+msgstr "设置深色模式至暗淡"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
@@ -3928,7 +3928,7 @@ msgstr "此用户包含在你已屏蔽的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr ""
+msgstr "此用户包含在你已静音的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
@@ -4090,7 +4090,7 @@ msgstr "使用系统默认浏览器"
 
 #: src/view/com/modals/AddAppPasswords.tsx:155
 msgid "Use this to sign into the other app along with your handle."
-msgstr "使用这个和你的昵称一起登录其他应用。"
+msgstr "使用这个和你的用户识别符一起登录其他应用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
@@ -4114,7 +4114,7 @@ msgstr "用户屏蔽了你"
 
 #: src/view/com/auth/create/Step3.tsx:41
 msgid "User handle"
-msgstr "用户昵称"
+msgstr "用户识别符"
 
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
@@ -4220,7 +4220,7 @@ msgstr "警告"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\""
+msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\":"
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4236,7 +4236,7 @@ msgstr "我们已经看完了你关注的帖子。这是来自 <0/> 的最新消
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
 msgid "We recommend our \"Discover\" feed:"
-msgstr "我们推荐我们的 \"Discover\" 信息流"
+msgstr "我们推荐我们的 \"Discover\" 信息流:"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -4378,7 +4378,7 @@ msgstr "你已屏蔽了此用户，你将无法查看他们发布的内容。"
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr ""
+msgstr "你输入的邀请码无效。它应该长得像这样 XXXXX-XXXXX。"
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
@@ -4487,11 +4487,11 @@ msgstr "你的关注信息流为空！关注更多用户去看看他们发了什
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
-msgstr "你的完整昵称将修改为"
+msgstr "你的完整用户识别符将修改为"
 
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "你的完整昵称将修改为 <0>@{0}</0>"
+msgstr "你的完整用户识别符将修改为 <0>@{0}</0>"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137
@@ -4501,7 +4501,7 @@ msgstr "在使用 App 专用密码登录时，你的邀请码将被隐藏"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "你的密码已更改成功！"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
@@ -4524,4 +4524,4 @@ msgstr "你的回复已发送"
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
-msgstr "你的用户昵称"
+msgstr "你的用户识别符"
