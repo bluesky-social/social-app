@@ -1104,7 +1104,7 @@ msgstr "なにか言いたいことはあった？"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr "薄暗い"
+msgstr "グレー"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -3478,11 +3478,11 @@ msgstr "カラーテーマをライトに設定します"
 
 #: src/view/screens/Settings.tsx:469
 msgid "Set color theme to system setting"
-msgstr "システム設定のカラーテーマを使用するように設定します"
+msgstr "デバイスで設定したカラーテーマを使用するように設定します"
 
 #: src/view/screens/Settings.tsx:508
 msgid "Set dark theme to the dark theme"
-msgstr "ダークテーマを暗いものに設定します"
+msgstr "ダークテーマをダークに設定します"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Set dark theme to the dim theme"
@@ -3865,7 +3865,7 @@ msgstr "ログインしているアカウントを切り替えます"
 
 #: src/view/screens/Settings.tsx:466
 msgid "System"
-msgstr "システム"
+msgstr "デバイスに同期"
 
 #: src/view/screens/Settings.tsx:769
 msgid "System log"
