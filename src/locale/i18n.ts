@@ -79,6 +79,7 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.zh_CN: {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
+      await import('@formatjs/intl-pluralrules/locale-data/zh')
     }
     default: {
       i18n.loadAndActivate({locale, messages: messagesEn})
