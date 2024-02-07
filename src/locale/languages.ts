@@ -17,6 +17,7 @@ export enum AppLanguage {
   uk = 'uk',
   ca = 'ca',
   zh_CN = 'zh-CN',
+  zh_TW = 'zh-TW',
 }
 
 interface AppLanguageConfig {
