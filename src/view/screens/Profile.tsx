@@ -97,14 +97,12 @@ export function ProfileScreen({route}: Props) {
   }
   if (resolveError || profileError) {
     return (
-      <CenteredView>
-        <ErrorScreen
-          testID="profileErrorScreen"
-          title="Oops!"
-          message={cleanError(resolveError || profileError)}
-          onPressTryAgain={onPressTryAgain}
-        />
-      </CenteredView>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title="Oops!"
+        message={cleanError(resolveError || profileError)}
+        onPressTryAgain={onPressTryAgain}
+      />
     )
   }
   if (profile && moderationOpts) {
@@ -118,14 +116,12 @@ export function ProfileScreen({route}: Props) {
   }
   // should never happen
   return (
-    <CenteredView>
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title="Oops!"
-        message="Something went wrong and we're not sure what."
-        onPressTryAgain={onPressTryAgain}
-      />
-    </CenteredView>
+    <ErrorScreen
+      testID="profileErrorScreen"
+      title="Oops!"
+      message="Something went wrong and we're not sure what."
+      onPressTryAgain={onPressTryAgain}
+    />
   )
 }
 
