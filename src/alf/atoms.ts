@@ -195,6 +195,9 @@ export const atoms = {
   font_bold: {
     fontWeight: tokens.fontWeight.semibold,
   },
+  italic: {
+    fontStyle: 'italic',
+  },
 
   /*
    * Border

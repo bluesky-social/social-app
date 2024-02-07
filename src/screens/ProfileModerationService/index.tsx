@@ -13,7 +13,6 @@ import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {TextLink} from 'view/com/util/Link'
 import {Button as OldButton} from 'view/com/util/forms/Button'
 import {Text as RNText} from 'view/com/util/text/Text'
-import {RichText} from 'view/com/util/text/RichText'
 import {ModServicePrefs} from '#/view/com/moderation/ModServicePrefs'
 import * as Toast from 'view/com/util/Toast'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
@@ -43,6 +42,9 @@ import {Text} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
 import {Button, ButtonText} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Heart2_Stroke2_Corner0_Rounded as Heart, Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled} from '#/components/icons/Heart2'
+import {RichText} from '#/components/RichText'
+import {InlineLink} from '#/components/Link'
 
 import {ErrorState} from '#/screens/ProfileModerationService/ErrorState'
 import {Header} from '#/screens/ProfileModerationService/Header'
@@ -130,6 +132,7 @@ export function ProfileModserviceScreenInner({
   preferences: UsePreferencesQueryResponse
   modInfo: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
+  const t = useTheme()
   const {_} = useLingui()
   const pal = usePalette('default')
   const {hasSession} = useSession()
@@ -148,17 +151,6 @@ export function ProfileModserviceScreenInner({
   const isEnabled = false // TODO
   // !unpinnedFeed &&
   // (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
-
-  const descriptionRT = useMemo(
-    () =>
-      modInfo.description
-        ? new RichTextAPI({
-            text: modInfo.description,
-            facets: modInfo.descriptionFacets,
-          })
-        : undefined,
-    [modInfo],
-  )
 
   useSetTitle(modInfo.creator.displayName || modInfo.creator.handle)
 
@@ -187,102 +179,79 @@ export function ProfileModserviceScreenInner({
     }
   }, [likeUri, isLiked, modInfo, likeMod, unlikeMod, track, _])
 
-  // render
-  // =
-
   return (
-    <View style={s.hContentRegion}>
-      <ScrollView
-        scrollEventThrottle={1}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}>
-        <Header info={modInfo} />
-        <View
-          style={[
-            {
-              borderTopWidth: 1,
-              paddingVertical: 20,
-              paddingHorizontal: 14,
-              gap: 12,
-            },
-            pal.border,
-          ]}>
-          {descriptionRT ? (
-            <RichText
-              testID="modinfoDescription"
-              type="lg"
-              style={pal.text}
-              richText={descriptionRT}
-            />
-          ) : (
-            <RNText type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-              <Trans>No description</Trans>
-            </RNText>
-          )}
-          <RNText type="lg" style={pal.textLight}>
-            <Trans>
-              Operated by{' '}
-              <TextLink
-                href={makeProfileLink(modInfo.creator)}
-                text={sanitizeHandle(modInfo.creator.handle, '@')}
-                style={pal.link}
-              />
-              . Handles reports of anti-social behavior, illegal content,
-              unwanted sexual content, and misinformation.
-            </Trans>
-          </RNText>
+    <ScrollView
+      scrollEventThrottle={1}
+      contentContainerStyle={{
+        minHeight: Dimensions.get('window').height * 1.5,
+        borderWidth: 0,
+      }}>
+      <Header info={modInfo} />
 
-          <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-            <OldButton
-              type="default"
-              testID="toggleLikeBtn"
-              accessibilityLabel={_(msg`Like this feed`)}
-              accessibilityHint=""
-              disabled={!hasSession || isLikePending || isUnlikePending}
-              onPress={onToggleLiked}
-              style={{paddingHorizontal: 10}}>
-              {isLiked ? (
-                <HeartIconSolid size={19} style={s.likeColor} />
-              ) : (
-                <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
-              )}
-            </OldButton>
-            {typeof modInfo.likeCount === 'number' && (
-              <TextLink
-                href={'#todo'}
-                text={_(
-                  msg`Liked by ${modInfo.likeCount} ${pluralize(
-                    modInfo.likeCount,
-                    'user',
-                  )}`,
-                )}
-                style={[pal.textLight, s.semiBold]}
-              />
+      <View style={[a.gap_md]}>
+        {modInfo.description ? (
+          <RichText
+            testID="modinfoDescription"
+            resolveFacets
+            value={modInfo.description}
+            style={[a.text_md, a.leading_normal]}
+          />
+        ) : (
+          <Text
+            style={[
+              a.text_md,
+              a.leading_normal,
+              t.atoms.text_contrast_700,
+              {fontStyle: 'italic'},
+            ]}>
+            <Trans>No description</Trans>
+          </Text>
+        )}
+
+        <Text style={[a.text_md, a.leading_normal, a.italic, t.atoms.text_contrast_700]}>
+          <Trans>
+            Operated by{' '}
+            <TextLink
+              href={makeProfileLink(modInfo.creator)}
+              text={sanitizeHandle(modInfo.creator.handle, '@')}
+              style={pal.link}
+            />
+            . Handles reports of anti-social behavior, illegal content, unwanted
+            sexual content, and misinformation.
+          </Trans>
+        </Text>
+
+        <View style={[a.flex_row, a.gap_md, a.align_center]}>
+          <Button
+            testID="toggleLikeBtn"
+            size='small'
+            color='secondary'
+            variant='solid'
+            shape='round'
+            label={_(msg`Like this feed`)}
+            disabled={!hasSession || isLikePending || isUnlikePending}
+            onPress={onToggleLiked}>
+            {isLiked ? (
+              <HeartFilled fill={t.palette.negative_400} />
+            ) : (
+              <Heart fill={t.atoms.text_contrast_700.color} />
             )}
-          </View>
+          </Button>
+
+          {typeof modInfo.likeCount === 'number' && (
+            <InlineLink
+              to={'#todo'}
+              style={[pal.textLight, s.semiBold]}
+            >
+              <Trans>Liked by {modInfo.likeCount} {pluralize(modInfo.likeCount, 'user')}</Trans>
+            </InlineLink>
+          )}
         </View>
-        <ModServicePrefs />
-        <View style={{height: 20}} />
-      </ScrollView>
-    </View>
+      </View>
+
+      <ModServicePrefs />
+
+      <View style={{height: 20}} />
+    </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  btn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 7,
-    paddingHorizontal: 14,
-    borderRadius: 50,
-    marginLeft: 6,
-  },
-  notFoundContainer: {
-    margin: 10,
-    paddingHorizontal: 18,
-    paddingVertical: 14,
-    borderRadius: 6,
-  },
-})

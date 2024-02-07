@@ -49,7 +49,7 @@ export type VariantProps = {
 }
 
 export type ButtonProps = React.PropsWithChildren<
-  Pick<PressableProps, 'disabled' | 'onPress'> &
+  Pick<PressableProps, 'disabled' | 'onPress' | 'testID'> &
     AccessibilityProps &
     VariantProps & {
       label: string
