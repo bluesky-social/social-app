@@ -3455,7 +3455,7 @@ msgstr "Questo nasconderà il post dai tuoi feeds."
 
 #: src/view/screens/PreferencesThreads.tsx:53 src/view/screens/Settings.tsx:531
 msgid "Thread Preferences"
-msgstr "Preferenze del filo di discussione"
+msgstr "Preferenze delle discussioni"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
