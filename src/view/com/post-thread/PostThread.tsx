@@ -183,7 +183,7 @@ function PostThreadLoaded({
   // Track whether we are ready to render or not
   const readyToRender = React.useRef(false)
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const items = createThreadSkeleton(
       sortThread(thread, threadViewPrefs),
       hasSession,
@@ -296,7 +296,7 @@ function PostThreadLoaded({
       // Increment the top page count and set prepending to false
       topPageCount.current += 1
       isPrepending.current = false
-    }, 1000)
+    }, 750)
   }, [renderedPosts])
 
   const onPTR = React.useCallback(async () => {
@@ -564,7 +564,7 @@ function* flattenThreadParents(
       if (node.parent) {
         yield* flattenThreadParents(node.parent, hasSession, treeView)
       } else {
-        // yield TOP_COMPONENT
+        yield TOP_COMPONENT
       }
     }
     if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
