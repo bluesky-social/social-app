@@ -1373,13 +1373,13 @@ msgstr "外部媒體"
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒體可能允許網站收集有關你和你設備的相關信息。在你按下「查看」按鈕之前，將不會發送或請求任何外部信息。"
+msgstr "外部媒體可能允許網站收集有關你和你設備的信息。在你按下「查看」按鈕之前，將不會發送或請求任何外部信息。"
 
 #: src/Navigation.tsx:259
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
 #: src/view/screens/Settings.tsx:651
 msgid "External Media Preferences"
-msgstr "外部媒體首選項"
+msgstr "外部媒體偏好"
 
 #: src/view/screens/Settings.tsx:642
 msgid "External media settings"
@@ -1417,7 +1417,7 @@ msgstr "訊息流已離線"
 
 #: src/view/com/feeds/FeedPage.tsx:143
 msgid "Feed Preferences"
-msgstr "訊息流首選項"
+msgstr "訊息流偏好"
 
 #: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:314
@@ -1727,7 +1727,7 @@ msgstr "主頁"
 #: src/view/screens/PreferencesHomeFeed.tsx:104
 #: src/view/screens/Settings.tsx:537
 msgid "Home Feed Preferences"
-msgstr "主頁訊息流首選項"
+msgstr "主頁訊息流偏好"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:116
 msgid "Hosting provider"
@@ -2578,7 +2578,7 @@ msgstr "開啟 App 專用密碼設定頁面"
 
 #: src/view/screens/Settings.tsx:529
 msgid "Opens the home feed preferences"
-msgstr "開啟主頁訊息流首選項"
+msgstr "開啟主頁訊息流偏好"
 
 #: src/view/screens/Settings.tsx:787
 msgid "Opens the storybook page"
@@ -2590,7 +2590,7 @@ msgstr "開啟系統日誌界面"
 
 #: src/view/screens/Settings.tsx:550
 msgid "Opens the threads preferences"
-msgstr "開啟討論串首選項"
+msgstr "開啟討論串偏好"
 
 #: src/view/com/util/forms/DropdownButton.tsx:280
 msgid "Option {0} of {numItems}"
@@ -3083,11 +3083,11 @@ msgstr "重置密碼"
 
 #: src/view/screens/Settings.tsx:796
 msgid "Reset preferences"
-msgstr "重置首選項"
+msgstr "重置偏好"
 
 #: src/view/screens/Settings.tsx:799
 msgid "Reset preferences state"
-msgstr "重置首選項狀態"
+msgstr "重置偏好狀態"
 
 #: src/view/screens/Settings.tsx:807
 msgid "Resets the onboarding state"
@@ -3095,7 +3095,7 @@ msgstr "重置引導流程狀態"
 
 #: src/view/screens/Settings.tsx:797
 msgid "Resets the preferences state"
-msgstr "重置首選項狀態"
+msgstr "重置偏好狀態"
 
 #: src/view/com/auth/login/LoginForm.tsx:266
 msgid "Retries login"
@@ -3945,7 +3945,7 @@ msgstr "這將在你的消息流中隱藏此貼文。"
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:559
 msgid "Thread Preferences"
-msgstr "討論串首選項"
+msgstr "討論串偏好"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
@@ -3953,7 +3953,7 @@ msgstr "分層模式"
 
 #: src/Navigation.tsx:253
 msgid "Threads Preferences"
-msgstr "討論串首選項"
+msgstr "討論串偏好"
 
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
