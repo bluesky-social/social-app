@@ -3588,7 +3588,7 @@ msgstr "Utilizza il tuo provider predefinito"
 #: src/view/com/modals/InAppBrowserConsent.tsx:56
 #: src/view/com/modals/InAppBrowserConsent.tsx:58
 msgid "Use in-app browser"
-msgstr "Utilizza il browser della app"
+msgstr "Utilizza il browser dell'app"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:66
 #: src/view/com/modals/InAppBrowserConsent.tsx:68
