@@ -633,7 +633,7 @@ msgstr "Chiudi la navigazione del footer"
 
 #: src/view/shell/index.web.tsx:52
 msgid "Closes bottom navigation bar"
-msgstr "Chiude la navigazione di fondo"
+msgstr "Chiude la barra di navigazione in basso"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:39
 msgid "Closes password update alert"
