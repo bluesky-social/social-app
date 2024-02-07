@@ -21,7 +21,6 @@ import {describeModerationCause} from 'lib/moderation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {s} from '#/lib/styles'
 import {CenteredView} from '../Views'
 
 export function ScreenHider({
