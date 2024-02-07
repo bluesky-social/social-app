@@ -3198,7 +3198,7 @@ msgstr "Spazio di archiviazione eliminato. Riavvia l'app."
 
 #: src/Navigation.tsx:202 src/view/screens/Settings.tsx:740
 msgid "Storybook"
-msgstr "Crnologia"
+msgstr "Cronologia"
 
 #: src/view/com/modals/AppealLabel.tsx:101
 msgid "Submit"
