@@ -1,5 +1,5 @@
 import React from 'react'
-import {useColorScheme} from 'react-native'
+import {ColorSchemeName, useColorScheme} from 'react-native'
 
 import {useThemePrefs} from 'state/shell'
 import {isWeb} from 'platform/detection'
@@ -9,25 +9,32 @@ import * as SystemUI from 'expo-system-ui'
 export function useColorModeTheme(): ThemeName {
   const colorScheme = useColorScheme()
   const {colorMode, darkTheme} = useThemePrefs()
-  const [themeName, setThemeName] = React.useState<ThemeName>('light')
 
   React.useLayoutEffect(() => {
-    if (
-      (colorMode === 'system' && colorScheme === 'light') ||
-      colorMode === 'light'
-    ) {
-      updateDocument('light')
-      updateSystemBackground('light')
-      setThemeName('light')
-    } else {
-      const theme = darkTheme ?? 'dim'
-      updateDocument(theme)
-      updateSystemBackground(theme)
-      setThemeName(theme)
-    }
+    const theme = getThemeName(colorScheme, colorMode, darkTheme)
+    updateDocument(theme)
+    updateSystemBackground(theme)
   }, [colorMode, colorScheme, darkTheme])
 
-  return themeName
+  return React.useMemo(
+    () => getThemeName(colorScheme, colorMode, darkTheme),
+    [colorScheme, colorMode, darkTheme],
+  )
+}
+
+function getThemeName(
+  colorScheme: ColorSchemeName,
+  colorMode: 'system' | 'light' | 'dark',
+  darkTheme?: ThemeName,
+) {
+  if (
+    (colorMode === 'system' && colorScheme === 'light') ||
+    colorMode === 'light'
+  ) {
+    return 'light'
+  } else {
+    return darkTheme ?? 'dim'
+  }
 }
 
 function updateDocument(theme: ThemeName) {
