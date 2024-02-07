@@ -46,7 +46,7 @@ export function Component({did}: {did: string}) {
   if (profileError) {
     return (
       <ErrorScreen
-        title={_(msg`Oops!`)}
+        title={_(msg`Not Found`)}
         message={cleanError(profileError)}
         onPressTryAgain={refetchProfile}
       />
