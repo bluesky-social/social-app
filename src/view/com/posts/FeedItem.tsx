@@ -297,6 +297,7 @@ let FeedItemInner = ({
             </View>
           )}
           <PostContent
+            record={record}
             moderation={moderation}
             richText={richText}
             postEmbed={post.embed}
@@ -319,11 +320,13 @@ let FeedItemInner = ({
 FeedItemInner = memo(FeedItemInner)
 
 let PostContent = ({
+  record,
   moderation,
   richText,
   postEmbed,
   postAuthor,
 }: {
+  record: AppBskyFeedPost.Record
   moderation: PostModeration
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
@@ -375,6 +378,7 @@ let PostContent = ({
           ignoreQuoteDecisions
           style={styles.embed}>
           <PostEmbeds
+            record={record}
             embed={postEmbed}
             moderation={moderation.embed}
             moderationDecisions={moderation.decisions}

@@ -383,6 +383,7 @@ let PostThreadItemLoaded = ({
                   ignoreQuoteDecisions
                   style={s.mb10}>
                   <PostEmbeds
+                    record={record}
                     embed={post.embed}
                     moderation={moderation.embed}
                     moderationDecisions={moderation.decisions}
@@ -582,6 +583,7 @@ let PostThreadItemLoaded = ({
                     ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
                     ignoreQuoteDecisions>
                     <PostEmbeds
+                      record={record}
                       embed={post.embed}
                       moderation={moderation.embed}
                       moderationDecisions={moderation.decisions}

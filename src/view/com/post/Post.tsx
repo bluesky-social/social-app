@@ -207,6 +207,7 @@ function PostInner({
                 ignoreQuoteDecisions
                 style={styles.contentHider}>
                 <PostEmbeds
+                  record={record}
                   embed={post.embed}
                   moderation={moderation.embed}
                   moderationDecisions={moderation.decisions}

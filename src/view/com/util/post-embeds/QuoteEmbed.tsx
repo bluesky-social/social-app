@@ -134,7 +134,7 @@ export function QuoteEmbed({
           noLinks
         />
       ) : null}
-      {embed && <PostEmbeds embed={embed} moderation={{}} />}
+      {embed && <PostEmbeds record={quote} embed={embed} moderation={{}} />}
     </Link>
   )
 }
