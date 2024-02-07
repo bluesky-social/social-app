@@ -9,22 +9,25 @@ import * as SystemUI from 'expo-system-ui'
 export function useColorModeTheme(): ThemeName {
   const colorScheme = useColorScheme()
   const {colorMode, darkTheme} = useThemePrefs()
+  const [themeName, setThemeName] = React.useState<ThemeName>('light')
 
-  return React.useMemo(() => {
+  React.useLayoutEffect(() => {
     if (
       (colorMode === 'system' && colorScheme === 'light') ||
       colorMode === 'light'
     ) {
       updateDocument('light')
       updateSystemBackground('light')
-      return 'light'
+      setThemeName('light')
     } else {
-      const themeName = darkTheme ?? 'dim'
-      updateDocument(themeName)
-      updateSystemBackground(themeName)
-      return themeName
+      const theme = darkTheme ?? 'dim'
+      updateDocument(theme)
+      updateSystemBackground(theme)
+      setThemeName(theme)
     }
-  }, [colorMode, darkTheme, colorScheme])
+  }, [colorMode, colorScheme, darkTheme])
+
+  return themeName
 }
 
 function updateDocument(theme: ThemeName) {
