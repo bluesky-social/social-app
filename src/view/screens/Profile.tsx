@@ -102,6 +102,7 @@ export function ProfileScreen({route}: Props) {
         title="Oops!"
         message={cleanError(resolveError || profileError)}
         onPressTryAgain={onPressTryAgain}
+        showHeader
       />
     )
   }
@@ -121,6 +122,7 @@ export function ProfileScreen({route}: Props) {
       title="Oops!"
       message="Something went wrong and we're not sure what."
       onPressTryAgain={onPressTryAgain}
+      showHeader
     />
   )
 }
