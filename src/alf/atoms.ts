@@ -208,6 +208,13 @@ export const atoms = {
   border_b: {
     borderBottomWidth: 1,
   },
+  border_l: {
+    borderLeftWidth: 1,
+  },
+  border_r: {
+    borderRightWidth: 1,
+  },
+
 
   /*
    * Shadow
