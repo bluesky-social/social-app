@@ -1893,7 +1893,7 @@ msgstr "Il moderatore ha scelto di mettere un avviso generale sul contenuto."
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
-msgstr "Più feed"
+msgstr "Altri feed"
 
 #: src/view/com/profile/ProfileHeader.tsx:562
 #: src/view/screens/ProfileFeed.tsx:371 src/view/screens/ProfileList.tsx:595
