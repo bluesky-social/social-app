@@ -231,7 +231,7 @@ let FeedItem = ({
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
+                <Text style={[pal.text]}>
                   {' '}
                   <Trans>and</Trans>{' '}
                 </Text>
