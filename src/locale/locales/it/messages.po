@@ -1804,7 +1804,7 @@ msgstr "Carica nuovi posts"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
 msgid "Loading..."
-msgstr "Caricando..."
+msgstr "Caricamento..."
 
 #: src/view/com/modals/ServerInput.tsx:50
 msgid "Local dev server"
