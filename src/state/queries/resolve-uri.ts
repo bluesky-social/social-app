@@ -4,7 +4,6 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyEmbedRecord,
-  AppBskyFeedPost,
   AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 
@@ -76,23 +75,44 @@ export function precacheFeedPosts(
 ) {
   const quoteEmbedUris: string[] = []
 
-  for (const post of posts) {
-    // Precache the profile
-    precacheProfile(queryClient, post.post.author)
-
-    // We are only going to precache quote embeds that have media as well (since we can't get this from the embed)
-    // All other embeds we can assemble a post view for
-    const embed = post.post.embed
-    if (
+  // For handling quote embeds
+  function handleEmbed(embed?: any) {
+    // If this is a view record, we just need to precache the author
+    if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
+      precacheProfile(queryClient, embed.record.author)
+    } else if (
       AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedRecord.isViewRecord(embed?.record) &&
-      AppBskyFeedPost.isRecord(embed?.record.value) &&
-      !queryClient.getQueryData(RQKEY_POST(embed.record.uri))
+      AppBskyEmbedRecord.isViewRecord(embed.record.record)
     ) {
-      quoteEmbedUris.push(embed.record.uri)
+      // If we run into a record with media, we want to cache both the author and the post
+      precacheProfile(queryClient, embed.record.record.author)
+      quoteEmbedUris.push(embed.record.record.uri as string)
     }
   }
 
+  for (const post of posts) {
+    // First precache the post's author
+    precacheProfile(queryClient, post.post.author)
+
+    // Precache the parent's author if there is one
+    if (post.reply?.parent?.author) {
+      precacheProfile(
+        queryClient,
+        post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,
+      )
+
+      const subEmbed = post.reply.parent.embed
+      handleEmbed(subEmbed)
+    }
+
+    // Finally the main post's quote author if it exists
+    // precacheQuoteProfile(post.post.embed)
+
+    const embed = post.post.embed
+    handleEmbed(embed)
+  }
+
+  // Fetch all the collected post uris (only quotes that have embeds)
   precacheQuoteEmbeds(queryClient, quoteEmbedUris)
 }
 
