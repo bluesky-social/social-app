@@ -3865,7 +3865,7 @@ msgstr "ログインしているアカウントを切り替えます"
 
 #: src/view/screens/Settings.tsx:466
 msgid "System"
-msgstr "デバイスに同期"
+msgstr "システム"
 
 #: src/view/screens/Settings.tsx:769
 msgid "System log"
