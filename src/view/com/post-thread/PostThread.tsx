@@ -268,7 +268,7 @@ function PostThreadLoaded({
     // - We are already prepending
     // - This is not a thread post
     // - There are no more parents to show
-    // - The top post is the highlighted post
+    // - The top post is the highlighted post, so that we don't automatically trigger this when showing only the highlight
     if (
       isPrepending.current ||
       !isThreadPost(first) ||
