@@ -3846,7 +3846,7 @@ msgstr "내가 좋아할 만한 인기 계정입니다:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
-msgstr "이 {screenDescription}에 플래그가 지정되었습니다:"
+msgstr "이 {screenDescription}에 다음 플래그가 지정되었습니다:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
