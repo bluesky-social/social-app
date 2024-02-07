@@ -178,29 +178,40 @@ function PostThreadLoaded({
       sortThread(thread, threadViewPrefs),
       hasSession,
       treeView,
+      readyToRender,
     )
 
-    if (!isWeb && !readyToRender) {
-      return items.highlightedPost
-    } else {
-      const postsToPrepend = items.parents?.slice(-(topPageCount * 15)) ?? []
+    // if (!isWeb && !readyToRender) {
+    //   return items.highlightedPost
+    // } else {
+    const postsToPrepend = items.parents?.slice(-(topPageCount * 15)) ?? []
 
-      // Build the entire array of items to render
-      let arr = [
-        // In the case of refreshes we need to take into account the page count when we load
-        ...postsToPrepend,
-        ...items.highlightedPost,
-        ...(items.replies ?? []),
-      ]
-      // Remove any items that shouldn't be visible right now due to view limit
-      if (arr.length > maxVisible) {
-        arr = [...arr.slice(0, maxVisible), LOAD_MORE]
-      }
-      if (arr.indexOf(CHILD_SPINNER) === -1) {
-        arr.push(BOTTOM_COMPONENT)
-      }
-      return arr
+    // Build the entire array of items to render
+    let arr = [
+      // In the case of refreshes we need to take into account the page count when we load
+      ...postsToPrepend,
+      ...items.highlightedPost,
+      ...(items.replies ?? []),
+    ]
+    // Remove any items that shouldn't be visible right now due to view limit
+    if (arr.length > maxVisible) {
+      arr = [...arr.slice(0, maxVisible), LOAD_MORE]
     }
+    if (arr.indexOf(CHILD_SPINNER) === -1) {
+      arr.push(BOTTOM_COMPONENT)
+    }
+
+    // HACK
+    // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
+    // correct post
+    if (items.highlightedPost && !readyToRender) {
+      setTimeout(() => {
+        setReadyToRender(true)
+      }, 300)
+    }
+
+    return arr
+    // }
   }, [
     thread,
     threadViewPrefs,
@@ -211,11 +222,7 @@ function PostThreadLoaded({
     maxVisible,
   ])
 
-  React.useEffect(() => {
-    if (posts.length === 1) {
-      setReadyToRender(true)
-    }
-  }, [posts])
+  React.useEffect(() => {}, [posts])
 
   /**
    * NOTE
@@ -545,11 +552,17 @@ function* flattenThreadParents(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
+  readyToRender: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
-    if (!node.ctx.isParentLoading) {
+    if (!node.ctx.isParentLoading && readyToRender) {
       if (node.parent) {
-        yield* flattenThreadParents(node.parent, hasSession, treeView)
+        yield* flattenThreadParents(
+          node.parent,
+          hasSession,
+          treeView,
+          readyToRender,
+        )
       } else {
         yield TOP_COMPONENT
       }
@@ -605,9 +618,12 @@ export function createThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
+  readyToRender: boolean,
 ) {
   const skeleton: ThreadSkeletonParts = {
-    parents: Array.from(flattenThreadParents(node, hasSession, treeView)),
+    parents: Array.from(
+      flattenThreadParents(node, hasSession, treeView, readyToRender),
+    ),
     highlightedPost: [node as YieldedItem],
     replies: Array.from(flattenThreadReplies(node, hasSession, treeView)),
   }
