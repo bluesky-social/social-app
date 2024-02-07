@@ -232,7 +232,8 @@ let FeedItem = ({
             {authors.length > 1 ? (
               <>
                 <Text style={[pal.text]}>
-                  <Trans> and </Trans>
+                  {' '}
+                  <Trans>and</Trans>{' '}
                 </Text>
                 <Text style={[pal.text, s.bold]}>
                   {formatCount(authors.length - 1)}{' '}
