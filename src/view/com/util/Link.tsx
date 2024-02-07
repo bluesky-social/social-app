@@ -197,6 +197,15 @@ export const TextLink = memo(function TextLink({
           href,
         })
       }
+      if (
+        isWeb &&
+        href !== '#' &&
+        e != null &&
+        isModifiedEvent(e as React.MouseEvent)
+      ) {
+        // Let the browser handle opening in new tab etc.
+        return
+      }
       if (onPress) {
         e?.preventDefault?.()
         // @ts-ignore function signature differs by platform -prf
@@ -381,4 +390,17 @@ function onPressInner(
       }
     }
   }
+}
+
+function isModifiedEvent(e: React.MouseEvent): boolean {
+  const eventTarget = e.currentTarget as HTMLAnchorElement
+  const target = eventTarget.getAttribute('target')
+  return (
+    (target && target !== '_self') ||
+    e.metaKey ||
+    e.ctrlKey ||
+    e.shiftKey ||
+    e.altKey ||
+    (e.nativeEvent && e.nativeEvent.which === 2)
+  )
 }
