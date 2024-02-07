@@ -255,7 +255,7 @@ msgstr "Password dell'app eliminata"
 
 #: src/view/com/modals/AddAppPasswords.tsx:133
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "I passwords per le app possono contenere solo lettere, numeri, spazi, trattini e trattini bassi."
+msgstr "Le password per le app possono contenere solo lettere, numeri, spazi, trattini e trattini bassi."
 
 #: src/view/com/modals/AddAppPasswords.tsx:98
 msgid "App Password names must be at least 4 characters long."
