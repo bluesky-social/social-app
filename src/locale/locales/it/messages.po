@@ -96,7 +96,7 @@ msgstr "Account bloccato"
 
 #: src/view/com/profile/ProfileHeader.tsx:260
 msgid "Account muted"
-msgstr "Account  silenziato"
+msgstr "Account silenziato"
 
 #: src/view/com/modals/ModerationDetails.tsx:86
 msgid "Account Muted"
