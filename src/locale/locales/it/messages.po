@@ -3398,7 +3398,7 @@ msgstr "Questo contenuto non è visualizzabile senza un account Bluesky."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "Questo canale sta attualmente ricevendo molte visite ed è temporaneamente inattivo. Riprova più tardi."
+msgstr "Questo canale al momento sta ricevendo molte visite ed è temporaneamente non disponibile. Riprova più tardi."
 
 #: src/view/screens/Profile.tsx:392 src/view/screens/ProfileFeed.tsx:484
 #: src/view/screens/ProfileList.tsx:639
