@@ -3837,7 +3837,7 @@ msgstr "あなたへのおすすめ"
 
 #: src/view/com/modals/SelfLabel.tsx:95
 msgid "Suggestive"
-msgstr "提案"
+msgstr "色気"
 
 #: src/Navigation.tsx:213
 #: src/view/screens/Support.tsx:30
