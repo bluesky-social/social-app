@@ -402,7 +402,7 @@ export function* findAllPostsInQueryData(
         }
         const quotedPost = getEmbeddedPost(item.post.embed)
         if (quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(quotedPost)
+          yield embedViewRecordToPostView(queryClient, quotedPost)
         }
         if (
           AppBskyFeedDefs.isPostView(item.reply?.parent) &&

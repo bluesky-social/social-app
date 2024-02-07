@@ -5,6 +5,7 @@ import {
   AppBskyFeedDefs,
   AppBskyEmbedRecord,
   AppBskyFeedPost,
+  AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 
 import {getAgent} from '#/state/session'
@@ -57,8 +58,9 @@ export function precacheProfile(
 }
 
 export function precacheQuoteEmbeds(queryClient: QueryClient, uris: string[]) {
-  if (uris.length === 0) return // Don't block UI with this request
+  if (uris.length === 0) return
   ;(async () => {
+    // Don't block the UI with this request
     const res = await getAgent().getPosts({uris})
     if (!res.success || !res.data.posts?.[0]) return
 
@@ -78,9 +80,11 @@ export function precacheFeedPosts(
     // Precache the profile
     precacheProfile(queryClient, post.post.author)
 
-    // Precache posts in quote embeds if any
+    // We are only going to precache quote embeds that have media as well (since we can't get this from the embed)
+    // All other embeds we can assemble a post view for
     const embed = post.post.embed
     if (
+      AppBskyEmbedRecordWithMedia.isView(embed) &&
       AppBskyEmbedRecord.isViewRecord(embed?.record) &&
       AppBskyFeedPost.isRecord(embed?.record.value) &&
       !queryClient.getQueryData(RQKEY_POST(embed.record.uri))
