@@ -8,9 +8,9 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-01 10:00\n"
-"Last-Translator: gildaswise\n"
-"Language-Team: maisondasilva, gildaswise, gleydson, faeriarum\n"
+"PO-Revision-Date: 2024-02-07 00:25\n"
+"Last-Translator: maisondasilva\n"
+"Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #~ msgid "- end of feed -"
@@ -72,7 +72,7 @@ msgstr "<0/> membros"
 
 #: src/view/com/profile/ProfileHeader.tsx:634
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{seguindo} </0><1>seguindo</1>"
+msgstr "<0>{following} </0><1>seguindo</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
