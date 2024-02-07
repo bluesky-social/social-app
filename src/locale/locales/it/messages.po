@@ -751,7 +751,7 @@ msgstr "Copiato"
 
 #: src/view/screens/Settings.tsx:243
 msgid "Copied build version to clipboard"
-msgstr "Versione del built copiato nella clipboard"
+msgstr "Versione di build copiata nella clipboard"
 
 #: src/view/com/modals/AddAppPasswords.tsx:75
 #: src/view/com/modals/InviteCodes.tsx:152
