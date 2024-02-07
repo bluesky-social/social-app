@@ -3162,7 +3162,7 @@ msgstr "Qualcosa è andato storto ma non siamo sicuri di cosa."
 
 #: src/view/com/modals/Waitlist.tsx:51
 msgid "Something went wrong. Check your email and try again."
-msgstr "Qualcosa è andato male. Controlla la tua email e riprovaci."
+msgstr "Qualcosa è andato storto. Controlla la tua email e riprova."
 
 #: src/App.native.tsx:62
 msgid "Sorry! Your session expired. Please log in again."
