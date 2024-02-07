@@ -149,7 +149,7 @@ export function Component({showReminder}: {showReminder?: boolean}) {
               onPress={onEmailIncorrect}
               style={styles.changeEmailLink}>
               <Text type="lg" style={pal.link}>
-                Change
+                <Trans>Change</Trans>
               </Text>
             </Pressable>
           </>
