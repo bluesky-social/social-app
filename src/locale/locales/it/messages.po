@@ -2959,7 +2959,7 @@ msgstr "Seleziona \"No\" per nascondere tutte le risposte dal tuo feed."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "Seleziona \"No\" per occultare tutte le ripubblicazioni dal tuo feed."
+msgstr "Seleziona \"No\" per nascondere tutte le ripubblicazioni dal tuo feed."
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
