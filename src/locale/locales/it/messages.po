@@ -2951,7 +2951,7 @@ msgstr "Imposta la password"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Seleziona \"No\" per occultare tutti i post con le citazioni dal tuo feed. I repost saranno ancora visibili."
+msgstr "Seleziona \"No\" per nascondere tutti i post con le citazioni dal tuo feed. I repost saranno ancora visibili."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
