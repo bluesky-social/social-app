@@ -225,8 +225,6 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     },
   }))
 
-  console.log('hellohello:', pal.text)
-
   return (
     <>
       <View style={styles.container}>
