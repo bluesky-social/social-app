@@ -6,11 +6,9 @@ import {useSessionApi, SessionAccount} from '#/state/session'
 import * as Toast from '#/view/com/util/Toast'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export function useAccountSwitcher() {
-  const {_} = useLingui()
   const {track} = useAnalytics()
   const {selectAccount, clearCurrentAccount} = useSessionApi()
   const closeAllActiveElements = useCloseAllActiveElements()
@@ -33,18 +31,18 @@ export function useAccountSwitcher() {
           }
           await selectAccount(account)
           setTimeout(() => {
-            Toast.show(_(msg`Signed in as @${account.handle}`))
+            Toast.show(t`Signed in as @${account.handle}`)
           }, 100)
         } else {
           closeAllActiveElements()
           requestSwitchToAccount({requestedAccount: account.did})
           Toast.show(
-            _(msg`Please sign in as @${account.handle}`),
+            t`Please sign in as @${account.handle}`,
             'circle-exclamation',
           )
         }
       } catch (e) {
-        Toast.show(_(msg`Sorry! We need you to enter your password.`))
+        Toast.show(t`Sorry! We need you to enter your password.`)
         clearCurrentAccount() // back user out to login
       }
     },
@@ -54,7 +52,6 @@ export function useAccountSwitcher() {
       selectAccount,
       closeAllActiveElements,
       requestSwitchToAccount,
-      _,
     ],
   )
 
