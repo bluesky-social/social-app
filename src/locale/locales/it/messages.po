@@ -3459,7 +3459,7 @@ msgstr "Preferenze delle discussioni"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
-msgstr "Modalità fili di discussione"
+msgstr "Modalità discussione"
 
 #: src/Navigation.tsx:252
 msgid "Threads Preferences"
