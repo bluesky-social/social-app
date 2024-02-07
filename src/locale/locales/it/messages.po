@@ -1898,7 +1898,7 @@ msgstr "Altri feed"
 #: src/view/com/profile/ProfileHeader.tsx:562
 #: src/view/screens/ProfileFeed.tsx:371 src/view/screens/ProfileList.tsx:595
 msgid "More options"
-msgstr "Più opzioni"
+msgstr "Altre opzioni"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:268
 msgid "More post options"
