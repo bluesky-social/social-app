@@ -220,8 +220,6 @@ function PostThreadLoaded({
     maxVisible,
   ])
 
-  React.useEffect(() => {}, [posts])
-
   /**
    * NOTE
    * Scroll positioning on web
