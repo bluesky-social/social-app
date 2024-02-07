@@ -19,6 +19,7 @@ import {
   ModerationUI,
   PostModeration,
   AppBskyRichtextFacet,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -34,6 +35,7 @@ import {ContentHider} from '../moderation/ContentHider'
 import {isNative} from '#/platform/detection'
 import {shareUrl} from '#/lib/sharing'
 import {useModalControls} from '#/state/modals'
+import {linkRequiresWarning} from '#/lib/strings/url-helpers'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -75,22 +77,38 @@ export function PostEmbeds({
         return
       }
 
-      const facets = record.facets || []
-      const links = facets.flatMap(facet =>
-        facet.features.filter((feature): feature is AppBskyRichtextFacet.Link =>
-          AppBskyRichtextFacet.isLink(feature),
-        ),
-      )
+      const rt = new RichTextAPI({text: record.text, facets: record.facets})
 
-      if (!links.some(link => link.uri === externalUri)) {
-        e.preventDefault()
+      for (const segment of rt.segments()) {
+        const link = segment.link
 
-        openModal({
-          name: 'link-warning',
-          text: '',
-          href: externalUri,
-        })
+        if (link && AppBskyRichtextFacet.validateLink(link).success) {
+          const href = link.uri
+          const text = segment.text
+
+          if (href !== externalUri) {
+            continue
+          }
+
+          const requiresWarning = linkRequiresWarning(href, text)
+          if (requiresWarning) {
+            openModal({
+              name: 'link-warning',
+              text: text,
+              href: href,
+            })
+          }
+
+          return
+        }
       }
+
+      e.preventDefault()
+      openModal({
+        name: 'link-warning',
+        text: '',
+        href: externalUri,
+      })
     },
     [record, externalUri, openModal],
   )
