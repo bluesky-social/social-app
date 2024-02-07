@@ -650,20 +650,20 @@ msgstr "選擇你的密碼"
 #: src/view/screens/Settings.tsx:816
 #: src/view/screens/Settings.tsx:817
 msgid "Clear all legacy storage data"
-msgstr "清除所有舊存儲數據"
+msgstr "清除所有舊存儲資料"
 
 #: src/view/screens/Settings.tsx:819
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "清除所有舊存儲數據（並重啟）"
+msgstr "清除所有舊存儲資料（並重啟）"
 
 #: src/view/screens/Settings.tsx:828
 #: src/view/screens/Settings.tsx:829
 msgid "Clear all storage data"
-msgstr "清除所有數據"
+msgstr "清除所有資料"
 
 #: src/view/screens/Settings.tsx:831
 msgid "Clear all storage data (restart after this)"
-msgstr "清除所有數據（並重啟）"
+msgstr "清除所有資料（並重啟）"
 
 #: src/view/com/util/forms/SearchInput.tsx:74
 #: src/view/screens/Search/Search.tsx:674
@@ -1149,7 +1149,7 @@ msgstr "例如：藝術家、愛狗人士和狂熱讀者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:283
 msgid "e.g. Great Posters"
-msgstr "例如：優秀的發帖者"
+msgstr "例如：優秀的發貼者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Spammers"
@@ -1157,7 +1157,7 @@ msgstr "例如：垃圾內容製造者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:312
 msgid "e.g. The posters who never miss."
-msgstr "例如：絕對不容錯過的發帖者"
+msgstr "例如：絕對不容錯過的發貼者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:313
 msgid "e.g. Users that repeatedly reply with ads."
@@ -1373,7 +1373,7 @@ msgstr "外部媒體"
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒體可能允許網站收集有關你和你設備的相關信息。在你按下「查看」按鈕之前，將不會發送或請求任何外部信息。"
+msgstr "外部媒體可能允許網站收集有關你和你設備的信息。在你按下「查看」按鈕之前，將不會發送或請求任何外部信息。"
 
 #: src/Navigation.tsx:259
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
@@ -1832,7 +1832,7 @@ msgstr "輸入你的使用者識別符"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Invalid or unsupported post record"
-msgstr "無效或不支援的貼文記錄"
+msgstr "無效或不支援的貼文紀錄"
 
 #: src/view/com/auth/login/LoginForm.tsx:115
 msgid "Invalid username or password"
@@ -2284,11 +2284,11 @@ msgstr "永不載入來自 {0} 的嵌入內容"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "永遠不會失去對您的追隨者和數據的訪問權。"
+msgstr "永遠不會失去對您的追隨者和資料的訪問權。"
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr "永遠不會失去對您的追隨者或數據的訪問權。"
+msgstr "永遠不會失去對您的追隨者或資料的訪問權。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
