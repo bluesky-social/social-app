@@ -177,17 +177,14 @@ function ErrorView() {
 }
 
 function NotifsView() {
-  const {_} = useLingui()
   const triggerPush = () => {
     // TODO: implement local notification for testing
   }
   const triggerToast = () => {
-    Toast.show(_(msg`The task has been completed`))
+    Toast.show('The task has been completed')
   }
   const triggerToast2 = () => {
-    Toast.show(
-      _(msg`The task has been completed successfully and with no problems`),
-    )
+    Toast.show('The task has been completed successfully and with no problems')
   }
   return (
     <View style={s.p10}>
