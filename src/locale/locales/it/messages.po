@@ -2931,7 +2931,7 @@ msgstr "Imposta l'età"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "Imposta il colore del tema su scuro"
+msgstr "Imposta il colore del tema scuro"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
