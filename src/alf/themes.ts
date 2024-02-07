@@ -71,7 +71,7 @@ export const lightPalette = {
 
 export const darkPalette: Palette = {
   white: tokens.color.gray_0,
-  black: tokens.color.gray_1000,
+  black: tokens.color.trueBlack,
 
   contrast_25: tokens.color.gray_975,
   contrast_50: tokens.color.gray_950,
@@ -128,6 +128,11 @@ export const darkPalette: Palette = {
   negative_900: tokens.color.red_900,
   negative_950: tokens.color.red_950,
   negative_975: tokens.color.red_975,
+} as const
+
+export const dimPalette: Palette = {
+  ...darkPalette,
+  black: tokens.color.gray_1000,
 } as const
 
 export const light = {
@@ -187,70 +192,6 @@ export const light = {
     shadow_lg: {
       ...atoms.shadow_lg,
       shadowColor: lightPalette.black,
-    },
-  },
-}
-
-export const dim: Theme = {
-  name: 'dim',
-  palette: darkPalette,
-  atoms: {
-    text: {
-      color: darkPalette.white,
-    },
-    text_contrast_700: {
-      color: darkPalette.contrast_800,
-    },
-    text_contrast_600: {
-      color: darkPalette.contrast_700,
-    },
-    text_contrast_500: {
-      color: darkPalette.contrast_600,
-    },
-    text_contrast_400: {
-      color: darkPalette.contrast_500,
-    },
-    text_inverted: {
-      color: darkPalette.black,
-    },
-    bg: {
-      backgroundColor: darkPalette.contrast_50,
-    },
-    bg_contrast_25: {
-      backgroundColor: darkPalette.contrast_100,
-    },
-    bg_contrast_50: {
-      backgroundColor: darkPalette.contrast_200,
-    },
-    bg_contrast_100: {
-      backgroundColor: darkPalette.contrast_300,
-    },
-    bg_contrast_200: {
-      backgroundColor: darkPalette.contrast_400,
-    },
-    bg_contrast_300: {
-      backgroundColor: darkPalette.contrast_500,
-    },
-    border: {
-      borderColor: darkPalette.contrast_200,
-    },
-    border_contrast: {
-      borderColor: darkPalette.contrast_400,
-    },
-    shadow_sm: {
-      ...atoms.shadow_sm,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-    shadow_md: {
-      ...atoms.shadow_md,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-    shadow_lg: {
-      ...atoms.shadow_lg,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
     },
   },
 }
@@ -315,6 +256,20 @@ export const dark: Theme = {
       ...atoms.shadow_lg,
       shadowOpacity: 0.7,
       shadowColor: tokens.color.trueBlack,
+    },
+  },
+}
+
+export const dim: Theme = {
+  ...dark,
+  name: 'dim',
+  atoms: {
+    ...dark.atoms,
+    text_inverted: {
+      color: dimPalette.black,
+    },
+    bg: {
+      backgroundColor: dimPalette.black,
     },
   },
 }

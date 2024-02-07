@@ -16,6 +16,7 @@ export enum AppLanguage {
   pt_BR = 'pt-BR',
   uk = 'uk',
   ca = 'ca',
+  zh_CN = 'zh-CN',
 }
 
 interface AppLanguageConfig {
@@ -35,6 +36,7 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.pt_BR, name: 'Português (BR) – Portuguese (BR)'},
   {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},
   {code2: AppLanguage.ca, name: 'Català – Catalan'},
+  {code2: AppLanguage.zh_CN, name: '简体中文（中国） – Chinese (Simplified)'},
 ]
 
 export const LANGUAGES: Language[] = [

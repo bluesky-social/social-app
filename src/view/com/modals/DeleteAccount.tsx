@@ -1,11 +1,12 @@
 import React from 'react'
 import {
+  SafeAreaView,
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
-import {TextInput} from './util'
+import {TextInput, ScrollView} from './util'
 import LinearGradient from 'react-native-linear-gradient'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
@@ -20,8 +21,9 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useSession, useSessionApi, getAgent} from '#/state/session'
+import {isAndroid} from 'platform/detection'
 
-export const snapPoints = ['60%']
+export const snapPoints = isAndroid ? ['90%'] : ['55%']
 
 export function Component({}: {}) {
   const pal = usePalette('default')
@@ -76,8 +78,10 @@ export function Component({}: {}) {
     closeModal()
   }
   return (
-    <View style={[styles.container, pal.view]}>
-      <View style={[styles.innerContainer, pal.view]}>
+    <SafeAreaView style={[s.flex1]}>
+      <ScrollView
+        contentContainerStyle={[pal.view]}
+        keyboardShouldPersistTaps="handled">
         <View style={[styles.titleContainer, pal.view]}>
           <Text type="title-xl" style={[s.textCenter, pal.text]}>
             <Trans>Delete Account</Trans>
@@ -234,18 +238,12 @@ export function Component({}: {}) {
             )}
           </>
         )}
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  innerContainer: {
-    paddingBottom: 20,
-  },
   titleContainer: {
     display: 'flex',
     flexDirection: 'row',

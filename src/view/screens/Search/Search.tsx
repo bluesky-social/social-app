@@ -190,7 +190,13 @@ type SearchResultSlice =
 
 function SearchScreenPostResults({query}: {query: string}) {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
+
+  const augmentedQuery = React.useMemo(() => {
+    return augmentSearchQuery(query || '', {did: currentAccount?.did})
+  }, [query, currentAccount])
+
   const {
     isFetched,
     data: results,
@@ -200,7 +206,7 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query})
+  } = useSearchPostsQuery({query: augmentedQuery})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -319,12 +325,8 @@ export function SearchScreenInner({
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
-
-  const augmentedQuery = React.useMemo(() => {
-    return augmentSearchQuery(query || '', {did: currentAccount?.did})
-  }, [query, currentAccount])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -337,7 +339,6 @@ export function SearchScreenInner({
   if (hasSession) {
     return query ? (
       <Pager
-        tabBarPosition="top"
         onPageSelected={onPageSelected}
         renderTabBar={props => (
           <CenteredView
@@ -348,7 +349,7 @@ export function SearchScreenInner({
         )}
         initialPage={0}>
         <View>
-          <SearchScreenPostResults query={augmentedQuery} />
+          <SearchScreenPostResults query={query} />
         </View>
         <View>
           <SearchScreenUserResults query={query} />
@@ -380,7 +381,6 @@ export function SearchScreenInner({
 
   return query ? (
     <Pager
-      tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
         <CenteredView

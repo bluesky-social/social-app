@@ -14,6 +14,7 @@ import {isNetworkError} from 'lib/strings/errors'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
 import {cleanError} from 'lib/strings/errors'
+import {checkAndFormatResetCode} from 'lib/strings/password'
 import {logger} from '#/logger'
 import {styles} from './styles'
 import {Trans, msg} from '@lingui/macro'
@@ -46,14 +47,26 @@ export const SetNewPasswordForm = ({
   const [password, setPassword] = useState<string>('')
 
   const onPressNext = async () => {
+    // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
+    // don't get to call onBlur first
+    const formattedCode = checkAndFormatResetCode(resetCode)
+    // TODO Better password strength check
+    if (!formattedCode || !password) {
+      setError(
+        _(
+          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        ),
+      )
+      return
+    }
+
     setError('')
     setIsProcessing(true)
 
     try {
       const agent = new BskyAgent({service: serviceUrl})
-      const token = resetCode.replace(/\s/g, '')
       await agent.com.atproto.server.resetPassword({
-        token,
+        token: formattedCode,
         password,
       })
       onPasswordSet()
@@ -69,6 +82,19 @@ export const SetNewPasswordForm = ({
         setError(cleanError(errMsg))
       }
     }
+  }
+
+  const onBlur = () => {
+    const formattedCode = checkAndFormatResetCode(resetCode)
+    if (!formattedCode) {
+      setError(
+        _(
+          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
+        ),
+      )
+      return
+    }
+    setResetCode(formattedCode)
   }
 
   return (
@@ -100,9 +126,11 @@ export const SetNewPasswordForm = ({
               autoCapitalize="none"
               autoCorrect={false}
               keyboardAppearance={theme.colorScheme}
-              autoFocus
+              autoComplete="off"
               value={resetCode}
               onChangeText={setResetCode}
+              onFocus={() => setError('')}
+              onBlur={onBlur}
               editable={!isProcessing}
               accessible={true}
               accessibilityLabel={_(msg`Reset code`)}
@@ -123,6 +151,7 @@ export const SetNewPasswordForm = ({
               placeholderTextColor={pal.colors.textLight}
               autoCapitalize="none"
               autoCorrect={false}
+              autoComplete="new-password"
               keyboardAppearance={theme.colorScheme}
               secureTextEntry
               value={password}
@@ -160,6 +189,7 @@ export const SetNewPasswordForm = ({
           ) : (
             <TouchableOpacity
               testID="setNewPasswordButton"
+              // Check the code before running the callback
               onPress={onPressNext}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Go to next`)}
