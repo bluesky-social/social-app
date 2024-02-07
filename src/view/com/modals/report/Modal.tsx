@@ -192,7 +192,7 @@ const SelectIssue = ({
             onPress={goToDetails}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Add details`)}
-            accessibilityHint="Add more details to your report">
+            accessibilityHint={_(msg`Add more details to your report`)}>
             <Text style={[s.f18, pal.link]}>
               <Trans>Add details to report</Trans>
             </Text>

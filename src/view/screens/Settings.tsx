@@ -525,8 +525,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openHomeFeedPreferences}
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens the home feed preferences`)}>
+          accessibilityLabel={_(msg`Home feed preferences`)}
+          accessibilityHint={_(msg`Opens the home feed preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="sliders"
@@ -546,8 +546,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openThreadsPreferences}
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens the threads preferences`)}>
+          accessibilityLabel={_(msg`Thread preferences`)}
+          accessibilityHint={_(msg`Opens the threads preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'comments']}
@@ -566,8 +566,8 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          accessibilityHint="My Saved Feeds"
-          accessibilityLabel={_(msg`Opens screen with all saved feeds`)}
+          accessibilityLabel={_(msg`My saved feeds`)}
+          accessibilityHint={_(msg`Opens screen with all saved feeds`)}
           onPress={onPressSavedFeeds}>
           <View style={[styles.iconContainer, pal.btn]}>
             <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
@@ -763,8 +763,8 @@ export function SettingsScreen({}: Props) {
           style={[pal.view, styles.linkCardNoIcon]}
           onPress={onPressSystemLog}
           accessibilityRole="button"
-          accessibilityHint="Open system log"
-          accessibilityLabel={_(msg`Opens the system log page`)}>
+          accessibilityLabel={_(msg`Open system log`)}
+          accessibilityHint={_(msg`Opens the system log page`)}>
           <Text type="lg" style={pal.text}>
             <Trans>System log</Trans>
           </Text>

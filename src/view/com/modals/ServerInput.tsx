@@ -73,7 +73,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             onPress={() => doSelect(PROD_SERVICE)}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Select Bluesky Social`)}
-            accessibilityHint="Sets Bluesky Social as your service provider">
+            accessibilityHint={_(msg`Sets Bluesky Social as your service provider`)}>
             <Text style={styles.btnText}>
               <Trans>Bluesky.Social</Trans>
             </Text>
@@ -91,7 +91,7 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             <TextInput
               testID="customServerTextInput"
               style={[pal.borderDark, pal.text, styles.textInput]}
-              placeholder={_(msg`e.g. ${`https://bsky.app`}`)}
+              placeholder={_(msg`e.g. https://bsky.app`)}
               placeholderTextColor={colors.gray4}
               autoCapitalize="none"
               autoComplete="off"

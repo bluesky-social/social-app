@@ -74,7 +74,7 @@ export function Component({text, href}: {text: string; href: string}) {
             onPress={onPressVisit}
             accessibilityLabel={_(msg`Visit Site`)}
             accessibilityHint=""
-            label="Visit Site"
+            label={_(msg`Visit Site`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

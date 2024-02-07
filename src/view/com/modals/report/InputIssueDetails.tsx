@@ -39,7 +39,7 @@ export function InputIssueDetails({
         onPress={goBack}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Add details`)}
-        accessibilityHint="Add more details to your report">
+        accessibilityHint={_(msg`Add more details to your report`)}>
         <FontAwesomeIcon size={18} icon="angle-left" style={[pal.link]} />
         <Text style={[pal.text, s.f18, pal.link]}>
           {' '}
@@ -49,7 +49,7 @@ export function InputIssueDetails({
       <View style={[pal.btn, styles.detailsInputContainer]}>
         <TextInput
           accessibilityLabel={_(msg`Text input field`)}
-          accessibilityHint="Enter a reason for reporting this post."
+          accessibilityHint={_(msg`Enter a reason for reporting this post.`)}
           placeholder={_(msg`Enter a reason or any other details here.`)}
           placeholderTextColor={pal.textLight.color}
           value={details}

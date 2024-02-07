@@ -254,7 +254,7 @@ function ProvidedHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder={_(msg`e.g. ${`alice`}`)}
+          placeholder={_(msg`e.g. alice`)}
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
@@ -277,8 +277,8 @@ function ProvidedHandleForm({
       <TouchableOpacity
         onPress={onToggleCustom}
         accessibilityRole="button"
-        accessibilityHint="Hosting provider"
-        accessibilityLabel={_(msg`Opens modal for using custom domain`)}>
+        accessibilityLabel={_(msg`Hosting provider`)}
+        accessibilityHint={_(msg`Opens modal for using custom domain`)}>
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
           <Trans>I have my own domain</Trans>
         </Text>
@@ -378,7 +378,7 @@ function CustomHandleForm({
         <TextInput
           testID="setHandleInput"
           style={[pal.text, styles.textInput]}
-          placeholder={_(msg`e.g. ${`alice.com`}`)}
+          placeholder={_(msg`e.g. alice.com`)}
           placeholderTextColor={pal.colors.textLight}
           autoCapitalize="none"
           keyboardAppearance={theme.colorScheme}
@@ -387,7 +387,7 @@ function CustomHandleForm({
           editable={!isProcessing}
           accessibilityLabelledBy="customDomain"
           accessibilityLabel={_(msg`Custom domain`)}
-          accessibilityHint="Input your preferred hosting provider"
+          accessibilityHint={_(msg`Input your preferred hosting provider`)}
         />
       </View>
       <View style={styles.spacer} />
@@ -398,7 +398,7 @@ function CustomHandleForm({
           label={_(msg`DNS Panel`)}
           left
           onSelect={() => setDNSForm(true)}
-          accessibilityHint="Use the DNS panel"
+          accessibilityHint={_(msg`Use the DNS panel`)}
           style={s.flex1}
         />
         <SelectableBtn
@@ -406,7 +406,7 @@ function CustomHandleForm({
           label={_(msg`No DNS Panel`)}
           right
           onSelect={() => setDNSForm(false)}
-          accessibilityHint="Use a file on your server"
+          accessibilityHint={_(msg`Use a file on your server`)}
           style={s.flex1}
         />
       </View>
@@ -418,7 +418,7 @@ function CustomHandleForm({
           </Text>
           <View style={[styles.dnsTable, pal.btn]}>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              <Trans>Host</Trans>:
+              <Trans>Host:</Trans>
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
@@ -426,7 +426,7 @@ function CustomHandleForm({
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              <Trans>Type</Trans>:
+              <Trans>Type:</Trans>
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
@@ -434,7 +434,7 @@ function CustomHandleForm({
               </Text>
             </View>
             <Text type="md-medium" style={[styles.dnsLabel, pal.text]}>
-              <Trans>Value</Trans>:
+              <Trans>Value:</Trans>
             </Text>
             <View style={[styles.dnsValue]}>
               <Text type="mono" style={[styles.monoText, pal.text]}>
@@ -443,7 +443,7 @@ function CustomHandleForm({
             </View>
           </View>
           <Text type="md" style={[pal.text, s.pt20, s.pl5]}>
-            <Trans>This should create a domain record at:</Trans>{' '}
+            <Trans>This should create a domain record at:</Trans>
           </Text>
           <Text type="mono" style={[styles.monoText, pal.text, s.pt5, s.pl5]}>
             _atproto.{handle}
@@ -515,7 +515,7 @@ function CustomHandleForm({
       <TouchableOpacity
         onPress={onToggleCustom}
         accessibilityLabel={_(msg`Use default provider`)}
-        accessibilityHint="Use bsky.social as hosting provider">
+        accessibilityHint={_(msg`Use bsky.social as hosting provider`)}>
         <Text type="md-medium" style={[pal.link, s.pl10, s.pt5]}>
           <Trans>Nevermind, create a handle for me</Trans>
         </Text>
