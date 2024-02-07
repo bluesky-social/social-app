@@ -85,10 +85,12 @@ export function ScreenHider({
           </Trans>
         ) : (
           <>
-            <Trans>This {screenDescription} has been flagged:</Trans>
-            <Text type="2xl-medium" style={[pal.text, s.ml5]}>
-              {desc.name}.
-            </Text>
+            <Trans>
+              This {screenDescription} has been flagged:{' '}
+              <Text type="2xl-medium" style={[pal.text]}>
+                {desc.name}.
+              </Text>
+            </Trans>{' '}
             <TouchableWithoutFeedback
               onPress={() => {
                 openModal({
@@ -105,7 +107,7 @@ export function ScreenHider({
               </Text>
             </TouchableWithoutFeedback>
           </>
-        )}{' '}
+        )}
       </Text>
       {isMobile && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>
