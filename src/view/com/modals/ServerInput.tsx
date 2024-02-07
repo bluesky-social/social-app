@@ -73,7 +73,9 @@ export function Component({onSelect}: {onSelect: (url: string) => void}) {
             onPress={() => doSelect(PROD_SERVICE)}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Select Bluesky Social`)}
-            accessibilityHint={_(msg`Sets Bluesky Social as your service provider`)}>
+            accessibilityHint={_(
+              msg`Sets Bluesky Social as your service provider`,
+            )}>
             <Text style={styles.btnText}>
               <Trans>Bluesky.Social</Trans>
             </Text>
