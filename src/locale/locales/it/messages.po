@@ -1532,7 +1532,7 @@ msgstr "Testo alternativo dell'immagine"
 
 #: src/view/com/util/UserAvatar.tsx:308 src/view/com/util/UserBanner.tsx:116
 msgid "Image options"
-msgstr "Opzioni per l' immagine"
+msgstr "Opzioni per l'immagine"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:110
 msgid "Input code sent to your email for password reset"
