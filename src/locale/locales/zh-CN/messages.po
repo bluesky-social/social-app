@@ -3846,7 +3846,7 @@ msgstr "出现问题了，请检查你的互联网连接并重试。"
 
 #: src/view/com/util/ErrorBoundary.tsx:36
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
-msgstr "\"应用发生意外错误，请联系我们进行错误反馈！"
+msgstr "应用发生意外错误，请联系我们进行错误反馈！"
 
 #: src/screens/Deactivated.tsx:107
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
@@ -3862,7 +3862,7 @@ msgstr "这里是一些受欢迎的账号，你可能会喜欢："
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
-msgstr "{screenDescription}\" 已被标记："
+msgstr "这个 {screenDescription} 已被标记："
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
