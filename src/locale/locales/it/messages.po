@@ -3942,7 +3942,7 @@ msgstr "La tua risposta è stata pubblicata"
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
-msgstr "Il tuo nome utente"
+msgstr "Il tuo handle utente"
 
 #~ msgid "{0}"
 #~ msgstr "{0}"
