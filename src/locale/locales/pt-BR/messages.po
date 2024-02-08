@@ -8,8 +8,8 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-07 00:25\n"
-"Last-Translator: maisondasilva\n"
+"PO-Revision-Date: 2024-02-07 12:00\n"
+"Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -260,7 +260,7 @@ msgstr "Avançado"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:217
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr ""
+msgstr "Já tem um código?"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -642,11 +642,11 @@ msgstr "Alterar meu email"
 
 #: src/view/screens/Settings.tsx:726
 msgid "Change password"
-msgstr ""
+msgstr "Alterar senha"
 
 #: src/view/screens/Settings.tsx:735
 msgid "Change Password"
-msgstr ""
+msgstr "Alterar Senha"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
@@ -654,7 +654,7 @@ msgstr "Trocar idioma do post para {0}"
 
 #: src/view/screens/Settings.tsx:727
 msgid "Change your Bluesky password"
-msgstr ""
+msgstr "Alterar sua senha do Bluesky"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -748,7 +748,7 @@ msgstr "Clima e tempo"
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
@@ -1036,7 +1036,7 @@ msgstr "Domínio personalizado"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr ""
+msgstr "Feeds customizados feitos pela comunidade te proporcionam novas experiências e te ajudam a encontrar o conteúdo que você mais ama."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1057,7 +1057,7 @@ msgstr "Modo escuro"
 
 #: src/view/screens/Settings.tsx:492
 msgid "Dark Theme"
-msgstr ""
+msgstr "Modo Escuro"
 
 #: src/Navigation.tsx:204
 #~ msgid "Debug"
@@ -1095,7 +1095,7 @@ msgstr "Excluir minha conta"
 
 #: src/view/screens/Settings.tsx:755
 msgid "Delete My Account…"
-msgstr ""
+msgstr "Excluir minha conta…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
@@ -1134,7 +1134,7 @@ msgstr "Você gostaria de dizer alguma coisa?"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr ""
+msgstr "Menos escuro"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -1372,7 +1372,7 @@ msgstr "Insira o código de confirmação"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr ""
+msgstr "Digite o código recebido para alterar sua senha."
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1871,7 +1871,7 @@ msgstr "Se nenhum for selecionado, adequado para todas as idades."
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr ""
+msgstr "Se você quiser alterar sua senha, enviaremos um código que para verificar sua identidade."
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -2466,7 +2466,7 @@ msgstr "Nova senha"
 
 #: src/view/com/modals/ChangePassword.tsx:215
 msgid "New Password"
-msgstr ""
+msgstr "Nova Senha"
 
 #: src/view/com/feeds/FeedPage.tsx:201
 msgctxt "action"
@@ -3260,7 +3260,7 @@ msgstr "Solicitar código"
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
-msgstr ""
+msgstr "Solicitar Código"
 
 #: src/view/screens/Moderation.tsx:188
 #~ msgid "Request to limit the visibility of my account"
@@ -3281,7 +3281,7 @@ msgstr "Código de redefinição"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr ""
+msgstr "Código de Redefinição"
 
 #: src/view/screens/Settings.tsx:806
 msgid "Reset onboarding"
@@ -3567,11 +3567,11 @@ msgstr "Definir o tema para acompanhar o sistema"
 
 #: src/view/screens/Settings.tsx:508
 msgid "Set dark theme to the dark theme"
-msgstr ""
+msgstr "Definir o tema escuro para o padrão"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Set dark theme to the dim theme"
-msgstr ""
+msgstr "Definir o tema escuro para a versão menos escura"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
@@ -4194,7 +4194,7 @@ msgstr "Este usuário está incluído na lista <0/>, que você bloqueou."
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr ""
+msgstr "Este usuário está incluído na lista <0/>, que você silenciou."
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
@@ -4680,7 +4680,7 @@ msgstr "Você bloqueou este usuário. Você não pode ver este conteúdo."
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr ""
+msgstr "Você utilizou um código inválido. O código segue este padrão: XXXXX-XXXXX."
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
@@ -4807,7 +4807,7 @@ msgstr "Seus códigos de convite estão ocultos quando conectado com uma Senha d
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "Sua senha foi alterada com sucesso!"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"

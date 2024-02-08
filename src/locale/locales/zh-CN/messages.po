@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-01 09:20+0800\n"
+"POT-Creation-Date: 2024-02-07 19:20+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -65,7 +65,7 @@ msgstr "<0>欢迎来到</0><1>Bluesky</1>"
 
 #: src/view/com/profile/ProfileHeader.tsx:597
 msgid "⚠Invalid Handle"
-msgstr "⚠无效的昵称"
+msgstr "⚠无效的用户识别符"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -101,15 +101,15 @@ msgstr "已屏蔽账户"
 
 #: src/view/com/profile/ProfileHeader.tsx:260
 msgid "Account muted"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/view/com/modals/ModerationDetails.tsx:86
 msgid "Account Muted"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "账户已被列表静音"
+msgstr "账户已被列表隐藏"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
@@ -125,7 +125,7 @@ msgstr "已取消屏蔽账户"
 
 #: src/view/com/profile/ProfileHeader.tsx:273
 msgid "Account unmuted"
-msgstr "已取消静音账户"
+msgstr "已取消隐藏账户"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
@@ -221,7 +221,7 @@ msgstr "详细设置"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:217
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr ""
+msgstr "已经有确认码了？"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -540,7 +540,7 @@ msgstr "撤销账户删除申请"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "撤销修改昵称"
+msgstr "撤销修改用户识别符"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -570,12 +570,12 @@ msgstr "更改"
 
 #: src/view/screens/Settings.tsx:690
 msgid "Change handle"
-msgstr "更改昵称"
+msgstr "更改用户识别符"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
 #: src/view/screens/Settings.tsx:699
 msgid "Change Handle"
-msgstr "更改昵称"
+msgstr "更改用户识别符"
 
 #: src/view/com/modals/VerifyEmail.tsx:147
 msgid "Change my email"
@@ -583,11 +583,11 @@ msgstr "更改我的邮箱地址"
 
 #: src/view/screens/Settings.tsx:726
 msgid "Change password"
-msgstr ""
+msgstr "更改密码"
 
 #: src/view/screens/Settings.tsx:735
 msgid "Change Password"
-msgstr ""
+msgstr "更改密码"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
@@ -595,7 +595,7 @@ msgstr "更改帖子的发布语言至 {0}"
 
 #: src/view/screens/Settings.tsx:727
 msgid "Change your Bluesky password"
-msgstr ""
+msgstr "更改你的 Bluesky 密码"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -681,7 +681,7 @@ msgstr "气象"
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
@@ -969,7 +969,7 @@ msgstr "自定义域名"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr ""
+msgstr "由社区构建的自定义信息流能为你带来新的体验，并帮助你找到你喜欢的内容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -982,15 +982,15 @@ msgstr "自定义外部站点的媒体。"
 #: src/view/screens/Settings.tsx:479
 #: src/view/screens/Settings.tsx:505
 msgid "Dark"
-msgstr "暗色"
+msgstr "深黑"
 
 #: src/view/screens/Debug.tsx:63
 msgid "Dark mode"
-msgstr "暗色模式"
+msgstr "深色模式"
 
 #: src/view/screens/Settings.tsx:492
 msgid "Dark Theme"
-msgstr ""
+msgstr "深色模式"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
@@ -1024,7 +1024,7 @@ msgstr "删除我的账户"
 
 #: src/view/screens/Settings.tsx:755
 msgid "Delete My Account…"
-msgstr ""
+msgstr "删除我的账户…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
@@ -1059,7 +1059,7 @@ msgstr "有什么想说的吗？"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr ""
+msgstr "暗淡"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -1137,7 +1137,7 @@ msgstr "拖放即可添加图片"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr "受 Apple 政策限制，成人内容只能在完成注册后在网页端启用显示"
+msgstr "受 Apple 政策限制，成人内容只能在完成注册后在网页端启用显示。"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1183,7 +1183,7 @@ msgstr "编辑列表详情"
 
 #: src/view/com/modals/CreateOrEditList.tsx:250
 msgid "Edit Moderation List"
-msgstr "编辑管理员列表"
+msgstr "编辑限制列表"
 
 #: src/Navigation.tsx:243
 #: src/view/screens/Feeds.tsx:403
@@ -1293,7 +1293,7 @@ msgstr "输入验证码"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr ""
+msgstr "输入你收到的确认码以更改密码。"
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1342,7 +1342,7 @@ msgstr "所有人"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "退出修改昵称流程"
+msgstr "退出修改用户识别符流程"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -1388,7 +1388,7 @@ msgstr "外部媒体设置"
 #: src/view/com/modals/AddAppPasswords.tsx:115
 #: src/view/com/modals/AddAppPasswords.tsx:119
 msgid "Failed to create app password."
-msgstr "无法创建 App 专用密码。"
+msgstr "创建 App 专用密码失败。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -1633,7 +1633,7 @@ msgstr "转到下一个"
 
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
-msgstr "昵称"
+msgstr "用户识别符"
 
 #: src/view/com/auth/create/CreateAccount.tsx:197
 msgid "Having trouble?"
@@ -1739,7 +1739,7 @@ msgstr "我们该如何打开此链接？"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
-msgstr "我有邀请码"
+msgstr "我有验证码"
 
 #: src/view/com/modals/VerifyEmail.tsx:216
 msgid "I have a confirmation code"
@@ -1759,7 +1759,7 @@ msgstr "若不勾选，则默认为全年龄向。"
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr ""
+msgstr "如果你需要更改密码，我们将向你发送一个确认码以验证这是你的账户。"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -1828,7 +1828,7 @@ msgstr "输入你的密码"
 
 #: src/view/com/auth/create/Step3.tsx:42
 msgid "Input your user handle"
-msgstr "输入你的用户昵称"
+msgstr "输入你的用户识别符"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:231
 msgid "Invalid or unsupported post record"
@@ -1845,7 +1845,7 @@ msgstr "邀请"
 #: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:399
 msgid "Invite a Friend"
-msgstr "邀请一位朋友"
+msgstr "邀请朋友"
 
 #: src/view/com/auth/create/Step1.tsx:92
 #: src/view/com/auth/create/Step1.tsx:101
@@ -2033,7 +2033,7 @@ msgstr "列表已删除"
 
 #: src/view/screens/ProfileList.tsx:282
 msgid "List muted"
-msgstr "列表已静音"
+msgstr "列表已隐藏"
 
 #: src/view/com/modals/CreateOrEditList.tsx:275
 msgid "List Name"
@@ -2045,7 +2045,7 @@ msgstr "取消屏蔽列表"
 
 #: src/view/screens/ProfileList.tsx:301
 msgid "List unmuted"
-msgstr "取消静音列表"
+msgstr "取消隐藏列表"
 
 #: src/Navigation.tsx:110
 #: src/view/screens/Profile.tsx:176
@@ -2130,47 +2130,47 @@ msgstr "来自服务器的信息：{0}"
 #: src/view/shell/Drawer.tsx:514
 #: src/view/shell/Drawer.tsx:515
 msgid "Moderation"
-msgstr "管理员"
+msgstr "限制"
 
 #: src/view/com/lists/ListCard.tsx:92
 #: src/view/com/modals/UserAddRemoveLists.tsx:206
 msgid "Moderation list by {0}"
-msgstr "管理员列表由 {0} 创建"
+msgstr "限制列表由 {0} 创建"
 
 #: src/view/screens/ProfileList.tsx:774
 msgid "Moderation list by <0/>"
-msgstr "管理员列表由 </0> 创建"
+msgstr "限制列表由 </0> 创建"
 
 #: src/view/com/lists/ListCard.tsx:90
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
 #: src/view/screens/ProfileList.tsx:772
 msgid "Moderation list by you"
-msgstr "管理员列表由你创建"
+msgstr "限制列表由你创建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:197
 msgid "Moderation list created"
-msgstr "管理员列表已创建"
+msgstr "限制列表已创建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:183
 msgid "Moderation list updated"
-msgstr "管理员列表已更新"
+msgstr "限制列表已更新"
 
 #: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
-msgstr "管理员列表"
+msgstr "限制列表"
 
 #: src/Navigation.tsx:120
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
-msgstr "管理员列表"
+msgstr "限制列表"
 
 #: src/view/screens/Settings.tsx:613
 msgid "Moderation settings"
-msgstr "管理员设置"
+msgstr "限制设置"
 
 #: src/view/com/modals/ModerationDetails.tsx:35
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "管理员选择对内容设置一般警告。"
+msgstr "限制选择对内容设置一般警告。"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
@@ -2192,48 +2192,48 @@ msgstr "最多点赞优先"
 
 #: src/view/com/profile/ProfileHeader.tsx:374
 msgid "Mute Account"
-msgstr "静音账户"
+msgstr "隐藏账户"
 
 #: src/view/screens/ProfileList.tsx:543
 msgid "Mute accounts"
-msgstr "静音账户"
+msgstr "隐藏账户"
 
 #: src/view/screens/ProfileList.tsx:490
 msgid "Mute list"
-msgstr "静音列表"
+msgstr "隐藏列表"
 
 #: src/view/screens/ProfileList.tsx:274
 msgid "Mute these accounts?"
-msgstr "静音这些账户？"
+msgstr "隐藏这些账户？"
 
 #: src/view/screens/ProfileList.tsx:278
 msgid "Mute this List"
-msgstr "静音这个列表"
+msgstr "隐藏这个列表"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Mute thread"
-msgstr "静音讨论串"
+msgstr "隐藏讨论串"
 
 #: src/view/com/lists/ListCard.tsx:101
 msgid "Muted"
-msgstr "已经印"
+msgstr "已隐藏"
 
 #: src/view/screens/Moderation.tsx:109
 msgid "Muted accounts"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/Navigation.tsx:125
 #: src/view/screens/ModerationMutedAccounts.tsx:107
 msgid "Muted Accounts"
-msgstr "已静音账户"
+msgstr "已隐藏账户"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "已静音的账户将不会在你的通知或时间线中显示，被静音账户将不会收到通知。"
+msgstr "已隐藏的账户将不会在你的通知或时间线中显示，被隐藏账户将不会收到通知。"
 
 #: src/view/screens/ProfileList.tsx:276
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "被静音的账户将不会得知你已将他静音，已静音的账户将不会在你的通知或时间线中显示。"
+msgstr "被隐藏的账户将不会得知你已将他隐藏，已隐藏的账户将不会在你的通知或时间线中显示。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -2293,15 +2293,15 @@ msgstr "永远不会失去对你的关注者或数据的访问。"
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
 msgid "New"
-msgstr "新"
+msgstr "新建"
 
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
-msgstr "新"
+msgstr "新建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:252
 msgid "New Moderation List"
-msgstr "新的管理员列表"
+msgstr "新的限制列表"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:150
 msgid "New password"
@@ -2309,7 +2309,7 @@ msgstr "新密码"
 
 #: src/view/com/modals/ChangePassword.tsx:215
 msgid "New Password"
-msgstr ""
+msgstr "新密码"
 
 #: src/view/com/feeds/FeedPage.tsx:201
 msgctxt "action"
@@ -2398,7 +2398,7 @@ msgstr "未找到\"{query}\"的结果"
 #: src/view/screens/Search/Search.tsx:280
 #: src/view/screens/Search/Search.tsx:308
 msgid "No results found for {query}"
-msgstr "未找到{query}的结果"
+msgstr "未找到 {query} 的结果"
 
 #: src/view/com/modals/EmbedConsent.tsx:129
 msgid "No thanks"
@@ -2480,7 +2480,7 @@ msgstr "打开"
 #: src/view/com/composer/Composer.tsx:470
 #: src/view/com/composer/Composer.tsx:471
 msgid "Open emoji picker"
-msgstr "打开emoji选择器"
+msgstr "打开 emoji 选择器"
 
 #: src/view/screens/Settings.tsx:706
 msgid "Open links with in-app browser"
@@ -2558,7 +2558,7 @@ msgstr "打开使用自定义域名的模式"
 
 #: src/view/screens/Settings.tsx:614
 msgid "Opens moderation settings"
-msgstr "打开管理员设置"
+msgstr "打开限制设置"
 
 #: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Opens password reset form"
@@ -2688,7 +2688,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "请选择你的昵称。"
+msgstr "请选择你的用户识别符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
@@ -2850,7 +2850,7 @@ msgstr "公开内容"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "公开且可共享的批量静音或屏蔽列表。"
+msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
@@ -3050,7 +3050,7 @@ msgstr "请求码"
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
-msgstr ""
+msgstr "确认码"
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
@@ -3067,7 +3067,7 @@ msgstr "重置码"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr ""
+msgstr "重置代码"
 
 #: src/view/screens/Settings.tsx:806
 msgid "Reset onboarding"
@@ -3155,7 +3155,7 @@ msgstr "保存更改"
 
 #: src/view/com/modals/ChangeHandle.tsx:170
 msgid "Save handle change"
-msgstr "保存新的昵称"
+msgstr "保存新的用户识别符"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:144
 msgid "Save image crop"
@@ -3171,7 +3171,7 @@ msgstr "保存个人资料中所做的变更"
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
-msgstr "保存昵称更改至 {handle}"
+msgstr "保存用户识别符更改至 {handle}"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
@@ -3321,7 +3321,7 @@ msgstr "设置年龄"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "设置主题为暗色模式"
+msgstr "设置主题为深色模式"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
@@ -3333,11 +3333,11 @@ msgstr "设置主题跟随系统设置"
 
 #: src/view/screens/Settings.tsx:508
 msgid "Set dark theme to the dark theme"
-msgstr ""
+msgstr "设置深色模式至深黑"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Set dark theme to the dim theme"
-msgstr ""
+msgstr "设置深色模式至暗淡"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
@@ -3846,7 +3846,7 @@ msgstr "出现问题了，请检查你的互联网连接并重试。"
 
 #: src/view/com/util/ErrorBoundary.tsx:36
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
-msgstr "\"应用发生意外错误，请联系我们进行错误反馈！"
+msgstr "应用发生意外错误，请联系我们进行错误反馈！"
 
 #: src/screens/Deactivated.tsx:107
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
@@ -3862,7 +3862,7 @@ msgstr "这里是一些受欢迎的账号，你可能会喜欢："
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
-msgstr "{screenDescription}\" 已被标记："
+msgstr "这个 {screenDescription} 已被标记："
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
@@ -3928,11 +3928,11 @@ msgstr "此用户包含在你已屏蔽的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr ""
+msgstr "此用户包含在你已隐藏的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
-#~ msgstr "此用户包含在你已静音的 <0/> 列表中。"
+#~ msgstr "此用户包含在你已隐藏的 <0/> 列表中。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -3980,7 +3980,7 @@ msgstr "取消屏蔽列表"
 
 #: src/view/screens/ProfileList.tsx:490
 msgid "Un-mute list"
-msgstr "取消静音列表"
+msgstr "取消隐藏列表"
 
 #: src/view/com/auth/create/CreateAccount.tsx:66
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
@@ -4031,15 +4031,15 @@ msgstr "取消喜欢"
 
 #: src/view/screens/ProfileList.tsx:596
 msgid "Unmute"
-msgstr "取消静音"
+msgstr "取消隐藏"
 
 #: src/view/com/profile/ProfileHeader.tsx:373
 msgid "Unmute Account"
-msgstr "取消静音账户"
+msgstr "取消隐藏账户"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Unmute thread"
-msgstr "取消静音讨论串"
+msgstr "取消隐藏讨论串"
 
 #: src/view/screens/ProfileFeed.tsx:353
 #: src/view/screens/ProfileList.tsx:580
@@ -4048,7 +4048,7 @@ msgstr "取消固定"
 
 #: src/view/screens/ProfileList.tsx:473
 msgid "Unpin moderation list"
-msgstr "取消固定管理员列表"
+msgstr "取消固定限制列表"
 
 #: src/view/screens/ProfileFeed.tsx:345
 msgid "Unsave"
@@ -4090,7 +4090,7 @@ msgstr "使用系统默认浏览器"
 
 #: src/view/com/modals/AddAppPasswords.tsx:155
 msgid "Use this to sign into the other app along with your handle."
-msgstr "使用这个和你的昵称一起登录其他应用。"
+msgstr "使用这个和你的用户识别符一起登录其他应用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
@@ -4114,7 +4114,7 @@ msgstr "用户屏蔽了你"
 
 #: src/view/com/auth/create/Step3.tsx:41
 msgid "User handle"
-msgstr "用户昵称"
+msgstr "用户识别符"
 
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
@@ -4220,7 +4220,7 @@ msgstr "警告"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\""
+msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\":"
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4236,7 +4236,7 @@ msgstr "我们已经看完了你关注的帖子。这是来自 <0/> 的最新消
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
 msgid "We recommend our \"Discover\" feed:"
-msgstr "我们推荐我们的 \"Discover\" 信息流"
+msgstr "我们推荐我们的 \"Discover\" 信息流:"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -4378,11 +4378,11 @@ msgstr "你已屏蔽了此用户，你将无法查看他们发布的内容。"
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr ""
+msgstr "你输入的邀请码无效。它应该长得像这样 XXXXX-XXXXX。"
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
-msgstr "你已静音这个用户。"
+msgstr "你已隐藏这个用户。"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:136
 msgid "You have no feeds."
@@ -4403,7 +4403,7 @@ msgstr "你尚未创建任何 App 专用密码，可以通过点击下面的按�
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-msgstr "你还没有静音任何账号。要静音账号，请转到其个人资料并在其账号上的菜单中选择 \"静音账号\"。"
+msgstr "你还没有隐藏任何账号。要隐藏账号，请转到其个人资料并在其账号上的菜单中选择 \"隐藏账号\"。"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:170
 msgid "You must be 18 or older to enable adult content."
@@ -4487,11 +4487,11 @@ msgstr "你的关注信息流为空！关注更多用户去看看他们发了什
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
-msgstr "你的完整昵称将修改为"
+msgstr "你的完整用户识别符将修改为"
 
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "你的完整昵称将修改为 <0>@{0}</0>"
+msgstr "你的完整用户识别符将修改为 <0>@{0}</0>"
 
 #: src/view/screens/Settings.tsx:430
 #: src/view/shell/desktop/RightNav.tsx:137
@@ -4501,7 +4501,7 @@ msgstr "在使用 App 专用密码登录时，你的邀请码将被隐藏"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "你的密码已更改成功！"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
@@ -4511,7 +4511,7 @@ msgstr "你的帖子已发送"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "你的帖子、点赞和屏蔽是公开可见的，而静音不可见。"
+msgstr "你的帖子、点赞和屏蔽是公开可见的，而隐藏不可见。"
 
 #: src/view/com/modals/SwitchAccount.tsx:84
 #: src/view/screens/Settings.tsx:125
@@ -4524,4 +4524,4 @@ msgstr "你的回复已发送"
 
 #: src/view/com/auth/create/Step3.tsx:28
 msgid "Your user handle"
-msgstr "你的用户昵称"
+msgstr "你的用户识别符"
