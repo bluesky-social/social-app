@@ -52,26 +52,11 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
       // Return undefined if no did or handle
       if (!didOrHandle) return
 
-      let item: AppBskyActorDefs.ProfileViewBasic | undefined
-
-      if (!didOrHandle?.startsWith('did:')) {
-        // If this is a handle all we have to do is use the query key
-        item = queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
+      const profile =
+        queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
           RQKEY_PROFILE_BASIC(didOrHandle),
         )
-      } else {
-        // If it is a did we need to search the queries data
-        item = queryClient
-          .getQueriesData<AppBskyActorDefs.ProfileViewBasic>({
-            queryKey: ['profileBasic'],
-            exact: false,
-          })
-          .find(q => q[1]?.did === didOrHandle)?.[1]
-      }
-      // Return nothing if we don't find one
-      if (!item) return undefined
-
-      return item.did
+      return profile?.did
     },
   })
 }
@@ -81,6 +66,7 @@ export function precacheProfile(
   profile: AppBskyActorDefs.ProfileViewBasic,
 ) {
   queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.handle), profile)
+  queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
 }
 
 export function precacheQuoteEmbeds(queryClient: QueryClient, uris: string[]) {

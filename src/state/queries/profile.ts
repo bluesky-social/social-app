@@ -50,12 +50,11 @@ export function useProfileQuery({
     },
     enabled: !!did,
     placeholderData: () => {
-      return queryClient
-        .getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
-          queryKey: ['profileBasic'],
-          exact: false,
-        })
-        .find(q => q[1]?.did === did)?.[1]
+      if (!did) return
+
+      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
+        profileBasicKey(did),
+      )
     },
   })
 }
