@@ -462,7 +462,7 @@ let ProfileHeaderLoaded = ({
       ]}
       pointerEvents="box-none">
       <View pointerEvents="none">
-        {true ? (
+        {isProfilePreview ? (
           <LoadingPlaceholder
             width="100%"
             height={150}
