@@ -1566,7 +1566,7 @@ msgstr "食物"
 
 #: src/view/com/modals/DeleteAccount.tsx:111
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "為了保護你的帳戶安全，我們需要將驗證碼發送到你的電子郵件地址。"
+msgstr "為了保護你的帳號安全，我們需要將驗證碼發送到你的電子郵件地址。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
