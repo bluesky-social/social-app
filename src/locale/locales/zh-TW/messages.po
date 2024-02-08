@@ -1739,7 +1739,7 @@ msgstr "我們該如何開啟此連結？"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
-msgstr "我有邀請碼"
+msgstr "我有驗證碼"
 
 #: src/view/com/modals/VerifyEmail.tsx:216
 msgid "I have a confirmation code"
