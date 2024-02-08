@@ -452,7 +452,10 @@ let ProfileHeaderLoaded = ({
 
   return (
     <View
-      style={[pal.view, isProfilePreview && styles.loadingBorderStyle]}
+      style={[
+        pal.view,
+        isProfilePreview && isDesktop && styles.loadingBorderStyle,
+      ]}
       pointerEvents="box-none">
       <View pointerEvents="none">
         {isProfilePreview ? (
