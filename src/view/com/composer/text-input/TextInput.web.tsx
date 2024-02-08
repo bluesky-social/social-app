@@ -228,7 +228,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   return (
     <>
       <View style={styles.container}>
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} style={{color: pal.text.color}} />
       </View>
 
       {isDropping && (
