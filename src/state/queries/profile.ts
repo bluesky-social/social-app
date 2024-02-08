@@ -38,7 +38,7 @@ export function useProfileQuery({
   const queryClient = useQueryClient()
   // TODO Figure out a good staleTime for this. We should refetch on every profile push, because we need to check for
   // blocks
-  return useQuery<AppBskyActorDefs.ProfileView>({
+  return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     staleTime,
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did ?? ''),
@@ -49,7 +49,7 @@ export function useProfileQuery({
     enabled: !!did,
     placeholderData: () => {
       return queryClient
-        .getQueriesData<AppBskyActorDefs.ProfileView>({
+        .getQueriesData<AppBskyActorDefs.ProfileViewDetailed>({
           queryKey: ['profileBasic'],
           exact: false,
         })
