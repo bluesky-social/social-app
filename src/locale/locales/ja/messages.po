@@ -334,7 +334,7 @@ msgstr "この判断に異議を申し立てる"
 
 #: src/view/screens/Settings.tsx:460
 msgid "Appearance"
-msgstr "外観"
+msgstr "背景"
 
 #: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
