@@ -13,7 +13,10 @@ import {useSetDrawerOpen} from '#/state/shell'
 import {emitSoftReset} from '#/state/events'
 import {shareUrl} from '#/lib/sharing'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {NativeDropdown, DropdownItem} from '#/view/com/util/forms/NativeDropdown'
+import {
+  NativeDropdown,
+  DropdownItem,
+} from '#/view/com/util/forms/NativeDropdown'
 import {useSession} from '#/state/session'
 import {useModalControls} from '#/state/modals'
 
@@ -95,7 +98,7 @@ export function Header({
             a.overflow_hidden,
           ]}>
           <LinearGradient
-            colors={tokens.gradients.sky.values.map(c => c[1])}
+            colors={tokens.gradients.bonfire.values.map(c => c[1])}
             locations={tokens.gradients.bonfire.values.map(c => c[0])}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}

@@ -1,32 +1,22 @@
-import React, {useMemo, useCallback} from 'react'
-import {Dimensions, StyleSheet, View, ActivityIndicator} from 'react-native'
+import React from 'react'
+import {Dimensions, View} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useIsFocused, useNavigation} from '@react-navigation/native'
-import {AppBskyModerationDefs, RichText as RichTextAPI} from '@atproto/api'
-import {usePalette} from 'lib/hooks/usePalette'
-import {HeartIcon, HeartIconSolid} from 'lib/icons'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {TextLink} from 'view/com/util/Link'
-import {Button as OldButton} from 'view/com/util/forms/Button'
-import {Text as RNText} from 'view/com/util/text/Text'
-import {ModServicePrefs} from '#/view/com/moderation/ModServicePrefs'
-import * as Toast from 'view/com/util/Toast'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {Haptics} from 'lib/haptics'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {makeCustomFeedLink} from 'lib/routes/links'
-import {pluralize} from 'lib/strings/helpers'
-import {CenteredView, ScrollView} from 'view/com/util/Views'
-import {NavigationProp} from 'lib/routes/types'
-import {makeProfileLink} from 'lib/routes/links'
-import {logger} from '#/logger'
+import {AppBskyModerationDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {TextLink} from '#/view/com/util/Link'
+import * as Toast from '#/view/com/util/Toast'
+import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {Haptics} from '#/lib/haptics'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {pluralize} from '#/lib/strings/helpers'
+import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {makeProfileLink} from '#/lib/routes/links'
+import {logger} from '#/logger'
 import {useModServiceInfoQuery} from '#/state/queries/modservice'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {
@@ -40,14 +30,18 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
-import {Button, ButtonText} from '#/components/Button'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {Heart2_Stroke2_Corner0_Rounded as Heart, Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled} from '#/components/icons/Heart2'
+import {Button} from '#/components/Button'
+import {
+  Heart2_Stroke2_Corner0_Rounded as Heart,
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+} from '#/components/icons/Heart2'
 import {RichText} from '#/components/RichText'
 import {InlineLink} from '#/components/Link'
+import {Divider} from '#/components/Divider'
 
 import {ErrorState} from '#/screens/ProfileModerationService/ErrorState'
 import {Header} from '#/screens/ProfileModerationService/Header'
+import {PreferenceRow} from '#/screens/ProfileModerationService/PreferenceRow'
 
 // TODO
 const MIN_HEIGHT = Dimensions.get('window').height * 1.5
@@ -125,7 +119,7 @@ function ProfileModservicecreenIntermediate({modDid}: {modDid: string}) {
 }
 
 export function ProfileModserviceScreenInner({
-  preferences,
+  // preferences,
   modInfo,
 }: {
   preferences: UsePreferencesQueryResponse
@@ -144,10 +138,10 @@ export function ProfileModserviceScreenInner({
   )
 
   const isLiked = !!likeUri
-  const isSaved = false // TODO
+  // const isSaved = false // TODO
   // !removedFeed &&
   // (!!savedFeed || preferences.feeds.saved.includes(feedInfo.uri))
-  const isEnabled = false // TODO
+  // const isEnabled = false // TODO
   // !unpinnedFeed &&
   // (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
 
@@ -207,7 +201,13 @@ export function ProfileModserviceScreenInner({
           </Text>
         )}
 
-        <Text style={[a.text_md, a.leading_normal, a.italic, t.atoms.text_contrast_700]}>
+        <Text
+          style={[
+            a.text_md,
+            a.leading_normal,
+            a.italic,
+            t.atoms.text_contrast_700,
+          ]}>
           <Trans>
             Operated by{' '}
             <TextLink
@@ -223,10 +223,10 @@ export function ProfileModserviceScreenInner({
         <View style={[a.flex_row, a.gap_md, a.align_center]}>
           <Button
             testID="toggleLikeBtn"
-            size='small'
-            color='secondary'
-            variant='solid'
-            shape='round'
+            size="small"
+            color="secondary"
+            variant="solid"
+            shape="round"
             label={_(msg`Like this feed`)}
             disabled={!hasSession || isLikePending || isUnlikePending}
             onPress={onToggleLiked}>
@@ -238,17 +238,24 @@ export function ProfileModserviceScreenInner({
           </Button>
 
           {typeof modInfo.likeCount === 'number' && (
-            <InlineLink
-              to={'#todo'}
-              style={[pal.textLight, s.semiBold]}
-            >
-              <Trans>Liked by {modInfo.likeCount} {pluralize(modInfo.likeCount, 'user')}</Trans>
+            <InlineLink to={'#todo'} style={[pal.textLight, s.semiBold]}>
+              <Trans>
+                Liked by {modInfo.likeCount}{' '}
+                {pluralize(modInfo.likeCount, 'user')}
+              </Trans>
             </InlineLink>
           )}
         </View>
       </View>
 
-      <ModServicePrefs />
+      <View style={[a.gap_md, a.mt_xl]}>
+        <Divider />
+        <PreferenceRow labelGroup="nsfw" />
+        <Divider />
+        <PreferenceRow labelGroup="nudity" />
+        <Divider />
+        <PreferenceRow labelGroup="suggestive" />
+      </View>
 
       <View style={{height: 20}} />
     </ScrollView>

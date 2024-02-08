@@ -1,68 +1,73 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import {RichText as RichTextAPI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HandIcon} from '#/lib/icons'
-import {Trans, msg} from '@lingui/macro'
+import {View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {Text} from '../util/text/Text'
-import {RichText} from '../util/text/RichText'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s, colors} from 'lib/styles'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import LinearGradient from 'react-native-linear-gradient'
 
-import {atoms as a} from '#/alf'
-import {Link} from '#/components/Link'
-
-const richtext = new RichTextAPI({
-  text: "Bluesky's official moderation service",
-})
+import {atoms as a, useTheme, tokens, web} from '#/alf'
+import {Link, useLinkContext} from '#/components/Link'
+import {Text} from '#/components/Typography'
+import {RichText} from '#/components/RichText'
+import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
 
 export function ProfileHeaderModCard() {
-  const pal = usePalette('default')
-  const {isMobile} = useWebMediaQueries()
+  const {_} = useLingui()
 
   return (
-    <Link to='/profile/alice.test/modservice' style={[a.flex_row]}>
-      <View
-        style={[
-          a.w_full,
-          pal.view,
-          pal.borderDark,
-          s.mt5,
-          {
-            borderWidth: 1,
-            borderRadius: 8,
-            paddingVertical: 10,
-            paddingHorizontal: 12,
-          },
-        ]}>
-        <View style={[s.flexRow, s.alignCenter, {gap: 8}]}>
-          {!isMobile && <HandIcon style={pal.text} size={24} strokeWidth={5.5} />}
-          <View style={{flex: 1}}>
-            <Text type="lg-bold" style={pal.text}>
-              <Trans>Moderation service</Trans>
-            </Text>
-            <RichText richText={richtext} />
-          </View>
-          {isMobile ? (
-            <HandIcon style={pal.text} size={24} strokeWidth={5.5} />
-          ) : (
-            <View
-              style={[
-                pal.viewLight,
-                {paddingHorizontal: 12, paddingVertical: 6, borderRadius: 24},
-              ]}>
-              <Text type="button" style={pal.text}>
-                <Trans>View</Trans>
-              </Text>
-            </View>
-          )}
-        </View>
-      </View>
+    <Link
+      to="/profile/alice.test/modservice"
+      label={_(msg`View the moderation service provided by this profile`)}>
+      <Inner />
     </Link>
   )
 }
 
-const styles = StyleSheet.create({})
+function Inner() {
+  const t = useTheme()
+  const {hovered, pressed, focused} = useLinkContext()
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.gap_sm,
+        a.w_full,
+        a.rounded_sm,
+        a.pt_md,
+        a.pb_sm,
+        a.pl_lg,
+        a.pr_sm,
+        a.overflow_hidden,
+        web({
+          transition: 'transform 0.2s cubic-bezier(.02,.73,.27,.99)',
+        }),
+        {
+          transform: [{scale: pressed || hovered || focused ? 0.992 : 1}],
+        },
+      ]}>
+      <LinearGradient
+        colors={tokens.gradients.bonfire.values.map(c => c[1])}
+        locations={tokens.gradients.bonfire.values.map(c => c[0])}
+        start={{x: 0, y: 0}}
+        end={{x: 1, y: 1}}
+        style={[a.absolute, a.inset_0]}
+      />
+
+      <View style={[a.z_10]}>
+        <Text
+          style={[a.text_md, a.font_bold, a.pb_2xs, {color: t.palette.white}]}>
+          <Trans>Moderation service</Trans>
+        </Text>
+
+        <RichText
+          value={'Moderation service managed by bsky.app'}
+          style={[{color: t.palette.white}]}
+        />
+      </View>
+
+      <RaisingHand size="xl" style={[a.z_10]} fill={t.palette.white} />
+    </View>
+  )
+}
