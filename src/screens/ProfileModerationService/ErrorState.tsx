@@ -24,7 +24,7 @@ export function ErrorState({error}: {error: string}) {
   }, [navigation])
 
   return (
-    <>
+    <View style={[a.px_xl]}>
       <CircleInfo width={48} style={[t.atoms.text_contrast_400]} />
 
       <Text style={[a.text_xl, a.font_bold, a.pb_md, a.pt_xl]}>
@@ -67,6 +67,6 @@ export function ErrorState({error}: {error: string}) {
           </ButtonText>
         </Button>
       </View>
-    </>
+    </View>
   )
 }

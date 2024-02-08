@@ -60,7 +60,6 @@ export function ProfileModserviceScreen(
     <CenteredView>
       <View
         style={[
-          a.px_xl,
           a.border_l,
           a.border_r,
           t.atoms.border,
@@ -184,6 +183,7 @@ export function ProfileModserviceScreenInner({
       contentContainerStyle={{
         minHeight: Dimensions.get('window').height * 1.5,
         borderWidth: 0,
+        paddingHorizontal: a.px_xl.paddingLeft,
       }}>
       <Header info={modInfo} />
 
