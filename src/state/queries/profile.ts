@@ -28,12 +28,18 @@ export const RQKEY = (did: string) => ['profile', did]
 export const profileBasicKey = (handle: string) => ['profileBasic', handle]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
-export function useProfileQuery({did}: {did: string | undefined}) {
+export function useProfileQuery({
+  did,
+  staleTime = STALE.SECONDS.FIFTEEN,
+}: {
+  did: string | undefined
+  staleTime?: number
+}) {
   const queryClient = useQueryClient()
   // TODO Figure out a good staleTime for this. We should refetch on every profile push, because we need to check for
   // blocks
   return useQuery<AppBskyActorDefs.ProfileView>({
-    staleTime: STALE.SECONDS.FIFTEEN,
+    staleTime,
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did ?? ''),
     queryFn: async () => {
