@@ -19,7 +19,7 @@ msgstr "（沒有郵件）"
 
 #: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr "{0, plural, one {# 邀請碼可用} other {# 邀請碼可用}}"
+msgstr "{0, plural, one {# 個可用的邀請碼} other {# 個可用的邀請碼}}"
 
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
