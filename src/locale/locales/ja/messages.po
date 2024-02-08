@@ -1104,7 +1104,7 @@ msgstr "なにか言いたいことはあった？"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr ""
+msgstr "グレー"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
