@@ -3931,8 +3931,8 @@ msgid "This user is included in the <0/> list which you have muted."
 msgstr "此使用者包含在你已靜音的 <0/> 清單中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
-msgid "This user is included the <0/> list which you have muted."
-msgstr "此使用者包含在你已靜音的 <0/> 清單中。"
+#~ msgid "This user is included the <0/> list which you have muted."
+#~ msgstr "此使用者包含在你已靜音的 <0/> 清單中。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -4238,114 +4238,114 @@ msgstr "我們已經看完了你追蹤的貼文。這是來自 <0/> 的最新消
 msgid "We recommend our \"Discover\" feed:"
 msgstr "我們推薦我們的「Discover」訊息流:"
 
-#~: src/screens/Onboarding/StepInterests/index.tsx:133
+#: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
 msgstr "我們無法連線到網路，請重試以繼續設定你的帳號。如果仍繼續失敗，你可以選擇跳過此流程。"
 
-#~: src/screens/Deactivated.tsx:138
+#: src/screens/Deactivated.tsx:138
 msgid "We will let you know when your account is ready."
 msgstr "我們會在你的帳號準備好時通知你。"
 
-#~: src/view/com/modals/AppealLabel.tsx:48
+#: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
 msgstr "我們將迅速審查你的申訴。"
 
-#~: src/screens/Onboarding/StepInterests/index.tsx:138
+#: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "We'll use this to help customize your experience."
 msgstr "我們將使用這些資訊來幫助定制你的體驗。"
 
-#~: src/view/com/auth/create/CreateAccount.tsx:123
+#: src/view/com/auth/create/CreateAccount.tsx:123
 msgid "We're so excited to have you join us!"
 msgstr "我們非常高興你加入我們！"
 
-#~: src/view/screens/ProfileList.tsx:85
+#: src/view/screens/ProfileList.tsx:85
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "很抱歉，我們無法解析此清單。如果問題持續發生，請聯繫清單創建者，@{handleOrDid}。"
 
-#~: src/view/screens/Search/Search.tsx:253
+#: src/view/screens/Search/Search.tsx:253
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，無法完成你的搜索。請稍後再試。"
 
-#~: src/view/screens/NotFound.tsx:48
+#: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "很抱歉！我們找不到你正在尋找的頁面。"
 
-#~: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
 msgid "Welcome to <0>Bluesky</0>"
 msgstr "歡迎來到 <0>Bluesky</0>"
 
-#~: src/screens/Onboarding/StepInterests/index.tsx:130
+#: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
 msgstr "你感興趣的是什麼？"
 
-#~: src/view/com/modals/report/Modal.tsx:169
+#: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
 msgstr "這個 {collectionName} 有什麼問題？"
 
-#~: src/view/com/auth/SplashScreen.tsx:34
-#~: src/view/com/composer/Composer.tsx:279
+#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "發生了什麼新鮮事？"
 
-#~: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
 msgstr "這個貼文中使用了哪些語言？"
 
-#~: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
 msgstr "你想在算法訊息流中看到哪些語言？"
 
-#~: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
-#~: src/view/com/modals/Threadgate.tsx:66
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
+#: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
 msgstr "誰可以回覆"
 
-#~: src/view/com/modals/crop-image/CropImage.web.tsx:102
+#: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
 msgstr "寬"
 
-#~: src/view/com/composer/Composer.tsx:415
+#: src/view/com/composer/Composer.tsx:415
 msgid "Write post"
 msgstr "撰寫貼文"
 
-#~: src/view/com/composer/Composer.tsx:278
-#~: src/view/com/composer/Prompt.tsx:33
+#: src/view/com/composer/Composer.tsx:278
+#: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "撰寫你的回覆"
 
-#~: src/screens/Onboarding/index.tsx:28
+#: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
 msgstr "作家"
 
-#~: src/view/com/auth/create/Step2.tsx:263
+#: src/view/com/auth/create/Step2.tsx:263
 msgid "XXXXXX"
 msgstr "XXXXXX"
 
-#~: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
-#~: src/view/screens/PreferencesHomeFeed.tsx:129
-#~: src/view/screens/PreferencesHomeFeed.tsx:201
-#~: src/view/screens/PreferencesHomeFeed.tsx:236
-#~: src/view/screens/PreferencesHomeFeed.tsx:271
-#~: src/view/screens/PreferencesThreads.tsx:106
-#~: src/view/screens/PreferencesThreads.tsx:129
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/screens/PreferencesHomeFeed.tsx:129
+#: src/view/screens/PreferencesHomeFeed.tsx:201
+#: src/view/screens/PreferencesHomeFeed.tsx:236
+#: src/view/screens/PreferencesHomeFeed.tsx:271
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
 msgstr "是的"
 
-#~: src/screens/Deactivated.tsx:131
+#: src/screens/Deactivated.tsx:131
 msgid "You are in line."
 msgstr "輪到你了。"
 
-#~: src/view/com/posts/FollowingEmptyState.tsx:67
-#~: src/view/com/posts/FollowingEndOfFeed.tsx:68
+#: src/view/com/posts/FollowingEmptyState.tsx:67
+#: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "你也可以探索新的自定義訊息流來追蹤。"
 
-#~: src/screens/Onboarding/StepFollowingFeed.tsx:142
+#: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
 msgstr "你可以稍後在設定中更改。"
 
-#~: src/view/com/auth/login/Login.tsx:158
-#~: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
+#: src/view/com/auth/login/Login.tsx:158
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
 msgid "You can now sign in with your new password."
 msgstr "你現在可以使用新密碼登錄."
 
