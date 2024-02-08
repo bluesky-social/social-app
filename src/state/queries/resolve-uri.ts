@@ -1,5 +1,11 @@
 import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
-import {AtUri, AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api'
+import {
+  AtUri,
+  AppBskyActorDefs,
+  AppBskyFeedDefs,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
@@ -53,9 +59,45 @@ export function precacheFeedPosts(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
 ) {
-  for (const post of posts) {
-    precacheProfile(queryClient, post.post.author)
+  // This is what we have presently. Regardless of implementation this needs to be reworked, because it doesn't
+  // save enough info
+  // for (const post of posts) {
+  //   precacheProfile(queryClient, post.post.author)
+  // }
+
+  // One thing we know we are going to need to query is a few of the posts. This will only happen whenever there's
+  // a quote embed that contains media (we need the URIs for the images). For simplicity, we'll always use this function
+  // to store the author of quotes.
+  // We should be able to store the author, which is ProfileViewBasic, and use that when pushing to the ProfileScreen.
+  // ProfileScreen can query for the full ProfileView on push (or before, like on hover on web, on push on native)
+  const quoteEmbedUris: string[] = []
+
+  // TODO figure out the type for this
+  function handleEmbed(embed?: any) {
+    // If it's a view record, all we need to do is "cache" the author
+    if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
+      // precache(embedAuthor)
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(embed) &&
+      AppBskyEmbedRecord.isViewRecord(embed.record.record)
+    ) {
+      // precache(embedAuthor)
+      // quoteEmbedUris.push(uri)
+    }
   }
+
+  for (const post of posts) {
+    // Save the author of the post every time
+    // precache(postAuthor)
+    // handleEmbed(postEmbed)
+
+    if (post.reply?.parent?.author) {
+      // precache(postReplyAuthor)
+      // handleEmbed(postReplyEmbed)
+    }
+  }
+
+  // precacheQuoteEmbeds(quoteEmbedUris)
 }
 
 export function precacheThreadPosts(
