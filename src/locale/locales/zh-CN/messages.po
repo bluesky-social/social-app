@@ -1739,7 +1739,7 @@ msgstr "我们该如何打开此链接？"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
-msgstr "我有邀请码"
+msgstr "我有验证码"
 
 #: src/view/com/modals/VerifyEmail.tsx:216
 msgid "I have a confirmation code"
@@ -2293,11 +2293,11 @@ msgstr "永远不会失去对你的关注者或数据的访问。"
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
 msgid "New"
-msgstr "新"
+msgstr "新建"
 
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
-msgstr "新"
+msgstr "新建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:252
 msgid "New Moderation List"
