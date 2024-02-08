@@ -25,7 +25,10 @@ import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (did: string) => ['profile', did]
-export const profileBasicKey = (handle: string) => ['profileBasic', handle]
+export const profileBasicKey = (didOrHandle: string) => [
+  'profileBasic',
+  didOrHandle,
+]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({
