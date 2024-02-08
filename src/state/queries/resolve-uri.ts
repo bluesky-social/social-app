@@ -12,7 +12,6 @@ import {
   AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 import {profileBasicKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
-import {RQKEY as RQKEY_POST} from './post'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
@@ -69,25 +68,10 @@ export function precacheProfile(
   queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
 }
 
-export function precacheQuoteEmbeds(queryClient: QueryClient, uris: string[]) {
-  if (uris.length === 0) return
-  ;(async () => {
-    // Don't block the UI with this request
-    const res = await getAgent().getPosts({uris})
-    if (!res.success || !res.data.posts?.[0]) return
-
-    for (const post of res.data.posts) {
-      queryClient.setQueryData(RQKEY_POST(post.uri), post)
-    }
-  })()
-}
 export function precacheFeedPosts(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
 ) {
-  // Store the embed URIs we run across that need caching
-  const quoteEmbedUris: string[] = []
-
   function handleEmbed(embed?: any) {
     // If it's a view record, all we need to do is "cache" the author
     if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
@@ -97,7 +81,6 @@ export function precacheFeedPosts(
       AppBskyEmbedRecord.isViewRecord(embed.record.record)
     ) {
       precacheProfile(queryClient, embed.record.record.author)
-      quoteEmbedUris.push(embed.record.record.uri as string)
     }
   }
 
@@ -115,9 +98,6 @@ export function precacheFeedPosts(
       handleEmbed(post.reply?.parent.embed)
     }
   }
-
-  // Precache the quotes finally
-  precacheQuoteEmbeds(queryClient, quoteEmbedUris)
 }
 
 export function precacheThreadPosts(
