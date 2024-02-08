@@ -33,6 +33,7 @@ import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useOpenGlobalDialog} from '#/components/dialogs'
 import {ReportDialog} from '#/components/dialogs/ReportDialog'
+import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 
 let PostDropdownBtn = ({
   testID,
@@ -212,12 +213,15 @@ let PostDropdownBtn = ({
       hasSession && {
         label: _(msg`Report post`),
         onPress() {
-          openDialog(ReportDialog, {type: 'post', uri: postUri, cid: postCid})
-          // openModal({
-          //   name: 'report',
-          //   uri: postUri,
-          //   cid: postCid,
-          // })
+          if (NEW_REPORT_DIALOG_ENABLED) {
+            openDialog(ReportDialog, {type: 'post', uri: postUri, cid: postCid})
+          } else {
+            openModal({
+              name: 'report',
+              uri: postUri,
+              cid: postCid,
+            })
+          }
         },
         testID: 'postDropdownReportBtn',
         icon: {

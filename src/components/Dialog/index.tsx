@@ -105,9 +105,9 @@ export function Inner(props: DialogInnerProps) {
   return (
     <BottomSheetView
       style={[
-        a.p_lg,
-        a.pt_3xl,
+        a.p_xl,
         {
+          paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
           paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
@@ -124,9 +124,9 @@ export function ScrollableInner(props: DialogInnerProps) {
     <BottomSheetScrollView
       style={[
         a.flex_1, // main diff is this
-        a.p_lg,
-        a.pt_3xl,
+        a.p_xl,
         {
+          paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
@@ -140,21 +140,21 @@ export function ScrollableInner(props: DialogInnerProps) {
 export function Handle() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.absolute,
-        a.rounded_sm,
-        a.z_10,
-        {
-          top: a.pt_lg.paddingTop,
-          width: 35,
-          height: 4,
-          alignSelf: 'center',
-          backgroundColor: t.palette.contrast_900,
-          opacity: 0.5,
-        },
-      ]}
-    />
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
+      <View
+        style={[
+          a.rounded_sm,
+          {
+            top: a.pt_lg.paddingTop,
+            width: 35,
+            height: 4,
+            alignSelf: 'center',
+            backgroundColor: t.palette.contrast_900,
+            opacity: 0.5,
+          },
+        ]}
+      />
+    </View>
   )
 }
 

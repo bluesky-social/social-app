@@ -148,7 +148,7 @@ export function Inner({
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_xl : a.p_lg,
+          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
