@@ -773,7 +773,11 @@ let ProfileHeaderPlaceholder = ({
         <UserBanner moderation={moderation.avatar} />
       </View>
       <View style={styles.content} pointerEvents="box-none">
-        <View style={[styles.buttonsLine]} pointerEvents="box-none" />
+        <View style={styles.content}>
+          <View style={[styles.buttonsLine]}>
+            <LoadingPlaceholder width={167} height={31} style={styles.br50} />
+          </View>
+        </View>
         <View pointerEvents="none">
           <Text
             testID="profileHeaderDisplayName"
