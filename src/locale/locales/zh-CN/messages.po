@@ -1183,7 +1183,7 @@ msgstr "编辑列表详情"
 
 #: src/view/com/modals/CreateOrEditList.tsx:250
 msgid "Edit Moderation List"
-msgstr "编辑管理员列表"
+msgstr "编辑限制列表"
 
 #: src/Navigation.tsx:243
 #: src/view/screens/Feeds.tsx:403
@@ -1845,7 +1845,7 @@ msgstr "邀请"
 #: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:399
 msgid "Invite a Friend"
-msgstr "邀请一位朋友"
+msgstr "邀请朋友"
 
 #: src/view/com/auth/create/Step1.tsx:92
 #: src/view/com/auth/create/Step1.tsx:101
@@ -2130,47 +2130,47 @@ msgstr "来自服务器的信息：{0}"
 #: src/view/shell/Drawer.tsx:514
 #: src/view/shell/Drawer.tsx:515
 msgid "Moderation"
-msgstr "管理员"
+msgstr "限制"
 
 #: src/view/com/lists/ListCard.tsx:92
 #: src/view/com/modals/UserAddRemoveLists.tsx:206
 msgid "Moderation list by {0}"
-msgstr "管理员列表由 {0} 创建"
+msgstr "限制列表由 {0} 创建"
 
 #: src/view/screens/ProfileList.tsx:774
 msgid "Moderation list by <0/>"
-msgstr "管理员列表由 </0> 创建"
+msgstr "限制列表由 </0> 创建"
 
 #: src/view/com/lists/ListCard.tsx:90
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
 #: src/view/screens/ProfileList.tsx:772
 msgid "Moderation list by you"
-msgstr "管理员列表由你创建"
+msgstr "限制列表由你创建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:197
 msgid "Moderation list created"
-msgstr "管理员列表已创建"
+msgstr "限制列表已创建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:183
 msgid "Moderation list updated"
-msgstr "管理员列表已更新"
+msgstr "限制列表已更新"
 
 #: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
-msgstr "管理员列表"
+msgstr "限制列表"
 
 #: src/Navigation.tsx:120
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
-msgstr "管理员列表"
+msgstr "限制列表"
 
 #: src/view/screens/Settings.tsx:613
 msgid "Moderation settings"
-msgstr "管理员设置"
+msgstr "限制设置"
 
 #: src/view/com/modals/ModerationDetails.tsx:35
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "管理员选择对内容设置一般警告。"
+msgstr "限制选择对内容设置一般警告。"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
@@ -2301,7 +2301,7 @@ msgstr "新建"
 
 #: src/view/com/modals/CreateOrEditList.tsx:252
 msgid "New Moderation List"
-msgstr "新的管理员列表"
+msgstr "新的限制列表"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:150
 msgid "New password"
@@ -2558,7 +2558,7 @@ msgstr "打开使用自定义域名的模式"
 
 #: src/view/screens/Settings.tsx:614
 msgid "Opens moderation settings"
-msgstr "打开管理员设置"
+msgstr "打开限制设置"
 
 #: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Opens password reset form"
@@ -4048,7 +4048,7 @@ msgstr "取消固定"
 
 #: src/view/screens/ProfileList.tsx:473
 msgid "Unpin moderation list"
-msgstr "取消固定管理员列表"
+msgstr "取消固定限制列表"
 
 #: src/view/screens/ProfileFeed.tsx:345
 msgid "Unsave"
