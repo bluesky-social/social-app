@@ -234,7 +234,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       <ChevronUpDownIcon
                         size={16}
                         strokeWidth={1.9}
-                        style={[pal.text, {marginLeft: -16, right: -16}]}
+                        style={[pal.text, styles.profileIconChevron]}
                       />
                     )}
                   </View>
@@ -251,7 +251,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       <ChevronUpDownIcon
                         size={16}
                         strokeWidth={1.9}
-                        style={[pal.text, {marginLeft: -16, right: -16}]}
+                        style={[pal.text, styles.profileIconChevron]}
                       />
                     )}
                   </View>

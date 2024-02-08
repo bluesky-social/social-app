@@ -67,6 +67,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     top: -4,
   },
+  profileIconChevron: {
+    marginLeft: -16,
+    right: -16,
+  },
   onProfile: {
     borderWidth: 1,
     borderRadius: 100,
