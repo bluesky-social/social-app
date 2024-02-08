@@ -28,14 +28,7 @@ export const RQKEY = (did: string) => ['profile', did]
 export const profileBasicKey = (did: string) => ['profileBasic', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
-export function useProfileQuery({
-  did,
-  queryClient,
-}: {
-  did: string | undefined
-  staleTime?: number
-  queryClient: QueryClient
-}) {
+export function useProfileQuery({did}: {did: string | undefined}) {
   // return useQuery({
   //   // WARNING
   //   // this staleTime is load-bearing
@@ -50,7 +43,7 @@ export function useProfileQuery({
   //   },
   //   enabled: !!did,
   // })
-
+  const queryClient = useQueryClient()
   // TODO Figure out a good staleTime for this. We should refetch on every profile push, because we need to check for
   // blocks
   return useQuery<AppBskyActorDefs.ProfileView>({
@@ -101,7 +94,6 @@ export function usePrefetchProfileQuery() {
   return prefetchProfileQuery
 }
 
-// We don't need a useQuery hook for this. We never actually use this except for
 export function cacheProfileBasic(
   queryClient: QueryClient,
   profile: AppBskyActorDefs.ProfileViewBasic,

@@ -1,4 +1,9 @@
-import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
+import {
+  QueryClient,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from '@tanstack/react-query'
 import {
   AtUri,
   AppBskyActorDefs,
@@ -6,12 +11,44 @@ import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
+import {profileBasicKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 import {ThreadNode} from './post-thread'
 
 export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
+
+// export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
+//   const urip = new AtUri(uri || '')
+//   const res = useResolveDidQuery(urip.host)
+//   if (res.data) {
+//     urip.host = res.data
+//     return {
+//       ...res,
+//       data: {did: urip.host, uri: urip.toString()},
+//     } as UriUseQueryResult
+//   }
+//   return res as UriUseQueryResult
+// }
+//
+// export function useResolveDidQuery(didOrHandle: string | undefined) {
+//   return useQuery<string, Error>({
+//     staleTime: STALE.HOURS.ONE,
+//     queryKey: RQKEY(didOrHandle || ''),
+//     async queryFn() {
+//       if (!didOrHandle) {
+//         return ''
+//       }
+//       if (!didOrHandle.startsWith('did:')) {
+//         const res = await getAgent().resolveHandle({handle: didOrHandle})
+//         didOrHandle = res.data.did
+//       }
+//       return didOrHandle
+//     },
+//     enabled: !!didOrHandle,
+//   })
+// }
 
 type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
 export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
@@ -28,20 +65,42 @@ export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
 }
 
 export function useResolveDidQuery(didOrHandle: string | undefined) {
+  const queryClient = useQueryClient()
+
   return useQuery<string, Error>({
     staleTime: STALE.HOURS.ONE,
-    queryKey: RQKEY(didOrHandle || ''),
-    async queryFn() {
-      if (!didOrHandle) {
-        return ''
-      }
-      if (!didOrHandle.startsWith('did:')) {
-        const res = await getAgent().resolveHandle({handle: didOrHandle})
-        didOrHandle = res.data.did
-      }
-      return didOrHandle
+    queryKey: RQKEY(didOrHandle ?? ''),
+    queryFn: async () => {
+      if (!didOrHandle) return ''
+
+      const res = await getAgent().resolveHandle({handle: didOrHandle})
+      return res.data.did
     },
-    enabled: !!didOrHandle,
+    initialData: () => {
+      // Return undefined if no did or handle
+      if (!didOrHandle) return
+
+      let item: AppBskyActorDefs.ProfileViewBasic | undefined
+
+      if (!didOrHandle?.startsWith('did:')) {
+        // If this is a handle all we have to do is use the query key
+        item = queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
+          RQKEY_PROFILE_BASIC(didOrHandle),
+        )
+      } else {
+        // If it is a did we need to search the queries data
+        item = queryClient
+          .getQueriesData<AppBskyActorDefs.ProfileViewBasic>({
+            queryKey: ['profileBasic'],
+            exact: false,
+          })
+          .find(q => q[1]?.did === didOrHandle)?.[1]
+      }
+      // Return nothing if we don't find one
+      if (!item) return undefined
+
+      return item.did
+    },
   })
 }
 
