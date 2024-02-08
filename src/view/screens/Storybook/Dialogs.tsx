@@ -25,6 +25,18 @@ export function Dialogs() {
         onPress={() => {
           control.open()
           prompt.open()
+          openDialog(ReportDialog, {type: 'user', did: ''})
+        }}
+        label="Open basic dialog">
+        Open all dialogs
+      </Button>
+
+      <Button
+        variant="outline"
+        color="secondary"
+        size="small"
+        onPress={() => {
+          control.open()
         }}
         label="Open basic dialog">
         Open basic dialog
@@ -39,18 +51,16 @@ export function Dialogs() {
         Open prompt
       </Button>
 
-      <View style={[a.flex_row, a.gap_md]}>
-        <Button
-          variant="solid"
-          color="primary"
-          size="small"
-          onPress={() => {
-            openDialog(ReportDialog, {type: 'user', did: ''})
-          }}
-          label="Open prompt">
-          Open dialogs
-        </Button>
-      </View>
+      <Button
+        variant="solid"
+        color="primary"
+        size="small"
+        onPress={() => {
+          openDialog(ReportDialog, {type: 'user', did: ''})
+        }}
+        label="Open prompt">
+        Open report dialog
+      </Button>
 
       <Prompt.Outer control={prompt}>
         <Prompt.Title>This is a prompt</Prompt.Title>
