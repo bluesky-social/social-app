@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-07 22:00+0800\n"
+"POT-Creation-Date: 2024-02-08 18:40+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly\n"
+"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -37,15 +37,15 @@ msgstr "{invitesAvailable} 個可用的邀請碼"
 #: src/view/screens/Settings.tsx:437
 #: src/view/shell/Drawer.tsx:666
 msgid "{invitesAvailable} invite codes available"
-msgstr "{invitesAvailable} 邀請碼可用"
+msgstr "{invitesAvailable} 可用的邀請碼"
 
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} 未讀"
+msgstr "{numUnreadNotifications} 個未讀"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:158
 msgid "<0/> members"
-msgstr "<0/> 成員"
+msgstr "<0/> 個成員"
 
 #: src/view/com/profile/ProfileHeader.tsx:634
 msgid "<0>{following} </0><1>following</1>"
@@ -204,7 +204,7 @@ msgstr "新增至自訂訊息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "調整回覆中需要具有的讚數才會在你的訊息流中顯示。"
+msgstr "調整回覆會在你的訊息流顯示的最低讚數。"
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -241,11 +241,11 @@ msgstr "替代文字為盲人和視覺受損的使用者描述圖片，並幫助
 
 #: src/view/com/modals/VerifyEmail.tsx:124
 msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至 {0}。請查閱郵件內容並複製驗證碼至下方。"
+msgstr "一封電子郵件已發送至 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至先前填寫的電子郵件 {0}。請查閱郵件內容並複製驗證碼至下方。"
+msgstr "一封電子郵件已發送至先前填寫的電郵地址 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/profile/FollowButton.tsx:30
 #: src/view/com/profile/FollowButton.tsx:40
@@ -583,7 +583,7 @@ msgstr "變更我的電子郵件地址"
 
 #: src/view/screens/Settings.tsx:726
 msgid "Change password"
-msgstr "編構密碼"
+msgstr "變更密碼"
 
 #: src/view/screens/Settings.tsx:735
 msgid "Change Password"
@@ -632,7 +632,7 @@ msgstr "選擇服務"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "選擇支持你的自定義訊息流的演算法。"
+msgstr "選擇生成你的自定義訊息流的演算法。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
@@ -742,7 +742,7 @@ msgstr "社群準則"
 
 #: src/screens/Onboarding/StepFinished.tsx:148
 msgid "Complete onboarding and start using your account"
-msgstr "完成引導並開始使用你的帳號"
+msgstr "完成引導流程並開始使用你的帳號"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -969,7 +969,7 @@ msgstr "自訂域名"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社區打造的自定義訊息流帶來新鮮體驗，協助您找到所愛內容。"
+msgstr "由社區打造的自定義訊息流帶來新鮮體驗，協助你找到所愛內容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1189,7 +1189,7 @@ msgstr "編輯管理清單"
 #: src/view/screens/Feeds.tsx:403
 #: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
-msgstr "編輯我的自定義訊息流"
+msgstr "編輯自定訊息流"
 
 #: src/view/com/modals/EditProfile.tsx:152
 msgid "Edit my profile"
@@ -1462,11 +1462,11 @@ msgstr "尋找一些要追蹤的帳號"
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find users on Bluesky"
-msgstr "在 Bluesky 上找到使用者"
+msgstr "在 Bluesky 上尋找使用者"
 
 #: src/view/screens/Search/Search.tsx:437
 msgid "Find users with the search tool on the right"
-msgstr "使用右側的搜索工具找到使用者"
+msgstr "使用右側的搜索工具尋找使用者"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
 msgid "Finding similar accounts..."
@@ -1474,11 +1474,11 @@ msgstr "尋找相似的帳號…"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:111
 msgid "Fine-tune the content you see on your home screen."
-msgstr "微調你在首頁上所看到的內容。"
+msgstr "改善你在首頁上所看到的內容。"
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
-msgstr "微調討論主題。"
+msgstr "改善討論主題。"
 
 #: src/screens/Onboarding/index.tsx:38
 msgid "Fitness"
@@ -1566,11 +1566,11 @@ msgstr "食物"
 
 #: src/view/com/modals/DeleteAccount.tsx:111
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
-msgstr "出於安全原因，我們需要將驗證碼發送到您的電子郵件地址。"
+msgstr "為了保護你的帳戶安全，我們需要將驗證碼發送到你的電子郵件地址。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "出於安全原因，您將無法再次查看此內容。如果您丟失了此密碼，您將需要生成一個新的密碼。"
+msgstr "為了保護你的帳戶安全，你將無法再次查看此內容。如果你丟失了此密碼，你將需要生成一個新密碼。"
 
 #: src/view/com/auth/login/LoginForm.tsx:238
 msgid "Forgot"
@@ -1800,7 +1800,7 @@ msgstr "輸入新密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:203
 msgid "Input password for account deletion"
-msgstr "輸入密碼進行帳號刪除"
+msgstr "輸入密碼以刪除帳號"
 
 #: src/view/com/auth/create/Step2.tsx:196
 msgid "Input phone number for SMS verification"
@@ -1854,7 +1854,7 @@ msgstr "邀請碼"
 
 #: src/view/com/auth/create/state.ts:199
 msgid "Invite code not accepted. Check that you input it correctly and try again."
-msgstr "邀請碼無效。請檢查您輸入的內容是否正確，然後重試。"
+msgstr "邀請碼無效。請檢查你輸入的內容是否正確，然後重試。"
 
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: {0} available"
@@ -1938,7 +1938,7 @@ msgstr "瞭解有關 Bluesky 上公開內容的更多資訊。"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
-msgstr "全部不選中以查看任何語言。"
+msgstr "全部留空以查看所有語言。"
 
 #: src/view/com/modals/LinkWarning.tsx:51
 msgid "Leaving Bluesky"
@@ -1950,16 +1950,16 @@ msgstr "尚未完成。"
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
-msgstr "舊存儲數據已清除，您需要立即重新啟動應用程式。"
+msgstr "舊存儲數據已清除，你需要立即重新啟動應用程式。"
 
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
 msgid "Let's get your password reset!"
-msgstr "讓我們來重置您的密碼！"
+msgstr "讓我們來重置你的密碼！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
-msgstr "讓我們開始！"
+msgstr "讓我們開始吧！"
 
 #: src/view/com/util/UserAvatar.tsx:245
 #: src/view/com/util/UserBanner.tsx:60
@@ -2233,7 +2233,7 @@ msgstr "已靜音的帳號將不會在你的通知或時間線中顯示，被靜
 
 #: src/view/screens/ProfileList.tsx:276
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "封鎖是私人的。被封鎖的帳號可以與您互動，但您將無法看到他們的貼文或收到來自他們的通知。"
+msgstr "封鎖是私人的。被封鎖的帳號可以與你互動，但你將無法看到他們的貼文或收到來自他們的通知。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
@@ -2241,7 +2241,7 @@ msgstr "我的生日"
 
 #: src/view/screens/Feeds.tsx:399
 msgid "My Feeds"
-msgstr "我的訊息流"
+msgstr "自定訊息流"
 
 #: src/view/shell/desktop/LeftNav.tsx:65
 msgid "My Profile"
@@ -2274,7 +2274,7 @@ msgstr "切換到下一畫面"
 
 #: src/view/shell/Drawer.tsx:73
 msgid "Navigates to your profile"
-msgstr "切換到您的個人檔案"
+msgstr "切換到你的個人檔案"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
@@ -2284,11 +2284,11 @@ msgstr "永不載入來自 {0} 的嵌入內容"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "永遠不會失去對您的追隨者和資料的訪問權。"
+msgstr "永遠不會失去對你的追隨者和資料的訪問權。"
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr "永遠不會失去對您的追隨者或資料的訪問權。"
+msgstr "永遠不會失去對你的追隨者或資料的訪問權。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2423,7 +2423,7 @@ msgstr "暫時不需要"
 
 #: src/view/screens/Moderation.tsx:233
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制您在 Bluesky 應用程式和網站上的內容可見性，其他應用程式可能不尊重此設定。您的內容仍可能由其他應用程式和網站顯示給未登入的使用者。"
+msgstr "注意：Bluesky 是一個開放且公開的網路。此設定僅限制你在 Bluesky 應用程式和網站上的內容可見性，其他應用程式可能不尊重此設定。你的內容仍可能由其他應用程式和網站顯示給未登入的使用者。"
 
 #: src/Navigation.tsx:448
 #: src/view/screens/Notifications.tsx:120
@@ -2688,15 +2688,15 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "請選擇您的使用者識別符。"
+msgstr "請請選擇你的使用者識別符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
-msgstr "請選擇您的密碼。"
+msgstr "請選擇你的密碼。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "更改前請先確認您的電子郵箱。這是新增電子郵箱更新工具的臨時要求，此限制將很快被移除。"
+msgstr "更改前請先確認你的電子郵箱。這是新增電子郵箱更新工具的臨時要求，此限制將很快被移除。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:90
 msgid "Please enter a name for your app password. All spaces is not allowed."
@@ -2720,24 +2720,24 @@ msgstr "請輸入發送到 {phoneNumberFormatted} 的驗證碼。"
 
 #: src/view/com/auth/create/state.ts:146
 msgid "Please enter your email."
-msgstr "請輸入您的電子郵件。"
+msgstr "請輸入你的電子郵件。"
 
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Please enter your password as well:"
-msgstr "請輸入您的密碼："
+msgstr "請輸入你的密碼："
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
 msgid "Please tell us why you think this content warning was incorrectly applied!"
-msgstr "請告訴我們您認為這個內容警告被錯誤應用的原因！"
+msgstr "請告訴我們你認為這個內容警告是錯誤的原因！"
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
-msgstr "請驗證您的電子郵箱"
+msgstr "請驗證你的電子郵箱"
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
-msgstr "請等待您的連結卡完成加載"
+msgstr "請等待你的連結卡載入完畢"
 
 #: src/screens/Onboarding/index.tsx:37
 msgid "Politics"
@@ -2842,7 +2842,7 @@ msgstr "個人檔案已更新"
 
 #: src/view/screens/Settings.tsx:931
 msgid "Protect your account by verifying your email."
-msgstr "通過驗證電子郵件來保護您的帳號。"
+msgstr "通過驗證電子郵件來保護你的帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
@@ -2880,7 +2880,7 @@ msgstr "引用貼文"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr "以隨機順序顯示 (又名試試手氣)"
+msgstr "隨機顯示 (又名試試手氣)"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -3058,7 +3058,7 @@ msgstr "要求發佈前提供替代文字"
 
 #: src/view/com/auth/create/Step1.tsx:97
 msgid "Required for this provider"
-msgstr "應提供商要求"
+msgstr "提供商要求必填"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:124
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:136
@@ -3299,7 +3299,7 @@ msgstr "發送電子郵件"
 #: src/view/shell/Drawer.tsx:298
 #: src/view/shell/Drawer.tsx:319
 msgid "Send feedback"
-msgstr "提交反饋"
+msgstr "提交意見"
 
 #: src/view/com/modals/report/SendReportButton.tsx:45
 msgid "Send Report"
@@ -3349,7 +3349,7 @@ msgstr "設定密碼"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "將此設定項設為「否」以隱藏來自訂閱訊息流的所有引用貼文。轉發仍將可見。"
+msgstr "將此設定項設為「否」會隱藏來自訂閱訊息流的所有引用貼文。轉發仍將可見。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
@@ -3365,7 +3365,7 @@ msgstr "將此設定項設為「是」以在分層視圖中顯示回覆。這是
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "將此設定項設為「是」以在追蹤訊息流中顯示已儲存訊息流的樣例。這是一個實驗性功能。"
+msgstr "將此設定項設為「是」以在追蹤訊息流中顯示已儲存訊息流的樣本。這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -3606,11 +3606,11 @@ msgstr "發生了一些問題，我們不確定是什麼原因。"
 
 #: src/view/com/modals/Waitlist.tsx:51
 msgid "Something went wrong. Check your email and try again."
-msgstr "發生了一些問題。請檢查您的電子郵件，然後重試。"
+msgstr "發生了一些問題。請檢查你的電子郵件，然後重試。"
 
 #: src/App.native.tsx:60
 msgid "Sorry! Your session expired. Please log in again."
-msgstr "抱歉！您的會話已過期。請重新登入。"
+msgstr "抱歉！你的登入已過期。請重新登入。"
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
@@ -3642,7 +3642,7 @@ msgstr "第 {0} 步，共 {numSteps} 步"
 
 #: src/view/screens/Settings.tsx:276
 msgid "Storage cleared, you need to restart the app now."
-msgstr "已清除存儲，您需要立即重啟應用程式。"
+msgstr "已清除存儲，你需要立即重啟應用程式。"
 
 #: src/Navigation.tsx:203
 #: src/view/screens/Settings.tsx:789
@@ -3874,7 +3874,7 @@ msgstr "此內容由 {0} 托管。是否要啟用外部媒體？"
 
 #: src/view/com/modals/ModerationDetails.tsx:67
 msgid "This content is not available because one of the users involved has blocked the other."
-msgstr "由於其中一個使用者封鎖了另一個使用者，此內容不可用。"
+msgstr "由於其中一個使用者封鎖了另一個使用者，無法查看此內容。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:108
 msgid "This content is not viewable without a Bluesky account."
@@ -3882,7 +3882,7 @@ msgstr "沒有 Bluesky 帳號，無法查看此內容。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "該訊息流目前使用人數較多，服務暫時不可用。請稍後再試。"
+msgstr "該訊息流目前使用人數較多，暫時無法查看。請稍後再試。"
 
 #: src/view/screens/Profile.tsx:402
 #: src/view/screens/ProfileFeed.tsx:475
@@ -3988,7 +3988,7 @@ msgstr "取消靜音清單"
 #: src/view/com/auth/login/LoginForm.tsx:120
 #: src/view/com/modals/ChangePassword.tsx:70
 msgid "Unable to contact your service. Please check your Internet connection."
-msgstr "無法連線到服務，請檢查您的網路連線。"
+msgstr "無法連線到服務，請檢查你的網路連線。"
 
 #: src/view/com/profile/ProfileHeader.tsx:472
 #: src/view/screens/ProfileList.tsx:589
@@ -4072,7 +4072,7 @@ msgstr "上傳文字檔案至："
 
 #: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用應用程式專用密碼登錄到其他 Bluesky 客戶端，而無需提供對您的帳號或密碼的完全訪問權限。"
+msgstr "使用應用程式專用密碼登錄到其他 Bluesky 客戶端，而無需提供對你的帳號或密碼的完全訪問權限。"
 
 #: src/view/com/modals/ChangeHandle.tsx:515
 msgid "Use default provider"
@@ -4094,7 +4094,7 @@ msgstr "使用這個和你的使用者識別符一起登錄其他應用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
-msgstr "使用您的域名作為 Bluesky 客戶端服務提供商"
+msgstr "使用你的域名作為 Bluesky 客戶端服務提供商"
 
 #: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
@@ -4224,7 +4224,7 @@ msgstr "我們認為你還會喜歡 Skygaze 維護的「For You」:"
 
 #: src/screens/Deactivated.tsx:134
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr "我們估計還需要 {estimatedTime} 才能完成你的帳號準備。"
+msgstr "我們估計還需要 {estimatedTime} 才能準備好你的帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -4289,7 +4289,7 @@ msgstr "發生了什麼新鮮事？"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr "這個貼文中使用了哪些語言？"
+msgstr "這個貼文使用了哪些語言？"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
@@ -4338,7 +4338,7 @@ msgstr "輪到你了。"
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你也可以探索新的自定義訊息流來追蹤。"
+msgstr "你也可以探索並追蹤新的自定義訊息流。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4399,7 +4399,7 @@ msgstr "你還沒有封鎖任何帳號。要封鎖帳號，請轉到其個人資
 
 #: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "你還沒有建立任何應用程式專用密碼。您可以通過按下下面的按鈕來創建一個。"
+msgstr "你還沒有建立任何應用程式專用密碼。你可以通過按下下面的按鈕來創建一個。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
