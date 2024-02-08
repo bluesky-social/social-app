@@ -83,7 +83,11 @@ export function ProfileHeader({
   if (!profile || !moderation) {
     return (
       <View style={pal.view}>
-        <LoadingPlaceholder width="100%" height={150} />
+        <LoadingPlaceholder
+          width="100%"
+          height={150}
+          style={{borderRadius: 0}}
+        />
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
           <LoadingPlaceholder width={80} height={80} style={styles.br40} />
@@ -458,8 +462,12 @@ let ProfileHeaderLoaded = ({
       ]}
       pointerEvents="box-none">
       <View pointerEvents="none">
-        {isProfilePreview ? (
-          <LoadingPlaceholder width="100%" height={150} />
+        {true ? (
+          <LoadingPlaceholder
+            width="100%"
+            height={150}
+            style={{borderRadius: 0}}
+          />
         ) : (
           <UserBanner banner={profile.banner} moderation={moderation.avatar} />
         )}
