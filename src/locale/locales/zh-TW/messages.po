@@ -4399,7 +4399,7 @@ msgstr "你還沒有封鎖任何帳號。要封鎖帳號，請轉到其個人資
 
 #: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
-msgstr "你還沒有建立任何應用程式專用密碼。你可以通過按下下面的按鈕來創建一個。"
+msgstr "你還沒有建立任何應用程式專用密碼，如你想建立一個，按下面的按鈕。"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
