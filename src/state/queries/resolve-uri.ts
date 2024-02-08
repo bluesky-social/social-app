@@ -57,6 +57,7 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
         )
       return profile?.did
     },
+    enabled: !!didOrHandle,
   })
 }
 

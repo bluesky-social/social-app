@@ -51,7 +51,6 @@ export function useProfileQuery({
       const res = await getAgent().getProfile({actor: did ?? ''})
       return res.data
     },
-    enabled: !!did,
     placeholderData: () => {
       if (!did) return
 
@@ -59,6 +58,7 @@ export function useProfileQuery({
         profileBasicKey(did),
       )
     },
+    enabled: !!did,
   })
 }
 
