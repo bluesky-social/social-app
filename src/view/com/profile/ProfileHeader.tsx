@@ -451,7 +451,9 @@ let ProfileHeaderLoaded = ({
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
-    <View style={pal.view} pointerEvents="box-none">
+    <View
+      style={[pal.view, isProfilePreview && styles.loadingBorderStyle]}
+      pointerEvents="box-none">
       <View pointerEvents="none">
         {isProfilePreview ? (
           <LoadingPlaceholder width="100%" height={150} />
@@ -833,4 +835,9 @@ const styles = StyleSheet.create({
 
   br40: {borderRadius: 40},
   br50: {borderRadius: 50},
+
+  loadingBorderStyle: {
+    borderLeftWidth: 1,
+    borderRightWidth: 1,
+  },
 })
