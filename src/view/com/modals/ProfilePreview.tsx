@@ -32,12 +32,17 @@ export function Component({did}: {did: string}) {
     did: did,
   })
 
-  if (isLoadingProfile || !moderationOpts) {
+  if (isLoadingProfile) {
+    const moderation =
+      profile && moderationOpts
+        ? moderateProfile(profile, moderationOpts)
+        : null
+
     return (
       <CenteredView style={[pal.view, s.flex1]}>
         <ProfileHeader
-          profile={null}
-          moderation={null}
+          profile={profile}
+          moderation={moderation}
           isProfilePreview={true}
         />
       </CenteredView>

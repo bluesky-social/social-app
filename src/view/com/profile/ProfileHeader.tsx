@@ -54,9 +54,14 @@ import {useSession, getAgent} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 
 interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
+  profile:
+    | AppBskyActorDefs.ProfileView
+    | AppBskyActorDefs.ProfileViewDetailed
+    | undefined
+    | null
   placeholderData?:
     | AppBskyActorDefs.ProfileView
     | AppBskyActorDefs.ProfileViewDetailed
@@ -67,23 +72,11 @@ interface Props {
 
 export function ProfileHeader({
   profile,
-  placeholderData,
   moderation,
   hideBackButton = false,
   isProfilePreview,
 }: Props) {
   const pal = usePalette('default')
-
-  // placeholder
-  // =
-  if (!profile && placeholderData && moderation) {
-    return (
-      <ProfileHeaderPlaceholder
-        profile={placeholderData}
-        moderation={moderation}
-      />
-    )
-  }
 
   // loading
   // =
@@ -117,18 +110,20 @@ export function ProfileHeader({
 }
 
 interface LoadedProps {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
+  profile: AppBskyActorDefs.ProfileViewDetailed
   moderation: ProfileModeration
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
 
 let ProfileHeaderLoaded = ({
-  profile,
+  profile: profileUnshadowed,
   moderation,
   hideBackButton = false,
   isProfilePreview,
 }: LoadedProps): React.ReactNode => {
+  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
+    useProfileShadow(profileUnshadowed)
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {currentAccount, hasSession} = useSession()
@@ -727,117 +722,6 @@ let ProfileHeaderLoaded = ({
   )
 }
 ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
-
-let ProfileHeaderPlaceholder = ({
-  profile,
-  moderation,
-  hideBackButton = false,
-}: {
-  profile: AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewDetailed
-  moderation: ProfileModeration
-  hideBackButton?: boolean
-}): React.ReactNode => {
-  const pal = usePalette('default')
-  const {currentAccount} = useSession()
-  const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
-  const invalidHandle = isInvalidHandle(profile.handle)
-  const {isDesktop} = useWebMediaQueries()
-  const isMe = React.useMemo(
-    () => currentAccount?.did === profile.did,
-    [currentAccount, profile],
-  )
-  const displayName = React.useMemo(
-    () =>
-      sanitizeDisplayName(
-        profile?.displayName ?? profile.handle,
-        moderation.profile,
-      ),
-    [moderation.profile, profile?.displayName, profile.handle],
-  )
-
-  const onPressBack = React.useCallback(() => {
-    if (navigation.canGoBack()) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('Home')
-    }
-  }, [navigation])
-
-  const blockHide =
-    !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
-
-  return (
-    <View style={pal.view} pointerEvents="box-none">
-      <View pointerEvents="none">
-        <UserBanner moderation={moderation.avatar} />
-      </View>
-      <View style={styles.content} pointerEvents="box-none">
-        <View style={styles.content}>
-          <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder width={167} height={31} style={styles.br50} />
-          </View>
-        </View>
-        <View pointerEvents="none">
-          <Text
-            testID="profileHeaderDisplayName"
-            type="title-2xl"
-            style={[pal.text, styles.title]}>
-            {displayName}
-          </Text>
-        </View>
-        <View style={styles.handleLine} pointerEvents="none">
-          {profile.viewer?.followedBy && !blockHide ? (
-            <View style={[styles.pill, pal.btn, s.mr5]}>
-              <Text type="xs" style={[pal.text]}>
-                <Trans>Follows you</Trans>
-              </Text>
-            </View>
-          ) : undefined}
-          <ThemedText
-            type={invalidHandle ? 'xs' : 'md'}
-            fg={invalidHandle ? 'error' : 'light'}
-            border={invalidHandle ? 'error' : undefined}
-            style={[
-              invalidHandle ? styles.invalidHandle : undefined,
-              styles.handle,
-            ]}>
-            {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
-          </ThemedText>
-        </View>
-        <ProfileHeaderAlerts moderation={moderation} />
-        {isMe && (
-          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
-        )}
-      </View>
-      {!isDesktop && !hideBackButton && (
-        <TouchableWithoutFeedback
-          testID="profileHeaderBackBtn"
-          onPress={onPressBack}
-          hitSlop={BACK_HITSLOP}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Back`)}
-          accessibilityHint="">
-          <View style={styles.backBtnWrapper}>
-            <BlurView style={styles.backBtn} blurType="dark">
-              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-            </BlurView>
-          </View>
-        </TouchableWithoutFeedback>
-      )}
-      <View
-        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-        <UserAvatar
-          size={80}
-          avatar={profile.avatar}
-          moderation={moderation.avatar}
-        />
-      </View>
-    </View>
-  )
-}
-
-ProfileHeaderPlaceholder = memo(ProfileHeaderPlaceholder)
 
 const styles = StyleSheet.create({
   banner: {

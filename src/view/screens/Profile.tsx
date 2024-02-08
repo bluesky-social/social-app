@@ -65,7 +65,6 @@ export function ProfileScreen({route}: Props) {
     error: profileError,
     refetch: refetchProfile,
     isLoading: isLoadingProfile,
-    isPlaceholderData: isProfilePlaceholder,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -85,26 +84,17 @@ export function ProfileScreen({route}: Props) {
     }
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
-  // This is the base state incase of a fresh load
-  if (isLoadingDid || isLoadingProfile || !moderationOpts) {
-    return (
-      <CenteredView>
-        <ProfileHeader
-          profile={null}
-          moderation={null}
-          isProfilePreview={true}
-        />
-      </CenteredView>
-    )
-  }
   // Most pushes will happen here, since we will have only placeholder data
-  if (isProfilePlaceholder && profile) {
-    const moderation = moderateProfile(profile, moderationOpts)
+  if (isLoadingDid || isLoadingProfile) {
+    const moderation =
+      profile && moderationOpts
+        ? moderateProfile(profile, moderationOpts)
+        : null
+
     return (
       <CenteredView>
         <ProfileHeader
-          profile={null}
-          placeholderData={profile}
+          profile={profile}
           moderation={moderation}
           isProfilePreview={true}
         />
