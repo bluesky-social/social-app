@@ -27,7 +27,7 @@ msgstr "{following} 正在追蹤"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-msgstr "{invitesAvailable, plural, one {邀請碼： # 可用} other {邀請碼： # 可用}}"
+msgstr "{invitesAvailable, plural, one {可用的邀請碼： # 個} other {可用的邀請碼： # 個}}"
 
 #: src/view/screens/Settings.tsx:435
 #: src/view/shell/Drawer.tsx:664
