@@ -13,7 +13,7 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {isWeb} from '#/platform/detection'
-import {useTheme, web, flatten, TextStyleProp} from '#/alf'
+import {useTheme, web, flatten, TextStyleProp, atoms as a} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
@@ -35,6 +35,8 @@ type BaseLinkProps = Pick<
   Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
   'to'
 > & {
+  testID?: string
+
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
    */
@@ -46,6 +48,13 @@ type BaseLinkProps = Pick<
    * Note: atm this only works for `InlineLink`s with a string child.
    */
   warnOnMismatchingTextChild?: boolean
+
+  /**
+   * Callback for when the link is pressed.
+   *
+   * DO NOT use this for navigation, that's what the `to` prop is for.
+   */
+  onPress?: (e: GestureResponderEvent) => void
 }
 
 export function useLink({
@@ -53,6 +62,7 @@ export function useLink({
   displayText,
   action = 'push',
   warnOnMismatchingTextChild,
+  onPress: outerOnPress,
 }: BaseLinkProps & {
   displayText: string
 }) {
@@ -66,6 +76,8 @@ export function useLink({
 
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
+      outerOnPress?.(e)
+
       const requiresWarning = Boolean(
         warnOnMismatchingTextChild &&
           displayText &&
@@ -143,7 +155,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
-  Omit<ButtonProps, 'style' | 'onPress' | 'disabled' | 'label'> & {
+  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'> & {
     /**
      * Label for a11y. Defaults to the href.
      */
@@ -169,6 +181,10 @@ export function Link({children, to, action = 'push', ...rest}: LinkProps) {
     <Button
       label={href}
       {...rest}
+      style={[
+        a.justify_start,
+        flatten(rest.style),
+      ]}
       role="link"
       accessibilityRole="link"
       href={href}

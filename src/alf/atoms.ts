@@ -122,6 +122,9 @@ export const atoms = {
   flex_shrink: {
     flexShrink: 1,
   },
+  justify_start: {
+    justifyContent: 'flex-start',
+  },
   justify_center: {
     justifyContent: 'center',
   },
@@ -139,6 +142,24 @@ export const atoms = {
   },
   align_end: {
     alignItems: 'flex-end',
+  },
+  self_auto: {
+    alignSelf: 'auto',
+  },
+  self_start: {
+    alignSelf: 'flex-start',
+  },
+  self_end: {
+    alignSelf: 'flex-end',
+  },
+  self_center: {
+    alignSelf: 'center',
+  },
+  self_stretch: {
+    alignSelf: 'stretch',
+  },
+  self_baseline: {
+    alignSelf: 'baseline',
   },
 
   /*

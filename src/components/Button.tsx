@@ -361,7 +361,6 @@ export function Button({
         disabled: disabled || false,
       }}
       style={[
-        flatten(style),
         a.flex_row,
         a.align_center,
         a.justify_center,
@@ -370,6 +369,7 @@ export function Button({
         ...baseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
+        flatten(style),
       ]}
       onPressIn={onPressIn}
       onPressOut={onPressOut}

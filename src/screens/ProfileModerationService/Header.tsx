@@ -1,5 +1,6 @@
 import React from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -25,16 +26,21 @@ import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {useSession} from '#/state/session'
 import {useModalControls} from '#/state/modals'
 
-import { useTheme, atoms as a } from '#/alf'
+import {useTheme, atoms as a, tokens} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, ButtonText} from '#/components/Button'
 import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
+import {InlineLink} from '#/components/Link'
+import {DotGrid1x3Horizontal_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
+import {Divider} from '#/components/Divider'
 
 export function Header({
   info,
 }: {
   info: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
+  const t = useTheme()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
@@ -55,86 +61,87 @@ export function Header({
   }, [setDrawerOpen])
 
   return (
-    <CenteredView style={pal.view}>
+    <View style={[a.pb_xl]}>
       {isMobile && (
-        <View
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-              borderBottomWidth: 1,
-              paddingTop: isNative ? 0 : 8,
-              paddingBottom: 8,
-              paddingHorizontal: isMobile ? 12 : 14,
-            },
-            pal.border,
-          ]}>
-          <Pressable
-            testID="headerDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? 'Back' : 'Menu'}
-            accessibilityHint="">
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : (
-              <FontAwesomeIcon
-                size={18}
-                icon="bars"
-                style={[styles.backIcon, pal.textLight]}
-              />
-            )}
-          </Pressable>
-          <View style={{flex: 1}} />
-          <CommonControls info={info} />
+        <View style={[a.mb_xl]}>
+          <View
+            style={[a.flex_row, a.justify_between, a.align_center, a.pb_md]}>
+            <Button
+              testID="headerDrawerBtn"
+              size="small"
+              color="secondary"
+              variant="ghost"
+              shape="round"
+              onPress={canGoBack ? onPressBack : onPressMenu}
+              label={canGoBack ? 'Back' : 'Menu'}>
+              {canGoBack ? (
+                <ChevronLeft width={18} style={[t.atoms.text]} />
+              ) : (
+                <FontAwesomeIcon
+                  size={18}
+                  icon="bars"
+                  style={[styles.backIcon, pal.textLight]}
+                />
+              )}
+            </Button>
+
+            <CommonControls info={info} />
+          </View>
+
+          <Divider />
         </View>
       )}
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          gap: 10,
-          paddingTop: 14,
-          paddingBottom: 14,
-          paddingHorizontal: isMobile ? 12 : 14,
-        }}>
-        <View style={{alignSelf: 'center'}}>
-          <HandIcon style={pal.text} size={32} strokeWidth={5.5} />
-        </View>
-        <View style={{flex: 1}}>
-          <TextLink
-            testID="headerTitle"
-            type="title-xl"
-            href={makeProfileLink(info.creator, 'modservice')}
-            style={[pal.text, {fontWeight: 'bold'}]}
-            text={
-              info.creator.displayName
-                ? sanitizeDisplayName(info.creator.displayName)
-                : sanitizeHandle(info.creator.handle, '@')
-            }
-            onPress={emitSoftReset}
-            numberOfLines={4}
-          />
-          <OldText type="xl" style={[pal.textLight]} numberOfLines={1}>
-            <Trans>Moderation service</Trans>
-          </OldText>
-        </View>
+
+      <View style={[a.flex_row, a.gap_lg, a.align_start]}>
         <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <OldButton type="primary" label={_(msg`Subscribe`)} />
+          style={[
+            a.p_md,
+            t.atoms.bg_contrast_50,
+            a.rounded_md,
+            a.overflow_hidden,
+          ]}>
+          <LinearGradient
+            colors={tokens.gradients.sky.values.map(c => c[1])}
+            locations={tokens.gradients.bonfire.values.map(c => c[0])}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[a.absolute, a.inset_0]}
+          />
+          <RaisingHand width={32} fill={t.atoms.text.color} style={[a.z_10]} />
+        </View>
+
+        <View style={[a.flex_1, a.gap_xs]}>
+          <InlineLink
+            testID="headerTitle"
+            to={makeProfileLink(info.creator, 'modservice')}
+            onPress={emitSoftReset}
+            style={[a.text_4xl, a.font_bold, t.atoms.text]}>
+            {/* A really long and complex title for a moderation service */}
+            {info.creator.displayName
+              ? sanitizeDisplayName(info.creator.displayName)
+              : sanitizeHandle(info.creator.handle, '@')}
+          </InlineLink>
+
+          <Text style={[a.text_md, t.atoms.text_contrast_700]}>
+            <Trans>Moderation service</Trans>
+          </Text>
+        </View>
+
+        <View style={[a.flex_row, a.align_center, a.gap_md]}>
+          <Button
+            size="small"
+            variant="solid"
+            color="primary"
+            label={_(msg`Subscribe to moderation service`)}>
+            <ButtonText>
+              <Trans>Subscribe</Trans>
+            </ButtonText>
+          </Button>
+
           {!isMobile && <CommonControls info={info} />}
         </View>
       </View>
-    </CenteredView>
+    </View>
   )
 }
 
@@ -143,7 +150,7 @@ function CommonControls({
 }: {
   info: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {hasSession} = useSession()
   const {openModal} = useModalControls()
   const {_} = useLingui()
@@ -199,8 +206,8 @@ function CommonControls({
         items={dropdownItems}
         accessibilityLabel={_(msg`More options`)}
         accessibilityHint="">
-        <View style={[pal.viewLight, styles.btn, {marginLeft: 6}]}>
-          <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
+        <View style={[a.rounded_full, a.p_sm, t.atoms.bg_contrast_50]}>
+          <Ellipsis width={20} fill={t.atoms.text_contrast_700.color} />
         </View>
       </NativeDropdown>
     </>
@@ -229,4 +236,3 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 })
-
