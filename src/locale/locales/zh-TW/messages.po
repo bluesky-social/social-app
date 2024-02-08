@@ -4423,7 +4423,7 @@ msgstr "你將收到這條討論串的通知"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:107
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "你將收到一封帶有重置代碼的電子郵件。請在此輸入該重置代碼，然後輸入你的新密碼。"
+msgstr "你將收到一封包含重置碼的電郵。請在此輸入該重置代碼，然後輸入你的新密碼。"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
