@@ -42,6 +42,8 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     queryKey: RQKEY(didOrHandle ?? ''),
     queryFn: async () => {
       if (!didOrHandle) return ''
+      // Just return the did if it's already one
+      if (didOrHandle.startsWith('did:')) return didOrHandle
 
       const res = await getAgent().resolveHandle({handle: didOrHandle})
       return res.data.did
