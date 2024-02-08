@@ -180,13 +180,15 @@ function Separator({i, length}: {i: number; length: number}) {
   }
   if (i === length - 2) {
     return (
-      <Trans>
+      <>
         {length > 2 ? _(msg`,`) : ''}
-        <Text type="sm" style={[{flexWrap: 'wrap'}, textStyles]}>
-          {' '}
-          and{' '}
-        </Text>
-      </Trans>
+        <Trans>
+          <Text type="sm" style={[{flexWrap: 'wrap'}, textStyles]}>
+            {' '}
+            and{' '}
+          </Text>
+        </Trans>
+      </>
     )
   }
   return <>, </>
