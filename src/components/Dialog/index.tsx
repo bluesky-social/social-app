@@ -40,7 +40,6 @@ export function Outer<Params extends DialogParams>({
   const open = React.useCallback<DialogControlProps<Params>['open']>(
     (params, {snapIndex} = {}) => {
       if (params) {
-        console.log({params})
         setParams(params)
       }
       sheet.current?.snapToIndex(snapIndex || 0)
