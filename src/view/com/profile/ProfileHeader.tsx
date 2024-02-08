@@ -606,7 +606,7 @@ let ProfileHeaderLoaded = ({
             {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
           </ThemedText>
         </View>
-        {!blockHide && (
+        {!isProfilePreview && !blockHide && (
           <>
             <View style={styles.metricsLine} pointerEvents="box-none">
               <Link

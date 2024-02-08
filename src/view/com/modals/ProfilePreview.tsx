@@ -28,11 +28,12 @@ export function Component({did}: {did: string}) {
     error: profileError,
     refetch: refetchProfile,
     isLoading: isLoadingProfile,
+    isPlaceholderData: isPlaceholderProfile,
   } = useProfileQuery({
     did: did,
   })
 
-  if (isLoadingProfile) {
+  if (isLoadingProfile || isPlaceholderProfile) {
     const moderation =
       profile && moderationOpts
         ? moderateProfile(profile, moderationOpts)

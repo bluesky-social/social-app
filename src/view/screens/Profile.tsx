@@ -65,6 +65,7 @@ export function ProfileScreen({route}: Props) {
     error: profileError,
     refetch: refetchProfile,
     isLoading: isLoadingProfile,
+    isPlaceholderData: isPlaceholderProfile,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -85,7 +86,7 @@ export function ProfileScreen({route}: Props) {
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile) {
+  if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
     const moderation =
       profile && moderationOpts
         ? moderateProfile(profile, moderationOpts)
