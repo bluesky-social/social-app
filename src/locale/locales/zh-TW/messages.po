@@ -69,7 +69,7 @@ msgstr "⚠無效的使用者識別碼"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
-msgstr "此處已啟用內容警告 {0}."
+msgstr "此處已啟用內容警告 {0} 。"
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
@@ -337,7 +337,7 @@ msgstr "藝術"
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
-msgstr "藝術作品或非色情的裸體。"
+msgstr "藝術作品或非情色的裸露。"
 
 #: src/view/com/auth/create/CreateAccount.tsx:147
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
@@ -360,7 +360,7 @@ msgstr "返回"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr "基於你對 {interestsText} 的興趣"
+msgstr "因為你對 {interestsText} 感興趣"
 
 #: src/view/screens/Settings.tsx:517
 msgid "Basics"
@@ -802,7 +802,7 @@ msgstr "確認將 {email} 註冊到候補清單"
 #: src/view/com/auth/create/CreateAccount.tsx:182
 #: src/view/com/auth/login/LoginForm.tsx:275
 msgid "Connecting..."
-msgstr "連線中......"
+msgstr "連線中…"
 
 #: src/view/com/auth/create/CreateAccount.tsx:202
 msgid "Contact support"
@@ -1020,11 +1020,11 @@ msgstr "刪除我的帳號"
 
 #: src/view/screens/Settings.tsx:706
 #~ msgid "Delete my account…"
-#~ msgstr "刪除我的帳號......"
+#~ msgstr "刪除我的帳號…"
 
 #: src/view/screens/Settings.tsx:755
 msgid "Delete My Account…"
-msgstr "刪除我的帳號......"
+msgstr "刪除我的帳號…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
@@ -1157,7 +1157,7 @@ msgstr "例如：垃圾內容製造者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:312
 msgid "e.g. The posters who never miss."
-msgstr "例如：絕對不容錯過的發貼者"
+msgstr "例如：絕對不容錯過的發貼者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:313
 msgid "e.g. Users that repeatedly reply with ads."
@@ -1470,7 +1470,7 @@ msgstr "使用右側的搜索工具找到使用者"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
 msgid "Finding similar accounts..."
-msgstr "尋找相似的帳號......"
+msgstr "尋找相似的帳號…"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:111
 msgid "Fine-tune the content you see on your home screen."
@@ -1696,23 +1696,23 @@ msgstr "在你的訂閱中隱藏來自 {0} 的貼文"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "與訂閱伺服器連線時發生了某種問題。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，與訂閱伺服器連線時發生了某種問題。請告訴訂閱的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "訂閱伺服器似乎設置錯誤。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，訂閱伺服器似乎設置錯誤。請告訴訂閱的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "哼，訂閱伺服器似乎已離線。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，訂閱伺服器似乎已離線。請告訴訂閱的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "哼，訂閱伺服器給出了錯誤的回應。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，訂閱伺服器給出了錯誤的回應。請告訴訂閱的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:96
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "我們無法找到這個訂閱，它可能已被刪除。"
+msgstr "唔，我們無法找到這個訂閱，它可能已被刪除。"
 
 #: src/Navigation.tsx:433
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
@@ -2073,7 +2073,7 @@ msgstr "載入新的貼文"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
 msgid "Loading..."
-msgstr "載入中......"
+msgstr "載入中…"
 
 #: src/view/com/modals/ServerInput.tsx:50
 msgid "Local dev server"
@@ -2471,7 +2471,7 @@ msgstr "只有 {0} 可以回覆。"
 #: src/view/com/modals/ProfilePreview.tsx:61
 #: src/view/screens/AppPasswords.tsx:65
 msgid "Oops!"
-msgstr "Oops！"
+msgstr "糟糕！"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
@@ -2610,7 +2610,7 @@ msgstr "其他服務"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:91
 msgid "Other..."
-msgstr "其他......"
+msgstr "其他…"
 
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
@@ -2745,7 +2745,7 @@ msgstr "政治"
 
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
-msgstr "色情內容"
+msgstr "情色內容"
 
 #: src/view/com/composer/Composer.tsx:350
 #: src/view/com/composer/Composer.tsx:358
@@ -2826,7 +2826,7 @@ msgstr "隱私政策"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:194
 msgid "Processing..."
-msgstr "處理中......"
+msgstr "處理中…"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:247
 #: src/view/shell/desktop/LeftNav.tsx:415
@@ -3537,7 +3537,7 @@ msgstr "以 {0} 登入"
 #: src/view/com/auth/login/ChooseAccountForm.tsx:118
 #: src/view/com/auth/login/Login.tsx:116
 msgid "Sign in as..."
-msgstr "登入為......"
+msgstr "登入為…"
 
 #: src/view/com/auth/login/LoginForm.tsx:134
 msgid "Sign into"
@@ -4064,7 +4064,7 @@ msgstr "更新可用"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:204
 msgid "Updating..."
-msgstr "更新中......"
+msgstr "更新中…"
 
 #: src/view/com/modals/ChangeHandle.tsx:455
 msgid "Upload a text file to:"
@@ -4240,7 +4240,7 @@ msgstr "我們推薦我們的「Discover」訊息流:"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr "我們無法連線到網路，請重試以繼續設定你的帳號。如果仍繼續失敗，你可以選擇跳過此流程。"
+msgstr "我們無法連線到網際網路，請重試以繼續設定你的帳號。如果仍繼續失敗，你可以選擇跳過此流程。"
 
 #: src/screens/Deactivated.tsx:138
 msgid "We will let you know when your account is ready."
@@ -4407,11 +4407,11 @@ msgstr "你還沒有靜音任何帳號。要靜音帳號，請轉到其個人資
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:170
 msgid "You must be 18 or older to enable adult content."
-msgstr "你必須年滿　18　歲才能啟用成人內容。"
+msgstr "你必須年滿 18 歲才能啟用成人內容。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
-msgstr "你必須年滿　18　歲才能啟用成人內容"
+msgstr "你必須年滿 18 歲才能啟用成人內容"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "You will no longer receive notifications for this thread"
