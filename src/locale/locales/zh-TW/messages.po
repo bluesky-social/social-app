@@ -4072,7 +4072,7 @@ msgstr "上傳文字檔案至："
 
 #: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
-msgstr "使用應用程式專用密碼登錄到其他 Bluesky 客戶端，而無需提供對你的帳號或密碼的完全訪問權限。"
+msgstr "使用應用程式專用密碼登錄到其他 Bluesky 客戶端，而無需提供你的帳號或密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:515
 msgid "Use default provider"
