@@ -131,10 +131,10 @@ export function Component({
           ) : (
             <View>
               <Text style={[pal.textLight]}>
-                <Text type="md-bold" style={[pal.textLight, s.mr5]}>
-                  <Trans>Not Applicable.</Trans>
-                </Text>
                 <Trans>
+                  <Text type="md-bold" style={[pal.textLight]}>
+                    Not Applicable.
+                  </Text>{' '}
                   This warning is only available for posts with media attached.
                 </Trans>
               </Text>
