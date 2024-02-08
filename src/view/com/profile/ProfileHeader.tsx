@@ -765,7 +765,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 'auto',
     marginBottom: 12,
-    height: 34,
   },
   primaryBtn: {
     backgroundColor: colors.blue3,
