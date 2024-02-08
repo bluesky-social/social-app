@@ -88,8 +88,8 @@ export function ScreenHider({
               This {screenDescription} has been flagged:{' '}
               <Text type="2xl-medium" style={[pal.text]}>
                 {desc.name}.
-              </Text>
-            </Trans>{' '}
+              </Text>{' '}
+            </Trans>
             <TouchableWithoutFeedback
               onPress={() => {
                 openModal({
