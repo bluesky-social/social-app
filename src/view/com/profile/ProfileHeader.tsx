@@ -83,7 +83,7 @@ export function ProfileHeader({
   if (!profile || !moderation) {
     return (
       <View style={pal.view}>
-        <LoadingPlaceholder width="100%" height={153} />
+        <LoadingPlaceholder width="100%" height={150} />
         <View
           style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
           <LoadingPlaceholder width={80} height={80} style={styles.br40} />
@@ -453,7 +453,11 @@ let ProfileHeaderLoaded = ({
   return (
     <View style={pal.view} pointerEvents="box-none">
       <View pointerEvents="none">
-        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+        {isProfilePreview ? (
+          <LoadingPlaceholder width="100%" height={150} />
+        ) : (
+          <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+        )}
       </View>
       <View style={styles.content} pointerEvents="box-none">
         <View style={[styles.buttonsLine]} pointerEvents="box-none">
@@ -487,7 +491,7 @@ let ProfileHeaderLoaded = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {!isProfilePreview && hasSession && (
+              {hasSession && (
                 <TouchableOpacity
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
@@ -674,7 +678,7 @@ let ProfileHeaderLoaded = ({
         )}
       </View>
 
-      {!isProfilePreview && showSuggestedFollows && (
+      {showSuggestedFollows && (
         <ProfileHeaderSuggestedFollows
           actorDid={profile.did}
           requestDismiss={() => {
