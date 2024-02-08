@@ -89,7 +89,11 @@ export function GlobalDialog() {
     popTopDialog()
   }, [popTopDialog])
 
-  return activeDialogs.map(({component: Comp, props, options}, i) => {
-    return <Comp key={i} {...props} cleanup={cleanup} options={options} />
-  })
+  return React.useMemo(
+    () =>
+      activeDialogs.map(({component: Comp, props, options}, i) => {
+        return <Comp key={i} {...props} cleanup={cleanup} options={options} />
+      }),
+    [activeDialogs, cleanup],
+  )
 }
