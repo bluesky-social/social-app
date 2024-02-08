@@ -9,7 +9,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {useProfileQuery} from '#/state/queries/profile'
-import {STALE} from 'state/queries'
+import {STALE} from '#/state/queries'
 
 export function UserInfoText({
   type = 'md',
