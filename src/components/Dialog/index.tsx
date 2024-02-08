@@ -16,6 +16,7 @@ import {
   DialogOuterProps,
   DialogControlProps,
   DialogInnerProps,
+  DialogParams,
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 
@@ -24,20 +25,28 @@ export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
 
-export function Outer({
+export function Outer<Params extends DialogParams>({
   children,
   control,
   onClose,
   nativeOptions,
-}: React.PropsWithChildren<DialogOuterProps>) {
+}: React.PropsWithChildren<DialogOuterProps<Params>>) {
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
+  const [params, setParams] = React.useState({})
 
-  const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
-    sheet.current?.snapToIndex(i)
-  }, [])
+  const open = React.useCallback<DialogControlProps<Params>['open']>(
+    (params, {snapIndex} = {}) => {
+      if (params) {
+        console.log({params})
+        setParams(params)
+      }
+      sheet.current?.snapToIndex(snapIndex || 0)
+    },
+    [setParams],
+  )
 
   const close = React.useCallback(() => {
     sheet.current?.close()
@@ -53,7 +62,7 @@ export function Outer({
     [open, close],
   )
 
-  const context = React.useMemo(() => ({close}), [close])
+  const context = React.useMemo(() => ({close, params}), [close, params])
 
   return (
     <Portal>

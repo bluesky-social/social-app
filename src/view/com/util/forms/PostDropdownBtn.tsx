@@ -31,6 +31,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {useReportDialogControl} from '#/components/dialogs/ReportDialog'
 
 let PostDropdownBtn = ({
   testID,
@@ -63,6 +64,7 @@ let PostDropdownBtn = ({
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
+  const reportDialogControl = useReportDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -209,11 +211,12 @@ let PostDropdownBtn = ({
       hasSession && {
         label: _(msg`Report post`),
         onPress() {
-          openModal({
-            name: 'report',
-            uri: postUri,
-            cid: postCid,
-          })
+          reportDialogControl.open({type: 'post', uri: postUri, cid: postCid})
+          // openModal({
+          //   name: 'report',
+          //   uri: postUri,
+          //   cid: postCid,
+          // })
         },
         testID: 'postDropdownReportBtn',
         icon: {

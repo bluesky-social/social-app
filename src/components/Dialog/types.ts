@@ -4,21 +4,24 @@ import {BottomSheetProps} from '@gorhom/bottom-sheet'
 
 type A11yProps = Required<AccessibilityProps>
 
-export type DialogContextProps = {
+export type DialogParams = Record<string, any>
+
+export type DialogContextProps<Params extends DialogParams> = {
+  params: Params
   close: () => void
 }
 
-export type DialogControlProps = {
-  open: (index?: number) => void
+export type DialogControlProps<Params extends DialogParams> = {
+  open: (params?: Params, options?: {snapIndex?: number}) => void
   close: () => void
 }
 
-export type DialogOuterProps = {
-  control: {
-    ref: React.RefObject<DialogControlProps>
-    open: (index?: number) => void
-    close: () => void
-  }
+export type DialogControlWithRefProps<Params extends DialogParams> = {
+  ref: React.RefObject<DialogControlProps<Params>>
+} & DialogControlProps<Params>
+
+export type DialogOuterProps<Params extends DialogParams> = {
+  control: DialogControlWithRefProps<Params>
   onClose?: () => void
   nativeOptions?: {
     sheet?: Omit<BottomSheetProps, 'children'>

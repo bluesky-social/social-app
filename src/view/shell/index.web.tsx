@@ -16,6 +16,7 @@ import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {ReportDialog} from '#/components/dialogs/ReportDialog'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -40,8 +41,11 @@ function ShellInner() {
       </ErrorBoundary>
       <Composer winHeight={0} />
       <ModalsContainer />
-      <PortalOutlet />
       <Lightbox />
+
+      <ReportDialog />
+      <PortalOutlet />
+
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

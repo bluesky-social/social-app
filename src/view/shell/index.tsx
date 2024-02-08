@@ -29,6 +29,7 @@ import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {ReportDialog} from '#/components/dialogs/ReportDialog'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -94,8 +95,10 @@ function ShellInner() {
       </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
-      <PortalOutlet />
       <Lightbox />
+
+      <ReportDialog />
+      <PortalOutlet />
     </>
   )
 }
