@@ -9,7 +9,6 @@ import {useModals, useModalControls} from '#/state/modals'
 import type {Modal as ModalIface} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
-import * as ProfilePreviewModal from './ProfilePreview'
 import * as ServerInputModal from './ServerInput'
 import * as ReportModal from './report/Modal'
 import * as AppealLabelModal from './AppealLabel'
@@ -85,8 +84,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ConfirmModal.Component {...modal} />
   } else if (modal.name === 'edit-profile') {
     element = <EditProfileModal.Component {...modal} />
-  } else if (modal.name === 'profile-preview') {
-    element = <ProfilePreviewModal.Component {...modal} />
   } else if (modal.name === 'server-input') {
     element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report') {
