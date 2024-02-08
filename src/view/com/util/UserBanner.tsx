@@ -15,6 +15,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useTheme} from 'lib/ThemeContext'
 
 export function UserBanner({
   banner,
@@ -29,6 +30,7 @@ export function UserBanner({
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const theme = useTheme()
 
   const dropdownItems: DropdownItem[] = useMemo(
     () =>
@@ -142,7 +144,10 @@ export function UserBanner({
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
-      style={styles.bannerImage}
+      style={[
+        styles.bannerImage,
+        {backgroundColor: theme.palette.default.backgroundLight},
+      ]}
       resizeMode="cover"
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}
