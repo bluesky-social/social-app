@@ -65,7 +65,6 @@ export function ProfileModserviceScreen(
     <CenteredView>
       <View
         style={[
-          a.pt_2xl,
           a.px_xl,
           a.border_l,
           a.border_r,
