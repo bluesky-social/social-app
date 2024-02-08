@@ -1,27 +1,19 @@
 import React from 'react'
 
 import {useDialogStateContext} from '#/state/dialogs'
-import {
-  DialogContextProps,
-  DialogControlProps,
-  DialogControlWithRefProps,
-  DialogParams,
-} from '#/components/Dialog/types'
+import {DialogContextProps, DialogControlProps} from '#/components/Dialog/types'
 
-export const Context = React.createContext<DialogContextProps<{}>>({
-  params: {},
+export const Context = React.createContext<DialogContextProps>({
   close: () => {},
 })
 
-export function useDialogContext<Params extends DialogParams>() {
-  return React.useContext(Context) as DialogContextProps<Params>
+export function useDialogContext() {
+  return React.useContext(Context)
 }
 
-export function useDialogControl<
-  Params extends DialogParams,
->(): DialogControlWithRefProps<Params> {
+export function useDialogControl() {
   const id = React.useId()
-  const control = React.useRef<DialogControlProps<Params>>({
+  const control = React.useRef<DialogControlProps>({
     open: () => {},
     close: () => {},
   })
@@ -37,7 +29,7 @@ export function useDialogControl<
 
   return {
     ref: control,
-    open: (params, options) => control.current.open(params, options),
+    open: () => control.current.open(),
     close: () => control.current.close(),
   }
 }

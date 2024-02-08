@@ -1,10 +1,11 @@
 import React from 'react'
+import {View} from 'react-native'
 
-import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
-import {Context} from '#/components/dialogs'
+import * as Dialog from '#/components/Dialog'
+import {GlobalDialogProps} from '#/components/dialogs'
 
-export type DialogParams =
+export type ReportDialogProps =
   | {
       type: 'post'
       uri: string
@@ -15,25 +16,20 @@ export type DialogParams =
       did: string
     }
 
-export function useReportDialogControl() {
-  return React.useContext(Context).report
-}
+export function ReportDialog(props: GlobalDialogProps<ReportDialogProps>) {
+  const control = Dialog.useDialogControl()
 
-export function ReportDialog() {
-  const control = useReportDialogControl()
+  const onClose = React.useCallback(() => {
+    props.cleanup()
+  }, [props])
 
   return (
-    <Dialog.Outer control={control}>
-      <Dialog.Handle />
-
-      <Dialog.ScrollableInner label="Report dialog">
-        <Inner />
-      </Dialog.ScrollableInner>
+    <Dialog.Outer defaultOpen control={control} onClose={onClose}>
+      <Dialog.Inner label="Report Dialog">
+        <View style={{height: 500}}>
+          <Text>hello {JSON.stringify(props)}</Text>
+        </View>
+      </Dialog.Inner>
     </Dialog.Outer>
   )
-}
-
-function Inner() {
-  const ctx = Dialog.useDialogContext<DialogParams>()
-  return <Text>hello {JSON.stringify(ctx.params)}</Text>
 }

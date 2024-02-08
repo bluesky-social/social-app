@@ -7,11 +7,14 @@ import {H3, P} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {useDialogStateControlContext} from '#/state/dialogs'
+import {useOpenGlobalDialog} from '#/components/dialogs'
+import {ReportDialog} from '#/components/dialogs/ReportDialog'
 
 export function Dialogs() {
   const control = Dialog.useDialogControl()
   const prompt = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
+  const openDialog = useOpenGlobalDialog()
 
   return (
     <View style={[a.gap_md]}>
@@ -35,6 +38,19 @@ export function Dialogs() {
         label="Open prompt">
         Open prompt
       </Button>
+
+      <View style={[a.flex_row, a.gap_md]}>
+        <Button
+          variant="solid"
+          color="primary"
+          size="small"
+          onPress={() => {
+            openDialog(ReportDialog, {type: 'user', did: ''})
+          }}
+          label="Open prompt">
+          Open dialogs
+        </Button>
+      </View>
 
       <Prompt.Outer control={prompt}>
         <Prompt.Title>This is a prompt</Prompt.Title>

@@ -8,12 +8,7 @@ import {useLingui} from '@lingui/react'
 import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
 import {Portal} from '#/components/Portal'
 
-import {
-  DialogOuterProps,
-  DialogInnerProps,
-  DialogControlProps,
-  DialogParams,
-} from '#/components/Dialog/types'
+import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
@@ -22,27 +17,21 @@ export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 
-export function Outer<Params extends DialogParams>({
+export function Outer({
+  children,
   control,
   onClose,
-  children,
-}: React.PropsWithChildren<DialogOuterProps<Params>>) {
+  defaultOpen,
+}: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(defaultOpen)
   const [isVisible, setIsVisible] = React.useState(true)
-  const [params, setParams] = React.useState({})
 
-  const open = React.useCallback<DialogControlProps<Params>['open']>(
-    params => {
-      if (params) {
-        setParams(params)
-      }
-      setIsOpen(true)
-    },
-    [setIsOpen, setParams],
-  )
+  const open = React.useCallback(() => {
+    setIsOpen(true)
+  }, [setIsOpen])
 
   const close = React.useCallback(async () => {
     setIsVisible(false)
@@ -75,10 +64,9 @@ export function Outer<Params extends DialogParams>({
 
   const context = React.useMemo(
     () => ({
-      params,
       close,
     }),
-    [close, params],
+    [close],
   )
 
   return (
