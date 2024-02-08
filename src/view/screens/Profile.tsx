@@ -50,6 +50,7 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen({route}: Props) {
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const name =
     route.params.name === 'me' ? currentAccount?.did : route.params.name
@@ -97,14 +98,13 @@ export function ProfileScreen({route}: Props) {
   }
   if (resolveError || profileError) {
     return (
-      <CenteredView>
-        <ErrorScreen
-          testID="profileErrorScreen"
-          title="Oops!"
-          message={cleanError(resolveError || profileError)}
-          onPressTryAgain={onPressTryAgain}
-        />
-      </CenteredView>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+        message={cleanError(resolveError || profileError)}
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
     )
   }
   if (profile && moderationOpts) {
@@ -118,14 +118,13 @@ export function ProfileScreen({route}: Props) {
   }
   // should never happen
   return (
-    <CenteredView>
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title="Oops!"
-        message="Something went wrong and we're not sure what."
-        onPressTryAgain={onPressTryAgain}
-      />
-    </CenteredView>
+    <ErrorScreen
+      testID="profileErrorScreen"
+      title="Oops!"
+      message="Something went wrong and we're not sure what."
+      onPressTryAgain={onPressTryAgain}
+      showHeader
+    />
   )
 }
 
