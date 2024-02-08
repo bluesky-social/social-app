@@ -88,7 +88,6 @@ export function ProfileHeader({
   // loading
   // =
   if (!profile || !moderation) {
-    console.log('this?')
     return (
       <View style={pal.view}>
         <LoadingPlaceholder width="100%" height={153} />

@@ -70,13 +70,6 @@ export function ProfileScreen({route}: Props) {
     did: resolvedDid,
   })
 
-  console.log({
-    isLoadingDid,
-    isLoadingProfile,
-    isProfilePlaceholder,
-    moderationOpts,
-  })
-
   const onPressTryAgain = React.useCallback(() => {
     if (resolveError) {
       refetchDid()
@@ -105,7 +98,7 @@ export function ProfileScreen({route}: Props) {
     )
   }
   // Most pushes will happen here, since we will have only placeholder data
-  if (isProfilePlaceholder) {
+  if (isProfilePlaceholder && profile) {
     const moderation = moderateProfile(profile, moderationOpts)
     return (
       <CenteredView>
