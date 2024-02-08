@@ -92,11 +92,11 @@ let DrawerProfileCard = ({
       </Text>
       <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
         <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(Number(profile?.followersCount))}
+          {formatCountShortOnly(profile?.followersCount ?? 0)}
         </Text>{' '}
-        {pluralize(Number(profile?.followersCount), 'follower')} &middot;{' '}
+        {pluralize(profile?.followersCount || 0, 'follower')} &middot;{' '}
         <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(Number(profile?.followsCount))}
+          {formatCountShortOnly(profile?.followsCount ?? 0)}
         </Text>{' '}
         following
       </Text>

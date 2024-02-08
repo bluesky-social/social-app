@@ -39,13 +39,11 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
-  // WARNING
-  // this staleTime is load-bearing
-  // if you remove it, the UI infinite-loops
-  // -prf
-  return useQuery<
-    AppBskyActorDefs.ProfileViewDetailed | AppBskyActorDefs.ProfileView
-  >({
+  return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
+    // WARNING
+    // this staleTime is load-bearing
+    // if you remove it, the UI infinite-loops
+    // -prf
     staleTime,
     refetchOnWindowFocus: true,
     queryKey: RQKEY(did ?? ''),
