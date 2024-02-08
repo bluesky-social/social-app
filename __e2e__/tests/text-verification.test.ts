@@ -27,7 +27,7 @@ describe('Create account', () => {
     await device.takeScreenshot('4- entered account details')
     await element(by.id('nextBtn')).tap()
 
-    await element(by.id('phoneInput')).typeText('1234567890')
+    await element(by.id('phoneInput')).typeText('8042221111')
     await element(by.id('requestCodeBtn')).tap()
     await device.takeScreenshot('5- requested code')
 
@@ -66,7 +66,7 @@ describe('Create account', () => {
     await device.takeScreenshot('4- entered account details')
     await element(by.id('nextBtn')).tap()
 
-    await element(by.id('phoneInput')).typeText('1234567890')
+    await element(by.id('phoneInput')).typeText('8042221111')
     await element(by.id('requestCodeBtn')).tap()
     await device.takeScreenshot('5- requested code')
 

@@ -220,6 +220,7 @@ function PwiOptOut() {
           paddingLeft: 66,
           paddingRight: 12,
           paddingBottom: 10,
+          marginBottom: 64,
         }}>
         <Text style={pal.textLight}>
           <Trans>

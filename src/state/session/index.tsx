@@ -237,6 +237,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         /*dont await*/ agent.upsertProfile(_existing => {
           return {
             displayName: '',
+
+            // HACKFIX
+            // creating a bunch of identical profile objects is breaking the relay
+            // tossing this unspecced field onto it to reduce the size of the problem
+            // -prf
+            createdAt: new Date().toISOString(),
           }
         })
       }
