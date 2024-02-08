@@ -130,8 +130,7 @@ export function precacheFeedPosts(
     handleEmbed(post.post.embed)
 
     // Cache parent author and embeds
-    if (AppBskyActorDefs.isProfileViewBasic(post.reply?.parent.author)) {
-      console.log(post.reply?.parent.author)
+    if (post.reply?.parent.author) {
       precacheProfile(
         queryClient,
         post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,

@@ -29,20 +29,6 @@ export const profileBasicKey = (did: string) => ['profileBasic', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({did}: {did: string | undefined}) {
-  // return useQuery({
-  //   // WARNING
-  //   // this staleTime is load-bearing
-  //   // if you remove it, the UI infinite-loops
-  //   // -prf
-  //   staleTime,
-  //   refetchOnWindowFocus: true,
-  //   queryKey: RQKEY(did || ''),
-  //   queryFn: async () => {
-  //     const res = await getAgent().getProfile({actor: did || ''})
-  //     return res.data
-  //   },
-  //   enabled: !!did,
-  // })
   const queryClient = useQueryClient()
   // TODO Figure out a good staleTime for this. We should refetch on every profile push, because we need to check for
   // blocks
