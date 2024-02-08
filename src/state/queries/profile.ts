@@ -25,28 +25,51 @@ import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
 
 export const RQKEY = (did: string) => ['profile', did]
+export const profileBasicKey = (did: string) => ['profileBasic', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({
   did,
-  staleTime = STALE.SECONDS.FIFTEEN,
+  queryClient,
 }: {
   did: string | undefined
   staleTime?: number
+  queryClient: QueryClient
 }) {
-  return useQuery({
-    // WARNING
-    // this staleTime is load-bearing
-    // if you remove it, the UI infinite-loops
-    // -prf
-    staleTime,
+  // return useQuery({
+  //   // WARNING
+  //   // this staleTime is load-bearing
+  //   // if you remove it, the UI infinite-loops
+  //   // -prf
+  //   staleTime,
+  //   refetchOnWindowFocus: true,
+  //   queryKey: RQKEY(did || ''),
+  //   queryFn: async () => {
+  //     const res = await getAgent().getProfile({actor: did || ''})
+  //     return res.data
+  //   },
+  //   enabled: !!did,
+  // })
+
+  // TODO Figure out a good staleTime for this. We should refetch on every profile push, because we need to check for
+  // blocks
+  return useQuery<AppBskyActorDefs.ProfileView>({
+    staleTime: STALE.SECONDS.FIFTEEN,
     refetchOnWindowFocus: true,
-    queryKey: RQKEY(did || ''),
+    queryKey: RQKEY(did ?? ''),
     queryFn: async () => {
-      const res = await getAgent().getProfile({actor: did || ''})
+      const res = await getAgent().getProfile({actor: did ?? ''})
       return res.data
     },
     enabled: !!did,
+    placeholderData: () => {
+      return queryClient
+        .getQueriesData<AppBskyActorDefs.ProfileView>({
+          queryKey: ['profileBasic'],
+          exact: false,
+        })
+        .find(q => q[1]?.did === did)?.[1]
+    },
   })
 }
 
@@ -76,6 +99,14 @@ export function usePrefetchProfileQuery() {
     [queryClient],
   )
   return prefetchProfileQuery
+}
+
+// We don't need a useQuery hook for this. We never actually use this except for
+export function cacheProfileBasic(
+  queryClient: QueryClient,
+  profile: AppBskyActorDefs.ProfileViewBasic,
+) {
+  queryClient.setQueryData(profileBasicKey(profile.handle), profile)
 }
 
 interface ProfileUpdateParams {
