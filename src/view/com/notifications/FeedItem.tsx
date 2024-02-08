@@ -231,9 +231,9 @@ let FeedItem = ({
             />
             {authors.length > 1 ? (
               <>
-                <Text style={[pal.text, s.mr5, s.ml5]}>
-                  <Trans> and </Trans>
-                </Text>
+                <Trans>
+                  <Text style={[pal.text]}> and </Text>
+                </Trans>
                 <Text style={[pal.text, s.bold]}>
                   {formatCount(authors.length - 1)}{' '}
                   {pluralize(authors.length - 1, 'other')}

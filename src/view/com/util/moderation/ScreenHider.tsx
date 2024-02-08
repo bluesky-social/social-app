@@ -21,7 +21,6 @@ import {describeModerationCause} from 'lib/moderation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
-import {s} from '#/lib/styles'
 import {CenteredView} from '../Views'
 
 export function ScreenHider({
@@ -85,10 +84,12 @@ export function ScreenHider({
           </Trans>
         ) : (
           <>
-            <Trans>This {screenDescription} has been flagged:</Trans>
-            <Text type="2xl-medium" style={[pal.text, s.ml5]}>
-              {desc.name}.
-            </Text>
+            <Trans>
+              This {screenDescription} has been flagged:{' '}
+              <Text type="2xl-medium" style={[pal.text]}>
+                {desc.name}.{' '}
+              </Text>
+            </Trans>
             <TouchableWithoutFeedback
               onPress={() => {
                 openModal({
@@ -105,7 +106,7 @@ export function ScreenHider({
               </Text>
             </TouchableWithoutFeedback>
           </>
-        )}{' '}
+        )}
       </Text>
       {isMobile && <View style={styles.spacer} />}
       <View style={styles.btnContainer}>

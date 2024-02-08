@@ -75,9 +75,12 @@ export const Policies = ({
     els.splice(
       1,
       0,
-      <Text key="and" style={pal.textLight}>
-        <Trans> and </Trans>
-      </Text>,
+      <Trans>
+        <Text key="and" style={pal.textLight}>
+          {' '}
+          and{' '}
+        </Text>
+      </Trans>,
     )
   }
   return (

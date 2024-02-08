@@ -6,7 +6,8 @@ import {
   AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {Text} from '../util/text/Text'
 import {TextLink} from '../util/Link'
@@ -169,15 +170,23 @@ function Rule({
 }
 
 function Separator({i, length}: {i: number; length: number}) {
+  const {_} = useLingui()
+  const textStyles = useColorSchemeStyle(
+    {color: colors.gray7},
+    {color: colors.blue1},
+  )
   if (length < 2 || i === length - 1) {
     return null
   }
   if (i === length - 2) {
     return (
-      <>
-        {length > 2 ? ',' : ''}
-        <Trans> and </Trans>
-      </>
+      <Trans>
+        {length > 2 ? _(msg`,`) : ''}
+        <Text type="sm" style={[{flexWrap: 'wrap'}, textStyles]}>
+          {' '}
+          and{' '}
+        </Text>
+      </Trans>
     )
   }
   return <>, </>
