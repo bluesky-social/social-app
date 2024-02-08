@@ -12,43 +12,13 @@ import {
   AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 import {profileBasicKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
+import {RQKEY as RQKEY_POST} from './post'
 
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
 import {ThreadNode} from './post-thread'
 
 export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
-
-// export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
-//   const urip = new AtUri(uri || '')
-//   const res = useResolveDidQuery(urip.host)
-//   if (res.data) {
-//     urip.host = res.data
-//     return {
-//       ...res,
-//       data: {did: urip.host, uri: urip.toString()},
-//     } as UriUseQueryResult
-//   }
-//   return res as UriUseQueryResult
-// }
-//
-// export function useResolveDidQuery(didOrHandle: string | undefined) {
-//   return useQuery<string, Error>({
-//     staleTime: STALE.HOURS.ONE,
-//     queryKey: RQKEY(didOrHandle || ''),
-//     async queryFn() {
-//       if (!didOrHandle) {
-//         return ''
-//       }
-//       if (!didOrHandle.startsWith('did:')) {
-//         const res = await getAgent().resolveHandle({handle: didOrHandle})
-//         didOrHandle = res.data.did
-//       }
-//       return didOrHandle
-//     },
-//     enabled: !!didOrHandle,
-//   })
-// }
 
 type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
 export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
@@ -106,14 +76,23 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
 
 export function precacheProfile(
   queryClient: QueryClient,
-  profile:
-    | AppBskyActorDefs.ProfileView
-    | AppBskyActorDefs.ProfileViewBasic
-    | AppBskyActorDefs.ProfileViewDetailed,
+  profile: AppBskyActorDefs.ProfileViewBasic,
 ) {
-  queryClient.setQueryData(RQKEY(profile.handle), profile.did)
+  queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.handle), profile)
 }
 
+export function precacheQuoteEmbeds(queryClient: QueryClient, uris: string[]) {
+  if (uris.length === 0) return
+  ;(async () => {
+    // Don't block the UI with this request
+    const res = await getAgent().getPosts({uris})
+    if (!res.success || !res.data.posts?.[0]) return
+
+    for (const post of res.data.posts) {
+      queryClient.setQueryData(RQKEY_POST(post.uri), post)
+    }
+  })()
+}
 export function precacheFeedPosts(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
@@ -135,28 +114,34 @@ export function precacheFeedPosts(
   function handleEmbed(embed?: any) {
     // If it's a view record, all we need to do is "cache" the author
     if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
-      // precache(embedAuthor)
+      precacheProfile(queryClient, embed.record.author)
     } else if (
       AppBskyEmbedRecordWithMedia.isView(embed) &&
       AppBskyEmbedRecord.isViewRecord(embed.record.record)
     ) {
-      // precache(embedAuthor)
-      // quoteEmbedUris.push(uri)
+      precacheProfile(queryClient, embed.record.record.author)
+      quoteEmbedUris.push(embed.record.record.uri as string)
     }
   }
 
   for (const post of posts) {
     // Save the author of the post every time
-    // precache(postAuthor)
-    // handleEmbed(postEmbed)
+    precacheProfile(queryClient, post.post.author)
+    handleEmbed(post.post.embed)
 
-    if (post.reply?.parent?.author) {
-      // precache(postReplyAuthor)
-      // handleEmbed(postReplyEmbed)
+    // Cache parent author and embeds
+    if (AppBskyActorDefs.isProfileViewBasic(post.reply?.parent.author)) {
+      console.log(post.reply?.parent.author)
+      precacheProfile(
+        queryClient,
+        post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,
+      )
+      handleEmbed(post.reply?.parent.embed)
     }
   }
 
-  // precacheQuoteEmbeds(quoteEmbedUris)
+  // Precache the quotes finally
+  precacheQuoteEmbeds(queryClient, quoteEmbedUris)
 }
 
 export function precacheThreadPosts(
