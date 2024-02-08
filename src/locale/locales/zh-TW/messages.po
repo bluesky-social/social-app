@@ -2688,7 +2688,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "請請選擇你的使用者識別符。"
+msgstr "請選擇你的使用者識別符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
