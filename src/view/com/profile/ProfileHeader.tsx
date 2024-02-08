@@ -28,7 +28,7 @@ import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
 import {formatCount} from '../util/numeric/format'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
-import {Link} from '../util/Link'
+import {TextLink} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
@@ -600,7 +600,7 @@ let ProfileHeaderLoaded = ({
         {!blockHide && (
           <>
             <View style={styles.metricsLine} pointerEvents="box-none">
-              <Link
+              <TextLink
                 testID="profileHeaderFollowersButton"
                 style={[s.flexRow, s.mr10]}
                 href={makeProfileLink(profile, 'followers')}
@@ -609,17 +609,20 @@ let ProfileHeaderLoaded = ({
                     handle: profile.handle,
                   })
                 }
-                asAnchor
                 accessibilityLabel={`${followers} ${pluralizedFollowers}`}
-                accessibilityHint={_(msg`Opens followers list`)}>
-                <Text type="md" style={[s.bold, pal.text]}>
-                  {followers}{' '}
-                </Text>
-                <Text type="md" style={[pal.textLight]}>
-                  {pluralizedFollowers}
-                </Text>
-              </Link>
-              <Link
+                accessibilityHint={_(msg`Opens followers list`)}
+                text={
+                  <>
+                    <Text type="md" style={[s.bold, pal.text]}>
+                      {followers}{' '}
+                    </Text>
+                    <Text type="md" style={[pal.textLight]}>
+                      {pluralizedFollowers}
+                    </Text>
+                  </>
+                }
+              />
+              <TextLink
                 testID="profileHeaderFollowsButton"
                 style={[s.flexRow, s.mr10]}
                 href={makeProfileLink(profile, 'follows')}
@@ -628,18 +631,19 @@ let ProfileHeaderLoaded = ({
                     handle: profile.handle,
                   })
                 }
-                asAnchor
                 accessibilityLabel={_(msg`${following} following`)}
-                accessibilityHint={_(msg`Opens following list`)}>
-                <Trans>
-                  <Text type="md" style={[s.bold, pal.text]}>
-                    {following}{' '}
-                  </Text>
-                  <Text type="md" style={[pal.textLight]}>
-                    following
-                  </Text>
-                </Trans>
-              </Link>
+                accessibilityHint={_(msg`Opens following list`)}
+                text={
+                  <Trans>
+                    <Text type="md" style={[s.bold, pal.text]}>
+                      {following}{' '}
+                    </Text>
+                    <Text type="md" style={[pal.textLight]}>
+                      following
+                    </Text>
+                  </Trans>
+                }
+              />
               <Text type="md" style={[s.bold, pal.text]}>
                 {formatCount(profile.postsCount || 0)}{' '}
                 <Text type="md" style={[pal.textLight]}>
