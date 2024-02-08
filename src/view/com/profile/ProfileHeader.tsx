@@ -42,12 +42,11 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {BACK_HITSLOP} from 'lib/constants'
-import {isInvalidHandle} from 'lib/strings/handles'
+import {isInvalidHandle, sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
@@ -58,6 +57,9 @@ import {LabelInfo} from '../util/moderation/LabelInfo'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
+  placeholderData?:
+    | AppBskyActorDefs.ProfileView
+    | AppBskyActorDefs.ProfileViewDetailed
   moderation: ProfileModeration | null
   hideBackButton?: boolean
   isProfilePreview?: boolean
@@ -65,15 +67,28 @@ interface Props {
 
 export function ProfileHeader({
   profile,
+  placeholderData,
   moderation,
   hideBackButton = false,
   isProfilePreview,
 }: Props) {
   const pal = usePalette('default')
 
+  // placeholder
+  // =
+  if (!profile && placeholderData && moderation) {
+    return (
+      <ProfileHeaderPlaceholder
+        profile={placeholderData}
+        moderation={moderation}
+      />
+    )
+  }
+
   // loading
   // =
   if (!profile || !moderation) {
+    console.log('this?')
     return (
       <View style={pal.view}>
         <LoadingPlaceholder width="100%" height={153} />
@@ -714,6 +729,130 @@ let ProfileHeaderLoaded = ({
 }
 ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
 
+let ProfileHeaderPlaceholder = ({
+  profile,
+  moderation,
+  hideBackButton = false,
+}: {
+  profile: AppBskyActorDefs.ProfileView | AppBskyActorDefs.ProfileViewDetailed
+  moderation: ProfileModeration
+  hideBackButton?: boolean
+}): React.ReactNode => {
+  const pal = usePalette('default')
+  const {currentAccount} = useSession()
+  const {_} = useLingui()
+  const {openLightbox} = useLightboxControls()
+  const navigation = useNavigation<NavigationProp>()
+  const invalidHandle = isInvalidHandle(profile.handle)
+  const {isDesktop} = useWebMediaQueries()
+  const isMe = React.useMemo(
+    () => currentAccount?.did === profile.did,
+    [currentAccount, profile],
+  )
+  const displayName = React.useMemo(
+    () =>
+      sanitizeDisplayName(
+        profile?.displayName ?? profile.handle,
+        moderation.profile,
+      ),
+    [moderation.profile, profile?.displayName, profile.handle],
+  )
+
+  const onPressBack = React.useCallback(() => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
+  }, [navigation])
+
+  const onPressAvi = React.useCallback(() => {
+    if (
+      profile.avatar &&
+      !(moderation.avatar.blur && moderation.avatar.noOverride)
+    ) {
+      openLightbox(new ProfileImageLightbox(profile))
+    }
+  }, [openLightbox, profile, moderation])
+
+  const blockHide =
+    !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
+
+  return (
+    <View style={pal.view} pointerEvents="box-none">
+      <View pointerEvents="none">
+        <UserBanner moderation={moderation.avatar} />
+      </View>
+      <View style={styles.content} pointerEvents="box-none">
+        <View style={[styles.buttonsLine]} pointerEvents="box-none" />
+        <View pointerEvents="none">
+          <Text
+            testID="profileHeaderDisplayName"
+            type="title-2xl"
+            style={[pal.text, styles.title]}>
+            {displayName}
+          </Text>
+        </View>
+        <View style={styles.handleLine} pointerEvents="none">
+          {profile.viewer?.followedBy && !blockHide ? (
+            <View style={[styles.pill, pal.btn, s.mr5]}>
+              <Text type="xs" style={[pal.text]}>
+                <Trans>Follows you</Trans>
+              </Text>
+            </View>
+          ) : undefined}
+          <ThemedText
+            type={invalidHandle ? 'xs' : 'md'}
+            fg={invalidHandle ? 'error' : 'light'}
+            border={invalidHandle ? 'error' : undefined}
+            style={[
+              invalidHandle ? styles.invalidHandle : undefined,
+              styles.handle,
+            ]}>
+            {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
+          </ThemedText>
+        </View>
+        <ProfileHeaderAlerts moderation={moderation} />
+        {isMe && (
+          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
+        )}
+      </View>
+      {!isDesktop && !hideBackButton && (
+        <TouchableWithoutFeedback
+          testID="profileHeaderBackBtn"
+          onPress={onPressBack}
+          hitSlop={BACK_HITSLOP}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Back`)}
+          accessibilityHint="">
+          <View style={styles.backBtnWrapper}>
+            <BlurView style={styles.backBtn} blurType="dark">
+              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
+            </BlurView>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
+      <TouchableWithoutFeedback
+        testID="profileHeaderAviButton"
+        onPress={onPressAvi}
+        accessibilityRole="image"
+        accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
+        accessibilityHint="">
+        <View
+          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+          <UserAvatar
+            size={80}
+            avatar={profile.avatar}
+            moderation={moderation.avatar}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </View>
+  )
+}
+
+ProfileHeaderPlaceholder = memo(ProfileHeaderPlaceholder)
+
 const styles = StyleSheet.create({
   banner: {
     width: '100%',
@@ -756,6 +895,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 'auto',
     marginBottom: 12,
+    height: 34,
   },
   primaryBtn: {
     backgroundColor: colors.blue3,
