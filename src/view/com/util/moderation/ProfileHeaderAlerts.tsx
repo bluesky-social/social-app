@@ -7,6 +7,7 @@ import {ShieldExclamation} from 'lib/icons'
 import {
   describeModerationCause,
   getProfileModerationCauses,
+  useLabelStrings,
 } from 'lib/moderation'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -23,6 +24,7 @@ export function ProfileHeaderAlerts({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const labelStrings = useLabelStrings()
 
   const causes = getProfileModerationCauses(moderation)
   if (!causes.length) {
@@ -33,7 +35,7 @@ export function ProfileHeaderAlerts({
     <View style={styles.grid}>
       {causes.map(cause => {
         const isMute = cause.type === 'muted'
-        const desc = describeModerationCause(cause, 'account')
+        const desc = describeModerationCause(cause, 'account', labelStrings)
         return (
           <Pressable
             testID="profileHeaderAlert"

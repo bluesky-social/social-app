@@ -18,6 +18,7 @@ import {
   describeModerationCause,
   getProfileModerationCauses,
   getModerationCauseKey,
+  useLabelStrings,
 } from 'lib/moderation'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
@@ -119,7 +120,7 @@ export function ProfileCard({
   )
 }
 
-function ProfileCardPills({
+export function ProfileCardPills({
   followedBy,
   moderation,
 }: {
@@ -127,6 +128,7 @@ function ProfileCardPills({
   moderation: ProfileModeration
 }) {
   const pal = usePalette('default')
+  const labelStrings = useLabelStrings()
 
   const causes = getProfileModerationCauses(moderation)
   if (!followedBy && !causes.length) {
@@ -143,7 +145,7 @@ function ProfileCardPills({
         </View>
       )}
       {causes.map(cause => {
-        const desc = describeModerationCause(cause, 'account')
+        const desc = describeModerationCause(cause, 'account', labelStrings)
         return (
           <View
             style={[s.mt5, pal.btn, styles.pill]}

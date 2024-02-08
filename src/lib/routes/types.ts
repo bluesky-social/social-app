@@ -23,6 +23,7 @@ export type CommonNavigatorParams = {
   ProfileFeedLikedBy: {name: string; rkey: string}
   ProfileModservice: {name: string}
   Debug: undefined
+  DebugMod: undefined
   Log: undefined
   Support: undefined
   PrivacyPolicy: undefined

@@ -4,7 +4,7 @@ import {ModerationUI} from '@atproto/api'
 import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ShieldExclamation} from 'lib/icons'
-import {describeModerationCause} from 'lib/moderation'
+import {describeModerationCause, useLabelStrings} from 'lib/moderation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
@@ -20,13 +20,18 @@ export function PostAlerts({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const labelStrings = useLabelStrings()
 
   const shouldAlert = !!moderation.cause && moderation.alert
   if (!shouldAlert) {
     return null
   }
 
-  const desc = describeModerationCause(moderation.cause, 'content')
+  const desc = describeModerationCause(
+    moderation.cause,
+    'content',
+    labelStrings,
+  )
   return (
     <Pressable
       onPress={() => {

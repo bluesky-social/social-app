@@ -17,6 +17,7 @@ export interface ModerationCauseDescription {
 export function describeModerationCause(
   cause: ModerationCause | undefined,
   context: 'account' | 'content',
+  labelStrings: LabelStrings,
 ): ModerationCauseDescription {
   // TODO localize
   if (!cause) {
@@ -77,7 +78,21 @@ export function describeModerationCause(
       description: `You have hidden this post`,
     }
   }
-  return cause.labelDef.strings[context].en
+  if (cause.labelDef.id in labelStrings) {
+    const strings = labelStrings[cause.labelDef.id as keyof typeof LABELS]
+    return {
+      name: context === 'account' ? strings.account.name : strings.content.name,
+      description:
+        context === 'account'
+          ? strings.account.description
+          : strings.content.description,
+    }
+  }
+  return {
+    name: 'TODO',
+    description: `TODo`,
+  }
+  // return cause.labelDef.strings[context].en
 }
 
 export function getProfileModerationCauses(

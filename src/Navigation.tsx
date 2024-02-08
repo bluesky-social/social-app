@@ -62,6 +62,7 @@ import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {Storybook} from './view/screens/Storybook'
+import {DebugModScreen} from './view/screens/DebugMod'
 import {LogScreen} from './view/screens/Log'
 import {SupportScreen} from './view/screens/Support'
 import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
@@ -207,6 +208,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         name="Debug"
         getComponent={() => Storybook}
         options={{title: title(msg`Storybook`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="DebugMod"
+        getComponent={() => DebugModScreen}
+        options={{title: title(msg`Moderation states`), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"

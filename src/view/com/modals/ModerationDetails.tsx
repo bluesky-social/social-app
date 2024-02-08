@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {ModerationUI} from '@atproto/api'
+import {ModerationUI, LABELS} from '@atproto/api'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../util/text/Text'
@@ -12,6 +12,7 @@ import {Button} from '../util/forms/Button'
 import {useModalControls} from '#/state/modals'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
+import {useLabelStrings} from '#/lib/moderation'
 
 export const snapPoints = [300]
 
@@ -26,6 +27,7 @@ export function Component({
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
   const {_} = useLingui()
+  const labelStrings = useLabelStrings()
 
   let name
   let description
@@ -86,9 +88,16 @@ export function Component({
       name = _(msg`Account Muted`)
       description = _(msg`You have muted this user.`)
     }
+  } else if (moderation.cause.labelDef.id in labelStrings) {
+    name =
+      labelStrings[moderation.cause.labelDef.id as keyof typeof LABELS][context]
+        .name
+    description =
+      labelStrings[moderation.cause.labelDef.id as keyof typeof LABELS][context]
+        .description
   } else {
-    name = moderation.cause.labelDef.strings[context].en.name
-    description = moderation.cause.labelDef.strings[context].en.description
+    name = 'TODO'
+    description = 'TODO'
   }
 
   return (
