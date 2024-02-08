@@ -1,9 +1,10 @@
 import React from 'react'
 import {Dimensions, View} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {AppBskyModerationDefs} from '@atproto/api'
+import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {LABEL_GROUPS} from '@atproto/api'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -136,6 +137,11 @@ export function ProfileModserviceScreenInner({
   const [likeUri, setLikeUri] = React.useState<string>(
     modInfo.viewer?.like || '',
   )
+  const groups = React.useMemo<
+    [keyof typeof LABEL_GROUPS, LabelGroupDefinition][]
+  >(() => {
+    return Object.entries(LABEL_GROUPS).filter(([, def]) => def.configurable)
+  }, [])
 
   const isLiked = !!likeUri
   // const isSaved = false // TODO
@@ -249,15 +255,17 @@ export function ProfileModserviceScreenInner({
       </View>
 
       <View style={[a.gap_md, a.mt_xl]}>
-        <Divider />
-        <PreferenceRow labelGroup="nsfw" />
-        <Divider />
-        <PreferenceRow labelGroup="nudity" />
-        <Divider />
-        <PreferenceRow labelGroup="suggestive" />
+        {groups.map(([name, def]) => {
+          return (
+            <React.Fragment key={def.id}>
+              <Divider />
+              <PreferenceRow labelGroup={name} />
+            </React.Fragment>
+          )
+        })}
       </View>
 
-      <View style={{height: 20}} />
+      <View style={{height: 100}} />
     </ScrollView>
   )
 }

@@ -3,23 +3,17 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-import {
-  CONFIGURABLE_LABEL_GROUPS,
-  ConfigurableLabelGroup,
-} from '#/state/queries/preferences'
+import {useLabelGroupStrings} from '#/lib/moderation'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 
-export function PreferenceRow({
-  labelGroup,
-}: {
-  labelGroup: ConfigurableLabelGroup
-}) {
+export function PreferenceRow({labelGroup}: {labelGroup: string}) {
   const t = useTheme()
   const {_} = useLingui()
-  const groupInfo = CONFIGURABLE_LABEL_GROUPS[labelGroup]
+  const labelGroupStrings = useLabelGroupStrings()
+  const groupInfoStrings = labelGroupStrings[labelGroup]
 
   const labels = {
     hide: _(msg`Hide`),
@@ -38,15 +32,15 @@ export function PreferenceRow({
         a.align_center,
       ]}>
       <View style={[a.gap_xs, {width: '50%'}]}>
-        <Text style={[a.font_bold]}>{groupInfo.title}</Text>
+        <Text style={[a.font_bold]}>{groupInfoStrings.name}</Text>
         <Text style={[t.atoms.text_contrast_700, a.leading_snug]}>
-          {groupInfo.subtitle}
+          {groupInfoStrings.description}
         </Text>
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
         <ToggleButton.Group
           label={_(
-            msg`Configure content filtering setting for category: ${groupInfo.title.toLowerCase()}`,
+            msg`Configure content filtering setting for category: ${groupInfoStrings.name.toLowerCase()}`,
           )}
           values={['warn']}
           onChange={() => {}}>
