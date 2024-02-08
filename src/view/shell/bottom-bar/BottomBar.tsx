@@ -15,6 +15,7 @@ import {
   HashtagIcon,
   BellIcon,
   BellIconSolid,
+  ChevronUpDownIcon,
 } from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
@@ -41,7 +42,7 @@ type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
 export function BottomBar({navigation}: BottomTabBarProps) {
   const {openModal} = useModalControls()
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession, currentAccount, accounts} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const safeAreaInsets = useSafeAreaInsets()
@@ -228,6 +229,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       // See https://github.com/bluesky-social/social-app/pull/1801:
                       usePlainRNImage={true}
                     />
+
+                    {accounts.length > 1 && (
+                      <ChevronUpDownIcon
+                        size={16}
+                        strokeWidth={1.9}
+                        style={[pal.text, {marginLeft: -16, right: -16}]}
+                      />
+                    )}
                   </View>
                 ) : (
                   <View style={[styles.ctrlIcon, pal.text, styles.profileIcon]}>
@@ -237,6 +246,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                       // See https://github.com/bluesky-social/social-app/pull/1801:
                       usePlainRNImage={true}
                     />
+
+                    {accounts.length > 1 && (
+                      <ChevronUpDownIcon
+                        size={16}
+                        strokeWidth={1.9}
+                        style={[pal.text, {marginLeft: -16, right: -16}]}
+                      />
+                    )}
                   </View>
                 )}
               </View>

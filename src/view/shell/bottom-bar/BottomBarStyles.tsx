@@ -63,6 +63,8 @@ export const styles = StyleSheet.create({
     top: -2.5,
   },
   profileIcon: {
+    flexDirection: 'row',
+    alignItems: 'center',
     top: -4,
   },
   onProfile: {
