@@ -740,7 +740,6 @@ let ProfileHeaderPlaceholder = ({
   const pal = usePalette('default')
   const {currentAccount} = useSession()
   const {_} = useLingui()
-  const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const invalidHandle = isInvalidHandle(profile.handle)
   const {isDesktop} = useWebMediaQueries()
@@ -764,15 +763,6 @@ let ProfileHeaderPlaceholder = ({
       navigation.navigate('Home')
     }
   }, [navigation])
-
-  const onPressAvi = React.useCallback(() => {
-    if (
-      profile.avatar &&
-      !(moderation.avatar.blur && moderation.avatar.noOverride)
-    ) {
-      openLightbox(new ProfileImageLightbox(profile))
-    }
-  }, [openLightbox, profile, moderation])
 
   const blockHide =
     !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
@@ -831,21 +821,14 @@ let ProfileHeaderPlaceholder = ({
           </View>
         </TouchableWithoutFeedback>
       )}
-      <TouchableWithoutFeedback
-        testID="profileHeaderAviButton"
-        onPress={onPressAvi}
-        accessibilityRole="image"
-        accessibilityLabel={_(msg`View ${profile.handle}'s avatar`)}
-        accessibilityHint="">
-        <View
-          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <UserAvatar
-            size={80}
-            avatar={profile.avatar}
-            moderation={moderation.avatar}
-          />
-        </View>
-      </TouchableWithoutFeedback>
+      <View
+        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+        <UserAvatar
+          size={80}
+          avatar={profile.avatar}
+          moderation={moderation.avatar}
+        />
+      </View>
     </View>
   )
 }
