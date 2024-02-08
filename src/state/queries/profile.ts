@@ -87,13 +87,6 @@ export function usePrefetchProfileQuery() {
   return prefetchProfileQuery
 }
 
-export function cacheProfileBasic(
-  queryClient: QueryClient,
-  profile: AppBskyActorDefs.ProfileViewBasic,
-) {
-  queryClient.setQueryData(profileBasicKey(profile.handle), profile)
-}
-
 interface ProfileUpdateParams {
   profile: AppBskyActorDefs.ProfileView
   updates:
