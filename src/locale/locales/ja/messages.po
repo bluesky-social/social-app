@@ -682,7 +682,7 @@ msgstr "メインのフィードを選択"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
-msgstr "パスワードを選択"
+msgstr "パスワードを入力"
 
 #: src/view/screens/Settings.tsx:816
 #: src/view/screens/Settings.tsx:817
