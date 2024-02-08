@@ -32,7 +32,7 @@ msgstr "{invitesAvailable, plural, one {可用的邀請碼： # 個} other {可�
 #: src/view/screens/Settings.tsx:435
 #: src/view/shell/Drawer.tsx:664
 msgid "{invitesAvailable} invite code available"
-msgstr "{invitesAvailable} 邀請碼可用"
+msgstr "{invitesAvailable} 個可用的邀請碼"
 
 #: src/view/screens/Settings.tsx:437
 #: src/view/shell/Drawer.tsx:666
