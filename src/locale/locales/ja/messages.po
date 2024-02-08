@@ -3470,7 +3470,7 @@ msgstr "年齢を設定"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "カラーテーマをダークに設定します"
+msgstr "カラーテーマを暗いものに設定します"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
