@@ -1570,7 +1570,7 @@ msgstr "為了保護你的帳號安全，我們需要將驗證碼發送到你的
 
 #: src/view/com/modals/AddAppPasswords.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "為了保護你的帳戶安全，你將無法再次查看此內容。如果你丟失了此密碼，你將需要生成一個新密碼。"
+msgstr "為了保護你的帳號安全，你將無法再次查看此內容。如果你丟失了此密碼，你將需要生成一個新密碼。"
 
 #: src/view/com/auth/login/LoginForm.tsx:238
 msgid "Forgot"
