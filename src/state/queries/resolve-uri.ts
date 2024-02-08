@@ -99,20 +99,9 @@ export function precacheFeedPosts(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
 ) {
-  // This is what we have presently. Regardless of implementation this needs to be reworked, because it doesn't
-  // save enough info
-  // for (const post of posts) {
-  //   precacheProfile(queryClient, post.post.author)
-  // }
-
-  // One thing we know we are going to need to query is a few of the posts. This will only happen whenever there's
-  // a quote embed that contains media (we need the URIs for the images). For simplicity, we'll always use this function
-  // to store the author of quotes.
-  // We should be able to store the author, which is ProfileViewBasic, and use that when pushing to the ProfileScreen.
-  // ProfileScreen can query for the full ProfileView on push (or before, like on hover on web, on push on native)
+  // Store the embed URIs we run across that need caching
   const quoteEmbedUris: string[] = []
 
-  // TODO figure out the type for this
   function handleEmbed(embed?: any) {
     // If it's a view record, all we need to do is "cache" the author
     if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
