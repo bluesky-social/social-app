@@ -1134,7 +1134,7 @@ msgstr "Você gostaria de dizer alguma coisa?"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr "Mais escuro"
+msgstr "Menos escuro"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -3571,7 +3571,7 @@ msgstr "Definir o tema escuro para o padrão"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Set dark theme to the dim theme"
-msgstr "Definir o tema escuro para a versão mais escura"
+msgstr "Definir o tema escuro para a versão menos escura"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
