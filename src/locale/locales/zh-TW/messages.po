@@ -4441,7 +4441,7 @@ msgstr "你已設定完成！"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已經瀏覽完你的訂閱訊息流啦！尋找一些更多的帳號追蹤吧。"
+msgstr "你已經瀏覽完你的訂閱訊息流啦！追蹤其他帳號吧。"
 
 #: src/view/com/auth/create/Step1.tsx:67
 msgid "Your account"
