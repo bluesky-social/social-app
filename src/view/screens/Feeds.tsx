@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {ActivityIndicator, StyleSheet, View, type FlatList} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -30,10 +30,12 @@ import {
   useFeedSourceInfoQuery,
   useGetPopularFeedsQuery,
   useSearchPopularFeedsMutation,
+  getAvatarTypeFromUri,
 } from '#/state/queries/feed'
 import {cleanError} from 'lib/strings/errors'
 import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
+import {isNative} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -118,6 +120,7 @@ export function FeedsScreen(_props: Props) {
     error: searchError,
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
+  const listRef = React.useRef<FlatList>(null)
 
   /**
    * A search query is present. We may not have search results yet.
@@ -338,6 +341,35 @@ export function FeedsScreen(_props: Props) {
     )
   }, [pal, _])
 
+  const searchBarIndex = items.findIndex(
+    item => item.type === 'popularFeedsHeader',
+  )
+
+  const onChangeSearchFocus = React.useCallback(
+    (focus: boolean) => {
+      if (focus && searchBarIndex > -1) {
+        if (isNative) {
+          // scrollToIndex scrolls the exact right amount, so use if available
+          listRef.current?.scrollToIndex({
+            index: searchBarIndex,
+            animated: true,
+          })
+        } else {
+          // web implementation only supports scrollToOffset
+          // thus, we calculate the offset based on the index
+          // pixel values are estimates, I wasn't able to get it pixel perfect :(
+          const headerHeight = isMobile ? 43 : 53
+          const feedItemHeight = isMobile ? 49 : 58
+          listRef.current?.scrollToOffset({
+            offset: searchBarIndex * feedItemHeight - headerHeight,
+            animated: true,
+          })
+        }
+      }
+    },
+    [searchBarIndex, isMobile],
+  )
+
   const renderItem = React.useCallback(
     ({item}: {item: FlatlistSlice}) => {
       if (item.type === 'error') {
@@ -415,6 +447,7 @@ export function FeedsScreen(_props: Props) {
                   onChangeQuery={onChangeQuery}
                   onPressCancelSearch={onPressCancelSearch}
                   onSubmitQuery={onSubmitQuery}
+                  setIsInputFocused={onChangeSearchFocus}
                   style={{flex: 1, maxWidth: 250}}
                 />
               )}
@@ -427,6 +460,7 @@ export function FeedsScreen(_props: Props) {
                   onChangeQuery={onChangeQuery}
                   onPressCancelSearch={onPressCancelSearch}
                   onSubmitQuery={onSubmitQuery}
+                  setIsInputFocused={onChangeSearchFocus}
                 />
               </View>
             )}
@@ -469,6 +503,7 @@ export function FeedsScreen(_props: Props) {
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
+      onChangeSearchFocus,
     ],
   )
 
@@ -486,6 +521,7 @@ export function FeedsScreen(_props: Props) {
       {preferences ? <View /> : <ActivityIndicator />}
 
       <List
+        ref={listRef}
         style={[!isTabletOrDesktop && s.flex1, styles.list]}
         data={items}
         keyExtractor={item => item.key}
@@ -520,6 +556,7 @@ function SavedFeed({feedUri}: {feedUri: string}) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   const {data: info, error} = useFeedSourceInfoQuery({uri: feedUri})
+  const typeAvatar = getAvatarTypeFromUri(feedUri)
 
   if (!info)
     return (
@@ -547,7 +584,7 @@ function SavedFeed({feedUri}: {feedUri: string}) {
           />
         </View>
       ) : (
-        <UserAvatar type="algo" size={28} avatar={info.avatar} />
+        <UserAvatar type={typeAvatar} size={28} avatar={info.avatar} />
       )}
       <View
         style={{flex: 1, flexDirection: 'row', gap: 8, alignItems: 'center'}}>

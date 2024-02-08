@@ -33,6 +33,9 @@ export function Step3({
           placeholder="e.g. alice"
           value={uiState.handle}
           editable
+          autoFocus
+          autoComplete="off"
+          autoCorrect={false}
           onChange={value => uiDispatch({type: 'set-handle', value})}
           // TODO: Add explicit text label
           accessibilityLabel={_(msg`User handle`)}
@@ -40,7 +43,7 @@ export function Step3({
         />
         <Text type="lg" style={[pal.text, s.pl5, s.pt10]}>
           <Trans>Your full handle will be</Trans>{' '}
-          <Text type="lg-bold" style={[pal.text, s.ml5]}>
+          <Text type="lg-bold" style={pal.text}>
             @{createFullHandle(uiState.handle, uiState.userDomain)}
           </Text>
         </Text>

@@ -34,7 +34,7 @@ export async function init() {
     logger.log('persisted state: initialized')
   } catch (e) {
     logger.error('persisted state: failed to load root state from storage', {
-      error: e,
+      message: e,
     })
     // AsyncStorage failure, but we can still continue in memory
     return defaults
@@ -59,7 +59,7 @@ export async function write<K extends keyof Schema>(
     })
   } catch (e) {
     logger.error(`persisted state: failed writing root state to storage`, {
-      error: e,
+      message: e,
     })
   }
 }
@@ -89,7 +89,7 @@ async function onBroadcastMessage({data}: MessageEvent) {
       logger.error(
         `persisted state: failed handling update from broadcast channel`,
         {
-          error: e,
+          message: e,
         },
       )
     }

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {View} from 'react-native'
-import {PWI_ENABLED} from '#/lib/build-flags'
+import {PWI_ENABLED, NEW_ONBOARDING_ENABLED} from '#/lib/build-flags'
 
 // Based on @react-navigation/native-stack/src/createNativeStackNavigator.ts
 // MIT License
@@ -35,8 +35,10 @@ import {
 } from '#/state/shell/logged-out'
 import {useSession} from '#/state/session'
 import {isWeb} from 'platform/detection'
+import {Deactivated} from '#/screens/Deactivated'
 import {LoggedOut} from '../com/auth/LoggedOut'
 import {Onboarding} from '../com/auth/Onboarding'
+import {Onboarding as NewOnboarding} from '#/screens/Onboarding'
 
 type NativeStackNavigationOptionsWithAuth = NativeStackNavigationOptions & {
   requireAuth?: boolean
@@ -92,22 +94,29 @@ function NativeStackNavigator({
   )
 
   // --- our custom logic starts here ---
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
   const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
     return <LoggedOut />
+  }
+  if (hasSession && currentAccount?.deactivated) {
+    return <Deactivated />
   }
   if (showLoggedOut) {
     return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
   }
   if (onboardingState.isActive) {
-    return <Onboarding />
+    if (NEW_ONBOARDING_ENABLED) {
+      return <NewOnboarding />
+    } else {
+      return <Onboarding />
+    }
   }
   const newDescriptors: typeof descriptors = {}
   for (let key in descriptors) {
@@ -125,6 +134,10 @@ function NativeStackNavigator({
     }
   }
 
+  // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
+  // on both tablet and mobile web so that we see the sign up CTA.
+  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+
   return (
     <NavigationContent>
       <NativeStackView
@@ -133,8 +146,8 @@ function NativeStackNavigator({
         navigation={navigation}
         descriptors={newDescriptors}
       />
-      {isWeb && isMobile && <BottomBarWeb />}
-      {isWeb && !isMobile && (
+      {isWeb && showBottomBar && <BottomBarWeb />}
+      {isWeb && !showBottomBar && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav routeName={activeRoute.name} />

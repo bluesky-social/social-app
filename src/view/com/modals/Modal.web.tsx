@@ -34,6 +34,7 @@ import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
+import * as ChangePasswordModal from './ChangePassword'
 import * as LinkWarningModal from './LinkWarning'
 import * as EmbedConsentModal from './EmbedConsent'
 
@@ -134,6 +135,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {
     element = <ChangeEmailModal.Component />
+  } else if (modal.name === 'change-password') {
+    element = <ChangePasswordModal.Component />
   } else if (modal.name === 'link-warning') {
     element = <LinkWarningModal.Component {...modal} />
   } else if (modal.name === 'embed-consent') {

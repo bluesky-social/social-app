@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <!-- 
+    <!--
       This viewport works for phones with notches.
       It's optimized for gestures by disabling global zoom.
      -->
@@ -40,54 +40,61 @@
         /* Prevent text size change on orientation change https://gist.github.com/tfausak/2222823#file-ios-8-web-app-html-L138 */
         -webkit-text-size-adjust: 100%;
         height: calc(100% + env(safe-area-inset-top));
-        scrollbar-gutter: stable;
-      }
-
-      /* Remove autofill styles on Webkit */
-      input:-webkit-autofill,
-      input:-webkit-autofill:hover, 
-      input:-webkit-autofill:focus,
-      textarea:-webkit-autofill,
-      textarea:-webkit-autofill:hover,
-      textarea:-webkit-autofill:focus,
-      select:-webkit-autofill,
-      select:-webkit-autofill:hover,
-      select:-webkit-autofill:focus {
-        border: 0;
-        -webkit-text-fill-color: transparent;
-        -webkit-box-shadow: none;
-      }
-      /* Force left-align date/time inputs on iOS mobile */
-      input::-webkit-date-and-time-value {
-        text-align: left;
+        scrollbar-gutter: stable both-edges;
       }
 
       /* Color theming */
+      /* Default will always be white */
       :root {
-        --text: black;
-        --background: white;
-        --backgroundLight: hsl(211, 20%, 95%);
-      }
-      html.colorMode--dark {
-        --text: white;
-        --background: hsl(211, 20%, 4%);
-        --backgroundLight: hsl(211, 20%, 10%);
-        color-scheme: dark;
-      }
-      @media (prefers-color-scheme: light) {
-        html.colorMode--system {
           --text: black;
           --background: white;
           --backgroundLight: hsl(211, 20%, 95%);
-        }
       }
+      /* This gives us a black background when system is dark and we have not loaded the theme/color scheme values in JS */
       @media (prefers-color-scheme: dark) {
-        html.colorMode--system {
+          :root {
+              --text: white;
+              --background: black;
+              --backgroundLight: hsl(211, 20%, 20%);
+              color-scheme: dark;
+          }
+      }
+
+      /* Overwrite those preferences with the selected theme */
+      html.theme--light {
+          --text: black;
+          --background: white;
+          --backgroundLight: hsl(211, 20%, 95%);
+      }
+      html.theme--dark {
+          --text: white;
+          --background: black;
+          --backgroundLight: hsl(211, 20%, 20%);
+          color-scheme: dark;
+      }
+      html.theme--dim {
           --text: white;
           --background: hsl(211, 20%, 4%);
           --backgroundLight: hsl(211, 20%, 10%);
           color-scheme: dark;
-        }
+      }
+
+      /* Remove autofill styles on Webkit */
+      input:autofill,
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      input:-webkit-autofill:active{
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: var(--text);
+          transition: background-color 5000s ease-in-out 0s;
+          box-shadow: inset 0 0 20px 20px var(--background);
+          background: var(--background);
+          color: var(--text);
+      }
+      /* Force left-align date/time inputs on iOS mobile */
+      input::-webkit-date-and-time-value {
+        text-align: left;
       }
 
       body {
@@ -100,6 +107,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -ms-overflow-style: scrollbar;
+        font-synthesis-weight: none;
       }
 
       /* Remove default link styling */
@@ -142,7 +150,7 @@
       .ProseMirror .mention {
         color: #0085ff;
       }
-      .ProseMirror a, 
+      .ProseMirror a,
       .ProseMirror .autolink {
         color: #0085ff;
       }
@@ -200,7 +208,7 @@
   </head>
 
   <body>
-    <!-- 
+    <!--
       A generic no script element with a reload button and a message.
       Feel free to customize this however you'd like.
     -->

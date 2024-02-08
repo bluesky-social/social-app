@@ -24,7 +24,7 @@ export const PostRepostedByScreen = ({route}: Props) => {
 
   return (
     <View>
-      <ViewHeader title={_(msg`Reposted by`)} />
+      <ViewHeader title={_(msg`Reposted By`)} />
       <PostRepostedByComponent uri={uri} />
     </View>
   )

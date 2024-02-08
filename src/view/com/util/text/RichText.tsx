@@ -18,6 +18,7 @@ export function RichText({
   style,
   numberOfLines,
   lang,
+  selectable,
   noLinks,
 }: {
   testID?: string
@@ -27,6 +28,7 @@ export function RichText({
   style?: StyleProp<TextStyle>
   numberOfLines?: number
   lang?: string
+  selectable?: boolean
   noLinks?: boolean
 }) {
   const theme = useTheme()
@@ -50,7 +52,8 @@ export function RichText({
           testID={testID}
           style={[style, pal.text]}
           dataSet={WORD_WRAP}
-          lang={lang}>
+          lang={lang}
+          selectable={selectable}>
           {text}
         </Text>
       )
@@ -63,7 +66,8 @@ export function RichText({
         numberOfLines={numberOfLines}
         // @ts-ignore web only -prf
         dataSet={WORD_WRAP}
-        lang={lang}>
+        lang={lang}
+        selectable={selectable}>
         {text}
       </Text>
     )
@@ -92,6 +96,7 @@ export function RichText({
           href={`/profile/${mention.did}`}
           style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
           dataSet={WORD_WRAP}
+          selectable={selectable}
         />,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
@@ -107,6 +112,7 @@ export function RichText({
             style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
             dataSet={WORD_WRAP}
             warnOnMismatchingLabel
+            selectable={selectable}
           />,
         )
       }
@@ -123,7 +129,8 @@ export function RichText({
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}
-      lang={lang}>
+      lang={lang}
+      selectable={selectable}>
       {els}
     </Text>
   )

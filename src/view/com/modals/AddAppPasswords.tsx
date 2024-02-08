@@ -62,7 +62,8 @@ export function Component({}: {}) {
   const {_} = useLingui()
   const {closeModal} = useModalControls()
   const {data: passwords} = useAppPasswordsQuery()
-  const createMutation = useAppPasswordCreateMutation()
+  const {mutateAsync: mutateAppPassword, isPending} =
+    useAppPasswordCreateMutation()
   const [name, setName] = useState(
     shadesOfBlue[Math.floor(Math.random() * shadesOfBlue.length)],
   )
@@ -107,7 +108,7 @@ export function Component({}: {}) {
     }
 
     try {
-      const newPassword = await createMutation.mutateAsync({name})
+      const newPassword = await mutateAppPassword({name})
       if (newPassword) {
         setAppPassword(newPassword.password)
       } else {
@@ -116,7 +117,7 @@ export function Component({}: {}) {
       }
     } catch (e) {
       Toast.show(_(msg`Failed to create app password.`), 'times')
-      logger.error('Failed to create app password', {error: e})
+      logger.error('Failed to create app password', {message: e})
     }
   }
 
@@ -170,13 +171,10 @@ export function Component({}: {}) {
               autoFocus={true}
               maxLength={32}
               selectTextOnFocus={true}
-              multiline={true} // need this to be true otherwise selectTextOnFocus doesn't work
-              numberOfLines={1} // hack for multiline so only one line shows (android)
-              scrollEnabled={false} // hack for multiline so only one line shows (ios)
-              blurOnSubmit={true} // hack for multiline so it submits
-              editable={!appPassword}
+              blurOnSubmit={true}
+              editable={!isPending}
               returnKeyType="done"
-              onEndEditing={createAppPassword}
+              onSubmitEditing={createAppPassword}
               accessible={true}
               accessibilityLabel={_(msg`Name`)}
               accessibilityHint={_(msg`Input name for app password`)}
@@ -253,7 +251,6 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 10,
     paddingHorizontal: 8,
-    marginTop: 6,
     fontSize: 17,
     letterSpacing: 0.25,
     fontWeight: '400',

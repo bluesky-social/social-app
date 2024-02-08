@@ -207,7 +207,7 @@ function ListItem({
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [feedUri, isPinned, pinFeed, unpinFeed, resetSaveFeedsMutationState, _])
 
@@ -229,7 +229,7 @@ function ListItem({
       })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to set pinned feed order', {error: e})
+      logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
 
@@ -250,7 +250,7 @@ function ListItem({
       })
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to set pinned feed order', {error: e})
+      logger.error('Failed to set pinned feed order', {message: e})
     }
   }, [feedUri, isPinned, setSavedFeeds, currentFeeds, _])
 

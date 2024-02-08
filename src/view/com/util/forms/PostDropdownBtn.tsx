@@ -1,5 +1,5 @@
 import React, {memo} from 'react'
-import {Linking, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {
@@ -24,6 +24,7 @@ import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -61,6 +62,7 @@ let PostDropdownBtn = ({
   const postDeleteMutation = usePostDeleteMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
+  const openLink = useOpenLink()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -82,7 +84,7 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`Post deleted`))
       },
       e => {
-        logger.error('Failed to delete post', {error: e})
+        logger.error('Failed to delete post', {message: e})
         Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
@@ -99,20 +101,20 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
-      logger.error('Failed to toggle thread mute', {error: e})
+      logger.error('Failed to toggle thread mute', {message: e})
     }
   }, [rootUri, toggleThreadMute, _])
 
   const onCopyPostText = React.useCallback(() => {
-    const str = richTextToString(richText)
+    const str = richTextToString(richText, true)
 
     Clipboard.setString(str)
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 
   const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
+    openLink(translatorUrl)
+  }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})

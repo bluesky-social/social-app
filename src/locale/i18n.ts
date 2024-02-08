@@ -3,8 +3,7 @@ import {i18n} from '@lingui/core'
 
 import {useLanguagePrefs} from '#/state/preferences'
 import {messages as messagesEn} from '#/locale/locales/en/messages'
-// DISABLED until this translation is fixed -prf
-// import {messages as messagesDe} from '#/locale/locales/de/messages'
+import {messages as messagesDe} from '#/locale/locales/de/messages'
 import {messages as messagesId} from '#/locale/locales/id/messages'
 import {messages as messagesEs} from '#/locale/locales/es/messages'
 import {messages as messagesFr} from '#/locale/locales/fr/messages'
@@ -14,6 +13,7 @@ import {messages as messagesKo} from '#/locale/locales/ko/messages'
 import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
 import {messages as messagesUk} from '#/locale/locales/uk/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
+import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
@@ -23,11 +23,10 @@ import {AppLanguage} from '#/locale/languages'
  */
 export async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
-    // DISABLED until this translation is fixed -prf
-    // case AppLanguage.de: {
-    //   i18n.loadAndActivate({locale, messages: messagesDe})
-    //   break
-    // }
+    case AppLanguage.de: {
+      i18n.loadAndActivate({locale, messages: messagesDe})
+      break
+    }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
       break
@@ -63,6 +62,9 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.ca: {
       i18n.loadAndActivate({locale, messages: messagesCa})
       break
+    }
+    case AppLanguage.zh_CN: {
+      i18n.loadAndActivate({locale, messages: messagesZh_CN})
     }
     default: {
       i18n.loadAndActivate({locale, messages: messagesEn})

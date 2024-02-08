@@ -228,7 +228,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
   return (
     <>
       <View style={styles.container}>
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} style={{color: pal.text.color}} />
       </View>
 
       {isDropping && (
@@ -316,7 +316,6 @@ function getImageFromUri(
     const type = item.type
 
     if (type === 'text/plain') {
-      console.log('hit')
       item.getAsString(async itemString => {
         if (isUriImage(itemString)) {
           const response = await fetch(itemString)

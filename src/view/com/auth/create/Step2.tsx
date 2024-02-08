@@ -28,6 +28,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {HITSLOP_10} from '#/lib/constants'
 
 export function Step2({
   uiState,
@@ -41,10 +42,11 @@ export function Step2({
   const {isMobile} = useWebMediaQueries()
 
   const onPressRequest = React.useCallback(() => {
-    if (
-      uiState.verificationPhone.length >= 9 &&
-      parsePhoneNumber(uiState.verificationPhone, uiState.phoneCountry)
-    ) {
+    const phoneNumber = parsePhoneNumber(
+      uiState.verificationPhone,
+      uiState.phoneCountry,
+    )
+    if (phoneNumber && phoneNumber.isValid()) {
       requestVerificationCode({uiState, uiDispatch, _})
     } else {
       uiDispatch({
@@ -243,7 +245,8 @@ export function Step2({
               <TouchableWithoutFeedback
                 onPress={onPressRetry}
                 accessibilityLabel={_(msg`Retry.`)}
-                accessibilityHint="">
+                accessibilityHint=""
+                hitSlop={HITSLOP_10}>
                 <View style={styles.touchable}>
                   <Text
                     type="md-medium"

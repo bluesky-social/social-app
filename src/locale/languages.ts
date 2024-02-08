@@ -6,8 +6,7 @@ interface Language {
 
 export enum AppLanguage {
   en = 'en',
-  // DISABLED until this translation is fixed -prf
-  // de = 'de',
+  de = 'de',
   es = 'es',
   fr = 'fr',
   hi = 'hi',
@@ -17,6 +16,7 @@ export enum AppLanguage {
   pt_BR = 'pt-BR',
   uk = 'uk',
   ca = 'ca',
+  zh_CN = 'zh-CN',
 }
 
 interface AppLanguageConfig {
@@ -26,17 +26,17 @@ interface AppLanguageConfig {
 
 export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
-  // DISABLED until this translation is fixed -prf
-  // {code2: AppLanguage.de, name: 'Deutsch'},
-  {code2: AppLanguage.es, name: 'Español'},
-  {code2: AppLanguage.fr, name: 'Français'},
-  {code2: AppLanguage.hi, name: 'हिंदी'},
-  {code2: AppLanguage.id, name: 'Bahasa Indonesia'},
-  {code2: AppLanguage.ja, name: '日本語'},
-  {code2: AppLanguage.ko, name: '한국어'},
-  {code2: AppLanguage.pt_BR, name: 'Português (BR)'},
-  {code2: AppLanguage.uk, name: 'Українська'},
-  {code2: AppLanguage.ca, name: 'Catalan'},
+  {code2: AppLanguage.de, name: 'Deutsch – German'},
+  {code2: AppLanguage.es, name: 'Español – Spanish'},
+  {code2: AppLanguage.fr, name: 'Français – French'},
+  {code2: AppLanguage.hi, name: 'हिंदी – Hindi'},
+  {code2: AppLanguage.id, name: 'Bahasa Indonesia – Indonesian'},
+  {code2: AppLanguage.ja, name: '日本語 – Japanese'},
+  {code2: AppLanguage.ko, name: '한국어 – Korean'},
+  {code2: AppLanguage.pt_BR, name: 'Português (BR) – Portuguese (BR)'},
+  {code2: AppLanguage.uk, name: 'Українська – Ukrainian'},
+  {code2: AppLanguage.ca, name: 'Català – Catalan'},
+  {code2: AppLanguage.zh_CN, name: '简体中文（中国） – Chinese (Simplified)'},
 ]
 
 export const LANGUAGES: Language[] = [

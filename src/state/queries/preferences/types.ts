@@ -5,14 +5,25 @@ import {
   BskyFeedViewPreference,
 } from '@atproto/api'
 
-export type ConfigurableLabelGroup =
-  | 'nsfw'
-  | 'nudity'
-  | 'suggestive'
-  | 'gore'
-  | 'hate'
-  | 'spam'
-  | 'impersonation'
+export const configurableAdultLabelGroups = [
+  'nsfw',
+  'nudity',
+  'suggestive',
+  'gore',
+] as const
+
+export const configurableOtherLabelGroups = [
+  'hate',
+  'spam',
+  'impersonation',
+] as const
+
+export const configurableLabelGroups = [
+  ...configurableAdultLabelGroups,
+  ...configurableOtherLabelGroups,
+] as const
+export type ConfigurableLabelGroup = (typeof configurableLabelGroups)[number]
+
 export type LabelGroup =
   | ConfigurableLabelGroup
   | 'illegal'
