@@ -7,6 +7,7 @@ import {lh} from 'lib/styles'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
+import {makeTagLink} from 'lib/routes/links'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -79,6 +80,7 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
+    const tag = segment.tag
     if (
       !noLinks &&
       mention &&
@@ -112,6 +114,26 @@ export function RichText({
           />,
         )
       }
+    } else if (
+      !noLinks &&
+      tag &&
+      AppBskyRichtextFacet.validateTag(tag).success
+    ) {
+      els.push(
+        <TextLink
+          key={key}
+          type={type}
+          text={segment.text}
+          // we could also use tag.tag here, which has the leading # removed.
+          // However, this search should eventually stop removing the #, so
+          // I want to keep the removal marked as a hack. See makeTagLink's
+          // comment for details.
+          href={makeTagLink(segment.text)}
+          style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
+          dataSet={WORD_WRAP}
+          selectable={selectable}
+        />,
+      )
     } else {
       els.push(segment.text)
     }
