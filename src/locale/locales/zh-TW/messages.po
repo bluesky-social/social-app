@@ -4232,7 +4232,7 @@ msgstr "我們希望你在此度過愉快的時光。請記住，Bluesky 是："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "我們已經看完了你追蹤的貼文。這是來自 <0/> 的最新消息。"
+msgstr "你已看完了你追蹤的貼文。這是 <0/> 的最新貼文。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
 msgid "We recommend our \"Discover\" feed:"
