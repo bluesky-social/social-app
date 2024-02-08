@@ -36,8 +36,10 @@ export function useProfileQuery({
   staleTime?: number
 }) {
   const queryClient = useQueryClient()
-  // TODO Figure out a good staleTime for this. We should refetch on every profile push, because we need to check for
-  // blocks
+  // WARNING
+  // this staleTime is load-bearing
+  // if you remove it, the UI infinite-loops
+  // -prf
   return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     staleTime,
     refetchOnWindowFocus: true,
