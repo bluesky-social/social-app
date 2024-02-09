@@ -218,6 +218,8 @@ function PostThreadLoaded({
       }, 300)
     }
 
+    // Reset the prepending ref
+    isPrepending.current = false
     return arr
     // }
   }, [
@@ -289,16 +291,15 @@ function PostThreadLoaded({
       return
     }
 
-    // Start prepending
+    // Set the ref to true for the onMomentumScrollEnd callback
     isPrepending.current = true
-    // We wait a moment both to appear like a "load" event and to let the scroll "settle". 850ms is the sweet spot
-    // that we should be confident the scroll has settled at. Lower is slightly janky, higher is too long.
-    setTimeout(() => {
-      // Increment the top page count and set prepending to false
-      setTopPageCount(prev => prev + 1)
-      isPrepending.current = false
-    }, 850)
   }, [posts])
+
+  const onMomentumScrollEnd = React.useCallback(() => {
+    if (isPrepending.current) {
+      setTopPageCount(prev => prev + 1)
+    }
+  }, [])
 
   const onPTR = React.useCallback(async () => {
     setIsPTRing(true)
@@ -436,6 +437,7 @@ function PostThreadLoaded({
       renderItem={renderItem}
       refreshing={isPTRing}
       onRefresh={onPTR}
+      onMomentumScrollEnd={onMomentumScrollEnd}
       // Always keep 2 pages rendered up top
       onStartReached={onStartReached}
       style={s.hContentRegion}
