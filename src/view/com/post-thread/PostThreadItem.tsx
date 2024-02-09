@@ -277,7 +277,7 @@ let PostThreadItemLoaded = ({
                       type="xl-bold"
                       style={[pal.text]}
                       numberOfLines={1}
-                      lineHeight={1}>
+                      lineHeight={1.2}>
                       {sanitizeDisplayName(
                         post.author.displayName ||
                           sanitizeHandle(post.author.handle),
