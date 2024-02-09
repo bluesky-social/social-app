@@ -19,7 +19,7 @@ msgstr "(没有邮件)"
 
 #: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr "{0, plural, one {# 邀请码可用} other {# 邀请码可用}}"
+msgstr "{0, plural, one {# 条邀请码可用} other {# 条邀请码可用}}"
 
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
@@ -32,12 +32,12 @@ msgstr "{invitesAvailable, plural, one {邀请码: # 可用} other {邀请码: #
 #: src/view/screens/Settings.tsx:435
 #: src/view/shell/Drawer.tsx:664
 msgid "{invitesAvailable} invite code available"
-msgstr "{invitesAvailable} 邀请码可用"
+msgstr "{invitesAvailable} 条邀请码可用"
 
 #: src/view/screens/Settings.tsx:437
 #: src/view/shell/Drawer.tsx:666
 msgid "{invitesAvailable} invite codes available"
-msgstr "{invitesAvailable} 邀请码可用"
+msgstr "{invitesAvailable} 条邀请码可用"
 
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
