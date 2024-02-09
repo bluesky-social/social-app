@@ -129,11 +129,6 @@ export function PostThread({
     return <PostThreadBlocked />
   }
   if (!thread || isLoading || !preferences) {
-    console.log({
-      thread,
-      isLoading,
-      preferences,
-    })
     return <LoadingScreen />
   }
   return (
