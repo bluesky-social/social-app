@@ -1,11 +1,6 @@
 import {useCallback} from 'react'
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-} from '@tanstack/react-query'
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {Shadow} from '#/state/cache/types'
 import {getAgent} from '#/state/session'
 import {updatePostShadow} from '#/state/cache/post-shadow'
@@ -225,10 +220,4 @@ export function usePostDeleteMutation() {
       track('Post:Delete')
     },
   })
-}
-
-export function findPostInQueryData(queryClient: QueryClient, uri: string) {
-  return queryClient.getQueryData(['post', uri]) as
-    | AppBskyFeedDefs.PostView
-    | undefined
 }

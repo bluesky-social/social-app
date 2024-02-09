@@ -5,7 +5,6 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
 } from '@atproto/api'
-import {findPostInQueryData} from 'state/queries/post'
 
 export function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,
@@ -45,13 +44,8 @@ export function getEmbeddedPost(
 }
 
 export function embedViewRecordToPostView(
-  queryClient: QueryClient,
   v: AppBskyEmbedRecord.ViewRecord,
 ): AppBskyFeedDefs.PostView {
-  // We should see if we already have this post cached
-  const foundPost = findPostInQueryData(queryClient, v.uri)
-  if (foundPost) return foundPost
-
   return {
     uri: v.uri,
     cid: v.cid,

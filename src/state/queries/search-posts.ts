@@ -56,7 +56,7 @@ export function* findAllPostsInQueryData(
         }
         const quotedPost = getEmbeddedPost(post.embed)
         if (quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(queryClient, quotedPost)
+          yield embedViewRecordToPostView(quotedPost)
         }
       }
     }

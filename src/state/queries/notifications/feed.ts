@@ -168,7 +168,7 @@ export function* findAllPostsInQueryData(
         }
         const quotedPost = getEmbeddedPost(item.subject?.embed)
         if (quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(queryClient, quotedPost)
+          yield embedViewRecordToPostView(quotedPost)
         }
       }
     }
