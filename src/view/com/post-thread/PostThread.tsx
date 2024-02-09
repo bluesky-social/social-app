@@ -187,17 +187,10 @@ function PostThreadLoaded({
       : undefined
 
     // Create the posts to prepend
-    let postsToPrepend = items.parents.slice(-(topPageCount * 15))
-    if (postsToPrepend.length > 0) {
-      // If there are any parent posts, we need to add the header here
-      postsToPrepend = [TOP_COMPONENT, ...postsToPrepend]
-    } else if (
-      postsToPrepend.length === 0 &&
-      !highlightedPost?.ctx.isParentLoading
-    ) {
-      // If there are no parents and there isn't a parent loading, then we just add the top component
-      postsToPrepend = [TOP_COMPONENT]
-    }
+    const postsToPrepend = [
+      ...(!highlightedPost?.ctx.isParentLoading ? [TOP_COMPONENT] : []),
+      ...items.parents.slice(-(topPageCount * 15)),
+    ]
 
     // Build the entire array of items to render
     let arr = [
