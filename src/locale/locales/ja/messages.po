@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-01-30 19:00+0900\n"
-"Last-Translator: dolciss\n"
+"Last-Translator: Hima-Zinn\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada\n"
 "Plural-Forms: \n"
 
@@ -242,7 +242,7 @@ msgstr "高度な設定"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:217
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr ""
+msgstr "コードをすでに持っていますか？"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -280,7 +280,7 @@ msgstr "および"
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Animals"
-msgstr ""
+msgstr "動物"
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
@@ -334,7 +334,7 @@ msgstr "この判断に異議を申し立てる"
 
 #: src/view/screens/Settings.tsx:460
 msgid "Appearance"
-msgstr "外観"
+msgstr "背景"
 
 #: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
@@ -358,7 +358,7 @@ msgstr "<0>{0}</0>で書かれた投稿ですか？"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
-msgstr ""
+msgstr "アート"
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -476,7 +476,7 @@ msgstr "Blueskyはパブリックです。"
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "Blueskyはより健全なコミュニティを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistにお申し込みいただくと招待状をお送りします。"
+msgstr "Blueskyはより健全なコミュニティーを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistにお申し込みいただくと招待状をお送りします。"
 
 #: src/view/screens/Moderation.tsx:226
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -488,7 +488,7 @@ msgstr "Bluesky.Social"
 
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
-msgstr ""
+msgstr "書籍"
 
 #: src/view/screens/Settings.tsx:841
 msgid "Build version {0} {1}"
@@ -616,11 +616,11 @@ msgstr "メールアドレスを変更"
 
 #: src/view/screens/Settings.tsx:726
 msgid "Change password"
-msgstr ""
+msgstr "パスワードを変更"
 
 #: src/view/screens/Settings.tsx:735
 msgid "Change Password"
-msgstr ""
+msgstr "パスワードを変更"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
@@ -628,7 +628,7 @@ msgstr "投稿の言語を{0}に変更します"
 
 #: src/view/screens/Settings.tsx:727
 msgid "Change your Bluesky password"
-msgstr ""
+msgstr "Blueskyのパスワードを変更"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -682,7 +682,7 @@ msgstr "メインのフィードを選択"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
-msgstr "パスワードを選択"
+msgstr "パスワードを入力"
 
 #: src/view/screens/Settings.tsx:816
 #: src/view/screens/Settings.tsx:817
@@ -713,12 +713,12 @@ msgstr "こちらをクリック"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
-msgstr ""
+msgstr "気象"
 
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
@@ -766,16 +766,16 @@ msgstr "指定した通知のユーザーリストを折りたたむ"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Comedy"
-msgstr ""
+msgstr "コメディー"
 
 #: src/screens/Onboarding/index.tsx:27
 msgid "Comics"
-msgstr ""
+msgstr "漫画"
 
 #: src/Navigation.tsx:228
 #: src/view/screens/CommunityGuidelines.tsx:32
 msgid "Community Guidelines"
-msgstr "コミュニティガイドライン"
+msgstr "コミュニティーガイドライン"
 
 #: src/screens/Onboarding/StepFinished.tsx:148
 msgid "Complete onboarding and start using your account"
@@ -898,7 +898,7 @@ msgstr "アカウントをフォローせずに次のステップへ進む"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
-msgstr ""
+msgstr "料理"
 
 #: src/view/com/modals/AddAppPasswords.tsx:195
 #: src/view/com/modals/InviteCodes.tsx:182
@@ -997,7 +997,7 @@ msgstr "サムネイル付きのカードを作成します。そのカードは
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
-msgstr ""
+msgstr "文化"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
@@ -1006,7 +1006,7 @@ msgstr "カスタムドメイン"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr ""
+msgstr "コミュニティーによって作成されたカスタムフィードは、あなたに新しい体験をもたらし、あなたが好きなコンテンツを見つけるのに役立ちます。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1027,7 +1027,7 @@ msgstr "ダークモード"
 
 #: src/view/screens/Settings.tsx:492
 msgid "Dark Theme"
-msgstr ""
+msgstr "ダークテーマ"
 
 #: src/Navigation.tsx:204
 #~ msgid "Debug"
@@ -1065,7 +1065,7 @@ msgstr "マイアカウントを削除"
 
 #: src/view/screens/Settings.tsx:755
 msgid "Delete My Account…"
-msgstr ""
+msgstr "マイアカウントを削除…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
@@ -1104,7 +1104,7 @@ msgstr "なにか言いたいことはあった？"
 
 #: src/view/screens/Settings.tsx:498
 msgid "Dim"
-msgstr ""
+msgstr "グレー"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -1266,7 +1266,7 @@ msgstr "あなたのプロフィールの説明を編集します"
 
 #: src/screens/Onboarding/index.tsx:34
 msgid "Education"
-msgstr ""
+msgstr "教育"
 
 #: src/view/com/auth/create/Step1.tsx:143
 #: src/view/com/auth/create/Step2.tsx:194
@@ -1342,7 +1342,7 @@ msgstr "確認コードを入力してください"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr ""
+msgstr "パスワードを変更するために受け取ったコードを入力してください。"
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1535,7 +1535,7 @@ msgstr "ディスカッションスレッドを微調整します。"
 
 #: src/screens/Onboarding/index.tsx:38
 msgid "Fitness"
-msgstr ""
+msgstr "フィットネス"
 
 #: src/screens/Onboarding/StepFinished.tsx:131
 msgid "Flexible"
@@ -1623,7 +1623,7 @@ msgstr "あなたをフォロー"
 
 #: src/screens/Onboarding/index.tsx:43
 msgid "Food"
-msgstr ""
+msgstr "食べ物"
 
 #: src/view/com/modals/DeleteAccount.tsx:111
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -1829,7 +1829,7 @@ msgstr "選択されていない場合は、すべての年齢に適していま
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr ""
+msgstr "パスワードを変更する場合は、あなたのアカウントであることを確認するためのコードをお送りします。"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -1969,7 +1969,7 @@ msgstr "Waitlistに参加"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
-msgstr ""
+msgstr "報道"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:104
 msgid "Language selection"
@@ -2364,7 +2364,7 @@ msgstr "名前は必須です"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
-msgstr ""
+msgstr "自然"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:186
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:215
@@ -2411,7 +2411,7 @@ msgstr "新しいパスワード"
 
 #: src/view/com/modals/ChangePassword.tsx:215
 msgid "New Password"
-msgstr ""
+msgstr "新しいパスワード"
 
 #: src/view/com/feeds/FeedPage.tsx:201
 msgctxt "action"
@@ -2446,7 +2446,7 @@ msgstr "新しい順に返信を表示"
 
 #: src/screens/Onboarding/index.tsx:23
 msgid "News"
-msgstr ""
+msgstr "ニュース"
 
 #: src/view/com/auth/create/CreateAccount.tsx:161
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:178
@@ -2768,7 +2768,7 @@ msgstr "カメラへのアクセスが拒否されました。システムの設
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
-msgstr ""
+msgstr "ペット"
 
 #: src/view/com/auth/create/Step2.tsx:183
 msgid "Phone number"
@@ -2860,7 +2860,7 @@ msgstr "リンクカードがロードされるまでお待ちください"
 
 #: src/screens/Onboarding/index.tsx:37
 msgid "Politics"
-msgstr ""
+msgstr "政治"
 
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
@@ -3187,7 +3187,7 @@ msgstr "コードをリクエスト"
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
-msgstr ""
+msgstr "コードをリクエスト"
 
 #: src/view/screens/Settings.tsx:450
 msgid "Require alt text before posting"
@@ -3204,7 +3204,7 @@ msgstr "コードをリセット"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr ""
+msgstr "コードをリセット"
 
 #: src/view/screens/Settings.tsx:806
 msgid "Reset onboarding"
@@ -3312,7 +3312,7 @@ msgstr "{handle}へのハンドルの変更を保存"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
-msgstr ""
+msgstr "科学"
 
 #: src/view/screens/ProfileList.tsx:854
 msgid "Scroll to top"
@@ -3470,7 +3470,7 @@ msgstr "年齢を設定"
 
 #: src/view/screens/Settings.tsx:482
 msgid "Set color theme to dark"
-msgstr "カラーテーマをダークに設定します"
+msgstr "カラーテーマを暗いものに設定します"
 
 #: src/view/screens/Settings.tsx:475
 msgid "Set color theme to light"
@@ -3478,15 +3478,15 @@ msgstr "カラーテーマをライトに設定します"
 
 #: src/view/screens/Settings.tsx:469
 msgid "Set color theme to system setting"
-msgstr "システム設定のカラーテーマを使用するように設定します"
+msgstr "デバイスで設定したカラーテーマを使用するように設定します"
 
 #: src/view/screens/Settings.tsx:508
 msgid "Set dark theme to the dark theme"
-msgstr ""
+msgstr "ダークテーマをダークに設定します"
 
 #: src/view/screens/Settings.tsx:501
 msgid "Set dark theme to the dim theme"
-msgstr ""
+msgstr "ダークテーマを薄暗いものに設定します"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
@@ -3751,7 +3751,7 @@ msgstr "SMS認証"
 
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
-msgstr ""
+msgstr "ソフトウェア開発"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 msgid "Something went wrong and we're not sure what."
@@ -3775,7 +3775,7 @@ msgstr "次の方法で同じ投稿への返信を並び替えます。"
 
 #: src/screens/Onboarding/index.tsx:30
 msgid "Sports"
-msgstr ""
+msgstr "スポーツ"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -3837,7 +3837,7 @@ msgstr "あなたへのおすすめ"
 
 #: src/view/com/modals/SelfLabel.tsx:95
 msgid "Suggestive"
-msgstr "提案"
+msgstr "きわどい"
 
 #: src/Navigation.tsx:213
 #: src/view/screens/Support.tsx:30
@@ -3881,7 +3881,7 @@ msgstr "タップして全体を表示"
 
 #: src/screens/Onboarding/index.tsx:39
 msgid "Tech"
-msgstr ""
+msgstr "テクノロジー"
 
 #: src/view/shell/desktop/RightNav.tsx:93
 msgid "Terms"
@@ -3905,7 +3905,7 @@ msgstr "このアカウントは、ブロック解除後にあなたとやり取
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
-msgstr "コミュニティガイドラインは<0/>に移動しました"
+msgstr "コミュニティーガイドラインは<0/>に移動しました"
 
 #: src/view/screens/CopyrightPolicy.tsx:33
 msgid "The Copyright Policy has been moved to <0/>"
@@ -4105,7 +4105,7 @@ msgstr "このユーザーは、あなたがブロックした<0/>リストに�
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr ""
+msgstr "このユーザーは、あなたがミュートした<0/>リストに含まれています。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
@@ -4368,7 +4368,7 @@ msgstr "メールアドレスを確認"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
-msgstr ""
+msgstr "ビデオゲーム"
 
 #: src/view/com/profile/ProfileHeader.tsx:701
 msgid "View {0}'s avatar"
@@ -4504,7 +4504,7 @@ msgstr "返信を書く"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
-msgstr ""
+msgstr "ライター"
 
 #: src/view/com/auth/create/Step2.tsx:263
 msgid "XXXXXX"
@@ -4579,7 +4579,7 @@ msgstr "あなたはこのユーザーをブロックしているため、コン
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr ""
+msgstr "無効なコードが入力されました。それはXXXXX-XXXXXのようになっているはずです。"
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
@@ -4706,7 +4706,7 @@ msgstr "アプリパスワードを使用してログインすると、招待コ
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "パスワードの変更が完了しました！"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"

@@ -2445,7 +2445,7 @@ msgstr "Hinweis: Bluesky ist ein offenes und öffentliches Netzwerk. Diese Einst
 #: src/view/shell/Drawer.tsx:438
 #: src/view/shell/Drawer.tsx:439
 msgid "Notifications"
-msgstr "Benachrichtigungen"
+msgstr "Mitteilungen"
 
 #: src/view/com/modals/SelfLabel.tsx:103
 msgid "Nudity"

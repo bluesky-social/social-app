@@ -29,6 +29,9 @@ import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isNative} from '#/platform/detection'
+import {FAB} from '../com/util/fab/FAB'
+import {ComposeIcon2} from 'lib/icons'
+import {useComposerControls} from '#/state/shell/composer'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -47,6 +50,7 @@ export function NotificationsScreen({}: Props) {
   const unreadApi = useUnreadNotificationsApi()
   const hasNew = !!unreadNotifs
   const isScreenFocused = useIsFocused()
+  const {openComposer} = useComposerControls()
 
   // event handlers
   // =
@@ -156,6 +160,14 @@ export function NotificationsScreen({}: Props) {
           showIndicator={hasNew}
         />
       )}
+      <FAB
+        testID="composeFAB"
+        onPress={() => openComposer({})}
+        icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`New post`)}
+        accessibilityHint=""
+      />
     </View>
   )
 }
