@@ -3,6 +3,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
   moderateProfile,
+  ModerationCause,
   ProfileModeration,
 } from '@atproto/api'
 import {Link} from '../util/Link'
@@ -14,17 +15,13 @@ import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {
-  describeModerationCause,
-  getProfileModerationCauses,
-  getModerationCauseKey,
-  useLabelStrings,
-} from 'lib/moderation'
+import {getProfileModerationCauses, getModerationCauseKey} from 'lib/moderation'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {Trans} from '@lingui/macro'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
 export function ProfileCard({
   testID,
@@ -128,7 +125,6 @@ export function ProfileCardPills({
   moderation: ProfileModeration
 }) {
   const pal = usePalette('default')
-  const labelStrings = useLabelStrings()
 
   const causes = getProfileModerationCauses(moderation)
   if (!followedBy && !causes.length) {
@@ -144,19 +140,27 @@ export function ProfileCardPills({
           </Text>
         </View>
       )}
-      {causes.map(cause => {
-        const desc = describeModerationCause(cause, 'account', labelStrings)
-        return (
-          <View
-            style={[s.mt5, pal.btn, styles.pill]}
-            key={getModerationCauseKey(cause)}>
-            <Text type="xs" style={pal.text}>
-              {cause?.type === 'label' ? '⚠' : ''}
-              {desc.name}
-            </Text>
-          </View>
-        )
-      })}
+      {causes.map(cause => (
+        <ProfileCardPillModerationCause
+          key={getModerationCauseKey(cause)}
+          cause={cause}
+        />
+      ))}
+    </View>
+  )
+}
+
+function ProfileCardPillModerationCause({cause}: {cause: ModerationCause}) {
+  const pal = usePalette('default')
+  const {name} = useModerationCauseDescription(cause, 'account')
+  return (
+    <View
+      style={[s.mt5, pal.btn, styles.pill]}
+      key={getModerationCauseKey(cause)}>
+      <Text type="xs" style={pal.text}>
+        {cause?.type === 'label' ? '⚠' : ''}
+        {name}
+      </Text>
     </View>
   )
 }

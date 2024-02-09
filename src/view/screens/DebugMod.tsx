@@ -18,7 +18,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {H1, H3, P} from '#/components/Typography'
-import {useLabelStrings} from '#/lib/moderation'
+import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {UserAvatar} from '../com/util/UserAvatar'

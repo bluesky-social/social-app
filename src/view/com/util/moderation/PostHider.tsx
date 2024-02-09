@@ -6,11 +6,11 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../Link'
 import {Text} from '../text/Text'
 import {addStyle} from 'lib/styles'
-import {describeModerationCause, useLabelStrings} from 'lib/moderation'
 import {ShieldExclamation} from 'lib/icons'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
 interface Props extends ComponentProps<typeof Link> {
   iconSize: number
@@ -32,7 +32,7 @@ export function PostHider({
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const {openModal} = useModalControls()
-  const labelStrings = useLabelStrings()
+  const desc = useModerationCauseDescription(moderation.cause, 'content')
 
   if (!moderation.blur) {
     return (
@@ -49,11 +49,6 @@ export function PostHider({
   }
 
   const isMute = moderation.cause?.type === 'muted'
-  const desc = describeModerationCause(
-    moderation.cause,
-    'content',
-    labelStrings,
-  )
   return !override ? (
     <Pressable
       onPress={() => {

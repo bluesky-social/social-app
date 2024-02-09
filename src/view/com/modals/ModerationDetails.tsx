@@ -1,6 +1,6 @@
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {ModerationUI, LABELS} from '@atproto/api'
+import {ModerationUI} from '@atproto/api'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
 import {Text} from '../util/text/Text'
@@ -12,7 +12,7 @@ import {Button} from '../util/forms/Button'
 import {useModalControls} from '#/state/modals'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
-import {useLabelStrings} from '#/lib/moderation'
+import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 
 export const snapPoints = [300]
 
@@ -88,16 +88,19 @@ export function Component({
       name = _(msg`Account Muted`)
       description = _(msg`You have muted this user.`)
     }
-  } else if (moderation.cause.labelDef.id in labelStrings) {
-    name =
-      labelStrings[moderation.cause.labelDef.id as keyof typeof LABELS][context]
-        .name
-    description =
-      labelStrings[moderation.cause.labelDef.id as keyof typeof LABELS][context]
-        .description
+  } else if (moderation.cause.type === 'label') {
+    if (moderation.cause.labelDef.id in labelStrings) {
+      name = labelStrings[moderation.cause.labelDef.id][context].name
+      description =
+        labelStrings[moderation.cause.labelDef.id][context].description
+    } else {
+      name = moderation.cause.labelDef.id
+      description = _(msg`Labeled ${moderation.cause.labelDef.id}`)
+    }
   } else {
-    name = 'TODO'
-    description = 'TODO'
+    // should never happen
+    name = ''
+    description = ''
   }
 
   return (

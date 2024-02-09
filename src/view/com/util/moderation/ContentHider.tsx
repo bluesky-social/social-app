@@ -5,10 +5,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {ModerationUI, PostModeration} from '@atproto/api'
 import {Text} from '../text/Text'
 import {ShieldExclamation} from 'lib/icons'
-import {describeModerationCause, useLabelStrings} from 'lib/moderation'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {isPostMediaBlurred} from 'lib/moderation'
 
 export function ContentHider({
@@ -33,7 +33,7 @@ export function ContentHider({
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const {openModal} = useModalControls()
-  const labelStrings = useLabelStrings()
+  const desc = useModerationCauseDescription(moderation.cause, 'content')
 
   if (
     !moderation.blur ||
@@ -48,11 +48,6 @@ export function ContentHider({
   }
 
   const isMute = moderation.cause?.type === 'muted'
-  const desc = describeModerationCause(
-    moderation.cause,
-    'content',
-    labelStrings,
-  )
   return (
     <View testID={testID} style={[styles.outer, style]}>
       <Pressable

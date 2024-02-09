@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-import {useLabelGroupStrings} from '#/lib/moderation'
+import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'

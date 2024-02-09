@@ -17,10 +17,10 @@ import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {NavigationProp} from 'lib/routes/types'
 import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
-import {describeModerationCause, useLabelStrings} from 'lib/moderation'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {s} from '#/lib/styles'
 import {CenteredView} from '../Views'
 
@@ -45,7 +45,7 @@ export function ScreenHider({
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
-  const labelStrings = useLabelStrings()
+  const desc = useModerationCauseDescription(moderation.cause, 'account')
 
   if (!moderation.blur || override) {
     return (
@@ -58,11 +58,6 @@ export function ScreenHider({
   const isNoPwi =
     moderation.cause?.type === 'label' &&
     moderation.cause?.labelDef.id === '!no-unauthenticated'
-  const desc = describeModerationCause(
-    moderation.cause,
-    'account',
-    labelStrings,
-  )
   return (
     <CenteredView
       style={[styles.container, pal.view, containerStyle]}
