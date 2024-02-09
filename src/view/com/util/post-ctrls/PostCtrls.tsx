@@ -30,6 +30,7 @@ import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {Arrow_Out_Of_Box} from '#/components/icons/ArrowOutOfBox'
 
 let PostCtrls = ({
   big,
@@ -193,6 +194,26 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
+      {big && (
+        <View style={styles.ctrlBig}>
+          <TouchableOpacity
+            testID="likeBtn"
+            style={[styles.btn]}
+            onPress={() => {}}
+            accessibilityRole="button"
+            accessibilityLabel={`${
+              post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
+            } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+            accessibilityHint=""
+            hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+            <Arrow_Out_Of_Box
+              style={[defaultCtrlColor, styles.mt1]}
+              height={18}
+              width={18}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={big ? styles.ctrlBig : styles.ctrl}>
         <PostDropdownBtn
           testID="postDropdownBtn"
