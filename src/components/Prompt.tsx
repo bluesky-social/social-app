@@ -4,7 +4,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a} from '#/alf'
-import {H4, P} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 import {Button} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
@@ -50,14 +50,11 @@ export function Outer({
 }
 
 export function Title({children}: React.PropsWithChildren<{}>) {
-  const t = useTheme()
   const {titleId} = React.useContext(Context)
   return (
-    <H4
-      nativeID={titleId}
-      style={[a.font_bold, t.atoms.text_contrast_700, a.pb_sm]}>
+    <Text nativeID={titleId} style={[a.text_2xl, a.font_bold, a.pb_sm]}>
       {children}
-    </H4>
+    </Text>
   )
 }
 
@@ -65,9 +62,11 @@ export function Description({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const {descriptionId} = React.useContext(Context)
   return (
-    <P nativeID={descriptionId} style={[t.atoms.text, a.pb_lg]}>
+    <Text
+      nativeID={descriptionId}
+      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high, a.pb_lg]}>
       {children}
-    </P>
+    </Text>
   )
 }
 
