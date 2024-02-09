@@ -273,7 +273,11 @@ let PostThreadItemLoaded = ({
                     style={styles.metaItem}
                     href={authorHref}
                     title={authorTitle}>
-                    <Text type="xl-bold" style={[pal.text]} numberOfLines={1}>
+                    <Text
+                      type="xl-bold"
+                      style={[pal.text]}
+                      numberOfLines={1}
+                      lineHeight={1}>
                       {sanitizeDisplayName(
                         post.author.displayName ||
                           sanitizeHandle(post.author.handle),
