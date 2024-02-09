@@ -625,7 +625,7 @@ function* flattenThreadReplies(
   }
 }
 
-export function createThreadSkeleton(
+function createThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
