@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-08 18:40+0800\n"
+"POT-Creation-Date: 2024-02-09 14:00+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208\n"
+"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208, Kisaragi Hiu\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -23,7 +23,7 @@ msgstr "{0, plural, one {# 個可用的邀請碼} other {# 個可用的邀請碼
 
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
-msgstr "{following} 正在跟隨"
+msgstr "{following} 個跟隨中"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
@@ -49,7 +49,7 @@ msgstr "<0/> 個成員"
 
 #: src/view/com/profile/ProfileHeader.tsx:634
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>正在跟隨</1>"
+msgstr "<0>{following} </0><1>個跟隨中</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -69,25 +69,25 @@ msgstr "⚠無效的帳號代碼"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
-msgstr "此處已啟用內容警告 {0} 。"
+msgstr "內容警告已套用到這個{0} 。"
 
 #: src/lib/hooks/useOTAUpdate.ts:16
 msgid "A new version of the app is available. Please update to continue using the app."
-msgstr "新版本應用程式已發布，請更新以繼續使用。"
+msgstr "新版本應用程式已發佈，請更新以繼續使用。"
 
 #: src/view/com/util/ViewHeader.tsx:83
 #: src/view/screens/Search/Search.tsx:624
 msgid "Access navigation links and settings"
-msgstr "存取導航連結和設定"
+msgstr "存取導覽連結和設定"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:89
 msgid "Access profile and other navigation links"
-msgstr "訪問個人資料和其他導航連結"
+msgstr "存取個人資料和其他導覽連結"
 
 #: src/view/com/modals/EditImage.tsx:299
 #: src/view/screens/Settings.tsx:445
 msgid "Accessibility"
-msgstr "無障礙"
+msgstr "協助工具"
 
 #: src/view/com/auth/login/LoginForm.tsx:163
 #: src/view/screens/Settings.tsx:308
@@ -117,7 +117,7 @@ msgstr "帳號選項"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:25
 msgid "Account removed from quick access"
-msgstr "已從快速訪問中移除帳號"
+msgstr "已從快速存取中移除帳號"
 
 #: src/view/com/profile/ProfileHeader.tsx:315
 msgid "Account unblocked"
@@ -178,7 +178,7 @@ msgstr "新增連結卡片："
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
-msgstr "將以下 DNS 記錄新增到你的域名："
+msgstr "將以下 DNS 記錄新增到你的網域："
 
 #: src/view/com/profile/ProfileHeader.tsx:357
 msgid "Add to Lists"
@@ -204,7 +204,7 @@ msgstr "新增至自訂訊息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "調整回覆會在你的訊息流顯示的最低喜歡數。"
+msgstr "調整回覆要在你的訊息流顯示所需的最低喜歡數。"
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -221,7 +221,7 @@ msgstr "詳細設定"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:217
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr "已經有驗證碼了？"
+msgstr "已經有重設碼了？"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -271,7 +271,7 @@ msgstr "應用程式專用密碼已刪除"
 
 #: src/view/com/modals/AddAppPasswords.tsx:134
 msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
-msgstr "應用程式用密碼只能包含字母、數字、空格、破折號及底線。"
+msgstr "應用程式專用密碼只能包含字母、數字、空格、破折號及底線。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:99
 msgid "App Password names must be at least 4 characters long."
@@ -329,7 +329,7 @@ msgstr "你確定嗎？此操作無法撤銷。"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
-msgstr "你是用 <0>{0}</0> 編寫的嗎？"
+msgstr "你正在使用 <0>{0}</0> 書寫嗎？"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
@@ -451,7 +451,7 @@ msgstr "Bluesky 為公眾而生。"
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "Bluesky 使用邀請制來打造更健康的社群環境。如果你不認識擁有邀請碼的人，你可以先填寫並提交候補列表，我們會儘快審核並發送邀請碼。"
+msgstr "Bluesky 使用邀請制來打造更健康的社群環境。如果你不認識擁有邀請碼的人，你可以先填寫並加入候補清單，我們會儘快審核並發送邀請碼。"
 
 #: src/view/screens/Moderation.tsx:226
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -475,7 +475,7 @@ msgstr "商務"
 
 #: src/view/com/modals/ServerInput.tsx:115
 msgid "Button disabled. Input custom domain to proceed."
-msgstr "按鈕已停用。請輸入自訂域名以繼續。"
+msgstr "按鈕已停用。請輸入自訂網域以繼續。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
@@ -561,7 +561,7 @@ msgstr "取消搜尋"
 
 #: src/view/com/modals/Waitlist.tsx:136
 msgid "Cancel waitlist signup"
-msgstr "取消候補名單註冊"
+msgstr "取消候補清單註冊"
 
 #: src/view/screens/Settings.tsx:334
 msgctxt "action"
@@ -608,11 +608,11 @@ msgstr "檢查我的狀態"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "查看一些推薦的訊息流。點擊＋將它們新增到你的固定訊息流列表中。"
+msgstr "來看看一些推薦的訊息流吧。點擊 + 將它們新增到你的釘選訊息流清單中。"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
-msgstr "查看一些推薦的使用者。跟隨他們以查看相似的使用者。"
+msgstr "來看看一些推薦的使用者吧。跟隨人來查看類似的使用者。"
 
 #: src/view/com/modals/DeleteAccount.tsx:169
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -632,16 +632,16 @@ msgstr "選擇服務"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "選擇生成你的自訂訊息流的演算法。"
+msgstr "選擇你的自訂訊息流所使用的演算法。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr "選擇可改進你自訂訊息流的演算法。"
+msgstr "選擇你的自訂訊息流體驗所使用的演算法。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
-msgstr "選擇你的首選訊息流"
+msgstr "選擇你的主要訊息流"
 
 #: src/view/com/auth/create/Step1.tsx:163
 msgid "Choose your password"
@@ -650,11 +650,11 @@ msgstr "選擇你的密碼"
 #: src/view/screens/Settings.tsx:816
 #: src/view/screens/Settings.tsx:817
 msgid "Clear all legacy storage data"
-msgstr "清除所有舊存儲資料"
+msgstr "清除所有舊儲存資料"
 
 #: src/view/screens/Settings.tsx:819
 msgid "Clear all legacy storage data (restart after this)"
-msgstr "清除所有舊存儲資料（並重啟）"
+msgstr "清除所有舊儲存資料（並重啟）"
 
 #: src/view/screens/Settings.tsx:828
 #: src/view/screens/Settings.tsx:829
@@ -685,7 +685,7 @@ msgstr "關閉"
 
 #: src/components/Dialog/index.web.tsx:78
 msgid "Close active dialog"
-msgstr "關閉活動對話框"
+msgstr "關閉作用中對話框"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
@@ -701,11 +701,11 @@ msgstr "關閉圖片"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:119
 msgid "Close image viewer"
-msgstr "關閉圖片查看器"
+msgstr "關閉圖片檢視器"
 
 #: src/view/shell/index.web.tsx:49
 msgid "Close navigation footer"
-msgstr "關閉導航頁腳"
+msgstr "關閉導覽頁腳"
 
 #: src/view/shell/index.web.tsx:50
 msgid "Closes bottom navigation bar"
@@ -721,11 +721,11 @@ msgstr "關閉貼文編輯頁並捨棄草稿"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
 msgid "Closes viewer for header image"
-msgstr "關閉標題圖片查看器"
+msgstr "關閉標題圖片檢視器"
 
 #: src/view/com/notifications/FeedItem.tsx:317
 msgid "Collapses list of users for a given notification"
-msgstr "折疊給定通知的使用者列表"
+msgstr "折疊指定通知的使用者清單"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Comedy"
@@ -742,7 +742,7 @@ msgstr "社群準則"
 
 #: src/screens/Onboarding/StepFinished.tsx:148
 msgid "Complete onboarding and start using your account"
-msgstr "完成引導流程並開始使用你的帳號"
+msgstr "完成初始設定並開始使用你的帳號"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -754,7 +754,7 @@ msgstr "撰寫回覆"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr "設置類別的內容過濾設定：{0}"
+msgstr "調整類別的內容過濾設定：{0}"
 
 #: src/components/Prompt.tsx:114
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -870,17 +870,17 @@ msgstr "已複製"
 
 #: src/view/screens/Settings.tsx:243
 msgid "Copied build version to clipboard"
-msgstr "已複製構建版本號至剪貼板"
+msgstr "已複製構建版本號至剪貼簿"
 
 #: src/view/com/modals/AddAppPasswords.tsx:76
 #: src/view/com/modals/InviteCodes.tsx:152
 #: src/view/com/util/forms/PostDropdownBtn.tsx:112
 msgid "Copied to clipboard"
-msgstr "已複製至剪貼板"
+msgstr "已複製至剪貼簿"
 
 #: src/view/com/modals/AddAppPasswords.tsx:189
 msgid "Copies app password"
-msgstr "已複製應用程式專用密碼"
+msgstr "會複製應用程式專用密碼"
 
 #: src/view/com/modals/AddAppPasswords.tsx:188
 msgid "Copy"
@@ -905,7 +905,7 @@ msgstr "複製貼文文字"
 #: src/Navigation.tsx:233
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
-msgstr "版權政策"
+msgstr "著作權"
 
 #: src/view/screens/ProfileFeed.tsx:96
 msgid "Could not load feed"
@@ -952,11 +952,11 @@ msgstr "由 <0/> 建立"
 
 #: src/view/screens/ProfileFeed.tsx:614
 msgid "Created by you"
-msgstr "由你創建"
+msgstr "由你建立"
 
 #: src/view/com/composer/Composer.tsx:448
 msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "創建帶有縮略圖的卡片。該卡片連結到 {url}"
+msgstr "建立帶有縮圖的卡片。該卡片連結到 {url}"
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
@@ -965,7 +965,7 @@ msgstr "文化"
 #: src/view/com/modals/ChangeHandle.tsx:389
 #: src/view/com/modals/ServerInput.tsx:102
 msgid "Custom domain"
-msgstr "自訂域名"
+msgstr "自訂網域"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
@@ -1071,7 +1071,7 @@ msgstr "捨棄草稿"
 
 #: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
-msgstr "阻止應用程式向未登入使用者顯示我的帳號"
+msgstr "鼓勵應用程式不要向未登入使用者顯示我的帳號"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
@@ -1092,7 +1092,7 @@ msgstr "顯示名稱"
 
 #: src/view/com/modals/ChangeHandle.tsx:487
 msgid "Domain verified!"
-msgstr "域名已驗證！"
+msgstr "網域已驗證！"
 
 #: src/view/com/auth/create/Step1.tsx:114
 msgid "Don't have an invite code?"
@@ -1149,7 +1149,7 @@ msgstr "例如：藝術家、愛狗人士和狂熱讀者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:283
 msgid "e.g. Great Posters"
-msgstr "例如：優秀的發貼者"
+msgstr "例如：優秀的發文者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Spammers"
@@ -1157,11 +1157,11 @@ msgstr "例如：垃圾內容製造者"
 
 #: src/view/com/modals/CreateOrEditList.tsx:312
 msgid "e.g. The posters who never miss."
-msgstr "例如：絕對不容錯過的發貼者。"
+msgstr "例如：絕對不容錯過的發文者。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:313
 msgid "e.g. Users that repeatedly reply with ads."
-msgstr "例如：反覆使用廣告回覆的使用者。"
+msgstr "例如：張貼廣告回覆的使用者。"
 
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
@@ -1189,7 +1189,7 @@ msgstr "編輯管理列表"
 #: src/view/screens/Feeds.tsx:403
 #: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
-msgstr "編輯自定訊息流"
+msgstr "編輯自訂訊息流"
 
 #: src/view/com/modals/EditProfile.tsx:152
 msgid "Edit my profile"
@@ -1277,11 +1277,11 @@ msgstr "啟用媒體播放器"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "啟用此設定以僅查看你跟隨的人之間的回覆。"
+msgstr "啟用此設定來只顯示你跟隨的人之間的回覆。"
 
 #: src/view/screens/Profile.tsx:437
 msgid "End of feed"
-msgstr "結束訊息流"
+msgstr "訊息流的結尾"
 
 #: src/view/com/modals/AddAppPasswords.tsx:166
 msgid "Enter a name for this App Password"
@@ -1297,11 +1297,11 @@ msgstr "輸入你收到的驗證碼以更改密碼。"
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
-msgstr "輸入你想使用的域名"
+msgstr "輸入你想使用的網域"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:103
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "輸入你用於創建帳號的電子郵件。我們將向你發送重置碼，以便你設定新密碼。"
+msgstr "輸入你用於創建帳號的電子郵件。我們將向你發送重設碼，以便你設定新密碼。"
 
 #: src/view/com/auth/create/Step1.tsx:195
 #: src/view/com/modals/BirthDateSettings.tsx:74
@@ -1342,16 +1342,16 @@ msgstr "所有人"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "退出修改帳號代碼流程"
+msgstr "離開修改帳號代碼流程"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
-msgstr "退出圖片檢視器"
+msgstr "離開圖片檢視器"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:88
 #: src/view/shell/desktop/Search.tsx:235
 msgid "Exits inputting search query"
-msgstr "退出輸入搜索查詢"
+msgstr "離開搜尋字詞輸入"
 
 #: src/view/com/modals/Waitlist.tsx:138
 msgid "Exits signing up for waitlist with {email}"
@@ -1373,13 +1373,13 @@ msgstr "外部媒體"
 #: src/view/com/modals/EmbedConsent.tsx:75
 #: src/view/screens/PreferencesExternalEmbeds.tsx:66
 msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
-msgstr "外部媒體可能允許網站收集有關你和你設備的信息。在你按下「查看」按鈕之前，將不會發送或請求任何外部信息。"
+msgstr "外部媒體可能允許網站收集有關你和你裝置的信息。在你按下「播放」按鈕之前，將不會發送或請求任何外部信息。"
 
 #: src/Navigation.tsx:259
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
 #: src/view/screens/Settings.tsx:651
 msgid "External Media Preferences"
-msgstr "外部媒體偏好"
+msgstr "外部媒體偏好設定"
 
 #: src/view/screens/Settings.tsx:642
 msgid "External media settings"
@@ -1388,7 +1388,7 @@ msgstr "外部媒體設定"
 #: src/view/com/modals/AddAppPasswords.tsx:115
 #: src/view/com/modals/AddAppPasswords.tsx:119
 msgid "Failed to create app password."
-msgstr "創建應用程式專用密碼失敗。"
+msgstr "建立應用程式專用密碼失敗。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
@@ -1409,7 +1409,7 @@ msgstr "訊息流"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:229
 msgid "Feed by {0}"
-msgstr "{0} 創建的訊息流"
+msgstr "{0} 建立的訊息流"
 
 #: src/view/screens/Feeds.tsx:597
 msgid "Feed offline"
@@ -1417,12 +1417,12 @@ msgstr "訊息流已離線"
 
 #: src/view/com/feeds/FeedPage.tsx:143
 msgid "Feed Preferences"
-msgstr "訊息流偏好"
+msgstr "訊息流偏好設定"
 
 #: src/view/shell/desktop/RightNav.tsx:73
 #: src/view/shell/Drawer.tsx:314
 msgid "Feedback"
-msgstr "反饋"
+msgstr "回饋"
 
 #: src/Navigation.tsx:443
 #: src/view/screens/Feeds.tsx:514
@@ -1436,15 +1436,15 @@ msgstr "訊息流"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 #~ msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-#~ msgstr "訊息流由使用者和組織創建，結合演算法為你推薦可能喜歡的內容，可為你帶來不一樣的體驗。"
+#~ msgstr "訊息流由使用者和組織建立，結合演算法為你推薦可能喜歡的內容，可為你帶來不一樣的體驗。"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
-msgstr "訊息流由使用者創建並管理。選擇一些你覺得有趣的訊息流。"
+msgstr "訊息流由使用者建立並管理。選擇一些你覺得有趣的訊息流。"
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "訊息流是使用者用一些編程技能構建的定制算法。查看 <0/> 以獲取更多資訊。"
+msgstr "訊息流是使用者用一點程式技能建立的自訂演算法。更多資訊請見 <0/>。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:70
 msgid "Feeds can be topical as well!"
@@ -1466,19 +1466,19 @@ msgstr "在 Bluesky 上尋找使用者"
 
 #: src/view/screens/Search/Search.tsx:437
 msgid "Find users with the search tool on the right"
-msgstr "使用右側的搜索工具尋找使用者"
+msgstr "使用右側的搜尋工具尋找使用者"
 
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
 msgid "Finding similar accounts..."
-msgstr "尋找相似的帳號…"
+msgstr "正在尋找相似的帳號…"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:111
 msgid "Fine-tune the content you see on your home screen."
-msgstr "改善你在首頁上所看到的內容。"
+msgstr "調整你在首頁上所看到的內容。"
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
-msgstr "改善討論主題。"
+msgstr "調整討論主題。"
 
 #: src/screens/Onboarding/index.tsx:38
 msgid "Fitness"
@@ -1570,7 +1570,7 @@ msgstr "為了保護你的帳號安全，我們需要將驗證碼發送到你的
 
 #: src/view/com/modals/AddAppPasswords.tsx:209
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
-msgstr "為了保護你的帳號安全，你將無法再次查看此內容。如果你丟失了此密碼，你將需要生成一個新密碼。"
+msgstr "為了保護你的帳號安全，你將無法再次查看此內容。如果你丟失了此密碼，你將需要產生一個新密碼。"
 
 #: src/view/com/auth/login/LoginForm.tsx:238
 msgid "Forgot"
@@ -1650,11 +1650,11 @@ msgstr "這裡有一些你可以跟隨的帳號"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr "這裡有一些熱門的專題訂閱。你可以選擇跟隨你喜歡的訂閱。"
+msgstr "這裡有一些熱門的話題訊息流。跟隨的訊息流數量沒有限制。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:74
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "根據你的興趣，這裡有一些專題訂閱：{interestsText}。你可以選擇跟隨你喜歡的訂閱。"
+msgstr "這裡有一些根據您的興趣（{interestsText}）所推薦的熱門的話題訊息流。跟隨的訊息流數量沒有限制。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:153
 msgid "Here is your app password."
@@ -1696,23 +1696,23 @@ msgstr "在你的訂閱中隱藏來自 {0} 的貼文"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
-msgstr "唔，與訂閱伺服器連線時發生了某種問題。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，與訊息流伺服器連線時發生了某種問題。請告訴該訊息流的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:99
 msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
-msgstr "唔，訂閱伺服器似乎設置錯誤。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，訊息流伺服器似乎設置錯誤。請告訴該訊息流的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:105
 msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
-msgstr "唔，訂閱伺服器似乎已離線。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，訊息流伺服器似乎已離線。請告訴該訊息流的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "唔，訂閱伺服器給出了錯誤的回應。請告訴訂閱的擁有者這個問題。"
+msgstr "唔，訊息流伺服器給出了錯誤的回應。請告訴該訊息流的擁有者這個問題。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:96
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
-msgstr "唔，我們無法找到這個訂閱，它可能已被刪除。"
+msgstr "唔，我們無法找到這個訊息流，它可能已被刪除。"
 
 #: src/Navigation.tsx:433
 #: src/view/shell/bottom-bar/BottomBar.tsx:137
@@ -1747,15 +1747,15 @@ msgstr "我有驗證碼"
 
 #: src/view/com/modals/ChangeHandle.tsx:283
 msgid "I have my own domain"
-msgstr "我擁有自己的域名"
+msgstr "我擁有自己的網域"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:165
 msgid "If alt text is long, toggles alt text expanded state"
-msgstr "若替代文字過長，則切換替代文字的展開狀態"
+msgstr "替代文字過長時，切換替代文字的展開狀態"
 
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
-msgstr "若不勾選，則默認為全年齡向。"
+msgstr "若不勾選，則預設為全年齡向。"
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -1776,7 +1776,7 @@ msgstr "圖片選項"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:138
 msgid "Input code sent to your email for password reset"
-msgstr "輸入發送到你電子郵箱的驗證碼以重置密碼"
+msgstr "輸入發送到你電子郵箱的重設碼以重置密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:184
 msgid "Input confirmation code for account deletion"
@@ -1870,7 +1870,7 @@ msgstr "邀請碼：1 可用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
-msgstr "它會即時顯示你所跟隨的人發布的貼文。"
+msgstr "它會即時顯示你所跟隨的人發佈的貼文。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 msgid "Jobs"
@@ -1950,12 +1950,12 @@ msgstr "尚未完成。"
 
 #: src/view/screens/Settings.tsx:280
 msgid "Legacy storage cleared, you need to restart the app now."
-msgstr "舊存儲數據已清除，你需要立即重新啟動應用程式。"
+msgstr "舊儲存資料已清除，你需要立即重新啟動應用程式。"
 
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
 msgid "Let's get your password reset!"
-msgstr "讓我們來重置你的密碼！"
+msgstr "讓我們來重設你的密碼吧！"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
@@ -1976,32 +1976,32 @@ msgstr "喜歡"
 
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "Like this feed"
-msgstr "按喜歡這個訊息流"
+msgstr "喜歡這個訊息流"
 
 #: src/Navigation.tsx:198
 msgid "Liked by"
-msgstr "按喜歡"
+msgstr "喜歡"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr "按喜歡"
+msgstr "喜歡"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
-msgstr "{0} {1} 按喜歡"
+msgstr "{0} {1} 喜歡"
 
 #: src/view/screens/ProfileFeed.tsx:606
 msgid "Liked by {likeCount} {0}"
-msgstr "{likeCount} {0} 按喜歡"
+msgstr "{likeCount} {0} 喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
-msgstr "按喜歡你的自訂訊息流"
+msgstr "喜歡你的自訂訊息流"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
-msgstr "按喜歡你的貼文"
+msgstr "喜歡你的貼文"
 
 #: src/view/screens/Profile.tsx:174
 msgid "Likes"
