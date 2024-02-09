@@ -57,8 +57,8 @@ const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
 type ThreadSkeletonParts = {
   highlightedPost: YieldedItem
-  parents?: YieldedItem[]
-  replies?: YieldedItem[]
+  parents: YieldedItem[]
+  replies: YieldedItem[]
 }
 
 type YieldedItem =
@@ -186,7 +186,7 @@ function PostThreadLoaded({
       : undefined
 
     // Create the posts to prepend
-    let postsToPrepend = items.parents?.slice(-(topPageCount * 15)) ?? []
+    let postsToPrepend = items.parents.slice(-(topPageCount * 15))
     if (postsToPrepend.length > 0) {
       // If there are any parent posts, we need to add the header here
       postsToPrepend = [TOP_COMPONENT, ...postsToPrepend]
@@ -203,7 +203,7 @@ function PostThreadLoaded({
       // In the case of refreshes we need to take into account the page count when we load
       ...postsToPrepend,
       items.highlightedPost,
-      ...(items.replies ?? []),
+      ...items.replies,
     ]
     // Remove any items that shouldn't be visible right now due to view limit
     if (arr.length > maxVisible) {
