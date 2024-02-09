@@ -2370,7 +2370,7 @@ msgstr "下一张图片"
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
-msgstr "没有"
+msgstr "停用"
 
 #: src/view/screens/ProfileFeed.tsx:584
 #: src/view/screens/ProfileList.tsx:754
@@ -3349,23 +3349,23 @@ msgstr "设置密码"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
+msgstr "停用此设置项以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有回复。"
+msgstr "停用此设置项以隐藏来自订阅信息流的所有回复。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有转发。"
+msgstr "停用此设置项以隐藏来自订阅信息流的所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "将此设置项设为\"是\"以在分层视图中显示回复。这是一个实验性功能。"
+msgstr "启用此设置项以在分层视图中显示回复。这是一个实验性功能。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "将此设置项设为\"是\"以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
+msgstr "启用此设置项以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -4329,7 +4329,7 @@ msgstr "XXXXXX"
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
-msgstr "是的"
+msgstr "启用"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
