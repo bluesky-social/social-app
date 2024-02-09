@@ -4,6 +4,9 @@ import {
   AppBskyActorDefs,
   AppBskyActorProfile,
   AppBskyActorGetProfile,
+  AppBskyFeedDefs,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 import {
   useQuery,
@@ -23,13 +26,14 @@ import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
+import {ThreadNode} from './post-thread'
 
 export const RQKEY = (did: string) => ['profile', did]
-export const profileBasicKey = (didOrHandle: string) => [
+export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
+export const profileBasicQueryKey = (didOrHandle: string) => [
   'profileBasic',
   didOrHandle,
 ]
-export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
 
 export function useProfileQuery({
   did,
@@ -55,7 +59,7 @@ export function useProfileQuery({
       if (!did) return
 
       return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
-        profileBasicKey(did),
+        profileBasicQueryKey(did),
       )
     },
     enabled: !!did,
@@ -415,6 +419,63 @@ function useProfileUnblockMutation() {
       resetProfilePostsQueries(did, 1000)
     },
   })
+}
+
+export function precacheProfile(
+  queryClient: QueryClient,
+  profile: AppBskyActorDefs.ProfileViewBasic,
+) {
+  queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
+  queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
+}
+
+export function precacheFeedPosts(
+  queryClient: QueryClient,
+  posts: AppBskyFeedDefs.FeedViewPost[],
+) {
+  function handleEmbed(embed?: any) {
+    // If it's a view record, all we need to do is "cache" the author
+    if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
+      precacheProfile(queryClient, embed.record.author)
+    } else if (
+      AppBskyEmbedRecordWithMedia.isView(embed) &&
+      AppBskyEmbedRecord.isViewRecord(embed.record.record)
+    ) {
+      precacheProfile(queryClient, embed.record.record.author)
+    }
+  }
+
+  for (const post of posts) {
+    // Save the author of the post every time
+    precacheProfile(queryClient, post.post.author)
+    handleEmbed(post.post.embed)
+
+    // Cache parent author and embeds
+    if (post.reply?.parent.author) {
+      precacheProfile(
+        queryClient,
+        post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,
+      )
+      handleEmbed(post.reply?.parent.embed)
+    }
+  }
+}
+
+export function precacheThreadPosts(
+  queryClient: QueryClient,
+  node: ThreadNode,
+) {
+  if (node.type === 'post') {
+    precacheProfile(queryClient, node.post.author)
+    if (node.parent) {
+      precacheThreadPosts(queryClient, node.parent)
+    }
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        precacheThreadPosts(queryClient, reply)
+      }
+    }
+  }
 }
 
 async function whenAppViewReady(

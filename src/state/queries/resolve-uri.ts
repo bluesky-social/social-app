@@ -1,21 +1,9 @@
-import {
-  QueryClient,
-  useQuery,
-  useQueryClient,
-  UseQueryResult,
-} from '@tanstack/react-query'
-import {
-  AtUri,
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-} from '@atproto/api'
-import {profileBasicKey as RQKEY_PROFILE_BASIC} from 'state/queries/profile'
+import {useQuery, useQueryClient, UseQueryResult} from '@tanstack/react-query'
+import {AtUri, AppBskyActorDefs} from '@atproto/api'
 
+import {profileBasicQueryKey as RQKEY_PROFILE_BASIC} from './profile'
 import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
-import {ThreadNode} from './post-thread'
 
 export const RQKEY = (didOrHandle: string) => ['resolved-did', didOrHandle]
 
@@ -59,61 +47,4 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     },
     enabled: !!didOrHandle,
   })
-}
-
-export function precacheProfile(
-  queryClient: QueryClient,
-  profile: AppBskyActorDefs.ProfileViewBasic,
-) {
-  queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.handle), profile)
-  queryClient.setQueryData(RQKEY_PROFILE_BASIC(profile.did), profile)
-}
-
-export function precacheFeedPosts(
-  queryClient: QueryClient,
-  posts: AppBskyFeedDefs.FeedViewPost[],
-) {
-  function handleEmbed(embed?: any) {
-    // If it's a view record, all we need to do is "cache" the author
-    if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
-      precacheProfile(queryClient, embed.record.author)
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedRecord.isViewRecord(embed.record.record)
-    ) {
-      precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
-
-  for (const post of posts) {
-    // Save the author of the post every time
-    precacheProfile(queryClient, post.post.author)
-    handleEmbed(post.post.embed)
-
-    // Cache parent author and embeds
-    if (post.reply?.parent.author) {
-      precacheProfile(
-        queryClient,
-        post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,
-      )
-      handleEmbed(post.reply?.parent.embed)
-    }
-  }
-}
-
-export function precacheThreadPosts(
-  queryClient: QueryClient,
-  node: ThreadNode,
-) {
-  if (node.type === 'post') {
-    precacheProfile(queryClient, node.post.author)
-    if (node.parent) {
-      precacheThreadPosts(queryClient, node.parent)
-    }
-    if (node.replies?.length) {
-      for (const reply of node.replies) {
-        precacheThreadPosts(queryClient, reply)
-      }
-    }
-  }
 }

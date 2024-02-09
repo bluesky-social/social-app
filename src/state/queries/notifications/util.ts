@@ -12,7 +12,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import chunk from 'lodash.chunk'
 import {QueryClient} from '@tanstack/react-query'
 import {getAgent} from '../../session'
-import {precacheProfile as precacheResolvedUri} from '../resolve-uri'
+import {precacheProfile as precacheResolvedUri} from '../profile'
 import {NotificationType, FeedNotification, FeedPage} from './types'
 
 const GROUPABLE_REASONS = ['like', 'repost', 'follow']

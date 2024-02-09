@@ -10,7 +10,7 @@ import {getAgent} from '#/state/session'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
 import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
-import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
+import {precacheThreadPosts as precacheResolvedUris} from './profile'
 import {getEmbeddedPost} from './util'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
