@@ -16,7 +16,7 @@ import {
   useButtonContext,
 } from '#/components/Button'
 import {Divider} from '#/components/Divider'
-import {useLabelGroupStrings} from '#/lib/moderation'
+import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
 import {
   ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,
   ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft,
