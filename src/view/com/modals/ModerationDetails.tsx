@@ -72,7 +72,7 @@ export function Component({
       name = _(msg`Account Muted by List`)
       description = (
         <Trans>
-          This user is included the{' '}
+          This user is included in the{' '}
           <TextLink
             type="2xl"
             href={listUriToHref(list.uri)}

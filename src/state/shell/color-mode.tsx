@@ -20,36 +20,38 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const [colorMode, setColorMode] = React.useState(persisted.get('colorMode'))
   const [darkTheme, setDarkTheme] = React.useState(persisted.get('darkTheme'))
 
-  const setColorModeWrapped = React.useCallback(
-    (_colorMode: persisted.Schema['colorMode']) => {
-      setColorMode(_colorMode)
-      persisted.write('colorMode', _colorMode)
-    },
-    [setColorMode],
+  const stateContextValue = React.useMemo(
+    () => ({
+      colorMode,
+      darkTheme,
+    }),
+    [colorMode, darkTheme],
   )
 
-  const setDarkThemeWrapped = React.useCallback(
-    (_darkTheme: persisted.Schema['darkTheme']) => {
-      setDarkTheme(_darkTheme)
-      persisted.write('darkTheme', _darkTheme)
-    },
-    [setDarkTheme],
+  const setContextValue = React.useMemo(
+    () => ({
+      setColorMode: (_colorMode: persisted.Schema['colorMode']) => {
+        setColorMode(_colorMode)
+        persisted.write('colorMode', _colorMode)
+      },
+      setDarkTheme: (_darkTheme: persisted.Schema['darkTheme']) => {
+        setDarkTheme(_darkTheme)
+        persisted.write('darkTheme', _darkTheme)
+      },
+    }),
+    [],
   )
 
   React.useEffect(() => {
     return persisted.onUpdate(() => {
-      setColorModeWrapped(persisted.get('colorMode'))
-      setDarkThemeWrapped(persisted.get('darkTheme'))
+      setColorMode(persisted.get('colorMode'))
+      setDarkTheme(persisted.get('darkTheme'))
     })
-  }, [setColorModeWrapped, setDarkThemeWrapped])
+  }, [])
 
   return (
-    <stateContext.Provider value={{colorMode, darkTheme}}>
-      <setContext.Provider
-        value={{
-          setDarkTheme: setDarkThemeWrapped,
-          setColorMode: setColorModeWrapped,
-        }}>
+    <stateContext.Provider value={stateContextValue}>
+      <setContext.Provider value={setContextValue}>
         {children}
       </setContext.Provider>
     </stateContext.Provider>
