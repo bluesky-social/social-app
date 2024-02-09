@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-09 17:00+0800\n"
+"POT-Creation-Date: 2024-02-09 22:50+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3349,23 +3349,23 @@ msgstr "設定密碼"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "將此設定項設為「否」會隱藏來自訂閱訊息流的所有引用貼文。轉發仍將可見。"
+msgstr "將此設定項設為「關」會隱藏來自訂閱訊息流的所有引用貼文。轉發仍將可見。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "將此設定項設為「否」以隱藏來自訂閱訊息流的所有回覆。"
+msgstr "將此設定項設為「關」以隱藏來自訂閱訊息流的所有回覆。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "將此設定項設為「否」以隱藏來自訂閱訊息流的所有轉發。"
+msgstr "將此設定項設為「關」以隱藏來自訂閱訊息流的所有轉發。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "將此設定項設為「是」以在分層視圖中顯示回覆。這是一個實驗性功能。"
+msgstr "將此設定項設為「開」以在分層視圖中顯示回覆。這是一個實驗性功能。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "將此設定項設為「是」以在跟隨訊息流中顯示已儲存訊息流的樣本。這是一個實驗性功能。"
+msgstr "將此設定項設為「開」以在跟隨訊息流中顯示已儲存訊息流的樣本。這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
