@@ -673,7 +673,7 @@ let ProfileHeaderLoaded = ({
               </Text>
             </View>
             {descriptionRT && !moderation.profile.blur ? (
-              <View pointerEvents={isNative ? 'auto' : 'none'}>
+              <View pointerEvents="auto">
                 <RichText
                   testID="profileHeaderDescription"
                   style={[styles.description, pal.text]}
