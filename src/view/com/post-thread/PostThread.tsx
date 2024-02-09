@@ -169,7 +169,8 @@ function PostThreadLoaded({
     [threadViewPrefs, thread],
   )
 
-  const [setReadyToShowAll, setSetReadyToShowAll] = React.useState(false)
+  // On web we always are ready to render, we only need this on mobile.
+  const [readyToShowAll, setReadyToShowAll] = React.useState(isWeb)
   const [topPageCount, setTopPageCount] = React.useState(1)
   const isPrepending = React.useRef(false)
 
@@ -178,7 +179,7 @@ function PostThreadLoaded({
       sortThread(thread, threadViewPrefs),
       hasSession,
       treeView,
-      setReadyToShowAll,
+      readyToShowAll,
     )
 
     const highlightedPost = isThreadPost(items.highlightedPost)
@@ -216,9 +217,9 @@ function PostThreadLoaded({
     // HACK
     // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
     // correct post
-    if (items.highlightedPost && !setReadyToShowAll) {
+    if (items.highlightedPost && !readyToShowAll) {
       setTimeout(() => {
-        setSetReadyToShowAll(true)
+        setReadyToShowAll(true)
       }, 300)
     }
 
@@ -229,7 +230,7 @@ function PostThreadLoaded({
     threadViewPrefs,
     hasSession,
     treeView,
-    setReadyToShowAll,
+    readyToShowAll,
     topPageCount,
     maxVisible,
   ])
@@ -563,16 +564,16 @@ function* flattenThreadParents(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
-  readyToRender: boolean,
+  readyToShowAll: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
-    if (!node.ctx.isParentLoading && readyToRender) {
+    if (!node.ctx.isParentLoading && readyToShowAll) {
       if (node.parent) {
         yield* flattenThreadParents(
           node.parent,
           hasSession,
           treeView,
-          readyToRender,
+          readyToShowAll,
         )
       }
     }
