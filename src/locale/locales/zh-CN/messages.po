@@ -2692,7 +2692,7 @@ msgstr "请设置你的用户识别符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
-msgstr "请选择你的密码。"
+msgstr "请设置你的密码。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
