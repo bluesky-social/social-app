@@ -8,7 +8,7 @@ import {msg} from '@lingui/macro'
 import {useTheme, atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {Text, H3} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 import {RichText} from '#/components/RichText'
 
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -94,14 +94,14 @@ function PrimaryFeedCardInner({
         </View>
 
         <View style={[a.pt_xs, a.flex_grow]}>
-          <H3
+          <Text
             style={[
               a.text_lg,
               a.font_bold,
               ctx.selected && styles.textSelected,
             ]}>
             {feed.displayName}
-          </H3>
+          </Text>
 
           <Text
             style={[
@@ -239,14 +239,14 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
         </View>
 
         <View style={[a.pt_2xs, a.flex_grow]}>
-          <H3
+          <Text
             style={[
               a.text_md,
               a.font_bold,
               ctx.selected && styles.textSelected,
             ]}>
             {feed.displayName}
-          </H3>
+          </Text>
           <Text
             style={[
               {opacity: 0.8},

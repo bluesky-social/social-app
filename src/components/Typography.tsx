@@ -41,138 +41,42 @@ function normalizeTextStyles(styles: TextStyle[]) {
   return s
 }
 
+/**
+ * Our main text component. Use this most of the time.
+ */
 export function Text({style, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
   return <RNText style={s} {...rest} />
 }
 
-export function H1({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 1,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_5xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
+export function createHeadingElement({level}: {level: number}) {
+  return function HeadingElement({style, ...rest}: TextProps) {
+    const t = useTheme()
+    const attr =
+      web({
+        role: 'heading',
+        'aria-level': level,
+      }) || {}
+    return (
+      <RNText
+        {...attr}
+        {...rest}
+        style={normalizeTextStyles([t.atoms.text, flatten(style)])}
+      />
+    )
+  }
 }
 
-export function H2({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 2,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_4xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H3({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 3,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_3xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H4({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 4,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_2xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H5({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 5,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H6({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 6,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_lg,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
+/*
+ * Use semantic components when it's beneficial to the user or to a web scraper
+ */
+export const H1 = createHeadingElement({level: 1})
+export const H2 = createHeadingElement({level: 2})
+export const H3 = createHeadingElement({level: 3})
+export const H4 = createHeadingElement({level: 4})
+export const H5 = createHeadingElement({level: 5})
+export const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
   const t = useTheme()
   const attr =

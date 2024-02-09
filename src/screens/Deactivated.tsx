@@ -10,9 +10,8 @@ import {pluralize} from '#/lib/strings/helpers'
 
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
+import {Text, P} from '#/components/Typography'
 import {isWeb} from '#/platform/detection'
-import {H2, P} from '#/components/Typography'
 import {ScrollView} from '#/view/com/util/Views'
 import {Loader} from '#/components/Loader'
 import {Logo} from '#/view/icons/Logo'
@@ -100,9 +99,9 @@ export function Deactivated() {
               <Logo width={120} />
             </View>
 
-            <H2 style={[a.pb_sm]}>
+            <Text style={[a.text_4xl, a.font_bold, a.pb_sm]}>
               <Trans>You're in line</Trans>
-            </H2>
+            </Text>
             <P style={[t.atoms.text_contrast_medium]}>
               <Trans>
                 There's been a rush of new users to Bluesky! We'll activate your
