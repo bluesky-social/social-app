@@ -233,35 +233,40 @@ let PagerTabBar = ({
       },
     ],
   }))
-  const headerRef = React.useRef(null)
-  React.useEffect(() => {
-    // Fire when layout *becomes* ready.
-    // We can't rely on onLayout alone because it won't fire if layout is the same.
-    // We can't rely on this effect alone because it won't fire if layout changes later.
-    if (isHeaderReady) {
-      // @ts-ignore
-      headerRef.current!.measure(
-        (_x: number, _y: number, _width: number, height: number) => {
-          onHeaderOnlyLayout(height)
-        },
-      )
-    }
-  }, [isHeaderReady, onHeaderOnlyLayout])
-
+  const pendingHeaderHeight = React.useRef<null | number>(null)
   return (
     <Animated.View
       pointerEvents="box-none"
       style={[styles.tabBarMobile, headerTransform]}>
       <View
-        ref={headerRef}
         pointerEvents="box-none"
         collapsable={false}
         onLayout={e => {
           if (isHeaderReady) {
             onHeaderOnlyLayout(e.nativeEvent.layout.height)
+            pendingHeaderHeight.current = null
+          } else {
+            // Stash it away for when `isHeaderReady` turns `true` later.
+            pendingHeaderHeight.current = e.nativeEvent.layout.height
           }
         }}>
         {renderHeader?.()}
+        {
+          // When `isHeaderReady` turns `true`, we want to send the parent layout.
+          // However, if that didn't lead to a layout change, parent `onLayout` wouldn't get called again.
+          // We're conditionally rendering an empty view so that we can send the last measurement.
+          isHeaderReady && (
+            <View
+              onLayout={() => {
+                // We're assuming the parent `onLayout` already ran (parent -> child ordering).
+                if (pendingHeaderHeight.current !== null) {
+                  onHeaderOnlyLayout(pendingHeaderHeight.current)
+                  pendingHeaderHeight.current = null
+                }
+              }}
+            />
+          )
+        }
       </View>
       <View
         onLayout={onTabBarLayout}
