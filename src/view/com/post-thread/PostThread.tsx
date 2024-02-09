@@ -189,7 +189,9 @@ function PostThreadLoaded({
     // Create the posts to prepend
     const postsToPrepend = [
       ...(!highlightedPost?.ctx.isParentLoading ? [TOP_COMPONENT] : []),
-      ...items.parents.slice(-(topPageCount * 15)),
+      ...(!isWeb
+        ? [...items.parents.slice(-(topPageCount * 15))]
+        : [...items.parents]),
     ]
 
     // Build the entire array of items to render
