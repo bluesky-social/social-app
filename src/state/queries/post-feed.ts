@@ -21,13 +21,14 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
+import {precacheFeedPostProfiles} from './profile'
 import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
+import {queryClient} from 'lib/react-query'
 
 type ActorDid = string
 type AuthorFilter =
@@ -137,7 +138,7 @@ export function usePostFeedQuery(
           }
 
       const res = await api.fetch({cursor, limit: PAGE_SIZE})
-      precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
+      precacheFeedPostProfiles(queryClient, res.feed)
 
       /*
        * If this is a public view, we need to check if posts fail moderation.
@@ -443,4 +444,16 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   if (!somePostsPassModeration) {
     throw new Error(KnownError.FeedNSFPublic)
   }
+}
+
+export function resetProfilePostsQueries(did: string, timeout = 0) {
+  setTimeout(() => {
+    queryClient.resetQueries({
+      predicate: query =>
+        !!(
+          query.queryKey[0] === 'post-feed' &&
+          (query.queryKey[1] as string)?.includes(did)
+        ),
+    })
+  }, timeout)
 }

@@ -4,6 +4,9 @@ import {
   AppBskyActorDefs,
   AppBskyActorProfile,
   AppBskyActorGetProfile,
+  AppBskyFeedDefs,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 import {
   useQuery,
@@ -17,30 +20,47 @@ import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {Shadow} from '#/state/cache/types'
+import {resetProfilePostsQueries} from '#/state/queries/post-feed'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
+import {ThreadNode} from './post-thread'
 
 export const RQKEY = (did: string) => ['profile', did]
 export const profilesQueryKey = (handles: string[]) => ['profiles', handles]
+export const profileBasicQueryKey = (didOrHandle: string) => [
+  'profileBasic',
+  didOrHandle,
+]
 
-export function useProfileQuery({did}: {did: string | undefined}) {
-  const {currentAccount} = useSession()
-  const isCurrentAccount = did === currentAccount?.did
-
-  return useQuery({
+export function useProfileQuery({
+  did,
+  staleTime = STALE.SECONDS.FIFTEEN,
+}: {
+  did: string | undefined
+  staleTime?: number
+}) {
+  const queryClient = useQueryClient()
+  return useQuery<AppBskyActorDefs.ProfileViewDetailed>({
     // WARNING
     // this staleTime is load-bearing
     // if you remove it, the UI infinite-loops
     // -prf
-    staleTime: isCurrentAccount ? STALE.SECONDS.THIRTY : STALE.MINUTES.FIVE,
+    staleTime,
     refetchOnWindowFocus: true,
-    queryKey: RQKEY(did || ''),
+    queryKey: RQKEY(did ?? ''),
     queryFn: async () => {
-      const res = await getAgent().getProfile({actor: did || ''})
+      const res = await getAgent().getProfile({actor: did ?? ''})
       return res.data
+    },
+    placeholderData: () => {
+      if (!did) return
+
+      return queryClient.getQueryData<AppBskyActorDefs.ProfileViewBasic>(
+        profileBasicQueryKey(did),
+      )
     },
     enabled: !!did,
   })
@@ -375,8 +395,9 @@ function useProfileBlockMutation() {
         {subject: did, createdAt: new Date().toISOString()},
       )
     },
-    onSuccess() {
+    onSuccess(_, {did}) {
       queryClient.invalidateQueries({queryKey: RQKEY_MY_BLOCKED()})
+      resetProfilePostsQueries(did, 1000)
     },
   })
 }
@@ -394,7 +415,68 @@ function useProfileUnblockMutation() {
         rkey,
       })
     },
+    onSuccess(_, {did}) {
+      resetProfilePostsQueries(did, 1000)
+    },
   })
+}
+
+export function precacheProfile(
+  queryClient: QueryClient,
+  profile: AppBskyActorDefs.ProfileViewBasic,
+) {
+  queryClient.setQueryData(profileBasicQueryKey(profile.handle), profile)
+  queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
+}
+
+export function precacheFeedPostProfiles(
+  queryClient: QueryClient,
+  posts: AppBskyFeedDefs.FeedViewPost[],
+) {
+  for (const post of posts) {
+    // Save the author of the post every time
+    precacheProfile(queryClient, post.post.author)
+    precachePostEmbedProfile(queryClient, post.post.embed)
+
+    // Cache parent author and embeds
+    const parent = post.reply?.parent
+    if (AppBskyFeedDefs.isPostView(parent)) {
+      precacheProfile(queryClient, parent.author)
+      precachePostEmbedProfile(queryClient, parent.embed)
+    }
+  }
+}
+
+function precachePostEmbedProfile(
+  queryClient: QueryClient,
+  embed: AppBskyFeedDefs.PostView['embed'],
+) {
+  if (AppBskyEmbedRecord.isView(embed)) {
+    if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+      precacheProfile(queryClient, embed.record.author)
+    }
+  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+    if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
+      precacheProfile(queryClient, embed.record.record.author)
+    }
+  }
+}
+
+export function precacheThreadPostProfiles(
+  queryClient: QueryClient,
+  node: ThreadNode,
+) {
+  if (node.type === 'post') {
+    precacheProfile(queryClient, node.post.author)
+    if (node.parent) {
+      precacheThreadPostProfiles(queryClient, node.parent)
+    }
+    if (node.replies?.length) {
+      for (const reply of node.replies) {
+        precacheThreadPostProfiles(queryClient, reply)
+      }
+    }
+  }
 }
 
 async function whenAppViewReady(

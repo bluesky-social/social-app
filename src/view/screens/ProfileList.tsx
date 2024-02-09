@@ -55,6 +55,7 @@ import {
   usePreferencesQuery,
   usePinFeedMutation,
   useUnpinFeedMutation,
+  useSetSaveFeedsMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
@@ -246,9 +247,11 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     useUnpinFeedMutation()
   const isPending = isPinPending || isUnpinPending
   const {data: preferences} = usePreferencesQuery()
+  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
 
   const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
+  const isSaved = preferences?.feeds?.saved?.includes(list.uri)
 
   const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
@@ -361,6 +364,16 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       message: _(msg`Are you sure?`),
       async onPressConfirm() {
         await listDeleteMutation.mutateAsync({uri: list.uri})
+
+        if (isSaved || isPinned) {
+          const {saved, pinned} = preferences!.feeds
+
+          setSavedFeeds({
+            saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
+            pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
+          })
+        }
+
         Toast.show(_(msg`List deleted`))
         track('Lists:Delete')
         if (navigation.canGoBack()) {
@@ -370,7 +383,18 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         }
       },
     })
-  }, [openModal, list, listDeleteMutation, navigation, track, _])
+  }, [
+    openModal,
+    list,
+    listDeleteMutation,
+    navigation,
+    track,
+    _,
+    preferences,
+    isPinned,
+    isSaved,
+    setSavedFeeds,
+  ])
 
   const onPressReport = useCallback(() => {
     openModal({

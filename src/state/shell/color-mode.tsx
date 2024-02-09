@@ -1,57 +1,67 @@
 import React from 'react'
-import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 
-type StateContext = persisted.Schema['colorMode']
-type SetContext = (v: persisted.Schema['colorMode']) => void
+type StateContext = {
+  colorMode: persisted.Schema['colorMode']
+  darkTheme: persisted.Schema['darkTheme']
+}
+type SetContext = {
+  setColorMode: (v: persisted.Schema['colorMode']) => void
+  setDarkTheme: (v: persisted.Schema['darkTheme']) => void
+}
 
-const stateContext = React.createContext<StateContext>('system')
-const setContext = React.createContext<SetContext>(
-  (_: persisted.Schema['colorMode']) => {},
-)
+const stateContext = React.createContext<StateContext>({
+  colorMode: 'system',
+  darkTheme: 'dark',
+})
+const setContext = React.createContext<SetContext>({} as SetContext)
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [state, setState] = React.useState(persisted.get('colorMode'))
+  const [colorMode, setColorMode] = React.useState(persisted.get('colorMode'))
+  const [darkTheme, setDarkTheme] = React.useState(persisted.get('darkTheme'))
 
-  const setStateWrapped = React.useCallback(
-    (colorMode: persisted.Schema['colorMode']) => {
-      setState(colorMode)
-      persisted.write('colorMode', colorMode)
-      updateDocument(colorMode)
-    },
-    [setState],
+  const stateContextValue = React.useMemo(
+    () => ({
+      colorMode,
+      darkTheme,
+    }),
+    [colorMode, darkTheme],
+  )
+
+  const setContextValue = React.useMemo(
+    () => ({
+      setColorMode: (_colorMode: persisted.Schema['colorMode']) => {
+        setColorMode(_colorMode)
+        persisted.write('colorMode', _colorMode)
+      },
+      setDarkTheme: (_darkTheme: persisted.Schema['darkTheme']) => {
+        setDarkTheme(_darkTheme)
+        persisted.write('darkTheme', _darkTheme)
+      },
+    }),
+    [],
   )
 
   React.useEffect(() => {
-    updateDocument(persisted.get('colorMode')) // set on load
     return persisted.onUpdate(() => {
-      setState(persisted.get('colorMode'))
-      updateDocument(persisted.get('colorMode'))
+      setColorMode(persisted.get('colorMode'))
+      setDarkTheme(persisted.get('darkTheme'))
     })
-  }, [setState])
+  }, [])
 
   return (
-    <stateContext.Provider value={state}>
-      <setContext.Provider value={setStateWrapped}>
+    <stateContext.Provider value={stateContextValue}>
+      <setContext.Provider value={setContextValue}>
         {children}
       </setContext.Provider>
     </stateContext.Provider>
   )
 }
 
-export function useColorMode() {
+export function useThemePrefs() {
   return React.useContext(stateContext)
 }
 
-export function useSetColorMode() {
+export function useSetThemePrefs() {
   return React.useContext(setContext)
-}
-
-function updateDocument(colorMode: string) {
-  if (isWeb && typeof window !== 'undefined') {
-    const html = window.document.documentElement
-    // remove any other color mode classes
-    html.className = html.className.replace(/colorMode--\w+/g, '')
-    html.classList.add(`colorMode--${colorMode}`)
-  }
 }

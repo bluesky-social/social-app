@@ -300,6 +300,9 @@ export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
   props: ListProps<ItemT> & {ref?: React.Ref<ListMethods>},
 ) => React.ReactElement
 
+// https://stackoverflow.com/questions/7944460/detect-safari-browser
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+
 const styles = StyleSheet.create({
   contentContainer: {
     borderLeftWidth: 1,
@@ -313,7 +316,7 @@ const styles = StyleSheet.create({
   },
   row: {
     // @ts-ignore web only
-    contentVisibility: 'auto',
+    contentVisibility: isSafari ? '' : 'auto', // Safari support for this is buggy.
   },
   minHeightViewport: {
     // @ts-ignore web only

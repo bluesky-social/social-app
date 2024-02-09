@@ -173,7 +173,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
             ? a.py_2xl
             : {
                 paddingTop: a.pt_lg.paddingTop,
-                paddingBottom: insets.bottom,
+                paddingBottom: insets.bottom + 10,
               },
         ]}>
         <View

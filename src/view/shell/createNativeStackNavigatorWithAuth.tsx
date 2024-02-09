@@ -101,7 +101,7 @@ function NativeStackNavigator({
   const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const {isMobile} = useWebMediaQueries()
+  const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   if ((!PWI_ENABLED || activeRouteRequiresAuth) && !hasSession) {
     return <LoggedOut />
   }
@@ -134,6 +134,10 @@ function NativeStackNavigator({
     }
   }
 
+  // Show the bottom bar if we have a session only on mobile web. If we don't have a session, we want to show it
+  // on both tablet and mobile web so that we see the sign up CTA.
+  const showBottomBar = hasSession ? isMobile : isTabletOrMobile
+
   return (
     <NavigationContent>
       <NativeStackView
@@ -142,8 +146,8 @@ function NativeStackNavigator({
         navigation={navigation}
         descriptors={newDescriptors}
       />
-      {isWeb && isMobile && <BottomBarWeb />}
-      {isWeb && !isMobile && (
+      {isWeb && showBottomBar && <BottomBarWeb />}
+      {isWeb && !showBottomBar && (
         <>
           <DesktopLeftNav />
           <DesktopRightNav routeName={activeRoute.name} />

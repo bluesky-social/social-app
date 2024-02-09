@@ -21,7 +21,10 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {ComposeIcon2} from 'lib/icons'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {combinedDisplayName} from 'lib/strings/display-names'
-import {FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  FeedDescriptor,
+  resetProfilePostsQueries,
+} from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -47,6 +50,7 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen({route}: Props) {
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const name =
     route.params.name === 'me' ? currentAccount?.did : route.params.name
@@ -55,13 +59,14 @@ export function ProfileScreen({route}: Props) {
     data: resolvedDid,
     error: resolveError,
     refetch: refetchDid,
-    isInitialLoading: isInitialLoadingDid,
+    isLoading: isLoadingDid,
   } = useResolveDidQuery(name)
   const {
     data: profile,
     error: profileError,
     refetch: refetchProfile,
-    isInitialLoading: isInitialLoadingProfile,
+    isLoading: isLoadingProfile,
+    isPlaceholderData: isPlaceholderProfile,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -74,12 +79,20 @@ export function ProfileScreen({route}: Props) {
     }
   }, [resolveError, refetchDid, refetchProfile])
 
-  if (isInitialLoadingDid || isInitialLoadingProfile || !moderationOpts) {
+  // When we open the profile, we want to reset the posts query if we are blocked.
+  React.useEffect(() => {
+    if (resolvedDid && profile?.viewer?.blockedBy) {
+      resetProfilePostsQueries(resolvedDid)
+    }
+  }, [profile?.viewer?.blockedBy, resolvedDid])
+
+  // Most pushes will happen here, since we will have only placeholder data
+  if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
     return (
       <CenteredView>
         <ProfileHeader
-          profile={null}
-          moderation={null}
+          profile={profile ?? null}
+          moderationOpts={moderationOpts ?? null}
           isProfilePreview={true}
         />
       </CenteredView>
@@ -87,14 +100,13 @@ export function ProfileScreen({route}: Props) {
   }
   if (resolveError || profileError) {
     return (
-      <CenteredView>
-        <ErrorScreen
-          testID="profileErrorScreen"
-          title="Oops!"
-          message={cleanError(resolveError || profileError)}
-          onPressTryAgain={onPressTryAgain}
-        />
-      </CenteredView>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+        message={cleanError(resolveError || profileError)}
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
     )
   }
   if (profile && moderationOpts) {
@@ -108,14 +120,13 @@ export function ProfileScreen({route}: Props) {
   }
   // should never happen
   return (
-    <CenteredView>
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title="Oops!"
-        message="Something went wrong and we're not sure what."
-        onPressTryAgain={onPressTryAgain}
-      />
-    </CenteredView>
+    <ErrorScreen
+      testID="profileErrorScreen"
+      title="Oops!"
+      message="Something went wrong and we're not sure what."
+      onPressTryAgain={onPressTryAgain}
+      showHeader
+    />
   )
 }
 
@@ -259,11 +270,11 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
-        moderation={moderation}
+        moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
       />
     )
-  }, [profile, moderation, hideBackButton])
+  }, [profile, moderationOpts, hideBackButton])
 
   return (
     <ScreenHider

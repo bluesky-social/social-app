@@ -346,6 +346,7 @@ class Mocker {
     const labelSrvc = ctx.services.label(ctx.db.getPrimary())
     await labelSrvc.createLabels([
       {
+        // @ts-ignore
         src: ctx.cfg.labelerDid,
         uri: did,
         cid: '',
@@ -375,6 +376,7 @@ class Mocker {
     const labelSrvc = ctx.services.label(ctx.db.getPrimary())
     await labelSrvc.createLabels([
       {
+        // @ts-ignore
         src: ctx.cfg.labelerDid,
         uri: profile.uri,
         cid: profile.cid,
@@ -393,6 +395,7 @@ class Mocker {
     const labelSrvc = ctx.services.label(ctx.db.getPrimary())
     await labelSrvc.createLabels([
       {
+        // @ts-ignore
         src: ctx.cfg.labelerDid,
         uri,
         cid,

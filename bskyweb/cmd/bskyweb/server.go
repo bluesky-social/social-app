@@ -159,6 +159,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/security.txt", func(c echo.Context) error {
 		return c.Redirect(http.StatusMovedPermanently, "/.well-known/security.txt")
 	})
+	e.GET("/iframe/youtube.html", echo.WrapHandler(staticHandler))
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			path := c.Request().URL.Path
@@ -203,20 +204,20 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/copyright", server.WebGeneric)
 
 	// profile endpoints; only first populates info
-	e.GET("/profile/:handle", server.WebProfile)
-	e.GET("/profile/:handle/follows", server.WebGeneric)
-	e.GET("/profile/:handle/followers", server.WebGeneric)
-	e.GET("/profile/:handle/lists/:rkey", server.WebGeneric)
-	e.GET("/profile/:handle/feed/:rkey", server.WebGeneric)
-	e.GET("/profile/:handle/feed/:rkey/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID", server.WebProfile)
+	e.GET("/profile/:handleOrDID/follows", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/followers", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/lists/:rkey", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
 
 	// profile RSS feed (DID not handle)
 	e.GET("/profile/:ident/rss", server.WebProfileRSS)
 
 	// post endpoints; only first populates info
-	e.GET("/profile/:handle/post/:rkey", server.WebPost)
-	e.GET("/profile/:handle/post/:rkey/liked-by", server.WebGeneric)
-	e.GET("/profile/:handle/post/:rkey/reposted-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/post/:rkey", server.WebPost)
+	e.GET("/profile/:handleOrDID/post/:rkey/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/post/:rkey/reposted-by", server.WebGeneric)
 
 	// Mailmodo
 	e.POST("/api/waitlist", server.apiWaitlist)
@@ -299,17 +300,18 @@ func (srv *Server) WebPost(c echo.Context) error {
 	if err != nil {
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	handleParam := c.Param("handle")
-	handle, err := syntax.ParseHandle(handleParam)
+	handleOrDIDParam := c.Param("handleOrDID")
+	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
 	if err != nil {
 		return c.Render(http.StatusOK, "post.html", data)
 	}
-	handle = handle.Normalize()
+
+	identifier := handleOrDID.Normalize().String()
 
 	// requires two fetches: first fetch profile (!)
-	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle.String())
+	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
 	if err != nil {
-		log.Warnf("failed to fetch handle: %s\t%v", handle, err)
+		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
 		return c.Render(http.StatusOK, "post.html", data)
 	}
 	unauthedViewingOkay := true
@@ -367,16 +369,16 @@ func (srv *Server) WebProfile(c echo.Context) error {
 	data := pongo2.Context{}
 
 	// sanity check arguments. don't 4xx, just let app handle if not expected format
-	handleParam := c.Param("handle")
-	handle, err := syntax.ParseHandle(handleParam)
+	handleOrDIDParam := c.Param("handleOrDID")
+	handleOrDID, err := syntax.ParseAtIdentifier(handleOrDIDParam)
 	if err != nil {
 		return c.Render(http.StatusOK, "profile.html", data)
 	}
-	handle = handle.Normalize()
+	identifier := handleOrDID.Normalize().String()
 
-	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, handle.String())
+	pv, err := appbsky.ActorGetProfile(ctx, srv.xrpcc, identifier)
 	if err != nil {
-		log.Warnf("failed to fetch handle: %s\t%v", handle, err)
+		log.Warnf("failed to fetch profile for: %s\t%v", identifier, err)
 		return c.Render(http.StatusOK, "profile.html", data)
 	}
 	unauthedViewingOkay := true

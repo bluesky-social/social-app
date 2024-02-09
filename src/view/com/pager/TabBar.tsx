@@ -78,7 +78,7 @@ export function TabBar({
           return (
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
-              key={item}
+              key={`${item}-${i}`}
               onLayout={e => onItemLayout(e, i)}
               style={[styles.item, selected && indicatorStyle]}
               hoverStyle={pal.viewLight}

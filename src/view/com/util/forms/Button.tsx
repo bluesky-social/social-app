@@ -9,14 +9,12 @@ import {
   PressableStateCallbackType,
   ActivityIndicator,
   View,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
 } from 'react-native'
 import {Text} from '../text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
-
-type Event =
-  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  | GestureResponderEvent
 
 export type ButtonType =
   | 'primary'
@@ -59,7 +57,7 @@ export function Button({
   style?: StyleProp<ViewStyle>
   labelContainerStyle?: StyleProp<ViewStyle>
   labelStyle?: StyleProp<TextStyle>
-  onPress?: () => void | Promise<void>
+  onPress?: (e: NativeSyntheticEvent<NativeTouchEvent>) => void | Promise<void>
   testID?: string
   accessibilityLabel?: string
   accessibilityHint?: string
@@ -148,11 +146,11 @@ export function Button({
 
   const [isLoading, setIsLoading] = React.useState(false)
   const onPressWrapped = React.useCallback(
-    async (event: Event) => {
+    async (event: GestureResponderEvent) => {
       event.stopPropagation()
       event.preventDefault()
       withLoading && setIsLoading(true)
-      await onPress?.()
+      await onPress?.(event)
       withLoading && setIsLoading(false)
     },
     [onPress, withLoading],

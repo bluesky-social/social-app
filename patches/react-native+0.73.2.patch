@@ -2,8 +2,8 @@ diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInp
 index 9dca6a5..090bda5 100644
 --- a/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.mm
 +++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBackedTextInputDelegateAdapter.mm
-@@ -266,11 +266,10 @@ static void *TextFieldSelectionObservingContext = &TextFieldSelectionObservingCo
- 
+@@ -266,11 +266,10 @@ - (void)textViewDidChange:(__unused UITextView *)textView
+
  - (void)textViewDidChangeSelection:(__unused UITextView *)textView
  {
 -  if (_lastStringStateWasUpdatedWith && ![_lastStringStateWasUpdatedWith isEqual:_backedTextInputView.attributedText]) {
@@ -14,4 +14,79 @@ index 9dca6a5..090bda5 100644
 -  _lastStringStateWasUpdatedWith = _backedTextInputView.attributedText;
    [self textViewProbablyDidChangeSelection];
  }
- 
+
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputShadowView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputShadowView.mm
+index 1f06b79..ab458f3 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputShadowView.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputShadowView.mm
+@@ -87,7 +87,7 @@ - (void)invalidateContentSize
+     return;
+   }
+
+-  CGSize maximumSize = self.layoutMetrics.frame.size;
++  CGSize maximumSize = self.layoutMetrics.contentFrame.size;
+
+   if (_maximumNumberOfLines == 1) {
+     maximumSize.width = CGFLOAT_MAX;
+@@ -158,6 +158,8 @@ - (void)uiManagerWillPerformMounting
+     [attributedText insertAttributedString:propertyAttributedText atIndex:0];
+   }
+
++  [self postprocessAttributedText:attributedText];
++
+   NSAttributedString *newAttributedText;
+   if (![_previousAttributedText isEqualToAttributedString:attributedText]) {
+     // We have to follow `set prop` pattern:
+@@ -191,6 +193,52 @@ - (void)uiManagerWillPerformMounting
+   }];
+ }
+
++- (void)postprocessAttributedText:(NSMutableAttributedString *)attributedText
++{
++  __block CGFloat maximumLineHeight = 0;
++
++  [attributedText enumerateAttribute:NSParagraphStyleAttributeName
++                             inRange:NSMakeRange(0, attributedText.length)
++                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
++                          usingBlock:^(NSParagraphStyle *paragraphStyle, __unused NSRange range, __unused BOOL *stop) {
++    if (!paragraphStyle) {
++      return;
++    }
++
++    maximumLineHeight = MAX(paragraphStyle.maximumLineHeight, maximumLineHeight);
++  }];
++
++  if (maximumLineHeight == 0) {
++    // `lineHeight` was not specified, nothing to do.
++    return;
++  }
++
++  __block CGFloat maximumFontLineHeight = 0;
++
++  [attributedText enumerateAttribute:NSFontAttributeName
++                             inRange:NSMakeRange(0, attributedText.length)
++                             options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired
++                          usingBlock:^(UIFont *font, NSRange range, __unused BOOL *stop) {
++    if (!font) {
++      return;
++    }
++
++    if (maximumFontLineHeight <= font.lineHeight) {
++      maximumFontLineHeight = font.lineHeight;
++    }
++  }];
++
++  if (maximumLineHeight < maximumFontLineHeight) {
++    return;
++  }
++
++  CGFloat baseLineOffset = maximumLineHeight / 2.0 - maximumFontLineHeight / 2.0;
++
++  [attributedText addAttribute:NSBaselineOffsetAttributeName
++                         value:@(baseLineOffset)
++                         range:NSMakeRange(0, attributedText.length)];
++}
++
+ #pragma mark -
+
+ - (NSAttributedString *)measurableAttributedText

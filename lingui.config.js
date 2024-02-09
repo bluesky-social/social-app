@@ -12,6 +12,7 @@ module.exports = {
     'pt-BR',
     'uk',
     'ca',
+    'zh-CN',
   ],
   catalogs: [
     {

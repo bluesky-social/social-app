@@ -183,8 +183,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         initialPage={initialPage}
         onPageSelected={onPageSelectedInner}
         onPageSelecting={onPageSelecting}
-        renderTabBar={renderTabBar}
-        tabBarPosition="top">
+        renderTabBar={renderTabBar}>
         {toArray(children)
           .filter(Boolean)
           .map((child, i) => {
