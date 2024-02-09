@@ -1,7 +1,12 @@
 import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationOpts,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
@@ -28,7 +33,7 @@ import {
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
@@ -156,6 +161,10 @@ function ProfileScreenLoaded({
 
   useSetTitle(combinedDisplayName(profile))
 
+  const description = profile.description ?? ''
+  const hasDescription = description !== ''
+  const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
+  const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -269,12 +278,20 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
+        descriptionRT={hasDescription ? descriptionRT : null}
         moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
-        isPlaceholderProfile={isPlaceholderProfile}
+        isPlaceholderProfile={showPlaceholder}
       />
     )
-  }, [profile, moderationOpts, hideBackButton, isPlaceholderProfile])
+  }, [
+    profile,
+    descriptionRT,
+    hasDescription,
+    moderationOpts,
+    hideBackButton,
+    showPlaceholder,
+  ])
 
   return (
     <ScreenHider
@@ -284,7 +301,7 @@ function ProfileScreenLoaded({
       moderation={moderation.account}>
       <PagerWithHeader
         testID="profilePager"
-        isHeaderReady={!isPlaceholderProfile}
+        isHeaderReady={!showPlaceholder}
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
@@ -439,6 +456,35 @@ function ProfileEndOfFeed() {
       </Text>
     </View>
   )
+}
+
+function useRichText(text: string): [RichTextAPI, boolean] {
+  const [prevText, setPrevText] = React.useState(text)
+  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  if (text !== prevText) {
+    setPrevText(text)
+    setRawRT(new RichTextAPI({text}))
+    setResolvedRT(null)
+    // This will queue an immediate re-render
+  }
+  React.useEffect(() => {
+    let ignore = false
+    async function resolveRTFacets() {
+      // new each time
+      const resolvedRT = new RichTextAPI({text})
+      await resolvedRT.detectFacets(getAgent())
+      if (!ignore) {
+        setResolvedRT(resolvedRT)
+      }
+    }
+    resolveRTFacets()
+    return () => {
+      ignore = true
+    }
+  }, [text])
+  const isResolving = resolvedRT === null
+  return [resolvedRT ?? rawRT, isResolving]
 }
 
 const styles = StyleSheet.create({

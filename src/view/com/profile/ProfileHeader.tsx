@@ -51,7 +51,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
-import {useSession, getAgent} from '#/state/session'
+import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
@@ -79,6 +79,7 @@ export {ProfileHeaderLoading}
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
@@ -86,6 +87,7 @@ interface Props {
 
 let ProfileHeader = ({
   profile: profileUnshadowed,
+  descriptionRT,
   moderationOpts,
   hideBackButton = false,
   isPlaceholderProfile,
@@ -112,7 +114,6 @@ let ProfileHeader = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-  const descriptionRT = useResolvedRichText(profile.description ?? '')
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -673,38 +674,6 @@ let ProfileHeader = ({
 }
 ProfileHeader = memo(ProfileHeader)
 export {ProfileHeader}
-
-function useResolvedRichText(text: string): RichTextAPI | null {
-  const [prevText, setPrevText] = React.useState(text)
-  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
-  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
-  if (text !== prevText) {
-    setPrevText(text)
-    setRawRT(new RichTextAPI({text}))
-    setResolvedRT(null)
-    // This will queue an immediate re-render
-  }
-  React.useEffect(() => {
-    let ignore = false
-    async function resolveRTFacets() {
-      // new each time
-      const resolvedRT = new RichTextAPI({text})
-      await resolvedRT.detectFacets(getAgent())
-      if (!ignore) {
-        setResolvedRT(resolvedRT)
-      }
-    }
-    resolveRTFacets()
-    return () => {
-      ignore = true
-    }
-  }, [text])
-  if (text != null && text !== '') {
-    return resolvedRT ?? rawRT
-  } else {
-    return null
-  }
-}
 
 const styles = StyleSheet.create({
   banner: {
