@@ -57,70 +57,39 @@ import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 
-interface Props {
-  profile: AppBskyActorDefs.ProfileView | null
-  placeholderData?: AppBskyActorDefs.ProfileView | null
-  moderationOpts: ModerationOpts | null
-  hideBackButton?: boolean
-  isProfilePreview?: boolean
-}
-
-export function ProfileHeader({
-  profile,
-  moderationOpts,
-  hideBackButton = false,
-  isProfilePreview,
-}: Props) {
+let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
-
-  // loading
-  // =
-  if (!profile || !moderationOpts) {
-    return (
-      <View style={pal.view}>
-        <LoadingPlaceholder
-          width="100%"
-          height={150}
-          style={{borderRadius: 0}}
-        />
-        <View
-          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <LoadingPlaceholder width={80} height={80} style={styles.br40} />
-        </View>
-        <View style={styles.content}>
-          <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder width={167} height={31} style={styles.br50} />
-          </View>
+  return (
+    <View style={pal.view}>
+      <LoadingPlaceholder width="100%" height={150} style={{borderRadius: 0}} />
+      <View
+        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+        <LoadingPlaceholder width={80} height={80} style={styles.br40} />
+      </View>
+      <View style={styles.content}>
+        <View style={[styles.buttonsLine]}>
+          <LoadingPlaceholder width={167} height={31} style={styles.br50} />
         </View>
       </View>
-    )
-  }
-
-  // loaded
-  // =
-  return (
-    <ProfileHeaderLoaded
-      profile={profile}
-      moderationOpts={moderationOpts}
-      hideBackButton={hideBackButton}
-      isProfilePreview={isProfilePreview}
-    />
+    </View>
   )
 }
+ProfileHeaderLoading = memo(ProfileHeaderLoading)
+export {ProfileHeaderLoading}
 
-interface LoadedProps {
+interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
-  isProfilePreview?: boolean
+  isPlaceholderProfile?: boolean
 }
 
-let ProfileHeaderLoaded = ({
+let ProfileHeader = ({
   profile: profileUnshadowed,
   moderationOpts,
   hideBackButton = false,
-  isProfilePreview,
-}: LoadedProps): React.ReactNode => {
+  isPlaceholderProfile,
+}: Props): React.ReactNode => {
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const pal = usePalette('default')
@@ -143,37 +112,7 @@ let ProfileHeaderLoaded = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-
-  /*
-   * BEGIN handle bio facet resolution
-   */
-  // should be undefined on first render to trigger a resolution
-  const prevProfileDescription = React.useRef<string | undefined>()
-  const [descriptionRT, setDescriptionRT] = React.useState<
-    RichTextAPI | undefined
-  >(
-    profile.description
-      ? new RichTextAPI({text: profile.description})
-      : undefined,
-  )
-  React.useEffect(() => {
-    async function resolveRTFacets() {
-      // new each time
-      const rt = new RichTextAPI({text: profile.description || ''})
-      await rt.detectFacets(getAgent())
-      // replace existing RT instance
-      setDescriptionRT(rt)
-    }
-
-    if (profile.description !== prevProfileDescription.current) {
-      // update prev immediately
-      prevProfileDescription.current = profile.description
-      resolveRTFacets()
-    }
-  }, [profile.description, setDescriptionRT])
-  /*
-   * END handle bio facet resolution
-   */
+  const descriptionRT = useResolvedRichText(profile.description ?? '')
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -454,14 +393,9 @@ let ProfileHeaderLoaded = ({
   const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
-    <View
-      style={[
-        pal.view,
-        isProfilePreview && isDesktop && styles.loadingBorderStyle,
-      ]}
-      pointerEvents="box-none">
+    <View style={[pal.view]} pointerEvents="box-none">
       <View pointerEvents="none">
-        {isProfilePreview ? (
+        {isPlaceholderProfile ? (
           <LoadingPlaceholder
             width="100%"
             height={150}
@@ -622,7 +556,7 @@ let ProfileHeaderLoaded = ({
             {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
           </ThemedText>
         </View>
-        {!isProfilePreview && !blockHide && (
+        {!isPlaceholderProfile && !blockHide && (
           <>
             <View style={styles.metricsLine} pointerEvents="box-none">
               <Link
@@ -737,7 +671,40 @@ let ProfileHeaderLoaded = ({
     </View>
   )
 }
-ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
+ProfileHeader = memo(ProfileHeader)
+export {ProfileHeader}
+
+function useResolvedRichText(text: string): RichTextAPI | null {
+  const [prevText, setPrevText] = React.useState(text)
+  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  if (text !== prevText) {
+    setPrevText(text)
+    setRawRT(new RichTextAPI({text}))
+    setResolvedRT(null)
+    // This will queue an immediate re-render
+  }
+  React.useEffect(() => {
+    let ignore = false
+    async function resolveRTFacets() {
+      // new each time
+      const resolvedRT = new RichTextAPI({text})
+      await resolvedRT.detectFacets(getAgent())
+      if (!ignore) {
+        setResolvedRT(resolvedRT)
+      }
+    }
+    resolveRTFacets()
+    return () => {
+      ignore = true
+    }
+  }, [text])
+  if (text != null && text !== '') {
+    return resolvedRT ?? rawRT
+  } else {
+    return null
+  }
+}
 
 const styles = StyleSheet.create({
   banner: {
@@ -845,9 +812,4 @@ const styles = StyleSheet.create({
 
   br40: {borderRadius: 40},
   br50: {borderRadius: 50},
-
-  loadingBorderStyle: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-  },
 })

@@ -11,7 +11,7 @@ import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileLists} from '../com/lists/ProfileLists'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
-import {ProfileHeader} from '../com/profile/ProfileHeader'
+import {ProfileHeader, ProfileHeaderLoading} from '../com/profile/ProfileHeader'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {EmptyState} from '../com/util/EmptyState'
@@ -87,14 +87,10 @@ export function ProfileScreen({route}: Props) {
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
+  if (isLoadingDid || isLoadingProfile) {
     return (
       <CenteredView>
-        <ProfileHeader
-          profile={profile ?? null}
-          moderationOpts={moderationOpts ?? null}
-          isProfilePreview={true}
-        />
+        <ProfileHeaderLoading />
       </CenteredView>
     )
   }
@@ -114,6 +110,7 @@ export function ProfileScreen({route}: Props) {
       <ProfileScreenLoaded
         profile={profile}
         moderationOpts={moderationOpts}
+        isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
       />
     )
@@ -132,12 +129,14 @@ export function ProfileScreen({route}: Props) {
 
 function ProfileScreenLoaded({
   profile: profileUnshadowed,
+  isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
+  isPlaceholderProfile: boolean
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
@@ -272,9 +271,10 @@ function ProfileScreenLoaded({
         profile={profile}
         moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
+        isPlaceholderProfile={isPlaceholderProfile}
       />
     )
-  }, [profile, moderationOpts, hideBackButton])
+  }, [profile, moderationOpts, hideBackButton, isPlaceholderProfile])
 
   return (
     <ScreenHider
@@ -284,7 +284,7 @@ function ProfileScreenLoaded({
       moderation={moderation.account}>
       <PagerWithHeader
         testID="profilePager"
-        isHeaderReady={true}
+        isHeaderReady={!isPlaceholderProfile}
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
