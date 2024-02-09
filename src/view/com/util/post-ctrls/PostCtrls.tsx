@@ -120,7 +120,7 @@ let PostCtrls = ({
     <View style={[styles.ctrls, style]}>
       <View
         style={[
-          styles.ctrl,
+          big ? styles.ctrlBig : styles.ctrl,
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <TouchableOpacity
@@ -149,7 +149,7 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={styles.ctrl}>
+      <View style={big ? styles.ctrlBig : styles.ctrl}>
         <RepostButton
           big={big}
           isReposted={!!post.viewer?.repost}
@@ -158,7 +158,7 @@ let PostCtrls = ({
           onQuote={onQuote}
         />
       </View>
-      <View style={styles.ctrl}>
+      <View style={big ? styles.ctrlBig : styles.ctrl}>
         <TouchableOpacity
           testID="likeBtn"
           style={[styles.btn, !big && styles.btnPad]}
@@ -193,7 +193,7 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={styles.ctrl}>
+      <View style={big ? styles.ctrlBig : styles.ctrl}>
         <PostDropdownBtn
           testID="postDropdownBtn"
           postAuthor={post.author}
@@ -220,6 +220,9 @@ const styles = StyleSheet.create({
   ctrl: {
     flex: 1,
     alignItems: 'flex-start',
+  },
+  ctrlBig: {
+    alignItems: 'center',
   },
   btn: {
     flexDirection: 'row',

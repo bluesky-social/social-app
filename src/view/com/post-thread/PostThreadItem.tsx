@@ -414,7 +414,7 @@ let PostThreadItemLoaded = ({
             ) : (
               <></>
             )}
-            <View style={[s.pl10, s.pb5]}>
+            <View style={[s.pl10, s.pr10, s.pb5]}>
               <PostCtrls
                 big
                 post={post}
