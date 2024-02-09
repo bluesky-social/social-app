@@ -1825,7 +1825,7 @@ msgstr "ALTテキストが長い場合、ALTテキストの展開状態を切り
 
 #: src/view/com/modals/SelfLabel.tsx:127
 msgid "If none are selected, suitable for all ages."
-msgstr "選択されていない場合は、すべての年齢に適しています。"
+msgstr "何も選択しない場合は、全年齢対象です。"
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -2776,7 +2776,7 @@ msgstr "電話番号"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
-msgstr "成人向けの写真です。"
+msgstr "成人向けの画像です。"
 
 #: src/view/screens/ProfileFeed.tsx:353
 #: src/view/screens/ProfileList.tsx:580
@@ -4113,7 +4113,7 @@ msgstr "このユーザーは、あなたがミュートした<0/>リストに�
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
-msgstr "この警告は、メディアが接続されている投稿にのみ使用できます。"
+msgstr "この警告は、メディアが添付されている投稿にのみ使用できます。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:192
 msgid "This will hide this post from your feeds."
