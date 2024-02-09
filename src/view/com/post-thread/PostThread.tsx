@@ -295,6 +295,8 @@ function PostThreadLoaded({
     isPrepending.current = true
   }, [posts])
 
+  // We want the scroll animation to settle before we increment the page count. We will check every time the scroll
+  // animation ends and prepend posts once settled if necessary.
   const onMomentumScrollEnd = React.useCallback(() => {
     if (isPrepending.current) {
       setTopPageCount(prev => prev + 1)
