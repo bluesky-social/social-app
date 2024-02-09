@@ -123,6 +123,7 @@ let UserAvatar = ({
   usePlainRNImage = false,
 }: UserAvatarProps): React.ReactNode => {
   const pal = usePalette('default')
+  const backgroundColor = pal.colors.backgroundLight
 
   const aviStyle = useMemo(() => {
     if (type === 'algo' || type === 'list') {
@@ -130,14 +131,16 @@ let UserAvatar = ({
         width: size,
         height: size,
         borderRadius: size > 32 ? 8 : 3,
+        backgroundColor,
       }
     }
     return {
       width: size,
       height: size,
       borderRadius: Math.floor(size / 2),
+      backgroundColor,
     }
-  }, [type, size])
+  }, [type, size, backgroundColor])
 
   const alert = useMemo(() => {
     if (!moderation?.alert) {

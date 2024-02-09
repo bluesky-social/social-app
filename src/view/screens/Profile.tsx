@@ -1,7 +1,12 @@
 import React, {useMemo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationOpts,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
@@ -11,7 +16,7 @@ import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
 import {ProfileLists} from '../com/lists/ProfileLists'
 import {ProfileFeedgens} from '../com/feeds/ProfileFeedgens'
-import {ProfileHeader} from '../com/profile/ProfileHeader'
+import {ProfileHeader, ProfileHeaderLoading} from '../com/profile/ProfileHeader'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {EmptyState} from '../com/util/EmptyState'
@@ -28,7 +33,7 @@ import {
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
@@ -87,14 +92,10 @@ export function ProfileScreen({route}: Props) {
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
+  if (isLoadingDid || isLoadingProfile) {
     return (
       <CenteredView>
-        <ProfileHeader
-          profile={profile ?? null}
-          moderationOpts={moderationOpts ?? null}
-          isProfilePreview={true}
-        />
+        <ProfileHeaderLoading />
       </CenteredView>
     )
   }
@@ -114,6 +115,7 @@ export function ProfileScreen({route}: Props) {
       <ProfileScreenLoaded
         profile={profile}
         moderationOpts={moderationOpts}
+        isPlaceholderProfile={isPlaceholderProfile}
         hideBackButton={!!route.params.hideBackButton}
       />
     )
@@ -132,12 +134,14 @@ export function ProfileScreen({route}: Props) {
 
 function ProfileScreenLoaded({
   profile: profileUnshadowed,
+  isPlaceholderProfile,
   moderationOpts,
   hideBackButton,
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hideBackButton: boolean
+  isPlaceholderProfile: boolean
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
@@ -157,6 +161,10 @@ function ProfileScreenLoaded({
 
   useSetTitle(combinedDisplayName(profile))
 
+  const description = profile.description ?? ''
+  const hasDescription = description !== ''
+  const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
+  const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -270,11 +278,20 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
+        descriptionRT={hasDescription ? descriptionRT : null}
         moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
+        isPlaceholderProfile={showPlaceholder}
       />
     )
-  }, [profile, moderationOpts, hideBackButton])
+  }, [
+    profile,
+    descriptionRT,
+    hasDescription,
+    moderationOpts,
+    hideBackButton,
+    showPlaceholder,
+  ])
 
   return (
     <ScreenHider
@@ -284,7 +301,7 @@ function ProfileScreenLoaded({
       moderation={moderation.account}>
       <PagerWithHeader
         testID="profilePager"
-        isHeaderReady={true}
+        isHeaderReady={!showPlaceholder}
         items={sectionTitles}
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
@@ -439,6 +456,35 @@ function ProfileEndOfFeed() {
       </Text>
     </View>
   )
+}
+
+function useRichText(text: string): [RichTextAPI, boolean] {
+  const [prevText, setPrevText] = React.useState(text)
+  const [rawRT, setRawRT] = React.useState(() => new RichTextAPI({text}))
+  const [resolvedRT, setResolvedRT] = React.useState<RichTextAPI | null>(null)
+  if (text !== prevText) {
+    setPrevText(text)
+    setRawRT(new RichTextAPI({text}))
+    setResolvedRT(null)
+    // This will queue an immediate re-render
+  }
+  React.useEffect(() => {
+    let ignore = false
+    async function resolveRTFacets() {
+      // new each time
+      const resolvedRT = new RichTextAPI({text})
+      await resolvedRT.detectFacets(getAgent())
+      if (!ignore) {
+        setResolvedRT(resolvedRT)
+      }
+    }
+    resolveRTFacets()
+    return () => {
+      ignore = true
+    }
+  }, [text])
+  const isResolving = resolvedRT === null
+  return [resolvedRT ?? rawRT, isResolving]
 }
 
 const styles = StyleSheet.create({
