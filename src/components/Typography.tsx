@@ -15,7 +15,7 @@ export function leading<
 >(textSize: Size, leading: Leading) {
   const size = textSize?.fontSize || atoms.text_md.fontSize
   const lineHeight = leading?.lineHeight || atoms.leading_normal.lineHeight
-  return size * lineHeight
+  return Math.round(size * lineHeight)
 }
 
 /**
@@ -32,7 +32,7 @@ function normalizeTextStyles(styles: TextStyle[]) {
 
   if (s?.lineHeight) {
     if (s.lineHeight <= 2) {
-      s.lineHeight = fontSize * s.lineHeight
+      s.lineHeight = Math.round(fontSize * s.lineHeight)
     }
   } else {
     s.lineHeight = fontSize
