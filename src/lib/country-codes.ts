@@ -219,7 +219,7 @@ export const COUNTRY_CODES: CountryCodeMap[] = [
   {code2: 'SE', name: 'Sweden (+46)'},
   {code2: 'CH', name: 'Switzerland (+41)'},
   {code2: 'SY', name: 'Syrian Arab Republic (+963)'},
-  {code2: 'TW', name: 'Taiwan, Province of China (+886)'},
+  {code2: 'TW', name: 'Taiwan (+886)'},
   {code2: 'TJ', name: 'Tajikistan (+992)'},
   {code2: 'TZ', name: 'Tanzania, United Republic of (+255)'},
   {code2: 'TH', name: 'Thailand (+66)'},
