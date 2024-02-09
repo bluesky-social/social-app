@@ -336,9 +336,11 @@ export function SettingsScreen({}: Props) {
               </Link>
             </View>
             <View style={[styles.infoLine]}>
-              <Text type="lg-medium" style={pal.text}>
-                <Trans>Birthday: </Trans>
-              </Text>
+              <Trans>
+                <Text type="lg-medium" style={pal.text}>
+                  Birthday:{' '}
+                </Text>
+              </Trans>
               <Link onPress={() => openModal({name: 'birth-date-settings'})}>
                 <Text type="lg" style={pal.link}>
                   <Trans>Show</Trans>
