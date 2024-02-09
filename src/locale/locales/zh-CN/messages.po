@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1\n"
+"Last-Translator: Mikan Harada <i@3kn.jp>\n"
+"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1, Mikan Harada\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -1759,7 +1759,7 @@ msgstr "若不勾选，则默认为全年龄向。"
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "如果你需要更改密码，我们将向你发送一个确认码以验证这是你的账户。"
+msgstr "如果你想要更改密码，我们将向你发送一个确认码以验证这是你的账户。"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -2688,7 +2688,7 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "请选择你的用户识别符。"
+msgstr "请设置你的用户识别符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
@@ -4090,7 +4090,7 @@ msgstr "使用系统默认浏览器"
 
 #: src/view/com/modals/AddAppPasswords.tsx:155
 msgid "Use this to sign into the other app along with your handle."
-msgstr "使用这个和你的用户识别符一起登录其他应用。"
+msgstr "使用你的域名作为 Bluesky 客户端的服务提供方。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
