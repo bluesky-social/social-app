@@ -9,7 +9,12 @@ import {atoms as a, useTheme, tokens, native} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import {GlobalDialogProps} from '#/components/dialogs'
-import {Button, ButtonIcon, useButtonContext} from '#/components/Button'
+import {
+  Button,
+  ButtonIcon,
+  ButtonText,
+  useButtonContext,
+} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {useLabelGroupStrings} from '#/lib/moderation'
 import {
@@ -22,6 +27,8 @@ import * as Toggle from '#/components/forms/Toggle'
 import {GradientFill} from '#/components/GradientFill'
 import * as TextField from '#/components/forms/TextField'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
+import {Loader} from '#/components/Loader'
+import * as Toast from '#/view/com/util/Toast'
 
 export type ReportDialogProps =
   | {
@@ -139,9 +146,11 @@ function ModServiceToggle({title}: {title: string}) {
 function SubmitView({
   selectedLabelGroup,
   goBack,
+  onSubmitComplete,
 }: {
   selectedLabelGroup: string
   goBack: () => void
+  onSubmitComplete: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -149,6 +158,17 @@ function SubmitView({
   const groupInfoStrings = labelGroupStrings[selectedLabelGroup]
   const [selectedServices, setSelectedServices] = React.useState<string[]>([])
   const [details, setDetails] = React.useState<string>('')
+  const [submitting, setSubmitting] = React.useState<boolean>(false)
+
+  const submit = React.useCallback(async () => {
+    setSubmitting(true)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setSubmitting(false)
+
+    Toast.show(`Thank you. Your report has been sent.`)
+
+    onSubmitComplete()
+  }, [onSubmitComplete])
 
   return (
     <View style={[a.gap_2xl]}>
@@ -242,8 +262,10 @@ function SubmitView({
           size="large"
           variant="gradient"
           color="gradient_midnight"
-          label={_(msg`Submit`)}>
-          Submit
+          label={_(msg`Submit`)}
+          onPress={submit}>
+          <ButtonText>Submit</ButtonText>
+          {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
     </View>
@@ -262,8 +284,7 @@ export function ReportDialog({
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
   const control = Dialog.useDialogControl()
-  const [selectedLabelGroup, setSelectedLabelGroup] =
-    React.useState<string>('nudity')
+  const [selectedLabelGroup, setSelectedLabelGroup] = React.useState<string>('')
   const labelGroupStrings = useLabelGroupStrings()
 
   // REQUIRED CLEANUP
@@ -307,6 +328,7 @@ export function ReportDialog({
           <SubmitView
             selectedLabelGroup={selectedLabelGroup}
             goBack={() => setSelectedLabelGroup('')}
+            onSubmitComplete={control.close}
           />
         ) : (
           <View style={[a.gap_lg]}>
