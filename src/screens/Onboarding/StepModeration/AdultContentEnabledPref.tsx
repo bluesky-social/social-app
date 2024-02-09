@@ -96,7 +96,7 @@ export function AdultContentEnabledPref({
           <Text
             style={[
               a.flex_1,
-              t.atoms.text_contrast_700,
+              t.atoms.text_contrast_medium,
               a.leading_snug,
               {paddingTop: 1},
             ]}>
