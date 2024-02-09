@@ -11,7 +11,7 @@ import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {findPostInQueryData as findPostInPostQueryData} from './post'
 import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
 import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
-import {precacheThreadPosts as precacheResolvedUris} from './resolve-uri'
+import {precacheThreadPostProfiles} from './profile'
 import {getEmbeddedPost} from './util'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
@@ -72,7 +72,7 @@ export function usePostThreadQuery(uri: string | undefined) {
       const res = await getAgent().getPostThread({uri: uri!})
       if (res.success) {
         const nodes = responseToThreadNodes(res.data.thread)
-        precacheResolvedUris(queryClient, nodes) // precache the handle->did resolution
+        precacheThreadPostProfiles(queryClient, nodes)
         return nodes
       }
       return {type: 'unknown', uri: uri!}

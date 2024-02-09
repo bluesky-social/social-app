@@ -50,6 +50,7 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen({route}: Props) {
+  const {_} = useLingui()
   const {currentAccount} = useSession()
   const name =
     route.params.name === 'me' ? currentAccount?.did : route.params.name
@@ -65,6 +66,7 @@ export function ProfileScreen({route}: Props) {
     error: profileError,
     refetch: refetchProfile,
     isLoading: isLoadingProfile,
+    isPlaceholderData: isPlaceholderProfile,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -84,12 +86,13 @@ export function ProfileScreen({route}: Props) {
     }
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
-  if (isLoadingDid || isLoadingProfile || !moderationOpts) {
+  // Most pushes will happen here, since we will have only placeholder data
+  if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
     return (
       <CenteredView>
         <ProfileHeader
-          profile={null}
-          moderation={null}
+          profile={profile ?? null}
+          moderationOpts={moderationOpts ?? null}
           isProfilePreview={true}
         />
       </CenteredView>
@@ -97,14 +100,13 @@ export function ProfileScreen({route}: Props) {
   }
   if (resolveError || profileError) {
     return (
-      <CenteredView>
-        <ErrorScreen
-          testID="profileErrorScreen"
-          title="Oops!"
-          message={cleanError(resolveError || profileError)}
-          onPressTryAgain={onPressTryAgain}
-        />
-      </CenteredView>
+      <ErrorScreen
+        testID="profileErrorScreen"
+        title={profileError ? _(msg`Not Found`) : _(msg`Oops!`)}
+        message={cleanError(resolveError || profileError)}
+        onPressTryAgain={onPressTryAgain}
+        showHeader
+      />
     )
   }
   if (profile && moderationOpts) {
@@ -118,14 +120,13 @@ export function ProfileScreen({route}: Props) {
   }
   // should never happen
   return (
-    <CenteredView>
-      <ErrorScreen
-        testID="profileErrorScreen"
-        title="Oops!"
-        message="Something went wrong and we're not sure what."
-        onPressTryAgain={onPressTryAgain}
-      />
-    </CenteredView>
+    <ErrorScreen
+      testID="profileErrorScreen"
+      title="Oops!"
+      message="Something went wrong and we're not sure what."
+      onPressTryAgain={onPressTryAgain}
+      showHeader
+    />
   )
 }
 
@@ -269,11 +270,11 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
-        moderation={moderation}
+        moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
       />
     )
-  }, [profile, moderation, hideBackButton])
+  }, [profile, moderationOpts, hideBackButton])
 
   return (
     <ScreenHider
