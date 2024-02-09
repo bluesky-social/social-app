@@ -46,25 +46,3 @@ export function createSinglePathSVG({path}: {path: string}) {
     )
   })
 }
-
-// HACK
-// Just doing this because either A need to figure out what we are doing for different view box sizes or B I don't
-// know how to export from figma correctly (it's probably this one) -h
-export function createSinglePathSVGHack({path}: {path: string}) {
-  return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
-    const {fill, size, style, ...rest} = useCommonSVGProps(props)
-
-    return (
-      <Svg
-        fill="none"
-        {...rest}
-        ref={ref}
-        viewBox="0 0 18 18"
-        width={size}
-        height={size}
-        style={[style]}>
-        <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
-      </Svg>
-    )
-  })
-}
