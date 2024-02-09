@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
@@ -205,17 +205,21 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-  {% block html_head_extra -%}{%- endblock %}
+  <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#1185fe">
+  <meta name="theme-color" content="#ffffff">
   <meta name="application-name" content="Bluesky">
   <meta name="generator" content="bskyweb">
+  <meta property="og:site_name" content="Bluesky Social" />
+
+  {% block html_head_extra -%}{%- endblock %}
 </head>
 <body>
 {%- block body_all %}
 	<div id="root"></div>
     <noscript>
-      <h1>JavaScript Required</h1>
-      <p>This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-      <p>Learn more about Bluesky at <a href="https://blueskyweb.xyz">blueskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>.
+      <h1 lang="en">JavaScript Required</h1>
+      <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
+      <p lang="en">Learn more about Bluesky at <a href="https://blueskyweb.xyz">blueskyweb.xyz</a> and <a href="https://atproto.com">atproto.com</a>.
 			{% block noscript_extra %}{% endblock %}
     </noscript>
 {% endblock -%}
