@@ -433,30 +433,31 @@ export function precacheFeedPostProfiles(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
 ) {
-  function handleEmbed(embed?: any) {
-    // If it's a view record, all we need to do is "cache" the author
-    if (AppBskyEmbedRecord.isViewRecord(embed?.record)) {
-      precacheProfile(queryClient, embed.record.author)
-    } else if (
-      AppBskyEmbedRecordWithMedia.isView(embed) &&
-      AppBskyEmbedRecord.isViewRecord(embed.record.record)
-    ) {
-      precacheProfile(queryClient, embed.record.record.author)
-    }
-  }
-
   for (const post of posts) {
     // Save the author of the post every time
     precacheProfile(queryClient, post.post.author)
-    handleEmbed(post.post.embed)
+    precachePostEmbedProfile(queryClient, post.post.embed)
 
     // Cache parent author and embeds
-    if (post.reply?.parent.author) {
-      precacheProfile(
-        queryClient,
-        post.reply.parent.author as AppBskyActorDefs.ProfileViewBasic,
-      )
-      handleEmbed(post.reply?.parent.embed)
+    const parent = post.reply?.parent
+    if (AppBskyFeedDefs.isPostView(parent)) {
+      precacheProfile(queryClient, parent.author)
+      precachePostEmbedProfile(queryClient, parent.embed)
+    }
+  }
+}
+
+function precachePostEmbedProfile(
+  queryClient: QueryClient,
+  embed: AppBskyFeedDefs.PostView['embed'],
+) {
+  if (AppBskyEmbedRecord.isView(embed)) {
+    if (AppBskyEmbedRecord.isViewRecord(embed.record)) {
+      precacheProfile(queryClient, embed.record.author)
+    }
+  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+    if (AppBskyEmbedRecord.isViewRecord(embed.record.record)) {
+      precacheProfile(queryClient, embed.record.record.author)
     }
   }
 }
