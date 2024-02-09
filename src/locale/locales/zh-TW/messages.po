@@ -1776,7 +1776,7 @@ msgstr "圖片選項"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:138
 msgid "Input code sent to your email for password reset"
-msgstr "輸入發送到你電子郵箱的重設碼以重置密碼"
+msgstr "輸入發送到你電子郵箱的重設碼以重設密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:184
 msgid "Input confirmation code for account deletion"
@@ -2212,7 +2212,7 @@ msgstr "靜音這個列表"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Mute thread"
-msgstr "靜音討論串"
+msgstr "靜音對話串"
 
 #: src/view/com/lists/ListCard.tsx:101
 msgid "Muted"
@@ -2500,7 +2500,7 @@ msgstr "開啟 {numItems} 個選項"
 
 #: src/view/screens/Log.tsx:54
 msgid "Opens additional details for a debug entry"
-msgstr "開啟除錯記錄的附加詳細資訊"
+msgstr "開啟除錯項目的額外詳細資訊"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "Opens an expanded list of users in this notification"
@@ -2562,7 +2562,7 @@ msgstr "開啟管理員設定"
 
 #: src/view/com/auth/login/LoginForm.tsx:236
 msgid "Opens password reset form"
-msgstr "開啟密碼重置表單"
+msgstr "開啟密碼重設表單"
 
 #: src/view/screens/Feeds.tsx:338
 msgid "Opens screen to edit Saved Feeds"
@@ -2590,7 +2590,7 @@ msgstr "開啟系統日誌界面"
 
 #: src/view/screens/Settings.tsx:550
 msgid "Opens the threads preferences"
-msgstr "開啟討論串偏好"
+msgstr "開啟對話串偏好"
 
 #: src/view/com/util/forms/DropdownButton.tsx:280
 msgid "Option {0} of {numItems}"
@@ -2963,7 +2963,7 @@ msgstr "回覆"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:98
 msgid "Replies to this thread are disabled"
-msgstr "對此討論串的回覆已被停用"
+msgstr "對此對話串的回覆已被停用"
 
 #: src/view/com/composer/Composer.tsx:348
 msgctxt "action"
@@ -3063,39 +3063,39 @@ msgstr "提供商要求必填"
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:124
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:136
 msgid "Reset code"
-msgstr "重置碼"
+msgstr "重設碼"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr "重置碼"
+msgstr "重設碼"
 
 #: src/view/screens/Settings.tsx:806
 msgid "Reset onboarding"
-msgstr "重置引導流程"
+msgstr "重設初始設定進行狀態"
 
 #: src/view/screens/Settings.tsx:809
 msgid "Reset onboarding state"
-msgstr "重置引導流程狀態"
+msgstr "重設初始設定進行狀態"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:100
 msgid "Reset password"
-msgstr "重置密碼"
+msgstr "重設密碼"
 
 #: src/view/screens/Settings.tsx:796
 msgid "Reset preferences"
-msgstr "重置偏好"
+msgstr "重設偏好設定"
 
 #: src/view/screens/Settings.tsx:799
 msgid "Reset preferences state"
-msgstr "重置偏好狀態"
+msgstr "重設偏好設定狀態"
 
 #: src/view/screens/Settings.tsx:807
 msgid "Resets the onboarding state"
-msgstr "重置引導流程狀態"
+msgstr "會重設初始設定狀態"
 
 #: src/view/screens/Settings.tsx:797
 msgid "Resets the preferences state"
-msgstr "重置偏好狀態"
+msgstr "會重設偏好設定狀態"
 
 #: src/view/com/auth/login/LoginForm.tsx:266
 msgid "Retries login"
@@ -3256,11 +3256,11 @@ msgstr "選擇你想看到（或不想看到）的內容，剩下的由我們來
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "選擇你希望訂閱訊息流中所包含的語言。如果未選擇任何語言，將默認顯示所有語言。"
+msgstr "選擇你希望訂閱訊息流中所包含的語言。未選擇任何語言時會顯示所有語言。"
 
 #: src/view/screens/LanguageSettings.tsx:98
 msgid "Select your app language for the default text to display in the app"
-msgstr "選擇應用中顯示默認文字的語言"
+msgstr "選擇應用程式中顯示預設文字的語言"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:196
 msgid "Select your interests from the options below"
@@ -3381,7 +3381,7 @@ msgstr "設定用於重設密碼的電子郵件"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:118
 msgid "Sets hosting provider for password reset"
-msgstr "設定用於密碼重置的主機提供商資訊"
+msgstr "設定用於密碼重設的主機提供商資訊"
 
 #: src/view/com/auth/create/Step1.tsx:78
 #: src/view/com/auth/login/LoginForm.tsx:148
@@ -3882,25 +3882,25 @@ msgstr "沒有 Bluesky 帳號，無法查看此內容。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
-msgstr "該訊息流目前使用人數較多，暫時無法查看。請稍後再試。"
+msgstr "此訊息流由於目前使用人數眾多而暫時無法使用。請稍後再試。"
 
 #: src/view/screens/Profile.tsx:402
 #: src/view/screens/ProfileFeed.tsx:475
 #: src/view/screens/ProfileList.tsx:660
 msgid "This feed is empty!"
-msgstr "該訊息流為空！"
+msgstr "這個訊息流是空的！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "該訊息流為空！你或許需要先跟隨更多的人或檢查你的語言設定。"
+msgstr "這個訊息流是空的！你或許需要先跟隨更多的人或檢查你的語言設定。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
-msgstr "此信息不與其他使用者共享。"
+msgstr "此資訊不會分享給其他使用者。"
 
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "這很重要，以防你將來需要更改電子郵箱或重置密碼。"
+msgstr "這很重要，以防你將來需要更改電子郵箱或重設密碼。"
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -3945,19 +3945,19 @@ msgstr "這將在你的消息流中隱藏此貼文。"
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings.tsx:559
 msgid "Thread Preferences"
-msgstr "討論串偏好"
+msgstr "對話串偏好"
 
 #: src/view/screens/PreferencesThreads.tsx:119
 msgid "Threaded Mode"
-msgstr "討論串模式"
+msgstr "對話串模式"
 
 #: src/Navigation.tsx:253
 msgid "Threads Preferences"
-msgstr "討論串偏好"
+msgstr "對話串偏好"
 
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
-msgstr "切換下拉菜單"
+msgstr "切換下拉式選單"
 
 #: src/view/com/modals/EditImage.tsx:271
 msgid "Transformations"
@@ -4039,7 +4039,7 @@ msgstr "取消靜音帳號"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Unmute thread"
-msgstr "取消靜音討論串"
+msgstr "取消靜音對話串"
 
 #: src/view/screens/ProfileFeed.tsx:353
 #: src/view/screens/ProfileList.tsx:580
@@ -4195,11 +4195,11 @@ msgstr "查看{0}的頭像"
 
 #: src/view/screens/Log.tsx:52
 msgid "View debug entry"
-msgstr "查看除錯入口"
+msgstr "查看除錯項目"
 
 #: src/view/com/posts/FeedSlice.tsx:103
 msgid "View full thread"
-msgstr "查看整個討論串"
+msgstr "查看整個對話串"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:172
 msgid "View profile"
@@ -4415,11 +4415,11 @@ msgstr "你必須年滿 18 歲才能啟用成人內容"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "You will no longer receive notifications for this thread"
-msgstr "你將不再收到這條討論串的通知"
+msgstr "你將不再收到這條對話串的通知"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:101
 msgid "You will now receive notifications for this thread"
-msgstr "你將收到這條討論串的通知"
+msgstr "你將收到這條對話串的通知"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:107
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
