@@ -37,7 +37,7 @@ msgstr "{invitesAvailable} 個可用的邀請碼"
 #: src/view/screens/Settings.tsx:437
 #: src/view/shell/Drawer.tsx:666
 msgid "{invitesAvailable} invite codes available"
-msgstr "{invitesAvailable} 可用的邀請碼"
+msgstr "{invitesAvailable} 個可用的邀請碼"
 
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
@@ -1845,7 +1845,7 @@ msgstr "邀請"
 #: src/view/com/modals/InviteCodes.tsx:93
 #: src/view/screens/Settings.tsx:399
 msgid "Invite a Friend"
-msgstr "邀請一位朋友"
+msgstr "邀請朋友"
 
 #: src/view/com/auth/create/Step1.tsx:92
 #: src/view/com/auth/create/Step1.tsx:101
