@@ -242,7 +242,6 @@ let PostThreadItemLoaded = ({
             </View>
           </View>
         )}
-
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
@@ -402,8 +401,7 @@ let PostThreadItemLoaded = ({
               </Link>
             </View>
             <View style={[s.pl10, s.pb5]}>
-            <View style={[styles.expandedInfo, pal.border]}>
-              {post.repostCount ? (
+              <View style={[styles.expandedInfo, pal.border]}>
                 <Link
                   style={styles.expandedInfoItem}
                   href={repostsHref}
@@ -413,9 +411,9 @@ let PostThreadItemLoaded = ({
                     type="lg"
                     style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {formatCount(post.repostCount)}
+                      {formatCount(post.repostCount ?? 0)}
                     </Text>{' '}
-                    {pluralize(post.repostCount, 'repost')}
+                    {pluralize(post.repostCount ?? 0, 'repost')}
                   </Text>
                 </Link>
                 <Link
@@ -427,24 +425,25 @@ let PostThreadItemLoaded = ({
                     type="lg"
                     style={pal.textLight}>
                     <Text type="xl-bold" style={pal.text}>
-                      {formatCount(post.likeCount)}
+                      {formatCount(post.likeCount ?? 0)}
                     </Text>{' '}
-                    {pluralize(post.likeCount, 'like')}
+                    {pluralize(post.likeCount ?? 0, 'like')}
                   </Text>
                 </Link>
-            </View>
-            <View style={[s.pl10, s.pr10, s.pb5]}>
-              <PostCtrls
-                big
-                post={post}
-                record={record}
-                richText={richText}
-                onPressReply={onPressReply}
-              />
+              </View>
+              <View style={[s.pl10, s.pr10, s.pb5]}>
+                <PostCtrls
+                  big
+                  post={post}
+                  record={record}
+                  richText={richText}
+                  onPressReply={onPressReply}
+                />
+              </View>
             </View>
           </View>
+          <WhoCanReply post={post} />
         </View>
-        <WhoCanReply post={post} />
       </>
     )
   } else {
