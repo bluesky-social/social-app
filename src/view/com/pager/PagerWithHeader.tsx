@@ -68,15 +68,12 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         setTabBarHeight(Math.round(height))
       }
     })
-    const onHeaderOnlyLayout = useNonReactiveCallback(
-      (evt: LayoutChangeEvent) => {
-        const height = evt.nativeEvent.layout.height
-        if (height > 0 && isHeaderReady) {
-          // The rounding is necessary to prevent jumps on iOS
-          setHeaderOnlyHeight(Math.round(height))
-        }
-      },
-    )
+    const onHeaderOnlyLayout = useNonReactiveCallback((height: number) => {
+      if (height > 0) {
+        // The rounding is necessary to prevent jumps on iOS
+        setHeaderOnlyHeight(Math.round(height))
+      }
+    })
 
     const renderTabBar = React.useCallback(
       (props: RenderTabBarFnProps) => {
@@ -224,7 +221,7 @@ let PagerTabBar = ({
   testID?: string
   scrollY: SharedValue<number>
   renderHeader?: () => JSX.Element
-  onHeaderOnlyLayout: (e: LayoutChangeEvent) => void
+  onHeaderOnlyLayout: (height: number) => void
   onTabBarLayout: (e: LayoutChangeEvent) => void
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
@@ -236,11 +233,34 @@ let PagerTabBar = ({
       },
     ],
   }))
+  const headerRef = React.useRef(null)
+  React.useEffect(() => {
+    // Fire when layout *becomes* ready.
+    // We can't rely on onLayout alone because it won't fire if layout is the same.
+    // We can't rely on this effect alone because it won't fire if layout changes later.
+    if (isHeaderReady) {
+      // @ts-ignore
+      headerRef.current!.measure(
+        (_x: number, _y: number, _width: number, height: number) => {
+          onHeaderOnlyLayout(height)
+        },
+      )
+    }
+  }, [isHeaderReady, onHeaderOnlyLayout])
+
   return (
     <Animated.View
       pointerEvents="box-none"
       style={[styles.tabBarMobile, headerTransform]}>
-      <View onLayout={onHeaderOnlyLayout} pointerEvents="box-none">
+      <View
+        ref={headerRef}
+        pointerEvents="box-none"
+        collapsable={false}
+        onLayout={e => {
+          if (isHeaderReady) {
+            onHeaderOnlyLayout(e.nativeEvent.layout.height)
+          }
+        }}>
         {renderHeader?.()}
       </View>
       <View
