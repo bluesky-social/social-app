@@ -169,7 +169,7 @@ function PostThreadLoaded({
     [threadViewPrefs, thread],
   )
 
-  const [readyToRender, setReadyToRender] = React.useState(false)
+  const [setReadyToShowAll, setSetReadyToShowAll] = React.useState(false)
   const [topPageCount, setTopPageCount] = React.useState(1)
   const isPrepending = React.useRef(false)
 
@@ -178,7 +178,7 @@ function PostThreadLoaded({
       sortThread(thread, threadViewPrefs),
       hasSession,
       treeView,
-      readyToRender,
+      setReadyToShowAll,
     )
 
     const highlightedPost = isThreadPost(items.highlightedPost)
@@ -216,9 +216,9 @@ function PostThreadLoaded({
     // HACK
     // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
     // correct post
-    if (items.highlightedPost && !readyToRender) {
+    if (items.highlightedPost && !setReadyToShowAll) {
       setTimeout(() => {
-        setReadyToRender(true)
+        setSetReadyToShowAll(true)
       }, 300)
     }
 
@@ -229,7 +229,7 @@ function PostThreadLoaded({
     threadViewPrefs,
     hasSession,
     treeView,
-    readyToRender,
+    setReadyToShowAll,
     topPageCount,
     maxVisible,
   ])
