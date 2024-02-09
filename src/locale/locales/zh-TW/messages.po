@@ -23,7 +23,7 @@ msgstr "{0, plural, one {# 個可用的邀請碼} other {# 個可用的邀請碼
 
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
-msgstr "{following} 正在追蹤"
+msgstr "{following} 正在跟隨"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
@@ -49,7 +49,7 @@ msgstr "<0/> 個成員"
 
 #: src/view/com/profile/ProfileHeader.tsx:634
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>正在追蹤</1>"
+msgstr "<0>{following} </0><1>正在跟隨</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -57,7 +57,7 @@ msgstr "<0>選擇你的</0><1>推薦</1><2>訊息流</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
-msgstr "<0>追蹤一些</0><1>推薦的</1><2>使用者</2>"
+msgstr "<0>跟隨一些</0><1>推薦的</1><2>使用者</2>"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
 msgid "<0>Welcome to</0><1>Bluesky</1>"
@@ -78,7 +78,7 @@ msgstr "新版本應用程式已發布，請更新以繼續使用。"
 #: src/view/com/util/ViewHeader.tsx:83
 #: src/view/screens/Search/Search.tsx:624
 msgid "Access navigation links and settings"
-msgstr "訪問導航連結和設定"
+msgstr "存取導航連結和設定"
 
 #: src/view/com/pager/FeedsTabBarMobile.tsx:89
 msgid "Access profile and other navigation links"
@@ -109,7 +109,7 @@ msgstr "已靜音帳號"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "帳號已被清單靜音"
+msgstr "帳號已被列表靜音"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
@@ -140,7 +140,7 @@ msgstr "新增內容警告"
 
 #: src/view/screens/ProfileList.tsx:802
 msgid "Add a user to this list"
-msgstr "將使用者新增至此清單"
+msgstr "將使用者新增至此列表"
 
 #: src/view/screens/Settings.tsx:383
 #: src/view/screens/Settings.tsx:392
@@ -182,7 +182,7 @@ msgstr "將以下 DNS 記錄新增到你的域名："
 
 #: src/view/com/profile/ProfileHeader.tsx:357
 msgid "Add to Lists"
-msgstr "新增至清單"
+msgstr "新增至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:243
 #: src/view/screens/ProfileFeed.tsx:272
@@ -196,7 +196,7 @@ msgstr "已新增"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
 msgid "Added to list"
-msgstr "新增至清單"
+msgstr "新增至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
@@ -204,7 +204,7 @@ msgstr "新增至自訂訊息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "調整回覆會在你的訊息流顯示的最低讚數。"
+msgstr "調整回覆會在你的訊息流顯示的最低喜歡數。"
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -317,7 +317,7 @@ msgstr "你確定要刪除這個應用程式專用密碼「{name}」嗎？"
 
 #: src/view/com/composer/Composer.tsx:143
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "你確定要丟棄此草稿嗎？"
+msgstr "你確定要捨棄此草稿嗎？"
 
 #: src/view/screens/ProfileList.tsx:364
 msgid "Are you sure?"
@@ -386,7 +386,7 @@ msgstr "封鎖帳號"
 
 #: src/view/screens/ProfileList.tsx:505
 msgid "Block list"
-msgstr "封鎖清單"
+msgstr "封鎖列表"
 
 #: src/view/screens/ProfileList.tsx:315
 msgid "Block these accounts?"
@@ -394,7 +394,7 @@ msgstr "封鎖這些帳號？"
 
 #: src/view/screens/ProfileList.tsx:319
 msgid "Block this List"
-msgstr "封鎖此清單"
+msgstr "封鎖此列表"
 
 #: src/view/com/lists/ListCard.tsx:109
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:60
@@ -451,7 +451,7 @@ msgstr "Bluesky 為公眾而生。"
 
 #: src/view/com/modals/Waitlist.tsx:70
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "Bluesky 使用邀請制來打造更健康的社群環境。如果你不認識擁有邀請碼的人，你可以先填寫並提交候補清單，我們會儘快審核並發送邀請碼。"
+msgstr "Bluesky 使用邀請制來打造更健康的社群環境。如果你不認識擁有邀請碼的人，你可以先填寫並提交候補列表，我們會儘快審核並發送邀請碼。"
 
 #: src/view/screens/Moderation.tsx:226
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -475,7 +475,7 @@ msgstr "商務"
 
 #: src/view/com/modals/ServerInput.tsx:115
 msgid "Button disabled. Input custom domain to proceed."
-msgstr "按鈕已停用。請輸入自定義域名以繼續。"
+msgstr "按鈕已停用。請輸入自訂域名以繼續。"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
@@ -608,11 +608,11 @@ msgstr "檢查我的狀態"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "查看一些推薦的訊息流。點擊＋將它們新增到你的固定訊息流清單中。"
+msgstr "查看一些推薦的訊息流。點擊＋將它們新增到你的固定訊息流列表中。"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
-msgstr "查看一些推薦的使用者。追蹤他們以查看相似的使用者。"
+msgstr "查看一些推薦的使用者。跟隨他們以查看相似的使用者。"
 
 #: src/view/com/modals/DeleteAccount.tsx:169
 msgid "Check your inbox for an email with the confirmation code to enter below:"
@@ -632,12 +632,12 @@ msgstr "選擇服務"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "選擇生成你的自定義訊息流的演算法。"
+msgstr "選擇生成你的自訂訊息流的演算法。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr "選擇可改進你自定義訊息流的演算法。"
+msgstr "選擇可改進你自訂訊息流的演算法。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
@@ -717,7 +717,7 @@ msgstr "關閉密碼更新警告"
 
 #: src/view/com/composer/Composer.tsx:302
 msgid "Closes post composer and discards post draft"
-msgstr "關閉貼文編輯頁並丟棄草稿"
+msgstr "關閉貼文編輯頁並捨棄草稿"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
 msgid "Closes viewer for header image"
@@ -725,7 +725,7 @@ msgstr "關閉標題圖片查看器"
 
 #: src/view/com/notifications/FeedItem.tsx:317
 msgid "Collapses list of users for a given notification"
-msgstr "折疊給定通知的使用者清單"
+msgstr "折疊給定通知的使用者列表"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Comedy"
@@ -797,7 +797,7 @@ msgstr "驗證碼"
 
 #: src/view/com/modals/Waitlist.tsx:120
 msgid "Confirms signing up {email} to the waitlist"
-msgstr "確認將 {email} 註冊到候補清單"
+msgstr "確認將 {email} 註冊到候補列表"
 
 #: src/view/com/auth/create/CreateAccount.tsx:182
 #: src/view/com/auth/login/LoginForm.tsx:275
@@ -857,7 +857,7 @@ msgstr "繼續下一步"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:187
 msgid "Continue to the next step without following any accounts"
-msgstr "繼續下一步，不追蹤任何帳號"
+msgstr "繼續下一步，不跟隨任何帳號"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
@@ -888,7 +888,7 @@ msgstr "複製"
 
 #: src/view/screens/ProfileList.tsx:417
 msgid "Copy link to list"
-msgstr "複製清單連結"
+msgstr "複製列表連結"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:153
 msgid "Copy link to post"
@@ -913,7 +913,7 @@ msgstr "無法載入訊息流"
 
 #: src/view/screens/ProfileList.tsx:888
 msgid "Could not load list"
-msgstr "無法載入清單"
+msgstr "無法載入列表"
 
 #: src/view/com/auth/create/Step2.tsx:91
 msgid "Country"
@@ -969,7 +969,7 @@ msgstr "自訂域名"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "由社區打造的自定義訊息流帶來新鮮體驗，協助你找到所愛內容。"
+msgstr "由社區打造的自訂訊息流帶來新鮮體驗，協助你找到所愛內容。"
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1012,7 +1012,7 @@ msgstr "刪除應用程式專用密碼"
 #: src/view/screens/ProfileList.tsx:363
 #: src/view/screens/ProfileList.tsx:444
 msgid "Delete List"
-msgstr "刪除清單"
+msgstr "刪除列表"
 
 #: src/view/com/modals/DeleteAccount.tsx:223
 msgid "Delete my account"
@@ -1063,11 +1063,11 @@ msgstr "暗淡"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
-msgstr "丟棄"
+msgstr "捨棄"
 
 #: src/view/com/composer/Composer.tsx:138
 msgid "Discard draft"
-msgstr "丟棄草稿"
+msgstr "捨棄草稿"
 
 #: src/view/screens/Moderation.tsx:207
 msgid "Discourage apps from showing my account to logged-out users"
@@ -1076,7 +1076,7 @@ msgstr "阻止應用程式向未登入使用者顯示我的帳號"
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
-msgstr "探索新的自定義訊息流"
+msgstr "探索新的自訂訊息流"
 
 #: src/view/screens/Feeds.tsx:441
 msgid "Discover new feeds"
@@ -1179,11 +1179,11 @@ msgstr "編輯圖片"
 
 #: src/view/screens/ProfileList.tsx:432
 msgid "Edit list details"
-msgstr "編輯清單詳情"
+msgstr "編輯列表詳情"
 
 #: src/view/com/modals/CreateOrEditList.tsx:250
 msgid "Edit Moderation List"
-msgstr "編輯管理清單"
+msgstr "編輯管理列表"
 
 #: src/Navigation.tsx:243
 #: src/view/screens/Feeds.tsx:403
@@ -1209,7 +1209,7 @@ msgstr "編輯已儲存的訊息流"
 
 #: src/view/com/modals/CreateOrEditList.tsx:245
 msgid "Edit User List"
-msgstr "編輯使用者清單"
+msgstr "編輯使用者列表"
 
 #: src/view/com/modals/EditProfile.tsx:193
 msgid "Edit your display name"
@@ -1277,7 +1277,7 @@ msgstr "啟用媒體播放器"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:147
 msgid "Enable this setting to only see replies between people you follow."
-msgstr "啟用此設定以僅查看你追蹤的人之間的回覆。"
+msgstr "啟用此設定以僅查看你跟隨的人之間的回覆。"
 
 #: src/view/screens/Profile.tsx:437
 msgid "End of feed"
@@ -1355,7 +1355,7 @@ msgstr "退出輸入搜索查詢"
 
 #: src/view/com/modals/Waitlist.tsx:138
 msgid "Exits signing up for waitlist with {email}"
-msgstr "將 {email} 從候補清單中移除"
+msgstr "將 {email} 從候補列表中移除"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
@@ -1392,7 +1392,7 @@ msgstr "創建應用程式專用密碼失敗。"
 
 #: src/view/com/modals/CreateOrEditList.tsx:206
 msgid "Failed to create the list. Check your internet connection and try again."
-msgstr "無法創建清單。請檢查你的網路連線並重試。"
+msgstr "無法創建列表。請檢查你的網路連線並重試。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:88
 msgid "Failed to delete post, please try again"
@@ -1458,7 +1458,7 @@ msgstr "最終確定"
 #: src/view/com/posts/FollowingEmptyState.tsx:57
 #: src/view/com/posts/FollowingEndOfFeed.tsx:58
 msgid "Find accounts to follow"
-msgstr "尋找一些要追蹤的帳號"
+msgstr "尋找一些要跟隨的帳號"
 
 #: src/view/screens/Search/Search.tsx:439
 msgid "Find users on Bluesky"
@@ -1500,65 +1500,65 @@ msgstr "垂直翻轉"
 #: src/view/com/profile/FollowButton.tsx:64
 msgctxt "action"
 msgid "Follow"
-msgstr "追蹤"
+msgstr "跟隨"
 
 #: src/view/com/profile/ProfileHeader.tsx:552
 msgid "Follow"
-msgstr "追蹤"
+msgstr "跟隨"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:58
 #: src/view/com/profile/ProfileHeader.tsx:543
 msgid "Follow {0}"
-msgstr "追蹤 {0}"
+msgstr "跟隨 {0}"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:178
 msgid "Follow All"
-msgstr "追蹤所有"
+msgstr "跟隨所有"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 msgid "Follow selected accounts and continue to the next step"
-msgstr "追蹤選擇的使用者並繼續下一步"
+msgstr "跟隨選擇的使用者並繼續下一步"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr "追蹤一些使用者以開始，我們可以根據你感興趣的使用者向你推薦更多相似使用者。"
+msgstr "跟隨一些使用者以開始，我們可以根據你感興趣的使用者向你推薦更多相似使用者。"
 
 #: src/view/com/profile/ProfileCard.tsx:194
 msgid "Followed by {0}"
-msgstr "由 {0} 追蹤"
+msgstr "由 {0} 跟隨"
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
-msgstr "已追蹤的使用者"
+msgstr "已跟隨的使用者"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:154
 msgid "Followed users only"
-msgstr "僅限已追蹤的使用者"
+msgstr "僅限已跟隨的使用者"
 
 #: src/view/com/notifications/FeedItem.tsx:166
 msgid "followed you"
-msgstr "已追蹤"
+msgstr "已跟隨"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
-msgstr "追蹤者"
+msgstr "跟隨者"
 
 #: src/view/com/profile/ProfileHeader.tsx:534
 #: src/view/screens/ProfileFollows.tsx:25
 msgid "Following"
-msgstr "追蹤中"
+msgstr "跟隨中"
 
 #: src/view/com/profile/ProfileHeader.tsx:196
 msgid "Following {0}"
-msgstr "追蹤中：{0}"
+msgstr "跟隨中：{0}"
 
 #: src/view/com/profile/ProfileHeader.tsx:585
 msgid "Follows you"
-msgstr "追蹤你"
+msgstr "跟隨你"
 
 #: src/view/com/profile/ProfileCard.tsx:141
 msgid "Follows You"
-msgstr "追蹤你"
+msgstr "跟隨你"
 
 #: src/screens/Onboarding/index.tsx:43
 msgid "Food"
@@ -1646,15 +1646,15 @@ msgstr "幫助"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Here are some accounts for you to follow"
-msgstr "這裡有一些你可以追蹤的帳號"
+msgstr "這裡有一些你可以跟隨的帳號"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:79
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr "這裡有一些熱門的專題訂閱。你可以選擇追蹤你喜歡的訂閱。"
+msgstr "這裡有一些熱門的專題訂閱。你可以選擇跟隨你喜歡的訂閱。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:74
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "根據你的興趣，這裡有一些專題訂閱：{interestsText}。你可以選擇追蹤你喜歡的訂閱。"
+msgstr "根據你的興趣，這裡有一些專題訂閱：{interestsText}。你可以選擇跟隨你喜歡的訂閱。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:153
 msgid "Here is your app password."
@@ -1688,7 +1688,7 @@ msgstr "隱藏這則貼文？"
 
 #: src/view/com/notifications/FeedItem.tsx:315
 msgid "Hide user list"
-msgstr "隱藏使用者清單"
+msgstr "隱藏使用者列表"
 
 #: src/view/com/profile/ProfileHeader.tsx:526
 msgid "Hides posts from {0} in your feed"
@@ -1820,7 +1820,7 @@ msgstr "輸入我們發送到你手機的驗證碼"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
-msgstr "輸入你的電子郵箱以加入 Bluesky 候補清單"
+msgstr "輸入你的電子郵箱以加入 Bluesky 候補列表"
 
 #: src/view/com/auth/login/LoginForm.tsx:226
 msgid "Input your password"
@@ -1870,7 +1870,7 @@ msgstr "邀請碼：1 可用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
-msgstr "它會即時顯示你所追蹤的人發布的貼文。"
+msgstr "它會即時顯示你所跟隨的人發布的貼文。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 msgid "Jobs"
@@ -1878,16 +1878,16 @@ msgstr "工作"
 
 #: src/view/com/modals/Waitlist.tsx:67
 msgid "Join the waitlist"
-msgstr "加入候補清單"
+msgstr "加入候補列表"
 
 #: src/view/com/auth/create/Step1.tsx:118
 #: src/view/com/auth/create/Step1.tsx:122
 msgid "Join the waitlist."
-msgstr "加入候補清單。"
+msgstr "加入候補列表。"
 
 #: src/view/com/modals/Waitlist.tsx:128
 msgid "Join Waitlist"
-msgstr "加入候補清單"
+msgstr "加入候補列表"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
@@ -1972,80 +1972,80 @@ msgstr "亮色"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:170
 msgid "Like"
-msgstr "讚"
+msgstr "喜歡"
 
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "Like this feed"
-msgstr "按讚這個訊息流"
+msgstr "按喜歡這個訊息流"
 
 #: src/Navigation.tsx:198
 msgid "Liked by"
-msgstr "按讚"
+msgstr "按喜歡"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr "按讚"
+msgstr "按喜歡"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
-msgstr "{0} {1} 按讚"
+msgstr "{0} {1} 按喜歡"
 
 #: src/view/screens/ProfileFeed.tsx:606
 msgid "Liked by {likeCount} {0}"
-msgstr "{likeCount} {0} 按讚"
+msgstr "{likeCount} {0} 按喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
-msgstr "按讚你的自訂訊息流"
+msgstr "按喜歡你的自訂訊息流"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
-msgstr "按讚你的貼文"
+msgstr "按喜歡你的貼文"
 
 #: src/view/screens/Profile.tsx:174
 msgid "Likes"
-msgstr "讚"
+msgstr "喜歡"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:185
 msgid "Likes on this post"
-msgstr "這條貼文的讚數"
+msgstr "這條貼文的喜歡數"
 
 #: src/Navigation.tsx:167
 msgid "List"
-msgstr "清單"
+msgstr "列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:261
 msgid "List Avatar"
-msgstr "清單頭像"
+msgstr "列表頭像"
 
 #: src/view/screens/ProfileList.tsx:323
 msgid "List blocked"
-msgstr "清單已封鎖"
+msgstr "列表已封鎖"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:231
 msgid "List by {0}"
-msgstr "清單由 {0} 創建"
+msgstr "列表由 {0} 創建"
 
 #: src/view/screens/ProfileList.tsx:377
 msgid "List deleted"
-msgstr "清單已刪除"
+msgstr "列表已刪除"
 
 #: src/view/screens/ProfileList.tsx:282
 msgid "List muted"
-msgstr "清單已靜音"
+msgstr "列表已靜音"
 
 #: src/view/com/modals/CreateOrEditList.tsx:275
 msgid "List Name"
-msgstr "清單名稱"
+msgstr "列表名稱"
 
 #: src/view/screens/ProfileList.tsx:342
 msgid "List unblocked"
-msgstr "解除封鎖清單"
+msgstr "解除封鎖列表"
 
 #: src/view/screens/ProfileList.tsx:301
 msgid "List unmuted"
-msgstr "解除靜音清單"
+msgstr "解除靜音列表"
 
 #: src/Navigation.tsx:110
 #: src/view/screens/Profile.tsx:176
@@ -2053,7 +2053,7 @@ msgstr "解除靜音清單"
 #: src/view/shell/Drawer.tsx:495
 #: src/view/shell/Drawer.tsx:496
 msgid "Lists"
-msgstr "清單"
+msgstr "列表"
 
 #: src/view/com/post-thread/PostThread.tsx:281
 #: src/view/com/post-thread/PostThread.tsx:289
@@ -2135,34 +2135,34 @@ msgstr "限制"
 #: src/view/com/lists/ListCard.tsx:92
 #: src/view/com/modals/UserAddRemoveLists.tsx:206
 msgid "Moderation list by {0}"
-msgstr "{0} 建立的限制清單"
+msgstr "{0} 建立的限制列表"
 
 #: src/view/screens/ProfileList.tsx:774
 msgid "Moderation list by <0/>"
-msgstr "</0> 建立的限制清單"
+msgstr "</0> 建立的限制列表"
 
 #: src/view/com/lists/ListCard.tsx:90
 #: src/view/com/modals/UserAddRemoveLists.tsx:204
 #: src/view/screens/ProfileList.tsx:772
 msgid "Moderation list by you"
-msgstr "你建立的限制清單"
+msgstr "你建立的限制列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:197
 msgid "Moderation list created"
-msgstr "已建立限制清單"
+msgstr "已建立限制列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:183
 msgid "Moderation list updated"
-msgstr "限制清單已更新"
+msgstr "限制列表已更新"
 
 #: src/view/screens/Moderation.tsx:95
 msgid "Moderation lists"
-msgstr "限制清單"
+msgstr "限制列表"
 
 #: src/Navigation.tsx:120
 #: src/view/screens/ModerationModlists.tsx:58
 msgid "Moderation Lists"
-msgstr "限制清單"
+msgstr "限制列表"
 
 #: src/view/screens/Settings.tsx:613
 msgid "Moderation settings"
@@ -2170,7 +2170,7 @@ msgstr "限制設定"
 
 #: src/view/com/modals/ModerationDetails.tsx:35
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "清單管理員選擇對內容設定一般警告。"
+msgstr "列表管理員選擇對內容設定一般警告。"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
@@ -2188,7 +2188,7 @@ msgstr "更多貼文選項"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
-msgstr "最多按讚數優先"
+msgstr "最多按喜歡數優先"
 
 #: src/view/com/profile/ProfileHeader.tsx:374
 msgid "Mute Account"
@@ -2200,7 +2200,7 @@ msgstr "靜音帳號"
 
 #: src/view/screens/ProfileList.tsx:490
 msgid "Mute list"
-msgstr "靜音清單"
+msgstr "靜音列表"
 
 #: src/view/screens/ProfileList.tsx:274
 msgid "Mute these accounts?"
@@ -2208,7 +2208,7 @@ msgstr "靜音這些帳號？"
 
 #: src/view/screens/ProfileList.tsx:278
 msgid "Mute this List"
-msgstr "靜音這個清單"
+msgstr "靜音這個列表"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:171
 msgid "Mute thread"
@@ -2284,11 +2284,11 @@ msgstr "永不載入來自 {0} 的嵌入內容"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "永遠不會失去對你的追隨者和資料的訪問權。"
+msgstr "永遠不會失去對你的追隨者和資料的存取權。"
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr "永遠不會失去對你的追隨者或資料的訪問權。"
+msgstr "永遠不會失去對你的追隨者或資料的存取權。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2301,7 +2301,7 @@ msgstr "新增"
 
 #: src/view/com/modals/CreateOrEditList.tsx:252
 msgid "New Moderation List"
-msgstr "新的管理員清單"
+msgstr "新的管理員列表"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:150
 msgid "New password"
@@ -2332,7 +2332,7 @@ msgstr "新文章"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
-msgstr "新的使用者清單"
+msgstr "新的使用者列表"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
@@ -2379,7 +2379,7 @@ msgstr "沒有描述"
 
 #: src/view/com/profile/ProfileHeader.tsx:217
 msgid "No longer following {0}"
-msgstr "不再追蹤 {0}"
+msgstr "不再跟隨 {0}"
 
 #: src/view/com/notifications/Feed.tsx:109
 msgid "No notifications yet!"
@@ -2504,7 +2504,7 @@ msgstr "開啟除錯記錄的附加詳細資訊"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "Opens an expanded list of users in this notification"
-msgstr "開啟此通知中的擴展使用者清單"
+msgstr "開啟此通知中的擴展使用者列表"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:61
 msgid "Opens camera on device"
@@ -2532,21 +2532,21 @@ msgstr "開啟外部嵌入設定"
 
 #: src/view/com/profile/ProfileHeader.tsx:614
 msgid "Opens followers list"
-msgstr "開啟追蹤者清單"
+msgstr "開啟跟隨者列表"
 
 #: src/view/com/profile/ProfileHeader.tsx:633
 msgid "Opens following list"
-msgstr "開啟正在追蹤清單"
+msgstr "開啟正在跟隨列表"
 
 #: src/view/screens/Settings.tsx:412
 msgid "Opens invite code list"
-msgstr "開啟邀請碼清單"
+msgstr "開啟邀請碼列表"
 
 #: src/view/com/modals/InviteCodes.tsx:172
 #: src/view/shell/desktop/RightNav.tsx:156
 #: src/view/shell/Drawer.tsx:646
 msgid "Opens list of invite codes"
-msgstr "開啟邀請碼清單"
+msgstr "開啟邀請碼列表"
 
 #: src/view/screens/Settings.tsx:745
 msgid "Opens modal for account deletion confirmation. Requires email code."
@@ -2638,19 +2638,19 @@ msgstr "密碼已更新！"
 
 #: src/Navigation.tsx:161
 msgid "People followed by @{0}"
-msgstr "被這些人所追蹤 @{0}"
+msgstr "被這些人所跟隨 @{0}"
 
 #: src/Navigation.tsx:154
 msgid "People following @{0}"
-msgstr "正在追蹤 @{0}"
+msgstr "正在跟隨 @{0}"
 
 #: src/view/com/lightbox/Lightbox.tsx:66
 msgid "Permission to access camera roll is required."
-msgstr "需要相機的訪問權限。"
+msgstr "需要相機的存取權限。"
 
 #: src/view/com/lightbox/Lightbox.tsx:72
 msgid "Permission to access camera roll was denied. Please enable it in your system settings."
-msgstr "相機的訪問權限已被拒絕，請在系統設定中啟用。"
+msgstr "相機的存取權限已被拒絕，請在系統設定中啟用。"
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
@@ -2671,7 +2671,7 @@ msgstr "固定到首頁"
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
-msgstr "固定訊息流清單"
+msgstr "固定訊息流列表"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
 msgid "Play {0}"
@@ -2810,7 +2810,7 @@ msgstr "主要語言"
 
 #: src/view/screens/PreferencesThreads.tsx:97
 msgid "Prioritize Your Follows"
-msgstr "優先顯示追蹤者"
+msgstr "優先顯示跟隨者"
 
 #: src/view/screens/Settings.tsx:626
 #: src/view/shell/desktop/RightNav.tsx:84
@@ -2850,11 +2850,11 @@ msgstr "公開內容"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
-msgstr "公開且可共享的批量靜音或封鎖清單。"
+msgstr "公開且可共享的批量靜音或封鎖列表。"
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "公開且可共享的清單，可作為訊息流使用。"
+msgstr "公開且可共享的列表，可作為訊息流使用。"
 
 #: src/view/com/composer/Composer.tsx:335
 msgid "Publish post"
@@ -2937,16 +2937,16 @@ msgstr "刪除轉發"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:173
 msgid "Remove this feed from my feeds?"
-msgstr "將這個訊息流從我的訊息流清單中刪除？"
+msgstr "將這個訊息流從我的訊息流列表中刪除？"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:132
 msgid "Remove this feed from your saved feeds?"
-msgstr "將這個訊息流從儲存的訊息流清單中刪除？"
+msgstr "將這個訊息流從儲存的訊息流列表中刪除？"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
 msgid "Removed from list"
-msgstr "從清單中刪除"
+msgstr "從列表中刪除"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:111
 #: src/view/com/feeds/FeedSourceCard.tsx:178
@@ -2994,7 +2994,7 @@ msgstr "檢舉訊息流"
 
 #: src/view/screens/ProfileList.tsx:458
 msgid "Report List"
-msgstr "檢舉清單"
+msgstr "檢舉列表"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
 #: src/view/com/util/forms/PostDropdownBtn.tsx:210
@@ -3244,11 +3244,11 @@ msgstr "選擇服務"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
-msgstr "在下面選擇一些要追蹤的帳號"
+msgstr "在下面選擇一些要跟隨的帳號"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
-msgstr "從下面的清單中選擇要追蹤的主題訊息流"
+msgstr "從下面的列表中選擇要跟隨的主題訊息流"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:75
 msgid "Select what you want to see (or not see), and we’ll handle the rest."
@@ -3365,7 +3365,7 @@ msgstr "將此設定項設為「是」以在分層視圖中顯示回覆。這是
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "將此設定項設為「是」以在追蹤訊息流中顯示已儲存訊息流的樣本。這是一個實驗性功能。"
+msgstr "將此設定項設為「是」以在跟隨訊息流中顯示已儲存訊息流的樣本。這是一個實驗性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -3437,7 +3437,7 @@ msgstr "顯示來自 {0} 的嵌入內容"
 
 #: src/view/com/profile/ProfileHeader.tsx:498
 msgid "Show follows similar to {0}"
-msgstr "顯示類似於 {0} 的追蹤者"
+msgstr "顯示類似於 {0} 的跟隨者"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:571
 #: src/view/com/post/Post.tsx:197
@@ -3455,15 +3455,15 @@ msgstr "顯示引用貼文"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "在追蹤訊息流中顯示引用"
+msgstr "在跟隨訊息流中顯示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr "在追蹤中顯示引用"
+msgstr "在跟隨中顯示引用"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr "在追蹤訊息流中顯示轉發"
+msgstr "在跟隨訊息流中顯示轉發"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
@@ -3471,15 +3471,15 @@ msgstr "顯示回覆"
 
 #: src/view/screens/PreferencesThreads.tsx:100
 msgid "Show replies by people you follow before all other replies."
-msgstr "在所有其他回覆之前顯示你追蹤的人的回覆。"
+msgstr "在所有其他回覆之前顯示你跟隨的人的回覆。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr "在追蹤中顯示回覆"
+msgstr "在跟隨中顯示回覆"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr "在追蹤訊息流中顯示回覆"
+msgstr "在跟隨訊息流中顯示回覆"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3491,7 +3491,7 @@ msgstr "顯示轉發"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr "在追蹤中顯示轉發"
+msgstr "在跟隨中顯示轉發"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -3504,7 +3504,7 @@ msgstr "顯示使用者"
 
 #: src/view/com/profile/ProfileHeader.tsx:501
 msgid "Shows a list of users similar to this user."
-msgstr "顯示與該使用者相似的使用者清單。"
+msgstr "顯示與該使用者相似的使用者列表。"
 
 #: src/view/com/profile/ProfileHeader.tsx:545
 msgid "Shows posts from {0} in your feed"
@@ -3664,11 +3664,11 @@ msgstr "訂閱 {0} 訊息流"
 
 #: src/view/screens/ProfileList.tsx:603
 msgid "Subscribe to this list"
-msgstr "訂閱這個清單"
+msgstr "訂閱這個列表"
 
 #: src/view/screens/Search/Search.tsx:373
 msgid "Suggested Follows"
-msgstr "推薦的追蹤者"
+msgstr "推薦的跟隨者"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:64
 msgid "Suggested for you"
@@ -3752,7 +3752,7 @@ msgstr "版權政策已移動到 <0/>"
 
 #: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
-msgstr "以下步驟將幫助自定義你的 Bluesky 體驗。"
+msgstr "以下步驟將幫助自訂你的 Bluesky 體驗。"
 
 #: src/view/com/post-thread/PostThread.tsx:458
 msgid "The post may have been deleted."
@@ -3812,12 +3812,12 @@ msgstr "取得貼文時發生問題，點擊這裡重試。"
 
 #: src/view/com/lists/ListMembers.tsx:172
 msgid "There was an issue fetching the list. Tap here to try again."
-msgstr "取得清單時發生問題，點擊這裡重試。"
+msgstr "取得列表時發生問題，點擊這裡重試。"
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:148
 #: src/view/com/lists/ProfileLists.tsx:155
 msgid "There was an issue fetching your lists. Tap here to try again."
-msgstr "取得清單時發生問題，點擊這裡重試。"
+msgstr "取得列表時發生問題，點擊這裡重試。"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:63
 #: src/view/com/modals/ContentFilteringSettings.tsx:126
@@ -3892,7 +3892,7 @@ msgstr "該訊息流為空！"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "該訊息流為空！你或許需要先追蹤更多的人或檢查你的語言設定。"
+msgstr "該訊息流為空！你或許需要先跟隨更多的人或檢查你的語言設定。"
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
@@ -3908,7 +3908,7 @@ msgstr "此連結將帶你到以下網站："
 
 #: src/view/screens/ProfileList.tsx:834
 msgid "This list is empty!"
-msgstr "此清單為空！"
+msgstr "此列表為空！"
 
 #: src/view/com/modals/AddAppPasswords.tsx:106
 msgid "This name is already in use"
@@ -3924,15 +3924,15 @@ msgstr "此使用者已封鎖你，你無法查看他們的內容。"
 
 #: src/view/com/modals/ModerationDetails.tsx:42
 msgid "This user is included in the <0/> list which you have blocked."
-msgstr "此使用者包含在你已封鎖的 <0/> 清單中。"
+msgstr "此使用者包含在你已封鎖的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr "此使用者包含在你已靜音的 <0/> 清單中。"
+msgstr "此使用者包含在你已靜音的 <0/> 列表中。"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
-#~ msgstr "此使用者包含在你已靜音的 <0/> 清單中。"
+#~ msgstr "此使用者包含在你已靜音的 <0/> 列表中。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -3976,11 +3976,11 @@ msgstr "重試"
 
 #: src/view/screens/ProfileList.tsx:505
 msgid "Un-block list"
-msgstr "取消封鎖清單"
+msgstr "取消封鎖列表"
 
 #: src/view/screens/ProfileList.tsx:490
 msgid "Un-mute list"
-msgstr "取消靜音清單"
+msgstr "取消靜音列表"
 
 #: src/view/com/auth/create/CreateAccount.tsx:66
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
@@ -4048,7 +4048,7 @@ msgstr "取消固定"
 
 #: src/view/screens/ProfileList.tsx:473
 msgid "Unpin moderation list"
-msgstr "取消固定管理員清單"
+msgstr "取消固定管理員列表"
 
 #: src/view/screens/ProfileFeed.tsx:345
 msgid "Unsave"
@@ -4056,7 +4056,7 @@ msgstr "取消儲存"
 
 #: src/view/com/modals/UserAddRemoveLists.tsx:70
 msgid "Update {displayName} in Lists"
-msgstr "更新清單中的 {displayName}"
+msgstr "更新列表中的 {displayName}"
 
 #: src/lib/hooks/useOTAUpdate.ts:15
 msgid "Update Available"
@@ -4106,7 +4106,7 @@ msgstr "使用者被封鎖"
 
 #: src/view/com/modals/ModerationDetails.tsx:40
 msgid "User Blocked by List"
-msgstr "使用者被清單封鎖"
+msgstr "使用者被列表封鎖"
 
 #: src/view/com/modals/ModerationDetails.tsx:60
 msgid "User Blocks You"
@@ -4119,29 +4119,29 @@ msgstr "帳號代碼"
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
 msgid "User list by {0}"
-msgstr "{0} 的使用者清單"
+msgstr "{0} 的使用者列表"
 
 #: src/view/screens/ProfileList.tsx:762
 msgid "User list by <0/>"
-msgstr "<0/> 的使用者清單"
+msgstr "<0/> 的使用者列表"
 
 #: src/view/com/lists/ListCard.tsx:82
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
 #: src/view/screens/ProfileList.tsx:760
 msgid "User list by you"
-msgstr "你的使用者清單"
+msgstr "你的使用者列表"
 
 #: src/view/com/modals/CreateOrEditList.tsx:196
 msgid "User list created"
-msgstr "使用者清單已建立"
+msgstr "使用者列表已建立"
 
 #: src/view/com/modals/CreateOrEditList.tsx:182
 msgid "User list updated"
-msgstr "使用者清單已更新"
+msgstr "使用者列表已更新"
 
 #: src/view/screens/Lists.tsx:58
 msgid "User Lists"
-msgstr "使用者清單"
+msgstr "使用者列表"
 
 #: src/view/com/auth/login/LoginForm.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:192
@@ -4154,7 +4154,7 @@ msgstr "使用者"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:143
 msgid "users followed by <0/>"
-msgstr "追蹤 <0/> 的使用者"
+msgstr "跟隨 <0/> 的使用者"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
@@ -4232,7 +4232,7 @@ msgstr "我們希望你在此度過愉快的時光。請記住，Bluesky 是："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "你已看完了你追蹤的貼文。這是 <0/> 的最新貼文。"
+msgstr "你已看完了你跟隨的貼文。這是 <0/> 的最新貼文。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:119
 msgid "We recommend our \"Discover\" feed:"
@@ -4260,7 +4260,7 @@ msgstr "我們非常高興你加入我們！"
 
 #: src/view/screens/ProfileList.tsx:85
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
-msgstr "很抱歉，我們無法解析此清單。如果問題持續發生，請聯繫清單創建者，@{handleOrDid}。"
+msgstr "很抱歉，我們無法解析此列表。如果問題持續發生，請聯繫列表創建者，@{handleOrDid}。"
 
 #: src/view/screens/Search/Search.tsx:253
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -4338,7 +4338,7 @@ msgstr "輪到你了。"
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "你也可以探索並追蹤新的自定義訊息流。"
+msgstr "你也可以探索並跟隨新的自訂訊息流。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4391,7 +4391,7 @@ msgstr "你沒有訂閱訊息流。"
 #: src/view/com/lists/MyLists.tsx:89
 #: src/view/com/lists/ProfileLists.tsx:140
 msgid "You have no lists."
-msgstr "你沒有清單。"
+msgstr "你沒有列表。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
@@ -4441,7 +4441,7 @@ msgstr "你已設定完成！"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "你已經瀏覽完你的訂閱訊息流啦！追蹤其他帳號吧。"
+msgstr "你已經瀏覽完你的訂閱訊息流啦！跟隨其他帳號吧。"
 
 #: src/view/com/auth/create/Step1.tsx:67
 msgid "Your account"
@@ -4461,7 +4461,7 @@ msgstr "你的選擇將被儲存，但可以稍後在設定中更改。"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr "你的預設訊息流為「追蹤」"
+msgstr "你的預設訊息流為「跟隨」"
 
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4483,7 +4483,7 @@ msgstr "你的電子郵箱尚未驗證。這是一個我們建議的重要安全
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "你的追蹤訊息流是空的！追蹤更多使用者看看發生了什麼事情。"
+msgstr "你的跟隨訊息流是空的！跟隨更多使用者看看發生了什麼事情。"
 
 #: src/view/com/auth/create/Step3.tsx:45
 msgid "Your full handle will be"
@@ -4511,7 +4511,7 @@ msgstr "你的貼文已發佈"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
 msgid "Your posts, likes, and blocks are public. Mutes are private."
-msgstr "你的貼文、按讚和封鎖是公開可見的，而靜音是私人的。"
+msgstr "你的貼文、按喜歡和封鎖是公開可見的，而靜音是私人的。"
 
 #: src/view/com/modals/SwitchAccount.tsx:84
 #: src/view/screens/Settings.tsx:125
