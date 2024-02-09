@@ -467,7 +467,7 @@ msgstr "書籍"
 
 #: src/view/screens/Settings.tsx:841
 msgid "Build version {0} {1}"
-msgstr "構建版本號 {0} {1}"
+msgstr "建構版本號 {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
 msgid "Business"
@@ -870,7 +870,7 @@ msgstr "已複製"
 
 #: src/view/screens/Settings.tsx:243
 msgid "Copied build version to clipboard"
-msgstr "已複製構建版本號至剪貼簿"
+msgstr "已複製建構版本號至剪貼簿"
 
 #: src/view/com/modals/AddAppPasswords.tsx:76
 #: src/view/com/modals/InviteCodes.tsx:152
@@ -2504,7 +2504,7 @@ msgstr "開啟除錯項目的額外詳細資訊"
 
 #: src/view/com/notifications/FeedItem.tsx:348
 msgid "Opens an expanded list of users in this notification"
-msgstr "開啟此通知中的擴展使用者列表"
+msgstr "展開此通知的使用者列表"
 
 #: src/view/com/composer/photos/OpenCameraBtn.tsx:61
 msgid "Opens camera on device"
@@ -3091,11 +3091,11 @@ msgstr "重設偏好設定狀態"
 
 #: src/view/screens/Settings.tsx:807
 msgid "Resets the onboarding state"
-msgstr "會重設初始設定狀態"
+msgstr "重設初始設定狀態"
 
 #: src/view/screens/Settings.tsx:797
 msgid "Resets the preferences state"
-msgstr "會重設偏好設定狀態"
+msgstr "重設偏好設定狀態"
 
 #: src/view/com/auth/login/LoginForm.tsx:266
 msgid "Retries login"
