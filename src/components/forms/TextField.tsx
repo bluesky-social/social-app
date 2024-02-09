@@ -12,8 +12,8 @@ import {
 
 import {HITSLOP_20} from 'lib/constants'
 import {isWeb} from '#/platform/detection'
-import {useTheme, atoms as a, web, tokens, android} from '#/alf'
-import {Text} from '#/components/Typography'
+import {useTheme, atoms as a, web, tokens, android, flatten} from '#/alf'
+import {Text, leading} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
 
@@ -208,10 +208,13 @@ export function createInput(Component: typeof TextInput) {
               paddingBottom: 2,
             }),
             {
-              lineHeight: a.text_md.fontSize * 1.1875,
+              lineHeight: rest.multiline
+                ? leading(a.text_md, a.leading_normal)
+                : a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
               minHeight: rest.multiline ? 60 : undefined,
             },
+            flatten(rest.style),
           ]}
         />
 
