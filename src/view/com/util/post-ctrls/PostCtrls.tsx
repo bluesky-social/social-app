@@ -31,7 +31,7 @@ import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {Arrow_Out_Of_Box} from '#/components/icons/ArrowOutOfBox'
+import {ArrowOutOfBox_Stroke2_Corner2_Rounded} from '#/components/icons/ArrowOutOfBox'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {shareUrl} from 'lib/sharing'
 import {makeProfileLink} from 'lib/routes/links'
@@ -217,7 +217,7 @@ let PostCtrls = ({
             } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
             accessibilityHint=""
             hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-            <Arrow_Out_Of_Box
+            <ArrowOutOfBox_Stroke2_Corner2_Rounded
               style={[defaultCtrlColor, styles.mt1]}
               height={17}
               width={17}

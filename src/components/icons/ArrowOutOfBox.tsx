@@ -1,5 +1,5 @@
 import {createSinglePathSVG} from './TEMPLATE'
 
-export const Arrow_Out_Of_Box = createSinglePathSVG({
+export const ArrowOutOfBox_Stroke2_Corner2_Rounded = createSinglePathSVG({
   path: 'M12 0c.354 0 .693.14.943.39l6 6a1.333 1.333 0 0 1-1.886 1.886l-3.724-3.724v11.781a1.333 1.333 0 1 1-2.666 0V4.553L6.943 8.275A1.333 1.333 0 0 1 5.057 6.39l6-6c.25-.25.59-.39.943-.39ZM1.333 11.667c.737 0 1.334.597 1.334 1.333v7c0 .736.597 1.333 1.333 1.333h16c.736 0 1.333-.597 1.333-1.333v-7A1.333 1.333 0 0 1 24 13v7a4 4 0 0 1-4 4H4a4 4 0 0 1-4-4v-7c0-.736.597-1.333 1.333-1.333Z',
 })
