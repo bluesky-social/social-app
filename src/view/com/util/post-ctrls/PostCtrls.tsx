@@ -9,6 +9,7 @@ import {
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {Text} from '../text/Text'
@@ -31,6 +32,9 @@ import {useRequireAuth} from '#/state/session'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {Arrow_Out_Of_Box} from '#/components/icons/ArrowOutOfBox'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {shareUrl} from 'lib/sharing'
+import {makeProfileLink} from 'lib/routes/links'
 
 let PostCtrls = ({
   big,
@@ -117,6 +121,13 @@ let PostCtrls = ({
     closeModal,
   ])
 
+  const onShare = useCallback(() => {
+    const urip = new AtUri(post.uri)
+    const href = makeProfileLink(post.author, 'post', urip.rkey)
+    const url = toShareUrl(href)
+    shareUrl(url)
+  }, [post.uri, post.author])
+
   return (
     <View style={[styles.ctrls, style]}>
       <View
@@ -199,7 +210,7 @@ let PostCtrls = ({
           <TouchableOpacity
             testID="likeBtn"
             style={[styles.btn]}
-            onPress={() => {}}
+            onPress={onShare}
             accessibilityRole="button"
             accessibilityLabel={`${
               post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
@@ -208,8 +219,8 @@ let PostCtrls = ({
             hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
             <Arrow_Out_Of_Box
               style={[defaultCtrlColor, styles.mt1]}
-              height={18}
-              width={18}
+              height={17}
+              width={17}
             />
           </TouchableOpacity>
         </View>
