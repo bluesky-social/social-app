@@ -66,6 +66,7 @@ export function ProfileScreen({route}: Props) {
     error: profileError,
     refetch: refetchProfile,
     isLoading: isLoadingProfile,
+    isPlaceholderData: isPlaceholderProfile,
   } = useProfileQuery({
     did: resolvedDid,
   })
@@ -85,12 +86,13 @@ export function ProfileScreen({route}: Props) {
     }
   }, [profile?.viewer?.blockedBy, resolvedDid])
 
-  if (isLoadingDid || isLoadingProfile || !moderationOpts) {
+  // Most pushes will happen here, since we will have only placeholder data
+  if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
     return (
       <CenteredView>
         <ProfileHeader
-          profile={null}
-          moderation={null}
+          profile={profile ?? null}
+          moderationOpts={moderationOpts ?? null}
           isProfilePreview={true}
         />
       </CenteredView>
@@ -268,11 +270,11 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
-        moderation={moderation}
+        moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
       />
     )
-  }, [profile, moderation, hideBackButton])
+  }, [profile, moderationOpts, hideBackButton])
 
   return (
     <ScreenHider
