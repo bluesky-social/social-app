@@ -19,6 +19,7 @@ module.exports = function () {
 
   /**
    * iOS build number. Must be incremented for each TestFlight version.
+   * WARNING: Always leave this variable on line 24! If it is moved, you need to update ./scripts/incrementIosBuildNumber.sh
    */
   const IOS_BUILD_NUMBER = '2'
 
