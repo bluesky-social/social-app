@@ -88,16 +88,11 @@ export function ProfileScreen({route}: Props) {
 
   // Most pushes will happen here, since we will have only placeholder data
   if (isLoadingDid || isLoadingProfile || isPlaceholderProfile) {
-    const moderation =
-      profile && moderationOpts
-        ? moderateProfile(profile, moderationOpts)
-        : null
-
     return (
       <CenteredView>
         <ProfileHeader
-          profile={profile}
-          moderation={moderation}
+          profile={profile ?? null}
+          moderationOpts={moderationOpts ?? null}
           isProfilePreview={true}
         />
       </CenteredView>
@@ -275,11 +270,11 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
-        moderation={moderation}
+        moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
       />
     )
-  }, [profile, moderation, hideBackButton])
+  }, [profile, moderationOpts, hideBackButton])
 
   return (
     <ScreenHider

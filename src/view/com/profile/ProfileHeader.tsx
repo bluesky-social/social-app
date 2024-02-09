@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useMemo} from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -10,7 +10,8 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {
   AppBskyActorDefs,
-  ProfileModeration,
+  ModerationOpts,
+  moderateProfile,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
@@ -57,22 +58,16 @@ import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 
 interface Props {
-  profile:
-    | AppBskyActorDefs.ProfileView
-    | AppBskyActorDefs.ProfileViewDetailed
-    | undefined
-    | null
-  placeholderData?:
-    | AppBskyActorDefs.ProfileView
-    | AppBskyActorDefs.ProfileViewDetailed
-  moderation: ProfileModeration | null
+  profile: AppBskyActorDefs.ProfileView | null
+  placeholderData?: AppBskyActorDefs.ProfileView | null
+  moderationOpts: ModerationOpts | null
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
 
 export function ProfileHeader({
   profile,
-  moderation,
+  moderationOpts,
   hideBackButton = false,
   isProfilePreview,
 }: Props) {
@@ -80,7 +75,7 @@ export function ProfileHeader({
 
   // loading
   // =
-  if (!profile || !moderation) {
+  if (!profile || !moderationOpts) {
     return (
       <View style={pal.view}>
         <LoadingPlaceholder
@@ -106,7 +101,7 @@ export function ProfileHeader({
   return (
     <ProfileHeaderLoaded
       profile={profile}
-      moderation={moderation}
+      moderationOpts={moderationOpts}
       hideBackButton={hideBackButton}
       isProfilePreview={isProfilePreview}
     />
@@ -115,14 +110,14 @@ export function ProfileHeader({
 
 interface LoadedProps {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  moderation: ProfileModeration
+  moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isProfilePreview?: boolean
 }
 
 let ProfileHeaderLoaded = ({
   profile: profileUnshadowed,
-  moderation,
+  moderationOpts,
   hideBackButton = false,
   isProfilePreview,
 }: LoadedProps): React.ReactNode => {
@@ -144,6 +139,10 @@ let ProfileHeaderLoaded = ({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
+  const moderation = useMemo(
+    () => moderateProfile(profile, moderationOpts),
+    [profile, moderationOpts],
+  )
 
   /*
    * BEGIN handle bio facet resolution
