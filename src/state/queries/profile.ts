@@ -429,7 +429,7 @@ export function precacheProfile(
   queryClient.setQueryData(profileBasicQueryKey(profile.did), profile)
 }
 
-export function precacheFeedPosts(
+export function precacheFeedPostProfiles(
   queryClient: QueryClient,
   posts: AppBskyFeedDefs.FeedViewPost[],
 ) {
@@ -461,18 +461,18 @@ export function precacheFeedPosts(
   }
 }
 
-export function precacheThreadPosts(
+export function precacheThreadPostProfiles(
   queryClient: QueryClient,
   node: ThreadNode,
 ) {
   if (node.type === 'post') {
     precacheProfile(queryClient, node.post.author)
     if (node.parent) {
-      precacheThreadPosts(queryClient, node.parent)
+      precacheThreadPostProfiles(queryClient, node.parent)
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        precacheThreadPosts(queryClient, reply)
+        precacheThreadPostProfiles(queryClient, reply)
       }
     }
   }
