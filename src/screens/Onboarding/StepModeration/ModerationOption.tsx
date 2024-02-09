@@ -57,7 +57,7 @@ export function ModerationOption({
       entering={isMounted.current ? FadeIn : undefined}>
       <View style={[a.gap_xs, {width: '50%'}]}>
         <Text style={[a.font_bold]}>{groupInfo.title}</Text>
-        <Text style={[t.atoms.text_contrast_700, a.leading_snug]}>
+        <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
           {groupInfo.subtitle}
         </Text>
       </View>

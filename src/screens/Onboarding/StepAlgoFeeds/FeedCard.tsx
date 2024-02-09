@@ -137,7 +137,7 @@ function PrimaryFeedCardInner({
           },
           a.mt_md,
           a.w_full,
-          t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
+          t.atoms.border_contrast_low,
           ctx.selected && {
             borderTopColor: t.palette.white,
           },
@@ -281,7 +281,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
           },
           a.mt_md,
           a.w_full,
-          t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
+          t.atoms.border_contrast_low,
           ctx.selected && {
             borderTopColor: t.palette.primary_200,
           },
@@ -360,7 +360,7 @@ export function FeedCardPlaceholder({primary}: {primary?: boolean}) {
           },
           a.mt_md,
           a.w_full,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
         ]}
       />
 

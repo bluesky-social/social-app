@@ -25,7 +25,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
           a.border,
           a.rounded_sm,
           a.overflow_hidden,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
         ]}>
         {children}
       </View>
@@ -103,7 +103,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         }),
         a.px_sm,
         t.atoms.bg,
-        t.atoms.border,
+        t.atoms.border_contrast_low,
         baseStyles,
         activeStyles,
         (state.hovered || state.focused || state.pressed) && hoverStyles,
@@ -113,7 +113,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           style={[
             a.text_center,
             a.font_bold,
-            t.atoms.text_contrast_500,
+            t.atoms.text_contrast_medium,
             textStyles,
           ]}>
           {children}

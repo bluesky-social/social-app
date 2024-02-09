@@ -103,7 +103,7 @@ export function Deactivated() {
             <H2 style={[a.pb_sm]}>
               <Trans>You're in line</Trans>
             </H2>
-            <P style={[t.atoms.text_contrast_700]}>
+            <P style={[t.atoms.text_contrast_medium]}>
               <Trans>
                 There's been a rush of new users to Bluesky! We'll activate your
                 account as soon as we can.
