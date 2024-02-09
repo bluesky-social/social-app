@@ -73,7 +73,6 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
         const height = evt.nativeEvent.layout.height
         if (height > 0 && isHeaderReady) {
           // The rounding is necessary to prevent jumps on iOS
-          console.log('onHeaderOnlyLayout', Math.round(height))
           setHeaderOnlyHeight(Math.round(height))
         }
       },
