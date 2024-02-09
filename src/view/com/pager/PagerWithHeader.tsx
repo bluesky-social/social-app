@@ -246,14 +246,14 @@ let PagerTabBar = ({
             onHeaderOnlyLayout(e.nativeEvent.layout.height)
             pendingHeaderHeight.current = null
           } else {
-            // Stash it away in case `isReady` turns `true` later.
+            // Stash it away for when `isHeaderReady` turns `true` later.
             pendingHeaderHeight.current = e.nativeEvent.layout.height
           }
         }}>
         {renderHeader?.()}
         {
           // When `isHeaderReady` turns `true`, we want to send the parent layout.
-          // However, if it didn't lead to a layout change, parent `onLayout` won't get called again.
+          // However, if that didn't lead to a layout change, parent `onLayout` wouldn't get called again.
           // We're conditionally rendering an empty view so that we can send the last measurement.
           isHeaderReady && (
             <View
