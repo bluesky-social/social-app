@@ -97,11 +97,7 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
                 style={{
                   display: isReady ? undefined : 'none',
                 }}>
-                <PagerItem
-                  isFocused={i === currentPage}
-                  renderTab={child}
-                  isReady={isReady}
-                />
+                <PagerItem isFocused={i === currentPage} renderTab={child} />
               </View>
             )
           })}
@@ -171,7 +167,6 @@ function PagerItem({
   renderTab,
 }: {
   isFocused: boolean
-  isReady: boolean
   renderTab: ((props: PagerWithHeaderChildParams) => JSX.Element) | null
 }) {
   const scrollElRef = useAnimatedRef()
