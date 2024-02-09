@@ -4090,11 +4090,11 @@ msgstr "使用系统默认浏览器"
 
 #: src/view/com/modals/AddAppPasswords.tsx:155
 msgid "Use this to sign into the other app along with your handle."
-msgstr "使用你的域名作为 Bluesky 客户端的服务提供方。"
+msgstr "使用这个和你的用户识别符一起登录其他应用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
-msgstr "使用你的域名作为 Bluesky 客户服务提供商"
+msgstr "使用你的域名作为 Bluesky 客户端的服务提供方"
 
 #: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
