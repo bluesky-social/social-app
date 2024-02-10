@@ -400,46 +400,14 @@ let PostThreadItemLoaded = ({
                 </Text>
               </Link>
             </View>
-            <View style={[s.pl10, s.pb5]}>
-              <View style={[styles.expandedInfo, pal.border]}>
-                <Link
-                  style={styles.expandedInfoItem}
-                  href={repostsHref}
-                  title={repostsTitle}>
-                  <Text
-                    testID="repostCount-expanded"
-                    type="lg"
-                    style={pal.textLight}>
-                    <Text type="xl-bold" style={pal.text}>
-                      {formatCount(post.repostCount ?? 0)}
-                    </Text>{' '}
-                    {pluralize(post.repostCount ?? 0, 'repost')}
-                  </Text>
-                </Link>
-                <Link
-                  style={styles.expandedInfoItem}
-                  href={likesHref}
-                  title={likesTitle}>
-                  <Text
-                    testID="likeCount-expanded"
-                    type="lg"
-                    style={pal.textLight}>
-                    <Text type="xl-bold" style={pal.text}>
-                      {formatCount(post.likeCount ?? 0)}
-                    </Text>{' '}
-                    {pluralize(post.likeCount ?? 0, 'like')}
-                  </Text>
-                </Link>
-              </View>
-              <View style={[s.pl10, s.pr10, s.pb5]}>
-                <PostCtrls
-                  big
-                  post={post}
-                  record={record}
-                  richText={richText}
-                  onPressReply={onPressReply}
-                />
-              </View>
+            <View style={[s.pl10, s.pr10, s.pb5]}>
+              <PostCtrls
+                big
+                post={post}
+                record={record}
+                richText={richText}
+                onPressReply={onPressReply}
+              />
             </View>
           </View>
           <WhoCanReply post={post} />
