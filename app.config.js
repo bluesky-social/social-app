@@ -21,7 +21,7 @@ module.exports = function () {
    * iOS build number. Must be incremented for each TestFlight version.
    * WARNING: Always leave this variable on line 24! If it is moved, you need to update ./scripts/bumpIosBuildNumber.sh
    */
-  const IOS_BUILD_NUMBER = '4'
+  const IOS_BUILD_NUMBER = '3'
 
   /**
    * Android build number. Must be incremented for each release.
