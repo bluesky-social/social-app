@@ -105,6 +105,7 @@ export function Component({image}: Props) {
             contentFit="contain"
             accessible={true}
             accessibilityIgnoresInvertColors
+            enableLiveTextInteraction
           />
         </View>
         <TextInput

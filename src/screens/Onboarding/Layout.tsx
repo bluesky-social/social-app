@@ -165,7 +165,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           isWeb ? a.fixed : a.absolute,
           {bottom: 0, left: 0, right: 0},
           t.atoms.bg,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
           a.border_t,
           a.align_center,
           gtMobile ? a.px_5xl : a.px_xl,
@@ -227,5 +227,7 @@ export function Description({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
-  return <P style={[t.atoms.text_contrast_700, flatten(style)]}>{children}</P>
+  return (
+    <P style={[t.atoms.text_contrast_medium, flatten(style)]}>{children}</P>
+  )
 }

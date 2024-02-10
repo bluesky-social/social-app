@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, useMemo} from 'react'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -10,7 +10,8 @@ import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {
   AppBskyActorDefs,
-  ProfileModeration,
+  ModerationOpts,
+  moderateProfile,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {Plural, Trans, msg, plural} from '@lingui/macro'
@@ -42,78 +43,56 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {BACK_HITSLOP} from 'lib/constants'
-import {isInvalidHandle} from 'lib/strings/handles'
+import {isInvalidHandle, sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
-import {useSession, getAgent} from '#/state/session'
+import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
+import {useProfileShadow} from 'state/cache/profile-shadow'
 
-interface Props {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> | null
-  moderation: ProfileModeration | null
-  hideBackButton?: boolean
-  isProfilePreview?: boolean
-}
-
-export function ProfileHeader({
-  profile,
-  moderation,
-  hideBackButton = false,
-  isProfilePreview,
-}: Props) {
+let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
-
-  // loading
-  // =
-  if (!profile || !moderation) {
-    return (
-      <View style={pal.view}>
-        <LoadingPlaceholder width="100%" height={153} />
-        <View
-          style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
-          <LoadingPlaceholder width={80} height={80} style={styles.br40} />
-        </View>
-        <View style={styles.content}>
-          <View style={[styles.buttonsLine]}>
-            <LoadingPlaceholder width={167} height={31} style={styles.br50} />
-          </View>
+  return (
+    <View style={pal.view}>
+      <LoadingPlaceholder width="100%" height={150} style={{borderRadius: 0}} />
+      <View
+        style={[pal.view, {borderColor: pal.colors.background}, styles.avi]}>
+        <LoadingPlaceholder width={80} height={80} style={styles.br40} />
+      </View>
+      <View style={styles.content}>
+        <View style={[styles.buttonsLine]}>
+          <LoadingPlaceholder width={167} height={31} style={styles.br50} />
         </View>
       </View>
-    )
-  }
-
-  // loaded
-  // =
-  return (
-    <ProfileHeaderLoaded
-      profile={profile}
-      moderation={moderation}
-      hideBackButton={hideBackButton}
-      isProfilePreview={isProfilePreview}
-    />
+    </View>
   )
 }
+ProfileHeaderLoading = memo(ProfileHeaderLoading)
+export {ProfileHeaderLoading}
 
-interface LoadedProps {
-  profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>
-  moderation: ProfileModeration
+interface Props {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+  descriptionRT: RichTextAPI | null
+  moderationOpts: ModerationOpts
   hideBackButton?: boolean
-  isProfilePreview?: boolean
+  isPlaceholderProfile?: boolean
 }
 
-let ProfileHeaderLoaded = ({
-  profile,
-  moderation,
+let ProfileHeader = ({
+  profile: profileUnshadowed,
+  descriptionRT,
+  moderationOpts,
   hideBackButton = false,
-  isProfilePreview,
-}: LoadedProps): React.ReactNode => {
+  isPlaceholderProfile,
+}: Props): React.ReactNode => {
+  const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
+    useProfileShadow(profileUnshadowed)
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
   const {currentAccount, hasSession} = useSession()
@@ -130,37 +109,10 @@ let ProfileHeaderLoaded = ({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
-
-  /*
-   * BEGIN handle bio facet resolution
-   */
-  // should be undefined on first render to trigger a resolution
-  const prevProfileDescription = React.useRef<string | undefined>()
-  const [descriptionRT, setDescriptionRT] = React.useState<
-    RichTextAPI | undefined
-  >(
-    profile.description
-      ? new RichTextAPI({text: profile.description})
-      : undefined,
+  const moderation = useMemo(
+    () => moderateProfile(profile, moderationOpts),
+    [profile, moderationOpts],
   )
-  React.useEffect(() => {
-    async function resolveRTFacets() {
-      // new each time
-      const rt = new RichTextAPI({text: profile.description || ''})
-      await rt.detectFacets(getAgent())
-      // replace existing RT instance
-      setDescriptionRT(rt)
-    }
-
-    if (profile.description !== prevProfileDescription.current) {
-      // update prev immediately
-      prevProfileDescription.current = profile.description
-      resolveRTFacets()
-    }
-  }, [profile.description, setDescriptionRT])
-  /*
-   * END handle bio facet resolution
-   */
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -440,9 +392,17 @@ let ProfileHeaderLoaded = ({
   const followers = formatCount(profile.followersCount || 0)
 
   return (
-    <View style={pal.view} pointerEvents="box-none">
+    <View style={[pal.view]} pointerEvents="box-none">
       <View pointerEvents="none">
-        <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+        {isPlaceholderProfile ? (
+          <LoadingPlaceholder
+            width="100%"
+            height={150}
+            style={{borderRadius: 0}}
+          />
+        ) : (
+          <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+        )}
       </View>
       <View style={styles.content} pointerEvents="box-none">
         <View style={[styles.buttonsLine]} pointerEvents="box-none">
@@ -476,7 +436,7 @@ let ProfileHeaderLoaded = ({
             )
           ) : !profile.viewer?.blockedBy ? (
             <>
-              {!isProfilePreview && hasSession && (
+              {hasSession && (
                 <TouchableOpacity
                   testID="suggestedFollowsBtn"
                   onPress={() => setShowSuggestedFollows(!showSuggestedFollows)}
@@ -595,7 +555,7 @@ let ProfileHeaderLoaded = ({
             {invalidHandle ? _(msg`⚠Invalid Handle`) : `@${profile.handle}`}
           </ThemedText>
         </View>
-        {!blockHide && (
+        {!isPlaceholderProfile && !blockHide && (
           <>
             <View style={styles.metricsLine} pointerEvents="box-none">
               <Link
@@ -653,7 +613,7 @@ let ProfileHeaderLoaded = ({
               </Text>
             </View>
             {descriptionRT && !moderation.profile.blur ? (
-              <View pointerEvents={isNative ? 'auto' : 'none'}>
+              <View pointerEvents="auto">
                 <RichText
                   testID="profileHeaderDescription"
                   style={[styles.description, pal.text]}
@@ -670,7 +630,7 @@ let ProfileHeaderLoaded = ({
         )}
       </View>
 
-      {!isProfilePreview && showSuggestedFollows && (
+      {showSuggestedFollows && (
         <ProfileHeaderSuggestedFollows
           actorDid={profile.did}
           requestDismiss={() => {
@@ -717,7 +677,8 @@ let ProfileHeaderLoaded = ({
     </View>
   )
 }
-ProfileHeaderLoaded = memo(ProfileHeaderLoaded)
+ProfileHeader = memo(ProfileHeader)
+export {ProfileHeader}
 
 const styles = StyleSheet.create({
   banner: {
