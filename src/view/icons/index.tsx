@@ -97,6 +97,7 @@ import {faUsers} from '@fortawesome/free-solid-svg-icons/faUsers'
 import {faUserCheck} from '@fortawesome/free-solid-svg-icons/faUserCheck'
 import {faUserSlash} from '@fortawesome/free-solid-svg-icons/faUserSlash'
 import {faUserPlus} from '@fortawesome/free-solid-svg-icons/faUserPlus'
+import {faUserMinus} from '@fortawesome/free-solid-svg-icons/faUserMinus'
 import {faUserXmark} from '@fortawesome/free-solid-svg-icons/faUserXmark'
 import {faUsersSlash} from '@fortawesome/free-solid-svg-icons/faUsersSlash'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
@@ -198,6 +199,7 @@ library.add(
   faUserCheck,
   faUserSlash,
   faUserPlus,
+  faUserMinus,
   faUserXmark,
   faUsersSlash,
   faThumbtack,
