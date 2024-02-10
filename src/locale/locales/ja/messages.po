@@ -1210,7 +1210,7 @@ msgstr "例：返信として広告を繰り返し送ってくるユーザー。
 
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
-msgstr "それぞれのコードは一度ずつ有効です。定期的に追加の招待コードをお送りします。"
+msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
