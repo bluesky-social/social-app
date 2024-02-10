@@ -31,7 +31,6 @@ import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
-import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -281,16 +280,6 @@ let PostThreadItemLoaded = ({
                       )}
                     </Text>
                   </Link>
-                  <TimeElapsed timestamp={post.indexedAt}>
-                    {({timeElapsed}) => (
-                      <Text
-                        type="md"
-                        style={[styles.metaItem, pal.textLight]}
-                        title={niceDate(post.indexedAt)}>
-                        &middot;&nbsp;{timeElapsed}
-                      </Text>
-                    )}
-                  </TimeElapsed>
                 </View>
               </View>
               <View style={styles.meta}>
@@ -710,7 +699,7 @@ function ExpandedPostDetails({
 }
 
 const useStyles = () => {
-  const {isDesktop} = useWebMediaQueries()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   return StyleSheet.create({
     outer: {
       borderTopWidth: 1,
@@ -726,13 +715,12 @@ const useStyles = () => {
     },
     layout: {
       flexDirection: 'row',
-      gap: 10,
-      paddingLeft: 8,
+      paddingHorizontal: 8,
     },
     layoutAvi: {},
     layoutContent: {
       flex: 1,
-      paddingRight: 10,
+      marginLeft: 10,
     },
     meta: {
       flexDirection: 'row',
@@ -744,8 +732,7 @@ const useStyles = () => {
       paddingBottom: 0,
     },
     metaItem: {
-      paddingRight: 5,
-      maxWidth: isDesktop ? 380 : 220,
+      maxWidth: isTabletOrDesktop ? 380 : 220,
     },
     alert: {
       marginBottom: 6,

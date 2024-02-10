@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import Animated, {FadeOut} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 import {AppBskyActorDefs} from '@atproto/api'
@@ -13,7 +13,6 @@ import * as Toast from 'view/com/util/Toast'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {Shadow, useProfileShadow} from 'state/cache/profile-shadow'
 import {track} from 'lib/analytics/analytics'
 import {
@@ -61,7 +60,7 @@ function PostThreadFollowBtnLoaded({
     // want to set a timeout to remove the follow button
     if (!wasFollowing.current && isFollowing) {
       timeout = setTimeout(() => {
-        setShowFollowBtn(false)
+        // setShowFollowBtn(false) TODO uncomment
       }, 3000)
     }
 
@@ -89,13 +88,6 @@ function PostThreadFollowBtnLoaded({
         try {
           track('ProfileHeader:FollowButtonClicked')
           await queueFollow()
-          Toast.show(
-            _(
-              msg`Following ${sanitizeDisplayName(
-                profile.displayName || profile.handle,
-              )}`,
-            ),
-          )
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to follow', {message: String(e)})
@@ -108,13 +100,6 @@ function PostThreadFollowBtnLoaded({
         try {
           track('ProfileHeader:UnfollowButtonClicked')
           await queueUnfollow()
-          Toast.show(
-            _(
-              msg`No longer following ${sanitizeDisplayName(
-                profile.displayName || profile.handle,
-              )}`,
-            ),
-          )
         } catch (e: any) {
           if (e?.name !== 'AbortError') {
             logger.error('Failed to unfollow', {message: String(e)})
@@ -123,83 +108,62 @@ function PostThreadFollowBtnLoaded({
         }
       })
     }
-  }, [
-    isFollowing,
-    requireAuth,
-    queueFollow,
-    _,
-    profile.displayName,
-    profile.handle,
-    queueUnfollow,
-  ])
+  }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow])
 
   if (!showFollowBtn) return null
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        isTabletOrDesktop && styles.containerTabletDesktop,
-      ]}
-      exiting={FadeOut}>
-      <TouchableOpacity
-        testID="followBtn"
-        onPress={onPress}
-        style={[
-          styles.btn,
-          !isFollowing ? palInverted.view : pal.viewLight,
-          isTabletOrDesktop && {paddingHorizontal: 24},
-        ]}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Follow ${profile.handle}`)}
-        accessibilityHint={_(
-          msg`Shows posts from ${profile.handle} in your feed`,
-        )}>
-        {isTabletOrDesktop ? (
-          <>
-            <FontAwesomeIcon
-              icon={!isFollowing ? 'plus' : 'check'}
-              style={[!isFollowing ? palInverted.text : pal.text, s.mr5]}
-            />
+    <View style={styles.container}>
+      {showFollowBtn && (
+        <Animated.View style={styles.btnOuter} exiting={FadeOut}>
+          <TouchableOpacity
+            testID="followBtn"
+            onPress={onPress}
+            style={[
+              styles.btn,
+              !isFollowing ? palInverted.view : pal.viewLight,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Follow ${profile.handle}`)}
+            accessibilityHint={_(
+              msg`Shows posts from ${profile.handle} in your feed`,
+            )}>
+            {isTabletOrDesktop && (
+              <FontAwesomeIcon
+                icon={!isFollowing ? 'plus' : 'check'}
+                style={[!isFollowing ? palInverted.text : pal.text, s.mr5]}
+              />
+            )}
             <Text
               type="button"
-              style={[!isFollowing ? palInverted.text : pal.text, s.bold]}>
+              style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
+              numberOfLines={1}>
               {!isFollowing ? <Trans>Follow</Trans> : <Trans>Following</Trans>}
             </Text>
-          </>
-        ) : (
-          <FontAwesomeIcon
-            icon={!isFollowing ? 'user-plus' : 'user-minus'}
-            style={[pal.text, !isFollowing ? palInverted.text : pal.text]}
-            size={14}
-          />
-        )}
-      </TouchableOpacity>
-    </Animated.View>
+          </TouchableOpacity>
+        </Animated.View>
+      )}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
+    width: 95,
+  },
+  btnOuter: {
     marginLeft: 'auto',
-    marginRight: 7,
-    marginTop: 5,
     // We have to use absolute position for this, otherwise the animation doesn't
     // work on web
     ...(isWeb && {
       position: 'absolute',
       right: 0,
-      width: 30,
     }),
-  },
-  containerTabletDesktop: {
-    width: 150,
   },
   btn: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     borderRadius: 50,
-    padding: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
   },
 })
