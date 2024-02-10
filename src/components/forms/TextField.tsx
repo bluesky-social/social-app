@@ -241,7 +241,8 @@ export const Input = createInput(TextInput)
 export function Label({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   return (
-    <Text style={[a.text_sm, a.font_bold, t.atoms.text_contrast_600, a.mb_sm]}>
+    <Text
+      style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium, a.mb_sm]}>
       {children}
     </Text>
   )
@@ -315,7 +316,7 @@ export function Suffix({
         a.z_20,
         a.pr_sm,
         a.text_md,
-        t.atoms.text_contrast_400,
+        t.atoms.text_contrast_medium,
         {
           pointerEvents: 'none',
         },
