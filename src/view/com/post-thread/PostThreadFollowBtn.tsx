@@ -21,6 +21,7 @@ import {
   useProfileQuery,
 } from 'state/queries/profile'
 import {useRequireAuth} from 'state/session'
+import {isWeb} from 'platform/detection'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -51,7 +52,7 @@ function PostThreadFollowBtnLoaded({
     !profile.viewer?.following,
   )
   // Store the initial following state for our timeout
-  const wasFollowing = React.useRef(profile.viewer?.following)
+  const wasFollowing = React.useRef(!!profile.viewer?.following)
   const isFollowing = profile.viewer?.following
 
   React.useEffect(() => {
@@ -77,6 +78,7 @@ function PostThreadFollowBtnLoaded({
     React.useCallback(() => {
       if (!isFollowing && !showFollowBtn) {
         setShowFollowBtn(true)
+        wasFollowing.current = false
       }
     }, [isFollowing, showFollowBtn]),
   )
@@ -134,7 +136,12 @@ function PostThreadFollowBtnLoaded({
   if (!showFollowBtn) return null
 
   return (
-    <Animated.View style={styles.container} exiting={FadeOut}>
+    <Animated.View
+      style={[
+        styles.container,
+        isTabletOrDesktop && styles.containerTabletDesktop,
+      ]}
+      exiting={FadeOut}>
       <TouchableOpacity
         testID="followBtn"
         onPress={onPress}
@@ -177,6 +184,16 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 7,
     marginTop: 5,
+    // We have to use absolute position for this, otherwise the animation doesn't
+    // work on web
+    ...(isWeb && {
+      position: 'absolute',
+      right: 0,
+      width: 30,
+    }),
+  },
+  containerTabletDesktop: {
+    width: 150,
   },
   btn: {
     flexDirection: 'row',
