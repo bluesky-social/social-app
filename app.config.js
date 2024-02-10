@@ -25,6 +25,7 @@ module.exports = function () {
 
   /**
    * Android build number. Must be incremented for each release.
+   * WARNING: Always leave this variable on line 30! If it is moved, you need to update ./scripts/bumpAndroidBuildNumber.sh
    */
   const ANDROID_VERSION_CODE = 61
 
