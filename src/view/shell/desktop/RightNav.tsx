@@ -80,7 +80,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             <TextLink
               type="md"
               style={pal.link}
-              href="https://blueskyweb.xyz/support/privacy-policy"
+              href="https://bsky.social/about/support/privacy-policy"
               text={_(msg`Privacy`)}
             />
             <Text type="md" style={pal.textLight}>
@@ -89,7 +89,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
             <TextLink
               type="md"
               style={pal.link}
-              href="https://blueskyweb.xyz/support/tos"
+              href="https://bsky.social/about/support/tos"
               text={_(msg`Terms`)}
             />
             <Text type="md" style={pal.textLight}>
