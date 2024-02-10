@@ -45,4 +45,4 @@ jobs:
         run: eas build -p ios --profile production --auto-submit --non-interactive
 
       - name: Commit
-        uses: stefanweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v5
