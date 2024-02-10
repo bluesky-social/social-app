@@ -156,7 +156,7 @@ function PostThreadLoaded({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const ref = useRef<ListMethods>(null)
+  const webHighlightRef = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
     !isNative || // web always uses scroll adjustment
@@ -209,15 +209,6 @@ function PostThreadLoaded({
       arr.push(BOTTOM_COMPONENT)
     }
 
-    // HACK
-    // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
-    // correct post
-    if (items.highlightedPost && !readyToShowAll) {
-      setTimeout(() => {
-        setReadyToShowAll(true)
-      }, 300)
-    }
-
     // Reset the prepending ref
     isPrepending.current = false
     return arr
@@ -251,7 +242,7 @@ function PostThreadLoaded({
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
       function onMeasure(pageY: number) {
-        ref.current?.scrollToOffset({
+        webHighlightRef.current?.scrollToOffset({
           animated: false,
           offset: pageY,
         })
@@ -312,6 +303,17 @@ function PostThreadLoaded({
     }
     setIsPTRing(false)
   }, [setIsPTRing, onRefresh])
+
+  const nativeHighlightRefCallback = () => {
+    // HACK
+    // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
+    // correct post
+    if (!readyToShowAll) {
+      setTimeout(() => {
+        setReadyToShowAll(true)
+      }, 200)
+    }
+  }
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
@@ -432,7 +434,7 @@ function PostThreadLoaded({
 
   return (
     <List
-      ref={ref}
+      ref={isWeb ? webHighlightRef : nativeHighlightRefCallback}
       data={posts}
       initialNumToRender={!isNative ? posts.length : undefined}
       keyExtractor={item => item._reactKey}
