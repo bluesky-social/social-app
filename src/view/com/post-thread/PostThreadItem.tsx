@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {Link, TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
@@ -42,6 +43,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
+import {useSession} from 'state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 
 export function PostThreadItem({
@@ -164,6 +166,7 @@ let PostThreadItemLoaded = ({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const styles = useStyles()
+  const {currentAccount} = useSession()
   const hasEngagement = post.likeCount || post.repostCount
 
   const rootUri = record.reply?.root?.uri || post.uri
@@ -249,7 +252,7 @@ let PostThreadItemLoaded = ({
           style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
           accessible={false}>
           <PostSandboxWarning />
-          <View style={styles.layout}>
+          <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
                 size={42}
@@ -325,6 +328,9 @@ let PostThreadItemLoaded = ({
                 </Link>
               </View>
             </View>
+            {currentAccount?.did !== post.author.did && (
+              <PostThreadFollowBtn did={post.author.did} />
+            )}
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
             <ContentHider
