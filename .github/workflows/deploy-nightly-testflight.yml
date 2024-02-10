@@ -38,8 +38,8 @@ jobs:
 #      - name: Install dependencies
 #        run: yarn install
 #
-#      - name: Bump build number
-#        run: yarn bump:ios
+      - name: Bump build number
+        run: yarn bump:ios
 
 #      - name: EAS build and submit
 #        run: eas build -p ios --profile production --auto-submit --non-interactive
