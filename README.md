@@ -6,7 +6,7 @@ Get the app itself:
 
 - **Web: [bsky.app](https://bsky.app)**
 - **iOS: [App Store](https://apps.apple.com/us/app/bluesky-social/id6444370199)**
-- **Android: [Play Store](https://play.google.com/store/apps/details?id=xyz.blueskyweb.app&hl=en_US&gl=US)**
+- **Android: [Play Store](https://play.google.com/store/apps/details?id=xyz.blueskyweb.app)**
 
 ## Development Resources
 
@@ -21,7 +21,7 @@ The Authenticated Transfer Protocol ("AT Protocol" or "atproto") is a decentrali
 - [Overview and Guides](https://atproto.com/guides/overview)
 - [Github Discussions](https://github.com/bluesky-social/atproto/discussions) 👈 Great place to ask questions
 - [Protocol Specifications](https://atproto.com/specs/atp)
-- [Blogpost on self-authenticating data structures](https://blueskyweb.xyz/blog/3-6-2022-a-self-authenticating-social-protocol)
+- [Blogpost on self-authenticating data structures](https://bsky.social/about/blog/3-6-2022-a-self-authenticating-social-protocol)
 
 The Bluesky Social application encompasses a set of schemas and APIs built in the overall AT Protocol framework. The namespace for these "Lexicons" is `app.bsky.*`.
 
