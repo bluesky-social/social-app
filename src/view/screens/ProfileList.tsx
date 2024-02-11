@@ -260,8 +260,12 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
 
-  const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
-  const isSaved = preferences?.feeds?.saved?.includes(list.uri)
+  const isPinned =
+    isPinPending ||
+    (!isUnpinPending && preferences?.feeds?.pinned?.includes(list.uri))
+  const isSaved =
+    isSavePending ||
+    (!isRemovePending && preferences?.feeds?.saved?.includes(list.uri))
 
   const onToggleSaved = React.useCallback(async () => {
     Haptics.default()
