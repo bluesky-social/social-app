@@ -262,10 +262,7 @@ let PostThreadItemLoaded = ({
             <View style={styles.layoutContent}>
               <View
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
-                <Link
-                  style={styles.metaItem}
-                  href={authorHref}
-                  title={authorTitle}>
+                <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text
                     type="xl-bold"
                     style={[pal.text]}
@@ -303,10 +300,7 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </View>
                 )}
-                <Link
-                  style={styles.metaItem}
-                  href={authorHref}
-                  title={authorTitle}>
+                <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text type="md" style={[pal.textLight]} numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}
                   </Text>
@@ -721,10 +715,6 @@ const styles = StyleSheet.create({
   },
   metaExpandedLine1: {
     paddingVertical: 0,
-  },
-  metaItem: {
-    flex: 1,
-    paddingRight: 20,
   },
   alert: {
     marginBottom: 6,

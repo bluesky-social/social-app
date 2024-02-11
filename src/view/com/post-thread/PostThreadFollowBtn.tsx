@@ -1,7 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import Animated, {FadeOut} from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/native'
 import {AppBskyActorDefs} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -20,7 +19,6 @@ import {
   useProfileQuery,
 } from 'state/queries/profile'
 import {useRequireAuth} from 'state/session'
-import {isWeb} from 'platform/detection'
 
 export function PostThreadFollowBtn({did}: {did: string}) {
   const {data: profile, isLoading} = useProfileQuery({did})
@@ -37,6 +35,7 @@ function PostThreadFollowBtnLoaded({
 }: {
   profile: AppBskyActorDefs.ProfileViewDetailed
 }) {
+  const navigation = useNavigation()
   const {_} = useLingui()
   const pal = usePalette('default')
   const palInverted = usePalette('inverted')
@@ -46,41 +45,41 @@ function PostThreadFollowBtnLoaded({
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const requireAuth = useRequireAuth()
 
-  // We use this so we can control how long until the button disappears
-  const [showFollowBtn, setShowFollowBtn] = React.useState(
-    !profile.viewer?.following,
-  )
-  // Store the initial following state for our timeout
-  const wasFollowing = React.useRef(!!profile.viewer?.following)
-  const isFollowing = profile.viewer?.following
+  const isFollowing = !!profile.viewer?.following
+  const [wasFollowing, setWasFollowing] = React.useState<boolean>(isFollowing)
 
+  // This prevents the button from disappearing as soon as we follow.
+  const showFollowBtn = React.useMemo(
+    () => !isFollowing || !wasFollowing,
+    [isFollowing, wasFollowing],
+  )
+
+  /**
+   * We want this button to stay visible even after following, so that the user can unfollow if they want.
+   * However, we need it to disappear after we push to a screen and then come back. We also need it to
+   * show up if we view the post while following, go to the profile and unfollow, then come back to the
+   * post.
+   *
+   * We want to update wasFollowing both on blur and on focus so that we hit all these cases. On native,
+   * we could do this only on focus because the transition animation gives us time to not notice the
+   * sudden rendering of the button. However, on web if we do this, there's an obvious flicker once the
+   * button renders. So, we update the state in both cases.
+   */
   React.useEffect(() => {
-    let timeout: NodeJS.Timeout
-    // If we were not initially following and the following state changes, we
-    // want to set a timeout to remove the follow button
-    if (!wasFollowing.current && isFollowing) {
-      timeout = setTimeout(() => {
-        // setShowFollowBtn(false) TODO uncomment
-      }, 3000)
-    }
-
-    // If the follow state changes again we need to clear the timeout so it
-    // doesn't disappear
-    return () => {
-      clearTimeout(timeout)
-    }
-  }, [isFollowing])
-
-  // We this effect to run even when we come back. It needs to display the follow button again
-  // if we unfollow from the profile screen
-  useFocusEffect(
-    React.useCallback(() => {
-      if (!isFollowing && !showFollowBtn) {
-        setShowFollowBtn(true)
-        wasFollowing.current = false
+    const updateWasFollowing = () => {
+      if (wasFollowing !== isFollowing) {
+        setWasFollowing(isFollowing)
       }
-    }, [isFollowing, showFollowBtn]),
-  )
+    }
+
+    const unsubscribeFocus = navigation.addListener('focus', updateWasFollowing)
+    const unsubscribeBlur = navigation.addListener('blur', updateWasFollowing)
+
+    return () => {
+      unsubscribeFocus()
+      unsubscribeBlur()
+    }
+  }, [isFollowing, wasFollowing, navigation])
 
   const onPress = React.useCallback(() => {
     if (!isFollowing) {
@@ -110,58 +109,46 @@ function PostThreadFollowBtnLoaded({
     }
   }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow])
 
+  if (!showFollowBtn) return null
+
   return (
-    <View style={styles.container}>
-      {showFollowBtn && (
-        <Animated.View style={styles.btnOuter} exiting={FadeOut}>
-          <TouchableOpacity
-            testID="followBtn"
-            onPress={onPress}
-            style={[
-              styles.btn,
-              !isFollowing ? palInverted.view : pal.viewLight,
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Follow ${profile.handle}`)}
-            accessibilityHint={_(
-              msg`Shows posts from ${profile.handle} in your feed`,
-            )}>
-            {isTabletOrDesktop && (
-              <FontAwesomeIcon
-                icon={!isFollowing ? 'plus' : 'check'}
-                style={[!isFollowing ? palInverted.text : pal.text, s.mr5]}
-              />
-            )}
-            <Text
-              type="button"
-              style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
-              numberOfLines={1}>
-              {!isFollowing ? <Trans>Follow</Trans> : <Trans>Following</Trans>}
-            </Text>
-          </TouchableOpacity>
-        </Animated.View>
-      )}
+    <View style={{width: isTabletOrDesktop ? 130 : 120}}>
+      <View style={styles.btnOuter}>
+        <TouchableOpacity
+          testID="followBtn"
+          onPress={onPress}
+          style={[styles.btn, !isFollowing ? palInverted.view : pal.viewLight]}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Follow ${profile.handle}`)}
+          accessibilityHint={_(
+            msg`Shows posts from ${profile.handle} in your feed`,
+          )}>
+          {isTabletOrDesktop && (
+            <FontAwesomeIcon
+              icon={!isFollowing ? 'plus' : 'check'}
+              style={[!isFollowing ? palInverted.text : pal.text, s.mr5]}
+            />
+          )}
+          <Text
+            type="button"
+            style={[!isFollowing ? palInverted.text : pal.text, s.bold]}
+            numberOfLines={1}>
+            {!isFollowing ? <Trans>Follow</Trans> : <Trans>Following</Trans>}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: 100,
-  },
   btnOuter: {
     marginLeft: 'auto',
-    // We have to use absolute position for this, otherwise the animation doesn't
-    // work on web
-    ...(isWeb && {
-      position: 'absolute',
-      right: 0,
-    }),
   },
   btn: {
     flexDirection: 'row',
     borderRadius: 50,
     paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingHorizontal: 14,
   },
 })
