@@ -114,7 +114,6 @@ export function PostThreadItem({
 }
 
 function PostThreadItemDeleted() {
-  const styles = useStyles()
   const pal = usePalette('default')
   return (
     <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
@@ -164,7 +163,6 @@ let PostThreadItemLoaded = ({
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
-  const styles = useStyles()
   const {currentAccount} = useSession()
   const hasEngagement = post.likeCount || post.repostCount
 
@@ -264,23 +262,21 @@ let PostThreadItemLoaded = ({
             <View style={styles.layoutContent}>
               <View
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
-                <View style={[s.flexRow]}>
-                  <Link
-                    style={styles.metaItem}
-                    href={authorHref}
-                    title={authorTitle}>
-                    <Text
-                      type="xl-bold"
-                      style={[pal.text]}
-                      numberOfLines={1}
-                      lineHeight={1.2}>
-                      {sanitizeDisplayName(
-                        post.author.displayName ||
-                          sanitizeHandle(post.author.handle),
-                      )}
-                    </Text>
-                  </Link>
-                </View>
+                <Link
+                  style={styles.metaItem}
+                  href={authorHref}
+                  title={authorTitle}>
+                  <Text
+                    type="xl-bold"
+                    style={[pal.text]}
+                    numberOfLines={1}
+                    lineHeight={1.2}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(post.author.handle),
+                    )}
+                  </Text>
+                </Link>
               </View>
               <View style={styles.meta}>
                 {isAuthorMuted && (
@@ -621,7 +617,6 @@ function PostOuterWrapper({
 }>) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  const styles = useStyles()
   if (treeView && depth > 0) {
     return (
       <View
@@ -698,92 +693,88 @@ function ExpandedPostDetails({
   )
 }
 
-const useStyles = () => {
-  const {isTabletOrDesktop} = useWebMediaQueries()
-  return StyleSheet.create({
-    outer: {
-      borderTopWidth: 1,
-      paddingLeft: 8,
-    },
-    outerHighlighted: {
-      paddingTop: 16,
-      paddingLeft: 8,
-      paddingRight: 8,
-    },
-    noTopBorder: {
-      borderTopWidth: 0,
-    },
-    layout: {
-      flexDirection: 'row',
-      paddingHorizontal: 8,
-    },
-    layoutAvi: {},
-    layoutContent: {
-      flex: 1,
-      marginLeft: 10,
-    },
-    meta: {
-      flexDirection: 'row',
-      paddingTop: 2,
-      paddingBottom: 2,
-    },
-    metaExpandedLine1: {
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-    metaItem: {
-      maxWidth: isTabletOrDesktop ? 380 : 220,
-    },
-    alert: {
-      marginBottom: 6,
-    },
-    postTextContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-      paddingBottom: 4,
-      paddingRight: 10,
-    },
-    postTextLargeContainer: {
-      paddingHorizontal: 0,
-      paddingRight: 0,
-      paddingBottom: 10,
-    },
-    translateLink: {
-      marginBottom: 6,
-    },
-    contentHider: {
-      marginBottom: 6,
-    },
-    contentHiderChild: {
-      marginTop: 6,
-    },
-    expandedInfo: {
-      flexDirection: 'row',
-      padding: 10,
-      borderTopWidth: 1,
-      borderBottomWidth: 1,
-      marginTop: 5,
-      marginBottom: 15,
-    },
-    expandedInfoItem: {
-      marginRight: 10,
-    },
-    loadMore: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      gap: 4,
-      paddingHorizontal: 20,
-    },
-    replyLine: {
-      width: 2,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-    cursor: {
-      // @ts-ignore web only
-      cursor: 'pointer',
-    },
-  })
-}
+const styles = StyleSheet.create({
+  outer: {
+    borderTopWidth: 1,
+    paddingLeft: 8,
+  },
+  outerHighlighted: {
+    paddingTop: 16,
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
+  noTopBorder: {
+    borderTopWidth: 0,
+  },
+  layout: {
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+  },
+  layoutAvi: {},
+  layoutContent: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  meta: {
+    flexDirection: 'row',
+    paddingVertical: 2,
+  },
+  metaExpandedLine1: {
+    paddingVertical: 0,
+  },
+  metaItem: {
+    flex: 1,
+    paddingRight: 20,
+  },
+  alert: {
+    marginBottom: 6,
+  },
+  postTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingBottom: 4,
+    paddingRight: 10,
+  },
+  postTextLargeContainer: {
+    paddingHorizontal: 0,
+    paddingRight: 0,
+    paddingBottom: 10,
+  },
+  translateLink: {
+    marginBottom: 6,
+  },
+  contentHider: {
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
+  },
+  expandedInfo: {
+    flexDirection: 'row',
+    padding: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 5,
+    marginBottom: 15,
+  },
+  expandedInfoItem: {
+    marginRight: 10,
+  },
+  loadMore: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 4,
+    paddingHorizontal: 20,
+  },
+  replyLine: {
+    width: 2,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  cursor: {
+    // @ts-ignore web only
+    cursor: 'pointer',
+  },
+})

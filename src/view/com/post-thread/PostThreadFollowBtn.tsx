@@ -110,8 +110,6 @@ function PostThreadFollowBtnLoaded({
     }
   }, [isFollowing, requireAuth, queueFollow, _, queueUnfollow])
 
-  if (!showFollowBtn) return null
-
   return (
     <View style={styles.container}>
       {showFollowBtn && (
@@ -149,7 +147,7 @@ function PostThreadFollowBtnLoaded({
 
 const styles = StyleSheet.create({
   container: {
-    width: 95,
+    width: 100,
   },
   btnOuter: {
     marginLeft: 'auto',
