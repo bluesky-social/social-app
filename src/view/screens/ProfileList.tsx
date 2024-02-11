@@ -56,6 +56,8 @@ import {
   usePinFeedMutation,
   useUnpinFeedMutation,
   useSetSaveFeedsMutation,
+  useSaveFeedMutation,
+  useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
@@ -242,16 +244,39 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
+
+  const {isPending: isSavePending, mutateAsync: saveFeed} =
+    useSaveFeedMutation()
+  const {isPending: isRemovePending, mutateAsync: removeFeed} =
+    useRemoveFeedMutation()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
-  const isPending = isPinPending || isUnpinPending
+
+  const isSaving = isSavePending || isRemovePending
+  const isPinning = isPinPending || isUnpinPending
+
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
 
   const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
   const isSaved = preferences?.feeds?.saved?.includes(list.uri)
+
+  const onToggleSaved = React.useCallback(async () => {
+    Haptics.default()
+
+    try {
+      if (isSaved) {
+        await removeFeed({uri: list.uri})
+      } else {
+        await saveFeed({uri: list.uri})
+      }
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`))
+      logger.error('Failed to toggle saved feed', {message: e})
+    }
+  }, [list.uri, isSaved, saveFeed, removeFeed, _])
 
   const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
@@ -471,7 +496,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       items.push({
         testID: 'listHeaderDropdownUnpinBtn',
         label: _(msg`Unpin moderation list`),
-        onPress: isPending ? undefined : () => unpinFeed({uri: list.uri}),
+        onPress: isPinning ? undefined : () => unpinFeed({uri: list.uri}),
         icon: {
           ios: {
             name: 'pin',
@@ -525,7 +550,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     isModList,
     isPinned,
     unpinFeed,
-    isPending,
+    isPinning,
     list.uri,
     isCurateList,
     isMuting,
@@ -573,15 +598,24 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       isOwner={list.creator.did === currentAccount?.did}
       creator={list.creator}
       avatarType="list">
-      {isCurateList || isPinned ? (
+      {(isCurateList || isSaved) && (
+        <Button
+          type={isSaved ? 'default' : 'inverted'}
+          label={isSaved ? _(msg`Unsave`) : _(msg`Save`)}
+          onPress={onToggleSaved}
+          disabled={isSaving}
+        />
+      )}
+      {isCurateList && (
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
           type={isPinned ? 'default' : 'inverted'}
           label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
           onPress={onTogglePinned}
-          disabled={isPending}
+          disabled={isPinning}
         />
-      ) : isModList ? (
+      )}
+      {isModList && !isSaved ? (
         isBlocking ? (
           <Button
             testID="unblockBtn"
