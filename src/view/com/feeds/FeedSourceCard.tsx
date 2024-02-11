@@ -96,8 +96,7 @@ export function FeedSourceCardLoaded({
   const isSaved = Boolean(preferences?.feeds?.saved?.includes(feed?.uri || ''))
 
   const onToggleSaved = React.useCallback(async () => {
-    // Only feeds can be un/saved, lists are handled elsewhere
-    if (feed?.type !== 'feed') return
+    if (!feed) return
 
     if (isSaved) {
       openModal({
@@ -233,7 +232,7 @@ export function FeedSourceCardLoaded({
           </Text>
         </View>
 
-        {showSaveBtn && feed.type === 'feed' && (
+        {showSaveBtn && (
           <View style={[s.justifyCenter]}>
             <Pressable
               testID={`feed-${feed.displayName}-toggleSave`}
