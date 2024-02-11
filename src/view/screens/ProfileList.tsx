@@ -491,12 +491,12 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
-    if (isModList && isPinned) {
+    if (isModList && isSaved) {
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownUnpinBtn',
-        label: _(msg`Unpin moderation list`),
-        onPress: isPinning ? undefined : () => unpinFeed({uri: list.uri}),
+        label: _(msg`Unsave moderation list`),
+        onPress: isSaving ? undefined : () => removeFeed({uri: list.uri}),
         icon: {
           ios: {
             name: 'pin',
@@ -548,9 +548,9 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     onPressReport,
     _,
     isModList,
-    isPinned,
-    unpinFeed,
-    isPinning,
+    isSaved,
+    isSaving,
+    removeFeed,
     list.uri,
     isCurateList,
     isMuting,
