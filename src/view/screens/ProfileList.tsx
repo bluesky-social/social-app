@@ -608,6 +608,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           label={isSaved ? _(msg`Unsave`) : _(msg`Save`)}
           onPress={onToggleSaved}
           disabled={isSaving}
+          style={styles.btn}
         />
       )}
       {isCurateList && (
@@ -617,6 +618,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
           onPress={onTogglePinned}
           disabled={isPinning}
+          style={styles.btn}
         />
       )}
       {isModList && !isSaved ? (
@@ -626,6 +628,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
             type="default"
             label={_(msg`Unblock`)}
             onPress={onUnsubscribeBlock}
+            style={styles.btn}
           />
         ) : isMuting ? (
           <Button
@@ -633,6 +636,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
             type="default"
             label={_(msg`Unmute`)}
             onPress={onUnsubscribeMute}
+            style={styles.btn}
           />
         ) : (
           <NativeDropdown
