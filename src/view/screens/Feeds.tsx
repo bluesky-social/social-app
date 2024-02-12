@@ -1,5 +1,11 @@
 import React from 'react'
-import {ActivityIndicator, StyleSheet, View, type FlatList} from 'react-native'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  View,
+  type FlatList,
+  Pressable,
+} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -8,9 +14,9 @@ import {Link} from 'view/com/util/Link'
 import {NativeStackScreenProps, FeedsTabNavigatorParams} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2, CogIcon} from 'lib/icons'
+import {ComposeIcon2, CogIcon, MagnifyingGlassIcon2} from 'lib/icons'
 import {s} from 'lib/styles'
-import {SearchInput} from 'view/com/util/forms/SearchInput'
+import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {
   LoadingPlaceholder,
@@ -36,6 +42,7 @@ import {cleanError} from 'lib/strings/errors'
 import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
 import {isNative} from '#/platform/detection'
+import {HITSLOP_10} from 'lib/constants'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -121,6 +128,7 @@ export function FeedsScreen(_props: Props) {
   } = useSearchPopularFeedsMutation()
   const {hasSession} = useSession()
   const listRef = React.useRef<FlatList>(null)
+  const searchInputRef = React.useRef<SearchInputRef>(null)
 
   /**
    * A search query is present. We may not have search results yet.
@@ -330,14 +338,26 @@ export function FeedsScreen(_props: Props) {
 
   const renderHeaderBtn = React.useCallback(() => {
     return (
-      <Link
-        href="/settings/saved-feeds"
-        hitSlop={10}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`Edit Saved Feeds`)}
-        accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
-        <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
-      </Link>
+      <View style={styles.headerBtnGroup}>
+        <Pressable
+          accessibilityRole="button"
+          hitSlop={HITSLOP_10}
+          onPress={searchInputRef.current?.focus}>
+          <MagnifyingGlassIcon2
+            size={22}
+            strokeWidth={2}
+            style={pal.textLight}
+          />
+        </Pressable>
+        <Link
+          href="/settings/saved-feeds"
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Edit Saved Feeds`)}
+          accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
+          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+        </Link>
+      </View>
     )
   }, [pal, _])
 
@@ -398,12 +418,24 @@ export function FeedsScreen(_props: Props) {
               <Text type="title-lg" style={[pal.text, s.bold]}>
                 <Trans>My Feeds</Trans>
               </Text>
-              <Link
-                href="/settings/saved-feeds"
-                accessibilityLabel={_(msg`Edit My Feeds`)}
-                accessibilityHint="">
-                <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-              </Link>
+              <View style={styles.headerBtnGroup}>
+                <Pressable
+                  accessibilityRole="button"
+                  hitSlop={HITSLOP_10}
+                  onPress={searchInputRef.current?.focus}>
+                  <MagnifyingGlassIcon2
+                    size={22}
+                    strokeWidth={2}
+                    style={pal.icon}
+                  />
+                </Pressable>
+                <Link
+                  href="/settings/saved-feeds"
+                  accessibilityLabel={_(msg`Edit My Feeds`)}
+                  accessibilityHint="">
+                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                </Link>
+              </View>
             </View>
           )
         }
@@ -443,6 +475,7 @@ export function FeedsScreen(_props: Props) {
 
               {!isMobile && (
                 <SearchInput
+                  ref={searchInputRef}
                   query={query}
                   onChangeQuery={onChangeQuery}
                   onPressCancelSearch={onPressCancelSearch}
@@ -456,6 +489,7 @@ export function FeedsScreen(_props: Props) {
             {isMobile && (
               <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
                 <SearchInput
+                  ref={searchInputRef}
                   query={query}
                   onChangeQuery={onChangeQuery}
                   onPressCancelSearch={onPressCancelSearch}
@@ -662,5 +696,10 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 4,
     paddingVertical: 2,
+  },
+  headerBtnGroup: {
+    flexDirection: 'row',
+    gap: 15,
+    alignItems: 'center',
   },
 })
