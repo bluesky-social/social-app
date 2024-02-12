@@ -188,7 +188,9 @@ function PostThreadLoaded({
 
     // Create the posts to prepend
     const postsToPrepend = [
-      ...(!highlightedPost?.ctx.isParentLoading ? [TOP_COMPONENT] : []),
+      ...(!highlightedPost?.ctx.isParentLoading && !highlightedPost?.parent
+        ? [TOP_COMPONENT]
+        : []),
       ...(!isWeb
         ? [...items.parents.slice(-(topPageCount * 15))]
         : [...items.parents]),
@@ -308,7 +310,9 @@ function PostThreadLoaded({
     // HACK
     // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
     // correct post
-    setReadyToShowAll(true)
+    setTimeout(() => {
+      setReadyToShowAll(true)
+    }, 150)
   }, [])
 
   const renderItem = React.useCallback(
