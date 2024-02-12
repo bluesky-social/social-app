@@ -475,6 +475,7 @@ let PostThreadItemLoaded = ({
                       : 8,
                 },
               ]}>
+              {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
               {!isThreadedChild && (
                 <View style={styles.layoutAvi}>
                   <PreviewableUserAvatar
@@ -500,7 +501,12 @@ let PostThreadItemLoaded = ({
                 </View>
               )}
 
-              <View style={styles.layoutContent}>
+              <View
+                style={
+                  isThreadedChild
+                    ? styles.layoutContentThreaded
+                    : styles.layoutContent
+                }>
                 <PostMeta
                   author={post.author}
                   authorHasWarning={!!post.author.labels?.length}
@@ -708,6 +714,10 @@ const styles = StyleSheet.create({
   layoutContent: {
     flex: 1,
     marginLeft: 10,
+  },
+  layoutContentThreaded: {
+    flex: 1,
+    paddingRight: 10,
   },
   meta: {
     flexDirection: 'row',
