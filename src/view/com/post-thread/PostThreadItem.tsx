@@ -87,7 +87,7 @@ export function PostThreadItem({
     [post, moderationOpts],
   )
   if (postShadowed === POST_TOMBSTONE) {
-    return <PostThreadItemDeleted />
+    return <PostThreadItemDeleted post={postShadowed} record={record} />
   }
   if (richText && moderation) {
     return (
@@ -112,16 +112,49 @@ export function PostThreadItem({
   return null
 }
 
-function PostThreadItemDeleted() {
+function PostThreadItemDeleted({
+  post,
+  record,
+}: {
+  post: Shadow<AppBskyFeedDefs.PostView>
+  record: AppBskyFeedPost.Record
+}) {
   const styles = useStyles()
   const pal = usePalette('default')
+  const rootUri = record.reply?.root?.uri || post.uri
   return (
-    <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
-      <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
-      <Text style={[pal.textLight, s.ml10]}>
-        <Trans>This post has been deleted.</Trans>
-      </Text>
-    </View>
+    <>
+      {rootUri !== post.uri && (
+        <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
+          <View style={{width: 38}}>
+            <View
+              style={[
+                styles.replyLine,
+                {
+                  flexGrow: 1,
+                  backgroundColor: pal.colors.border,
+                },
+              ]}
+            />
+          </View>
+        </View>
+      )}
+
+      <View
+        style={[
+          styles.outer,
+          rootUri === post.uri && styles.noTopBorder,
+          pal.border,
+          pal.view,
+          s.p20,
+          s.flexRow,
+        ]}>
+        <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
+        <Text style={[pal.textLight, s.ml10]}>
+          <Trans>This post has been deleted.</Trans>
+        </Text>
+      </View>
+    </>
   )
 }
 
