@@ -156,7 +156,7 @@ function PostThreadLoaded({
   const {_} = useLingui()
   const pal = usePalette('default')
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
-  const webHighlightRef = useRef<ListMethods>(null)
+  const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
   const needsScrollAdjustment = useRef<boolean>(
     !isNative || // web always uses scroll adjustment
@@ -242,7 +242,7 @@ function PostThreadLoaded({
     // wait for loading to finish
     if (thread.type === 'post' && !!thread.parent) {
       function onMeasure(pageY: number) {
-        webHighlightRef.current?.scrollToOffset({
+        ref.current?.scrollToOffset({
           animated: false,
           offset: pageY,
         })
@@ -304,16 +304,12 @@ function PostThreadLoaded({
     setIsPTRing(false)
   }, [setIsPTRing, onRefresh])
 
-  const nativeHighlightRefCallback = () => {
+  const nativeHighlightRefCallback = React.useCallback(() => {
     // HACK
     // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
     // correct post
-    if (!readyToShowAll) {
-      setTimeout(() => {
-        setReadyToShowAll(true)
-      }, 200)
-    }
-  }
+    setReadyToShowAll(true)
+  }, [])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
@@ -394,7 +390,14 @@ function PostThreadLoaded({
           : undefined
         return (
           <View
-            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}>
+            ref={
+              item.ctx.isHighlightedPost
+                ? // Use a ref on web, use a ref callback on native
+                  isWeb
+                  ? highlightedPostRef
+                  : nativeHighlightRefCallback
+                : undefined
+            }>
             <PostThreadItem
               post={item.post}
               record={item.record}
@@ -417,6 +420,7 @@ function PostThreadLoaded({
     [
       hasSession,
       isTabletOrMobile,
+      _,
       isMobile,
       onPressReply,
       pal.border,
@@ -426,15 +430,15 @@ function PostThreadLoaded({
       pal.text,
       pal.colors.border,
       posts,
-      onRefresh,
+      nativeHighlightRefCallback,
       treeView,
-      _,
+      onRefresh,
     ],
   )
 
   return (
     <List
-      ref={isWeb ? webHighlightRef : nativeHighlightRefCallback}
+      ref={ref}
       data={posts}
       initialNumToRender={!isNative ? posts.length : undefined}
       keyExtractor={item => item._reactKey}
