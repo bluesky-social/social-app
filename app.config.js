@@ -11,7 +11,7 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
-module.exports = function (config) {
+module.exports = function () {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
@@ -23,6 +23,11 @@ module.exports = function (config) {
    * @see https://docs.expo.dev/build-reference/variables/#built-in-environment-variables
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
+
+  const DIST_BUILD_NUMBER =
+    PLATFORM === 'android'
+      ? process.env.BSKY_ANDROID_VERSION_CODE
+      : process.env.BSKY_IOS_BUILD_NUMBER
 
   return {
     expo: {
@@ -149,7 +154,7 @@ module.exports = function (config) {
               organization: 'blueskyweb',
               project: 'react-native',
               release: VERSION,
-              dist: `${PLATFORM}.${VERSION}.${new Date().toISOString()}`,
+              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
             },
           },
         ],
