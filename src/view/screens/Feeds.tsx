@@ -338,7 +338,7 @@ export function FeedsScreen(_props: Props) {
 
   const renderHeaderBtn = React.useCallback(() => {
     return (
-      <View style={styles.headerBar}>
+      <View style={styles.headerBtnGroup}>
         <Pressable
           accessibilityRole="button"
           hitSlop={HITSLOP_10}
@@ -418,12 +418,24 @@ export function FeedsScreen(_props: Props) {
               <Text type="title-lg" style={[pal.text, s.bold]}>
                 <Trans>My Feeds</Trans>
               </Text>
-              <Link
-                href="/settings/saved-feeds"
-                accessibilityLabel={_(msg`Edit My Feeds`)}
-                accessibilityHint="">
-                <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-              </Link>
+              <View style={styles.headerBtnGroup}>
+                <Pressable
+                  accessibilityRole="button"
+                  hitSlop={HITSLOP_10}
+                  onPress={searchInputRef.current?.focus}>
+                  <MagnifyingGlassIcon2
+                    size={22}
+                    strokeWidth={2}
+                    style={pal.icon}
+                  />
+                </Pressable>
+                <Link
+                  href="/settings/saved-feeds"
+                  accessibilityLabel={_(msg`Edit My Feeds`)}
+                  accessibilityHint="">
+                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                </Link>
+              </View>
             </View>
           )
         }
@@ -463,6 +475,7 @@ export function FeedsScreen(_props: Props) {
 
               {!isMobile && (
                 <SearchInput
+                  ref={searchInputRef}
                   query={query}
                   onChangeQuery={onChangeQuery}
                   onPressCancelSearch={onPressCancelSearch}
@@ -684,8 +697,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingVertical: 2,
   },
-  headerBar: {
+  headerBtnGroup: {
     flexDirection: 'row',
     gap: 15,
+    alignItems: 'center',
   },
 })
