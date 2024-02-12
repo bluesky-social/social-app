@@ -252,6 +252,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 0.2,
     fontWeight: '400',
-    lineHeight: 23.4, // 1.3*16
   },
 })
