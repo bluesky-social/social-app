@@ -475,6 +475,7 @@ let PostThreadItemLoaded = ({
                       : 8,
                 },
               ]}>
+              {/* If we are in threaded mode, the avatar is rendered in PostMeta */}
               {!isThreadedChild && (
                 <View style={styles.layoutAvi}>
                   <PreviewableUserAvatar
@@ -502,7 +503,9 @@ let PostThreadItemLoaded = ({
 
               <View
                 style={
-                  treeView ? styles.layoutContentThreaded : styles.layoutContent
+                  isThreadedChild
+                    ? styles.layoutContentThreaded
+                    : styles.layoutContent
                 }>
                 <PostMeta
                   author={post.author}
