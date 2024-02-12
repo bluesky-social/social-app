@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-01-30 19:00+0900\n"
 "Last-Translator: Hima-Zinn\n"
-"Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada\n"
+"Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -1210,7 +1210,7 @@ msgstr "例：返信として広告を繰り返し送ってくるユーザー。
 
 #: src/view/com/modals/InviteCodes.tsx:96
 msgid "Each code works once. You'll receive more invite codes periodically."
-msgstr "それぞれのコードは一度ずつ動作します。定期的に招待コードをお送りします。"
+msgstr "それぞれのコードは一回限り有効です。定期的に追加の招待コードをお送りします。"
 
 #: src/view/com/lists/ListMembers.tsx:149
 msgctxt "action"
@@ -1658,7 +1658,7 @@ msgstr "ギャラリー"
 #: src/view/com/modals/VerifyEmail.tsx:189
 #: src/view/com/modals/VerifyEmail.tsx:191
 msgid "Get Started"
-msgstr "はじめに"
+msgstr "開始"
 
 #: src/view/com/auth/LoggedOut.tsx:81
 #: src/view/com/auth/LoggedOut.tsx:82
@@ -2272,7 +2272,7 @@ msgstr "モデレーションの設定"
 
 #: src/view/com/modals/ModerationDetails.tsx:35
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "モデレーターはその投稿に一般的な警告の設定を選択しました。"
+msgstr "モデレーターによりコンテンツに一般的な警告が設定されました。"
 
 #: src/view/shell/desktop/Feeds.tsx:53
 msgid "More feeds"
@@ -2525,7 +2525,7 @@ msgstr "見つかりません"
 #: src/view/com/modals/VerifyEmail.tsx:246
 #: src/view/com/modals/VerifyEmail.tsx:252
 msgid "Not right now"
-msgstr "今すぐにではない"
+msgstr "今はしない"
 
 #: src/view/screens/Moderation.tsx:227
 #~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
@@ -3717,7 +3717,7 @@ msgstr "サインアップ"
 
 #: src/view/shell/NavSignupCard.tsx:42
 msgid "Sign up or sign in to join the conversation"
-msgstr "登録またはログインして会話に参加"
+msgstr "サインアップまたはサインインして会話に参加"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:76
 msgid "Sign-in Required"
@@ -4568,7 +4568,7 @@ msgstr "保存されたフィードがありません。"
 
 #: src/view/com/post-thread/PostThread.tsx:406
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "あなたが著者をブロックしているか、または著者によってあなたはブロックされています。"
+msgstr "あなたが投稿者をブロックしているか、または投稿者によってあなたはブロックされています。"
 
 #: src/view/com/modals/ModerationDetails.tsx:56
 msgid "You have blocked this user. You cannot view their content."
@@ -4676,7 +4676,7 @@ msgstr "メールアドレスが保存されました！すぐにご連絡いた
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "メールアドレスは更新されましたが、確認されていません。次のステップとして、新しいEメールを確認してください。"
+msgstr "メールアドレスは更新されましたが、確認されていません。次のステップとして、新しいメールアドレスを確認してください。"
 
 #: src/view/com/modals/VerifyEmail.tsx:114
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
