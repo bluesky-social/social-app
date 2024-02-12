@@ -223,6 +223,9 @@ export const atoms = {
   /*
    * Border
    */
+  border_0: {
+    borderWidth: 0,
+  },
   border: {
     borderWidth: 1,
   },

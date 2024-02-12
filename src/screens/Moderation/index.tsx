@@ -16,7 +16,7 @@ import {s} from '#/lib/styles'
 import {CenteredView} from '#/view/com/util/Views'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import {Link, TextLink} from '#/view/com/util/Link'
-import {Text} from '#/view/com/util/text/Text'
+import {Text as OldText} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -32,14 +32,20 @@ import {
 } from '#/state/queries/profile'
 import {ScrollView} from '#/view/com/util/Views'
 
+import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {Divider} from '#/components/Divider'
+import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
+import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
+import {Text} from '#/components/Typography'
+
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export function ModerationScreen({}: Props) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {screen, track} = useAnalytics()
-  const {isTabletOrDesktop} = useWebMediaQueries()
-  const {openModal} = useModalControls()
+  const {screen} = useAnalytics()
+  const {gtMobile, gtTablet} = useBreakpoints()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -48,91 +54,84 @@ export function ModerationScreen({}: Props) {
     }, [screen, setMinimalShellMode]),
   )
 
-  const onPressContentFiltering = React.useCallback(() => {
-    track('Moderation:ContentfilteringButtonClicked')
-    openModal({name: 'content-filtering-settings'})
-  }, [track, openModal])
-
   return (
     <CenteredView
       style={[
-        s.hContentRegion,
-        pal.border,
-        isTabletOrDesktop ? styles.desktopContainer : pal.viewLight,
+        a.border,
+        t.atoms.border_contrast_low,
+        t.atoms.bg,
+        ...(gtMobile ? [a.border_l, a.border_r] : []),
       ]}
       testID="moderationScreen">
       <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
-      <ScrollView contentContainerStyle={[styles.noBorder]}>
-        <View style={styles.spacer} />
-        <TouchableOpacity
-          testID="contentFilteringBtn"
-          style={[styles.linkCard, pal.view]}
-          onPress={onPressContentFiltering}
-          accessibilityRole="tab"
-          accessibilityHint="Content filtering"
-          accessibilityLabel="">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="eye"
-              style={pal.text as FontAwesomeIconStyle}
-            />
-          </View>
-          <Text type="lg" style={pal.text}>
-            <Trans>Content filtering</Trans>
-          </Text>
-        </TouchableOpacity>
+
+      <ScrollView contentContainerStyle={[a.border_0]}>
+        {!gtTablet && <Divider />}
+
         <Link
           testID="moderationlistsBtn"
-          style={[styles.linkCard, pal.view]}
+          style={[a.flex_row, a.align_center, a.py_md, a.px_lg, a.gap_md]}
           href="/moderation/modlists">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="users-slash"
-              style={pal.text as FontAwesomeIconStyle}
-            />
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.p_md,
+              a.rounded_full,
+              t.atoms.bg_contrast_50,
+            ]}>
+            <Group size="md" style={[t.atoms.text_contrast_medium]} />
           </View>
-          <Text type="lg" style={pal.text}>
+          <Text style={[a.text_md]}>
             <Trans>Moderation lists</Trans>
           </Text>
         </Link>
+
+        <Divider />
+
         <Link
           testID="mutedAccountsBtn"
-          style={[styles.linkCard, pal.view]}
+          style={[a.flex_row, a.align_center, a.py_md, a.px_lg, a.gap_md]}
           href="/moderation/muted-accounts">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="user-slash"
-              style={pal.text as FontAwesomeIconStyle}
-            />
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.p_md,
+              a.rounded_full,
+              t.atoms.bg_contrast_50,
+            ]}>
+            <Person size="md" style={[t.atoms.text_contrast_medium]} />
           </View>
-          <Text type="lg" style={pal.text}>
+          <Text style={[a.text_md]}>
             <Trans>Muted accounts</Trans>
           </Text>
         </Link>
+
+        <Divider />
+
         <Link
           testID="blockedAccountsBtn"
-          style={[styles.linkCard, pal.view]}
+          style={[a.flex_row, a.align_center, a.py_md, a.px_lg, a.gap_md]}
           href="/moderation/blocked-accounts">
-          <View style={[styles.iconContainer, pal.btn]}>
-            <FontAwesomeIcon
-              icon="ban"
-              style={pal.text as FontAwesomeIconStyle}
-            />
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.p_md,
+              a.rounded_full,
+              t.atoms.bg_contrast_50,
+            ]}>
+            <CircleBanSign size="md" style={[t.atoms.text_contrast_medium]} />
           </View>
-          <Text type="lg" style={pal.text}>
+          <Text style={[a.text_md]}>
             <Trans>Blocked accounts</Trans>
           </Text>
         </Link>
-        <Text
-          type="xl-bold"
-          style={[
-            pal.text,
-            {
-              paddingHorizontal: 18,
-              paddingTop: 18,
-              paddingBottom: 6,
-            },
-          ]}>
+
+        <Divider />
+
+        <Text style={[a.text_lg, a.font_bold, a.pl_lg, a.pt_lg, a.pb_sm]}>
           <Trans>Logged-out visibility</Trans>
         </Text>
         <PwiOptOut />
@@ -222,21 +221,21 @@ function PwiOptOut() {
           paddingBottom: 10,
           marginBottom: 64,
         }}>
-        <Text style={pal.textLight}>
+        <OldText style={pal.textLight}>
           <Trans>
             Bluesky will not show your profile and posts to logged-out users.
             Other apps may not honor this request. This does not make your
             account private.
           </Trans>
-        </Text>
-        <Text style={[pal.textLight, {fontWeight: '500'}]}>
+        </OldText>
+        <OldText style={[pal.textLight, {fontWeight: '500'}]}>
           <Trans>
             Note: Bluesky is an open and public network. This setting only
             limits the visibility of your content on the Bluesky app and
             website, and other apps may not respect this setting. Your content
             may still be shown to logged-out users by other apps and websites.
           </Trans>
-        </Text>
+        </OldText>
         <TextLink
           style={pal.link}
           href="https://blueskyweb.zendesk.com/hc/en-us/articles/15835264007693-Data-Privacy"
