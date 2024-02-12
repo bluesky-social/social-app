@@ -31,7 +31,7 @@ export const Pager = React.forwardRef(function PagerImpl(
   const anchorRef = React.useRef(null)
 
   React.useImperativeHandle(ref, () => ({
-    setPage: (index: number) => setSelectedPage(index),
+    setPage: (index: number) => onTabBarSelect(index),
   }))
 
   const onTabBarSelect = React.useCallback(

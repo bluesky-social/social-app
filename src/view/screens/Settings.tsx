@@ -863,13 +863,13 @@ export function SettingsScreen({}: Props) {
           <TextLink
             type="md"
             style={pal.link}
-            href="https://blueskyweb.xyz/support/tos"
+            href="https://bsky.social/about/support/tos"
             text={_(msg`Terms of Service`)}
           />
           <TextLink
             type="md"
             style={pal.link}
-            href="https://blueskyweb.xyz/support/privacy-policy"
+            href="https://bsky.social/about/support/privacy-policy"
             text={_(msg`Privacy Policy`)}
           />
         </View>

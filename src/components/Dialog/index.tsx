@@ -35,6 +35,7 @@ export function Outer({
   const sheet = React.useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
+  const insets = useSafeAreaInsets()
 
   const open = React.useCallback<DialogControlProps['open']>(({index} = {}) => {
     sheet.current?.snapToIndex(index || 0)
@@ -42,8 +43,7 @@ export function Outer({
 
   const close = React.useCallback(() => {
     sheet.current?.close()
-    onClose?.()
-  }, [onClose])
+  }, [])
 
   useImperativeHandle(
     control.ref,
@@ -52,6 +52,15 @@ export function Outer({
       close,
     }),
     [open, close],
+  )
+
+  const onChange = React.useCallback(
+    (index: number) => {
+      if (index === -1) {
+        onClose?.()
+      }
+    },
+    [onClose],
   )
 
   const context = React.useMemo(() => ({close}), [close])
@@ -64,6 +73,7 @@ export function Outer({
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize"
         keyboardBlurBehavior="restore"
+        topInset={insets.top}
         {...sheetOptions}
         ref={sheet}
         index={defaultOpen ? 0 : -1}
@@ -78,7 +88,7 @@ export function Outer({
         )}
         handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
         handleStyle={{display: 'none'}}
-        onClose={onClose}>
+        onChange={onChange}>
         <Context.Provider value={context}>
           <View
             style={[
@@ -122,6 +132,8 @@ export function ScrollableInner(props: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       style={[
         a.flex_1, // main diff is this
         a.p_xl,

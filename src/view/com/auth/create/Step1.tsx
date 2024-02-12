@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Keyboard,
   StyleSheet,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
@@ -13,7 +14,6 @@ import {StepHeader} from './StepHeader'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
-import {Button} from '../../util/forms/Button'
 import {Policies} from './Policies'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {isWeb} from 'platform/detection'
@@ -21,7 +21,14 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {logger} from '#/logger'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {useDialogControl} from '#/components/Dialog'
+
+import {ServerInputDialog} from '../server-input'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -43,16 +50,12 @@ export function Step1({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const serverInputControl = useDialogControl()
 
   const onPressSelectService = React.useCallback(() => {
-    openModal({
-      name: 'server-input',
-      initialService: uiState.serviceUrl,
-      onSelect: (url: string) =>
-        uiDispatch({type: 'set-service-url', value: url}),
-    })
+    serverInputControl.open()
     Keyboard.dismiss()
-  }, [uiDispatch, uiState.serviceUrl, openModal])
+  }, [serverInputControl])
 
   const onPressWaitlist = React.useCallback(() => {
     openModal({name: 'waitlist'})
@@ -64,23 +67,72 @@ export function Step1({
 
   return (
     <View>
-      <StepHeader uiState={uiState} title={_(msg`Your account`)}>
-        <View>
-          <Button
-            testID="selectServiceButton"
-            type="default"
-            style={{
-              aspectRatio: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            accessibilityLabel={_(msg`Select service`)}
-            accessibilityHint={_(msg`Sets server for the Bluesky client`)}
-            onPress={onPressSelectService}>
-            <FontAwesomeIcon icon="server" size={21} color={pal.colors.text} />
-          </Button>
+      <ServerInputDialog
+        control={serverInputControl}
+        onSelect={url => uiDispatch({type: 'set-service-url', value: url})}
+      />
+      <StepHeader uiState={uiState} title={_(msg`Your account`)} />
+
+      <View style={s.pb20}>
+        <Text type="md-medium" style={[pal.text, s.mb2]}>
+          <Trans>Hosting provider</Trans>
+        </Text>
+        <View style={[pal.border, {borderWidth: 1, borderRadius: 6}]}>
+          <View
+            style={[
+              pal.borderDark,
+              {flexDirection: 'row', alignItems: 'center'},
+            ]}>
+            <FontAwesomeIcon
+              icon="globe"
+              style={[pal.textLight, {marginLeft: 14}]}
+            />
+            <TouchableOpacity
+              testID="loginSelectServiceButton"
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+                alignItems: 'center',
+              }}
+              onPress={onPressSelectService}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Select service`)}
+              accessibilityHint={_(msg`Sets server for the Bluesky client`)}>
+              <Text
+                type="xl"
+                style={[
+                  pal.text,
+                  {
+                    flex: 1,
+                    paddingVertical: 10,
+                    paddingRight: 12,
+                    paddingLeft: 10,
+                  },
+                ]}>
+                {toNiceDomain(uiState.serviceUrl)}
+              </Text>
+              <View
+                style={[
+                  pal.btn,
+                  {
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderRadius: 6,
+                    paddingVertical: 6,
+                    paddingHorizontal: 8,
+                    marginHorizontal: 6,
+                  },
+                ]}>
+                <FontAwesomeIcon
+                  icon="pen"
+                  size={12}
+                  style={pal.textLight as FontAwesomeIconStyle}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-      </StepHeader>
+      </View>
 
       {!uiState.serviceDescription ? (
         <ActivityIndicator />
