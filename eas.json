@@ -29,7 +29,11 @@
     "production": {
       "extends": "base",
       "ios": {
-        "resourceClass": "large"
+        "resourceClass": "large",
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
       },
       "channel": "production"
     }
