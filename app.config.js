@@ -11,23 +11,11 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
-module.exports = function () {
+module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
   const VERSION = pkg.version
-
-  /**
-   * iOS build number. Must be incremented for each TestFlight version.
-   * WARNING: Always leave this variable on line 24! If it is moved, you need to update ./scripts/bumpIosBuildNumber.sh
-   */
-  const IOS_BUILD_NUMBER = '3'
-
-  /**
-   * Android build number. Must be incremented for each release.
-   * WARNING: Always leave this variable on line 30! If it is moved, you need to update ./scripts/bumpAndroidBuildNumber.sh
-   */
-  const ANDROID_VERSION_CODE = 61
 
   /**
    * Uses built-in Expo env vars
@@ -35,12 +23,6 @@ module.exports = function () {
    * @see https://docs.expo.dev/build-reference/variables/#built-in-environment-variables
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
-
-  /**
-   * Additional granularity for the `dist` field
-   */
-  const DIST_BUILD_NUMBER =
-    PLATFORM === 'android' ? ANDROID_VERSION_CODE : IOS_BUILD_NUMBER
 
   return {
     expo: {
@@ -57,7 +39,6 @@ module.exports = function () {
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
       ios: {
-        buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
@@ -85,7 +66,6 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: ANDROID_VERSION_CODE,
         icon: './assets/icon.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
@@ -169,7 +149,7 @@ module.exports = function () {
               organization: 'blueskyweb',
               project: 'react-native',
               release: VERSION,
-              dist: `${PLATFORM}.${VERSION}.${DIST_BUILD_NUMBER}`,
+              dist: `${PLATFORM}.${VERSION}.${new Date().toISOString()}`,
             },
           },
         ],
