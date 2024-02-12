@@ -41,7 +41,7 @@ import {
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
-import {useInviteCodesQuery} from '#/state/queries/invites'
+// TODO import {useInviteCodesQuery} from '#/state/queries/invites'
 import {clear as clearStorage} from '#/state/persisted/store'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
 import {STATUS_PAGE_URL} from 'lib/constants'
@@ -153,20 +153,21 @@ export function SettingsScreen({}: Props) {
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
-  const {data: invites} = useInviteCodesQuery()
-  const invitesAvailable = invites?.available?.length ?? 0
+  // TODO
+  // const {data: invites} = useInviteCodesQuery()
+  // const invitesAvailable = invites?.available?.length ?? 0
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
 
-  const primaryBg = useCustomPalette<ViewStyle>({
-    light: {backgroundColor: colors.blue0},
-    dark: {backgroundColor: colors.blue6},
-  })
-  const primaryText = useCustomPalette<TextStyle>({
-    light: {color: colors.blue3},
-    dark: {color: colors.blue2},
-  })
+  // const primaryBg = useCustomPalette<ViewStyle>({
+  //   light: {backgroundColor: colors.blue0},
+  //   dark: {backgroundColor: colors.blue6},
+  // })
+  // const primaryText = useCustomPalette<TextStyle>({
+  //   light: {color: colors.blue3},
+  //   dark: {color: colors.blue2},
+  // })
 
   const dangerBg = useCustomPalette<ViewStyle>({
     light: {backgroundColor: colors.red1},
@@ -209,10 +210,12 @@ export function SettingsScreen({}: Props) {
     exportCarControl.open()
   }, [exportCarControl])
 
+  /* TODO
   const onPressInviteCodes = React.useCallback(() => {
     track('Settings:InvitecodesButtonClicked')
     openModal({name: 'invite-codes'})
   }, [track, openModal])
+ */
 
   const onPressLanguageSettings = React.useCallback(() => {
     navigation.navigate('LanguageSettings')
@@ -392,8 +395,7 @@ export function SettingsScreen({}: Props) {
 
         <View style={styles.spacer20} />
 
-        {/* TODO(eric) */}
-        {false && (
+        {/* TODO (
           <>
             <Text type="xl-bold" style={[pal.text, styles.heading]}>
               <Trans>Invite a Friend</Trans>
@@ -443,7 +445,7 @@ export function SettingsScreen({}: Props) {
 
             <View style={styles.spacer20} />
           </>
-        )}
+        )*/}
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Accessibility</Trans>
