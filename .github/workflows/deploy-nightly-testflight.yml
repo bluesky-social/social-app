@@ -44,7 +44,7 @@ jobs:
 #        run: yarn bump:ios
 
       - name: Test EAS
-        run: eas build:version:get -p all
+        run: eas build:version:sync -p all
 
 #      - name: EAS build and submit
 #        run: eas build -p ios --profile production --auto-submit --non-interactive
