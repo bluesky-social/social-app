@@ -116,7 +116,7 @@ function PostThreadItemDeleted() {
   const styles = useStyles()
   const pal = usePalette('default')
   return (
-    <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
+    <View style={[styles.outer, styles.noTopBorder, pal.border, pal.view, s.p20, s.flexRow]}>
       <FontAwesomeIcon icon={['far', 'trash-can']} color={pal.colors.icon} />
       <Text style={[pal.textLight, s.ml10]}>
         <Trans>This post has been deleted.</Trans>
@@ -246,7 +246,13 @@ let PostThreadItemLoaded = ({
 
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
-          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+          style={[
+            styles.outer,
+            rootUri === post.uri && styles.noTopBorder,
+            styles.outerHighlighted,
+            pal.border,
+            pal.view,
+          ]}
           accessible={false}>
           <PostSandboxWarning />
           <View style={styles.layout}>
@@ -659,6 +665,7 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
+        depth < 1 && styles.noTopBorder,
         pal.view,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
