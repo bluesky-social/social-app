@@ -1,6 +1,6 @@
 import React from 'react'
 import {LabelPreference} from '@atproto/api'
-import {StyleSheet, Pressable, View} from 'react-native'
+import {StyleSheet, Pressable, View, Linking} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {ScrollView} from './util'
 import {s, colors, gradients} from 'lib/styles'
@@ -129,6 +129,10 @@ function AdultContentEnabledPref() {
     }
   }, [variables, preferences, mutate, _])
 
+  const onAdultContentLinkPress = React.useCallback(() => {
+    Linking.openURL('https://bsky.app/')
+  }, [])
+
   return (
     <View style={s.mb10}>
       {isIOS ? (
@@ -138,8 +142,9 @@ function AdultContentEnabledPref() {
               Adult content can only be enabled via the Web at{' '}
               <TextLink
                 style={pal.link}
-                href="https://bsky.app"
+                href=""
                 text="bsky.app"
+                onPress={onAdultContentLinkPress}
               />
               .
             </Trans>
