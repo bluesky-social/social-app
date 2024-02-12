@@ -500,7 +500,10 @@ let PostThreadItemLoaded = ({
                 </View>
               )}
 
-              <View style={styles.layoutContent}>
+              <View
+                style={
+                  treeView ? styles.layoutContentThreaded : styles.layoutContent
+                }>
                 <PostMeta
                   author={post.author}
                   authorHasWarning={!!post.author.labels?.length}
@@ -708,6 +711,10 @@ const styles = StyleSheet.create({
   layoutContent: {
     flex: 1,
     marginLeft: 10,
+  },
+  layoutContentThreaded: {
+    flex: 1,
+    paddingRight: 10,
   },
   meta: {
     flexDirection: 'row',
