@@ -20,7 +20,6 @@ import * as ReportModal from './report/Modal'
 import * as AppealLabelModal from './AppealLabel'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
-import * as ExportRepositoryModal from './ExportRepository'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
@@ -110,9 +109,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'export-repository') {
-    snapPoints = ExportRepositoryModal.snapPoints
-    element = <ExportRepositoryModal.Component {...activeModal} />
   } else if (activeModal?.name === 'waitlist') {
     snapPoints = WaitlistModal.snapPoints
     element = <WaitlistModal.Component />
