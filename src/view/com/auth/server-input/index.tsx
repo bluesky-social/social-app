@@ -118,6 +118,8 @@ export function ServerInputDialog({
                   onChangeText={setCustomAddress}
                   label={_(msg`my-server.com`)}
                   accessibilityLabelledBy="address-input-label"
+                  autoCapitalize="none"
+                  keyboardType="url"
                 />
               </TextField.Root>
               {pdsAddressHistory.length > 0 && (
