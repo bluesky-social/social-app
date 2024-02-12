@@ -26,11 +26,22 @@
 - Start the dev servers
   - `git clone git@github.com:bluesky-social/atproto.git`
   - `cd atproto`
+  - `brew install pnpm`
+  - `brew install jq`
   - `pnpm i`
   - `pnpm build`
+  - Start the docker daemon (on MacOS this entails starting the Docker Desktop app)
+  - Launch a Postgres database on port 5432
   - `cd packages/dev-env && pnpm start`
 - Run the dev app
   - iOS: `yarn ios`
+    - Xcode must be installed for this to run.
+      - A simulator must be preconfigured in Xcode settings.
+        - if no iOS versions are available, install the iOS runtime at `Xcode > Settings > Platforms`.
+      - In addition, ensure Xcode Command Line Tools are installed using `xcode-select --install`.
+    - Pods must be installed:
+      - From the project directory root: `cd ios && pod install`.
+    - Expo will require you to configure Xcode Signing. Follow the linked instructions. Error messages in Xcode related to the signing process can be safely ignored when installing on the iOS Simulator; Expo merely requires the profile to exist in order to install the app on the Simulator.
   - Android: `yarn android`
   - Web: `yarn web`
 - If you are cloning or forking this repo as an open-source developer, please check the tips below as well
