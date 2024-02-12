@@ -74,7 +74,6 @@ export function Root({children, isInvalid = false}: RootProps) {
       <View
         style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
         {...web({
-          // onPressIn/out don't work on android web
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,
           onMouseOut: onHoverOut,
