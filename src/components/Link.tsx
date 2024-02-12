@@ -148,6 +148,10 @@ export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
      * Label for a11y. Defaults to the href.
      */
     label?: string
+    /**
+     * Web-only attribute. Sets `download` attr on web.
+     */
+    download?: string
   }
 
 /**
@@ -158,7 +162,13 @@ export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
  * Intended to behave as a web anchor tag. For more complex routing, use a
  * `Button`.
  */
-export function Link({children, to, action = 'push', ...rest}: LinkProps) {
+export function Link({
+  children,
+  to,
+  action = 'push',
+  download,
+  ...rest
+}: LinkProps) {
   const {href, isExternal, onPress} = useLink({
     to,
     displayText: typeof children === 'string' ? children : '',
@@ -177,6 +187,7 @@ export function Link({children, to, action = 'push', ...rest}: LinkProps) {
         hrefAttrs: {
           target: isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
         },
         dataSet: {
           // default to no underline, apply this ourselves

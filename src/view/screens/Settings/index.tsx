@@ -17,14 +17,6 @@ import {
 } from '@fortawesome/react-native-fontawesome'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import * as AppInfo from 'lib/app-info'
-import {s, colors} from 'lib/styles'
-import {ScrollView} from '../com/util/Views'
-import {Link, TextLink} from '../com/util/Link'
-import {Text} from '../com/util/text/Text'
-import * as Toast from '../com/util/Toast'
-import {UserAvatar} from '../com/util/UserAvatar'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useCustomPalette} from 'lib/hooks/useCustomPalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -34,8 +26,6 @@ import {NavigationProp} from 'lib/routes/types'
 import {HandIcon, HashtagIcon} from 'lib/icons'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {makeProfileLink} from 'lib/routes/links'
-import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
-import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
 import {
@@ -48,22 +38,12 @@ import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {
-  useSession,
-  useSessionApi,
-  SessionAccount,
-  getAgent,
-} from '#/state/session'
+import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 import {clear as clearStorage} from '#/state/persisted/store'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
-
-// TEMPORARY (APP-700)
-// remove after backend testing finishes
-// -prf
-import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -75,6 +55,19 @@ import {
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
 import {isNative} from '#/platform/detection'
+import {useDialogControl} from '#/components/Dialog'
+
+import {s, colors} from 'lib/styles'
+import {ScrollView} from 'view/com/util/Views'
+import {Link, TextLink} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
+import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
+import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
+import {ExportCarDialog} from './ExportCarDialog'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -159,14 +152,12 @@ export function SettingsScreen({}: Props) {
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
-  const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
-    getAgent(),
-  )
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const exportCarControl = useDialogControl()
 
   const primaryBg = useCustomPalette<ViewStyle>({
     light: {backgroundColor: colors.blue0},
@@ -213,6 +204,10 @@ export function SettingsScreen({}: Props) {
       },
     })
   }, [track, queryClient, openModal, currentAccount])
+
+  const onPressExportRepository = React.useCallback(() => {
+    exportCarControl.open()
+  }, [exportCarControl])
 
   const onPressInviteCodes = React.useCallback(() => {
     track('Settings:InvitecodesButtonClicked')
@@ -282,6 +277,8 @@ export function SettingsScreen({}: Props) {
 
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
+      <ExportCarDialog control={exportCarControl} />
+
       <SimpleViewHeader
         showBackButton={isMobile}
         style={[
@@ -736,6 +733,29 @@ export function SettingsScreen({}: Props) {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
+          testID="exportRepositoryBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={isSwitchingAccounts ? undefined : onPressExportRepository}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Export my data`)}
+          accessibilityHint={_(
+            msg`Download Bluesky account data (repository)`,
+          )}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="download"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text} numberOfLines={1}>
+            <Trans>Export My Data</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[pal.view, styles.linkCard]}
           onPress={onPressDeleteAccount}
           accessible={true}
@@ -756,9 +776,6 @@ export function SettingsScreen({}: Props) {
           </Text>
         </TouchableOpacity>
         <View style={styles.spacer20} />
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Developer Tools</Trans>
-        </Text>
         <TouchableOpacity
           style={[pal.view, styles.linkCardNoIcon]}
           onPress={onPressSystemLog}
@@ -769,14 +786,6 @@ export function SettingsScreen({}: Props) {
             <Trans>System log</Trans>
           </Text>
         </TouchableOpacity>
-        {__DEV__ ? (
-          <ToggleButton
-            type="default-light"
-            label="Experiment: Use AppView Proxy"
-            isSelected={debugHeaderEnabled}
-            onPress={toggleDebugHeader}
-          />
-        ) : null}
         {__DEV__ ? (
           <>
             <TouchableOpacity
