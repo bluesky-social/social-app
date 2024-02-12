@@ -2,7 +2,15 @@ import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
-import {useTheme, atoms as a, web, native, flatten, ViewStyleProp} from '#/alf'
+import {
+  useTheme,
+  atoms as a,
+  web,
+  native,
+  flatten,
+  ViewStyleProp,
+  TextStyleProp,
+} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
@@ -232,7 +240,10 @@ export function Item({
   )
 }
 
-export function Label({children}: React.PropsWithChildren<{}>) {
+export function Label({
+  children,
+  style,
+}: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
   const {disabled} = useItemContext()
   return (
@@ -241,11 +252,14 @@ export function Label({children}: React.PropsWithChildren<{}>) {
         a.font_bold,
         {
           userSelect: 'none',
-          color: disabled ? t.palette.contrast_400 : t.palette.contrast_600,
+          color: disabled
+            ? t.atoms.text_contrast_low.color
+            : t.atoms.text_contrast_high.color,
         },
         native({
           paddingTop: 3,
         }),
+        flatten(style),
       ]}>
       {children}
     </Text>

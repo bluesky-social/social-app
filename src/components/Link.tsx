@@ -144,6 +144,7 @@ export function useLink({
       displayText,
       closeModal,
       openModal,
+      outerOnPress,
     ],
   )
 
@@ -181,10 +182,7 @@ export function Link({children, to, action = 'push', ...rest}: LinkProps) {
     <Button
       label={href}
       {...rest}
-      style={[
-        a.justify_start,
-        flatten(rest.style),
-      ]}
+      style={[a.justify_start, flatten(rest.style)]}
       role="link"
       accessibilityRole="link"
       href={href}
@@ -265,12 +263,6 @@ export function InlineLink({
             target: isExternal ? 'blank' : undefined,
             rel: isExternal ? 'noopener noreferrer' : undefined,
           },
-          dataSet: stringChildren
-            ? {}
-            : {
-                // default to no underline, apply this ourselves
-                noUnderline: '1',
-              },
         })}>
         {children}
       </Text>
