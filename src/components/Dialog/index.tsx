@@ -34,6 +34,7 @@ export function Outer({
   const sheet = React.useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
+  const insets = useSafeAreaInsets()
 
   const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
     sheet.current?.snapToIndex(i)
@@ -63,6 +64,7 @@ export function Outer({
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize"
         keyboardBlurBehavior="restore"
+        topInset={insets.top}
         {...sheetOptions}
         ref={sheet}
         index={-1}
