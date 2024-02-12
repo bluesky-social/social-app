@@ -102,17 +102,17 @@ function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
-        href="https://blueskyweb.xyz"
+        href="https://bsky.social"
         text="Business"
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
-        href="https://blueskyweb.xyz/blog"
+        href="https://bsky.social/about/blog"
         text="Blog"
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
-        href="https://blueskyweb.xyz/join"
+        href="https://bsky.social/about/join"
         text="Jobs"
         style={[styles.footerLink, pal.link]}
       />
