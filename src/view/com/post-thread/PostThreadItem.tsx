@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {Link, TextLink} from '../util/Link'
 import {RichText} from '../util/text/RichText'
 import {Text} from '../util/text/Text'
@@ -30,7 +31,6 @@ import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
-import {TimeElapsed} from 'view/com/util/TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {MAX_POST_LINES} from 'lib/constants'
@@ -42,6 +42,7 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
+import {useSession} from 'state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 
 export function PostThreadItem({
@@ -113,7 +114,6 @@ export function PostThreadItem({
 }
 
 function PostThreadItemDeleted() {
-  const styles = useStyles()
   const pal = usePalette('default')
   return (
     <View style={[styles.outer, pal.border, pal.view, s.p20, s.flexRow]}>
@@ -163,7 +163,7 @@ let PostThreadItemLoaded = ({
   const [limitLines, setLimitLines] = React.useState(
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
-  const styles = useStyles()
+  const {currentAccount} = useSession()
   const hasEngagement = post.likeCount || post.repostCount
 
   const rootUri = record.reply?.root?.uri || post.uri
@@ -249,7 +249,7 @@ let PostThreadItemLoaded = ({
           style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
           accessible={false}>
           <PostSandboxWarning />
-          <View style={styles.layout}>
+          <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
                 size={42}
@@ -262,33 +262,18 @@ let PostThreadItemLoaded = ({
             <View style={styles.layoutContent}>
               <View
                 style={[styles.meta, styles.metaExpandedLine1, {zIndex: 1}]}>
-                <View style={[s.flexRow]}>
-                  <Link
-                    style={styles.metaItem}
-                    href={authorHref}
-                    title={authorTitle}>
-                    <Text
-                      type="xl-bold"
-                      style={[pal.text]}
-                      numberOfLines={1}
-                      lineHeight={1.2}>
-                      {sanitizeDisplayName(
-                        post.author.displayName ||
-                          sanitizeHandle(post.author.handle),
-                      )}
-                    </Text>
-                  </Link>
-                  <TimeElapsed timestamp={post.indexedAt}>
-                    {({timeElapsed}) => (
-                      <Text
-                        type="md"
-                        style={[styles.metaItem, pal.textLight]}
-                        title={niceDate(post.indexedAt)}>
-                        &middot;&nbsp;{timeElapsed}
-                      </Text>
+                <Link style={s.flex1} href={authorHref} title={authorTitle}>
+                  <Text
+                    type="xl-bold"
+                    style={[pal.text]}
+                    numberOfLines={1}
+                    lineHeight={1.2}>
+                    {sanitizeDisplayName(
+                      post.author.displayName ||
+                        sanitizeHandle(post.author.handle),
                     )}
-                  </TimeElapsed>
-                </View>
+                  </Text>
+                </Link>
               </View>
               <View style={styles.meta}>
                 {isAuthorMuted && (
@@ -315,16 +300,16 @@ let PostThreadItemLoaded = ({
                     </Text>
                   </View>
                 )}
-                <Link
-                  style={styles.metaItem}
-                  href={authorHref}
-                  title={authorTitle}>
+                <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text type="md" style={[pal.textLight]} numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}
                   </Text>
                 </Link>
               </View>
             </View>
+            {currentAccount?.did !== post.author.did && (
+              <PostThreadFollowBtn did={post.author.did} />
+            )}
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
             <ContentHider
@@ -626,7 +611,6 @@ function PostOuterWrapper({
 }>) {
   const {isMobile} = useWebMediaQueries()
   const pal = usePalette('default')
-  const styles = useStyles()
   if (treeView && depth > 0) {
     return (
       <View
@@ -703,94 +687,84 @@ function ExpandedPostDetails({
   )
 }
 
-const useStyles = () => {
-  const {isDesktop} = useWebMediaQueries()
-  return StyleSheet.create({
-    outer: {
-      borderTopWidth: 1,
-      paddingLeft: 8,
-    },
-    outerHighlighted: {
-      paddingTop: 16,
-      paddingLeft: 8,
-      paddingRight: 8,
-    },
-    noTopBorder: {
-      borderTopWidth: 0,
-    },
-    layout: {
-      flexDirection: 'row',
-      gap: 10,
-      paddingLeft: 8,
-    },
-    layoutAvi: {},
-    layoutContent: {
-      flex: 1,
-      paddingRight: 10,
-    },
-    meta: {
-      flexDirection: 'row',
-      paddingTop: 2,
-      paddingBottom: 2,
-    },
-    metaExpandedLine1: {
-      paddingTop: 0,
-      paddingBottom: 0,
-    },
-    metaItem: {
-      paddingRight: 5,
-      maxWidth: isDesktop ? 380 : 220,
-    },
-    alert: {
-      marginBottom: 6,
-    },
-    postTextContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      flexWrap: 'wrap',
-      paddingBottom: 4,
-      paddingRight: 10,
-    },
-    postTextLargeContainer: {
-      paddingHorizontal: 0,
-      paddingRight: 0,
-      paddingBottom: 10,
-    },
-    translateLink: {
-      marginBottom: 6,
-    },
-    contentHider: {
-      marginBottom: 6,
-    },
-    contentHiderChild: {
-      marginTop: 6,
-    },
-    expandedInfo: {
-      flexDirection: 'row',
-      padding: 10,
-      borderTopWidth: 1,
-      borderBottomWidth: 1,
-      marginTop: 5,
-      marginBottom: 15,
-    },
-    expandedInfoItem: {
-      marginRight: 10,
-    },
-    loadMore: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      gap: 4,
-      paddingHorizontal: 20,
-    },
-    replyLine: {
-      width: 2,
-      marginLeft: 'auto',
-      marginRight: 'auto',
-    },
-    cursor: {
-      // @ts-ignore web only
-      cursor: 'pointer',
-    },
-  })
-}
+const styles = StyleSheet.create({
+  outer: {
+    borderTopWidth: 1,
+    paddingLeft: 8,
+  },
+  outerHighlighted: {
+    paddingTop: 16,
+    paddingLeft: 8,
+    paddingRight: 8,
+  },
+  noTopBorder: {
+    borderTopWidth: 0,
+  },
+  layout: {
+    flexDirection: 'row',
+    paddingHorizontal: 8,
+  },
+  layoutAvi: {},
+  layoutContent: {
+    flex: 1,
+    marginLeft: 10,
+  },
+  meta: {
+    flexDirection: 'row',
+    paddingVertical: 2,
+  },
+  metaExpandedLine1: {
+    paddingVertical: 0,
+  },
+  alert: {
+    marginBottom: 6,
+  },
+  postTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    paddingBottom: 4,
+    paddingRight: 10,
+  },
+  postTextLargeContainer: {
+    paddingHorizontal: 0,
+    paddingRight: 0,
+    paddingBottom: 10,
+  },
+  translateLink: {
+    marginBottom: 6,
+  },
+  contentHider: {
+    marginBottom: 6,
+  },
+  contentHiderChild: {
+    marginTop: 6,
+  },
+  expandedInfo: {
+    flexDirection: 'row',
+    padding: 10,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+    marginTop: 5,
+    marginBottom: 15,
+  },
+  expandedInfoItem: {
+    marginRight: 10,
+  },
+  loadMore: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    gap: 4,
+    paddingHorizontal: 20,
+  },
+  replyLine: {
+    width: 2,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
+  cursor: {
+    // @ts-ignore web only
+    cursor: 'pointer',
+  },
+})
