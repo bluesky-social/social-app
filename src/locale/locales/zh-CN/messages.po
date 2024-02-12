@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1\n"
+"Last-Translator: Mikan Harada <i@3kn.jp>\n"
+"Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1, Mikan Harada\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -19,7 +19,7 @@ msgstr "(没有邮件)"
 
 #: src/view/shell/desktop/RightNav.tsx:168
 msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-msgstr "{0, plural, one {# 邀请码可用} other {# 邀请码可用}}"
+msgstr "{0, plural, one {# 条邀请码可用} other {# 条邀请码可用}}"
 
 #: src/view/com/profile/ProfileHeader.tsx:632
 msgid "{following} following"
@@ -32,12 +32,12 @@ msgstr "{invitesAvailable, plural, one {邀请码: # 可用} other {邀请码: #
 #: src/view/screens/Settings.tsx:435
 #: src/view/shell/Drawer.tsx:664
 msgid "{invitesAvailable} invite code available"
-msgstr "{invitesAvailable} 邀请码可用"
+msgstr "{invitesAvailable} 条邀请码可用"
 
 #: src/view/screens/Settings.tsx:437
 #: src/view/shell/Drawer.tsx:666
 msgid "{invitesAvailable} invite codes available"
-msgstr "{invitesAvailable} 邀请码可用"
+msgstr "{invitesAvailable} 条邀请码可用"
 
 #: src/view/shell/Drawer.tsx:443
 msgid "{numUnreadNotifications} unread"
@@ -1759,7 +1759,7 @@ msgstr "若不勾选，则默认为全年龄向。"
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr "如果你需要更改密码，我们将向你发送一个确认码以验证这是你的账户。"
+msgstr "如果你想要更改密码，我们将向你发送一个确认码以验证这是你的账户。"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -2092,7 +2092,7 @@ msgstr "登出"
 
 #: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
-msgstr "登出可见性"
+msgstr "未登录用户可见性"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
@@ -2370,7 +2370,7 @@ msgstr "下一张图片"
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "No"
-msgstr "没有"
+msgstr "停用"
 
 #: src/view/screens/ProfileFeed.tsx:584
 #: src/view/screens/ProfileList.tsx:754
@@ -2688,11 +2688,11 @@ msgstr "播放 GIF"
 
 #: src/view/com/auth/create/state.ts:177
 msgid "Please choose your handle."
-msgstr "请选择你的用户识别符。"
+msgstr "请设置你的用户识别符。"
 
 #: src/view/com/auth/create/state.ts:160
 msgid "Please choose your password."
-msgstr "请选择你的密码。"
+msgstr "请设置你的密码。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -3349,23 +3349,23 @@ msgstr "设置密码"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
+msgstr "停用此设置项以隐藏来自订阅信息流的所有引用帖子，转发仍将可见。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有回复。"
+msgstr "停用此设置项以隐藏来自订阅信息流的所有回复。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "将此设置项设为\"否\"以隐藏来自订阅信息流的所有转发。"
+msgstr "停用此设置项以隐藏来自订阅信息流的所有转发。"
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "将此设置项设为\"是\"以在分层视图中显示回复。这是一个实验性功能。"
+msgstr "启用此设置项以在分层视图中显示回复。这是一个实验性功能。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-msgstr "将此设置项设为\"是\"以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
+msgstr "启用此设置项以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -4094,7 +4094,7 @@ msgstr "使用这个和你的用户识别符一起登录其他应用。"
 
 #: src/view/com/modals/ServerInput.tsx:105
 msgid "Use your domain as your Bluesky client service provider"
-msgstr "使用你的域名作为 Bluesky 客户服务提供商"
+msgstr "使用你的域名作为 Bluesky 客户端的服务提供方"
 
 #: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
@@ -4329,7 +4329,7 @@ msgstr "XXXXXX"
 #: src/view/screens/PreferencesThreads.tsx:106
 #: src/view/screens/PreferencesThreads.tsx:129
 msgid "Yes"
-msgstr "是的"
+msgstr "启用"
 
 #: src/screens/Deactivated.tsx:131
 msgid "You are in line."
