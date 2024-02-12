@@ -1,8 +1,11 @@
 name: Deploy Nightly Testflight Release
 
 on:
-  schedule:
-    - cron: '0 5 * * *'
+#  schedule:
+#    - cron: '0 5 * * *'
+  push:
+    branches:
+      - hailey/use-eas-version-code
 
 jobs:
   build:
@@ -37,16 +40,19 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Bump build number
-        run: yarn bump:ios
+#      - name: Bump build number
+#        run: yarn bump:ios
 
-      - name: EAS build and submit
-        run: eas build -p ios --profile production --auto-submit --non-interactive
+      - name: Test EAS
+        run: eas build:version:get -p all
 
-      - name: Commit
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: Nightly iOS Build Bump
-          branch: main
-          commit_user_name: github-actions[bot]
-          commit_user_email: github-actions[bot]@users.noreply.github.com
+#      - name: EAS build and submit
+#        run: eas build -p ios --profile production --auto-submit --non-interactive
+
+#      - name: Commit
+#        uses: stefanzweifel/git-auto-commit-action@v5
+#        with:
+#          commit_message: Nightly iOS Build Bump
+#          branch: main
+#          commit_user_name: github-actions[bot]
+#          commit_user_email: github-actions[bot]@users.noreply.github.com
