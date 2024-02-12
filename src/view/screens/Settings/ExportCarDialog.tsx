@@ -33,9 +33,7 @@ export function ExportCarDialog({
   }, [currentAccount])
 
   return (
-    <Dialog.Outer
-      control={control}
-      nativeOptions={{sheet: {snapPoints: ['80%']}}}>
+    <Dialog.Outer control={control}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
@@ -90,12 +88,14 @@ export function ExportCarDialog({
               testID="doneBtn"
               variant="outline"
               color="primary"
-              size="small"
+              size={gtMobile ? 'small' : 'large'}
               onPress={() => control.close()}
               label={_(msg`Done`)}>
               {_(msg`Done`)}
             </Button>
           </View>
+
+          {!gtMobile && <View style={{height: 40}} />}
         </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
