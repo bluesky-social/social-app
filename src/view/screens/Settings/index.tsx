@@ -792,52 +792,50 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressStorybook}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Open storybook page`)}
-              accessibilityHint={_(msg`Opens the storybook page`)}>
+              accessibilityLabel="Open storybook page"
+              accessibilityHint="Opens the storybook page">
               <Text type="lg" style={pal.text}>
-                <Trans>Storybook</Trans>
+                Storybook
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetPreferences}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset preferences`)}
-              accessibilityHint={_(msg`Resets the preferences state`)}>
+              accessibilityLabel="Reset preferences"
+              accessibilityHint="Resets the preferences state">
               <Text type="lg" style={pal.text}>
-                <Trans>Reset preferences state</Trans>
+                Reset preferences state
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset onboarding`)}
-              accessibilityHint={_(msg`Resets the onboarding state`)}>
+              accessibilityLabel="Reset onboarding"
+              accessibilityHint="Resets the onboarding state">
               <Text type="lg" style={pal.text}>
-                <Trans>Reset onboarding state</Trans>
+                Reset onboarding state
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={clearAllLegacyStorage}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clear all legacy storage data`)}>
+              accessibilityLabel="Clear all legacy storage data"
+              accessibilityHint="Clears all legacy storage data">
               <Text type="lg" style={pal.text}>
-                <Trans>
-                  Clear all legacy storage data (restart after this)
-                </Trans>
+                Clear all legacy storage data (restart after this)
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={clearAllStorage}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all storage data`)}
-              accessibilityHint={_(msg`Clear all storage data`)}>
+              accessibilityLabel="Clear all storage data"
+              accessibilityHint="Clears all storage data">
               <Text type="lg" style={pal.text}>
-                <Trans>Clear all storage data (restart after this)</Trans>
+                Clear all storage data (restart after this)
               </Text>
             </TouchableOpacity>
           </>
