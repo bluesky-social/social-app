@@ -36,6 +36,16 @@
         "autoIncrement": true
       },
       "channel": "production"
+    },
+    "github": {
+      "extends": "base",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "preview"
     }
   },
   "submit": {

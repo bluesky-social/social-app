@@ -11,7 +11,7 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
-module.exports = function () {
+module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
