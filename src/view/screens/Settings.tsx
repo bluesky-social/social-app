@@ -48,22 +48,13 @@ import {
   useRequireAltTextEnabled,
   useSetRequireAltTextEnabled,
 } from '#/state/preferences'
-import {
-  useSession,
-  useSessionApi,
-  SessionAccount,
-  getAgent,
-} from '#/state/session'
+import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useClearPreferencesMutation} from '#/state/queries/preferences'
 import {useInviteCodesQuery} from '#/state/queries/invites'
 import {clear as clearStorage} from '#/state/persisted/store'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
 
-// TEMPORARY (APP-700)
-// remove after backend testing finishes
-// -prf
-import {useDebugHeaderSetting} from 'lib/api/debug-appview-proxy-header'
 import {STATUS_PAGE_URL} from 'lib/constants'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -159,9 +150,6 @@ export function SettingsScreen({}: Props) {
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
-  const [debugHeaderEnabled, toggleDebugHeader] = useDebugHeaderSetting(
-    getAgent(),
-  )
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   const {data: invites} = useInviteCodesQuery()
   const invitesAvailable = invites?.available?.length ?? 0
@@ -799,14 +787,6 @@ export function SettingsScreen({}: Props) {
             <Trans>System log</Trans>
           </Text>
         </TouchableOpacity>
-        {__DEV__ ? (
-          <ToggleButton
-            type="default-light"
-            label="Experiment: Use AppView Proxy"
-            isSelected={debugHeaderEnabled}
-            onPress={toggleDebugHeader}
-          />
-        ) : null}
         {__DEV__ ? (
           <>
             <TouchableOpacity
