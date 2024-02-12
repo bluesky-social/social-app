@@ -42,8 +42,7 @@ export function Outer({
 
   const close = React.useCallback(() => {
     sheet.current?.close()
-    onClose?.()
-  }, [onClose])
+  }, [])
 
   useImperativeHandle(
     control.ref,
@@ -52,6 +51,15 @@ export function Outer({
       close,
     }),
     [open, close],
+  )
+
+  const onChange = React.useCallback(
+    (index: number) => {
+      if (index === -1) {
+        onClose?.()
+      }
+    },
+    [onClose],
   )
 
   const context = React.useMemo(() => ({close}), [close])
@@ -79,7 +87,7 @@ export function Outer({
         )}
         handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
         handleStyle={{display: 'none'}}
-        onClose={onClose}>
+        onChange={onChange}>
         <Context.Provider value={context}>
           <View
             style={[

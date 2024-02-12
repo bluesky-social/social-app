@@ -11,7 +11,6 @@ import {Text, P} from '#/components/Typography'
 import {Button, ButtonText} from '#/components/Button'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import * as TextField from '#/components/forms/TextField'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 
 export function ServerInputDialog({
@@ -30,10 +29,13 @@ export function ServerInputDialog({
   const [fixedOption, setFixedOption] = React.useState([PROD_SERVICE])
   const [customAddress, setCustomAddress] = React.useState('')
 
-  const onPressDone = React.useCallback(() => {
+  const onClose = React.useCallback(() => {
     let url
     if (fixedOption[0] === 'custom') {
       url = customAddress.trim().toLowerCase()
+      if (!url) {
+        return
+      }
     } else {
       url = fixedOption[0]
     }
@@ -53,13 +55,11 @@ export function ServerInputDialog({
       }
     }
 
-    control.close()
     onSelect(url)
   }, [
     fixedOption,
     customAddress,
     onSelect,
-    control,
     pdsAddressHistory,
     setPdsAddressHistory,
   ])
@@ -67,7 +67,8 @@ export function ServerInputDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{sheet: {snapPoints: ['70%']}}}>
+      nativeOptions={{sheet: {snapPoints: ['100%']}}}
+      onClose={onClose}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner
@@ -85,10 +86,8 @@ export function ServerInputDialog({
             label="Preferences"
             values={fixedOption}
             onChange={setFixedOption}>
-            <ToggleButton.Button
-              name={PROD_SERVICE}
-              label={_(msg`Bluesky Social`)}>
-              {_(msg`Bluesky Social`)}
+            <ToggleButton.Button name={PROD_SERVICE} label={_(msg`Bluesky`)}>
+              {_(msg`Bluesky`)}
             </ToggleButton.Button>
             <ToggleButton.Button
               testID="customSelectBtn"
@@ -140,8 +139,7 @@ export function ServerInputDialog({
             </View>
           )}
 
-          <View style={[a.py_xs, a.rounded_xs, a.flex_row, a.gap_sm]}>
-            <CircleInfo size="md" fill={t.palette.contrast_500} />
+          <View style={[a.py_xs]}>
             <P
               style={[
                 t.atoms.text_contrast_medium,
@@ -163,7 +161,7 @@ export function ServerInputDialog({
               variant="outline"
               color="primary"
               size="small"
-              onPress={onPressDone}
+              onPress={() => control.close()}
               label={_(msg`Done`)}>
               {_(msg`Done`)}
             </Button>
