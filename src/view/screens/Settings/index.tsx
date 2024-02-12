@@ -392,51 +392,58 @@ export function SettingsScreen({}: Props) {
 
         <View style={styles.spacer20} />
 
-        <Text type="xl-bold" style={[pal.text, styles.heading]}>
-          <Trans>Invite a Friend</Trans>
-        </Text>
+        {/* TODO(eric) */}
+        {false && (
+          <>
+            <Text type="xl-bold" style={[pal.text, styles.heading]}>
+              <Trans>Invite a Friend</Trans>
+            </Text>
 
-        <TouchableOpacity
-          testID="inviteFriendBtn"
-          style={[
-            styles.linkCard,
-            pal.view,
-            isSwitchingAccounts && styles.dimmed,
-          ]}
-          onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Invite`)}
-          accessibilityHint={_(msg`Opens invite code list`)}
-          disabled={invites?.disabled}>
-          <View
-            style={[
-              styles.iconContainer,
-              invitesAvailable > 0 ? primaryBg : pal.btn,
-            ]}>
-            <FontAwesomeIcon
-              icon="ticket"
-              style={
-                (invitesAvailable > 0
-                  ? primaryText
-                  : pal.text) as FontAwesomeIconStyle
-              }
-            />
-          </View>
-          <Text type="lg" style={invitesAvailable > 0 ? pal.link : pal.text}>
-            {invites?.disabled ? (
-              <Trans>
-                Your invite codes are hidden when logged in using an App
-                Password
-              </Trans>
-            ) : invitesAvailable === 1 ? (
-              <Trans>{invitesAvailable} invite code available</Trans>
-            ) : (
-              <Trans>{invitesAvailable} invite codes available</Trans>
-            )}
-          </Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              testID="inviteFriendBtn"
+              style={[
+                styles.linkCard,
+                pal.view,
+                isSwitchingAccounts && styles.dimmed,
+              ]}
+              onPress={isSwitchingAccounts ? undefined : onPressInviteCodes}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Invite`)}
+              accessibilityHint={_(msg`Opens invite code list`)}
+              disabled={invites?.disabled}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  invitesAvailable > 0 ? primaryBg : pal.btn,
+                ]}>
+                <FontAwesomeIcon
+                  icon="ticket"
+                  style={
+                    (invitesAvailable > 0
+                      ? primaryText
+                      : pal.text) as FontAwesomeIconStyle
+                  }
+                />
+              </View>
+              <Text
+                type="lg"
+                style={invitesAvailable > 0 ? pal.link : pal.text}>
+                {invites?.disabled ? (
+                  <Trans>
+                    Your invite codes are hidden when logged in using an App
+                    Password
+                  </Trans>
+                ) : invitesAvailable === 1 ? (
+                  <Trans>{invitesAvailable} invite code available</Trans>
+                ) : (
+                  <Trans>{invitesAvailable} invite codes available</Trans>
+                )}
+              </Text>
+            </TouchableOpacity>
 
-        <View style={styles.spacer20} />
+            <View style={styles.spacer20} />
+          </>
+        )}
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Accessibility</Trans>
