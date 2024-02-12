@@ -121,6 +121,8 @@ export function ScrollableInner(props: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       style={[
         a.flex_1, // main diff is this
         a.p_lg,

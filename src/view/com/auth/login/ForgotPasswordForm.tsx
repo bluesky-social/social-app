@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
+  Keyboard,
   TextInput,
   TouchableOpacity,
   View,
@@ -24,7 +25,9 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {styles} from './styles'
-import {useModalControls} from '#/state/modals'
+import {useDialogControl} from '#/components/Dialog'
+
+import {ServerInputDialog} from '../server-input'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -51,19 +54,16 @@ export const ForgotPasswordForm = ({
   const [email, setEmail] = useState<string>('')
   const {screen} = useAnalytics()
   const {_} = useLingui()
-  const {openModal} = useModalControls()
+  const serverInputControl = useDialogControl()
 
   useEffect(() => {
     screen('Signin:ForgotPassword')
   }, [screen])
 
-  const onPressSelectService = () => {
-    openModal({
-      name: 'server-input',
-      initialService: serviceUrl,
-      onSelect: setServiceUrl,
-    })
-  }
+  const onPressSelectService = React.useCallback(() => {
+    serverInputControl.open()
+    Keyboard.dismiss()
+  }, [serverInputControl])
 
   const onPressNext = async () => {
     if (!EmailValidator.validate(email)) {
@@ -96,6 +96,10 @@ export const ForgotPasswordForm = ({
   return (
     <>
       <View>
+        <ServerInputDialog
+          control={serverInputControl}
+          onSelect={setServiceUrl}
+        />
         <Text type="title-lg" style={[pal.text, styles.screenTitle]}>
           <Trans>Reset password</Trans>
         </Text>

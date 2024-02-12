@@ -22,6 +22,9 @@ import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {logger} from '#/logger'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useDialogControl} from '#/components/Dialog'
+
+import {ServerInputDialog} from '../server-input'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -43,16 +46,12 @@ export function Step1({
   const pal = usePalette('default')
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const serverInputControl = useDialogControl()
 
   const onPressSelectService = React.useCallback(() => {
-    openModal({
-      name: 'server-input',
-      initialService: uiState.serviceUrl,
-      onSelect: (url: string) =>
-        uiDispatch({type: 'set-service-url', value: url}),
-    })
+    serverInputControl.open()
     Keyboard.dismiss()
-  }, [uiDispatch, uiState.serviceUrl, openModal])
+  }, [serverInputControl])
 
   const onPressWaitlist = React.useCallback(() => {
     openModal({name: 'waitlist'})
@@ -64,6 +63,10 @@ export function Step1({
 
   return (
     <View>
+      <ServerInputDialog
+        control={serverInputControl}
+        onSelect={url => uiDispatch({type: 'set-service-url', value: url})}
+      />
       <StepHeader uiState={uiState} title={_(msg`Your account`)}>
         <View>
           <Button
