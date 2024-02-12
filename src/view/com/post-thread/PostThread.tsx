@@ -306,15 +306,6 @@ function PostThreadLoaded({
     setIsPTRing(false)
   }, [setIsPTRing, onRefresh])
 
-  const nativeHighlightRefCallback = React.useCallback(() => {
-    // HACK
-    // This lets us delay rendering of the additional items in the flatlist for a little while so we can latch onto the
-    // correct post
-    setTimeout(() => {
-      setReadyToShowAll(true)
-    }, 150)
-  }, [])
-
   const renderItem = React.useCallback(
     ({item, index}: {item: YieldedItem; index: number}) => {
       if (item === TOP_COMPONENT) {
@@ -394,13 +385,9 @@ function PostThreadLoaded({
           : undefined
         return (
           <View
-            ref={
-              item.ctx.isHighlightedPost
-                ? // Use a ref on web, use a ref callback on native
-                  isWeb
-                  ? highlightedPostRef
-                  : nativeHighlightRefCallback
-                : undefined
+            ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
+            onLayout={
+              readyToShowAll ? undefined : () => setReadyToShowAll(true)
             }>
             <PostThreadItem
               post={item.post}
@@ -434,7 +421,7 @@ function PostThreadLoaded({
       pal.text,
       pal.colors.border,
       posts,
-      nativeHighlightRefCallback,
+      readyToShowAll,
       treeView,
       onRefresh,
     ],
