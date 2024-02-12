@@ -22,6 +22,7 @@ import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {logger} from '#/logger'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {PasswordStrength} from '../../util/PasswordStrength'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -172,6 +173,8 @@ export function Step1({
                   autoComplete="new-password"
                   autoCorrect={false}
                 />
+
+                <PasswordStrength result={uiState.passwordStrength} />
               </View>
 
               <View style={s.pb20}>
