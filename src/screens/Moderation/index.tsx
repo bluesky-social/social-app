@@ -11,12 +11,12 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoLabelDefs} from '@atproto/api'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {CenteredView} from '../com/util/Views'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Link, TextLink} from '../com/util/Link'
-import {Text} from '../com/util/text/Text'
+import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
+import {s} from '#/lib/styles'
+import {CenteredView} from '#/view/com/util/Views'
+import {ViewHeader} from '#/view/com/util/ViewHeader'
+import {Link, TextLink} from '#/view/com/util/Link'
+import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -24,13 +24,13 @@ import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {ToggleButton} from '../com/util/forms/ToggleButton'
+import {ToggleButton} from '#/view/com/util/forms/ToggleButton'
 import {useSession} from '#/state/session'
 import {
   useProfileQuery,
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
-import {ScrollView} from '../com/util/Views'
+import {ScrollView} from '#/view/com/util/Views'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export function ModerationScreen({}: Props) {
