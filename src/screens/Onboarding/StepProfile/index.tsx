@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
@@ -13,8 +12,6 @@ import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
-import {getAgent} from '#/state/session'
 import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
@@ -24,10 +21,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
-import {
-  bulkWriteFollows,
-  sortPrimaryAlgorithmFeeds,
-} from '#/screens/Onboarding/util'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 
 export function StepProfile() {
   const {_} = useLingui()
@@ -35,52 +29,15 @@ export function StepProfile() {
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
-  const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
-
-  const finishOnboarding = React.useCallback(async () => {
-    setSaving(true)
-
-    const {
-      interestsStepResults,
-      suggestedAccountsStepResults,
-      algoFeedsStepResults,
-      topicalFeedsStepResults,
-    } = state
-    const {selectedInterests} = interestsStepResults
-    const selectedFeeds = [
-      ...sortPrimaryAlgorithmFeeds(algoFeedsStepResults.feedUris),
-      ...topicalFeedsStepResults.feedUris,
-    ]
-
-    try {
-      await Promise.all([
-        bulkWriteFollows(suggestedAccountsStepResults.accountDids),
-        // these must be serial
-        (async () => {
-          await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds({
-            saved: selectedFeeds,
-            pinned: selectedFeeds,
-          })
-        })(),
-      ])
-    } catch (e: any) {
-      logger.info(`onboarding: bulk save failed`)
-      logger.error(e)
-      // don't alert the user, just let them into their account
-    }
-
-    setSaving(false)
-    dispatch({type: 'finish'})
-    onboardDispatch({type: 'finish'})
-    track('OnboardingV2:StepFinished:End')
-    track('OnboardingV2:Complete')
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
 
   React.useEffect(() => {
-    track('OnboardingV2:StepFinished:Start')
+    track('OnboardingV2:StepProfile:Start')
   }, [track])
+
+  const onContinue = React.useCallback(() => {
+    dispatch({type: 'next'})
+    track('OnboardingV2:StepProfile:End')
+  }, [track, dispatch])
 
   return (
     <View style={[a.align_start]}>
@@ -140,17 +97,16 @@ export function StepProfile() {
 
       <OnboardingControls.Portal>
         <Button
-          disabled={saving}
           key={state.activeStep} // remove focus state on nav
           variant="gradient"
           color="gradient_sky"
           size="large"
-          label={_(msg`Complete onboarding and start using your account`)}
-          onPress={finishOnboarding}>
+          label={_(msg`Continue to next step`)}
+          onPress={onContinue}>
           <ButtonText>
-            {saving ? <Trans>Finalizing</Trans> : <Trans>Let's go!</Trans>}
+            <Trans>Continue</Trans>
           </ButtonText>
-          {saving && <ButtonIcon icon={Loader} position="right" />}
+          <ButtonIcon icon={ChevronRight} position="right" />
         </Button>
       </OnboardingControls.Portal>
     </View>
