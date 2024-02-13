@@ -99,10 +99,6 @@ type FlatlistSlice =
       type: 'popularFeedsLoadingMore'
       key: string
     }
-  | {
-      type: 'largeSeparator'
-      key: string
-    }
 
 export function FeedsScreen(_props: Props) {
   const pal = usePalette('default')
@@ -248,10 +244,6 @@ export function FeedsScreen(_props: Props) {
       }
     }
 
-    slices.push({
-      key: 'largeSeparator',
-      type: 'largeSeparator',
-    })
     slices.push({
       key: 'popularFeedsHeader',
       type: 'popularFeedsHeader',
@@ -424,7 +416,7 @@ export function FeedsScreen(_props: Props) {
                   },
                 ]}>
                 <Text type="title-lg" style={[pal.text, s.bold]}>
-                  <Trans>My Feeds</Trans>
+                  <Trans>Feeds</Trans>
                 </Text>
                 <View style={styles.headerBtnGroup}>
                   <Pressable
@@ -467,7 +459,7 @@ export function FeedsScreen(_props: Props) {
         return (
           <>
             <FeedsAboutHeader />
-            <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
+            <View style={{paddingHorizontal: 12, paddingBottom: 12}}>
               <SearchInput
                 ref={searchInputRef}
                 query={query}
@@ -504,8 +496,6 @@ export function FeedsScreen(_props: Props) {
             </Text>
           </View>
         )
-      } else if (item.type === 'largeSeparator') {
-        return <LargeSeparator />
       }
       return null
     },
@@ -656,14 +646,14 @@ function FeedsSavedHeader() {
         a.px_md,
         a.pt_2xl,
         a.gap_md,
-        isWeb ? a.pb_2xl : a.pb_lg,
+        isWeb ? a.pb_2xl : a.pb_xl,
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
       <View style={[a.flex_1, a.gap_sm]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
-          Your Feeds
+          <Trans>My Feeds</Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
           <Trans>All the feeds you've saved, right in one place.</Trans>
@@ -683,7 +673,7 @@ function FeedsAboutHeader() {
         a.px_md,
         a.pt_2xl,
         a.gap_md,
-        isWeb ? a.pb_2xl : a.pb_lg,
+        isWeb ? a.pb_2xl : a.pb_xl,
       ]}>
       <IconCircle
         icon={ListMagnifyingGlass_Stroke2_Corner0_Rounded}
@@ -702,11 +692,6 @@ function FeedsAboutHeader() {
       </View>
     </View>
   )
-}
-
-function LargeSeparator() {
-  const t = useTheme()
-  return <View style={[{borderBottomWidth: 15}, t.atoms.border_contrast_low]} />
 }
 
 const styles = StyleSheet.create({
