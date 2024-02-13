@@ -55,7 +55,15 @@ const CHILD_SPINNER = {_reactKey: '__child_spinner__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
 const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
-type YieldedItem = ThreadPost | typeof TOP_COMPONENT | typeof REPLY_PROMPT
+type YieldedItem = ThreadPost | ThreadBlocked | ThreadNotFound
+type RowItem =
+  | YieldedItem
+  // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
+  | typeof TOP_COMPONENT
+  | typeof REPLY_PROMPT
+  | typeof CHILD_SPINNER
+  | typeof LOAD_MORE
+  | typeof BOTTOM_COMPONENT
 
 export function PostThread({
   uri,
@@ -161,22 +169,29 @@ function PostThreadLoaded({
   // construct content
   const posts = React.useMemo(() => {
     const root = sortThread(thread, threadViewPrefs)
-    let arr = []
-    for (const parent of flattenThreadParents(root, hasSession)) {
-      arr.push(parent)
-    }
-    arr.push(root)
-    if (root.type === 'post' && !root.post.viewer?.replyDisabled) {
-      arr.push(REPLY_PROMPT)
-    }
-    for (const reply of flattenThreadReplies(root, hasSession, treeView)) {
-      arr.push(reply)
+    let arr: RowItem[] = []
+    if (root.type === 'post') {
+      if (!root.ctx.isParentLoading) {
+        arr.push(TOP_COMPONENT)
+        for (const parent of flattenThreadParents(root, hasSession)) {
+          arr.push(parent)
+        }
+      }
+      arr.push(root)
+      if (!root.post.viewer?.replyDisabled) {
+        arr.push(REPLY_PROMPT)
+      }
+      if (root.ctx.isChildLoading) {
+        arr.push(CHILD_SPINNER)
+      } else {
+        for (const reply of flattenThreadReplies(root, hasSession, treeView)) {
+          arr.push(reply)
+        }
+        arr.push(BOTTOM_COMPONENT)
+      }
     }
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-    }
-    if (arr.indexOf(CHILD_SPINNER) === -1) {
-      arr.push(BOTTOM_COMPONENT)
     }
     return arr
   }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
@@ -244,7 +259,7 @@ function PostThreadLoaded({
   }, [setIsPTRing, onRefresh])
 
   const renderItem = React.useCallback(
-    ({item, index}: {item: YieldedItem; index: number}) => {
+    ({item, index}: {item: RowItem; index: number}) => {
       if (item === TOP_COMPONENT) {
         return isTabletOrMobile ? (
           <ViewHeader
@@ -499,12 +514,8 @@ function* flattenThreadParents(
   hasSession: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
-    if (!node.ctx.isParentLoading) {
-      if (node.parent) {
-        yield* flattenThreadParents(node.parent, hasSession)
-      } else {
-        yield TOP_COMPONENT
-      }
+    if (node.parent) {
+      yield* flattenThreadParents(node.parent, hasSession)
     }
     if (!node.ctx.isHighlightedPost) {
       yield node
@@ -535,8 +546,6 @@ function* flattenThreadReplies(
           break
         }
       }
-    } else if (node.ctx.isChildLoading) {
-      yield CHILD_SPINNER
     }
   } else if (node.type === 'not-found') {
     yield node
