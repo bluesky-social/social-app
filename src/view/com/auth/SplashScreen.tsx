@@ -101,7 +101,7 @@ export const SplashScreen = ({
                 },
                 inputIOS: {
                   color: pal.text.color,
-                  fontSize: 14,
+                  fontSize: 16,
                   paddingRight: 10 + 4,
                 },
               }}
@@ -113,7 +113,6 @@ export const SplashScreen = ({
                 top: 0,
                 right: 0,
                 bottom: 0,
-                width: 10,
                 pointerEvents: 'none',
                 alignItems: 'center',
                 justifyContent: 'center',
