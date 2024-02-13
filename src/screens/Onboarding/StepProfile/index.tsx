@@ -29,6 +29,7 @@ import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openCropper, openPicker} from 'lib/media/picker'
+import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
 
 interface Avatar {
   image?: {
@@ -46,8 +47,8 @@ const AvatarContext = React.createContext<Avatar>({} as Avatar)
 const SetAvatarContext = React.createContext<
   React.Dispatch<React.SetStateAction<Avatar>>
 >({} as React.Dispatch<React.SetStateAction<Avatar>>)
-const useAvatar = () => React.useContext(AvatarContext)
-const useSetAvatar = () => React.useContext(SetAvatarContext)
+export const useAvatar = () => React.useContext(AvatarContext)
+export const useSetAvatar = () => React.useContext(SetAvatarContext)
 
 export function StepProfile() {
   const {_} = useLingui()
@@ -189,7 +190,6 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
   const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
   const onPress = React.useCallback(() => {
     setAvatar(prev => ({
@@ -198,47 +198,8 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
     }))
   }, [emoji, setAvatar])
 
-  const onCameraPress = React.useCallback(async () => {
-    if (!(await requestPhotoAccessIfNeeded())) {
-      return
-    }
-
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
-    const item = items[0]
-    if (!item) return
-
-    const croppedImage = await openCropper({
-      mediaType: 'photo',
-      cropperCircleOverlay: true,
-      height: item.height,
-      width: item.width,
-      path: item.path,
-    })
-
-    setAvatar(prev => ({
-      ...prev,
-      image: croppedImage,
-    }))
-  }, [requestPhotoAccessIfNeeded, setAvatar])
-
   if (emoji === 'camera') {
-    return (
-      <Pressable
-        accessibilityRole="button"
-        style={[
-          styles.imageContainer,
-          styles.paletteContainer,
-          t.atoms.border_contrast_high,
-          {
-            borderWidth: avatar.placeholder === emoji ? 4 : 2,
-          },
-        ]}
-        onPress={onCameraPress}>
-        <Camera size="xl" style={[t.atoms.text_contrast_medium]} />
-      </Pressable>
-    )
+    return <SelectImageButton />
   }
 
   return (
