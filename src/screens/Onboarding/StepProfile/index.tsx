@@ -15,6 +15,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
+import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
@@ -55,7 +56,7 @@ export function StepProfile() {
   const onboardDispatch = useOnboardingDispatch()
   const [avatar, setAvatar] = React.useState<Avatar>({
     placeholder: 'smile',
-    backgroundColor: 'red',
+    backgroundColor: '#338388',
   })
 
   React.useEffect(() => {
@@ -109,11 +110,12 @@ export function StepProfile() {
 }
 
 function AvatarCircle() {
+  const t = useTheme()
   const avatar = useAvatar()
 
   if (avatar.imageUri) {
     return (
-      <View style={[styles.imageContainer]}>
+      <View style={[styles.imageContainer, t.atoms.border_contrast_high]}>
         <Image
           source={avatar.imageUri}
           style={{flex: 1}}
@@ -134,10 +136,17 @@ function AvatarCircle() {
   )
 }
 
-const colors = ['image', 'red', 'blue', 'green', 'orange'] as const
+const colors = [
+  '#338388',
+  '#4ABFBD',
+  '#8AB17D',
+  '#E9C46A',
+  '#F4A261',
+  '#E76F51',
+] as const
 type Color = (typeof colors)[number]
 
-const emojis = ['smile', 'frown', 'eyes'] as const
+const emojis = ['camera', 'smile', 'frown', 'eyes'] as const
 type Emoji = (typeof emojis)[number]
 const emojiItems: Record<Emoji, string> = {
   smile: '😊',
@@ -146,6 +155,7 @@ const emojiItems: Record<Emoji, string> = {
 }
 
 function ColorItem({color}: {color: Color}) {
+  const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
 
@@ -156,17 +166,16 @@ function ColorItem({color}: {color: Color}) {
     }))
   }, [color, setAvatar])
 
-  if (color === 'image') return null
-
   return (
     <Pressable
       accessibilityRole="button"
       style={[
         styles.imageContainer,
         styles.paletteContainer,
+        t.atoms.border_contrast_high,
         {
           backgroundColor: color,
-          borderWidth: avatar.backgroundColor === color ? 3 : 1,
+          borderWidth: avatar.backgroundColor === color ? 4 : 2,
         },
       ]}
       onPress={onPress}
@@ -178,6 +187,7 @@ function colorRenderItem({item}: ListRenderItemInfo<Color>) {
 }
 
 function EmojiItem({emoji}: {emoji: Emoji}) {
+  const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
 
@@ -188,14 +198,35 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
     }))
   }, [emoji, setAvatar])
 
+  const onCameraPress = React.useCallback(() => {}, [])
+
+  if (emoji === 'camera') {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        style={[
+          styles.imageContainer,
+          styles.paletteContainer,
+          t.atoms.border_contrast_high,
+          {
+            borderWidth: avatar.placeholder === emoji ? 4 : 2,
+          },
+        ]}
+        onPress={onCameraPress}>
+        <Camera size="xl" style={[t.atoms.text_contrast_medium]} />
+      </Pressable>
+    )
+  }
+
   return (
     <Pressable
       accessibilityRole="button"
       style={[
         styles.imageContainer,
         styles.paletteContainer,
+        t.atoms.border_contrast_high,
         {
-          borderWidth: avatar.placeholder === emoji ? 3 : 1,
+          borderWidth: avatar.placeholder === emoji ? 4 : 2,
         },
       ]}
       onPress={onPress}>
