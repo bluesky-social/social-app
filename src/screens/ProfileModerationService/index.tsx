@@ -1,10 +1,9 @@
 import React from 'react'
 import {Dimensions, View} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
+import {AppBskyModerationDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {LABEL_GROUPS} from '@atproto/api'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -27,6 +26,8 @@ import {
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {sanitizeHandle} from '#/lib/strings/handles'
+
+import {getLabelGroupsFromLabels} from '#/lib/moderation'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -108,7 +109,7 @@ function ProfileModservicecreenIntermediate({modDid}: {modDid: string}) {
       <Loader size="xl" fill={t.atoms.text.color} />
     </View>
   ) : preferences && info ? (
-    <ProfileModserviceScreenInner preferences={preferences} modInfo={info} />
+    <ProfileModserviceScreenInner preferences={preferences} modservice={info} />
   ) : (
     <ErrorState
       error={
@@ -120,10 +121,10 @@ function ProfileModservicecreenIntermediate({modDid}: {modDid: string}) {
 
 export function ProfileModserviceScreenInner({
   // preferences,
-  modInfo,
+  modservice,
 }: {
   preferences: UsePreferencesQueryResponse
-  modInfo: AppBskyModerationDefs.ModServiceViewDetailed
+  modservice: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -134,13 +135,13 @@ export function ProfileModserviceScreenInner({
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
   const [likeUri, setLikeUri] = React.useState<string>(
-    modInfo.viewer?.like || '',
+    modservice.viewer?.like || '',
   )
-  const groups = React.useMemo<
-    [keyof typeof LABEL_GROUPS, LabelGroupDefinition][]
-  >(() => {
-    return Object.entries(LABEL_GROUPS).filter(([, def]) => def.configurable)
-  }, [])
+  const groups = React.useMemo(() => {
+    return getLabelGroupsFromLabels(modservice.policies.labelValues).filter(
+      def => def.configurable,
+    )
+  }, [modservice.policies.labelValues])
 
   const isLiked = !!likeUri
   // const isSaved = false // TODO
@@ -150,7 +151,7 @@ export function ProfileModserviceScreenInner({
   // !unpinnedFeed &&
   // (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
 
-  useSetTitle(modInfo.creator.displayName || modInfo.creator.handle)
+  useSetTitle(modservice.creator.displayName || modservice.creator.handle)
 
   // event handlers
   //
@@ -163,7 +164,7 @@ export function ProfileModserviceScreenInner({
         track('CustomFeed:Unlike')
         setLikeUri('')
       } else {
-        const res = await likeMod({uri: modInfo.uri, cid: modInfo.cid})
+        const res = await likeMod({uri: modservice.uri, cid: modservice.cid})
         track('CustomFeed:Like')
         setLikeUri(res.uri)
       }
@@ -175,7 +176,7 @@ export function ProfileModserviceScreenInner({
       )
       logger.error('Failed up toggle like', {error: err})
     }
-  }, [likeUri, isLiked, modInfo, likeMod, unlikeMod, track, _])
+  }, [likeUri, isLiked, modservice, likeMod, unlikeMod, track, _])
 
   return (
     <ScrollView
@@ -185,14 +186,14 @@ export function ProfileModserviceScreenInner({
         borderWidth: 0,
         paddingHorizontal: a.px_xl.paddingLeft,
       }}>
-      <Header info={modInfo} />
+      <Header modservice={modservice} />
 
       <View style={[a.gap_md]}>
-        {modInfo.description ? (
+        {modservice.description ? (
           <RichText
             testID="modinfoDescription"
             resolveFacets
-            value={modInfo.description}
+            value={modservice.description}
             style={[a.text_md, a.leading_normal]}
           />
         ) : (
@@ -203,7 +204,9 @@ export function ProfileModserviceScreenInner({
               t.atoms.text_contrast_medium,
               {fontStyle: 'italic'},
             ]}>
-            <Trans>No description</Trans>
+            <Trans>
+              Moderation service managed by @{modservice.creator.handle}
+            </Trans>
           </Text>
         )}
 
@@ -217,8 +220,8 @@ export function ProfileModserviceScreenInner({
           <Trans>
             Operated by{' '}
             <TextLink
-              href={makeProfileLink(modInfo.creator)}
-              text={sanitizeHandle(modInfo.creator.handle, '@')}
+              href={makeProfileLink(modservice.creator)}
+              text={sanitizeHandle(modservice.creator.handle, '@')}
               style={pal.link}
             />
             . Handles reports of anti-social behavior, illegal content, unwanted
@@ -243,11 +246,11 @@ export function ProfileModserviceScreenInner({
             )}
           </Button>
 
-          {typeof modInfo.likeCount === 'number' && (
+          {typeof modservice.likeCount === 'number' && (
             <InlineLink to={'#todo'} style={[pal.textLight, s.semiBold]}>
               <Trans>
-                Liked by {modInfo.likeCount}{' '}
-                {pluralize(modInfo.likeCount, 'user')}
+                Liked by {modservice.likeCount}{' '}
+                {pluralize(modservice.likeCount, 'user')}
               </Trans>
             </InlineLink>
           )}
@@ -255,11 +258,11 @@ export function ProfileModserviceScreenInner({
       </View>
 
       <View style={[a.gap_md, a.mt_xl]}>
-        {groups.map(([name, def]) => {
+        {groups.map(def => {
           return (
             <React.Fragment key={def.id}>
               <Divider />
-              <PreferenceRow labelGroup={name} />
+              <PreferenceRow labelGroup={def.id} />
             </React.Fragment>
           )
         })}

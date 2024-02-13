@@ -1,4 +1,10 @@
-import {ModerationCause, ProfileModeration, PostModeration} from '@atproto/api'
+import {
+  ModerationCause,
+  ProfileModeration,
+  PostModeration,
+  LABEL_GROUPS,
+  LabelGroupDefinition,
+} from '@atproto/api'
 
 export function getProfileModerationCauses(
   moderation: ProfileModeration,
@@ -69,4 +75,19 @@ export function getModerationCauseKey(cause: ModerationCause): string {
     return `label:${cause.label.val}:${source}`
   }
   return `${cause.type}:${source}`
+}
+
+export function getLabelGroupsFromLabels(labels: string[]) {
+  const groups: LabelGroupDefinition[] = []
+
+  for (const label of labels) {
+    for (const group in LABEL_GROUPS) {
+      const def = LABEL_GROUPS[group as LabelGroupDefinition['id']]
+      if (def.labels.find(l => l.id === label)) {
+        groups.push(def)
+      }
+    }
+  }
+
+  return Array.from(groups)
 }

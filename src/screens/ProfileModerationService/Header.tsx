@@ -30,9 +30,9 @@ import {Bars3_Stroke2_Corner0_Rounded as Bars} from '#/components/icons/Bars'
 import {Divider} from '#/components/Divider'
 
 export function Header({
-  info,
+  modservice,
 }: {
-  info: AppBskyModerationDefs.ModServiceViewDetailed
+  modservice: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
@@ -81,7 +81,7 @@ export function Header({
                 </ButtonText>
               </Button>
 
-              <CommonControls info={info} />
+              <CommonControls modservice={modservice} />
             </View>
           </View>
 
@@ -98,8 +98,8 @@ export function Header({
             a.overflow_hidden,
           ]}>
           <LinearGradient
-            colors={tokens.gradients.bonfire.values.map(c => c[1])}
-            locations={tokens.gradients.bonfire.values.map(c => c[0])}
+            colors={tokens.gradients.midnight.values.map(c => c[1])}
+            locations={tokens.gradients.midnight.values.map(c => c[0])}
             start={{x: 0, y: 0}}
             end={{x: 1, y: 1}}
             style={[a.absolute, a.inset_0]}
@@ -115,10 +115,11 @@ export function Header({
             onPress={emitSoftReset}
             style={[a.justify_start]}>
             <Text style={[a.text_4xl, a.font_bold, t.atoms.text]}>
-              {/* A really long and complex title for a moderation service */}
-              {info.creator.displayName
-                ? sanitizeDisplayName(info.creator.displayName)
-                : sanitizeHandle(info.creator.handle, '@')}
+              {modservice.displayName
+                ? sanitizeDisplayName(modservice.displayName)
+                : modservice.creator.displayName
+                ? sanitizeDisplayName(modservice.creator.displayName)
+                : sanitizeHandle(modservice.creator.handle, '@')}
             </Text>
           </Button>
 
@@ -139,7 +140,7 @@ export function Header({
               </ButtonText>
             </Button>
 
-            <CommonControls info={info} />
+            <CommonControls modservice={modservice} />
           </View>
         )}
       </View>
@@ -148,9 +149,9 @@ export function Header({
 }
 
 function CommonControls({
-  info,
+  modservice,
 }: {
-  info: AppBskyModerationDefs.ModServiceViewDetailed
+  modservice: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -158,19 +159,19 @@ function CommonControls({
   const {openModal} = useModalControls()
 
   const onPressShare = React.useCallback(() => {
-    const url = makeProfileLink(info.creator, 'modservice')
+    const url = makeProfileLink(modservice.creator, 'modservice')
     shareUrl(url)
     // track('CustomFeed:Share') TODO
-  }, [info /*, track*/])
+  }, [modservice /*, track*/])
 
   const onPressReport = React.useCallback(() => {
-    if (!info) return
+    if (!modservice) return
     openModal({
       name: 'report',
-      uri: info.uri,
-      cid: info.cid,
+      uri: modservice.uri,
+      cid: modservice.cid,
     })
-  }, [openModal, info])
+  }, [openModal, modservice])
 
   const dropdownItems: DropdownItem[] = React.useMemo(() => {
     return [
