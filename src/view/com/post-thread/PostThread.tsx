@@ -160,16 +160,16 @@ function PostThreadLoaded({
 
   // construct content
   const posts = React.useMemo(() => {
-    const sortedThread = sortThread(thread, threadViewPrefs)
+    const root = sortThread(thread, threadViewPrefs)
     let arr = []
-    for (let parent of flattenThreadParents(sortedThread, hasSession)) {
+    for (const parent of flattenThreadParents(root, hasSession)) {
       arr.push(parent)
     }
-    for (let reply of flattenThreadReplies(
-      sortedThread,
-      hasSession,
-      treeView,
-    )) {
+    arr.push(root)
+    if (root.type === 'post' && !root.post.viewer?.replyDisabled) {
+      arr.push(REPLY_PROMPT)
+    }
+    for (const reply of flattenThreadReplies(root, hasSession, treeView)) {
       arr.push(reply)
     }
     if (arr.length > maxVisible) {
@@ -522,12 +522,11 @@ function* flattenThreadReplies(
   treeView: boolean,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
-    yield node
-    if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
-      yield REPLY_PROMPT
-    }
     if (!hasSession && hasPwiOptOut(node)) {
       return
+    }
+    if (!node.ctx.isHighlightedPost) {
+      yield node
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
