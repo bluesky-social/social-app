@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Text} from 'view/com/util/text/Text'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
@@ -30,6 +31,7 @@ export const SplashScreen = ({
 
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
+  const insets = useSafeAreaInsets()
 
   const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
 
@@ -125,6 +127,7 @@ export const SplashScreen = ({
             </View>
           </View>
         </View>
+        <View style={{height: insets.bottom}} />
       </ErrorBoundary>
     </CenteredView>
   )
