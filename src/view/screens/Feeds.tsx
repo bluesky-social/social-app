@@ -46,6 +46,7 @@ import {isNative, isWeb} from '#/platform/detection'
 import {HITSLOP_10} from 'lib/constants'
 import {IconCircle} from '#/components/IconCircle'
 import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -659,31 +660,21 @@ function FeedsSavedHeader() {
         a.border_b,
         t.atoms.border_contrast_low,
       ]}>
-      <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} />
+      <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
       <View style={[a.flex_1, a.gap_sm]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           Your Feeds
+        </Text>
+        <Text style={[t.atoms.text_contrast_high]}>
+          <Trans>All the feeds you've saved, right in one place.</Trans>
         </Text>
       </View>
     </View>
   )
 }
 
-const discoverCopies = [
-  {
-    title: 'Discover New Feeds',
-    description:
-      'Custom feeds built by the community bring you new experiences and help you find the content you love.',
-  },
-]
-
 function FeedsAboutHeader() {
   const t = useTheme()
-
-  const randomCopy = React.useMemo(
-    () => discoverCopies[Math.floor(Math.random() * discoverCopies.length)],
-    [],
-  )
 
   return (
     <View
@@ -694,13 +685,19 @@ function FeedsAboutHeader() {
         a.gap_md,
         isWeb ? a.pb_2xl : a.pb_lg,
       ]}>
-      <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} />
+      <IconCircle
+        icon={ListMagnifyingGlass_Stroke2_Corner0_Rounded}
+        size="lg"
+      />
       <View style={[a.flex_1, a.gap_sm]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
-          {randomCopy.title}
+          <Trans>Discover New Feeds</Trans>
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
-          {randomCopy.description}
+          <Trans>
+            Custom feeds built by the community bring you new experiences and
+            help you find the content you love.
+          </Trans>
         </Text>
       </View>
     </View>
@@ -709,7 +706,7 @@ function FeedsAboutHeader() {
 
 function LargeSeparator() {
   const t = useTheme()
-  return <View style={[{borderBottomWidth: 20}, t.atoms.border_contrast_low]} />
+  return <View style={[{borderBottomWidth: 15}, t.atoms.border_contrast_low]} />
 }
 
 const styles = StyleSheet.create({
