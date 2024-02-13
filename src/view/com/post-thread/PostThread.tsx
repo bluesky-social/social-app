@@ -55,7 +55,15 @@ const CHILD_SPINNER = {_reactKey: '__child_spinner__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
 const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
-type YieldedItem = ThreadPost | typeof TOP_COMPONENT | typeof REPLY_PROMPT
+type YieldedItem = ThreadPost | ThreadBlocked | ThreadNotFound
+type RowItem =
+  | YieldedItem
+  // TODO: TS doesn't actually enforce it's one of these, it only enforces matching shape.
+  | typeof TOP_COMPONENT
+  | typeof REPLY_PROMPT
+  | typeof CHILD_SPINNER
+  | typeof LOAD_MORE
+  | typeof BOTTOM_COMPONENT
 
 export function PostThread({
   uri,
@@ -160,18 +168,30 @@ function PostThreadLoaded({
 
   // construct content
   const posts = React.useMemo(() => {
-    let arr = Array.from(
-      flattenThreadSkeleton(
-        sortThread(thread, threadViewPrefs),
-        hasSession,
-        treeView,
-      ),
-    )
+    const root = sortThread(thread, threadViewPrefs)
+    let arr: RowItem[] = []
+    if (root.type === 'post') {
+      if (!root.ctx.isParentLoading) {
+        arr.push(TOP_COMPONENT)
+        for (const parent of flattenThreadParents(root, hasSession)) {
+          arr.push(parent)
+        }
+      }
+      arr.push(root)
+      if (!root.post.viewer?.replyDisabled) {
+        arr.push(REPLY_PROMPT)
+      }
+      if (root.ctx.isChildLoading) {
+        arr.push(CHILD_SPINNER)
+      } else {
+        for (const reply of flattenThreadReplies(root, hasSession, treeView)) {
+          arr.push(reply)
+        }
+        arr.push(BOTTOM_COMPONENT)
+      }
+    }
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-    }
-    if (arr.indexOf(CHILD_SPINNER) === -1) {
-      arr.push(BOTTOM_COMPONENT)
     }
     return arr
   }, [thread, treeView, maxVisible, threadViewPrefs, hasSession])
@@ -239,7 +259,7 @@ function PostThreadLoaded({
   }, [setIsPTRing, onRefresh])
 
   const renderItem = React.useCallback(
-    ({item, index}: {item: YieldedItem; index: number}) => {
+    ({item, index}: {item: RowItem; index: number}) => {
       if (item === TOP_COMPONENT) {
         return isTabletOrMobile ? (
           <ViewHeader
@@ -489,36 +509,43 @@ function isThreadBlocked(v: unknown): v is ThreadBlocked {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'blocked'
 }
 
-function* flattenThreadSkeleton(
+function* flattenThreadParents(
+  node: ThreadNode,
+  hasSession: boolean,
+): Generator<YieldedItem, void> {
+  if (node.type === 'post') {
+    if (node.parent) {
+      yield* flattenThreadParents(node.parent, hasSession)
+    }
+    if (!node.ctx.isHighlightedPost) {
+      yield node
+    }
+  } else if (node.type === 'not-found') {
+    yield node
+  } else if (node.type === 'blocked') {
+    yield node
+  }
+}
+
+function* flattenThreadReplies(
   node: ThreadNode,
   hasSession: boolean,
   treeView: boolean,
-  isTraversingReplies: boolean = false,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
-    if (!node.ctx.isParentLoading) {
-      if (node.parent) {
-        yield* flattenThreadSkeleton(node.parent, hasSession, treeView, false)
-      } else if (!isTraversingReplies) {
-        yield TOP_COMPONENT
-      }
-    }
-    if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
+    if (!hasSession && hasPwiOptOut(node)) {
       return
     }
-    yield node
-    if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
-      yield REPLY_PROMPT
+    if (!node.ctx.isHighlightedPost) {
+      yield node
     }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply, hasSession, treeView, true)
+        yield* flattenThreadReplies(reply, hasSession, treeView)
         if (!treeView && !node.ctx.isHighlightedPost) {
           break
         }
       }
-    } else if (node.ctx.isChildLoading) {
-      yield CHILD_SPINNER
     }
   } else if (node.type === 'not-found') {
     yield node
