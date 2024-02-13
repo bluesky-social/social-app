@@ -36,8 +36,8 @@ type AvatarPlaceholder = 'thinking' | 'heart' | 'laughing'
 
 interface Avatar {
   imageUri?: string
-  backgroundColor?: Color
-  placeholder?: Emoji
+  backgroundColor: Color
+  placeholder: Emoji
 }
 
 const AvatarContext = React.createContext<Avatar>({} as Avatar)
@@ -53,7 +53,10 @@ export function StepProfile() {
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
-  const [avatar, setAvatar] = React.useState<Avatar>({})
+  const [avatar, setAvatar] = React.useState<Avatar>({
+    placeholder: 'smile',
+    backgroundColor: 'red',
+  })
 
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
@@ -78,6 +81,9 @@ export function StepProfile() {
           </Description>
 
           <View style={[a.pt_5xl, a.gap_3xl]}>
+            <View style={[a.align_center, a.pb_lg]}>
+              <AvatarCircle />
+            </View>
             <Items type="emojis" />
             <Items type="colors" />
           </View>
@@ -119,8 +125,12 @@ function AvatarCircle() {
 
   return (
     <View
-      style={[styles.imageContainer, {backgroundColor: avatar.backgroundColor}]}
-    />
+      style={[
+        styles.imageContainer,
+        {backgroundColor: avatar.backgroundColor},
+      ]}>
+      <Text style={[a.text_5xl]}>{emojiItems[avatar.placeholder]}</Text>
+    </View>
   )
 }
 
@@ -185,8 +195,6 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
         styles.imageContainer,
         styles.paletteContainer,
         {
-          alignItems: 'center',
-          justifyContent: 'center',
           borderWidth: avatar.placeholder === emoji ? 3 : 1,
         },
       ]}
@@ -228,12 +236,15 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderRadius: 100,
     height: 150,
-    width: 250,
+    width: 150,
     overflow: 'hidden',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   paletteContainer: {
-    height: 90,
-    width: 90,
+    height: 80,
+    width: 80,
     marginHorizontal: 5,
   },
   flatListOuter: {
