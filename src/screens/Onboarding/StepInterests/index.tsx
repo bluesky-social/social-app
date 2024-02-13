@@ -26,7 +26,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export function StepInterests() {
   const {_} = useLingui()
