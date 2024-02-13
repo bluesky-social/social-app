@@ -160,13 +160,18 @@ function PostThreadLoaded({
 
   // construct content
   const posts = React.useMemo(() => {
-    let arr = Array.from(
-      flattenThreadSkeleton(
-        sortThread(thread, threadViewPrefs),
-        hasSession,
-        treeView,
-      ),
-    )
+    const sortedThread = sortThread(thread, threadViewPrefs)
+    let arr = []
+    for (let parent of flattenThreadParents(sortedThread, hasSession)) {
+      arr.push(parent)
+    }
+    for (let reply of flattenThreadReplies(
+      sortedThread,
+      hasSession,
+      treeView,
+    )) {
+      arr.push(reply)
+    }
     if (arr.length > maxVisible) {
       arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
     }
@@ -489,30 +494,44 @@ function isThreadBlocked(v: unknown): v is ThreadBlocked {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'blocked'
 }
 
-function* flattenThreadSkeleton(
+function* flattenThreadParents(
   node: ThreadNode,
   hasSession: boolean,
-  treeView: boolean,
-  isTraversingReplies: boolean = false,
 ): Generator<YieldedItem, void> {
   if (node.type === 'post') {
     if (!node.ctx.isParentLoading) {
       if (node.parent) {
-        yield* flattenThreadSkeleton(node.parent, hasSession, treeView, false)
-      } else if (!isTraversingReplies) {
+        yield* flattenThreadParents(node.parent, hasSession)
+      } else {
         yield TOP_COMPONENT
       }
     }
-    if (!hasSession && node.ctx.depth > 0 && hasPwiOptOut(node)) {
-      return
+    if (!node.ctx.isHighlightedPost) {
+      yield node
     }
+  } else if (node.type === 'not-found') {
+    yield node
+  } else if (node.type === 'blocked') {
+    yield node
+  }
+}
+
+function* flattenThreadReplies(
+  node: ThreadNode,
+  hasSession: boolean,
+  treeView: boolean,
+): Generator<YieldedItem, void> {
+  if (node.type === 'post') {
     yield node
     if (node.ctx.isHighlightedPost && !node.post.viewer?.replyDisabled) {
       yield REPLY_PROMPT
     }
+    if (!hasSession && hasPwiOptOut(node)) {
+      return
+    }
     if (node.replies?.length) {
       for (const reply of node.replies) {
-        yield* flattenThreadSkeleton(reply, hasSession, treeView, true)
+        yield* flattenThreadReplies(reply, hasSession, treeView)
         if (!treeView && !node.ctx.isHighlightedPost) {
           break
         }
