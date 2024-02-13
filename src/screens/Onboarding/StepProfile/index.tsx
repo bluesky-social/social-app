@@ -68,6 +68,7 @@ export function StepProfile() {
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
         <Items type="colors" />
+        <Items type="emojis" />
       </View>
 
       <OnboardingControls.Portal>
@@ -117,6 +118,14 @@ function AvatarCircle({
 const colors = ['image', 'red', 'blue', 'green', 'orange'] as const
 type Color = (typeof colors)[number]
 
+const emojis = ['smile', 'frown', 'eyes'] as const
+type Emoji = (typeof emojis)[number]
+const emojiItems: Record<Emoji, string> = {
+  smile: '😊',
+  frown: '☹️',
+  eyes: '👀',
+}
+
 function ColorItem({color}: {color: Color}) {
   if (color === 'image') return null
 
@@ -134,11 +143,34 @@ function colorRenderItem({item}: ListRenderItemInfo<Color>) {
   return <ColorItem color={item} />
 }
 
-function Items({type}: {type: 'icons' | 'colors'}) {
+function EmojiItem({emoji}: {emoji: Emoji}) {
   return (
-    <FlatList
-      data={colors}
-      renderItem={colorRenderItem}
+    <View style={[styles.imageContainer, styles.paletteContainer]}>
+      <Text>{emojiItems[emoji]}</Text>
+    </View>
+  )
+}
+function emojiRenderItem({item}: ListRenderItemInfo<Emoji>) {
+  return <EmojiItem emoji={item} />
+}
+
+function Items({type}: {type: 'emojis' | 'colors'}) {
+  if (type === 'colors') {
+    return (
+      <FlatList<Color>
+        style={{height: 100}}
+        data={colors}
+        renderItem={colorRenderItem}
+        horizontal
+        contentContainerStyle={styles.flatListContainer}
+      />
+    )
+  }
+
+  return (
+    <FlatList<Emoji>
+      data={emojis}
+      renderItem={emojiRenderItem}
       horizontal
       contentContainerStyle={styles.flatListContainer}
     />
