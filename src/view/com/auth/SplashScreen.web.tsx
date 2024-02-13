@@ -169,7 +169,6 @@ function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
             width: '100%',
             color: 'transparent',
             background: 'transparent',
-            outline: 0,
             border: 0,
             padding: 0,
           }}>
