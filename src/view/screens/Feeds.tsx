@@ -669,8 +669,21 @@ function FeedsSavedHeader() {
   )
 }
 
+const discoverCopies = [
+  {
+    title: 'Discover New Feeds',
+    description:
+      'Custom feeds built by the community bring you new experiences and help you find the content you love.',
+  },
+]
+
 function FeedsAboutHeader() {
   const t = useTheme()
+
+  const randomCopy = React.useMemo(
+    () => discoverCopies[Math.floor(Math.random() * discoverCopies.length)],
+    [],
+  )
 
   return (
     <View
@@ -684,13 +697,10 @@ function FeedsAboutHeader() {
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} />
       <View style={[a.flex_1, a.gap_sm]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
-          Discover New Feeds
+          {randomCopy.title}
         </Text>
         <Text style={[t.atoms.text_contrast_high]}>
-          <Trans>
-            Custom feeds built by the community bring you new experiences and
-            help you find the content you love.
-          </Trans>
+          {randomCopy.description}
         </Text>
       </View>
     </View>
