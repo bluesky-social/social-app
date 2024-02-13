@@ -1,5 +1,11 @@
 import React from 'react'
-import {View} from 'react-native'
+import {
+  ColorValue,
+  FlatList,
+  ListRenderItemInfo,
+  StyleSheet,
+  View,
+} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
@@ -20,6 +26,17 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {IconCircle} from '#/components/IconCircle'
+import {Image} from 'expo-image'
+import {usePalette} from 'lib/hooks/usePalette'
+import {configurableLabelGroups} from 'state/queries/preferences'
+
+type AvatarPlaceholder = 'thinking' | 'heart' | 'laughing'
+
+interface Avatar {
+  imageUri?: string
+  backgroundColor?: ColorValue
+  placeholder?: AvatarPlaceholder
+}
 
 export function StepProfile() {
   const {_} = useLingui()
@@ -27,6 +44,7 @@ export function StepProfile() {
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
+  const [avatar, setAvatar] = React.useState<Avatar>({})
 
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
@@ -49,52 +67,7 @@ export function StepProfile() {
       </Description>
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle
-            icon={StreamingLive}
-            size="lg"
-            style={{width: 48, height: 48}}
-          />
-          <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_lg]}>
-              <Trans>Public</Trans>
-            </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
-              <Trans>
-                Your posts, likes, and blocks are public. Mutes are private.
-              </Trans>
-            </Text>
-          </View>
-        </View>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle icon={News} size="lg" style={{width: 48, height: 48}} />
-          <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_lg]}>
-              <Trans>Open</Trans>
-            </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
-              <Trans>Never lose access to your followers or data.</Trans>
-            </Text>
-          </View>
-        </View>
-        <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          {/*<IconCircle*/}
-          {/*  icon={Trending}*/}
-          {/*  size="lg"*/}
-          {/*  style={{width: 48, height: 48}}*/}
-          {/*/>*/}
-          <View style={[a.flex_1, a.gap_xs]}>
-            <Text style={[a.font_bold, a.text_lg]}>
-              <Trans>Flexible</Trans>
-            </Text>
-            <Text
-              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
-              <Trans>Choose the algorithms that power your custom feeds.</Trans>
-            </Text>
-          </View>
-        </View>
+        <Items type="colors" />
       </View>
 
       <OnboardingControls.Portal>
@@ -114,3 +87,78 @@ export function StepProfile() {
     </View>
   )
 }
+
+function AvatarCircle({
+  avatar,
+  setAvatar,
+}: {
+  avatar: Avatar
+  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
+}) {
+  if (avatar.imageUri) {
+    return (
+      <View style={[styles.imageContainer]}>
+        <Image
+          source={avatar.imageUri}
+          style={{flex: 1}}
+          accessibilityIgnoresInvertColors
+        />
+      </View>
+    )
+  }
+
+  return (
+    <View
+      style={[styles.imageContainer, {backgroundColor: avatar.backgroundColor}]}
+    />
+  )
+}
+
+const colors = ['image', 'red', 'blue', 'green', 'orange'] as const
+type Color = (typeof colors)[number]
+
+function ColorItem({color}: {color: Color}) {
+  if (color === 'image') return null
+
+  return (
+    <View
+      style={[
+        styles.imageContainer,
+        styles.paletteContainer,
+        {backgroundColor: color},
+      ]}
+    />
+  )
+}
+function colorRenderItem({item}: ListRenderItemInfo<Color>) {
+  return <ColorItem color={item} />
+}
+
+function Items({type}: {type: 'icons' | 'colors'}) {
+  return (
+    <FlatList
+      data={colors}
+      renderItem={colorRenderItem}
+      horizontal
+      contentContainerStyle={styles.flatListContainer}
+    />
+  )
+}
+
+const styles = StyleSheet.create({
+  imageContainer: {
+    borderRadius: 100,
+    height: 150,
+    width: 250,
+    overflow: 'hidden',
+  },
+  paletteContainer: {
+    height: 90,
+    width: 90,
+    marginHorizontal: 5,
+  },
+  flatListContainer: {
+    paddingLeft: 40,
+    paddingRight: 40,
+  },
+})
