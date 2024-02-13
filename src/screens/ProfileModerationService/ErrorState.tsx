@@ -25,7 +25,7 @@ export function ErrorState({error}: {error: string}) {
 
   return (
     <View style={[a.px_xl]}>
-      <CircleInfo width={48} style={[t.atoms.text_contrast_400]} />
+      <CircleInfo width={48} style={[t.atoms.text_contrast_low]} />
 
       <Text style={[a.text_xl, a.font_bold, a.pb_md, a.pt_xl]}>
         <Trans>Hmmmm, we couldn't load that moderation service.</Trans>
@@ -35,7 +35,7 @@ export function ErrorState({error}: {error: string}) {
           a.text_md,
           a.leading_normal,
           a.pb_md,
-          t.atoms.text_contrast_700,
+          t.atoms.text_contrast_medium,
         ]}>
         <Trans>
           This moderation service is unavailable. See below for more details. If

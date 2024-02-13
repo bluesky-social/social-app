@@ -33,7 +33,7 @@ export function PreferenceRow({labelGroup}: {labelGroup: string}) {
       ]}>
       <View style={[a.gap_xs, {width: '50%'}]}>
         <Text style={[a.font_bold]}>{groupInfoStrings.name}</Text>
-        <Text style={[t.atoms.text_contrast_700, a.leading_snug]}>
+        <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
           {groupInfoStrings.description}
         </Text>
       </View>

@@ -62,7 +62,7 @@ export function ProfileModserviceScreen(
         style={[
           a.border_l,
           a.border_r,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
           {
             minHeight: MIN_HEIGHT,
           },
@@ -200,7 +200,7 @@ export function ProfileModserviceScreenInner({
             style={[
               a.text_md,
               a.leading_normal,
-              t.atoms.text_contrast_700,
+              t.atoms.text_contrast_medium,
               {fontStyle: 'italic'},
             ]}>
             <Trans>No description</Trans>
@@ -212,7 +212,7 @@ export function ProfileModserviceScreenInner({
             a.text_md,
             a.leading_normal,
             a.italic,
-            t.atoms.text_contrast_700,
+            t.atoms.text_contrast_medium,
           ]}>
           <Trans>
             Operated by{' '}
@@ -239,7 +239,7 @@ export function ProfileModserviceScreenInner({
             {isLiked ? (
               <HeartFilled fill={t.palette.negative_400} />
             ) : (
-              <Heart fill={t.atoms.text_contrast_700.color} />
+              <Heart fill={t.atoms.text_contrast_medium.color} />
             )}
           </Button>
 

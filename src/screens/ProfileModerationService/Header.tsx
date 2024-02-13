@@ -122,7 +122,7 @@ export function Header({
             </Text>
           </Button>
 
-          <Text style={[a.text_md, t.atoms.text_contrast_700]}>
+          <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
             <Trans>Moderation service</Trans>
           </Text>
         </View>
@@ -208,7 +208,7 @@ function CommonControls({
       accessibilityLabel={_(msg`More options`)}
       accessibilityHint="">
       <View style={[a.rounded_full, a.p_sm, t.atoms.bg_contrast_50]}>
-        <Ellipsis width={20} fill={t.atoms.text_contrast_700.color} />
+        <Ellipsis width={20} fill={t.atoms.text_contrast_medium.color} />
       </View>
     </NativeDropdown>
   )
