@@ -27,7 +27,6 @@ import {RichText} from '../util/text/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
-import {ProfileHeaderModCard} from './ProfileHeaderModCard'
 import {formatCount} from '../util/numeric/format'
 import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
@@ -57,6 +56,10 @@ import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
+import {
+  Loader as ModServiceLoader,
+  ModerationServiceCard,
+} from '#/components/ModerationServiceCard'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -624,7 +627,8 @@ let ProfileHeader = ({
         {isMe && (
           <LabelInfo details={{did: profile.did}} labels={profile.labels} />
         )}
-        <ProfileHeaderModCard />
+
+        <ModServiceLoader did={profile.did} component={ModerationServiceCard} />
       </View>
 
       {showSuggestedFollows && (
