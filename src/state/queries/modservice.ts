@@ -48,3 +48,19 @@ export function useModServiceEnableMutation() {
     },
   })
 }
+
+export function useModServiceLabelGroupEnableMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    async mutationFn({did, group, enabled}: {did: string; group: string, enabled: boolean}) {
+      console.log('useModServiceLabelGroupEnableMutation', did, group, enabled)
+      await getAgent().setModServiceLabelGroupEnabled(did, group, enabled)
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}

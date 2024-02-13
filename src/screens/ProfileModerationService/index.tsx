@@ -143,6 +143,11 @@ export function ProfileModserviceScreenInner({
       def => def.configurable,
     )
   }, [modservice.policies.labelValues])
+  const modservicePreferences = React.useMemo(() => {
+    return preferences.moderationOpts.mods.find(
+      p => p.did === modservice.creator.did,
+    )
+  }, [modservice.creator.did, preferences.moderationOpts.mods])
 
   useSetTitle(modservice.creator.displayName || modservice.creator.handle)
 
@@ -179,7 +184,7 @@ export function ProfileModserviceScreenInner({
       }}>
       <Header modservice={modservice} preferences={preferences} />
 
-      <View style={[a.gap_md]}>
+      <View style={[a.gap_md, a.pb_xl]}>
         {modservice.description ? (
           <RichText
             testID="modinfoDescription"
@@ -248,12 +253,28 @@ export function ProfileModserviceScreenInner({
         </View>
       </View>
 
+      <Divider />
+
+      <View style={[a.gap_sm, a.mt_xl]}>
+        <Text style={[a.text_md, a.font_bold]}>
+          Configure moderation service
+        </Text>
+        <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+          This moderation service supports the following types of content.
+          Configure which types of content you'd like to respect from this
+          service.
+        </Text>
+      </View>
+
       <View style={[a.gap_md, a.mt_xl]}>
-        {groups.map(def => {
+        {groups.map((def, i) => {
           return (
             <React.Fragment key={def.id}>
-              <Divider />
-              <PreferenceRow labelGroup={def.id} />
+              {i !== 0 && <Divider />}
+              <PreferenceRow
+                labelGroup={def.id}
+                modservicePreferences={modservicePreferences}
+              />
             </React.Fragment>
           )
         })}
