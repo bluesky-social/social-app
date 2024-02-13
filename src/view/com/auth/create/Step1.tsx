@@ -88,7 +88,7 @@ export function Step1({
               style={[pal.textLight, {marginLeft: 14}]}
             />
             <TouchableOpacity
-              testID="loginSelectServiceButton"
+              testID="selectServiceButton"
               style={{
                 flexDirection: 'row',
                 flex: 1,
