@@ -17,7 +17,7 @@ import {
   flatten,
   TextStyleProp,
 } from '#/alf'
-import {H2, P, leading} from '#/components/Typography'
+import {P, leading, Text} from '#/components/Typography'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ScrollView} from '#/view/com/util/Views'
@@ -165,7 +165,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           isWeb ? a.fixed : a.absolute,
           {bottom: 0, left: 0, right: 0},
           t.atoms.bg,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
           a.border_t,
           a.align_center,
           gtMobile ? a.px_5xl : a.px_xl,
@@ -209,16 +209,18 @@ export function Title({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   return (
-    <H2
+    <Text
       style={[
         a.pb_sm,
+        a.text_4xl,
+        a.font_bold,
         {
           lineHeight: leading(a.text_4xl, a.leading_tight),
         },
         flatten(style),
       ]}>
       {children}
-    </H2>
+    </Text>
   )
 }
 
@@ -227,5 +229,7 @@ export function Description({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
-  return <P style={[t.atoms.text_contrast_700, flatten(style)]}>{children}</P>
+  return (
+    <P style={[t.atoms.text_contrast_medium, flatten(style)]}>{children}</P>
+  )
 }

@@ -44,12 +44,10 @@ import {formatCountShortOnly} from 'view/com/util/numeric/format'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
-import {useModalControls} from '#/state/modals'
 import {useSession, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {emitSoftReset} from '#/state/events'
-import {useInviteCodesQuery} from '#/state/queries/invites'
 import {NavSignupCard} from '#/view/shell/NavSignupCard'
 import {TextLink} from '../com/util/Link'
 
@@ -228,8 +226,7 @@ let DrawerContent = ({}: {}): React.ReactNode => {
 
           {hasSession ? (
             <>
-              <InviteCodes />
-              <View style={{height: 10}} />
+              <View style={{height: 16}} />
               <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
               <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
               <NotificationsMenuItem
@@ -255,13 +252,13 @@ let DrawerContent = ({}: {}): React.ReactNode => {
             <TextLink
               type="md"
               style={pal.link}
-              href="https://blueskyweb.xyz/support/tos"
+              href="https://bsky.social/about/support/tos"
               text={_(msg`Terms of Service`)}
             />
             <TextLink
               type="md"
               style={pal.link}
-              href="https://blueskyweb.xyz/support/privacy-policy"
+              href="https://bsky.social/about/support/privacy-policy"
               text={_(msg`Privacy Policy`)}
             />
           </View>
@@ -620,56 +617,6 @@ function MenuItem({
     </TouchableOpacity>
   )
 }
-
-let InviteCodes = ({}: {}): React.ReactNode => {
-  const {track} = useAnalytics()
-  const setDrawerOpen = useSetDrawerOpen()
-  const pal = usePalette('default')
-  const {data: invites} = useInviteCodesQuery()
-  const invitesAvailable = invites?.available?.length ?? 0
-  const {openModal} = useModalControls()
-  const {_} = useLingui()
-
-  const onPress = React.useCallback(() => {
-    track('Menu:ItemClicked', {url: '#invite-codes'})
-    setDrawerOpen(false)
-    openModal({name: 'invite-codes'})
-  }, [openModal, track, setDrawerOpen])
-
-  return (
-    <TouchableOpacity
-      testID="menuItemInviteCodes"
-      style={styles.inviteCodes}
-      onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Invite codes: ${invitesAvailable} available`)}
-      accessibilityHint={_(msg`Opens list of invite codes`)}
-      disabled={invites?.disabled}>
-      <FontAwesomeIcon
-        icon="ticket"
-        style={[
-          styles.inviteCodesIcon,
-          invitesAvailable > 0 ? pal.link : pal.textLight,
-        ]}
-        size={18}
-      />
-      <Text
-        type="lg-medium"
-        style={invitesAvailable > 0 ? pal.link : pal.textLight}>
-        {invites?.disabled ? (
-          <Trans>
-            Your invite codes are hidden when logged in using an App Password
-          </Trans>
-        ) : invitesAvailable === 1 ? (
-          <Trans>{invitesAvailable} invite code available</Trans>
-        ) : (
-          <Trans>{invitesAvailable} invite codes available</Trans>
-        )}
-      </Text>
-    </TouchableOpacity>
-  )
-}
-InviteCodes = React.memo(InviteCodes)
 
 const styles = StyleSheet.create({
   view: {

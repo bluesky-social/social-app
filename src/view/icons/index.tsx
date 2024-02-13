@@ -39,6 +39,7 @@ import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faCommentSlash} from '@fortawesome/free-solid-svg-icons/faCommentSlash'
 import {faComments} from '@fortawesome/free-regular-svg-icons/faComments'
 import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
+import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
@@ -143,6 +144,7 @@ library.add(
   faCommentSlash,
   faComments,
   faCompass,
+  faDownload,
   faEllipsis,
   faEnvelope,
   faEye,

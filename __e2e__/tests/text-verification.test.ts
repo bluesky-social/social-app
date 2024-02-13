@@ -18,9 +18,10 @@ describe('Create account', () => {
     await device.takeScreenshot('1- opened create account screen')
     await element(by.id('selectServiceButton')).tap()
     await device.takeScreenshot('2- selected other server')
+    await element(by.id('customSelectBtn')).tap()
     await element(by.id('customServerTextInput')).typeText(service)
     await element(by.id('customServerTextInput')).tapReturnKey()
-    await element(by.id('customServerSelectBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await device.takeScreenshot('3- input test server URL')
     await element(by.id('emailInput')).typeText('text-verification@test.com')
     await element(by.id('passwordInput')).typeText('hunter2')
@@ -40,13 +41,7 @@ describe('Create account', () => {
 
     await element(by.id('nextBtn')).tap()
 
-    await expect(element(by.id('welcomeOnboarding'))).toBeVisible()
-    await element(by.id('continueBtn')).tap()
-    await expect(element(by.id('recommendedFeedsOnboarding'))).toBeVisible()
-    await element(by.id('continueBtn')).tap()
-    await expect(element(by.id('recommendedFollowsOnboarding'))).toBeVisible()
-    await element(by.id('continueBtn')).tap()
-    await expect(element(by.id('homeScreen'))).toBeVisible()
+    await expect(element(by.id('onboardingInterests'))).toBeVisible()
   })
 
   it('failed text verification correctly goes back to the code input screen', async () => {
@@ -57,9 +52,10 @@ describe('Create account', () => {
     await device.takeScreenshot('1- opened create account screen')
     await element(by.id('selectServiceButton')).tap()
     await device.takeScreenshot('2- selected other server')
+    await element(by.id('customSelectBtn')).tap()
     await element(by.id('customServerTextInput')).typeText(service)
     await element(by.id('customServerTextInput')).tapReturnKey()
-    await element(by.id('customServerSelectBtn')).tap()
+    await element(by.id('doneBtn')).tap()
     await device.takeScreenshot('3- input test server URL')
     await element(by.id('emailInput')).typeText('text-verification2@test.com')
     await element(by.id('passwordInput')).typeText('hunter2')

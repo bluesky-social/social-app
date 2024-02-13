@@ -30,8 +30,8 @@ export function IconCircle({
         a.align_center,
         a.rounded_full,
         {
-          width: 64,
-          height: 64,
+          width: size === 'lg' ? 52 : 64,
+          height: size === 'lg' ? 52 : 64,
           backgroundColor:
             t.name === 'light' ? t.palette.primary_50 : t.palette.primary_950,
         },
