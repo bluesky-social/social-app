@@ -142,6 +142,8 @@ export function sanitizeAppLanguageSetting(appLanguage: string): AppLanguage {
         return AppLanguage.zh_CN
       case 'zh-TW':
         return AppLanguage.zh_TW
+      case 'it':
+        return AppLanguage.it
       default:
         continue
     }
