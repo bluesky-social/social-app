@@ -223,12 +223,7 @@ export function FeedsScreen(_props: Props) {
             // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
-          if (preferences?.feeds?.saved.length === 0) {
-            slices.push({
-              key: 'savedFeedNoResults',
-              type: 'savedFeedNoResults',
-            })
-          } else {
+          if (preferences?.feeds?.saved.length > 0) {
             const {saved, pinned} = preferences.feeds
 
             slices = slices.concat(
@@ -451,7 +446,7 @@ export function FeedsScreen(_props: Props) {
                 </View>
               </View>
             )}
-            <FeedsSavedHeader />
+            {preferences?.feeds?.saved?.length !== 0 && <FeedsSavedHeader />}
           </>
         )
       } else if (item.type === 'savedFeedNoResults') {
@@ -515,15 +510,20 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
-      _,
-      hasSession,
       isMobile,
-      pal,
+      pal.view,
+      pal.border,
+      pal.text,
+      pal.icon,
+      pal.textLight,
+      _,
+      preferences?.feeds?.saved?.length,
       query,
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
+      hasSession,
     ],
   )
 
