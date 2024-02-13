@@ -639,17 +639,26 @@ function FeedsSavedHeader() {
 
   return (
     <View
-      style={[
-        a.flex_row,
-        a.px_md,
-        a.pt_2xl,
-        a.gap_md,
-        isWeb ? a.pb_2xl : a.pb_xl,
-        a.border_b,
-        t.atoms.border_contrast_low,
-      ]}>
+      style={
+        isWeb
+          ? [
+              a.flex_row,
+              a.px_md,
+              a.py_lg,
+              a.gap_md,
+              a.border_b,
+              t.atoms.border_contrast_low,
+            ]
+          : [
+              {flexDirection: 'row-reverse'},
+              a.p_lg,
+              a.gap_md,
+              a.border_b,
+              t.atoms.border_contrast_low,
+            ]
+      }>
       <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
-      <View style={[a.flex_1, a.gap_sm]}>
+      <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
           <Trans>My Feeds</Trans>
         </Text>
@@ -666,13 +675,11 @@ function FeedsAboutHeader() {
 
   return (
     <View
-      style={[
-        a.flex_row,
-        a.px_md,
-        a.pt_2xl,
-        a.gap_md,
-        isWeb ? a.pb_2xl : a.pb_xl,
-      ]}>
+      style={
+        isWeb
+          ? [a.flex_row, a.px_md, a.pt_lg, a.pb_lg, a.gap_md]
+          : [{flexDirection: 'row-reverse'}, a.p_lg, a.gap_md]
+      }>
       <IconCircle
         icon={ListMagnifyingGlass_Stroke2_Corner0_Rounded}
         size="lg"
