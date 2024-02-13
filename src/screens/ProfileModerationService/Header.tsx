@@ -19,6 +19,8 @@ import {
 } from '#/view/com/util/forms/NativeDropdown'
 import {useSession} from '#/state/session'
 import {useModalControls} from '#/state/modals'
+import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
 
 import {useTheme, atoms as a, tokens, web, native, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -30,8 +32,10 @@ import {Bars3_Stroke2_Corner0_Rounded as Bars} from '#/components/icons/Bars'
 import {Divider} from '#/components/Divider'
 
 export function Header({
+  preferences,
   modservice,
 }: {
+  preferences: UsePreferencesQueryResponse
   modservice: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
   const t = useTheme()
@@ -40,6 +44,13 @@ export function Header({
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const canGoBack = navigation.canGoBack()
+  const {mutateAsync: service, variables} = useModServiceSubscriptionMutation()
+  const isSubscribed =
+    variables?.subscribe ??
+    preferences.moderationOpts.mods.find(
+      mod => mod.did === modservice.creator.did,
+    )
+  const [subscriptionError, setSubscriptionError] = React.useState<string>('')
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -53,8 +64,16 @@ export function Header({
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
+  const toggleSubscribe = React.useCallback(async () => {
+    try {
+      await service({did: modservice.creator.did, subscribe: !isSubscribed})
+    } catch (e: any) {
+      setSubscriptionError(e.message)
+    }
+  }, [service, isSubscribed, modservice.creator.did])
+
   return (
-    <View style={[a.pb_xl, web(a.pt_md), gtMobile && web(a.pt_4xl)]}>
+    <View style={[a.pb_xl, web(a.pt_md), gtMobile && web(a.pt_2xl)]}>
       {!gtMobile && (
         <View style={[a.mb_xl]}>
           <View
@@ -75,9 +94,14 @@ export function Header({
                 size="small"
                 variant="solid"
                 color="primary"
-                label={_(msg`Subscribe to moderation service`)}>
+                label={_(msg`Subscribe to this moderation service`)}
+                onPress={toggleSubscribe}>
                 <ButtonText>
-                  <Trans>Subscribe</Trans>
+                  {isSubscribed ? (
+                    <Trans>Unsubscribe</Trans>
+                  ) : (
+                    <Trans>Subscribe</Trans>
+                  )}
                 </ButtonText>
               </Button>
 
@@ -134,9 +158,14 @@ export function Header({
               size="small"
               variant="solid"
               color="primary"
-              label={_(msg`Subscribe to moderation service`)}>
+              label={_(msg`Subscribe to this moderation service`)}
+              onPress={toggleSubscribe}>
               <ButtonText>
-                <Trans>Subscribe</Trans>
+                {isSubscribed ? (
+                  <Trans>Unsubscribe</Trans>
+                ) : (
+                  <Trans>Subscribe</Trans>
+                )}
               </ButtonText>
             </Button>
 
@@ -144,6 +173,30 @@ export function Header({
           </View>
         )}
       </View>
+
+      {subscriptionError && (
+        <View style={[a.pt_lg]}>
+          <View
+            style={[
+              a.px_lg,
+              a.py_md,
+              a.rounded_sm,
+              a.border,
+              a.gap_xs,
+              {
+                backgroundColor: t.palette.negative_50,
+                borderColor: t.palette.negative_100,
+              },
+            ]}>
+            <Text style={[a.font_bold, {color: t.palette.negative_950}]}>
+              An error occurred while editing your subscription.
+            </Text>
+            <Text style={[{color: t.palette.negative_900}]}>
+              {subscriptionError}
+            </Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }

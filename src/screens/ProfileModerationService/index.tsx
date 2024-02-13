@@ -120,7 +120,7 @@ function ProfileModservicecreenIntermediate({modDid}: {modDid: string}) {
 }
 
 export function ProfileModserviceScreenInner({
-  // preferences,
+  preferences,
   modservice,
 }: {
   preferences: UsePreferencesQueryResponse
@@ -186,7 +186,7 @@ export function ProfileModserviceScreenInner({
         borderWidth: 0,
         paddingHorizontal: a.px_xl.paddingLeft,
       }}>
-      <Header modservice={modservice} />
+      <Header modservice={modservice} preferences={preferences} />
 
       <View style={[a.gap_md]}>
         {modservice.description ? (
