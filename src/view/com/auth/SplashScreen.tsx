@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingTop: 12,
+    paddingBottom: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
