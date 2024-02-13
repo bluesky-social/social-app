@@ -7,8 +7,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
-import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
+import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
@@ -22,6 +21,7 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {IconCircle} from '#/screens/Onboarding/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {StreamingLive_Stroke2_Corner0_Rounded} from '#/components/icons/StreamingLive'
 
 export function StepProfile() {
   const {_} = useLingui()
@@ -41,7 +41,7 @@ export function StepProfile() {
 
   return (
     <View style={[a.align_start]}>
-      <IconCircle icon={Check} style={[a.mb_2xl]} />
+      <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
 
       <Title>
         <Trans>You're ready to go!</Trans>
@@ -52,7 +52,11 @@ export function StepProfile() {
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle icon={Growth} size="lg" style={{width: 48, height: 48}} />
+          <IconCircle
+            icon={StreamingLive}
+            size="lg"
+            style={{width: 48, height: 48}}
+          />
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Public</Trans>
@@ -78,11 +82,11 @@ export function StepProfile() {
           </View>
         </View>
         <View style={[a.flex_row, a.align_center, a.w_full, a.gap_lg]}>
-          <IconCircle
-            icon={Trending}
-            size="lg"
-            style={{width: 48, height: 48}}
-          />
+          {/*<IconCircle*/}
+          {/*  icon={Trending}*/}
+          {/*  size="lg"*/}
+          {/*  style={{width: 48, height: 48}}*/}
+          {/*/>*/}
           <View style={[a.flex_1, a.gap_xs]}>
             <Text style={[a.font_bold, a.text_lg]}>
               <Trans>Flexible</Trans>
