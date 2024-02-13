@@ -153,7 +153,8 @@ function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
         </Text>
         <FontAwesomeIcon
           icon="chevron-down"
-          style={[pal.textLight, {width: 12, flexShrink: 0}]}
+          size={12}
+          style={[pal.textLight, {flexShrink: 0}]}
         />
 
         <select
