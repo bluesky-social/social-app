@@ -6,7 +6,6 @@ import {msg, Trans} from '@lingui/macro'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
@@ -19,9 +18,8 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {StreamingLive_Stroke2_Corner0_Rounded} from '#/components/icons/StreamingLive'
+import {IconCircle} from '#/components/IconCircle'
 
 export function StepProfile() {
   const {_} = useLingui()
@@ -44,10 +42,10 @@ export function StepProfile() {
       <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
 
       <Title>
-        <Trans>You're ready to go!</Trans>
+        <Trans>Upload a profile picture</Trans>
       </Title>
       <Description>
-        <Trans>We hope you have a wonderful time. Remember, Bluesky is:</Trans>
+        <Trans>Help people know you're not a bot!</Trans>
       </Description>
 
       <View style={[a.pt_5xl, a.gap_3xl]}>
