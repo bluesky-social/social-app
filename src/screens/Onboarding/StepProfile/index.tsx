@@ -1,6 +1,5 @@
 import React from 'react'
 import {
-  ColorValue,
   FlatList,
   FlatListProps,
   ListRenderItemInfo,
@@ -13,12 +12,10 @@ import {msg, Trans} from '@lingui/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 import {Text} from '#/components/Typography'
-import {useOnboardingDispatch} from '#/state/shell'
-import {Loader} from '#/components/Loader'
+// import {useOnboardingDispatch} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
@@ -30,12 +27,8 @@ import {
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
-import {usePalette} from 'lib/hooks/usePalette'
-import {configurableLabelGroups} from 'state/queries/preferences'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openCropper, openPicker} from 'lib/media/picker'
-
-type AvatarPlaceholder = 'thinking' | 'heart' | 'laughing'
 
 interface Avatar {
   image?: {
@@ -58,10 +51,8 @@ const useSetAvatar = () => React.useContext(SetAvatarContext)
 
 export function StepProfile() {
   const {_} = useLingui()
-  const t = useTheme()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
-  const onboardDispatch = useOnboardingDispatch()
   const [avatar, setAvatar] = React.useState<Avatar>({
     placeholder: 'smile',
     backgroundColor: '#338388',
@@ -207,8 +198,6 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
     }))
   }, [emoji, setAvatar])
 
-  const onSelectAvatar = React.useCallback(() => {}, [])
-
   const onCameraPress = React.useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
@@ -232,7 +221,7 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
       ...prev,
       image: croppedImage,
     }))
-  }, [avatar])
+  }, [requestPhotoAccessIfNeeded, setAvatar])
 
   if (emoji === 'camera') {
     return (
