@@ -25,6 +25,8 @@ import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {
   ThreadNode,
   ThreadPost,
+  ThreadNotFound,
+  ThreadBlocked,
   usePostThreadQuery,
   sortThread,
 } from '#/state/queries/post-thread'
@@ -49,18 +51,11 @@ const MAINTAIN_VISIBLE_CONTENT_POSITION = {minIndexForVisible: 1}
 
 const TOP_COMPONENT = {_reactKey: '__top_component__'}
 const REPLY_PROMPT = {_reactKey: '__reply__'}
-const DELETED = {_reactKey: '__deleted__'}
-const BLOCKED = {_reactKey: '__blocked__'}
 const CHILD_SPINNER = {_reactKey: '__child_spinner__'}
 const LOAD_MORE = {_reactKey: '__load_more__'}
 const BOTTOM_COMPONENT = {_reactKey: '__bottom_component__'}
 
-type YieldedItem =
-  | ThreadPost
-  | typeof TOP_COMPONENT
-  | typeof REPLY_PROMPT
-  | typeof DELETED
-  | typeof BLOCKED
+type YieldedItem = ThreadPost | typeof TOP_COMPONENT | typeof REPLY_PROMPT
 
 export function PostThread({
   uri,
@@ -257,7 +252,7 @@ function PostThreadLoaded({
             {!isMobile && <ComposePrompt onPressCompose={onPressReply} />}
           </View>
         )
-      } else if (item === DELETED) {
+      } else if (isThreadNotFound(item)) {
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
@@ -265,7 +260,7 @@ function PostThreadLoaded({
             </Text>
           </View>
         )
-      } else if (item === BLOCKED) {
+      } else if (isThreadBlocked(item)) {
         return (
           <View style={[pal.border, pal.viewLight, styles.itemContainer]}>
             <Text type="lg-bold" style={pal.textLight}>
@@ -486,6 +481,14 @@ function isThreadPost(v: unknown): v is ThreadPost {
   return !!v && typeof v === 'object' && 'type' in v && v.type === 'post'
 }
 
+function isThreadNotFound(v: unknown): v is ThreadNotFound {
+  return !!v && typeof v === 'object' && 'type' in v && v.type === 'not-found'
+}
+
+function isThreadBlocked(v: unknown): v is ThreadBlocked {
+  return !!v && typeof v === 'object' && 'type' in v && v.type === 'blocked'
+}
+
 function* flattenThreadSkeleton(
   node: ThreadNode,
   hasSession: boolean,
@@ -518,9 +521,9 @@ function* flattenThreadSkeleton(
       yield CHILD_SPINNER
     }
   } else if (node.type === 'not-found') {
-    yield DELETED
+    yield node
   } else if (node.type === 'blocked') {
-    yield BLOCKED
+    yield node
   }
 }
 

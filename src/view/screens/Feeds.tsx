@@ -16,6 +16,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2, CogIcon, MagnifyingGlassIcon2} from 'lib/icons'
 import {s} from 'lib/styles'
+import {atoms as a, useTheme} from '#/alf'
 import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {
@@ -41,8 +42,11 @@ import {
 import {cleanError} from 'lib/strings/errors'
 import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {HITSLOP_10} from 'lib/constants'
+import {IconCircle} from '#/components/IconCircle'
+import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
+import {ListMagnifyingGlass_Stroke2_Corner0_Rounded} from '#/components/icons/ListMagnifyingGlass'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -215,12 +219,7 @@ export function FeedsScreen(_props: Props) {
             // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
-          if (preferences?.feeds?.saved.length === 0) {
-            slices.push({
-              key: 'savedFeedNoResults',
-              type: 'savedFeedNoResults',
-            })
-          } else {
+          if (preferences?.feeds?.saved.length !== 0) {
             const {saved, pinned} = preferences.feeds
 
             slices = slices.concat(
@@ -400,46 +399,48 @@ export function FeedsScreen(_props: Props) {
       ) {
         return (
           <View style={s.p10}>
-            <ActivityIndicator />
+            <ActivityIndicator size="large" />
           </View>
         )
       } else if (item.type === 'savedFeedsHeader') {
-        if (!isMobile) {
-          return (
-            <View
-              style={[
-                pal.view,
-                styles.header,
-                pal.border,
-                {
-                  borderBottomWidth: 1,
-                },
-              ]}>
-              <Text type="title-lg" style={[pal.text, s.bold]}>
-                <Trans>My Feeds</Trans>
-              </Text>
-              <View style={styles.headerBtnGroup}>
-                <Pressable
-                  accessibilityRole="button"
-                  hitSlop={HITSLOP_10}
-                  onPress={searchInputRef.current?.focus}>
-                  <MagnifyingGlassIcon2
-                    size={22}
-                    strokeWidth={2}
-                    style={pal.icon}
-                  />
-                </Pressable>
-                <Link
-                  href="/settings/saved-feeds"
-                  accessibilityLabel={_(msg`Edit My Feeds`)}
-                  accessibilityHint="">
-                  <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
-                </Link>
+        return (
+          <>
+            {!isMobile && (
+              <View
+                style={[
+                  pal.view,
+                  styles.header,
+                  pal.border,
+                  {
+                    borderBottomWidth: 1,
+                  },
+                ]}>
+                <Text type="title-lg" style={[pal.text, s.bold]}>
+                  <Trans>Feeds</Trans>
+                </Text>
+                <View style={styles.headerBtnGroup}>
+                  <Pressable
+                    accessibilityRole="button"
+                    hitSlop={HITSLOP_10}
+                    onPress={searchInputRef.current?.focus}>
+                    <MagnifyingGlassIcon2
+                      size={22}
+                      strokeWidth={2}
+                      style={pal.icon}
+                    />
+                  </Pressable>
+                  <Link
+                    href="/settings/saved-feeds"
+                    accessibilityLabel={_(msg`Edit My Feeds`)}
+                    accessibilityHint="">
+                    <CogIcon strokeWidth={1.5} style={pal.icon} size={28} />
+                  </Link>
+                </View>
               </View>
-            </View>
-          )
-        }
-        return <View />
+            )}
+            {preferences?.feeds?.saved?.length !== 0 && <FeedsSavedHeader />}
+          </>
+        )
       } else if (item.type === 'savedFeedNoResults') {
         return (
           <View
@@ -457,47 +458,17 @@ export function FeedsScreen(_props: Props) {
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
-            <View
-              style={[
-                pal.view,
-                styles.header,
-                {
-                  // This is first in the flatlist without a session -esb
-                  marginTop: hasSession ? 16 : 0,
-                  paddingLeft: isMobile ? 12 : undefined,
-                  paddingRight: 10,
-                  paddingBottom: isMobile ? 6 : undefined,
-                },
-              ]}>
-              <Text type="title-lg" style={[pal.text, s.bold]}>
-                <Trans>Discover new feeds</Trans>
-              </Text>
-
-              {!isMobile && (
-                <SearchInput
-                  ref={searchInputRef}
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                  setIsInputFocused={onChangeSearchFocus}
-                  style={{flex: 1, maxWidth: 250}}
-                />
-              )}
+            <FeedsAboutHeader />
+            <View style={{paddingHorizontal: 12, paddingBottom: 12}}>
+              <SearchInput
+                ref={searchInputRef}
+                query={query}
+                onChangeQuery={onChangeQuery}
+                onPressCancelSearch={onPressCancelSearch}
+                onSubmitQuery={onSubmitQuery}
+                setIsInputFocused={onChangeSearchFocus}
+              />
             </View>
-
-            {isMobile && (
-              <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
-                <SearchInput
-                  ref={searchInputRef}
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                  setIsInputFocused={onChangeSearchFocus}
-                />
-              </View>
-            )}
           </>
         )
       } else if (item.type === 'popularFeedsLoading') {
@@ -529,15 +500,20 @@ export function FeedsScreen(_props: Props) {
       return null
     },
     [
-      _,
-      hasSession,
       isMobile,
-      pal,
+      pal.view,
+      pal.border,
+      pal.text,
+      pal.icon,
+      pal.textLight,
+      _,
+      preferences?.feeds?.saved?.length,
       query,
       onChangeQuery,
       onPressCancelSearch,
       onSubmitQuery,
       onChangeSearchFocus,
+      hasSession,
     ],
   )
 
@@ -551,8 +527,6 @@ export function FeedsScreen(_props: Props) {
           showBorder
         />
       )}
-
-      {preferences ? <View /> : <ActivityIndicator />}
 
       <List
         ref={listRef}
@@ -656,6 +630,64 @@ function SavedFeedLoadingPlaceholder() {
       ]}>
       <LoadingPlaceholder width={28} height={28} style={{borderRadius: 4}} />
       <LoadingPlaceholder width={140} height={12} />
+    </View>
+  )
+}
+
+function FeedsSavedHeader() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.px_md,
+        a.pt_2xl,
+        a.gap_md,
+        isWeb ? a.pb_2xl : a.pb_xl,
+        a.border_b,
+        t.atoms.border_contrast_low,
+      ]}>
+      <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} size="lg" />
+      <View style={[a.flex_1, a.gap_sm]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
+          <Trans>My Feeds</Trans>
+        </Text>
+        <Text style={[t.atoms.text_contrast_high]}>
+          <Trans>All the feeds you've saved, right in one place.</Trans>
+        </Text>
+      </View>
+    </View>
+  )
+}
+
+function FeedsAboutHeader() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.px_md,
+        a.pt_2xl,
+        a.gap_md,
+        isWeb ? a.pb_2xl : a.pb_xl,
+      ]}>
+      <IconCircle
+        icon={ListMagnifyingGlass_Stroke2_Corner0_Rounded}
+        size="lg"
+      />
+      <View style={[a.flex_1, a.gap_sm]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
+          <Trans>Discover New Feeds</Trans>
+        </Text>
+        <Text style={[t.atoms.text_contrast_high]}>
+          <Trans>
+            Custom feeds built by the community bring you new experiences and
+            help you find the content you love.
+          </Trans>
+        </Text>
+      </View>
     </View>
   )
 }

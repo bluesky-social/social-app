@@ -5,13 +5,11 @@ import {
   TextInputProps,
   TextStyle,
   ViewStyle,
-  Pressable,
   StyleSheet,
   AccessibilityProps,
 } from 'react-native'
 
 import {HITSLOP_20} from 'lib/constants'
-import {isWeb} from '#/platform/detection'
 import {useTheme, atoms as a, web, tokens, android} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -41,7 +39,6 @@ export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
 
 export function Root({children, isInvalid = false}: RootProps) {
   const inputRef = React.useRef<TextInput>(null)
-  const rootRef = React.useRef<View>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -72,35 +69,17 @@ export function Root({children, isInvalid = false}: RootProps) {
     ],
   )
 
-  React.useLayoutEffect(() => {
-    const root = rootRef.current
-    if (!root || !isWeb) return
-    // @ts-ignore web only
-    root.tabIndex = -1
-  }, [])
-
   return (
     <Context.Provider value={context}>
-      <Pressable
-        accessibilityRole="button"
-        ref={rootRef}
-        role="none"
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.relative,
-          a.w_full,
-          a.px_md,
-          {
-            paddingVertical: 14,
-          },
-        ]}
-        // onPressIn/out don't work on android web
-        onPress={() => inputRef.current?.focus()}
-        onHoverIn={onHoverIn}
-        onHoverOut={onHoverOut}>
+      <View
+        style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
+        {...web({
+          onClick: () => inputRef.current?.focus(),
+          onMouseOver: onHoverIn,
+          onMouseOut: onHoverOut,
+        })}>
         {children}
-      </Pressable>
+      </View>
     </Context.Provider>
   )
 }
@@ -187,7 +166,6 @@ export function createInput(Component: typeof TextInput) {
         <Component
           accessibilityHint={undefined}
           {...rest}
-          aria-label={label}
           accessibilityLabel={label}
           ref={ctx.inputRef}
           value={value}
@@ -204,14 +182,17 @@ export function createInput(Component: typeof TextInput) {
             a.text_md,
             t.atoms.text,
             a.px_xs,
-            android({
-              paddingBottom: 2,
-            }),
             {
+              // paddingVertical doesn't work w/multiline - esb
+              paddingTop: 14,
+              paddingBottom: 14,
               lineHeight: a.text_md.fontSize * 1.1875,
               textAlignVertical: rest.multiline ? 'top' : undefined,
-              minHeight: rest.multiline ? 60 : undefined,
+              minHeight: rest.multiline ? 80 : undefined,
             },
+            android({
+              paddingBottom: 16,
+            }),
           ]}
         />
 
@@ -313,7 +294,6 @@ export function Suffix({
   const ctx = React.useContext(Context)
   return (
     <Text
-      aria-label={label}
       accessibilityLabel={label}
       accessibilityHint={accessibilityHint}
       style={[
