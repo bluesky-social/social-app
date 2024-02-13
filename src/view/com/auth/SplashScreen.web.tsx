@@ -9,9 +9,10 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {useLingui} from '@lingui/react'
 
 export const SplashScreen = ({
   onDismiss,
@@ -98,22 +99,23 @@ export const SplashScreen = ({
 
 function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
         href="https://bsky.social"
-        text="Business"
+        text={_(msg`Business`)}
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
         href="https://bsky.social/about/blog"
-        text="Blog"
+        text={_(msg`Blog`)}
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
         href="https://bsky.social/about/join"
-        text="Jobs"
+        text={_(msg`Jobs`)}
         style={[styles.footerLink, pal.link]}
       />
     </View>
