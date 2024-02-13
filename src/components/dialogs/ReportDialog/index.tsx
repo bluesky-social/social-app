@@ -69,7 +69,7 @@ function LabelGroupButton({labelGroup}: {labelGroup: string}) {
         interacted && styles.interacted,
       ]}>
       <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_700]}>
+        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
           {groupInfoStrings.name}
         </Text>
         <Text style={[a.leading_tight, {maxWidth: 400}]}>
@@ -88,7 +88,7 @@ function LabelGroupButton({labelGroup}: {labelGroup: string}) {
         <ChevronRight
           size="md"
           fill={
-            hovered ? t.palette.primary_500 : t.atoms.text_contrast_400.color
+            hovered ? t.palette.primary_500 : t.atoms.text_contrast_low.color
           }
         />
       </View>
@@ -135,7 +135,7 @@ function ModServiceToggle({title}: {title: string}) {
           fill={
             ctx.selected
               ? t.palette.primary_200
-              : t.atoms.text_contrast_400.color
+              : t.atoms.text_contrast_low.color
           }
         />
       </View>
@@ -204,7 +204,7 @@ function SubmitView({
       </View>
 
       <View style={[a.gap_md]}>
-        <Text style={[t.atoms.text_contrast_700]}>
+        <Text style={[t.atoms.text_contrast_medium]}>
           Select the moderation service(s) to report to
         </Text>
 
@@ -226,7 +226,7 @@ function SubmitView({
         </Toggle.Group>
       </View>
       <View style={[a.gap_md]}>
-        <Text style={[t.atoms.text_contrast_700]}>
+        <Text style={[t.atoms.text_contrast_medium]}>
           Optionally provide additional information below:
         </Text>
 
@@ -334,7 +334,7 @@ export function ReportDialog({
           <View style={[a.gap_lg]}>
             <View style={[a.justify_center, a.gap_sm]}>
               <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
-              <Text style={[a.text_md, t.atoms.text_contrast_700]}>
+              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
                 {i18n.description}
               </Text>
             </View>

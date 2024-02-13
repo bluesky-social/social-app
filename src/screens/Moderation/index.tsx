@@ -4,6 +4,11 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {
+  LABEL_GROUPS,
+  LabelGroupDefinition,
+  DEFAULT_LABEL_GROUP_SETTINGS,
+} from '@atproto/api'
 
 import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
@@ -22,24 +27,141 @@ import {Divider} from '#/components/Divider'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
+import * as Dialog from '#/components/Dialog'
+import {Button} from '#/components/Button'
 
-type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
-export function ModerationScreen({}: Props) {
+function ModSettingsToggleItem({name}: {name: string}) {
+  const t = useTheme()
+  const ctx = Toggle.useItemContext()
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.justify_between,
+        a.align_center,
+        a.p_md,
+        a.rounded_sm,
+        t.atoms.bg_contrast_25,
+        {
+          backgroundColor: ctx.selected ? t.palette.primary_25 : undefined,
+        },
+      ]}>
+      <Text>{name}</Text>
+      {ctx.selected && <Check />}
+    </View>
+  )
+}
+
+function ModSettingsDialog({
+  name,
+  onComplete,
+}: {
+  name: string
+  onComplete: () => void
+}) {
+  const t = useTheme()
+  const labelGroupStrings = useLabelGroupStrings()
+  const [selectedServices, setSelectedServices] = React.useState<string[]>([
+    'bluesky',
+  ])
+
+  const save = React.useCallback(() => {
+    onComplete()
+  }, [onComplete])
+
+  return (
+    <Dialog.Inner label="Configure moderation service settings">
+      <Text style={[a.text_xl, a.font_bold, a.pb_sm]}>
+        Configure moderation services
+      </Text>
+      <Text
+        style={[
+          a.text_md,
+          a.leading_snug,
+          t.atoms.text_contrast_high,
+          a.pb_lg,
+        ]}>
+        Select which moderation services' labels you'd like to use to filter
+        content matching {labelGroupStrings[name].name}.
+      </Text>
+
+      <Toggle.Group
+        values={selectedServices}
+        onChange={setSelectedServices}
+        label="Select one or more">
+        <View style={[a.w_full, a.gap_md]}>
+          <Toggle.Item name="bluesky" label="Bluesky">
+            <ModSettingsToggleItem name="Bluesky" />
+          </Toggle.Item>
+          <Toggle.Item name="contraption" label="Contraption">
+            <ModSettingsToggleItem name="Contraption" />
+          </Toggle.Item>
+          <Toggle.Item name="safety" label="Safety Corp">
+            <ModSettingsToggleItem name="Safety Corp" />
+          </Toggle.Item>
+        </View>
+      </Toggle.Group>
+
+      <View style={[a.flex_row, a.justify_end, a.pt_lg]}>
+        <Button
+          size="large"
+          variant="solid"
+          color="primary"
+          label="Save"
+          onPress={save}>
+          {selectedServices.length ? 'Save' : 'Ignore all'}
+        </Button>
+      </View>
+    </Dialog.Inner>
+  )
+}
+
+export function ModerationScreen({}: NativeStackScreenProps<
+  CommonNavigatorParams,
+  'Moderation'
+>) {
   const t = useTheme()
   const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {gtMobile, gtTablet} = useBreakpoints()
+  const labelGroupStrings = useLabelGroupStrings()
+  const modSettingsDialogControl = Dialog.useDialogControl()
+  const [modSettingsDialogLabelGroup, setModSettingsDialogLabelGroup] =
+    React.useState<string>(() => Object.keys(LABEL_GROUPS)[0])
 
   useFocusEffect(
     React.useCallback(() => {
       screen('Moderation')
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
+  )
+
+  const groups = React.useMemo<
+    [keyof typeof LABEL_GROUPS, LabelGroupDefinition][]
+  >(() => {
+    return Object.entries(LABEL_GROUPS).filter(([, def]) => def.configurable)
+  }, [])
+  const labelOptions = {
+    hide: _(msg`Hide`),
+    warn: _(msg`Warn`),
+    show: _(msg`Show`),
+  }
+
+  const openModSettingsDialog = React.useCallback(
+    ({name}: {name: string}) => {
+      setModSettingsDialogLabelGroup(name)
+      modSettingsDialogControl.open()
+    },
+    [modSettingsDialogControl],
   )
 
   return (
@@ -51,6 +173,15 @@ export function ModerationScreen({}: Props) {
         ...(gtMobile ? [a.border_l, a.border_r] : []),
       ]}
       testID="moderationScreen">
+      <Dialog.Outer control={modSettingsDialogControl}>
+        <Dialog.Handle />
+
+        <ModSettingsDialog
+          name={modSettingsDialogLabelGroup}
+          onComplete={() => modSettingsDialogControl.close()}
+        />
+      </Dialog.Outer>
+
       <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
 
       <ScrollView contentContainerStyle={[a.border_0]}>
@@ -119,10 +250,132 @@ export function ModerationScreen({}: Props) {
 
         <Divider />
 
+        <View style={[a.gap_sm, a.px_lg, a.py_lg]}>
+          <Text style={[a.text_lg, a.font_bold, a.pb_sm]}>
+            <Trans>Content filtering settings</Trans>
+          </Text>
+
+          {groups.map(([name, def], i) => {
+            const groupStrings = labelGroupStrings[name]
+            return (
+              <React.Fragment key={def.id}>
+                {i !== 0 && <Divider />}
+
+                <View style={[a.pb_md]}>
+                  <View
+                    style={[
+                      a.py_md,
+                      a.flex_row,
+                      a.justify_between,
+                      a.gap_sm,
+                      a.align_center,
+                    ]}>
+                    <View style={[a.gap_xs, {width: '50%'}]}>
+                      <Text
+                        style={[
+                          a.text_md,
+                          a.font_bold,
+                          t.atoms.text_contrast_medium,
+                        ]}>
+                        {groupStrings.name}
+                      </Text>
+                      <Text style={[a.leading_tight, {maxWidth: 400}]}>
+                        {groupStrings.description}
+                      </Text>
+                    </View>
+
+                    <View>
+                      <ToggleButton.Group
+                        label={_(
+                          msg`Configure content filtering setting for category: ${groupStrings.name.toLowerCase()}`,
+                        )}
+                        values={[DEFAULT_LABEL_GROUP_SETTINGS[name]]}
+                        onChange={() => {}}>
+                        <ToggleButton.Button
+                          name="hide"
+                          label={labelOptions.hide}>
+                          {labelOptions.hide}
+                        </ToggleButton.Button>
+                        <ToggleButton.Button
+                          name="warn"
+                          label={labelOptions.warn}>
+                          {labelOptions.warn}
+                        </ToggleButton.Button>
+                        <ToggleButton.Button
+                          name="ignore"
+                          label={labelOptions.show}>
+                          {labelOptions.show}
+                        </ToggleButton.Button>
+                      </ToggleButton.Group>
+                    </View>
+                  </View>
+
+                  <View style={[a.flex_row, a.align_start]}>
+                    <Button
+                      label={_(
+                        msg`Configure moderation services for category: ${groupStrings.name.toLowerCase()}`,
+                      )}
+                      onPress={() =>
+                        openModSettingsDialog({
+                          name,
+                        })
+                      }>
+                      <View style={[a.flex_row, a.align_start, a.gap_xs]}>
+                        <View
+                          style={[
+                            a.py_sm,
+                            a.px_md,
+                            a.rounded_full,
+                            t.atoms.bg_contrast_800,
+                          ]}>
+                          <Text
+                            style={[
+                              a.text_xs,
+                              a.font_bold,
+                              t.atoms.text_inverted,
+                            ]}>
+                            Bluesky
+                          </Text>
+                        </View>
+                        <View
+                          style={[
+                            a.py_sm,
+                            a.px_md,
+                            a.rounded_full,
+                            t.atoms.bg_contrast_25,
+                          ]}>
+                          <Text style={[a.text_xs, a.font_bold]}>
+                            Contraption
+                          </Text>
+                        </View>
+                        <View
+                          style={[
+                            a.py_sm,
+                            a.px_md,
+                            a.rounded_full,
+                            t.atoms.bg_contrast_25,
+                          ]}>
+                          <Text style={[a.text_xs, a.font_bold]}>
+                            Safety Corp
+                          </Text>
+                        </View>
+                      </View>
+                    </Button>
+                  </View>
+                </View>
+              </React.Fragment>
+            )
+          })}
+        </View>
+
+        <Divider />
+
         <Text style={[a.text_lg, a.font_bold, a.pl_lg, a.pt_lg, a.pb_sm]}>
           <Trans>Logged-out visibility</Trans>
         </Text>
         <PwiOptOut />
+
+        <View style={{height: 200}} />
       </ScrollView>
     </CenteredView>
   )
