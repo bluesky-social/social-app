@@ -16,6 +16,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ComposeIcon2, CogIcon, MagnifyingGlassIcon2} from 'lib/icons'
 import {s} from 'lib/styles'
+import {atoms as a, useTheme} from '#/alf'
 import {SearchInput, SearchInputRef} from 'view/com/util/forms/SearchInput'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {
@@ -41,8 +42,10 @@ import {
 import {cleanError} from 'lib/strings/errors'
 import {useComposerControls} from '#/state/shell/composer'
 import {useSession} from '#/state/session'
-import {isNative} from '#/platform/detection'
+import {isNative, isWeb} from '#/platform/detection'
 import {HITSLOP_10} from 'lib/constants'
+import {IconCircle} from '#/components/IconCircle'
+import {ListSparkle_Stroke2_Corner0_Rounded} from '#/components/icons/ListSparkle'
 
 type Props = NativeStackScreenProps<FeedsTabNavigatorParams, 'Feeds'>
 
@@ -457,47 +460,46 @@ export function FeedsScreen(_props: Props) {
       } else if (item.type === 'popularFeedsHeader') {
         return (
           <>
-            <View
-              style={[
-                pal.view,
-                styles.header,
-                {
-                  // This is first in the flatlist without a session -esb
-                  marginTop: hasSession ? 16 : 0,
-                  paddingLeft: isMobile ? 12 : undefined,
-                  paddingRight: 10,
-                  paddingBottom: isMobile ? 6 : undefined,
-                },
-              ]}>
-              <Text type="title-lg" style={[pal.text, s.bold]}>
-                <Trans>Discover new feeds</Trans>
-              </Text>
+            <FeedsAbout />
+            {/*<View*/}
+            {/*  style={[*/}
+            {/*    pal.view,*/}
+            {/*    styles.header,*/}
+            {/*    {*/}
+            {/*      // This is first in the flatlist without a session -esb*/}
+            {/*      marginTop: hasSession ? 16 : 0,*/}
+            {/*      paddingLeft: isMobile ? 12 : undefined,*/}
+            {/*      paddingRight: 10,*/}
+            {/*      paddingBottom: isMobile ? 6 : undefined,*/}
+            {/*    },*/}
+            {/*  ]}>*/}
+            {/*  <Text type="title-lg" style={[pal.text, s.bold]}>*/}
+            {/*    <Trans>Discover new feeds</Trans>*/}
+            {/*  </Text>*/}
 
-              {!isMobile && (
-                <SearchInput
-                  ref={searchInputRef}
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                  setIsInputFocused={onChangeSearchFocus}
-                  style={{flex: 1, maxWidth: 250}}
-                />
-              )}
+            {/*  {!isMobile && (*/}
+            {/*    <SearchInput*/}
+            {/*      ref={searchInputRef}*/}
+            {/*      query={query}*/}
+            {/*      onChangeQuery={onChangeQuery}*/}
+            {/*      onPressCancelSearch={onPressCancelSearch}*/}
+            {/*      onSubmitQuery={onSubmitQuery}*/}
+            {/*      setIsInputFocused={onChangeSearchFocus}*/}
+            {/*      style={{flex: 1, maxWidth: 250}}*/}
+            {/*    />*/}
+            {/*  )}*/}
+            {/*</View>*/}
+
+            <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
+              <SearchInput
+                ref={searchInputRef}
+                query={query}
+                onChangeQuery={onChangeQuery}
+                onPressCancelSearch={onPressCancelSearch}
+                onSubmitQuery={onSubmitQuery}
+                setIsInputFocused={onChangeSearchFocus}
+              />
             </View>
-
-            {isMobile && (
-              <View style={{paddingHorizontal: 8, paddingBottom: 10}}>
-                <SearchInput
-                  ref={searchInputRef}
-                  query={query}
-                  onChangeQuery={onChangeQuery}
-                  onPressCancelSearch={onPressCancelSearch}
-                  onSubmitQuery={onSubmitQuery}
-                  setIsInputFocused={onChangeSearchFocus}
-                />
-              </View>
-            )}
           </>
         )
       } else if (item.type === 'popularFeedsLoading') {
@@ -656,6 +658,34 @@ function SavedFeedLoadingPlaceholder() {
       ]}>
       <LoadingPlaceholder width={28} height={28} style={{borderRadius: 4}} />
       <LoadingPlaceholder width={140} height={12} />
+    </View>
+  )
+}
+
+function FeedsAbout() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.px_md,
+        a.pt_2xl,
+        a.gap_md,
+        isWeb ? a.pb_2xl : a.pb_lg,
+      ]}>
+      <IconCircle icon={ListSparkle_Stroke2_Corner0_Rounded} />
+      <View style={[a.flex_1, a.gap_sm]}>
+        <Text style={[a.flex_1, a.text_2xl, a.font_bold, t.atoms.text]}>
+          Discover New Feeds
+        </Text>
+        <Text style={[t.atoms.text_contrast_high]}>
+          <Trans>
+            Custom feeds built by the community bring you new experiences and
+            help you find the content you love.
+          </Trans>
+        </Text>
+      </View>
     </View>
   )
 }
