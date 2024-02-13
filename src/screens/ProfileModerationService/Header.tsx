@@ -19,7 +19,10 @@ import {
 } from '#/view/com/util/forms/NativeDropdown'
 import {useSession} from '#/state/session'
 import {useModalControls} from '#/state/modals'
-import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
+import {
+  useModServiceSubscriptionMutation,
+  useModServiceEnableMutation,
+} from '#/state/queries/modservice'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
 
 import {useTheme, atoms as a, tokens, web, native, useBreakpoints} from '#/alf'
@@ -44,13 +47,23 @@ export function Header({
   const navigation = useNavigation<NavigationProp>()
   const {_} = useLingui()
   const canGoBack = navigation.canGoBack()
-  const {mutateAsync: service, variables} = useModServiceSubscriptionMutation()
+  const {mutateAsync: toggleSubscription, variables} =
+    useModServiceSubscriptionMutation()
   const isSubscribed =
     variables?.subscribe ??
     preferences.moderationOpts.mods.find(
       mod => mod.did === modservice.creator.did,
     )
+  const {mutateAsync: toggleEnabled, variables: enabledVariables} =
+    useModServiceEnableMutation()
+  const isEnabled =
+    enabledVariables?.enabled ??
+    preferences.moderationOpts.mods.find(
+      mod => mod.did === modservice.creator.did && mod.enabled,
+    ) ??
+    variables?.subscribe
   const [subscriptionError, setSubscriptionError] = React.useState<string>('')
+  const [enablementError, setEnablementError] = React.useState<string>('')
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -64,13 +77,27 @@ export function Header({
     setDrawerOpen(true)
   }, [setDrawerOpen])
 
-  const toggleSubscribe = React.useCallback(async () => {
+  const onPressSubscribe = React.useCallback(async () => {
     try {
-      await service({did: modservice.creator.did, subscribe: !isSubscribed})
+      await toggleSubscription({
+        did: modservice.creator.did,
+        subscribe: !isSubscribed,
+      })
     } catch (e: any) {
       setSubscriptionError(e.message)
     }
-  }, [service, isSubscribed, modservice.creator.did])
+  }, [toggleSubscription, isSubscribed, modservice.creator.did])
+
+  const onPressEnable = React.useCallback(async () => {
+    try {
+      await toggleEnabled({
+        did: modservice.creator.did,
+        enabled: !isEnabled,
+      })
+    } catch (e: any) {
+      setEnablementError(e.message)
+    }
+  }, [toggleEnabled, isEnabled, modservice.creator.did])
 
   return (
     <View style={[a.pb_xl, web(a.pt_md), gtMobile && web(a.pt_2xl)]}>
@@ -95,7 +122,7 @@ export function Header({
                 variant="solid"
                 color="primary"
                 label={_(msg`Subscribe to this moderation service`)}
-                onPress={toggleSubscribe}>
+                onPress={onPressSubscribe}>
                 <ButtonText>
                   {isSubscribed ? (
                     <Trans>Unsubscribe</Trans>
@@ -139,9 +166,7 @@ export function Header({
             onPress={emitSoftReset}
             style={[a.justify_start]}>
             <Text style={[a.text_4xl, a.font_bold, t.atoms.text]}>
-              {modservice.displayName
-                ? sanitizeDisplayName(modservice.displayName)
-                : modservice.creator.displayName
+              {modservice.creator.displayName
                 ? sanitizeDisplayName(modservice.creator.displayName)
                 : sanitizeHandle(modservice.creator.handle, '@')}
             </Text>
@@ -154,12 +179,33 @@ export function Header({
 
         {gtMobile && (
           <View style={[a.flex_row, a.align_center, a.gap_md]}>
+            {isSubscribed && (
+              <Button
+                size="small"
+                variant="solid"
+                color="secondary"
+                label={
+                  isEnabled
+                    ? _(msg`Disable this moderation service`)
+                    : _(msg`Enable this moderation service`)
+                }
+                onPress={onPressEnable}>
+                <ButtonText>
+                  {isEnabled ? <Trans>Disable</Trans> : <Trans>Enable</Trans>}
+                </ButtonText>
+              </Button>
+            )}
+
             <Button
               size="small"
               variant="solid"
               color="primary"
-              label={_(msg`Subscribe to this moderation service`)}
-              onPress={toggleSubscribe}>
+              label={
+                isSubscribed
+                  ? _(msg`Unsubscribe from this moderation service`)
+                  : _(msg`Subscribe to this moderation service`)
+              }
+              onPress={onPressSubscribe}>
               <ButtonText>
                 {isSubscribed ? (
                   <Trans>Unsubscribe</Trans>
@@ -174,29 +220,32 @@ export function Header({
         )}
       </View>
 
-      {subscriptionError && (
-        <View style={[a.pt_lg]}>
-          <View
-            style={[
-              a.px_lg,
-              a.py_md,
-              a.rounded_sm,
-              a.border,
-              a.gap_xs,
-              {
-                backgroundColor: t.palette.negative_50,
-                borderColor: t.palette.negative_100,
-              },
-            ]}>
-            <Text style={[a.font_bold, {color: t.palette.negative_950}]}>
-              An error occurred while editing your subscription.
-            </Text>
-            <Text style={[{color: t.palette.negative_900}]}>
-              {subscriptionError}
-            </Text>
+      {subscriptionError ||
+        (enablementError && (
+          <View style={[a.pt_lg]}>
+            <View
+              style={[
+                a.px_lg,
+                a.py_md,
+                a.rounded_sm,
+                a.border,
+                a.gap_xs,
+                {
+                  backgroundColor: t.palette.negative_50,
+                  borderColor: t.palette.negative_100,
+                },
+              ]}>
+              <Text style={[a.font_bold, {color: t.palette.negative_950}]}>
+                <Trans>
+                  An error occurred while editing your subscription.
+                </Trans>
+              </Text>
+              <Text style={[{color: t.palette.negative_900}]}>
+                {subscriptionError || enablementError}
+              </Text>
+            </View>
           </View>
-        </View>
-      )}
+        ))}
     </View>
   )
 }

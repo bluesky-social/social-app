@@ -33,3 +33,18 @@ export function useModServiceSubscriptionMutation() {
     },
   })
 }
+
+export function useModServiceEnableMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    async mutationFn({did, enabled}: {did: string; enabled: boolean}) {
+      await getAgent().setModServiceEnabled(did, enabled)
+    },
+    onSuccess() {
+      queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}

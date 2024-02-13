@@ -137,24 +137,15 @@ export function ProfileModserviceScreenInner({
   const [likeUri, setLikeUri] = React.useState<string>(
     modservice.viewer?.like || '',
   )
+  const isLiked = !!likeUri
   const groups = React.useMemo(() => {
     return getLabelGroupsFromLabels(modservice.policies.labelValues).filter(
       def => def.configurable,
     )
   }, [modservice.policies.labelValues])
 
-  const isLiked = !!likeUri
-  // const isSaved = false // TODO
-  // !removedFeed &&
-  // (!!savedFeed || preferences.feeds.saved.includes(feedInfo.uri))
-  // const isEnabled = false // TODO
-  // !unpinnedFeed &&
-  // (!!pinnedFeed || preferences.feeds.pinned.includes(feedInfo.uri))
-
   useSetTitle(modservice.creator.displayName || modservice.creator.handle)
 
-  // event handlers
-  //
   const onToggleLiked = React.useCallback(async () => {
     try {
       Haptics.default()
