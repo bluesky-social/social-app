@@ -2,7 +2,9 @@ import React from 'react'
 import {
   ColorValue,
   FlatList,
+  FlatListProps,
   ListRenderItemInfo,
+  Pressable,
   StyleSheet,
   View,
 } from 'react-native'
@@ -34,9 +36,16 @@ type AvatarPlaceholder = 'thinking' | 'heart' | 'laughing'
 
 interface Avatar {
   imageUri?: string
-  backgroundColor?: ColorValue
-  placeholder?: AvatarPlaceholder
+  backgroundColor?: Color
+  placeholder?: Emoji
 }
+
+const AvatarContext = React.createContext<Avatar>({} as Avatar)
+const SetAvatarContext = React.createContext<
+  React.Dispatch<React.SetStateAction<Avatar>>
+>({} as React.Dispatch<React.SetStateAction<Avatar>>)
+const useAvatar = () => React.useContext(AvatarContext)
+const useSetAvatar = () => React.useContext(SetAvatarContext)
 
 export function StepProfile() {
   const {_} = useLingui()
@@ -56,46 +65,46 @@ export function StepProfile() {
   }, [track, dispatch])
 
   return (
-    <View style={[a.align_start]}>
-      <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
+    <SetAvatarContext.Provider value={setAvatar}>
+      <AvatarContext.Provider value={avatar}>
+        <View style={[a.align_start]}>
+          <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
 
-      <Title>
-        <Trans>Upload a profile picture</Trans>
-      </Title>
-      <Description>
-        <Trans>Help people know you're not a bot!</Trans>
-      </Description>
+          <Title>
+            <Trans>Upload a profile picture</Trans>
+          </Title>
+          <Description>
+            <Trans>Help people know you're not a bot!</Trans>
+          </Description>
 
-      <View style={[a.pt_5xl, a.gap_3xl]}>
-        <Items type="colors" />
-        <Items type="emojis" />
-      </View>
+          <View style={[a.pt_5xl, a.gap_3xl]}>
+            <Items type="emojis" />
+            <Items type="colors" />
+          </View>
 
-      <OnboardingControls.Portal>
-        <Button
-          key={state.activeStep} // remove focus state on nav
-          variant="gradient"
-          color="gradient_sky"
-          size="large"
-          label={_(msg`Continue to next step`)}
-          onPress={onContinue}>
-          <ButtonText>
-            <Trans>Continue</Trans>
-          </ButtonText>
-          <ButtonIcon icon={ChevronRight} position="right" />
-        </Button>
-      </OnboardingControls.Portal>
-    </View>
+          <OnboardingControls.Portal>
+            <Button
+              key={state.activeStep} // remove focus state on nav
+              variant="gradient"
+              color="gradient_sky"
+              size="large"
+              label={_(msg`Continue to next step`)}
+              onPress={onContinue}>
+              <ButtonText>
+                <Trans>Continue</Trans>
+              </ButtonText>
+              <ButtonIcon icon={ChevronRight} position="right" />
+            </Button>
+          </OnboardingControls.Portal>
+        </View>
+      </AvatarContext.Provider>
+    </SetAvatarContext.Provider>
   )
 }
 
-function AvatarCircle({
-  avatar,
-  setAvatar,
-}: {
-  avatar: Avatar
-  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
-}) {
+function AvatarCircle() {
+  const avatar = useAvatar()
+
   if (avatar.imageUri) {
     return (
       <View style={[styles.imageContainer]}>
@@ -127,15 +136,30 @@ const emojiItems: Record<Emoji, string> = {
 }
 
 function ColorItem({color}: {color: Color}) {
+  const avatar = useAvatar()
+  const setAvatar = useSetAvatar()
+
+  const onPress = React.useCallback(() => {
+    setAvatar(prev => ({
+      ...prev,
+      backgroundColor: color,
+    }))
+  }, [color, setAvatar])
+
   if (color === 'image') return null
 
   return (
-    <View
+    <Pressable
+      accessibilityRole="button"
       style={[
         styles.imageContainer,
         styles.paletteContainer,
-        {backgroundColor: color},
+        {
+          backgroundColor: color,
+          borderWidth: avatar.backgroundColor === color ? 3 : 1,
+        },
       ]}
+      onPress={onPress}
     />
   )
 }
@@ -144,10 +168,31 @@ function colorRenderItem({item}: ListRenderItemInfo<Color>) {
 }
 
 function EmojiItem({emoji}: {emoji: Emoji}) {
+  const avatar = useAvatar()
+  const setAvatar = useSetAvatar()
+
+  const onPress = React.useCallback(() => {
+    setAvatar(prev => ({
+      ...prev,
+      placeholder: emoji,
+    }))
+  }, [emoji, setAvatar])
+
   return (
-    <View style={[styles.imageContainer, styles.paletteContainer]}>
-      <Text>{emojiItems[emoji]}</Text>
-    </View>
+    <Pressable
+      accessibilityRole="button"
+      style={[
+        styles.imageContainer,
+        styles.paletteContainer,
+        {
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: avatar.placeholder === emoji ? 3 : 1,
+        },
+      ]}
+      onPress={onPress}>
+      <Text style={[a.text_5xl]}>{emojiItems[emoji]}</Text>
+    </Pressable>
   )
 }
 function emojiRenderItem({item}: ListRenderItemInfo<Emoji>) {
@@ -157,23 +202,25 @@ function emojiRenderItem({item}: ListRenderItemInfo<Emoji>) {
 function Items({type}: {type: 'emojis' | 'colors'}) {
   if (type === 'colors') {
     return (
-      <FlatList<Color>
-        style={{height: 100}}
-        data={colors}
-        renderItem={colorRenderItem}
-        horizontal
-        contentContainerStyle={styles.flatListContainer}
-      />
+      <View style={styles.flatListOuter}>
+        <FlatList<Color>
+          style={{height: 100}}
+          data={colors}
+          renderItem={colorRenderItem}
+          {...commonFlatListProps}
+        />
+      </View>
     )
   }
 
   return (
-    <FlatList<Emoji>
-      data={emojis}
-      renderItem={emojiRenderItem}
-      horizontal
-      contentContainerStyle={styles.flatListContainer}
-    />
+    <View style={styles.flatListOuter}>
+      <FlatList<Emoji>
+        data={emojis}
+        renderItem={emojiRenderItem}
+        {...commonFlatListProps}
+      />
+    </View>
   )
 }
 
@@ -189,8 +236,17 @@ const styles = StyleSheet.create({
     width: 90,
     marginHorizontal: 5,
   },
+  flatListOuter: {
+    height: 100,
+  },
   flatListContainer: {
     paddingLeft: 40,
     paddingRight: 40,
   },
 })
+
+const commonFlatListProps: Partial<FlatListProps<any>> = {
+  horizontal: true,
+  contentContainerStyle: styles.flatListContainer,
+  showsHorizontalScrollIndicator: false,
+}
