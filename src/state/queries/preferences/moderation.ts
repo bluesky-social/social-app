@@ -1,13 +1,8 @@
-import {
-  LabelPreference,
-  ComAtprotoLabelDefs,
-  ModerationOpts,
-} from '@atproto/api'
+import {ComAtprotoLabelDefs, DEFAULT_LABEL_GROUP_SETTINGS} from '@atproto/api'
 
 import {
   LabelGroup,
   ConfigurableLabelGroup,
-  UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 
 export type Label = ComAtprotoLabelDefs.Label
@@ -21,36 +16,18 @@ export type LabelGroupConfig = {
   values: string[]
 }
 
-export const DEFAULT_LABEL_PREFERENCES: Record<
-  ConfigurableLabelGroup,
-  LabelPreference
-> = {
-  nsfw: 'hide',
-  nudity: 'warn',
-  suggestive: 'warn',
-  gore: 'warn',
-  hate: 'hide',
-  spam: 'hide',
-  impersonation: 'hide',
-}
-
 /**
  * More strict than our default settings for logged in users.
  *
  * TODO(pwi)
  */
-export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: Record<
-  ConfigurableLabelGroup,
-  LabelPreference
-> = {
-  nsfw: 'hide',
-  nudity: 'hide',
-  suggestive: 'hide',
-  gore: 'hide',
-  hate: 'hide',
-  spam: 'hide',
-  impersonation: 'hide',
-}
+export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_GROUP_SETTINGS =
+  Object.fromEntries(
+    Object.entries(DEFAULT_LABEL_GROUP_SETTINGS).map(([key, _pref]) => [
+      key,
+      'hide',
+    ]),
+  )
 
 export const CONFIGURABLE_LABEL_GROUPS: Record<
   ConfigurableLabelGroup,
@@ -109,45 +86,4 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     warning: 'Impersonation',
     values: ['impersonation'],
   },
-}
-
-export function getModerationOpts({
-  userDid,
-  preferences,
-}: {
-  userDid: string
-  preferences: UsePreferencesQueryResponse
-}): ModerationOpts {
-  return {
-    userDid: userDid,
-    adultContentEnabled: preferences.adultContentEnabled,
-    labels: {
-      porn: preferences.contentLabels.nsfw,
-      sexual: preferences.contentLabels.suggestive,
-      nudity: preferences.contentLabels.nudity,
-      nsfl: preferences.contentLabels.gore,
-      corpse: preferences.contentLabels.gore,
-      gore: preferences.contentLabels.gore,
-      torture: preferences.contentLabels.gore,
-      'self-harm': preferences.contentLabels.gore,
-      'intolerant-race': preferences.contentLabels.hate,
-      'intolerant-gender': preferences.contentLabels.hate,
-      'intolerant-sexual-orientation': preferences.contentLabels.hate,
-      'intolerant-religion': preferences.contentLabels.hate,
-      intolerant: preferences.contentLabels.hate,
-      'icon-intolerant': preferences.contentLabels.hate,
-      spam: preferences.contentLabels.spam,
-      impersonation: preferences.contentLabels.impersonation,
-      scam: 'warn',
-    },
-    labelers: [
-      {
-        labeler: {
-          did: '',
-          displayName: 'Bluesky Social',
-        },
-        labels: {},
-      },
-    ],
-  }
 }

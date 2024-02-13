@@ -17,22 +17,22 @@ export function ModServicePrefs({}: {}) {
       <LabelGroupPref
         preferences={preferences}
         labelGroup="nsfw"
-        disabled={!preferences?.adultContentEnabled}
+        disabled={!preferences?.moderationOpts.adultContentEnabled}
       />
       <LabelGroupPref
         preferences={preferences}
         labelGroup="nudity"
-        disabled={!preferences?.adultContentEnabled}
+        disabled={!preferences?.moderationOpts.adultContentEnabled}
       />
       <LabelGroupPref
         preferences={preferences}
         labelGroup="suggestive"
-        disabled={!preferences?.adultContentEnabled}
+        disabled={!preferences?.moderationOpts.adultContentEnabled}
       />
       <LabelGroupPref
         preferences={preferences}
         labelGroup="gore"
-        disabled={!preferences?.adultContentEnabled}
+        disabled={!preferences?.moderationOpts.adultContentEnabled}
       />
       <LabelGroupPref preferences={preferences} labelGroup="hate" />
       <LabelGroupPref preferences={preferences} labelGroup="spam" />

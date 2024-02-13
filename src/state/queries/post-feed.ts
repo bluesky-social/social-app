@@ -24,7 +24,6 @@ import {STALE} from '#/state/queries'
 import {precacheFeedPostProfiles} from './profile'
 import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
@@ -429,11 +428,10 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   let somePostsPassModeration = false
 
   for (const item of feed) {
-    const moderationOpts = getModerationOpts({
-      userDid: '',
-      preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
-    })
-    const moderation = moderatePost(item.post, moderationOpts)
+    const moderation = moderatePost(
+      item.post,
+      DEFAULT_LOGGED_OUT_PREFERENCES.moderationOpts,
+    )
 
     if (!moderation.content.filter) {
       // we have a sfw post

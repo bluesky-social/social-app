@@ -4,20 +4,17 @@ import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
-import {useSession, getAgent} from '#/state/session'
-import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
+import {getAgent} from '#/state/session'
 import {
   ConfigurableLabelGroup,
   UsePreferencesQueryResponse,
   ThreadViewPreferences,
 } from '#/state/queries/preferences/types'
-import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
 import {
   DEFAULT_HOME_FEED_PREFS,
   DEFAULT_THREAD_VIEW_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
 } from '#/state/queries/preferences/const'
-import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {STALE} from '#/state/queries'
 import {useHiddenPosts} from '#/state/preferences/hidden-posts'
 
@@ -50,32 +47,6 @@ export function usePreferencesQuery() {
                 return !res.feeds.pinned?.includes(f)
               }) || [],
           },
-          // labels are undefined until set by user
-          contentLabels: {
-            nsfw: temp__migrateLabelPref(
-              res.contentLabels?.nsfw || DEFAULT_LABEL_PREFERENCES.nsfw,
-            ),
-            nudity: temp__migrateLabelPref(
-              res.contentLabels?.nudity || DEFAULT_LABEL_PREFERENCES.nudity,
-            ),
-            suggestive: temp__migrateLabelPref(
-              res.contentLabels?.suggestive ||
-                DEFAULT_LABEL_PREFERENCES.suggestive,
-            ),
-            gore: temp__migrateLabelPref(
-              res.contentLabels?.gore || DEFAULT_LABEL_PREFERENCES.gore,
-            ),
-            hate: temp__migrateLabelPref(
-              res.contentLabels?.hate || DEFAULT_LABEL_PREFERENCES.hate,
-            ),
-            spam: temp__migrateLabelPref(
-              res.contentLabels?.spam || DEFAULT_LABEL_PREFERENCES.spam,
-            ),
-            impersonation: temp__migrateLabelPref(
-              res.contentLabels?.impersonation ||
-                DEFAULT_LABEL_PREFERENCES.impersonation,
-            ),
-          },
           feedViewPrefs: {
             ...DEFAULT_HOME_FEED_PREFS,
             ...(res.feedViewPrefs.home || {}),
@@ -93,23 +64,18 @@ export function usePreferencesQuery() {
 }
 
 export function useModerationOpts() {
-  const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
   const hiddenPosts = useHiddenPosts()
   const opts = useMemo(() => {
     if (!prefs.data) {
       return
     }
-    const moderationOpts = getModerationOpts({
-      userDid: currentAccount?.did || '',
-      preferences: prefs.data,
-    })
-
+    const moderationOpts = prefs.data.moderationOpts
     return {
       ...moderationOpts,
       hiddenPosts,
     }
-  }, [currentAccount?.did, prefs.data, hiddenPosts])
+  }, [prefs.data, hiddenPosts])
   return opts
 }
 

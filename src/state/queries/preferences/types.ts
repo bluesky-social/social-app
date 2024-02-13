@@ -1,6 +1,5 @@
 import {
   BskyPreferences,
-  LabelPreference,
   BskyThreadViewPreference,
   BskyFeedViewPreference,
 } from '@atproto/api'
@@ -35,12 +34,6 @@ export type UsePreferencesQueryResponse = Omit<
   BskyPreferences,
   'contentLabels' | 'feedViewPrefs' | 'feeds'
 > & {
-  /*
-   * Content labels previously included 'show', which has been deprecated in
-   * favor of 'ignore'. The API can return legacy data from the database, and
-   * we clean up the data in `usePreferencesQuery`.
-   */
-  contentLabels: Record<ConfigurableLabelGroup, LabelPreference>
   feedViewPrefs: BskyFeedViewPreference & {
     lab_mergeFeedEnabled?: boolean
   }

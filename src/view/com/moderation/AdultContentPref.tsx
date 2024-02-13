@@ -34,7 +34,9 @@ export function AdultContentEnabledPref() {
 
     try {
       mutate({
-        enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
+        enabled: !(
+          variables?.enabled ?? preferences?.moderationOpts.adultContentEnabled
+        ),
       })
     } catch (e) {
       Toast.show(
@@ -47,7 +49,7 @@ export function AdultContentEnabledPref() {
   return (
     <View style={[pal.border, {borderTopWidth: 1, paddingHorizontal: 12}]}>
       {isIOS ? (
-        preferences?.adultContentEnabled ? null : (
+        preferences?.moderationOpts.adultContentEnabled ? null : (
           <View style={{paddingVertical: 12}}>
             <Text type="md" style={pal.textLight}>
               <Trans>
@@ -68,7 +70,9 @@ export function AdultContentEnabledPref() {
             type="default-light"
             label={_(msg`Enable Adult Content`)}
             isSelected={
-              variables?.enabled ?? preferences?.adultContentEnabled ?? false
+              variables?.enabled ??
+              preferences?.moderationOpts.adultContentEnabled ??
+              false
             }
             onPress={onToggleAdultContent}
             style={styles.toggleBtn}

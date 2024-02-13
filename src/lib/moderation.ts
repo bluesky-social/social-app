@@ -61,7 +61,7 @@ export function isCauseALabelOnUri(
 export function getModerationCauseKey(cause: ModerationCause): string {
   const source =
     cause.source.type === 'labeler'
-      ? cause.source.labeler.did
+      ? cause.source.did
       : cause.source.type === 'list'
       ? cause.source.list.uri
       : 'user'

@@ -6,17 +6,10 @@ import {logger} from '#/logger'
 import {getAgent} from '#/state/session'
 import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {STALE} from '#/state/queries'
-import {
-  DEFAULT_LOGGED_OUT_PREFERENCES,
-  getModerationOpts,
-  useModerationOpts,
-} from './preferences'
+import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 import {isInvalidHandle} from '#/lib/strings/handles'
 
-const DEFAULT_MOD_OPTS = getModerationOpts({
-  userDid: '',
-  preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
-})
+const DEFAULT_MOD_OPTS = DEFAULT_LOGGED_OUT_PREFERENCES.moderationOpts
 
 export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
 

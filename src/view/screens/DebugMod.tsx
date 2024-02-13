@@ -3,14 +3,12 @@ import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {View} from 'react-native'
 import {
   LABELS,
-  LABEL_GROUPS,
   mock,
   moderatePost,
   moderateProfile,
   PostModeration,
   ProfileModeration,
   ModerationUI,
-  LabelPreference,
   AppBskyActorDefs,
   AppBskyFeedDefs,
 } from '@atproto/api'
@@ -39,12 +37,10 @@ const MOCK_MOD_OPTS = {
   userDid: 'at://did:web:alice',
   adultContentEnabled: true,
   labelGroups: {},
-  labelers: [
+  mods: [
     {
-      labeler: {did: 'did:plc:fake-labeler'},
-      labelGroups: Object.fromEntries(
-        Object.keys(LABEL_GROUPS).map(key => [key, 'hide' as LabelPreference]),
-      ),
+      did: 'did:plc:fake-labeler',
+      enabled: true,
     },
   ],
 }
@@ -201,7 +197,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
         <H3 style={a.pb_md}>
           Account{' '}
-          <H3 style={[t.atoms.text_contrast_500, a.text_lg]}>in listing</H3>
+          <H3 style={[t.atoms.text_contrast_low, a.text_lg]}>in listing</H3>
         </H3>
         <MockAccountCard
           label={label[0]}
@@ -225,16 +221,11 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
         <H3 style={a.pb_md}>
           Account{' '}
-          <H3 style={[t.atoms.text_contrast_500, a.text_lg]}>
+          <H3 style={[t.atoms.text_contrast_low, a.text_lg]}>
             viewing directly
           </H3>
         </H3>
-        <MockAccountScreen
-          label={label[0]}
-          profile={profile}
-          moderation={profileModeration}
-          postModeration={postModeration}
-        />
+        <MockAccountScreen label={label[0]} profile={profile} />
         <View
           style={[
             t.atoms.bg_contrast_50,
@@ -267,7 +258,14 @@ function MockPost({
 }) {
   const t = useTheme()
   return (
-    <View style={[t.atoms.border, a.border, a.rounded_md, a.mb_md, a.p_2xs]}>
+    <View
+      style={[
+        t.atoms.border_contrast_medium,
+        a.border,
+        a.rounded_md,
+        a.mb_md,
+        a.p_2xs,
+      ]}>
       {' '}
       <PostHider
         key={label}
@@ -285,7 +283,7 @@ function MockPost({
           <View style={[a.flex_1]}>
             <View style={[a.flex_row]}>
               <P style={[a.font_bold]}>Bob Robertson </P>
-              <P style={t.atoms.text_contrast_500}>
+              <P style={t.atoms.text_contrast_low}>
                 @bob.bsky.social &middot; 5m
               </P>
             </View>
@@ -302,7 +300,7 @@ function MockPost({
               moderationDecisions={moderation.decisions}>
               <View
                 style={[
-                  t.atoms.border,
+                  t.atoms.border_contrast_medium,
                   a.border,
                   a.rounded_md,
                   a.flex_col,
@@ -312,7 +310,7 @@ function MockPost({
                 ]}>
                 <View style={[a.flex_row]}>
                   <P style={[a.font_bold]}>Bob Robertson </P>
-                  <P style={t.atoms.text_contrast_500}>
+                  <P style={t.atoms.text_contrast_low}>
                     @bob.bsky.social &middot; 5m
                   </P>
                 </View>
@@ -341,7 +339,7 @@ function MockAccountCard({
     <View
       key={label}
       style={[
-        t.atoms.border,
+        t.atoms.border_contrast_medium,
         a.border,
         a.rounded_md,
         a.flex_row,
@@ -359,7 +357,7 @@ function MockAccountCard({
         <P style={[a.font_bold]}>
           {sanitizeDisplayName('Bob Robertson', moderation.profile)}{' '}
         </P>
-        <P style={t.atoms.text_contrast_500}>@bob.bsky.social</P>
+        <P style={t.atoms.text_contrast_low}>@bob.bsky.social</P>
         <P>Thought leader or something.</P>
         <ProfileCardPills followedBy={false} moderation={moderation} />
       </View>
@@ -370,19 +368,20 @@ function MockAccountCard({
 function MockAccountScreen({
   label,
   profile,
-  moderation,
 }: {
   label: string
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ProfileModeration
 }) {
   const t = useTheme()
   return (
-    <View key={label} style={[t.atoms.border, a.border, a.mb_md]}>
+    <View
+      key={label}
+      style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
       <ProfileHeader
         // @ts-ignore ProfileViewBasic is close enough -prf
         profile={profile}
-        moderation={moderation}
+        moderationOpts={MOCK_MOD_OPTS}
+        descriptionRT={null /*TODO*/}
       />
 
       {/*
@@ -400,12 +399,12 @@ function MockAccountScreen({
         style={[
           a.pb_2xl,
           a.px_xl,
-          t.atoms.border,
+          t.atoms.border_contrast_medium,
           a.border_b,
           {paddingTop: 60},
         ]}>
         <H3>Bob Robertson</H3>
-        <P style={t.atoms.text_contrast_500}>@bob.bsky.social</P>
+        <P style={t.atoms.text_contrast_low}>@bob.bsky.social</P>
         <P>Thought leader or something.</P>
       </View>
       */}
@@ -435,7 +434,7 @@ function Flag({v, label}: {v: boolean | undefined; label: string}) {
           a.align_center,
           a.rounded_xs,
           a.border,
-          t.atoms.border,
+          t.atoms.border_contrast_medium,
           {
             backgroundColor: v ? t.palette.black : t.palette.white,
             width: 14,

@@ -23,7 +23,7 @@ export function LabelGroupPref({
   disabled?: boolean
 }) {
   const pal = usePalette('default')
-  const visibility = preferences?.contentLabels?.[labelGroup]
+  const visibility = preferences?.moderationOpts.labelGroups?.[labelGroup]
   const {mutate, variables} = usePreferencesSetContentLabelMutation()
 
   const onChange = React.useCallback(

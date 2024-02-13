@@ -49,22 +49,22 @@ export function Component({}: {}) {
         <ContentLabelPref
           preferences={preferences}
           labelGroup="nsfw"
-          disabled={!preferences?.adultContentEnabled}
+          disabled={!preferences?.moderationOpts.adultContentEnabled}
         />
         <ContentLabelPref
           preferences={preferences}
           labelGroup="nudity"
-          disabled={!preferences?.adultContentEnabled}
+          disabled={!preferences?.moderationOpts.adultContentEnabled}
         />
         <ContentLabelPref
           preferences={preferences}
           labelGroup="suggestive"
-          disabled={!preferences?.adultContentEnabled}
+          disabled={!preferences?.moderationOpts.adultContentEnabled}
         />
         <ContentLabelPref
           preferences={preferences}
           labelGroup="gore"
-          disabled={!preferences?.adultContentEnabled}
+          disabled={!preferences?.moderationOpts.adultContentEnabled}
         />
         <ContentLabelPref preferences={preferences} labelGroup="hate" />
         <ContentLabelPref preferences={preferences} labelGroup="spam" />
@@ -119,7 +119,9 @@ function AdultContentEnabledPref() {
 
     try {
       mutate({
-        enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
+        enabled: !(
+          variables?.enabled ?? preferences?.moderationOpts.adultContentEnabled
+        ),
       })
     } catch (e) {
       Toast.show(
@@ -136,7 +138,7 @@ function AdultContentEnabledPref() {
   return (
     <View style={s.mb10}>
       {isIOS ? (
-        preferences?.adultContentEnabled ? null : (
+        preferences?.moderationOpts.adultContentEnabled ? null : (
           <Text type="md" style={pal.textLight}>
             <Trans>
               Adult content can only be enabled via the Web at{' '}
@@ -165,7 +167,10 @@ function AdultContentEnabledPref() {
         <ToggleButton
           type="default-light"
           label={_(msg`Enable Adult Content`)}
-          isSelected={variables?.enabled ?? preferences?.adultContentEnabled}
+          isSelected={
+            variables?.enabled ??
+            preferences?.moderationOpts.adultContentEnabled
+          }
           onPress={onToggleAdultContent}
           style={styles.toggleBtn}
         />
@@ -196,7 +201,7 @@ function ContentLabelPref({
   disabled?: boolean
 }) {
   const pal = usePalette('default')
-  const visibility = preferences?.contentLabels?.[labelGroup]
+  const visibility = preferences?.moderationOpts.labelGroups?.[labelGroup]
   const {mutate, variables} = usePreferencesSetContentLabelMutation()
 
   const onChange = React.useCallback(

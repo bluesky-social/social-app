@@ -28,7 +28,8 @@ export function ModerationOption({
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetContentLabelMutation()
   const visibility =
-    variables?.visibility ?? preferences?.contentLabels?.[labelGroup]
+    variables?.visibility ??
+    preferences?.moderationOpts.labelGroups?.[labelGroup]
 
   const onChange = React.useCallback(
     (vis: string[]) => {
