@@ -32,11 +32,19 @@ import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
 import {usePalette} from 'lib/hooks/usePalette'
 import {configurableLabelGroups} from 'state/queries/preferences'
+import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
+import {openCropper, openPicker} from 'lib/media/picker'
 
 type AvatarPlaceholder = 'thinking' | 'heart' | 'laughing'
 
 interface Avatar {
-  imageUri?: string
+  image?: {
+    path: string
+    mime: string
+    size: number
+    width: number
+    height: number
+  }
   backgroundColor: Color
   placeholder: Emoji
 }
@@ -113,15 +121,15 @@ function AvatarCircle() {
   const t = useTheme()
   const avatar = useAvatar()
 
-  if (avatar.imageUri) {
+  console.log(avatar)
+
+  if (avatar.image) {
     return (
-      <View style={[styles.imageContainer, t.atoms.border_contrast_high]}>
-        <Image
-          source={avatar.imageUri}
-          style={{flex: 1}}
-          accessibilityIgnoresInvertColors
-        />
-      </View>
+      <Image
+        source={avatar.image.path}
+        style={[styles.imageContainer, t.atoms.border_contrast_high]}
+        accessibilityIgnoresInvertColors
+      />
     )
   }
 
@@ -190,6 +198,7 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
   const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
+  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
   const onPress = React.useCallback(() => {
     setAvatar(prev => ({
@@ -198,7 +207,32 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
     }))
   }, [emoji, setAvatar])
 
-  const onCameraPress = React.useCallback(() => {}, [])
+  const onSelectAvatar = React.useCallback(() => {}, [])
+
+  const onCameraPress = React.useCallback(async () => {
+    if (!(await requestPhotoAccessIfNeeded())) {
+      return
+    }
+
+    const items = await openPicker({
+      aspect: [1, 1],
+    })
+    const item = items[0]
+    if (!item) return
+
+    const croppedImage = await openCropper({
+      mediaType: 'photo',
+      cropperCircleOverlay: true,
+      height: item.height,
+      width: item.width,
+      path: item.path,
+    })
+
+    setAvatar(prev => ({
+      ...prev,
+      image: croppedImage,
+    }))
+  }, [avatar])
 
   if (emoji === 'camera') {
     return (
