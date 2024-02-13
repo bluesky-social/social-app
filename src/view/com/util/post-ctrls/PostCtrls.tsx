@@ -208,7 +208,7 @@ let PostCtrls = ({
       {big && (
         <View style={styles.ctrlBig}>
           <TouchableOpacity
-            testID="likeBtn"
+            testID="shareBtn"
             style={[styles.btn]}
             onPress={onShare}
             accessibilityRole="button"
