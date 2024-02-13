@@ -219,7 +219,7 @@ export function FeedsScreen(_props: Props) {
             // pendingItems: this.rootStore.preferences.savedFeeds.length || 3,
           })
         } else {
-          if (preferences?.feeds?.saved.length > 0) {
+          if (preferences?.feeds?.saved.length !== 0) {
             const {saved, pinned} = preferences.feeds
 
             slices = slices.concat(
@@ -399,7 +399,7 @@ export function FeedsScreen(_props: Props) {
       ) {
         return (
           <View style={s.p10}>
-            <ActivityIndicator />
+            <ActivityIndicator size="large" />
           </View>
         )
       } else if (item.type === 'savedFeedsHeader') {
@@ -527,8 +527,6 @@ export function FeedsScreen(_props: Props) {
           showBorder
         />
       )}
-
-      {preferences ? <View /> : <ActivityIndicator />}
 
       <List
         ref={listRef}
