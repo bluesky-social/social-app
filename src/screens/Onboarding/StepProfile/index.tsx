@@ -32,7 +32,10 @@ import {openCropper, openPicker} from 'lib/media/picker'
 import {Emoji, EmojiName, emojiItems, emojiNames} from './types'
 import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
 import ViewShot from 'react-native-view-shot'
-import {PlaceholderCanvas} from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
+import {
+  PlaceholderCanvas,
+  PlaceholderCanvasRef,
+} from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 
 interface Avatar {
   image?: {
@@ -63,6 +66,19 @@ export function StepProfile() {
     placeholder: emojiItems.smile,
     backgroundColor: '#338388',
   })
+  const [uri, setUri] = React.useState('')
+
+  const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
+
+  React.useEffect(() => {
+    // TODO remove, this is for testing
+    ;(async () => {
+      const res = await canvasRef.current?.capture()
+      if (res) {
+        setUri(res)
+      }
+    })()
+  }, [avatar])
 
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
@@ -97,6 +113,8 @@ export function StepProfile() {
               </View>
               <Items type="emojis" />
               <Items type="colors" />
+              {/* TOOD remove, testing */}
+              <Image source={uri} style={{height: 100, width: 100}} />
             </View>
 
             <OnboardingControls.Portal>
@@ -114,7 +132,7 @@ export function StepProfile() {
               </Button>
             </OnboardingControls.Portal>
           </View>
-          <PlaceholderCanvas />
+          <PlaceholderCanvas ref={canvasRef} />
         </>
       </AvatarContext.Provider>
     </SetAvatarContext.Provider>
@@ -140,6 +158,7 @@ function AvatarCircle() {
     <View
       style={[
         styles.imageContainer,
+        t.atoms.border_contrast_high,
         {backgroundColor: avatar.backgroundColor},
       ]}>
       <Icon height={85} width={85} style={{color: 'white'}} />
@@ -256,7 +275,7 @@ const styles = StyleSheet.create({
     height: 150,
     width: 150,
     overflow: 'hidden',
-    borderWidth: 1,
+    borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
