@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-09 22:50+0800\n"
+"POT-Creation-Date: 2024-02-14 13:50+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -438,7 +438,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr ""
+msgstr "Bluesky 是一個開放的網路，你可以挑選你的托管服務提供商。現在，開發者也可以參與自訂托管服務的測試版本。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
@@ -971,7 +971,7 @@ msgstr "文化"
 #: src/view/com/auth/server-input/index.tsx:95
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr ""
+msgstr "自訂"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 msgid "Custom domain"
@@ -1147,12 +1147,12 @@ msgstr "雙擊以登入"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Download Bluesky account data (repository)"
-msgstr ""
+msgstr "下載 Bluesky 帳號資料（存放庫）"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
 msgid "Download CAR file"
-msgstr ""
+msgstr "下載 CAR 檔案"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:247
 msgid "Drop to add images"
@@ -1391,12 +1391,12 @@ msgstr "展開或摺疊你要回覆的完整貼文"
 
 #: src/view/screens/Settings/index.tsx:753
 msgid "Export my data"
-msgstr ""
+msgstr "匯出我的資料"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:44
 #: src/view/screens/Settings/index.tsx:764
 msgid "Export My Data"
-msgstr ""
+msgstr "匯出我的資料"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
@@ -2290,7 +2290,7 @@ msgstr "我儲存的訊息流"
 
 #: src/view/com/auth/server-input/index.tsx:118
 msgid "my-server.com"
-msgstr ""
+msgstr "my-server.com"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 #: src/view/com/modals/CreateOrEditList.tsx:290
@@ -3288,7 +3288,7 @@ msgstr "在下面選擇一些要跟隨的帳號"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
-msgstr ""
+msgstr "選擇托管你資料的服務"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
@@ -3355,7 +3355,7 @@ msgstr "發送包含帳號刪除確認碼的電子郵件"
 
 #: src/view/com/auth/server-input/index.tsx:110
 msgid "Server address"
-msgstr ""
+msgstr "伺服器地址"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:311
 msgid "Set {value} for {labelGroup} content moderation policy"
@@ -3933,7 +3933,7 @@ msgstr "沒有 Bluesky 帳號，無法查看此內容。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr ""
+msgstr "此功能目前為測試版本。您可以在<0>這篇部落格文章</0>中了解更多有關存放庫匯出的資訊"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -4509,7 +4509,7 @@ msgstr "你的帳號已刪除"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr ""
+msgstr "你的帳號存放庫，包含所有公開的資料記錄，可以下載為一個「CAR」文件。該文件不包括嵌入的媒體，如圖片，或你的私人資料，目前這些資料必須單獨擷取。"
 
 #: src/view/com/auth/create/Step1.tsx:234
 msgid "Your birth date"
