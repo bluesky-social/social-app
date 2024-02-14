@@ -28,6 +28,7 @@ import {useLingui} from '@lingui/react'
 import {useDialogControl} from '#/components/Dialog'
 
 import {ServerInputDialog} from '../server-input'
+import {AuthSessionButton} from 'view/com/auth/create/AuthSessionButton'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -162,87 +163,96 @@ export const LoginForm = ({
           </TouchableOpacity>
         </View>
       </View>
-      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-        <Trans>Account</Trans>
-      </Text>
-      <View style={[pal.borderDark, styles.group]}>
-        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <FontAwesomeIcon
-            icon="at"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TextInput
-            testID="loginUsernameInput"
-            style={[pal.text, styles.textInput]}
-            placeholder={_(msg`Username or email address`)}
-            placeholderTextColor={pal.colors.textLight}
-            autoCapitalize="none"
-            autoFocus
-            autoCorrect={false}
-            autoComplete="username"
-            returnKeyType="next"
-            textContentType="username"
-            onSubmitEditing={() => {
-              passwordInputRef.current?.focus()
-            }}
-            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-            keyboardAppearance={theme.colorScheme}
-            value={identifier}
-            onChangeText={str =>
-              setIdentifier((str || '').toLowerCase().trim())
-            }
-            editable={!isProcessing}
-            accessibilityLabel={_(msg`Username or email address`)}
-            accessibilityHint={_(
-              msg`Input the username or email address you used at signup`,
-            )}
-          />
+      {serviceUrl !== 'https://bsky.social' ? (
+        <>
+          <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
+            <Trans>Account</Trans>
+          </Text>
+          <View style={[pal.borderDark, styles.group]}>
+            <View
+              style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
+              <FontAwesomeIcon
+                icon="at"
+                style={[pal.textLight, styles.groupContentIcon]}
+              />
+              <TextInput
+                testID="loginUsernameInput"
+                style={[pal.text, styles.textInput]}
+                placeholder={_(msg`Username or email address`)}
+                placeholderTextColor={pal.colors.textLight}
+                autoCapitalize="none"
+                autoFocus
+                autoCorrect={false}
+                autoComplete="username"
+                returnKeyType="next"
+                textContentType="username"
+                onSubmitEditing={() => {
+                  passwordInputRef.current?.focus()
+                }}
+                blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+                keyboardAppearance={theme.colorScheme}
+                value={identifier}
+                onChangeText={str =>
+                  setIdentifier((str || '').toLowerCase().trim())
+                }
+                editable={!isProcessing}
+                accessibilityLabel={_(msg`Username or email address`)}
+                accessibilityHint={_(
+                  msg`Input the username or email address you used at signup`,
+                )}
+              />
+            </View>
+            <View style={[pal.borderDark, styles.groupContent]}>
+              <FontAwesomeIcon
+                icon="lock"
+                style={[pal.textLight, styles.groupContentIcon]}
+              />
+              <TextInput
+                testID="loginPasswordInput"
+                ref={passwordInputRef}
+                style={[pal.text, styles.textInput]}
+                placeholder="Password"
+                placeholderTextColor={pal.colors.textLight}
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="password"
+                returnKeyType="done"
+                enablesReturnKeyAutomatically={true}
+                keyboardAppearance={theme.colorScheme}
+                secureTextEntry={true}
+                textContentType="password"
+                clearButtonMode="while-editing"
+                value={password}
+                onChangeText={setPassword}
+                onSubmitEditing={onPressNext}
+                blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+                editable={!isProcessing}
+                accessibilityLabel={_(msg`Password`)}
+                accessibilityHint={
+                  identifier === ''
+                    ? _(msg`Input your password`)
+                    : _(msg`Input the password tied to ${identifier}`)
+                }
+              />
+              <TouchableOpacity
+                testID="forgotPasswordButton"
+                style={styles.textInputInnerBtn}
+                onPress={onPressForgotPassword}
+                accessibilityRole="button"
+                accessibilityLabel={_(msg`Forgot password`)}
+                accessibilityHint={_(msg`Opens password reset form`)}>
+                <Text style={pal.link}>
+                  <Trans>Forgot</Trans>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      ) : (
+        <View style={[s.ml20, s.mr20, s.mb20]}>
+          <AuthSessionButton type="login" />
         </View>
-        <View style={[pal.borderDark, styles.groupContent]}>
-          <FontAwesomeIcon
-            icon="lock"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TextInput
-            testID="loginPasswordInput"
-            ref={passwordInputRef}
-            style={[pal.text, styles.textInput]}
-            placeholder="Password"
-            placeholderTextColor={pal.colors.textLight}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="password"
-            returnKeyType="done"
-            enablesReturnKeyAutomatically={true}
-            keyboardAppearance={theme.colorScheme}
-            secureTextEntry={true}
-            textContentType="password"
-            clearButtonMode="while-editing"
-            value={password}
-            onChangeText={setPassword}
-            onSubmitEditing={onPressNext}
-            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-            editable={!isProcessing}
-            accessibilityLabel={_(msg`Password`)}
-            accessibilityHint={
-              identifier === ''
-                ? _(msg`Input your password`)
-                : _(msg`Input the password tied to ${identifier}`)
-            }
-          />
-          <TouchableOpacity
-            testID="forgotPasswordButton"
-            style={styles.textInputInnerBtn}
-            onPress={onPressForgotPassword}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Forgot password`)}
-            accessibilityHint={_(msg`Opens password reset form`)}>
-            <Text style={pal.link}>
-              <Trans>Forgot</Trans>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      )}
       {error ? (
         <View style={styles.error}>
           <View style={styles.errorIcon}>

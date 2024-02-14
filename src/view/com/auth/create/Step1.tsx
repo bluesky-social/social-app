@@ -265,7 +265,11 @@ export function Step1({
           )}
         </>
       ) : (
-        <AuthSessionButton uiState={uiState} uiDispatch={uiDispatch} />
+        <AuthSessionButton
+          type="signup"
+          uiState={uiState}
+          uiDispatch={uiDispatch}
+        />
       )}
       {uiState.error ? (
         <ErrorMessage message={uiState.error} style={styles.error} />

@@ -1,17 +1,12 @@
 import React from 'react'
 import * as WebBrowser from 'expo-web-browser'
-import {
-  WebBrowserRedirectResult,
-  WebBrowserResult,
-  WebBrowserResultType,
-} from 'expo-web-browser'
+import {WebBrowserRedirectResult, WebBrowserResult} from 'expo-web-browser'
 
 import {
   CreateAccountDispatch,
   CreateAccountState,
   is18,
 } from 'view/com/auth/create/state'
-import {usePalette} from 'lib/hooks/usePalette'
 import {useLingui} from '@lingui/react'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {StyleSheet, View} from 'react-native'
@@ -20,17 +15,20 @@ import {msg} from '@lingui/macro'
 import {s} from 'lib/styles'
 import {Policies} from 'view/com/auth/create/Policies'
 import {isAndroid} from 'platform/detection'
+import {useTheme} from '#/alf'
 
 export function AuthSessionButton({
+  type,
   uiState,
   uiDispatch,
 }: {
-  uiState: CreateAccountState
-  uiDispatch: CreateAccountDispatch
+  type: 'login' | 'signup'
+  uiState?: CreateAccountState
+  uiDispatch?: CreateAccountDispatch
 }) {
-  const pal = usePalette('default')
   const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
+  const t = useTheme()
 
   React.useEffect(() => {
     if (isAndroid) {
@@ -46,6 +44,7 @@ export function AuthSessionButton({
         'bsky://auth',
         {
           preferEphemeralSession: !__DEV__,
+          toolbarColor: t.atoms.bg.backgroundColor,
         },
       )
 
@@ -62,12 +61,16 @@ export function AuthSessionButton({
       <Button
         testID="requestCodeBtn"
         type="primary"
-        label={_(msg`Sign up on Bluesky Social`)}
+        label={
+          type === 'signup'
+            ? _(msg`Sign up on Bluesky Social`)
+            : _(msg`Log into Bluesky Social`)
+        }
         labelStyle={isMobile ? [s.flex1, s.textCenter, s.f17] : []}
-        style={isMobile ? {paddingVertical: 12, paddingHorizontal: 20} : {}}
+        style={[{paddingVertical: 12, paddingHorizontal: 20}, s.alignCenter]}
         onPress={onPressStartAuth}
       />
-      {uiState.serviceDescription && (
+      {type === 'signup' && uiState.serviceDescription && (
         <Policies
           serviceDescription={uiState.serviceDescription}
           needsGuardian={!is18(uiState)}
