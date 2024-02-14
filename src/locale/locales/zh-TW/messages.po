@@ -3288,7 +3288,7 @@ msgstr "在下面選擇一些要跟隨的帳號"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
-msgstr "選擇托管你資料的服務。"
+msgstr "選擇用來託管你的資料的服務商。"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
