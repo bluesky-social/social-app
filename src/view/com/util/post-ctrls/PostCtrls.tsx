@@ -9,6 +9,7 @@ import {
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  AtUri,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {Text} from '../text/Text'
@@ -30,6 +31,10 @@ import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {shareUrl} from 'lib/sharing'
+import {makeProfileLink} from 'lib/routes/links'
 
 let PostCtrls = ({
   big,
@@ -116,11 +121,18 @@ let PostCtrls = ({
     closeModal,
   ])
 
+  const onShare = useCallback(() => {
+    const urip = new AtUri(post.uri)
+    const href = makeProfileLink(post.author, 'post', urip.rkey)
+    const url = toShareUrl(href)
+    shareUrl(url)
+  }, [post.uri, post.author])
+
   return (
     <View style={[styles.ctrls, style]}>
       <View
         style={[
-          styles.ctrl,
+          big ? styles.ctrlBig : styles.ctrl,
           post.viewer?.replyDisabled ? {opacity: 0.5} : undefined,
         ]}>
         <TouchableOpacity
@@ -149,7 +161,7 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      <View style={styles.ctrl}>
+      <View style={big ? styles.ctrlBig : styles.ctrl}>
         <RepostButton
           big={big}
           isReposted={!!post.viewer?.repost}
@@ -158,7 +170,7 @@ let PostCtrls = ({
           onQuote={onQuote}
         />
       </View>
-      <View style={styles.ctrl}>
+      <View style={big ? styles.ctrlBig : styles.ctrl}>
         <TouchableOpacity
           testID="likeBtn"
           style={[styles.btn, !big && styles.btnPad]}
@@ -193,20 +205,34 @@ let PostCtrls = ({
           ) : undefined}
         </TouchableOpacity>
       </View>
-      {big ? undefined : (
-        <View style={styles.ctrl}>
-          <PostDropdownBtn
-            testID="postDropdownBtn"
-            postAuthor={post.author}
-            postCid={post.cid}
-            postUri={post.uri}
-            record={record}
-            richText={richText}
-            showAppealLabelItem={showAppealLabelItem}
-            style={styles.btnPad}
-          />
+      {big && (
+        <View style={styles.ctrlBig}>
+          <TouchableOpacity
+            testID="shareBtn"
+            style={[styles.btn]}
+            onPress={onShare}
+            accessibilityRole="button"
+            accessibilityLabel={`${
+              post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
+            } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+            accessibilityHint=""
+            hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
+            <ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />
+          </TouchableOpacity>
         </View>
       )}
+      <View style={big ? styles.ctrlBig : styles.ctrl}>
+        <PostDropdownBtn
+          testID="postDropdownBtn"
+          postAuthor={post.author}
+          postCid={post.cid}
+          postUri={post.uri}
+          record={record}
+          richText={richText}
+          showAppealLabelItem={showAppealLabelItem}
+          style={styles.btnPad}
+        />
+      </View>
     </View>
   )
 }
@@ -222,6 +248,9 @@ const styles = StyleSheet.create({
   ctrl: {
     flex: 1,
     alignItems: 'flex-start',
+  },
+  ctrlBig: {
+    alignItems: 'center',
   },
   btn: {
     flexDirection: 'row',

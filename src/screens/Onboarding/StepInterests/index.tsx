@@ -26,7 +26,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export function StepInterests() {
   const {_} = useLingui()
@@ -139,7 +139,7 @@ export function StepInterests() {
   )
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start]} testID="onboardingInterests">
       <IconCircle
         icon={isError ? EmojiSad : Hashtag}
         style={[

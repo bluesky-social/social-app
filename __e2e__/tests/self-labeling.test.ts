@@ -28,6 +28,7 @@ describe('Self-labeling', () => {
     await element(by.id('composerPublishBtn')).tap()
     await expect(element(by.id('composeFAB'))).toBeVisible()
     const posts = by.id('feedItem-by-alice.test')
+    await element(by.id('e2eRefreshHome')).tap()
     await expect(
       element(by.id('contentHider-embed').withAncestor(posts)).atIndex(0),
     ).toExist()

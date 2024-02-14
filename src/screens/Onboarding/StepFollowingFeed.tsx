@@ -22,7 +22,7 @@ import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from 'state/queries/preferences'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export function StepFollowingFeed() {
   const {_} = useLingui()

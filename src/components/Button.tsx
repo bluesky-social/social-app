@@ -52,6 +52,7 @@ export type ButtonProps = React.PropsWithChildren<
   Pick<PressableProps, 'disabled' | 'onPress'> &
     AccessibilityProps &
     VariantProps & {
+      testID?: string
       label: string
       style?: StyleProp<ViewStyle>
     }

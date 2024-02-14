@@ -20,7 +20,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export type FeedConfig = {
   default: boolean
@@ -115,12 +115,22 @@ export function StepAlgoFeeds() {
           onChange={setPrimaryFeedUris}
           label={_(msg`Select your primary algorithmic feeds`)}>
           <Text
-            style={[a.text_md, a.pt_4xl, a.pb_md, t.atoms.text_contrast_700]}>
+            style={[
+              a.text_md,
+              a.pt_4xl,
+              a.pb_md,
+              t.atoms.text_contrast_medium,
+            ]}>
             <Trans>We recommend our "Discover" feed:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[0]} />
           <Text
-            style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
+            style={[
+              a.text_md,
+              a.pt_4xl,
+              a.pb_lg,
+              t.atoms.text_contrast_medium,
+            ]}>
             <Trans>We also think you'll like "For You" by Skygaze:</Trans>
           </Text>
           <FeedCard config={PRIMARY_FEEDS[1]} />
@@ -131,7 +141,12 @@ export function StepAlgoFeeds() {
           onChange={setSeconaryFeedUris}
           label={_(msg`Select your secondary algorithmic feeds`)}>
           <Text
-            style={[a.text_md, a.pt_4xl, a.pb_lg, t.atoms.text_contrast_700]}>
+            style={[
+              a.text_md,
+              a.pt_4xl,
+              a.pb_lg,
+              t.atoms.text_contrast_medium,
+            ]}>
             <Trans>There are many feeds to try:</Trans>
           </Text>
           <View style={[a.gap_md]}>

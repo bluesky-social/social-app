@@ -8,7 +8,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useTheme, atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
-import {Text, H3} from '#/components/Typography'
+import {Text} from '#/components/Typography'
 import {RichText} from '#/components/RichText'
 
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -95,14 +95,14 @@ function PrimaryFeedCardInner({
 
         <View style={[a.pt_xs, a.flex_grow]}>
           <Trans>
-            <H3
+            <Text
               style={[
                 a.text_lg,
                 a.font_bold,
                 ctx.selected && styles.textSelected,
               ]}>
               {feed.displayName}
-            </H3>
+            </Text>
 
             <Text
               style={[
@@ -139,7 +139,7 @@ function PrimaryFeedCardInner({
           },
           a.mt_md,
           a.w_full,
-          t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
+          t.atoms.border_contrast_low,
           ctx.selected && {
             borderTopColor: t.palette.white,
           },
@@ -241,14 +241,14 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
         </View>
 
         <View style={[a.pt_2xs, a.flex_grow]}>
-          <H3
+          <Text
             style={[
               a.text_md,
               a.font_bold,
               ctx.selected && styles.textSelected,
             ]}>
             {feed.displayName}
-          </H3>
+          </Text>
           <Text
             style={[
               {opacity: 0.8},
@@ -283,7 +283,7 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
           },
           a.mt_md,
           a.w_full,
-          t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
+          t.atoms.border_contrast_low,
           ctx.selected && {
             borderTopColor: t.palette.primary_200,
           },
@@ -362,7 +362,7 @@ export function FeedCardPlaceholder({primary}: {primary?: boolean}) {
           },
           a.mt_md,
           a.w_full,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
         ]}
       />
 
