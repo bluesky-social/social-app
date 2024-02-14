@@ -1112,7 +1112,7 @@ msgstr "두 번 탭하여 로그인합니다"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Download Bluesky account data (repository)"
-msgstr "Bluesky 계정 데이터 다운로드 (저장소)"
+msgstr "Bluesky 계정 데이터를 다운로드합니다 (저장소)"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
