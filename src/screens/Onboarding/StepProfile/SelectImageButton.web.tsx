@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet, Text} from 'react-native'
+import {Pressable, StyleSheet} from 'react-native'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {useTheme} from '#/alf'
@@ -57,20 +57,24 @@ export function SelectImageButton() {
 function Canvas() {
   const avatar = useAvatar()
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
-  React.useEffect(() => {}, [])
 
-  return (
-    <canvas
-      ref={canvasRef}
-      height={1000}
-      width={1000}
-      style={{
-        backgroundColor: avatar.backgroundColor,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    />
-  )
+  React.useEffect(() => {
+    // @ts-ignore web only
+    const path = new Path2D(avatar.placeholder.path)
+    // @ts-ignore web only
+    const ctx = canvasRef.current?.getContext('2d')
+    ctx?.reset()
+    ctx.fillStyle = avatar.backgroundColor
+    ctx?.moveTo(0, 0)
+    ctx?.fillRect(0, 0, 24 * 10, 24 * 10)
+    ctx.fillStyle = '#fff'
+    ctx.lineWidth = 0.1
+    ctx?.translate(24 * 1.5, 24 * 1.5)
+    ctx?.scale(7, 7)
+    ctx?.fill(path)
+  }, [avatar.backgroundColor, avatar.placeholder.path])
+
+  return <canvas ref={canvasRef} height={24 * 10} width={24 * 10} />
 }
 
 const styles = StyleSheet.create({
