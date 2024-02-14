@@ -13,9 +13,6 @@ import {msg, Trans} from '@lingui/macro'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
-import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
-import {Text} from '#/components/Typography'
-// import {useOnboardingDispatch} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
 
 import {Context} from '#/screens/Onboarding/state'
@@ -27,11 +24,8 @@ import {
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {openCropper, openPicker} from 'lib/media/picker'
 import {Emoji, EmojiName, emojiItems, emojiNames} from './types'
 import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
-import ViewShot from 'react-native-view-shot'
 import {
   PlaceholderCanvas,
   PlaceholderCanvasRef,
@@ -84,10 +78,22 @@ export function StepProfile() {
     track('OnboardingV2:StepProfile:Start')
   }, [track])
 
-  const onContinue = React.useCallback(() => {
+  const onContinue = React.useCallback(async () => {
+    let imageUri = avatar?.image?.path
+    if (!imageUri) {
+      imageUri = await canvasRef.current?.capture()
+    }
+
+    if (imageUri) {
+      dispatch({
+        type: 'setProfileStepResults',
+        imageUri,
+      })
+    }
+
     dispatch({type: 'next'})
     track('OnboardingV2:StepProfile:End')
-  }, [track, dispatch])
+  }, [avatar?.image?.path, dispatch, track])
 
   return (
     <SetAvatarContext.Provider value={setAvatar}>
@@ -113,8 +119,12 @@ export function StepProfile() {
               </View>
               <Items type="emojis" />
               <Items type="colors" />
-              {/* TOOD remove, testing */}
-              <Image source={uri} style={{height: 100, width: 100}} />
+              {/* TODO remove, testing */}
+              <Image
+                source={uri}
+                style={{height: 100, width: 100}}
+                accessibilityIgnoresInvertColors
+              />
             </View>
 
             <OnboardingControls.Portal>

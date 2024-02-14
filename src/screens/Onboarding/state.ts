@@ -29,6 +29,9 @@ export type OnboardingState = {
   topicalFeedsStepResults: {
     feedUris: string[]
   }
+  profileStepResults: {
+    imageUri?: string
+  }
 }
 
 export type OnboardingAction =
@@ -57,6 +60,10 @@ export type OnboardingAction =
   | {
       type: 'setTopicalFeedsStepResults'
       feedUris: string[]
+    }
+  | {
+      type: 'setProfileStepResults'
+      imageUri: string
     }
 
 export type ApiResponseMap = {
@@ -92,6 +99,9 @@ export const initialState: OnboardingState = {
   },
   topicalFeedsStepResults: {
     feedUris: [],
+  },
+  profileStepResults: {
+    imageUri: '',
   },
 }
 
@@ -220,6 +230,12 @@ export function reducer(
       }
       break
     }
+    case 'setProfileStepResults': {
+      next.profileStepResults = {
+        imageUri: a.imageUri,
+      }
+      break
+    }
   }
 
   const state = {
@@ -237,6 +253,7 @@ export function reducer(
     suggestedAccountsStepResults: state.suggestedAccountsStepResults,
     algoFeedsStepResults: state.algoFeedsStepResults,
     topicalFeedsStepResults: state.topicalFeedsStepResults,
+    profileStepResults: state.profileStepResults,
   })
 
   if (s.activeStep !== state.activeStep) {
