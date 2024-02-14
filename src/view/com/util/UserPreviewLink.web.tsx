@@ -109,15 +109,9 @@ export function UserPreviewLink(
 
 interface HoverProfileCardProps {
   did: string
-  // onPointerEnter: () => void
-  // onPointerLeave: () => void
 }
 
-function HoverProfileCard({
-  did,
-}: // onPointerEnter,
-// onPointerLeave,
-HoverProfileCardProps) {
+function HoverProfileCard({did}: HoverProfileCardProps) {
   const pal = usePalette('default')
 
   const profile = useProfileQuery({did})
