@@ -29,6 +29,7 @@ import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openCropper, openPicker} from 'lib/media/picker'
+import {Emoji, emojis, emojiItems} from './types'
 import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
 
 interface Avatar {
@@ -75,10 +76,13 @@ export function StepProfile() {
           <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
 
           <Title>
-            <Trans>Upload a profile picture</Trans>
+            <Trans>Set your profile picture</Trans>
           </Title>
           <Description>
-            <Trans>Help people know you're not a bot!</Trans>
+            <Trans>
+              Help people know you're not a bot by uploading a picture or
+              creating an avatar!
+            </Trans>
           </Description>
 
           <View style={[a.pt_5xl, a.gap_3xl]}>
@@ -112,6 +116,7 @@ export function StepProfile() {
 function AvatarCircle() {
   const t = useTheme()
   const avatar = useAvatar()
+  const Icon = emojiItems[avatar.placeholder]
 
   console.log(avatar)
 
@@ -131,7 +136,7 @@ function AvatarCircle() {
         styles.imageContainer,
         {backgroundColor: avatar.backgroundColor},
       ]}>
-      <Text style={[a.text_5xl]}>{emojiItems[avatar.placeholder]}</Text>
+      <Icon height={85} width={85} style={{color: 'white'}} />
     </View>
   )
 }
@@ -145,14 +150,6 @@ const colors = [
   '#E76F51',
 ] as const
 type Color = (typeof colors)[number]
-
-const emojis = ['camera', 'smile', 'frown', 'eyes'] as const
-type Emoji = (typeof emojis)[number]
-const emojiItems: Record<Emoji, string> = {
-  smile: '😊',
-  frown: '☹️',
-  eyes: '👀',
-}
 
 function ColorItem({color}: {color: Color}) {
   const t = useTheme()
@@ -190,6 +187,7 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
   const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
+  const Icon = emojiItems[emoji]
 
   const onPress = React.useCallback(() => {
     setAvatar(prev => ({
@@ -214,7 +212,7 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
         },
       ]}
       onPress={onPress}>
-      <Text style={[a.text_5xl]}>{emojiItems[emoji]}</Text>
+      <Icon height={35} width={35} style={[t.atoms.text_contrast_medium]} />
     </Pressable>
   )
 }
