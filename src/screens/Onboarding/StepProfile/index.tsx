@@ -3,6 +3,7 @@ import {
   FlatList,
   FlatListProps,
   LayoutAnimation,
+  LayoutChangeEvent,
   ListRenderItemInfo,
   Pressable,
   StyleSheet,
@@ -22,7 +23,11 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {
+  ChevronLeft_Stroke2_Corner0_Rounded,
+  ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,
+} from '#/components/icons/Chevron'
+import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
 import {Emoji, EmojiName, emojiItems, emojiNames} from './types'
@@ -31,8 +36,7 @@ import {
   PlaceholderCanvas,
   PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
-import {Text} from '#/components/Typography'
-import {HITSLOP_10} from 'lib/constants'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 interface Avatar {
   image?: {
@@ -157,30 +161,29 @@ function AvatarCircle() {
 
   if (avatar.image) {
     return (
-      <Pressable
-        accessibilityRole="button"
-        hitSlop={HITSLOP_10}
-        onPress={onPressRemoveAvatar}>
+      <View>
         <Image
           source={avatar.image.path}
           style={[styles.imageContainer, t.atoms.border_contrast_high]}
           accessibilityIgnoresInvertColors
         />
-        <View
+        <Pressable
+          accessibilityRole="button"
           style={[
             a.absolute,
             a.rounded_full,
             a.align_center,
             a.justify_center,
             a.border,
+            a.shadow_lg,
             t.atoms.border_contrast_high,
             t.atoms.bg_contrast_300,
             {height: 40, width: 40, bottom: 5, right: 5},
-          ]}>
-          {/* TODO Get a trash icon for alf */}
-          <Text style={[a.text_4xl, {color: t.palette.white}]}>x</Text>
-        </View>
-      </Pressable>
+          ]}
+          onPress={onPressRemoveAvatar}>
+          <Times size="lg" style={{color: 'white'}} />
+        </Pressable>
+      </View>
     )
   }
 
@@ -189,7 +192,9 @@ function AvatarCircle() {
       style={[
         styles.imageContainer,
         t.atoms.border_contrast_high,
-        {backgroundColor: avatar.backgroundColor},
+        {
+          backgroundColor: avatar.backgroundColor,
+        },
       ]}>
       <Icon height={85} width={85} style={{color: 'white'}} />
     </View>
@@ -263,7 +268,7 @@ function EmojiItem({emojiName}: {emojiName: EmojiName}) {
         styles.paletteContainer,
         t.atoms.border_contrast_high,
         {
-          borderWidth: avatar.placeholder ? 4 : 2,
+          borderWidth: avatar.placeholder.name === emojiName ? 4 : 2,
         },
       ]}
       onPress={onPress}>
@@ -276,25 +281,76 @@ function emojiRenderItem({item}: ListRenderItemInfo<EmojiName>) {
 }
 
 function Items({type}: {type: 'emojis' | 'colors'}) {
-  if (type === 'colors') {
-    return (
-      <View style={styles.flatListOuter}>
-        <FlatList<Color>
-          data={colors}
-          renderItem={colorRenderItem}
-          {...commonFlatListProps}
-        />
-      </View>
-    )
-  }
+  const t = useTheme()
+  const {isTabletOrDesktop} = useWebMediaQueries()
+
+  const maxWidth = React.useRef(0)
+  const width = React.useRef(0)
+  const page = React.useRef(0)
+  const ref = React.useRef<FlatList>(null)
+
+  const onLayout = React.useCallback((e: LayoutChangeEvent) => {
+    width.current = e.nativeEvent.layout.width
+  }, [])
+
+  const onContentSizeChanged = React.useCallback((w: number, _: number) => {
+    maxWidth.current = w
+  }, [])
+
+  const onLeftPress = React.useCallback(() => {
+    if (page.current === 0) return
+    page.current -= 1
+    ref.current?.scrollToOffset({
+      offset: width.current * page.current - width.current + 50,
+    })
+  }, [])
+
+  const onRightPress = React.useCallback(() => {
+    const newOffset = width.current * (page.current + 1) - 50
+    if (newOffset >= maxWidth.current + width.current) return
+
+    page.current += 1
+    ref.current?.scrollToOffset({
+      offset: newOffset,
+    })
+  }, [])
 
   return (
     <View style={styles.flatListOuter}>
-      <FlatList<EmojiName>
-        data={emojiNames}
-        renderItem={emojiRenderItem}
+      {isTabletOrDesktop && (
+        <Pressable
+          onPress={onLeftPress}
+          style={[
+            a.align_center,
+            a.justify_center,
+            t.atoms.bg_contrast_100,
+            {height: 40, width: 40, borderRadius: 100},
+          ]}
+          accessibilityRole="button">
+          <ChevronLeft_Stroke2_Corner0_Rounded style={t.atoms.text} />
+        </Pressable>
+      )}
+      <FlatList
+        data={type === 'colors' ? colors : emojiNames}
+        renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
+        ref={ref}
         {...commonFlatListProps}
+        onLayout={onLayout}
+        onContentSizeChange={onContentSizeChanged}
       />
+      {isTabletOrDesktop && (
+        <Pressable
+          onPress={onRightPress}
+          style={[
+            a.align_center,
+            a.justify_center,
+            t.atoms.bg_contrast_100,
+            {height: 40, width: 40, borderRadius: 100},
+          ]}
+          accessibilityRole="button">
+          <ChevronRight style={t.atoms.text} />
+        </Pressable>
+      )}
     </View>
   )
 }
@@ -315,6 +371,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   flatListOuter: {
+    flexDirection: 'row',
+    alignItems: 'center',
     height: 100,
   },
   flatListContainer: {
@@ -325,6 +383,5 @@ const styles = StyleSheet.create({
 
 const commonFlatListProps: Partial<FlatListProps<any>> = {
   horizontal: true,
-  contentContainerStyle: styles.flatListContainer,
   showsHorizontalScrollIndicator: false,
 }
