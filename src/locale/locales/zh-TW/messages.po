@@ -3933,7 +3933,7 @@ msgstr "沒有 Bluesky 帳號，無法查看此內容。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr "此功能目前為測試版本。您可以在<0>這篇部落格文章</0>中了解更多有關存放庫匯出的資訊"
+msgstr "此功能目前為測試版本。您可以在<0>這篇部落格文章</0>中了解更多有關匯出存放庫的資訊"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
