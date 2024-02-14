@@ -1,8 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-import {LABEL_GROUPS, AppBskyModerationDefs} from '@atproto/api'
+// import {msg} from '@lingui/macro'
+import {LABEL_GROUPS} from '@atproto/api'
 // TODO
 import {ModPrefItem} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 
@@ -24,7 +24,7 @@ export function PreferenceRow({
   const {_} = useLingui()
   const labelGroupStrings = useLabelGroupStrings()
   const groupInfoStrings = labelGroupStrings[labelGroup]
-  const {mutateAsync, variables} = useModServiceLabelGroupEnableMutation()
+  const {mutateAsync, variables, reset} = useModServiceLabelGroupEnableMutation()
   const enabled =
     variables?.enabled ??
     !modservicePreferences?.disabledLabelGroups?.includes(labelGroup)
@@ -37,10 +37,12 @@ export function PreferenceRow({
         group: labelGroup,
         enabled: !enabled,
       })
+      reset() // Important: clears query `variables`
     } catch (e: any) {
+      // TODO
       console.error(e)
     }
-  }, [mutateAsync, enabled])
+  }, [mutateAsync, enabled, modservicePreferences, labelGroup, reset])
 
   return (
     <View

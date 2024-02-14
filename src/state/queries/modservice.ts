@@ -1,3 +1,4 @@
+import {z} from 'zod'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
@@ -20,6 +21,12 @@ export function useModServiceSubscriptionMutation() {
 
   return useMutation({
     async mutationFn({did, subscribe}: {did: string; subscribe: boolean}) {
+      // TODO
+      z.object({
+        did: z.string(),
+        subscribe: z.boolean(),
+      }).parse({did, subscribe})
+
       if (subscribe) {
         await getAgent().addModService(did)
       } else {
@@ -39,6 +46,11 @@ export function useModServiceEnableMutation() {
 
   return useMutation({
     async mutationFn({did, enabled}: {did: string; enabled: boolean}) {
+      // TODO
+      z.object({
+        did: z.string(),
+        enabled: z.boolean(),
+      }).parse({did, enabled})
       await getAgent().setModServiceEnabled(did, enabled)
     },
     onSuccess() {
@@ -54,7 +66,12 @@ export function useModServiceLabelGroupEnableMutation() {
 
   return useMutation({
     async mutationFn({did, group, enabled}: {did: string; group: string, enabled: boolean}) {
-      console.log('useModServiceLabelGroupEnableMutation', did, group, enabled)
+      // TODO
+      z.object({
+        did: z.string(),
+        group: z.string(),
+        enabled: z.boolean(),
+      }).parse({did, group, enabled})
       await getAgent().setModServiceLabelGroupEnabled(did, group, enabled)
     },
     onSuccess() {
