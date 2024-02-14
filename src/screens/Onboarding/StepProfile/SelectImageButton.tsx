@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, StyleSheet} from 'react-native'
+import {LayoutAnimation, Pressable, StyleSheet} from 'react-native'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 import {useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {useTheme} from '#/alf'
@@ -22,33 +22,25 @@ export function SelectImageButton() {
     const items = await openPicker({
       aspect: [1, 1],
     })
-    const item = items[0]
-    if (!item) return
+    let image = items[0]
+    if (!image) return
 
     // TODO we need an alf modal for the cropper
-    if (isWeb) {
-      const compressedImage = await compressIfNeeded(item)
-
-      setAvatar(prev => ({
-        ...prev,
-        image: compressedImage,
-      }))
-      return
+    if (!isWeb) {
+      image = await openCropper({
+        mediaType: 'photo',
+        cropperCircleOverlay: true,
+        height: image.height,
+        width: image.width,
+        path: image.path,
+      })
     }
+    image = await compressIfNeeded(image)
 
-    const croppedImage = await openCropper({
-      mediaType: 'photo',
-      cropperCircleOverlay: true,
-      height: item.height,
-      width: item.width,
-      path: item.path,
-    })
-
-    const compressedImage = await compressIfNeeded(croppedImage)
-
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setAvatar(prev => ({
       ...prev,
-      image: compressedImage,
+      image,
     }))
   }, [requestPhotoAccessIfNeeded, setAvatar])
 

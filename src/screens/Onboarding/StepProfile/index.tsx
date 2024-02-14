@@ -2,6 +2,7 @@ import React from 'react'
 import {
   FlatList,
   FlatListProps,
+  LayoutAnimation,
   ListRenderItemInfo,
   Pressable,
   StyleSheet,
@@ -110,8 +111,12 @@ export function StepProfile() {
               <View style={[a.align_center, a.pb_5xl]}>
                 <AvatarCircle />
               </View>
-              <Items type="emojis" />
-              <Items type="colors" />
+              {!avatar.image && (
+                <>
+                  <Items type="emojis" />
+                  <Items type="colors" />
+                </>
+              )}
             </View>
 
             <OnboardingControls.Portal>
@@ -143,6 +148,7 @@ function AvatarCircle() {
   const Icon = avatar.placeholder.component
 
   const onPressRemoveAvatar = React.useCallback(() => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setAvatar(prev => ({
       ...prev,
       image: undefined,
