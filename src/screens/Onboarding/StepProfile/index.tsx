@@ -29,7 +29,7 @@ import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openCropper, openPicker} from 'lib/media/picker'
-import {Emoji, emojis, emojiItems} from './types'
+import {Emoji, EmojiName, emojiItems, emojiNames} from './types'
 import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
 
 interface Avatar {
@@ -56,7 +56,7 @@ export function StepProfile() {
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
-    placeholder: 'smile',
+    placeholder: emojiItems.smile,
     backgroundColor: '#338388',
   })
 
@@ -116,9 +116,7 @@ export function StepProfile() {
 function AvatarCircle() {
   const t = useTheme()
   const avatar = useAvatar()
-  const Icon = emojiItems[avatar.placeholder]
-
-  console.log(avatar)
+  const Icon = avatar.placeholder.component
 
   if (avatar.image) {
     return (
@@ -183,20 +181,20 @@ function colorRenderItem({item}: ListRenderItemInfo<Color>) {
   return <ColorItem color={item} />
 }
 
-function EmojiItem({emoji}: {emoji: Emoji}) {
+function EmojiItem({emojiName}: {emojiName: EmojiName}) {
   const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
-  const Icon = emojiItems[emoji]
+  const Icon = emojiItems[emojiName].component
 
   const onPress = React.useCallback(() => {
     setAvatar(prev => ({
       ...prev,
-      placeholder: emoji,
+      placeholder: emojiItems[emojiName],
     }))
-  }, [emoji, setAvatar])
+  }, [emojiName, setAvatar])
 
-  if (emoji === 'camera') {
+  if (emojiName === 'camera') {
     return <SelectImageButton />
   }
 
@@ -208,7 +206,7 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
         styles.paletteContainer,
         t.atoms.border_contrast_high,
         {
-          borderWidth: avatar.placeholder === emoji ? 4 : 2,
+          borderWidth: avatar.placeholder ? 4 : 2,
         },
       ]}
       onPress={onPress}>
@@ -216,8 +214,8 @@ function EmojiItem({emoji}: {emoji: Emoji}) {
     </Pressable>
   )
 }
-function emojiRenderItem({item}: ListRenderItemInfo<Emoji>) {
-  return <EmojiItem emoji={item} />
+function emojiRenderItem({item}: ListRenderItemInfo<EmojiName>) {
+  return <EmojiItem emojiName={item} />
 }
 
 function Items({type}: {type: 'emojis' | 'colors'}) {
@@ -236,8 +234,8 @@ function Items({type}: {type: 'emojis' | 'colors'}) {
 
   return (
     <View style={styles.flatListOuter}>
-      <FlatList<Emoji>
-        data={emojis}
+      <FlatList<EmojiName>
+        data={emojiNames}
         renderItem={emojiRenderItem}
         {...commonFlatListProps}
       />

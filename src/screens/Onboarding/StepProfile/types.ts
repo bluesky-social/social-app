@@ -57,7 +57,11 @@ export interface Emoji {
   path: string
 }
 export const emojiItems: Record<EmojiName, Emoji> = {
-  camera: {},
+  camera: {
+    name: 'camera',
+    component: EmojiSmile,
+    path: emojiSmilePath,
+  },
   smile: {
     name: 'smile',
     component: EmojiSmile,
