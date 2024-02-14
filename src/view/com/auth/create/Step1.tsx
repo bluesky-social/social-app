@@ -29,6 +29,8 @@ import {useDialogControl} from '#/components/Dialog'
 
 import {ServerInputDialog} from '../server-input'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {Button} from 'view/com/util/forms/Button'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -49,6 +51,7 @@ export function Step1({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
+  const {isMobile} = useWebMediaQueries()
   const {openModal} = useModalControls()
   const serverInputControl = useDialogControl()
 
@@ -64,6 +67,8 @@ export function Step1({
   const birthDate = React.useMemo(() => {
     return sanitizeDate(uiState.birthDate)
   }, [uiState.birthDate])
+
+  const onPressStartAuth = React.useCallback(() => {}, [])
 
   return (
     <View>
@@ -136,7 +141,7 @@ export function Step1({
 
       {!uiState.serviceDescription ? (
         <ActivityIndicator />
-      ) : (
+      ) : uiState.serviceUrl !== 'https://bsky.social' ? (
         <>
           {uiState.isInviteCodeRequired && (
             <View style={s.pb20}>
@@ -258,6 +263,23 @@ export function Step1({
             </>
           )}
         </>
+      ) : (
+        <View style={[styles.signupButtonContainer]}>
+          <Button
+            testID="requestCodeBtn"
+            type="primary"
+            label={_(msg`Sign up on Bluesky Social`)}
+            labelStyle={isMobile ? [s.flex1, s.textCenter, s.f17] : []}
+            style={isMobile ? {paddingVertical: 12, paddingHorizontal: 20} : {}}
+            onPress={onPressStartAuth}
+          />
+          {uiState.serviceDescription && (
+            <Policies
+              serviceDescription={uiState.serviceDescription}
+              needsGuardian={!is18(uiState)}
+            />
+          )}
+        </View>
       )}
       {uiState.error ? (
         <ErrorMessage message={uiState.error} style={styles.error} />
@@ -279,5 +301,9 @@ const styles = StyleSheet.create({
   // @ts-expect-error: Suppressing error due to incomplete `ViewStyle` type definition in react-native-web, missing `cursor` prop as discussed in https://github.com/necolas/react-native-web/issues/832.
   touchable: {
     ...(isWeb && {cursor: 'pointer'}),
+  },
+  signupButtonContainer: {
+    gap: 20,
+    paddingVertical: 10,
   },
 })
