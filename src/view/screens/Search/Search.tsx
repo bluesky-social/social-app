@@ -825,6 +825,7 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     fontSize: 17,
+    minWidth: 0,
   },
   headerCancelBtn: {
     paddingLeft: 10,
