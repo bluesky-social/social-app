@@ -31,6 +31,7 @@ import {ServerInputDialog} from '../server-input'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {Button} from 'view/com/util/forms/Button'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {AuthSessionButton} from 'view/com/auth/create/AuthSessionButton'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -264,22 +265,7 @@ export function Step1({
           )}
         </>
       ) : (
-        <View style={[styles.signupButtonContainer]}>
-          <Button
-            testID="requestCodeBtn"
-            type="primary"
-            label={_(msg`Sign up on Bluesky Social`)}
-            labelStyle={isMobile ? [s.flex1, s.textCenter, s.f17] : []}
-            style={isMobile ? {paddingVertical: 12, paddingHorizontal: 20} : {}}
-            onPress={onPressStartAuth}
-          />
-          {uiState.serviceDescription && (
-            <Policies
-              serviceDescription={uiState.serviceDescription}
-              needsGuardian={!is18(uiState)}
-            />
-          )}
-        </View>
+        <AuthSessionButton uiState={uiState} uiDispatch={uiDispatch} />
       )}
       {uiState.error ? (
         <ErrorMessage message={uiState.error} style={styles.error} />
