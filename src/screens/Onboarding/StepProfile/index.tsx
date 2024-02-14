@@ -66,15 +66,15 @@ export function StepProfile() {
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
 
-  React.useEffect(() => {
-    // TODO remove, this is for testing
-    ;(async () => {
-      const res = await canvasRef.current?.capture()
-      if (res) {
-        setUri(res)
-      }
-    })()
-  }, [avatar])
+  // React.useEffect(() => {
+  //   // TODO remove, this is for testing
+  //   ;(async () => {
+  //     const res = await canvasRef.current?.capture()
+  //     if (res) {
+  //       setUri(res)
+  //     }
+  //   })()
+  // }, [avatar])
 
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')

@@ -34,9 +34,13 @@ export async function uploadBlob(
 ): Promise<ComAtprotoRepoUploadBlob.Response> {
   if (isWeb) {
     // `blob` should be a data uri
-    return agent.uploadBlob(convertDataURIToUint8Array(blob), {
+    console.log(convertDataURIToUint8Array(blob))
+
+    const x = await agent.uploadBlob(convertDataURIToUint8Array(blob), {
       encoding,
     })
+
+    return x
   } else {
     // `blob` should be a path to a file in the local FS
     return agent.uploadBlob(

@@ -78,10 +78,12 @@ export function StepFinished() {
           const res = await uploadBlob(
             getAgent(),
             profileStepResults.imageUri,
-            profileStepResults.imageUri,
+            profileStepResults.imageMime,
           )
 
-          existing.avatar = res.data.blob
+          if (res.data.blob) {
+            existing.avatar = res.data.blob
+          }
         }
 
         return existing

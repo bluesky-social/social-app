@@ -1,10 +1,11 @@
 import React from 'react'
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
+import {StyleSheet, View} from 'react-native'
 
-const CANVAS_HEIGHT = 24 * 10
-const CANVAS_OFFSET = 24 * 1.5
+const CANVAS_HEIGHT = 24 * 20
+const CANVAS_OFFSET = 24 * 3
 
-interface PlaceholderCanvasRef {
+export interface PlaceholderCanvasRef {
   capture: () => string
 }
 
@@ -16,7 +17,7 @@ export const PlaceholderCanvas = React.forwardRef(function PlaceholderCanvas(
   const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
   const capture = React.useCallback(() => {
-    return ''
+    return canvasRef.current?.toDataURL('image/jpeg')
   }, [])
 
   React.useImperativeHandle(ref, () => ({
@@ -35,9 +36,20 @@ export const PlaceholderCanvas = React.forwardRef(function PlaceholderCanvas(
     ctx.fillStyle = '#fff'
     ctx.lineWidth = 0.1
     ctx?.translate(CANVAS_OFFSET, CANVAS_OFFSET)
-    ctx?.scale(7, 7)
+    ctx?.scale(14, 14)
     ctx?.fill(path)
   }, [avatar.backgroundColor, avatar.placeholder.path])
 
-  return <canvas ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_HEIGHT} />
+  return (
+    <View style={styles.container}>
+      <canvas ref={canvasRef} height={CANVAS_HEIGHT} width={CANVAS_HEIGHT} />
+    </View>
+  )
+})
+
+const styles = StyleSheet.create({
+  container: {
+    top: -2000,
+    position: 'absolute',
+  },
 })
