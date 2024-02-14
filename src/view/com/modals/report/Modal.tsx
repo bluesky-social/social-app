@@ -18,7 +18,7 @@ import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {getAgent} from '#/state/session'
 
-const DMCA_LINK = 'https://blueskyweb.xyz/support/copyright'
+const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 
 export const snapPoints = [575]
 

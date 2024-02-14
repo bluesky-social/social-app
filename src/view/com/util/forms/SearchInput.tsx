@@ -26,64 +26,79 @@ interface Props {
   onSubmitQuery: () => void
   style?: StyleProp<ViewStyle>
 }
-export function SearchInput({
-  query,
-  setIsInputFocused,
-  onChangeQuery,
-  onPressCancelSearch,
-  onSubmitQuery,
-  style,
-}: Props) {
-  const theme = useTheme()
-  const pal = usePalette('default')
-  const {_} = useLingui()
-  const textInput = React.useRef<TextInput>(null)
 
-  const onPressCancelSearchInner = React.useCallback(() => {
-    onPressCancelSearch()
-    textInput.current?.blur()
-  }, [onPressCancelSearch, textInput])
-
-  return (
-    <View style={[pal.viewLight, styles.container, style]}>
-      <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
-      <TextInput
-        testID="searchTextInput"
-        ref={textInput}
-        placeholder={_(msg`Search`)}
-        placeholderTextColor={pal.colors.textLight}
-        selectTextOnFocus
-        returnKeyType="search"
-        value={query}
-        style={[pal.text, styles.input]}
-        keyboardAppearance={theme.colorScheme}
-        onFocus={() => setIsInputFocused?.(true)}
-        onBlur={() => setIsInputFocused?.(false)}
-        onChangeText={onChangeQuery}
-        onSubmitEditing={onSubmitQuery}
-        accessibilityRole="search"
-        accessibilityLabel={_(msg`Search`)}
-        accessibilityHint=""
-        autoCorrect={false}
-        autoCapitalize="none"
-      />
-      {query ? (
-        <TouchableOpacity
-          onPress={onPressCancelSearchInner}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Clear search query`)}
-          accessibilityHint=""
-          hitSlop={HITSLOP_10}>
-          <FontAwesomeIcon
-            icon="xmark"
-            size={16}
-            style={pal.textLight as FontAwesomeIconStyle}
-          />
-        </TouchableOpacity>
-      ) : undefined}
-    </View>
-  )
+export interface SearchInputRef {
+  focus?: () => void
 }
+
+export const SearchInput = React.forwardRef<SearchInputRef, Props>(
+  function SearchInput(
+    {
+      query,
+      setIsInputFocused,
+      onChangeQuery,
+      onPressCancelSearch,
+      onSubmitQuery,
+      style,
+    },
+    ref,
+  ) {
+    const theme = useTheme()
+    const pal = usePalette('default')
+    const {_} = useLingui()
+    const textInput = React.useRef<TextInput>(null)
+
+    const onPressCancelSearchInner = React.useCallback(() => {
+      onPressCancelSearch()
+      textInput.current?.blur()
+    }, [onPressCancelSearch, textInput])
+
+    React.useImperativeHandle(ref, () => ({
+      focus: () => textInput.current?.focus(),
+      blur: () => textInput.current?.blur(),
+    }))
+
+    return (
+      <View style={[pal.viewLight, styles.container, style]}>
+        <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
+        <TextInput
+          testID="searchTextInput"
+          ref={textInput}
+          placeholder={_(msg`Search`)}
+          placeholderTextColor={pal.colors.textLight}
+          selectTextOnFocus
+          returnKeyType="search"
+          value={query}
+          style={[pal.text, styles.input]}
+          keyboardAppearance={theme.colorScheme}
+          onFocus={() => setIsInputFocused?.(true)}
+          onBlur={() => setIsInputFocused?.(false)}
+          onChangeText={onChangeQuery}
+          onSubmitEditing={onSubmitQuery}
+          accessibilityRole="search"
+          accessibilityLabel={_(msg`Search`)}
+          accessibilityHint=""
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+        {query ? (
+          <TouchableOpacity
+            onPress={onPressCancelSearchInner}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Clear search query`)}
+            accessibilityHint=""
+            hitSlop={HITSLOP_10}>
+            <FontAwesomeIcon
+              icon="xmark"
+              size={16}
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </TouchableOpacity>
+        ) : undefined}
+      </View>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   container: {

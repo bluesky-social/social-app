@@ -27,7 +27,7 @@ import {
   SuggestedAccountCardPlaceholder,
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export function Inner({
   profiles,
@@ -175,7 +175,11 @@ export function StepSuggestedAccounts() {
             )}
             onPress={handleContinue}>
             <ButtonText>
-              <Trans>Follow All</Trans>
+              {dids.length === 20 ? (
+                <Trans>Follow All</Trans>
+              ) : (
+                <Trans>Follow</Trans>
+              )}
             </ButtonText>
             <ButtonIcon icon={saving ? Loader : Plus} position="right" />
           </Button>
