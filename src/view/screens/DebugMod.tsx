@@ -6,16 +6,19 @@ import {
   mock,
   moderatePost,
   moderateProfile,
+  ModerationOpts,
   PostModeration,
   ProfileModeration,
   ModerationUI,
   AppBskyActorDefs,
   AppBskyFeedDefs,
+  LabelTarget,
+  LabelPreference,
 } from '@atproto/api'
 
 import {atoms as a, useTheme} from '#/alf'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {H1, H3, P} from '#/components/Typography'
+import {H1, H3, P, Text} from '#/components/Typography'
 import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
@@ -25,6 +28,7 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PostHider} from '../com/util/moderation/PostHider'
 import {PostAlerts} from '../com/util/moderation/PostAlerts'
 import {ContentHider} from '../com/util/moderation/ContentHider'
+import {ScreenHider} from '../com/util/moderation/ScreenHider'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {ProfileCardPills} from '../com/profile/ProfileCard'
@@ -52,6 +56,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const t = useTheme()
   const [label, setLabel] = React.useState<string[]>([LABEL_VALUES[0]])
   const [target, setTarget] = React.useState<string[]>(['account'])
+  const [visibility, setVisiblity] = React.useState<string[]>(['hide'])
   const labelStrings = useLabelStrings()
 
   const profile = React.useMemo(() => {
@@ -121,14 +126,22 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     })
   }, [label, target, profile])
 
-  const profileModeration = React.useMemo(
-    () => moderateProfile(profile, MOCK_MOD_OPTS),
-    [profile],
-  )
-  const postModeration = React.useMemo(
-    () => moderatePost(post, MOCK_MOD_OPTS),
-    [post],
-  )
+  const modOpts = React.useMemo(() => {
+    return {
+      ...MOCK_MOD_OPTS,
+      labelGroups: {
+        [LABELS[label[0] as keyof typeof LABELS].groupId]:
+          visibility[0] as LabelPreference,
+      },
+    }
+  }, [label, visibility])
+
+  const profileModeration = React.useMemo(() => {
+    return moderateProfile(profile, modOpts)
+  }, [profile, modOpts])
+  const postModeration = React.useMemo(() => {
+    return moderatePost(post, modOpts)
+  }, [post, modOpts])
 
   console.log(post, profile)
   console.log(profileModeration, postModeration)
@@ -136,110 +149,178 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   return (
     <ScrollView>
       <CenteredView style={[t.atoms.bg, a.px_lg, a.py_lg]}>
-        <H1 style={a.pb_lg}>Moderation states</H1>
+        <H1 style={[a.text_5xl, a.font_bold, a.pb_lg]}>Moderation states</H1>
 
-        <H3 style={a.pb_md}>Target</H3>
-        <View style={a.pb_2xl}>
-          <ToggleButton.Group
-            label="Preferences"
-            values={target}
-            onChange={setTarget}>
-            <ToggleButton.Button name="account" label="Account">
-              Account
-            </ToggleButton.Button>
-            <ToggleButton.Button name="profile" label="Profile">
-              Profile
-            </ToggleButton.Button>
-            <ToggleButton.Button name="post" label="Post">
-              Post
-            </ToggleButton.Button>
-            <ToggleButton.Button name="embed" label="Embed">
-              Embed
-            </ToggleButton.Button>
-          </ToggleButton.Group>
-        </View>
+        <Heading title="Config" />
+        <Heading title="" subtitle="Target" />
+        <ToggleButton.Group label="Target" values={target} onChange={setTarget}>
+          <ToggleButton.Button name="account" label="Account">
+            Account
+          </ToggleButton.Button>
+          <ToggleButton.Button name="profile" label="Profile">
+            Profile
+          </ToggleButton.Button>
+          <ToggleButton.Button name="post" label="Post">
+            Post
+          </ToggleButton.Button>
+          <ToggleButton.Button name="embed" label="Embed">
+            Embed
+          </ToggleButton.Button>
+        </ToggleButton.Group>
 
-        <H3 style={a.pb_md}>Label</H3>
+        <View style={{height: 10}} />
+
+        <Heading title="" subtitle="Preference" />
+        <ToggleButton.Group
+          label="Visiblity"
+          values={visibility}
+          onChange={setVisiblity}>
+          <ToggleButton.Button name="hide" label="Hide">
+            Hide
+          </ToggleButton.Button>
+          <ToggleButton.Button name="warn" label="Warn">
+            Warn
+          </ToggleButton.Button>
+          <ToggleButton.Button name="ignore" label="Ignore">
+            Ignore
+          </ToggleButton.Button>
+        </ToggleButton.Group>
+
+        <View style={{height: 10}} />
+
+        <Heading title="" subtitle="Label" />
         <Toggle.Group
           label="Toggle"
           type="radio"
           values={label}
           onChange={setLabel}>
-          <View style={[a.flex_row, a.gap_md, a.flex_wrap, a.pb_2xl]}>
-            {LABEL_VALUES.map(labelValue => (
-              <Toggle.Item
-                key={labelValue}
-                name={labelValue}
-                label={labelStrings[labelValue].general.name}>
-                <Toggle.Radio />
-                <Toggle.Label>{labelValue}</Toggle.Label>
-              </Toggle.Item>
-            ))}
+          <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+            {LABEL_VALUES.map(labelValue => {
+              let targetFixed = target[0]
+              if (targetFixed !== 'account' && targetFixed !== 'profile') {
+                targetFixed = 'content'
+              }
+              const disabled = !LABELS[labelValue].targets.includes(
+                targetFixed as LabelTarget,
+              )
+              return (
+                <Toggle.Item
+                  key={labelValue}
+                  name={labelValue}
+                  label={labelStrings[labelValue].general.name}
+                  disabled={disabled}
+                  style={disabled ? {opacity: 0.5} : undefined}>
+                  <Toggle.Radio />
+                  <Toggle.Label>{labelValue}</Toggle.Label>
+                </Toggle.Item>
+              )
+            })}
           </View>
         </Toggle.Group>
 
-        <H3 style={a.pb_md}>Post</H3>
-        <MockPost label={label[0]} post={post} moderation={postModeration} />
+        <Spacer />
+
+        <Heading title={label[0]} />
+        <Text style={{fontFamily: 'monospace'}}>
+          {JSON.stringify(LABELS[label[0]], null, 2)}
+        </Text>
+
+        <Spacer />
+
+        <Heading title="Output" />
+        <P style={[a.font_bold]}>Post moderation</P>
         <View
           style={[
-            t.atoms.bg_contrast_50,
+            t.atoms.border_contrast_low,
+            a.border,
             a.px_md,
             a.py_sm,
             a.rounded_sm,
             a.flex_col,
             a.gap_xs,
-            a.mb_2xl,
           ]}>
           <ModerationUIView mod={postModeration.avatar} label="Avatar" />
           <ModerationUIView mod={postModeration.content} label="Content" />
           <ModerationUIView mod={postModeration.embed} label="Embed" />
         </View>
+        <P style={[a.font_bold, a.mt_md]}>Profile Moderation</P>
+        <View
+          style={[
+            t.atoms.border_contrast_low,
+            a.border,
+            a.px_md,
+            a.py_sm,
+            a.rounded_sm,
+            a.flex_col,
+            a.gap_xs,
+          ]}>
+          <ModerationUIView mod={profileModeration.avatar} label="Avatar" />
+          <ModerationUIView mod={profileModeration.account} label="Account" />
+          <ModerationUIView mod={profileModeration.profile} label="Profile" />
+        </View>
 
-        <H3 style={a.pb_md}>
-          Account{' '}
-          <H3 style={[t.atoms.text_contrast_low, a.text_lg]}>in listing</H3>
-        </H3>
-        <MockAccountCard
+        <Spacer />
+
+        <Heading title="Post" subtitle="in feed" />
+        <MockPost
           label={label[0]}
-          profile={profile}
-          moderation={profileModeration}
+          context="feed"
+          post={post}
+          moderation={postModeration}
         />
-        <View
-          style={[
-            t.atoms.bg_contrast_50,
-            a.px_md,
-            a.py_sm,
-            a.rounded_sm,
-            a.flex_col,
-            a.gap_xs,
-            a.mb_2xl,
-          ]}>
-          <ModerationUIView mod={profileModeration.avatar} label="Avatar" />
-          <ModerationUIView mod={profileModeration.account} label="Account" />
-          <ModerationUIView mod={profileModeration.profile} label="Profile" />
-        </View>
 
-        <H3 style={a.pb_md}>
-          Account{' '}
-          <H3 style={[t.atoms.text_contrast_low, a.text_lg]}>
-            viewing directly
-          </H3>
-        </H3>
-        <MockAccountScreen label={label[0]} profile={profile} />
-        <View
-          style={[
-            t.atoms.bg_contrast_50,
-            a.px_md,
-            a.py_sm,
-            a.rounded_sm,
-            a.flex_col,
-            a.gap_xs,
-            a.mb_2xl,
-          ]}>
-          <ModerationUIView mod={profileModeration.avatar} label="Avatar" />
-          <ModerationUIView mod={profileModeration.account} label="Account" />
-          <ModerationUIView mod={profileModeration.profile} label="Profile" />
-        </View>
+        <Spacer />
+
+        <Heading title="Post" subtitle="viewed directly" />
+        <MockPost
+          label={label[0]}
+          context="view"
+          post={post}
+          moderation={postModeration}
+        />
+
+        <Spacer />
+
+        <Heading title="Post" subtitle="reply in thread" />
+        <MockPost
+          label={label[0]}
+          context="reply"
+          post={post}
+          moderation={postModeration}
+        />
+
+        <Spacer />
+
+        <Heading title="Notification" subtitle="quote or reply" />
+        <P>TODO</P>
+
+        <Spacer />
+
+        {(target[0] === 'account' || target[0] === 'profile') && (
+          <>
+            <Heading title="Notification" subtitle="follow or like" />
+            <P>TODO</P>
+
+            <Spacer />
+
+            <Heading title="Account" subtitle="in listing" />
+            <MockAccountCard
+              label={label[0]}
+              profile={profile}
+              moderation={profileModeration}
+            />
+
+            <Spacer />
+
+            <Heading title="Account" subtitle="viewing directly" />
+            <MockAccountScreen
+              label={label[0]}
+              profile={profile}
+              moderation={profileModeration}
+              moderationOpts={modOpts}
+            />
+          </>
+        )}
 
         <View style={{height: 400}} />
       </CenteredView>
@@ -247,25 +328,46 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   )
 }
 
+function Heading({title, subtitle}: {title: string; subtitle?: string}) {
+  const t = useTheme()
+  return (
+    <H3 style={[a.text_3xl, a.font_bold, a.pb_md]}>
+      {title}{' '}
+      {!!subtitle && (
+        <H3 style={[t.atoms.text_contrast_medium, a.text_lg]}>{subtitle}</H3>
+      )}
+    </H3>
+  )
+}
+
+function Spacer() {
+  return <View style={{height: 40}} />
+}
+
 function MockPost({
   label,
+  context,
   post,
   moderation,
 }: {
   label: string
+  context: 'feed' | 'view' | 'reply'
   post: AppBskyFeedDefs.PostView
   moderation: PostModeration
 }) {
   const t = useTheme()
+
+  if (context === 'feed' && moderation.content.filter) {
+    return (
+      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
+        Filtered from the feed
+      </P>
+    )
+  }
+
   return (
     <View
-      style={[
-        t.atoms.border_contrast_medium,
-        a.border,
-        a.rounded_md,
-        a.mb_md,
-        a.p_2xs,
-      ]}>
+      style={[t.atoms.border_contrast_medium, a.border, a.rounded_md, a.p_2xs]}>
       {' '}
       <PostHider
         key={label}
@@ -283,7 +385,7 @@ function MockPost({
           <View style={[a.flex_1]}>
             <View style={[a.flex_row]}>
               <P style={[a.font_bold]}>Bob Robertson </P>
-              <P style={t.atoms.text_contrast_low}>
+              <P style={t.atoms.text_contrast_medium}>
                 @bob.bsky.social &middot; 5m
               </P>
             </View>
@@ -310,7 +412,7 @@ function MockPost({
                 ]}>
                 <View style={[a.flex_row]}>
                   <P style={[a.font_bold]}>Bob Robertson </P>
-                  <P style={t.atoms.text_contrast_low}>
+                  <P style={t.atoms.text_contrast_medium}>
                     @bob.bsky.social &middot; 5m
                   </P>
                 </View>
@@ -335,6 +437,15 @@ function MockAccountCard({
   moderation: ProfileModeration
 }) {
   const t = useTheme()
+
+  if (moderation.account.filter || moderation.profile.filter) {
+    return (
+      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
+        Filtered from the listing
+      </P>
+    )
+  }
+
   return (
     <View
       key={label}
@@ -357,7 +468,7 @@ function MockAccountCard({
         <P style={[a.font_bold]}>
           {sanitizeDisplayName('Bob Robertson', moderation.profile)}{' '}
         </P>
-        <P style={t.atoms.text_contrast_low}>@bob.bsky.social</P>
+        <P style={t.atoms.text_contrast_medium}>@bob.bsky.social</P>
         <P>Thought leader or something.</P>
         <ProfileCardPills followedBy={false} moderation={moderation} />
       </View>
@@ -368,23 +479,31 @@ function MockAccountCard({
 function MockAccountScreen({
   label,
   profile,
+  moderation,
+  moderationOpts,
 }: {
   label: string
   profile: AppBskyActorDefs.ProfileViewBasic
+  moderation: ProfileModeration
+  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   return (
     <View
       key={label}
       style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
-      <ProfileHeader
-        // @ts-ignore ProfileViewBasic is close enough -prf
-        profile={profile}
-        moderationOpts={MOCK_MOD_OPTS}
-        descriptionRT={null /*TODO*/}
-      />
+      <ScreenHider
+        style={{}}
+        screenDescription="profile"
+        moderation={moderation.account}>
+        <ProfileHeader
+          // @ts-ignore ProfileViewBasic is close enough -prf
+          profile={profile}
+          moderationOpts={moderationOpts}
+          descriptionRT={null /*TODO*/}
+        />
 
-      {/*
+        {/*
       <UserBanner />
       <View
         style={[
@@ -404,10 +523,11 @@ function MockAccountScreen({
           {paddingTop: 60},
         ]}>
         <H3>Bob Robertson</H3>
-        <P style={t.atoms.text_contrast_low}>@bob.bsky.social</P>
+        <P style={t.atoms.text_contrast_medium}>@bob.bsky.social</P>
         <P>Thought leader or something.</P>
       </View>
       */}
+      </ScreenHider>
     </View>
   )
 }

@@ -672,21 +672,21 @@ export function useLabelStrings(): LabelStrings {
           ),
         },
       },
-      curation: {
+      dislike: {
         general: {
-          name: _(msg`Curation`),
+          name: _(msg`Dislike`),
           description: _(
             msg`Judgment of the moderators to remove content they feel does not meet their standards of quality, however they choose to define it.`,
           ),
         },
         account: {
-          name: _(msg`Curation`),
+          name: _(msg`Dislike`),
           description: _(
             msg`The moderators feel this account does not meet their standards of quality.`,
           ),
         },
         content: {
-          name: _(msg`Curation`),
+          name: _(msg`Dislike`),
           description: _(
             msg`The moderators feel this content does not meet their standards of quality.`,
           ),

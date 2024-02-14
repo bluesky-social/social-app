@@ -87,7 +87,7 @@ export function ScreenHider({
           <>
             <Trans>This {screenDescription} has been flagged:</Trans>
             <Text type="2xl-medium" style={[pal.text, s.ml5]}>
-              {desc.name}.
+              {desc.name}.{' '}
             </Text>
             <TouchableWithoutFeedback
               onPress={() => {
