@@ -30,6 +30,8 @@ import {
   PlaceholderCanvas,
   PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
+import {Text} from '#/components/Typography'
+import {HITSLOP_10} from 'lib/constants'
 
 interface Avatar {
   image?: {
@@ -80,6 +82,7 @@ export function StepProfile() {
 
   const onContinue = React.useCallback(async () => {
     let imageUri = avatar?.image?.path
+    let imageMime = avatar?.image?.mime
     if (!imageUri) {
       imageUri = await canvasRef.current?.capture()
     }
@@ -88,12 +91,13 @@ export function StepProfile() {
       dispatch({
         type: 'setProfileStepResults',
         imageUri,
+        imageMime: imageMime ?? 'image/jpeg',
       })
     }
 
     dispatch({type: 'next'})
     track('OnboardingV2:StepProfile:End')
-  }, [avatar?.image?.path, dispatch, track])
+  }, [avatar?.image, dispatch, track])
 
   return (
     <SetAvatarContext.Provider value={setAvatar}>
@@ -152,15 +156,42 @@ export function StepProfile() {
 function AvatarCircle() {
   const t = useTheme()
   const avatar = useAvatar()
+  const setAvatar = useSetAvatar()
   const Icon = avatar.placeholder.component
+
+  const onPressRemoveAvatar = React.useCallback(() => {
+    setAvatar(prev => ({
+      ...prev,
+      image: undefined,
+    }))
+  }, [setAvatar])
 
   if (avatar.image) {
     return (
-      <Image
-        source={avatar.image.path}
-        style={[styles.imageContainer, t.atoms.border_contrast_high]}
-        accessibilityIgnoresInvertColors
-      />
+      <Pressable
+        accessibilityRole="button"
+        hitSlop={HITSLOP_10}
+        onPress={onPressRemoveAvatar}>
+        <Image
+          source={avatar.image.path}
+          style={[styles.imageContainer, t.atoms.border_contrast_high]}
+          accessibilityIgnoresInvertColors
+        />
+        <View
+          style={[
+            a.absolute,
+            a.rounded_full,
+            a.align_center,
+            a.justify_center,
+            a.border,
+            t.atoms.border_contrast_high,
+            t.atoms.bg_contrast_300,
+            {height: 40, width: 40, bottom: 5, right: 5},
+          ]}>
+          {/* TODO Get a trash icon for alf */}
+          <Text style={[a.text_4xl, {color: t.palette.white}]}>x</Text>
+        </View>
+      </Pressable>
     )
   }
 

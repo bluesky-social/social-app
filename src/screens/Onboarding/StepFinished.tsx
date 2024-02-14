@@ -13,7 +13,7 @@ import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+// import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
 import {getAgent} from '#/state/session'
 import {useAnalytics} from '#/lib/analytics/analytics'
 
@@ -24,10 +24,11 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {IconCircle} from '#/components/IconCircle'
-import {
-  bulkWriteFollows,
-  sortPrimaryAlgorithmFeeds,
-} from '#/screens/Onboarding/util'
+import {uploadBlob} from 'lib/api'
+// import {
+//   bulkWriteFollows,
+//   sortPrimaryAlgorithmFeeds,
+// } from '#/screens/Onboarding/util'
 
 export function StepFinished() {
   const {_} = useLingui()
@@ -37,35 +38,54 @@ export function StepFinished() {
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
   const [saving, setSaving] = React.useState(false)
-  const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
+  // const {mutateAsync: saveFeeds} = useSetSaveFeedsMutation()
 
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
+    // TODO uncomment
     const {
-      interestsStepResults,
-      suggestedAccountsStepResults,
-      algoFeedsStepResults,
-      topicalFeedsStepResults,
+      // interestsStepResults,
+      // suggestedAccountsStepResults,
+      // algoFeedsStepResults,
+      // topicalFeedsStepResults,
+      profileStepResults,
     } = state
-    const {selectedInterests} = interestsStepResults
-    const selectedFeeds = [
-      ...sortPrimaryAlgorithmFeeds(algoFeedsStepResults.feedUris),
-      ...topicalFeedsStepResults.feedUris,
-    ]
+    // const {selectedInterests} = interestsStepResults
+    // const selectedFeeds = [
+    //   ...sortPrimaryAlgorithmFeeds(algoFeedsStepResults.feedUris),
+    //   ...topicalFeedsStepResults.feedUris,
+    // ]
 
     try {
-      await Promise.all([
-        bulkWriteFollows(suggestedAccountsStepResults.accountDids),
-        // these must be serial
-        (async () => {
-          await getAgent().setInterestsPref({tags: selectedInterests})
-          await saveFeeds({
-            saved: selectedFeeds,
-            pinned: selectedFeeds,
-          })
-        })(),
-      ])
+      // TODO uncomment!
+      // await Promise.all([
+      //   bulkWriteFollows(suggestedAccountsStepResults.accountDids),
+      //   // these must be serial
+      //   (async () => {
+      //     await getAgent().setInterestsPref({tags: selectedInterests})
+      //     await saveFeeds({
+      //       saved: selectedFeeds,
+      //       pinned: selectedFeeds,
+      //     })
+      //   })(),
+      // ])
+
+      await getAgent().upsertProfile(async existing => {
+        existing = existing ?? {}
+
+        if (profileStepResults.imageUri && profileStepResults.imageMime) {
+          const res = await uploadBlob(
+            getAgent(),
+            profileStepResults.imageUri,
+            profileStepResults.imageUri,
+          )
+
+          existing.avatar = res.data.blob
+        }
+
+        return existing
+      })
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
@@ -77,7 +97,7 @@ export function StepFinished() {
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+  }, [dispatch, onboardDispatch, state, track])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')

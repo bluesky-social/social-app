@@ -31,6 +31,7 @@ export type OnboardingState = {
   }
   profileStepResults: {
     imageUri?: string
+    imageMime?: string
   }
 }
 
@@ -64,6 +65,7 @@ export type OnboardingAction =
   | {
       type: 'setProfileStepResults'
       imageUri: string
+      imageMime: string
     }
 
 export type ApiResponseMap = {
@@ -102,6 +104,7 @@ export const initialState: OnboardingState = {
   },
   profileStepResults: {
     imageUri: '',
+    imageMime: '',
   },
 }
 
@@ -233,6 +236,7 @@ export function reducer(
     case 'setProfileStepResults': {
       next.profileStepResults = {
         imageUri: a.imageUri,
+        imageMime: a.imageMime,
       }
       break
     }
