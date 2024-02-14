@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 import Animated, {Easing, Layout} from 'react-native-reanimated'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {
   configurableAdultLabelGroups,
   configurableOtherLabelGroups,
@@ -38,6 +38,7 @@ function AnimatedDivider() {
 
 export function StepModeration() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
@@ -65,7 +66,7 @@ export function StepModeration() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
       <Title>

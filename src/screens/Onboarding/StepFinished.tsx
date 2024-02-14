@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -32,6 +32,7 @@ import {
 export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
@@ -83,7 +84,7 @@ export function StepFinished() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
       <Title>

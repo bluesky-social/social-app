@@ -85,8 +85,8 @@ export function StepProfile() {
             </Trans>
           </Description>
 
-          <View style={[a.pt_5xl, a.gap_3xl]}>
-            <View style={[a.align_center, a.pb_lg]}>
+          <View style={[a.w_full, a.pt_5xl]}>
+            <View style={[a.align_center, a.pb_5xl]}>
               <AvatarCircle />
             </View>
             <Items type="emojis" />
@@ -223,7 +223,6 @@ function Items({type}: {type: 'emojis' | 'colors'}) {
     return (
       <View style={styles.flatListOuter}>
         <FlatList<Color>
-          style={{height: 100}}
           data={colors}
           renderItem={colorRenderItem}
           {...commonFlatListProps}

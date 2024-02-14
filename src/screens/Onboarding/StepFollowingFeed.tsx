@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -26,6 +26,7 @@ import {IconCircle} from '#/components/IconCircle'
 
 export function StepFollowingFeed() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {dispatch} = React.useContext(Context)
 
@@ -54,7 +55,7 @@ export function StepFollowingFeed() {
 
   return (
     // Hack for now to move the image container up
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={FilterTimeline} style={[a.mb_2xl]} />
 
       <Title>

@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {IS_PROD} from '#/env'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -25,6 +25,7 @@ import {IconCircle} from '#/components/IconCircle'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
@@ -63,7 +64,7 @@ export function StepTopicalFeeds() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={ListMagnifyingGlass} style={[a.mb_2xl]} />
 
       <Title>

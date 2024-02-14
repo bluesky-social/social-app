@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {IS_PROD} from '#/env'
-import {atoms as a, tokens, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
@@ -68,6 +68,7 @@ export function StepAlgoFeeds() {
   const {_} = useLingui()
   const {track} = useAnalytics()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {state, dispatch} = React.useContext(Context)
   const [primaryFeedUris, setPrimaryFeedUris] = React.useState<string[]>(
     PRIMARY_FEEDS.map(f => (f.default ? f.uri : '')).filter(Boolean),
@@ -96,7 +97,7 @@ export function StepAlgoFeeds() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={ListSparkle} style={[a.mb_2xl]} />
 
       <Title>
