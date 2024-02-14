@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan\n"
+"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
