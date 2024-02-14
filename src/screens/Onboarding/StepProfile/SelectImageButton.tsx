@@ -35,7 +35,7 @@ export function SelectImageButton() {
         path: image.path,
       })
     }
-    image = await compressIfNeeded(image)
+    image = await compressIfNeeded(image, 1000000)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setAvatar(prev => ({
