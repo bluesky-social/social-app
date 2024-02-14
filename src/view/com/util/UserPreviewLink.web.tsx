@@ -34,6 +34,21 @@ import {RichText} from './text/RichText'
 import {Text} from './text/Text'
 import {ThemedText} from './text/ThemedText'
 
+const floatingMiddlewares = [
+  offset(4),
+  flip({padding: 16}),
+  shift({padding: 16}),
+  size({
+    padding: 16,
+    apply({availableWidth, availableHeight, elements}) {
+      Object.assign(elements.floating.style, {
+        maxWidth: `${availableWidth}px`,
+        maxHeight: `${availableHeight}px`,
+      })
+    },
+  }),
+]
+
 interface UserPreviewLinkProps {
   did: string
   handle: string
@@ -47,20 +62,7 @@ export function UserPreviewLink(
   const [hovered, setHovered] = React.useState(false)
 
   const {refs, floatingStyles} = useFloating({
-    middleware: [
-      offset(4),
-      flip({padding: 16}),
-      shift({padding: 16}),
-      size({
-        padding: 16,
-        apply({availableWidth, availableHeight, elements}) {
-          Object.assign(elements.floating.style, {
-            maxWidth: `${availableWidth}px`,
-            maxHeight: `${availableHeight}px`,
-          })
-        },
-      }),
-    ],
+    middleware: floatingMiddlewares,
   })
 
   const onPointerEnter = React.useCallback(() => {
