@@ -62,19 +62,8 @@ export function StepProfile() {
     placeholder: emojiItems.smile,
     backgroundColor: '#338388',
   })
-  const [uri, setUri] = React.useState('')
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
-
-  // React.useEffect(() => {
-  //   // TODO remove, this is for testing
-  //   ;(async () => {
-  //     const res = await canvasRef.current?.capture()
-  //     if (res) {
-  //       setUri(res)
-  //     }
-  //   })()
-  // }, [avatar])
 
   React.useEffect(() => {
     track('OnboardingV2:StepProfile:Start')
@@ -123,12 +112,6 @@ export function StepProfile() {
               </View>
               <Items type="emojis" />
               <Items type="colors" />
-              {/* TODO remove, testing */}
-              <Image
-                source={uri}
-                style={{height: 100, width: 100}}
-                accessibilityIgnoresInvertColors
-              />
             </View>
 
             <OnboardingControls.Portal>

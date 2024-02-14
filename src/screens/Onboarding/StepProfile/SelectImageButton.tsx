@@ -6,6 +6,8 @@ import {useTheme} from '#/alf'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openPicker} from 'lib/media/picker.shared'
 import {openCropper} from 'lib/media/picker'
+import {compressIfNeeded} from 'lib/media/manip'
+import {isWeb} from 'platform/detection'
 
 export function SelectImageButton() {
   const t = useTheme()
@@ -23,6 +25,17 @@ export function SelectImageButton() {
     const item = items[0]
     if (!item) return
 
+    // TODO we need an alf modal for the cropper
+    if (isWeb) {
+      const compressedImage = await compressIfNeeded(item)
+
+      setAvatar(prev => ({
+        ...prev,
+        image: compressedImage,
+      }))
+      return
+    }
+
     const croppedImage = await openCropper({
       mediaType: 'photo',
       cropperCircleOverlay: true,
@@ -31,9 +44,11 @@ export function SelectImageButton() {
       path: item.path,
     })
 
+    const compressedImage = await compressIfNeeded(croppedImage)
+
     setAvatar(prev => ({
       ...prev,
-      image: croppedImage,
+      image: compressedImage,
     }))
   }, [requestPhotoAccessIfNeeded, setAvatar])
 
