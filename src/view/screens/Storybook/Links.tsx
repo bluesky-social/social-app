@@ -14,19 +14,19 @@ export function Links() {
 
       <View style={[a.gap_md, a.align_start]}>
         <InlineLink
-          to="https://blueskyweb.xyz"
+          to="https://bsky.social"
           warnOnMismatchingTextChild
           style={[a.text_md]}>
           External
         </InlineLink>
-        <InlineLink to="https://blueskyweb.xyz" style={[a.text_md]}>
+        <InlineLink to="https://bsky.social" style={[a.text_md]}>
           <H3>External with custom children</H3>
         </InlineLink>
         <InlineLink
-          to="https://blueskyweb.xyz"
+          to="https://bsky.social"
           warnOnMismatchingTextChild
           style={[a.text_lg]}>
-          https://blueskyweb.xyz
+          https://bsky.social
         </InlineLink>
         <InlineLink
           to="https://bsky.app/profile/bsky.app"

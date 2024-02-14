@@ -347,7 +347,7 @@ export function Checkbox() {
         a.align_center,
         a.border,
         a.rounded_xs,
-        t.atoms.border_contrast,
+        t.atoms.border_contrast_high,
         {
           height: 20,
           width: 20,
@@ -393,7 +393,7 @@ export function Switch() {
         a.border,
         a.rounded_full,
         t.atoms.bg,
-        t.atoms.border_contrast,
+        t.atoms.border_contrast_high,
         {
           height: 20,
           width: 30,
@@ -445,7 +445,7 @@ export function Radio() {
         a.align_center,
         a.border,
         a.rounded_full,
-        t.atoms.border_contrast,
+        t.atoms.border_contrast_high,
         {
           height: 20,
           width: 20,

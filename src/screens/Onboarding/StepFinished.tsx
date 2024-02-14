@@ -23,7 +23,7 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,
@@ -101,7 +101,7 @@ export function StepFinished() {
               <Trans>Public</Trans>
             </Text>
             <Text
-              style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
+              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
               <Trans>
                 Your posts, likes, and blocks are public. Mutes are private.
               </Trans>
@@ -115,7 +115,7 @@ export function StepFinished() {
               <Trans>Open</Trans>
             </Text>
             <Text
-              style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
+              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
               <Trans>Never lose access to your followers or data.</Trans>
             </Text>
           </View>
@@ -131,7 +131,7 @@ export function StepFinished() {
               <Trans>Flexible</Trans>
             </Text>
             <Text
-              style={[t.atoms.text_contrast_500, a.text_md, a.leading_snug]}>
+              style={[t.atoms.text_contrast_medium, a.text_md, a.leading_snug]}>
               <Trans>Choose the algorithms that power your custom feeds.</Trans>
             </Text>
           </View>

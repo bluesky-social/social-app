@@ -26,12 +26,6 @@ export interface EditProfileModal {
   onUpdate?: () => void
 }
 
-export interface ServerInputModal {
-  name: 'server-input'
-  initialService: string
-  onSelect: (url: string) => void
-}
-
 export interface ModerationDetailsModal {
   name: 'moderation-details'
   context: 'account' | 'content'
@@ -222,7 +216,6 @@ export type Modal =
   | AltTextImageModal
   | CropImageModal
   | EditImageModal
-  | ServerInputModal
   | RepostModal
   | SelfLabelModal
   | ThreadgateModal

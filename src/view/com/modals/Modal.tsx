@@ -8,7 +8,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useModals, useModalControls} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
-import * as ServerInputModal from './ServerInput'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
 import * as ThreadgateModal from './Threadgate'
@@ -74,9 +73,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = <EditProfileModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'server-input') {
-    snapPoints = ServerInputModal.snapPoints
-    element = <ServerInputModal.Component {...activeModal} />
   } else if (activeModal?.name === 'report') {
     snapPoints = ReportModal.snapPoints
     element = <ReportModal.Component {...activeModal} />
