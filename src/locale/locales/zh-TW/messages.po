@@ -4509,7 +4509,7 @@ msgstr "你的帳號已刪除"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "你的帳號存放庫，包含所有公開的資料記錄，可以下載為一個「CAR」文件。該文件不包括嵌入的媒體，如圖片，或你的私人資料，目前這些資料必須單獨擷取。"
+msgstr "你可以將你的帳號存放庫下載為一個「CAR」檔案。該檔案包含了所有公開的資料紀錄，但不包括嵌入媒體，例如圖片或你的私人資料，目前這些資料必須另外擷取。
 
 #: src/view/com/auth/create/Step1.tsx:234
 msgid "Your birth date"
