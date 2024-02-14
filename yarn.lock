@@ -8883,7 +8883,7 @@ base-64@0.1.0, base-64@^0.1.0:
   resolved "https://registry.yarnpkg.com/base-64/-/base-64-0.1.0.tgz#780a99c84e7d600260361511c4877613bf24f6bb"
   integrity sha512-Y5gU45svrR5tI2Vt/X9GPd3L0HNIKzGu202EjxrXMpuc2V2CiKgemAbUUsqYmZJvPtCXoUKjNZwBJzsNScUbXA==
 
-base64-js@^1.0.2, base64-js@^1.2.3, base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.0.2, base64-js@^1.2.3, base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -11596,6 +11596,18 @@ expo-asset@~9.0.2:
     invariant "^2.2.4"
     md5-file "^3.2.3"
 
+expo-auth-session@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/expo-auth-session/-/expo-auth-session-5.4.0.tgz#caae0bae4eeae649d320124ba8cd623c40c6cf0a"
+  integrity sha512-ZwjPMsMgCqdMi+vnhDbtjOAF12Y9+y1bYvorn/jQs47aFg6yeIRHycSOM/WL4hpFr+fAxycP3mIJeHVYfF3zuQ==
+  dependencies:
+    expo-application "~5.8.0"
+    expo-constants "~15.4.0"
+    expo-crypto "~12.8.0"
+    expo-linking "~6.2.0"
+    expo-web-browser "~12.8.0"
+    invariant "^2.2.4"
+
 expo-build-properties@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.11.0.tgz#523e242b5db2f26b9fd397dcf2c841824aed348c"
@@ -11624,6 +11636,13 @@ expo-constants@~15.4.3:
   integrity sha512-iOLIB0ckJFSzsH68FoYp9f8FB0CjKViuLnRID+OhiF3IGL1ja9IZdfvtZgkGJ27Az79yThX/9ktlw77+5ejGbA==
   dependencies:
     "@expo/config" "~8.5.0"
+
+expo-crypto@^12.8.0, expo-crypto@~12.8.0:
+  version "12.8.0"
+  resolved "https://registry.yarnpkg.com/expo-crypto/-/expo-crypto-12.8.0.tgz#dc06793bd569401995225cb2f8783e49e3090ed8"
+  integrity sha512-67CoxXz+b4VU1zMo/2kUp+9t6TiVs8HvCvHsW8zoLLAZkVNa3YW1l0arLtQ4oR4HQpEr1i9rAZhP0/mvo+fg5A==
+  dependencies:
+    base64-js "^1.3.0"
 
 expo-dev-client@~3.3.5:
   version "3.3.5"
@@ -11724,6 +11743,14 @@ expo-keep-awake@~12.8.1:
   version "12.8.1"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-12.8.1.tgz#3c8df9d86c265741b5e7bdd36965aa0c6fc17df0"
   integrity sha512-P/VZFV02Rzgj13skMwH+ceGOGZSEdaUu5n7pCS3wThh2LppZjPJ7sBxUwyzeLa3DXEVUtwLZi+BiQ91wPwy9Gg==
+
+expo-linking@~6.2.0:
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/expo-linking/-/expo-linking-6.2.2.tgz#b7e148068ae49fd9ad814428c16fdf7a236e8aca"
+  integrity sha512-FEe6lP4f7xFT/vjoHRG+tt6EPVtkEGaWNK1smpaUevmNdyCJKqW0PDB8o8sfG6y7fly8ULe8qg3HhKh5J7aqUQ==
+  dependencies:
+    expo-constants "~15.4.3"
+    invariant "^2.2.4"
 
 expo-localization@~14.8.2:
   version "14.8.2"
@@ -11846,6 +11873,14 @@ expo-updates@~0.24.7:
     expo-updates-interface "~0.15.1"
     fbemitter "^3.0.0"
     resolve-from "^5.0.0"
+
+expo-web-browser@~12.8.0:
+  version "12.8.2"
+  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-12.8.2.tgz#f34fb85c80031e0dddd4f9b9efd03cb60333b089"
+  integrity sha512-Mw8WoFMSADecNjtC4PZVsVj1/lYdxIAH1jOVV+F8v8SEWYxORWofoShfXg7oUxRLu0iUG8JETfO5y4m8+fOgdg==
+  dependencies:
+    compare-urls "^2.0.0"
+    url "^0.11.0"
 
 expo-web-browser@~12.8.1:
   version "12.8.1"
