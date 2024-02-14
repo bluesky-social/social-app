@@ -103,7 +103,7 @@ export function ProfileFeedScreen(props: Props) {
             <Button
               type="default"
               accessibilityLabel={_(msg`Go Back`)}
-              accessibilityHint="Return to previous page"
+              accessibilityHint={_(msg`Return to previous page`)}
               onPress={onPressBack}
               style={{flexShrink: 1}}>
               <Text type="button" style={pal.text}>

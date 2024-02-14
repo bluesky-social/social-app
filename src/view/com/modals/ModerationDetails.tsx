@@ -115,7 +115,7 @@ export function Component({
           closeModal()
         }}>
         <Text type="button-lg" style={[pal.textLight, s.textCenter, s.white]}>
-          Okay
+          <Trans>Okay</Trans>
         </Text>
       </Button>
     </View>

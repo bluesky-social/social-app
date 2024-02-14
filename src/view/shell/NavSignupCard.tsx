@@ -58,7 +58,7 @@ let NavSignupCard = ({}: {}): React.ReactNode => {
           accessibilityHint={_(msg`Sign in`)}
           accessibilityLabel={_(msg`Sign in`)}>
           <Text type="md" style={[pal.text, s.bold]}>
-            Sign in
+            <Trans>Sign in</Trans>
           </Text>
         </Button>
       </View>

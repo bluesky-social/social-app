@@ -100,7 +100,7 @@ export function Component({
           onPress={doSetAs(AspectRatio.Wide)}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Wide`)}
-          accessibilityHint="Sets image aspect ratio to wide">
+          accessibilityHint={_(msg`Sets image aspect ratio to wide`)}>
           <RectWideIcon
             size={24}
             style={as === AspectRatio.Wide ? s.blue3 : pal.text}
@@ -110,7 +110,7 @@ export function Component({
           onPress={doSetAs(AspectRatio.Tall)}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Tall`)}
-          accessibilityHint="Sets image aspect ratio to tall">
+          accessibilityHint={_(msg`Sets image aspect ratio to tall`)}>
           <RectTallIcon
             size={24}
             style={as === AspectRatio.Tall ? s.blue3 : pal.text}
@@ -120,7 +120,7 @@ export function Component({
           onPress={doSetAs(AspectRatio.Square)}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Square`)}
-          accessibilityHint="Sets image aspect ratio to square">
+          accessibilityHint={_(msg`Sets image aspect ratio to square`)}>
           <SquareIcon
             size={24}
             style={as === AspectRatio.Square ? s.blue3 : pal.text}
@@ -132,9 +132,9 @@ export function Component({
           onPress={onPressCancel}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Cancel image crop`)}
-          accessibilityHint="Exits image cropping process">
+          accessibilityHint={_(msg`Exits image cropping process`)}>
           <Text type="xl" style={pal.link}>
-            Cancel
+            <Trans>Cancel</Trans>
           </Text>
         </TouchableOpacity>
         <View style={s.flex1} />
@@ -142,7 +142,7 @@ export function Component({
           onPress={onPressDone}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Save image crop`)}
-          accessibilityHint="Saves image crop settings">
+          accessibilityHint={_(msg`Saves image crop settings`)}>
           <LinearGradient
             colors={[gradients.blueLight.start, gradients.blueLight.end]}
             start={{x: 0, y: 0}}

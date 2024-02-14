@@ -173,7 +173,7 @@ export function Component({}: {}) {
             </Text>
             <TextInput
               style={[styles.textInput, pal.borderDark, pal.text, styles.mb20]}
-              placeholder="Confirmation code"
+              placeholder={_(msg`Confirmation code`)}
               placeholderTextColor={pal.textLight.color}
               keyboardAppearance={theme.colorScheme}
               value={confirmCode}
@@ -192,7 +192,7 @@ export function Component({}: {}) {
             </Text>
             <TextInput
               style={[styles.textInput, pal.borderDark, pal.text]}
-              placeholder="Password"
+              placeholder={_(msg`Password`)}
               placeholderTextColor={pal.textLight.color}
               keyboardAppearance={theme.colorScheme}
               secureTextEntry
@@ -228,7 +228,7 @@ export function Component({}: {}) {
                   onPress={onCancel}
                   accessibilityRole="button"
                   accessibilityLabel={_(msg`Cancel account deletion`)}
-                  accessibilityHint="Exits account deletion process"
+                  accessibilityHint={_(msg`Exits account deletion process`)}
                   onAccessibilityEscape={onCancel}>
                   <Text type="button-lg" style={pal.textLight}>
                     <Trans context="action">Cancel</Trans>

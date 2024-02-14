@@ -531,8 +531,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openHomeFeedPreferences}
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens the home feed preferences`)}>
+          accessibilityLabel={_(msg`Home feed preferences`)}
+          accessibilityHint={_(msg`Opens the home feed preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="sliders"
@@ -552,8 +552,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openThreadsPreferences}
           accessibilityRole="button"
-          accessibilityHint=""
-          accessibilityLabel={_(msg`Opens the threads preferences`)}>
+          accessibilityLabel={_(msg`Thread preferences`)}
+          accessibilityHint={_(msg`Opens the threads preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon={['far', 'comments']}
@@ -572,8 +572,8 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          accessibilityHint="My Saved Feeds"
-          accessibilityLabel={_(msg`Opens screen with all saved feeds`)}
+          accessibilityLabel={_(msg`My saved feeds`)}
+          accessibilityHint={_(msg`Opens screen with all saved feeds`)}
           onPress={onPressSavedFeeds}>
           <View style={[styles.iconContainer, pal.btn]}>
             <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
@@ -730,7 +730,9 @@ export function SettingsScreen({}: Props) {
           onPress={() => openModal({name: 'change-password'})}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
-          accessibilityHint={_(msg`Change your Bluesky password`)}>
+          accessibilityHint={_(
+            msg`Opens modal for change your Bluesky password`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
@@ -752,7 +754,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Export my data`)}
           accessibilityHint={_(
-            msg`Download Bluesky account data (repository)`,
+            msg`Opens modal for download Bluesky account data (repository)`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
@@ -789,8 +791,8 @@ export function SettingsScreen({}: Props) {
           style={[pal.view, styles.linkCardNoIcon]}
           onPress={onPressSystemLog}
           accessibilityRole="button"
-          accessibilityHint="Open system log"
-          accessibilityLabel={_(msg`Opens the system log page`)}>
+          accessibilityLabel={_(msg`Open system log`)}
+          accessibilityHint={_(msg`Opens the system log page`)}>
           <Text type="lg" style={pal.text}>
             <Trans>System log</Trans>
           </Text>
@@ -811,7 +813,7 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetPreferences}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset preferences`)}
+              accessibilityLabel={_(msg`Reset preferences state`)}
               accessibilityHint={_(msg`Resets the preferences state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset preferences state</Trans>
@@ -821,7 +823,7 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset onboarding`)}
+              accessibilityLabel={_(msg`Reset onboarding state`)}
               accessibilityHint={_(msg`Resets the onboarding state`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Reset onboarding state</Trans>
@@ -832,7 +834,7 @@ export function SettingsScreen({}: Props) {
               onPress={clearAllLegacyStorage}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clear all legacy storage data`)}>
+              accessibilityHint={_(msg`Clears all legacy storage data`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>
                   Clear all legacy storage data (restart after this)
@@ -844,7 +846,7 @@ export function SettingsScreen({}: Props) {
               onPress={clearAllStorage}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear all storage data`)}
-              accessibilityHint={_(msg`Clear all storage data`)}>
+              accessibilityHint={_(msg`Clears all storage data`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Clear all storage data (restart after this)</Trans>
               </Text>
@@ -933,7 +935,7 @@ function EmailConfirmationNotice() {
             ]}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Verify my email`)}
-            accessibilityHint=""
+            accessibilityHint={_(msg`Opens modal for email verification`)}
             onPress={() => openModal({name: 'verify-email'})}>
             <FontAwesomeIcon
               icon="envelope"

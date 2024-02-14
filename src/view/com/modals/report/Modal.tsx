@@ -41,6 +41,7 @@ type ReportComponentProps =
 export function Component(content: ReportComponentProps) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
   const [showDetailsInput, setShowDetailsInput] = useState(false)
@@ -77,7 +78,9 @@ export function Component(content: ReportComponentProps) {
         },
         reason: details,
       })
-      Toast.show("Thank you for your report! We'll look into it promptly.")
+      Toast.show(
+        _(msg`Thank you for your report! We'll look into it promptly.`),
+      )
 
       closeModal()
       return
@@ -189,7 +192,7 @@ const SelectIssue = ({
             onPress={goToDetails}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Add details`)}
-            accessibilityHint="Add more details to your report">
+            accessibilityHint={_(msg`Add more details to your report`)}>
             <Text style={[s.f18, pal.link]}>
               <Trans>Add details to report</Trans>
             </Text>

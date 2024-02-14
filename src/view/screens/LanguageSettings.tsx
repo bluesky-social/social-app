@@ -97,7 +97,7 @@ export function LanguageSettingsScreen(_props: Props) {
           <Text style={[pal.text, s.pb10]}>
             <Trans>
               Select your app language for the default text to display in the
-              app
+              app.
             </Trans>
           </Text>
 

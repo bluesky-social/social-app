@@ -180,7 +180,7 @@ export function Component() {
                 <TextInput
                   testID="codeInput"
                   style={[pal.text, styles.textInput]}
-                  placeholder="Reset code"
+                  placeholder={_(msg`Reset code`)}
                   placeholderTextColor={pal.colors.textLight}
                   value={resetCode}
                   onChangeText={setResetCode}
@@ -207,7 +207,7 @@ export function Component() {
                 <TextInput
                   testID="codeInput"
                   style={[pal.text, styles.textInput]}
-                  placeholder="New password"
+                  placeholder={_(msg`New password`)}
                   placeholderTextColor={pal.colors.textLight}
                   onChangeText={setNewPassword}
                   secureTextEntry

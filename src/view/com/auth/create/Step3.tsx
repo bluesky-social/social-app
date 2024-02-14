@@ -30,7 +30,7 @@ export function Step3({
         <TextInput
           testID="handleInput"
           icon="at"
-          placeholder="e.g. alice"
+          placeholder={_(msg`e.g. alice`)}
           value={uiState.handle}
           editable
           autoFocus

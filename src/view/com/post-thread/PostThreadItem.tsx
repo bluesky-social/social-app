@@ -296,7 +296,7 @@ let PostThreadItemLoaded = ({
                       color={pal.colors.textLight}
                     />
                     <Text type="sm-medium" style={pal.textLight}>
-                      Muted
+                      <Trans>Muted</Trans>
                     </Text>
                   </View>
                 )}
@@ -578,7 +578,7 @@ let PostThreadItemLoaded = ({
                 title={itemTitle}
                 noFeedback>
                 <Text type="sm-medium" style={pal.textLight}>
-                  More
+                  <Trans>More</Trans>
                 </Text>
                 <FontAwesomeIcon
                   icon="angle-right"
