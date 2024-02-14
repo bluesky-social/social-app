@@ -438,7 +438,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky 是一個開放的網路，你可以挑選你的托管服務提供商。現在，開發者也可以參與自訂托管服務的測試版本。"
+msgstr "Bluesky 是一個開放的網路，你可以自行挑選託管服務提供商。現在，開發者也可以參與自訂託管服務的測試版本。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
