@@ -10,7 +10,7 @@ import {
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
@@ -31,6 +31,8 @@ import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openCropper, openPicker} from 'lib/media/picker'
 import {Emoji, EmojiName, emojiItems, emojiNames} from './types'
 import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
+import ViewShot from 'react-native-view-shot'
+import {PlaceholderCanvas} from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 
 interface Avatar {
   image?: {
@@ -53,6 +55,8 @@ export const useSetAvatar = () => React.useContext(SetAvatarContext)
 
 export function StepProfile() {
   const {_} = useLingui()
+  const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
@@ -72,42 +76,46 @@ export function StepProfile() {
   return (
     <SetAvatarContext.Provider value={setAvatar}>
       <AvatarContext.Provider value={avatar}>
-        <View style={[a.align_start]}>
-          <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
+        <>
+          <View style={[a.align_start, t.atoms.bg]}>
+            <View style={[gtMobile ? a.px_5xl : a.px_xl]}>
+              <IconCircle icon={StreamingLive} style={[a.mb_2xl]} />
 
-          <Title>
-            <Trans>Set your profile picture</Trans>
-          </Title>
-          <Description>
-            <Trans>
-              Help people know you're not a bot by uploading a picture or
-              creating an avatar!
-            </Trans>
-          </Description>
-
-          <View style={[a.w_full, a.pt_5xl]}>
-            <View style={[a.align_center, a.pb_5xl]}>
-              <AvatarCircle />
+              <Title>
+                <Trans>Set your profile picture</Trans>
+              </Title>
+              <Description>
+                <Trans>
+                  Help people know you're not a bot by uploading a picture or
+                  creating an avatar!
+                </Trans>
+              </Description>
             </View>
-            <Items type="emojis" />
-            <Items type="colors" />
-          </View>
+            <View style={[a.w_full, a.pt_5xl]}>
+              <View style={[a.align_center, a.pb_5xl]}>
+                <AvatarCircle />
+              </View>
+              <Items type="emojis" />
+              <Items type="colors" />
+            </View>
 
-          <OnboardingControls.Portal>
-            <Button
-              key={state.activeStep} // remove focus state on nav
-              variant="gradient"
-              color="gradient_sky"
-              size="large"
-              label={_(msg`Continue to next step`)}
-              onPress={onContinue}>
-              <ButtonText>
-                <Trans>Continue</Trans>
-              </ButtonText>
-              <ButtonIcon icon={ChevronRight} position="right" />
-            </Button>
-          </OnboardingControls.Portal>
-        </View>
+            <OnboardingControls.Portal>
+              <Button
+                key={state.activeStep} // remove focus state on nav
+                variant="gradient"
+                color="gradient_sky"
+                size="large"
+                label={_(msg`Continue to next step`)}
+                onPress={onContinue}>
+                <ButtonText>
+                  <Trans>Continue</Trans>
+                </ButtonText>
+                <ButtonIcon icon={ChevronRight} position="right" />
+              </Button>
+            </OnboardingControls.Portal>
+          </View>
+          <PlaceholderCanvas />
+        </>
       </AvatarContext.Provider>
     </SetAvatarContext.Provider>
   )
