@@ -825,7 +825,7 @@ const styles = StyleSheet.create({
   headerSearchInput: {
     flex: 1,
     fontSize: 17,
-    minWidth: 0,
+    minWidth: 0, // overflow mitigation for firefox
   },
   headerCancelBtn: {
     paddingLeft: 10,
