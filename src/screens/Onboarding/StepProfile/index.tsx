@@ -30,7 +30,14 @@ import {
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
-import {Emoji, EmojiName, emojiItems, emojiNames} from './types'
+import {
+  Emoji,
+  EmojiName,
+  emojiItems,
+  emojiNames,
+  AvatarColor,
+  avatarColors,
+} from './types'
 import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
 import {
   PlaceholderCanvas,
@@ -46,7 +53,7 @@ interface Avatar {
     width: number
     height: number
   }
-  backgroundColor: Color
+  backgroundColor: AvatarColor
   placeholder: Emoji
 }
 
@@ -65,7 +72,7 @@ export function StepProfile() {
   const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
     placeholder: emojiItems.at,
-    backgroundColor: '#338388',
+    backgroundColor: avatarColors[1],
   })
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
@@ -201,17 +208,7 @@ function AvatarCircle() {
   )
 }
 
-const colors = [
-  '#338388',
-  '#4ABFBD',
-  '#8AB17D',
-  '#E9C46A',
-  '#F4A261',
-  '#E76F51',
-] as const
-type Color = (typeof colors)[number]
-
-function ColorItem({color}: {color: Color}) {
+function ColorItem({color}: {color: AvatarColor}) {
   const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
@@ -239,7 +236,7 @@ function ColorItem({color}: {color: Color}) {
     />
   )
 }
-function colorRenderItem({item}: ListRenderItemInfo<Color>) {
+function colorRenderItem({item}: ListRenderItemInfo<AvatarColor>) {
   return <ColorItem color={item} />
 }
 
@@ -331,7 +328,7 @@ function Items({type}: {type: 'emojis' | 'colors'}) {
         </Pressable>
       )}
       <FlatList
-        data={type === 'colors' ? colors : emojiNames}
+        data={type === 'colors' ? avatarColors : emojiNames}
         renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
         ref={ref}
         onLayout={onLayout}

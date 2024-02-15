@@ -147,3 +147,14 @@ export const emojiItems: Record<EmojiName, Emoji> = {
     component: Poop,
   },
 }
+
+export const avatarColors = [
+  'hsl(168,76%,42%)',
+  'hsl(204,70%,53%)',
+  'hsl(282,38%,53%)',
+  'hsl(28,80%,52%)',
+  'hsl(5,79%,57%)',
+  'hsl(314,79%,57%)',
+  'hsl(41,79%,57%)',
+] as const
+export type AvatarColor = (typeof avatarColors)[number]
