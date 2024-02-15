@@ -695,7 +695,9 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
-          accessibilityHint={_(msg`Opens modal for choosing or creating a new Bluesky username`)}>
+          accessibilityHint={_(
+            msg`Opens modal for choosing or creating a new Bluesky username`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
