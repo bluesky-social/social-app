@@ -155,7 +155,7 @@ function PostInner({
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
               <FontAwesomeIcon
                 icon="reply"
-                size={9}
+                size={10}
                 style={[pal.textLight, s.mr5]}
               />
               <Text

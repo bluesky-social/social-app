@@ -273,7 +273,7 @@ let FeedItemInner = ({
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
               <FontAwesomeIcon
                 icon="reply"
-                size={9}
+                size={10}
                 style={[
                   {color: pal.colors.textLight} as FontAwesomeIconStyle,
                   s.mr5,
