@@ -4,6 +4,7 @@ import {
   LabelPreference,
   BskyFeedViewPreference,
   ModerationOpts,
+  LabelGroupDefinition,
 } from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
@@ -115,6 +116,26 @@ export function usePreferencesSetContentLabelMutation() {
     {labelGroup: ConfigurableLabelGroup; visibility: LabelPreference}
   >({
     mutationFn: async ({labelGroup, visibility}) => {
+      await getAgent().setContentLabelPref(labelGroup, visibility)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetContentLabelMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      labelGroup,
+      visibility,
+    }: {
+      labelGroup: LabelGroupDefinition['id']
+      visibility: LabelPreference
+    }) => {
       await getAgent().setContentLabelPref(labelGroup, visibility)
       // triggers a refetch
       await queryClient.invalidateQueries({

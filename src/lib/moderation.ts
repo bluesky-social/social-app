@@ -1,4 +1,7 @@
+import React from 'react'
 import {ModerationCause, LABEL_GROUPS, LabelGroupDefinition} from '@atproto/api'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
 
 export function getModerationCauseKey(cause: ModerationCause): string {
   const source =
@@ -26,4 +29,24 @@ export function getLabelGroupsFromLabels(labels: string[]) {
   }
 
   return Array.from(groups)
+}
+
+export function getConfigurableLabelGroups() {
+  return Object.values(LABEL_GROUPS).filter(group => group.configurable)
+}
+
+export function useConfigurableLabelGroups() {
+  return React.useMemo(() => getConfigurableLabelGroups(), [])
+}
+
+export function getModerationServiceTitle({
+  displayName,
+  handle,
+}: {
+  displayName?: string
+  handle: string
+}) {
+  return displayName
+    ? sanitizeDisplayName(displayName)
+    : sanitizeHandle(handle, '@')
 }

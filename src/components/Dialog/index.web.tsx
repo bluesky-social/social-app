@@ -10,6 +10,8 @@ import {Portal} from '#/components/Portal'
 
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
+import {Button, ButtonIcon} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -171,25 +173,28 @@ export function Handle() {
   return null
 }
 
-/**
- * TODO(eric) unused rn
- */
-// export function Close() {
-//   const {_} = useLingui()
-//   const t = useTheme()
-//   const {close} = useDialogContext()
-//   return (
-//     <View
-//       style={[
-//         a.absolute,
-//         a.z_10,
-//         {
-//           top: a.pt_lg.paddingTop,
-//           right: a.pr_lg.paddingRight,
-//         },
-//       ]}>
-//       <Button onPress={close} label={_(msg`Close active dialog`)}>
-//       </Button>
-//     </View>
-//   )
-// }
+export function Close() {
+  const {_} = useLingui()
+  const {close} = React.useContext(Context)
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.z_10,
+        {
+          top: a.pt_md.paddingTop,
+          right: a.pr_md.paddingRight,
+        },
+      ]}>
+      <Button
+        size="small"
+        variant="ghost"
+        color="primary"
+        shape="round"
+        onPress={close}
+        label={_(msg`Close active dialog`)}>
+        <ButtonIcon icon={X} size="md" />
+      </Button>
+    </View>
+  )
+}
