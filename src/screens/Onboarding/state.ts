@@ -81,9 +81,8 @@ export type ApiResponseMap = {
 export const initialState: OnboardingState = {
   hasPrev: false,
   totalSteps: 8,
-  // activeStep: 'interests', // TODO revert this
-  activeStep: 'profile',
-  activeStepIndex: 7,
+  activeStep: 'interests',
+  activeStepIndex: 1,
 
   interestsStepResults: {
     selectedInterests: [],

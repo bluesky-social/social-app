@@ -1,11 +1,13 @@
 import React from 'react'
-import {atoms as a, useTheme} from '#/alf'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {FlatList, ListRenderItemInfo, Pressable, View} from 'react-native'
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+
+import {atoms as a, useTheme} from '#/alf'
+import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {
   AvatarColor,
   avatarColors,
@@ -13,15 +15,7 @@ import {
   EmojiName,
   emojiNames,
 } from '#/screens/Onboarding/StepProfile/types'
-import {
-  FlatList,
-  FlatListProps,
-  ListRenderItemInfo,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
-import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 const WITH_TIMING_CONFIG = {duration: 150}
 
@@ -31,8 +25,25 @@ function AnimatedCircle({
 }: React.PropsWithChildren<{selected: boolean}>) {
   const t = useTheme()
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const styles = useStyles()
   const size = useSharedValue(selected ? 1.2 : 1)
+
+  const styles = React.useMemo(
+    () => ({
+      imageContainer: [
+        a.rounded_full,
+        a.overflow_hidden,
+        a.align_center,
+        a.justify_center,
+        {height: 150, width: 150, borderWidth: 2},
+      ],
+      paletteContainer: {
+        height: 70,
+        width: 70,
+        margin: isTabletOrDesktop ? 8 : 2,
+      },
+    }),
+    [isTabletOrDesktop],
+  )
 
   React.useEffect(() => {
     if (selected && size.value !== 1.2) {
@@ -125,63 +136,40 @@ function emojiRenderItem({item}: ListRenderItemInfo<EmojiName>) {
 
 export function AvatarCreatorItems({type}: {type: 'emojis' | 'colors'}) {
   const {isTabletOrDesktop} = useWebMediaQueries()
-  const styles = useStyles()
+
+  const styles = React.useMemo(
+    () => ({
+      flatListOuter: isTabletOrDesktop
+        ? {
+            height: 435,
+          }
+        : [a.flex_row, a.align_center, {height: 100}],
+    }),
+    [isTabletOrDesktop],
+  )
 
   return (
-    <View style={styles.flatListOuter}>
-      <FlatList
+    <View
+      style={[
+        styles.flatListOuter,
+        isTabletOrDesktop && type === 'colors' && {width: 125},
+      ]}>
+      <FlatList<any>
         // Changing the value of numColumns on the fly isn't supported, so we want the flatlist to re-render whenever
-        // the size of the screen changes
+        // the size of the screen changes. Should only happen when `isTabletOrDesktop` changes.
         key={isTabletOrDesktop ? 0 : 1}
         data={type === 'colors' ? avatarColors : emojiNames}
         renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
         style={[isTabletOrDesktop && {marginHorizontal: 10}]}
         contentContainerStyle={[
           a.align_center,
-          {height: 100},
-          !isTabletOrDesktop && styles.flatListContainer,
           isTabletOrDesktop && type === 'colors' && a.pr_xs,
+          !isTabletOrDesktop && {paddingHorizontal: 40},
         ]}
         numColumns={isTabletOrDesktop && type === 'emojis' ? 4 : undefined}
         showsHorizontalScrollIndicator={isTabletOrDesktop && type === 'colors'}
         horizontal={!isTabletOrDesktop}
-        {...commonFlatListProps}
       />
     </View>
   )
 }
-
-const useStyles = () => {
-  const {isTabletOrDesktop} = useWebMediaQueries()
-
-  return StyleSheet.create({
-    imageContainer: {
-      borderRadius: 100,
-      height: 150,
-      width: 150,
-      overflow: 'hidden',
-      borderWidth: 2,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    paletteContainer: {
-      height: 70,
-      width: 70,
-      margin: isTabletOrDesktop ? 8 : 2,
-    },
-    flatListOuter: isTabletOrDesktop
-      ? {
-          height: 435,
-        }
-      : {
-          flexDirection: 'row',
-          alignItems: 'center',
-          height: 100,
-        },
-    flatListContainer: {
-      paddingHorizontal: 40,
-    },
-  })
-}
-
-const commonFlatListProps: Partial<FlatListProps<any>> = {}

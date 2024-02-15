@@ -4,26 +4,25 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
-import {useAnalytics} from '#/lib/analytics/analytics'
-
 import {Context} from '#/screens/Onboarding/state'
 import {
   Title,
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {IconCircle} from '#/components/IconCircle'
+import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
+import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
 import {Emoji, emojiItems, AvatarColor, avatarColors} from './types'
 import {
   PlaceholderCanvas,
   PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
+import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {IconCircle} from '#/components/IconCircle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {AvatarCircle} from '#/screens/Onboarding/StepProfile/AvatarCircle'
-import {AvatarCreatorItems} from '#/screens/Onboarding/StepProfile/AvatarCreatorItems'
+import {useAnalytics} from '#/lib/analytics/analytics'
 
 interface Avatar {
   image?: {
@@ -64,7 +63,6 @@ export function StepProfile() {
 
   const onContinue = React.useCallback(async () => {
     let imageUri = avatar?.image?.path
-    let imageMime = avatar?.image?.mime
     if (!imageUri) {
       imageUri = await canvasRef.current?.capture()
     }
@@ -73,7 +71,7 @@ export function StepProfile() {
       dispatch({
         type: 'setProfileStepResults',
         imageUri,
-        imageMime: imageMime ?? 'image/jpeg',
+        imageMime: avatar.image?.mime ?? 'image/jpeg',
       })
     }
 

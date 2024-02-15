@@ -1,21 +1,16 @@
 import React from 'react'
-import {
-  LayoutAnimation,
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  View,
-} from 'react-native'
+import {LayoutAnimation, Pressable, PressableProps, View} from 'react-native'
+import {Image} from 'expo-image'
+import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
+import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
+import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
+
 import {atoms as a, useTheme} from '#/alf'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openPicker} from 'lib/media/picker.shared'
 import {isNative, isWeb} from 'platform/detection'
 import {openCropper} from 'lib/media/picker'
 import {compressIfNeeded} from 'lib/media/manip'
-import {Image} from 'expo-image'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
-import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
 
 export function AvatarBottomButton({...props}: PressableProps) {
   const t = useTheme()
@@ -42,6 +37,25 @@ export function AvatarCircle() {
   const setAvatar = useSetAvatar()
   const Icon = avatar.placeholder.component
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+
+  const styles = React.useMemo(
+    () => ({
+      imageContainer: [
+        a.rounded_full,
+        a.overflow_hidden,
+        a.align_center,
+        a.justify_center,
+        t.atoms.border_contrast_high,
+        {
+          height: 150,
+          width: 150,
+          borderWidth: 2,
+          backgroundColor: avatar.backgroundColor,
+        },
+      ],
+    }),
+    [avatar.backgroundColor, t.atoms.border_contrast_high],
+  )
 
   const onCameraPress = React.useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
@@ -93,7 +107,7 @@ export function AvatarCircle() {
       <View>
         <Image
           source={avatar.image.path}
-          style={[styles.imageContainer, t.atoms.border_contrast_high]}
+          style={styles.imageContainer}
           accessibilityIgnoresInvertColors
         />
         <AvatarBottomButton onPress={onPressRemoveAvatar}>
@@ -105,14 +119,7 @@ export function AvatarCircle() {
 
   return (
     <View>
-      <View
-        style={[
-          styles.imageContainer,
-          t.atoms.border_contrast_high,
-          {
-            backgroundColor: avatar.backgroundColor,
-          },
-        ]}>
+      <View style={styles.imageContainer}>
         <Icon height={85} width={85} style={{color: t.palette.white}} />
       </View>
       <AvatarBottomButton onPress={onCameraPress}>
@@ -121,15 +128,3 @@ export function AvatarCircle() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  imageContainer: {
-    borderRadius: 100,
-    height: 150,
-    width: 150,
-    overflow: 'hidden',
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})

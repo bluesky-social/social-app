@@ -1,7 +1,9 @@
 import React from 'react'
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import ViewShot from 'react-native-view-shot'
-import {StyleSheet, View} from 'react-native'
+import {View} from 'react-native'
+
+import {atoms as a} from '#/alf'
 
 export interface PlaceholderCanvasRef {
   capture: () => Promise<string>
@@ -14,6 +16,18 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
     const avatar = useAvatar()
     const viewshotRef = React.useRef()
     const Icon = avatar.placeholder.component
+
+    const styles = React.useMemo(
+      () => ({
+        container: [a.absolute, {top: -2000}],
+        imageContainer: [
+          a.align_center,
+          a.justify_center,
+          {height: 150 * 5, width: 150 * 5},
+        ],
+      }),
+      [],
+    )
 
     React.useImperativeHandle(ref, () => ({
       // @ts-ignore this library doesn't have types
@@ -43,16 +57,3 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
     )
   },
 )
-
-const styles = StyleSheet.create({
-  container: {
-    top: -2000,
-    position: 'absolute',
-  },
-  imageContainer: {
-    height: 150 * 5,
-    width: 150 * 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
