@@ -5,6 +5,8 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 
+const SIZE_MULTIPLIER = 1.5
+
 export interface PlaceholderCanvasRef {
   capture: () => Promise<string>
 }
@@ -23,7 +25,7 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
         imageContainer: [
           a.align_center,
           a.justify_center,
-          {height: 150 * 5, width: 150 * 5},
+          {height: 150 * SIZE_MULTIPLIER, width: 150 * SIZE_MULTIPLIER},
         ],
       }),
       [],
@@ -42,7 +44,9 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
           options={{
             fileName: 'placeholderAvatar',
             format: 'jpg',
-            quality: 1.0,
+            quality: 0.8,
+            height: 150 * SIZE_MULTIPLIER,
+            width: 150 * SIZE_MULTIPLIER,
           }}>
           <View
             style={[
@@ -50,7 +54,11 @@ export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
               {backgroundColor: avatar.backgroundColor},
             ]}
             collapsable={false}>
-            <Icon height={85 * 5} width={85 * 5} style={{color: 'white'}} />
+            <Icon
+              height={85 * SIZE_MULTIPLIER}
+              width={85 * SIZE_MULTIPLIER}
+              style={{color: 'white'}}
+            />
           </View>
         </ViewShot>
       </View>

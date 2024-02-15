@@ -81,7 +81,6 @@ export function AvatarCircle() {
     image = await compressIfNeeded(image, 1000000)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-
     // If we are on mobile, prefetching the image will load the image into memory before we try and display it,
     // stopping any brief flickers.
     if (isNative) {
