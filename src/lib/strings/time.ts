@@ -8,7 +8,7 @@ export function ago(time: number | string | Date): string {
   const base = new Date()
   const date = time instanceof Date ? time : new Date(time)
 
-  let diffSeconds = Math.floor((base.getTime() - date.getTime()) / 1e3)
+  const diffSeconds = Math.floor((base.getTime() - date.getTime()) / 1e3)
 
   if (diffSeconds < NOW) {
     return `now`
