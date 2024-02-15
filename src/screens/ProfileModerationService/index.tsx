@@ -1,9 +1,10 @@
 import React from 'react'
-import {Dimensions, View} from 'react-native'
+import {View} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {AppBskyModerationDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -45,17 +46,32 @@ import {ErrorState} from '#/screens/ProfileModerationService/ErrorState'
 import {Header} from '#/screens/ProfileModerationService/Header'
 import {PreferenceRow} from '#/screens/ProfileModerationService/PreferenceRow'
 
-// TODO
-const MIN_HEIGHT = Dimensions.get('window').height * 1.5
-// TODO loader default color
-
 export function ProfileModserviceScreen(
   props: NativeStackScreenProps<CommonNavigatorParams, 'ProfileModservice'>,
 ) {
   const t = useTheme()
   const {_} = useLingui()
+  const {height: minHeight} = useSafeAreaFrame()
   const {name: handleOrDid} = props.route.params
-  const {isLoading, error, data: resolvedDid} = useResolveDidQuery(handleOrDid)
+  const {
+    isLoading: isDidResolutionLoading,
+    error: didResolutionError,
+    data: did,
+  } = useResolveDidQuery(handleOrDid)
+  const {
+    isLoading: isPreferencesLoading,
+    error: preferencesError,
+    data: preferences,
+  } = usePreferencesQuery()
+  const {
+    isLoading: isModServiceLoading,
+    error: modServiceError,
+    data: modservice,
+  } = useModServiceInfoQuery({did})
+
+  const isLoading =
+    isDidResolutionLoading || isPreferencesLoading || isModServiceLoading
+  const error = didResolutionError || preferencesError || modServiceError
 
   return (
     <CenteredView>
@@ -65,57 +81,28 @@ export function ProfileModserviceScreen(
           a.border_r,
           t.atoms.border_contrast_low,
           {
-            minHeight: MIN_HEIGHT,
+            minHeight,
           },
         ]}>
         {isLoading ? (
           <View style={[a.w_full, a.align_center]}>
-            <Loader size="xl" fill={t.atoms.text.color} />
+            <Loader size="xl" />
           </View>
-        ) : resolvedDid ? (
-          <ProfileModservicecreenIntermediate modDid={resolvedDid} />
-        ) : (
+        ) : error || !(did && preferences && modservice) ? (
           <ErrorState
             error={
               error?.toString() ||
               _(msg`Something went wrong, please try again.`)
             }
           />
+        ) : (
+          <ProfileModserviceScreenInner
+            preferences={preferences}
+            modservice={modservice}
+          />
         )}
       </View>
     </CenteredView>
-  )
-}
-
-function ProfileModservicecreenIntermediate({modDid}: {modDid: string}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {
-    isLoading: isPreferencesLoading,
-    error: preferencesError,
-    data: preferences,
-  } = usePreferencesQuery()
-  const {
-    isLoading: isModServiceLoading,
-    error: modServiceError,
-    data: info,
-  } = useModServiceInfoQuery({did: modDid})
-
-  const isLoading = isPreferencesLoading || isModServiceLoading
-  const error = preferencesError || modServiceError
-
-  return isLoading ? (
-    <View style={[a.w_full, a.align_center]}>
-      <Loader size="xl" fill={t.atoms.text.color} />
-    </View>
-  ) : preferences && info ? (
-    <ProfileModserviceScreenInner preferences={preferences} modservice={info} />
-  ) : (
-    <ErrorState
-      error={
-        error?.toString() || _(msg`Something went wrong, please try again.`)
-      }
-    />
   )
 }
 
@@ -128,6 +115,7 @@ export function ProfileModserviceScreenInner({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {height: minHeight} = useSafeAreaFrame()
   const pal = usePalette('default')
   const {hasSession} = useSession()
   const {track} = useAnalytics()
@@ -178,7 +166,7 @@ export function ProfileModserviceScreenInner({
     <ScrollView
       scrollEventThrottle={1}
       contentContainerStyle={{
-        minHeight: Dimensions.get('window').height * 1.5,
+        minHeight,
         borderWidth: 0,
         paddingHorizontal: a.px_xl.paddingLeft,
       }}>
