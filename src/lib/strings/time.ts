@@ -24,7 +24,7 @@ export function ago(time: number | string | Date): string {
     date.setHours(0, 0, 0, 0)
     base.setHours(0, 0, 0, 0)
 
-    const normalizedDiff = Math.floor((base.getTime() - date.getTime()) / 1e3)
+    const normalizedDiff = (base.getTime() - date.getTime()) / 1e3
 
     return `${Math.floor(normalizedDiff / DAY)}d`
   } else if (diffSeconds < YEAR) {
