@@ -472,20 +472,20 @@ export function SettingsScreen({}: Props) {
               label={_(msg`System`)}
               left
               onSelect={() => setColorMode('system')}
-              accessibilityHint={_(msg`Set color theme to system setting`)}
+              accessibilityHint={_(msg`Sets color theme to system setting`)}
             />
             <SelectableBtn
               selected={colorMode === 'light'}
               label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
-              accessibilityHint={_(msg`Set color theme to light`)}
+              accessibilityHint={_(msg`Sets color theme to light`)}
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
               label={_(msg`Dark`)}
               right
               onSelect={() => setColorMode('dark')}
-              accessibilityHint={_(msg`Set color theme to dark`)}
+              accessibilityHint={_(msg`Sets color theme to dark`)}
             />
           </View>
         </View>
@@ -504,14 +504,14 @@ export function SettingsScreen({}: Props) {
                   label={_(msg`Dim`)}
                   left
                   onSelect={() => setDarkTheme('dim')}
-                  accessibilityHint={_(msg`Set dark theme to the dim theme`)}
+                  accessibilityHint={_(msg`Sets dark theme to the dim theme`)}
                 />
                 <SelectableBtn
                   selected={darkTheme === 'dark'}
                   label={_(msg`Dark`)}
                   right
                   onSelect={() => setDarkTheme('dark')}
-                  accessibilityHint={_(msg`Set dark theme to the dark theme`)}
+                  accessibilityHint={_(msg`Sets dark theme to the dark theme`)}
                 />
               </View>
             </View>
@@ -572,9 +572,10 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
+          onPress={onPressSavedFeeds}
+          accessibilityRole="button"
           accessibilityLabel={_(msg`My saved feeds`)}
-          accessibilityHint={_(msg`Opens screen with all saved feeds`)}
-          onPress={onPressSavedFeeds}>
+          accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
           </View>
@@ -673,7 +674,7 @@ export function SettingsScreen({}: Props) {
           onPress={onPressAppPasswords}
           accessibilityRole="button"
           accessibilityLabel={_(msg`App password settings`)}
-          accessibilityHint={_(msg`Opens the app password settings page`)}>
+          accessibilityHint={_(msg`Opens the app password settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
@@ -694,7 +695,7 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
-          accessibilityHint={_(msg`Choose a new Bluesky username or create`)}>
+          accessibilityHint={_(msg`Opens modal for choosing or creating a new Bluesky username`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
