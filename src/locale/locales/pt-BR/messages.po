@@ -8,8 +8,8 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-08 19:59\n"
-"Last-Translator: maisondasilva\n"
+"PO-Revision-Date: 2024-02-15 11:00\n"
+"Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -17,27 +17,9 @@ msgstr ""
 msgid "(no email)"
 msgstr "(sem email)"
 
-#: src/view/shell/desktop/RightNav.tsx:168
-#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-#~ msgstr "{0, plural, one {# convite disponível} other {# convites disponíveis}}"
-
 #: src/view/com/profile/ProfileHeader.tsx:592
 msgid "{following} following"
 msgstr "{following} seguindo"
-
-#: src/view/shell/desktop/RightNav.tsx:151
-#~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-#~ msgstr "{invitesAvailable, plural, one {Convites: # disponível} other {Convites: # disponíveis}}"
-
-#: src/view/screens/Settings.tsx:435
-#: src/view/shell/Drawer.tsx:664
-#~ msgid "{invitesAvailable} invite code available"
-#~ msgstr "{invitesAvailable} convite disponível"
-
-#: src/view/screens/Settings.tsx:437
-#: src/view/shell/Drawer.tsx:666
-#~ msgid "{invitesAvailable} invite codes available"
-#~ msgstr "{invitesAvailable} convites disponíveis"
 
 #: src/view/shell/Drawer.tsx:440
 msgid "{numUnreadNotifications} unread"
@@ -214,10 +196,6 @@ msgstr "Conteúdo Adulto"
 msgid "Adult content can only be enabled via the Web at <0/>."
 msgstr "Conteúdo adulto só pode ser habilitado no site: <0/>."
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
-#~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
-#~ msgstr "Conteúdo adulto só pode ser habilitado no site: <0>bsky.app</0>."
-
 #: src/view/screens/Settings/index.tsx:664
 msgid "Advanced"
 msgstr "Avançado"
@@ -284,10 +262,6 @@ msgstr "O nome da Senha de Aplicativo precisa ter no mínimo 4 caracteres."
 #: src/view/screens/Settings/index.tsx:675
 msgid "App password settings"
 msgstr "Configurações de Senha de Aplicativo"
-
-#: src/view/screens/Settings.tsx:650
-#~ msgid "App passwords"
-#~ msgstr "Senhas de aplicativos"
 
 #: src/Navigation.tsx:237
 #: src/view/screens/AppPasswords.tsx:187
@@ -442,7 +416,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr ""
+msgstr "Bluesky é uma rede aberta que permite a escolha do seu provedor de hospedagem. Desenvolvedores já conseguem utilizar a versão beta de hospedagem própria."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
@@ -467,10 +441,6 @@ msgstr "O Bluesky usa convites para criar uma comunidade mais saudável. Se voc�
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "O Bluesky não mostrará seu perfil e publicações para usuários desconectados. Outros aplicativos podem não honrar esta solicitação. Isso não torna a sua conta privada."
 
-#: src/view/com/modals/ServerInput.tsx:78
-#~ msgid "Bluesky.Social"
-#~ msgstr "Bluesky.Social"
-
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
 msgstr "Livros"
@@ -482,10 +452,6 @@ msgstr "Versão {0} {1}"
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
 msgid "Business"
 msgstr "Empresarial"
-
-#: src/view/com/modals/ServerInput.tsx:115
-#~ msgid "Button disabled. Input custom domain to proceed."
-#~ msgstr "Botão desabilitado. Utilize um domínio personalizado para continuar."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:157
 msgid "by —"
@@ -648,10 +614,6 @@ msgstr "Escolha os algoritmos que geram seus feeds customizados."
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
 msgstr "Escolha os algoritmos que fazem sentido para você com os feeds personalizados."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
-#~ msgid "Choose your algorithmic feeds"
-#~ msgstr "Escolha seus feeds algoritmicos"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
@@ -979,7 +941,7 @@ msgstr "Cultura"
 #: src/view/com/auth/server-input/index.tsx:95
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr ""
+msgstr "Customizado"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 msgid "Custom domain"
@@ -992,10 +954,6 @@ msgstr "Feeds customizados feitos pela comunidade te proporcionam novas experiê
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
 msgstr "Configurar mídia de sites externos."
-
-#: src/view/screens/Settings.tsx:687
-#~ msgid "Danger Zone"
-#~ msgstr "Zona Perigosa"
 
 #: src/view/screens/Settings/index.tsx:485
 #: src/view/screens/Settings/index.tsx:511
@@ -1036,10 +994,6 @@ msgstr "Excluir Lista"
 msgid "Delete my account"
 msgstr "Excluir minha conta"
 
-#: src/view/screens/Settings.tsx:706
-#~ msgid "Delete my account…"
-#~ msgstr "Excluir minha conta…"
-
 #: src/view/screens/Settings/index.tsx:784
 msgid "Delete My Account…"
 msgstr "Excluir minha conta…"
@@ -1066,10 +1020,6 @@ msgstr "Post excluído."
 #: src/view/com/modals/EditProfile.tsx:210
 msgid "Description"
 msgstr "Descrição"
-
-#: src/view/screens/Settings.tsx:760
-#~ msgid "Developer Tools"
-#~ msgstr "Ferramentas de Desenvolvedor"
 
 #: src/view/com/composer/Composer.tsx:211
 msgid "Did you want to say anything?"
@@ -1155,12 +1105,12 @@ msgstr "Toque duas vezes para logar"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Download Bluesky account data (repository)"
-msgstr ""
+msgstr "Baixar os dados da minha conta Bluesky (repositório)"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
 msgid "Download CAR file"
-msgstr ""
+msgstr "Baixar arquivo CAR"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:247
 msgid "Drop to add images"
@@ -1399,12 +1349,12 @@ msgstr "Mostrar ou esconder o post a que você está respondendo"
 
 #: src/view/screens/Settings/index.tsx:753
 msgid "Export my data"
-msgstr ""
+msgstr "Exportar meus dados"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:44
 #: src/view/screens/Settings/index.tsx:764
 msgid "Export My Data"
-msgstr ""
+msgstr "Exportar Meus Dados"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
@@ -1473,14 +1423,6 @@ msgstr "Comentários"
 #: src/view/shell/Drawer.tsx:477
 msgid "Feeds"
 msgstr "Feeds"
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-#~ msgid "Feeds are created by users and can give you entirely new experiences."
-#~ msgstr "Feeds são criados por usuários e podem te dar experiências completamente únicas."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
-#~ msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
-#~ msgstr "Feeds são criados por usuários ou organizações. Eles oferecem experiências únicas e podem te sugerir conteúdo usando algoritmos próprios."
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
 msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
@@ -1887,10 +1829,6 @@ msgstr "Post inválido"
 msgid "Invalid username or password"
 msgstr "Credenciais inválidas"
 
-#: src/view/screens/Settings.tsx:411
-#~ msgid "Invite"
-#~ msgstr "Convidar"
-
 #: src/view/com/modals/InviteCodes.tsx:93
 msgid "Invite a Friend"
 msgstr "Convide um Amigo"
@@ -1907,10 +1845,6 @@ msgstr "Convite inválido. Verifique se você o inseriu corretamente e tente nov
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: {0} available"
 msgstr "Convites: {0} disponíveis"
-
-#: src/view/shell/Drawer.tsx:645
-#~ msgid "Invite codes: {invitesAvailable} available"
-#~ msgstr "Convites: {invitesAvailable} disponível"
 
 #: src/view/com/modals/InviteCodes.tsx:169
 msgid "Invite codes: 1 available"
@@ -2124,10 +2058,6 @@ msgstr "Carregar novos posts"
 msgid "Loading..."
 msgstr "Carregando..."
 
-#: src/view/com/modals/ServerInput.tsx:50
-#~ msgid "Local dev server"
-#~ msgstr "Servidor de desenvolvimento local"
-
 #: src/Navigation.tsx:207
 msgid "Log"
 msgstr "Registros"
@@ -2302,7 +2232,7 @@ msgstr "Meus Feeds Salvos"
 
 #: src/view/com/auth/server-input/index.tsx:118
 msgid "my-server.com"
-msgstr ""
+msgstr "meu-servidor.com"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 #: src/view/com/modals/CreateOrEditList.tsx:290
@@ -2592,10 +2522,6 @@ msgstr "Abre lista de seguidores"
 msgid "Opens following list"
 msgstr "Abre lista de seguidos"
 
-#: src/view/screens/Settings.tsx:412
-#~ msgid "Opens invite code list"
-#~ msgstr "Abre lista de convites"
-
 #: src/view/com/modals/InviteCodes.tsx:172
 msgid "Opens list of invite codes"
 msgstr "Abre a lista de códigos de convite"
@@ -2655,10 +2581,6 @@ msgstr "Ou combine estas opções:"
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
 msgstr "Outra conta"
-
-#: src/view/com/modals/ServerInput.tsx:88
-#~ msgid "Other service"
-#~ msgstr "Outro serviço"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:91
 msgid "Other..."
@@ -2782,11 +2704,6 @@ msgstr "Por favor, digite sua senha também:"
 #: src/view/com/modals/AppealLabel.tsx:75
 msgid "Please tell us why you think this content warning was incorrectly applied!"
 msgstr "Por favor, diga-nos por que você acha que este aviso de conteúdo foi aplicado incorretamente!"
-
-#: src/view/com/modals/AppealLabel.tsx:72
-#: src/view/com/modals/AppealLabel.tsx:75
-#~ msgid "Please tell us why you think this decision was incorrect."
-#~ msgstr "Por favor, conte-nos por que achou que esta decisão está incorreta."
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
@@ -3282,10 +3199,6 @@ msgstr "Veja o que vem por aí"
 msgid "Select {item}"
 msgstr "Selecionar {item}"
 
-#: src/view/com/modals/ServerInput.tsx:75
-#~ msgid "Select Bluesky Social"
-#~ msgstr "Selecionar Bluesky Social"
-
 #: src/view/com/auth/login/Login.tsx:117
 msgid "Select from an existing account"
 msgstr "Selecionar de uma conta existente"
@@ -3305,11 +3218,7 @@ msgstr "Selecione algumas contas para seguir"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
-msgstr ""
-
-#: src/screens/Onboarding/StepModeration/index.tsx:49
-#~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
-#~ msgstr "Selecione os tipos de conteúdo que você quer (ou não) ver, e cuidaremos do resto."
+msgstr "Selecione o serviço que hospeda seus dados."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:90
 msgid "Select topical feeds to follow from the list below"
@@ -3376,7 +3285,7 @@ msgstr "Envia o e-mail com o código de confirmação para excluir a conta"
 
 #: src/view/com/auth/server-input/index.tsx:110
 msgid "Server address"
-msgstr ""
+msgstr "URL do servidor"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:311
 msgid "Set {value} for {labelGroup} content moderation policy"
@@ -3670,10 +3579,6 @@ msgstr "Verificação por SMS"
 msgid "Software Dev"
 msgstr "Desenvolvimento de software"
 
-#: src/view/com/modals/ProfilePreview.tsx:62
-#~ msgid "Something went wrong and we're not sure what."
-#~ msgstr "Algo deu errado e meio que não sabemos o que houve."
-
 #: src/view/com/modals/Waitlist.tsx:51
 msgid "Something went wrong. Check your email and try again."
 msgstr "Algo deu errado. Verifique seu e-mail e tente novamente."
@@ -3697,10 +3602,6 @@ msgstr "Esportes"
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
 msgstr "Quadrado"
-
-#: src/view/com/modals/ServerInput.tsx:62
-#~ msgid "Staging"
-#~ msgstr "Staging"
 
 #: src/view/screens/Settings/index.tsx:871
 msgid "Status page"
@@ -3753,10 +3654,6 @@ msgstr "Sugestivo"
 #: src/view/screens/Support.tsx:33
 msgid "Support"
 msgstr "Suporte"
-
-#: src/view/com/modals/ProfilePreview.tsx:110
-#~ msgid "Swipe up to see more"
-#~ msgstr "Deslize para cima para ver mais"
 
 #: src/view/com/modals/SwitchAccount.tsx:117
 msgid "Switch Account"
@@ -3954,7 +3851,7 @@ msgstr "Este conteúdo não é visível sem uma conta do Bluesky."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr ""
+msgstr "Esta funcionalidade está em beta. Você pode ler mais sobre exportação de repositórios <0>neste post.</0>"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -4005,10 +3902,6 @@ msgstr "Este usuário está incluído na lista <0/>, que você bloqueou."
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
 msgstr "Este usuário está incluído na lista <0/>, que você silenciou."
-
-#: src/view/com/modals/ModerationDetails.tsx:74
-#~ msgid "This user is included the <0/> list which you have muted."
-#~ msgstr "Este usuário está incluído na lista <0/>, que você silenciou."
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -4169,10 +4062,6 @@ msgstr "Usar o meu navegador padrão"
 msgid "Use this to sign into the other app along with your handle."
 msgstr "Use esta senha para entrar no outro aplicativo juntamente com seu identificador."
 
-#: src/view/com/modals/ServerInput.tsx:105
-#~ msgid "Use your domain as your Bluesky client service provider"
-#~ msgstr "Use seu domínio como o provedor de serviço do Bluesky"
-
 #: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
 msgstr "Usado por:"
@@ -4311,10 +4200,6 @@ msgstr "Esperamos que você se divirta. Lembre-se, o Bluesky é:"
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "Não temos mais posts de quem você segue. Aqui estão os mais novos de <0/>."
 
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
-#~ msgid "We recommend \"For You\" by Skygaze:"
-#~ msgstr "Recomendamos o \"Para você\", do Skygaze:"
-
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
 msgstr "Recomendamos nosso feed \"Discover\":"
@@ -4412,10 +4297,6 @@ msgstr "XXXXXX"
 msgid "Yes"
 msgstr "Sim"
 
-#: src/screens/Onboarding/StepModeration/index.tsx:46
-#~ msgid "You are in control"
-#~ msgstr "Você está no controle"
-
 #: src/screens/Deactivated.tsx:130
 msgid "You are in line."
 msgstr "Você está na fila."
@@ -4424,10 +4305,6 @@ msgstr "Você está na fila."
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
 msgstr "Você também pode descobrir novos feeds para seguir."
-
-#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
-#~ msgid "You can also try our \"Discover\" algorithm:"
-#~ msgstr "Você também pode tentar nosso algoritmo \"Discover\":"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
@@ -4542,7 +4419,7 @@ msgstr "Sua conta foi excluída"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr ""
+msgstr "O repositório da sua conta, contendo todos os seus dados públicos, pode ser baixado como um arquivo \"CAR\". Este arquivo não inclui imagens ou dados privados, estes devem ser exportados separadamente."
 
 #: src/view/com/auth/create/Step1.tsx:234
 msgid "Your birth date"
@@ -4585,12 +4462,6 @@ msgstr "Seu identificador completo será"
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "Seu usuário completo será <0>@{0}</0>"
-
-#: src/view/screens/Settings.tsx:430
-#: src/view/shell/desktop/RightNav.tsx:137
-#: src/view/shell/Drawer.tsx:660
-#~ msgid "Your invite codes are hidden when logged in using an App Password"
-#~ msgstr "Seus códigos de convite estão ocultos quando conectado com uma Senha do Aplicativo"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
