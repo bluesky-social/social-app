@@ -44,6 +44,7 @@ import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from 'state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 
 export function PostThreadItem({
   post,
@@ -164,8 +165,6 @@ let PostThreadItemLoaded = ({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const {currentAccount} = useSession()
-  const hasEngagement = post.likeCount || post.repostCount
-
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -357,9 +356,16 @@ let PostThreadItemLoaded = ({
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {hasEngagement ? (
+            {post.repostCount !== 0 || post.likeCount !== 0 ? (
+              // Show this section unless we're *sure* it has no engagement.
               <View style={[styles.expandedInfo, pal.border]}>
-                {post.repostCount ? (
+                {post.repostCount == null && post.likeCount == null && (
+                  // If we're still loading and not sure, assume this post has engagement.
+                  // This lets us avoid a layout shift for the common case (embedded post with likes/reposts).
+                  // TODO: embeds should include metrics to avoid us having to guess.
+                  <LoadingPlaceholder width={50} height={20} />
+                )}
+                {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={repostsHref}
@@ -374,10 +380,8 @@ let PostThreadItemLoaded = ({
                       {pluralize(post.repostCount, 'repost')}
                     </Text>
                   </Link>
-                ) : (
-                  <></>
-                )}
-                {post.likeCount ? (
+                ) : null}
+                {post.likeCount != null && post.likeCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={likesHref}
@@ -392,13 +396,9 @@ let PostThreadItemLoaded = ({
                       {pluralize(post.likeCount, 'like')}
                     </Text>
                   </Link>
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </View>
-            ) : (
-              <></>
-            )}
+            ) : null}
             <View style={[s.pl10, s.pr10, s.pb5]}>
               <PostCtrls
                 big
