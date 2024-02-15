@@ -6,7 +6,7 @@ const MONTH = DAY * 28
 const YEAR = DAY * 365
 export function ago(time: number | string | Date): string {
   const base = new Date()
-  const date = time instanceof Date ? time : new Date(time)
+  const date = new Date(time)
 
   const diffSeconds = Math.floor((base.getTime() - date.getTime()) / 1e3)
 
