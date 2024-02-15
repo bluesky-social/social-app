@@ -1,13 +1,14 @@
 import React from 'react'
 import {LayoutAnimation, Pressable, StyleSheet} from 'react-native'
+import {Image} from 'expo-image'
 import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
 import {useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 import {openPicker} from 'lib/media/picker.shared'
 import {openCropper} from 'lib/media/picker'
 import {compressIfNeeded} from 'lib/media/manip'
-import {isWeb} from 'platform/detection'
+import {isNative, isWeb} from 'platform/detection'
 
 export function SelectImageButton() {
   const t = useTheme()
@@ -38,6 +39,13 @@ export function SelectImageButton() {
     image = await compressIfNeeded(image, 1000000)
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
+    // If we are on mobile, prefetching the image will load the image into memory before we try and display it,
+    // stopping any brief flickers.
+    if (isNative) {
+      await Image.prefetch(image.path)
+    }
+
     setAvatar(prev => ({
       ...prev,
       image,
@@ -50,10 +58,11 @@ export function SelectImageButton() {
       style={[
         styles.imageContainer,
         styles.paletteContainer,
+        a.mr_2xl,
         t.atoms.border_contrast_high,
       ]}
       onPress={onCameraPress}>
-      <Camera size="xl" style={[t.atoms.text_contrast_medium]} />
+      <Camera height={35} width={35} style={[t.atoms.text_contrast_medium]} />
     </Pressable>
   )
 }
