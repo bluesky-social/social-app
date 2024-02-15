@@ -7,7 +7,11 @@ import {preferencesQueryKey} from '#/state/queries/preferences'
 
 export const modServiceInfoQueryKey = (did: string) => ['mod-service-info', did]
 export const modServicesInfoQueryKey = (dids: string[]) => [
-  'mod-service-info',
+  'mod-services-info',
+  dids,
+]
+export const modServicesDetailedInfoQueryKey = (dids: string[]) => [
+  'mod-services-detailed-info',
   dids,
 ]
 
@@ -23,7 +27,18 @@ export function useModServiceInfoQuery({did}: {did: string}) {
 
 export function useModServicesInfoQuery({dids}: {dids: string[]}) {
   return useQuery({
+    enabled: !!dids.length,
     queryKey: modServicesInfoQueryKey(dids),
+    queryFn: async () => {
+      const res = await getAgent().app.bsky.moderation.getServices({dids})
+      return res.data.views
+    },
+  })
+}
+
+export function useModServicesDetailedInfoQuery({dids}: {dids: string[]}) {
+  return useQuery({
+    queryKey: modServicesDetailedInfoQueryKey(dids),
     queryFn: async () => {
       const views: AppBskyModerationDefs.ModServiceViewDetailed[] = []
 

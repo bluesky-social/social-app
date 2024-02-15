@@ -149,6 +149,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value: string
   onChangeText: (value: string) => void
   isInvalid?: boolean
+  disabled?: boolean
 }
 
 export function createInput(Component: typeof TextInput) {

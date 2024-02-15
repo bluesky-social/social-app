@@ -23,7 +23,7 @@ import {
   usePreferencesQuery,
   useSetContentLabelMutation,
 } from '#/state/queries/preferences'
-import {useModServicesInfoQuery} from '#/state/queries/modservice'
+import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -79,7 +79,7 @@ function ModerationScreenIntermediate({
     isLoading: isModServicesLoading,
     data: modservices,
     // error: modservicesError,
-  } = useModServicesInfoQuery({
+  } = useModServicesDetailedInfoQuery({
     dids: preferences.moderationOpts.mods.map(m => m.did),
   })
 

@@ -2,7 +2,7 @@ import React from 'react'
 import {View, Dimensions} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {LABEL_GROUPS, LabelGroupDefinition} from '@atproto/api'
+import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme, tokens, native} from '#/alf'
@@ -25,10 +25,16 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import * as Toggle from '#/components/forms/Toggle'
 import {GradientFill} from '#/components/GradientFill'
-import * as TextField from '#/components/forms/TextField'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/view/com/util/Toast'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
+import {
+  getLabelGroupsFromLabels,
+  getModerationServiceTitle,
+  useConfigurableLabelGroups,
+} from '#/lib/moderation'
 
 export type ReportDialogProps =
   | {
@@ -41,7 +47,11 @@ export type ReportDialogProps =
       did: string
     }
 
-function LabelGroupButton({labelGroup}: {labelGroup: string}) {
+function LabelGroupButton({
+  labelGroup,
+}: {
+  labelGroup: LabelGroupDefinition['id']
+}) {
   const t = useTheme()
   const {hovered, focused, pressed} = useButtonContext()
   const labelGroupStrings = useLabelGroupStrings()
@@ -143,22 +153,89 @@ function ModServiceToggle({title}: {title: string}) {
   )
 }
 
+function SubmitViewLoader({
+  children,
+}: {
+  children: (props: {
+    labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
+    labelGroupToModServiceMap: Record<LabelGroupDefinition['id'], string[]>
+  }) => React.ReactNode
+}) {
+  const {
+    isLoading: isPreferencesLoading,
+    error: preferencesError,
+    data: preferences,
+  } = usePreferencesQuery()
+  const {
+    isLoading: isModServicesLoading,
+    data: modservices,
+    error: modservicesError,
+  } = useModServicesDetailedInfoQuery({
+    dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
+  })
+  const labelGroupToModServiceMap = React.useMemo(() => {
+    if (!modservices) return {}
+
+    const groups: Partial<
+      Record<
+        LabelGroupDefinition['id'],
+        AppBskyModerationDefs.ModServiceViewDetailed[]
+      >
+    > = {}
+
+    for (const modservice of modservices) {
+      const labelGroups = getLabelGroupsFromLabels(
+        modservice.policies.labelValues,
+      )
+      for (const group of labelGroups) {
+        const g = (groups[group.id] = groups[group.id] || [])
+        g.push(modservice)
+      }
+    }
+
+    return groups
+  }, [modservices])
+
+  const isLoading = isPreferencesLoading || isModServicesLoading
+  const error = preferencesError || modservicesError
+
+  return isLoading ? (
+    <View style={[{height: 500}]}>
+      <Loader />
+    </View>
+  ) : error || !(preferences && modservices) ? null : ( // TODO
+    children({
+      labelers: modservices,
+      // TODO mismatched types
+      // @ts-ignore
+      labelGroupToModServiceMap,
+    })
+  )
+}
+
 function SubmitView({
   selectedLabelGroup,
   goBack,
   onSubmitComplete,
+  labelGroupToModServiceMap,
 }: {
-  selectedLabelGroup: string
+  selectedLabelGroup: LabelGroupDefinition['id']
   goBack: () => void
   onSubmitComplete: () => void
+  labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
+  labelGroupToModServiceMap: Record<
+    LabelGroupDefinition['id'],
+    AppBskyModerationDefs.ModServiceViewDetailed[]
+  >
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const labelGroupStrings = useLabelGroupStrings()
   const groupInfoStrings = labelGroupStrings[selectedLabelGroup]
-  const [selectedServices, setSelectedServices] = React.useState<string[]>([])
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
+  const [selectedServices, setSelectedServices] = React.useState<string[]>([])
+  const supportedLabelers = labelGroupToModServiceMap[selectedLabelGroup]
 
   const submit = React.useCallback(async () => {
     setSubmitting(true)
@@ -208,22 +285,35 @@ function SubmitView({
           Select the moderation service(s) to report to
         </Text>
 
-        <Toggle.Group
-          label="Select mod services"
-          values={selectedServices}
-          onChange={setSelectedServices}>
-          <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
-            <Toggle.Item name="bluesky" label="Bluesky">
-              <ModServiceToggle title="Bluesky" />
-            </Toggle.Item>
-            <Toggle.Item name="contraption" label="The Contraption">
-              <ModServiceToggle title="The Contraption" />
-            </Toggle.Item>
-            <Toggle.Item name="safety" label="Safety Corp">
-              <ModServiceToggle title="Safety Corp" />
-            </Toggle.Item>
+        {supportedLabelers ? (
+          <Toggle.Group
+            label="Select mod services"
+            values={selectedServices}
+            onChange={setSelectedServices}>
+            <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
+              {supportedLabelers.map(labeler => {
+                const title = getModerationServiceTitle({
+                  displayName: labeler.creator.displayName,
+                  handle: labeler.creator.handle,
+                })
+                return (
+                  <Toggle.Item
+                    key={labeler.creator.did}
+                    name={labeler.creator.did}
+                    label={title}>
+                    <ModServiceToggle title={title} />
+                  </Toggle.Item>
+                )
+              })}
+            </View>
+          </Toggle.Group>
+        ) : (
+          <View style={[a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
+            <Text style={[a.italic, t.atoms.text_contrast_medium]}>
+              None of your subscribed labelers support this content type.
+            </Text>
           </View>
-        </Toggle.Group>
+        )}
       </View>
       <View style={[a.gap_md]}>
         <Text style={[t.atoms.text_contrast_medium]}>
@@ -231,13 +321,14 @@ function SubmitView({
         </Text>
 
         <View style={[a.relative, a.w_full]}>
-          <TextField.Input
+          <Dialog.Input
             multiline
             value={details}
             onChangeText={setDetails}
             label="Text field"
             style={{paddingRight: 60}}
             numberOfLines={6}
+            disabled={!supportedLabelers}
           />
 
           <View
@@ -260,10 +351,11 @@ function SubmitView({
       <View style={[a.align_end]}>
         <Button
           size="large"
-          variant="gradient"
-          color="gradient_midnight"
+          variant="solid"
+          color="primary"
           label={_(msg`Submit`)}
-          onPress={submit}>
+          onPress={submit}
+          disabled={!supportedLabelers}>
           <ButtonText>Submit</ButtonText>
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
@@ -284,7 +376,9 @@ export function ReportDialog({
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
   const control = Dialog.useDialogControl()
-  const [selectedLabelGroup, setSelectedLabelGroup] = React.useState<string>('')
+  const [selectedLabelGroup, setSelectedLabelGroup] = React.useState<
+    LabelGroupDefinition['id'] | undefined
+  >()
   const labelGroupStrings = useLabelGroupStrings()
 
   // REQUIRED CLEANUP
@@ -305,11 +399,7 @@ export function ReportDialog({
     }
   }, [_, params.type])
 
-  const groups = React.useMemo<
-    [keyof typeof LABEL_GROUPS, LabelGroupDefinition][]
-  >(() => {
-    return Object.entries(LABEL_GROUPS).filter(([, def]) => def.configurable)
-  }, [])
+  const groups = useConfigurableLabelGroups()
 
   return (
     <Dialog.Outer
@@ -325,11 +415,18 @@ export function ReportDialog({
 
       <Dialog.ScrollableInner label="Report Dialog">
         {selectedLabelGroup ? (
-          <SubmitView
-            selectedLabelGroup={selectedLabelGroup}
-            goBack={() => setSelectedLabelGroup('')}
-            onSubmitComplete={control.close}
-          />
+          <SubmitViewLoader>
+            {props => (
+              // TODO same types mismatch
+              // @ts-ignore
+              <SubmitView
+                {...props}
+                selectedLabelGroup={selectedLabelGroup}
+                goBack={() => setSelectedLabelGroup(undefined)}
+                onSubmitComplete={control.close}
+              />
+            )}
+          </SubmitViewLoader>
         ) : (
           <View style={[a.gap_lg]}>
             <View style={[a.justify_center, a.gap_sm]}>
@@ -342,14 +439,14 @@ export function ReportDialog({
             <Divider />
 
             <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
-              {groups.map(([name, def]) => {
-                const groupStrings = labelGroupStrings[name]
+              {groups.map(def => {
+                const groupStrings = labelGroupStrings[def.id]
                 return (
                   <Button
                     key={def.id}
                     label={_(msg`Create report for ${groupStrings.name}`)}
-                    onPress={() => setSelectedLabelGroup(name)}>
-                    <LabelGroupButton labelGroup={name} />
+                    onPress={() => setSelectedLabelGroup(def.id)}>
+                    <LabelGroupButton labelGroup={def.id} />
                   </Button>
                 )
               })}
