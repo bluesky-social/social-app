@@ -87,7 +87,7 @@ export function ScreenHider({
           <>
             <Trans>This {screenDescription} has been flagged:</Trans>
             <Text type="2xl-medium" style={[pal.text, s.ml5]}>
-              {desc.name}.
+              {desc.name}{' '}
             </Text>
             <TouchableWithoutFeedback
               onPress={() => {
@@ -100,7 +100,7 @@ export function ScreenHider({
               accessibilityRole="button"
               accessibilityLabel={_(msg`Learn more about this warning`)}
               accessibilityHint="">
-              <Text type="2xl" style={pal.link}>
+              <Text type="2xl" style={[pal.link, styles.pointer]}>
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>
@@ -176,5 +176,9 @@ const styles = StyleSheet.create({
   btn: {
     paddingHorizontal: 20,
     paddingVertical: 14,
+  },
+  pointer: {
+    // @ts-ignore -web
+    cursor: 'pointer',
   },
 })
