@@ -214,7 +214,11 @@ let PostDropdownBtn = ({
         label: _(msg`Report post`),
         onPress() {
           if (NEW_REPORT_DIALOG_ENABLED) {
-            openDialog(ReportDialog, {type: 'post', uri: postUri, cid: postCid})
+            openDialog(ReportDialog, {
+              type: 'content',
+              uri: postUri,
+              cid: postCid,
+            })
           } else {
             openModal({
               name: 'report',

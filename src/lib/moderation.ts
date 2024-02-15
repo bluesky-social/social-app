@@ -1,5 +1,11 @@
 import React from 'react'
-import {ModerationCause, LABEL_GROUPS, LabelGroupDefinition} from '@atproto/api'
+import {
+  ModerationCause,
+  LABEL_GROUPS,
+  LabelGroupDefinition,
+  AppBskyModerationDefs,
+} from '@atproto/api'
+
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 
@@ -39,6 +45,33 @@ export function useConfigurableLabelGroups() {
   return React.useMemo(() => getConfigurableLabelGroups(), [])
 }
 
+export function useConfigurableContentLabelGroups() {
+  return React.useMemo(() => {
+    const groups = getConfigurableLabelGroups()
+    return groups.filter(group => {
+      return group.labels.every(l => l.targets.includes('content'))
+    })
+  }, [])
+}
+
+export function useConfigurableProfileLabelGroups() {
+  return React.useMemo(() => {
+    const groups = getConfigurableLabelGroups()
+    return groups.filter(group => {
+      return group.labels.every(l => l.targets.includes('profile'))
+    })
+  }, [])
+}
+
+export function useConfigurableAccountLabelGroups() {
+  return React.useMemo(() => {
+    const groups = getConfigurableLabelGroups()
+    return groups.filter(group => {
+      return group.labels.every(l => l.targets.includes('account'))
+    })
+  }, [])
+}
+
 export function getModerationServiceTitle({
   displayName,
   handle,
@@ -49,4 +82,32 @@ export function getModerationServiceTitle({
   return displayName
     ? sanitizeDisplayName(displayName)
     : sanitizeHandle(handle, '@')
+}
+
+export function getLabelGroupToLabelerMap(
+  labelers: AppBskyModerationDefs.ModServiceViewDetailed[],
+) {
+  if (!labelers) return {}
+
+  const groups: Partial<
+    Record<
+      LabelGroupDefinition['id'] | 'other',
+      AppBskyModerationDefs.ModServiceViewDetailed[]
+    >
+  > = {
+    // `other` reports go to all labelers TODO confirm this
+    other: labelers,
+  }
+
+  for (const modservice of labelers) {
+    const labelGroups = getLabelGroupsFromLabels(
+      modservice.policies.labelValues,
+    )
+    for (const group of labelGroups) {
+      const g = (groups[group.id] = groups[group.id] || [])
+      g.push(modservice)
+    }
+  }
+
+  return groups
 }

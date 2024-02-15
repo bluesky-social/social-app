@@ -58,6 +58,9 @@ import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
 import {getModerationServiceTitle} from '#/lib/moderation'
+import {useOpenGlobalDialog} from '#/components/dialogs'
+import {ReportDialog} from '#/components/dialogs/ReportDialog'
+import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 
 import {useTheme} from '#/alf'
 
@@ -119,6 +122,7 @@ let ProfileHeader = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
+  const openDialog = useOpenGlobalDialog()
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -280,11 +284,15 @@ let ProfileHeader = ({
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
-    openModal({
-      name: 'report',
-      did: profile.did,
-    })
-  }, [track, openModal, profile])
+    if (NEW_REPORT_DIALOG_ENABLED) {
+      openDialog(ReportDialog, {type: 'profile', did: profile.did})
+    } else {
+      openModal({
+        name: 'report',
+        did: profile.did,
+      })
+    }
+  }, [track, openModal, profile, openDialog])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,

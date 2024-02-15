@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {useMemo} from 'react'
 
 export type LabelGroupStrings = Record<
-  keyof typeof LABEL_GROUPS,
+  keyof typeof LABEL_GROUPS | 'other',
   {name: string; description: string}
 >
 
@@ -115,6 +115,10 @@ export function useLabelGroupStrings(): LabelGroupStrings {
         description: _(
           msg`Helpful annotations to explain intent, such as satire or parody.`,
         ),
+      },
+      other: {
+        name: _(msg`Other`),
+        description: _(msg`Other content not covered by the other categories.`),
       },
     }),
     [_],

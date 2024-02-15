@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Dimensions} from 'react-native'
+import {View, Dimensions, Linking} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
@@ -31,31 +31,37 @@ import * as Toast from '#/view/com/util/Toast'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
 import {
-  getLabelGroupsFromLabels,
   getModerationServiceTitle,
-  useConfigurableLabelGroups,
+  useConfigurableContentLabelGroups,
+  useConfigurableProfileLabelGroups,
+  getLabelGroupToLabelerMap,
 } from '#/lib/moderation'
+import {DMCA_LINK} from '#/components/dialogs/ReportDialog/const'
+import {Link} from '#/components/Link'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
+// import {getAgent} from '#/state/session'
 
+export type ReportDialogLabelIds = LabelGroupDefinition['id'] | 'other'
 export type ReportDialogProps =
   | {
-      type: 'post'
+      type: 'content'
       uri: string
       cid: string
     }
   | {
-      type: 'user'
+      type: 'profile'
       did: string
     }
 
 function LabelGroupButton({
-  labelGroup,
+  name,
+  description,
 }: {
-  labelGroup: LabelGroupDefinition['id']
+  name: string
+  description: string
 }) {
   const t = useTheme()
   const {hovered, focused, pressed} = useButtonContext()
-  const labelGroupStrings = useLabelGroupStrings()
-  const groupInfoStrings = labelGroupStrings[labelGroup]
   const interacted = hovered || focused || pressed
 
   const styles = React.useMemo(() => {
@@ -80,11 +86,9 @@ function LabelGroupButton({
       ]}>
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-          {groupInfoStrings.name}
+          {name}
         </Text>
-        <Text style={[a.leading_tight, {maxWidth: 400}]}>
-          {groupInfoStrings.description}
-        </Text>
+        <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>
       </View>
 
       <View
@@ -158,7 +162,7 @@ function SubmitViewLoader({
 }: {
   children: (props: {
     labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
-    labelGroupToModServiceMap: Record<LabelGroupDefinition['id'], string[]>
+    labelGroupToModServiceMap: ReturnType<typeof getLabelGroupToLabelerMap>
   }) => React.ReactNode
 }) {
   const {
@@ -175,25 +179,7 @@ function SubmitViewLoader({
   })
   const labelGroupToModServiceMap = React.useMemo(() => {
     if (!modservices) return {}
-
-    const groups: Partial<
-      Record<
-        LabelGroupDefinition['id'],
-        AppBskyModerationDefs.ModServiceViewDetailed[]
-      >
-    > = {}
-
-    for (const modservice of modservices) {
-      const labelGroups = getLabelGroupsFromLabels(
-        modservice.policies.labelValues,
-      )
-      for (const group of labelGroups) {
-        const g = (groups[group.id] = groups[group.id] || [])
-        g.push(modservice)
-      }
-    }
-
-    return groups
+    return getLabelGroupToLabelerMap(modservices)
   }, [modservices])
 
   const isLoading = isPreferencesLoading || isModServicesLoading
@@ -206,27 +192,24 @@ function SubmitViewLoader({
   ) : error || !(preferences && modservices) ? null : ( // TODO
     children({
       labelers: modservices,
-      // TODO mismatched types
-      // @ts-ignore
       labelGroupToModServiceMap,
     })
   )
 }
 
 function SubmitView({
+  params,
   selectedLabelGroup,
   goBack,
   onSubmitComplete,
   labelGroupToModServiceMap,
 }: {
-  selectedLabelGroup: LabelGroupDefinition['id']
+  params: ReportDialogProps
+  selectedLabelGroup: ReportDialogLabelIds
   goBack: () => void
   onSubmitComplete: () => void
   labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
-  labelGroupToModServiceMap: Record<
-    LabelGroupDefinition['id'],
-    AppBskyModerationDefs.ModServiceViewDetailed[]
-  >
+  labelGroupToModServiceMap: ReturnType<typeof getLabelGroupToLabelerMap>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -240,12 +223,28 @@ function SubmitView({
   const submit = React.useCallback(async () => {
     setSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
+
+    const $type =
+      params.type === 'content'
+        ? 'com.atproto.repo.strongRef'
+        : 'com.atproto.admin.defs#repoRef'
+    const report = {
+      reasonType: selectedLabelGroup, // TODO map to reasons
+      subject: {
+        $type,
+        ...params,
+      },
+      reason: details,
+    }
+    console.log(report)
+    // await getAgent().createModerationReport(report)
+
     setSubmitting(false)
 
     Toast.show(`Thank you. Your report has been sent.`)
 
     onSubmitComplete()
-  }, [onSubmitComplete])
+  }, [params, details, selectedLabelGroup, onSubmitComplete])
 
   return (
     <View style={[a.gap_2xl]}>
@@ -364,31 +363,30 @@ function SubmitView({
   )
 }
 
-/**
- * TODO copyright link out to DMCA
- * TODO add "other" option
- */
 export function ReportDialog({
   params,
   cleanup,
 }: GlobalDialogProps<ReportDialogProps>) {
+  // REQUIRED CLEANUP
+  const onClose = React.useCallback(() => cleanup(), [cleanup])
+
   const t = useTheme()
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
   const control = Dialog.useDialogControl()
   const [selectedLabelGroup, setSelectedLabelGroup] = React.useState<
-    LabelGroupDefinition['id'] | undefined
+    ReportDialogLabelIds | undefined
   >()
   const labelGroupStrings = useLabelGroupStrings()
-
-  // REQUIRED CLEANUP
-  const onClose = React.useCallback(() => cleanup(), [cleanup])
+  const contentGroups = useConfigurableContentLabelGroups()
+  const profileGroups = useConfigurableProfileLabelGroups()
+  const groups = params.type === 'content' ? contentGroups : profileGroups
 
   const i18n = React.useMemo(() => {
     let title = _(msg`Report this post`)
     let description = _(msg`Why should this post be reviewed?`)
 
-    if (params.type === 'user') {
+    if (params.type === 'profile') {
       title = _(msg`Report this user`)
       description = _(msg`Why should this user be reviewed?`)
     }
@@ -399,7 +397,16 @@ export function ReportDialog({
     }
   }, [_, params.type])
 
-  const groups = useConfigurableLabelGroups()
+  const next = React.useCallback(
+    (group: ReportDialogLabelIds | 'copyright') => {
+      if (group === 'copyright') {
+        Linking.openURL(DMCA_LINK)
+      } else {
+        setSelectedLabelGroup(group)
+      }
+    },
+    [setSelectedLabelGroup],
+  )
 
   return (
     <Dialog.Outer
@@ -417,10 +424,9 @@ export function ReportDialog({
         {selectedLabelGroup ? (
           <SubmitViewLoader>
             {props => (
-              // TODO same types mismatch
-              // @ts-ignore
               <SubmitView
                 {...props}
+                params={params}
                 selectedLabelGroup={selectedLabelGroup}
                 goBack={() => setSelectedLabelGroup(undefined)}
                 onSubmitComplete={control.close}
@@ -440,16 +446,59 @@ export function ReportDialog({
 
             <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
               {groups.map(def => {
-                const groupStrings = labelGroupStrings[def.id]
+                const strings = labelGroupStrings[def.id]
                 return (
                   <Button
                     key={def.id}
-                    label={_(msg`Create report for ${groupStrings.name}`)}
-                    onPress={() => setSelectedLabelGroup(def.id)}>
-                    <LabelGroupButton labelGroup={def.id} />
+                    label={_(msg`Create report for ${strings.name}`)}
+                    onPress={() => next(def.id)}>
+                    <LabelGroupButton
+                      name={strings.name}
+                      description={strings.description}
+                    />
                   </Button>
                 )
               })}
+
+              <Button
+                label={_(msg`Create report for other reasons`)}
+                onPress={() => next('other')}>
+                <LabelGroupButton
+                  name="Other"
+                  description="An issue not covered by another option"
+                />
+              </Button>
+
+              {params.type === 'content' && (
+                <View style={[a.pt_md, a.px_md]}>
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_between,
+                      a.gap_md,
+                      a.p_md,
+                      a.pl_lg,
+                      a.rounded_md,
+                      t.atoms.bg_contrast_900,
+                    ]}>
+                    <Text style={[t.atoms.text_inverted, a.italic]}>
+                      Need to report a copyright violation?
+                    </Text>
+                    <Link
+                      to={DMCA_LINK}
+                      label={_(
+                        msg`View details for reporting a copyright violation`,
+                      )}
+                      size="small"
+                      variant="solid"
+                      color="secondary">
+                      <ButtonText>View details</ButtonText>
+                      <ButtonIcon position="right" icon={SquareArrowTopRight} />
+                    </Link>
+                  </View>
+                </View>
+              )}
             </View>
           </View>
         )}

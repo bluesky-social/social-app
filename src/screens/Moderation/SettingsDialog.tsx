@@ -24,8 +24,7 @@ function LabelerToggle({
   preferences: UsePreferencesQueryResponse
 }) {
   const t = useTheme()
-  const {mutateAsync, variables, reset} =
-    useModServiceLabelGroupEnableMutation()
+  const {mutateAsync, variables} = useModServiceLabelGroupEnableMutation()
 
   const modservicePreferences = preferences.moderationOpts.mods.find(
     ({did}) => did === labeler.creator.did,
@@ -46,12 +45,11 @@ function LabelerToggle({
         group: labelGroup,
         enabled: !enabled,
       })
-      reset() // Important: clears query `variables`
     } catch (e: any) {
       // TODO
       console.error(e)
     }
-  }, [mutateAsync, enabled, modservicePreferences, labelGroup, reset])
+  }, [mutateAsync, enabled, modservicePreferences, labelGroup])
   return (
     <Toggle.Item
       name={labeler.creator.did}
