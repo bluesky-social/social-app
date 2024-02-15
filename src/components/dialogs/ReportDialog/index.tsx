@@ -31,14 +31,15 @@ import * as Toast from '#/view/com/util/Toast'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
 import {
-  getLabelGroupsFromLabels,
   getModerationServiceTitle,
   useConfigurableContentLabelGroups,
   useConfigurableProfileLabelGroups,
+  getLabelGroupToLabelerMap,
 } from '#/lib/moderation'
 import {DMCA_LINK} from '#/components/dialogs/ReportDialog/const'
 import {Link} from '#/components/Link'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
+// import {getAgent} from '#/state/session'
 
 export type ReportDialogLabelIds = LabelGroupDefinition['id'] | 'other'
 export type ReportDialogProps =
@@ -161,7 +162,7 @@ function SubmitViewLoader({
 }: {
   children: (props: {
     labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
-    labelGroupToModServiceMap: Record<LabelGroupDefinition['id'], string[]>
+    labelGroupToModServiceMap: ReturnType<typeof getLabelGroupToLabelerMap>
   }) => React.ReactNode
 }) {
   const {
@@ -178,28 +179,7 @@ function SubmitViewLoader({
   })
   const labelGroupToModServiceMap = React.useMemo(() => {
     if (!modservices) return {}
-
-    const groups: Partial<
-      Record<
-        ReportDialogLabelIds,
-        AppBskyModerationDefs.ModServiceViewDetailed[]
-      >
-    > = {
-      // report `other` to all labelers
-      other: modservices,
-    }
-
-    for (const modservice of modservices) {
-      const labelGroups = getLabelGroupsFromLabels(
-        modservice.policies.labelValues,
-      )
-      for (const group of labelGroups) {
-        const g = (groups[group.id] = groups[group.id] || [])
-        g.push(modservice)
-      }
-    }
-
-    return groups
+    return getLabelGroupToLabelerMap(modservices)
   }, [modservices])
 
   const isLoading = isPreferencesLoading || isModServicesLoading
@@ -212,27 +192,24 @@ function SubmitViewLoader({
   ) : error || !(preferences && modservices) ? null : ( // TODO
     children({
       labelers: modservices,
-      // TODO mismatched types
-      // @ts-ignore
       labelGroupToModServiceMap,
     })
   )
 }
 
 function SubmitView({
+  params,
   selectedLabelGroup,
   goBack,
   onSubmitComplete,
   labelGroupToModServiceMap,
 }: {
+  params: ReportDialogProps
   selectedLabelGroup: ReportDialogLabelIds
   goBack: () => void
   onSubmitComplete: () => void
   labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
-  labelGroupToModServiceMap: Record<
-    ReportDialogLabelIds,
-    AppBskyModerationDefs.ModServiceViewDetailed[]
-  >
+  labelGroupToModServiceMap: ReturnType<typeof getLabelGroupToLabelerMap>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -246,12 +223,28 @@ function SubmitView({
   const submit = React.useCallback(async () => {
     setSubmitting(true)
     await new Promise(resolve => setTimeout(resolve, 1000))
+
+    const $type =
+      params.type === 'content'
+        ? 'com.atproto.repo.strongRef'
+        : 'com.atproto.admin.defs#repoRef'
+    const report = {
+      reasonType: selectedLabelGroup, // TODO map to reasons
+      subject: {
+        $type,
+        ...params,
+      },
+      reason: details,
+    }
+    console.log(report)
+    // await getAgent().createModerationReport(report)
+
     setSubmitting(false)
 
     Toast.show(`Thank you. Your report has been sent.`)
 
     onSubmitComplete()
-  }, [onSubmitComplete])
+  }, [params, details, selectedLabelGroup, onSubmitComplete])
 
   return (
     <View style={[a.gap_2xl]}>
@@ -431,10 +424,9 @@ export function ReportDialog({
         {selectedLabelGroup ? (
           <SubmitViewLoader>
             {props => (
-              // TODO same types mismatch
-              // @ts-ignore
               <SubmitView
                 {...props}
+                params={params}
                 selectedLabelGroup={selectedLabelGroup}
                 goBack={() => setSelectedLabelGroup(undefined)}
                 onSubmitComplete={control.close}
