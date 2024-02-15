@@ -6,19 +6,18 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
-import {usePalette} from '#/lib/hooks/usePalette'
 import {CommonNavigatorParams} from '#/lib/routes/types'
-import {s} from '#/lib/styles'
-import {TextLink} from '#/view/com/util/Link'
 import * as Toast from '#/view/com/util/Toast'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {Haptics} from '#/lib/haptics'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {pluralize} from '#/lib/strings/helpers'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {makeProfileLink} from '#/lib/routes/links'
 import {logger} from '#/logger'
-import {useModServiceInfoQuery} from '#/state/queries/modservice'
+import {
+  useModServiceInfoQuery,
+  useModServiceEnableMutation,
+} from '#/state/queries/modservice'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {
   UsePreferencesQueryResponse,
@@ -26,7 +25,6 @@ import {
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
-import {sanitizeHandle} from '#/lib/strings/handles'
 
 import {getLabelGroupsFromLabels} from '#/lib/moderation'
 
@@ -41,6 +39,7 @@ import {
 import {RichText} from '#/components/RichText'
 import {InlineLink} from '#/components/Link'
 import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
 
 import {ErrorState} from '#/screens/ProfileModerationService/ErrorState'
 import {Header} from '#/screens/ProfileModerationService/Header'
@@ -116,15 +115,20 @@ export function ProfileModserviceScreenInner({
   const t = useTheme()
   const {_} = useLingui()
   const {height: minHeight} = useSafeAreaFrame()
-  const pal = usePalette('default')
   const {hasSession} = useSession()
   const {track} = useAnalytics()
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
+  const {mutateAsync: toggleEnabled, variables: enabledVariables} =
+    useModServiceEnableMutation()
+
   const [likeUri, setLikeUri] = React.useState<string>(
     modservice.viewer?.like || '',
   )
+  // TODO error state
+  const [_enablementError, setEnablementError] = React.useState<string>('')
+
   const isLiked = !!likeUri
   const groups = React.useMemo(() => {
     return getLabelGroupsFromLabels(modservice.policies.labelValues).filter(
@@ -136,6 +140,12 @@ export function ProfileModserviceScreenInner({
       p => p.did === modservice.creator.did,
     )
   }, [modservice.creator.did, preferences.moderationOpts.mods])
+  const isEnabled = Boolean(
+    enabledVariables?.enabled ??
+      preferences.moderationOpts.mods.find(
+        mod => mod.did === modservice.creator.did && mod.enabled,
+      ),
+  )
 
   useSetTitle(modservice.creator.displayName || modservice.creator.handle)
 
@@ -152,15 +162,27 @@ export function ProfileModserviceScreenInner({
         track('CustomFeed:Like')
         setLikeUri(res.uri)
       }
-    } catch (err) {
+    } catch (e: any) {
       Toast.show(
         _(
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up toggle like', {error: err})
+      logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
   }, [likeUri, isLiked, modservice, likeMod, unlikeMod, track, _])
+
+  const onToggleLabelerEnabled = React.useCallback(async () => {
+    try {
+      await toggleEnabled({
+        did: modservice.creator.did,
+        enabled: !isEnabled,
+      })
+    } catch (e: any) {
+      setEnablementError(e.message)
+      logger.error(`Failed to toggle labeler enabled`, {message: e.message})
+    }
+  }, [toggleEnabled, isEnabled, modservice.creator.did])
 
   return (
     <ScrollView
@@ -194,25 +216,6 @@ export function ProfileModserviceScreenInner({
           </Text>
         )}
 
-        <Text
-          style={[
-            a.text_md,
-            a.leading_normal,
-            a.italic,
-            t.atoms.text_contrast_medium,
-          ]}>
-          <Trans>
-            Operated by{' '}
-            <TextLink
-              href={makeProfileLink(modservice.creator)}
-              text={sanitizeHandle(modservice.creator.handle, '@')}
-              style={pal.link}
-            />
-            . Handles reports of anti-social behavior, illegal content, unwanted
-            sexual content, and misinformation.
-          </Trans>
-        </Text>
-
         <View style={[a.flex_row, a.gap_md, a.align_center]}>
           <Button
             testID="toggleLikeBtn"
@@ -231,7 +234,9 @@ export function ProfileModserviceScreenInner({
           </Button>
 
           {typeof modservice.likeCount === 'number' && (
-            <InlineLink to={'#todo'} style={[pal.textLight, s.semiBold]}>
+            <InlineLink
+              to={'#todo'}
+              style={[t.atoms.text_contrast_medium, a.font_bold]}>
               <Trans>
                 Liked by {modservice.likeCount}{' '}
                 {pluralize(modservice.likeCount, 'user')}
@@ -248,10 +253,44 @@ export function ProfileModserviceScreenInner({
           Configure moderation service
         </Text>
         <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-          This moderation service supports the following types of content.
-          Configure which types of content you'd like to respect from this
-          service.
+          This labeler moderates the following types of content. You can
+          optionally enable or disable the labeler's recommendations for each
+          type of content below.
         </Text>
+      </View>
+
+      <View style={[a.w_full, a.mt_xl]}>
+        <Toggle.Item
+          name="enable"
+          value={isEnabled}
+          onChange={onToggleLabelerEnabled}
+          label={
+            isEnabled
+              ? _(msg`Disable this moderation service`)
+              : _(msg`Enable this moderation service`)
+          }>
+          <View
+            style={[
+              a.w_full,
+              a.flex_row,
+              a.justify_between,
+              a.gap_lg,
+              a.p_md,
+              a.rounded_sm,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <View style={[a.flex_1]}>
+              <Text style={[a.font_bold, a.pb_xs]}>
+                This service is {isEnabled ? 'enabled' : 'disabled'}
+              </Text>
+              <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+                Optionally disable this service without affecting your
+                subscription.
+              </Text>
+            </View>
+            <Toggle.Switch />
+          </View>
+        </Toggle.Item>
       </View>
 
       <View style={[a.gap_md, a.mt_xl]}>
@@ -260,6 +299,7 @@ export function ProfileModserviceScreenInner({
             <React.Fragment key={def.id}>
               {i !== 0 && <Divider />}
               <PreferenceRow
+                disabled={isEnabled ? undefined : true}
                 labelGroup={def.id}
                 modservicePreferences={modservicePreferences}
               />

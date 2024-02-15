@@ -19,11 +19,9 @@ import {
 } from '#/view/com/util/forms/NativeDropdown'
 import {useSession} from '#/state/session'
 import {useModalControls} from '#/state/modals'
-import {
-  useModServiceSubscriptionMutation,
-  useModServiceEnableMutation,
-} from '#/state/queries/modservice'
+import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {logger} from '#/logger'
 
 import {useTheme, atoms as a, tokens, web, native, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -54,16 +52,7 @@ export function Header({
     preferences.moderationOpts.mods.find(
       mod => mod.did === modservice.creator.did,
     )
-  const {mutateAsync: toggleEnabled, variables: enabledVariables} =
-    useModServiceEnableMutation()
-  const isEnabled =
-    enabledVariables?.enabled ??
-    preferences.moderationOpts.mods.find(
-      mod => mod.did === modservice.creator.did && mod.enabled,
-    ) ??
-    variables?.subscribe
   const [subscriptionError, setSubscriptionError] = React.useState<string>('')
-  const [enablementError, setEnablementError] = React.useState<string>('')
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -85,19 +74,9 @@ export function Header({
       })
     } catch (e: any) {
       setSubscriptionError(e.message)
+      logger.error(`Failed to subscribe to labeler`, {message: e.message})
     }
   }, [toggleSubscription, isSubscribed, modservice.creator.did])
-
-  const onPressEnable = React.useCallback(async () => {
-    try {
-      await toggleEnabled({
-        did: modservice.creator.did,
-        enabled: !isEnabled,
-      })
-    } catch (e: any) {
-      setEnablementError(e.message)
-    }
-  }, [toggleEnabled, isEnabled, modservice.creator.did])
 
   return (
     <View style={[a.pb_xl, web(a.pt_md), gtMobile && web(a.pt_2xl)]}>
@@ -179,23 +158,6 @@ export function Header({
 
         {gtMobile && (
           <View style={[a.flex_row, a.align_center, a.gap_md]}>
-            {isSubscribed && (
-              <Button
-                size="small"
-                variant="solid"
-                color="secondary"
-                label={
-                  isEnabled
-                    ? _(msg`Disable this moderation service`)
-                    : _(msg`Enable this moderation service`)
-                }
-                onPress={onPressEnable}>
-                <ButtonText>
-                  {isEnabled ? <Trans>Disable</Trans> : <Trans>Enable</Trans>}
-                </ButtonText>
-              </Button>
-            )}
-
             <Button
               size="small"
               variant="solid"
@@ -220,32 +182,29 @@ export function Header({
         )}
       </View>
 
-      {subscriptionError ||
-        (enablementError && (
-          <View style={[a.pt_lg]}>
-            <View
-              style={[
-                a.px_lg,
-                a.py_md,
-                a.rounded_sm,
-                a.border,
-                a.gap_xs,
-                {
-                  backgroundColor: t.palette.negative_50,
-                  borderColor: t.palette.negative_100,
-                },
-              ]}>
-              <Text style={[a.font_bold, {color: t.palette.negative_950}]}>
-                <Trans>
-                  An error occurred while editing your subscription.
-                </Trans>
-              </Text>
-              <Text style={[{color: t.palette.negative_900}]}>
-                {subscriptionError || enablementError}
-              </Text>
-            </View>
+      {subscriptionError && (
+        <View style={[a.pt_lg]}>
+          <View
+            style={[
+              a.px_lg,
+              a.py_md,
+              a.rounded_sm,
+              a.border,
+              a.gap_xs,
+              {
+                backgroundColor: t.palette.negative_50,
+                borderColor: t.palette.negative_100,
+              },
+            ]}>
+            <Text style={[a.font_bold, {color: t.palette.negative_950}]}>
+              <Trans>An error occurred while editing your subscription.</Trans>
+            </Text>
+            <Text style={[{color: t.palette.negative_900}]}>
+              {subscriptionError || enablementError}
+            </Text>
           </View>
-        ))}
+        </View>
+      )}
     </View>
   )
 }

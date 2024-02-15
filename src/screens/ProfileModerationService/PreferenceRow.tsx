@@ -2,13 +2,13 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-// import {msg} from '@lingui/macro'
 import {LABEL_GROUPS} from '@atproto/api'
 // TODO
 import {ModPrefItem} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 
 import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
 import {useModServiceLabelGroupEnableMutation} from '#/state/queries/modservice'
+import {logger} from '#/logger'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -16,9 +16,11 @@ import * as Toggle from '#/components/forms/Toggle'
 
 export function PreferenceRow({
   labelGroup,
+  disabled,
   modservicePreferences,
 }: {
   labelGroup: keyof typeof LABEL_GROUPS
+  disabled?: boolean
   modservicePreferences?: ModPrefItem
 }) {
   const t = useTheme()
@@ -32,15 +34,19 @@ export function PreferenceRow({
 
   const onToggleEnabled = React.useCallback(async () => {
     try {
+      if (!modservicePreferences)
+        throw new Error(`modservicePreferences not found`)
+
       await mutateAsync({
-        // @ts-ignore TODO
-        did: modservicePreferences?.did,
+        did: modservicePreferences.did,
         group: labelGroup,
         enabled: !enabled,
       })
     } catch (e: any) {
-      // TODO
-      console.error(e)
+      logger.error(`Failed to toggle label group enabled`, {
+        message: e.message,
+        labelGroup,
+      })
     }
   }, [mutateAsync, enabled, modservicePreferences, labelGroup])
 
@@ -62,8 +68,9 @@ export function PreferenceRow({
       <View style={[a.justify_center, {minHeight: 35}]}>
         {modservicePreferences && (
           <Toggle.Item
+            disabled={disabled}
             name="enable"
-            value={enabled}
+            value={disabled ? false : enabled}
             onChange={onToggleEnabled}
             label={_(msg`Enable`)}>
             <Toggle.Label>{enabled ? 'Enabled' : 'Disabled'}</Toggle.Label>
