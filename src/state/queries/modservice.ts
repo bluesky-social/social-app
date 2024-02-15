@@ -82,9 +82,7 @@ export function useModServiceEnableMutation() {
         enabled: z.boolean(),
       }).parse({did, enabled})
       await getAgent().setModServiceEnabled(did, enabled)
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
       })
     },
