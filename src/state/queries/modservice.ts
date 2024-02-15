@@ -15,12 +15,14 @@ export const modServicesDetailedInfoQueryKey = (dids: string[]) => [
   dids,
 ]
 
-export function useModServiceInfoQuery({did}: {did: string}) {
+export function useModServiceInfoQuery({did}: {did?: string}) {
   return useQuery({
     enabled: !!did,
-    queryKey: modServiceInfoQueryKey(did),
+    queryKey: modServiceInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.moderation.getService({did})
+      const res = await getAgent().app.bsky.moderation.getService({
+        did: did as string,
+      })
       return res.data
     },
   })
