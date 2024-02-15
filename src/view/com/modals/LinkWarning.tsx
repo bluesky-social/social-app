@@ -73,7 +73,7 @@ export function Component({text, href}: {text: string; href: string}) {
             type="primary"
             onPress={onPressVisit}
             accessibilityLabel={_(msg`Visit Site`)}
-            accessibilityHint=""
+            accessibilityHint={_(msg`Opens the linked website`)}
             label={_(msg`Visit Site`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
