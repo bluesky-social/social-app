@@ -731,7 +731,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
           accessibilityHint={_(
-            msg`Opens modal for change your Bluesky password`,
+            msg`Opens modal for changing your Bluesky password`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
