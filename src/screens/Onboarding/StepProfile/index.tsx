@@ -64,7 +64,7 @@ export function StepProfile() {
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
-    placeholder: emojiItems.smile,
+    placeholder: emojiItems.at,
     backgroundColor: '#338388',
   })
 
