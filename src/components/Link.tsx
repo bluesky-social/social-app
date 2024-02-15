@@ -171,11 +171,18 @@ export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
  * Intended to behave as a web anchor tag. For more complex routing, use a
  * `Button`.
  */
-export function Link({children, to, action = 'push', ...rest}: LinkProps) {
+export function Link({
+  children,
+  to,
+  action = 'push',
+  onPress: outerOnPress,
+  ...rest
+}: LinkProps) {
   const {href, isExternal, onPress} = useLink({
     to,
     displayText: typeof children === 'string' ? children : '',
     action,
+    onPress: outerOnPress,
   })
 
   return (
@@ -218,6 +225,7 @@ export function InlineLink({
   action = 'push',
   warnOnMismatchingTextChild,
   style,
+  onPress: outerOnPress,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -227,6 +235,7 @@ export function InlineLink({
     displayText: stringChildren ? children : '',
     action,
     warnOnMismatchingTextChild,
+    onPress: outerOnPress,
   })
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {

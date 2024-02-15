@@ -7,6 +7,7 @@ import {Text} from '#/components/Typography'
 import {RichText} from '#/components/RichText'
 import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {sanitizeHandle} from '#/lib/strings/handles'
 
 export function Outer({
   children,
@@ -43,6 +44,22 @@ export function Avatar({avatar}: {avatar?: string}) {
   return <UserAvatar type="list" size={40} avatar={avatar} />
 }
 
+export function Title({value}: {value: string}) {
+  return <Text style={[a.text_md, a.font_bold, a.pb_2xs]}>{value}</Text>
+}
+
+export function Description({value, handle}: {value?: string; handle: string}) {
+  return value ? (
+    <RichText value={value} style={[]} />
+  ) : (
+    <Text>
+      <Trans>
+        Moderation service managed by @{sanitizeHandle(handle, '@')}
+      </Trans>
+    </Text>
+  )
+}
+
 export function Content({
   title,
   description,
@@ -63,7 +80,9 @@ export function Content({
           <RichText value={description} style={[]} />
         ) : (
           <Text>
-            <Trans>Moderation service managed by @{handle}</Trans>
+            <Trans>
+              Moderation service managed by @{sanitizeHandle(handle, '@')}
+            </Trans>
           </Text>
         )}
       </View>
