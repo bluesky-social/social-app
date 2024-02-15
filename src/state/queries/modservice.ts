@@ -1,10 +1,15 @@
 import {z} from 'zod'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {AppBskyModerationDefs} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 
 export const modServiceInfoQueryKey = (did: string) => ['mod-service-info', did]
+export const modServicesInfoQueryKey = (dids: string[]) => [
+  'mod-service-info',
+  dids,
+]
 
 export function useModServiceInfoQuery({did}: {did: string}) {
   return useQuery({
@@ -12,6 +17,31 @@ export function useModServiceInfoQuery({did}: {did: string}) {
     queryFn: async () => {
       const res = await getAgent().app.bsky.moderation.getService({did})
       return res.data
+    },
+  })
+}
+
+export function useModServicesInfoQuery({dids}: {dids: string[]}) {
+  return useQuery({
+    queryKey: modServicesInfoQueryKey(dids),
+    queryFn: async () => {
+      const views: AppBskyModerationDefs.ModServiceViewDetailed[] = []
+
+      await Promise.all(
+        dids.map(did => {
+          return getAgent()
+            .app.bsky.moderation.getService({did})
+            .then(res => {
+              views.push(res.data)
+            })
+            .catch(e => {
+              console.error(e)
+              return null
+            })
+        }),
+      )
+
+      return views
     },
   })
 }
@@ -65,7 +95,15 @@ export function useModServiceLabelGroupEnableMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    async mutationFn({did, group, enabled}: {did: string; group: string, enabled: boolean}) {
+    async mutationFn({
+      did,
+      group,
+      enabled,
+    }: {
+      did: string
+      group: string
+      enabled: boolean
+    }) {
       // TODO
       z.object({
         did: z.string(),

@@ -1,6 +1,10 @@
 import {useMemo} from 'react'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
+import {
+  LabelPreference,
+  BskyFeedViewPreference,
+  LabelGroupDefinition,
+} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
@@ -102,6 +106,26 @@ export function usePreferencesSetContentLabelMutation() {
     {labelGroup: ConfigurableLabelGroup; visibility: LabelPreference}
   >({
     mutationFn: async ({labelGroup, visibility}) => {
+      await getAgent().setContentLabelPref(labelGroup, visibility)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useSetContentLabelMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      labelGroup,
+      visibility,
+    }: {
+      labelGroup: LabelGroupDefinition['id']
+      visibility: LabelPreference
+    }) => {
       await getAgent().setContentLabelPref(labelGroup, visibility)
       // triggers a refetch
       await queryClient.invalidateQueries({

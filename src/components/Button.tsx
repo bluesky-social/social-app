@@ -48,25 +48,30 @@ export type VariantProps = {
   shape?: ButtonShape
 }
 
-export type ButtonProps = React.PropsWithChildren<
-  Pick<PressableProps, 'disabled' | 'onPress' | 'testID'> &
-    AccessibilityProps &
-    VariantProps & {
-      testID?: string
-      label: string
-      style?: StyleProp<ViewStyle>
-    }
->
+export type ButtonState = {
+  hovered: boolean
+  focused: boolean
+  pressed: boolean
+  disabled: boolean
+}
+
+export type ButtonProps = Pick<
+  PressableProps,
+  'disabled' | 'onPress' | 'testID'
+> &
+  AccessibilityProps &
+  VariantProps & {
+    testID?: string
+    label: string
+    style?: StyleProp<ViewStyle>
+    children:
+      | React.ReactNode
+      | string
+      | ((state: VariantProps & ButtonState) => React.ReactNode | string)
+  }
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
-const Context = React.createContext<
-  VariantProps & {
-    hovered: boolean
-    focused: boolean
-    pressed: boolean
-    disabled: boolean
-  }
->({
+const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
   focused: false,
   pressed: false,
@@ -394,6 +399,8 @@ export function Button({
       <Context.Provider value={context}>
         {typeof children === 'string' ? (
           <ButtonText>{children}</ButtonText>
+        ) : typeof children === 'function' ? (
+          children(context)
         ) : (
           children
         )}
@@ -514,9 +521,11 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 export function ButtonIcon({
   icon: Comp,
   position,
+  size: iconSize,
 }: {
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
+  size?: SVGIconProps['size']
 }) {
   const {size, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
@@ -532,7 +541,7 @@ export function ButtonIcon({
         },
       ]}>
       <Comp
-        size={size === 'large' ? 'md' : 'sm'}
+        size={iconSize ?? (size === 'large' ? 'md' : 'sm')}
         style={[{color: textStyles.color, pointerEvents: 'none'}]}
       />
     </View>
