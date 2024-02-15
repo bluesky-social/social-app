@@ -41,4 +41,4 @@ jobs:
         run: yarn install
 
       - name: EAS build and submit
-        run: yarn use-build-number eas build -p ios --profile github --non-interactive
+        run: yarn use-build-number eas build -p ios --profile github --auto-submit --non-interactive
