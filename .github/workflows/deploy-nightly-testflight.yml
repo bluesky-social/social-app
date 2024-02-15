@@ -1,8 +1,11 @@
 name: Deploy Nightly Testflight Release
 
 on:
-  schedule:
-    - cron: '0 5 * * *'
+#  schedule:
+#    - cron: '0 5 * * *'
+  push:
+    branches:
+      - hailey/use-eas-version-code
 
 jobs:
   build:
