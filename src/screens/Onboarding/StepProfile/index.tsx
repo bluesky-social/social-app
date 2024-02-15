@@ -44,6 +44,11 @@ import {
   PlaceholderCanvasRef,
 } from '#/screens/Onboarding/StepProfile/PlaceholderCanvas'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 
 interface Avatar {
   image?: {
@@ -188,7 +193,7 @@ function AvatarCircle() {
             {height: 40, width: 40, bottom: 5, right: 5},
           ]}
           onPress={onPressRemoveAvatar}>
-          <Times size="lg" style={{color: 'white'}} />
+          <Times size="lg" style={{color: t.palette.white}} />
         </Pressable>
       </View>
     )
@@ -203,13 +208,45 @@ function AvatarCircle() {
           backgroundColor: avatar.backgroundColor,
         },
       ]}>
-      <Icon height={85} width={85} style={{color: 'white'}} />
+      <Icon height={85} width={85} style={{color: t.palette.white}} />
     </View>
   )
 }
 
-function ColorItem({color}: {color: AvatarColor}) {
+function AnimatedCircle({
+  selected,
+  children,
+}: React.PropsWithChildren<{selected: boolean}>) {
   const t = useTheme()
+  const size = useSharedValue(selected ? 80 : 70)
+
+  React.useEffect(() => {
+    if (selected && size.value !== 80) {
+      size.value = withTiming(80)
+    } else if (!selected && size.value !== 70) {
+      size.value = withTiming(70)
+    }
+  }, [selected, size])
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    height: size.value,
+    width: size.value,
+  }))
+
+  return (
+    <Animated.View
+      style={[
+        styles.imageContainer,
+        styles.paletteContainer,
+        t.atoms.border_contrast_high,
+        animatedStyle,
+      ]}>
+      {children}
+    </Animated.View>
+  )
+}
+
+function ColorItem({color}: {color: AvatarColor}) {
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
 
@@ -221,19 +258,13 @@ function ColorItem({color}: {color: AvatarColor}) {
   }, [color, setAvatar])
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      style={[
-        styles.imageContainer,
-        styles.paletteContainer,
-        t.atoms.border_contrast_high,
-        {
-          backgroundColor: color,
-          borderWidth: avatar.backgroundColor === color ? 4 : 2,
-        },
-      ]}
-      onPress={onPress}
-    />
+    <AnimatedCircle selected={avatar.backgroundColor === color}>
+      <Pressable
+        accessibilityRole="button"
+        style={[a.h_full, a.w_full, {backgroundColor: color}]}
+        onPress={onPress}
+      />
+    </AnimatedCircle>
   )
 }
 function colorRenderItem({item}: ListRenderItemInfo<AvatarColor>) {
@@ -258,19 +289,14 @@ function EmojiItem({emojiName}: {emojiName: EmojiName}) {
   }
 
   return (
-    <Pressable
-      accessibilityRole="button"
-      style={[
-        styles.imageContainer,
-        styles.paletteContainer,
-        t.atoms.border_contrast_high,
-        {
-          borderWidth: avatar.placeholder.name === emojiName ? 4 : 2,
-        },
-      ]}
-      onPress={onPress}>
-      <Icon height={35} width={35} style={[t.atoms.text_contrast_medium]} />
-    </Pressable>
+    <AnimatedCircle selected={avatar.placeholder.name === emojiName}>
+      <Pressable
+        accessibilityRole="button"
+        style={[a.flex_1, a.justify_center, a.align_center]}
+        onPress={onPress}>
+        <Icon height={35} width={35} style={[t.atoms.text_contrast_medium]} />
+      </Pressable>
+    </AnimatedCircle>
   )
 }
 function emojiRenderItem({item}: ListRenderItemInfo<EmojiName>) {
@@ -367,8 +393,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   paletteContainer: {
-    height: 80,
-    width: 80,
+    height: 70,
+    width: 70,
     marginHorizontal: 5,
   },
   flatListOuter: {
@@ -379,6 +405,7 @@ const styles = StyleSheet.create({
   flatListContainer: {
     paddingLeft: 40,
     paddingRight: 40,
+    alignItems: 'center',
   },
 })
 
