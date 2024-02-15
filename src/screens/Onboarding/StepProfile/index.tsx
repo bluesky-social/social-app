@@ -223,21 +223,31 @@ function AnimatedCircle({
   children,
 }: React.PropsWithChildren<{selected: boolean}>) {
   const t = useTheme()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const styles = useStyles()
-  const size = useSharedValue(selected ? 80 : 70)
+  const size = useSharedValue(selected ? 1.2 : 1)
 
   React.useEffect(() => {
-    if (selected && size.value !== 80) {
-      size.value = withTiming(80, WITH_TIMING_CONFIG)
-    } else if (!selected && size.value !== 70) {
-      size.value = withTiming(70, WITH_TIMING_CONFIG)
+    if (selected && size.value !== 1.2) {
+      size.value = withTiming(1.2, WITH_TIMING_CONFIG)
+    } else if (!selected && size.value !== 1) {
+      size.value = withTiming(1, WITH_TIMING_CONFIG)
     }
   }, [selected, size])
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    height: size.value,
-    width: size.value,
-  }))
+  // On mobile we want to expand the height/width of the container so the items around it get moved as well. On
+  // desktop, we don't want anything around the item to move so we just increase the scale.
+  const animatedStyle = useAnimatedStyle(() => {
+    if (isTabletOrDesktop) {
+      return {
+        transform: [{scale: size.value}],
+      }
+    }
+    return {
+      height: 70 * size.value,
+      width: 70 * size.value,
+    }
+  })
 
   return (
     <Animated.View
@@ -324,6 +334,7 @@ function Items({type}: {type: 'emojis' | 'colors'}) {
         style={[isTabletOrDesktop && {marginHorizontal: 10}]}
         contentContainerStyle={[
           a.align_center,
+          {height: 100},
           !isTabletOrDesktop && styles.flatListContainer,
         ]}
         numColumns={isTabletOrDesktop && type === 'emojis' ? 4 : undefined}
@@ -351,8 +362,7 @@ const useStyles = () => {
     paletteContainer: {
       height: 70,
       width: 70,
-      marginHorizontal: 5,
-      marginVertical: 5,
+      margin: isTabletOrDesktop ? 8 : 2,
     },
     flatListOuter: isTabletOrDesktop
       ? {
