@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Dimensions} from 'react-native'
+import {View, Dimensions, Linking} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
@@ -35,7 +35,11 @@ import {
   getModerationServiceTitle,
   useConfigurableLabelGroups,
 } from '#/lib/moderation'
+import {DMCA_LINK} from '#/components/dialogs/ReportDialog/const'
+import {Link} from '#/components/Link'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 
+export type ReportDialogLabelIds = LabelGroupDefinition['id'] | 'other'
 export type ReportDialogProps =
   | {
       type: 'post'
@@ -48,14 +52,14 @@ export type ReportDialogProps =
     }
 
 function LabelGroupButton({
-  labelGroup,
+  name,
+  description,
 }: {
-  labelGroup: LabelGroupDefinition['id']
+  name: string
+  description: string
 }) {
   const t = useTheme()
   const {hovered, focused, pressed} = useButtonContext()
-  const labelGroupStrings = useLabelGroupStrings()
-  const groupInfoStrings = labelGroupStrings[labelGroup]
   const interacted = hovered || focused || pressed
 
   const styles = React.useMemo(() => {
@@ -80,11 +84,9 @@ function LabelGroupButton({
       ]}>
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-          {groupInfoStrings.name}
+          {name}
         </Text>
-        <Text style={[a.leading_tight, {maxWidth: 400}]}>
-          {groupInfoStrings.description}
-        </Text>
+        <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>
       </View>
 
       <View
@@ -178,10 +180,13 @@ function SubmitViewLoader({
 
     const groups: Partial<
       Record<
-        LabelGroupDefinition['id'],
+        ReportDialogLabelIds,
         AppBskyModerationDefs.ModServiceViewDetailed[]
       >
-    > = {}
+    > = {
+      // report `other` to all labelers
+      other: modservices,
+    }
 
     for (const modservice of modservices) {
       const labelGroups = getLabelGroupsFromLabels(
@@ -219,12 +224,12 @@ function SubmitView({
   onSubmitComplete,
   labelGroupToModServiceMap,
 }: {
-  selectedLabelGroup: LabelGroupDefinition['id']
+  selectedLabelGroup: ReportDialogLabelIds
   goBack: () => void
   onSubmitComplete: () => void
   labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
   labelGroupToModServiceMap: Record<
-    LabelGroupDefinition['id'],
+    ReportDialogLabelIds,
     AppBskyModerationDefs.ModServiceViewDetailed[]
   >
 }) {
@@ -364,25 +369,22 @@ function SubmitView({
   )
 }
 
-/**
- * TODO copyright link out to DMCA
- * TODO add "other" option
- */
 export function ReportDialog({
   params,
   cleanup,
 }: GlobalDialogProps<ReportDialogProps>) {
+  // REQUIRED CLEANUP
+  const onClose = React.useCallback(() => cleanup(), [cleanup])
+
   const t = useTheme()
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
   const control = Dialog.useDialogControl()
   const [selectedLabelGroup, setSelectedLabelGroup] = React.useState<
-    LabelGroupDefinition['id'] | undefined
+    ReportDialogLabelIds | undefined
   >()
   const labelGroupStrings = useLabelGroupStrings()
-
-  // REQUIRED CLEANUP
-  const onClose = React.useCallback(() => cleanup(), [cleanup])
+  const groups = useConfigurableLabelGroups()
 
   const i18n = React.useMemo(() => {
     let title = _(msg`Report this post`)
@@ -399,7 +401,16 @@ export function ReportDialog({
     }
   }, [_, params.type])
 
-  const groups = useConfigurableLabelGroups()
+  const next = React.useCallback(
+    (group: ReportDialogLabelIds | 'copyright') => {
+      if (group === 'copyright') {
+        Linking.openURL(DMCA_LINK)
+      } else {
+        setSelectedLabelGroup(group)
+      }
+    },
+    [setSelectedLabelGroup],
+  )
 
   return (
     <Dialog.Outer
@@ -440,16 +451,57 @@ export function ReportDialog({
 
             <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
               {groups.map(def => {
-                const groupStrings = labelGroupStrings[def.id]
+                const strings = labelGroupStrings[def.id]
                 return (
                   <Button
                     key={def.id}
-                    label={_(msg`Create report for ${groupStrings.name}`)}
-                    onPress={() => setSelectedLabelGroup(def.id)}>
-                    <LabelGroupButton labelGroup={def.id} />
+                    label={_(msg`Create report for ${strings.name}`)}
+                    onPress={() => next(def.id)}>
+                    <LabelGroupButton
+                      name={strings.name}
+                      description={strings.description}
+                    />
                   </Button>
                 )
               })}
+
+              <Button
+                label={_(msg`Create report for other reasons`)}
+                onPress={() => next('other')}>
+                <LabelGroupButton
+                  name="Other"
+                  description="An issue not covered by another option"
+                />
+              </Button>
+
+              <View style={[a.pt_md, a.px_md]}>
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_md,
+                    a.p_md,
+                    a.pl_lg,
+                    a.rounded_md,
+                    t.atoms.bg_contrast_900,
+                  ]}>
+                  <Text style={[t.atoms.text_inverted, a.italic]}>
+                    Need to report a copyright violation?
+                  </Text>
+                  <Link
+                    to={DMCA_LINK}
+                    label={_(
+                      msg`View details for reporting a copyright violation`,
+                    )}
+                    size="small"
+                    variant="solid"
+                    color="secondary">
+                    <ButtonText>View details</ButtonText>
+                    <ButtonIcon position="right" icon={SquareArrowTopRight} />
+                  </Link>
+                </View>
+              </View>
             </View>
           </View>
         )}
