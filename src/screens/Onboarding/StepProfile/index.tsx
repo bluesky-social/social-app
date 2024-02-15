@@ -3,7 +3,6 @@ import {
   FlatList,
   FlatListProps,
   LayoutAnimation,
-  LayoutChangeEvent,
   ListRenderItemInfo,
   Pressable,
   StyleSheet,
@@ -23,10 +22,7 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {
-  ChevronLeft_Stroke2_Corner0_Rounded,
-  ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,
-} from '#/components/icons/Chevron'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {IconCircle} from '#/components/IconCircle'
 import {Image} from 'expo-image'
@@ -62,6 +58,8 @@ interface Avatar {
   placeholder: Emoji
 }
 
+const WITH_TIMING_CONFIG = {duration: 100}
+
 const AvatarContext = React.createContext<Avatar>({} as Avatar)
 const SetAvatarContext = React.createContext<
   React.Dispatch<React.SetStateAction<Avatar>>
@@ -72,6 +70,7 @@ export const useSetAvatar = () => React.useContext(SetAvatarContext)
 export function StepProfile() {
   const {_} = useLingui()
   const t = useTheme()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
@@ -128,10 +127,15 @@ export function StepProfile() {
                 <AvatarCircle />
               </View>
               {!avatar.image && (
-                <>
+                <View
+                  style={
+                    isTabletOrDesktop
+                      ? [a.flex_row, a.justify_between]
+                      : undefined
+                  }>
                   <Items type="emojis" />
                   <Items type="colors" />
-                </>
+                </View>
               )}
             </View>
 
@@ -159,6 +163,7 @@ export function StepProfile() {
 
 function AvatarCircle() {
   const t = useTheme()
+  const styles = useStyles()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
   const Icon = avatar.placeholder.component
@@ -218,13 +223,14 @@ function AnimatedCircle({
   children,
 }: React.PropsWithChildren<{selected: boolean}>) {
   const t = useTheme()
+  const styles = useStyles()
   const size = useSharedValue(selected ? 80 : 70)
 
   React.useEffect(() => {
     if (selected && size.value !== 80) {
-      size.value = withTiming(80)
+      size.value = withTiming(80, WITH_TIMING_CONFIG)
     } else if (!selected && size.value !== 70) {
-      size.value = withTiming(70)
+      size.value = withTiming(70, WITH_TIMING_CONFIG)
     }
   }, [selected, size])
 
@@ -275,7 +281,7 @@ function EmojiItem({emojiName}: {emojiName: EmojiName}) {
   const t = useTheme()
   const avatar = useAvatar()
   const setAvatar = useSetAvatar()
-  const Icon = emojiItems[emojiName].component
+  const Icon = React.useMemo(() => emojiItems[emojiName].component, [emojiName])
 
   const onPress = React.useCallback(() => {
     setAvatar(prev => ({
@@ -294,7 +300,7 @@ function EmojiItem({emojiName}: {emojiName: EmojiName}) {
         accessibilityRole="button"
         style={[a.flex_1, a.justify_center, a.align_center]}
         onPress={onPress}>
-        <Icon height={35} width={35} style={[t.atoms.text_contrast_medium]} />
+        <Icon style={[t.atoms.text_contrast_medium]} height={40} width={40} />
       </Pressable>
     </AnimatedCircle>
   )
@@ -304,112 +310,63 @@ function emojiRenderItem({item}: ListRenderItemInfo<EmojiName>) {
 }
 
 function Items({type}: {type: 'emojis' | 'colors'}) {
-  const t = useTheme()
   const {isTabletOrDesktop} = useWebMediaQueries()
-
-  const maxWidth = React.useRef(0)
-  const width = React.useRef(0)
-  const page = React.useRef(0)
-  const ref = React.useRef<FlatList>(null)
-
-  const onLayout = React.useCallback((e: LayoutChangeEvent) => {
-    width.current = e.nativeEvent.layout.width
-  }, [])
-
-  const onContentSizeChanged = React.useCallback((w: number, _: number) => {
-    maxWidth.current = w
-  }, [])
-
-  const onLeftPress = React.useCallback(() => {
-    if (page.current === 0) return
-    page.current -= 1
-    ref.current?.scrollToOffset({
-      offset: width.current * page.current - width.current + 50,
-    })
-  }, [])
-
-  const onRightPress = React.useCallback(() => {
-    const newOffset = width.current * (page.current + 1) - 50
-    if (newOffset >= maxWidth.current + width.current) return
-
-    page.current += 1
-    ref.current?.scrollToOffset({
-      offset: newOffset,
-    })
-  }, [])
+  const styles = useStyles()
 
   return (
     <View style={styles.flatListOuter}>
-      {isTabletOrDesktop && (
-        <Pressable
-          onPress={onLeftPress}
-          style={[
-            a.align_center,
-            a.justify_center,
-            t.atoms.bg_contrast_100,
-            {height: 40, width: 40, borderRadius: 100},
-          ]}
-          accessibilityRole="button">
-          <ChevronLeft_Stroke2_Corner0_Rounded style={t.atoms.text} />
-        </Pressable>
-      )}
       <FlatList
+        // Changing the value of numColumns on the fly isn't supported, so we want the flatlist to re-render whenever
+        // the size of the screen changes
+        key={isTabletOrDesktop ? 0 : 1}
         data={type === 'colors' ? avatarColors : emojiNames}
         renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
-        ref={ref}
-        onLayout={onLayout}
-        onContentSizeChange={onContentSizeChanged}
         style={[isTabletOrDesktop && {marginHorizontal: 10}]}
-        contentContainerStyle={
-          !isTabletOrDesktop ? styles.flatListContainer : undefined
-        }
+        contentContainerStyle={[
+          a.align_center,
+          !isTabletOrDesktop && styles.flatListContainer,
+        ]}
+        numColumns={isTabletOrDesktop && type === 'emojis' ? 4 : undefined}
+        showsHorizontalScrollIndicator={isTabletOrDesktop && type === 'emojis'}
+        horizontal={!isTabletOrDesktop}
         {...commonFlatListProps}
       />
-      {isTabletOrDesktop && (
-        <Pressable
-          onPress={onRightPress}
-          style={[
-            a.align_center,
-            a.justify_center,
-            t.atoms.bg_contrast_100,
-            {height: 40, width: 40, borderRadius: 100},
-          ]}
-          accessibilityRole="button">
-          <ChevronRight style={t.atoms.text} />
-        </Pressable>
-      )}
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  imageContainer: {
-    borderRadius: 100,
-    height: 150,
-    width: 150,
-    overflow: 'hidden',
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paletteContainer: {
-    height: 70,
-    width: 70,
-    marginHorizontal: 5,
-  },
-  flatListOuter: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: 100,
-  },
-  flatListContainer: {
-    paddingLeft: 40,
-    paddingRight: 40,
-    alignItems: 'center',
-  },
-})
+const useStyles = () => {
+  const {isTabletOrDesktop} = useWebMediaQueries()
 
-const commonFlatListProps: Partial<FlatListProps<any>> = {
-  horizontal: true,
-  showsHorizontalScrollIndicator: false,
+  return StyleSheet.create({
+    imageContainer: {
+      borderRadius: 100,
+      height: 150,
+      width: 150,
+      overflow: 'hidden',
+      borderWidth: 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    paletteContainer: {
+      height: 70,
+      width: 70,
+      marginHorizontal: 5,
+      marginVertical: 5,
+    },
+    flatListOuter: isTabletOrDesktop
+      ? {
+          height: 450,
+        }
+      : {
+          flexDirection: 'row',
+          alignItems: 'center',
+          height: 100,
+        },
+    flatListContainer: {
+      paddingHorizontal: 40,
+    },
+  })
 }
+
+const commonFlatListProps: Partial<FlatListProps<any>> = {}

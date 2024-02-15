@@ -9,9 +9,12 @@ import {openPicker} from 'lib/media/picker.shared'
 import {openCropper} from 'lib/media/picker'
 import {compressIfNeeded} from 'lib/media/manip'
 import {isNative, isWeb} from 'platform/detection'
+import Animated from 'react-native-reanimated'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
 export function SelectImageButton() {
   const t = useTheme()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const setAvatar = useSetAvatar()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
 
@@ -53,17 +56,21 @@ export function SelectImageButton() {
   }, [requestPhotoAccessIfNeeded, setAvatar])
 
   return (
-    <Pressable
-      accessibilityRole="button"
+    <Animated.View
       style={[
         styles.imageContainer,
         styles.paletteContainer,
         a.mr_2xl,
         t.atoms.border_contrast_high,
-      ]}
-      onPress={onCameraPress}>
-      <Camera height={35} width={35} style={[t.atoms.text_contrast_medium]} />
-    </Pressable>
+        {height: 70, width: 70, marginRight: isTabletOrDesktop ? 0 : 5},
+      ]}>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onCameraPress}
+        style={[a.flex_1, a.align_center, a.justify_center]}>
+        <Camera height={40} width={40} style={[t.atoms.text_contrast_medium]} />
+      </Pressable>
+    </Animated.View>
   )
 }
 
@@ -80,6 +87,5 @@ const styles = StyleSheet.create({
   paletteContainer: {
     height: 70,
     width: 70,
-    marginHorizontal: 5,
   },
 })
