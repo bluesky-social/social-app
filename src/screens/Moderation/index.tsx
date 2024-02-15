@@ -5,6 +5,7 @@ import {ComAtprotoLabelDefs, LabelPreference} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {LabelGroupDefinition, AppBskyModerationDefs} from '@atproto/api'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
@@ -49,24 +50,78 @@ import {
   SettingsDialogProps,
 } from '#/screens/Moderation/SettingsDialog'
 
+function ErrorState({error}: {error: string}) {
+  const t = useTheme()
+  return (
+    <View style={[a.p_xl]}>
+      <Text
+        style={[
+          a.text_md,
+          a.leading_normal,
+          a.pb_md,
+          t.atoms.text_contrast_medium,
+        ]}>
+        <Trans>
+          Hmmmm, it seems we're having trouble loading this data. See below for
+          more details. If this issue persists, please contact us.
+        </Trans>
+      </Text>
+      <View
+        style={[
+          a.relative,
+          a.py_md,
+          a.px_lg,
+          a.rounded_md,
+          a.mb_2xl,
+          t.atoms.bg_contrast_25,
+        ]}>
+        <Text style={[a.text_md, a.leading_normal]}>{error}</Text>
+      </View>
+    </View>
+  )
+}
+
 export function ModerationScreen(
   _props: NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>,
 ) {
   const t = useTheme()
+  const {_} = useLingui()
   const {
     isLoading: isPreferencesLoading,
-    // error: preferencesError,
+    error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
+  const {gtMobile} = useBreakpoints()
+  const {height} = useSafeAreaFrame()
 
-  return isPreferencesLoading ? (
-    <View style={[a.w_full, a.align_center]}>
-      <Loader size="xl" fill={t.atoms.text.color} />
-    </View>
-  ) : preferences ? (
-    <ModerationScreenIntermediate preferences={preferences} />
-  ) : // TODO
-  null
+  return (
+    <CenteredView
+      testID="moderationScreen"
+      style={[
+        a.border,
+        t.atoms.border_contrast_low,
+        t.atoms.bg,
+        {minHeight: height},
+        ...(gtMobile ? [a.border_l, a.border_r] : []),
+      ]}>
+      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
+
+      {isPreferencesLoading ? (
+        <View style={[a.w_full, a.align_center, a.pt_2xl]}>
+          <Loader size="xl" fill={t.atoms.text.color} />
+        </View>
+      ) : preferencesError || !preferences ? (
+        <ErrorState
+          error={
+            preferencesError?.toString() ||
+            _(msg`Something went wrong, please try again.`)
+          }
+        />
+      ) : (
+        <ModerationScreenIntermediate preferences={preferences} />
+      )}
+    </CenteredView>
+  )
 }
 
 function ModerationScreenIntermediate({
@@ -75,25 +130,32 @@ function ModerationScreenIntermediate({
   preferences: UsePreferencesQueryResponse
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   const {
     isLoading: isModServicesLoading,
     data: modservices,
-    // error: modservicesError,
+    error: modservicesError,
   } = useModServicesDetailedInfoQuery({
     dids: preferences.moderationOpts.mods.map(m => m.did),
   })
 
   return isModServicesLoading ? (
-    <View style={[a.w_full, a.align_center]}>
+    <View style={[a.w_full, a.align_center, a.pt_2xl]}>
       <Loader size="xl" fill={t.atoms.text.color} />
     </View>
-  ) : modservices ? (
+  ) : modservicesError || !modservices ? (
+    <ErrorState
+      error={
+        modservicesError?.toString() ||
+        _(msg`Something went wrong, please try again.`)
+      }
+    />
+  ) : (
     <ModerationScreenInner
       preferences={preferences}
       modservices={modservices}
     />
-  ) : // TODO
-  null
+  )
 }
 
 export function ModerationScreenInner({
@@ -104,10 +166,9 @@ export function ModerationScreenInner({
   modservices: AppBskyModerationDefs.ModServiceViewDetailed[]
 }) {
   const t = useTheme()
-  const {_} = useLingui()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {gtMobile, gtTablet} = useBreakpoints()
+  const {gtTablet} = useBreakpoints()
   const labelGroupStrings = useLabelGroupStrings()
   const modSettingsDialogControl = Dialog.useDialogControl()
 
@@ -165,20 +226,11 @@ export function ModerationScreenInner({
   )
 
   return (
-    <CenteredView
-      style={[
-        a.border,
-        t.atoms.border_contrast_low,
-        t.atoms.bg,
-        ...(gtMobile ? [a.border_l, a.border_r] : []),
-      ]}
-      testID="moderationScreen">
+    <View>
       <Dialog.Outer control={modSettingsDialogControl}>
         <Dialog.Handle />
         <SettingsDialog {...settingsDialogProps} preferences={preferences} />
       </Dialog.Outer>
-
-      <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
 
       <ScrollView contentContainerStyle={[a.border_0]}>
         {!gtTablet && <Divider />}
@@ -280,7 +332,7 @@ export function ModerationScreenInner({
 
         <View style={{height: 200}} />
       </ScrollView>
-    </CenteredView>
+    </View>
   )
 }
 
