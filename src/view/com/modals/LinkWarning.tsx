@@ -85,7 +85,7 @@ export function Component({text, href}: {text: string; href: string}) {
               closeModal()
             }}
             accessibilityLabel={_(msg`Cancel`)}
-            accessibilityHint=""
+            accessibilityHint={_(msg`Cancels opening the linked website`)}
             label={_(msg`Cancel`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
