@@ -40,9 +40,9 @@ import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
 import * as Dialog from '#/components/Dialog'
 import {Button} from '#/components/Button'
 import {
-  getLabelGroupsFromLabels,
   getModerationServiceTitle,
   useConfigurableLabelGroups,
+  getLabelGroupToLabelerMap,
 } from '#/lib/moderation'
 
 import {
@@ -91,8 +91,18 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
+  const {
+    isLoading: isModServicesLoading,
+    data: modservices,
+    error: modservicesError,
+  } = useModServicesDetailedInfoQuery({
+    dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
+  })
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()
+
+  const isLoading = isPreferencesLoading || isModServicesLoading
+  const error = preferencesError || modservicesError
 
   return (
     <CenteredView
@@ -106,11 +116,11 @@ export function ModerationScreen(
       ]}>
       <ViewHeader title={_(msg`Moderation`)} showOnDesktop />
 
-      {isPreferencesLoading ? (
+      {isLoading ? (
         <View style={[a.w_full, a.align_center, a.pt_2xl]}>
           <Loader size="xl" fill={t.atoms.text.color} />
         </View>
-      ) : preferencesError || !preferences ? (
+      ) : error || !(preferences && modservices) ? (
         <ErrorState
           error={
             preferencesError?.toString() ||
@@ -118,43 +128,12 @@ export function ModerationScreen(
           }
         />
       ) : (
-        <ModerationScreenIntermediate preferences={preferences} />
+        <ModerationScreenInner
+          preferences={preferences}
+          modservices={modservices}
+        />
       )}
     </CenteredView>
-  )
-}
-
-function ModerationScreenIntermediate({
-  preferences,
-}: {
-  preferences: UsePreferencesQueryResponse
-}) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const {
-    isLoading: isModServicesLoading,
-    data: modservices,
-    error: modservicesError,
-  } = useModServicesDetailedInfoQuery({
-    dids: preferences.moderationOpts.mods.map(m => m.did),
-  })
-
-  return isModServicesLoading ? (
-    <View style={[a.w_full, a.align_center, a.pt_2xl]}>
-      <Loader size="xl" fill={t.atoms.text.color} />
-    </View>
-  ) : modservicesError || !modservices ? (
-    <ErrorState
-      error={
-        modservicesError?.toString() ||
-        _(msg`Something went wrong, please try again.`)
-      }
-    />
-  ) : (
-    <ModerationScreenInner
-      preferences={preferences}
-      modservices={modservices}
-    />
   )
 }
 
@@ -169,15 +148,17 @@ export function ModerationScreenInner({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {gtTablet} = useBreakpoints()
-  const labelGroupStrings = useLabelGroupStrings()
   const modSettingsDialogControl = Dialog.useDialogControl()
-
   const [settingsDialogProps, setSettingsDialogProps] =
     React.useState<SettingsDialogProps>({
-      // @ts-ignore
-      labelGroup: '',
+      // prefill with valid value to appease TS
+      labelGroup: 'intolerance',
       modservices: [],
     })
+  const groups = useConfigurableLabelGroups()
+  const labelGroupToLabelerMap = React.useMemo(() => {
+    return getLabelGroupToLabelerMap(modservices)
+  }, [modservices])
 
   useFocusEffect(
     React.useCallback(() => {
@@ -185,34 +166,6 @@ export function ModerationScreenInner({
       setMinimalShellMode(false)
     }, [screen, setMinimalShellMode]),
   )
-
-  const groups = useConfigurableLabelGroups()
-
-  const didToModServiceMap = React.useMemo<
-    Record<string, AppBskyModerationDefs.ModServiceViewDetailed>
-  >(() => {
-    return modservices.reduce((acc, modservice) => {
-      return {
-        ...acc,
-        [modservice.creator.did]: modservice,
-      }
-    }, {})
-  }, [modservices])
-  const labelGroupToModServiceMap = React.useMemo(() => {
-    const groups: Partial<Record<LabelGroupDefinition['id'], string[]>> = {}
-
-    for (const modservice of modservices) {
-      const labelGroups = getLabelGroupsFromLabels(
-        modservice.policies.labelValues,
-      )
-      for (const group of labelGroups) {
-        const g = (groups[group.id] = groups[group.id] || [])
-        g.push(modservice.creator.did)
-      }
-    }
-
-    return groups
-  }, [modservices])
 
   const openModSettingsDialog = React.useCallback(
     ({labelGroup, modservices}: Omit<SettingsDialogProps, 'onComplete'>) => {
@@ -304,19 +257,15 @@ export function ModerationScreenInner({
           </Text>
 
           {groups.map((def, i) => {
-            const groupStrings = labelGroupStrings[def.id]
-            const modDids = labelGroupToModServiceMap[def.id] || []
-            const mods = modDids.map(did => didToModServiceMap[did])
+            const labelers = labelGroupToLabelerMap[def.id] || []
             return (
               <React.Fragment key={def.id}>
                 {i !== 0 && <Divider />}
                 <LabelGroup
-                  name={groupStrings.name}
-                  description={groupStrings.description}
-                  labelers={mods}
-                  openModSettingsDialog={openModSettingsDialog}
-                  preferences={preferences}
                   labelGroup={def.id}
+                  labelers={labelers}
+                  preferences={preferences}
+                  openModSettingsDialog={openModSettingsDialog}
                 />
               </React.Fragment>
             )
@@ -338,21 +287,18 @@ export function ModerationScreenInner({
 
 function LabelGroup({
   labelGroup,
-  name,
-  description,
   labelers: mods,
   preferences,
   openModSettingsDialog,
 }: {
   labelGroup: LabelGroupDefinition['id']
-  name: string
-  description: string
   labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
   preferences: UsePreferencesQueryResponse
   openModSettingsDialog: (props: SettingsDialogProps) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const labelGroupStrings = useLabelGroupStrings()
   const {mutateAsync: setContentLabelPref, variables: optimisticContentLabel} =
     useSetContentLabelMutation()
 
@@ -364,16 +310,17 @@ function LabelGroup({
           visibility: values[0] as LabelPreference,
         })
       } catch (e) {
+        // TODO
         console.error(e)
       }
     },
     [labelGroup, setContentLabelPref],
   )
 
+  const {name, description} = labelGroupStrings[labelGroup]
   const value =
     optimisticContentLabel?.visibility ??
     preferences.moderationOpts.labelGroups[labelGroup]
-
   const labelOptions = {
     hide: _(msg`Hide`),
     warn: _(msg`Warn`),

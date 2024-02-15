@@ -17,6 +17,7 @@ export const modServicesDetailedInfoQueryKey = (dids: string[]) => [
 
 export function useModServiceInfoQuery({did}: {did: string}) {
   return useQuery({
+    enabled: !!did,
     queryKey: modServiceInfoQueryKey(did),
     queryFn: async () => {
       const res = await getAgent().app.bsky.moderation.getService({did})
@@ -38,6 +39,7 @@ export function useModServicesInfoQuery({dids}: {dids: string[]}) {
 
 export function useModServicesDetailedInfoQuery({dids}: {dids: string[]}) {
   return useQuery({
+    enabled: !!dids.length,
     queryKey: modServicesDetailedInfoQueryKey(dids),
     queryFn: async () => {
       const views: AppBskyModerationDefs.ModServiceViewDetailed[] = []
