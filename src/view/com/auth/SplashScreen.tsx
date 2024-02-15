@@ -1,5 +1,6 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Text} from 'view/com/util/text/Text'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s, colors} from 'lib/styles'
@@ -9,6 +10,14 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
+import {APP_LANGUAGES} from '#/locale/languages'
 
 export const SplashScreen = ({
   onPressSignin,
@@ -19,6 +28,22 @@ export const SplashScreen = ({
 }) => {
   const pal = usePalette('default')
   const {_} = useLingui()
+
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
+  const insets = useSafeAreaInsets()
+
+  const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
+
+  const onChangeAppLanguage = React.useCallback(
+    (value: Parameters<PickerSelectProps['onValueChange']>[0]) => {
+      if (!value) return
+      if (sanitizedLang !== value) {
+        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
+      }
+    },
+    [sanitizedLang, setLangPrefs],
+  )
 
   return (
     <CenteredView style={[styles.container, pal.view]}>
@@ -58,6 +83,51 @@ export const SplashScreen = ({
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.footer}>
+          <View style={{position: 'relative'}}>
+            <RNPickerSelect
+              placeholder={{}}
+              value={sanitizedLang}
+              onValueChange={onChangeAppLanguage}
+              items={APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => ({
+                label: l.name,
+                value: l.code2,
+                key: l.code2,
+              }))}
+              useNativeAndroidPickerStyle={false}
+              style={{
+                inputAndroid: {
+                  color: pal.textLight.color,
+                  fontSize: 16,
+                  paddingRight: 10 + 4,
+                },
+                inputIOS: {
+                  color: pal.text.color,
+                  fontSize: 16,
+                  paddingRight: 10 + 4,
+                },
+              }}
+            />
+
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                pointerEvents: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <FontAwesomeIcon
+                icon="chevron-down"
+                size={10}
+                style={pal.textLight as FontAwesomeIconStyle}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{height: insets.bottom}} />
       </ErrorBoundary>
     </CenteredView>
   )
@@ -73,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btns: {
-    paddingBottom: 40,
+    paddingBottom: 0,
   },
   title: {
     textAlign: 'center',
@@ -94,5 +164,12 @@ const styles = StyleSheet.create({
   btnLabel: {
     textAlign: 'center',
     fontSize: 21,
+  },
+  footer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })
