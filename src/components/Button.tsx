@@ -27,7 +27,7 @@ export type ButtonColor =
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'small' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -277,6 +277,8 @@ export function Button({
         baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
         baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
+      } else if (size === 'tiny') {
+        baseStyles.push({paddingVertical: 4}, a.px_sm, a.rounded_xs, a.gap_xs)
       }
     } else if (shape === 'round' || shape === 'square') {
       if (size === 'large') {
@@ -287,12 +289,18 @@ export function Button({
         }
       } else if (size === 'small') {
         baseStyles.push({height: 40, width: 40})
+      } else if (size === 'tiny') {
+        baseStyles.push({height: 20, width: 20})
       }
 
       if (shape === 'round') {
         baseStyles.push(a.rounded_full)
       } else if (shape === 'square') {
-        baseStyles.push(a.rounded_sm)
+        if (size === 'tiny') {
+          baseStyles.push(a.rounded_xs)
+        } else {
+          baseStyles.push(a.rounded_sm)
+        }
       }
     }
 
@@ -493,6 +501,8 @@ export function useSharedButtonTextStyles() {
 
     if (size === 'large') {
       baseStyles.push(a.text_md, android({paddingBottom: 1}))
+    } else if (size === 'tiny') {
+      baseStyles.push(a.text_xs, android({paddingBottom: 1}))
     } else {
       baseStyles.push(a.text_sm, android({paddingBottom: 1}))
     }
@@ -532,7 +542,7 @@ export function ButtonIcon({
         },
       ]}>
       <Comp
-        size={size === 'large' ? 'md' : 'sm'}
+        size={size === 'large' ? 'md' : size === 'tiny' ? 'xs' : 'sm'}
         style={[{color: textStyles.color, pointerEvents: 'none'}]}
       />
     </View>

@@ -88,7 +88,7 @@ export function SuggestedAccountCard({
             <UserAvatar
               size={48}
               avatar={profile.avatar}
-              moderation={moderation.avatar}
+              moderation={moderation.ui('avatar')}
             />
           </View>
           <View style={[a.flex_1]}>

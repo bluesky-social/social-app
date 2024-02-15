@@ -1,6 +1,10 @@
-import {useMemo} from 'react'
+import {useMemo, createContext, useContext} from 'react'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
+import {
+  LabelPreference,
+  BskyFeedViewPreference,
+  ModerationOpts,
+} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
@@ -63,10 +67,19 @@ export function usePreferencesQuery() {
   })
 }
 
+// used in the moderation state devtool
+export const moderationOptsOverrideContext = createContext<
+  ModerationOpts | undefined
+>(undefined)
+
 export function useModerationOpts() {
+  const override = useContext(moderationOptsOverrideContext)
   const prefs = usePreferencesQuery()
   const hiddenPosts = useHiddenPosts()
   const opts = useMemo(() => {
+    if (override) {
+      return override
+    }
     if (!prefs.data) {
       return
     }
@@ -75,7 +88,7 @@ export function useModerationOpts() {
       ...moderationOpts,
       hiddenPosts,
     }
-  }, [prefs.data, hiddenPosts])
+  }, [override, prefs.data, hiddenPosts])
   return opts
 }
 

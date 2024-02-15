@@ -298,7 +298,7 @@ function ProfileScreenLoaded({
       testID="profileView"
       style={styles.container}
       screenDescription="profile"
-      moderation={moderation.account}>
+      modui={moderation.ui('profileView')}>
       <PagerWithHeader
         testID="profilePager"
         isHeaderReady={!showPlaceholder}

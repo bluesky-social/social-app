@@ -26,12 +26,6 @@ export interface EditProfileModal {
   onUpdate?: () => void
 }
 
-export interface ModerationDetailsModal {
-  name: 'moderation-details'
-  context: 'account' | 'content'
-  moderation: ModerationUI
-}
-
 export type ReportModal = {
   name: 'report'
 } & (
@@ -203,7 +197,6 @@ export type Modal =
   | PostLanguagesSettingsModal
 
   // Moderation
-  | ModerationDetailsModal
   | ReportModal
   | AppealLabelModal
 

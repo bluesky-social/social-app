@@ -4,7 +4,7 @@ import {
   AppBskyActorDefs,
   moderateProfile,
   ModerationCause,
-  ProfileModeration,
+  ModerationDecision,
 } from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -15,7 +15,7 @@ import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {getProfileModerationCauses, getModerationCauseKey} from 'lib/moderation'
+import {getModerationCauseKey} from 'lib/moderation'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -51,11 +51,8 @@ export function ProfileCard({
     return null
   }
   const moderation = moderateProfile(profile, moderationOpts)
-  if (
-    !noModFilter &&
-    moderation.account.filter &&
-    moderation.account.cause?.type !== 'muted'
-  ) {
+  const modui = moderation.ui('profileList')
+  if (!noModFilter && modui.filter /* TODO && modui.type !== 'muted'*/) {
     return null
   }
 
@@ -78,7 +75,7 @@ export function ProfileCard({
           <UserAvatar
             size={40}
             avatar={profile.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -89,7 +86,7 @@ export function ProfileCard({
             lineHeight={1.2}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
@@ -122,12 +119,12 @@ export function ProfileCardPills({
   moderation,
 }: {
   followedBy: boolean
-  moderation: ProfileModeration
+  moderation: ModerationDecision
 }) {
   const pal = usePalette('default')
 
-  const causes = getProfileModerationCauses(moderation)
-  if (!followedBy && !causes.length) {
+  const informs = moderation.ui('profileList').informs
+  if (!followedBy && !informs.length) {
     return null
   }
 
@@ -140,10 +137,10 @@ export function ProfileCardPills({
           </Text>
         </View>
       )}
-      {causes.map(cause => (
+      {informs.map(inform => (
         <ProfileCardPillModerationCause
-          key={getModerationCauseKey(cause)}
-          cause={cause}
+          key={getModerationCauseKey(inform)}
+          cause={inform}
         />
       ))}
     </View>
@@ -183,7 +180,7 @@ function FollowersList({
         f,
         mod: moderateProfile(f, moderationOpts),
       }))
-      .filter(({mod}) => !mod.account.filter)
+      .filter(({mod}) => !mod.ui('profileList').filter)
   }, [followers, moderationOpts])
 
   if (!followersWithMods?.length) {
@@ -205,7 +202,11 @@ function FollowersList({
       {followersWithMods.slice(0, 3).map(({f, mod}) => (
         <View key={f.did} style={styles.followedByAviContainer}>
           <View style={[styles.followedByAvi, pal.view]}>
-            <UserAvatar avatar={f.avatar} size={32} moderation={mod.avatar} />
+            <UserAvatar
+              avatar={f.avatar}
+              size={32}
+              moderation={mod.ui('avatar')}
+            />
           </View>
         </View>
       ))}

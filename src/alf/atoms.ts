@@ -165,6 +165,9 @@ export const atoms = {
   /*
    * Text
    */
+  text_left: {
+    textAlign: 'left',
+  },
   text_center: {
     textAlign: 'center',
   },
@@ -241,7 +244,6 @@ export const atoms = {
   border_r: {
     borderRightWidth: 1,
   },
-
 
   /*
    * Shadow

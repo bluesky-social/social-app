@@ -1,6 +1,6 @@
 import {
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
+  // AppBskyEmbedRecord,
+  // AppBskyEmbedRecordWithMedia,
   moderatePost,
 } from '@atproto/api'
 
@@ -13,10 +13,11 @@ export function moderatePost_wrapped(
   subject: Parameters<ModeratePost>[0],
   opts: Options,
 ) {
-  const {hiddenPosts = [], ...options} = opts
-  const moderations = moderatePost(subject, options)
+  // const {hiddenPosts = [], ...options} = opts
+  const moderations = moderatePost(subject, opts) // options)
 
-  if (hiddenPosts.includes(subject.uri)) {
+  // TODO
+  /*if (hiddenPosts.includes(subject.uri)) {
     moderations.content.filter = true
     moderations.content.blur = true
     if (!moderations.content.cause) {
@@ -52,7 +53,7 @@ export function moderatePost_wrapped(
         }
       }
     }
-  }
+  }*/
 
   return moderations
 }

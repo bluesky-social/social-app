@@ -107,8 +107,8 @@ function computeSuggestions(
     }
   }
   return items.filter(profile => {
-    const mod = moderateProfile(profile, moderationOpts)
-    return !mod.account.filter && mod.account.cause?.type !== 'muted'
+    const mod = moderateProfile(profile, moderationOpts).ui('profileList')
+    return !mod.filter // TODO && mod.account.cause?.type !== 'muted'
   })
 }
 

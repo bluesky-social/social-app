@@ -9,19 +9,21 @@ import {addStyle} from 'lib/styles'
 import {ShieldExclamation} from 'lib/icons'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
-import {useModalControls} from '#/state/modals'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+
+import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
+import {useOpenGlobalDialog} from '#/components/dialogs'
 
 interface Props extends ComponentProps<typeof Link> {
   iconSize: number
   iconStyles: StyleProp<ViewStyle>
-  moderation: ModerationUI
+  modui: ModerationUI
 }
 
 export function PostHider({
   testID,
   href,
-  moderation,
+  modui,
   style,
   children,
   iconSize,
@@ -31,10 +33,11 @@ export function PostHider({
   const pal = usePalette('default')
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
-  const {openModal} = useModalControls()
-  const desc = useModerationCauseDescription(moderation.cause, 'content')
+  const openDialog = useOpenGlobalDialog()
+  const blur = modui.blurs[0]
+  const desc = useModerationCauseDescription(blur, 'content')
 
-  if (!moderation.blur) {
+  if (!blur) {
     return (
       <Link
         testID={testID}
@@ -48,11 +51,11 @@ export function PostHider({
     )
   }
 
-  const isMute = moderation.cause?.type === 'muted'
+  const isMute = blur.type === 'muted'
   return !override ? (
     <Pressable
       onPress={() => {
-        if (!moderation.noOverride) {
+        if (!modui.noOverride) {
           setOverride(v => !v)
         }
       }}
@@ -68,10 +71,9 @@ export function PostHider({
       ]}>
       <Pressable
         onPress={() => {
-          openModal({
-            name: 'moderation-details',
+          openDialog(ModerationDetailsDialog, {
             context: 'content',
-            moderation,
+            modcause: blur,
           })
         }}
         accessibilityRole="button"
@@ -103,7 +105,7 @@ export function PostHider({
       <Text type="sm" style={[{flex: 1}, pal.textLight]} numberOfLines={1}>
         {desc.name}
       </Text>
-      {!moderation.noOverride && (
+      {!modui.noOverride && (
         <Text type="sm" style={[styles.showBtn, pal.link]}>
           {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
         </Text>

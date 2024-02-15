@@ -46,7 +46,8 @@ export function useSuggestedFollowsQuery() {
 
       res.data.actors = res.data.actors
         .filter(
-          actor => !moderateProfile(actor, moderationOpts!).account.filter,
+          actor =>
+            !moderateProfile(actor, moderationOpts!).ui('profileList').filter,
         )
         .filter(actor => {
           const viewer = actor.viewer

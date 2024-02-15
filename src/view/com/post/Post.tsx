@@ -4,7 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  PostModeration,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
@@ -92,7 +92,7 @@ function PostInner({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  moderation: PostModeration
+  moderation: ModerationDecision
   showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
@@ -141,7 +141,7 @@ function PostInner({
             did={post.author.did}
             handle={post.author.handle}
             avatar={post.author.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -176,10 +176,13 @@ function PostInner({
             </View>
           )}
           <ContentHider
-            moderation={moderation.content}
+            modui={moderation.ui('contentView')}
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
-            <PostAlerts moderation={moderation.content} style={styles.alert} />
+            <PostAlerts
+              modui={moderation.ui('contentView')}
+              style={styles.alert}
+            />
             {richText.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
@@ -201,17 +204,7 @@ function PostInner({
               />
             ) : undefined}
             {post.embed ? (
-              <ContentHider
-                moderation={moderation.embed}
-                moderationDecisions={moderation.decisions}
-                ignoreQuoteDecisions
-                style={styles.contentHider}>
-                <PostEmbeds
-                  embed={post.embed}
-                  moderation={moderation.embed}
-                  moderationDecisions={moderation.decisions}
-                />
-              </ContentHider>
+              <PostEmbeds embed={post.embed} moderation={moderation} />
             ) : null}
           </ContentHider>
           <PostCtrls

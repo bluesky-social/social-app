@@ -1,44 +1,44 @@
 import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ModerationUI, PostModeration} from '@atproto/api'
-import {Text} from '../text/Text'
-import {ShieldExclamation} from 'lib/icons'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {ModerationUI} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
-import {useModalControls} from '#/state/modals'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {isPostMediaBlurred} from 'lib/moderation'
+
+import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Text} from '#/components/Typography'
+import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
+import {useOpenGlobalDialog} from '#/components/dialogs'
 
 export function ContentHider({
   testID,
-  moderation,
-  moderationDecisions,
-  ignoreMute,
-  ignoreQuoteDecisions,
+  modui,
+  // ignoreMute, TODO
   style,
   childContainerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
-  moderation: ModerationUI
-  moderationDecisions?: PostModeration['decisions']
+  modui: ModerationUI | undefined
   ignoreMute?: boolean
-  ignoreQuoteDecisions?: boolean
   style?: StyleProp<ViewStyle>
   childContainerStyle?: StyleProp<ViewStyle>
 }>) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
-  const {openModal} = useModalControls()
-  const desc = useModerationCauseDescription(moderation.cause, 'content')
+  const {gtMobile} = useBreakpoints()
+  const openDialog = useOpenGlobalDialog()
+
+  const blur = modui?.blurs[0]
+  const desc = useModerationCauseDescription(blur, 'content')
 
   if (
-    !moderation.blur ||
-    (ignoreMute && moderation.cause?.type === 'muted') ||
-    shouldIgnoreQuote(moderationDecisions, ignoreQuoteDecisions)
+    !blur
+    // || (ignoreMute && moderation.cause?.type === 'muted') TODO
   ) {
     return (
       <View testID={testID} style={[styles.outer, style]}>
@@ -47,81 +47,72 @@ export function ContentHider({
     )
   }
 
-  const isMute = moderation.cause?.type === 'muted'
   return (
-    <View testID={testID} style={[styles.outer, style]}>
-      <Pressable
-        onPress={() => {
-          if (!moderation.noOverride) {
-            setOverride(v => !v)
-          } else {
-            openModal({
-              name: 'moderation-details',
-              context: 'content',
-              moderation,
-            })
-          }
-        }}
-        accessibilityRole="button"
-        accessibilityHint={
-          override ? _(msg`Hide the content`) : _(msg`Show the content`)
-        }
-        accessibilityLabel=""
-        style={[
-          styles.cover,
-          moderation.noOverride
-            ? {borderWidth: 1, borderColor: pal.colors.borderDark}
-            : pal.viewLight,
-        ]}>
-        <Pressable
+    <View testID={testID} style={[a.overflow_hidden, style]}>
+      <View style={[a.flex_col, a.gap_xs]}>
+        <Button
+          variant="solid"
+          color="secondary"
+          size={gtMobile ? 'large' : 'small'}
+          shape="default"
           onPress={() => {
-            openModal({
-              name: 'moderation-details',
-              context: 'content',
-              moderation,
-            })
+            if (!modui.noOverride) {
+              setOverride(v => !v)
+            } else {
+              openDialog(ModerationDetailsDialog, {
+                context: 'content',
+                modcause: blur,
+              })
+            }
           }}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Learn more about this warning`)}
-          accessibilityHint="">
-          {isMute ? (
-            <FontAwesomeIcon
-              icon={['far', 'eye-slash']}
-              size={18}
-              color={pal.colors.textLight}
-            />
-          ) : (
-            <ShieldExclamation size={18} style={pal.textLight} />
+          label={desc.name}
+          accessibilityHint={
+            override ? _(msg`Hide the content`) : _(msg`Show the content`)
+          }>
+          <ButtonIcon
+            icon={blur.type === 'muted' ? EyeSlash : Shield}
+            position="left"
+          />{' '}
+          <ButtonText style={[a.flex_1, a.text_left]}>{desc.name}</ButtonText>
+          {!modui.noOverride && (
+            <ButtonText>
+              {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
+            </ButtonText>
           )}
-        </Pressable>
-        <Text type="md" style={[pal.text, {flex: 1}]} numberOfLines={2}>
-          {desc.name}
-        </Text>
-        <View style={styles.showBtn}>
-          <Text type="lg" style={pal.link}>
-            {moderation.noOverride ? (
-              <Trans>Learn more</Trans>
-            ) : override ? (
-              <Trans>Hide</Trans>
-            ) : (
-              <Trans>Show</Trans>
-            )}
-          </Text>
-        </View>
-      </Pressable>
+        </Button>
+        {blur.type === 'label' && !override && (
+          <Button
+            variant="ghost"
+            size="tiny"
+            onPress={() => {
+              openDialog(ModerationDetailsDialog, {
+                context: 'content',
+                modcause: blur,
+              })
+            }}
+            label={_(msg`Learn more`)}>
+            <ButtonText
+              style={[
+                a.flex_1,
+                a.text_sm,
+                a.font_normal,
+                t.atoms.text_contrast_medium,
+                a.text_left,
+              ]}>
+              {/* TODO get actual labeler */}
+              <Trans>
+                Labeled by Bluesky Safety.{' '}
+                <Text style={[{color: t.palette.primary_500}, a.text_sm]}>
+                  Learn more.
+                </Text>
+              </Trans>
+            </ButtonText>
+          </Button>
+        )}
+      </View>
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>
   )
-}
-
-function shouldIgnoreQuote(
-  decisions: PostModeration['decisions'] | undefined,
-  ignore: boolean | undefined,
-): boolean {
-  if (!decisions || !ignore) {
-    return false
-  }
-  return !isPostMediaBlurred(decisions)
 }
 
 const styles = StyleSheet.create({

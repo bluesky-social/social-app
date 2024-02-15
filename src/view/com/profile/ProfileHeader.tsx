@@ -134,10 +134,8 @@ let ProfileHeader = ({
   }, [navigation])
 
   const onPressAvi = React.useCallback(() => {
-    if (
-      profile.avatar &&
-      !(moderation.avatar.blur && moderation.avatar.noOverride)
-    ) {
+    const modui = moderation.ui('avatar')
+    if (profile.avatar && !(modui.blur && modui.noOverride)) {
       openLightbox(new ProfileImageLightbox(profile))
     }
   }, [openLightbox, profile, moderation])
@@ -407,7 +405,10 @@ let ProfileHeader = ({
             style={{borderRadius: 0}}
           />
         ) : (
-          <UserBanner banner={profile.banner} moderation={moderation.avatar} />
+          <UserBanner
+            banner={profile.banner}
+            moderation={moderation.ui('banner')}
+          />
         )}
       </View>
       <View style={styles.content} pointerEvents="box-none">
@@ -538,7 +539,7 @@ let ProfileHeader = ({
             style={[pal.text, styles.title]}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
         </View>
@@ -611,7 +612,7 @@ let ProfileHeader = ({
                 </Text>
               </Text>
             </View>
-            {descriptionRT && !moderation.profile.blur ? (
+            {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
                 <RichText
                   testID="profileHeaderDescription"
@@ -671,7 +672,7 @@ let ProfileHeader = ({
           <UserAvatar
             size={80}
             avatar={profile.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
         </View>
       </TouchableWithoutFeedback>

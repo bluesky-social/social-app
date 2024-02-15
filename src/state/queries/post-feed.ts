@@ -1,6 +1,10 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost, PostModeration} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  ModerationDecision,
+} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -62,7 +66,7 @@ export interface FeedPostSliceItem {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
-  moderation: PostModeration
+  moderation: ModerationDecision
 }
 
 export interface FeedPostSlice {
@@ -227,7 +231,7 @@ export function usePostFeedQuery(
                   // apply moderation filter
                   for (let i = 0; i < slice.items.length; i++) {
                     if (
-                      moderations[i]?.content.filter &&
+                      moderations[i]?.ui('contentList').filter &&
                       slice.items[i].post.author.did !== ignoreFilterFor
                     ) {
                       return undefined
@@ -433,7 +437,7 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
       DEFAULT_LOGGED_OUT_PREFERENCES.moderationOpts,
     )
 
-    if (!moderation.content.filter) {
+    if (!moderation.ui('contentList').filter) {
       // we have a sfw post
       somePostsPassModeration = true
     }

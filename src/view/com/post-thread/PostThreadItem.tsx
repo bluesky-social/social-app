@@ -5,7 +5,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   RichText as RichTextAPI,
-  PostModeration,
+  ModerationDecision,
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -19,7 +19,6 @@ import {niceDate} from 'lib/strings/time'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {countLines, pluralize} from 'lib/strings/helpers'
-import {isEmbedByEmbedder} from 'lib/embeds'
 import {getTranslatorLink, isPostInLanguage} from '../../../locale/helpers'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
@@ -144,7 +143,7 @@ let PostThreadItemLoaded = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  moderation: PostModeration
+  moderation: ModerationDecision
   treeView: boolean
   depth: number
   prevPost: ThreadPost | undefined
@@ -256,7 +255,7 @@ let PostThreadItemLoaded = ({
                 did={post.author.did}
                 handle={post.author.handle}
                 avatar={post.author.avatar}
-                moderation={moderation.avatar}
+                moderation={moderation.ui('avatar')}
               />
             </View>
             <View style={styles.layoutContent}>
@@ -313,12 +312,12 @@ let PostThreadItemLoaded = ({
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
             <ContentHider
-              moderation={moderation.content}
+              modui={moderation.ui('contentView')}
               ignoreMute
               style={styles.contentHider}
               childContainerStyle={styles.contentHiderChild}>
               <PostAlerts
-                moderation={moderation.content}
+                modui={moderation.ui('contentView')}
                 includeMute
                 style={styles.alert}
               />
@@ -338,18 +337,7 @@ let PostThreadItemLoaded = ({
                 </View>
               ) : undefined}
               {post.embed && (
-                <ContentHider
-                  moderation={moderation.embed}
-                  moderationDecisions={moderation.decisions}
-                  ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
-                  ignoreQuoteDecisions
-                  style={s.mb10}>
-                  <PostEmbeds
-                    embed={post.embed}
-                    moderation={moderation.embed}
-                    moderationDecisions={moderation.decisions}
-                  />
-                </ContentHider>
+                <PostEmbeds embed={post.embed} moderation={moderation} />
               )}
             </ContentHider>
             <ExpandedPostDetails
@@ -431,7 +419,7 @@ let PostThreadItemLoaded = ({
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
             style={[pal.view]}
-            moderation={moderation.content}
+            modui={moderation.ui('contentList')}
             iconSize={isThreadedChild ? 26 : 38}
             iconStyles={
               isThreadedChild
@@ -482,7 +470,7 @@ let PostThreadItemLoaded = ({
                     did={post.author.did}
                     handle={post.author.handle}
                     avatar={post.author.avatar}
-                    moderation={moderation.avatar}
+                    moderation={moderation.ui('avatar')}
                   />
 
                   {showChildReplyLine && (
@@ -507,14 +495,14 @@ let PostThreadItemLoaded = ({
                   timestamp={post.indexedAt}
                   postHref={postHref}
                   showAvatar={isThreadedChild}
-                  avatarModeration={moderation.avatar}
+                  avatarModeration={moderation.ui('avatar')}
                   avatarSize={28}
                   displayNameType="md-bold"
                   displayNameStyle={isThreadedChild && s.ml2}
                   style={isThreadedChild && s.mb2}
                 />
                 <PostAlerts
-                  moderation={moderation.content}
+                  modui={moderation.ui('contentList')}
                   style={styles.alert}
                 />
                 {richText?.text ? (
@@ -537,18 +525,7 @@ let PostThreadItemLoaded = ({
                   />
                 ) : undefined}
                 {post.embed && (
-                  <ContentHider
-                    style={styles.contentHider}
-                    moderation={moderation.embed}
-                    moderationDecisions={moderation.decisions}
-                    ignoreMute={isEmbedByEmbedder(post.embed, post.author.did)}
-                    ignoreQuoteDecisions>
-                    <PostEmbeds
-                      embed={post.embed}
-                      moderation={moderation.embed}
-                      moderationDecisions={moderation.decisions}
-                    />
-                  </ContentHider>
+                  <PostEmbeds embed={post.embed} moderation={moderation} />
                 )}
                 <PostCtrls
                   post={post}

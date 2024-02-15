@@ -97,11 +97,7 @@ function shouldFilterNotif(
     return false
   }
   const profile = moderateProfile(notif.author, moderationOpts)
-  if (
-    profile.account.filter ||
-    profile.profile.filter ||
-    notif.author.viewer?.muted
-  ) {
+  if (profile.ui('profileList').filter || notif.author.viewer?.muted) {
     return true
   }
   if (
@@ -111,7 +107,7 @@ function shouldFilterNotif(
   ) {
     // NOTE: the notification overlaps the post enough for this to work
     const post = moderatePost(notif, moderationOpts)
-    if (post.content.filter) {
+    if (post.ui('contentList').filter) {
       return true
     }
   }

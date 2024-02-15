@@ -19,22 +19,24 @@ import {Text} from '../text/Text'
 import {Button} from '../forms/Button'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 import {s} from '#/lib/styles'
 import {CenteredView} from '../Views'
 
+import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
+import {useOpenGlobalDialog} from '#/components/dialogs'
+
 export function ScreenHider({
   testID,
   screenDescription,
-  moderation,
+  modui,
   style,
   containerStyle,
   children,
 }: React.PropsWithChildren<{
   testID?: string
   screenDescription: string
-  moderation: ModerationUI
+  modui: ModerationUI
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
@@ -44,10 +46,11 @@ export function ScreenHider({
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
-  const {openModal} = useModalControls()
-  const desc = useModerationCauseDescription(moderation.cause, 'account')
+  const openDialog = useOpenGlobalDialog()
+  const blur = modui.blurs[0]
+  const desc = useModerationCauseDescription(blur, 'content')
 
-  if (!moderation.blur || override) {
+  if (!blur || override) {
     return (
       <View testID={testID} style={style}>
         {children}
@@ -55,9 +58,10 @@ export function ScreenHider({
     )
   }
 
-  const isNoPwi =
-    moderation.cause?.type === 'label' &&
-    moderation.cause?.labelDef.id === '!no-unauthenticated'
+  const isNoPwi = !!modui.blurs.find(
+    cause =>
+      cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated',
+  )
   return (
     <CenteredView
       style={[styles.container, pal.view, containerStyle]}
@@ -91,10 +95,9 @@ export function ScreenHider({
             </Text>
             <TouchableWithoutFeedback
               onPress={() => {
-                openModal({
-                  name: 'moderation-details',
+                openDialog(ModerationDetailsDialog, {
                   context: 'account',
-                  moderation,
+                  modcause: blur,
                 })
               }}
               accessibilityRole="button"
@@ -123,7 +126,7 @@ export function ScreenHider({
             <Trans>Go back</Trans>
           </Text>
         </Button>
-        {!moderation.noOverride && (
+        {!modui.noOverride && (
           <Button
             type="default"
             onPress={() => setOverride(v => !v)}

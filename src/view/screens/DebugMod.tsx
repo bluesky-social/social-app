@@ -7,14 +7,16 @@ import {
   moderatePost,
   moderateProfile,
   ModerationOpts,
-  PostModeration,
-  ProfileModeration,
-  ModerationUI,
   AppBskyActorDefs,
   AppBskyFeedDefs,
+  AppBskyFeedPost,
   LabelTarget,
   LabelPreference,
+  ModerationDecision,
+  ModerationBehavior,
+  RichText,
 } from '@atproto/api'
+import {moderationOptsOverrideContext} from '#/state/queries/preferences'
 
 import {atoms as a, useTheme} from '#/alf'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -22,23 +24,24 @@ import {H1, H3, P, Text} from '#/components/Typography'
 import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import {UserAvatar} from '../com/util/UserAvatar'
-
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PostHider} from '../com/util/moderation/PostHider'
-import {PostAlerts} from '../com/util/moderation/PostAlerts'
-import {ContentHider} from '../com/util/moderation/ContentHider'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
+} from '#/components/icons/Chevron'
 import {ScreenHider} from '../com/util/moderation/ScreenHider'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {ProfileCardPills} from '../com/profile/ProfileCard'
+import {ProfileCard} from '../com/profile/ProfileCard'
+import {FeedItem} from '../com/posts/FeedItem'
+import {PostThreadItem} from '../com/post-thread/PostThreadItem'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
 ) as (keyof typeof LABELS)[]
 
 const MOCK_MOD_OPTS = {
-  userDid: 'at://did:web:alice',
+  userDid: 'did:web:alice.test',
   adultContentEnabled: true,
   labelGroups: {},
   mods: [
@@ -54,36 +57,53 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   'DebugMod'
 >) => {
   const t = useTheme()
+  const [scenario, setScenario] = React.useState<string[]>(['label'])
+  const [scenarioSwitches, setScenarioSwitches] = React.useState<string[]>([])
   const [label, setLabel] = React.useState<string[]>([LABEL_VALUES[0]])
   const [target, setTarget] = React.useState<string[]>(['account'])
   const [visibility, setVisiblity] = React.useState<string[]>(['hide'])
   const labelStrings = useLabelStrings()
 
+  const isTargetMe =
+    scenario[0] === 'label' && scenarioSwitches.includes('targetMe')
+  const isSelfLabel =
+    scenario[0] === 'label' && scenarioSwitches.includes('selfLabel')
+  const noAdult =
+    scenario[0] === 'label' && scenarioSwitches.includes('noAdult')
+  const isLoggedOut =
+    scenario[0] === 'label' && scenarioSwitches.includes('loggedOut')
+
   const profile = React.useMemo(() => {
     const mockedProfile = mock.profileViewBasic({
       handle: `bob.test`,
       displayName: 'Bob Robertson',
+      description: 'User with this as their bio',
       labels:
-        target[0] === 'account'
+        scenario[0] === 'label' && target[0] === 'account'
           ? [
               mock.label({
+                src: isSelfLabel ? 'did:web:bob.test' : undefined,
                 val: label[0],
-                uri: `at://did:web:bob/`,
+                uri: `at://did:web:bob.test/`,
               }),
             ]
-          : target[0] === 'profile'
+          : scenario[0] === 'label' && target[0] === 'profile'
           ? [
               mock.label({
+                src: isSelfLabel ? 'did:web:bob.test' : undefined,
                 val: label[0],
-                uri: `at://did:web:bob/app.bsky.actor.profile/self`,
+                uri: `at://did:web:bob.test/app.bsky.actor.profile/self`,
               }),
             ]
           : undefined,
       viewer: mock.actorViewerState({
-        muted: false,
+        muted: scenario[0] === 'mute',
         mutedByList: undefined,
         blockedBy: undefined,
-        blocking: undefined,
+        blocking:
+          scenario[0] === 'block'
+            ? 'did://did:web:alice/app.bsky.actor.block/fake'
+            : undefined,
         blockingByList: undefined,
       }),
     })
@@ -91,7 +111,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     mockedProfile.banner =
       'https://bsky.social/about/images/social-card-default-gradient.png'
     return mockedProfile
-  }, [target, label])
+  }, [scenario, target, label, isSelfLabel])
 
   const post = React.useMemo(() => {
     return mock.postView({
@@ -100,41 +120,63 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       }),
       author: profile,
       labels:
-        target[0] === 'post'
+        scenario[0] === 'label' && target[0] === 'post'
           ? [
               mock.label({
+                src: isSelfLabel ? 'did:web:bob.test' : undefined,
                 val: label[0],
                 uri: `at://bob.test/app.bsky.feed.post/fake`,
               }),
             ]
           : undefined,
-      embed: mock.embedRecordView({
-        record: mock.post({
-          text: 'Embed',
-        }),
-        labels:
-          target[0] === 'embed'
-            ? [
-                mock.label({
-                  val: label[0],
-                  uri: `at://bob.test/app.bsky.feed.post/fake`,
-                }),
-              ]
-            : undefined,
-        author: profile,
-      }),
+      embed:
+        target[0] === 'embed'
+          ? mock.embedRecordView({
+              record: mock.post({
+                text: 'Embed',
+              }),
+              labels:
+                scenario[0] === 'label' && target[0] === 'embed'
+                  ? [
+                      mock.label({
+                        src: isSelfLabel ? 'did:web:bob.test' : undefined,
+                        val: label[0],
+                        uri: `at://bob.test/app.bsky.feed.post/fake`,
+                      }),
+                    ]
+                  : undefined,
+              author: profile,
+            })
+          : {
+              $type: 'app.bsky.embed.images#view',
+              images: [
+                {
+                  thumb:
+                    'https://bsky.social/about/images/social-card-default-gradient.png',
+                  fullsize:
+                    'https://bsky.social/about/images/social-card-default-gradient.png',
+                  alt: '',
+                },
+              ],
+            },
     })
-  }, [label, target, profile])
+  }, [scenario, label, target, profile, isSelfLabel])
 
   const modOpts = React.useMemo(() => {
     return {
       ...MOCK_MOD_OPTS,
+      userDid: isLoggedOut
+        ? ''
+        : isTargetMe
+        ? 'did:web:bob.test'
+        : 'did:web:alice.test',
+      adultContentEnabled: !noAdult,
       labelGroups: {
         [LABELS[label[0] as keyof typeof LABELS].groupId]:
           visibility[0] as LabelPreference,
       },
     }
-  }, [label, visibility])
+  }, [label, visibility, noAdult, isLoggedOut, isTargetMe])
 
   const profileModeration = React.useMemo(() => {
     return moderateProfile(profile, modOpts)
@@ -143,188 +185,201 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return moderatePost(post, modOpts)
   }, [post, modOpts])
 
-  console.log(post, profile)
-  console.log(profileModeration, postModeration)
+  console.log(post)
 
   return (
-    <ScrollView>
-      <CenteredView style={[t.atoms.bg, a.px_lg, a.py_lg]}>
-        <H1 style={[a.text_5xl, a.font_bold, a.pb_lg]}>Moderation states</H1>
+    <moderationOptsOverrideContext.Provider value={modOpts}>
+      <ScrollView>
+        <CenteredView style={[t.atoms.bg, a.px_lg, a.py_lg]}>
+          <H1 style={[a.text_5xl, a.font_bold, a.pb_lg]}>Moderation states</H1>
 
-        <Heading title="Config" />
-        <Heading title="" subtitle="Target" />
-        <ToggleButton.Group label="Target" values={target} onChange={setTarget}>
-          <ToggleButton.Button name="account" label="Account">
-            Account
-          </ToggleButton.Button>
-          <ToggleButton.Button name="profile" label="Profile">
-            Profile
-          </ToggleButton.Button>
-          <ToggleButton.Button name="post" label="Post">
-            Post
-          </ToggleButton.Button>
-          <ToggleButton.Button name="embed" label="Embed">
-            Embed
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+          <Heading title="Config" />
 
-        <View style={{height: 10}} />
+          <Heading title="" subtitle="Scenario" />
+          <ToggleButton.Group
+            label="Scenario"
+            values={scenario}
+            onChange={setScenario}>
+            <ToggleButton.Button name="label" label="Label">
+              Label
+            </ToggleButton.Button>
+            <ToggleButton.Button name="block" label="Block">
+              Block
+            </ToggleButton.Button>
+            <ToggleButton.Button name="mute" label="Mute">
+              Mute
+            </ToggleButton.Button>
+          </ToggleButton.Group>
 
-        <Heading title="" subtitle="Preference" />
-        <ToggleButton.Group
-          label="Visiblity"
-          values={visibility}
-          onChange={setVisiblity}>
-          <ToggleButton.Button name="hide" label="Hide">
-            Hide
-          </ToggleButton.Button>
-          <ToggleButton.Button name="warn" label="Warn">
-            Warn
-          </ToggleButton.Button>
-          <ToggleButton.Button name="ignore" label="Ignore">
-            Ignore
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+          {scenario[0] === 'label' && (
+            <>
+              <Toggle.Group
+                label="Toggle"
+                type="checkbox"
+                values={scenarioSwitches}
+                onChange={setScenarioSwitches}>
+                <View style={[a.gap_md, a.flex_row, a.pt_md]}>
+                  <Toggle.Item name="targetMe" label="Target is me">
+                    <Toggle.Checkbox />
+                    <Toggle.Label>Target is me</Toggle.Label>
+                  </Toggle.Item>
+                  <Toggle.Item name="selfLabel" label="Self label">
+                    <Toggle.Checkbox />
+                    <Toggle.Label>Self label</Toggle.Label>
+                  </Toggle.Item>
+                  <Toggle.Item name="noAdult" label="Adult disabled">
+                    <Toggle.Checkbox />
+                    <Toggle.Label>Adult disabled</Toggle.Label>
+                  </Toggle.Item>
+                  <Toggle.Item name="loggedOut" label="Logged out">
+                    <Toggle.Checkbox />
+                    <Toggle.Label>Logged out</Toggle.Label>
+                  </Toggle.Item>
+                </View>
+              </Toggle.Group>
+              <View style={{height: 10}} />
 
-        <View style={{height: 10}} />
+              <Heading title="" subtitle="Target" />
+              <ToggleButton.Group
+                label="Target"
+                values={target}
+                onChange={setTarget}>
+                <ToggleButton.Button name="account" label="Account">
+                  Account
+                </ToggleButton.Button>
+                <ToggleButton.Button name="profile" label="Profile">
+                  Profile
+                </ToggleButton.Button>
+                <ToggleButton.Button name="post" label="Post">
+                  Post
+                </ToggleButton.Button>
+                <ToggleButton.Button name="embed" label="Embed">
+                  Embed
+                </ToggleButton.Button>
+              </ToggleButton.Group>
 
-        <Heading title="" subtitle="Label" />
-        <Toggle.Group
-          label="Toggle"
-          type="radio"
-          values={label}
-          onChange={setLabel}>
-          <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
-            {LABEL_VALUES.map(labelValue => {
-              let targetFixed = target[0]
-              if (targetFixed !== 'account' && targetFixed !== 'profile') {
-                targetFixed = 'content'
-              }
-              const disabled = !LABELS[labelValue].targets.includes(
-                targetFixed as LabelTarget,
-              )
-              return (
-                <Toggle.Item
-                  key={labelValue}
-                  name={labelValue}
-                  label={labelStrings[labelValue].general.name}
-                  disabled={disabled}
-                  style={disabled ? {opacity: 0.5} : undefined}>
-                  <Toggle.Radio />
-                  <Toggle.Label>{labelValue}</Toggle.Label>
-                </Toggle.Item>
-              )
-            })}
-          </View>
-        </Toggle.Group>
+              <View style={{height: 10}} />
 
-        <Spacer />
+              <Heading title="" subtitle="Preference" />
+              <ToggleButton.Group
+                label="Visiblity"
+                values={visibility}
+                onChange={setVisiblity}>
+                <ToggleButton.Button name="hide" label="Hide">
+                  Hide
+                </ToggleButton.Button>
+                <ToggleButton.Button name="warn" label="Warn">
+                  Warn
+                </ToggleButton.Button>
+                <ToggleButton.Button name="ignore" label="Ignore">
+                  Ignore
+                </ToggleButton.Button>
+              </ToggleButton.Group>
 
-        <Heading title={label[0]} />
-        <Text style={{fontFamily: 'monospace'}}>
-          {JSON.stringify(LABELS[label[0]], null, 2)}
-        </Text>
+              <View style={{height: 10}} />
 
-        <Spacer />
+              <Heading title="" subtitle="Label" />
+              <Toggle.Group
+                label="Toggle"
+                type="radio"
+                values={label}
+                onChange={setLabel}>
+                <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+                  {LABEL_VALUES.map(labelValue => {
+                    let targetFixed = target[0]
+                    if (
+                      targetFixed !== 'account' &&
+                      targetFixed !== 'profile'
+                    ) {
+                      targetFixed = 'content'
+                    }
+                    const disabled =
+                      !LABELS[labelValue].targets.includes(
+                        targetFixed as LabelTarget,
+                      ) ||
+                      (isSelfLabel &&
+                        LABELS[labelValue].flags.includes('no-self'))
+                    return (
+                      <Toggle.Item
+                        key={labelValue}
+                        name={labelValue}
+                        label={labelStrings[labelValue].general.name}
+                        disabled={disabled}
+                        style={disabled ? {opacity: 0.5} : undefined}>
+                        <Toggle.Radio />
+                        <Toggle.Label>{labelValue}</Toggle.Label>
+                      </Toggle.Item>
+                    )
+                  })}
+                </View>
+              </Toggle.Group>
+            </>
+          )}
 
-        <Heading title="Output" />
-        <P style={[a.font_bold]}>Post moderation</P>
-        <View
-          style={[
-            t.atoms.border_contrast_low,
-            a.border,
-            a.px_md,
-            a.py_sm,
-            a.rounded_sm,
-            a.flex_col,
-            a.gap_xs,
-          ]}>
-          <ModerationUIView mod={postModeration.avatar} label="Avatar" />
-          <ModerationUIView mod={postModeration.content} label="Content" />
-          <ModerationUIView mod={postModeration.embed} label="Embed" />
-        </View>
-        <P style={[a.font_bold, a.mt_md]}>Profile Moderation</P>
-        <View
-          style={[
-            t.atoms.border_contrast_low,
-            a.border,
-            a.px_md,
-            a.py_sm,
-            a.rounded_sm,
-            a.flex_col,
-            a.gap_xs,
-          ]}>
-          <ModerationUIView mod={profileModeration.avatar} label="Avatar" />
-          <ModerationUIView mod={profileModeration.account} label="Account" />
-          <ModerationUIView mod={profileModeration.profile} label="Profile" />
-        </View>
+          <Spacer />
 
-        <Spacer />
+          <ModerationUIView
+            label="Profile Moderation UI"
+            mod={profileModeration}
+          />
+          <ModerationUIView label="Post Moderation UI" mod={postModeration} />
+          <DataView
+            label={label[0]}
+            data={LABELS[label[0] as keyof typeof LABELS]}
+          />
+          <DataView label="Profile Moderation Data" data={profileModeration} />
+          <DataView label="Post Data" data={postModeration} />
 
-        <Heading title="Post" subtitle="in feed" />
-        <MockPost
-          label={label[0]}
-          context="feed"
-          post={post}
-          moderation={postModeration}
-        />
+          <Spacer />
 
-        <Spacer />
+          <Heading title="Post" subtitle="in feed" />
+          <MockPostFeedItem post={post} moderation={postModeration} />
 
-        <Heading title="Post" subtitle="viewed directly" />
-        <MockPost
-          label={label[0]}
-          context="view"
-          post={post}
-          moderation={postModeration}
-        />
+          <Spacer />
 
-        <Spacer />
+          <Heading title="Post" subtitle="viewed directly" />
+          <MockPostThreadItem post={post} moderation={postModeration} />
 
-        <Heading title="Post" subtitle="reply in thread" />
-        <MockPost
-          label={label[0]}
-          context="reply"
-          post={post}
-          moderation={postModeration}
-        />
+          <Spacer />
 
-        <Spacer />
+          <Heading title="Post" subtitle="reply in thread" />
+          <MockPostThreadItem post={post} moderation={postModeration} reply />
 
-        <Heading title="Notification" subtitle="quote or reply" />
-        <P>TODO</P>
+          <Spacer />
 
-        <Spacer />
+          <Heading title="Notification" subtitle="quote or reply" />
+          <P>TODO</P>
 
-        {(target[0] === 'account' || target[0] === 'profile') && (
-          <>
-            <Heading title="Notification" subtitle="follow or like" />
-            <P>TODO</P>
+          <Spacer />
 
-            <Spacer />
+          {(target[0] === 'account' || target[0] === 'profile') && (
+            <>
+              <Heading title="Notification" subtitle="follow or like" />
+              <P>TODO</P>
 
-            <Heading title="Account" subtitle="in listing" />
-            <MockAccountCard
-              label={label[0]}
-              profile={profile}
-              moderation={profileModeration}
-            />
+              <Spacer />
 
-            <Spacer />
+              <Heading title="Account" subtitle="in listing" />
+              <MockAccountCard
+                profile={profile}
+                moderation={profileModeration}
+              />
 
-            <Heading title="Account" subtitle="viewing directly" />
-            <MockAccountScreen
-              label={label[0]}
-              profile={profile}
-              moderation={profileModeration}
-              moderationOpts={modOpts}
-            />
-          </>
-        )}
+              <Spacer />
 
-        <View style={{height: 400}} />
-      </CenteredView>
-    </ScrollView>
+              <Heading title="Account" subtitle="viewing directly" />
+              <MockAccountScreen
+                profile={profile}
+                moderation={profileModeration}
+                moderationOpts={modOpts}
+              />
+            </>
+          )}
+
+          <View style={{height: 400}} />
+        </CenteredView>
+      </ScrollView>
+    </moderationOptsOverrideContext.Provider>
   )
 }
 
@@ -340,105 +395,146 @@ function Heading({title, subtitle}: {title: string; subtitle?: string}) {
   )
 }
 
-function Spacer() {
-  return <View style={{height: 40}} />
+function Toggler({label, children}: React.PropsWithChildren<{label: string}>) {
+  const t = useTheme()
+  const [show, setShow] = React.useState(false)
+  return (
+    <View style={a.mb_md}>
+      <View
+        style={[
+          t.atoms.border_contrast_medium,
+          a.border,
+          a.rounded_sm,
+          a.p_xs,
+        ]}>
+        <Button
+          variant="solid"
+          color="secondary"
+          label="Toggle visibility"
+          size="small"
+          onPress={() => setShow(!show)}>
+          <ButtonText>{label}</ButtonText>
+          <ButtonIcon
+            icon={show ? ChevronTop : ChevronBottom}
+            position="right"
+          />
+        </Button>
+        {show && children}
+      </View>
+    </View>
+  )
 }
 
-function MockPost({
+function DataView({label, data}: {label: string; data: any}) {
+  return (
+    <Toggler label={label}>
+      <Text style={[{fontFamily: 'monospace'}, a.p_md]}>
+        {JSON.stringify(data, null, 2)}
+      </Text>
+    </Toggler>
+  )
+}
+
+function ModerationUIView({
+  mod,
   label,
-  context,
+}: {
+  mod: ModerationDecision
+  label: string
+}) {
+  return (
+    <Toggler label={label}>
+      <View style={a.p_lg}>
+        {[
+          'profileList',
+          'profileView',
+          'avatar',
+          'banner',
+          'displayName',
+          'contentList',
+          'contentView',
+          'contentMedia',
+        ].map(key => {
+          const ui = mod.ui(key as keyof ModerationBehavior)
+          return (
+            <View key={key} style={[a.flex_row, a.gap_md]}>
+              <Text style={[a.font_bold, {width: 100}]}>{key}</Text>
+              <Flag v={ui.filter} label="Filter" />
+              <Flag v={ui.blur} label="Blur" />
+              <Flag v={ui.alert} label="Alert" />
+              <Flag v={ui.inform} label="Inform" />
+              <Flag v={ui.noOverride} label="No-override" />
+            </View>
+          )
+        })}
+      </View>
+    </Toggler>
+  )
+}
+
+function Spacer() {
+  return <View style={{height: 30}} />
+}
+
+function MockPostFeedItem({
   post,
   moderation,
 }: {
-  label: string
-  context: 'feed' | 'view' | 'reply'
   post: AppBskyFeedDefs.PostView
-  moderation: PostModeration
+  moderation: ModerationDecision
 }) {
   const t = useTheme()
-
-  if (context === 'feed' && moderation.content.filter) {
+  if (moderation.ui('contentList').filter) {
     return (
       <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
         Filtered from the feed
       </P>
     )
   }
-
   return (
-    <View
-      style={[t.atoms.border_contrast_medium, a.border, a.rounded_md, a.p_2xs]}>
-      {' '}
-      <PostHider
-        key={label}
-        href="#"
-        moderation={moderation.content}
-        iconSize={38}
-        iconStyles={{marginLeft: 2, marginRight: 2}}
-        style={[a.px_lg, a.py_lg, a.rounded_md]}>
-        <View style={[a.flex_row, a.gap_md]}>
-          <UserAvatar
-            size={64}
-            avatar={post.author.avatar}
-            moderation={moderation.avatar}
-          />
-          <View style={[a.flex_1]}>
-            <View style={[a.flex_row]}>
-              <P style={[a.font_bold]}>Bob Robertson </P>
-              <P style={t.atoms.text_contrast_medium}>
-                @bob.bsky.social &middot; 5m
-              </P>
-            </View>
+    <FeedItem
+      post={post}
+      record={post.record as AppBskyFeedPost.Record}
+      moderation={moderation}
+      reason={undefined}
+    />
+  )
+}
 
-            <PostAlerts moderation={moderation.content} />
-
-            <P style={a.mb_lg}>
-              This is the body of the post. It's where the text goes. You get
-              the idea.
-            </P>
-
-            <ContentHider
-              moderation={moderation.embed}
-              moderationDecisions={moderation.decisions}>
-              <View
-                style={[
-                  t.atoms.border_contrast_medium,
-                  a.border,
-                  a.rounded_md,
-                  a.flex_col,
-                  a.gap_xs,
-                  a.px_xl,
-                  a.py_xl,
-                ]}>
-                <View style={[a.flex_row]}>
-                  <P style={[a.font_bold]}>Bob Robertson </P>
-                  <P style={t.atoms.text_contrast_medium}>
-                    @bob.bsky.social &middot; 5m
-                  </P>
-                </View>
-                <PostAlerts moderation={moderation.embed} />
-                <P>Embedded content</P>
-              </View>
-            </ContentHider>
-          </View>
-        </View>
-      </PostHider>
-    </View>
+function MockPostThreadItem({
+  post,
+  reply,
+}: {
+  post: AppBskyFeedDefs.PostView
+  moderation: ModerationDecision
+  reply?: boolean
+}) {
+  return (
+    <PostThreadItem
+      // @ts-ignore
+      post={post}
+      record={post.record as AppBskyFeedPost.Record}
+      depth={reply ? 1 : 0}
+      isHighlightedPost={!reply}
+      treeView={false}
+      prevPost={undefined}
+      nextPost={undefined}
+      hasPrecedingItem={false}
+      onPostReply={() => {}}
+    />
   )
 }
 
 function MockAccountCard({
-  label,
   profile,
   moderation,
 }: {
-  label: string
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ProfileModeration
+  moderation: ModerationDecision
 }) {
   const t = useTheme()
 
-  if (moderation.account.filter || moderation.profile.filter) {
+  if (moderation.ui('profileList').filter) {
     return (
       <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
         Filtered from the listing
@@ -446,100 +542,32 @@ function MockAccountCard({
     )
   }
 
-  return (
-    <View
-      key={label}
-      style={[
-        t.atoms.border_contrast_medium,
-        a.border,
-        a.rounded_md,
-        a.flex_row,
-        a.gap_md,
-        a.px_lg,
-        a.py_md,
-        a.mb_md,
-      ]}>
-      <UserAvatar
-        size={64}
-        avatar={profile.avatar}
-        moderation={moderation.avatar}
-      />
-      <View style={[a.flex_1]}>
-        <P style={[a.font_bold]}>
-          {sanitizeDisplayName('Bob Robertson', moderation.profile)}{' '}
-        </P>
-        <P style={t.atoms.text_contrast_medium}>@bob.bsky.social</P>
-        <P>Thought leader or something.</P>
-        <ProfileCardPills followedBy={false} moderation={moderation} />
-      </View>
-    </View>
-  )
+  return <ProfileCard profile={profile} />
 }
 
 function MockAccountScreen({
-  label,
   profile,
   moderation,
   moderationOpts,
 }: {
-  label: string
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ProfileModeration
+  moderation: ModerationDecision
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   return (
-    <View
-      key={label}
-      style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
+    <View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
       <ScreenHider
         style={{}}
         screenDescription="profile"
-        moderation={moderation.account}>
+        modui={moderation.ui('profileView')}>
         <ProfileHeader
           // @ts-ignore ProfileViewBasic is close enough -prf
           profile={profile}
           moderationOpts={moderationOpts}
-          descriptionRT={null /*TODO*/}
+          descriptionRT={new RichText({text: profile.description as string})}
         />
-
-        {/*
-      <UserBanner />
-      <View
-        style={[
-          a.absolute,
-          t.atoms.bg,
-          a.rounded_full,
-          {top: 100, left: 10, width: 100, height: 100, padding: 2},
-        ]}>
-        <UserAvatar size={96} moderation={moderation.avatar} />
-      </View>
-      <View
-        style={[
-          a.pb_2xl,
-          a.px_xl,
-          t.atoms.border_contrast_medium,
-          a.border_b,
-          {paddingTop: 60},
-        ]}>
-        <H3>Bob Robertson</H3>
-        <P style={t.atoms.text_contrast_medium}>@bob.bsky.social</P>
-        <P>Thought leader or something.</P>
-      </View>
-      */}
       </ScreenHider>
-    </View>
-  )
-}
-
-function ModerationUIView({mod, label}: {mod: ModerationUI; label: string}) {
-  return (
-    <View style={[a.flex_row, a.gap_md]}>
-      <P style={[a.font_bold, a.text_xs, {width: 60}]}>{label}:</P>
-      <Flag v={mod.filter} label="Filter" />
-      <Flag v={mod.blur} label="Blur" />
-      <Flag v={mod.alert} label="Alert" />
-      <Flag v={mod.noOverride} label="No-override" />
     </View>
   )
 }
@@ -556,12 +584,12 @@ function Flag({v, label}: {v: boolean | undefined; label: string}) {
           a.border,
           t.atoms.border_contrast_medium,
           {
-            backgroundColor: v ? t.palette.black : t.palette.white,
+            backgroundColor: t.palette.contrast_25,
             width: 14,
             height: 14,
           },
         ]}>
-        {v && <Check size="xs" fill={t.palette.white} />}
+        {v && <Check size="xs" fill={t.palette.contrast_900} />}
       </View>
       <P style={a.text_xs}>{label}</P>
     </View>

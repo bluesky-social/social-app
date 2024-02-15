@@ -4,7 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  PostModeration,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {
@@ -28,7 +28,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
@@ -50,7 +49,7 @@ export function FeedItem({
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
-  moderation: PostModeration
+  moderation: ModerationDecision
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -98,7 +97,7 @@ let FeedItemInner = ({
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   richText: RichTextAPI
-  moderation: PostModeration
+  moderation: ModerationDecision
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -111,9 +110,12 @@ let FeedItemInner = ({
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const isModeratedPost =
-    moderation.decisions.post.cause?.type === 'label' &&
-    moderation.decisions.post.cause.label.src !== currentAccount?.did
+  const isModeratedPost = !!moderation.causes.find(
+    cause =>
+      cause?.type === 'label' &&
+      cause.label.src !== currentAccount?.did &&
+      cause.label.uri === post.uri,
+  )
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -247,7 +249,7 @@ let FeedItemInner = ({
             did={post.author.did}
             handle={post.author.handle}
             avatar={post.author.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
           {isThreadParent && (
             <View
@@ -324,7 +326,7 @@ let PostContent = ({
   postEmbed,
   postAuthor,
 }: {
-  moderation: PostModeration
+  moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
@@ -342,10 +344,10 @@ let PostContent = ({
   return (
     <ContentHider
       testID="contentHider-post"
-      moderation={moderation.content}
+      modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts moderation={moderation.content} style={styles.alert} />
+      <PostAlerts modui={moderation.ui('contentList')} style={styles.alert} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -367,19 +369,7 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <ContentHider
-          testID="contentHider-embed"
-          moderation={moderation.embed}
-          moderationDecisions={moderation.decisions}
-          ignoreMute={isEmbedByEmbedder(postEmbed, postAuthor.did)}
-          ignoreQuoteDecisions
-          style={styles.embed}>
-          <PostEmbeds
-            embed={postEmbed}
-            moderation={moderation.embed}
-            moderationDecisions={moderation.decisions}
-          />
-        </ContentHider>
+        <PostEmbeds embed={postEmbed} moderation={moderation} />
       ) : null}
     </ContentHider>
   )
