@@ -238,6 +238,10 @@ msgstr "Konten dewasa hanya dapat diaktifkan melalui Web di <0/>."
 msgid "Advanced"
 msgstr "Lanjutan"
 
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
@@ -368,15 +372,15 @@ msgstr "Ketelanjangan artistik atau non-erotis."
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:408
-#: src/view/com/post-thread/PostThread.tsx:458
-#: src/view/com/post-thread/PostThread.tsx:466
+#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:487
+#: src/view/com/post-thread/PostThread.tsx:495
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "Kembali"
 
-#: src/view/com/post-thread/PostThread.tsx:416
+#: src/view/com/post-thread/PostThread.tsx:445
 msgctxt "action"
 msgid "Back"
 msgstr "Kembali"
@@ -441,7 +445,7 @@ msgstr "Akun yang diblokir tidak dapat membalas di utas Anda, menyebut Anda, ata
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Akun yang diblokir tidak dapat membalas postingan Anda, menyebutkan Anda, dan interaksi lain dengan Anda. Anda tidak akan melihat konten mereka dan mereka akan dicegah melihat konten Anda."
 
-#: src/view/com/post-thread/PostThread.tsx:267
+#: src/view/com/post-thread/PostThread.tsx:297
 msgid "Blocked post."
 msgstr "Postingan yang diblokir."
 
@@ -450,6 +454,7 @@ msgid "Blocking is public. Blocked accounts cannot reply in your threads, mentio
 msgstr "Blokir bersifat publik. Akun yang diblokir tidak dapat membalas postingan Anda, menyebutkan Anda, dan interaksi lain dengan Anda."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "Blog"
 
@@ -499,6 +504,7 @@ msgid "Build version {0} {1}"
 msgstr "Versi {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
 msgid "Business"
 msgstr "Bisnis"
 
@@ -959,8 +965,8 @@ msgid "Country"
 msgstr ""
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
-#: src/view/com/auth/SplashScreen.tsx:46
-#: src/view/com/auth/SplashScreen.web.tsx:77
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
 msgid "Create a new account"
 msgstr "Buat akun baru"
 
@@ -977,7 +983,7 @@ msgid "Create App Password"
 msgstr "Buat Kata Sandi Aplikasi"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:68
 msgid "Create new account"
 msgstr "Buat akun baru"
 
@@ -1011,6 +1017,7 @@ msgid "Custom domain"
 msgstr "Domain kustom"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr ""
 
@@ -1085,7 +1092,7 @@ msgstr "Hapus postingan ini?"
 msgid "Deleted"
 msgstr "Dihapus"
 
-#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:289
 msgid "Deleted post."
 msgstr "Postingan dihapus."
 
@@ -1130,8 +1137,12 @@ msgid "Discover new custom feeds"
 msgstr "Temukan feed khusus baru"
 
 #: src/view/screens/Feeds.tsx:473
-msgid "Discover new feeds"
-msgstr "Temukan feed baru"
+#~ msgid "Discover new feeds"
+#~ msgstr "Temukan feed baru"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1267,7 +1278,7 @@ msgstr "Edit profil"
 msgid "Edit Profile"
 msgstr "Edit Profil"
 
-#: src/view/screens/Feeds.tsx:356
+#: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "Edit Feed Tersimpan"
 
@@ -1488,7 +1499,7 @@ msgstr "Feed"
 msgid "Feed by {0}"
 msgstr "Feed oleh {0}"
 
-#: src/view/screens/Feeds.tsx:631
+#: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
 msgstr "Feed offline"
 
@@ -1502,7 +1513,8 @@ msgid "Feedback"
 msgstr "Masukan"
 
 #: src/Navigation.tsx:442
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
 #: src/view/screens/Profile.tsx:184
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -1981,6 +1993,7 @@ msgid "It shows posts from the people you follow as they happen."
 msgstr ""
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "Karir"
 
@@ -2172,8 +2185,8 @@ msgstr "Daftar tidak dibisukan"
 msgid "Lists"
 msgstr "Daftar"
 
-#: src/view/com/post-thread/PostThread.tsx:276
-#: src/view/com/post-thread/PostThread.tsx:284
+#: src/view/com/post-thread/PostThread.tsx:306
+#: src/view/com/post-thread/PostThread.tsx:314
 msgid "Load more posts"
 msgstr "Muat postingan lainnya"
 
@@ -2362,7 +2375,7 @@ msgstr "Pembisuan akun bersifat privat. Akun yang dibisukan tetap dapat berinter
 msgid "My Birthday"
 msgstr "Tanggal Lahir Saya"
 
-#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
 msgstr "Feed Saya"
 
@@ -2443,7 +2456,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Postingan baru"
 
-#: src/view/screens/Feeds.tsx:581
+#: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:382
 #: src/view/screens/ProfileFeed.tsx:432
@@ -2521,7 +2534,7 @@ msgstr "Belum ada notifikasi!"
 msgid "No result"
 msgstr "Tidak ada hasil"
 
-#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
 msgstr "Tidak ada hasil ditemukan untuk \"{query}\""
 
@@ -2693,7 +2706,7 @@ msgstr "Buka pengaturan moderasi"
 msgid "Opens password reset form"
 msgstr "Membuka formulir pengaturan ulang kata sandi"
 
-#: src/view/screens/Feeds.tsx:357
+#: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Membuka layar untuk mengedit Umpan Tersimpan"
 
@@ -2889,7 +2902,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Posting"
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:276
 msgctxt "description"
 msgid "Post"
 msgstr "Posting"
@@ -2911,7 +2924,7 @@ msgstr "Postingan oleh @{0}"
 msgid "Post deleted"
 msgstr "Postingan dihapus"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post hidden"
 msgstr "Postingan disembunyikan"
 
@@ -2923,7 +2936,7 @@ msgstr "Bahasa postingan"
 msgid "Post Languages"
 msgstr "Bahasa Postingan"
 
-#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/post-thread/PostThread.tsx:479
 msgid "Post not found"
 msgstr "Postingan tidak ditemukan"
 
@@ -3682,7 +3695,7 @@ msgstr "Tampilkan postingan dari {0} di feed Anda"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
-#: src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:79
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
@@ -3695,8 +3708,8 @@ msgid "Sign in"
 msgstr "Masuk"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
 msgid "Sign In"
 msgstr "Masuk"
 
@@ -3928,7 +3941,7 @@ msgstr "Kebijakan Hak Cipta telah dipindahkan ke <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:482
 msgid "The post may have been deleted."
 msgstr "Postingan mungkin telah dihapus."
 
@@ -4491,7 +4504,7 @@ msgstr "Apa yang bermasalah dengan {collectionName}?"
 #~ msgid "What's next?"
 #~ msgstr "Apa selanjutnya?"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "Apa kabar?"
@@ -4578,7 +4591,7 @@ msgstr "Anda belum memiliki kode undangan! Kami akan mengirimkan kode saat Anda 
 msgid "You don't have any pinned feeds."
 msgstr "Anda tidak memiliki feed yang disematkan."
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
 msgstr "Anda tidak memiliki feed yang disimpan!"
 
@@ -4586,7 +4599,7 @@ msgstr "Anda tidak memiliki feed yang disimpan!"
 msgid "You don't have any saved feeds."
 msgstr "Anda tidak memiliki feed yang disimpan."
 
-#: src/view/com/post-thread/PostThread.tsx:401
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Anda telah memblokir atau diblokir oleh penulis ini."
 
