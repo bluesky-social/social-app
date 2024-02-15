@@ -334,9 +334,13 @@ function Items({type}: {type: 'emojis' | 'colors'}) {
         data={type === 'colors' ? colors : emojiNames}
         renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
         ref={ref}
-        {...commonFlatListProps}
         onLayout={onLayout}
         onContentSizeChange={onContentSizeChanged}
+        style={[isTabletOrDesktop && {marginHorizontal: 10}]}
+        contentContainerStyle={
+          !isTabletOrDesktop ? styles.flatListContainer : undefined
+        }
+        {...commonFlatListProps}
       />
       {isTabletOrDesktop && (
         <Pressable

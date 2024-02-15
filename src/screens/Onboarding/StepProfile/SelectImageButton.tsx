@@ -82,11 +82,4 @@ const styles = StyleSheet.create({
     width: 80,
     marginHorizontal: 5,
   },
-  flatListOuter: {
-    height: 100,
-  },
-  flatListContainer: {
-    paddingLeft: 40,
-    paddingRight: 40,
-  },
 })
