@@ -39,6 +39,33 @@ export function useConfigurableLabelGroups() {
   return React.useMemo(() => getConfigurableLabelGroups(), [])
 }
 
+export function useConfigurableContentLabelGroups() {
+  return React.useMemo(() => {
+    const groups = getConfigurableLabelGroups()
+    return groups.filter(group => {
+      return group.labels.every(l => l.targets.includes('content'))
+    })
+  }, [])
+}
+
+export function useConfigurableProfileLabelGroups() {
+  return React.useMemo(() => {
+    const groups = getConfigurableLabelGroups()
+    return groups.filter(group => {
+      return group.labels.every(l => l.targets.includes('profile'))
+    })
+  }, [])
+}
+
+export function useConfigurableAccountLabelGroups() {
+  return React.useMemo(() => {
+    const groups = getConfigurableLabelGroups()
+    return groups.filter(group => {
+      return group.labels.every(l => l.targets.includes('account'))
+    })
+  }, [])
+}
+
 export function getModerationServiceTitle({
   displayName,
   handle,

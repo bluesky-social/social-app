@@ -33,7 +33,8 @@ import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
 import {
   getLabelGroupsFromLabels,
   getModerationServiceTitle,
-  useConfigurableLabelGroups,
+  useConfigurableContentLabelGroups,
+  useConfigurableProfileLabelGroups,
 } from '#/lib/moderation'
 import {DMCA_LINK} from '#/components/dialogs/ReportDialog/const'
 import {Link} from '#/components/Link'
@@ -42,12 +43,12 @@ import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from
 export type ReportDialogLabelIds = LabelGroupDefinition['id'] | 'other'
 export type ReportDialogProps =
   | {
-      type: 'post'
+      type: 'content'
       uri: string
       cid: string
     }
   | {
-      type: 'user'
+      type: 'profile'
       did: string
     }
 
@@ -384,13 +385,15 @@ export function ReportDialog({
     ReportDialogLabelIds | undefined
   >()
   const labelGroupStrings = useLabelGroupStrings()
-  const groups = useConfigurableLabelGroups()
+  const contentGroups = useConfigurableContentLabelGroups()
+  const profileGroups = useConfigurableProfileLabelGroups()
+  const groups = params.type === 'content' ? contentGroups : profileGroups
 
   const i18n = React.useMemo(() => {
     let title = _(msg`Report this post`)
     let description = _(msg`Why should this post be reviewed?`)
 
-    if (params.type === 'user') {
+    if (params.type === 'profile') {
       title = _(msg`Report this user`)
       description = _(msg`Why should this user be reviewed?`)
     }
@@ -474,34 +477,36 @@ export function ReportDialog({
                 />
               </Button>
 
-              <View style={[a.pt_md, a.px_md]}>
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.justify_between,
-                    a.gap_md,
-                    a.p_md,
-                    a.pl_lg,
-                    a.rounded_md,
-                    t.atoms.bg_contrast_900,
-                  ]}>
-                  <Text style={[t.atoms.text_inverted, a.italic]}>
-                    Need to report a copyright violation?
-                  </Text>
-                  <Link
-                    to={DMCA_LINK}
-                    label={_(
-                      msg`View details for reporting a copyright violation`,
-                    )}
-                    size="small"
-                    variant="solid"
-                    color="secondary">
-                    <ButtonText>View details</ButtonText>
-                    <ButtonIcon position="right" icon={SquareArrowTopRight} />
-                  </Link>
+              {params.type === 'content' && (
+                <View style={[a.pt_md, a.px_md]}>
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_between,
+                      a.gap_md,
+                      a.p_md,
+                      a.pl_lg,
+                      a.rounded_md,
+                      t.atoms.bg_contrast_900,
+                    ]}>
+                    <Text style={[t.atoms.text_inverted, a.italic]}>
+                      Need to report a copyright violation?
+                    </Text>
+                    <Link
+                      to={DMCA_LINK}
+                      label={_(
+                        msg`View details for reporting a copyright violation`,
+                      )}
+                      size="small"
+                      variant="solid"
+                      color="secondary">
+                      <ButtonText>View details</ButtonText>
+                      <ButtonIcon position="right" icon={SquareArrowTopRight} />
+                    </Link>
+                  </View>
                 </View>
-              </View>
+              )}
             </View>
           </View>
         )}
