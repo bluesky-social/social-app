@@ -173,7 +173,6 @@ let PostThreadItemLoaded = ({
   const itemTitle = _(msg`Post by ${post.author.handle}`)
   const authorHref = makeProfileLink(post.author)
   const authorTitle = post.author.handle
-  const isAuthorMuted = post.author.viewer?.muted
   const likesHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey, 'liked-by')
@@ -275,30 +274,6 @@ let PostThreadItemLoaded = ({
                 </Link>
               </View>
               <View style={styles.meta}>
-                {isAuthorMuted && (
-                  <View
-                    style={[
-                      pal.viewLight,
-                      {
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        gap: 4,
-                        borderRadius: 6,
-                        paddingHorizontal: 6,
-                        paddingVertical: 2,
-                        marginRight: 4,
-                      },
-                    ]}>
-                    <FontAwesomeIcon
-                      icon={['far', 'eye-slash']}
-                      size={12}
-                      color={pal.colors.textLight}
-                    />
-                    <Text type="sm-medium" style={pal.textLight}>
-                      Muted
-                    </Text>
-                  </View>
-                )}
                 <Link style={s.flex1} href={authorHref} title={authorTitle}>
                   <Text type="md" style={[pal.textLight]} numberOfLines={1}>
                     {sanitizeHandle(post.author.handle, '@')}

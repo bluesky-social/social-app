@@ -8,6 +8,7 @@ import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {isJustAMute} from '#/lib/moderation'
 
 const DEFAULT_MOD_OPTS = DEFAULT_LOGGED_OUT_PREFERENCES.moderationOpts
 
@@ -107,8 +108,8 @@ function computeSuggestions(
     }
   }
   return items.filter(profile => {
-    const mod = moderateProfile(profile, moderationOpts).ui('profileList')
-    return !mod.filter // TODO && mod.account.cause?.type !== 'muted'
+    const modui = moderateProfile(profile, moderationOpts).ui('profileList')
+    return !modui.filter || isJustAMute(modui)
   })
 }
 

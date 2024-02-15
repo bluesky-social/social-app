@@ -230,9 +230,17 @@ export function usePostFeedQuery(
 
                   // apply moderation filter
                   for (let i = 0; i < slice.items.length; i++) {
+                    const ignoreFilter =
+                      slice.items[i].post.author.did === ignoreFilterFor
+                    if (ignoreFilter) {
+                      // remove mutes to avoid confused UIs
+                      moderations[i].causes = moderations[i].causes.filter(
+                        cause => cause.type !== 'muted',
+                      )
+                    }
                     if (
-                      moderations[i]?.ui('contentList').filter &&
-                      slice.items[i].post.author.did !== ignoreFilterFor
+                      !ignoreFilter &&
+                      moderations[i]?.ui('contentList').filter
                     ) {
                       return undefined
                     }

@@ -4,6 +4,7 @@ import {ModerationUI} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {isJustAMute} from '#/lib/moderation'
 
 import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
@@ -16,7 +17,7 @@ import {useOpenGlobalDialog} from '#/components/dialogs'
 export function ContentHider({
   testID,
   modui,
-  // ignoreMute, TODO
+  ignoreMute,
   style,
   childContainerStyle,
   children,
@@ -36,10 +37,7 @@ export function ContentHider({
   const blur = modui?.blurs[0]
   const desc = useModerationCauseDescription(blur, 'content')
 
-  if (
-    !blur
-    // || (ignoreMute && moderation.cause?.type === 'muted') TODO
-  ) {
+  if (!blur || (ignoreMute && isJustAMute(modui))) {
     return (
       <View testID={testID} style={[styles.outer, style]}>
         {children}

@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   ModerationCause,
+  ModerationUI,
   LABEL_GROUPS,
   LabelGroupDefinition,
   AppBskyModerationDefs,
@@ -20,6 +21,10 @@ export function getModerationCauseKey(cause: ModerationCause): string {
     return `label:${cause.label.val}:${source}`
   }
   return `${cause.type}:${source}`
+}
+
+export function isJustAMute(modui: ModerationUI): boolean {
+  return modui.filters.length === 1 && modui.filters[0].type === 'muted'
 }
 
 export function getLabelGroupsFromLabels(labels: string[]) {

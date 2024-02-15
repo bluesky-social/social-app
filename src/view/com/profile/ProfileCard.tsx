@@ -15,7 +15,7 @@ import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {getModerationCauseKey} from 'lib/moderation'
+import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
@@ -52,7 +52,7 @@ export function ProfileCard({
   }
   const moderation = moderateProfile(profile, moderationOpts)
   const modui = moderation.ui('profileList')
-  if (!noModFilter && modui.filter /* TODO && modui.type !== 'muted'*/) {
+  if (!noModFilter && modui.filter && !isJustAMute(modui)) {
     return null
   }
 

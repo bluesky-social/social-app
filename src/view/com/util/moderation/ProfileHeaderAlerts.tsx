@@ -44,7 +44,7 @@ export function ProfileHeaderAlerts({
 
 function ProfileInform({cause}: {cause: ModerationCause}) {
   const openDialog = useOpenGlobalDialog()
-  const desc = useModerationCauseDescription(cause, 'content')
+  const desc = useModerationCauseDescription(cause, 'account')
 
   return (
     <Button
@@ -55,7 +55,7 @@ function ProfileInform({cause}: {cause: ModerationCause}) {
       shape="default"
       onPress={() => {
         openDialog(ModerationDetailsDialog, {
-          context: 'content',
+          context: 'account',
           modcause: cause,
         })
       }}>
@@ -71,7 +71,7 @@ function ProfileInform({cause}: {cause: ModerationCause}) {
 function ProfileAlert({cause}: {cause: ModerationCause}) {
   const t = useTheme()
   const openDialog = useOpenGlobalDialog()
-  const desc = useModerationCauseDescription(cause, 'content')
+  const desc = useModerationCauseDescription(cause, 'account')
 
   return (
     <Button
@@ -82,7 +82,7 @@ function ProfileAlert({cause}: {cause: ModerationCause}) {
       shape="default"
       onPress={() => {
         openDialog(ModerationDetailsDialog, {
-          context: 'content',
+          context: 'account',
           modcause: cause,
         })
       }}>

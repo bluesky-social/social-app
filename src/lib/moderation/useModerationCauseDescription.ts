@@ -58,18 +58,12 @@ export function useModerationCauseDescription(
   if (cause.type === 'muted') {
     if (cause.source.type === 'list') {
       return {
-        name:
-          context === 'account'
-            ? _(msg`Muted by "${cause.source.list.name}"`)
-            : _(msg`Post by muted user ("${cause.source.list.name}")`),
+        name: _(msg`Muted by "${cause.source.list.name}"`),
         description: _(msg`You have muted this user`),
       }
     } else {
       return {
-        name:
-          context === 'account'
-            ? _(msg`Muted User`)
-            : _(msg`Post by muted user`),
+        name: _(msg`Muted User`),
         description: _(msg`You have muted this user`),
       }
     }
