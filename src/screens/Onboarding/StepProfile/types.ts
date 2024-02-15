@@ -3,7 +3,6 @@ import {
   EmojiHeartEyes_Stroke2_Corner0_Rounded as EmojiHeartEyes,
 } from '#/components/icons/Emoji'
 import {Alien_Stroke2_Corner0_Rounded as Alien} from '#/components/icons/Alien'
-import {Bubbles_Stroke2_Corner0_Rounded as Bubbles} from '#/components/icons/Bubbles'
 import {Explosion_Stroke2_Corner0_Rounded as Explosion} from '#/components/icons/Explosion'
 import {Lab_Stroke2_Corner0_Rounded as Lab} from '#/components/icons/Lab'
 import {PiggyBank_Stroke2_Corner0_Rounded as PiggyBank} from '#/components/icons/PiggyBank'
@@ -28,7 +27,6 @@ import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons
  */
 
 export const emojiNames = [
-  'camera',
   'at',
   'arc',
   'heartEyes',
@@ -45,7 +43,6 @@ export const emojiNames = [
   'shaka',
   'ufo',
   'zap',
-  'bubbles',
   'explosion',
   'lab',
   'piggyBank',
@@ -58,10 +55,6 @@ export interface Emoji {
   component: typeof EmojiArc
 }
 export const emojiItems: Record<EmojiName, Emoji> = {
-  camera: {
-    name: 'camera',
-    component: EmojiArc,
-  },
   at: {
     name: 'at',
     component: At,
@@ -126,10 +119,6 @@ export const emojiItems: Record<EmojiName, Emoji> = {
     name: 'zap',
     component: Zap,
   },
-  bubbles: {
-    name: 'bubbles',
-    component: Bubbles,
-  },
   explosion: {
     name: 'explosion',
     component: Explosion,
@@ -149,8 +138,8 @@ export const emojiItems: Record<EmojiName, Emoji> = {
 }
 
 export const avatarColors = [
-  'hsl(168,76%,42%)',
   'hsl(204,70%,53%)',
+  'hsl(168,76%,42%)',
   'hsl(282,38%,53%)',
   'hsl(28,80%,52%)',
   'hsl(5,79%,57%)',

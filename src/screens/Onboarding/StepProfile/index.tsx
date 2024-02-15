@@ -34,7 +34,6 @@ import {
   AvatarColor,
   avatarColors,
 } from './types'
-import {SelectImageButton} from '#/screens/Onboarding/StepProfile/SelectImageButton'
 import {
   PlaceholderCanvas,
   PlaceholderCanvasRef,
@@ -76,7 +75,7 @@ export function StepProfile() {
   const {state, dispatch} = React.useContext(Context)
   const [avatar, setAvatar] = React.useState<Avatar>({
     placeholder: emojiItems.at,
-    backgroundColor: avatarColors[1],
+    backgroundColor: avatarColors[0],
   })
 
   const canvasRef = React.useRef<PlaceholderCanvasRef>(null)
@@ -300,10 +299,6 @@ function EmojiItem({emojiName}: {emojiName: EmojiName}) {
     }))
   }, [emojiName, setAvatar])
 
-  if (emojiName === 'camera') {
-    return <SelectImageButton />
-  }
-
   return (
     <AnimatedCircle selected={avatar.placeholder.name === emojiName}>
       <Pressable
@@ -336,9 +331,10 @@ function Items({type}: {type: 'emojis' | 'colors'}) {
           a.align_center,
           {height: 100},
           !isTabletOrDesktop && styles.flatListContainer,
+          isTabletOrDesktop && type === 'colors' && a.pr_xs,
         ]}
         numColumns={isTabletOrDesktop && type === 'emojis' ? 4 : undefined}
-        showsHorizontalScrollIndicator={isTabletOrDesktop && type === 'emojis'}
+        showsHorizontalScrollIndicator={isTabletOrDesktop && type === 'colors'}
         horizontal={!isTabletOrDesktop}
         {...commonFlatListProps}
       />
@@ -366,7 +362,7 @@ const useStyles = () => {
     },
     flatListOuter: isTabletOrDesktop
       ? {
-          height: 450,
+          height: 435,
         }
       : {
           flexDirection: 'row',
