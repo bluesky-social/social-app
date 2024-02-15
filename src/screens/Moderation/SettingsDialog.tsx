@@ -96,6 +96,9 @@ export function SettingsDialog({
   const labelGroupStrings = useLabelGroupStrings()
   const groupInfoStrings = labelGroupStrings[labelGroup]
 
+  // this is mounted on native
+  if (!groupInfoStrings) return null
+
   return (
     <Dialog.ScrollableInner label="Configure moderation service settings">
       <Dialog.Close />
