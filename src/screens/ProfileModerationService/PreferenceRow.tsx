@@ -1,6 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 // import {msg} from '@lingui/macro'
 import {LABEL_GROUPS} from '@atproto/api'
 // TODO
@@ -24,7 +25,7 @@ export function PreferenceRow({
   const {_} = useLingui()
   const labelGroupStrings = useLabelGroupStrings()
   const groupInfoStrings = labelGroupStrings[labelGroup]
-  const {mutateAsync, variables, reset} = useModServiceLabelGroupEnableMutation()
+  const {mutateAsync, variables} = useModServiceLabelGroupEnableMutation()
   const enabled =
     variables?.enabled ??
     !modservicePreferences?.disabledLabelGroups?.includes(labelGroup)
@@ -37,12 +38,11 @@ export function PreferenceRow({
         group: labelGroup,
         enabled: !enabled,
       })
-      reset() // Important: clears query `variables`
     } catch (e: any) {
       // TODO
       console.error(e)
     }
-  }, [mutateAsync, enabled, modservicePreferences, labelGroup, reset])
+  }, [mutateAsync, enabled, modservicePreferences, labelGroup])
 
   return (
     <View
@@ -65,7 +65,7 @@ export function PreferenceRow({
             name="enable"
             value={enabled}
             onChange={onToggleEnabled}
-            label="Enable">
+            label={_(msg`Enable`)}>
             <Toggle.Label>{enabled ? 'Enabled' : 'Disabled'}</Toggle.Label>
             <Toggle.Switch />
           </Toggle.Item>
