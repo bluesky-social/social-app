@@ -222,6 +222,10 @@ msgstr "Conteúdo adulto só pode ser habilitado no site: <0/>."
 msgid "Advanced"
 msgstr "Avançado"
 
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
@@ -349,15 +353,15 @@ msgstr "Nudez artística ou não erótica."
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:408
-#: src/view/com/post-thread/PostThread.tsx:458
-#: src/view/com/post-thread/PostThread.tsx:466
+#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:487
+#: src/view/com/post-thread/PostThread.tsx:495
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "Voltar"
 
-#: src/view/com/post-thread/PostThread.tsx:416
+#: src/view/com/post-thread/PostThread.tsx:445
 msgctxt "action"
 msgid "Back"
 msgstr "Voltar"
@@ -422,7 +426,7 @@ msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir com vo
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Contas bloqueadas não podem te responder, mencionar ou interagir com você. Você não verá o conteúdo deles e eles serão impedidos de ver o seu."
 
-#: src/view/com/post-thread/PostThread.tsx:267
+#: src/view/com/post-thread/PostThread.tsx:297
 msgid "Blocked post."
 msgstr "Post bloqueado."
 
@@ -431,6 +435,7 @@ msgid "Blocking is public. Blocked accounts cannot reply in your threads, mentio
 msgstr "Bloqueios são públicos. Contas bloqueadas não podem te responder, mencionar ou interagir com você."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "Blog"
 
@@ -480,6 +485,7 @@ msgid "Build version {0} {1}"
 msgstr "Versão {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
 msgid "Business"
 msgstr "Empresarial"
 
@@ -934,8 +940,8 @@ msgid "Country"
 msgstr "País"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
-#: src/view/com/auth/SplashScreen.tsx:46
-#: src/view/com/auth/SplashScreen.web.tsx:77
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
 msgid "Create a new account"
 msgstr "Criar uma nova conta"
 
@@ -952,7 +958,7 @@ msgid "Create App Password"
 msgstr "Criar Senha de Aplicativo"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:68
 msgid "Create new account"
 msgstr "Criar uma nova conta"
 
@@ -986,6 +992,7 @@ msgid "Custom domain"
 msgstr "Domínio personalizado"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "Feeds customizados feitos pela comunidade te proporcionam novas experiências e te ajudam a encontrar o conteúdo que você mais ama."
 
@@ -1056,7 +1063,7 @@ msgstr "Excluir este post?"
 msgid "Deleted"
 msgstr "Excluído"
 
-#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:289
 msgid "Deleted post."
 msgstr "Post excluído."
 
@@ -1097,8 +1104,12 @@ msgid "Discover new custom feeds"
 msgstr "Descubra novos feeds"
 
 #: src/view/screens/Feeds.tsx:473
-msgid "Discover new feeds"
-msgstr "Descubra novos feeds"
+#~ msgid "Discover new feeds"
+#~ msgstr "Descubra novos feeds"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1234,7 +1245,7 @@ msgstr "Editar perfil"
 msgid "Edit Profile"
 msgstr "Editar Perfil"
 
-#: src/view/screens/Feeds.tsx:356
+#: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "Editar Feeds Salvos"
 
@@ -1451,7 +1462,7 @@ msgstr "Feed"
 msgid "Feed by {0}"
 msgstr "Feed por {0}"
 
-#: src/view/screens/Feeds.tsx:631
+#: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
 msgstr "Feed offline"
 
@@ -1465,7 +1476,8 @@ msgid "Feedback"
 msgstr "Comentários"
 
 #: src/Navigation.tsx:442
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
 #: src/view/screens/Profile.tsx:184
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -1921,6 +1933,7 @@ msgid "It shows posts from the people you follow as they happen."
 msgstr "Mostra os posts de quem você segue conforme acontecem."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "Carreiras"
 
@@ -2104,8 +2117,8 @@ msgstr "Lista dessilenciada"
 msgid "Lists"
 msgstr "Listas"
 
-#: src/view/com/post-thread/PostThread.tsx:276
-#: src/view/com/post-thread/PostThread.tsx:284
+#: src/view/com/post-thread/PostThread.tsx:306
+#: src/view/com/post-thread/PostThread.tsx:314
 msgid "Load more posts"
 msgstr "Carregar mais posts"
 
@@ -2288,7 +2301,7 @@ msgstr "Silenciar é privado. Contas silenciadas podem interagir com você, mas 
 msgid "My Birthday"
 msgstr "Meu Aniversário"
 
-#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
 msgstr "Meus Feeds"
 
@@ -2369,7 +2382,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Novo post"
 
-#: src/view/screens/Feeds.tsx:581
+#: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:382
 #: src/view/screens/ProfileFeed.tsx:432
@@ -2444,7 +2457,7 @@ msgstr "Nenhuma notificação!"
 msgid "No result"
 msgstr "Nenhum resultado"
 
-#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
 msgstr "Nenhum resultado encontrado para \"{query}\""
 
@@ -2616,7 +2629,7 @@ msgstr "Abre configurações de moderação"
 msgid "Opens password reset form"
 msgstr "Abre o formulário de redefinição de senha"
 
-#: src/view/screens/Feeds.tsx:357
+#: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Abre a tela para editar feeds salvos"
 
@@ -2810,7 +2823,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Postar"
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:276
 msgctxt "description"
 msgid "Post"
 msgstr "Post"
@@ -2829,7 +2842,7 @@ msgstr "Post por @{0}"
 msgid "Post deleted"
 msgstr "Post excluído"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post hidden"
 msgstr "Post oculto"
 
@@ -2841,7 +2854,7 @@ msgstr "Idioma do post"
 msgid "Post Languages"
 msgstr "Idiomas do Post"
 
-#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/post-thread/PostThread.tsx:479
 msgid "Post not found"
 msgstr "Post não encontrado"
 
@@ -3582,7 +3595,7 @@ msgstr "Mostra posts de {0} no seu feed"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
-#: src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:79
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
@@ -3595,8 +3608,8 @@ msgid "Sign in"
 msgstr "Fazer login"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
 msgid "Sign In"
 msgstr "Fazer Login"
 
@@ -3824,7 +3837,7 @@ msgstr "A Política de Direitos Autorais foi movida para <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "Os seguintes passos vão ajudar a customizar sua experiência no Bluesky."
 
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:482
 msgid "The post may have been deleted."
 msgstr "O post pode ter sido excluído."
 
@@ -4363,7 +4376,7 @@ msgstr "Do que você gosta?"
 msgid "What is the issue with this {collectionName}?"
 msgstr "Qual é o problema com este {collectionName}?"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "E aí?"
@@ -4446,7 +4459,7 @@ msgstr "Você ainda não tem nenhum convite! Nós lhe enviaremos alguns quando v
 msgid "You don't have any pinned feeds."
 msgstr "Você não tem feeds fixados."
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
 msgstr "Você não tem feeds salvos!"
 
@@ -4454,7 +4467,7 @@ msgstr "Você não tem feeds salvos!"
 msgid "You don't have any saved feeds."
 msgstr "Você não tem feeds salvos."
 
-#: src/view/com/post-thread/PostThread.tsx:401
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Você bloqueou esta conta ou foi bloqueado por ela."
 

@@ -233,6 +233,10 @@ msgstr "El contingut per a adults només es pot habilitar via web a <0/>."
 msgid "Advanced"
 msgstr "Avançat"
 
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
@@ -363,15 +367,15 @@ msgstr "Nuesa artística o no eròtica."
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:408
-#: src/view/com/post-thread/PostThread.tsx:458
-#: src/view/com/post-thread/PostThread.tsx:466
+#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:487
+#: src/view/com/post-thread/PostThread.tsx:495
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "Endarrere"
 
-#: src/view/com/post-thread/PostThread.tsx:416
+#: src/view/com/post-thread/PostThread.tsx:445
 msgctxt "action"
 msgid "Back"
 msgstr "Endarrere"
@@ -436,7 +440,7 @@ msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Els comptes bloquejats no poden respondre a cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera. No veuràs mai el seu contingut ni ells el teu."
 
-#: src/view/com/post-thread/PostThread.tsx:267
+#: src/view/com/post-thread/PostThread.tsx:297
 msgid "Blocked post."
 msgstr "Publicació bloquejada."
 
@@ -445,6 +449,7 @@ msgid "Blocking is public. Blocked accounts cannot reply in your threads, mentio
 msgstr "El bloqueig és públic. Els comptes bloquejats no poden respondre els teus fils, ni mencionar-te ni interactuar amb tu de cap manera."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "Blog"
 
@@ -494,6 +499,7 @@ msgid "Build version {0} {1}"
 msgstr "Versió {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
 msgid "Business"
 msgstr "Negocis"
 
@@ -952,8 +958,8 @@ msgid "Country"
 msgstr "País"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
-#: src/view/com/auth/SplashScreen.tsx:46
-#: src/view/com/auth/SplashScreen.web.tsx:77
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
 msgid "Create a new account"
 msgstr "Crea un nou compte"
 
@@ -970,7 +976,7 @@ msgid "Create App Password"
 msgstr "Crea una contrasenya d'aplicació"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:68
 msgid "Create new account"
 msgstr "Crea un nou compte"
 
@@ -1004,6 +1010,7 @@ msgid "Custom domain"
 msgstr "Domini personalitzat"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr ""
 
@@ -1074,7 +1081,7 @@ msgstr "Vols eliminar aquesta publicació?"
 msgid "Deleted"
 msgstr "Eliminat"
 
-#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:289
 msgid "Deleted post."
 msgstr "Publicació eliminada."
 
@@ -1119,8 +1126,12 @@ msgid "Discover new custom feeds"
 msgstr "Descobreix nous canals personalitzats"
 
 #: src/view/screens/Feeds.tsx:473
-msgid "Discover new feeds"
-msgstr "Descobreix nous canals"
+#~ msgid "Discover new feeds"
+#~ msgstr "Descobreix nous canals"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1256,7 +1267,7 @@ msgstr "Edita el perfil"
 msgid "Edit Profile"
 msgstr "Edita el perfil"
 
-#: src/view/screens/Feeds.tsx:356
+#: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "Edita els meus canals guardats"
 
@@ -1477,7 +1488,7 @@ msgstr "Canal"
 msgid "Feed by {0}"
 msgstr "Canal per {0}"
 
-#: src/view/screens/Feeds.tsx:631
+#: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
 msgstr "Canal fora de línia"
 
@@ -1491,7 +1502,8 @@ msgid "Feedback"
 msgstr "Comentaris"
 
 #: src/Navigation.tsx:442
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
 #: src/view/screens/Profile.tsx:184
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -1948,6 +1960,7 @@ msgid "It shows posts from the people you follow as they happen."
 msgstr ""
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "Feines"
 
@@ -2135,8 +2148,8 @@ msgstr "Llista no silenciada"
 msgid "Lists"
 msgstr "Llistes"
 
-#: src/view/com/post-thread/PostThread.tsx:276
-#: src/view/com/post-thread/PostThread.tsx:284
+#: src/view/com/post-thread/PostThread.tsx:306
+#: src/view/com/post-thread/PostThread.tsx:314
 msgid "Load more posts"
 msgstr "Carrega més publicacions"
 
@@ -2326,7 +2339,7 @@ msgstr "Silenciar és privat. Els comptes silenciats poden interactuar amb tu, p
 msgid "My Birthday"
 msgstr "El meu aniversari"
 
-#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
 msgstr "Els meus canals"
 
@@ -2407,7 +2420,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "Nova publicació"
 
-#: src/view/screens/Feeds.tsx:581
+#: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:382
 #: src/view/screens/ProfileFeed.tsx:432
@@ -2486,7 +2499,7 @@ msgstr "Encara no tens cap notificació"
 msgid "No result"
 msgstr "Cap resultat"
 
-#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
 msgstr "No s'han trobat resultats per \"{query}\""
 
@@ -2658,7 +2671,7 @@ msgstr "Obre la configuració de la moderació"
 msgid "Opens password reset form"
 msgstr "Obre el formulari de restabliment de la contrasenya"
 
-#: src/view/screens/Feeds.tsx:357
+#: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Obre pantalla per editar els canals desats"
 
@@ -2850,7 +2863,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Publica"
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:276
 msgctxt "description"
 msgid "Post"
 msgstr "Publicació"
@@ -2875,7 +2888,7 @@ msgstr "Publicació per @{0}"
 msgid "Post deleted"
 msgstr "Publicació eliminada"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post hidden"
 msgstr "Publicació oculta"
 
@@ -2887,7 +2900,7 @@ msgstr "Idioma de la publicació"
 msgid "Post Languages"
 msgstr "Idiomes de les publicacions"
 
-#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/post-thread/PostThread.tsx:479
 msgid "Post not found"
 msgstr "Publicació no trobada"
 
@@ -3640,7 +3653,7 @@ msgstr "Mostra les publicacions de {0} al teu canal"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
-#: src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:79
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
@@ -3653,8 +3666,8 @@ msgid "Sign in"
 msgstr "Inicia sessió"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
 msgid "Sign In"
 msgstr "Inicia sessió"
 
@@ -3882,7 +3895,7 @@ msgstr "La política de drets d'autoria ha estat traslladada a <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:482
 msgid "The post may have been deleted."
 msgstr "És possible que la publicació s'hagi esborrat."
 
@@ -4435,7 +4448,7 @@ msgstr "Quin problema hi ha amb {collectionName}?"
 #~ msgid "What's next?"
 #~ msgstr "¿Qué sigue?"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "Què hi ha de nou"
@@ -4514,7 +4527,7 @@ msgstr "Encara no tens codis d'invitació! Te n'enviarem quan portis una mica m�
 msgid "You don't have any pinned feeds."
 msgstr "No tens cap canal fixat."
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
 msgstr "No tens cap canal desat!"
 
@@ -4522,7 +4535,7 @@ msgstr "No tens cap canal desat!"
 msgid "You don't have any saved feeds."
 msgstr "No tens cap canal desat."
 
-#: src/view/com/post-thread/PostThread.tsx:401
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Has bloquejat l'autor o has estat bloquejat per ell."
 

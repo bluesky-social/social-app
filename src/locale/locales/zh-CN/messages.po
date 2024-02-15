@@ -218,6 +218,10 @@ msgstr "要显示成人内容，你必须访问网页端上的<0/>。"
 msgid "Advanced"
 msgstr "详细设置"
 
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
@@ -345,15 +349,15 @@ msgstr "艺术作品或非色情的裸体。"
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:408
-#: src/view/com/post-thread/PostThread.tsx:458
-#: src/view/com/post-thread/PostThread.tsx:466
+#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:487
+#: src/view/com/post-thread/PostThread.tsx:495
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "返回"
 
-#: src/view/com/post-thread/PostThread.tsx:416
+#: src/view/com/post-thread/PostThread.tsx:445
 msgctxt "action"
 msgid "Back"
 msgstr "返回"
@@ -418,7 +422,7 @@ msgstr "被屏蔽的账户无法在你的帖子中回复、提及你或以其他
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "被屏蔽的账户无法在你的帖子中回复、提及你或以其他方式与你互动。你将不会看到他们所发的内容，同样他们也无法查看你的内容。"
 
-#: src/view/com/post-thread/PostThread.tsx:267
+#: src/view/com/post-thread/PostThread.tsx:297
 msgid "Blocked post."
 msgstr "已屏蔽帖子。"
 
@@ -427,6 +431,7 @@ msgid "Blocking is public. Blocked accounts cannot reply in your threads, mentio
 msgstr "屏蔽是公共性的。被屏蔽的账户无法在你的帖子中回复、提及你或以其他方式与你互动。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "博客"
 
@@ -476,6 +481,7 @@ msgid "Build version {0} {1}"
 msgstr "构建版本号 {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
 msgid "Business"
 msgstr "商务"
 
@@ -926,8 +932,8 @@ msgid "Country"
 msgstr "国家"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
-#: src/view/com/auth/SplashScreen.tsx:46
-#: src/view/com/auth/SplashScreen.web.tsx:77
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
 msgid "Create a new account"
 msgstr "创建新的账户"
 
@@ -944,7 +950,7 @@ msgid "Create App Password"
 msgstr "创建 App 专用密码"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:68
 msgid "Create new account"
 msgstr "创建新的账户"
 
@@ -978,6 +984,7 @@ msgid "Custom domain"
 msgstr "自定义域名"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "由社区构建的自定义信息流能为你带来新的体验，并帮助你找到你喜欢的内容。"
 
@@ -1048,7 +1055,7 @@ msgstr "删除这条帖子？"
 msgid "Deleted"
 msgstr "已删除"
 
-#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:289
 msgid "Deleted post."
 msgstr "已删除帖子。"
 
@@ -1089,8 +1096,12 @@ msgid "Discover new custom feeds"
 msgstr "探索新的自定义信息流"
 
 #: src/view/screens/Feeds.tsx:473
-msgid "Discover new feeds"
-msgstr "探索新的信息流"
+#~ msgid "Discover new feeds"
+#~ msgstr "探索新的信息流"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1226,7 +1237,7 @@ msgstr "编辑资料"
 msgid "Edit Profile"
 msgstr "编辑资料"
 
-#: src/view/screens/Feeds.tsx:356
+#: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "编辑保存的信息流"
 
@@ -1443,7 +1454,7 @@ msgstr "信息流"
 msgid "Feed by {0}"
 msgstr "信息流由 {0} 创建"
 
-#: src/view/screens/Feeds.tsx:631
+#: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
 msgstr "信息流已离线"
 
@@ -1457,7 +1468,8 @@ msgid "Feedback"
 msgstr "反馈"
 
 #: src/Navigation.tsx:442
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
 #: src/view/screens/Profile.tsx:184
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -1909,6 +1921,7 @@ msgid "It shows posts from the people you follow as they happen."
 msgstr "他会显示你所关注的人发布的帖子。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "工作"
 
@@ -2092,8 +2105,8 @@ msgstr "取消隐藏列表"
 msgid "Lists"
 msgstr "列表"
 
-#: src/view/com/post-thread/PostThread.tsx:276
-#: src/view/com/post-thread/PostThread.tsx:284
+#: src/view/com/post-thread/PostThread.tsx:306
+#: src/view/com/post-thread/PostThread.tsx:314
 msgid "Load more posts"
 msgstr "加载更多帖子"
 
@@ -2276,7 +2289,7 @@ msgstr "被隐藏的账户将不会得知你已将他隐藏，已隐藏的账户
 msgid "My Birthday"
 msgstr "我的生日"
 
-#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
 msgstr "自定义信息流"
 
@@ -2357,7 +2370,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新帖子"
 
-#: src/view/screens/Feeds.tsx:581
+#: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:382
 #: src/view/screens/ProfileFeed.tsx:432
@@ -2432,7 +2445,7 @@ msgstr "没有通知！"
 msgid "No result"
 msgstr "没有结果"
 
-#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
 msgstr "未找到\"{query}\"的结果"
 
@@ -2604,7 +2617,7 @@ msgstr "打开限制设置"
 msgid "Opens password reset form"
 msgstr "打开密码重置申请"
 
-#: src/view/screens/Feeds.tsx:357
+#: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "打开用于编辑已保存信息流的界面"
 
@@ -2793,7 +2806,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:276
 msgctxt "description"
 msgid "Post"
 msgstr "发布"
@@ -2812,7 +2825,7 @@ msgstr "发布者 @{0}"
 msgid "Post deleted"
 msgstr "已删除帖子"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post hidden"
 msgstr "已隐藏帖子"
 
@@ -2824,7 +2837,7 @@ msgstr "帖子语言"
 msgid "Post Languages"
 msgstr "帖子语言"
 
-#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/post-thread/PostThread.tsx:479
 msgid "Post not found"
 msgstr "无法找到帖子"
 
@@ -3561,7 +3574,7 @@ msgstr "在你的信息流中显示来自 {0} 的帖子"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
-#: src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:79
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
@@ -3574,8 +3587,8 @@ msgid "Sign in"
 msgstr "登录"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
 msgid "Sign In"
 msgstr "登录"
 
@@ -3803,7 +3816,7 @@ msgstr "版权许可已迁移至 <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "以下步骤将帮助定制你的 Bluesky 体验。"
 
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:482
 msgid "The post may have been deleted."
 msgstr "此帖子似乎已被删除。"
 
@@ -4338,7 +4351,7 @@ msgstr "你感兴趣的是什么？"
 msgid "What is the issue with this {collectionName}?"
 msgstr "这个 {collectionName} 有什么问题？"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
@@ -4413,7 +4426,7 @@ msgstr "你目前还没有邀请码！当你持续使用 Bluesky 一段时间后
 msgid "You don't have any pinned feeds."
 msgstr "你目前还没有任何固定的信息流。"
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
 msgstr "你目前还没有任何保存的信息流！"
 
@@ -4421,7 +4434,7 @@ msgstr "你目前还没有任何保存的信息流！"
 msgid "You don't have any saved feeds."
 msgstr "你目前还没有任何保存的信息流。"
 
-#: src/view/com/post-thread/PostThread.tsx:401
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "你已屏蔽该作者，或你已被该作者屏蔽。"
 
