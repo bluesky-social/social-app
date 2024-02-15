@@ -19,6 +19,8 @@ export function ago(time: number | string | Date): string {
   } else if (diffSeconds < DAY) {
     return `${Math.floor(diffSeconds / HOUR)}h`
   } else if (diffSeconds < MONTH) {
+    // normalize the time, this handles the following scenario:
+    // - 2024-02-13T09:00Z <- 2024-02-15T07:00Z = 2d (instead of 1d)
     date.setHours(0, 0, 0, 0)
     base.setHours(0, 0, 0, 0)
 
