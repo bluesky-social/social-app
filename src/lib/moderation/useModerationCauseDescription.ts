@@ -75,7 +75,7 @@ export function useModerationCauseDescription(
     }
   }
   // @ts-ignore Temporary extension to the moderation system -prf
-  if (cause.type === 'post-hidden') {
+  if (cause.type === 'hidden') {
     return {
       name: _(msg`Post Hidden by You`),
       description: _(msg`You have hidden this post`),
