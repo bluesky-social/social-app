@@ -79,14 +79,17 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
     if (uiState.step === 2) {
       uiDispatch({type: 'set-processing', value: true})
       try {
-        await getAgent().resolveHandle({
+        const res = await getAgent().resolveHandle({
           handle: uiState.handle,
         })
-        uiDispatch({
-          type: 'set-error',
-          value: _(msg`That handle is already taken.`),
-        })
-        return
+
+        if (res.data.did) {
+          uiDispatch({
+            type: 'set-error',
+            value: _(msg`That handle is already taken.`),
+          })
+          return
+        }
       } catch (e) {
         // Don't need to handle
       } finally {
