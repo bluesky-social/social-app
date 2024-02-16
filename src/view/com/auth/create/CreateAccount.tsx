@@ -13,16 +13,9 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useOnboardingDispatch} from '#/state/shell'
-import {useSessionApi} from '#/state/session'
-import {useCreateAccount, submit} from './state'
+import {useCreateAccount, useSubmitCreateAccount} from './state'
 import {useServiceQuery} from '#/state/queries/service'
-import {
-  usePreferencesSetBirthDateMutation,
-  useSetSaveFeedsMutation,
-  DEFAULT_PROD_FEEDS,
-} from '#/state/queries/preferences'
-import {FEEDBACK_FORM_URL, HITSLOP_10, IS_PROD} from '#/lib/constants'
+import {FEEDBACK_FORM_URL, HITSLOP_10} from '#/lib/constants'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
@@ -35,11 +28,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const [uiState, uiDispatch] = useCreateAccount()
-  const onboardingDispatch = useOnboardingDispatch()
-  const {createAccount} = useSessionApi()
-  const {mutate: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const submit = useSubmitCreateAccount(uiState, uiDispatch)
 
   React.useEffect(() => {
     screen('CreateAccount')
@@ -84,34 +74,17 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
     if (!uiState.canNext) {
       return
     }
-    if (uiState.step < 3) {
-      uiDispatch({type: 'next'})
-    } else {
+
+    if (!uiState.isCaptchaRequired && uiState.step === 2) {
       try {
-        await submit({
-          onboardingDispatch,
-          createAccount,
-          uiState,
-          uiDispatch,
-          _,
-        })
-        setBirthDate({birthDate: uiState.birthDate})
-        if (IS_PROD(uiState.serviceUrl)) {
-          setSavedFeeds(DEFAULT_PROD_FEEDS)
-        }
+        await submit()
       } catch {
         // dont need to handle here
       }
+    } else {
+      uiDispatch({type: 'next'})
     }
-  }, [
-    uiState,
-    uiDispatch,
-    onboardingDispatch,
-    createAccount,
-    setBirthDate,
-    setSavedFeeds,
-    _,
-  ])
+  }, [uiState, uiDispatch, submit])
 
   // rendering
   // =
