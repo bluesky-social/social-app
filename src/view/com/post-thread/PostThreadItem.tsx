@@ -27,7 +27,6 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
-import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
@@ -247,7 +246,6 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
           accessible={false}>
-          <PostSandboxWarning />
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
@@ -438,8 +436,6 @@ let PostThreadItemLoaded = ({
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
             }>
-            <PostSandboxWarning />
-
             <View
               style={{
                 flexDirection: 'row',
