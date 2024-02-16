@@ -200,7 +200,7 @@ export function Link({
           rel: isExternal ? 'noopener noreferrer' : undefined,
         },
         dataSet: {
-          // default to no underline, apply this ourselves
+          // no underline, only `InlineLink` has underlines
           noUnderline: '1',
         },
       })}>
