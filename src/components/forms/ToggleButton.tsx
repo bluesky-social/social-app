@@ -8,7 +8,9 @@ import * as Toggle from '#/components/forms/Toggle'
 
 export type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps &
-  React.PropsWithChildren<{testID?: string}>
+  React.PropsWithChildren<{
+    testID?: string
+  }>
 
 export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean

@@ -31,7 +31,8 @@ import {Divider} from '#/components/Divider'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
-import {SquareBehindSquare4_Stroke2_Corner0_Rounded as SquareBehindSquare} from '#/components/icons/SquareBehindSquare4'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
@@ -39,12 +40,13 @@ import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
 import * as Dialog from '#/components/Dialog'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {Button} from '#/components/Button'
 import {
   getModerationServiceTitle,
   useConfigurableLabelGroups,
   getLabelGroupToLabelerMap,
 } from '#/lib/moderation'
+import * as ModerationServiceCard from '#/components/ModerationServiceCard'
 
 import {
   SettingsDialog,
@@ -109,7 +111,6 @@ export function ModerationScreen(
     <CenteredView
       testID="moderationScreen"
       style={[
-        a.border,
         t.atoms.border_contrast_low,
         t.atoms.bg,
         {minHeight: height},
@@ -148,7 +149,7 @@ export function ModerationScreenInner({
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
-  const {gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
   const modSettingsDialogControl = Dialog.useDialogControl()
   const [settingsDialogProps, setSettingsDialogProps] =
     React.useState<SettingsDialogProps>({
@@ -186,77 +187,145 @@ export function ModerationScreenInner({
         <SettingsDialog {...settingsDialogProps} preferences={preferences} />
       </Dialog.Outer>
 
-      <ScrollView contentContainerStyle={[a.border_0]}>
-        {!gtTablet && <Divider />}
+      <ScrollView
+        contentContainerStyle={[
+          a.border_0,
+          a.pt_2xl,
+          a.px_lg,
+          gtMobile && a.px_2xl,
+        ]}>
+        <Text
+          style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
+          <Trans>Moderation tools</Trans>
+        </Text>
 
-        <Link
-          testID="moderationlistsBtn"
-          style={[a.flex_row, a.align_center, a.py_md, a.px_lg, a.gap_md]}
-          to="/moderation/modlists">
-          <View
+        <View
+          style={[
+            a.w_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <Link
+            testID="moderationlistsBtn"
             style={[
+              a.flex_row,
               a.align_center,
-              a.justify_center,
-              a.p_md,
-              a.rounded_full,
-              t.atoms.bg_contrast_50,
-            ]}>
-            <Group size="md" style={[t.atoms.text_contrast_medium]} />
-          </View>
-          <Text style={[a.text_md]}>
-            <Trans>Moderation lists</Trans>
-          </Text>
-        </Link>
-
-        <Divider />
-
-        <Link
-          testID="mutedAccountsBtn"
-          style={[a.flex_row, a.align_center, a.py_md, a.px_lg, a.gap_md]}
-          to="/moderation/muted-accounts">
-          <View
+              a.justify_between,
+              a.p_lg,
+              a.gap_sm,
+            ]}
+            to="/moderation/modlists">
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <Group size="md" style={[t.atoms.text_contrast_medium]} />
+              <Text style={[a.text_md]}>
+                <Trans>Moderation lists</Trans>
+              </Text>
+            </View>
+            <ChevronRight
+              size="sm"
+              style={[t.atoms.text_contrast_low, a.self_end]}
+            />
+          </Link>
+          <Divider />
+          <Link
+            testID="mutedAccountsBtn"
             style={[
+              a.flex_row,
               a.align_center,
-              a.justify_center,
-              a.p_md,
-              a.rounded_full,
-              t.atoms.bg_contrast_50,
-            ]}>
-            <Person size="md" style={[t.atoms.text_contrast_medium]} />
-          </View>
-          <Text style={[a.text_md]}>
-            <Trans>Muted accounts</Trans>
-          </Text>
-        </Link>
-
-        <Divider />
-
-        <Link
-          testID="blockedAccountsBtn"
-          style={[a.flex_row, a.align_center, a.py_md, a.px_lg, a.gap_md]}
-          to="/moderation/blocked-accounts">
-          <View
+              a.justify_between,
+              a.p_lg,
+              a.gap_sm,
+            ]}
+            to="/moderation/muted-accounts">
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <Person size="md" style={[t.atoms.text_contrast_medium]} />
+              <Text style={[a.text_md]}>
+                <Trans>Muted accounts</Trans>
+              </Text>
+            </View>
+            <ChevronRight
+              size="sm"
+              style={[t.atoms.text_contrast_low, a.self_end]}
+            />
+          </Link>
+          <Divider />
+          <Link
+            testID="blockedAccountsBtn"
             style={[
+              a.flex_row,
               a.align_center,
-              a.justify_center,
-              a.p_md,
-              a.rounded_full,
-              t.atoms.bg_contrast_50,
-            ]}>
-            <CircleBanSign size="md" style={[t.atoms.text_contrast_medium]} />
-          </View>
-          <Text style={[a.text_md]}>
-            <Trans>Blocked accounts</Trans>
-          </Text>
-        </Link>
+              a.justify_between,
+              a.p_lg,
+              a.gap_sm,
+            ]}
+            to="/moderation/blocked-accounts">
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <CircleBanSign size="md" style={[t.atoms.text_contrast_medium]} />
+              <Text style={[a.text_md]}>
+                <Trans>Blocked accounts</Trans>
+              </Text>
+            </View>
+            <ChevronRight
+              size="sm"
+              style={[t.atoms.text_contrast_low, a.self_end]}
+            />
+          </Link>
+        </View>
 
-        <Divider />
+        <Text
+          style={[
+            a.text_md,
+            a.font_bold,
+            a.pt_2xl,
+            a.pb_md,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Labeler subscriptions</Trans>
+        </Text>
 
-        <View style={[a.gap_sm, a.px_lg, a.py_lg]}>
-          <Text style={[a.text_lg, a.font_bold, a.pb_sm]}>
-            <Trans>Content filtering settings</Trans>
-          </Text>
+        <View style={[a.gap_sm]}>
+          {modservices.map(mod => {
+            return (
+              <ModerationServiceCard.Link
+                modservice={mod}
+                key={mod.creator.did}>
+                <ModerationServiceCard.Card.Outer>
+                  <ModerationServiceCard.Card.Avatar
+                    avatar={mod.creator.avatar}
+                  />
+                  <ModerationServiceCard.Card.Content
+                    title={getModerationServiceTitle({
+                      displayName: mod.creator.displayName,
+                      handle: mod.creator.handle,
+                    })}
+                    handle={mod.creator.handle}
+                    description={mod.description}
+                  />
+                </ModerationServiceCard.Card.Outer>
+              </ModerationServiceCard.Link>
+            )
+          })}
+        </View>
 
+        <Text
+          style={[
+            a.text_md,
+            a.font_bold,
+            a.pt_2xl,
+            a.pb_md,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Content filtering</Trans>
+        </Text>
+
+        <View
+          style={[
+            a.w_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
           {groups.map((def, i) => {
             const labelers = labelGroupToLabelerMap[def.id] || []
             return (
@@ -273,11 +342,17 @@ export function ModerationScreenInner({
           })}
         </View>
 
-        <Divider />
-
-        <Text style={[a.text_lg, a.font_bold, a.pl_lg, a.pt_lg, a.pb_sm]}>
+        <Text
+          style={[
+            a.text_md,
+            a.font_bold,
+            a.pt_2xl,
+            a.pb_md,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>Logged-out visibility</Trans>
         </Text>
+
         <PwiOptOut />
 
         <View style={{height: 200}} />
@@ -290,8 +365,8 @@ function LabelGroup({
   labelGroup,
   labelers: mods,
   preferences,
-  openModSettingsDialog,
-}: {
+}: // openModSettingsDialog,
+{
   labelGroup: LabelGroupDefinition['id']
   labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
   preferences: UsePreferencesQueryResponse
@@ -299,9 +374,11 @@ function LabelGroup({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const labelGroupStrings = useLabelGroupStrings()
   const {mutateAsync: setContentLabelPref, variables: optimisticContentLabel} =
     useSetContentLabelMutation()
+  const [settingsOpen, setSettingsOpen] = React.useState(false)
 
   const onChangeVisibility = React.useCallback(
     async (values: string[]) => {
@@ -329,7 +406,7 @@ function LabelGroup({
   }
 
   return (
-    <View style={[]}>
+    <View style={[a.px_md, a.pr_md, gtMobile && a.px_lg]}>
       <View
         style={[
           a.py_md,
@@ -339,7 +416,7 @@ function LabelGroup({
           a.align_center,
         ]}>
         <View style={[a.gap_xs, {width: '50%'}]}>
-          <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
             {name}
           </Text>
           <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>
@@ -366,91 +443,115 @@ function LabelGroup({
       </View>
 
       {!!mods.length && (
-        <View
-          style={[
-            a.flex_row,
-            a.align_start,
-            a.justify_between,
-            a.mb_md,
-            a.p_sm,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
-          ]}>
-          <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
-            {mods.map(mod => {
-              const modservicePreferences =
-                preferences.moderationOpts.mods.find(
-                  ({did}) => did === mod.creator.did,
-                )
-              const labelGroupEnabled =
-                !modservicePreferences?.disabledLabelGroups?.includes(
-                  labelGroup,
-                )
-              const isLabelerEnabled = modservicePreferences?.enabled
-              const enabled = labelGroupEnabled && isLabelerEnabled
-              return (
-                <View
-                  key={mod.creator.did}
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.gap_sm,
-                    a.py_sm,
-                    a.px_md,
-                    a.rounded_full,
-                    a.border,
-                    t.atoms.border_contrast_low,
-                    enabled && t.atoms.border_contrast_high,
-                    enabled && t.atoms.bg,
-                  ]}>
-                  <View
-                    style={[
-                      a.rounded_full,
-                      t.atoms.bg_contrast_300,
-                      {
-                        height: 6,
-                        width: 6,
-                      },
-                      enabled && {
-                        backgroundColor: t.palette.positive_500,
-                      },
-                    ]}
-                  />
-                  <Text
-                    style={[
-                      a.text_xs,
-                      a.font_bold,
-                      native({
-                        top: 1,
-                      }),
-                      t.atoms.text_contrast_medium,
-                      enabled && t.atoms.text_contrast_high,
-                    ]}>
-                    {getModerationServiceTitle({
-                      displayName: mod.creator.displayName,
-                      handle: mod.creator.handle,
-                    })}
-                  </Text>
-                </View>
-              )
-            })}
-          </View>
-
+        <View style={[a.mb_md, a.rounded_sm, t.atoms.bg]}>
           <Button
-            size="tiny"
-            variant="ghost"
-            color="secondary"
-            label={_(msg`Configure enabled labelers for this content type`)}
-            style={[a.mt_xs]}
-            onPress={() => {
-              openModSettingsDialog({
-                labelGroup,
-                modservices: mods,
-              })
-            }}>
-            <ButtonText>Configure</ButtonText>
-            <ButtonIcon icon={SquareBehindSquare} position="right" />
+            label="Expand to configure labelers"
+            onPress={() => setSettingsOpen(!settingsOpen)}>
+            <View
+              style={[
+                a.w_full,
+                a.flex_row,
+                a.align_center,
+                a.justify_between,
+                a.p_md,
+              ]}>
+              <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
+                {mods.map(mod => {
+                  const modservicePreferences =
+                    preferences.moderationOpts.mods.find(
+                      ({did}) => did === mod.creator.did,
+                    )
+                  const labelGroupEnabled =
+                    !modservicePreferences?.disabledLabelGroups?.includes(
+                      labelGroup,
+                    )
+                  const isLabelerEnabled = modservicePreferences?.enabled
+                  const enabled = labelGroupEnabled && isLabelerEnabled
+                  return (
+                    <View
+                      key={mod.creator.did}
+                      style={[
+                        a.flex_row,
+                        a.align_center,
+                        a.gap_xs,
+                        a.py_xs,
+                        a.px_sm,
+                        a.rounded_xs,
+                        t.atoms.bg_contrast_600,
+                        enabled && t.atoms.bg_contrast_800,
+                      ]}>
+                      <View
+                        style={[
+                          a.rounded_full,
+                          t.atoms.bg_contrast_300,
+                          {
+                            height: 6,
+                            width: 6,
+                          },
+                          enabled && {
+                            backgroundColor: t.palette.positive_500,
+                          },
+                        ]}
+                      />
+                      <Text
+                        style={[
+                          a.text_xs,
+                          a.font_bold,
+                          native({
+                            top: 1,
+                          }),
+                          t.atoms.text_inverted,
+                        ]}>
+                        {getModerationServiceTitle({
+                          displayName: mod.creator.displayName,
+                          handle: mod.creator.handle,
+                        })}
+                      </Text>
+                    </View>
+                  )
+                })}
+              </View>
+
+              <ChevronDown size="sm" />
+            </View>
           </Button>
+
+          {settingsOpen && (
+            <View style={[a.px_md]}>
+              <Divider />
+
+              {mods.map((mod, i) => {
+                return (
+                  <>
+                    {i !== 0 && <Divider />}
+
+                    <Toggle.Item
+                      label={'Toggle label'}
+                      name={mod.creator.did}
+                      value
+                      onChange={() => {}}>
+                      <View
+                        style={[
+                          a.w_full,
+                          a.flex_row,
+                          a.align_center,
+                          a.justify_between,
+                          a.py_md,
+                        ]}>
+                        <Text style={[a.font_bold]}>
+                          {getModerationServiceTitle({
+                            displayName: mod.creator.displayName,
+                            handle: mod.creator.handle,
+                          })}
+                        </Text>
+                        <Toggle.Switch />
+                      </View>
+                    </Toggle.Item>
+                  </>
+                )
+              })}
+            </View>
+          )}
         </View>
       )}
     </View>
@@ -514,7 +615,7 @@ function PwiOptOut() {
   }, [updateProfile, profile])
 
   return (
-    <View style={[a.pt_sm, a.px_lg]}>
+    <View style={[a.pt_sm]}>
       <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_lg]}>
         <Toggle.Item
           disabled={!canToggle}
