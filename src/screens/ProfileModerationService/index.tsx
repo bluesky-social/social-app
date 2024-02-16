@@ -140,6 +140,9 @@ export function ProfileModserviceScreenInner({
       p => p.did === modservice.creator.did,
     )
   }, [modservice.creator.did, preferences.moderationOpts.mods])
+  const isSubscribed = preferences.moderationOpts.mods.find(
+    mod => mod.did === modservice.creator.did,
+  )
   const isEnabled = Boolean(
     enabledVariables?.enabled ??
       preferences.moderationOpts.mods.find(
@@ -248,61 +251,58 @@ export function ProfileModserviceScreenInner({
 
       <Divider />
 
-      <View style={[a.gap_sm, a.mt_xl]}>
-        <Text style={[a.text_md, a.font_bold]}>
-          Configure moderation service
-        </Text>
-        <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-          This labeler moderates the following types of content. You can
-          optionally enable or disable the labeler's recommendations for each
-          type of content below.
-        </Text>
-      </View>
-
-      <View style={[a.w_full, a.mt_xl]}>
-        <Toggle.Item
-          name="enable"
-          value={isEnabled}
-          onChange={onToggleLabelerEnabled}
-          label={
-            isEnabled
-              ? _(msg`Disable this moderation service`)
-              : _(msg`Enable this moderation service`)
-          }>
-          <View
-            style={[
-              a.w_full,
-              a.flex_row,
-              a.justify_between,
-              a.gap_lg,
-              a.p_md,
-              a.rounded_sm,
-              t.atoms.bg_contrast_25,
-            ]}>
-            <View style={[a.flex_1]}>
-              <Text style={[a.font_bold, a.pb_xs]}>
-                This service is {isEnabled ? 'enabled' : 'disabled'}
-              </Text>
-              <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
-                Optionally disable this service without affecting your
-                subscription.
-              </Text>
-            </View>
-            <Toggle.Switch />
+      {isSubscribed ? (
+        <View style={[a.flex_row, a.pr_lg, a.pt_xl]}>
+          <View style={[a.gap_sm, a.flex_1]}>
+            <Text style={[a.text_md, a.font_bold]}>Settings</Text>
+            <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+              Enable or disable labels from this service.
+            </Text>
           </View>
-        </Toggle.Item>
-      </View>
 
-      <View style={[a.gap_md, a.mt_xl]}>
+          <Toggle.Item
+            name="enable"
+            value={isEnabled}
+            onChange={onToggleLabelerEnabled}
+            label={
+              isEnabled
+                ? _(msg`Disable this moderation service`)
+                : _(msg`Enable this moderation service`)
+            }>
+            <Toggle.Label>{isEnabled ? 'Enabled' : 'Disabled'}</Toggle.Label>
+            <Toggle.Switch />
+          </Toggle.Item>
+        </View>
+      ) : (
+        <View style={[a.gap_sm, a.pt_xl]}>
+          <Text style={[a.text_md, a.font_bold]}>Labels</Text>
+          <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+            This labeler moderates the following types of content.
+          </Text>
+        </View>
+      )}
+
+      <View
+        style={[
+          a.gap_md,
+          a.mt_xl,
+          t.atoms.bg_contrast_25,
+          a.rounded_md,
+          a.border,
+          a.py_md,
+          t.atoms.border_contrast_low,
+        ]}>
         {groups.map((def, i) => {
           return (
             <React.Fragment key={def.id}>
               {i !== 0 && <Divider />}
-              <PreferenceRow
-                disabled={isEnabled ? undefined : true}
-                labelGroup={def.id}
-                modservicePreferences={modservicePreferences}
-              />
+              <View style={[a.px_lg]}>
+                <PreferenceRow
+                  disabled={isEnabled ? undefined : true}
+                  labelGroup={def.id}
+                  modservicePreferences={modservicePreferences}
+                />
+              </View>
             </React.Fragment>
           )
         })}
