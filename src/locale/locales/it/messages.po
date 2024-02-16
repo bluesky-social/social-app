@@ -2884,7 +2884,7 @@ msgstr "Le risposte a questo thread sono disabilitate"
 #: src/view/com/composer/Composer.tsx:348
 msgctxt "action"
 msgid "Reply"
-msgstr "Rispondi"
+msgstr "Risposta"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:144
 msgid "Reply Filters"
@@ -2893,7 +2893,7 @@ msgstr "Filtri di risposta"
 #: src/view/com/post/Post.tsx:166 src/view/com/posts/FeedItem.tsx:287
 msgctxt "description"
 msgid "Reply to <0/>"
-msgstr "Rispondi a <0/>"
+msgstr "In risposta a <0/>"
 
 #: src/view/com/modals/report/Modal.tsx:166
 msgid "Report {collectionName}"
