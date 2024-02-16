@@ -18,6 +18,7 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {ScrollView} from '#/view/com/util/Views'
+import {logger} from '#/logger'
 
 import {
   UsePreferencesQueryResponse,
@@ -25,6 +26,7 @@ import {
   useSetContentLabelMutation,
 } from '#/state/queries/preferences'
 import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
+import {useModServiceLabelGroupEnableMutation} from '#/state/queries/modservice'
 
 import {useTheme, atoms as a, useBreakpoints, native} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -522,32 +524,15 @@ function LabelGroup({
 
               {mods.map((mod, i) => {
                 return (
-                  <>
+                  <React.Fragment key={mod.creator.did}>
                     {i !== 0 && <Divider />}
 
-                    <Toggle.Item
-                      label={'Toggle label'}
-                      name={mod.creator.did}
-                      value
-                      onChange={() => {}}>
-                      <View
-                        style={[
-                          a.w_full,
-                          a.flex_row,
-                          a.align_center,
-                          a.justify_between,
-                          a.py_md,
-                        ]}>
-                        <Text style={[a.font_bold]}>
-                          {getModerationServiceTitle({
-                            displayName: mod.creator.displayName,
-                            handle: mod.creator.handle,
-                          })}
-                        </Text>
-                        <Toggle.Switch />
-                      </View>
-                    </Toggle.Item>
-                  </>
+                    <LabelerToggle
+                      labelGroup={labelGroup}
+                      labeler={mod}
+                      preferences={preferences}
+                    />
+                  </React.Fragment>
                 )
               })}
             </View>
@@ -555,6 +540,82 @@ function LabelGroup({
         </View>
       )}
     </View>
+  )
+}
+
+function LabelerToggle({
+  labelGroup,
+  labeler,
+  preferences,
+}: {
+  labelGroup: LabelGroupDefinition['id']
+  labeler: AppBskyModerationDefs.ModServiceViewDetailed
+  preferences: UsePreferencesQueryResponse
+}) {
+  const t = useTheme()
+  const {
+    mutateAsync: toggleGroupEnabled,
+    variables: optimisticToggleGroupEnabled,
+  } = useModServiceLabelGroupEnableMutation()
+
+  const labelerPrefs = React.useMemo(
+    () =>
+      preferences.moderationOpts.mods.find(
+        ({did}) => did === labeler.creator.did,
+      ),
+    [preferences.moderationOpts.mods, labeler.creator.did],
+  )
+  const isLabelerEnabled = !!labelerPrefs?.enabled
+  const isEnabled = isLabelerEnabled
+    ? optimisticToggleGroupEnabled?.enabled ??
+      !labelerPrefs?.disabledLabelGroups?.includes(labelGroup)
+    : false
+  const title = getModerationServiceTitle({
+    displayName: labeler.creator.displayName,
+    handle: labeler.creator.handle,
+  })
+
+  const onToggleEnabled = React.useCallback(async () => {
+    try {
+      if (!labelerPrefs) throw new Error(`labelerPrefs not found`)
+
+      await toggleGroupEnabled({
+        did: labelerPrefs.did,
+        group: labelGroup,
+        enabled: !isEnabled,
+      })
+    } catch (e: any) {
+      logger.error(`Failed to toggle label group enabled`, {
+        message: e.message,
+        labelGroup,
+      })
+    }
+  }, [toggleGroupEnabled, isEnabled, labelerPrefs, labelGroup])
+
+  return (
+    <Toggle.Item
+      disabled={!isLabelerEnabled}
+      label={'Toggle label'}
+      name={labeler.creator.did}
+      value={isEnabled}
+      onChange={onToggleEnabled}>
+      <View
+        style={[
+          a.w_full,
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.py_md,
+        ]}>
+        <Text style={[a.font_bold]}>
+          {title}{' '}
+          <Text style={[t.atoms.text_contrast_low]}>
+            {isLabelerEnabled ? '' : '(labeler disabled)'}
+          </Text>
+        </Text>
+        <Toggle.Switch />
+      </View>
+    </Toggle.Item>
   )
 }
 
