@@ -78,8 +78,9 @@ export function ExportCarDialog({
               <InlineLink
                 to="https://atproto.com/blog/repo-export"
                 style={[a.text_sm]}>
-                this blogpost.
+                this blogpost
               </InlineLink>
+              .
             </Trans>
           </P>
 
