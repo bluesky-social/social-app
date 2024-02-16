@@ -213,15 +213,7 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps &
-    TextStyleProp &
-    Pick<TextProps, 'selectable'> &
-    TextStyleProp & {
-      /**
-       * Label for a11y. Defaults to the href.
-       */
-      label?: string
-    }
+  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
 >
 
 export function InlineLink({
