@@ -1,7 +1,8 @@
 import React from 'react'
 import {StyleSheet} from 'react-native'
 
-const REDIRECT_HOST = 'localhost:19006'
+// @ts-ignore web only, we will always redirect to the app on web (CORS)
+const REDIRECT_HOST = new URL(window.location.href).host
 
 export function CaptchaWebView({
   url,
