@@ -23,7 +23,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
-import {Text} from '#/components/Typography'
+import {Text, TextProps} from '#/components/Typography'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -217,7 +217,15 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps & TextStyleProp
+  BaseLinkProps &
+    TextStyleProp &
+    Pick<TextProps, 'selectable'> &
+    TextStyleProp & {
+      /**
+       * Label for a11y. Defaults to the href.
+       */
+      label?: string
+    }
 >
 
 export function InlineLink({
@@ -228,6 +236,7 @@ export function InlineLink({
   style,
   onPress: outerOnPress,
   download,
+  selectable,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -261,6 +270,7 @@ export function InlineLink({
       onFocus={onFocus}
       onBlur={onBlur}>
       <Text
+        selectable={selectable}
         label={href}
         {...rest}
         style={[
