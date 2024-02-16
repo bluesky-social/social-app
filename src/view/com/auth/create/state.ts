@@ -174,7 +174,6 @@ export function useSubmitCreateAccount(
         uiDispatch({type: 'set-processing', value: false})
         uiDispatch({type: 'set-error', value: cleanError(errMsg)})
         uiDispatch({type: 'set-step', value: isHandleError ? 2 : 1})
-        throw e
       }
     },
     [
