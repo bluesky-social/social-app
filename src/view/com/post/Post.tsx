@@ -16,6 +16,7 @@ import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
+import {LabelsOnMyPost} from '../util/moderation/LabelsOnMe'
 import {Text} from '../util/text/Text'
 import {RichText} from '../util/text/RichText'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -175,6 +176,7 @@ function PostInner({
               </Text>
             </View>
           )}
+          <LabelsOnMyPost post={post} />
           <ContentHider
             modui={moderation.ui('contentView')}
             style={styles.contentHider}

@@ -54,7 +54,7 @@ import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
-import {LabelInfo} from '../util/moderation/LabelInfo'
+import {LabelsOnMe} from '../util/moderation/LabelsOnMe'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
 import {getModerationServiceTitle} from '#/lib/moderation'
@@ -635,7 +635,7 @@ let ProfileHeader = ({
         )}
         <ProfileHeaderAlerts moderation={moderation} />
         {isMe && (
-          <LabelInfo details={{did: profile.did}} labels={profile.labels} />
+          <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />
         )}
 
         <ModerationServiceCard.Loader

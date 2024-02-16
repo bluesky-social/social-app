@@ -20,6 +20,7 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
+import {LabelsOnMyPost} from '../util/moderation/LabelsOnMe'
 import {RichText} from '../util/text/RichText'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -298,6 +299,7 @@ let FeedItemInner = ({
               </Text>
             </View>
           )}
+          <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
             richText={richText}
@@ -309,9 +311,6 @@ let FeedItemInner = ({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
-            showAppealLabelItem={
-              post.author.did === currentAccount?.did && isModeratedPost
-            }
           />
         </View>
       </View>
@@ -324,12 +323,10 @@ let PostContent = ({
   moderation,
   richText,
   postEmbed,
-  postAuthor,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
-  postAuthor: AppBskyFeedDefs.PostView['author']
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()

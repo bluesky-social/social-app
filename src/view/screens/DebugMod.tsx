@@ -17,6 +17,7 @@ import {
   RichText,
 } from '@atproto/api'
 import {moderationOptsOverrideContext} from '#/state/queries/preferences'
+import {useSession} from '#/state/session'
 
 import {atoms as a, useTheme} from '#/alf'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -41,7 +42,7 @@ const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
 ) as (keyof typeof LABELS)[]
 
 const MOCK_MOD_OPTS = {
-  userDid: 'did:web:alice.test',
+  userDid: '',
   adultContentEnabled: true,
   labelGroups: {},
   mods: [
@@ -63,6 +64,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const [target, setTarget] = React.useState<string[]>(['account'])
   const [visibility, setVisiblity] = React.useState<string[]>(['hide'])
   const labelStrings = useLabelStrings()
+  const {currentAccount} = useSession()
 
   const isTargetMe =
     scenario[0] === 'label' && scenarioSwitches.includes('targetMe')
@@ -73,6 +75,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const isLoggedOut =
     scenario[0] === 'label' && scenarioSwitches.includes('loggedOut')
 
+  const did =
+    isTargetMe && currentAccount ? currentAccount.did : 'did:web:bob.test'
+
   const profile = React.useMemo(() => {
     const mockedProfile = mock.profileViewBasic({
       handle: `bob.test`,
@@ -82,17 +87,17 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         scenario[0] === 'label' && target[0] === 'account'
           ? [
               mock.label({
-                src: isSelfLabel ? 'did:web:bob.test' : undefined,
+                src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://did:web:bob.test/`,
+                uri: `at://${did}/`,
               }),
             ]
           : scenario[0] === 'label' && target[0] === 'profile'
           ? [
               mock.label({
-                src: isSelfLabel ? 'did:web:bob.test' : undefined,
+                src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://did:web:bob.test/app.bsky.actor.profile/self`,
+                uri: `at://${did}/app.bsky.actor.profile/self`,
               }),
             ]
           : undefined,
@@ -102,16 +107,17 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         blockedBy: undefined,
         blocking:
           scenario[0] === 'block'
-            ? 'did://did:web:alice/app.bsky.actor.block/fake'
+            ? `at://did:web:alice.test/app.bsky.actor.block/fake`
             : undefined,
         blockingByList: undefined,
       }),
     })
+    mockedProfile.did = did
     mockedProfile.avatar = 'https://bsky.social/about/images/favicon-32x32.png'
     mockedProfile.banner =
       'https://bsky.social/about/images/social-card-default-gradient.png'
     return mockedProfile
-  }, [scenario, target, label, isSelfLabel])
+  }, [scenario, target, label, isSelfLabel, did])
 
   const post = React.useMemo(() => {
     return mock.postView({
@@ -123,9 +129,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         scenario[0] === 'label' && target[0] === 'post'
           ? [
               mock.label({
-                src: isSelfLabel ? 'did:web:bob.test' : undefined,
+                src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at://bob.test/app.bsky.feed.post/fake`,
+                uri: `at:/${did}/app.bsky.feed.post/fake`,
               }),
             ]
           : undefined,
@@ -139,9 +145,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 scenario[0] === 'label' && target[0] === 'embed'
                   ? [
                       mock.label({
-                        src: isSelfLabel ? 'did:web:bob.test' : undefined,
+                        src: isSelfLabel ? did : undefined,
                         val: label[0],
-                        uri: `at://bob.test/app.bsky.feed.post/fake`,
+                        uri: `at://${did}/app.bsky.feed.post/fake`,
                       }),
                     ]
                   : undefined,
@@ -160,23 +166,19 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               ],
             },
     })
-  }, [scenario, label, target, profile, isSelfLabel])
+  }, [scenario, label, target, profile, isSelfLabel, did])
 
   const modOpts = React.useMemo(() => {
     return {
       ...MOCK_MOD_OPTS,
-      userDid: isLoggedOut
-        ? ''
-        : isTargetMe
-        ? 'did:web:bob.test'
-        : 'did:web:alice.test',
+      userDid: isLoggedOut ? '' : isTargetMe ? did : 'did:web:alice.test',
       adultContentEnabled: !noAdult,
       labelGroups: {
         [LABELS[label[0] as keyof typeof LABELS].groupId]:
           visibility[0] as LabelPreference,
       },
     }
-  }, [label, visibility, noAdult, isLoggedOut, isTargetMe])
+  }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did])
 
   const profileModeration = React.useMemo(() => {
     return moderateProfile(profile, modOpts)

@@ -26,6 +26,7 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
+import {LabelsOnMyPost} from '../util/moderation/LabelsOnMe'
 import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -286,6 +287,7 @@ let PostThreadItemLoaded = ({
             )}
           </View>
           <View style={[s.pl10, s.pr10, s.pb10]}>
+            <LabelsOnMyPost post={post} />
             <ContentHider
               modui={moderation.ui('contentView')}
               ignoreMute
@@ -476,6 +478,7 @@ let PostThreadItemLoaded = ({
                   displayNameStyle={isThreadedChild && s.ml2}
                   style={isThreadedChild && s.mb2}
                 />
+                <LabelsOnMyPost post={post} />
                 <PostAlerts
                   modui={moderation.ui('contentList')}
                   style={styles.alert}

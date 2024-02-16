@@ -36,16 +36,6 @@ export type ReportModal = {
   | {did: string}
 )
 
-export type AppealLabelModal = {
-  name: 'appeal-label'
-} & (
-  | {
-      uri: string
-      cid: string
-    }
-  | {did: string}
-)
-
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
@@ -198,7 +188,6 @@ export type Modal =
 
   // Moderation
   | ReportModal
-  | AppealLabelModal
 
   // Lists
   | CreateOrEditListModal

@@ -41,7 +41,6 @@ let PostCtrls = ({
   post,
   record,
   richText,
-  showAppealLabelItem,
   style,
   onPressReply,
 }: {
@@ -49,7 +48,6 @@ let PostCtrls = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
 }): React.ReactNode => {
@@ -229,7 +227,6 @@ let PostCtrls = ({
           postUri={post.uri}
           record={record}
           richText={richText}
-          showAppealLabelItem={showAppealLabelItem}
           style={styles.btnPad}
         />
       </View>
