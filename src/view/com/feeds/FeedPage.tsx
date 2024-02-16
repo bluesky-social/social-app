@@ -119,17 +119,20 @@ export function FeedPage({
             style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
-                {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+                {isSandbox ? 'SANDBOX' : 'Bluesky'}
                 {hasNew && (
-                  <View
-                    style={{
-                      top: -8,
-                      backgroundColor: colors.blue3,
-                      width: 8,
-                      height: 8,
-                      borderRadius: 4,
-                    }}
-                  />
+                  <>
+                    <> </>
+                    <View
+                      style={{
+                        top: -8,
+                        backgroundColor: colors.blue3,
+                        width: 8,
+                        height: 8,
+                        borderRadius: 4,
+                      }}
+                    />
+                  </>
                 )}
               </>
             }
