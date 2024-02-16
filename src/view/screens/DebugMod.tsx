@@ -187,8 +187,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return moderatePost(post, modOpts)
   }, [post, modOpts])
 
-  console.log(post)
-
   return (
     <moderationOptsOverrideContext.Provider value={modOpts}>
       <ScrollView>
