@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     ...(isWeb && {cursor: 'pointer'}),
   },
   container: {
-    height: isWeb ? 250 : 200,
+    minHeight: 250,
     width: '100%',
     paddingBottom: 20,
     overflow: 'hidden',
