@@ -28,11 +28,12 @@ export function CaptchaWebView({
   onError: () => void
 }) {
   const redirectHost = React.useMemo(() => {
-    if (uiState?.serviceUrl === 'https://staging.bsky.dev') {
-      return 'staging.bsky.app'
-    } else {
-      return 'bsky.app'
-    }
+    if (!uiState?.serviceUrl) return 'bsky.app'
+
+    return uiState?.serviceUrl &&
+      new URL(uiState?.serviceUrl).host === 'staging.bsky.dev'
+      ? 'staging.bsky.app'
+      : 'bsky.app'
   }, [uiState?.serviceUrl])
 
   const wasSuccessful = React.useRef(false)
