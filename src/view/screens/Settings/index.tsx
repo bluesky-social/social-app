@@ -776,7 +776,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Delete account`)}
           accessibilityHint={_(
-            msg`Opens modal for account deletion confirmation. Requires email code.`,
+            msg`Opens modal for account deletion confirmation. Requires email code`,
           )}>
           <View style={[styles.iconContainer, dangerBg]}>
             <FontAwesomeIcon
