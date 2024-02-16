@@ -5,9 +5,10 @@ import {Trans} from '@lingui/macro'
 import {atoms as a, useTheme, ViewStyleProp, flatten} from '#/alf'
 import {Text} from '#/components/Typography'
 import {RichText} from '#/components/RichText'
-import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {pluralize} from '#/lib/strings/helpers'
 
 export function Outer({
   children,
@@ -64,10 +65,12 @@ export function Content({
   title,
   description,
   handle,
+  likeCount,
 }: {
   title: string
   description?: string
   handle: string
+  likeCount?: number
 }) {
   const t = useTheme()
 
@@ -85,9 +88,23 @@ export function Content({
             </Trans>
           </Text>
         )}
+
+        {typeof likeCount === 'number' && (
+          <Text
+            style={[
+              t.atoms.text_contrast_medium,
+              a.text_sm,
+              {fontWeight: '500'},
+              a.mt_sm,
+            ]}>
+            <Trans>
+              Liked by {likeCount || 0} {pluralize(likeCount || 0, 'user')}
+            </Trans>
+          </Text>
+        )}
       </View>
 
-      <RaisingHand size="xl" style={[a.z_10]} fill={t.palette.primary_500} />
+      <ChevronRight size="md" style={[a.z_10]} fill={t.palette.contrast_500} />
     </View>
   )
 }

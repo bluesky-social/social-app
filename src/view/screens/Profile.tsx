@@ -10,7 +10,7 @@ import {
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {CenteredView} from '../com/util/Views'
+import {CenteredView, ScrollView} from '../com/util/Views'
 import {ListRef} from '../com/util/List'
 import {ScreenHider} from 'view/com/util/moderation/ScreenHider'
 import {Feed} from 'view/com/posts/Feed'
@@ -48,6 +48,10 @@ import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {isInvalidHandle} from '#/lib/strings/handles'
+
+import {useTheme, atoms as a} from '#/alf'
+import * as ModerationServiceCard from '#/components/ModerationServiceCard'
+import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -158,6 +162,7 @@ function ProfileScreenLoaded({
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
+  const moderationSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -175,6 +180,9 @@ function ProfileScreenLoaded({
   const showLikesTab = isMe
   const showFeedsTab = hasSession && (isMe || extraInfoQuery.data?.hasFeedgens)
   const showListsTab = hasSession && (isMe || extraInfoQuery.data?.hasLists)
+  const showModerationTab =
+    hasSession && (isMe || true) /* TODO true should be associated modservice */
+
   const sectionTitles = useMemo<string[]>(() => {
     return [
       _(msg`Posts`),
@@ -183,8 +191,16 @@ function ProfileScreenLoaded({
       showLikesTab ? _(msg`Likes`) : undefined,
       showFeedsTab ? _(msg`Feeds`) : undefined,
       showListsTab ? _(msg`Lists`) : undefined,
+      showModerationTab ? _(msg`Moderation`) : undefined,
     ].filter(Boolean) as string[]
-  }, [showRepliesTab, showLikesTab, showFeedsTab, showListsTab, _])
+  }, [
+    showRepliesTab,
+    showLikesTab,
+    showFeedsTab,
+    showListsTab,
+    showModerationTab,
+    _,
+  ])
 
   let nextIndex = 0
   const postsIndex = nextIndex++
@@ -205,6 +221,10 @@ function ProfileScreenLoaded({
   if (showListsTab) {
     listsIndex = nextIndex++
   }
+  let moderationIndex: number | null = null
+  if (showModerationTab) {
+    moderationIndex = nextIndex++
+  }
 
   const scrollSectionToTop = React.useCallback(
     (index: number) => {
@@ -220,9 +240,19 @@ function ProfileScreenLoaded({
         feedsSectionRef.current?.scrollToTop()
       } else if (index === listsIndex) {
         listsSectionRef.current?.scrollToTop()
+      } else if (index === moderationIndex) {
+        moderationSectionRef.current?.scrollToTop()
       }
     },
-    [postsIndex, repliesIndex, mediaIndex, likesIndex, feedsIndex, listsIndex],
+    [
+      postsIndex,
+      repliesIndex,
+      mediaIndex,
+      likesIndex,
+      feedsIndex,
+      listsIndex,
+      moderationIndex,
+    ],
   )
 
   useFocusEffect(
@@ -372,6 +402,17 @@ function ProfileScreenLoaded({
               />
             )
           : null}
+        {showModerationTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ModerationSection
+                // ref={moderationSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
       </PagerWithHeader>
       {hasSession && (
         <FAB
@@ -455,6 +496,55 @@ function ProfileEndOfFeed() {
         <Trans>End of feed</Trans>
       </Text>
     </View>
+  )
+}
+
+function ModerationSection({did}: {did: string}) {
+  const t = useTheme()
+  return (
+    <ScrollView>
+      <ModerationServiceCard.Loader
+        did={did}
+        component={({modservice}) => (
+          <ModerationServiceCard.Link modservice={modservice}>
+            {ctx => (
+              <View
+                style={[
+                  a.flex_1,
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_md,
+                  a.p_md,
+                  a.border_t,
+                  t.atoms.border_contrast_low,
+                  ...(ctx.focused || ctx.hovered
+                    ? [t.atoms.bg_contrast_25]
+                    : []),
+                ]}>
+                <View
+                  style={[
+                    {backgroundColor: t.palette.negative_25},
+                    a.p_lg,
+                    a.rounded_sm,
+                  ]}>
+                  <RaisingHand
+                    width={36}
+                    style={[a.z_10]}
+                    fill={t.palette.negative_500}
+                  />
+                </View>
+                <ModerationServiceCard.Card.Content
+                  title="Moderation service"
+                  description={modservice.description}
+                  handle={modservice.creator.handle}
+                  likeCount={modservice.likeCount}
+                />
+              </View>
+            )}
+          </ModerationServiceCard.Link>
+        )}
+      />
+    </ScrollView>
   )
 }
 

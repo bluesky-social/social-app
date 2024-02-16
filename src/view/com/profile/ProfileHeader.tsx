@@ -56,13 +56,9 @@ import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelsOnMe} from '../util/moderation/LabelsOnMe'
 import {useProfileShadow} from 'state/cache/profile-shadow'
-import * as ModerationServiceCard from '#/components/ModerationServiceCard'
-import {getModerationServiceTitle} from '#/lib/moderation'
 import {useOpenGlobalDialog} from '#/components/dialogs'
 import {ReportDialog} from '#/components/dialogs/ReportDialog'
 import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
-
-import {useTheme} from '#/alf'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -99,7 +95,6 @@ let ProfileHeader = ({
   hideBackButton = false,
   isPlaceholderProfile,
 }: Props): React.ReactNode => {
-  const t = useTheme()
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const pal = usePalette('default')
@@ -637,31 +632,6 @@ let ProfileHeader = ({
         {isMe && (
           <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />
         )}
-
-        <ModerationServiceCard.Loader
-          did={profile.did}
-          component={({modservice}) => (
-            <ModerationServiceCard.Link modservice={modservice}>
-              {ctx => (
-                <ModerationServiceCard.Card.Outer
-                  style={[
-                    ...(ctx.focused || ctx.hovered
-                      ? [t.atoms.bg_contrast_50]
-                      : []),
-                  ]}>
-                  <ModerationServiceCard.Card.Content
-                    title={getModerationServiceTitle({
-                      displayName: modservice.creator.displayName,
-                      handle: modservice.creator.handle,
-                    })}
-                    description={modservice.description}
-                    handle={modservice.creator.handle}
-                  />
-                </ModerationServiceCard.Card.Outer>
-              )}
-            </ModerationServiceCard.Link>
-          )}
-        />
       </View>
 
       {showSuggestedFollows && (
