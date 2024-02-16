@@ -26,11 +26,12 @@ import {
 } from '#/state/queries/preferences'
 import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints, native} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
+import {SquareBehindSquare4_Stroke2_Corner0_Rounded as SquareBehindSquare} from '#/components/icons/SquareBehindSquare4'
 import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
@@ -38,7 +39,7 @@ import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
 import * as Dialog from '#/components/Dialog'
-import {Button} from '#/components/Button'
+import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {
   getModerationServiceTitle,
   useConfigurableLabelGroups,
@@ -365,79 +366,90 @@ function LabelGroup({
       </View>
 
       {!!mods.length && (
-        <View style={[a.flex_row, a.align_start, a.pb_md]}>
+        <View
+          style={[
+            a.flex_row,
+            a.align_start,
+            a.justify_between,
+            a.mb_md,
+            a.p_sm,
+            a.rounded_sm,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <View style={[a.flex_row, a.align_center, a.flex_1, a.gap_xs]}>
+            {mods.map(mod => {
+              const modservicePreferences =
+                preferences.moderationOpts.mods.find(
+                  ({did}) => did === mod.creator.did,
+                )
+              const labelGroupEnabled =
+                !modservicePreferences?.disabledLabelGroups?.includes(
+                  labelGroup,
+                )
+              const isLabelerEnabled = modservicePreferences?.enabled
+              const enabled = labelGroupEnabled && isLabelerEnabled
+              return (
+                <View
+                  key={mod.creator.did}
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.gap_sm,
+                    a.py_sm,
+                    a.px_md,
+                    a.rounded_full,
+                    a.border,
+                    t.atoms.border_contrast_low,
+                    enabled && t.atoms.border_contrast_high,
+                    enabled && t.atoms.bg,
+                  ]}>
+                  <View
+                    style={[
+                      a.rounded_full,
+                      t.atoms.bg_contrast_300,
+                      {
+                        height: 6,
+                        width: 6,
+                      },
+                      enabled && {
+                        backgroundColor: t.palette.positive_500,
+                      },
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      a.text_xs,
+                      a.font_bold,
+                      native({
+                        top: 1,
+                      }),
+                      t.atoms.text_contrast_medium,
+                      enabled && t.atoms.text_contrast_high,
+                    ]}>
+                    {getModerationServiceTitle({
+                      displayName: mod.creator.displayName,
+                      handle: mod.creator.handle,
+                    })}
+                  </Text>
+                </View>
+              )
+            })}
+          </View>
+
           <Button
-            label={_(
-              msg`Configure moderation services for category: ${name.toLowerCase()}`,
-            )}
-            onPress={() =>
+            size="tiny"
+            variant="ghost"
+            color="secondary"
+            label={_(msg`Configure enabled labelers for this content type`)}
+            style={[a.mt_xs]}
+            onPress={() => {
               openModSettingsDialog({
                 labelGroup,
                 modservices: mods,
               })
-            }
-            style={[a.flex_1]}>
-            {ctx => (
-              <View
-                style={[
-                  a.w_full,
-                  a.flex_row,
-                  a.align_center,
-                  a.gap_xs,
-                  a.p_sm,
-                  a.border,
-                  a.rounded_sm,
-                  t.atoms.border_contrast_low,
-                  (ctx.hovered || ctx.focused) && t.atoms.bg_contrast_25,
-                ]}>
-                {mods.map(mod => {
-                  const modservicePreferences =
-                    preferences.moderationOpts.mods.find(
-                      ({did}) => did === mod.creator.did,
-                    )
-                  const enabled =
-                    !modservicePreferences?.disabledLabelGroups?.includes(
-                      labelGroup,
-                    )
-                  return (
-                    <View
-                      key={mod.creator.did}
-                      style={[
-                        a.py_xs,
-                        a.px_sm,
-                        a.rounded_sm,
-                        a.border,
-                        t.atoms.border_contrast_low,
-                        enabled && t.atoms.bg_contrast_800,
-                      ]}>
-                      <Text
-                        style={[
-                          a.text_xs,
-                          a.font_bold,
-                          t.atoms.text_contrast_high,
-                          enabled && t.atoms.text_inverted,
-                        ]}>
-                        {getModerationServiceTitle({
-                          displayName: mod.creator.displayName,
-                          handle: mod.creator.handle,
-                        })}
-                      </Text>
-                    </View>
-                  )
-                })}
-
-                <Text
-                  style={[
-                    a.text_xs,
-                    a.font_bold,
-                    a.pl_sm,
-                    a.italic,
-                    t.atoms.text_contrast_low,
-                  ]}>
-                  Configure
-                </Text>
-              </View>
-            )}
+            }}>
+            <ButtonText>Configure</ButtonText>
+            <ButtonIcon icon={SquareBehindSquare} position="right" />
           </Button>
         </View>
       )}
