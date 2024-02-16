@@ -124,10 +124,7 @@ export function RichText({
           key={key}
           type={type}
           text={segment.text}
-          // we could also use tag.tag here, which has the leading # removed.
-          // However, this search should eventually stop removing the #, so
-          // I want to keep the removal marked as a hack. See makeTagLink's
-          // comment for details.
+          // segment.text has the leading "#" while tag.tag does not
           href={makeTagLink(segment.text)}
           style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
           dataSet={WORD_WRAP}

@@ -27,8 +27,5 @@ export function makeListLink(did: string, rkey: string, ...segments: string[]) {
 }
 
 export function makeTagLink(did: string) {
-  // HACK: searching for "#foo" currently returns no results (#2491). This
-  // strips the "#" before searching.
-  const query = did.startsWith('#') ? did.substring(1) : did
-  return `/search?q=${encodeURIComponent(query)}`
+  return `/search?q=${encodeURIComponent(did)}`
 }
