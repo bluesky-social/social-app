@@ -95,8 +95,6 @@ export function useSubmitCreateAccount(
 
   return useCallback(
     async (verificationCode?: string) => {
-      console.log('submitting!')
-
       if (!uiState.email) {
         uiDispatch({type: 'set-step', value: 1})
         console.log('no email?')
@@ -105,7 +103,6 @@ export function useSubmitCreateAccount(
           value: _(msg`Please enter your email.`),
         })
       }
-      console.log('email')
       if (!EmailValidator.validate(uiState.email)) {
         uiDispatch({type: 'set-step', value: 1})
         return uiDispatch({
@@ -113,7 +110,6 @@ export function useSubmitCreateAccount(
           value: _(msg`Your email appears to be invalid.`),
         })
       }
-      console.log('emaile2')
       if (!uiState.password) {
         uiDispatch({type: 'set-step', value: 1})
         return uiDispatch({
@@ -121,7 +117,6 @@ export function useSubmitCreateAccount(
           value: _(msg`Please choose your password.`),
         })
       }
-      console.log('password')
       if (!uiState.handle) {
         uiDispatch({type: 'set-step', value: 2})
         return uiDispatch({
@@ -129,7 +124,6 @@ export function useSubmitCreateAccount(
           value: _(msg`Please choose your handle.`),
         })
       }
-      console.log('handle')
       if (uiState.isCaptchaRequired && !verificationCode) {
         uiDispatch({type: 'set-step', value: 3})
         return uiDispatch({
@@ -137,10 +131,8 @@ export function useSubmitCreateAccount(
           value: _(msg`Please complete the verification captcha.`),
         })
       }
-      console.log('captcha')
       uiDispatch({type: 'set-error', value: ''})
       uiDispatch({type: 'set-processing', value: true})
-      console.log('done here')
 
       try {
         onboardingDispatch({type: 'start'}) // start now to avoid flashing the wrong view
@@ -154,7 +146,6 @@ export function useSubmitCreateAccount(
             ? verificationCode
             : undefined,
         })
-        console.log('no create')
         setBirthDate({birthDate: uiState.birthDate})
         if (IS_PROD(uiState.serviceUrl)) {
           setSavedFeeds(DEFAULT_PROD_FEEDS)
