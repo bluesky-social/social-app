@@ -23,7 +23,6 @@ import Svg, {Path, SvgProps} from 'react-native-svg'
 import {isAndroid} from '#/platform/detection'
 import {useThemePrefs} from 'state/shell'
 import {Logotype} from '#/view/icons/Logotype'
-import {tokens} from '#/alf'
 
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
@@ -266,7 +265,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                   StyleSheet.absoluteFillObject,
                   {
                     backgroundColor: isDarkMode
-                      ? tokens.color.blue_500
+                      ? // special off-spec color for dark mode
+                        '#0F1824'
                       : '#fff',
                   },
                 ]}
