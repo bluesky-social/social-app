@@ -169,7 +169,7 @@ export function useSubmitCreateAccount(
         }
 
         const error = cleanError(errMsg)
-        const isHandleError = error.includes('handle')
+        const isHandleError = error.toLowerCase().includes('handle')
 
         uiDispatch({type: 'set-processing', value: false})
         uiDispatch({type: 'set-error', value: cleanError(errMsg)})

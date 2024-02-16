@@ -15,7 +15,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
 import {useTheme} from 'lib/ThemeContext'
 
-const CAPTCHA_URL = 'http://192.168.1.10:3000/gate'
+const CAPTCHA_URL = 'http://192.168.1.10:3000/'
 
 export function Step3({
   uiState,
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     ...(isWeb && {cursor: 'pointer'}),
   },
   container: {
-    minHeight: 250,
+    minHeight: 350,
     width: '100%',
     paddingBottom: 20,
     overflow: 'hidden',
