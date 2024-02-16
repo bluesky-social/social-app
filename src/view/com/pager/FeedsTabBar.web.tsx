@@ -37,7 +37,6 @@ export function FeedsTabBar(
 
 function FeedsTabBarPublic() {
   const pal = usePalette('default')
-  const {isSandbox} = useSession()
 
   return (
     <CenteredView sideBorders>
@@ -58,7 +57,7 @@ function FeedsTabBarPublic() {
           style={[pal.text, {fontWeight: 'bold'}]}
           text={
             <>
-              {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+              Bluesky{' '}
               {/*hasNew && (
                 <View
                   style={{
