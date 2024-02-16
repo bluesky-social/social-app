@@ -57,6 +57,7 @@ export const schema = z.object({
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
   lastSelectedHomeFeed: z.string().optional(),
+  pdsAddressHistory: z.array(z.string()).optional(),
 })
 export type Schema = z.infer<typeof schema>
 
@@ -91,4 +92,5 @@ export const defaults: Schema = {
   hiddenPosts: [],
   useInAppBrowser: undefined,
   lastSelectedHomeFeed: undefined,
+  pdsAddressHistory: [],
 }

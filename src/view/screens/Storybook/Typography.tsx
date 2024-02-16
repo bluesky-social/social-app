@@ -21,11 +21,11 @@ export function Typography() {
 
       <RichText
         resolveFacets
-        value={`This is rich text. It can have mentions like @bsky.app or links like https://blueskyweb.xyz`}
+        value={`This is rich text. It can have mentions like @bsky.app or links like https://bsky.social`}
       />
       <RichText
         resolveFacets
-        value={`This is rich text. It can have mentions like @bsky.app or links like https://blueskyweb.xyz`}
+        value={`This is rich text. It can have mentions like @bsky.app or links like https://bsky.social`}
         style={[a.text_xl]}
       />
     </View>
