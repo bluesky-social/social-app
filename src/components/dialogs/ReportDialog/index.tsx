@@ -1,9 +1,8 @@
 import React from 'react'
-import {View, Dimensions, Linking} from 'react-native'
+import {View, Linking} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, useTheme, tokens, native} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -157,59 +156,18 @@ function ModServiceToggle({title}: {title: string}) {
   )
 }
 
-function SubmitViewLoader({
-  children,
-}: {
-  children: (props: {
-    labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
-    labelGroupToModServiceMap: ReturnType<typeof getLabelGroupToLabelerMap>
-  }) => React.ReactNode
-}) {
-  const {
-    isLoading: isPreferencesLoading,
-    error: preferencesError,
-    data: preferences,
-  } = usePreferencesQuery()
-  const {
-    isLoading: isModServicesLoading,
-    data: modservices,
-    error: modservicesError,
-  } = useModServicesDetailedInfoQuery({
-    dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
-  })
-  const labelGroupToModServiceMap = React.useMemo(() => {
-    if (!modservices) return {}
-    return getLabelGroupToLabelerMap(modservices)
-  }, [modservices])
-
-  const isLoading = isPreferencesLoading || isModServicesLoading
-  const error = preferencesError || modservicesError
-
-  return isLoading ? (
-    <View style={[{height: 500}]}>
-      <Loader />
-    </View>
-  ) : error || !(preferences && modservices) ? null : ( // TODO
-    children({
-      labelers: modservices,
-      labelGroupToModServiceMap,
-    })
-  )
-}
-
 function SubmitView({
   params,
   selectedLabelGroup,
   goBack,
   onSubmitComplete,
-  labelGroupToModServiceMap,
+  labelGroupToLabelerMap,
 }: {
   params: ReportDialogProps
   selectedLabelGroup: ReportDialogLabelIds
   goBack: () => void
   onSubmitComplete: () => void
-  labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
-  labelGroupToModServiceMap: ReturnType<typeof getLabelGroupToLabelerMap>
+  labelGroupToLabelerMap: ReturnType<typeof getLabelGroupToLabelerMap>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -217,8 +175,10 @@ function SubmitView({
   const groupInfoStrings = labelGroupStrings[selectedLabelGroup]
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
-  const [selectedServices, setSelectedServices] = React.useState<string[]>([])
-  const supportedLabelers = labelGroupToModServiceMap[selectedLabelGroup]
+  const supportedLabelers = labelGroupToLabelerMap[selectedLabelGroup]
+  const [selectedServices, setSelectedServices] = React.useState<string[]>(
+    supportedLabelers?.map(labeler => labeler.creator.did) || [],
+  )
 
   const submit = React.useCallback(async () => {
     setSubmitting(true)
@@ -347,14 +307,26 @@ function SubmitView({
         </View>
       </View>
 
-      <View style={[a.align_end]}>
+      <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_lg]}>
+        {!selectedServices.length && (
+          <Text
+            style={[
+              a.flex_1,
+              a.italic,
+              a.leading_snug,
+              t.atoms.text_contrast_medium,
+            ]}>
+            You must select at least one labeler for a report
+          </Text>
+        )}
+
         <Button
           size="large"
           variant="solid"
           color="primary"
           label={_(msg`Submit`)}
           onPress={submit}
-          disabled={!supportedLabelers}>
+          disabled={!selectedServices.length}>
           <ButtonText>Submit</ButtonText>
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
@@ -363,16 +335,16 @@ function SubmitView({
   )
 }
 
-export function ReportDialog({
+export function ReportDialogInner({
   params,
-  cleanup,
-}: GlobalDialogProps<ReportDialogProps>) {
-  // REQUIRED CLEANUP
-  const onClose = React.useCallback(() => cleanup(), [cleanup])
-
+  labelGroupToLabelerMap,
+}: {
+  params: ReportDialogProps
+  labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
+  labelGroupToLabelerMap: ReturnType<typeof getLabelGroupToLabelerMap>
+}) {
   const t = useTheme()
   const {_} = useLingui()
-  const insets = useSafeAreaInsets()
   const control = Dialog.useDialogControl()
   const [selectedLabelGroup, setSelectedLabelGroup] = React.useState<
     ReportDialogLabelIds | undefined
@@ -381,6 +353,9 @@ export function ReportDialog({
   const contentGroups = useConfigurableContentLabelGroups()
   const profileGroups = useConfigurableProfileLabelGroups()
   const groups = params.type === 'content' ? contentGroups : profileGroups
+  const filteredGroups = groups.filter(group => {
+    return Boolean(labelGroupToLabelerMap[group.id])
+  })
 
   const i18n = React.useMemo(() => {
     let title = _(msg`Report this post`)
@@ -409,99 +384,144 @@ export function ReportDialog({
   )
 
   return (
+    <>
+      {selectedLabelGroup ? (
+        <SubmitView
+          labelGroupToLabelerMap={labelGroupToLabelerMap}
+          params={params}
+          selectedLabelGroup={selectedLabelGroup}
+          goBack={() => setSelectedLabelGroup(undefined)}
+          onSubmitComplete={control.close}
+        />
+      ) : (
+        <View style={[a.gap_lg]}>
+          <View style={[a.justify_center, a.gap_sm]}>
+            <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
+            <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+              {i18n.description}
+            </Text>
+          </View>
+
+          <Divider />
+
+          <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
+            {filteredGroups.map(def => {
+              const strings = labelGroupStrings[def.id]
+              return (
+                <Button
+                  key={def.id}
+                  label={_(msg`Create report for ${strings.name}`)}
+                  onPress={() => next(def.id)}>
+                  <LabelGroupButton
+                    name={strings.name}
+                    description={strings.description}
+                  />
+                </Button>
+              )
+            })}
+
+            <Button
+              label={_(msg`Create report for other reasons`)}
+              onPress={() => next('other')}>
+              <LabelGroupButton
+                name="Other"
+                description="An issue not covered by another option"
+              />
+            </Button>
+
+            {params.type === 'content' && (
+              <View style={[a.pt_md, a.px_md]}>
+                <View
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_lg,
+                    a.p_md,
+                    a.pl_lg,
+                    a.rounded_md,
+                    t.atoms.bg_contrast_900,
+                  ]}>
+                  <Text
+                    style={[
+                      a.flex_1,
+                      t.atoms.text_inverted,
+                      a.italic,
+                      a.leading_snug,
+                    ]}>
+                    Need to report a copyright violation?
+                  </Text>
+                  <Link
+                    to={DMCA_LINK}
+                    label={_(
+                      msg`View details for reporting a copyright violation`,
+                    )}
+                    size="small"
+                    variant="solid"
+                    color="secondary">
+                    <ButtonText>View details</ButtonText>
+                    <ButtonIcon position="right" icon={SquareArrowTopRight} />
+                  </Link>
+                </View>
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+    </>
+  )
+}
+
+export function ReportDialog({
+  params,
+  cleanup,
+}: GlobalDialogProps<ReportDialogProps>) {
+  // REQUIRED CLEANUP
+  const onClose = React.useCallback(() => cleanup(), [cleanup])
+  const control = Dialog.useDialogControl()
+
+  const {
+    isLoading: isPreferencesLoading,
+    error: preferencesError,
+    data: preferences,
+  } = usePreferencesQuery()
+  const {
+    isLoading: isModServicesLoading,
+    data: modservices,
+    error: modservicesError,
+  } = useModServicesDetailedInfoQuery({
+    dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
+  })
+  const labelGroupToLabelerMap = React.useMemo(() => {
+    if (!modservices) return {}
+    return getLabelGroupToLabelerMap(modservices)
+  }, [modservices])
+
+  const isLoading = isPreferencesLoading || isModServicesLoading
+  const error = preferencesError || modservicesError
+
+  return isLoading ? (
+    <View style={[{height: 500}]}>
+      <Loader />
+    </View>
+  ) : error || !(preferences && modservices) ? null : ( // TODO
     <Dialog.Outer
       defaultOpen
       control={control}
       onClose={onClose}
       nativeOptions={{
         sheet: {
-          snapPoints: [Dimensions.get('window').height - insets.top],
+          snapPoints: ['100%'],
         },
       }}>
       <Dialog.Handle />
 
       <Dialog.ScrollableInner label="Report Dialog">
-        {selectedLabelGroup ? (
-          <SubmitViewLoader>
-            {props => (
-              <SubmitView
-                {...props}
-                params={params}
-                selectedLabelGroup={selectedLabelGroup}
-                goBack={() => setSelectedLabelGroup(undefined)}
-                onSubmitComplete={control.close}
-              />
-            )}
-          </SubmitViewLoader>
-        ) : (
-          <View style={[a.gap_lg]}>
-            <View style={[a.justify_center, a.gap_sm]}>
-              <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
-              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                {i18n.description}
-              </Text>
-            </View>
-
-            <Divider />
-
-            <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
-              {groups.map(def => {
-                const strings = labelGroupStrings[def.id]
-                return (
-                  <Button
-                    key={def.id}
-                    label={_(msg`Create report for ${strings.name}`)}
-                    onPress={() => next(def.id)}>
-                    <LabelGroupButton
-                      name={strings.name}
-                      description={strings.description}
-                    />
-                  </Button>
-                )
-              })}
-
-              <Button
-                label={_(msg`Create report for other reasons`)}
-                onPress={() => next('other')}>
-                <LabelGroupButton
-                  name="Other"
-                  description="An issue not covered by another option"
-                />
-              </Button>
-
-              {params.type === 'content' && (
-                <View style={[a.pt_md, a.px_md]}>
-                  <View
-                    style={[
-                      a.flex_row,
-                      a.align_center,
-                      a.justify_between,
-                      a.gap_md,
-                      a.p_md,
-                      a.pl_lg,
-                      a.rounded_md,
-                      t.atoms.bg_contrast_900,
-                    ]}>
-                    <Text style={[t.atoms.text_inverted, a.italic]}>
-                      Need to report a copyright violation?
-                    </Text>
-                    <Link
-                      to={DMCA_LINK}
-                      label={_(
-                        msg`View details for reporting a copyright violation`,
-                      )}
-                      size="small"
-                      variant="solid"
-                      color="secondary">
-                      <ButtonText>View details</ButtonText>
-                      <ButtonIcon position="right" icon={SquareArrowTopRight} />
-                    </Link>
-                  </View>
-                </View>
-              )}
-            </View>
-          </View>
-        )}
+        <ReportDialogInner
+          params={params}
+          labelers={modservices}
+          labelGroupToLabelerMap={labelGroupToLabelerMap}
+        />
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
