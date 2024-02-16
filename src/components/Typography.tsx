@@ -56,10 +56,11 @@ function normalizeTextStyles(styles: TextStyle[]) {
 export function Text({style, selectable, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
+  console.log(rest)
   return selectable && isIOS ? (
     <UITextView style={s} {...rest} />
   ) : (
-    <RNText style={s} {...rest} />
+    <RNText selectable={selectable} style={s} {...rest} />
   )
 }
 

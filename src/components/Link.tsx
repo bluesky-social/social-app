@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  GestureResponderEvent,
-  Linking,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import {GestureResponderEvent, Linking} from 'react-native'
 import {
   useLinkProps,
   useNavigation,
@@ -262,44 +258,41 @@ export function InlineLink({
   const flattenedStyle = flatten(style)
 
   return (
-    <TouchableWithoutFeedback
-      accessibilityRole="button"
+    <Text
+      selectable={selectable}
+      label={href}
+      {...rest}
+      style={[
+        {color: t.palette.primary_500},
+        (hovered || focused || pressed) && {
+          outline: 0,
+          textDecorationLine: 'underline',
+          textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+        },
+        flattenedStyle,
+      ]}
+      role="link"
       onPress={download ? undefined : onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       onFocus={onFocus}
-      onBlur={onBlur}>
-      <Text
-        selectable={selectable}
-        label={href}
-        {...rest}
-        style={[
-          {color: t.palette.primary_500},
-          (hovered || focused || pressed) && {
-            outline: 0,
-            textDecorationLine: 'underline',
-            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
-          },
-          flattenedStyle,
-        ]}
-        role="link"
-        onMouseEnter={onHoverIn}
-        onMouseLeave={onHoverOut}
-        accessibilityRole="link"
-        href={href}
-        {...web({
-          hrefAttrs: {
-            target: download ? undefined : isExternal ? 'blank' : undefined,
-            rel: isExternal ? 'noopener noreferrer' : undefined,
-            download,
-          },
-          dataSet: {
-            // default to no underline, apply this ourselves
-            noUnderline: '1',
-          },
-        })}>
-        {children}
-      </Text>
-    </TouchableWithoutFeedback>
+      onBlur={onBlur}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+      accessibilityRole="link"
+      href={href}
+      {...web({
+        hrefAttrs: {
+          target: download ? undefined : isExternal ? 'blank' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
+        },
+        dataSet: {
+          // default to no underline, apply this ourselves
+          noUnderline: '1',
+        },
+      })}>
+      {children}
+    </Text>
   )
 }
