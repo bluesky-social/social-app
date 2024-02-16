@@ -202,7 +202,7 @@ export function Link({
       onPress={download ? undefined : onPress}
       {...web({
         hrefAttrs: {
-          target: isExternal ? 'blank' : undefined,
+          target: download ? undefined : isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
           download,
         },
@@ -279,7 +279,7 @@ export function InlineLink({
         href={href}
         {...web({
           hrefAttrs: {
-            target: isExternal ? 'blank' : undefined,
+            target: download ? undefined : isExternal ? 'blank' : undefined,
             rel: isExternal ? 'noopener noreferrer' : undefined,
             download,
           },
