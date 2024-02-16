@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-15 11:00\n"
+"PO-Revision-Date: 2024-02-16 11:49\n"
 "Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -202,7 +202,7 @@ msgstr "Avançado"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr ""
+msgstr "Todos os feeds que você salvou, em um único lugar."
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
@@ -1053,13 +1053,9 @@ msgstr "Desencorajar aplicativos a mostrar minha conta para usuários deslogados
 msgid "Discover new custom feeds"
 msgstr "Descubra novos feeds"
 
-#: src/view/screens/Feeds.tsx:473
-#~ msgid "Discover new feeds"
-#~ msgstr "Descubra novos feeds"
-
 #: src/view/screens/Feeds.tsx:689
 msgid "Discover New Feeds"
-msgstr ""
+msgstr "Descubra Novos Feeds"
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -2245,7 +2241,7 @@ msgstr "Meus Feeds Salvos"
 
 #: src/view/com/auth/server-input/index.tsx:118
 msgid "my-server.com"
-msgstr "meu-servidor.com"
+msgstr "meu-servidor.com.br"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 #: src/view/com/modals/CreateOrEditList.tsx:290
@@ -3864,7 +3860,7 @@ msgstr "Este conteúdo não é visível sem uma conta do Bluesky."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr "Esta funcionalidade está em beta. Você pode ler mais sobre exportação de repositórios <0>neste post.</0>"
+msgstr "Esta funcionalidade está em beta. Você pode ler mais sobre exportação de repositórios <0>neste post</0> do nosso blog."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
