@@ -263,7 +263,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
               <View
                 style={[
                   StyleSheet.absoluteFillObject,
-                  {backgroundColor: '#fff'},
+                  {
+                    backgroundColor: isDarkMode
+                      ? // special off-spec color for dark mode
+                        '#0F1824'
+                      : '#fff',
+                  },
                 ]}
               />
             )}
