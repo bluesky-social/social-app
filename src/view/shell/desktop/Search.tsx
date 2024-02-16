@@ -303,8 +303,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     width: '100%',
-    paddingTop: 7,
-    paddingBottom: 7,
+    paddingVertical: 7,
   },
   cancelBtn: {
     paddingRight: 4,

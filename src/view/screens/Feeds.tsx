@@ -714,8 +714,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 16,
-    paddingHorizontal: 16,
+    gap: 18,
+    paddingHorizontal: 18,
     paddingVertical: 12,
   },
 

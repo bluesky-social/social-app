@@ -40,7 +40,7 @@ import {useActorSearch} from '#/state/queries/actor-search'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {MagnifyingGlassIcon} from '#/lib/icons'
+import {MagnifyingGlassIcon2} from '#/lib/icons'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {
   MATCH_HANDLE,
@@ -427,7 +427,7 @@ export function SearchScreenInner({
             paddingVertical: 30,
             gap: 15,
           }}>
-          <MagnifyingGlassIcon
+          <MagnifyingGlassIcon2
             strokeWidth={3}
             size={isDesktop ? 60 : 60}
             style={pal.textLight}
@@ -610,7 +610,6 @@ export function SearchScreen(
           styles.header,
           pal.border,
           pal.view,
-          isTabletOrDesktop && {paddingTop: 10},
         ]}
         sideBorders={isTabletOrDesktop}>
         {isTabletOrMobile && (
@@ -635,9 +634,9 @@ export function SearchScreen(
             {backgroundColor: pal.colors.backgroundLight},
             styles.headerSearchContainer,
           ]}>
-          <MagnifyingGlassIcon
-            style={[pal.icon, styles.headerSearchIcon]}
-            size={21}
+          <MagnifyingGlassIcon2
+            style={[pal.textLight, styles.headerSearchIcon]}
+            size={18}
           />
           <TextInput
             testID="searchTextInput"
@@ -670,6 +669,7 @@ export function SearchScreen(
             <Pressable
               testID="searchTextInputClearBtn"
               onPress={onPressClearQuery}
+              style={[{alignSelf: 'center', marginLeft: 6}]}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Clear search query`)}
               accessibilityHint=""
@@ -794,7 +794,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
-    paddingVertical: 4,
     height: HEADER_HEIGHT,
     // @ts-ignore web only
     position: isWeb ? 'sticky' : '',
@@ -813,19 +812,22 @@ const styles = StyleSheet.create({
   headerSearchContainer: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 2,
+    borderRadius: 20,
   },
   headerSearchIcon: {
-    marginRight: 6,
-    alignSelf: 'center',
+    position: 'relative',
+    top: 2,
+    paddingVertical: 7,
+    marginRight: 8,
   },
   headerSearchInput: {
     flex: 1,
-    fontSize: 17,
     minWidth: 0, // overflow mitigation for firefox
+    fontSize: 18,
+    width: '100%',
+    paddingVertical: 7,
   },
   headerCancelBtn: {
     paddingLeft: 10,

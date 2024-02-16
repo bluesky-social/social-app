@@ -12,7 +12,7 @@ import {
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
 import {HITSLOP_10} from 'lib/constants'
-import {MagnifyingGlassIcon} from 'lib/icons'
+import {MagnifyingGlassIcon2} from 'lib/icons'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useLingui} from '@lingui/react'
@@ -60,7 +60,7 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
 
     return (
       <View style={[pal.viewLight, styles.container, style]}>
-        <MagnifyingGlassIcon style={[pal.icon, styles.icon]} size={21} />
+        <MagnifyingGlassIcon2 style={[pal.textLight, styles.icon]} size={18} />
         <TextInput
           testID="searchTextInput"
           ref={textInput}
@@ -84,6 +84,7 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
         {query ? (
           <TouchableOpacity
             onPress={onPressCancelSearchInner}
+            style={[{alignSelf: 'center', marginLeft: 6}]}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Clear search query`)}
             accessibilityHint=""
@@ -102,20 +103,22 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 2,
+    borderRadius: 20,
     flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
   },
   icon: {
-    marginRight: 6,
-    alignSelf: 'center',
+    position: 'relative',
+    top: 2,
+    paddingVertical: 7,
+    marginRight: 8,
   },
   input: {
     flex: 1,
-    fontSize: 17,
+    fontSize: 18,
+    width: '100%',
+    paddingVertical: 7,
     minWidth: 0, // overflow mitigation for firefox
   },
   cancelBtn: {
