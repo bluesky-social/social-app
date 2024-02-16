@@ -55,6 +55,8 @@ export type ButtonState = {
   disabled: boolean
 }
 
+export type ButtonContext = VariantProps & ButtonState
+
 export type ButtonProps = Pick<
   PressableProps,
   'disabled' | 'onPress' | 'testID'
@@ -67,7 +69,7 @@ export type ButtonProps = Pick<
     children:
       | React.ReactNode
       | string
-      | ((state: VariantProps & ButtonState) => React.ReactNode | string)
+      | ((context: ButtonContext) => React.ReactNode | string)
   }
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
@@ -351,7 +353,7 @@ export function Button({
       }
     }, [variant, color])
 
-  const context = React.useMemo(
+  const context = React.useMemo<ButtonContext>(
     () => ({
       ...state,
       variant,
