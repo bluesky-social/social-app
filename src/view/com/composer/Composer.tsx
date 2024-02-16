@@ -63,6 +63,9 @@ import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import {useDialogControl} from '#/components/Dialog'
+import {ImageAltReminderDialog} from './ImageAltReminderDialog'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -111,6 +114,7 @@ export const ComposePost = observer(function ComposePost({
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(), [])
+  const altReminderControl = useDialogControl()
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
@@ -197,22 +201,8 @@ export const ComposePost = observer(function ComposePost({
     [gallery, track],
   )
 
-  const onPressPublish = async () => {
+  const publishPost = useNonReactiveCallback(async () => {
     if (isProcessing || graphemeLength > MAX_GRAPHEME_LENGTH) {
-      return
-    }
-    if (requireAltTextEnabled && gallery.needsAltText) {
-      return
-    }
-
-    setError('')
-
-    if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
-      setError(_(msg`Did you want to say anything?`))
-      return
-    }
-    if (extLink?.isLoading) {
-      setError(_(msg`Please wait for your link card to finish loading`))
       return
     }
 
@@ -266,12 +256,39 @@ export const ComposePost = observer(function ComposePost({
         ? _(msg`Your reply has been published`)
         : _(msg`Your post has been published`),
     )
+  })
+
+  const onPressPublish = async () => {
+    setError('')
+
+    if (richtext.text.trim().length === 0 && gallery.isEmpty && !extLink) {
+      setError(_(msg`Did you want to say anything?`))
+      return
+    }
+
+    if (extLink?.isLoading) {
+      setError(_(msg`Please wait for your link card to finish loading`))
+      return
+    }
+
+    if (gallery.needsAltText) {
+      if (requireAltTextEnabled === 'remind') {
+        altReminderControl.open()
+        return
+      }
+
+      if (requireAltTextEnabled) {
+        return
+      }
+    }
+
+    publishPost()
   }
 
   const canPost = useMemo(
     () =>
       graphemeLength <= MAX_GRAPHEME_LENGTH &&
-      (!requireAltTextEnabled || !gallery.needsAltText),
+      (requireAltTextEnabled !== true || !gallery.needsAltText),
     [graphemeLength, requireAltTextEnabled, gallery.needsAltText],
   )
   const selectTextInputPlaceholder = replyTo
@@ -290,6 +307,11 @@ export const ComposePost = observer(function ComposePost({
       testID="composePostView"
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.outer}>
+      <ImageAltReminderDialog
+        control={altReminderControl}
+        onContinue={publishPost}
+      />
+
       <View style={[s.flex1, viewStyles]} aria-modal accessibilityViewIsModal>
         <View style={[styles.topbar, isDesktop && styles.topbarDesktop]}>
           <TouchableOpacity
@@ -362,7 +384,7 @@ export const ComposePost = observer(function ComposePost({
             </>
           )}
         </View>
-        {requireAltTextEnabled && gallery.needsAltText && (
+        {requireAltTextEnabled === true && gallery.needsAltText && (
           <View style={[styles.reminderLine, pal.viewLight]}>
             <View style={styles.errorIcon}>
               <FontAwesomeIcon

@@ -33,7 +33,7 @@ export const schema = z.object({
     postLanguageHistory: z.array(z.string()),
     appLanguage: z.string(),
   }),
-  requireAltTextEnabled: z.boolean(), // should move to server
+  requireAltTextEnabled: z.union([z.boolean(), z.literal('remind')]), // should move to server
   externalEmbeds: z
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
@@ -80,7 +80,7 @@ export const defaults: Schema = {
       .slice(0, 6),
     appLanguage: deviceLocales[0] || 'en',
   },
-  requireAltTextEnabled: false,
+  requireAltTextEnabled: 'remind',
   externalEmbeds: {},
   mutedThreads: [],
   invites: {

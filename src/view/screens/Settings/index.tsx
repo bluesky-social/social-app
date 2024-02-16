@@ -455,7 +455,7 @@ export function SettingsScreen({}: Props) {
             type="default-light"
             label={_(msg`Require alt text before posting`)}
             labelType="lg"
-            isSelected={requireAltTextEnabled}
+            isSelected={requireAltTextEnabled === true}
             onPress={() => setRequireAltTextEnabled(!requireAltTextEnabled)}
           />
         </View>
