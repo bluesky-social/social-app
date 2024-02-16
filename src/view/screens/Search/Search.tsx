@@ -606,11 +606,7 @@ export function SearchScreen(
   return (
     <View style={isWeb ? null : {flex: 1}}>
       <CenteredView
-        style={[
-          styles.header,
-          pal.border,
-          pal.view,
-        ]}
+        style={[styles.header, pal.border, pal.view]}
         sideBorders={isTabletOrDesktop}>
         {isTabletOrMobile && (
           <Pressable
