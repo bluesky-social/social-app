@@ -15,7 +15,7 @@ import {nanoid} from 'nanoid/non-secure'
 import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
 import {useTheme} from 'lib/ThemeContext'
 
-const CAPTCHA_PATH = __DEV__ ? '/' : '/gate/signup'
+const CAPTCHA_PATH = '/gate/signup'
 
 export function Step3({
   uiState,
@@ -32,16 +32,14 @@ export function Step3({
 
   const stateParam = React.useMemo(() => nanoid(15), [])
   const url = React.useMemo(() => {
-    const newUrl = new URL(
-      __DEV__ ? 'http://localhost:3000' : uiState.serviceUrl,
-    )
+    const newUrl = new URL(uiState.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
-    newUrl.searchParams.set('email', uiState.email)
+    newUrl.searchParams.set('handle', uiState.handle)
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.colorScheme)
 
     return newUrl.href
-  }, [uiState.serviceUrl, uiState.email, stateParam, theme.colorScheme])
+  }, [uiState.serviceUrl, uiState.handle, stateParam, theme.colorScheme])
 
   const onSuccess = React.useCallback(
     (code: string) => {

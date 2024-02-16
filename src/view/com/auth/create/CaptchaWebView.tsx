@@ -30,9 +30,7 @@ export function CaptchaWebView({
   onError: () => void
 }) {
   const redirectHost = React.useMemo(() => {
-    if (__DEV__) {
-      return 'localhost:19006'
-    } else if (uiState?.serviceUrl === 'https://staging.bsky.dev/') {
+    if (uiState?.serviceUrl === 'https://staging.bsky.dev') {
       return 'staging.bsky.app'
     } else {
       return 'bsky.app'
