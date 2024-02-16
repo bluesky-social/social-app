@@ -281,10 +281,10 @@ export function ModerationScreenInner({
             a.pb_md,
             t.atoms.text_contrast_high,
           ]}>
-          <Trans>Labeler subscriptions</Trans>
+          <Trans>Labelers</Trans>
         </Text>
 
-        <View style={[a.gap_sm]}>
+        <View style={[a.gap_sm, a.rounded_sm, t.atoms.bg_contrast_25]}>
           {modservices.map(mod => {
             return (
               <ModerationServiceCard.Link

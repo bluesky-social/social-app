@@ -14,8 +14,6 @@ export function Outer({
   children,
   style,
 }: React.PropsWithChildren<ViewStyleProp>) {
-  const t = useTheme()
-
   return (
     <View
       style={[
@@ -23,15 +21,11 @@ export function Outer({
         a.align_center,
         a.gap_sm,
         a.w_full,
-        a.rounded_sm,
         a.pt_md,
         a.pb_md,
         a.pl_md,
-        a.pr_md,
+        a.pr_lg,
         a.overflow_hidden,
-        a.border,
-        t.atoms.border_contrast_low,
-        t.atoms.bg_contrast_25,
         flatten(style),
       ]}>
       <View style={[a.flex_row, a.align_center, a.w_full, a.gap_md]}>
@@ -104,7 +98,7 @@ export function Content({
         )}
       </View>
 
-      <ChevronRight size="md" style={[a.z_10]} fill={t.palette.contrast_500} />
+      <ChevronRight size="md" style={[a.z_10, t.atoms.text_contrast_low]} />
     </View>
   )
 }
