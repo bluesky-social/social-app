@@ -38,6 +38,11 @@ type BaseLinkProps = Pick<
   testID?: string
 
   /**
+   * Label for a11y. Defaults to the href.
+   */
+  label?: string
+
+  /**
    * The React Navigation `StackAction` to perform when the link is pressed.
    */
   action?: 'push' | 'replace' | 'navigate'
@@ -55,6 +60,11 @@ type BaseLinkProps = Pick<
    * DO NOT use this for navigation, that's what the `to` prop is for.
    */
   onPress?: (e: GestureResponderEvent) => void
+
+  /**
+   * Web-only attribute. Sets `download` attr on web.
+   */
+  download?: string
 }
 
 export function useLink({
@@ -156,12 +166,7 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
-  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'> & {
-    /**
-     * Label for a11y. Defaults to the href.
-     */
-    label?: string
-  }
+  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'>
 
 /**
  * A interactive element that renders as a `<a>` tag on the web. On mobile it
@@ -176,6 +181,7 @@ export function Link({
   to,
   action = 'push',
   onPress: outerOnPress,
+  download,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress} = useLink({
@@ -193,11 +199,12 @@ export function Link({
       role="link"
       accessibilityRole="link"
       href={href}
-      onPress={onPress}
+      onPress={download ? undefined : onPress}
       {...web({
         hrefAttrs: {
           target: isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
         },
         dataSet: {
           // no underline, only `InlineLink` has underlines
@@ -210,13 +217,7 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps &
-    TextStyleProp & {
-      /**
-       * Label for a11y. Defaults to the href.
-       */
-      label?: string
-    }
+  BaseLinkProps & TextStyleProp
 >
 
 export function InlineLink({
@@ -226,6 +227,7 @@ export function InlineLink({
   warnOnMismatchingTextChild,
   style,
   onPress: outerOnPress,
+  download,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -253,7 +255,7 @@ export function InlineLink({
   return (
     <TouchableWithoutFeedback
       accessibilityRole="button"
-      onPress={onPress}
+      onPress={download ? undefined : onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       onFocus={onFocus}
@@ -279,6 +281,7 @@ export function InlineLink({
           hrefAttrs: {
             target: isExternal ? 'blank' : undefined,
             rel: isExternal ? 'noopener noreferrer' : undefined,
+            download,
           },
           dataSet: {
             // default to no underline, apply this ourselves
