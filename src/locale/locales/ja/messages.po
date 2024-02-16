@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2024-01-30 19:00+0900\n"
 "Last-Translator: Hima-Zinn\n"
-"Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys\n"
+"Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -241,7 +241,7 @@ msgstr "高度な設定"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr ""
+msgstr "あなたが保存したフィードはすべて右側の１か所にあります。"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
@@ -1146,7 +1146,7 @@ msgstr "新しいカスタムフィードを見つける"
 
 #: src/view/screens/Feeds.tsx:689
 msgid "Discover New Feeds"
-msgstr ""
+msgstr "新しいフィードを見つける"
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1203,12 +1203,12 @@ msgstr "ダブルタップでサインイン"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Download Bluesky account data (repository)"
-msgstr ""
+msgstr "Blueskyのアカウントのデータ（リポジトリ）をダウンロードする"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
 msgid "Download CAR file"
-msgstr ""
+msgstr "CARファイルをダウンロード"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:247
 msgid "Drop to add images"
@@ -2405,7 +2405,7 @@ msgstr "保存されたフィード"
 
 #: src/view/com/auth/server-input/index.tsx:118
 msgid "my-server.com"
-msgstr ""
+msgstr "my-server.com"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 #: src/view/com/modals/CreateOrEditList.tsx:290
@@ -3517,7 +3517,7 @@ msgstr "アカウントの削除の確認コードをメールに送信"
 
 #: src/view/com/auth/server-input/index.tsx:110
 msgid "Server address"
-msgstr ""
+msgstr "サーバーのアドレス"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:311
 msgid "Set {value} for {labelGroup} content moderation policy"
@@ -3543,7 +3543,7 @@ msgstr "デバイスで設定したカラーテーマを使用するように設
 
 #: src/view/screens/Settings/index.tsx:514
 msgid "Set dark theme to the dark theme"
-msgstr "ダークテーマをダークに設定します"
+msgstr "ダークテーマを暗いものに設定します"
 
 #: src/view/screens/Settings/index.tsx:507
 msgid "Set dark theme to the dim theme"
@@ -4723,7 +4723,7 @@ msgstr "あなたのアカウントは削除されました"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr ""
+msgstr "あなたのアカウントリポジトリは、すべて公開データの記録を含み、CARファイルとしてダウンロードできます。このファイルには画像などのメディアの埋め込みやプライベートなデータは含まれません。"
 
 #: src/view/com/auth/create/Step1.tsx:234
 msgid "Your birth date"
