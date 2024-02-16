@@ -4,12 +4,16 @@ const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH = DAY * 28
 const YEAR = DAY * 365
-export function ago(time: number | string | Date): string {
-  const base = new Date()
-  const date = new Date(time)
-
-  const diffSeconds = Math.floor((base.getTime() - date.getTime()) / 1e3)
-
+export function ago(date: number | string | Date): string {
+  let ts: number
+  if (typeof date === 'string') {
+    ts = Number(new Date(date))
+  } else if (date instanceof Date) {
+    ts = Number(date)
+  } else {
+    ts = date
+  }
+  const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
   if (diffSeconds < NOW) {
     return `now`
   } else if (diffSeconds < MINUTE) {
@@ -19,18 +23,11 @@ export function ago(time: number | string | Date): string {
   } else if (diffSeconds < DAY) {
     return `${Math.floor(diffSeconds / HOUR)}h`
   } else if (diffSeconds < MONTH) {
-    // normalize the time, this handles the following scenario:
-    // - 2024-02-13T09:00Z <- 2024-02-15T07:00Z = 2d (instead of 1d)
-    date.setHours(0, 0, 0, 0)
-    base.setHours(0, 0, 0, 0)
-
-    const normalizedDiff = (base.getTime() - date.getTime()) / 1e3
-
-    return `${Math.floor(normalizedDiff / DAY)}d`
+    return `${Math.round(diffSeconds / DAY)}d`
   } else if (diffSeconds < YEAR) {
     return `${Math.floor(diffSeconds / MONTH)}mo`
   } else {
-    return date.toLocaleDateString()
+    return new Date(ts).toLocaleDateString()
   }
 }
 
