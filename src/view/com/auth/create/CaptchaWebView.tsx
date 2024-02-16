@@ -5,12 +5,10 @@ import {StyleSheet} from 'react-native'
 import {CreateAccountState} from 'view/com/auth/create/state'
 
 const ALLOWED_HOSTS = [
-  '192.168.1.10:3000', // TODO these are some testing hosts we can remove
-  '192.168.1.10:19006',
-  'localhost:19006',
   'bsky.social',
-  'staging.bsky.app',
   'bsky.app',
+  'staging.bsky.app',
+  'staging.bsky.dev',
   'js.hcaptcha.com',
   'newassets.hcaptcha.com',
   'api2.hcaptcha.com',
