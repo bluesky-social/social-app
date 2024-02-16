@@ -133,8 +133,6 @@ export type TrackPropertiesMap = {
   'OnboardingV2:StepSuggestedAccounts:End': {
     selectedAccountsLength: number
   }
-  'OnboardingV2:StepFollowingFeed:Start': {}
-  'OnboardingV2:StepFollowingFeed:End': {}
   'OnboardingV2:StepAlgoFeeds:Start': {}
   'OnboardingV2:StepAlgoFeeds:End': {
     selectedPrimaryFeeds: string[]

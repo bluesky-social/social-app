@@ -8,7 +8,6 @@ import {Context, initialState, reducer} from '#/screens/Onboarding/state'
 import {Layout, OnboardingControls} from '#/screens/Onboarding/Layout'
 import {StepInterests} from '#/screens/Onboarding/StepInterests'
 import {StepSuggestedAccounts} from '#/screens/Onboarding/StepSuggestedAccounts'
-import {StepFollowingFeed} from '#/screens/Onboarding/StepFollowingFeed'
 import {StepAlgoFeeds} from '#/screens/Onboarding/StepAlgoFeeds'
 import {StepTopicalFeeds} from '#/screens/Onboarding/StepTopicalFeeds'
 import {StepFinished} from '#/screens/Onboarding/StepFinished'
@@ -58,7 +57,6 @@ export function Onboarding() {
             {state.activeStep === 'suggestedAccounts' && (
               <StepSuggestedAccounts />
             )}
-            {state.activeStep === 'followingFeed' && <StepFollowingFeed />}
             {state.activeStep === 'algoFeeds' && <StepAlgoFeeds />}
             {state.activeStep === 'topicalFeeds' && <StepTopicalFeeds />}
             {state.activeStep === 'moderation' && <StepModeration />}
