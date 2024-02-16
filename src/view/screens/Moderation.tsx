@@ -70,7 +70,9 @@ export function ModerationScreen({}: Props) {
           onPress={onPressContentFiltering}
           accessibilityRole="tab"
           accessibilityLabel={_(msg`Content filtering`)}
-          accessibilityHint={_(msg`Opens modal for content filtering preferences`)}>
+          accessibilityHint={_(
+            msg`Opens modal for content filtering preferences`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="eye"
