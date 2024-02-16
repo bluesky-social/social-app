@@ -202,7 +202,7 @@ msgstr "고급"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr "저장한 모든 피드를 한 곳에서 확인합니다."
+msgstr "저장한 모든 피드를 한 곳에서 확인하세요."
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
