@@ -22,6 +22,7 @@ import {Step2} from './Step2'
 import {Step3} from './Step3'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {TextLink} from '../../util/Link'
+import {getAgent} from 'state/session'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
@@ -75,16 +76,44 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
       return
     }
 
-    if (!uiState.isCaptchaRequired && uiState.step === 2) {
+    if (uiState.step === 2) {
+      uiDispatch({type: 'set-processing', value: true})
       try {
-        await submit()
-      } catch {
-        // dont need to handle here
+        await getAgent().resolveHandle({
+          handle: uiState.handle,
+        })
+        uiDispatch({
+          type: 'set-error',
+          value: _(msg`That handle is already taken.`),
+        })
+        return
+      } catch (e) {
+        // Don't need to handle
+      } finally {
+        uiDispatch({type: 'set-processing', value: false})
       }
-    } else {
-      uiDispatch({type: 'next'})
+
+      if (!uiState.isCaptchaRequired) {
+        try {
+          await submit()
+        } catch {
+          // dont need to handle here
+        }
+        // We don't need to go to the next page if there wasn't a captcha required
+        return
+      }
     }
-  }, [uiState, uiDispatch, submit])
+
+    uiDispatch({type: 'next'})
+  }, [
+    uiState.canNext,
+    uiState.step,
+    uiState.isCaptchaRequired,
+    uiState.handle,
+    uiDispatch,
+    _,
+    submit,
+  ])
 
   // rendering
   // =
