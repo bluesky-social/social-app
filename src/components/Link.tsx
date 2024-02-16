@@ -13,7 +13,7 @@ import {sanitizeUrl} from '@braintree/sanitize-url'
 
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {isWeb} from '#/platform/detection'
-import {useTheme, web, flatten, TextStyleProp} from '#/alf'
+import {useTheme, web, flatten, TextStyleProp, atoms as a} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
 import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
 import {
@@ -35,6 +35,8 @@ type BaseLinkProps = Pick<
   Parameters<typeof useLinkProps<AllNavigatorParams>>[0],
   'to'
 > & {
+  testID?: string
+
   /**
    * The React Navigation `StackAction` to perform when the link is pressed.
    */
@@ -46,6 +48,13 @@ type BaseLinkProps = Pick<
    * Note: atm this only works for `InlineLink`s with a string child.
    */
   warnOnMismatchingTextChild?: boolean
+
+  /**
+   * Callback for when the link is pressed.
+   *
+   * DO NOT use this for navigation, that's what the `to` prop is for.
+   */
+  onPress?: (e: GestureResponderEvent) => void
 }
 
 export function useLink({
@@ -53,6 +62,7 @@ export function useLink({
   displayText,
   action = 'push',
   warnOnMismatchingTextChild,
+  onPress: outerOnPress,
 }: BaseLinkProps & {
   displayText: string
 }) {
@@ -66,6 +76,8 @@ export function useLink({
 
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
+      outerOnPress?.(e)
+
       const requiresWarning = Boolean(
         warnOnMismatchingTextChild &&
           displayText &&
@@ -132,6 +144,7 @@ export function useLink({
       displayText,
       closeModal,
       openModal,
+      outerOnPress,
     ],
   )
 
@@ -143,15 +156,11 @@ export function useLink({
 }
 
 export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
-  Omit<ButtonProps, 'style' | 'onPress' | 'disabled' | 'label'> & {
+  Omit<ButtonProps, 'onPress' | 'disabled' | 'label'> & {
     /**
      * Label for a11y. Defaults to the href.
      */
     label?: string
-    /**
-     * Web-only attribute. Sets `download` attr on web.
-     */
-    download?: string
   }
 
 /**
@@ -166,19 +175,21 @@ export function Link({
   children,
   to,
   action = 'push',
-  download,
+  onPress: outerOnPress,
   ...rest
 }: LinkProps) {
   const {href, isExternal, onPress} = useLink({
     to,
     displayText: typeof children === 'string' ? children : '',
     action,
+    onPress: outerOnPress,
   })
 
   return (
     <Button
       label={href}
       {...rest}
+      style={[a.justify_start, flatten(rest.style)]}
       role="link"
       accessibilityRole="link"
       href={href}
@@ -187,7 +198,6 @@ export function Link({
         hrefAttrs: {
           target: isExternal ? 'blank' : undefined,
           rel: isExternal ? 'noopener noreferrer' : undefined,
-          download,
         },
         dataSet: {
           // default to no underline, apply this ourselves
@@ -215,6 +225,7 @@ export function InlineLink({
   action = 'push',
   warnOnMismatchingTextChild,
   style,
+  onPress: outerOnPress,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -224,13 +235,20 @@ export function InlineLink({
     displayText: stringChildren ? children : '',
     action,
     warnOnMismatchingTextChild,
+    onPress: outerOnPress,
   })
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
+  const flattenedStyle = flatten(style)
 
   return (
     <TouchableWithoutFeedback
@@ -245,14 +263,16 @@ export function InlineLink({
         {...rest}
         style={[
           {color: t.palette.primary_500},
-          (focused || pressed) && {
+          (hovered || focused || pressed) && {
             outline: 0,
             textDecorationLine: 'underline',
-            textDecorationColor: t.palette.primary_500,
+            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
           },
-          flatten(style),
+          flattenedStyle,
         ]}
         role="link"
+        onMouseEnter={onHoverIn}
+        onMouseLeave={onHoverOut}
         accessibilityRole="link"
         href={href}
         {...web({
@@ -260,12 +280,10 @@ export function InlineLink({
             target: isExternal ? 'blank' : undefined,
             rel: isExternal ? 'noopener noreferrer' : undefined,
           },
-          dataSet: stringChildren
-            ? {}
-            : {
-                // default to no underline, apply this ourselves
-                noUnderline: '1',
-              },
+          dataSet: {
+            // default to no underline, apply this ourselves
+            noUnderline: '1',
+          },
         })}>
         {children}
       </Text>
