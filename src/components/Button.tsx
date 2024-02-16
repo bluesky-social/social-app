@@ -362,6 +362,8 @@ export function Button({
     [state, variant, color, size, disabled],
   )
 
+  const flattenedBaseStyles = flatten(baseStyles)
+
   return (
     <Pressable
       role="button"
@@ -378,9 +380,8 @@ export function Button({
         a.flex_row,
         a.align_center,
         a.justify_center,
-        a.overflow_hidden,
         a.justify_center,
-        ...baseStyles,
+        flattenedBaseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
         flatten(style),
@@ -392,17 +393,25 @@ export function Button({
       onFocus={onFocus}
       onBlur={onBlur}>
       {variant === 'gradient' && (
-        <LinearGradient
-          colors={
-            state.hovered || state.pressed || state.focused
-              ? gradientHoverColors
-              : gradientColors
-          }
-          locations={gradientLocations}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[a.absolute, a.inset_0]}
-        />
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.overflow_hidden,
+            {borderRadius: flattenedBaseStyles.borderRadius},
+          ]}>
+          <LinearGradient
+            colors={
+              state.hovered || state.pressed || state.focused
+                ? gradientHoverColors
+                : gradientColors
+            }
+            locations={gradientLocations}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[a.absolute, a.inset_0]}
+          />
+        </View>
       )}
       <Context.Provider value={context}>
         {typeof children === 'string' ? (
