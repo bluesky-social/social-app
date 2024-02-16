@@ -239,6 +239,10 @@ msgstr "成人向けコンテンツはウェブ(<0/>)からのみ有効化でき
 msgid "Advanced"
 msgstr "高度な設定"
 
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
@@ -370,15 +374,15 @@ msgstr "芸術的または性的ではないヌード。"
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:408
-#: src/view/com/post-thread/PostThread.tsx:458
-#: src/view/com/post-thread/PostThread.tsx:466
+#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:487
+#: src/view/com/post-thread/PostThread.tsx:495
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "戻る"
 
-#: src/view/com/post-thread/PostThread.tsx:416
+#: src/view/com/post-thread/PostThread.tsx:445
 msgctxt "action"
 msgid "Back"
 msgstr "戻る"
@@ -443,7 +447,7 @@ msgstr "ブロック中のアカウントは、あなたのスレッドでの返
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。あなたは相手のコンテンツを見ることができず、相手はあなたのコンテンツを見ることができなくなります。"
 
-#: src/view/com/post-thread/PostThread.tsx:267
+#: src/view/com/post-thread/PostThread.tsx:297
 msgid "Blocked post."
 msgstr "投稿をブロックしました。"
 
@@ -452,6 +456,7 @@ msgid "Blocking is public. Blocked accounts cannot reply in your threads, mentio
 msgstr "ブロックしたことは公開されます。ブロック中のアカウントは、あなたのスレッドでの返信、あなたへのメンション、その他の方法であなたとやり取りすることはできません。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "ブログ"
 
@@ -501,6 +506,7 @@ msgid "Build version {0} {1}"
 msgstr "ビルドバージョン {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
 msgid "Business"
 msgstr "ビジネス"
 
@@ -963,8 +969,8 @@ msgid "Country"
 msgstr "国"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
-#: src/view/com/auth/SplashScreen.tsx:46
-#: src/view/com/auth/SplashScreen.web.tsx:77
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
 msgid "Create a new account"
 msgstr "新しいアカウントを作成"
 
@@ -981,7 +987,7 @@ msgid "Create App Password"
 msgstr "アプリパスワードを作成"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:68
 msgid "Create new account"
 msgstr "新しいアカウントを作成"
 
@@ -1015,6 +1021,7 @@ msgid "Custom domain"
 msgstr "カスタムドメイン"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "コミュニティーによって作成されたカスタムフィードは、あなたに新しい体験をもたらし、あなたが好きなコンテンツを見つけるのに役立ちます。"
 
@@ -1089,7 +1096,7 @@ msgstr "この投稿を削除しますか？"
 msgid "Deleted"
 msgstr "削除されています"
 
-#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:289
 msgid "Deleted post."
 msgstr "投稿を削除しました。"
 
@@ -1134,8 +1141,12 @@ msgid "Discover new custom feeds"
 msgstr "新しいカスタムフィードを見つける"
 
 #: src/view/screens/Feeds.tsx:473
-msgid "Discover new feeds"
-msgstr "新しいフィードを見つける"
+#~ msgid "Discover new feeds"
+#~ msgstr "新しいフィードを見つける"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr ""
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1271,7 +1282,7 @@ msgstr "プロフィールを編集"
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
 
-#: src/view/screens/Feeds.tsx:356
+#: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "保存されたフィードを編集"
 
@@ -1492,7 +1503,7 @@ msgstr "フィード"
 msgid "Feed by {0}"
 msgstr "{0}によるフィード"
 
-#: src/view/screens/Feeds.tsx:631
+#: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
 msgstr "フィードはオフラインです"
 
@@ -1506,7 +1517,8 @@ msgid "Feedback"
 msgstr "フィードバック"
 
 #: src/Navigation.tsx:442
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
 #: src/view/screens/Profile.tsx:184
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -1987,6 +1999,7 @@ msgid "It shows posts from the people you follow as they happen."
 msgstr "あなたがフォローした人の投稿が随時表示されます。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "仕事"
 
@@ -2182,8 +2195,8 @@ msgstr "リストのミュートを解除しました"
 msgid "Lists"
 msgstr "リスト"
 
-#: src/view/com/post-thread/PostThread.tsx:276
-#: src/view/com/post-thread/PostThread.tsx:284
+#: src/view/com/post-thread/PostThread.tsx:306
+#: src/view/com/post-thread/PostThread.tsx:314
 msgid "Load more posts"
 msgstr "投稿をさらにロード"
 
@@ -2378,7 +2391,7 @@ msgstr "ミュートの設定は非公開です。ミュート中のアカウン
 msgid "My Birthday"
 msgstr "誕生日"
 
-#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
 msgstr "マイフィード"
 
@@ -2459,7 +2472,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新しい投稿"
 
-#: src/view/screens/Feeds.tsx:581
+#: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:382
 #: src/view/screens/ProfileFeed.tsx:432
@@ -2538,7 +2551,7 @@ msgstr "お知らせはありません！"
 msgid "No result"
 msgstr "結果はありません"
 
-#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
 msgstr "「{query}」の検索結果はありません"
 
@@ -2714,7 +2727,7 @@ msgstr "モデレーションの設定を開く"
 msgid "Opens password reset form"
 msgstr "パスワードリセットのフォームを開く"
 
-#: src/view/screens/Feeds.tsx:357
+#: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "保存されたフィードの編集画面を開く"
 
@@ -2912,7 +2925,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "投稿"
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:276
 msgctxt "description"
 msgid "Post"
 msgstr "投稿"
@@ -2937,7 +2950,7 @@ msgstr "@{0}による投稿"
 msgid "Post deleted"
 msgstr "投稿を削除"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post hidden"
 msgstr "投稿を非表示"
 
@@ -2949,7 +2962,7 @@ msgstr "投稿の言語"
 msgid "Post Languages"
 msgstr "投稿の言語"
 
-#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/post-thread/PostThread.tsx:479
 msgid "Post not found"
 msgstr "投稿が見つかりません"
 
@@ -3714,7 +3727,7 @@ msgstr "マイフィード内の{0}からの投稿を表示します"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
-#: src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:79
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
@@ -3727,8 +3740,8 @@ msgid "Sign in"
 msgstr "サインイン"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
 msgid "Sign In"
 msgstr "サインイン"
 
@@ -3964,7 +3977,7 @@ msgstr "著作権ポリシーは<0/>に移動しました"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "次の手順であなたのBlueskyでの体験をカスタマイズできます。"
 
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:482
 msgid "The post may have been deleted."
 msgstr "投稿が削除された可能性があります。"
 
@@ -4527,7 +4540,7 @@ msgstr "何に興味がありますか？"
 msgid "What is the issue with this {collectionName}?"
 msgstr "この{collectionName}の問題は何ですか？"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "最近どう？"
@@ -4614,7 +4627,7 @@ msgstr "まだ招待コードがありません！Blueskyをもうしばらく�
 msgid "You don't have any pinned feeds."
 msgstr "ピン留めされたフィードがありません。"
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
 msgstr "保存されたフィードがありません！"
 
@@ -4622,7 +4635,7 @@ msgstr "保存されたフィードがありません！"
 msgid "You don't have any saved feeds."
 msgstr "保存されたフィードがありません。"
 
-#: src/view/com/post-thread/PostThread.tsx:401
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "あなたが投稿者をブロックしているか、または投稿者によってあなたはブロックされています。"
 
