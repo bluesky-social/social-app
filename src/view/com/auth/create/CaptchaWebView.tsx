@@ -72,6 +72,7 @@ export function CaptchaWebView({
       style={styles.webview}
       onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
       onNavigationStateChange={onNavigationStateChange}
+      scrollEnabled={false}
     />
   )
 }
