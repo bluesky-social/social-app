@@ -648,7 +648,7 @@ msgstr "clicca qui"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
-msgstr "Il clima"
+msgstr "Clima"
 
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -933,7 +933,7 @@ msgstr "Cultura"
 #: src/view/com/auth/server-input/index.tsx:95
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr "Personalizzatp"
+msgstr "Personalizzato"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 msgid "Custom domain"
@@ -995,7 +995,7 @@ msgstr "Elimina il post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Delete this post?"
-msgstr "Elimina questo post?"
+msgstr "Eliminare questo post?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:69
 msgid "Deleted"
@@ -1035,11 +1035,11 @@ msgstr "Scoraggia le app dal mostrare il mio account agli utenti disconnessi"
 #: src/view/com/posts/FollowingEmptyState.tsx:74
 #: src/view/com/posts/FollowingEndOfFeed.tsx:75
 msgid "Discover new custom feeds"
-msgstr "Scopri nuovi feed personalizzati"
+msgstr "Scopri nuovi feeds personalizzati"
 
 #: src/view/screens/Feeds.tsx:689
 msgid "Discover New Feeds"
-msgstr "Scopri nuovi feed"
+msgstr "Scopri nuovi feeds"
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1234,7 +1234,7 @@ msgstr "Attiva Contenuto per Adulti"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
-msgstr "Abilita i contenuti per adulti nei tuoi feed"
+msgstr "Abilita i contenuti per adulti nei tuoi feeds"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
