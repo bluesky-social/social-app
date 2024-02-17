@@ -241,7 +241,7 @@ msgstr "高度な設定"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr "あなたが保存したフィードはすべて右側の１か所にあります。"
+msgstr "あなたが保存したフィードはすべて１か所にあります。"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
