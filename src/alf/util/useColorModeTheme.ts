@@ -46,6 +46,13 @@ function updateDocument(theme: ThemeName) {
     html.className = html.className.replace(/(theme)--\w+/g, '')
 
     html.classList.add(`theme--${theme}`)
+
+    // set color to 'theme-color' meta tag
+    const themeColor = window
+      .getComputedStyle(html)
+      .getPropertyValue('--background')
+    const meta = window.document.querySelector('meta[name="theme-color"]')
+    meta.setAttribute('content', themeColor)
   }
 }
 
