@@ -5,7 +5,7 @@ msgstr ""
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
 "PO-Revision-Date: 2024-02-16\n"
 "Last-Translator: Gabriella Nonino <sandswimmer@gmail.com>\n"
-"Language-Team: Gabriella Nonino sandsiwmmer@gmail.com\n"
+"Language-Team: Gabriella Nonino sandswimmer@gmail.com\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr "<0/> membri"
 
 #: src/view/com/profile/ProfileHeader.tsx:594
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>seguiti</1>"
+msgstr "<0>{following} </0><1>following</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -1513,17 +1513,17 @@ msgstr "ti segue"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
-msgstr "Seguiti"
+msgstr "Followers"
 
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:136
 #: src/view/com/profile/ProfileHeader.tsx:494
 #: src/view/screens/ProfileFollows.tsx:25
 msgid "Following"
-msgstr "Seguiti"
+msgstr "Following"
 
 #: src/view/com/profile/ProfileHeader.tsx:148
 msgid "Following {0}"
-msgstr "Seguiti {0}"
+msgstr "Following {0}"
 
 #: src/view/com/profile/ProfileHeader.tsx:545
 msgid "Follows you"
