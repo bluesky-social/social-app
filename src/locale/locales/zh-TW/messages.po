@@ -220,7 +220,7 @@ msgstr "詳細設定"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr ""
+msgstr "你已儲存的所有訊息流都集中在一处。"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
