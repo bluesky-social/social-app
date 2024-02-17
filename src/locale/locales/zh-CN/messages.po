@@ -1584,7 +1584,7 @@ msgstr "仅限已关注的用户"
 
 #: src/view/com/notifications/FeedItem.tsx:166
 msgid "followed you"
-msgstr "已关注"
+msgstr "关注了你"
 
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
@@ -1602,11 +1602,11 @@ msgstr "正在关注 {0}"
 
 #: src/view/com/profile/ProfileHeader.tsx:545
 msgid "Follows you"
-msgstr "已关注"
+msgstr "关注了你"
 
 #: src/view/com/profile/ProfileCard.tsx:141
 msgid "Follows You"
-msgstr "已关注"
+msgstr "关注了你"
 
 #: src/screens/Onboarding/index.tsx:43
 msgid "Food"
