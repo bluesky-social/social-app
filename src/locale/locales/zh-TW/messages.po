@@ -886,7 +886,7 @@ msgstr "已複製至剪貼簿"
 
 #: src/view/com/modals/AddAppPasswords.tsx:189
 msgid "Copies app password"
-msgstr "會複製應用程式專用密碼"
+msgstr "複製應用程式專用密碼"
 
 #: src/view/com/modals/AddAppPasswords.tsx:188
 msgid "Copy"
@@ -2207,7 +2207,7 @@ msgstr "限制設定"
 
 #: src/view/com/modals/ModerationDetails.tsx:35
 msgid "Moderator has chosen to set a general warning on the content."
-msgstr "列表管理員選擇對內容設定一般警告。"
+msgstr "限制選擇對內容設定一般警告。"
 
 #: src/view/shell/desktop/Feeds.tsx:63
 msgid "More feeds"
@@ -2342,7 +2342,7 @@ msgstr "新增"
 
 #: src/view/com/modals/CreateOrEditList.tsx:252
 msgid "New Moderation List"
-msgstr "新的管理員列表"
+msgstr "新的限制列表"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:150
 msgid "New password"
@@ -2355,7 +2355,7 @@ msgstr "新密碼"
 #: src/view/com/feeds/FeedPage.tsx:201
 msgctxt "action"
 msgid "New post"
-msgstr "新文章"
+msgstr "新貼文"
 
 #: src/view/screens/Feeds.tsx:581
 #: src/view/screens/Notifications.tsx:168
@@ -2365,12 +2365,12 @@ msgstr "新文章"
 #: src/view/screens/ProfileList.tsx:223
 #: src/view/shell/desktop/LeftNav.tsx:248
 msgid "New post"
-msgstr "新文章"
+msgstr "新貼文"
 
 #: src/view/shell/desktop/LeftNav.tsx:258
 msgctxt "action"
 msgid "New Post"
-msgstr "新文章"
+msgstr "新貼文"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
@@ -2598,7 +2598,7 @@ msgstr "開啟使用自訂網域的彈窗"
 
 #: src/view/screens/Settings/index.tsx:620
 msgid "Opens moderation settings"
-msgstr "開啟管理員設定"
+msgstr "開啟限制設定"
 
 #: src/view/com/auth/login/LoginForm.tsx:239
 msgid "Opens password reset form"
@@ -3971,7 +3971,7 @@ msgstr "此名稱已被使用"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:122
 msgid "This post has been deleted."
-msgstr "此文章已被刪除。"
+msgstr "此貼文已被刪除。"
 
 #: src/view/com/modals/ModerationDetails.tsx:62
 msgid "This user has blocked you. You cannot view their content."
@@ -4104,7 +4104,7 @@ msgstr "取消固定"
 
 #: src/view/screens/ProfileList.tsx:473
 msgid "Unpin moderation list"
-msgstr "取消固定管理員列表"
+msgstr "取消固定限制列表"
 
 #: src/view/screens/ProfileFeed.tsx:345
 msgid "Unsave"
