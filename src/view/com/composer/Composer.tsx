@@ -63,9 +63,9 @@ import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
-import {useDialogControl} from '#/components/Dialog'
 import {ImageAltReminderDialog} from './ImageAltReminderDialog'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {usePromptControl} from '#/components/Prompt'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -114,7 +114,7 @@ export const ComposePost = observer(function ComposePost({
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
   const gallery = useMemo(() => new GalleryModel(), [])
-  const altReminderControl = useDialogControl()
+  const altReminderControl = usePromptControl()
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])
