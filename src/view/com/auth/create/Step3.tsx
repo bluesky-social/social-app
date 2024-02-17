@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
 import {useTheme} from 'lib/ThemeContext'
+import {createFullHandle} from 'lib/strings/handles'
 
 const CAPTCHA_PATH = '/gate/signup'
 
@@ -34,12 +35,23 @@ export function Step3({
   const url = React.useMemo(() => {
     const newUrl = new URL(uiState.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
-    newUrl.searchParams.set('handle', uiState.handle)
+    newUrl.searchParams.set(
+      'handle',
+      createFullHandle(uiState.handle, uiState.userDomain),
+    )
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.colorScheme)
 
+    console.log(newUrl)
+
     return newUrl.href
-  }, [uiState.serviceUrl, uiState.handle, stateParam, theme.colorScheme])
+  }, [
+    uiState.serviceUrl,
+    uiState.handle,
+    uiState.userDomain,
+    stateParam,
+    theme.colorScheme,
+  ])
 
   const onSuccess = React.useCallback(
     (code: string) => {
