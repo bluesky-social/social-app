@@ -218,6 +218,10 @@ msgstr "成人内容只能在網頁上<0/>啟用。"
 msgid "Advanced"
 msgstr "詳細設定"
 
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr ""
+
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
@@ -345,15 +349,15 @@ msgstr "藝術作品或非情色的裸露。"
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:408
-#: src/view/com/post-thread/PostThread.tsx:458
-#: src/view/com/post-thread/PostThread.tsx:466
+#: src/view/com/post-thread/PostThread.tsx:437
+#: src/view/com/post-thread/PostThread.tsx:487
+#: src/view/com/post-thread/PostThread.tsx:495
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "返回"
 
-#: src/view/com/post-thread/PostThread.tsx:416
+#: src/view/com/post-thread/PostThread.tsx:445
 msgctxt "action"
 msgid "Back"
 msgstr "返回"
@@ -418,7 +422,7 @@ msgstr "被封鎖的帳號無法在你的貼文中回覆、提及你，或以其
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "被封鎖的帳號無法在你的貼文中回覆、提及你，或以其他方式與你互動。你將不會看到他們所發佈的內容，同樣他們也無法查看你的內容。"
 
-#: src/view/com/post-thread/PostThread.tsx:267
+#: src/view/com/post-thread/PostThread.tsx:297
 msgid "Blocked post."
 msgstr "已封鎖貼文。"
 
@@ -427,6 +431,7 @@ msgid "Blocking is public. Blocked accounts cannot reply in your threads, mentio
 msgstr "封鎖是公開的。被封鎖的帳號無法在你的貼文中回覆、提及你，或以其他方式與你互動。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "部落格"
 
@@ -476,6 +481,7 @@ msgid "Build version {0} {1}"
 msgstr "建構版本號 {0} {1}"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
 msgid "Business"
 msgstr "商務"
 
@@ -926,8 +932,8 @@ msgid "Country"
 msgstr "國家"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
-#: src/view/com/auth/SplashScreen.tsx:46
-#: src/view/com/auth/SplashScreen.web.tsx:77
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
 msgid "Create a new account"
 msgstr "建立新帳號"
 
@@ -944,7 +950,7 @@ msgid "Create App Password"
 msgstr "建立應用程式專用密碼"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:54
-#: src/view/com/auth/SplashScreen.tsx:43
+#: src/view/com/auth/SplashScreen.tsx:68
 msgid "Create new account"
 msgstr "建立新帳號"
 
@@ -978,6 +984,7 @@ msgid "Custom domain"
 msgstr "自訂網域"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
 msgstr "由社群打造的自訂訊息流帶來新鮮體驗，協助你找到所愛內容。"
 
@@ -1048,7 +1055,7 @@ msgstr "刪除這條貼文？"
 msgid "Deleted"
 msgstr "已刪除"
 
-#: src/view/com/post-thread/PostThread.tsx:259
+#: src/view/com/post-thread/PostThread.tsx:289
 msgid "Deleted post."
 msgstr "已刪除貼文。"
 
@@ -1089,7 +1096,11 @@ msgid "Discover new custom feeds"
 msgstr "探索新的自訂訊息流"
 
 #: src/view/screens/Feeds.tsx:473
-msgid "Discover new feeds"
+#~ msgid "Discover new feeds"
+#~ msgstr "探索新的訊息流"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
 msgstr "探索新的訊息流"
 
 #: src/view/com/modals/EditProfile.tsx:192
@@ -1226,7 +1237,7 @@ msgstr "編輯個人資料"
 msgid "Edit Profile"
 msgstr "編輯個人資料"
 
-#: src/view/screens/Feeds.tsx:356
+#: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "編輯已儲存的訊息流"
 
@@ -1443,7 +1454,7 @@ msgstr "訊息流"
 msgid "Feed by {0}"
 msgstr "{0} 建立的訊息流"
 
-#: src/view/screens/Feeds.tsx:631
+#: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
 msgstr "訊息流已離線"
 
@@ -1457,7 +1468,8 @@ msgid "Feedback"
 msgstr "意見回饋"
 
 #: src/Navigation.tsx:442
-#: src/view/screens/Feeds.tsx:548
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
 #: src/view/screens/Profile.tsx:184
 #: src/view/shell/bottom-bar/BottomBar.tsx:181
 #: src/view/shell/desktop/LeftNav.tsx:342
@@ -1909,6 +1921,7 @@ msgid "It shows posts from the people you follow as they happen."
 msgstr "它會即時顯示你所跟隨的人發佈的貼文。"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "工作"
 
@@ -2092,8 +2105,8 @@ msgstr "解除靜音列表"
 msgid "Lists"
 msgstr "列表"
 
-#: src/view/com/post-thread/PostThread.tsx:276
-#: src/view/com/post-thread/PostThread.tsx:284
+#: src/view/com/post-thread/PostThread.tsx:306
+#: src/view/com/post-thread/PostThread.tsx:314
 msgid "Load more posts"
 msgstr "載入更多貼文"
 
@@ -2276,7 +2289,7 @@ msgstr "封鎖是私人的。被封鎖的帳號可以與你互動，但你將無
 msgid "My Birthday"
 msgstr "我的生日"
 
-#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:663
 msgid "My Feeds"
 msgstr "自定訊息流"
 
@@ -2357,7 +2370,7 @@ msgctxt "action"
 msgid "New post"
 msgstr "新貼文"
 
-#: src/view/screens/Feeds.tsx:581
+#: src/view/screens/Feeds.tsx:555
 #: src/view/screens/Notifications.tsx:168
 #: src/view/screens/Profile.tsx:382
 #: src/view/screens/ProfileFeed.tsx:432
@@ -2432,7 +2445,7 @@ msgstr "還沒有通知！"
 msgid "No result"
 msgstr "沒有結果"
 
-#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
 msgstr "未找到「{query}」的結果"
 
@@ -2604,7 +2617,7 @@ msgstr "開啟限制設定"
 msgid "Opens password reset form"
 msgstr "開啟密碼重設表單"
 
-#: src/view/screens/Feeds.tsx:357
+#: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "開啟編輯已儲存訊息流的畫面"
 
@@ -2793,7 +2806,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "發佈"
 
-#: src/view/com/post-thread/PostThread.tsx:246
+#: src/view/com/post-thread/PostThread.tsx:276
 msgctxt "description"
 msgid "Post"
 msgstr "發佈"
@@ -2812,7 +2825,7 @@ msgstr "@{0} 的貼文"
 msgid "Post deleted"
 msgstr "貼文已刪除"
 
-#: src/view/com/post-thread/PostThread.tsx:398
+#: src/view/com/post-thread/PostThread.tsx:427
 msgid "Post hidden"
 msgstr "貼文已隱藏"
 
@@ -2824,7 +2837,7 @@ msgstr "貼文語言"
 msgid "Post Languages"
 msgstr "貼文語言"
 
-#: src/view/com/post-thread/PostThread.tsx:450
+#: src/view/com/post-thread/PostThread.tsx:479
 msgid "Post not found"
 msgstr "找不到貼文"
 
@@ -3561,7 +3574,7 @@ msgstr "在你的訊息流中顯示來自 {0} 的貼文"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:70
 #: src/view/com/auth/login/Login.tsx:98
-#: src/view/com/auth/SplashScreen.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:79
 #: src/view/shell/bottom-bar/BottomBar.tsx:285
 #: src/view/shell/bottom-bar/BottomBar.tsx:286
 #: src/view/shell/bottom-bar/BottomBar.tsx:288
@@ -3574,8 +3587,8 @@ msgid "Sign in"
 msgstr "登入"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:78
-#: src/view/com/auth/SplashScreen.tsx:57
-#: src/view/com/auth/SplashScreen.web.tsx:87
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
 msgid "Sign In"
 msgstr "登入"
 
@@ -3803,7 +3816,7 @@ msgstr "版權政策已移動到 <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "以下步驟將幫助自訂你的 Bluesky 體驗。"
 
-#: src/view/com/post-thread/PostThread.tsx:453
+#: src/view/com/post-thread/PostThread.tsx:482
 msgid "The post may have been deleted."
 msgstr "此貼文可能已被刪除。"
 
@@ -4338,7 +4351,7 @@ msgstr "你感興趣的是什麼？"
 msgid "What is the issue with this {collectionName}?"
 msgstr "這個 {collectionName} 有什麼問題？"
 
-#: src/view/com/auth/SplashScreen.tsx:34
+#: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:279
 msgid "What's up?"
 msgstr "發生了什麼新鮮事？"
@@ -4413,7 +4426,7 @@ msgstr "你目前還沒有邀請碼！當你持續使用 Bluesky 一段時間後
 msgid "You don't have any pinned feeds."
 msgstr "你目前還沒有任何固定的訊息流。"
 
-#: src/view/screens/Feeds.tsx:451
+#: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
 msgstr "你目前還沒有任何儲存的訊息流！"
 
@@ -4421,7 +4434,7 @@ msgstr "你目前還沒有任何儲存的訊息流！"
 msgid "You don't have any saved feeds."
 msgstr "你目前還沒有任何儲存的訊息流。"
 
-#: src/view/com/post-thread/PostThread.tsx:401
+#: src/view/com/post-thread/PostThread.tsx:430
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "你已封鎖該作者，或你已被該作者封鎖。"
 
