@@ -21,7 +21,6 @@ import {PostEmbeds} from '../util/post-embeds'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
 import {RichText} from '../util/text/RichText'
-import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -160,8 +159,6 @@ let FeedItemInner = ({
       href={href}
       noFeedback
       accessible={false}>
-      <PostSandboxWarning />
-
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
