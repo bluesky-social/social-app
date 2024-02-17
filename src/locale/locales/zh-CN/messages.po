@@ -3107,7 +3107,7 @@ msgstr "请求码"
 
 #: src/view/screens/Settings/index.tsx:456
 msgid "Require alt text before posting"
-msgstr "要求发布前提供替代文本"
+msgstr "发布时检查媒体是否存在替代文本"
 
 #: src/view/com/auth/create/Step1.tsx:149
 msgid "Required for this provider"
