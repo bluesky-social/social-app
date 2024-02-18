@@ -758,7 +758,7 @@ msgstr "完成初始設定並開始使用你的帳號"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
-msgstr ""
+msgstr "完成驗證"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -1370,7 +1370,7 @@ msgstr "輸入你的使用者名稱和密碼"
 
 #: src/view/com/auth/create/Step3.tsx:67
 msgid "Error receiving captcha response."
-msgstr ""
+msgstr "Captcha 給出了錯誤的回應。"
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
@@ -2755,7 +2755,7 @@ msgstr "請選擇你的密碼。"
 
 #: src/view/com/auth/create/state.ts:131
 msgid "Please complete the verification captcha."
-msgstr ""
+msgstr "請完成 Captcha 驗證。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -3811,7 +3811,7 @@ msgstr "文字輸入框"
 
 #: src/view/com/auth/create/CreateAccount.tsx:90
 msgid "That handle is already taken."
-msgstr ""
+msgstr "這個帳號代碼已被使用。"
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
