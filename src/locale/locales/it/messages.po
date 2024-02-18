@@ -344,7 +344,7 @@ msgstr "Basato su i tuoi interessi {interestsText}"
 
 #: src/view/screens/Settings/index.tsx:523
 msgid "Basics"
-msgstr "Nozioni di base"
+msgstr "Preferenze"
 
 #: src/view/com/auth/create/Step1.tsx:246
 #: src/view/com/modals/BirthDateSettings.tsx:73
