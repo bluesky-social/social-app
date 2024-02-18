@@ -1870,7 +1870,6 @@ msgid "Input the username or email address you used at signup"
 msgstr "输入注册时使用的用户名或电子邮箱"
 
 #: src/view/com/auth/create/Step2.tsx:271
-
 msgid "Input the verification code we have texted to you"
 msgstr "输入我们发送到你手机的短信验证码"
 
