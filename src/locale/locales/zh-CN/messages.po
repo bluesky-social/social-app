@@ -1370,7 +1370,7 @@ msgstr "输入你的用户名和密码"
 
 #: src/view/com/auth/create/Step3.tsx:67
 msgid "Error receiving captcha response."
-msgstr "人机验证响应错误"
+msgstr "Captcha 响应错误"
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
