@@ -703,7 +703,7 @@ msgstr "Schließt den Post Composer und verwirft den Beitragsentwurf"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
 msgid "Closes viewer for header image"
-msgstr "Schließt den Viewer für das Kopfbild"
+msgstr "Schließt den Betrachter für das Banner"
 
 #: src/view/com/notifications/FeedItem.tsx:317
 msgid "Collapses list of users for a given notification"
