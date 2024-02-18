@@ -1337,7 +1337,7 @@ msgstr "输入你想使用的域名"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:107
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "输入你用于创建账户的电子邮箱。我们将向你发送重置码，以便你重新设置密码。"
+msgstr "输入你用于创建账户的电子邮箱。我们将向你发送用于密码重设的确认码。"
 
 #: src/view/com/auth/create/Step1.tsx:251
 #: src/view/com/modals/BirthDateSettings.tsx:74
@@ -2413,12 +2413,12 @@ msgstr "新闻"
 #: src/view/com/modals/ChangePassword.tsx:251
 #: src/view/com/modals/ChangePassword.tsx:253
 msgid "Next"
-msgstr "下一个"
+msgstr "下一步"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
 msgctxt "action"
 msgid "Next"
-msgstr "下一个"
+msgstr "下一步"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:149
 msgid "Next image"
@@ -2943,7 +2943,7 @@ msgstr "引用帖子"
 
 #: src/view/screens/PreferencesThreads.tsx:86
 msgid "Random (aka \"Poster's Roulette\")"
-msgstr "随机显示 (又名试试手气)"
+msgstr "随机显示 (手气不错)"
 
 #: src/view/com/modals/EditImage.tsx:236
 msgid "Ratios"
@@ -3126,11 +3126,11 @@ msgstr "服务提供者要求"
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:124
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:136
 msgid "Reset code"
-msgstr "重置码"
+msgstr "确认码"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr "重置代码"
+msgstr "确认码"
 
 #: src/view/screens/Settings/index.tsx:824
 msgid "Reset onboarding"
@@ -4449,7 +4449,7 @@ msgstr "你目前还没有任何保存的信息流。"
 
 #: src/view/com/post-thread/PostThread.tsx:464
 msgid "You have blocked the author or you have been blocked by the author."
-msgstr "你已屏蔽该作者，或你已被该作者屏蔽。"
+msgstr "你已屏蔽该帖子作者，或你已被该作者屏蔽。"
 
 #: src/view/com/modals/ModerationDetails.tsx:56
 msgid "You have blocked this user. You cannot view their content."
@@ -4460,7 +4460,7 @@ msgstr "你已屏蔽了此用户，你将无法查看他们发布的内容。"
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "你输入的邀请码无效。它应该长得像这样 XXXXX-XXXXX。"
+msgstr "你输入的确认码无效。它应该长得像这样 XXXXX-XXXXX。"
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
@@ -4505,7 +4505,7 @@ msgstr "你将收到这条讨论串的通知"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:107
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "你将收到一封带有重置代码的电子邮件。请在此输入该重置代码，然后输入你的新密码。"
+msgstr "你将收到一封带有确认码的电子邮件。请在此输入该确认码，然后输入你的新密码。"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
