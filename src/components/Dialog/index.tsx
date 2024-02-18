@@ -34,6 +34,7 @@ export function Outer({
   const sheet = React.useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
+  const insets = useSafeAreaInsets()
 
   const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
     sheet.current?.snapToIndex(i)
@@ -41,8 +42,7 @@ export function Outer({
 
   const close = React.useCallback(() => {
     sheet.current?.close()
-    onClose?.()
-  }, [onClose])
+  }, [])
 
   useImperativeHandle(
     control.ref,
@@ -51,6 +51,15 @@ export function Outer({
       close,
     }),
     [open, close],
+  )
+
+  const onChange = React.useCallback(
+    (index: number) => {
+      if (index === -1) {
+        onClose?.()
+      }
+    },
+    [onClose],
   )
 
   const context = React.useMemo(() => ({close}), [close])
@@ -63,6 +72,7 @@ export function Outer({
         keyboardBehavior="interactive"
         android_keyboardInputMode="adjustResize"
         keyboardBlurBehavior="restore"
+        topInset={insets.top}
         {...sheetOptions}
         ref={sheet}
         index={-1}
@@ -77,7 +87,7 @@ export function Outer({
         )}
         handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
         handleStyle={{display: 'none'}}
-        onClose={onClose}>
+        onChange={onChange}>
         <Context.Provider value={context}>
           <View
             style={[
@@ -105,8 +115,8 @@ export function Inner(props: DialogInnerProps) {
     <BottomSheetView
       style={[
         a.p_lg,
-        a.pt_3xl,
         {
+          paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
           paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
@@ -121,11 +131,13 @@ export function ScrollableInner(props: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       style={[
         a.flex_1, // main diff is this
-        a.p_lg,
-        a.pt_3xl,
+        a.p_xl,
         {
+          paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
@@ -139,21 +151,21 @@ export function ScrollableInner(props: DialogInnerProps) {
 export function Handle() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.absolute,
-        a.rounded_sm,
-        a.z_10,
-        {
-          top: a.pt_lg.paddingTop,
-          width: 35,
-          height: 4,
-          alignSelf: 'center',
-          backgroundColor: t.palette.contrast_900,
-          opacity: 0.5,
-        },
-      ]}
-    />
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
+      <View
+        style={[
+          a.rounded_sm,
+          {
+            top: a.pt_lg.paddingTop,
+            width: 35,
+            height: 4,
+            alignSelf: 'center',
+            backgroundColor: t.palette.contrast_900,
+            opacity: 0.5,
+          },
+        ]}
+      />
+    </View>
   )
 }
 

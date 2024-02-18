@@ -26,7 +26,7 @@ import {
 import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 function AnimatedDivider() {
   return (

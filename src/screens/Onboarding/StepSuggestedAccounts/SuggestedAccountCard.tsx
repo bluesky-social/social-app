@@ -95,7 +95,7 @@ export function SuggestedAccountCard({
             <Text style={[a.font_bold, a.text_md, a.pb_xs]} numberOfLines={1}>
               {profile.displayName}
             </Text>
-            <Text style={[t.atoms.text_contrast_600]}>{profile.handle}</Text>
+            <Text style={[t.atoms.text_contrast_medium]}>{profile.handle}</Text>
           </View>
         </View>
 
@@ -124,7 +124,7 @@ export function SuggestedAccountCard({
                 borderTopWidth: 1,
               },
               a.w_full,
-              t.name === 'light' ? t.atoms.border : t.atoms.border_contrast,
+              t.atoms.border_contrast_low,
               ctx.selected && {
                 borderTopColor: t.palette.primary_200,
               },

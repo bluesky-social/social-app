@@ -1,19 +1,13 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
+import {SafeAreaView} from 'react-native-safe-area-context'
 import BottomSheet from '@gorhom/bottom-sheet'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
-import {timeout} from 'lib/async/timeout'
-import {navigate} from '../../../Navigation'
-import once from 'lodash.once'
 
 import {useModals, useModalControls} from '#/state/modals'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
-import * as ProfilePreviewModal from './ProfilePreview'
-import * as ServerInputModal from './ServerInput'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
 import * as ThreadgateModal from './Threadgate'
@@ -50,34 +44,14 @@ export function ModalsContainer() {
   const {closeModal} = useModalControls()
   const bottomSheetRef = useRef<BottomSheet>(null)
   const pal = usePalette('default')
-  const safeAreaInsets = useSafeAreaInsets()
-
   const activeModal = activeModals[activeModals.length - 1]
 
-  const navigateOnce = once(navigate)
-
-  // It seems like the bottom sheet bugs out when this callback changes.
-  const onBottomSheetAnimate = useNonReactiveCallback(
-    (_fromIndex: number, toIndex: number) => {
-      if (activeModal?.name === 'profile-preview' && toIndex === 1) {
-        // begin loading the profile screen behind the scenes
-        navigateOnce('Profile', {name: activeModal.did})
-      }
-    },
-  )
   const onBottomSheetChange = async (snapPoint: number) => {
     if (snapPoint === -1) {
       closeModal()
-    } else if (activeModal?.name === 'profile-preview' && snapPoint === 1) {
-      await navigateOnce('Profile', {name: activeModal.did})
-      // There is no particular callback for when the view has actually been presented.
-      // This delay gives us a decent chance the navigation has flushed *and* images have loaded.
-      // It's acceptable because the data is already being fetched + it usually takes longer anyway.
-      // TODO: Figure out why avatar/cover don't always show instantly from cache.
-      await timeout(200)
-      closeModal()
     }
   }
+
   const onClose = () => {
     bottomSheetRef.current?.close()
     closeModal()
@@ -91,7 +65,6 @@ export function ModalsContainer() {
     }
   }, [isModalActive, bottomSheetRef, activeModal?.name])
 
-  let needsSafeTopInset = false
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
   if (activeModal?.name === 'confirm') {
@@ -100,13 +73,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = <EditProfileModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'profile-preview') {
-    snapPoints = ProfilePreviewModal.snapPoints
-    element = <ProfilePreviewModal.Component {...activeModal} />
-    needsSafeTopInset = true // Need to align with the target profile screen.
-  } else if (activeModal?.name === 'server-input') {
-    snapPoints = ServerInputModal.snapPoints
-    element = <ServerInputModal.Component {...activeModal} />
   } else if (activeModal?.name === 'report') {
     snapPoints = ReportModal.snapPoints
     element = <ReportModal.Component {...activeModal} />
@@ -200,12 +166,10 @@ export function ModalsContainer() {
     )
   }
 
-  const topInset = needsSafeTopInset ? safeAreaInsets.top - HANDLE_HEIGHT : 0
   return (
     <BottomSheet
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      topInset={topInset}
       handleHeight={HANDLE_HEIGHT}
       index={isModalActive ? 0 : -1}
       enablePanDownToClose
@@ -216,7 +180,6 @@ export function ModalsContainer() {
       }
       handleIndicatorStyle={{backgroundColor: pal.text.color}}
       handleStyle={[styles.handle, pal.view]}
-      onAnimate={onBottomSheetAnimate}
       onChange={onBottomSheetChange}>
       {element}
     </BottomSheet>
