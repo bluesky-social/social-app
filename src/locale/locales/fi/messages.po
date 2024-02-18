@@ -1031,7 +1031,7 @@ msgstr "Poista käyttäjätili"
 
 #: src/view/com/modals/DeleteAccount.tsx:87
 msgid "Delete Account"
-msgstr "Poista tili"
+msgstr "Poista käyttäjätili"
 
 #: src/view/screens/AppPasswords.tsx:222
 #: src/view/screens/AppPasswords.tsx:242
@@ -1045,7 +1045,7 @@ msgstr "Poista lista"
 
 #: src/view/com/modals/DeleteAccount.tsx:223
 msgid "Delete my account"
-msgstr "Poista tilini"
+msgstr "Poista käyttäjätilini"
 
 #: src/view/screens/Settings.tsx:706
 #~ msgid "Delete my account…"
@@ -1793,7 +1793,7 @@ msgstr "Koti"
 #: src/view/screens/PreferencesHomeFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
 msgid "Home Feed Preferences"
-msgstr "Aloitussivun Syötteiden Asetukset"
+msgstr "Aloitussivun syötteiden asetukset"
 
 #: src/view/com/auth/create/Step1.tsx:82
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:120
@@ -2836,7 +2836,7 @@ msgstr "Lähetä"
 #: src/view/com/post-thread/PostThread.tsx:303
 msgctxt "description"
 msgid "Post"
-msgstr "Lähetä"
+msgstr "Viesti"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:172
 msgid "Post by {0}"
