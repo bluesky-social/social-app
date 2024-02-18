@@ -556,7 +556,7 @@ msgstr "Peruuta tilin poisto"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "Peruuta käyttäjänimen vaihto"
+msgstr "Peruuta käyttäjätunnuksen vaihto"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -1390,7 +1390,7 @@ msgstr "Kaikki"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "Peruuta käyttäjätunnuksen vaihtaminen"
+msgstr "Peruuttaa käyttäjätunnuksen vaihtamisen"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -1403,7 +1403,7 @@ msgstr "Poistuu hakukyselyn kirjoittamisesta"
 
 #: src/view/com/modals/Waitlist.tsx:138
 msgid "Exits signing up for waitlist with {email}"
-msgstr "Poistu odotuslistalle liittymisestä sähköpostilla {email}"
+msgstr "Poistuu odotuslistalle liittymisestä sähköpostilla {email}"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
