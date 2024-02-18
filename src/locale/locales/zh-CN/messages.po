@@ -140,12 +140,12 @@ msgstr "新增内容警告"
 
 #: src/view/screens/ProfileList.tsx:802
 msgid "Add a user to this list"
-msgstr "将用户新增至列表"
+msgstr "将用户添加至列表"
 
 #: src/view/screens/Settings/index.tsx:383
 #: src/view/screens/Settings/index.tsx:392
 msgid "Add account"
-msgstr "新增账户"
+msgstr "添加账户"
 
 #: src/view/com/composer/photos/Gallery.tsx:119
 #: src/view/com/composer/photos/Gallery.tsx:180
@@ -170,19 +170,19 @@ msgstr "补充反馈详细内容"
 
 #: src/view/com/composer/Composer.tsx:446
 msgid "Add link card"
-msgstr "新增链接卡片"
+msgstr "添加链接卡片"
 
 #: src/view/com/composer/Composer.tsx:451
 msgid "Add link card:"
-msgstr "新增链接卡片:"
+msgstr "添加链接卡片:"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
-msgstr "将以下DNS记录新增到你的域名:"
+msgstr "将以下 DNS 记录新增到你的域名:"
 
 #: src/view/com/profile/ProfileHeader.tsx:309
 msgid "Add to Lists"
-msgstr "新增至列表"
+msgstr "添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:243
 #: src/view/screens/ProfileFeed.tsx:272
@@ -191,16 +191,16 @@ msgstr "新增至自定义信息流"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
 msgid "Added"
-msgstr "已新增"
+msgstr "已添加"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
 msgid "Added to list"
-msgstr "新增至列表"
+msgstr "添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "新增至自定义信息流"
+msgstr "添加至自定义信息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
@@ -212,7 +212,7 @@ msgstr "成人内容"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:141
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "要显示成人内容，你必须访问网页端<0/>启用。"
+msgstr "要显示成人内容，你必须访问网页端<0/>来启用。"
 
 #: src/view/screens/Settings/index.tsx:664
 msgid "Advanced"
@@ -721,7 +721,7 @@ msgstr "关闭导航页脚"
 
 #: src/view/shell/index.web.tsx:50
 msgid "Closes bottom navigation bar"
-msgstr "关闭底部导航列"
+msgstr "关闭底部导航栏"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:39
 msgid "Closes password update alert"
@@ -1175,7 +1175,7 @@ msgstr "拖放即可新增图片"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr "受 Apple 政策限制，成人内容只能在完成注册后在网页端启用显示。"
+msgstr "受 Apple 政策限制，显示成人内容只能在完成注册后在网页端设置中启用。"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1329,7 +1329,7 @@ msgstr "输入验证码"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr "输入你收到的验证码以更改密码。"
+msgstr "输入你收到的确认码以更改密码。"
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1790,7 +1790,7 @@ msgstr "托管服务提供商"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
-msgstr "我们该如何开启此链接？"
+msgstr "我们该如何打开此链接？"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
@@ -1993,7 +1993,7 @@ msgstr "了解有关 Bluesky 公开内容的更多详情。"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
-msgstr "全部留空以查看任何语言。"
+msgstr "全部留空以查看所有语言的帖子。"
 
 #: src/view/com/modals/LinkWarning.tsx:51
 msgid "Leaving Bluesky"
@@ -2097,11 +2097,11 @@ msgstr "列表名称"
 
 #: src/view/screens/ProfileList.tsx:342
 msgid "List unblocked"
-msgstr "解除屏蔽列表"
+msgstr "解除对列表的屏蔽"
 
 #: src/view/screens/ProfileList.tsx:301
 msgid "List unmuted"
-msgstr "解除隐藏列表"
+msgstr "解除对列表的隐藏"
 
 #: src/Navigation.tsx:110
 #: src/view/screens/Profile.tsx:185
@@ -2156,7 +2156,7 @@ msgstr "登录未列出的账户"
 
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Make sure this is where you intend to go!"
-msgstr "请确认这是你想去的地方！"
+msgstr "请确认目标页面地址是否正确！"
 
 #: src/view/screens/Profile.tsx:182
 msgid "Media"
@@ -3113,7 +3113,7 @@ msgstr "请求变更"
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
-msgstr "请求码"
+msgstr "确认码"
 
 #: src/view/screens/Settings/index.tsx:456
 msgid "Require alt text before posting"
@@ -3839,7 +3839,7 @@ msgstr "隐私政策已迁移至 <0/>"
 
 #: src/view/screens/Support.tsx:36
 msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
-msgstr "支持表单已迁移至别处。如果你需要帮助，请点击<0/>或访问{HELP_DESK_URL}与我们联系。"
+msgstr "支持表单已被移除。如果你需要帮助，请点击<0/>或访问{HELP_DESK_URL}与我们联系。"
 
 #: src/view/screens/TermsOfService.tsx:33
 msgid "The Terms of Service have been moved to"
