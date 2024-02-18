@@ -2755,7 +2755,7 @@ msgstr "请设置你的密码。"
 
 #: src/view/com/auth/create/state.ts:131
 msgid "Please complete the verification captcha."
-msgstr "请通过人机验证"
+msgstr "请完成 Captcha 验证"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
