@@ -109,7 +109,7 @@ msgstr "Tili on hiljennetty"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
-msgstr "Tili on hiljennetty listan toimesta"
+msgstr "Tili on hiljennetty listalla"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:41
 msgid "Account options"
@@ -4409,7 +4409,7 @@ msgstr "Kuka voi vastata"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
-msgstr "Laaja"
+msgstr "Leveä"
 
 #: src/view/com/composer/Composer.tsx:415
 msgid "Write post"
