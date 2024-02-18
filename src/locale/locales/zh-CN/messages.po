@@ -758,7 +758,7 @@ msgstr "完成引导并开始使用你的账户"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
-msgstr "完成人机验证"
+msgstr "完成验证"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
