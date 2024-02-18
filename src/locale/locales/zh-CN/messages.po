@@ -758,7 +758,7 @@ msgstr "完成引导并开始使用你的账户"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
-msgstr ""
+msgstr "完成人机验证"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -1370,7 +1370,7 @@ msgstr "输入你的用户名和密码"
 
 #: src/view/com/auth/create/Step3.tsx:67
 msgid "Error receiving captcha response."
-msgstr ""
+msgstr "人机验证响应错误"
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
@@ -2755,7 +2755,7 @@ msgstr "请设置你的密码。"
 
 #: src/view/com/auth/create/state.ts:131
 msgid "Please complete the verification captcha."
-msgstr ""
+msgstr "请通过人机验证"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -3811,7 +3811,7 @@ msgstr "文本输入框"
 
 #: src/view/com/auth/create/CreateAccount.tsx:90
 msgid "That handle is already taken."
-msgstr ""
+msgstr "该用户识别符已被占用"
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
