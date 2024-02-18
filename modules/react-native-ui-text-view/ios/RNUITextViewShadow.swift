@@ -40,19 +40,19 @@ class RNUITextViewShadow: RCTShadowView {
     self.setAttributedText()
   }
 
-  // Tell yoga not to use flexbox
+  // Returning true here will tell Yoga to not use flexbox and instead use our custom measure func.
   override func isYogaLeafNode() -> Bool {
     return true
   }
 
-  // We only need to insert text children
+  // We should only insert children that are UITextView shadows
   override func insertReactSubview(_ subview: RCTShadowView!, at atIndex: Int) {
     if subview.isKind(of: RNUITextViewChildShadow.self) {
       super.insertReactSubview(subview, at: atIndex)
     }
   }
 
-  // Whenever the subvies update, set the text
+  // Every time the subviews change, we need to reformat and render the text.
   override func didUpdateReactSubviews() {
     self.setAttributedText()
   }
@@ -64,7 +64,7 @@ class RNUITextViewShadow: RCTShadowView {
       return
     }
 
-    // Update the text
+    // Since we are inside the shadow view here, we have to find the real view and update the text.
     self.bridge.uiManager.addUIBlock { uiManager, viewRegistry in
       guard let textView = viewRegistry?[self.reactTag] as? RNUITextView else {
         return
@@ -124,24 +124,22 @@ class RNUITextViewShadow: RCTShadowView {
     self.dirtyLayout()
   }
 
-  // Create a YGSize based on the max width
+  // To create the needed size we need to:
+  // 1. Get the max size that we can use for the view
+  // 2. Calculate the height of the text based on that max size
+  // 3. Determine how many lines the text is, and limit that number if it exceeds the max
+  // 4. Set the frame size and return the YGSize. YGSize requires Float values while CGSize needs CGFloat
   func getNeededSize(maxWidth: Float) -> YGSize {
-    // Create the max size and figure out the size of the entire text
     let maxSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(MAXFLOAT))
     let textSize = self.attributedText.boundingRect(with: maxSize, options: .usesLineFragmentOrigin, context: nil)
 
-    // Figure out how many total lines there are
-    let totalLines = Int(ceil(textSize.height / self.lineHeight))
+    var totalLines = Int(ceil(textSize.height / self.lineHeight))
 
-    // Default to the text size
-    var neededSize: CGSize = textSize.size
-
-    // If the total lines > max number, return size with the max
     if self.numberOfLines != 0, totalLines > self.numberOfLines {
-      neededSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(CGFloat(self.numberOfLines) * self.lineHeight))
+      totalLines = self.numberOfLines
     }
 
-    self.frameSize = neededSize
-    return YGSize(width: Float(neededSize.width), height: Float(neededSize.height))
+    self.frameSize = CGSize(width: CGFloat(maxWidth), height: CGFloat(CGFloat(totalLines) * self.lineHeight))
+    return YGSize(width: Float(self.frameSize.width), height: Float(self.frameSize.height))
   }
 }
