@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
   <meta name="referrer" content="origin-when-cross-origin">
+  <!--
+    Preconnect to essential domains
+  -->
+  <link rel="preconnect" href="https://bsky.social">
+  <link rel="preconnect" href="https://bsky.network">
   <title>{%- block head_title -%}Bluesky{%- endblock -%}</title>
 
   <!-- Hello Humans! API docs at https://atproto.com -->
@@ -210,6 +215,7 @@
   <meta name="application-name" content="Bluesky">
   <meta name="generator" content="bskyweb">
   <meta property="og:site_name" content="Bluesky Social" />
+  <link type="application/activity+json" href="" />
 
   {% block html_head_extra -%}{%- endblock %}
 </head>
