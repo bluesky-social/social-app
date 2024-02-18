@@ -100,18 +100,25 @@ class RNUITextViewShadow: RCTShadowView {
       // Create the attributed string with the generic attributes
       let string = NSMutableAttributedString(string: child.text, attributes: attributes)
 
-      // Set the paragraph style attributes if necessary
+      // Set the paragraph style attributes if necessary. We can check this by seeing if the provided
+      // line height is not 0.0.
       let paragraphStyle = NSMutableParagraphStyle()
       if child.lineHeight != 0.0 {
-        paragraphStyle.minimumLineHeight = child.lineHeight
-        paragraphStyle.maximumLineHeight = child.lineHeight
+        // Whenever we change the line height for the text, we are also removing the DynamicType
+        // adjustment for line height. We need to get the multiplier and apply that to the
+        // line height.
+        let scaleMultiplier = scaledFontSize / child.fontSize
+        paragraphStyle.minimumLineHeight = child.lineHeight * scaleMultiplier
+        paragraphStyle.maximumLineHeight = child.lineHeight * scaleMultiplier
+
         string.addAttribute(
           NSAttributedString.Key.paragraphStyle,
           value: paragraphStyle,
           range: NSMakeRange(0, string.length)
         )
 
-        // Store that height
+        // To calcualte the size of the text without creating a new UILabel or UITextView, we have
+        // to store this line height for later.
         self.lineHeight = child.lineHeight
       } else {
         self.lineHeight = font.lineHeight
