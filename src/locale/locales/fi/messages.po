@@ -65,7 +65,7 @@ msgstr "<0>Tervetuloa</0><1>Blueskyhin</1>"
 
 #: src/view/com/profile/ProfileHeader.tsx:557
 msgid "⚠Invalid Handle"
-msgstr "⚠Virheellinen käyttäjänimi"
+msgstr "⚠Virheellinen käyttäjätunnus"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -586,12 +586,12 @@ msgstr "Vaihda"
 
 #: src/view/screens/Settings/index.tsx:696
 msgid "Change handle"
-msgstr "Vaihda käyttäjänimi"
+msgstr "Vaihda käyttäjätunnus"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
 #: src/view/screens/Settings/index.tsx:705
 msgid "Change Handle"
-msgstr "Vaihda käyttäjänimi"
+msgstr "Vaihda käyttäjätunnus"
 
 #: src/view/com/modals/VerifyEmail.tsx:147
 msgid "Change my email"
@@ -640,7 +640,7 @@ msgstr "Valitse \"Kaikki\" tai \"Ei kukaan\""
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Choose a new Bluesky username or create"
-msgstr "Valitse uusi Bluesky-käyttäjänimi tai luo"
+msgstr "Valitse uusi Bluesky-käyttäjätunnus tai luo"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Choose Service"
@@ -1374,7 +1374,7 @@ msgstr "Syötä puhelinnumerosi"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
-msgstr "Syötä käyttäjänimesi ja salasanasi"
+msgstr "Syötä käyttäjätunnuksesi ja salasanasi"
 
 #: src/view/com/auth/create/Step3.tsx:67
 msgid "Error receiving captcha response."
@@ -1390,7 +1390,7 @@ msgstr "Kaikki"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "Peruuta käyttäjänimen vaihtaminen"
+msgstr "Peruuta käyttäjätunnuksen vaihtaminen"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -2759,7 +2759,7 @@ msgstr "Toistaa GIFin"
 
 #: src/view/com/auth/create/state.ts:124
 msgid "Please choose your handle."
-msgstr "Valitse käyttäjänimesi."
+msgstr "Valitse käyttäjätunnuksesi."
 
 #: src/view/com/auth/create/state.ts:117
 msgid "Please choose your password."
@@ -3668,7 +3668,7 @@ msgstr "Kirjautunut sisään nimellä"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:103
 msgid "Signed in as @{0}"
-msgstr "Kirjautunut sisään käyttäjänimellä @{0}"
+msgstr "Kirjautunut sisään käyttäjätunnuksella @{0}"
 
 #: src/view/com/modals/SwitchAccount.tsx:66
 msgid "Signs {0} out of Bluesky"
@@ -3832,7 +3832,7 @@ msgstr "Tekstikenttä"
 
 #: src/view/com/auth/create/CreateAccount.tsx:90
 msgid "That handle is already taken."
-msgstr "Tuo käyttäjänimi on jo käytössä."
+msgstr "Tuo käyttätunnus on jo käytössä."
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
