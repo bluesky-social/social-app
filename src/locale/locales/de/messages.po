@@ -87,7 +87,7 @@ msgstr "Konto stummgeschaltet"
 
 #: src/view/com/modals/ModerationDetails.tsx:86
 msgid "Account Muted"
-msgstr "Konto stummgeschaltet"
+msgstr "Konto Stummgeschaltet"
 
 #: src/view/com/modals/ModerationDetails.tsx:72
 msgid "Account Muted by List"
@@ -522,7 +522,7 @@ msgstr "Konto-Löschung abbrechen"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "Ändern abbrechen Benutzerhandle"
+msgstr "Benutzerhandle ändern abbrechen"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -569,7 +569,7 @@ msgstr "Passwort ändern"
 
 #: src/view/screens/Settings/index.tsx:741
 msgid "Change Password"
-msgstr "Passwort ändern"
+msgstr "Passwort Ändern"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
