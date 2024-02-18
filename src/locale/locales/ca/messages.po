@@ -235,7 +235,7 @@ msgstr "Avançat"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr "Tots els canals que has guardat, en un sol lloc"
+msgstr "Tots els canals que has desat, en un sol lloc."
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
