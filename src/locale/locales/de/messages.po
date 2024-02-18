@@ -732,7 +732,7 @@ msgstr "Beende die Herausforderung"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
-msgstr "Verfassen von Beiträgen mit einer Länge von bis zu {MAX_GRAPHEME_LENGTH} Zeichen"
+msgstr "Verfasse Beiträge mit einer Länge von bis zu {MAX_GRAPHEME_LENGTH} Zeichen"
 
 #: src/view/com/composer/Prompt.tsx:24
 msgid "Compose reply"
@@ -792,7 +792,7 @@ msgstr "Verbinden..."
 
 #: src/view/com/auth/create/CreateAccount.tsx:209
 msgid "Contact support"
-msgstr "Kontakt zum Support"
+msgstr "Support kontaktieren"
 
 #: src/view/screens/Moderation.tsx:81
 msgid "Content filtering"
@@ -805,7 +805,7 @@ msgstr "Inhaltsfilterung"
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
 #: src/view/screens/LanguageSettings.tsx:278
 msgid "Content Languages"
-msgstr "Inhalt Sprachen"
+msgstr "Inhaltssprachen"
 
 #: src/view/com/modals/ModerationDetails.tsx:65
 msgid "Content Not Available"
@@ -843,7 +843,7 @@ msgstr "Weiter zum nächsten Schritt"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:191
 msgid "Continue to the next step without following any accounts"
-msgstr "Fahren Sie mit dem nächsten Schritt fort, ohne die Konten zu verfolgen"
+msgstr "Fahren Sie mit dem nächsten Schritt fort, ohne Konten zu folgen"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
@@ -862,11 +862,11 @@ msgstr "Die Build-Version wurde in die Zwischenablage kopiert"
 #: src/view/com/modals/InviteCodes.tsx:152
 #: src/view/com/util/forms/PostDropdownBtn.tsx:112
 msgid "Copied to clipboard"
-msgstr "Wurde in die Zwischenablage kopiert"
+msgstr "In die Zwischenablage kopiert"
 
 #: src/view/com/modals/AddAppPasswords.tsx:189
 msgid "Copies app password"
-msgstr "Kopiert App-Passwort"
+msgstr "Kopiert das App-Passwor"
 
 #: src/view/com/modals/AddAppPasswords.tsx:188
 msgid "Copy"
@@ -891,7 +891,7 @@ msgstr "Beitragstext kopieren"
 #: src/Navigation.tsx:232
 #: src/view/screens/CopyrightPolicy.tsx:29
 msgid "Copyright Policy"
-msgstr "Urheberrechtspolitik"
+msgstr "Urheberrechtsbestimmungen"
 
 #: src/view/screens/ProfileFeed.tsx:96
 msgid "Could not load feed"
