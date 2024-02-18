@@ -1933,28 +1933,28 @@ msgstr "Metti mi piace a questo feed"
 
 #: src/Navigation.tsx:197
 msgid "Liked by"
-msgstr "È piaciuto a"
+msgstr "Piace a"
 
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr "È Piaciuto A"
+msgstr "Piace A"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
-msgstr "È piaciuto a {0} {1}"
+msgstr "Piace a {0} {1}"
 
 #: src/view/screens/ProfileFeed.tsx:606
 msgid "Liked by {likeCount} {0}"
-msgstr "È piaciuto a {likeCount} {0}"
+msgstr "Piace a {likeCount} {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
-msgstr "è piaciuto il tuo feed personalizzato"
+msgstr "piace il tuo feed personalizzato"
 
 #: src/view/com/notifications/FeedItem.tsx:155
 msgid "liked your post"
-msgstr "è piaciuto il tuo post"
+msgstr "piace il tuo post"
 
 #: src/view/screens/Profile.tsx:183
 msgid "Likes"
@@ -4472,7 +4472,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Codici di invito: {invitesAvailable} disponibili"
 
 #~ msgid "liked your custom feed{0}"
-#~ msgstr "è piaciuto il feed personalizzato{0}"
+#~ msgstr "piace il feed personalizzato{0}"
 
 #~ msgid "Local dev server"
 #~ msgstr "Server di sviluppo locale"
