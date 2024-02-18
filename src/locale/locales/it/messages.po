@@ -2234,11 +2234,11 @@ msgstr "Non perdere mai l'accesso ai tuoi follower o ai tuoi dati."
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
 msgid "New"
-msgstr "Nuovo"
+msgstr "Nuova"
 
 #: src/view/screens/ModerationModlists.tsx:78
 msgid "New"
-msgstr "Nuovo"
+msgstr "Nuova"
 
 #: src/view/com/modals/CreateOrEditList.tsx:252
 msgid "New Moderation List"
@@ -2271,7 +2271,7 @@ msgstr "Nuovo post"
 
 #: src/view/com/modals/CreateOrEditList.tsx:247
 msgid "New User List"
-msgstr "Nuova lista utenti"
+msgstr "Nuova lista"
 
 #: src/view/screens/PreferencesThreads.tsx:79
 msgid "Newest replies first"
@@ -2771,7 +2771,7 @@ msgstr "Elenchi pubblici e condivisibili di utenti da disattivare o bloccare in 
 
 #: src/view/screens/Lists.tsx:61
 msgid "Public, shareable lists which can drive feeds."
-msgstr "Elenchi pubblici e condivisibili che possono gestire i feeds."
+msgstr "Liste pubbliche e condivisibili che possono impulsare i feeds."
 
 #: src/view/com/composer/Composer.tsx:335
 msgid "Publish post"
@@ -4001,29 +4001,29 @@ msgstr "Handle dell'utente"
 #: src/view/com/lists/ListCard.tsx:84
 #: src/view/com/modals/UserAddRemoveLists.tsx:198
 msgid "User list by {0}"
-msgstr "Lista utenti di {0}"
+msgstr "Lista di {0}"
 
 #: src/view/screens/ProfileList.tsx:762
 msgid "User list by <0/>"
-msgstr "Lista utenti di<0/>"
+msgstr "Lista di<0/>"
 
 #: src/view/com/lists/ListCard.tsx:82
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
 #: src/view/screens/ProfileList.tsx:760
 msgid "User list by you"
-msgstr "La tua lista utenti"
+msgstr "La tua lista"
 
 #: src/view/com/modals/CreateOrEditList.tsx:196
 msgid "User list created"
-msgstr "Lista utenti creata"
+msgstr "Lista creata"
 
 #: src/view/com/modals/CreateOrEditList.tsx:182
 msgid "User list updated"
-msgstr "Lista utenti aggiornata"
+msgstr "Lista aggiornata"
 
 #: src/view/screens/Lists.tsx:58
 msgid "User Lists"
-msgstr "Lista utenti"
+msgstr "Liste publiche"
 
 #: src/view/com/auth/login/LoginForm.tsx:177
 #: src/view/com/auth/login/LoginForm.tsx:195
