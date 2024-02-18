@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Italian localization\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-01-05 11:44+0530\n"
-"PO-Revision-Date: 2024-02-16\n"
+"PO-Revision-Date: 2024-02-18\n"
 "Last-Translator: Gabriella Nonino <sandswimmer@gmail.com>\n"
 "Language-Team: Gabriella Nonino sandswimmer@gmail.com\n"
 "Language: it\n"
@@ -1386,7 +1386,7 @@ msgstr "Feed"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:229
 msgid "Feed by {0}"
-msgstr "Feed realizzato da {0}"
+msgstr "Feed fatto da {0}"
 
 #: src/view/screens/Feeds.tsx:605
 msgid "Feed offline"
@@ -2594,7 +2594,7 @@ msgstr "Fissa sulla pagina principale"
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
-msgstr "Feed Fissati"
+msgstr "Feeds Fissi"
 
 #: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
 msgid "Play {0}"
