@@ -131,7 +131,7 @@ export function ModerationBlockedAccounts({}: Props) {
               <Text type="lg" style={[pal.text, styles.emptyText]}>
                 <Trans>
                   You have not blocked any accounts yet. To block an account, go
-                  to their profile and selected "Block account" from the menu on
+                  to their profile and select "Block account" from the menu on
                   their account.
                 </Trans>
               </Text>
