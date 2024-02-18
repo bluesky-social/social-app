@@ -606,7 +606,7 @@ msgstr "Wählen Sie \"Alle\" oder \"Niemand\""
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Choose a new Bluesky username or create"
-msgstr "Wähle einen neuen Bluesky-Benutzernamen oder erstelle"
+msgstr "Wähle oder erstelle einen neuen Bluesky-Benutzernamen"
 
 #: src/view/com/auth/server-input/index.tsx:79
 msgid "Choose Service"
