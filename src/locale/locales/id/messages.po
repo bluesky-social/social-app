@@ -1002,7 +1002,7 @@ msgstr "Domain kustom"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "Kustom feed yang dibuat oleh komunitas memberikan pengalaman baru dan membantu Anda menemukan konten yang Anda sukai."
+msgstr "Feed khusus yang dibuat oleh komunitas memberikan pengalaman baru dan membantu Anda menemukan konten yang Anda sukai."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1942,7 +1942,7 @@ msgstr "Kode undangan: 1 tersedia"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
-msgstr "Menampilkan postingan dari orang yang Anda ikuti secara langsung."
+msgstr "Feed ini menampilkan postingan secara langsung dari orang yang Anda ikuti."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 msgid "Jobs"
@@ -3126,7 +3126,7 @@ msgstr "Posting ulang atau kutip postingan"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr "Diposing Ulang Oleh"
+msgstr "Diposting Ulang Oleh"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
@@ -3311,7 +3311,7 @@ msgstr "Cari"
 #: src/view/screens/Search/Search.tsx:712
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
-msgstr "Cari untuk \"{query}\""
+msgstr "Cari \"{query}\""
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
@@ -3576,15 +3576,15 @@ msgstr "Tampilkan Kutipan Postingan"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "Tampilkan kutipan postingan di feed Following"
+msgstr "Tampilkan kutipan postingan di feed Mengikut"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr "Tampilkan kutipan di Following"
+msgstr "Tampilkan kutipan di Mengikuti"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr "Tampilkan posting ulang di feed Following"
+msgstr "Tampilkan posting ulang di feed Mengikuti"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:119
 msgid "Show Replies"
@@ -3596,11 +3596,11 @@ msgstr "Tampilkan balasan dari orang yang Anda ikuti sebelum balasan lainnya."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr "Tampilkan balasan di Following"
+msgstr "Tampilkan balasan di Mengikuti"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr "Tampilkan balasan di feed Following"
+msgstr "Tampilkan balasan di feed Mengikuti"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3612,7 +3612,7 @@ msgstr "Tampilkan Posting Ulang"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr "Tampilkan posting ulang di Following"
+msgstr "Tampilkan posting ulang di Mengikuti"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -3978,11 +3978,11 @@ msgstr "Sepertinya ada masalah pada aplikasi. Harap beri tahu kami jika Anda men
 
 #: src/screens/Deactivated.tsx:107
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Sepertinya ada lonjakan pengguna baru di Bluesky! Kami akan mengaktifkan akun Anda secepat mungkin."
+msgstr "Sedang ada lonjakan pengguna baru di Bluesky! Kami akan mengaktifkan akun Anda secepat mungkin."
 
 #: src/view/com/auth/create/Step2.tsx:55
 msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-msgstr "Sepertinya ada yang salah dengan nomor ini. Pilih negara Anda dan masukkan nomor telepon lengkap Anda!"
+msgstr "Ada kesalahan pada nomor ini. Mohon pilih negara dan masukkan nomor telepon lengkap Anda!"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
@@ -4468,7 +4468,7 @@ msgstr "Tulis balasan Anda"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
-msgstr "Sastra"
+msgstr "Penulis"
 
 #: src/view/com/auth/create/Step2.tsx:263
 msgid "XXXXXX"
@@ -4626,7 +4626,7 @@ msgstr "Pilihan Anda akan disimpan, tetapi dapat diubah nanti di pengaturan."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr "Feed bawaan Anda adalah \"Following\""
+msgstr "Feed bawaan Anda adalah \"Mengikuti\""
 
 #: src/view/com/auth/create/state.ts:153
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
