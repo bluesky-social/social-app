@@ -2934,23 +2934,23 @@ msgstr "Ripubblicare o citare il post"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr "Ripubblicato da"
+msgstr "Repost di"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
-msgstr "Ripubblicato da {0}"
+msgstr "Repost di {0}"
 
 #: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0/>"
-msgstr "Ripubblicato da <0/>"
+msgstr "Repost di <0/>"
 
 #: src/view/com/notifications/FeedItem.tsx:162
 msgid "reposted your post"
-msgstr "ripubblicato il tuo post"
+msgstr "reposted il tuo post"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:187
 msgid "Reposts of this post"
-msgstr "Ripubblicazione di questo post"
+msgstr "Repost di questo post"
 
 #: src/view/com/modals/ChangeEmail.tsx:181
 #: src/view/com/modals/ChangeEmail.tsx:183
@@ -4502,10 +4502,10 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Cita una publicació"
 
 #~ msgid "Reposted by"
-#~ msgstr "Ripubblicato da"
+#~ msgstr "Repost di"
 
 #~ msgid "Reposted by {0})"
-#~ msgstr "Ripubblicato da {0})"
+#~ msgstr "Repost di {0})"
 
 #~ msgid "Select Bluesky Social"
 #~ msgstr "Seleziona Bluesky Social"
