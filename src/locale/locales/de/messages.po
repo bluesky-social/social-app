@@ -275,11 +275,11 @@ msgstr "App-Passwörter"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:250
 msgid "Appeal content warning"
-msgstr "Einspruch gegen diese Inhaltswarnung"
+msgstr "Inhaltswarnungseinspruch"
 
 #: src/view/com/modals/AppealLabel.tsx:65
 msgid "Appeal Content Warning"
-msgstr "Einspruch gegen diese Inhaltswarnung"
+msgstr "Inhaltswarnungseinspruch"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:52
 msgid "Appeal this decision"
