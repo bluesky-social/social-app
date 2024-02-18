@@ -670,7 +670,7 @@ msgstr "Tria un servei"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "Tria els algoritmes que alimentaran els teus canals personalitzats"
+msgstr "Tria els algoritmes que alimentaran els teus canals personalitzats."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
@@ -1067,7 +1067,7 @@ msgstr "Elimina el meu compte"
 
 #: src/view/screens/Settings/index.tsx:784
 msgid "Delete My Account…"
-msgstr "Elimina el meu compte"
+msgstr "Elimina el meu compte…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:228
 msgid "Delete post"
@@ -1193,7 +1193,7 @@ msgstr "Descarrega les dades del compte de Bluesky (repositori)"
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
 msgid "Download CAR file"
-msgstr "Dercarrega l'arxiu CAR"
+msgstr "Descarrega el fitxer CAR"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:247
 msgid "Drop to add images"
@@ -1361,7 +1361,7 @@ msgstr "Entra el codi de confirmació"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr "Introdueix el codi que has rebut per canviar la teva contrasenya"
+msgstr "Introdueix el codi que has rebut per canviar la teva contrasenya."
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -2034,7 +2034,7 @@ msgstr "Sortint de Bluesky"
 
 #: src/screens/Deactivated.tsx:128
 msgid "left to go."
-msgstr "queda"
+msgstr "queda."
 
 #: src/view/screens/Settings/index.tsx:278
 msgid "Legacy storage cleared, you need to restart the app now."
@@ -3599,7 +3599,7 @@ msgstr "Mostra les publicacions citades en el canal Seguint"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr "Mostra els citats a Seguintg"
+msgstr "Mostra els citats a Seguint"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
@@ -3631,7 +3631,7 @@ msgstr "Mostra republicacions"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr "Mostra les republicacions al canal seguint"
+msgstr "Mostra les republicacions al canal Seguint"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
