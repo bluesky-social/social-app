@@ -743,7 +743,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             {descriptionRT ? (
               <RichText
                 testID="listDescription"
-                style={[a.text_md, a.leading_snug]}
+                style={[a.text_md]}
                 value={descriptionRT}
               />
             ) : (

@@ -612,7 +612,7 @@ let ProfileHeader = ({
               <View pointerEvents="auto" style={[styles.description]}>
                 <RichText
                   testID="profileHeaderDescription"
-                  style={[a.text_md, a.leading_snug]}
+                  style={[a.text_md]}
                   numberOfLines={15}
                   value={descriptionRT}
                 />

@@ -350,7 +350,7 @@ let PostContent = ({
             testID="postText"
             value={richText}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-            style={[a.flex_1, a.leading_snug, a.text_md]}
+            style={[a.flex_1, a.text_md]}
           />
         </View>
       ) : undefined}
