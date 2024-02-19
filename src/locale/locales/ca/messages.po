@@ -361,21 +361,21 @@ msgstr ""
 msgid "Artistic or non-erotic nudity."
 msgstr "Nuesa artística o no eròtica."
 
-#: src/view/com/auth/create/CreateAccount.tsx:147
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:437
-#: src/view/com/post-thread/PostThread.tsx:487
-#: src/view/com/post-thread/PostThread.tsx:495
+#: src/view/com/post-thread/PostThread.tsx:471
+#: src/view/com/post-thread/PostThread.tsx:521
+#: src/view/com/post-thread/PostThread.tsx:529
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "Endarrere"
 
-#: src/view/com/post-thread/PostThread.tsx:445
+#: src/view/com/post-thread/PostThread.tsx:479
 msgctxt "action"
 msgid "Back"
 msgstr "Endarrere"
@@ -388,7 +388,7 @@ msgstr ""
 msgid "Basics"
 msgstr "Conceptes bàsics"
 
-#: src/view/com/auth/create/Step1.tsx:246
+#: src/view/com/auth/create/Step1.tsx:250
 #: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "Aniversari"
@@ -440,7 +440,7 @@ msgstr "Els comptes bloquejats no poden respondre cap fil teu, ni anomenar-te ni
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "Els comptes bloquejats no poden respondre a cap fil teu, ni anomenar-te ni interactuar amb tu de cap manera. No veuràs mai el seu contingut ni ells el teu."
 
-#: src/view/com/post-thread/PostThread.tsx:297
+#: src/view/com/post-thread/PostThread.tsx:324
 msgid "Blocked post."
 msgstr "Publicació bloquejada."
 
@@ -681,7 +681,7 @@ msgstr "Tria els algoritmes que potenciaran la teva experiència amb els canals 
 msgid "Choose your main feeds"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:215
+#: src/view/com/auth/create/Step1.tsx:219
 msgid "Choose your password"
 msgstr "Tria la teva contrasenya"
 
@@ -782,6 +782,10 @@ msgstr "Directrius de la comunitat"
 msgid "Complete onboarding and start using your account"
 msgstr ""
 
+#: src/view/com/auth/create/Step3.tsx:73
+msgid "Complete the challenge"
+msgstr ""
+
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "Crea publicacions de fins a {MAX_GRAPHEME_LENGTH} caràcters"
@@ -837,12 +841,12 @@ msgstr "Codi de confirmació"
 msgid "Confirms signing up {email} to the waitlist"
 msgstr "Confirma afegir {email} a la llista d'espera"
 
-#: src/view/com/auth/create/CreateAccount.tsx:182
+#: src/view/com/auth/create/CreateAccount.tsx:189
 #: src/view/com/auth/login/LoginForm.tsx:278
 msgid "Connecting..."
 msgstr "Connectant…"
 
-#: src/view/com/auth/create/CreateAccount.tsx:202
+#: src/view/com/auth/create/CreateAccount.tsx:209
 msgid "Contact support"
 msgstr "Contacta amb suport"
 
@@ -954,8 +958,8 @@ msgid "Could not load list"
 msgstr "No es pot carregar la llista"
 
 #: src/view/com/auth/create/Step2.tsx:91
-msgid "Country"
-msgstr "País"
+#~ msgid "Country"
+#~ msgstr "País"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:71
@@ -967,7 +971,7 @@ msgstr "Crea un nou compte"
 msgid "Create a new Bluesky account"
 msgstr "Crea un nou compte de Bluesky"
 
-#: src/view/com/auth/create/CreateAccount.tsx:122
+#: src/view/com/auth/create/CreateAccount.tsx:129
 msgid "Create Account"
 msgstr "Crea un compte"
 
@@ -1081,7 +1085,7 @@ msgstr "Vols eliminar aquesta publicació?"
 msgid "Deleted"
 msgstr "Eliminat"
 
-#: src/view/com/post-thread/PostThread.tsx:289
+#: src/view/com/post-thread/PostThread.tsx:316
 msgid "Deleted post."
 msgstr "Publicació eliminada."
 
@@ -1145,7 +1149,7 @@ msgstr "Nom mostrat"
 msgid "Domain verified!"
 msgstr "Domini verificat!"
 
-#: src/view/com/auth/create/Step1.tsx:166
+#: src/view/com/auth/create/Step1.tsx:170
 msgid "Don't have an invite code?"
 msgstr "No tens un codi d'invitació?"
 
@@ -1287,16 +1291,14 @@ msgstr "Edita la descripció del teu perfil"
 msgid "Education"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:195
-#: src/view/com/auth/create/Step2.tsx:194
-#: src/view/com/auth/create/Step2.tsx:269
+#: src/view/com/auth/create/Step1.tsx:199
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:156
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "Correu"
 
-#: src/view/com/auth/create/Step1.tsx:186
+#: src/view/com/auth/create/Step1.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:147
 msgid "Email address"
 msgstr "Adreça de correu"
@@ -1371,7 +1373,7 @@ msgstr "Introdueix el domini que vols utilitzar"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "Introdueix el correu que vas fer servir per crear el teu compte. T'enviarem un \"codi de restabliment\" perquè puguis posar una nova contrasenya."
 
-#: src/view/com/auth/create/Step1.tsx:247
+#: src/view/com/auth/create/Step1.tsx:251
 #: src/view/com/modals/BirthDateSettings.tsx:74
 msgid "Enter your birth date"
 msgstr "Introdueix la teva data de naixement"
@@ -1380,7 +1382,7 @@ msgstr "Introdueix la teva data de naixement"
 msgid "Enter your email"
 msgstr "Introdueix el teu correu"
 
-#: src/view/com/auth/create/Step1.tsx:191
+#: src/view/com/auth/create/Step1.tsx:195
 msgid "Enter your email address"
 msgstr "Introdueix el teu correu"
 
@@ -1393,12 +1395,16 @@ msgid "Enter your new email address below."
 msgstr "Introdueix el teu nou correu a continuació."
 
 #: src/view/com/auth/create/Step2.tsx:188
-msgid "Enter your phone number"
-msgstr "Introdueix el teu telèfon"
+#~ msgid "Enter your phone number"
+#~ msgstr "Introdueix el teu telèfon"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
 msgstr "Introdueix el teu usuari i contrasenya"
+
+#: src/view/com/auth/create/Step3.tsx:67
+msgid "Error receiving captcha response."
+msgstr ""
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
@@ -1496,7 +1502,7 @@ msgstr "Canal fora de línia"
 msgid "Feed Preferences"
 msgstr "Preferències del canal"
 
-#: src/view/shell/desktop/RightNav.tsx:69
+#: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "Comentaris"
@@ -1667,7 +1673,7 @@ msgstr "He oblidat la contrasenya"
 msgid "Forgot Password"
 msgstr "He oblidat la contrasenya"
 
-#: src/view/com/posts/FeedItem.tsx:189
+#: src/view/com/posts/FeedItem.tsx:186
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "De <0/>"
@@ -1717,11 +1723,11 @@ msgstr "Ves al següent"
 msgid "Handle"
 msgstr "Identificador"
 
-#: src/view/com/auth/create/CreateAccount.tsx:197
+#: src/view/com/auth/create/CreateAccount.tsx:204
 msgid "Having trouble?"
 msgstr "Tens problemes?"
 
-#: src/view/shell/desktop/RightNav.tsx:98
+#: src/view/shell/desktop/RightNav.tsx:90
 #: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "Ajuda"
@@ -1811,7 +1817,7 @@ msgstr "Inici"
 msgid "Home Feed Preferences"
 msgstr "Preferències dels canals a l'inici"
 
-#: src/view/com/auth/create/Step1.tsx:78
+#: src/view/com/auth/create/Step1.tsx:82
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:120
 msgid "Hosting provider"
 msgstr "Proveïdor d'allotjament"
@@ -1870,11 +1876,11 @@ msgstr "Introdueix el codi que s'ha enviat al teu correu per restablir la contra
 msgid "Input confirmation code for account deletion"
 msgstr "Introdueix el codi de confirmació per eliminar el compte"
 
-#: src/view/com/auth/create/Step1.tsx:196
+#: src/view/com/auth/create/Step1.tsx:200
 msgid "Input email for Bluesky account"
 msgstr "Introdueix el correu del compte de Bluesky"
 
-#: src/view/com/auth/create/Step1.tsx:154
+#: src/view/com/auth/create/Step1.tsx:158
 msgid "Input invite code to proceed"
 msgstr "Introdueix el codi d'invitació per continuar"
 
@@ -1891,8 +1897,8 @@ msgid "Input password for account deletion"
 msgstr "Introdueix la contrasenya per elimiar el compte"
 
 #: src/view/com/auth/create/Step2.tsx:196
-msgid "Input phone number for SMS verification"
-msgstr "Introdueix el telèfon per la verificació per SMS"
+#~ msgid "Input phone number for SMS verification"
+#~ msgstr "Introdueix el telèfon per la verificació per SMS"
 
 #: src/view/com/auth/login/LoginForm.tsx:230
 msgid "Input the password tied to {identifier}"
@@ -1903,8 +1909,8 @@ msgid "Input the username or email address you used at signup"
 msgstr "Introdueix el nom d'usuari o correu que vas utilitzar per registrar-te"
 
 #: src/view/com/auth/create/Step2.tsx:271
-msgid "Input the verification code we have texted to you"
-msgstr "Introdueix el codi de verificació que t'hem enviat"
+#~ msgid "Input the verification code we have texted to you"
+#~ msgstr "Introdueix el codi de verificació que t'hem enviat"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -1914,11 +1920,11 @@ msgstr "Introdueix el teu correu per afegir-te a la llista d'espera de Bluesky"
 msgid "Input your password"
 msgstr "Introdueix la teva contrasenya"
 
-#: src/view/com/auth/create/Step3.tsx:42
+#: src/view/com/auth/create/Step2.tsx:45
 msgid "Input your user handle"
 msgstr "Introdueix el teu identificador d'usuari"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:225
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Invalid or unsupported post record"
 msgstr "Registre de publicació no vàlid o no admès"
 
@@ -1934,12 +1940,12 @@ msgstr "Nom d'usuari o contrasenya incorrectes"
 msgid "Invite a Friend"
 msgstr "Convida un amic"
 
-#: src/view/com/auth/create/Step1.tsx:144
-#: src/view/com/auth/create/Step1.tsx:153
+#: src/view/com/auth/create/Step1.tsx:148
+#: src/view/com/auth/create/Step1.tsx:157
 msgid "Invite code"
 msgstr "Codi d'invitació"
 
-#: src/view/com/auth/create/state.ts:199
+#: src/view/com/auth/create/state.ts:158
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "Codi d'invitació rebutjat. Comprova que l'has entrat correctament i torna-ho a provar."
 
@@ -1968,8 +1974,8 @@ msgstr "Feines"
 msgid "Join the waitlist"
 msgstr "Uneix-te a la llista d'espera"
 
-#: src/view/com/auth/create/Step1.tsx:170
 #: src/view/com/auth/create/Step1.tsx:174
+#: src/view/com/auth/create/Step1.tsx:178
 msgid "Join the waitlist."
 msgstr "Uneix-te a la llista d'espera."
 
@@ -2100,7 +2106,7 @@ msgstr "li ha agradat la teva publicació"
 msgid "Likes"
 msgstr "M'agrades"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:182
+#: src/view/com/post-thread/PostThreadItem.tsx:180
 msgid "Likes on this post"
 msgstr "M'agrades a aquesta publicació"
 
@@ -2148,8 +2154,8 @@ msgstr "Llista no silenciada"
 msgid "Lists"
 msgstr "Llistes"
 
-#: src/view/com/post-thread/PostThread.tsx:306
-#: src/view/com/post-thread/PostThread.tsx:314
+#: src/view/com/post-thread/PostThread.tsx:333
+#: src/view/com/post-thread/PostThread.tsx:341
 msgid "Load more posts"
 msgstr "Carrega més publicacions"
 
@@ -2157,7 +2163,7 @@ msgstr "Carrega més publicacions"
 msgid "Load new notifications"
 msgstr "Carrega noves notificacions"
 
-#: src/view/com/feeds/FeedPage.tsx:190
+#: src/view/com/feeds/FeedPage.tsx:181
 #: src/view/screens/Profile.tsx:440
 #: src/view/screens/ProfileFeed.tsx:494
 #: src/view/screens/ProfileList.tsx:680
@@ -2415,7 +2421,7 @@ msgstr "Nova contrasenya"
 msgid "New Password"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:201
+#: src/view/com/feeds/FeedPage.tsx:192
 msgctxt "action"
 msgid "New post"
 msgstr "Nova publicació"
@@ -2451,7 +2457,7 @@ msgstr "Les respostes més noves primer"
 msgid "News"
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:161
+#: src/view/com/auth/create/CreateAccount.tsx:168
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:182
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:192
 #: src/view/com/auth/login/LoginForm.tsx:291
@@ -2727,8 +2733,8 @@ msgstr "Pàgina no trobada"
 msgid "Page Not Found"
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:210
-#: src/view/com/auth/create/Step1.tsx:220
+#: src/view/com/auth/create/Step1.tsx:214
+#: src/view/com/auth/create/Step1.tsx:224
 #: src/view/com/auth/login/LoginForm.tsx:226
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:161
 #: src/view/com/modals/DeleteAccount.tsx:202
@@ -2764,8 +2770,8 @@ msgid "Pets"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:183
-msgid "Phone number"
-msgstr "Telèfon"
+#~ msgid "Phone number"
+#~ msgstr "Telèfon"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -2793,13 +2799,17 @@ msgstr "Reprodueix el vídeo"
 msgid "Plays the GIF"
 msgstr "Reprodueix el GIF"
 
-#: src/view/com/auth/create/state.ts:177
+#: src/view/com/auth/create/state.ts:124
 msgid "Please choose your handle."
 msgstr "Tria el teu identificador."
 
-#: src/view/com/auth/create/state.ts:160
+#: src/view/com/auth/create/state.ts:117
 msgid "Please choose your password."
 msgstr "Tria la teva contrasenya."
+
+#: src/view/com/auth/create/state.ts:131
+msgid "Please complete the verification captcha."
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -2810,22 +2820,22 @@ msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "Introdueix un nom per a la contrasenya de la vostra aplicació. No es permeten tot en espais."
 
 #: src/view/com/auth/create/Step2.tsx:206
-msgid "Please enter a phone number that can receive SMS text messages."
-msgstr "Introdueix un telèfon que pugui rebre missatges SMS"
+#~ msgid "Please enter a phone number that can receive SMS text messages."
+#~ msgstr "Introdueix un telèfon que pugui rebre missatges SMS"
 
 #: src/view/com/modals/AddAppPasswords.tsx:145
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "Introdueix un nom únic per aquesta contrasenya d'aplicació o fes servir un nom generat aleatòriament."
 
 #: src/view/com/auth/create/state.ts:170
-msgid "Please enter the code you received by SMS."
-msgstr "Introdueix el codi que has rebut per SMS"
+#~ msgid "Please enter the code you received by SMS."
+#~ msgstr "Introdueix el codi que has rebut per SMS"
 
 #: src/view/com/auth/create/Step2.tsx:282
-msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-msgstr "Introdueix el codi de verificació enviat a {phoneNumberFormatted}"
+#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
+#~ msgstr "Introdueix el codi de verificació enviat a {phoneNumberFormatted}"
 
-#: src/view/com/auth/create/state.ts:146
+#: src/view/com/auth/create/state.ts:103
 msgid "Please enter your email."
 msgstr "Introdueix el teu correu."
 
@@ -2863,7 +2873,7 @@ msgctxt "action"
 msgid "Post"
 msgstr "Publica"
 
-#: src/view/com/post-thread/PostThread.tsx:276
+#: src/view/com/post-thread/PostThread.tsx:303
 msgctxt "description"
 msgid "Post"
 msgstr "Publicació"
@@ -2874,7 +2884,7 @@ msgstr "Publicació"
 #~ msgid "Post"
 #~ msgstr "Publicació"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:174
+#: src/view/com/post-thread/PostThreadItem.tsx:172
 msgid "Post by {0}"
 msgstr "Publicació per {0}"
 
@@ -2888,7 +2898,7 @@ msgstr "Publicació per @{0}"
 msgid "Post deleted"
 msgstr "Publicació eliminada"
 
-#: src/view/com/post-thread/PostThread.tsx:427
+#: src/view/com/post-thread/PostThread.tsx:461
 msgid "Post hidden"
 msgstr "Publicació oculta"
 
@@ -2900,7 +2910,7 @@ msgstr "Idioma de la publicació"
 msgid "Post Languages"
 msgstr "Idiomes de les publicacions"
 
-#: src/view/com/post-thread/PostThread.tsx:479
+#: src/view/com/post-thread/PostThread.tsx:513
 msgid "Post not found"
 msgstr "Publicació no trobada"
 
@@ -2929,7 +2939,7 @@ msgid "Prioritize Your Follows"
 msgstr "Prioritza els usuaris que segueixes"
 
 #: src/view/screens/Settings/index.tsx:632
-#: src/view/shell/desktop/RightNav.tsx:80
+#: src/view/shell/desktop/RightNav.tsx:72
 msgid "Privacy"
 msgstr "Privacitat"
 
@@ -3095,7 +3105,7 @@ msgid "Reply Filters"
 msgstr "Filtres de resposta"
 
 #: src/view/com/post/Post.tsx:166
-#: src/view/com/posts/FeedItem.tsx:287
+#: src/view/com/posts/FeedItem.tsx:284
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr "Resposta a <0/>"
@@ -3146,7 +3156,7 @@ msgstr "Republica o cita la publicació"
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:207
+#: src/view/com/posts/FeedItem.tsx:204
 msgid "Reposted by {0}"
 msgstr ""
 
@@ -3154,7 +3164,7 @@ msgstr ""
 #~ msgid "Reposted by {0})"
 #~ msgstr "Republicada per {0}"
 
-#: src/view/com/posts/FeedItem.tsx:224
+#: src/view/com/posts/FeedItem.tsx:221
 msgid "Reposted by <0/>"
 msgstr "Republicada per <0/>"
 
@@ -3162,7 +3172,7 @@ msgstr "Republicada per <0/>"
 msgid "reposted your post"
 msgstr "ha republicat la teva publicació"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:187
+#: src/view/com/post-thread/PostThreadItem.tsx:185
 msgid "Reposts of this post"
 msgstr "Republicacions d'aquesta publicació"
 
@@ -3172,8 +3182,8 @@ msgid "Request Change"
 msgstr "Demana un canvi"
 
 #: src/view/com/auth/create/Step2.tsx:219
-msgid "Request code"
-msgstr "Demana un codi"
+#~ msgid "Request code"
+#~ msgstr "Demana un codi"
 
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
@@ -3184,7 +3194,7 @@ msgstr ""
 msgid "Require alt text before posting"
 msgstr "Requereix un text alternatiu abans de publicar"
 
-#: src/view/com/auth/create/Step1.tsx:149
+#: src/view/com/auth/create/Step1.tsx:153
 msgid "Required for this provider"
 msgstr "Requerit per aquest proveïdor"
 
@@ -3236,9 +3246,8 @@ msgstr "Torna a intentar l'última acció, que ha donat error"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:221
 #: src/screens/Onboarding/StepInterests/index.tsx:224
-#: src/view/com/auth/create/CreateAccount.tsx:170
-#: src/view/com/auth/create/CreateAccount.tsx:175
-#: src/view/com/auth/create/Step2.tsx:255
+#: src/view/com/auth/create/CreateAccount.tsx:177
+#: src/view/com/auth/create/CreateAccount.tsx:182
 #: src/view/com/auth/login/LoginForm.tsx:268
 #: src/view/com/auth/login/LoginForm.tsx:271
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -3247,16 +3256,16 @@ msgid "Retry"
 msgstr "Torna-ho a provar"
 
 #: src/view/com/auth/create/Step2.tsx:247
-msgid "Retry."
-msgstr "Torna-ho a provar"
+#~ msgid "Retry."
+#~ msgstr "Torna-ho a provar"
 
 #: src/view/screens/ProfileList.tsx:898
 msgid "Return to previous page"
 msgstr "Torna a la pàgina anterior"
 
 #: src/view/shell/desktop/RightNav.tsx:55
-msgid "SANDBOX. Posts and accounts are not permanent."
-msgstr "ENTORN DE PROVES. Les publicacions i els comptes no són permanents."
+#~ msgid "SANDBOX. Posts and accounts are not permanent."
+#~ msgstr "ENTORN DE PROVES. Les publicacions i els comptes no són permanents."
 
 #: src/view/com/lightbox/Lightbox.tsx:132
 #: src/view/com/modals/CreateOrEditList.tsx:345
@@ -3365,7 +3374,7 @@ msgstr "Selecciona d'un compte existent"
 msgid "Select option {i} of {numItems}"
 msgstr "Selecciona l'opció {i} de {numItems}"
 
-#: src/view/com/auth/create/Step1.tsx:99
+#: src/view/com/auth/create/Step1.tsx:103
 #: src/view/com/auth/login/LoginForm.tsx:150
 msgid "Select service"
 msgstr "Selecciona el servei"
@@ -3399,8 +3408,8 @@ msgid "Select your interests from the options below"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:155
-msgid "Select your phone's country"
-msgstr "Selecciona el país del teu telèfon"
+#~ msgid "Select your phone's country"
+#~ msgstr "Selecciona el país del teu telèfon"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3483,7 +3492,7 @@ msgstr ""
 msgid "Set new password"
 msgstr "Estableix una nova contrasenya"
 
-#: src/view/com/auth/create/Step1.tsx:221
+#: src/view/com/auth/create/Step1.tsx:225
 msgid "Set password"
 msgstr "Estableix una contrasenya"
 
@@ -3523,7 +3532,7 @@ msgstr "Estableix un correu per restablir la contrasenya"
 msgid "Sets hosting provider for password reset"
 msgstr "Estableix un proveïdor d'allotjament per restablir la contrasenya"
 
-#: src/view/com/auth/create/Step1.tsx:100
+#: src/view/com/auth/create/Step1.tsx:104
 #: src/view/com/auth/login/LoginForm.tsx:151
 msgid "Sets server for the Bluesky client"
 msgstr "Estableix el servidor pel cient de Bluesky"
@@ -3579,9 +3588,9 @@ msgstr "Mostra els incrustats de {0}"
 msgid "Show follows similar to {0}"
 msgstr "Mostra seguidors semblants a {0}"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:539
+#: src/view/com/post-thread/PostThreadItem.tsx:535
 #: src/view/com/post/Post.tsx:197
-#: src/view/com/posts/FeedItem.tsx:363
+#: src/view/com/posts/FeedItem.tsx:360
 msgid "Show More"
 msgstr "Mostra més"
 
@@ -3734,8 +3743,8 @@ msgid "Skip this flow"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:82
-msgid "SMS verification"
-msgstr "Verificació per SMS"
+#~ msgid "SMS verification"
+#~ msgstr "Verificació per SMS"
 
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
@@ -3863,7 +3872,7 @@ msgstr "Toca per veure-ho completament"
 msgid "Tech"
 msgstr ""
 
-#: src/view/shell/desktop/RightNav.tsx:89
+#: src/view/shell/desktop/RightNav.tsx:81
 msgid "Terms"
 msgstr "Condicions"
 
@@ -3878,6 +3887,10 @@ msgstr "Condicions del servei"
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "Camp d'introducció de text"
+
+#: src/view/com/auth/create/CreateAccount.tsx:90
+msgid "That handle is already taken."
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
@@ -3895,7 +3908,7 @@ msgstr "La política de drets d'autoria ha estat traslladada a <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:482
+#: src/view/com/post-thread/PostThread.tsx:516
 msgid "The post may have been deleted."
 msgstr "És possible que la publicació s'hagi esborrat."
 
@@ -4000,8 +4013,8 @@ msgid "There's been a rush of new users to Bluesky! We'll activate your account 
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:55
-msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-msgstr "Aquest telèfon és erroni. Tria el teu país i introdueix el teu telèfon complert"
+#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
+#~ msgstr "Aquest telèfon és erroni. Tria el teu país i introdueix el teu telèfon complert"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
@@ -4121,8 +4134,8 @@ msgstr "Commuta el menú desplegable"
 msgid "Transformations"
 msgstr "Transformacions"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:686
-#: src/view/com/post-thread/PostThreadItem.tsx:688
+#: src/view/com/post-thread/PostThreadItem.tsx:682
+#: src/view/com/post-thread/PostThreadItem.tsx:684
 #: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Translate"
 msgstr "Tradueix"
@@ -4144,7 +4157,7 @@ msgstr "Desbloqueja la llista"
 msgid "Un-mute list"
 msgstr "Deixa de silenciar la llista"
 
-#: src/view/com/auth/create/CreateAccount.tsx:66
+#: src/view/com/auth/create/CreateAccount.tsx:58
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:118
@@ -4183,7 +4196,7 @@ msgstr "Deixa de seguir"
 msgid "Unfollow {0}"
 msgstr "Deixa de seguir a {0}"
 
-#: src/view/com/auth/create/state.ts:300
+#: src/view/com/auth/create/state.ts:262
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr "No compleixes les condicions per crear un compte."
 
@@ -4275,7 +4288,7 @@ msgstr "Usuari bloquejat per una llista"
 msgid "User Blocks You"
 msgstr "L'usuari t'ha bloquejat"
 
-#: src/view/com/auth/create/Step3.tsx:41
+#: src/view/com/auth/create/Step2.tsx:44
 msgid "User handle"
 msgstr "Identificador d'usuari"
 
@@ -4324,8 +4337,8 @@ msgid "Users in \"{0}\""
 msgstr "Usuaris a \"{0}\""
 
 #: src/view/com/auth/create/Step2.tsx:243
-msgid "Verification code"
-msgstr "Codi de verificació"
+#~ msgid "Verification code"
+#~ msgstr "Codi de verificació"
 
 #: src/view/screens/Settings/index.tsx:910
 msgid "Verify email"
@@ -4417,7 +4430,7 @@ msgstr "Analitzarem la teva apel·lació ràpidament."
 msgid "We'll use this to help customize your experience."
 msgstr ""
 
-#: src/view/com/auth/create/CreateAccount.tsx:123
+#: src/view/com/auth/create/CreateAccount.tsx:130
 msgid "We're so excited to have you join us!"
 msgstr "Ens fa molta il·lusió que t'uneixis a nosaltres!"
 
@@ -4484,8 +4497,8 @@ msgid "Writers"
 msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:263
-msgid "XXXXXX"
-msgstr "XXXXXX"
+#~ msgid "XXXXXX"
+#~ msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesHomeFeed.tsx:129
@@ -4535,7 +4548,7 @@ msgstr "No tens cap canal desat!"
 msgid "You don't have any saved feeds."
 msgstr "No tens cap canal desat."
 
-#: src/view/com/post-thread/PostThread.tsx:430
+#: src/view/com/post-thread/PostThread.tsx:464
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Has bloquejat l'autor o has estat bloquejat per ell."
 
@@ -4625,7 +4638,7 @@ msgstr "El teu compte s'ha eliminat"
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:234
+#: src/view/com/auth/create/Step1.tsx:238
 msgid "Your birth date"
 msgstr "La teva data de naixement"
 
@@ -4637,7 +4650,7 @@ msgstr "La teva elecció es desarà, però es pot canviar més endavant a la con
 msgid "Your default feed is \"Following\""
 msgstr ""
 
-#: src/view/com/auth/create/state.ts:153
+#: src/view/com/auth/create/state.ts:110
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 #: src/view/com/modals/ChangePassword.tsx:54
 msgid "Your email appears to be invalid."
@@ -4659,7 +4672,7 @@ msgstr "El teu correu encara no s'ha verificat. Et recomanem fer-ho per segureta
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "El teu canal de seguint està buit! Segueix a més usuaris per saber què està passant."
 
-#: src/view/com/auth/create/Step3.tsx:45
+#: src/view/com/auth/create/Step2.tsx:48
 msgid "Your full handle will be"
 msgstr "El teu identificador complet serà"
 
@@ -4700,6 +4713,6 @@ msgstr "El teu perfil"
 msgid "Your reply has been published"
 msgstr "S'ha publicat a teva resposta"
 
-#: src/view/com/auth/create/Step3.tsx:28
+#: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
 msgstr "El teu identificador d'usuari"

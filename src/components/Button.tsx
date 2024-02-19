@@ -27,7 +27,7 @@ export type ButtonColor =
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'small' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -48,25 +48,32 @@ export type VariantProps = {
   shape?: ButtonShape
 }
 
-export type ButtonProps = React.PropsWithChildren<
-  Pick<PressableProps, 'disabled' | 'onPress'> &
-    AccessibilityProps &
-    VariantProps & {
-      testID?: string
-      label: string
-      style?: StyleProp<ViewStyle>
-    }
->
+export type ButtonState = {
+  hovered: boolean
+  focused: boolean
+  pressed: boolean
+  disabled: boolean
+}
+
+export type ButtonContext = VariantProps & ButtonState
+
+export type ButtonProps = Pick<
+  PressableProps,
+  'disabled' | 'onPress' | 'testID'
+> &
+  AccessibilityProps &
+  VariantProps & {
+    testID?: string
+    label: string
+    style?: StyleProp<ViewStyle>
+    children:
+      | React.ReactNode
+      | string
+      | ((context: ButtonContext) => React.ReactNode | string)
+  }
 export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
 
-const Context = React.createContext<
-  VariantProps & {
-    hovered: boolean
-    focused: boolean
-    pressed: boolean
-    disabled: boolean
-  }
->({
+const Context = React.createContext<VariantProps & ButtonState>({
   hovered: false,
   focused: false,
   pressed: false,
@@ -277,6 +284,8 @@ export function Button({
         baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
         baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
+      } else if (size === 'tiny') {
+        baseStyles.push({paddingVertical: 4}, a.px_sm, a.rounded_xs, a.gap_xs)
       }
     } else if (shape === 'round' || shape === 'square') {
       if (size === 'large') {
@@ -287,12 +296,18 @@ export function Button({
         }
       } else if (size === 'small') {
         baseStyles.push({height: 40, width: 40})
+      } else if (size === 'tiny') {
+        baseStyles.push({height: 20, width: 20})
       }
 
       if (shape === 'round') {
         baseStyles.push(a.rounded_full)
       } else if (shape === 'square') {
-        baseStyles.push(a.rounded_sm)
+        if (size === 'tiny') {
+          baseStyles.push(a.rounded_xs)
+        } else {
+          baseStyles.push(a.rounded_sm)
+        }
       }
     }
 
@@ -338,7 +353,7 @@ export function Button({
       }
     }, [variant, color])
 
-  const context = React.useMemo(
+  const context = React.useMemo<ButtonContext>(
     () => ({
       ...state,
       variant,
@@ -348,6 +363,8 @@ export function Button({
     }),
     [state, variant, color, size, disabled],
   )
+
+  const flattenedBaseStyles = flatten(baseStyles)
 
   return (
     <Pressable
@@ -362,15 +379,14 @@ export function Button({
         disabled: disabled || false,
       }}
       style={[
-        flatten(style),
         a.flex_row,
         a.align_center,
         a.justify_center,
-        a.overflow_hidden,
         a.justify_center,
-        ...baseStyles,
+        flattenedBaseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
+        flatten(style),
       ]}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
@@ -379,21 +395,31 @@ export function Button({
       onFocus={onFocus}
       onBlur={onBlur}>
       {variant === 'gradient' && (
-        <LinearGradient
-          colors={
-            state.hovered || state.pressed || state.focused
-              ? gradientHoverColors
-              : gradientColors
-          }
-          locations={gradientLocations}
-          start={{x: 0, y: 0}}
-          end={{x: 1, y: 1}}
-          style={[a.absolute, a.inset_0]}
-        />
+        <View
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.overflow_hidden,
+            {borderRadius: flattenedBaseStyles.borderRadius},
+          ]}>
+          <LinearGradient
+            colors={
+              state.hovered || state.pressed || state.focused
+                ? gradientHoverColors
+                : gradientColors
+            }
+            locations={gradientLocations}
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 1}}
+            style={[a.absolute, a.inset_0]}
+          />
+        </View>
       )}
       <Context.Provider value={context}>
         {typeof children === 'string' ? (
           <ButtonText>{children}</ButtonText>
+        ) : typeof children === 'function' ? (
+          children(context)
         ) : (
           children
         )}
@@ -493,6 +519,8 @@ export function useSharedButtonTextStyles() {
 
     if (size === 'large') {
       baseStyles.push(a.text_md, android({paddingBottom: 1}))
+    } else if (size === 'tiny') {
+      baseStyles.push(a.text_xs, android({paddingBottom: 1}))
     } else {
       baseStyles.push(a.text_sm, android({paddingBottom: 1}))
     }
@@ -514,9 +542,11 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
 export function ButtonIcon({
   icon: Comp,
   position,
+  size: iconSize,
 }: {
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
+  size?: SVGIconProps['size']
 }) {
   const {size, disabled} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
@@ -532,7 +562,9 @@ export function ButtonIcon({
         },
       ]}>
       <Comp
-        size={size === 'large' ? 'md' : 'sm'}
+        size={
+          iconSize ?? (size === 'large' ? 'md' : size === 'tiny' ? 'xs' : 'sm')
+        }
         style={[{color: textStyles.color, pointerEvents: 'none'}]}
       />
     </View>
