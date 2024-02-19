@@ -3646,7 +3646,7 @@ msgstr "Tampilkan Kutipan Postingan"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "Tampilkan kutipan postingan di feed Mengikut"
+msgstr "Tampilkan kutipan postingan di feed Mengikuti"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
