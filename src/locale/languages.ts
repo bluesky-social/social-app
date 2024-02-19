@@ -30,7 +30,7 @@ export const APP_LANGUAGES: AppLanguageConfig[] = [
   {code2: AppLanguage.en, name: 'English'},
   {code2: AppLanguage.de, name: 'Deutsch – German'},
   {code2: AppLanguage.es, name: 'Español – Spanish'},
-  {code2: AppLanguage.fi, name: 'Finnish - Suomi'},
+  {code2: AppLanguage.fi, name: 'Suomi - Finnish'},
   {code2: AppLanguage.fr, name: 'Français – French'},
   {code2: AppLanguage.hi, name: 'हिंदी – Hindi'},
   {code2: AppLanguage.id, name: 'Bahasa Indonesia – Indonesian'},
