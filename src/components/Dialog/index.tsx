@@ -8,7 +8,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {createInput} from '#/components/forms/TextField'
 
@@ -35,10 +35,15 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
+  const [openIndex, setOpenIndex] = React.useState(-1)
+  const isOpen = openIndex > -1
 
-  const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
-    sheet.current?.snapToIndex(i)
-  }, [])
+  const open = React.useCallback<DialogControlProps['open']>(
+    ({index} = {}) => {
+      setOpenIndex(index || 0)
+    },
+    [setOpenIndex],
+  )
 
   const close = React.useCallback(() => {
     sheet.current?.close()
@@ -57,77 +62,81 @@ export function Outer({
     (index: number) => {
       if (index === -1) {
         onClose?.()
+        setOpenIndex(-1)
       }
     },
-    [onClose],
+    [onClose, setOpenIndex],
   )
 
   const context = React.useMemo(() => ({close}), [close])
 
   return (
-    <Portal>
-      <BottomSheet
-        enableDynamicSizing={!hasSnapPoints}
-        enablePanDownToClose
-        keyboardBehavior="interactive"
-        android_keyboardInputMode="adjustResize"
-        keyboardBlurBehavior="restore"
-        topInset={insets.top}
-        {...sheetOptions}
-        ref={sheet}
-        index={-1}
-        backgroundStyle={{backgroundColor: 'transparent'}}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            opacity={0.4}
-            appearsOnIndex={0}
-            disappearsOnIndex={-1}
-            {...props}
-          />
-        )}
-        handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-        handleStyle={{display: 'none'}}
-        onChange={onChange}>
-        <Context.Provider value={context}>
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              t.atoms.bg,
-              {
-                borderTopLeftRadius: 40,
-                borderTopRightRadius: 40,
-                height: Dimensions.get('window').height * 2,
-              },
-            ]}
-          />
-          {children}
-        </Context.Provider>
-      </BottomSheet>
-    </Portal>
+    isOpen && (
+      <Portal>
+        <BottomSheet
+          enableDynamicSizing={!hasSnapPoints}
+          enablePanDownToClose
+          keyboardBehavior="interactive"
+          android_keyboardInputMode="adjustResize"
+          keyboardBlurBehavior="restore"
+          topInset={insets.top}
+          {...sheetOptions}
+          ref={sheet}
+          index={openIndex}
+          backgroundStyle={{backgroundColor: 'transparent'}}
+          backdropComponent={props => (
+            <BottomSheetBackdrop
+              opacity={0.4}
+              appearsOnIndex={0}
+              disappearsOnIndex={-1}
+              {...props}
+            />
+          )}
+          handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
+          handleStyle={{display: 'none'}}
+          onChange={onChange}>
+          <Context.Provider value={context}>
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                t.atoms.bg,
+                {
+                  borderTopLeftRadius: 40,
+                  borderTopRightRadius: 40,
+                  height: Dimensions.get('window').height * 2,
+                },
+              ]}
+            />
+            {children}
+          </Context.Provider>
+        </BottomSheet>
+      </Portal>
+    )
   )
 }
 
 // TODO a11y props here, or is that handled by the sheet?
-export function Inner(props: DialogInnerProps) {
+export function Inner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetView
       style={[
-        a.p_lg,
+        a.p_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
           paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
         },
+        flatten(style),
       ]}>
-      {props.children}
+      {children}
     </BottomSheetView>
   )
 }
 
-export function ScrollableInner(props: DialogInnerProps) {
+export function ScrollableInner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
@@ -141,8 +150,9 @@ export function ScrollableInner(props: DialogInnerProps) {
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
+        flatten(style),
       ]}>
-      {props.children}
+      {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
