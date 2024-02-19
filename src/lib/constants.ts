@@ -5,7 +5,6 @@ export const LOCAL_DEV_SERVICE =
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
 export const PROD_SERVICE = 'https://bsky.social'
 export const DEFAULT_SERVICE = PROD_SERVICE
-
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
 
@@ -45,15 +44,7 @@ export function IS_STAGING(url: string) {
 }
 
 export function IS_PROD(url: string) {
-  // NOTE
-  // until open federation, "production" is defined as the main server
-  // this definition will not work once federation is enabled!
-  // -prf
-  return (
-    url.startsWith('https://bsky.social') ||
-    url.startsWith('https://api.bsky.app') ||
-    /bsky\.network\/?$/.test(url)
-  )
+  return url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
 }
 
 export const PROD_TEAM_HANDLES = [
