@@ -4723,7 +4723,7 @@ msgstr "あなたのアカウントは削除されました"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "あなたのアカウントリポジトリは、すべて公開データの記録を含み、CARファイルとしてダウンロードできます。このファイルには画像などのメディアの埋め込みやプライベートなデータは含まれません。"
+msgstr "あなたのアカウントのリポジトリは、すべて公開データの記録を含み、CARファイルとしてダウンロードできます。このファイルには画像などのメディアの埋め込みやプライベートなデータは含まれません。"
 
 #: src/view/com/auth/create/Step1.tsx:234
 msgid "Your birth date"
