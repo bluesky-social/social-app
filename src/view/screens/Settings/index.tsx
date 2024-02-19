@@ -694,7 +694,9 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
-          accessibilityHint={_(msg`Opens modal to choose a new Bluesky handle`)}>
+          accessibilityHint={_(
+            msg`Opens modal to choose a new Bluesky handle`
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
