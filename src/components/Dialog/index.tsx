@@ -116,7 +116,6 @@ export function Outer({
   )
 }
 
-// TODO a11y props here, or is that handled by the sheet?
 export function Inner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
