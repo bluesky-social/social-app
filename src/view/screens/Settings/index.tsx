@@ -695,7 +695,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
           accessibilityHint={_(
-            msg`Opens modal to choose a new Bluesky handle`
+            msg`Opens modal to choose a new Bluesky handle`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
