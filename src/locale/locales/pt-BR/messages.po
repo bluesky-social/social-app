@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-16 11:49\n"
+"PO-Revision-Date: 2024-02-19 11:23\n"
 "Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -728,7 +728,7 @@ msgstr "Completar e começar a usar sua conta"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
-msgstr ""
+msgstr "Complete o captcha"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -900,10 +900,6 @@ msgstr "Não foi possível carregar o feed"
 #: src/view/screens/ProfileList.tsx:888
 msgid "Could not load list"
 msgstr "Não foi possível carregar a lista"
-
-#: src/view/com/auth/create/Step2.tsx:91
-#~ msgid "Country"
-#~ msgstr "País"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:71
@@ -1314,17 +1310,13 @@ msgstr "Digite o novo e-mail acima"
 msgid "Enter your new email address below."
 msgstr "Digite seu novo endereço de e-mail abaixo."
 
-#: src/view/com/auth/create/Step2.tsx:188
-#~ msgid "Enter your phone number"
-#~ msgstr "Digite seu número de telefone"
-
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
 msgstr "Digite seu nome de usuário e senha"
 
 #: src/view/com/auth/create/Step3.tsx:67
 msgid "Error receiving captcha response."
-msgstr ""
+msgstr "Não foi possível processar o captcha."
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
@@ -1807,10 +1799,6 @@ msgstr "Insira a nova senha"
 msgid "Input password for account deletion"
 msgstr "Insira a senha para excluir a conta"
 
-#: src/view/com/auth/create/Step2.tsx:196
-#~ msgid "Input phone number for SMS verification"
-#~ msgstr "Insira o número de telefone para verificação via SMS"
-
 #: src/view/com/auth/login/LoginForm.tsx:230
 msgid "Input the password tied to {identifier}"
 msgstr "Insira a senha da conta {identifier}"
@@ -1818,10 +1806,6 @@ msgstr "Insira a senha da conta {identifier}"
 #: src/view/com/auth/login/LoginForm.tsx:197
 msgid "Input the username or email address you used at signup"
 msgstr "Insira o usuário ou e-mail que você cadastrou"
-
-#: src/view/com/auth/create/Step2.tsx:271
-#~ msgid "Input the verification code we have texted to you"
-#~ msgstr "Insira o código de verificação que enviamos para você"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -2645,10 +2629,6 @@ msgstr "A permissão de galeria foi recusada. Por favor, habilite-a nas configur
 msgid "Pets"
 msgstr "Pets"
 
-#: src/view/com/auth/create/Step2.tsx:183
-#~ msgid "Phone number"
-#~ msgstr "Número de telefone"
-
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
 msgstr "Imagens destinadas a adultos."
@@ -2685,7 +2665,7 @@ msgstr "Por favor, escolha sua senha."
 
 #: src/view/com/auth/create/state.ts:131
 msgid "Please complete the verification captcha."
-msgstr ""
+msgstr "Por favor, complete o captcha de verificação."
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -2695,21 +2675,9 @@ msgstr "Por favor, confirme seu e-mail antes de alterá-lo. Este é um requisito
 msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "Por favor, insira um nome para a sua Senha de Aplicativo."
 
-#: src/view/com/auth/create/Step2.tsx:206
-#~ msgid "Please enter a phone number that can receive SMS text messages."
-#~ msgstr "Por favor, insira um número de telefone que possa receber mensagens SMS."
-
 #: src/view/com/modals/AddAppPasswords.tsx:145
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "Por favor, insira um nome único para esta Senha de Aplicativo ou use nosso nome gerado automaticamente."
-
-#: src/view/com/auth/create/state.ts:170
-#~ msgid "Please enter the code you received by SMS."
-#~ msgstr "Por favor, digite o código recebido via SMS."
-
-#: src/view/com/auth/create/Step2.tsx:282
-#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-#~ msgstr "Por favor, digite o código de verificação enviado para {phoneNumberFormatted}."
 
 #: src/view/com/auth/create/state.ts:103
 msgid "Please enter your email."
@@ -3036,10 +3004,6 @@ msgstr "Reposts"
 msgid "Request Change"
 msgstr "Solicitar Alteração"
 
-#: src/view/com/auth/create/Step2.tsx:219
-#~ msgid "Request code"
-#~ msgstr "Solicitar código"
-
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
@@ -3110,17 +3074,9 @@ msgstr "Tenta a última ação, que deu erro"
 msgid "Retry"
 msgstr "Tente novamente"
 
-#: src/view/com/auth/create/Step2.tsx:247
-#~ msgid "Retry."
-#~ msgstr "Tentar novamente."
-
 #: src/view/screens/ProfileList.tsx:898
 msgid "Return to previous page"
 msgstr "Voltar para página anterior"
-
-#: src/view/shell/desktop/RightNav.tsx:55
-#~ msgid "SANDBOX. Posts and accounts are not permanent."
-#~ msgstr "SANDBOX. Posts e contas não são permanentes."
 
 #: src/view/com/lightbox/Lightbox.tsx:132
 #: src/view/com/modals/CreateOrEditList.tsx:345
@@ -3257,10 +3213,6 @@ msgstr "Selecione o idioma do seu aplicativo"
 #: src/screens/Onboarding/StepInterests/index.tsx:196
 msgid "Select your interests from the options below"
 msgstr "Selecione seus interesses"
-
-#: src/view/com/auth/create/Step2.tsx:155
-#~ msgid "Select your phone's country"
-#~ msgstr "Selecione o país do número de telefone"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3589,10 +3541,6 @@ msgstr "Pular"
 msgid "Skip this flow"
 msgstr "Pular"
 
-#: src/view/com/auth/create/Step2.tsx:82
-#~ msgid "SMS verification"
-#~ msgstr "Verificação por SMS"
-
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
 msgstr "Desenvolvimento de software"
@@ -3725,7 +3673,7 @@ msgstr "Campo de entrada de texto"
 
 #: src/view/com/auth/create/CreateAccount.tsx:90
 msgid "That handle is already taken."
-msgstr ""
+msgstr "Este identificador de usuário já está sendo usado."
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
@@ -3842,10 +3790,6 @@ msgstr "Houve um problema inesperado no aplicativo. Por favor, deixe-nos saber s
 #: src/screens/Deactivated.tsx:106
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
 msgstr "Muitos usuários estão tentando acessar o Bluesky! Ativaremos sua conta assim que possível."
-
-#: src/view/com/auth/create/Step2.tsx:55
-#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-#~ msgstr "Houve um problema com este número. Por favor, escolha um país e digite seu número de telefone completo!"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
@@ -4148,10 +4092,6 @@ msgstr "usuários seguidos por <0/>"
 msgid "Users in \"{0}\""
 msgstr "Usuários em \"{0}\""
 
-#: src/view/com/auth/create/Step2.tsx:243
-#~ msgid "Verification code"
-#~ msgstr "Código de verificação"
-
 #: src/view/screens/Settings/index.tsx:910
 msgid "Verify email"
 msgstr "Verificar e-mail"
@@ -4304,10 +4244,6 @@ msgstr "Escreva sua resposta"
 #: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
 msgstr "Escritores"
-
-#: src/view/com/auth/create/Step2.tsx:263
-#~ msgid "XXXXXX"
-#~ msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesHomeFeed.tsx:129
