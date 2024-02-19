@@ -25,3 +25,7 @@ export function makeCustomFeedLink(
 export function makeListLink(did: string, rkey: string, ...segments: string[]) {
   return [`/profile`, did, 'lists', rkey, ...segments].join('/')
 }
+
+export function makeTagLink(did: string) {
+  return `/search?q=${encodeURIComponent(did)}`
+}
