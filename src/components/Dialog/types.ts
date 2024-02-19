@@ -10,7 +10,15 @@ export type DialogContextProps = {
   close: () => void
 }
 
-export type DialogControlOpenOptions = {index?: number}
+export type DialogControlOpenOptions = {
+  /**
+   * NATIVE ONLY
+   *
+   * Optional index of the snap point to open the bottom sheet to. Defaults to
+   * 0, which is the first snap point (i.e. "open").
+   */
+  index?: number
+}
 
 export type DialogControlProps = {
   open: (options?: DialogControlOpenOptions) => void

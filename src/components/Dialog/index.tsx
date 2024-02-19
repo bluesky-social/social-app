@@ -35,11 +35,20 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
+
+  /*
+   * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
+   */
   const [openIndex, setOpenIndex] = React.useState(-1)
+
+  /*
+   * `openIndex` is the index of the snap point to open the bottom sheet to. If >0, the bottom sheet is open.
+   */
   const isOpen = openIndex > -1
 
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
     },
     [setOpenIndex],
