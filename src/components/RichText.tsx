@@ -29,7 +29,7 @@ export function RichText({
   const [richText, setRichText] = React.useState<RichTextAPI>(() =>
     value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
   )
-  const styles = [a.leading_normal, style]
+  const styles = [a.leading_tight, style]
 
   React.useEffect(() => {
     if (!resolveFacets) return

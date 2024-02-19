@@ -3,7 +3,7 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
-import {RichText as RichTextCom} from '../util/text/RichText'
+import {RichText as RichTextCom} from '#/components/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -12,6 +12,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {Trans} from '@lingui/macro'
+import {atoms as a} from '#/alf'
 
 export const ListCard = ({
   testID,
@@ -119,9 +120,9 @@ export const ListCard = ({
       {descriptionRichText ? (
         <View style={styles.details}>
           <RichTextCom
-            style={[pal.text, s.flex1]}
+            style={[a.flex_1]}
             numberOfLines={20}
-            richText={descriptionRichText}
+            value={descriptionRichText}
           />
         </View>
       ) : undefined}

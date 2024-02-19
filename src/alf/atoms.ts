@@ -208,10 +208,13 @@ export const atoms = {
     lineHeight: 1.15,
   },
   leading_snug: {
-    lineHeight: 1.25,
+    lineHeight: 1.3,
   },
   leading_normal: {
     lineHeight: 1.5,
+  },
+  tracking_wide: {
+    letterSpacing: 0.2,
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
