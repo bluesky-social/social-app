@@ -46,7 +46,7 @@ export function FeedPage({
   renderEmptyState: () => JSX.Element
   renderEndOfFeed?: () => JSX.Element
 }) {
-  const {isSandbox, hasSession} = useSession()
+  const {hasSession} = useSession()
   const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation()
@@ -119,7 +119,7 @@ export function FeedPage({
             style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
-                {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
+                Bluesky{' '}
                 {hasNew && (
                   <View
                     style={{
@@ -154,16 +154,7 @@ export function FeedPage({
       )
     }
     return <></>
-  }, [
-    isDesktop,
-    pal.view,
-    pal.text,
-    pal.textLight,
-    hasNew,
-    _,
-    isSandbox,
-    hasSession,
-  ])
+  }, [isDesktop, pal.view, pal.text, pal.textLight, hasNew, _, hasSession])
 
   return (
     <View testID={testID} style={s.h100pct}>

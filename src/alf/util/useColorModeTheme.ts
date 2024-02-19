@@ -13,7 +13,7 @@ export function useColorModeTheme(): ThemeName {
   React.useLayoutEffect(() => {
     const theme = getThemeName(colorScheme, colorMode, darkTheme)
     updateDocument(theme)
-    updateSystemBackground(theme)
+    SystemUI.setBackgroundColorAsync(getBackgroundColor(theme))
   }, [colorMode, colorScheme, darkTheme])
 
   return React.useMemo(
@@ -42,23 +42,24 @@ function updateDocument(theme: ThemeName) {
   if (isWeb && typeof window !== 'undefined') {
     // @ts-ignore web only
     const html = window.document.documentElement
+    // @ts-ignore web only
+    const meta = window.document.querySelector('meta[name="theme-color"]')
+
     // remove any other color mode classes
     html.className = html.className.replace(/(theme)--\w+/g, '')
-
     html.classList.add(`theme--${theme}`)
+    // set color to 'theme-color' meta tag
+    meta?.setAttribute('content', getBackgroundColor(theme))
   }
 }
 
-function updateSystemBackground(theme: ThemeName) {
+function getBackgroundColor(theme: ThemeName): string {
   switch (theme) {
     case 'light':
-      SystemUI.setBackgroundColorAsync(light.atoms.bg.backgroundColor)
-      break
+      return light.atoms.bg.backgroundColor
     case 'dark':
-      SystemUI.setBackgroundColorAsync(dark.atoms.bg.backgroundColor)
-      break
+      return dark.atoms.bg.backgroundColor
     case 'dim':
-      SystemUI.setBackgroundColorAsync(dim.atoms.bg.backgroundColor)
-      break
+      return dim.atoms.bg.backgroundColor
   }
 }

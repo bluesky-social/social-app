@@ -73,6 +73,10 @@ export function Step1({
       />
       <StepHeader uiState={uiState} title={_(msg`Your account`)} />
 
+      {uiState.error ? (
+        <ErrorMessage message={uiState.error} style={styles.error} />
+      ) : undefined}
+
       <View style={s.pb20}>
         <Text type="md-medium" style={[pal.text, s.mb2]}>
           <Trans>Hosting provider</Trans>
@@ -259,9 +263,6 @@ export function Step1({
           )}
         </>
       )}
-      {uiState.error ? (
-        <ErrorMessage message={uiState.error} style={styles.error} />
-      ) : undefined}
     </View>
   )
 }
@@ -269,7 +270,7 @@ export function Step1({
 const styles = StyleSheet.create({
   error: {
     borderRadius: 6,
-    marginTop: 10,
+    marginBottom: 10,
   },
   dateInputButton: {
     borderWidth: 1,
