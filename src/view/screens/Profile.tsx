@@ -29,6 +29,7 @@ import {combinedDisplayName} from 'lib/strings/display-names'
 import {
   FeedDescriptor,
   resetProfilePostsQueries,
+  RQKEY,
 } from '#/state/queries/post-feed'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useProfileQuery} from '#/state/queries/profile'
@@ -48,6 +49,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {ScrollForwarder} from 'react-native-scroll-forwarder/src/ScrollForwarder'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -143,6 +145,7 @@ function ProfileScreenLoaded({
   hideBackButton: boolean
   isPlaceholderProfile: boolean
 }) {
+  const client = useQueryClient()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -152,6 +155,11 @@ function ProfileScreenLoaded({
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
+
+  const [scrollViewTag, setScrollViewTag] =
+    React.useState<[string, FeedDescriptor]>()
+  const [refreshing, setRefreshing] = React.useState(false)
+
   const postsSectionRef = React.useRef<SectionRef>(null)
   const repliesSectionRef = React.useRef<SectionRef>(null)
   const mediaSectionRef = React.useRef<SectionRef>(null)
@@ -257,12 +265,9 @@ function ProfileScreenLoaded({
     openComposer({mention})
   }, [openComposer, currentAccount, track, profile])
 
-  const onPageSelected = React.useCallback(
-    (i: number) => {
-      setCurrentPage(i)
-    },
-    [setCurrentPage],
-  )
+  const onPageSelected = React.useCallback((i: number) => {
+    setCurrentPage(i)
+  }, [])
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {
@@ -271,23 +276,42 @@ function ProfileScreenLoaded({
     [scrollSectionToTop],
   )
 
+  // This onRefresh is used by the ScrollForwarder, since we cannot easily access the onRefresh callback from the
+  // list. The ScrollForwarder wil handle the refresh control with the refreshing state value.
+  const onRefresh = React.useCallback(async () => {
+    if (!scrollViewTag?.[1]) return
+    setRefreshing(true)
+    await client.refetchQueries({
+      queryKey: RQKEY(scrollViewTag[1]),
+    })
+    setRefreshing(false)
+  }, [client, scrollViewTag])
+
   // rendering
   // =
 
   const renderHeader = React.useCallback(() => {
     return (
-      <ProfileHeader
-        profile={profile}
-        descriptionRT={hasDescription ? descriptionRT : null}
-        moderationOpts={moderationOpts}
-        hideBackButton={hideBackButton}
-        isPlaceholderProfile={showPlaceholder}
-      />
+      <ScrollForwarder
+        scrollViewTag={scrollViewTag?.[0]}
+        onScrollViewRefresh={onRefresh}
+        scrollViewRefreshing={refreshing}>
+        <ProfileHeader
+          profile={profile}
+          descriptionRT={hasDescription ? descriptionRT : null}
+          moderationOpts={moderationOpts}
+          hideBackButton={hideBackButton}
+          isPlaceholderProfile={showPlaceholder}
+        />
+      </ScrollForwarder>
     )
   }, [
+    scrollViewTag,
+    onRefresh,
+    refreshing,
     profile,
-    descriptionRT,
     hasDescription,
+    descriptionRT,
     moderationOpts,
     hideBackButton,
     showPlaceholder,
@@ -314,6 +338,7 @@ function ProfileScreenLoaded({
             isFocused={isFocused}
             scrollElRef={scrollElRef as ListRef}
             ignoreFilterFor={profile.did}
+            setScrollViewTag={setScrollViewTag}
           />
         )}
         {showRepliesTab
@@ -325,6 +350,7 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -336,6 +362,7 @@ function ProfileScreenLoaded({
             isFocused={isFocused}
             scrollElRef={scrollElRef as ListRef}
             ignoreFilterFor={profile.did}
+            setScrollViewTag={setScrollViewTag}
           />
         )}
         {showLikesTab
@@ -347,6 +374,7 @@ function ProfileScreenLoaded({
                 isFocused={isFocused}
                 scrollElRef={scrollElRef as ListRef}
                 ignoreFilterFor={profile.did}
+                setScrollViewTag={setScrollViewTag}
               />
             )
           : null}
@@ -393,10 +421,18 @@ interface FeedSectionProps {
   isFocused: boolean
   scrollElRef: ListRef
   ignoreFilterFor?: string
+  setScrollViewTag: (val: [string, FeedDescriptor]) => void
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(
-    {feed, headerHeight, isFocused, scrollElRef, ignoreFilterFor},
+    {
+      feed,
+      headerHeight,
+      isFocused,
+      scrollElRef,
+      ignoreFilterFor,
+      setScrollViewTag,
+    },
     ref,
   ) {
     const {_} = useLingui()
@@ -419,6 +455,16 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     const renderPostsEmpty = React.useCallback(() => {
       return <EmptyState icon="feed" message={_(msg`This feed is empty!`)} />
     }, [_])
+
+    React.useEffect(() => {
+      if (isFocused) {
+        setScrollViewTag([
+          // @ts-ignore _nativeTag exists on getNativeScrollRef()
+          scrollElRef.current?.getNativeScrollRef()?._nativeTag,
+          feed,
+        ])
+      }
+    }, [isFocused, scrollElRef, setScrollViewTag, feed])
 
     return (
       <View>
