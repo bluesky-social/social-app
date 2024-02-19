@@ -25,7 +25,7 @@ import {
 } from '#/state/queries/preferences'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
+import {useTheme} from '#/alf'
 
 export function FeedSourceCard({
   feedUri,
@@ -268,12 +268,7 @@ export function FeedSourceCardLoaded({
 
       {showDescription && feed.description ? (
         <RichText
-          style={[
-            t.atoms.text_contrast_high,
-            a.text_sm,
-            a.leading_snug,
-            styles.description,
-          ]}
+          style={[t.atoms.text_contrast_high, styles.description]}
           value={feed.description}
           numberOfLines={3}
         />
