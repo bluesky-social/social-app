@@ -129,7 +129,7 @@ export function QuoteEmbed({
       {richText ? (
         <RichText
           value={richText}
-          style={[a.text_md, a.tracking_wide]}
+          style={[a.text_md]}
           numberOfLines={20}
           disableLinks
         />

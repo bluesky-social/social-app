@@ -328,12 +328,7 @@ let PostThreadItemLoaded = ({
                   ]}>
                   <RichText
                     value={richText}
-                    style={[
-                      a.flex_1,
-                      a.leading_snug,
-                      a.text_xl,
-                      a.tracking_wide,
-                    ]}
+                    style={[a.flex_1, a.leading_snug, a.text_xl]}
                     selectable
                   />
                 </View>
@@ -527,12 +522,7 @@ let PostThreadItemLoaded = ({
                   <View style={styles.postTextContainer}>
                     <RichText
                       value={richText}
-                      style={[
-                        a.flex_1,
-                        a.leading_snug,
-                        a.text_md,
-                        a.tracking_wide,
-                      ]}
+                      style={[a.flex_1, a.leading_snug, a.text_md]}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     />
                   </View>

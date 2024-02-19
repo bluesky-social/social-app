@@ -576,7 +576,7 @@ function AboutSection({
         {feedInfo.description ? (
           <RichText
             testID="listDescription"
-            style={[a.text_md, a.leading_snug, a.tracking_wide]}
+            style={[a.text_md, a.leading_snug]}
             value={feedInfo.description}
           />
         ) : (
