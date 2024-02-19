@@ -42,15 +42,14 @@ function updateDocument(theme: ThemeName) {
   if (isWeb && typeof window !== 'undefined') {
     // @ts-ignore web only
     const html = window.document.documentElement
+    // @ts-ignore web only
+    const meta = window.document.querySelector('meta[name="theme-color"]')
+
     // remove any other color mode classes
     html.className = html.className.replace(/(theme)--\w+/g, '')
-
     html.classList.add(`theme--${theme}`)
-
     // set color to 'theme-color' meta tag
-    const themeColor = getBackgroundColor(theme)
-    const meta = window.document.querySelector('meta[name="theme-color"]')
-    meta.setAttribute('content', themeColor)
+    meta.setAttribute('content', getBackgroundColor(theme))
   }
 }
 
