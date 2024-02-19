@@ -343,21 +343,21 @@ msgstr "艺术"
 msgid "Artistic or non-erotic nudity."
 msgstr "艺术作品或非色情的裸体。"
 
-#: src/view/com/auth/create/CreateAccount.tsx:147
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:437
-#: src/view/com/post-thread/PostThread.tsx:487
-#: src/view/com/post-thread/PostThread.tsx:495
+#: src/view/com/post-thread/PostThread.tsx:471
+#: src/view/com/post-thread/PostThread.tsx:521
+#: src/view/com/post-thread/PostThread.tsx:529
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "返回"
 
-#: src/view/com/post-thread/PostThread.tsx:445
+#: src/view/com/post-thread/PostThread.tsx:479
 msgctxt "action"
 msgid "Back"
 msgstr "返回"
@@ -370,7 +370,7 @@ msgstr "基于你对 {interestsText} 感兴趣"
 msgid "Basics"
 msgstr "基础信息"
 
-#: src/view/com/auth/create/Step1.tsx:246
+#: src/view/com/auth/create/Step1.tsx:250
 #: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "生日"
@@ -422,7 +422,7 @@ msgstr "被屏蔽的账户无法在你的帖子中回复、提及你或以其他
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "被屏蔽的账户无法在你的帖子中回复、提及你或以其他方式与你互动。你将不会看到他们所发的内容，同样他们也无法查看你的内容。"
 
-#: src/view/com/post-thread/PostThread.tsx:297
+#: src/view/com/post-thread/PostThread.tsx:324
 msgid "Blocked post."
 msgstr "已屏蔽帖子。"
 
@@ -655,7 +655,7 @@ msgstr "选择可改进你自定义信息流的算法。"
 msgid "Choose your main feeds"
 msgstr "选择你的首选信息流"
 
-#: src/view/com/auth/create/Step1.tsx:215
+#: src/view/com/auth/create/Step1.tsx:219
 msgid "Choose your password"
 msgstr "选择你的密码"
 
@@ -756,6 +756,10 @@ msgstr "社群准则"
 msgid "Complete onboarding and start using your account"
 msgstr "完成引导并开始使用你的账户"
 
+#: src/view/com/auth/create/Step3.tsx:73
+msgid "Complete the challenge"
+msgstr ""
+
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰写帖子的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
@@ -811,12 +815,12 @@ msgstr "验证码"
 msgid "Confirms signing up {email} to the waitlist"
 msgstr "确认将 {email} 注册到候补列表"
 
-#: src/view/com/auth/create/CreateAccount.tsx:182
+#: src/view/com/auth/create/CreateAccount.tsx:189
 #: src/view/com/auth/login/LoginForm.tsx:278
 msgid "Connecting..."
 msgstr "连接中..."
 
-#: src/view/com/auth/create/CreateAccount.tsx:202
+#: src/view/com/auth/create/CreateAccount.tsx:209
 msgid "Contact support"
 msgstr "联系支持"
 
@@ -928,8 +932,8 @@ msgid "Could not load list"
 msgstr "无法加载列表"
 
 #: src/view/com/auth/create/Step2.tsx:91
-msgid "Country"
-msgstr "国家"
+#~ msgid "Country"
+#~ msgstr "国家"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:71
@@ -941,7 +945,7 @@ msgstr "创建新的账户"
 msgid "Create a new Bluesky account"
 msgstr "创建新的 Bluesky 账户"
 
-#: src/view/com/auth/create/CreateAccount.tsx:122
+#: src/view/com/auth/create/CreateAccount.tsx:129
 msgid "Create Account"
 msgstr "创建账户"
 
@@ -1055,7 +1059,7 @@ msgstr "删除这条帖子？"
 msgid "Deleted"
 msgstr "已删除"
 
-#: src/view/com/post-thread/PostThread.tsx:289
+#: src/view/com/post-thread/PostThread.tsx:316
 msgid "Deleted post."
 msgstr "已删除帖子。"
 
@@ -1115,7 +1119,7 @@ msgstr "显示名称"
 msgid "Domain verified!"
 msgstr "域名已认证！"
 
-#: src/view/com/auth/create/Step1.tsx:166
+#: src/view/com/auth/create/Step1.tsx:170
 msgid "Don't have an invite code?"
 msgstr "没有邀请码？"
 
@@ -1257,16 +1261,14 @@ msgstr "编辑你的账户描述"
 msgid "Education"
 msgstr "教育"
 
-#: src/view/com/auth/create/Step1.tsx:195
-#: src/view/com/auth/create/Step2.tsx:194
-#: src/view/com/auth/create/Step2.tsx:269
+#: src/view/com/auth/create/Step1.tsx:199
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:156
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "电子邮箱"
 
-#: src/view/com/auth/create/Step1.tsx:186
+#: src/view/com/auth/create/Step1.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:147
 msgid "Email address"
 msgstr "邮箱地址"
@@ -1337,7 +1339,7 @@ msgstr "输入你想使用的域名"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "输入你用于创建账户的电子邮箱。我们将向你发送重置码，以便你重新设置密码。"
 
-#: src/view/com/auth/create/Step1.tsx:247
+#: src/view/com/auth/create/Step1.tsx:251
 #: src/view/com/modals/BirthDateSettings.tsx:74
 msgid "Enter your birth date"
 msgstr "输入你的出生日期"
@@ -1346,7 +1348,7 @@ msgstr "输入你的出生日期"
 msgid "Enter your email"
 msgstr "输入你的电子邮箱"
 
-#: src/view/com/auth/create/Step1.tsx:191
+#: src/view/com/auth/create/Step1.tsx:195
 msgid "Enter your email address"
 msgstr "输入你的电子邮箱"
 
@@ -1359,12 +1361,16 @@ msgid "Enter your new email address below."
 msgstr "请在下方输入你新的电子邮箱。"
 
 #: src/view/com/auth/create/Step2.tsx:188
-msgid "Enter your phone number"
-msgstr "输入你的手机号码"
+#~ msgid "Enter your phone number"
+#~ msgstr "输入你的手机号码"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
 msgstr "输入你的用户名和密码"
+
+#: src/view/com/auth/create/Step3.tsx:67
+msgid "Error receiving captcha response."
+msgstr ""
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
@@ -1462,7 +1468,7 @@ msgstr "信息流已离线"
 msgid "Feed Preferences"
 msgstr "信息流首选项"
 
-#: src/view/shell/desktop/RightNav.tsx:69
+#: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "反馈"
@@ -1633,7 +1639,7 @@ msgstr "忘记密码"
 msgid "Forgot Password"
 msgstr "忘记密码"
 
-#: src/view/com/posts/FeedItem.tsx:189
+#: src/view/com/posts/FeedItem.tsx:186
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "来自 <0/>"
@@ -1683,11 +1689,11 @@ msgstr "转到下一个"
 msgid "Handle"
 msgstr "用户识别符"
 
-#: src/view/com/auth/create/CreateAccount.tsx:197
+#: src/view/com/auth/create/CreateAccount.tsx:204
 msgid "Having trouble?"
 msgstr "任何疑问？"
 
-#: src/view/shell/desktop/RightNav.tsx:98
+#: src/view/shell/desktop/RightNav.tsx:90
 #: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "帮助"
@@ -1777,7 +1783,7 @@ msgstr "主页"
 msgid "Home Feed Preferences"
 msgstr "主页信息流首选项"
 
-#: src/view/com/auth/create/Step1.tsx:78
+#: src/view/com/auth/create/Step1.tsx:82
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:120
 msgid "Hosting provider"
 msgstr "托管服务提供商"
@@ -1831,11 +1837,11 @@ msgstr "输入发送到你电子邮箱的验证码以重置密码"
 msgid "Input confirmation code for account deletion"
 msgstr "输入删除用户的验证码"
 
-#: src/view/com/auth/create/Step1.tsx:196
+#: src/view/com/auth/create/Step1.tsx:200
 msgid "Input email for Bluesky account"
 msgstr "输入 Bluesky 账户的电子邮箱"
 
-#: src/view/com/auth/create/Step1.tsx:154
+#: src/view/com/auth/create/Step1.tsx:158
 msgid "Input invite code to proceed"
 msgstr "输入邀请码以继续"
 
@@ -1852,8 +1858,8 @@ msgid "Input password for account deletion"
 msgstr "输入密码以删除账户"
 
 #: src/view/com/auth/create/Step2.tsx:196
-msgid "Input phone number for SMS verification"
-msgstr "输入手机号码进行短信验证"
+#~ msgid "Input phone number for SMS verification"
+#~ msgstr "输入手机号码进行短信验证"
 
 #: src/view/com/auth/login/LoginForm.tsx:230
 msgid "Input the password tied to {identifier}"
@@ -1864,8 +1870,8 @@ msgid "Input the username or email address you used at signup"
 msgstr "输入注册时使用的用户名或电子邮箱"
 
 #: src/view/com/auth/create/Step2.tsx:271
-msgid "Input the verification code we have texted to you"
-msgstr "输入收到的短信验证码"
+#~ msgid "Input the verification code we have texted to you"
+#~ msgstr "输入收到的短信验证码"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -1875,11 +1881,11 @@ msgstr "输入你的电子邮箱以加入 Bluesky 候补列表"
 msgid "Input your password"
 msgstr "输入你的密码"
 
-#: src/view/com/auth/create/Step3.tsx:42
+#: src/view/com/auth/create/Step2.tsx:45
 msgid "Input your user handle"
 msgstr "输入你的用户识别符"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:225
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Invalid or unsupported post record"
 msgstr "帖子记录无效或不受支持"
 
@@ -1895,12 +1901,12 @@ msgstr "用户名或密码无效"
 msgid "Invite a Friend"
 msgstr "邀请朋友"
 
-#: src/view/com/auth/create/Step1.tsx:144
-#: src/view/com/auth/create/Step1.tsx:153
+#: src/view/com/auth/create/Step1.tsx:148
+#: src/view/com/auth/create/Step1.tsx:157
 msgid "Invite code"
 msgstr "邀请码"
 
-#: src/view/com/auth/create/state.ts:199
+#: src/view/com/auth/create/state.ts:158
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "邀请码无效，请检查你输入的邀请码并重试。"
 
@@ -1929,8 +1935,8 @@ msgstr "工作"
 msgid "Join the waitlist"
 msgstr "加入候补列表"
 
-#: src/view/com/auth/create/Step1.tsx:170
 #: src/view/com/auth/create/Step1.tsx:174
+#: src/view/com/auth/create/Step1.tsx:178
 msgid "Join the waitlist."
 msgstr "加入候补列表。"
 
@@ -2057,7 +2063,7 @@ msgstr "点赞你的帖子"
 msgid "Likes"
 msgstr "点赞"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:182
+#: src/view/com/post-thread/PostThreadItem.tsx:180
 msgid "Likes on this post"
 msgstr "点赞这条帖子"
 
@@ -2105,8 +2111,8 @@ msgstr "取消隐藏列表"
 msgid "Lists"
 msgstr "列表"
 
-#: src/view/com/post-thread/PostThread.tsx:306
-#: src/view/com/post-thread/PostThread.tsx:314
+#: src/view/com/post-thread/PostThread.tsx:333
+#: src/view/com/post-thread/PostThread.tsx:341
 msgid "Load more posts"
 msgstr "加载更多帖子"
 
@@ -2114,7 +2120,7 @@ msgstr "加载更多帖子"
 msgid "Load new notifications"
 msgstr "加载新的通知"
 
-#: src/view/com/feeds/FeedPage.tsx:190
+#: src/view/com/feeds/FeedPage.tsx:181
 #: src/view/screens/Profile.tsx:440
 #: src/view/screens/ProfileFeed.tsx:494
 #: src/view/screens/ProfileList.tsx:680
@@ -2365,7 +2371,7 @@ msgstr "新密码"
 msgid "New Password"
 msgstr "新密码"
 
-#: src/view/com/feeds/FeedPage.tsx:201
+#: src/view/com/feeds/FeedPage.tsx:192
 msgctxt "action"
 msgid "New post"
 msgstr "新帖子"
@@ -2397,7 +2403,7 @@ msgstr "最新回复优先"
 msgid "News"
 msgstr "新闻"
 
-#: src/view/com/auth/create/CreateAccount.tsx:161
+#: src/view/com/auth/create/CreateAccount.tsx:168
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:182
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:192
 #: src/view/com/auth/login/LoginForm.tsx:291
@@ -2673,8 +2679,8 @@ msgstr "无法找到此页面"
 msgid "Page Not Found"
 msgstr "无法找到此页面"
 
-#: src/view/com/auth/create/Step1.tsx:210
-#: src/view/com/auth/create/Step1.tsx:220
+#: src/view/com/auth/create/Step1.tsx:214
+#: src/view/com/auth/create/Step1.tsx:224
 #: src/view/com/auth/login/LoginForm.tsx:226
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:161
 #: src/view/com/modals/DeleteAccount.tsx:202
@@ -2710,8 +2716,8 @@ msgid "Pets"
 msgstr "宠物"
 
 #: src/view/com/auth/create/Step2.tsx:183
-msgid "Phone number"
-msgstr "手机号码"
+#~ msgid "Phone number"
+#~ msgstr "手机号码"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -2739,13 +2745,17 @@ msgstr "播放视频"
 msgid "Plays the GIF"
 msgstr "播放 GIF"
 
-#: src/view/com/auth/create/state.ts:177
+#: src/view/com/auth/create/state.ts:124
 msgid "Please choose your handle."
 msgstr "请设置你的用户识别符。"
 
-#: src/view/com/auth/create/state.ts:160
+#: src/view/com/auth/create/state.ts:117
 msgid "Please choose your password."
 msgstr "请设置你的密码。"
+
+#: src/view/com/auth/create/state.ts:131
+msgid "Please complete the verification captcha."
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -2756,22 +2766,22 @@ msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "请输入 App 专用密码的名称，不允许使用空格。"
 
 #: src/view/com/auth/create/Step2.tsx:206
-msgid "Please enter a phone number that can receive SMS text messages."
-msgstr "请输入可以接收短信的手机号码。"
+#~ msgid "Please enter a phone number that can receive SMS text messages."
+#~ msgstr "请输入可以接收短信的手机号码。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:145
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "请输入此 App 专用密码的唯一名称，或使用我们提供的随机生成名称。"
 
 #: src/view/com/auth/create/state.ts:170
-msgid "Please enter the code you received by SMS."
-msgstr "请输入你收到的短信验证码。"
+#~ msgid "Please enter the code you received by SMS."
+#~ msgstr "请输入你收到的短信验证码。"
 
 #: src/view/com/auth/create/Step2.tsx:282
-msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-msgstr "请输入发送到 {phoneNumberFormatted} 的验证码。"
+#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
+#~ msgstr "请输入发送到 {phoneNumberFormatted} 的验证码。"
 
-#: src/view/com/auth/create/state.ts:146
+#: src/view/com/auth/create/state.ts:103
 msgid "Please enter your email."
 msgstr "请输入你的电子邮箱。"
 
@@ -2806,12 +2816,12 @@ msgctxt "action"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/post-thread/PostThread.tsx:276
+#: src/view/com/post-thread/PostThread.tsx:303
 msgctxt "description"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:174
+#: src/view/com/post-thread/PostThreadItem.tsx:172
 msgid "Post by {0}"
 msgstr "发布者 {0}"
 
@@ -2825,7 +2835,7 @@ msgstr "发布者 @{0}"
 msgid "Post deleted"
 msgstr "已删除帖子"
 
-#: src/view/com/post-thread/PostThread.tsx:427
+#: src/view/com/post-thread/PostThread.tsx:461
 msgid "Post hidden"
 msgstr "已隐藏帖子"
 
@@ -2837,7 +2847,7 @@ msgstr "帖子语言"
 msgid "Post Languages"
 msgstr "帖子语言"
 
-#: src/view/com/post-thread/PostThread.tsx:479
+#: src/view/com/post-thread/PostThread.tsx:513
 msgid "Post not found"
 msgstr "无法找到帖子"
 
@@ -2866,7 +2876,7 @@ msgid "Prioritize Your Follows"
 msgstr "关注者优先"
 
 #: src/view/screens/Settings/index.tsx:632
-#: src/view/shell/desktop/RightNav.tsx:80
+#: src/view/shell/desktop/RightNav.tsx:72
 msgid "Privacy"
 msgstr "隐私"
 
@@ -3028,7 +3038,7 @@ msgid "Reply Filters"
 msgstr "回复过滤器"
 
 #: src/view/com/post/Post.tsx:166
-#: src/view/com/posts/FeedItem.tsx:287
+#: src/view/com/posts/FeedItem.tsx:284
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr "回复 <0/>"
@@ -3075,11 +3085,11 @@ msgstr "转发或引用帖子"
 msgid "Reposted By"
 msgstr "转发"
 
-#: src/view/com/posts/FeedItem.tsx:207
+#: src/view/com/posts/FeedItem.tsx:204
 msgid "Reposted by {0}"
 msgstr "由 {0} 转发"
 
-#: src/view/com/posts/FeedItem.tsx:224
+#: src/view/com/posts/FeedItem.tsx:221
 msgid "Reposted by <0/>"
 msgstr "由 <0/> 转发"
 
@@ -3087,7 +3097,7 @@ msgstr "由 <0/> 转发"
 msgid "reposted your post"
 msgstr "转发你的帖子"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:187
+#: src/view/com/post-thread/PostThreadItem.tsx:185
 msgid "Reposts of this post"
 msgstr "转发这条帖子"
 
@@ -3097,8 +3107,8 @@ msgid "Request Change"
 msgstr "请求变更"
 
 #: src/view/com/auth/create/Step2.tsx:219
-msgid "Request code"
-msgstr "请求码"
+#~ msgid "Request code"
+#~ msgstr "请求码"
 
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
@@ -3109,7 +3119,7 @@ msgstr "确认码"
 msgid "Require alt text before posting"
 msgstr "要求发布前提供替代文本"
 
-#: src/view/com/auth/create/Step1.tsx:149
+#: src/view/com/auth/create/Step1.tsx:153
 msgid "Required for this provider"
 msgstr "应提供商要求"
 
@@ -3161,9 +3171,8 @@ msgstr "重试上次出错的操作"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:221
 #: src/screens/Onboarding/StepInterests/index.tsx:224
-#: src/view/com/auth/create/CreateAccount.tsx:170
-#: src/view/com/auth/create/CreateAccount.tsx:175
-#: src/view/com/auth/create/Step2.tsx:255
+#: src/view/com/auth/create/CreateAccount.tsx:177
+#: src/view/com/auth/create/CreateAccount.tsx:182
 #: src/view/com/auth/login/LoginForm.tsx:268
 #: src/view/com/auth/login/LoginForm.tsx:271
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -3172,16 +3181,16 @@ msgid "Retry"
 msgstr "重试"
 
 #: src/view/com/auth/create/Step2.tsx:247
-msgid "Retry."
-msgstr "重试。"
+#~ msgid "Retry."
+#~ msgstr "重试。"
 
 #: src/view/screens/ProfileList.tsx:898
 msgid "Return to previous page"
 msgstr "回到上一页"
 
 #: src/view/shell/desktop/RightNav.tsx:55
-msgid "SANDBOX. Posts and accounts are not permanent."
-msgstr "沙盒模式。帖子和账户不会永久保存。"
+#~ msgid "SANDBOX. Posts and accounts are not permanent."
+#~ msgstr "沙盒模式。帖子和账户不会永久保存。"
 
 #: src/view/com/lightbox/Lightbox.tsx:132
 #: src/view/com/modals/CreateOrEditList.tsx:345
@@ -3290,7 +3299,7 @@ msgstr "选择已存在的账户"
 msgid "Select option {i} of {numItems}"
 msgstr "从 {i} 项中选择 {numItems} 项"
 
-#: src/view/com/auth/create/Step1.tsx:99
+#: src/view/com/auth/create/Step1.tsx:103
 #: src/view/com/auth/login/LoginForm.tsx:150
 msgid "Select service"
 msgstr "选择服务"
@@ -3324,8 +3333,8 @@ msgid "Select your interests from the options below"
 msgstr "下面选择你感兴趣的选项"
 
 #: src/view/com/auth/create/Step2.tsx:155
-msgid "Select your phone's country"
-msgstr "选择你的电话区号"
+#~ msgid "Select your phone's country"
+#~ msgstr "选择你的电话区号"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3404,7 +3413,7 @@ msgstr "设置深色模式至暗淡"
 msgid "Set new password"
 msgstr "设置新密码"
 
-#: src/view/com/auth/create/Step1.tsx:221
+#: src/view/com/auth/create/Step1.tsx:225
 msgid "Set password"
 msgstr "设置密码"
 
@@ -3444,7 +3453,7 @@ msgstr "设置用于重置密码的电子邮箱"
 msgid "Sets hosting provider for password reset"
 msgstr "设置用于密码重置的托管提供商信息"
 
-#: src/view/com/auth/create/Step1.tsx:100
+#: src/view/com/auth/create/Step1.tsx:104
 #: src/view/com/auth/login/LoginForm.tsx:151
 msgid "Sets server for the Bluesky client"
 msgstr "设置 Bluesky 客户端的服务器"
@@ -3500,9 +3509,9 @@ msgstr "显示来自 {0} 的嵌入内容"
 msgid "Show follows similar to {0}"
 msgstr "显示类似于 {0} 的关注者"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:539
+#: src/view/com/post-thread/PostThreadItem.tsx:535
 #: src/view/com/post/Post.tsx:197
-#: src/view/com/posts/FeedItem.tsx:363
+#: src/view/com/posts/FeedItem.tsx:360
 msgid "Show More"
 msgstr "显示更多"
 
@@ -3655,8 +3664,8 @@ msgid "Skip this flow"
 msgstr "跳过此流程"
 
 #: src/view/com/auth/create/Step2.tsx:82
-msgid "SMS verification"
-msgstr "短信验证"
+#~ msgid "SMS verification"
+#~ msgstr "短信验证"
 
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
@@ -3784,7 +3793,7 @@ msgstr "点击查看完整内容"
 msgid "Tech"
 msgstr "科技"
 
-#: src/view/shell/desktop/RightNav.tsx:89
+#: src/view/shell/desktop/RightNav.tsx:81
 msgid "Terms"
 msgstr "条款"
 
@@ -3799,6 +3808,10 @@ msgstr "服务条款"
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "文本输入字段"
+
+#: src/view/com/auth/create/CreateAccount.tsx:90
+msgid "That handle is already taken."
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
@@ -3816,7 +3829,7 @@ msgstr "版权许可已迁移至 <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "以下步骤将帮助定制你的 Bluesky 体验。"
 
-#: src/view/com/post-thread/PostThread.tsx:482
+#: src/view/com/post-thread/PostThread.tsx:516
 msgid "The post may have been deleted."
 msgstr "此帖子似乎已被删除。"
 
@@ -3917,8 +3930,8 @@ msgid "There's been a rush of new users to Bluesky! We'll activate your account 
 msgstr "Bluesky 迎来了大量新用户！我们将尽快激活你的账户。"
 
 #: src/view/com/auth/create/Step2.tsx:55
-msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-msgstr "电话号码有误，请选择电话区号并输入完整的电话号码！"
+#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
+#~ msgstr "电话号码有误，请选择电话区号并输入完整的电话号码！"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
@@ -4031,8 +4044,8 @@ msgstr "切换下拉菜单"
 msgid "Transformations"
 msgstr "转换"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:686
-#: src/view/com/post-thread/PostThreadItem.tsx:688
+#: src/view/com/post-thread/PostThreadItem.tsx:682
+#: src/view/com/post-thread/PostThreadItem.tsx:684
 #: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Translate"
 msgstr "翻译"
@@ -4050,7 +4063,7 @@ msgstr "取消屏蔽列表"
 msgid "Un-mute list"
 msgstr "取消隐藏列表"
 
-#: src/view/com/auth/create/CreateAccount.tsx:66
+#: src/view/com/auth/create/CreateAccount.tsx:58
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:118
@@ -4089,7 +4102,7 @@ msgstr "取关"
 msgid "Unfollow {0}"
 msgstr "取关 {0}"
 
-#: src/view/com/auth/create/state.ts:300
+#: src/view/com/auth/create/state.ts:262
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr "很遗憾，你不符合创建账户的要求。"
 
@@ -4181,7 +4194,7 @@ msgstr "用户被列表屏蔽"
 msgid "User Blocks You"
 msgstr "用户屏蔽了你"
 
-#: src/view/com/auth/create/Step3.tsx:41
+#: src/view/com/auth/create/Step2.tsx:44
 msgid "User handle"
 msgstr "用户识别符"
 
@@ -4230,8 +4243,8 @@ msgid "Users in \"{0}\""
 msgstr "\"{0}\"中的用户"
 
 #: src/view/com/auth/create/Step2.tsx:243
-msgid "Verification code"
-msgstr "验证码"
+#~ msgid "Verification code"
+#~ msgstr "验证码"
 
 #: src/view/screens/Settings/index.tsx:910
 msgid "Verify email"
@@ -4323,7 +4336,7 @@ msgstr "我们将迅速审查你的申诉。"
 msgid "We'll use this to help customize your experience."
 msgstr "我们将使用这些信息来帮助定制你的体验。"
 
-#: src/view/com/auth/create/CreateAccount.tsx:123
+#: src/view/com/auth/create/CreateAccount.tsx:130
 msgid "We're so excited to have you join us!"
 msgstr "我们非常高兴你加入我们！"
 
@@ -4387,8 +4400,8 @@ msgid "Writers"
 msgstr "作家"
 
 #: src/view/com/auth/create/Step2.tsx:263
-msgid "XXXXXX"
-msgstr "XXXXXX"
+#~ msgid "XXXXXX"
+#~ msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesHomeFeed.tsx:129
@@ -4434,7 +4447,7 @@ msgstr "你目前还没有任何保存的信息流！"
 msgid "You don't have any saved feeds."
 msgstr "你目前还没有任何保存的信息流。"
 
-#: src/view/com/post-thread/PostThread.tsx:430
+#: src/view/com/post-thread/PostThread.tsx:464
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "你已屏蔽该作者，或你已被该作者屏蔽。"
 
@@ -4524,7 +4537,7 @@ msgstr "你的账户已删除"
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:234
+#: src/view/com/auth/create/Step1.tsx:238
 msgid "Your birth date"
 msgstr "你的生日"
 
@@ -4536,7 +4549,7 @@ msgstr "你的选择将被保存，但可以稍后在设置中更改。"
 msgid "Your default feed is \"Following\""
 msgstr "你的默认信息流为\"关注\""
 
-#: src/view/com/auth/create/state.ts:153
+#: src/view/com/auth/create/state.ts:110
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 #: src/view/com/modals/ChangePassword.tsx:54
 msgid "Your email appears to be invalid."
@@ -4558,7 +4571,7 @@ msgstr "你的电子邮箱尚未验证。这是一个重要的安全步骤，我
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "你的关注信息流为空！关注更多用户去看看他们发了什么什么。"
 
-#: src/view/com/auth/create/Step3.tsx:45
+#: src/view/com/auth/create/Step2.tsx:48
 msgid "Your full handle will be"
 msgstr "你的完整用户识别符将修改为"
 
@@ -4595,6 +4608,6 @@ msgstr "你的个人资料"
 msgid "Your reply has been published"
 msgstr "你的回复已发送"
 
-#: src/view/com/auth/create/Step3.tsx:28
+#: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
 msgstr "你的用户识别符"
