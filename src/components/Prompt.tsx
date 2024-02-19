@@ -3,7 +3,7 @@ import {View, PressableProps} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a, native} from '#/alf'
+import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button} from '#/components/Button'
 
@@ -41,7 +41,7 @@ export function Outer({
         <Dialog.Inner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[{width: 'auto', maxWidth: 400}, native({minHeight: 200})]}>
+          style={[{width: 'auto', maxWidth: 400}]}>
           {children}
         </Dialog.Inner>
       </Context.Provider>

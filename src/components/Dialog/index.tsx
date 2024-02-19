@@ -108,7 +108,7 @@ export function Outer({
                 },
               ]}
             />
-            {children}
+            {hasSnapPoints ? children : <View>{children}</View>}
           </Context.Provider>
         </BottomSheet>
       </Portal>
@@ -144,6 +144,7 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
+        a.h_full,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
