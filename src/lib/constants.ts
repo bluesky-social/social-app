@@ -3,8 +3,8 @@ import {Insets, Platform} from 'react-native'
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
 export const STAGING_SERVICE = 'https://staging.bsky.dev'
-export const PROD_SERVICE = 'https://bsky.social'
-export const DEFAULT_SERVICE = PROD_SERVICE
+export const BSKY_SERVICE = 'https://bsky.social'
+export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
 
@@ -35,16 +35,8 @@ export const MAX_GRAPHEME_LENGTH = 300
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 1000
 
-export function IS_LOCAL_DEV(url: string) {
-  return url.includes('localhost')
-}
-
-export function IS_STAGING(url: string) {
-  return url.startsWith('https://staging.bsky.dev')
-}
-
-export function IS_PROD(url: string) {
-  return url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
+export function IS_PROD_SERVICE(url?: string) {
+  return url && url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
 }
 
 export const PROD_DEFAULT_FEED = (rkey: string) =>
@@ -62,13 +54,11 @@ export const STAGING_LINK_META_PROXY =
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
 export function LINK_META_PROXY(serviceUrl: string) {
-  if (IS_LOCAL_DEV(serviceUrl)) {
-    return STAGING_LINK_META_PROXY
-  } else if (IS_STAGING(serviceUrl)) {
-    return STAGING_LINK_META_PROXY
-  } else {
+  if (IS_PROD_SERVICE(serviceUrl)) {
     return PROD_LINK_META_PROXY
   }
+
+  return STAGING_LINK_META_PROXY
 }
 
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
