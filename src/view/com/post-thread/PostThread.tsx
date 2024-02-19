@@ -43,9 +43,12 @@ import {
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isAndroid, isNative} from '#/platform/detection'
-import {logger} from '#/logger'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+
+// FlatList maintainVisibleContentPosition breaks if too many items
+// are prepended. This seems to be an optimal number based on *shrug*.
+const PARENTS_CHUNK_SIZE = 15
 
 const MAINTAIN_VISIBLE_CONTENT_POSITION = {
   // We don't insert any elements before the root row while loading.
@@ -165,8 +168,10 @@ function PostThreadLoaded({
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
   const ref = useRef<ListMethods>(null)
   const highlightedPostRef = useRef<View | null>(null)
-  const [maxVisible, setMaxVisible] = React.useState(100)
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [maxParents, setMaxParents] = React.useState(
+    isWeb ? Infinity : PARENTS_CHUNK_SIZE,
+  )
+  const [maxReplies, setMaxReplies] = React.useState(100)
   const treeView = React.useMemo(
     () => !!threadViewPrefs.lab_treeViewEnabled && hasBranchingReplies(thread),
     [threadViewPrefs, thread],
@@ -206,10 +211,18 @@ function PostThreadLoaded({
           // maintainVisibleContentPosition and onContentSizeChange
           // to "hold onto" the correct row instead of the first one.
         } else {
-          // Everything is loaded.
-          arr.push(TOP_COMPONENT)
-          for (const parent of parents) {
-            arr.push(parent)
+          // Everything is loaded
+          let startIndex = Math.max(0, parents.length - maxParents)
+          if (startIndex === 0) {
+            arr.push(TOP_COMPONENT)
+          } else {
+            // When progressively revealing parents, rendering a placeholder
+            // here will cause scrolling jumps. Don't add it unless you test it.
+            // QT'ing this thread is a great way to test all the scrolling hacks:
+            // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
+          }
+          for (let i = startIndex; i < parents.length; i++) {
+            arr.push(parents[i])
           }
         }
       }
@@ -220,17 +233,18 @@ function PostThreadLoaded({
       if (highlightedPost.ctx.isChildLoading) {
         arr.push(CHILD_SPINNER)
       } else {
-        for (const reply of replies) {
-          arr.push(reply)
+        for (let i = 0; i < replies.length; i++) {
+          arr.push(replies[i])
+          if (i === maxReplies) {
+            arr.push(LOAD_MORE)
+            break
+          }
         }
         arr.push(BOTTOM_COMPONENT)
       }
     }
-    if (arr.length > maxVisible) {
-      arr = arr.slice(0, maxVisible).concat([LOAD_MORE])
-    }
     return arr
-  }, [skeleton, maxVisible, deferParents])
+  }, [skeleton, deferParents, maxParents, maxReplies])
 
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
@@ -258,15 +272,28 @@ function PostThreadLoaded({
     }
   }, [thread])
 
-  const onPTR = React.useCallback(async () => {
-    setIsPTRing(true)
-    try {
-      await onRefresh()
-    } catch (err) {
-      logger.error('Failed to refresh posts thread', {message: err})
+  // On native, we reveal parents in chunks. Although they're all already
+  // loaded and FlatList already has its own virtualization, unfortunately FlatList
+  // has a bug that causes the content to jump around if too many items are getting
+  // prepended at once. It also jumps around if items get prepended during scroll.
+  // To work around this, we prepend rows after scroll bumps against the top and rests.
+  const needsBumpMaxParents = React.useRef(false)
+  const onStartReached = React.useCallback(() => {
+    if (maxParents < skeleton.parents.length) {
+      needsBumpMaxParents.current = true
     }
-    setIsPTRing(false)
-  }, [setIsPTRing, onRefresh])
+  }, [maxParents, skeleton.parents.length])
+  const bumpMaxParentsIfNeeded = React.useCallback(() => {
+    if (!isNative) {
+      return
+    }
+    if (needsBumpMaxParents.current) {
+      needsBumpMaxParents.current = false
+      setMaxParents(n => n + PARENTS_CHUNK_SIZE)
+    }
+  }, [])
+  const onMomentumScrollEnd = bumpMaxParentsIfNeeded
+  const onScrollToTop = bumpMaxParentsIfNeeded
 
   const renderItem = React.useCallback(
     ({item, index}: {item: RowItem; index: number}) => {
@@ -301,7 +328,7 @@ function PostThreadLoaded({
       } else if (item === LOAD_MORE) {
         return (
           <Pressable
-            onPress={() => setMaxVisible(n => n + 50)}
+            onPress={() => setMaxReplies(n => n + 50)}
             style={[pal.border, pal.view, styles.itemContainer]}
             accessibilityLabel={_(msg`Load more posts`)}
             accessibilityHint="">
@@ -345,6 +372,8 @@ function PostThreadLoaded({
         const next = isThreadPost(posts[index - 1])
           ? (posts[index - 1] as ThreadPost)
           : undefined
+        const hasUnrevealedParents =
+          index === 0 && maxParents < skeleton.parents.length
         return (
           <View
             ref={item.ctx.isHighlightedPost ? highlightedPostRef : undefined}
@@ -360,7 +389,9 @@ function PostThreadLoaded({
               hasMore={item.ctx.hasMore}
               showChildReplyLine={item.ctx.showChildReplyLine}
               showParentReplyLine={item.ctx.showParentReplyLine}
-              hasPrecedingItem={!!prev?.ctx.showChildReplyLine}
+              hasPrecedingItem={
+                !!prev?.ctx.showChildReplyLine || hasUnrevealedParents
+              }
               onPostReply={onRefresh}
             />
           </View>
@@ -383,6 +414,8 @@ function PostThreadLoaded({
       onRefresh,
       deferParents,
       treeView,
+      skeleton.parents.length,
+      maxParents,
       _,
     ],
   )
@@ -393,9 +426,10 @@ function PostThreadLoaded({
       data={posts}
       keyExtractor={item => item._reactKey}
       renderItem={renderItem}
-      refreshing={isPTRing}
-      onRefresh={onPTR}
       onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+      onStartReached={onStartReached}
+      onMomentumScrollEnd={onMomentumScrollEnd}
+      onScrollToTop={onScrollToTop}
       maintainVisibleContentPosition={
         isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
       }
