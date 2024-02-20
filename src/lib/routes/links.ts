@@ -32,6 +32,6 @@ export function makeTagLink(did: string) {
 
 export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
   return `/search?q=${encodeURIComponent(
-    props.query + (props.from ? `from:${props.from}` : ''),
+    props.query + (props.from ? ` from:${props.from}` : ''),
   )}`
 }

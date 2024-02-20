@@ -99,6 +99,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
 
   return (
     <>
+      <Stack.Screen name="Search" getComponent={() => SearchScreen} />
       <Stack.Screen
         name="NotFound"
         getComponent={() => NotFoundScreen}
@@ -434,11 +435,13 @@ const FlatNavigator = () => {
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`), requireAuth: true}}
       />
+      {/*
       <Flat.Screen
         name="Search"
         getComponent={() => SearchScreen}
         options={{title: title(msg`Search`)}}
       />
+        */}
       <Flat.Screen
         name="Feeds"
         getComponent={() => FeedsScreen}

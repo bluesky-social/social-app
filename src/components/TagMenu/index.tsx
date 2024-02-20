@@ -20,9 +20,11 @@ export function TagMenu({
   children,
   control,
   tag,
+  authorHandle,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
   tag: string
+  authorHandle?: string
 }>) {
   const t = useTheme()
 
@@ -42,7 +44,10 @@ export function TagMenu({
               t.atoms.border_contrast_low,
               t.atoms.bg_contrast_25,
             ]}>
-            <Link label="tag" to={makeSearchLink({query: tag})}>
+            <Link
+              label="tag"
+              to={makeSearchLink({query: tag})}
+              onPress={control.close}>
               <View
                 style={[
                   a.w_full,
@@ -55,42 +60,61 @@ export function TagMenu({
                 ]}>
                 <Search size="lg" style={[t.atoms.text_contrast_medium]} />
                 <Text
+                  numberOfLines={1}
                   style={[
+                    a.flex_1,
                     a.text_md,
                     a.font_bold,
                     native({top: 2}),
                     t.atoms.text_contrast_medium,
                   ]}>
-                  See all {tag} posts
+                  See{' '}
+                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                    {tag}
+                  </Text>{' '}
+                  posts
                 </Text>
               </View>
             </Link>
 
-            <Divider />
+            {authorHandle && (
+              <>
+                <Divider />
 
-            <Link label="tag" to={makeSearchLink({query: tag, from: ''})}>
-              <View
-                style={[
-                  a.w_full,
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_start,
-                  a.gap_md,
-                  a.px_lg,
-                  a.py_md,
-                ]}>
-                <Person size="lg" style={[t.atoms.text_contrast_medium]} />
-                <Text
-                  style={[
-                    a.text_md,
-                    a.font_bold,
-                    native({top: 2}),
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  See all {tag} posts by this user
-                </Text>
-              </View>
-            </Link>
+                <Link
+                  label="tag"
+                  to={makeSearchLink({query: tag, from: authorHandle})}
+                  onPress={control.close}>
+                  <View
+                    style={[
+                      a.w_full,
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_start,
+                      a.gap_md,
+                      a.px_lg,
+                      a.py_md,
+                    ]}>
+                    <Person size="lg" style={[t.atoms.text_contrast_medium]} />
+                    <Text
+                      numberOfLines={1}
+                      style={[
+                        a.flex_1,
+                        a.text_md,
+                        a.font_bold,
+                        native({top: 2}),
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      See{' '}
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                        {tag}
+                      </Text>{' '}
+                      posts by this user
+                    </Text>
+                  </View>
+                </Link>
+              </>
+            )}
 
             <Divider />
 
@@ -107,13 +131,19 @@ export function TagMenu({
                 ]}>
                 <Mute size="lg" style={[t.atoms.text_contrast_medium]} />
                 <Text
+                  numberOfLines={1}
                   style={[
+                    a.flex_1,
                     a.text_md,
                     a.font_bold,
                     native({top: 2}),
                     t.atoms.text_contrast_medium,
                   ]}>
-                  Mute all {tag} posts
+                  Mute{' '}
+                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                    {tag}
+                  </Text>{' '}
+                  posts
                 </Text>
               </View>
             </Button>

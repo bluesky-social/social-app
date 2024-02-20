@@ -33,6 +33,7 @@ export type CommonNavigatorParams = {
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
+  Search: {q?: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
