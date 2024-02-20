@@ -21,7 +21,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 import {AppBskyEmbedExternal} from '@atproto/api'
-import {EmbedPlayerParams, getPlayerHeight} from 'lib/strings/embed-player'
+import {EmbedPlayerParams, getPlayerAspect} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
 import {isNative} from 'platform/detection'
 import {NavigationProp} from 'lib/routes/types'
@@ -67,14 +67,12 @@ function PlaceholderOverlay({
 
 // This renders the webview/youtube player as a separate layer
 function Player({
-  height,
   params,
   onLoad,
   isPlayerActive,
 }: {
   isPlayerActive: boolean
   params: EmbedPlayerParams
-  height: number
   onLoad: () => void
 }) {
   // ensures we only load what's requested
@@ -91,25 +89,21 @@ function Player({
   if (!isPlayerActive) return null
 
   return (
-    <View style={[styles.layer, styles.playerLayer]}>
-      <EventStopper>
-        <View style={{height, width: '100%'}}>
-          <WebView
-            javaScriptEnabled={true}
-            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-            mediaPlaybackRequiresUserAction={false}
-            allowsInlineMediaPlayback
-            bounces={false}
-            allowsFullscreenVideo
-            nestedScrollEnabled
-            source={{uri: params.playerUri}}
-            onLoad={onLoad}
-            setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-            style={[styles.webview, styles.topRadius]}
-          />
-        </View>
-      </EventStopper>
-    </View>
+    <EventStopper style={[styles.layer, styles.playerLayer]}>
+      <WebView
+        javaScriptEnabled={true}
+        onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+        mediaPlaybackRequiresUserAction={false}
+        allowsInlineMediaPlayback
+        bounces={false}
+        allowsFullscreenVideo
+        nestedScrollEnabled
+        source={{uri: params.playerUri}}
+        onLoad={onLoad}
+        style={styles.webview}
+        setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
+      />
+    </EventStopper>
   )
 }
 
@@ -129,13 +123,16 @@ export function ExternalPlayer({
 
   const [isPlayerActive, setPlayerActive] = React.useState(false)
   const [isLoading, setIsLoading] = React.useState(true)
-  const [dim, setDim] = React.useState({
-    width: 0,
-    height: 0,
-  })
+
+  const aspect = React.useMemo(() => {
+    return getPlayerAspect({
+      type: params.type,
+      width: windowDims.width,
+      hasThumb: !!link.thumb,
+    })
+  }, [params.type, windowDims.width, link.thumb])
 
   const viewRef = useAnimatedRef()
-
   const frameCallback = useFrameCallback(() => {
     const measurement = measure(viewRef)
     if (!measurement) return
@@ -180,17 +177,6 @@ export function ExternalPlayer({
     }
   }, [navigation, isPlayerActive, frameCallback])
 
-  // calculate height for the player and the screen size
-  const height = React.useMemo(
-    () =>
-      getPlayerHeight({
-        type: params.type,
-        width: dim.width,
-        hasThumb: !!link.thumb,
-      }),
-    [params.type, dim.width, link.thumb],
-  )
-
   const onLoad = React.useCallback(() => {
     setIsLoading(false)
   }, [])
@@ -216,32 +202,11 @@ export function ExternalPlayer({
     [externalEmbedsPrefs, openModal, params.source],
   )
 
-  // measure the layout to set sizing
-  const onLayout = React.useCallback(
-    (event: {nativeEvent: {layout: {width: any; height: any}}}) => {
-      setDim({
-        width: event.nativeEvent.layout.width,
-        height: event.nativeEvent.layout.height,
-      })
-    },
-    [],
-  )
-
   return (
-    <Animated.View
-      ref={viewRef}
-      style={{height}}
-      collapsable={false}
-      onLayout={onLayout}>
+    <Animated.View ref={viewRef} collapsable={false} style={[aspect]}>
       {link.thumb && (!isPlayerActive || isLoading) && (
         <Image
-          style={[
-            {
-              width: dim.width,
-              height,
-            },
-            styles.topRadius,
-          ]}
+          style={[{flex: 1}, styles.topRadius]}
           source={{uri: link.thumb}}
           accessibilityIgnoresInvertColors
         />
@@ -251,12 +216,7 @@ export function ExternalPlayer({
         isPlayerActive={isPlayerActive}
         onPress={onPlayPress}
       />
-      <Player
-        isPlayerActive={isPlayerActive}
-        params={params}
-        height={height}
-        onLoad={onLoad}
-      />
+      <Player isPlayerActive={isPlayerActive} params={params} onLoad={onLoad} />
     </Animated.View>
   )
 }
