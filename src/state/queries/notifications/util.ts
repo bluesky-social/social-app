@@ -87,17 +87,20 @@ export async function fetchPage({
 // internal methods
 // =
 
-function shouldFilterNotif(
+export function shouldFilterNotif(
   notif: AppBskyNotificationListNotifications.Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
   if (!moderationOpts) {
     return false
   }
+  if (notif.author.viewer?.following) {
+    return false
+  }
   return moderateNotification(notif, moderationOpts).ui('contentList').filter
 }
 
-function groupNotifications(
+export function groupNotifications(
   notifs: AppBskyNotificationListNotifications.Notification[],
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []

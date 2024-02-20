@@ -18,6 +18,11 @@ import {
 } from '@atproto/api'
 import {moderationOptsOverrideContext} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
+import {FeedNotification} from '#/state/queries/notifications/types'
+import {
+  groupNotifications,
+  shouldFilterNotif,
+} from '#/state/queries/notifications/util'
 
 import {atoms as a, useTheme} from '#/alf'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
@@ -35,6 +40,7 @@ import {ScreenHider} from '../com/util/moderation/ScreenHider'
 import {ProfileHeader} from '../com/profile/ProfileHeader'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {FeedItem} from '../com/posts/FeedItem'
+import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
@@ -74,6 +80,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     scenario[0] === 'label' && scenarioSwitches.includes('noAdult')
   const isLoggedOut =
     scenario[0] === 'label' && scenarioSwitches.includes('loggedOut')
+  const isFollowing = scenarioSwitches.includes('following')
 
   const did =
     isTargetMe && currentAccount ? currentAccount.did : 'did:web:bob.test'
@@ -102,6 +109,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             ]
           : undefined,
       viewer: mock.actorViewerState({
+        following: isFollowing
+          ? `at://${currentAccount?.did || ''}/app.bsky.graph.follow/1234`
+          : undefined,
         muted: scenario[0] === 'mute',
         mutedByList: undefined,
         blockedBy: undefined,
@@ -117,7 +127,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     mockedProfile.banner =
       'https://bsky.social/about/images/social-card-default-gradient.png'
     return mockedProfile
-  }, [scenario, target, label, isSelfLabel, did])
+  }, [scenario, target, label, isSelfLabel, did, isFollowing, currentAccount])
 
   const post = React.useMemo(() => {
     return mock.postView({
@@ -131,7 +141,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               mock.label({
                 src: isSelfLabel ? did : undefined,
                 val: label[0],
-                uri: `at:/${did}/app.bsky.feed.post/fake`,
+                uri: `at://${did}/app.bsky.feed.post/fake`,
               }),
             ]
           : undefined,
@@ -167,6 +177,51 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             },
     })
   }, [scenario, label, target, profile, isSelfLabel, did])
+
+  const replyNotif = React.useMemo(() => {
+    const notif = mock.replyNotification({
+      record: mock.post({
+        text: "This is the body of the post. It's where the text goes. You get the idea.",
+        reply: {
+          parent: {
+            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
+            cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
+          },
+          root: {
+            uri: `at://${did}/app.bsky.feed.post/fake-parent`,
+            cid: 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq',
+          },
+        },
+      }),
+      author: profile,
+      labels:
+        scenario[0] === 'label' && target[0] === 'post'
+          ? [
+              mock.label({
+                src: isSelfLabel ? did : undefined,
+                val: label[0],
+                uri: `at://${did}/app.bsky.feed.post/fake`,
+              }),
+            ]
+          : undefined,
+    })
+    const [item] = groupNotifications([notif])
+    item.subject = mock.postView({
+      record: notif.record as AppBskyFeedPost.Record,
+      author: profile,
+      labels: notif.labels,
+    })
+    return item
+  }, [scenario, label, target, profile, isSelfLabel, did])
+
+  const followNotif = React.useMemo(() => {
+    const notif = mock.followNotification({
+      author: profile,
+      subjectDid: currentAccount?.did || '',
+    })
+    const [item] = groupNotifications([notif])
+    return item
+  }, [profile, currentAccount])
 
   const modOpts = React.useMemo(() => {
     return {
@@ -218,10 +273,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 type="checkbox"
                 values={scenarioSwitches}
                 onChange={setScenarioSwitches}>
-                <View style={[a.gap_md, a.flex_row, a.pt_md]}>
+                <View style={[a.gap_md, a.flex_row, a.flex_wrap, a.pt_md]}>
                   <Toggle.Item name="targetMe" label="Target is me">
                     <Toggle.Checkbox />
                     <Toggle.Label>Target is me</Toggle.Label>
+                  </Toggle.Item>
+                  <Toggle.Item name="following" label="Following target">
+                    <Toggle.Checkbox />
+                    <Toggle.Label>Following target</Toggle.Label>
                   </Toggle.Item>
                   <Toggle.Item name="selfLabel" label="Self label">
                     <Toggle.Checkbox />
@@ -318,20 +377,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
           <Spacer />
 
-          <ModerationUIView
-            label="Profile Moderation UI"
-            mod={profileModeration}
-          />
-          <ModerationUIView label="Post Moderation UI" mod={postModeration} />
-          <DataView
-            label={label[0]}
-            data={LABELS[label[0] as keyof typeof LABELS]}
-          />
-          <DataView label="Profile Moderation Data" data={profileModeration} />
-          <DataView label="Post Data" data={postModeration} />
-
-          <Spacer />
-
           <Heading title="Post" subtitle="in feed" />
           <MockPostFeedItem post={post} moderation={postModeration} />
 
@@ -348,14 +393,14 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
           <Spacer />
 
           <Heading title="Notification" subtitle="quote or reply" />
-          <P>TODO</P>
+          <MockNotifItem notif={replyNotif} moderationOpts={modOpts} />
 
           <Spacer />
 
           {(target[0] === 'account' || target[0] === 'profile') && (
             <>
               <Heading title="Notification" subtitle="follow or like" />
-              <P>TODO</P>
+              <MockNotifItem notif={followNotif} moderationOpts={modOpts} />
 
               <Spacer />
 
@@ -373,8 +418,22 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 moderation={profileModeration}
                 moderationOpts={modOpts}
               />
+
+              <Spacer />
             </>
           )}
+
+          <ModerationUIView
+            label="Profile Moderation UI"
+            mod={profileModeration}
+          />
+          <ModerationUIView label="Post Moderation UI" mod={postModeration} />
+          <DataView
+            label={label[0]}
+            data={LABELS[label[0] as keyof typeof LABELS]}
+          />
+          <DataView label="Profile Moderation Data" data={profileModeration} />
+          <DataView label="Post Moderation Data" data={postModeration} />
 
           <View style={{height: 400}} />
         </CenteredView>
@@ -523,6 +582,24 @@ function MockPostThreadItem({
       onPostReply={() => {}}
     />
   )
+}
+
+function MockNotifItem({
+  notif,
+  moderationOpts,
+}: {
+  notif: FeedNotification
+  moderationOpts: ModerationOpts
+}) {
+  const t = useTheme()
+  if (shouldFilterNotif(notif.notification, moderationOpts)) {
+    return (
+      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
+        Filtered from the feed
+      </P>
+    )
+  }
+  return <NotifFeedItem item={notif} moderationOpts={moderationOpts} />
 }
 
 function MockAccountCard({
