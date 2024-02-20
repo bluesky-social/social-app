@@ -147,7 +147,7 @@ export function Inner({children, style}: DialogInnerProps) {
         },
         flatten(style),
       ]}>
-      <View>{children}</View>
+      {children}
     </BottomSheetView>
   )
 }
