@@ -83,6 +83,7 @@ export function Outer({
     isOpen && (
       <Portal>
         <BottomSheet
+          animateOnMount
           enableDynamicSizing={!hasSnapPoints}
           enablePanDownToClose
           keyboardBehavior="interactive"
@@ -90,6 +91,7 @@ export function Outer({
           keyboardBlurBehavior="restore"
           topInset={insets.top}
           {...sheetOptions}
+          snapPoints={sheetOptions.snapPoints || ['100%']}
           ref={sheet}
           index={openIndex}
           backgroundStyle={{backgroundColor: 'transparent'}}
@@ -99,6 +101,7 @@ export function Outer({
               appearsOnIndex={0}
               disappearsOnIndex={-1}
               {...props}
+              style={[flatten(props.style), t.atoms.bg_contrast_300]}
             />
           )}
           handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
@@ -114,10 +117,11 @@ export function Outer({
                   borderTopLeftRadius: 40,
                   borderTopRightRadius: 40,
                   height: Dimensions.get('window').height * 2,
+                  pointerEvents: 'none',
                 },
               ]}
             />
-            {hasSnapPoints ? children : <View>{children}</View>}
+            {children}
           </Context.Provider>
         </BottomSheet>
       </Portal>
