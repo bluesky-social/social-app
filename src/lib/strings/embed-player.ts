@@ -358,10 +358,10 @@ export function getPlayerAspect({
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
-      return {aspectRatio: 16 / 9} // This is 16:9
+      return {aspectRatio: 16 / 9}
     case 'youtube_short':
       if (SCREEN_HEIGHT < 600) {
-        return {aspectRatio: (9 / 16) * 1.75} // 0.5625 is 9:16
+        return {aspectRatio: (9 / 16) * 1.75}
       } else {
         return {aspectRatio: (9 / 16) * 1.5}
       }
