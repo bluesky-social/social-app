@@ -83,19 +83,19 @@ export function HomeLoggedOutCTA() {
       <View style={[styles.footer, pal.view, pal.border]}>
         <TextLink
           type="2xl"
-          href="https://blueskyweb.xyz"
+          href="https://bsky.social"
           text={_(msg`Business`)}
           style={[styles.footerLink, pal.link]}
         />
         <TextLink
           type="2xl"
-          href="https://blueskyweb.xyz/blog"
+          href="https://bsky.social/about/blog"
           text={_(msg`Blog`)}
           style={[styles.footerLink, pal.link]}
         />
         <TextLink
           type="2xl"
-          href="https://blueskyweb.xyz/join"
+          href="https://bsky.social/about/join"
           text={_(msg`Jobs`)}
           style={[styles.footerLink, pal.link]}
         />

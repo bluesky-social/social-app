@@ -122,6 +122,9 @@ export const atoms = {
   flex_shrink: {
     flexShrink: 1,
   },
+  justify_start: {
+    justifyContent: 'flex-start',
+  },
   justify_center: {
     justifyContent: 'center',
   },
@@ -140,10 +143,31 @@ export const atoms = {
   align_end: {
     alignItems: 'flex-end',
   },
+  self_auto: {
+    alignSelf: 'auto',
+  },
+  self_start: {
+    alignSelf: 'flex-start',
+  },
+  self_end: {
+    alignSelf: 'flex-end',
+  },
+  self_center: {
+    alignSelf: 'center',
+  },
+  self_stretch: {
+    alignSelf: 'stretch',
+  },
+  self_baseline: {
+    alignSelf: 'baseline',
+  },
 
   /*
    * Text
    */
+  text_left: {
+    textAlign: 'left',
+  },
   text_center: {
     textAlign: 'center',
   },
@@ -195,10 +219,16 @@ export const atoms = {
   font_bold: {
     fontWeight: tokens.fontWeight.semibold,
   },
+  italic: {
+    fontStyle: 'italic',
+  },
 
   /*
    * Border
    */
+  border_0: {
+    borderWidth: 0,
+  },
   border: {
     borderWidth: 1,
   },
@@ -207,6 +237,12 @@ export const atoms = {
   },
   border_b: {
     borderBottomWidth: 1,
+  },
+  border_l: {
+    borderLeftWidth: 1,
+  },
+  border_r: {
+    borderRightWidth: 1,
   },
 
   /*

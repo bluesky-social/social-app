@@ -71,21 +71,21 @@ export const lightPalette = {
 
 export const darkPalette: Palette = {
   white: tokens.color.gray_0,
-  black: tokens.color.gray_1000,
+  black: tokens.color.trueBlack,
 
-  contrast_25: tokens.color.gray_975,
-  contrast_50: tokens.color.gray_950,
-  contrast_100: tokens.color.gray_900,
-  contrast_200: tokens.color.gray_800,
-  contrast_300: tokens.color.gray_700,
-  contrast_400: tokens.color.gray_600,
-  contrast_500: tokens.color.gray_500,
-  contrast_600: tokens.color.gray_400,
-  contrast_700: tokens.color.gray_300,
-  contrast_800: tokens.color.gray_200,
-  contrast_900: tokens.color.gray_100,
-  contrast_950: tokens.color.gray_50,
-  contrast_975: tokens.color.gray_25,
+  contrast_25: tokens.color.gray_1000,
+  contrast_50: tokens.color.gray_975,
+  contrast_100: tokens.color.gray_950,
+  contrast_200: tokens.color.gray_900,
+  contrast_300: tokens.color.gray_800,
+  contrast_400: tokens.color.gray_700,
+  contrast_500: tokens.color.gray_600,
+  contrast_600: tokens.color.gray_500,
+  contrast_700: tokens.color.gray_400,
+  contrast_800: tokens.color.gray_300,
+  contrast_900: tokens.color.gray_200,
+  contrast_950: tokens.color.gray_100,
+  contrast_975: tokens.color.gray_50,
 
   primary_25: tokens.color.blue_25,
   primary_50: tokens.color.blue_50,
@@ -130,6 +130,25 @@ export const darkPalette: Palette = {
   negative_975: tokens.color.red_975,
 } as const
 
+export const dimPalette: Palette = {
+  ...darkPalette,
+  black: tokens.color.gray_1000,
+
+  contrast_25: tokens.color.gray_975,
+  contrast_50: tokens.color.gray_950,
+  contrast_100: tokens.color.gray_900,
+  contrast_200: tokens.color.gray_800,
+  contrast_300: tokens.color.gray_700,
+  contrast_400: tokens.color.gray_600,
+  contrast_500: tokens.color.gray_500,
+  contrast_600: tokens.color.gray_400,
+  contrast_700: tokens.color.gray_300,
+  contrast_800: tokens.color.gray_200,
+  contrast_900: tokens.color.gray_100,
+  contrast_950: tokens.color.gray_50,
+  contrast_975: tokens.color.gray_25,
+} as const
+
 export const light = {
   name: 'light',
   palette: lightPalette,
@@ -137,17 +156,14 @@ export const light = {
     text: {
       color: lightPalette.black,
     },
-    text_contrast_700: {
+    text_contrast_low: {
+      color: lightPalette.contrast_400,
+    },
+    text_contrast_medium: {
       color: lightPalette.contrast_700,
     },
-    text_contrast_600: {
-      color: lightPalette.contrast_600,
-    },
-    text_contrast_500: {
-      color: lightPalette.contrast_500,
-    },
-    text_contrast_400: {
-      color: lightPalette.contrast_400,
+    text_contrast_high: {
+      color: lightPalette.contrast_900,
     },
     text_inverted: {
       color: lightPalette.white,
@@ -170,11 +186,38 @@ export const light = {
     bg_contrast_300: {
       backgroundColor: lightPalette.contrast_300,
     },
-    border: {
+    bg_contrast_400: {
+      backgroundColor: lightPalette.contrast_400,
+    },
+    bg_contrast_500: {
+      backgroundColor: lightPalette.contrast_500,
+    },
+    bg_contrast_600: {
+      backgroundColor: lightPalette.contrast_600,
+    },
+    bg_contrast_700: {
+      backgroundColor: lightPalette.contrast_700,
+    },
+    bg_contrast_800: {
+      backgroundColor: lightPalette.contrast_800,
+    },
+    bg_contrast_900: {
+      backgroundColor: lightPalette.contrast_900,
+    },
+    bg_contrast_950: {
+      backgroundColor: lightPalette.contrast_950,
+    },
+    bg_contrast_975: {
+      backgroundColor: lightPalette.contrast_975,
+    },
+    border_contrast_low: {
       borderColor: lightPalette.contrast_100,
     },
-    border_contrast: {
-      borderColor: lightPalette.contrast_400,
+    border_contrast_medium: {
+      borderColor: lightPalette.contrast_200,
+    },
+    border_contrast_high: {
+      borderColor: lightPalette.contrast_300,
     },
     shadow_sm: {
       ...atoms.shadow_sm,
@@ -187,70 +230,6 @@ export const light = {
     shadow_lg: {
       ...atoms.shadow_lg,
       shadowColor: lightPalette.black,
-    },
-  },
-}
-
-export const dim: Theme = {
-  name: 'dim',
-  palette: darkPalette,
-  atoms: {
-    text: {
-      color: darkPalette.white,
-    },
-    text_contrast_700: {
-      color: darkPalette.contrast_800,
-    },
-    text_contrast_600: {
-      color: darkPalette.contrast_700,
-    },
-    text_contrast_500: {
-      color: darkPalette.contrast_600,
-    },
-    text_contrast_400: {
-      color: darkPalette.contrast_500,
-    },
-    text_inverted: {
-      color: darkPalette.black,
-    },
-    bg: {
-      backgroundColor: darkPalette.contrast_50,
-    },
-    bg_contrast_25: {
-      backgroundColor: darkPalette.contrast_100,
-    },
-    bg_contrast_50: {
-      backgroundColor: darkPalette.contrast_200,
-    },
-    bg_contrast_100: {
-      backgroundColor: darkPalette.contrast_300,
-    },
-    bg_contrast_200: {
-      backgroundColor: darkPalette.contrast_400,
-    },
-    bg_contrast_300: {
-      backgroundColor: darkPalette.contrast_500,
-    },
-    border: {
-      borderColor: darkPalette.contrast_200,
-    },
-    border_contrast: {
-      borderColor: darkPalette.contrast_400,
-    },
-    shadow_sm: {
-      ...atoms.shadow_sm,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-    shadow_md: {
-      ...atoms.shadow_md,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
-    },
-    shadow_lg: {
-      ...atoms.shadow_lg,
-      shadowOpacity: 0.7,
-      shadowColor: tokens.color.trueBlack,
     },
   },
 }
@@ -262,17 +241,14 @@ export const dark: Theme = {
     text: {
       color: darkPalette.white,
     },
-    text_contrast_700: {
+    text_contrast_low: {
+      color: darkPalette.contrast_400,
+    },
+    text_contrast_medium: {
       color: darkPalette.contrast_700,
     },
-    text_contrast_600: {
-      color: darkPalette.contrast_600,
-    },
-    text_contrast_500: {
-      color: darkPalette.contrast_500,
-    },
-    text_contrast_400: {
-      color: darkPalette.contrast_400,
+    text_contrast_high: {
+      color: darkPalette.contrast_900,
     },
     text_inverted: {
       color: darkPalette.black,
@@ -281,24 +257,51 @@ export const dark: Theme = {
       backgroundColor: darkPalette.black,
     },
     bg_contrast_25: {
-      backgroundColor: darkPalette.contrast_50,
+      backgroundColor: darkPalette.contrast_25,
     },
     bg_contrast_50: {
-      backgroundColor: darkPalette.contrast_100,
+      backgroundColor: darkPalette.contrast_50,
     },
     bg_contrast_100: {
-      backgroundColor: darkPalette.contrast_200,
+      backgroundColor: darkPalette.contrast_100,
     },
     bg_contrast_200: {
-      backgroundColor: darkPalette.contrast_300,
+      backgroundColor: darkPalette.contrast_200,
     },
     bg_contrast_300: {
+      backgroundColor: darkPalette.contrast_300,
+    },
+    bg_contrast_400: {
       backgroundColor: darkPalette.contrast_400,
     },
-    border: {
+    bg_contrast_500: {
+      backgroundColor: darkPalette.contrast_500,
+    },
+    bg_contrast_600: {
+      backgroundColor: darkPalette.contrast_600,
+    },
+    bg_contrast_700: {
+      backgroundColor: darkPalette.contrast_700,
+    },
+    bg_contrast_800: {
+      backgroundColor: darkPalette.contrast_800,
+    },
+    bg_contrast_900: {
+      backgroundColor: darkPalette.contrast_900,
+    },
+    bg_contrast_950: {
+      backgroundColor: darkPalette.contrast_950,
+    },
+    bg_contrast_975: {
+      backgroundColor: darkPalette.contrast_975,
+    },
+    border_contrast_low: {
       borderColor: darkPalette.contrast_100,
     },
-    border_contrast: {
+    border_contrast_medium: {
+      borderColor: darkPalette.contrast_200,
+    },
+    border_contrast_high: {
       borderColor: darkPalette.contrast_300,
     },
     shadow_sm: {
@@ -315,6 +318,80 @@ export const dark: Theme = {
       ...atoms.shadow_lg,
       shadowOpacity: 0.7,
       shadowColor: tokens.color.trueBlack,
+    },
+  },
+}
+
+export const dim: Theme = {
+  ...dark,
+  name: 'dim',
+  atoms: {
+    ...dark.atoms,
+    text: {
+      color: dimPalette.white,
+    },
+    text_contrast_low: {
+      color: dimPalette.contrast_400,
+    },
+    text_contrast_medium: {
+      color: dimPalette.contrast_700,
+    },
+    text_contrast_high: {
+      color: dimPalette.contrast_900,
+    },
+    text_inverted: {
+      color: dimPalette.black,
+    },
+    bg: {
+      backgroundColor: dimPalette.black,
+    },
+    bg_contrast_25: {
+      backgroundColor: dimPalette.contrast_25,
+    },
+    bg_contrast_50: {
+      backgroundColor: dimPalette.contrast_50,
+    },
+    bg_contrast_100: {
+      backgroundColor: dimPalette.contrast_100,
+    },
+    bg_contrast_200: {
+      backgroundColor: dimPalette.contrast_200,
+    },
+    bg_contrast_300: {
+      backgroundColor: dimPalette.contrast_300,
+    },
+    bg_contrast_400: {
+      backgroundColor: dimPalette.contrast_400,
+    },
+    bg_contrast_500: {
+      backgroundColor: dimPalette.contrast_500,
+    },
+    bg_contrast_600: {
+      backgroundColor: dimPalette.contrast_600,
+    },
+    bg_contrast_700: {
+      backgroundColor: dimPalette.contrast_700,
+    },
+    bg_contrast_800: {
+      backgroundColor: dimPalette.contrast_800,
+    },
+    bg_contrast_900: {
+      backgroundColor: dimPalette.contrast_900,
+    },
+    bg_contrast_950: {
+      backgroundColor: dimPalette.contrast_950,
+    },
+    bg_contrast_975: {
+      backgroundColor: dimPalette.contrast_975,
+    },
+    border_contrast_low: {
+      borderColor: dimPalette.contrast_100,
+    },
+    border_contrast_medium: {
+      borderColor: dimPalette.contrast_200,
+    },
+    border_contrast_high: {
+      borderColor: dimPalette.contrast_300,
     },
   },
 }

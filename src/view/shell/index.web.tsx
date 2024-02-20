@@ -11,7 +11,6 @@ import {DrawerContent} from './Drawer'
 import {useWebMediaQueries} from '../../lib/hooks/useWebMediaQueries'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
-import {useAuxClick} from 'lib/hooks/useAuxClick'
 import {t} from '@lingui/macro'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -26,7 +25,6 @@ function ShellInner() {
   const closeAllActiveElements = useCloseAllActiveElements()
 
   useWebBodyScrollLock(isDrawerOpen)
-  useAuxClick()
 
   useEffect(() => {
     const unsubscribe = navigator.addListener('state', () => {

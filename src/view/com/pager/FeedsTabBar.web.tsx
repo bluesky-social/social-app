@@ -37,7 +37,6 @@ export function FeedsTabBar(
 
 function FeedsTabBarPublic() {
   const pal = usePalette('default')
-  const {isSandbox} = useSession()
 
   return (
     <CenteredView sideBorders>
@@ -56,23 +55,7 @@ function FeedsTabBarPublic() {
           type="title-lg"
           href="/"
           style={[pal.text, {fontWeight: 'bold'}]}
-          text={
-            <>
-              {isSandbox ? 'SANDBOX' : 'Bluesky'}{' '}
-              {/*hasNew && (
-                <View
-                  style={{
-                    top: -8,
-                    backgroundColor: colors.blue3,
-                    width: 8,
-                    height: 8,
-                    borderRadius: 4,
-                  }}
-                />
-              )*/}
-            </>
-          }
-          // onPress={emitSoftReset}
+          text="Bluesky "
         />
       </View>
     </CenteredView>
@@ -88,11 +71,17 @@ function FeedsTabBarTablet(
   const navigation = useNavigation<NavigationProp>()
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
-  const pinnedDisplayNames = hasSession ? feeds.map(f => f.displayName) : []
-  const showFeedsLinkInTabBar = hasSession && !hasPinnedCustom
-  const items = showFeedsLinkInTabBar
-    ? pinnedDisplayNames.concat('Feeds ✨')
-    : pinnedDisplayNames
+
+  const items = React.useMemo(() => {
+    if (!hasSession) return []
+
+    const pinnedNames = feeds.map(f => f.displayName)
+
+    if (!hasPinnedCustom) {
+      return pinnedNames.concat('Feeds ✨')
+    }
+    return pinnedNames
+  }, [hasSession, hasPinnedCustom, feeds])
 
   const onPressDiscoverFeeds = React.useCallback(() => {
     if (isWeb) {
@@ -105,13 +94,13 @@ function FeedsTabBarTablet(
 
   const onSelect = React.useCallback(
     (index: number) => {
-      if (showFeedsLinkInTabBar && index === items.length - 1) {
+      if (hasSession && !hasPinnedCustom && index === items.length - 1) {
         onPressDiscoverFeeds()
       } else if (props.onSelect) {
         props.onSelect(index)
       }
     },
-    [items.length, onPressDiscoverFeeds, props, showFeedsLinkInTabBar],
+    [items.length, onPressDiscoverFeeds, props, hasSession, hasPinnedCustom],
   )
 
   return (

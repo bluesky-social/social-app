@@ -6,7 +6,7 @@ import {Image as RNImage} from 'react-native-image-crop-picker'
 import {ImageModel} from '#/state/models/media/image'
 import {GalleryModel} from '#/state/models/media/gallery'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {EmbedPlayerSource} from '#/lib/strings/embed-player.ts'
+import {EmbedPlayerSource} from '#/lib/strings/embed-player'
 import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface ConfirmModal {
@@ -24,17 +24,6 @@ export interface EditProfileModal {
   name: 'edit-profile'
   profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
-}
-
-export interface ProfilePreviewModal {
-  name: 'profile-preview'
-  did: string
-}
-
-export interface ServerInputModal {
-  name: 'server-input'
-  initialService: string
-  onSelect: (url: string) => void
 }
 
 export interface ModerationDetailsModal {
@@ -171,6 +160,10 @@ export interface ChangeEmailModal {
   name: 'change-email'
 }
 
+export interface ChangePasswordModal {
+  name: 'change-password'
+}
+
 export interface SwitchAccountModal {
   name: 'switch-account'
 }
@@ -198,10 +191,10 @@ export type Modal =
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
-  | ProfilePreviewModal
   | BirthDateSettingsModal
   | VerifyEmailModal
   | ChangeEmailModal
+  | ChangePasswordModal
   | SwitchAccountModal
 
   // Curation
@@ -223,7 +216,6 @@ export type Modal =
   | AltTextImageModal
   | CropImageModal
   | EditImageModal
-  | ServerInputModal
   | RepostModal
   | SelfLabelModal
   | ThreadgateModal

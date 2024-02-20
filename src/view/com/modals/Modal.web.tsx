@@ -9,8 +9,6 @@ import {useModals, useModalControls} from '#/state/modals'
 import type {Modal as ModalIface} from '#/state/modals'
 import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
-import * as ProfilePreviewModal from './ProfilePreview'
-import * as ServerInputModal from './ServerInput'
 import * as ReportModal from './report/Modal'
 import * as AppealLabelModal from './AppealLabel'
 import * as CreateOrEditListModal from './CreateOrEditList'
@@ -34,6 +32,7 @@ import * as ModerationDetailsModal from './ModerationDetails'
 import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
+import * as ChangePasswordModal from './ChangePassword'
 import * as LinkWarningModal from './LinkWarning'
 import * as EmbedConsentModal from './EmbedConsent'
 
@@ -84,10 +83,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ConfirmModal.Component {...modal} />
   } else if (modal.name === 'edit-profile') {
     element = <EditProfileModal.Component {...modal} />
-  } else if (modal.name === 'profile-preview') {
-    element = <ProfilePreviewModal.Component {...modal} />
-  } else if (modal.name === 'server-input') {
-    element = <ServerInputModal.Component {...modal} />
   } else if (modal.name === 'report') {
     element = <ReportModal.Component {...modal} />
   } else if (modal.name === 'appeal-label') {
@@ -134,6 +129,8 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <VerifyEmailModal.Component {...modal} />
   } else if (modal.name === 'change-email') {
     element = <ChangeEmailModal.Component />
+  } else if (modal.name === 'change-password') {
+    element = <ChangePasswordModal.Component />
   } else if (modal.name === 'link-warning') {
     element = <LinkWarningModal.Component {...modal} />
   } else if (modal.name === 'embed-consent') {

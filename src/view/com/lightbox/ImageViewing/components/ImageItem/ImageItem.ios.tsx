@@ -144,6 +144,7 @@ const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           onLoad={() => setLoaded(true)}
+          enableLiveTextInteraction={!scaled}
         />
       </Animated.ScrollView>
     </GestureDetector>

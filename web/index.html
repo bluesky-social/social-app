@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="%LANG_ISO_CODE%">
+<html>
   <head>
-    <meta charset="utf-8" />
-    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <!-- 
+    <meta charset="utf-8">
+    <meta name="theme-color">
+    <!--
       This viewport works for phones with notches.
       It's optimized for gestures by disabling global zoom.
      -->
@@ -11,6 +11,11 @@
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1.00001, viewport-fit=cover"
     />
+    <!--
+      Preconnect to essential domains
+    -->
+    <link rel="preconnect" href="https://bsky.social">
+    <link rel="preconnect" href="https://bsky.network">
     <title>%WEB_TITLE%</title>
     <style>
       /**
@@ -44,35 +49,39 @@
       }
 
       /* Color theming */
+      /* Default will always be white */
       :root {
-        --text: black;
-        --background: white;
-        --backgroundLight: hsl(211, 20%, 95%);
-      }
-      html.colorMode--dark {
-        --text: white;
-        --background: hsl(211, 20%, 4%);
-        --backgroundLight: hsl(211, 20%, 20%);
-        color-scheme: dark;
-      }
-      @media (prefers-color-scheme: light) {
-        html.colorMode--system {
           --text: black;
           --background: white;
           --backgroundLight: hsl(211, 20%, 95%);
-        }
       }
+      /* This gives us a black background when system is dark and we have not loaded the theme/color scheme values in JS */
       @media (prefers-color-scheme: dark) {
-        html.colorMode--system {
-          --text: white;
-          --background: hsl(211, 20%, 4%);
-          --backgroundLight: hsl(211, 20%, 20%);
-          color-scheme: dark;
-        }
+          :root {
+              --text: white;
+              --background: black;
+              --backgroundLight: hsl(211, 20%, 20%);
+              color-scheme: dark;
+          }
       }
 
-      ::selection {
-        background-color: var(--backgroundLight);
+      /* Overwrite those preferences with the selected theme */
+      html.theme--light {
+          --text: black;
+          --background: white;
+          --backgroundLight: hsl(211, 20%, 95%);
+      }
+      html.theme--dark {
+          --text: white;
+          --background: black;
+          --backgroundLight: hsl(211, 20%, 20%);
+          color-scheme: dark;
+      }
+      html.theme--dim {
+          --text: white;
+          --background: hsl(211, 20%, 4%);
+          --backgroundLight: hsl(211, 20%, 10%);
+          color-scheme: dark;
       }
 
       /* Remove autofill styles on Webkit */
@@ -103,6 +112,7 @@
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         -ms-overflow-style: scrollbar;
+        font-synthesis-weight: none;
       }
 
       /* Remove default link styling */
@@ -232,7 +242,7 @@
   </head>
 
   <body>
-    <!-- 
+    <!--
       A generic no script element with a reload button and a message.
       Feel free to customize this however you'd like.
     -->
@@ -258,8 +268,8 @@
             width: 80%;
           "
         >
-          <p>Oh no! It looks like JavaScript is not enabled in your browser.</p>
-          <p style="margin: 20px 0;">
+          <p lang="en">Oh no! It looks like JavaScript is not enabled in your browser.</p>
+          <p lang="en" style="margin: 20px 0;">
             <button
               type="submit"
               style="

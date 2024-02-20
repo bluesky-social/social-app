@@ -1,7 +1,16 @@
 import React from 'react'
-import {Text as RNText, TextStyle, TextProps} from 'react-native'
+import {Text as RNText, TextStyle, TextProps as RNTextProps} from 'react-native'
+import {UITextView} from 'react-native-ui-text-view'
 
 import {useTheme, atoms, web, flatten} from '#/alf'
+import {isIOS} from '#/platform/detection'
+
+export type TextProps = RNTextProps & {
+  /**
+   * Lets the user select text, to use the native copy and paste functionality.
+   */
+  selectable?: boolean
+}
 
 /**
  * Util to calculate lineHeight from a text size atom and a leading atom
@@ -15,7 +24,7 @@ export function leading<
 >(textSize: Size, leading: Leading) {
   const size = textSize?.fontSize || atoms.text_md.fontSize
   const lineHeight = leading?.lineHeight || atoms.leading_normal.lineHeight
-  return size * lineHeight
+  return Math.round(size * lineHeight)
 }
 
 /**
@@ -32,7 +41,7 @@ function normalizeTextStyles(styles: TextStyle[]) {
 
   if (s?.lineHeight) {
     if (s.lineHeight <= 2) {
-      s.lineHeight = fontSize * s.lineHeight
+      s.lineHeight = Math.round(fontSize * s.lineHeight)
     }
   } else {
     s.lineHeight = fontSize
@@ -41,154 +50,49 @@ function normalizeTextStyles(styles: TextStyle[]) {
   return s
 }
 
-export function Text({style, ...rest}: TextProps) {
+/**
+ * Our main text component. Use this most of the time.
+ */
+export function Text({style, selectable, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
-  return <RNText style={s} {...rest} />
-}
-
-export function H1({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 1,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_5xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
+  return selectable && isIOS ? (
+    <UITextView style={s} {...rest} />
+  ) : (
+    <RNText selectable={selectable} style={s} {...rest} />
   )
 }
 
-export function H2({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 2,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_4xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
+export function createHeadingElement({level}: {level: number}) {
+  return function HeadingElement({style, ...rest}: TextProps) {
+    const attr =
+      web({
+        role: 'heading',
+        'aria-level': level,
+      }) || {}
+    return <Text {...attr} {...rest} style={style} />
+  }
 }
 
-export function H3({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 3,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_3xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H4({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 4,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_2xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H5({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 5,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_xl,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
-export function H6({style, ...rest}: TextProps) {
-  const t = useTheme()
-  const attr =
-    web({
-      role: 'heading',
-      'aria-level': 6,
-    }) || {}
-  return (
-    <RNText
-      {...attr}
-      {...rest}
-      style={normalizeTextStyles([
-        atoms.text_lg,
-        atoms.font_bold,
-        t.atoms.text,
-        flatten(style),
-      ])}
-    />
-  )
-}
-
+/*
+ * Use semantic components when it's beneficial to the user or to a web scraper
+ */
+export const H1 = createHeadingElement({level: 1})
+export const H2 = createHeadingElement({level: 2})
+export const H3 = createHeadingElement({level: 3})
+export const H4 = createHeadingElement({level: 4})
+export const H5 = createHeadingElement({level: 5})
+export const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
-  const t = useTheme()
   const attr =
     web({
       role: 'paragraph',
     }) || {}
   return (
-    <RNText
+    <Text
       {...attr}
       {...rest}
-      style={normalizeTextStyles([
-        atoms.text_md,
-        atoms.leading_normal,
-        t.atoms.text,
-        flatten(style),
-      ])}
+      style={[atoms.text_md, atoms.leading_normal, flatten(style)]}
     />
   )
 }

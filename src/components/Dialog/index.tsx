@@ -8,7 +8,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {createInput} from '#/components/forms/TextField'
 
@@ -34,15 +34,29 @@ export function Outer({
   const sheet = React.useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
+  const insets = useSafeAreaInsets()
 
-  const open = React.useCallback<DialogControlProps['open']>((i = 0) => {
-    sheet.current?.snapToIndex(i)
-  }, [])
+  /*
+   * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
+   */
+  const [openIndex, setOpenIndex] = React.useState(-1)
+
+  /*
+   * `openIndex` is the index of the snap point to open the bottom sheet to. If >0, the bottom sheet is open.
+   */
+  const isOpen = openIndex > -1
+
+  const open = React.useCallback<DialogControlProps['open']>(
+    ({index} = {}) => {
+      // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
+      setOpenIndex(index || 0)
+    },
+    [setOpenIndex],
+  )
 
   const close = React.useCallback(() => {
     sheet.current?.close()
-    onClose?.()
-  }, [onClose])
+  }, [])
 
   useImperativeHandle(
     control.ref,
@@ -53,84 +67,101 @@ export function Outer({
     [open, close],
   )
 
+  const onChange = React.useCallback(
+    (index: number) => {
+      if (index === -1) {
+        onClose?.()
+        setOpenIndex(-1)
+      }
+    },
+    [onClose, setOpenIndex],
+  )
+
   const context = React.useMemo(() => ({close}), [close])
 
   return (
-    <Portal>
-      <BottomSheet
-        enableDynamicSizing={!hasSnapPoints}
-        enablePanDownToClose
-        keyboardBehavior="interactive"
-        android_keyboardInputMode="adjustResize"
-        keyboardBlurBehavior="restore"
-        {...sheetOptions}
-        ref={sheet}
-        index={-1}
-        backgroundStyle={{backgroundColor: 'transparent'}}
-        backdropComponent={props => (
-          <BottomSheetBackdrop
-            opacity={0.4}
-            appearsOnIndex={0}
-            disappearsOnIndex={-1}
-            {...props}
-          />
-        )}
-        handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-        handleStyle={{display: 'none'}}
-        onClose={onClose}>
-        <Context.Provider value={context}>
-          <View
-            style={[
-              a.absolute,
-              a.inset_0,
-              t.atoms.bg,
-              {
-                borderTopLeftRadius: 40,
-                borderTopRightRadius: 40,
-                height: Dimensions.get('window').height * 2,
-              },
-            ]}
-          />
-          {children}
-        </Context.Provider>
-      </BottomSheet>
-    </Portal>
+    isOpen && (
+      <Portal>
+        <BottomSheet
+          enableDynamicSizing={!hasSnapPoints}
+          enablePanDownToClose
+          keyboardBehavior="interactive"
+          android_keyboardInputMode="adjustResize"
+          keyboardBlurBehavior="restore"
+          topInset={insets.top}
+          {...sheetOptions}
+          ref={sheet}
+          index={openIndex}
+          backgroundStyle={{backgroundColor: 'transparent'}}
+          backdropComponent={props => (
+            <BottomSheetBackdrop
+              opacity={0.4}
+              appearsOnIndex={0}
+              disappearsOnIndex={-1}
+              {...props}
+            />
+          )}
+          handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
+          handleStyle={{display: 'none'}}
+          onChange={onChange}>
+          <Context.Provider value={context}>
+            <View
+              style={[
+                a.absolute,
+                a.inset_0,
+                t.atoms.bg,
+                {
+                  borderTopLeftRadius: 40,
+                  borderTopRightRadius: 40,
+                  height: Dimensions.get('window').height * 2,
+                },
+              ]}
+            />
+            {hasSnapPoints ? children : <View>{children}</View>}
+          </Context.Provider>
+        </BottomSheet>
+      </Portal>
+    )
   )
 }
 
-// TODO a11y props here, or is that handled by the sheet?
-export function Inner(props: DialogInnerProps) {
+export function Inner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetView
       style={[
-        a.p_lg,
-        a.pt_3xl,
+        a.p_xl,
         {
+          paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
           paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
         },
+        flatten(style),
       ]}>
-      {props.children}
+      {children}
     </BottomSheetView>
   )
 }
 
-export function ScrollableInner(props: DialogInnerProps) {
+export function ScrollableInner({children, style}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
+      keyboardShouldPersistTaps="handled"
+      keyboardDismissMode="on-drag"
       style={[
         a.flex_1, // main diff is this
-        a.p_lg,
-        a.pt_3xl,
+        a.p_xl,
+        a.h_full,
         {
+          paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
         },
+        flatten(style),
       ]}>
-      {props.children}
+      {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
@@ -139,21 +170,21 @@ export function ScrollableInner(props: DialogInnerProps) {
 export function Handle() {
   const t = useTheme()
   return (
-    <View
-      style={[
-        a.absolute,
-        a.rounded_sm,
-        a.z_10,
-        {
-          top: a.pt_lg.paddingTop,
-          width: 35,
-          height: 4,
-          alignSelf: 'center',
-          backgroundColor: t.palette.contrast_900,
-          opacity: 0.5,
-        },
-      ]}
-    />
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
+      <View
+        style={[
+          a.rounded_sm,
+          {
+            top: a.pt_lg.paddingTop,
+            width: 35,
+            height: 4,
+            alignSelf: 'center',
+            backgroundColor: t.palette.contrast_900,
+            opacity: 0.5,
+          },
+        ]}
+      />
+    </View>
   )
 }
 

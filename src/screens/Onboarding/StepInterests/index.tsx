@@ -17,26 +17,23 @@ import {getAgent} from '#/state/session'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {Text} from '#/components/Typography'
 import {useOnboardingDispatch} from '#/state/shell'
+import {capitalize} from '#/lib/strings/capitalize'
 
-import {Context} from '#/screens/Onboarding/state'
+import {Context, ApiResponseMap} from '#/screens/Onboarding/state'
 import {
   Title,
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {
-  ApiResponseMap,
-  INTEREST_TO_DISPLAY_NAME,
-} from '#/screens/Onboarding/StepInterests/data'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export function StepInterests() {
   const {_} = useLingui()
   const t = useTheme()
   const {track} = useAnalytics()
   const {gtMobile} = useBreakpoints()
-  const {state, dispatch} = React.useContext(Context)
+  const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [saving, setSaving] = React.useState(false)
   const [interests, setInterests] = React.useState<string[]>(
     state.interestsStepResults.selectedInterests.map(i => i),
@@ -142,7 +139,7 @@ export function StepInterests() {
   )
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start]} testID="onboardingInterests">
       <IconCircle
         icon={isError ? EmojiSad : Hashtag}
         style={[
@@ -202,7 +199,9 @@ export function StepInterests() {
                 <Toggle.Item
                   key={interest}
                   name={interest}
-                  label={INTEREST_TO_DISPLAY_NAME[interest]}>
+                  label={
+                    interestsDisplayNames[interest] || capitalize(interest)
+                  }>
                   <InterestButton interest={interest} />
                 </Toggle.Item>
               ))}
