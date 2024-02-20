@@ -8,7 +8,7 @@ import {View, ViewStyle} from 'react-native'
 export function EventStopper({
   children,
   style,
-}: React.PropsWithChildren<{style: ViewStyle | ViewStyle[]}>) {
+}: React.PropsWithChildren<{style?: ViewStyle | ViewStyle[]}>) {
   const stop = (e: any) => {
     e.stopPropagation()
   }
