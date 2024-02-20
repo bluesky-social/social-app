@@ -153,7 +153,7 @@ export function Inner({children, style}: DialogInnerProps) {
           paddingTop: 40,
           borderTopLeftRadius: 40,
           borderTopRightRadius: 40,
-          paddingBottom: insets.bottom + a.pb_5xl.paddingBottom,
+          paddingBottom: insets.bottom + a.pb_xl.paddingBottom,
         },
         flatten(style),
       ]}>

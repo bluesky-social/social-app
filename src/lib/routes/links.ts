@@ -29,3 +29,9 @@ export function makeListLink(did: string, rkey: string, ...segments: string[]) {
 export function makeTagLink(did: string) {
   return `/search?q=${encodeURIComponent(did)}`
 }
+
+export function makeSearchLink(props: {query: string; from?: 'me' | string}) {
+  return `/search?q=${encodeURIComponent(
+    props.query + (props.from ? `from:${props.from}` : ''),
+  )}`
+}
