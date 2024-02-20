@@ -9,7 +9,8 @@ import * as Prompt from '#/components/Prompt'
 import {useDialogStateControlContext} from '#/state/dialogs'
 
 export function Dialogs() {
-  const control = Dialog.useDialogControl()
+  const scrollable = Dialog.useDialogControl()
+  const basic = Dialog.useDialogControl()
   const prompt = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
 
@@ -20,8 +21,31 @@ export function Dialogs() {
         color="secondary"
         size="small"
         onPress={() => {
-          control.open()
+          scrollable.open()
           prompt.open()
+          basic.open()
+        }}
+        label="Open basic dialog">
+        Open all dialogs
+      </Button>
+
+      <Button
+        variant="outline"
+        color="secondary"
+        size="small"
+        onPress={() => {
+          scrollable.open()
+        }}
+        label="Open basic dialog">
+        Open scrollable dialog
+      </Button>
+
+      <Button
+        variant="outline"
+        color="secondary"
+        size="small"
+        onPress={() => {
+          basic.open()
         }}
         label="Open basic dialog">
         Open basic dialog
@@ -48,8 +72,17 @@ export function Dialogs() {
         </Prompt.Actions>
       </Prompt.Outer>
 
+      <Dialog.Outer control={basic}>
+        <Dialog.Handle />
+
+        <Dialog.Inner label="test">
+          <H3 nativeID="dialog-title">Dialog</H3>
+          <P nativeID="dialog-description">A basic dialog</P>
+        </Dialog.Inner>
+      </Dialog.Outer>
+
       <Dialog.Outer
-        control={control}
+        control={scrollable}
         nativeOptions={{sheet: {snapPoints: ['100%']}}}>
         <Dialog.Handle />
 
@@ -77,9 +110,9 @@ export function Dialogs() {
                 variant="outline"
                 color="primary"
                 size="small"
-                onPress={() => control.close()}
+                onPress={() => scrollable.close()}
                 label="Open basic dialog">
-                Close basic dialog
+                Close dialog
               </Button>
             </View>
           </View>
