@@ -159,11 +159,18 @@ function responseToThreadNodes(
     AppBskyFeedPost.isRecord(node.post.record) &&
     AppBskyFeedPost.validateRecord(node.post.record).success
   ) {
+    const post = node.post
+    // These should normally be present. They're missing only for
+    // posts that were *just* created. Ideally, the backend would
+    // know to return zeros. Fill them in manually to compensate.
+    post.replyCount ??= 0
+    post.likeCount ??= 0
+    post.repostCount ??= 0
     return {
       type: 'post',
       _reactKey: node.post.uri,
       uri: node.post.uri,
-      post: node.post,
+      post: post,
       record: node.post.record,
       parent:
         node.parent && direction !== 'down'
