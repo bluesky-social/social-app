@@ -1,5 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useNavigation} from '@react-navigation/native'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -11,6 +12,7 @@ import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {Divider} from '#/components/Divider'
 import {Link} from '#/components/Link'
 import {makeSearchLink} from '#/lib/routes/links'
+import {NavigationProp} from '#/lib/routes/types'
 
 export function useTagMenuControl() {
   return Dialog.useDialogControl()
@@ -27,6 +29,7 @@ export function TagMenu({
   authorHandle?: string
 }>) {
   const t = useTheme()
+  const navigation = useNavigation<NavigationProp>()
 
   return (
     <>
@@ -47,7 +50,21 @@ export function TagMenu({
             <Link
               label="tag"
               to={makeSearchLink({query: tag})}
-              onPress={control.close}>
+              onPress={e => {
+                e.preventDefault()
+
+                control.close()
+
+                // @ts-ignore :ron_swanson: "I know more than you"
+                navigation.navigate('SearchTab', {
+                  screen: 'Search',
+                  params: {
+                    q: tag,
+                  },
+                })
+
+                return false
+              }}>
               <View
                 style={[
                   a.w_full,
@@ -84,7 +101,21 @@ export function TagMenu({
                 <Link
                   label="tag"
                   to={makeSearchLink({query: tag, from: authorHandle})}
-                  onPress={control.close}>
+                  onPress={e => {
+                    e.preventDefault()
+
+                    control.close()
+
+                    // @ts-ignore :ron_swanson: "I know more than you"
+                    navigation.navigate('SearchTab', {
+                      screen: 'Search',
+                      params: {
+                        q: tag + (authorHandle ? ` from:${authorHandle}` : ''),
+                      },
+                    })
+
+                    return false
+                  }}>
                   <View
                     style={[
                       a.w_full,
