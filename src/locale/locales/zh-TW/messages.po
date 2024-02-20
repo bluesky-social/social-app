@@ -2019,7 +2019,7 @@ msgstr "讓我們開始吧！"
 #: src/view/com/util/UserAvatar.tsx:248
 #: src/view/com/util/UserBanner.tsx:62
 msgid "Library"
-msgstr "圖書館"
+msgstr "圖片庫"
 
 #: src/view/screens/Settings/index.tsx:479
 msgid "Light"
