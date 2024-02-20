@@ -32,6 +32,10 @@ import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
+import {AppBskyFeedDefs} from '@atproto/api'
+
+export const PLACEHOLDER_POSTS: Map<string, AppBskyFeedDefs.PostView | null> =
+  new Map()
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -49,6 +53,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
+  placeholderData?: any
 }
 
 export const Link = memo(function Link({
@@ -62,6 +67,7 @@ export const Link = memo(function Link({
   accessible,
   anchorNoUnderline,
   navigationAction,
+  placeholderData,
   ...props
 }: Props) {
   const {closeModal} = useModalControls()
@@ -72,6 +78,10 @@ export const Link = memo(function Link({
   const onPress = React.useCallback(
     (e?: Event) => {
       if (typeof href === 'string') {
+        if (placeholderData) {
+          PLACEHOLDER_POSTS.set(placeholderData.uri, placeholderData)
+        }
+
         return onPressInner(
           closeModal,
           navigation,
@@ -82,7 +92,7 @@ export const Link = memo(function Link({
         )
       }
     },
-    [closeModal, navigation, navigationAction, href, openLink],
+    [href, placeholderData, closeModal, navigation, navigationAction, openLink],
   )
 
   if (noFeedback) {

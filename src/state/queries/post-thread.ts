@@ -12,6 +12,7 @@ import {findPostInQueryData as findPostInFeedQueryData} from './post-feed'
 import {findPostInQueryData as findPostInNotifsQueryData} from './notifications/feed'
 import {precacheThreadPostProfiles} from './profile'
 import {getEmbeddedPost} from './util'
+import {PLACEHOLDER_POSTS} from 'view/com/util/Link'
 
 export const RQKEY = (uri: string) => ['post-thread', uri]
 type ThreadViewNode = AppBskyFeedGetPostThread.OutputSchema['thread']
@@ -72,6 +73,9 @@ export function usePostThreadQuery(uri: string | undefined) {
       if (res.success) {
         const nodes = responseToThreadNodes(res.data.thread)
         precacheThreadPostProfiles(queryClient, nodes)
+
+        if (uri) PLACEHOLDER_POSTS.delete(uri)
+
         return nodes
       }
       return {type: 'unknown', uri: uri!}
@@ -81,24 +85,29 @@ export function usePostThreadQuery(uri: string | undefined) {
       if (!uri) {
         return undefined
       }
-      {
-        const item = findPostInQueryData(queryClient, uri)
-        if (item) {
-          return threadNodeToPlaceholderThread(item)
-        }
+      const item = PLACEHOLDER_POSTS.get(uri)
+
+      if (item) {
+        return postViewToPlaceholderThread(item)
       }
-      {
-        const item = findPostInFeedQueryData(queryClient, uri)
-        if (item) {
-          return postViewToPlaceholderThread(item)
-        }
-      }
-      {
-        const item = findPostInNotifsQueryData(queryClient, uri)
-        if (item) {
-          return postViewToPlaceholderThread(item)
-        }
-      }
+      // {
+      //   const item = findPostInQueryData(queryClient, uri)
+      //   if (item) {
+      //     return threadNodeToPlaceholderThread(item)
+      //   }
+      // }
+      // {
+      //   const item = findPostInFeedQueryData(queryClient, uri)
+      //   if (item) {
+      //     return postViewToPlaceholderThread(item)
+      //   }
+      // }
+      // {
+      //   const item = findPostInNotifsQueryData(queryClient, uri)
+      //   if (item) {
+      //     return postViewToPlaceholderThread(item)
+      //   }
+      // }
       return undefined
     },
   })

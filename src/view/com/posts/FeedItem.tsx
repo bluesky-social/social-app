@@ -158,7 +158,8 @@ let FeedItemInner = ({
       style={outerStyles}
       href={href}
       noFeedback
-      accessible={false}>
+      accessible={false}
+      placeholderData={post}>
       <View style={{flexDirection: 'row', gap: 10, paddingLeft: 8}}>
         <View style={{width: 52}}>
           {isThreadChild && (
@@ -177,7 +178,7 @@ let FeedItemInner = ({
 
         <View style={{paddingTop: 12, flexShrink: 1}}>
           {isReasonFeedSource(reason) ? (
-            <Link href={reason.href}>
+            <Link href={reason.href} placeholderData={post}>
               <Text
                 type="sm-bold"
                 style={pal.textLight}
