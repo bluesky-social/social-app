@@ -344,7 +344,14 @@ export const TextInput = React.forwardRef<TextInputRef, TextInputProps>(
 
     return (
       <div className={`rt-editor ` + modeClass}>
-        <div ref={overlayRef} className="rt-overlay">
+        <div
+          ref={overlayRef}
+          // `inert` prevents the browser from searching the text contained here,
+          // we don't want that as we already have a textarea with the same text.
+          // React (and its TypeScript declaration) doesn't support `inert`
+          // properly yet, so here's a workaround.
+          {...{inert: ''}}
+          className="rt-overlay">
           {textOverlay}
         </div>
 
