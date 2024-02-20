@@ -5,7 +5,7 @@ msgstr ""
 "POT-Creation-Date: 2023-12-28 11:56+07000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: danninov\n"
-"Language-Team: GID0317, danninov, thinkbyte1024, mary-ext\n"
+"Language-Team: GID0317, danninov, thinkbyte1024, mary-ext, kodebanget\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -2714,7 +2714,7 @@ msgstr "Membuka formulir pengaturan ulang kata sandi"
 
 #: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
-msgstr "Membuka layar untuk mengedit Umpan Tersimpan"
+msgstr "Membuka layar untuk mengedit Feed Tersimpan"
 
 #: src/view/screens/Settings/index.tsx:576
 msgid "Opens screen with all saved feeds"
