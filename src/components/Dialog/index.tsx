@@ -37,22 +37,18 @@ export function Outer({
   const insets = useSafeAreaInsets()
   const closeCallback = React.useRef<() => void>()
 
-  /*
-   * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
-   */
-  const [openIndex, setOpenIndex] = React.useState(-1)
+  const tempIndex = React.useRef<number | undefined>()
 
-  /*
-   * `openIndex` is the index of the snap point to open the bottom sheet to. If >0, the bottom sheet is open.
-   */
-  const isOpen = openIndex > -1
+  const [isOpen, setIsOpen] = React.useState(false)
+  const [isMounted, setIsMounted] = React.useState(false)
 
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      tempIndex.current = index || 0
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
-      setOpenIndex(index || 0)
+      setIsOpen(true)
     },
-    [setOpenIndex],
+    [setIsOpen],
   )
 
   const close = React.useCallback<DialogControlProps['close']>(cb => {
@@ -71,16 +67,29 @@ export function Outer({
     [open, close],
   )
 
+  React.useEffect(() => {
+    console.log({isOpen, isMounted, index: tempIndex.current})
+    if (isMounted && tempIndex.current !== undefined) {
+      const idx = tempIndex.current
+      setTimeout(() => {
+        sheet.current?.snapToIndex(idx)
+      }, 100)
+      tempIndex.current = undefined
+    }
+  }, [isOpen, isMounted])
+
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
         closeCallback.current?.()
         closeCallback.current = undefined
         onClose?.()
-        setOpenIndex(-1)
+        tempIndex.current = undefined
+        setIsOpen(false)
+        setIsMounted(false)
       }
     },
-    [onClose, setOpenIndex],
+    [onClose, setIsOpen],
   )
 
   const context = React.useMemo(() => ({close}), [close])
@@ -98,7 +107,7 @@ export function Outer({
           {...sheetOptions}
           snapPoints={sheetOptions.snapPoints || ['100%']}
           ref={sheet}
-          index={openIndex}
+          index={-1}
           backgroundStyle={{backgroundColor: 'transparent'}}
           backdropComponent={props => (
             <BottomSheetBackdrop
@@ -114,6 +123,7 @@ export function Outer({
           onChange={onChange}>
           <Context.Provider value={context}>
             <View
+              onLayout={() => setIsMounted(true)}
               style={[
                 a.absolute,
                 a.inset_0,

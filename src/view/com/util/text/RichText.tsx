@@ -9,6 +9,7 @@ import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeTagLink} from 'lib/routes/links'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {isNative} from '#/platform/detection'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -174,18 +175,27 @@ function RichTextTag({
 
   return (
     <React.Fragment>
-      <TextLink
-        type={type}
-        text={tag}
-        // segment.text has the leading "#" while tag.tag does not
-        href={makeTagLink(tag)}
-        style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
-        dataSet={WORD_WRAP}
-        selectable={selectable}
-        onPress={open}
-      />
-
-      <TagMenu control={control} tag={tag} />
+      <TagMenu control={control} tag={tag}>
+        {isNative ? (
+          <TextLink
+            type={type}
+            text={tag}
+            // segment.text has the leading "#" while tag.tag does not
+            href={makeTagLink(tag)}
+            style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
+            dataSet={WORD_WRAP}
+            selectable={selectable}
+            onPress={open}
+          />
+        ) : (
+          <Text
+            selectable={selectable}
+            type={type}
+            style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}>
+            {tag}
+          </Text>
+        )}
+      </TagMenu>
     </React.Fragment>
   )
 }
