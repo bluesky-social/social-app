@@ -132,7 +132,7 @@ msgstr "已取消隐藏账户"
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
 #: src/view/screens/ProfileList.tsx:812
 msgid "Add"
-msgstr "新增"
+msgstr "添加"
 
 #: src/view/com/modals/SelfLabel.tsx:56
 msgid "Add a content warning"
@@ -187,7 +187,7 @@ msgstr "添加至列表"
 #: src/view/com/feeds/FeedSourceCard.tsx:243
 #: src/view/screens/ProfileFeed.tsx:272
 msgid "Add to my feeds"
-msgstr "新增至自定义信息流"
+msgstr "添加至自定义信息流"
 
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
 msgid "Added"
