@@ -3,7 +3,7 @@ import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-import {atoms as a, TextStyleProp, flatten, useTheme} from '#/alf'
+import {atoms as a, TextStyleProp, flatten, useTheme, web} from '#/alf'
 import {InlineLink} from '#/components/Link'
 import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
@@ -205,14 +205,14 @@ function RichTextTag({
           style={[
             style,
             {
-              // @ts-ignore web only
-              cursor: 'pointer',
               pointerEvents: 'auto',
               color: t.palette.primary_500,
             },
+            web({
+              cursor: 'pointer',
+            }),
             (hovered || focused || pressed) && {
-              // @ts-ignore web only
-              outline: 0,
+              ...web({outline: 0}),
               textDecorationLine: 'underline',
               textDecorationColor:
                 flattenedStyle.color ?? t.palette.primary_500,
