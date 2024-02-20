@@ -83,7 +83,6 @@ export function Outer({
     isOpen && (
       <Portal>
         <BottomSheet
-          animateOnMount
           enableDynamicSizing={!hasSnapPoints}
           enablePanDownToClose
           keyboardBehavior="interactive"
