@@ -3,7 +3,7 @@ import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
 
 import {atoms as a, TextStyleProp} from '#/alf'
 import {InlineLink} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
 import {getAgent} from '#/state/session'
 
@@ -16,13 +16,15 @@ export function RichText({
   numberOfLines,
   disableLinks,
   resolveFacets = false,
-}: TextStyleProp & {
-  value: RichTextAPI | string
-  testID?: string
-  numberOfLines?: number
-  disableLinks?: boolean
-  resolveFacets?: boolean
-}) {
+  selectable,
+}: TextStyleProp &
+  Pick<TextProps, 'selectable'> & {
+    value: RichTextAPI | string
+    testID?: string
+    numberOfLines?: number
+    disableLinks?: boolean
+    resolveFacets?: boolean
+  }) {
   const detected = React.useRef(false)
   const [richText, setRichText] = React.useState<RichTextAPI>(() =>
     value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
@@ -50,6 +52,7 @@ export function RichText({
     if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
       return (
         <Text
+          selectable={selectable}
           testID={testID}
           style={[
             {
@@ -65,6 +68,7 @@ export function RichText({
     }
     return (
       <Text
+        selectable={selectable}
         testID={testID}
         style={styles}
         numberOfLines={numberOfLines}
@@ -88,6 +92,7 @@ export function RichText({
     ) {
       els.push(
         <InlineLink
+          selectable={selectable}
           key={key}
           to={`/profile/${mention.did}`}
           style={[...styles, {pointerEvents: 'auto'}]}
@@ -102,6 +107,7 @@ export function RichText({
       } else {
         els.push(
           <InlineLink
+            selectable={selectable}
             key={key}
             to={link.uri}
             style={[...styles, {pointerEvents: 'auto'}]}
@@ -120,6 +126,7 @@ export function RichText({
 
   return (
     <Text
+      selectable={selectable}
       testID={testID}
       style={styles}
       numberOfLines={numberOfLines}
