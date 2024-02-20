@@ -204,11 +204,18 @@ function findPostInQueryData(
 ): ThreadNode | void {
   let partial
   for (let item of findAllPostsInQueryData(queryClient, uri)) {
-    if (item.type === 'post' && item.post.likeCount != null) {
-      return item
-    } else {
-      partial = item
-      // Keep searching, we might still find a full post in the cache.
+    if (item.type === 'post') {
+      // Currently, the backend doesn't send full post info in some cases
+      // (for example, for quoted posts). We use missing `likeCount`
+      // as a way to detect that. In the future, we should fix this on
+      // the backend, which will let us always stop on the first result.
+      const hasAllInfo = item.post.likeCount != null
+      if (hasAllInfo) {
+        return item
+      } else {
+        partial = item
+        // Keep searching, we might still find a full post in the cache.
+      }
     }
   }
   return partial
