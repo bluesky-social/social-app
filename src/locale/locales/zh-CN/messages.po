@@ -196,11 +196,11 @@ msgstr "已添加"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:191
 #: src/view/com/modals/UserAddRemoveLists.tsx:144
 msgid "Added to list"
-msgstr "添加至列表"
+msgstr "已添加至列表"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:125
 msgid "Added to my feeds"
-msgstr "添加至自定义信息流"
+msgstr "已添加至自定义信息流"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
@@ -1870,8 +1870,8 @@ msgid "Input the username or email address you used at signup"
 msgstr "输入注册时使用的用户名或电子邮箱"
 
 #: src/view/com/auth/create/Step2.tsx:271
-msgid "Input the verification code we have texted to you"
-msgstr "输入我们发送到你手机的短信验证码"
+#~ msgid "Input the verification code we have texted to you"
+#~ msgstr "输入我们发送到你手机的短信验证码"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -2045,11 +2045,11 @@ msgstr "喜欢"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
-msgstr "{0} 个{1} 喜欢"
+msgstr "{0} 个 {1} 喜欢"
 
 #: src/view/screens/ProfileFeed.tsx:606
 msgid "Liked by {likeCount} {0}"
-msgstr "{likeCount} 个{0} 喜欢"
+msgstr "{likeCount} 个 {0} 喜欢"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
