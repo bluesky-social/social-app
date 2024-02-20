@@ -1,7 +1,16 @@
 import React from 'react'
-import {Text as RNText, TextStyle, TextProps} from 'react-native'
+import {Text as RNText, TextStyle, TextProps as RNTextProps} from 'react-native'
+import {UITextView} from 'react-native-ui-text-view'
 
 import {useTheme, atoms, web, flatten} from '#/alf'
+import {isIOS} from '#/platform/detection'
+
+export type TextProps = RNTextProps & {
+  /**
+   * Lets the user select text, to use the native copy and paste functionality.
+   */
+  selectable?: boolean
+}
 
 /**
  * Util to calculate lineHeight from a text size atom and a leading atom
@@ -44,27 +53,24 @@ function normalizeTextStyles(styles: TextStyle[]) {
 /**
  * Our main text component. Use this most of the time.
  */
-export function Text({style, ...rest}: TextProps) {
+export function Text({style, selectable, ...rest}: TextProps) {
   const t = useTheme()
   const s = normalizeTextStyles([atoms.text_sm, t.atoms.text, flatten(style)])
-  return <RNText style={s} {...rest} />
+  return selectable && isIOS ? (
+    <UITextView style={s} {...rest} />
+  ) : (
+    <RNText selectable={selectable} style={s} {...rest} />
+  )
 }
 
 export function createHeadingElement({level}: {level: number}) {
   return function HeadingElement({style, ...rest}: TextProps) {
-    const t = useTheme()
     const attr =
       web({
         role: 'heading',
         'aria-level': level,
       }) || {}
-    return (
-      <RNText
-        {...attr}
-        {...rest}
-        style={normalizeTextStyles([t.atoms.text, flatten(style)])}
-      />
-    )
+    return <Text {...attr} {...rest} style={style} />
   }
 }
 
@@ -78,21 +84,15 @@ export const H4 = createHeadingElement({level: 4})
 export const H5 = createHeadingElement({level: 5})
 export const H6 = createHeadingElement({level: 6})
 export function P({style, ...rest}: TextProps) {
-  const t = useTheme()
   const attr =
     web({
       role: 'paragraph',
     }) || {}
   return (
-    <RNText
+    <Text
       {...attr}
       {...rest}
-      style={normalizeTextStyles([
-        atoms.text_md,
-        atoms.leading_normal,
-        t.atoms.text,
-        flatten(style),
-      ])}
+      style={[atoms.text_md, atoms.leading_normal, flatten(style)]}
     />
   )
 }

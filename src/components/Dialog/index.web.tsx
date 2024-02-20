@@ -5,11 +5,13 @@ import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints, web, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
+import {Button, ButtonIcon} from '#/components/Button'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -18,9 +20,9 @@ export {Input} from '#/components/forms/TextField'
 const stopPropagation = (e: any) => e.stopPropagation()
 
 export function Outer({
+  children,
   control,
   onClose,
-  children,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const t = useTheme()
@@ -147,7 +149,7 @@ export function Inner({
           a.rounded_md,
           a.w_full,
           a.border,
-          gtMobile ? a.p_xl : a.p_lg,
+          gtMobile ? a.p_2xl : a.p_xl,
           t.atoms.bg,
           {
             maxWidth: 600,
@@ -156,7 +158,7 @@ export function Inner({
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
           },
-          ...(Array.isArray(style) ? style : [style || {}]),
+          flatten(style),
         ]}>
         {children}
       </Animated.View>
@@ -170,25 +172,28 @@ export function Handle() {
   return null
 }
 
-/**
- * TODO(eric) unused rn
- */
-// export function Close() {
-//   const {_} = useLingui()
-//   const t = useTheme()
-//   const {close} = useDialogContext()
-//   return (
-//     <View
-//       style={[
-//         a.absolute,
-//         a.z_10,
-//         {
-//           top: a.pt_lg.paddingTop,
-//           right: a.pr_lg.paddingRight,
-//         },
-//       ]}>
-//       <Button onPress={close} label={_(msg`Close active dialog`)}>
-//       </Button>
-//     </View>
-//   )
-// }
+export function Close() {
+  const {_} = useLingui()
+  const {close} = React.useContext(Context)
+  return (
+    <View
+      style={[
+        a.absolute,
+        a.z_10,
+        {
+          top: a.pt_md.paddingTop,
+          right: a.pr_md.paddingRight,
+        },
+      ]}>
+      <Button
+        size="small"
+        variant="ghost"
+        color="primary"
+        shape="round"
+        onPress={close}
+        label={_(msg`Close active dialog`)}>
+        <ButtonIcon icon={X} size="md" />
+      </Button>
+    </View>
+  )
+}
