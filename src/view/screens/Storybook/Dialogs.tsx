@@ -50,7 +50,7 @@ export function Dialogs() {
 
       <Dialog.Outer
         control={control}
-        nativeOptions={{sheet: {snapPoints: ['90%']}}}>
+        nativeOptions={{sheet: {snapPoints: ['100%']}}}>
         <Dialog.Handle />
 
         <Dialog.ScrollableInner
