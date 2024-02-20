@@ -391,6 +391,9 @@ export function* findAllPostsInQueryData(
   >({
     queryKey: ['post-feed'],
   })
+
+  let foundEmbed: AppBskyFeedDefs.PostView | undefined
+
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
       continue
@@ -402,7 +405,7 @@ export function* findAllPostsInQueryData(
         }
         const quotedPost = getEmbeddedPost(item.post.embed)
         if (quotedPost?.uri === uri) {
-          yield embedViewRecordToPostView(quotedPost)
+          foundEmbed = embedViewRecordToPostView(quotedPost)
         }
         if (
           AppBskyFeedDefs.isPostView(item.reply?.parent) &&
@@ -418,6 +421,10 @@ export function* findAllPostsInQueryData(
         }
       }
     }
+  }
+
+  if (foundEmbed) {
+    yield foundEmbed
   }
 }
 
