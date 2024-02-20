@@ -8,6 +8,7 @@ import {toShortUrl} from 'lib/strings/url-helpers'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {makeTagLink} from 'lib/routes/links'
+import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -123,14 +124,12 @@ export function RichText({
       AppBskyRichtextFacet.validateTag(tag).success
     ) {
       els.push(
-        <TextLink
+        <RichTextTag
           key={key}
-          type={type}
           text={segment.text}
-          // segment.text has the leading "#" while tag.tag does not
-          href={makeTagLink(segment.text)}
-          style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
-          dataSet={WORD_WRAP}
+          type={type}
+          style={style}
+          lineHeightStyle={lineHeightStyle}
           selectable={selectable}
         />,
       )
@@ -150,5 +149,43 @@ export function RichText({
       selectable={selectable}>
       {els}
     </Text>
+  )
+}
+
+function RichTextTag({
+  text: tag,
+  type,
+  style,
+  lineHeightStyle,
+  selectable,
+}: {
+  text: string
+  type?: TypographyVariant
+  style?: StyleProp<TextStyle>
+  lineHeightStyle?: TextStyle
+  selectable?: boolean
+}) {
+  const pal = usePalette('default')
+  const control = useTagMenuControl()
+
+  const open = React.useCallback(() => {
+    control.open()
+  }, [control])
+
+  return (
+    <React.Fragment>
+      <TextLink
+        type={type}
+        text={tag}
+        // segment.text has the leading "#" while tag.tag does not
+        href={makeTagLink(tag)}
+        style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
+        dataSet={WORD_WRAP}
+        selectable={selectable}
+        onPress={open}
+      />
+
+      <TagMenu control={control} tag={tag} />
+    </React.Fragment>
   )
 }
