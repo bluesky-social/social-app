@@ -116,7 +116,6 @@ export function Outer({
                   borderTopLeftRadius: 40,
                   borderTopRightRadius: 40,
                   height: Dimensions.get('window').height * 2,
-                  pointerEvents: 'none',
                 },
               ]}
             />
