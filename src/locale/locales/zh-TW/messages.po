@@ -2045,11 +2045,11 @@ msgstr "喜歡"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:277
 msgid "Liked by {0} {1}"
-msgstr "{0} 個{1}喜歡"
+msgstr "{0} 個 {1} 喜歡"
 
 #: src/view/screens/ProfileFeed.tsx:606
 msgid "Liked by {likeCount} {0}"
-msgstr "{likeCount} 個{0}喜歡"
+msgstr "{likeCount} 個 {0} 喜歡"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
