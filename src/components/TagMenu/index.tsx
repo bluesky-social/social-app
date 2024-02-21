@@ -53,14 +53,14 @@ export function TagMenu({
               onPress={e => {
                 e.preventDefault()
 
-                control.close()
-
-                // @ts-ignore :ron_swanson: "I know more than you"
-                navigation.navigate('SearchTab', {
-                  screen: 'Search',
-                  params: {
-                    q: tag,
-                  },
+                control.close(() => {
+                  // @ts-ignore :ron_swanson: "I know more than you"
+                  navigation.navigate('SearchTab', {
+                    screen: 'Search',
+                    params: {
+                      q: tag,
+                    },
+                  })
                 })
 
                 return false
@@ -104,14 +104,15 @@ export function TagMenu({
                   onPress={e => {
                     e.preventDefault()
 
-                    control.close()
-
-                    // @ts-ignore :ron_swanson: "I know more than you"
-                    navigation.navigate('SearchTab', {
-                      screen: 'Search',
-                      params: {
-                        q: tag + (authorHandle ? ` from:${authorHandle}` : ''),
-                      },
+                    control.close(() => {
+                      // @ts-ignore :ron_swanson: "I know more than you"
+                      navigation.navigate('SearchTab', {
+                        screen: 'Search',
+                        params: {
+                          q:
+                            tag + (authorHandle ? ` from:${authorHandle}` : ''),
+                        },
+                      })
                     })
 
                     return false
