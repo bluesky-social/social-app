@@ -52,6 +52,8 @@ import {isInvalidHandle} from '#/lib/strings/handles'
 import {useTheme, atoms as a} from '#/alf'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
 import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
+import {ProfileFiltersSection} from '#/screens/Profile/FiltersSection'
+import {ProfileHeader as ProfileHeaderV2} from '#/screens/Profile/Header'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -115,8 +117,11 @@ export function ProfileScreen({route}: Props) {
     )
   }
   if (profile && moderationOpts) {
+    if (profile.handle === 'alice.test') {
+      profile.associated = {modservice: true}
+    }
     return (
-      <ProfileScreenLoaded
+      <ProfileScreenLoadedV2
         profile={profile}
         moderationOpts={moderationOpts}
         isPlaceholderProfile={isPlaceholderProfile}
@@ -428,6 +433,313 @@ function ProfileScreenLoaded({
   )
 }
 
+function ProfileScreenLoadedV2({
+  profile: profileUnshadowed,
+  isPlaceholderProfile,
+  moderationOpts,
+  hideBackButton,
+}: {
+  profile: AppBskyActorDefs.ProfileViewDetailed
+  moderationOpts: ModerationOpts
+  hideBackButton: boolean
+  isPlaceholderProfile: boolean
+}) {
+  const profile = useProfileShadow(profileUnshadowed)
+  const {hasSession, currentAccount} = useSession()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const {openComposer} = useComposerControls()
+  const {screen, track} = useAnalytics()
+  const [currentPage, setCurrentPage] = React.useState(0)
+  const {_} = useLingui()
+  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
+  const postsSectionRef = React.useRef<SectionRef>(null)
+  const repliesSectionRef = React.useRef<SectionRef>(null)
+  const mediaSectionRef = React.useRef<SectionRef>(null)
+  const likesSectionRef = React.useRef<SectionRef>(null)
+  const feedsSectionRef = React.useRef<SectionRef>(null)
+  const listsSectionRef = React.useRef<SectionRef>(null)
+  const filtersSectionRef = React.useRef<SectionRef>(null)
+
+  useSetTitle(combinedDisplayName(profile))
+
+  const description = profile.description ?? ''
+  const hasDescription = description !== ''
+  const [descriptionRT, isResolvingDescriptionRT] = useRichText(description)
+  const showPlaceholder = isPlaceholderProfile || isResolvingDescriptionRT
+  const moderation = useMemo(
+    () => moderateProfile(profile, moderationOpts),
+    [profile, moderationOpts],
+  )
+
+  const isMe = profile.did === currentAccount?.did
+  const isModService = !!profile.associated?.modservice
+  const showFiltersTab = hasSession && profile.associated?.modservice
+  const showPostsTab = !isModService
+  const showRepliesTab = hasSession && !isModService
+  const showMediaTab = !isModService
+  const showLikesTab = isMe && !isModService
+  const showFeedsTab =
+    hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
+  const showListsTab =
+    hasSession && (isMe || (profile.associated?.lists || 0) > 0)
+
+  const sectionTitles = useMemo<string[]>(() => {
+    return [
+      showFiltersTab ? _(msg`Content Filters`) : undefined,
+      showPostsTab ? _(msg`Posts`) : undefined,
+      showRepliesTab ? _(msg`Replies`) : undefined,
+      showMediaTab ? _(msg`Media`) : undefined,
+      showLikesTab ? _(msg`Likes`) : undefined,
+      showFeedsTab ? _(msg`Feeds`) : undefined,
+      showListsTab ? _(msg`Lists`) : undefined,
+    ].filter(Boolean) as string[]
+  }, [
+    showPostsTab,
+    showRepliesTab,
+    showMediaTab,
+    showLikesTab,
+    showFeedsTab,
+    showListsTab,
+    showFiltersTab,
+    _,
+  ])
+
+  let nextIndex = 0
+  let filtersIndex: number | null = null
+  if (showFiltersTab) {
+    filtersIndex = nextIndex++
+  }
+  let postsIndex: number | null = null
+  if (showPostsTab) {
+    postsIndex = nextIndex++
+  }
+  let repliesIndex: number | null = null
+  if (showRepliesTab) {
+    repliesIndex = nextIndex++
+  }
+  let mediaIndex: number | null = null
+  if (showMediaTab) {
+    mediaIndex = nextIndex++
+  }
+  let likesIndex: number | null = null
+  if (showLikesTab) {
+    likesIndex = nextIndex++
+  }
+  let feedsIndex: number | null = null
+  if (showFeedsTab) {
+    feedsIndex = nextIndex++
+  }
+  let listsIndex: number | null = null
+  if (showListsTab) {
+    listsIndex = nextIndex++
+  }
+
+  const scrollSectionToTop = React.useCallback(
+    (index: number) => {
+      if (index === filtersIndex) {
+        filtersSectionRef.current?.scrollToTop()
+      } else if (index === postsIndex) {
+        postsSectionRef.current?.scrollToTop()
+      } else if (index === repliesIndex) {
+        repliesSectionRef.current?.scrollToTop()
+      } else if (index === mediaIndex) {
+        mediaSectionRef.current?.scrollToTop()
+      } else if (index === likesIndex) {
+        likesSectionRef.current?.scrollToTop()
+      } else if (index === feedsIndex) {
+        feedsSectionRef.current?.scrollToTop()
+      } else if (index === listsIndex) {
+        listsSectionRef.current?.scrollToTop()
+      }
+    },
+    [
+      filtersIndex,
+      postsIndex,
+      repliesIndex,
+      mediaIndex,
+      likesIndex,
+      feedsIndex,
+      listsIndex,
+    ],
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setMinimalShellMode(false)
+      screen('Profile')
+      return listenSoftReset(() => {
+        scrollSectionToTop(currentPage)
+      })
+    }, [setMinimalShellMode, screen, currentPage, scrollSectionToTop]),
+  )
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setDrawerSwipeDisabled(currentPage > 0)
+      return () => {
+        setDrawerSwipeDisabled(false)
+      }
+    }, [setDrawerSwipeDisabled, currentPage]),
+  )
+
+  // events
+  // =
+
+  const onPressCompose = React.useCallback(() => {
+    track('ProfileScreen:PressCompose')
+    const mention =
+      profile.handle === currentAccount?.handle ||
+      isInvalidHandle(profile.handle)
+        ? undefined
+        : profile.handle
+    openComposer({mention})
+  }, [openComposer, currentAccount, track, profile])
+
+  const onPageSelected = React.useCallback(
+    (i: number) => {
+      setCurrentPage(i)
+    },
+    [setCurrentPage],
+  )
+
+  const onCurrentPageSelected = React.useCallback(
+    (index: number) => {
+      scrollSectionToTop(index)
+    },
+    [scrollSectionToTop],
+  )
+
+  // rendering
+  // =
+
+  const renderHeader = React.useCallback(() => {
+    return (
+      <ProfileHeaderV2
+        profile={profile}
+        descriptionRT={hasDescription ? descriptionRT : null}
+        moderationOpts={moderationOpts}
+        hideBackButton={hideBackButton}
+        isPlaceholderProfile={showPlaceholder}
+      />
+    )
+  }, [
+    profile,
+    descriptionRT,
+    hasDescription,
+    moderationOpts,
+    hideBackButton,
+    showPlaceholder,
+  ])
+
+  return (
+    <ScreenHider
+      testID="profileView"
+      style={styles.container}
+      screenDescription="profile"
+      modui={moderation.ui('profileView')}>
+      <PagerWithHeader
+        testID="profilePager"
+        isHeaderReady={!showPlaceholder}
+        items={sectionTitles}
+        onPageSelected={onPageSelected}
+        onCurrentPageSelected={onCurrentPageSelected}
+        renderHeader={renderHeader}>
+        {showFiltersTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFiltersSection
+                // ref={moderationSectionRef}
+                profile={profile}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
+        {showPostsTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <FeedSection
+                ref={postsSectionRef}
+                feed={`author|${profile.did}|posts_and_author_threads`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+              />
+            )
+          : null}
+        {showRepliesTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <FeedSection
+                ref={repliesSectionRef}
+                feed={`author|${profile.did}|posts_with_replies`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+              />
+            )
+          : null}
+        {showMediaTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <FeedSection
+                ref={mediaSectionRef}
+                feed={`author|${profile.did}|posts_with_media`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+              />
+            )
+          : null}
+        {showLikesTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <FeedSection
+                ref={likesSectionRef}
+                feed={`likes|${profile.did}`}
+                headerHeight={headerHeight}
+                isFocused={isFocused}
+                scrollElRef={scrollElRef as ListRef}
+                ignoreFilterFor={profile.did}
+              />
+            )
+          : null}
+        {showFeedsTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileFeedgens
+                ref={feedsSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
+        {showListsTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileLists
+                ref={listsSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
+      </PagerWithHeader>
+      {hasSession && (
+        <FAB
+          testID="composeFAB"
+          onPress={onPressCompose}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`New post`)}
+          accessibilityHint=""
+        />
+      )}
+    </ScreenHider>
+  )
+}
+
 interface FeedSectionProps {
   feed: FeedDescriptor
   headerHeight: number
@@ -500,6 +812,55 @@ function ProfileEndOfFeed() {
 }
 
 function ModerationSection({did}: {did: string}) {
+  const t = useTheme()
+  return (
+    <ScrollView>
+      <ModerationServiceCard.Loader
+        did={did}
+        component={({modservice}) => (
+          <ModerationServiceCard.Link modservice={modservice}>
+            {ctx => (
+              <View
+                style={[
+                  a.flex_1,
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_md,
+                  a.p_md,
+                  a.border_t,
+                  t.atoms.border_contrast_low,
+                  ...(ctx.focused || ctx.hovered
+                    ? [t.atoms.bg_contrast_25]
+                    : []),
+                ]}>
+                <View
+                  style={[
+                    {backgroundColor: t.palette.negative_25},
+                    a.p_lg,
+                    a.rounded_sm,
+                  ]}>
+                  <RaisingHand
+                    width={36}
+                    style={[a.z_10]}
+                    fill={t.palette.negative_500}
+                  />
+                </View>
+                <ModerationServiceCard.Card.Content
+                  title="Moderation service"
+                  description={modservice.description}
+                  handle={modservice.creator.handle}
+                  likeCount={modservice.likeCount}
+                />
+              </View>
+            )}
+          </ModerationServiceCard.Link>
+        )}
+      />
+    </ScrollView>
+  )
+}
+
+function FiltersSection({did}: {did: string}) {
   const t = useTheme()
   return (
     <ScrollView>

@@ -380,7 +380,6 @@ export function Button({
         a.flex_row,
         a.align_center,
         a.justify_center,
-        a.justify_center,
         flattenedBaseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
         ...(state.focused ? focusStyles : []),
