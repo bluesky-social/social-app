@@ -498,7 +498,6 @@ const LINKING = {
       ])
     } else {
       const res = buildStateObject('Flat', name, params)
-      console.log('BUILD', res)
       return res
     }
   },

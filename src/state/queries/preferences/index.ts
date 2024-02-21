@@ -112,6 +112,7 @@ export function useModerationOpts() {
     return {
       ...moderationOpts,
       hiddenPosts,
+      mutedWords: prefs.data.mutedWords || [],
     }
   }, [currentAccount?.did, prefs.data, hiddenPosts])
   return opts
