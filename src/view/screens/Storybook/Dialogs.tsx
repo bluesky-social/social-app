@@ -110,7 +110,11 @@ export function Dialogs() {
                 variant="outline"
                 color="primary"
                 size="small"
-                onPress={() => scrollable.close()}
+                onPress={() =>
+                  scrollable.close(() => {
+                    console.log('CLOSED')
+                  })
+                }
                 label="Open basic dialog">
                 Close dialog
               </Button>

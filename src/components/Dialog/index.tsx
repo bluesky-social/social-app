@@ -7,6 +7,7 @@ import BottomSheet, {
   BottomSheetView,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import EventEmitter from 'eventemitter3'
 
 import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
@@ -35,6 +36,7 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
+  const events = React.useRef(new EventEmitter<'close'>()).current
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
@@ -54,9 +56,15 @@ export function Outer({
     [setOpenIndex],
   )
 
-  const close = React.useCallback(() => {
-    sheet.current?.close()
-  }, [])
+  const close = React.useCallback<DialogControlProps['close']>(
+    cb => {
+      if (cb) {
+        events.on('close', cb)
+      }
+      sheet.current?.close()
+    },
+    [events],
+  )
 
   useImperativeHandle(
     control.ref,
@@ -70,11 +78,13 @@ export function Outer({
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
+        events.emit('close')
+        events.removeAllListeners('close')
         onClose?.()
         setOpenIndex(-1)
       }
     },
-    [onClose, setOpenIndex],
+    [onClose, setOpenIndex, events],
   )
 
   const context = React.useMemo(() => ({close}), [close])
