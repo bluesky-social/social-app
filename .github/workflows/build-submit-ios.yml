@@ -2,9 +2,6 @@
 name: Build and Submit iOS
 
 on:
-  push:
-    branches:
-      - hailey/use-eas-version-code
   schedule:
     - cron: '0 5 * * *'
   workflow_dispatch:

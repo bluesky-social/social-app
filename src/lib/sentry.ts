@@ -3,7 +3,7 @@
  * avoid future conflicts and/or circular deps
  */
 
-import {Alert, Platform} from 'react-native'
+import {Platform} from 'react-native'
 import app from 'react-native-version-number'
 import * as info from 'expo-updates'
 import {init} from 'sentry-expo'
@@ -45,5 +45,3 @@ init({
   dist,
   release,
 })
-
-Alert.alert(dist)
