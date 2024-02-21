@@ -343,45 +343,45 @@ export function parseEmbedPlayerFromUrl(
   }
 }
 
-export function getPlayerHeight({
+export function getPlayerAspect({
   type,
-  width,
   hasThumb,
+  width,
 }: {
   type: EmbedPlayerParams['type']
-  width: number
   hasThumb: boolean
-}) {
-  if (!hasThumb) return (width / 16) * 9
+  width: number
+}): {aspectRatio?: number; height?: number} {
+  if (!hasThumb) return {aspectRatio: 16 / 9}
 
   switch (type) {
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
-      return (width / 16) * 9
+      return {aspectRatio: 16 / 9}
     case 'youtube_short':
       if (SCREEN_HEIGHT < 600) {
-        return ((width / 9) * 16) / 1.75
+        return {aspectRatio: (9 / 16) * 1.75}
       } else {
-        return ((width / 9) * 16) / 1.5
+        return {aspectRatio: (9 / 16) * 1.5}
       }
     case 'spotify_album':
     case 'apple_music_album':
     case 'apple_music_playlist':
     case 'spotify_playlist':
     case 'soundcloud_set':
-      return 380
+      return {height: 380}
     case 'spotify_song':
       if (width <= 300) {
-        return 155
+        return {height: 155}
       }
-      return 232
+      return {height: 232}
     case 'soundcloud_track':
-      return 165
+      return {height: 165}
     case 'apple_music_song':
-      return 150
+      return {height: 150}
     default:
-      return width
+      return {aspectRatio: 16 / 9}
   }
 }
 
