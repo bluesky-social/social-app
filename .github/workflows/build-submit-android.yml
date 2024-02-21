@@ -46,11 +46,13 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 📁 Copy google-services.json
-        run: cp google-services.json.example google-services.json
-
       - name: ⚙️ Install dependencies
         run: yarn install
+
+      - name: ✏️ Write environment variables
+        run: |
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
 
       - name: 🏗️ EAS Build
         run: yarn use-build-number eas build -p android --profile production --local --output build.aab --non-interactive
