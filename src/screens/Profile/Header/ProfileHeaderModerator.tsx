@@ -2,6 +2,7 @@ import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyModerationDefs,
   ModerationOpts,
   moderateProfile,
   RichText as RichTextAPI,
@@ -36,6 +37,7 @@ import {
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  modservice: AppBskyModerationDefs.ModServiceViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -44,6 +46,7 @@ interface Props {
 
 let ProfileHeaderModerator = ({
   profile: profileUnshadowed,
+  modservice,
   descriptionRT,
   moderationOpts,
   hideBackButton = false,
@@ -66,16 +69,18 @@ let ProfileHeaderModerator = ({
   const isSubscribed =
     variables?.subscribe ??
     preferences?.moderationOpts.mods.find(mod => mod.did === profile.did)
-  const modservice = {likeCount: 0} // TODO
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
   const [likeUri, setLikeUri] = React.useState<string>(
-    /* TODO modservice.viewer?.like ||*/ '',
+    modservice.viewer?.like || '',
   )
   const isLiked = !!likeUri
 
   const onToggleLiked = React.useCallback(async () => {
+    if (!modservice) {
+      return
+    }
     try {
       Haptics.default()
 
@@ -84,10 +89,9 @@ let ProfileHeaderModerator = ({
         track('CustomFeed:Unlike')
         setLikeUri('')
       } else {
-        // TODO
-        // const res = await likeMod({uri: modservice.uri, cid: modservice.cid})
+        const res = await likeMod({uri: modservice.uri, cid: modservice.cid})
         track('CustomFeed:Like')
-        // setLikeUri(res.uri)
+        setLikeUri(res.uri)
       }
     } catch (e: any) {
       Toast.show(
@@ -97,7 +101,7 @@ let ProfileHeaderModerator = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [likeUri, isLiked, likeMod, unlikeMod, track, _])
+  }, [modservice, likeUri, isLiked, likeMod, unlikeMod, track, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')

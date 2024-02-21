@@ -28,7 +28,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderShell} from './Shell'
 import {ProfileHeaderDropdownBtn} from './DropdownBtn'
@@ -36,6 +36,8 @@ import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {RichText} from 'view/com/util/text/RichText'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -224,7 +226,11 @@ let ProfileHeaderStandard = ({
                 onPress={
                   profile.viewer?.following ? onPressUnfollow : onPressFollow
                 }
-                style={a.rounded_full}>
+                style={[a.rounded_full, a.gap_xs]}>
+                <ButtonIcon
+                  position="left"
+                  icon={profile.viewer?.following ? Check : Plus}
+                />
                 <ButtonText>
                   {profile.viewer?.following ? (
                     <Trans>Following</Trans>

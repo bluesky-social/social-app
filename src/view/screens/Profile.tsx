@@ -36,6 +36,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
+import {useModServiceInfoQuery} from '#/state/queries/modservice'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
@@ -52,7 +53,7 @@ import {isInvalidHandle} from '#/lib/strings/handles'
 import {useTheme, atoms as a} from '#/alf'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
 import {RaisingHande4Finger_Stroke2_Corner0_Rounded as RaisingHand} from '#/components/icons/RaisingHand'
-import {ProfileFiltersSection} from '#/screens/Profile/FiltersSection'
+import {ProfileContentFiltersSection} from '#/screens/Profile/Sections/ContentFilters'
 import {ProfileHeader as ProfileHeaderV2} from '#/screens/Profile/Header'
 
 interface SectionRef {
@@ -449,6 +450,10 @@ function ProfileScreenLoadedV2({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
+  const modServiceQuery = useModServiceInfoQuery({
+    did: profile.did,
+    enabled: !!profile.associated?.modservice,
+  })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
@@ -616,6 +621,7 @@ function ProfileScreenLoadedV2({
     return (
       <ProfileHeaderV2
         profile={profile}
+        modservice={modServiceQuery.data}
         descriptionRT={hasDescription ? descriptionRT : null}
         moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
@@ -624,6 +630,7 @@ function ProfileScreenLoadedV2({
     )
   }, [
     profile,
+    modServiceQuery,
     descriptionRT,
     hasDescription,
     moderationOpts,
@@ -646,9 +653,10 @@ function ProfileScreenLoadedV2({
         renderHeader={renderHeader}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileFiltersSection
+              <ProfileContentFiltersSection
                 // ref={moderationSectionRef}
-                profile={profile}
+                modServiceQuery={modServiceQuery}
+                moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
@@ -812,55 +820,6 @@ function ProfileEndOfFeed() {
 }
 
 function ModerationSection({did}: {did: string}) {
-  const t = useTheme()
-  return (
-    <ScrollView>
-      <ModerationServiceCard.Loader
-        did={did}
-        component={({modservice}) => (
-          <ModerationServiceCard.Link modservice={modservice}>
-            {ctx => (
-              <View
-                style={[
-                  a.flex_1,
-                  a.flex_row,
-                  a.align_center,
-                  a.gap_md,
-                  a.p_md,
-                  a.border_t,
-                  t.atoms.border_contrast_low,
-                  ...(ctx.focused || ctx.hovered
-                    ? [t.atoms.bg_contrast_25]
-                    : []),
-                ]}>
-                <View
-                  style={[
-                    {backgroundColor: t.palette.negative_25},
-                    a.p_lg,
-                    a.rounded_sm,
-                  ]}>
-                  <RaisingHand
-                    width={36}
-                    style={[a.z_10]}
-                    fill={t.palette.negative_500}
-                  />
-                </View>
-                <ModerationServiceCard.Card.Content
-                  title="Moderation service"
-                  description={modservice.description}
-                  handle={modservice.creator.handle}
-                  likeCount={modservice.likeCount}
-                />
-              </View>
-            )}
-          </ModerationServiceCard.Link>
-        )}
-      />
-    </ScrollView>
-  )
-}
-
-function FiltersSection({did}: {did: string}) {
   const t = useTheme()
   return (
     <ScrollView>

@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyModerationDefs, AppBskyActorDefs} from '@atproto/api'
+import {AppBskyModerationDefs, ModerationOpts} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
@@ -11,14 +11,7 @@ import {Haptics} from '#/lib/haptics'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {logger} from '#/logger'
-import {
-  useModServiceInfoQuery,
-  useModServiceEnableMutation,
-} from '#/state/queries/modservice'
-import {
-  UsePreferencesQueryResponse,
-  usePreferencesQuery,
-} from '#/state/queries/preferences'
+import {useModServiceEnableMutation} from '#/state/queries/modservice'
 import {useSession} from '#/state/session'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 
@@ -33,28 +26,21 @@ import * as Toggle from '#/components/forms/Toggle'
 import {ErrorState} from '#/screens/ProfileModerationService/ErrorState'
 import {PreferenceRow} from '#/screens/ProfileModerationService/PreferenceRow'
 
-export function ProfileFiltersSection({
-  profile,
+export function ProfileContentFiltersSection({
+  modServiceQuery,
+  moderationOpts,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  modServiceQuery: {
+    data: AppBskyModerationDefs.ModServiceViewDetailed | undefined
+    isLoading: boolean
+    error: Error | null
+  }
+  moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const {height: minHeight} = useSafeAreaFrame()
-  const {
-    isLoading: isPreferencesLoading,
-    error: preferencesError,
-    data: preferences,
-  } = usePreferencesQuery()
-  const {
-    isLoading: isModServiceLoading,
-    error: modServiceError,
-    data: modservice,
-  } = useModServiceInfoQuery({did: profile.did})
-
-  const isLoading = isPreferencesLoading || isModServiceLoading
-  const error = preferencesError || modServiceError
-
+  const {isLoading, error, data: modservice} = modServiceQuery
   return (
     <CenteredView>
       <View
@@ -71,7 +57,7 @@ export function ProfileFiltersSection({
           <View style={[a.w_full, a.align_center]}>
             <Loader size="xl" />
           </View>
-        ) : error || !(preferences && modservice) ? (
+        ) : error || !modservice ? (
           <ErrorState
             error={
               error?.toString() ||
@@ -79,8 +65,8 @@ export function ProfileFiltersSection({
             }
           />
         ) : (
-          <ProfileFiltersSectionInner
-            preferences={preferences}
+          <ProfileContentFiltersSectionInner
+            moderationOpts={moderationOpts}
             modservice={modservice}
           />
         )}
@@ -89,11 +75,11 @@ export function ProfileFiltersSection({
   )
 }
 
-export function ProfileFiltersSectionInner({
-  preferences,
+export function ProfileContentFiltersSectionInner({
+  moderationOpts,
   modservice,
 }: {
-  preferences: UsePreferencesQueryResponse
+  moderationOpts: ModerationOpts
   modservice: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
   const t = useTheme()
@@ -119,16 +105,14 @@ export function ProfileFiltersSectionInner({
     )
   }, [modservice.policies.labelValues])
   const modservicePreferences = React.useMemo(() => {
-    return preferences.moderationOpts.mods.find(
-      p => p.did === modservice.creator.did,
-    )
-  }, [modservice.creator.did, preferences.moderationOpts.mods])
-  const isSubscribed = preferences.moderationOpts.mods.find(
+    return moderationOpts.mods.find(p => p.did === modservice.creator.did)
+  }, [modservice.creator.did, moderationOpts.mods])
+  const isSubscribed = moderationOpts.mods.find(
     mod => mod.did === modservice.creator.did,
   )
   const isEnabled = Boolean(
     enabledVariables?.enabled ??
-      preferences.moderationOpts.mods.find(
+      moderationOpts.mods.find(
         mod => mod.did === modservice.creator.did && mod.enabled,
       ),
   )

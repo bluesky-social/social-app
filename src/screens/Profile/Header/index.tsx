@@ -2,6 +2,7 @@ import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {
   AppBskyActorDefs,
+  AppBskyModerationDefs,
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
@@ -33,6 +34,7 @@ export {ProfileHeaderLoading}
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
+  modservice: AppBskyModerationDefs.ModServiceViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -41,7 +43,10 @@ interface Props {
 
 let ProfileHeader = (props: Props): React.ReactNode => {
   if (props.profile.associated?.modservice) {
-    return <ProfileHeaderModerator {...props} />
+    if (!props.modservice) {
+      return <ProfileHeaderLoading />
+    }
+    return <ProfileHeaderModerator {...props} modservice={props.modservice} />
   }
   return <ProfileHeaderStandard {...props} />
 }
