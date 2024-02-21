@@ -623,7 +623,7 @@ msgstr "Wählen Sie die Algorithmen, die Ihr Erlebnis mit benutzerdefinierten Fe
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
-msgstr "Wählen Sie Ihre wichtigsten Feeds"
+msgstr "Wählen Sie Ihre Haupt-Feeds"
 
 #: src/view/com/auth/create/Step1.tsx:219
 msgid "Choose your password"
