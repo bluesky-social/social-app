@@ -22,15 +22,13 @@ export type DialogControlOpenOptions = {
 
 export type DialogControlProps = {
   open: (options?: DialogControlOpenOptions) => void
-  close: () => void
+  close: (callback?: () => void) => void
 }
 
 export type DialogOuterProps = {
   control: {
     ref: React.RefObject<DialogControlProps>
-    open: (index?: number) => void
-    close: () => void
-  }
+  } & DialogControlProps
   onClose?: () => void
   nativeOptions?: {
     sheet?: Omit<BottomSheetProps, 'children'>

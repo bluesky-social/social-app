@@ -35,6 +35,7 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
+  const closeCallback = React.useRef<() => void>()
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
@@ -54,7 +55,10 @@ export function Outer({
     [setOpenIndex],
   )
 
-  const close = React.useCallback(() => {
+  const close = React.useCallback<DialogControlProps['close']>(cb => {
+    if (cb) {
+      closeCallback.current = cb
+    }
     sheet.current?.close()
   }, [])
 
@@ -70,6 +74,8 @@ export function Outer({
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
+        closeCallback.current?.()
+        closeCallback.current = undefined
         onClose?.()
         setOpenIndex(-1)
       }
