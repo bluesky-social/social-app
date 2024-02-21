@@ -2231,7 +2231,7 @@ msgstr "Meine gespeicherten Feeds"
 
 #: src/view/com/auth/server-input/index.tsx:118
 msgid "my-server.com"
-msgstr "meine-server.de"
+msgstr "mein-server.de"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 #: src/view/com/modals/CreateOrEditList.tsx:290
