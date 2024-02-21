@@ -10,6 +10,9 @@ import {usePalette} from 'lib/hooks/usePalette'
 
 const WORD_WRAP = {wordWrap: 1}
 
+/**
+ * @deprecated use `#/components/RichText`
+ */
 export function RichText({
   testID,
   type = 'md',

@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  GestureResponderEvent,
-  Linking,
-  TouchableWithoutFeedback,
-} from 'react-native'
+import {GestureResponderEvent, Linking} from 'react-native'
 import {
   useLinkProps,
   useNavigation,
@@ -23,7 +19,7 @@ import {
 } from '#/lib/strings/url-helpers'
 import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
-import {Text} from '#/components/Typography'
+import {Text, TextProps} from '#/components/Typography'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -55,11 +51,12 @@ type BaseLinkProps = Pick<
   warnOnMismatchingTextChild?: boolean
 
   /**
-   * Callback for when the link is pressed.
+   * Callback for when the link is pressed. Prevent default and return `false`
+   * to exit early and prevent navigation.
    *
    * DO NOT use this for navigation, that's what the `to` prop is for.
    */
-  onPress?: (e: GestureResponderEvent) => void
+  onPress?: (e: GestureResponderEvent) => void | false
 
   /**
    * Web-only attribute. Sets `download` attr on web.
@@ -86,7 +83,9 @@ export function useLink({
 
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
-      outerOnPress?.(e)
+      const exitEarlyIfFalse = outerOnPress?.(e)
+
+      if (exitEarlyIfFalse === false) return
 
       const requiresWarning = Boolean(
         warnOnMismatchingTextChild &&
@@ -217,7 +216,7 @@ export function Link({
 }
 
 export type InlineLinkProps = React.PropsWithChildren<
-  BaseLinkProps & TextStyleProp
+  BaseLinkProps & TextStyleProp & Pick<TextProps, 'selectable'>
 >
 
 export function InlineLink({
@@ -228,6 +227,7 @@ export function InlineLink({
   style,
   onPress: outerOnPress,
   download,
+  selectable,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -253,43 +253,41 @@ export function InlineLink({
   const flattenedStyle = flatten(style)
 
   return (
-    <TouchableWithoutFeedback
-      accessibilityRole="button"
+    <Text
+      selectable={selectable}
+      label={href}
+      {...rest}
+      style={[
+        {color: t.palette.primary_500},
+        (hovered || focused || pressed) && {
+          outline: 0,
+          textDecorationLine: 'underline',
+          textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
+        },
+        flattenedStyle,
+      ]}
+      role="link"
       onPress={download ? undefined : onPress}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
       onFocus={onFocus}
-      onBlur={onBlur}>
-      <Text
-        label={href}
-        {...rest}
-        style={[
-          {color: t.palette.primary_500},
-          (hovered || focused || pressed) && {
-            outline: 0,
-            textDecorationLine: 'underline',
-            textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
-          },
-          flattenedStyle,
-        ]}
-        role="link"
-        onMouseEnter={onHoverIn}
-        onMouseLeave={onHoverOut}
-        accessibilityRole="link"
-        href={href}
-        {...web({
-          hrefAttrs: {
-            target: download ? undefined : isExternal ? 'blank' : undefined,
-            rel: isExternal ? 'noopener noreferrer' : undefined,
-            download,
-          },
-          dataSet: {
-            // default to no underline, apply this ourselves
-            noUnderline: '1',
-          },
-        })}>
-        {children}
-      </Text>
-    </TouchableWithoutFeedback>
+      onBlur={onBlur}
+      onMouseEnter={onHoverIn}
+      onMouseLeave={onHoverOut}
+      accessibilityRole="link"
+      href={href}
+      {...web({
+        hrefAttrs: {
+          target: download ? undefined : isExternal ? 'blank' : undefined,
+          rel: isExternal ? 'noopener noreferrer' : undefined,
+          download,
+        },
+        dataSet: {
+          // default to no underline, apply this ourselves
+          noUnderline: '1',
+        },
+      })}>
+      {children}
+    </Text>
   )
 }

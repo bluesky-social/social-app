@@ -2,6 +2,7 @@ import React, {memo} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
   AppBskyFeedPost,
@@ -19,6 +20,8 @@ import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {getCurrentRoute} from 'lib/routes/helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
@@ -63,6 +66,7 @@ let PostDropdownBtn = ({
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
+  const navigation = useNavigation()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -82,13 +86,38 @@ let PostDropdownBtn = ({
     postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
         Toast.show(_(msg`Post deleted`))
+
+        const route = getCurrentRoute(navigation.getState())
+        if (route.name === 'PostThread') {
+          const params = route.params as CommonNavigatorParams['PostThread']
+          if (
+            currentAccount &&
+            isAuthor &&
+            (params.name === currentAccount.handle ||
+              params.name === currentAccount.did)
+          ) {
+            const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
+            if (currentHref === href && navigation.canGoBack()) {
+              navigation.goBack()
+            }
+          }
+        }
       },
       e => {
         logger.error('Failed to delete post', {message: e})
         Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
-  }, [postUri, postDeleteMutation, _])
+  }, [
+    navigation,
+    postUri,
+    postDeleteMutation,
+    postAuthor,
+    currentAccount,
+    isAuthor,
+    href,
+    _,
+  ])
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
