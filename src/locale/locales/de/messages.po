@@ -671,7 +671,7 @@ msgstr "Aktiven Dialog schließen"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
-msgstr "Alarm schließen"
+msgstr "Meldung schließen"
 
 #: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
 msgid "Close bottom drawer"
