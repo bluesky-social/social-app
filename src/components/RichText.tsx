@@ -1,7 +1,7 @@
 import React from 'react'
 import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
 
-import {atoms as a, TextStyleProp} from '#/alf'
+import {atoms as a, TextStyleProp, flatten} from '#/alf'
 import {InlineLink} from '#/components/Link'
 import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
@@ -29,7 +29,7 @@ export function RichText({
   const [richText, setRichText] = React.useState<RichTextAPI>(() =>
     value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
   )
-  const styles = [a.leading_normal, style]
+  const styles = [a.leading_snug, flatten(style)]
 
   React.useEffect(() => {
     if (!resolveFacets) return

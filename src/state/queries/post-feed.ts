@@ -365,23 +365,6 @@ function createApi(
   }
 }
 
-/**
- * This helper is used by the post-thread placeholder function to
- * find a post in the query-data cache
- */
-export function findPostInQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): AppBskyFeedDefs.PostView | undefined {
-  const generator = findAllPostsInQueryData(queryClient, uri)
-  const result = generator.next()
-  if (result.done) {
-    return undefined
-  } else {
-    return result.value
-  }
-}
-
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
@@ -391,9 +374,6 @@ export function* findAllPostsInQueryData(
   >({
     queryKey: ['post-feed'],
   })
-
-  let foundEmbed: AppBskyFeedDefs.PostView | undefined
-
   for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData?.pages) {
       continue
@@ -405,7 +385,7 @@ export function* findAllPostsInQueryData(
         }
         const quotedPost = getEmbeddedPost(item.post.embed)
         if (quotedPost?.uri === uri) {
-          foundEmbed = embedViewRecordToPostView(quotedPost)
+          yield embedViewRecordToPostView(quotedPost)
         }
         if (
           AppBskyFeedDefs.isPostView(item.reply?.parent) &&
@@ -421,10 +401,6 @@ export function* findAllPostsInQueryData(
         }
       }
     }
-  }
-
-  if (foundEmbed) {
-    yield foundEmbed
   }
 }
 
