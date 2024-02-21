@@ -614,7 +614,7 @@ msgstr "Service wählen"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr "Wählen Sie die Algorithmen, die Ihre benutzerdefinierten Feeds betreiben."
+msgstr "Wählen Sie die Algorithmen, die Ihre benutzerdefinierten Feeds generieren."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
