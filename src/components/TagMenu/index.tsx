@@ -13,6 +13,12 @@ import {Divider} from '#/components/Divider'
 import {Link} from '#/components/Link'
 import {makeSearchLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
+import {
+  usePreferencesQuery,
+  useUpsertMutedWordsMutation,
+  useRemoveMutedWordMutation,
+} from '#/state/queries/preferences'
+import {Loader} from '#/components/Loader'
 
 export function useTagMenuControl() {
   return Dialog.useDialogControl()
@@ -28,8 +34,30 @@ export function TagMenu({
   tag: string
   authorHandle?: string
 }>) {
+  const sanitizedTag = tag.replace(/^#/, '')
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
+  const {isLoading: isPreferencesLoading, data: preferences} =
+    usePreferencesQuery()
+  const {
+    mutateAsync: upsertMutedWord,
+    variables: optimisticUpsert,
+    reset: resetUpsert,
+  } = useUpsertMutedWordsMutation()
+  const {
+    mutateAsync: removeMutedWord,
+    variables: optimisticRemove,
+    reset: resetRemove,
+  } = useRemoveMutedWordMutation()
+  const isMuted = Boolean(
+    (preferences?.mutedWords?.find(
+      m => m.value === sanitizedTag && m.targets.includes('tag'),
+    ) ??
+      optimisticUpsert?.find(
+        m => m.value === sanitizedTag && m.targets.includes('tag'),
+      )) &&
+      !(optimisticRemove?.value === sanitizedTag),
+  )
 
   return (
     <>
@@ -39,68 +67,23 @@ export function TagMenu({
         <Dialog.Handle />
 
         <Dialog.Inner label="Tag">
-          <View
-            style={[
-              a.rounded_md,
-              a.border,
-              a.mb_md,
-              t.atoms.border_contrast_low,
-              t.atoms.bg_contrast_25,
-            ]}>
-            <Link
-              label="tag"
-              to={makeSearchLink({query: tag})}
-              onPress={e => {
-                e.preventDefault()
-
-                control.close(() => {
-                  // @ts-ignore :ron_swanson: "I know more than you"
-                  navigation.navigate('SearchTab', {
-                    screen: 'Search',
-                    params: {
-                      q: tag,
-                    },
-                  })
-                })
-
-                return false
-              }}>
+          {isPreferencesLoading ? (
+            <View style={[a.w_full, a.align_center]}>
+              <Loader size="lg" />
+            </View>
+          ) : (
+            <>
               <View
                 style={[
-                  a.w_full,
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_start,
-                  a.gap_md,
-                  a.px_lg,
-                  a.py_md,
+                  a.rounded_md,
+                  a.border,
+                  a.mb_md,
+                  t.atoms.border_contrast_low,
+                  t.atoms.bg_contrast_25,
                 ]}>
-                <Search size="lg" style={[t.atoms.text_contrast_medium]} />
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    a.flex_1,
-                    a.text_md,
-                    a.font_bold,
-                    native({top: 2}),
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  See{' '}
-                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                    {tag}
-                  </Text>{' '}
-                  posts
-                </Text>
-              </View>
-            </Link>
-
-            {authorHandle && (
-              <>
-                <Divider />
-
                 <Link
                   label="tag"
-                  to={makeSearchLink({query: tag, from: authorHandle})}
+                  to={makeSearchLink({query: tag})}
                   onPress={e => {
                     e.preventDefault()
 
@@ -109,8 +92,7 @@ export function TagMenu({
                       navigation.navigate('SearchTab', {
                         screen: 'Search',
                         params: {
-                          q:
-                            tag + (authorHandle ? ` from:${authorHandle}` : ''),
+                          q: tag,
                         },
                       })
                     })
@@ -127,7 +109,7 @@ export function TagMenu({
                       a.px_lg,
                       a.py_md,
                     ]}>
-                    <Person size="lg" style={[t.atoms.text_contrast_medium]} />
+                    <Search size="lg" style={[t.atoms.text_contrast_medium]} />
                     <Text
                       numberOfLines={1}
                       style={[
@@ -141,54 +123,134 @@ export function TagMenu({
                       <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                         {tag}
                       </Text>{' '}
-                      posts by this user
+                      posts
                     </Text>
                   </View>
                 </Link>
-              </>
-            )}
 
-            <Divider />
+                {authorHandle && (
+                  <>
+                    <Divider />
 
-            <Button label="tag">
-              <View
-                style={[
-                  a.w_full,
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_start,
-                  a.gap_md,
-                  a.px_lg,
-                  a.py_md,
-                ]}>
-                <Mute size="lg" style={[t.atoms.text_contrast_medium]} />
-                <Text
-                  numberOfLines={1}
-                  style={[
-                    a.flex_1,
-                    a.text_md,
-                    a.font_bold,
-                    native({top: 2}),
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  Mute{' '}
-                  <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                    {tag}
-                  </Text>{' '}
-                  posts
-                </Text>
+                    <Link
+                      label="tag"
+                      to={makeSearchLink({query: tag, from: authorHandle})}
+                      onPress={e => {
+                        e.preventDefault()
+
+                        control.close(() => {
+                          // @ts-ignore :ron_swanson: "I know more than you"
+                          navigation.navigate('SearchTab', {
+                            screen: 'Search',
+                            params: {
+                              q:
+                                tag +
+                                (authorHandle ? ` from:${authorHandle}` : ''),
+                            },
+                          })
+                        })
+
+                        return false
+                      }}>
+                      <View
+                        style={[
+                          a.w_full,
+                          a.flex_row,
+                          a.align_center,
+                          a.justify_start,
+                          a.gap_md,
+                          a.px_lg,
+                          a.py_md,
+                        ]}>
+                        <Person
+                          size="lg"
+                          style={[t.atoms.text_contrast_medium]}
+                        />
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            a.flex_1,
+                            a.text_md,
+                            a.font_bold,
+                            native({top: 2}),
+                            t.atoms.text_contrast_medium,
+                          ]}>
+                          See{' '}
+                          <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                            {tag}
+                          </Text>{' '}
+                          posts by this user
+                        </Text>
+                      </View>
+                    </Link>
+                  </>
+                )}
+
+                {preferences ? (
+                  <>
+                    <Divider />
+
+                    <Button
+                      label="tag"
+                      onPress={() => {
+                        if (isMuted) {
+                          resetUpsert()
+                          removeMutedWord({
+                            value: sanitizedTag,
+                            targets: ['tag'],
+                          })
+                        } else {
+                          resetRemove()
+                          upsertMutedWord([
+                            {value: sanitizedTag, targets: ['tag']},
+                          ])
+                        }
+                      }}>
+                      <View
+                        style={[
+                          a.w_full,
+                          a.flex_row,
+                          a.align_center,
+                          a.justify_start,
+                          a.gap_md,
+                          a.px_lg,
+                          a.py_md,
+                        ]}>
+                        <Mute
+                          size="lg"
+                          style={[t.atoms.text_contrast_medium]}
+                        />
+                        <Text
+                          numberOfLines={1}
+                          style={[
+                            a.flex_1,
+                            a.text_md,
+                            a.font_bold,
+                            native({top: 2}),
+                            t.atoms.text_contrast_medium,
+                          ]}>
+                          {isMuted ? 'Unmute' : 'Mute'}{' '}
+                          <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                            {tag}
+                          </Text>{' '}
+                          posts
+                        </Text>
+                      </View>
+                    </Button>
+                  </>
+                ) : null}
               </View>
-            </Button>
-          </View>
 
-          <Button
-            label="tag"
-            size="small"
-            variant="ghost"
-            color="secondary"
-            onPress={control.close}>
-            <ButtonText>Cancel</ButtonText>
-          </Button>
+              <Button
+                label="tag"
+                size="small"
+                variant="ghost"
+                color="secondary"
+                onPress={() => control.close()}>
+                <ButtonText>Cancel</ButtonText>
+              </Button>
+            </>
+          )}
         </Dialog.Inner>
       </Dialog.Outer>
     </>
