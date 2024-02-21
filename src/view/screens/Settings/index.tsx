@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  Alert,
 } from 'react-native'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
@@ -68,6 +69,7 @@ import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {ExportCarDialog} from './ExportCarDialog'
+import {logger} from '#/logger'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -627,6 +629,28 @@ export function SettingsScreen({}: Props) {
         </TouchableOpacity>
 
         <View style={styles.spacer20} />
+
+        <TouchableOpacity
+          testID="moderationBtn"
+          style={[
+            styles.linkCard,
+            pal.view,
+            isSwitchingAccounts && styles.dimmed,
+          ]}
+          onPress={() => {
+            Alert.alert('throwing')
+            logger.error('Throw something here')
+
+            throw new Error()
+          }}
+          accessibilityRole="button">
+          <View style={[styles.iconContainer, pal.btn]}>
+            <HandIcon style={pal.text} size={18} strokeWidth={6} />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>ThorwSample</Trans>
+          </Text>
+        </TouchableOpacity>
 
         <Text type="xl-bold" style={[pal.text, styles.heading]}>
           <Trans>Privacy</Trans>

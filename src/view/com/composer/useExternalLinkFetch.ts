@@ -88,6 +88,7 @@ export function useExternalLinkFetch({
             })
           },
           err => {
+            console.log('errored')
             logger.error('Failed to fetch list for embedding', {message: err})
             setExtLink(undefined)
           },
