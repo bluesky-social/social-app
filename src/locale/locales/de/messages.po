@@ -740,7 +740,7 @@ msgstr "Antwort verfassen"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr "Konfigurieren Sie die Einstellung für die Inhaltsfilterung für die Kategorie: {0}"
+msgstr "Konfigurieren Sie die Einstellung der Inhaltsfilterung für die Kategorie: {0}"
 
 #: src/components/Prompt.tsx:113
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -783,7 +783,7 @@ msgstr "Bestätigungscode"
 
 #: src/view/com/modals/Waitlist.tsx:120
 msgid "Confirms signing up {email} to the waitlist"
-msgstr "Bestätigt die Eintragung in die Warteliste {email}"
+msgstr "Bestätigt die Eintragung von {email} in die Warteliste"
 
 #: src/view/com/auth/create/CreateAccount.tsx:189
 #: src/view/com/auth/login/LoginForm.tsx:278
@@ -938,7 +938,7 @@ msgstr "Erstellt von Ihnen"
 
 #: src/view/com/composer/Composer.tsx:448
 msgid "Creates a card with a thumbnail. The card links to {url}"
-msgstr "Erzeugt eine Link-Karte mit einem Vorschaubild und verlinkt auf {url}"
+msgstr "Erzeugt eine Karte mit Vorschaubild und verlinkt auf {url}"
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
@@ -1015,7 +1015,7 @@ msgstr "Diesen Beitrag löschen?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:69
 msgid "Deleted"
-msgstr "Gelöschter"
+msgstr "Gelöscht"
 
 #: src/view/com/post-thread/PostThread.tsx:316
 msgid "Deleted post."
@@ -1034,7 +1034,7 @@ msgstr "Wollten Sie etwas sagen?"
 
 #: src/view/screens/Settings/index.tsx:504
 msgid "Dim"
-msgstr "Dim"
+msgstr "Dimmen"
 
 #: src/view/com/composer/Composer.tsx:144
 msgid "Discard"
@@ -1137,11 +1137,11 @@ msgstr "z.B. Künstlerin, Hundeliebhaberin und begeisterte Leserin."
 
 #: src/view/com/modals/CreateOrEditList.tsx:283
 msgid "e.g. Great Posters"
-msgstr "z.B. Großen Poster"
+msgstr "z.B. Große Poster"
 
 #: src/view/com/modals/CreateOrEditList.tsx:284
 msgid "e.g. Spammers"
-msgstr "z.B. Spammern"
+msgstr "z.B. Spammer"
 
 #: src/view/com/modals/CreateOrEditList.tsx:312
 msgid "e.g. The posters who never miss."
@@ -1292,7 +1292,7 @@ msgstr "Gib die E-Mail ein, die du zur Erstellung deines Kontos verwendet hast. 
 #: src/view/com/auth/create/Step1.tsx:251
 #: src/view/com/modals/BirthDateSettings.tsx:74
 msgid "Enter your birth date"
-msgstr "Gib deine Geburtsdatum ein"
+msgstr "Gib dein Geburtsdatum ein"
 
 #: src/view/com/modals/Waitlist.tsx:78
 msgid "Enter your email"
@@ -1504,11 +1504,11 @@ msgstr "Folgen"
 #: src/view/com/post-thread/PostThreadFollowBtn.tsx:122
 #: src/view/com/profile/ProfileHeader.tsx:503
 msgid "Follow {0}"
-msgstr "Folgen {0}"
+msgstr "{0} folgen"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:179
 msgid "Follow All"
-msgstr "Alle folgen"
+msgstr "Allen folgen"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 msgid "Follow selected accounts and continue to the next step"
@@ -1524,11 +1524,11 @@ msgstr "Gefolgt von {0}"
 
 #: src/view/com/modals/Threadgate.tsx:98
 msgid "Followed users"
-msgstr "Benutzer ich verfolge"
+msgstr "Benutzer, denen ich folge"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:154
 msgid "Followed users only"
-msgstr "Nur Benutzer denen ich folge"
+msgstr "Nur Benutzer, denen ich folge"
 
 #: src/view/com/notifications/FeedItem.tsx:166
 msgid "followed you"
@@ -1546,7 +1546,7 @@ msgstr "Folge ich"
 
 #: src/view/com/profile/ProfileHeader.tsx:148
 msgid "Following {0}"
-msgstr "Folge ich {0}"
+msgstr "ich folge {0}"
 
 #: src/view/com/profile/ProfileHeader.tsx:545
 msgid "Follows you"
