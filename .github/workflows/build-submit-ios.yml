@@ -63,6 +63,11 @@ jobs:
           # change unless the yarn version changes as well.
           key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
 
+      - name: ✏️ Write environment variables
+        run: |
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
+
       - name: 🏗️ EAS Build
         run: yarn use-build-number eas build -p ios --profile production --local --output build.ipa --non-interactive
 
