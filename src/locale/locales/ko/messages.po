@@ -343,21 +343,21 @@ msgstr "예술"
 msgid "Artistic or non-erotic nudity."
 msgstr "선정적이지 않거나 예술적인 노출."
 
-#: src/view/com/auth/create/CreateAccount.tsx:147
+#: src/view/com/auth/create/CreateAccount.tsx:154
 #: src/view/com/auth/login/ChooseAccountForm.tsx:151
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:437
-#: src/view/com/post-thread/PostThread.tsx:487
-#: src/view/com/post-thread/PostThread.tsx:495
+#: src/view/com/post-thread/PostThread.tsx:471
+#: src/view/com/post-thread/PostThread.tsx:521
+#: src/view/com/post-thread/PostThread.tsx:529
 #: src/view/com/profile/ProfileHeader.tsx:648
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "뒤로"
 
-#: src/view/com/post-thread/PostThread.tsx:445
+#: src/view/com/post-thread/PostThread.tsx:479
 msgctxt "action"
 msgid "Back"
 msgstr "뒤로"
@@ -370,7 +370,7 @@ msgstr "{interestsText}에 대한 관심사 기반"
 msgid "Basics"
 msgstr "기본"
 
-#: src/view/com/auth/create/Step1.tsx:246
+#: src/view/com/auth/create/Step1.tsx:250
 #: src/view/com/modals/BirthDateSettings.tsx:73
 msgid "Birthday"
 msgstr "생년월일"
@@ -422,7 +422,7 @@ msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션�
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr "차단한 계정은 내 스레드에 답글을 달거나 나를 멘션하거나 기타 다른 방식으로 나와 상호작용할 수 없습니다. 차단한 계정의 콘텐츠를 볼 수 없으며 해당 계정도 내 콘텐츠를 볼 수 없게 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:297
+#: src/view/com/post-thread/PostThread.tsx:324
 msgid "Blocked post."
 msgstr "차단된 게시물."
 
@@ -655,7 +655,7 @@ msgstr "맞춤 피드를 통해 사용자 경험을 강화하는 알고리즘을
 msgid "Choose your main feeds"
 msgstr "기본 피드 선택"
 
-#: src/view/com/auth/create/Step1.tsx:215
+#: src/view/com/auth/create/Step1.tsx:219
 msgid "Choose your password"
 msgstr "비밀번호를 입력하세요"
 
@@ -756,6 +756,10 @@ msgstr "커뮤니티 가이드라인"
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
+#: src/view/com/auth/create/Step3.tsx:73
+msgid "Complete the challenge"
+msgstr ""
+
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
@@ -811,12 +815,12 @@ msgstr "확인 코드"
 msgid "Confirms signing up {email} to the waitlist"
 msgstr "{email}을(를) 대기자 명단에 등록합니다"
 
-#: src/view/com/auth/create/CreateAccount.tsx:182
+#: src/view/com/auth/create/CreateAccount.tsx:189
 #: src/view/com/auth/login/LoginForm.tsx:278
 msgid "Connecting..."
 msgstr "연결 중…"
 
-#: src/view/com/auth/create/CreateAccount.tsx:202
+#: src/view/com/auth/create/CreateAccount.tsx:209
 msgid "Contact support"
 msgstr "지원에 연락하기"
 
@@ -928,8 +932,8 @@ msgid "Could not load list"
 msgstr "리스트를 불러올 수 없습니다"
 
 #: src/view/com/auth/create/Step2.tsx:91
-msgid "Country"
-msgstr "국가"
+#~ msgid "Country"
+#~ msgstr "국가"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:62
 #: src/view/com/auth/SplashScreen.tsx:71
@@ -941,7 +945,7 @@ msgstr "새 계정 만들기"
 msgid "Create a new Bluesky account"
 msgstr "새 Bluesky 계정을 만듭니다"
 
-#: src/view/com/auth/create/CreateAccount.tsx:122
+#: src/view/com/auth/create/CreateAccount.tsx:129
 msgid "Create Account"
 msgstr "계정 만들기"
 
@@ -1055,7 +1059,7 @@ msgstr "이 게시물을 삭제하시겠습니까?"
 msgid "Deleted"
 msgstr "삭제됨"
 
-#: src/view/com/post-thread/PostThread.tsx:289
+#: src/view/com/post-thread/PostThread.tsx:316
 msgid "Deleted post."
 msgstr "삭제된 게시물."
 
@@ -1115,7 +1119,7 @@ msgstr "표시 이름"
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다."
 
-#: src/view/com/auth/create/Step1.tsx:166
+#: src/view/com/auth/create/Step1.tsx:170
 msgid "Don't have an invite code?"
 msgstr "초대 코드가 없나요?"
 
@@ -1257,16 +1261,14 @@ msgstr "내 프로필 설명 편집"
 msgid "Education"
 msgstr "교육"
 
-#: src/view/com/auth/create/Step1.tsx:195
-#: src/view/com/auth/create/Step2.tsx:194
-#: src/view/com/auth/create/Step2.tsx:269
+#: src/view/com/auth/create/Step1.tsx:199
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:156
 #: src/view/com/modals/ChangeEmail.tsx:141
 #: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "이메일"
 
-#: src/view/com/auth/create/Step1.tsx:186
+#: src/view/com/auth/create/Step1.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:147
 msgid "Email address"
 msgstr "이메일 주소"
@@ -1337,7 +1339,7 @@ msgstr "사용할 도메인 입력"
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
 msgstr "계정을 만들 때 사용한 이메일을 입력합니다. 새 비밀번호를 설정할 수 있도록 \"재설정 코드\"를 보내드립니다."
 
-#: src/view/com/auth/create/Step1.tsx:247
+#: src/view/com/auth/create/Step1.tsx:251
 #: src/view/com/modals/BirthDateSettings.tsx:74
 msgid "Enter your birth date"
 msgstr "생년월일을 입력하세요"
@@ -1346,7 +1348,7 @@ msgstr "생년월일을 입력하세요"
 msgid "Enter your email"
 msgstr "이메일을 입력하세요"
 
-#: src/view/com/auth/create/Step1.tsx:191
+#: src/view/com/auth/create/Step1.tsx:195
 msgid "Enter your email address"
 msgstr "이메일 주소를 입력하세요"
 
@@ -1359,12 +1361,16 @@ msgid "Enter your new email address below."
 msgstr "아래에 새 이메일 주소를 입력하세요."
 
 #: src/view/com/auth/create/Step2.tsx:188
-msgid "Enter your phone number"
-msgstr "전화번호를 입력하세요"
+#~ msgid "Enter your phone number"
+#~ msgstr "전화번호를 입력하세요"
 
 #: src/view/com/auth/login/Login.tsx:99
 msgid "Enter your username and password"
 msgstr "사용자 이름 및 비밀번호 입력"
+
+#: src/view/com/auth/create/Step3.tsx:67
+msgid "Error receiving captcha response."
+msgstr ""
 
 #: src/view/screens/Search/Search.tsx:109
 msgid "Error:"
@@ -1462,7 +1468,7 @@ msgstr "피드 오프라인"
 msgid "Feed Preferences"
 msgstr "피드 설정"
 
-#: src/view/shell/desktop/RightNav.tsx:69
+#: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
 msgstr "피드백"
@@ -1629,7 +1635,7 @@ msgstr "비밀번호 분실"
 msgid "Forgot Password"
 msgstr "비밀번호 분실"
 
-#: src/view/com/posts/FeedItem.tsx:189
+#: src/view/com/posts/FeedItem.tsx:186
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "<0/>에서"
@@ -1679,11 +1685,11 @@ msgstr "다음"
 msgid "Handle"
 msgstr "핸들"
 
-#: src/view/com/auth/create/CreateAccount.tsx:197
+#: src/view/com/auth/create/CreateAccount.tsx:204
 msgid "Having trouble?"
 msgstr "문제가 있나요?"
 
-#: src/view/shell/desktop/RightNav.tsx:98
+#: src/view/shell/desktop/RightNav.tsx:90
 #: src/view/shell/Drawer.tsx:321
 msgid "Help"
 msgstr "도움말"
@@ -1773,7 +1779,7 @@ msgstr "홈"
 msgid "Home Feed Preferences"
 msgstr "홈 피드 설정"
 
-#: src/view/com/auth/create/Step1.tsx:78
+#: src/view/com/auth/create/Step1.tsx:82
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:120
 msgid "Hosting provider"
 msgstr "호스팅 제공자"
@@ -1827,11 +1833,11 @@ msgstr "비밀번호 재설정을 위해 이메일로 전송된 코드를 입력
 msgid "Input confirmation code for account deletion"
 msgstr "계정 삭제를 위한 확인 코드를 입력합니다"
 
-#: src/view/com/auth/create/Step1.tsx:196
+#: src/view/com/auth/create/Step1.tsx:200
 msgid "Input email for Bluesky account"
 msgstr "Bluesky 계정에 사용할 이메일을 입력합니다"
 
-#: src/view/com/auth/create/Step1.tsx:154
+#: src/view/com/auth/create/Step1.tsx:158
 msgid "Input invite code to proceed"
 msgstr "진행하기 위해 초대 코드를 입력합니다"
 
@@ -1848,8 +1854,8 @@ msgid "Input password for account deletion"
 msgstr "계정을 삭제하기 위해 비밀번호를 입력합니다"
 
 #: src/view/com/auth/create/Step2.tsx:196
-msgid "Input phone number for SMS verification"
-msgstr "SMS 인증에 사용할 전화번호를 입력합니다"
+#~ msgid "Input phone number for SMS verification"
+#~ msgstr "SMS 인증에 사용할 전화번호를 입력합니다"
 
 #: src/view/com/auth/login/LoginForm.tsx:230
 msgid "Input the password tied to {identifier}"
@@ -1860,8 +1866,8 @@ msgid "Input the username or email address you used at signup"
 msgstr "가입 시 사용한 사용자 이름 또는 이메일 주소를 입력합니다"
 
 #: src/view/com/auth/create/Step2.tsx:271
-msgid "Input the verification code we have texted to you"
-msgstr "문자 메시지로 전송된 인증 코드를 입력합니다"
+#~ msgid "Input the verification code we have texted to you"
+#~ msgstr "문자 메시지로 전송된 인증 코드를 입력합니다"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
@@ -1871,11 +1877,11 @@ msgstr "Bluesky 대기자 명단에 등록하려면 이메일을 입력합니다
 msgid "Input your password"
 msgstr "비밀번호를 입력합니다"
 
-#: src/view/com/auth/create/Step3.tsx:42
+#: src/view/com/auth/create/Step2.tsx:45
 msgid "Input your user handle"
 msgstr "사용자 핸들을 입력합니다"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:225
+#: src/view/com/post-thread/PostThreadItem.tsx:223
 msgid "Invalid or unsupported post record"
 msgstr "유효하지 않거나 지원되지 않는 게시물 기록"
 
@@ -1891,12 +1897,12 @@ msgstr "잘못된 사용자 이름 또는 비밀번호"
 msgid "Invite a Friend"
 msgstr "친구 초대하기"
 
-#: src/view/com/auth/create/Step1.tsx:144
-#: src/view/com/auth/create/Step1.tsx:153
+#: src/view/com/auth/create/Step1.tsx:148
+#: src/view/com/auth/create/Step1.tsx:157
 msgid "Invite code"
 msgstr "초대 코드"
 
-#: src/view/com/auth/create/state.ts:199
+#: src/view/com/auth/create/state.ts:158
 msgid "Invite code not accepted. Check that you input it correctly and try again."
 msgstr "초대 코드가 올바르지 않습니다. 코드를 올바르게 입력했는지 확인한 후 다시 시도하세요."
 
@@ -1925,8 +1931,8 @@ msgstr "채용"
 msgid "Join the waitlist"
 msgstr "대기자 명단 등록"
 
-#: src/view/com/auth/create/Step1.tsx:170
 #: src/view/com/auth/create/Step1.tsx:174
+#: src/view/com/auth/create/Step1.tsx:178
 msgid "Join the waitlist."
 msgstr "대기자 명단에 등록하세요."
 
@@ -2053,7 +2059,7 @@ msgstr "님이 내 게시물을 좋아합니다"
 msgid "Likes"
 msgstr "좋아요"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:182
+#: src/view/com/post-thread/PostThreadItem.tsx:180
 msgid "Likes on this post"
 msgstr "이 게시물을 좋아요 표시합니다"
 
@@ -2101,8 +2107,8 @@ msgstr "리스트 언뮤트됨"
 msgid "Lists"
 msgstr "리스트"
 
-#: src/view/com/post-thread/PostThread.tsx:306
-#: src/view/com/post-thread/PostThread.tsx:314
+#: src/view/com/post-thread/PostThread.tsx:333
+#: src/view/com/post-thread/PostThread.tsx:341
 msgid "Load more posts"
 msgstr "더 많은 게시물 불러오기"
 
@@ -2110,7 +2116,7 @@ msgstr "더 많은 게시물 불러오기"
 msgid "Load new notifications"
 msgstr "새 알림 불러오기"
 
-#: src/view/com/feeds/FeedPage.tsx:190
+#: src/view/com/feeds/FeedPage.tsx:181
 #: src/view/screens/Profile.tsx:440
 #: src/view/screens/ProfileFeed.tsx:494
 #: src/view/screens/ProfileList.tsx:680
@@ -2361,7 +2367,7 @@ msgstr "새 비밀번호"
 msgid "New Password"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:201
+#: src/view/com/feeds/FeedPage.tsx:192
 msgctxt "action"
 msgid "New post"
 msgstr "새 게시물"
@@ -2393,7 +2399,7 @@ msgstr "새로운 순"
 msgid "News"
 msgstr "뉴스"
 
-#: src/view/com/auth/create/CreateAccount.tsx:161
+#: src/view/com/auth/create/CreateAccount.tsx:168
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:182
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:192
 #: src/view/com/auth/login/LoginForm.tsx:291
@@ -2669,8 +2675,8 @@ msgstr "페이지를 찾을 수 없음"
 msgid "Page Not Found"
 msgstr "페이지를 찾을 수 없음"
 
-#: src/view/com/auth/create/Step1.tsx:210
-#: src/view/com/auth/create/Step1.tsx:220
+#: src/view/com/auth/create/Step1.tsx:214
+#: src/view/com/auth/create/Step1.tsx:224
 #: src/view/com/auth/login/LoginForm.tsx:226
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:161
 #: src/view/com/modals/DeleteAccount.tsx:202
@@ -2706,8 +2712,8 @@ msgid "Pets"
 msgstr "반려동물"
 
 #: src/view/com/auth/create/Step2.tsx:183
-msgid "Phone number"
-msgstr "전화번호"
+#~ msgid "Phone number"
+#~ msgstr "전화번호"
 
 #: src/view/com/modals/SelfLabel.tsx:121
 msgid "Pictures meant for adults."
@@ -2735,13 +2741,17 @@ msgstr "동영상 재생"
 msgid "Plays the GIF"
 msgstr "GIF를 재생합니다"
 
-#: src/view/com/auth/create/state.ts:177
+#: src/view/com/auth/create/state.ts:124
 msgid "Please choose your handle."
 msgstr "핸들을 입력하세요."
 
-#: src/view/com/auth/create/state.ts:160
+#: src/view/com/auth/create/state.ts:117
 msgid "Please choose your password."
 msgstr "비밀번호를 입력하세요."
+
+#: src/view/com/auth/create/state.ts:131
+msgid "Please complete the verification captcha."
+msgstr ""
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
@@ -2752,22 +2762,22 @@ msgid "Please enter a name for your app password. All spaces is not allowed."
 msgstr "앱 비밀번호의 이름을 입력하세요. 모든 공백 문자는 허용되지 않습니다."
 
 #: src/view/com/auth/create/Step2.tsx:206
-msgid "Please enter a phone number that can receive SMS text messages."
-msgstr "SMS 문자 메시지를 받을 수 있는 휴대폰 번호를 입력하세요."
+#~ msgid "Please enter a phone number that can receive SMS text messages."
+#~ msgstr "SMS 문자 메시지를 받을 수 있는 휴대폰 번호를 입력하세요."
 
 #: src/view/com/modals/AddAppPasswords.tsx:145
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "이 앱 비밀번호에 대해 고유한 이름을 입력하거나 무작위로 생성된 이름을 사용합니다."
 
 #: src/view/com/auth/create/state.ts:170
-msgid "Please enter the code you received by SMS."
-msgstr "SMS로 받은 코드를 입력하세요."
+#~ msgid "Please enter the code you received by SMS."
+#~ msgstr "SMS로 받은 코드를 입력하세요."
 
 #: src/view/com/auth/create/Step2.tsx:282
-msgid "Please enter the verification code sent to {phoneNumberFormatted}."
-msgstr "{phoneNumberFormatted}(으)로 보내진 인증 코드를 입력하세요."
+#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
+#~ msgstr "{phoneNumberFormatted}(으)로 보내진 인증 코드를 입력하세요."
 
-#: src/view/com/auth/create/state.ts:146
+#: src/view/com/auth/create/state.ts:103
 msgid "Please enter your email."
 msgstr "이메일을 입력하세요."
 
@@ -2802,12 +2812,12 @@ msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
 
-#: src/view/com/post-thread/PostThread.tsx:276
+#: src/view/com/post-thread/PostThread.tsx:303
 msgctxt "description"
 msgid "Post"
 msgstr "게시물"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:174
+#: src/view/com/post-thread/PostThreadItem.tsx:172
 msgid "Post by {0}"
 msgstr "{0} 님의 게시물"
 
@@ -2821,7 +2831,7 @@ msgstr "@{0} 님의 게시물"
 msgid "Post deleted"
 msgstr "게시물 삭제됨"
 
-#: src/view/com/post-thread/PostThread.tsx:427
+#: src/view/com/post-thread/PostThread.tsx:461
 msgid "Post hidden"
 msgstr "게시물 숨김"
 
@@ -2833,7 +2843,7 @@ msgstr "게시물 언어"
 msgid "Post Languages"
 msgstr "게시물 언어"
 
-#: src/view/com/post-thread/PostThread.tsx:479
+#: src/view/com/post-thread/PostThread.tsx:513
 msgid "Post not found"
 msgstr "게시물을 찾을 수 없음"
 
@@ -2862,7 +2872,7 @@ msgid "Prioritize Your Follows"
 msgstr "내 팔로우 먼저 표시"
 
 #: src/view/screens/Settings/index.tsx:632
-#: src/view/shell/desktop/RightNav.tsx:80
+#: src/view/shell/desktop/RightNav.tsx:72
 msgid "Privacy"
 msgstr "개인정보"
 
@@ -3024,7 +3034,7 @@ msgid "Reply Filters"
 msgstr "답글 필터"
 
 #: src/view/com/post/Post.tsx:166
-#: src/view/com/posts/FeedItem.tsx:287
+#: src/view/com/posts/FeedItem.tsx:284
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr "<0/> 님에게 보내는 답글"
@@ -3071,11 +3081,11 @@ msgstr "재게시 또는 게시물 인용"
 msgid "Reposted By"
 msgstr "재게시한 사용자"
 
-#: src/view/com/posts/FeedItem.tsx:207
+#: src/view/com/posts/FeedItem.tsx:204
 msgid "Reposted by {0}"
 msgstr "{0} 님이 재게시함"
 
-#: src/view/com/posts/FeedItem.tsx:224
+#: src/view/com/posts/FeedItem.tsx:221
 msgid "Reposted by <0/>"
 msgstr "<0/> 님이 재게시함"
 
@@ -3083,7 +3093,7 @@ msgstr "<0/> 님이 재게시함"
 msgid "reposted your post"
 msgstr "님이 내 게시물을 재게시했습니다"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:187
+#: src/view/com/post-thread/PostThreadItem.tsx:185
 msgid "Reposts of this post"
 msgstr "이 게시물의 재게시"
 
@@ -3093,8 +3103,8 @@ msgid "Request Change"
 msgstr "변경 요청"
 
 #: src/view/com/auth/create/Step2.tsx:219
-msgid "Request code"
-msgstr "코드 요청"
+#~ msgid "Request code"
+#~ msgstr "코드 요청"
 
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
@@ -3105,7 +3115,7 @@ msgstr ""
 msgid "Require alt text before posting"
 msgstr "게시하기 전 대체 텍스트 필수"
 
-#: src/view/com/auth/create/Step1.tsx:149
+#: src/view/com/auth/create/Step1.tsx:153
 msgid "Required for this provider"
 msgstr "이 제공자에서 필수"
 
@@ -3157,9 +3167,8 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:221
 #: src/screens/Onboarding/StepInterests/index.tsx:224
-#: src/view/com/auth/create/CreateAccount.tsx:170
-#: src/view/com/auth/create/CreateAccount.tsx:175
-#: src/view/com/auth/create/Step2.tsx:255
+#: src/view/com/auth/create/CreateAccount.tsx:177
+#: src/view/com/auth/create/CreateAccount.tsx:182
 #: src/view/com/auth/login/LoginForm.tsx:268
 #: src/view/com/auth/login/LoginForm.tsx:271
 #: src/view/com/util/error/ErrorMessage.tsx:55
@@ -3168,16 +3177,16 @@ msgid "Retry"
 msgstr "다시 시도"
 
 #: src/view/com/auth/create/Step2.tsx:247
-msgid "Retry."
-msgstr "다시 시도하기"
+#~ msgid "Retry."
+#~ msgstr "다시 시도하기"
 
 #: src/view/screens/ProfileList.tsx:898
 msgid "Return to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
 #: src/view/shell/desktop/RightNav.tsx:55
-msgid "SANDBOX. Posts and accounts are not permanent."
-msgstr "샌드박스. 글과 계정은 영구적이지 않습니다."
+#~ msgid "SANDBOX. Posts and accounts are not permanent."
+#~ msgstr "샌드박스. 글과 계정은 영구적이지 않습니다."
 
 #: src/view/com/lightbox/Lightbox.tsx:132
 #: src/view/com/modals/CreateOrEditList.tsx:345
@@ -3286,7 +3295,7 @@ msgstr "기존 계정에서 선택"
 msgid "Select option {i} of {numItems}"
 msgstr "{numItems}개 중 {i}번째 옵션을 선택합니다"
 
-#: src/view/com/auth/create/Step1.tsx:99
+#: src/view/com/auth/create/Step1.tsx:103
 #: src/view/com/auth/login/LoginForm.tsx:150
 msgid "Select service"
 msgstr "서비스 선택"
@@ -3320,8 +3329,8 @@ msgid "Select your interests from the options below"
 msgstr "아래 옵션에서 관심사를 선택하세요"
 
 #: src/view/com/auth/create/Step2.tsx:155
-msgid "Select your phone's country"
-msgstr "전화번호 국가 선택"
+#~ msgid "Select your phone's country"
+#~ msgstr "전화번호 국가 선택"
 
 #: src/view/screens/LanguageSettings.tsx:190
 msgid "Select your preferred language for translations in your feed."
@@ -3400,7 +3409,7 @@ msgstr ""
 msgid "Set new password"
 msgstr "새 비밀번호 설정"
 
-#: src/view/com/auth/create/Step1.tsx:221
+#: src/view/com/auth/create/Step1.tsx:225
 msgid "Set password"
 msgstr "비밀번호 설정"
 
@@ -3440,7 +3449,7 @@ msgstr "비밀번호 재설정을 위한 이메일을 설정합니다"
 msgid "Sets hosting provider for password reset"
 msgstr "비밀번호 재설정을 위한 호스팅 제공자를 설정합니다"
 
-#: src/view/com/auth/create/Step1.tsx:100
+#: src/view/com/auth/create/Step1.tsx:104
 #: src/view/com/auth/login/LoginForm.tsx:151
 msgid "Sets server for the Bluesky client"
 msgstr "Bluesky 클라이언트를 위한 서버를 설정합니다"
@@ -3496,9 +3505,9 @@ msgstr "{0} 임베드 표시"
 msgid "Show follows similar to {0}"
 msgstr "{0} 님과 비슷한 팔로우 표시"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:539
+#: src/view/com/post-thread/PostThreadItem.tsx:535
 #: src/view/com/post/Post.tsx:197
-#: src/view/com/posts/FeedItem.tsx:363
+#: src/view/com/posts/FeedItem.tsx:360
 msgid "Show More"
 msgstr "더 보기"
 
@@ -3651,8 +3660,8 @@ msgid "Skip this flow"
 msgstr "이 단계 건너뛰기"
 
 #: src/view/com/auth/create/Step2.tsx:82
-msgid "SMS verification"
-msgstr "SMS 인증"
+#~ msgid "SMS verification"
+#~ msgstr "SMS 인증"
 
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
@@ -3780,7 +3789,7 @@ msgstr "탭하여 전체 크기로 봅니다"
 msgid "Tech"
 msgstr "기술"
 
-#: src/view/shell/desktop/RightNav.tsx:89
+#: src/view/shell/desktop/RightNav.tsx:81
 msgid "Terms"
 msgstr "이용약관"
 
@@ -3795,6 +3804,10 @@ msgstr "서비스 이용약관"
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
 msgid "Text input field"
 msgstr "텍스트 입력 필드"
+
+#: src/view/com/auth/create/CreateAccount.tsx:90
+msgid "That handle is already taken."
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:262
 msgid "The account will be able to interact with you after unblocking."
@@ -3812,7 +3825,7 @@ msgstr "저작권 정책을 <0/>(으)로 이동했습니다"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "다음 단계는 Bluesky 환경을 맞춤 설정하는 데 도움이 됩니다."
 
-#: src/view/com/post-thread/PostThread.tsx:482
+#: src/view/com/post-thread/PostThread.tsx:516
 msgid "The post may have been deleted."
 msgstr "게시물이 삭제되었을 수 있습니다."
 
@@ -3913,8 +3926,8 @@ msgid "There's been a rush of new users to Bluesky! We'll activate your account 
 msgstr "Bluesky에 신규 사용자가 몰리고 있습니다! 최대한 빨리 계정을 활성화해 드리겠습니다."
 
 #: src/view/com/auth/create/Step2.tsx:55
-msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
-msgstr "잘못된 번호입니다. 국가를 선택하고 전체 전화번호를 입력하세요."
+#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
+#~ msgstr "잘못된 번호입니다. 국가를 선택하고 전체 전화번호를 입력하세요."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
@@ -4027,8 +4040,8 @@ msgstr "드롭다운 열기 및 닫기"
 msgid "Transformations"
 msgstr "변형"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:686
-#: src/view/com/post-thread/PostThreadItem.tsx:688
+#: src/view/com/post-thread/PostThreadItem.tsx:682
+#: src/view/com/post-thread/PostThreadItem.tsx:684
 #: src/view/com/util/forms/PostDropdownBtn.tsx:125
 msgid "Translate"
 msgstr "번역"
@@ -4046,7 +4059,7 @@ msgstr "리스트 차단 해제"
 msgid "Un-mute list"
 msgstr "리스트 언뮤트"
 
-#: src/view/com/auth/create/CreateAccount.tsx:66
+#: src/view/com/auth/create/CreateAccount.tsx:58
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
 #: src/view/com/auth/login/Login.tsx:76
 #: src/view/com/auth/login/LoginForm.tsx:118
@@ -4085,7 +4098,7 @@ msgstr "언팔로우"
 msgid "Unfollow {0}"
 msgstr "{0} 님을 언팔로우"
 
-#: src/view/com/auth/create/state.ts:300
+#: src/view/com/auth/create/state.ts:262
 msgid "Unfortunately, you do not meet the requirements to create an account."
 msgstr "아쉽지만 계정을 만들 수 있는 요건을 충족하지 못했습니다."
 
@@ -4177,7 +4190,7 @@ msgstr "리스트로 사용자 차단됨"
 msgid "User Blocks You"
 msgstr "사용자가 나를 차단함"
 
-#: src/view/com/auth/create/Step3.tsx:41
+#: src/view/com/auth/create/Step2.tsx:44
 msgid "User handle"
 msgstr "사용자 핸들"
 
@@ -4226,8 +4239,8 @@ msgid "Users in \"{0}\""
 msgstr "\"{0}\"에 있는 사용자"
 
 #: src/view/com/auth/create/Step2.tsx:243
-msgid "Verification code"
-msgstr "인증 코드"
+#~ msgid "Verification code"
+#~ msgstr "인증 코드"
 
 #: src/view/screens/Settings/index.tsx:910
 msgid "Verify email"
@@ -4319,7 +4332,7 @@ msgstr "이의신청을 즉시 검토하겠습니다."
 msgid "We'll use this to help customize your experience."
 msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
-#: src/view/com/auth/create/CreateAccount.tsx:123
+#: src/view/com/auth/create/CreateAccount.tsx:130
 msgid "We're so excited to have you join us!"
 msgstr "당신과 함께하게 되어 정말 기쁘네요!"
 
@@ -4383,8 +4396,8 @@ msgid "Writers"
 msgstr "작가"
 
 #: src/view/com/auth/create/Step2.tsx:263
-msgid "XXXXXX"
-msgstr "XXXXXX"
+#~ msgid "XXXXXX"
+#~ msgstr "XXXXXX"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesHomeFeed.tsx:129
@@ -4430,7 +4443,7 @@ msgstr "저장된 피드가 없습니다!"
 msgid "You don't have any saved feeds."
 msgstr "저장된 피드가 없습니다."
 
-#: src/view/com/post-thread/PostThread.tsx:430
+#: src/view/com/post-thread/PostThread.tsx:464
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "작성자를 차단했거나 작성자가 나를 차단했습니다."
 
@@ -4520,7 +4533,7 @@ msgstr "계정을 삭제했습니다"
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
-#: src/view/com/auth/create/Step1.tsx:234
+#: src/view/com/auth/create/Step1.tsx:238
 msgid "Your birth date"
 msgstr "생년월일"
 
@@ -4532,7 +4545,7 @@ msgstr "선택 사항은 저장되며 나중에 설정에서 변경할 수 있�
 msgid "Your default feed is \"Following\""
 msgstr "기본 피드는 \"팔로우 중\"입니다"
 
-#: src/view/com/auth/create/state.ts:153
+#: src/view/com/auth/create/state.ts:110
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 #: src/view/com/modals/ChangePassword.tsx:54
 msgid "Your email appears to be invalid."
@@ -4554,7 +4567,7 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 msgid "Your following feed is empty! Follow more users to see what's happening."
 msgstr "팔로우 중인 피드가 비어 있습니다! 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
 
-#: src/view/com/auth/create/Step3.tsx:45
+#: src/view/com/auth/create/Step2.tsx:48
 msgid "Your full handle will be"
 msgstr "내 전체 핸들:"
 
@@ -4591,6 +4604,6 @@ msgstr "내 프로필"
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
-#: src/view/com/auth/create/Step3.tsx:28
+#: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
 msgstr "내 사용자 핸들"

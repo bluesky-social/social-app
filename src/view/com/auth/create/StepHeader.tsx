@@ -11,7 +11,7 @@ export function StepHeader({
   children,
 }: React.PropsWithChildren<{uiState: CreateAccountState; title: string}>) {
   const pal = usePalette('default')
-  const numSteps = uiState.isPhoneVerificationRequired ? 3 : 2
+  const numSteps = 3
   return (
     <View style={styles.container}>
       <View>
