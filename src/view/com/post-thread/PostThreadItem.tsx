@@ -11,7 +11,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {Link, TextLink} from '../util/Link'
-import {RichText} from '../util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
@@ -44,6 +44,7 @@ import {ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from 'state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {atoms as a} from '#/alf'
 
 export function PostThreadItem({
   post,
@@ -326,10 +327,8 @@ let PostThreadItemLoaded = ({
                     styles.postTextLargeContainer,
                   ]}>
                   <RichText
-                    type="post-text-lg"
-                    richText={richText}
-                    lineHeight={1.3}
-                    style={s.flex1}
+                    value={richText}
+                    style={[a.flex_1, a.text_xl]}
                     selectable
                   />
                 </View>
@@ -522,10 +521,8 @@ let PostThreadItemLoaded = ({
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
                     <RichText
-                      type="post-text"
-                      richText={richText}
-                      style={[pal.text, s.flex1]}
-                      lineHeight={1.3}
+                      value={richText}
+                      style={[a.flex_1, a.text_md]}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     />
                   </View>
