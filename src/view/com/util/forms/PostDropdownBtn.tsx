@@ -34,6 +34,10 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {
+  useMutedWordsDialogControl,
+  MutedWordsDialog,
+} from '#/components/dialogs/MutedWords'
 
 let PostDropdownBtn = ({
   testID,
@@ -67,6 +71,7 @@ let PostDropdownBtn = ({
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
   const navigation = useNavigation()
+  const mutedWordsDialogControl = useMutedWordsDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -210,6 +215,20 @@ let PostDropdownBtn = ({
         web: 'comment-slash',
       },
     },
+    hasSession && {
+      label: _(msg`Mute words & tags`),
+      onPress() {
+        mutedWordsDialogControl.open()
+      },
+      testID: 'postDropdownMuteWordsBtn',
+      icon: {
+        ios: {
+          name: 'speaker.slash',
+        },
+        android: 'ic_lock_silent_mode',
+        web: 'comment-slash',
+      },
+    },
     hasSession &&
       !isAuthor &&
       !isPostHidden && {
@@ -292,17 +311,25 @@ let PostDropdownBtn = ({
   ].filter(Boolean) as NativeDropdownItem[]
 
   return (
-    <EventStopper>
-      <NativeDropdown
-        testID={testID}
-        items={dropdownItems}
-        accessibilityLabel={_(msg`More post options`)}
-        accessibilityHint="">
-        <View style={style}>
-          <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
-        </View>
-      </NativeDropdown>
-    </EventStopper>
+    <>
+      <MutedWordsDialog control={mutedWordsDialogControl} />
+
+      <EventStopper>
+        <NativeDropdown
+          testID={testID}
+          items={dropdownItems}
+          accessibilityLabel={_(msg`More post options`)}
+          accessibilityHint="">
+          <View style={style}>
+            <FontAwesomeIcon
+              icon="ellipsis"
+              size={20}
+              color={defaultCtrlColor}
+            />
+          </View>
+        </NativeDropdown>
+      </EventStopper>
+    </>
   )
 }
 

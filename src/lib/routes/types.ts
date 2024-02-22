@@ -34,7 +34,6 @@ export type CommonNavigatorParams = {
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
   Search: {q?: string}
-  MutedWords: undefined
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {

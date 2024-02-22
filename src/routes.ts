@@ -28,7 +28,6 @@ export const router = new Router({
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
   SavedFeeds: '/settings/saved-feeds',
-  MutedWords: '/moderation/muted-words',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
   TermsOfService: '/support/tos',
