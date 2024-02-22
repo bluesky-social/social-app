@@ -7,11 +7,12 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme, flatten} from '#/alf'
 import {Props, useCommonSVGProps} from '#/components/icons/common'
 import {Loader_Stroke2_Corner0_Rounded as Icon} from '#/components/icons/Loader'
 
 export function Loader(props: Props) {
+  const t = useTheme()
   const common = useCommonSVGProps(props)
   const rotation = useSharedValue(0)
 
@@ -35,7 +36,15 @@ export function Loader(props: Props) {
         {width: common.size, height: common.size},
         animatedStyles,
       ]}>
-      <Icon {...props} style={[a.absolute, a.inset_0, props.style]} />
+      <Icon
+        {...props}
+        style={[
+          a.absolute,
+          a.inset_0,
+          t.atoms.text_contrast_high,
+          flatten(props.style),
+        ]}
+      />
     </Animated.View>
   )
 }

@@ -9,14 +9,13 @@ import {FEEDBACK_FORM_URL, HELP_DESK_URL} from 'lib/constants'
 import {s} from 'lib/styles'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useSession} from '#/state/session'
 
 export function DesktopRightNav({routeName}: {routeName: string}) {
   const pal = usePalette('default')
-  const palError = usePalette('error')
   const {_} = useLingui()
-  const {isSandbox, hasSession, currentAccount} = useSession()
+  const {hasSession, currentAccount} = useSession()
 
   const {isTablet} = useWebMediaQueries()
   if (isTablet) {
@@ -49,13 +48,6 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
               paddingTop: hasSession ? 0 : 18,
             },
           ]}>
-          {isSandbox ? (
-            <View style={[palError.view, styles.messageLine, s.p10]}>
-              <Text type="md" style={[palError.text, s.bold]}>
-                <Trans>SANDBOX. Posts and accounts are not permanent.</Trans>
-              </Text>
-            </View>
-          ) : undefined}
           <View style={[{flexWrap: 'wrap'}, s.flexRow]}>
             {hasSession && (
               <>

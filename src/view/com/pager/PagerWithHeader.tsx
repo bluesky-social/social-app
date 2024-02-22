@@ -233,36 +233,29 @@ let PagerTabBar = ({
       },
     ],
   }))
-  const pendingHeaderHeight = React.useRef<null | number>(null)
+  const headerRef = React.useRef(null)
   return (
     <Animated.View
       pointerEvents="box-none"
       style={[styles.tabBarMobile, headerTransform]}>
-      <View
-        pointerEvents="box-none"
-        collapsable={false}
-        onLayout={e => {
-          if (isHeaderReady) {
-            onHeaderOnlyLayout(e.nativeEvent.layout.height)
-            pendingHeaderHeight.current = null
-          } else {
-            // Stash it away for when `isHeaderReady` turns `true` later.
-            pendingHeaderHeight.current = e.nativeEvent.layout.height
-          }
-        }}>
+      <View ref={headerRef} pointerEvents="box-none" collapsable={false}>
         {renderHeader?.()}
         {
-          // When `isHeaderReady` turns `true`, we want to send the parent layout.
-          // However, if that didn't lead to a layout change, parent `onLayout` wouldn't get called again.
-          // We're conditionally rendering an empty view so that we can send the last measurement.
+          // It wouldn't be enough to place `onLayout` on the parent node because
+          // this would risk measuring before `isHeaderReady` has turned `true`.
+          // Instead, we'll render a brand node conditionally and get fresh layout.
           isHeaderReady && (
             <View
+              // It wouldn't be enough to do this in a `ref` of an effect because,
+              // even if `isHeaderReady` might have turned `true`, the associated
+              // layout might not have been performed yet on the native side.
               onLayout={() => {
-                // We're assuming the parent `onLayout` already ran (parent -> child ordering).
-                if (pendingHeaderHeight.current !== null) {
-                  onHeaderOnlyLayout(pendingHeaderHeight.current)
-                  pendingHeaderHeight.current = null
-                }
+                // @ts-ignore
+                headerRef.current?.measure(
+                  (_x: number, _y: number, _width: number, height: number) => {
+                    onHeaderOnlyLayout(height)
+                  },
+                )
               }}
             />
           )

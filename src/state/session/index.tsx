@@ -7,7 +7,6 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {IS_PROD} from '#/lib/constants'
 import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -36,7 +35,6 @@ export type SessionState = {
 }
 export type StateContext = SessionState & {
   hasSession: boolean
-  isSandbox: boolean
 }
 export type ApiContext = {
   createAccount: (props: {
@@ -84,7 +82,6 @@ const StateContext = React.createContext<StateContext>({
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
-  isSandbox: false,
 })
 
 const ApiContext = React.createContext<ApiContext>({
@@ -610,9 +607,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       ...state,
       hasSession: !!state.currentAccount,
-      isSandbox: state.currentAccount
-        ? !IS_PROD(state.currentAccount?.service)
-        : false,
     }),
     [state],
   )

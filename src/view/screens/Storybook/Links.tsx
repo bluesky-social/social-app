@@ -19,8 +19,13 @@ export function Links() {
           style={[a.text_md]}>
           External
         </InlineLink>
-        <InlineLink to="https://bsky.social" style={[a.text_md]}>
+        <InlineLink to="https://bsky.social" style={[a.text_md, t.atoms.text]}>
           <H3>External with custom children</H3>
+        </InlineLink>
+        <InlineLink
+          to="https://bsky.social"
+          style={[a.text_md, t.atoms.text_contrast_low]}>
+          External with custom children
         </InlineLink>
         <InlineLink
           to="https://bsky.social"
