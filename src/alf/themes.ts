@@ -132,21 +132,21 @@ export const darkPalette: Palette = {
 
 export const dimPalette: Palette = {
   ...darkPalette,
-  black: tokens.color.gray_1000,
+  black: tokens.color.dimGray,
 
-  contrast_25: tokens.color.gray_975,
-  contrast_50: tokens.color.gray_950,
-  contrast_100: tokens.color.gray_900,
-  contrast_200: tokens.color.gray_800,
-  contrast_300: tokens.color.gray_700,
-  contrast_400: tokens.color.gray_600,
-  contrast_500: tokens.color.gray_500,
-  contrast_600: tokens.color.gray_400,
-  contrast_700: tokens.color.gray_300,
-  contrast_800: tokens.color.gray_200,
-  contrast_900: tokens.color.gray_100,
-  contrast_950: tokens.color.gray_50,
-  contrast_975: tokens.color.gray_25,
+  contrast_25: tokens.color.gray_900,
+  contrast_50: tokens.color.gray_800,
+  contrast_100: tokens.color.gray_700,
+  contrast_200: tokens.color.gray_600,
+  contrast_300: tokens.color.gray_500,
+  contrast_400: tokens.color.gray_400,
+  contrast_500: tokens.color.gray_300,
+  contrast_600: tokens.color.gray_200,
+  contrast_700: tokens.color.gray_100,
+  contrast_800: tokens.color.gray_50,
+  contrast_900: tokens.color.gray_25,
+  contrast_950: tokens.color.gray_0,
+  contrast_975: tokens.color.gray_0,
 } as const
 
 export const light = {

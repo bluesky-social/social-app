@@ -4,6 +4,7 @@ const GREEN_HUE = 152
 
 export const color = {
   trueBlack: '#000000',
+  dimGray: `hsl(216, 23%, 17%)`,
 
   gray_0: `hsl(${BLUE_HUE}, 20%, 100%)`,
   gray_25: `hsl(${BLUE_HUE}, 20%, 97%)`,
