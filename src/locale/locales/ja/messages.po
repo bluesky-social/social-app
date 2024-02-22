@@ -2,16 +2,16 @@ msgid ""
 msgstr ""
 "POT-Creation-Date: 2023-11-22 17:10-0800\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-20 22:57\n"
-"Last-Translator: reindex\n"
-"Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, reindex\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"PO-Revision-Date: 2024-02-22 17:35+0900\n"
+"Last-Translator: reindex-ot\n"
+"Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, reindex-ot\n"
+"Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
 msgid "(no email)"
@@ -23,7 +23,7 @@ msgstr "メールがありません"
 
 #: src/view/com/profile/ProfileHeader.tsx:592
 msgid "{following} following"
-msgstr "{following}人をフォロー中"
+msgstr "{following} フォロー"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 #~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
@@ -49,7 +49,7 @@ msgstr "<0/>のメンバー"
 
 #: src/view/com/profile/ProfileHeader.tsx:594
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following}</0><1>人をフォロー中</1>"
+msgstr "<0>{following}</0><1>フォロー</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -224,7 +224,7 @@ msgstr "高度な設定"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr "保存したすべてのフィードを1箇所にまとめます。"
+msgstr "保存したすべてのフィードを 1 箇所にまとめます。"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
@@ -457,7 +457,7 @@ msgstr "Blueskyは柔軟です。"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:69
 msgid "Bluesky is open."
-msgstr "Blueskyはオープンです。"
+msgstr "Blueskyは開かれています。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
@@ -737,7 +737,7 @@ msgstr "パスワード更新アラートを閉じる"
 
 #: src/view/com/composer/Composer.tsx:302
 msgid "Closes post composer and discards post draft"
-msgstr "投稿の編集画面を閉じ、下書きを削除する"
+msgstr "投稿の編集画面を閉じて、下書きを削除する"
 
 #: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
 msgid "Closes viewer for header image"
@@ -2252,7 +2252,7 @@ msgstr "その他のオプション"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:270
 msgid "More post options"
-msgstr "そのほかの投稿のオプション"
+msgstr "その他の投稿のオプション"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
@@ -4290,7 +4290,7 @@ msgstr "メールアドレスを確認"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
-msgstr "テレビゲーム"
+msgstr "ビデオゲーム"
 
 #: src/view/com/profile/ProfileHeader.tsx:661
 msgid "View {0}'s avatar"
@@ -4644,3 +4644,4 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
+
