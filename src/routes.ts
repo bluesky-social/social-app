@@ -28,7 +28,7 @@ export const router = new Router({
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
   SavedFeeds: '/settings/saved-feeds',
-  SettingsMutedWords: '/settings/muted-words',
+  MutedWords: '/moderation/muted-words',
   Support: '/support',
   PrivacyPolicy: '/support/privacy',
   TermsOfService: '/support/tos',

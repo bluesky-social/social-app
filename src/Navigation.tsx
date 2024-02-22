@@ -77,7 +77,7 @@ import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbed
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
-import {MutedWords} from '#/screens/Settings/MutedWords'
+import {MutedWords} from '#/screens/moderation/MutedWords'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -264,7 +264,7 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         }}
       />
       <Stack.Screen
-        name="SettingsMutedWords"
+        name="MutedWords"
         getComponent={() => MutedWords}
         options={{
           title: title(msg`Muted Words`),
