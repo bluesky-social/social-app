@@ -24,13 +24,10 @@ import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
 import * as Prompt from '#/components/Prompt'
 
-export {useDialogControl as useMutedWordsDialogControl} from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
-export function MutedWordsDialog({
-  control,
-}: {
-  control: Dialog.DialogOuterProps['control']
-}) {
+export function MutedWordsDialog() {
+  const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
