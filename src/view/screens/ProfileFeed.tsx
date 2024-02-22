@@ -17,7 +17,7 @@ import {TextLink} from 'view/com/util/Link'
 import {ListRef} from 'view/com/util/List'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {EmptyState} from 'view/com/util/EmptyState'
@@ -59,6 +59,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {atoms as a} from '#/alf'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -575,9 +576,8 @@ function AboutSection({
         {feedInfo.description ? (
           <RichText
             testID="listDescription"
-            type="lg"
-            style={pal.text}
-            richText={feedInfo.description}
+            style={[a.text_md]}
+            value={feedInfo.description}
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>

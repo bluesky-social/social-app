@@ -176,42 +176,58 @@ export const atoms = {
   },
   text_2xs: {
     fontSize: tokens.fontSize._2xs,
+    letterSpacing: 0.25,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
+    letterSpacing: 0.25,
   },
   text_sm: {
     fontSize: tokens.fontSize.sm,
+    letterSpacing: 0.25,
   },
   text_md: {
     fontSize: tokens.fontSize.md,
+    letterSpacing: 0.25,
   },
   text_lg: {
     fontSize: tokens.fontSize.lg,
+    letterSpacing: 0.25,
   },
   text_xl: {
     fontSize: tokens.fontSize.xl,
+    letterSpacing: 0.25,
   },
   text_2xl: {
     fontSize: tokens.fontSize._2xl,
+    letterSpacing: 0.25,
   },
   text_3xl: {
     fontSize: tokens.fontSize._3xl,
+    letterSpacing: 0.25,
   },
   text_4xl: {
     fontSize: tokens.fontSize._4xl,
+    letterSpacing: 0.25,
   },
   text_5xl: {
     fontSize: tokens.fontSize._5xl,
+    letterSpacing: 0.25,
   },
   leading_tight: {
     lineHeight: 1.15,
   },
   leading_snug: {
-    lineHeight: 1.25,
+    lineHeight: 1.3,
   },
   leading_normal: {
     lineHeight: 1.5,
+  },
+  tracking_normal: {
+    letterSpacing: 0,
+  },
+  tracking_wide: {
+    letterSpacing: 0.25,
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
