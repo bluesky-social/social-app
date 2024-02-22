@@ -1,7 +1,5 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {TabBar} from 'view/com/pager/TabBar'
-import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../util/Link'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
@@ -13,10 +11,7 @@ import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {isWeb} from 'platform/detection'
-import {useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
 import {Logo} from '#/view/icons/Logo'
 
 import {IS_DEV} from '#/env'
@@ -24,45 +19,16 @@ import {atoms} from '#/alf'
 import {Link as Link2} from '#/components/Link'
 import {ColorPalette_Stroke2_Corner0_Rounded as ColorPalette} from '#/components/icons/ColorPalette'
 
-export function FeedsTabBar(
-  props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
-) {
+export function HomeHeaderLayoutMobile({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
-  const navigation = useNavigation<NavigationProp>()
-  const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
   const {headerHeight} = useShellLayout()
   const {headerMinimalShellTransform} = useMinimalShellMode()
-
-  const items = React.useMemo(() => {
-    const pinnedNames = feeds.map(f => f.displayName)
-
-    if (!hasPinnedCustom) {
-      return pinnedNames.concat('Feeds ✨')
-    }
-    return pinnedNames
-  }, [hasPinnedCustom, feeds])
-
-  const onPressFeedsLink = React.useCallback(() => {
-    if (isWeb) {
-      navigation.navigate('Feeds')
-    } else {
-      navigation.navigate('FeedsTab')
-      navigation.popToTop()
-    }
-  }, [navigation])
-
-  const onSelect = React.useCallback(
-    (index: number) => {
-      if (!hasPinnedCustom && index === items.length - 1) {
-        onPressFeedsLink()
-      } else if (props.onSelect) {
-        props.onSelect(index)
-      }
-    },
-    [items.length, onPressFeedsLink, props, hasPinnedCustom],
-  )
 
   const onPressAvi = React.useCallback(() => {
     setDrawerOpen(true)
@@ -123,18 +89,7 @@ export function FeedsTabBar(
           </Link>
         </View>
       </View>
-
-      {items.length > 0 && (
-        <TabBar
-          key={items.join(',')}
-          onPressSelected={props.onPressSelected}
-          selectedPage={props.selectedPage}
-          onSelect={onSelect}
-          testID={props.testID}
-          items={items}
-          indicatorColor={pal.colors.link}
-        />
-      )}
+      {children}
     </Animated.View>
   )
 }
