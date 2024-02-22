@@ -30,7 +30,7 @@ export type CommonNavigatorParams = {
   CopyrightPolicy: undefined
   AppPasswords: undefined
   SavedFeeds: undefined
-  PreferencesHomeFeed: undefined
+  PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
 }
