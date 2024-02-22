@@ -76,7 +76,7 @@ export function ExportCarDialog({
               This feature is in beta. You can read more about repository
               exports in{' '}
               <InlineLink
-                to="https://atproto.com/blog/repo-export"
+                to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
                 this blogpost
               </InlineLink>

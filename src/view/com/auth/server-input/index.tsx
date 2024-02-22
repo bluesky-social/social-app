@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
-import {PROD_SERVICE} from 'lib/constants'
+import {BSKY_SERVICE} from 'lib/constants'
 import * as persisted from '#/state/persisted'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
@@ -26,7 +26,7 @@ export function ServerInputDialog({
   const [pdsAddressHistory, setPdsAddressHistory] = React.useState<string[]>(
     persisted.get('pdsAddressHistory') || [],
   )
-  const [fixedOption, setFixedOption] = React.useState([PROD_SERVICE])
+  const [fixedOption, setFixedOption] = React.useState([BSKY_SERVICE])
   const [customAddress, setCustomAddress] = React.useState('')
 
   const onClose = React.useCallback(() => {
@@ -86,7 +86,7 @@ export function ServerInputDialog({
             label="Preferences"
             values={fixedOption}
             onChange={setFixedOption}>
-            <ToggleButton.Button name={PROD_SERVICE} label={_(msg`Bluesky`)}>
+            <ToggleButton.Button name={BSKY_SERVICE} label={_(msg`Bluesky`)}>
               {_(msg`Bluesky`)}
             </ToggleButton.Button>
             <ToggleButton.Button
