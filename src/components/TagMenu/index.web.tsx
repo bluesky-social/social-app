@@ -49,7 +49,7 @@ export function TagMenu({
             q: tag,
           })
         },
-        // testID: 'foo',
+        testID: 'tagMenuSearch',
         icon: {
           ios: {
             name: 'magnifyingglass',
@@ -68,13 +68,13 @@ export function TagMenu({
             },
           })
         },
-        // testID: 'foo',
+        testID: 'tagMenuSeachByUser',
         icon: {
           ios: {
             name: 'magnifyingglass',
           },
           android: '',
-          web: 'user',
+          web: ['far', 'user'],
         },
       },
       preferences && {
@@ -89,13 +89,13 @@ export function TagMenu({
             upsertMutedWord([{value: sanitizedTag, targets: ['tag']}])
           }
         },
-        // testID: 'foo',
+        testID: 'tagMenuMute',
         icon: {
           ios: {
             name: 'speaker.slash',
           },
           android: 'ic_menu_sort_alphabetically',
-          web: 'eye-slash',
+          web: isMuted ? 'eye' : ['far', 'eye-slash'],
         },
       },
     ].filter(Boolean)
@@ -114,6 +114,8 @@ export function TagMenu({
   return (
     <EventStopper>
       <NativeDropdown
+        accessibilityLabel={_(msg`Repost or quote post`)}
+        accessibilityHint=""
         // @ts-ignore
         items={dropdownItems}>
         {children}
