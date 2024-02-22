@@ -138,7 +138,7 @@ export function RichText({
         <RichTextTag
           key={key}
           text={segment.text}
-          style={style}
+          style={styles}
           selectable={selectable}
           authorHandle={authorHandle}
         />,
@@ -186,7 +186,6 @@ function RichTextTag({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
-  const flattenedStyle = flatten(style)
 
   const open = React.useCallback(() => {
     control.open()
@@ -214,8 +213,7 @@ function RichTextTag({
             (hovered || focused || pressed) && {
               ...web({outline: 0}),
               textDecorationLine: 'underline',
-              textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
+              textDecorationColor: t.palette.primary_500,
             },
           ]}
           onPress={isNative ? open : undefined}
