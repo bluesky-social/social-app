@@ -260,7 +260,7 @@ function MutedWordRow({
               style={[a.py_xs, a.px_sm, a.rounded_sm, t.atoms.bg_contrast_100]}>
               <Text
                 style={[a.text_xs, a.font_bold, t.atoms.text_contrast_medium]}>
-                {target}
+                {target === 'content' ? _(msg`text`) : _(msg`tag`)}
               </Text>
             </View>
           ))}
