@@ -67,6 +67,8 @@ export function moderatePost_wrapped(
             priority: 1,
           }
         }
+        // only need one
+        break
       }
     }
 
@@ -83,6 +85,8 @@ export function moderatePost_wrapped(
           }
         }
       }
+      // only need one
+      break
     }
   }
 

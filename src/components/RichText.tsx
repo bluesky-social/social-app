@@ -3,7 +3,7 @@ import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-import {atoms as a, TextStyleProp, flatten, useTheme, web} from '#/alf'
+import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
 import {InlineLink} from '#/components/Link'
 import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
@@ -191,16 +191,31 @@ function RichTextTag({
     control.open()
   }, [control])
 
+  /*
+   * N.B. On web, this is wrapped in another pressable comopnent with a11y
+   * labels, etc. That's why only some of these props are applied here.
+   */
+
   return (
     <React.Fragment>
       <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
         <Text
-          accessibilityLabel={_(msg`Hashtag: ${tag}`)}
-          accessibilityHint={_(
-            msg`Click here to search by this tag, mute it, and more`,
-          )}
-          accessibilityRole={isNative ? 'button' : undefined}
           selectable={selectable}
+          {...native({
+            accessibilityLabel: _(msg`Hashtag: ${tag}`),
+            accessibilityHint: _(msg`Click here to open tag menu for ${tag}`),
+            accessibilityRole: isNative ? 'button' : undefined,
+            onPress: open,
+            onPressIn: onPressIn,
+            onPressOut: onPressOut,
+          })}
+          {...web({
+            onMouseEnter: onHoverIn,
+            onMouseLeave: onHoverOut,
+          })}
+          // @ts-ignore
+          onFocus={onFocus}
+          onBlur={onBlur}
           style={[
             style,
             {
@@ -215,15 +230,7 @@ function RichTextTag({
               textDecorationLine: 'underline',
               textDecorationColor: t.palette.primary_500,
             },
-          ]}
-          onPress={isNative ? open : undefined}
-          onPressIn={onPressIn}
-          onPressOut={onPressOut}
-          // @ts-ignore
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onMouseEnter={onHoverIn}
-          onMouseLeave={onHoverOut}>
+          ]}>
           {tag}
         </Text>
       </TagMenu>

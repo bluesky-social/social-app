@@ -1,6 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
@@ -34,7 +36,7 @@ export function TagMenu({
   tag: string
   authorHandle?: string
 }>) {
-  const sanitizedTag = tag.replace(/^#/, '')
+  const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {isLoading: isPreferencesLoading, data: preferences} =
@@ -49,6 +51,8 @@ export function TagMenu({
     variables: optimisticRemove,
     reset: resetRemove,
   } = useRemoveMutedWordMutation()
+
+  const sanitizedTag = tag.replace(/^#/, '')
   const isMuted = Boolean(
     (preferences?.mutedWords?.find(
       m => m.value === sanitizedTag && m.targets.includes('tag'),
@@ -66,7 +70,7 @@ export function TagMenu({
       <Dialog.Outer control={control}>
         <Dialog.Handle />
 
-        <Dialog.Inner label="Tag">
+        <Dialog.Inner label={_(msg`Tag menu: ${tag}`)}>
           {isPreferencesLoading ? (
             <View style={[a.w_full, a.align_center]}>
               <Loader size="lg" />
@@ -82,7 +86,7 @@ export function TagMenu({
                   t.atoms.bg_contrast_25,
                 ]}>
                 <Link
-                  label="tag"
+                  label={_(msg`Search for all posts with tag ${tag}`)}
                   to={makeSearchLink({query: tag})}
                   onPress={e => {
                     e.preventDefault()
@@ -119,11 +123,13 @@ export function TagMenu({
                         native({top: 2}),
                         t.atoms.text_contrast_medium,
                       ]}>
-                      See{' '}
-                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                        {tag}
-                      </Text>{' '}
-                      posts
+                      <Trans>
+                        See{' '}
+                        <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                          {tag}
+                        </Text>{' '}
+                        posts
+                      </Trans>
                     </Text>
                   </View>
                 </Link>
@@ -133,7 +139,9 @@ export function TagMenu({
                     <Divider />
 
                     <Link
-                      label="tag"
+                      label={_(
+                        msg`Search for all posts by @${authorHandle} with tag ${tag}`,
+                      )}
                       to={makeSearchLink({query: tag, from: authorHandle})}
                       onPress={e => {
                         e.preventDefault()
@@ -175,11 +183,14 @@ export function TagMenu({
                             native({top: 2}),
                             t.atoms.text_contrast_medium,
                           ]}>
-                          See{' '}
-                          <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                            {tag}
-                          </Text>{' '}
-                          posts by this user
+                          <Trans>
+                            See{' '}
+                            <Text
+                              style={[a.text_md, a.font_bold, t.atoms.text]}>
+                              {tag}
+                            </Text>{' '}
+                            posts by this user
+                          </Trans>
                         </Text>
                       </View>
                     </Link>
@@ -191,7 +202,11 @@ export function TagMenu({
                     <Divider />
 
                     <Button
-                      label="tag"
+                      label={
+                        isMuted
+                          ? _(msg`Unmute all ${tag} posts`)
+                          : _(msg`Mute all ${tag} posts`)
+                      }
                       onPress={() => {
                         control.close(() => {
                           if (isMuted) {
@@ -231,11 +246,11 @@ export function TagMenu({
                             native({top: 2}),
                             t.atoms.text_contrast_medium,
                           ]}>
-                          {isMuted ? 'Unmute' : 'Mute'}{' '}
+                          {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
                           <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                             {tag}
                           </Text>{' '}
-                          posts
+                          <Trans>posts</Trans>
                         </Text>
                       </View>
                     </Button>
@@ -244,7 +259,7 @@ export function TagMenu({
               </View>
 
               <Button
-                label="tag"
+                label={_(msg`Close this dialog`)}
                 size="small"
                 variant="ghost"
                 color="secondary"

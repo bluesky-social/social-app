@@ -114,7 +114,7 @@ export function TagMenu({
   return (
     <EventStopper>
       <NativeDropdown
-        accessibilityLabel={_(msg`Repost or quote post`)}
+        accessibilityLabel={_(msg`Click here to open tag menu for ${tag}`)}
         accessibilityHint=""
         // @ts-ignore
         items={dropdownItems}>
