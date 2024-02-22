@@ -13,7 +13,6 @@ import {useLingui} from '@lingui/react'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetDrawerOpen} from '#/state/shell/drawer-open'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {useSession} from '#/state/session'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {isWeb} from 'platform/detection'
 import {useNavigation} from '@react-navigation/native'
@@ -29,7 +28,6 @@ export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const pal = usePalette('default')
-  const {hasSession} = useSession()
   const {_} = useLingui()
   const setDrawerOpen = useSetDrawerOpen()
   const navigation = useNavigation<NavigationProp>()
@@ -38,15 +36,13 @@ export function FeedsTabBar(
   const {headerMinimalShellTransform} = useMinimalShellMode()
 
   const items = React.useMemo(() => {
-    if (!hasSession) return []
-
     const pinnedNames = feeds.map(f => f.displayName)
 
     if (!hasPinnedCustom) {
       return pinnedNames.concat('Feeds ✨')
     }
     return pinnedNames
-  }, [hasSession, hasPinnedCustom, feeds])
+  }, [hasPinnedCustom, feeds])
 
   const onPressFeedsLink = React.useCallback(() => {
     if (isWeb) {
@@ -59,13 +55,13 @@ export function FeedsTabBar(
 
   const onSelect = React.useCallback(
     (index: number) => {
-      if (hasSession && !hasPinnedCustom && index === items.length - 1) {
+      if (!hasPinnedCustom && index === items.length - 1) {
         onPressFeedsLink()
       } else if (props.onSelect) {
         props.onSelect(index)
       }
     },
-    [items.length, onPressFeedsLink, props, hasSession, hasPinnedCustom],
+    [items.length, onPressFeedsLink, props, hasPinnedCustom],
   )
 
   const onPressAvi = React.useCallback(() => {
@@ -113,21 +109,18 @@ export function FeedsTabBar(
               <ColorPalette size="md" />
             </Link2>
           )}
-
-          {hasSession && (
-            <Link
-              testID="viewHeaderHomeFeedPrefsBtn"
-              href="/settings/home-feed"
-              hitSlop={HITSLOP_10}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`Home Feed Preferences`)}
-              accessibilityHint="">
-              <FontAwesomeIcon
-                icon="sliders"
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </Link>
-          )}
+          <Link
+            testID="viewHeaderHomeFeedPrefsBtn"
+            href="/settings/home-feed"
+            hitSlop={HITSLOP_10}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Home Feed Preferences`)}
+            accessibilityHint="">
+            <FontAwesomeIcon
+              icon="sliders"
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          </Link>
         </View>
       </View>
 
