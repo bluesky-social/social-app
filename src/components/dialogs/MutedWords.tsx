@@ -198,6 +198,8 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           </View>
         )}
       </View>
+
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
