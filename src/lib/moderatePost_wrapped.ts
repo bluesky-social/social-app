@@ -5,6 +5,7 @@ import {
   AppBskyActorDefs,
   AppBskyFeedPost,
   AppBskyRichtextFacet,
+  AppBskyEmbedImages,
 } from '@atproto/api'
 
 type ModeratePost = typeof moderatePost
@@ -82,13 +83,22 @@ export function moderatePost_wrapped(
     }
   }
 
-  if (mutedWords.length && AppBskyFeedPost.isRecord(subject.record)) {
-    const muted = hasMutedWord(
+  if (AppBskyFeedPost.isRecord(subject.record)) {
+    let muted = hasMutedWord(
       mutedWords,
       subject.record.text,
       subject.record.facets || [],
       subject.record.tags || [],
     )
+
+    if (
+      subject.record.embed &&
+      AppBskyEmbedImages.isMain(subject.record.embed)
+    ) {
+      for (const image of subject.record.embed.images) {
+        muted = muted || hasMutedWord(mutedWords, image.alt, [], [])
+      }
+    }
 
     if (muted) {
       moderations.content.filter = true
@@ -104,16 +114,34 @@ export function moderatePost_wrapped(
     }
   }
 
-  // TODO mute embed
   if (subject.embed) {
     let embedHidden = false
     if (AppBskyEmbedRecord.isViewRecord(subject.embed.record)) {
       embedHidden = hiddenPosts.includes(subject.embed.record.uri)
+
+      if (AppBskyFeedPost.isRecord(subject.embed.record.value)) {
+        embedHidden =
+          embedHidden ||
+          hasMutedWord(
+            mutedWords,
+            subject.embed.record.value.text,
+            subject.embed.record.value.facets,
+            subject.embed.record.value.tags,
+          )
+
+        if (AppBskyEmbedImages.isMain(subject.embed.record.value.embed)) {
+          for (const image of subject.embed.record.value.embed.images) {
+            embedHidden =
+              embedHidden || hasMutedWord(mutedWords, image.alt, [], [])
+          }
+        }
+      }
     }
     if (
       AppBskyEmbedRecordWithMedia.isView(subject.embed) &&
       AppBskyEmbedRecord.isViewRecord(subject.embed.record.record)
     ) {
+      // TODO what
       embedHidden = hiddenPosts.includes(subject.embed.record.record.uri)
     }
     if (embedHidden) {
