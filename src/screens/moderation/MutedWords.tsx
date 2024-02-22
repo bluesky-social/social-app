@@ -20,9 +20,11 @@ import * as TextField from '#/components/forms/TextField'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
 import {Divider} from '#/components/Divider'
 import {Loader} from '#/components/Loader'
-import * as Toggle from '#/components/forms/Toggle'
+import {logger} from '#/logger'
 
 export function MutedWords() {
   const t = useTheme()
@@ -36,23 +38,26 @@ export function MutedWords() {
   const {mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const {mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
   const [field, setField] = React.useState('')
-  const [targetContentEnabled, setTargetContentEnabled] = React.useState(true)
-  const [targetTagEnabled, setTargetTagEnabled] = React.useState(true)
+  const [_error, setError] = React.useState('')
 
-  const add = React.useCallback(() => {
-    if (field.trim()) {
-      addMutedWord([
-        {
-          value: field,
-          targets: [
-            targetContentEnabled && 'content',
-            targetTagEnabled && 'tag',
-          ].filter(Boolean) as AppBskyActorDefs.MutedWord['targets'],
-        },
-      ])
-      setField('')
-    }
-  }, [field, addMutedWord, targetContentEnabled, targetTagEnabled])
+  const submit = React.useCallback(
+    async ({
+      value,
+      targets,
+    }: {
+      value: string
+      targets: AppBskyActorDefs.MutedWord['targets']
+    }) => {
+      try {
+        await addMutedWord([{value, targets}])
+        setField('')
+      } catch (e: any) {
+        logger.error(`Failed to save muted word`, {message: e.message})
+        setError(e.message)
+      }
+    },
+    [addMutedWord, setField],
+  )
 
   const remove = React.useCallback(
     (word: AppBskyActorDefs.MutedWord) => {
@@ -75,10 +80,10 @@ export function MutedWords() {
       <View style={[a.p_xl]}>
         <Text
           style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
-          Add muted words
+          Add muted words and tags
         </Text>
         <Text style={[a.pb_lg, t.atoms.text_contrast_medium]}>
-          Muted words can target a post's content, the posts's tags, or both.
+          Posts can be muted based on their content, their tags, or both.
         </Text>
 
         <TextField.Input
@@ -86,55 +91,40 @@ export function MutedWords() {
           placeholder="Enter word or tag"
           value={field}
           onChangeText={setField}
-          onSubmitEditing={add}
+          onSubmitEditing={() =>
+            submit({value: field, targets: ['tag', 'content']})
+          }
         />
 
         <View
           style={[
-            a.mt_lg,
-            a.mb_xl,
+            a.my_lg,
             a.flex_row,
             a.align_center,
             a.justify_end,
             a.gap_md,
           ]}>
-          <Toggle.Item
-            label="Enable on content"
-            name="content"
-            value={targetContentEnabled}
-            onChange={setTargetContentEnabled}>
-            <Toggle.Label>Content</Toggle.Label>
-            <Toggle.Switch />
-          </Toggle.Item>
+          <Button
+            label="Add"
+            size="small"
+            color="secondary"
+            variant="solid"
+            style={[a.flex_shrink]}
+            onPress={() => submit({value: field, targets: ['content']})}>
+            <ButtonText>Content</ButtonText>
+            <ButtonIcon icon={PageText} />
+          </Button>
 
-          <View
-            style={[
-              {
-                width: 1,
-                height: 30,
-                backgroundColor: t.atoms.border_contrast_low.borderColor,
-              },
-            ]}
-          />
-
-          <Toggle.Item
-            label="Enable on content"
-            name="tags"
-            value={targetTagEnabled}
-            onChange={setTargetTagEnabled}>
-            <Toggle.Label>Tags</Toggle.Label>
-            <Toggle.Switch />
-          </Toggle.Item>
-
-          <View
-            style={[
-              {
-                width: 1,
-                height: 30,
-                backgroundColor: t.atoms.border_contrast_low.borderColor,
-              },
-            ]}
-          />
+          <Button
+            label="Add"
+            size="small"
+            color="secondary"
+            variant="solid"
+            style={[a.flex_shrink]}
+            onPress={() => submit({value: field, targets: ['tag']})}>
+            <ButtonText>Tags</ButtonText>
+            <ButtonIcon icon={Hashtag} />
+          </Button>
 
           <Button
             label="Add"
@@ -142,40 +132,83 @@ export function MutedWords() {
             color="primary"
             variant="solid"
             style={[a.flex_shrink]}
-            onPress={add}>
-            <ButtonText>Add</ButtonText>
+            onPress={() => submit({value: field, targets: ['tag', 'content']})}>
+            <ButtonText>Both</ButtonText>
             <ButtonIcon icon={Plus} />
           </Button>
         </View>
 
         <Divider />
 
-        <View style={[]}>
+        <View style={[a.pt_2xl]}>
+          <Text
+            style={[
+              a.text_md,
+              a.font_bold,
+              a.pb_md,
+              t.atoms.text_contrast_high,
+            ]}>
+            Your muted words
+          </Text>
+
           {isPreferencesLoading ? (
             <Loader />
           ) : preferencesError || !preferences ? null : (
-            preferences.mutedWords.map(word => (
+            preferences.mutedWords.map((word, i) => (
               <React.Fragment key={word.value}>
                 <View
                   style={[
                     a.py_md,
+                    a.px_lg,
                     a.flex_row,
                     a.align_center,
                     a.justify_between,
+                    a.rounded_md,
+                    i % 2 === 0 && t.atoms.bg_contrast_25,
                   ]}>
-                  <Text style={[]}>{word.value}</Text>
+                  <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                    {word.value}
+                  </Text>
 
-                  <Button
-                    label="Remove"
-                    size="tiny"
-                    shape="round"
-                    variant="ghost"
-                    color="secondary"
-                    onPress={() => remove(word)}>
-                    <ButtonIcon icon={X} />
-                  </Button>
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_end,
+                      a.gap_sm,
+                    ]}>
+                    {word.targets.map(target => (
+                      <View
+                        key={target}
+                        style={[
+                          a.py_xs,
+                          a.px_sm,
+                          a.rounded_sm,
+                          t.atoms.bg_contrast_100,
+                        ]}>
+                        <Text
+                          style={[
+                            a.text_xs,
+                            a.font_bold,
+                            t.atoms.text_contrast_medium,
+                          ]}>
+                          {target}
+                        </Text>
+                      </View>
+                    ))}
+
+                    <Button
+                      label="Remove"
+                      size="tiny"
+                      shape="round"
+                      variant="ghost"
+                      color="secondary"
+                      onPress={() => remove(word)}
+                      style={[a.ml_sm]}>
+                      <ButtonIcon icon={X} />
+                    </Button>
+                  </View>
                 </View>
-                <Divider />
               </React.Fragment>
             ))
           )}
