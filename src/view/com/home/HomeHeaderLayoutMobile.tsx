@@ -77,10 +77,10 @@ export function HomeHeaderLayoutMobile({
           )}
           <Link
             testID="viewHeaderHomeFeedPrefsBtn"
-            href="/settings/home-feed"
+            href="/settings/following-feed"
             hitSlop={HITSLOP_10}
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Home Feed Preferences`)}
+            accessibilityLabel={_(msg`Following Feed Preferences`)}
             accessibilityHint="">
             <FontAwesomeIcon
               icon="sliders"

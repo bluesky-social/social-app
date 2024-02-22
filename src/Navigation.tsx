@@ -71,7 +71,7 @@ import {AppPasswords} from 'view/screens/AppPasswords'
 import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
 import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
 import {SavedFeeds} from 'view/screens/SavedFeeds'
-import {PreferencesHomeFeed} from 'view/screens/PreferencesHomeFeed'
+import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
 import {PreferencesThreads} from 'view/screens/PreferencesThreads'
 import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
@@ -242,9 +242,12 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Edit My Feeds`), requireAuth: true}}
       />
       <Stack.Screen
-        name="PreferencesHomeFeed"
-        getComponent={() => PreferencesHomeFeed}
-        options={{title: title(msg`Home Feed Preferences`), requireAuth: true}}
+        name="PreferencesFollowingFeed"
+        getComponent={() => PreferencesFollowingFeed}
+        options={{
+          title: title(msg`Following Feed Preferences`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="PreferencesThreads"

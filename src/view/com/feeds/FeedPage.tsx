@@ -138,7 +138,7 @@ export function FeedPage({
           {hasSession && (
             <TextLink
               type="title-lg"
-              href="/settings/home-feed"
+              href="/settings/following-feed"
               style={{fontWeight: 'bold'}}
               accessibilityLabel={_(msg`Feed Preferences`)}
               accessibilityHint=""
