@@ -14,8 +14,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {atoms as a, useTheme} from '#/alf'
-import {Check_Stroke2_Corner0_Rounded} from '#/components/icons/Check'
-import {TimesLarge_Stroke2_Corner0_Rounded} from '#/components/icons/Times'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
 import {useFocusEffect} from '@react-navigation/native'
 
 /** STEP 3: Your user handle
@@ -97,20 +97,20 @@ export function Step2({
           ]}>
           {uiState.error && (
             <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-              <IsValidCheck valid={false} />
+              <IsValidIcon valid={false} />
               <Text style={[t.atoms.text, a.text_md, a.flex]}>
                 {uiState.error}
               </Text>
             </View>
           )}
           <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-            <IsValidCheck valid={validCheck.handleChars} />
+            <IsValidIcon valid={validCheck.handleChars} />
             <Text style={[t.atoms.text, a.text_md, a.flex]}>
               <Trans>May only contain letters and numbers</Trans>
             </Text>
           </View>
           <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-            <IsValidCheck
+            <IsValidIcon
               valid={validCheck.frontLength && validCheck.totalLength}
             />
             {!validCheck.totalLength ? (
@@ -129,22 +129,12 @@ export function Step2({
   )
 }
 
-function IsValidCheck({valid}: {valid: boolean}) {
+function IsValidIcon({valid}: {valid: boolean}) {
   const t = useTheme()
 
   if (!valid) {
-    return (
-      <TimesLarge_Stroke2_Corner0_Rounded
-        size="md"
-        style={{color: t.palette.negative_500}}
-      />
-    )
+    return <Check size="md" style={{color: t.palette.negative_500}} />
   }
 
-  return (
-    <Check_Stroke2_Corner0_Rounded
-      size="md"
-      style={{color: t.palette.positive_700}}
-    />
-  )
+  return <Times size="md" style={{color: t.palette.positive_700}} />
 }
