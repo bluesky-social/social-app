@@ -1,6 +1,6 @@
 import React, {memo} from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
-import Clipboard from '@react-native-clipboard/clipboard'
+import {setStringAsync} from 'expo-clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {
@@ -137,7 +137,7 @@ let PostDropdownBtn = ({
   const onCopyPostText = React.useCallback(() => {
     const str = richTextToString(richText, true)
 
-    Clipboard.setString(str)
+    setStringAsync(str)
     Toast.show(_(msg`Copied to clipboard`))
   }, [_, richText])
 

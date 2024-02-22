@@ -11,7 +11,7 @@ import {
   StyleSheet,
   StyleProp,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 
 import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'

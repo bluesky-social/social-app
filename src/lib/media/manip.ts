@@ -1,13 +1,20 @@
-import RNFetchBlob from 'rn-fetch-blob'
-import ImageResizer from '@bam.tech/react-native-image-resizer'
-import {Image as RNImage, Share as RNShare} from 'react-native'
+import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {Image as RNImage} from 'react-native'
 import {Image} from 'react-native-image-crop-picker'
-import * as RNFS from 'react-native-fs'
+import {Image as ExpoImage} from 'expo-image'
+import {
+  cacheDirectory,
+  createDownloadResumable,
+  deleteAsync,
+  getInfoAsync,
+  moveAsync,
+} from 'expo-file-system'
 import uuid from 'react-native-uuid'
 import * as Sharing from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import {Dimensions} from './types'
-import {isAndroid, isIOS} from 'platform/detection'
+import {isAndroid} from 'platform/detection'
+import * as FS from 'fs'
 
 export async function compressIfNeeded(
   img: Image,
@@ -53,26 +60,12 @@ export async function downloadAndResize(opts: DownloadAndResizeOpts) {
     return
   }
 
-  let downloadRes
+  const path = createPath(appendExt)
   try {
-    const downloadResPromise = RNFetchBlob.config({
-      fileCache: true,
-      appendExt,
-    }).fetch('GET', opts.uri)
-    const to1 = setTimeout(() => downloadResPromise.cancel(), opts.timeout)
-    downloadRes = await downloadResPromise
-    clearTimeout(to1)
-
-    let localUri = downloadRes.path()
-    if (!localUri.startsWith('file://')) {
-      localUri = `file://${localUri}`
-    }
-
-    return await doResize(localUri, opts)
+    await downloadImage(opts.uri, path, opts.timeout)
+    return await doResize(path, opts)
   } finally {
-    if (downloadRes) {
-      downloadRes.flush()
-    }
+    deleteAsync(path)
   }
 }
 
@@ -81,47 +74,61 @@ export async function shareImageModal({uri}: {uri: string}) {
     // TODO might need to give an error to the user in this case -prf
     return
   }
-  const downloadResponse = await RNFetchBlob.config({
-    fileCache: true,
-  }).fetch('GET', uri)
 
-  // NOTE
-  // assuming PNG
-  // we're currently relying on the fact our CDN only serves pngs
-  // -prf
+  // Usually we won't need to download the image because it will already be in the cache. If it isn't, then we
+  // will download it
+  let imageUri = await ExpoImage.getCachePathAsync(uri)
+  let wasCached = true
 
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
-
-  // NOTE
-  // for some reason expo-sharing refuses to work on iOS
-  // ...and visa versa
-  // -prf
-  if (isIOS) {
-    await RNShare.share({url: imagePath})
-  } else {
-    await Sharing.shareAsync(imagePath, {
-      mimeType: 'image/png',
-      UTI: 'image/png',
-    })
+  if (!imageUri) {
+    // NOTE
+    // assuming PNG
+    // we're currently relying on the fact our CDN only serves pngs
+    // -prf
+    wasCached = false
+    imageUri = await downloadImage(uri, createPath('png'), 1e5)
   }
-  RNFS.unlink(imagePath)
+
+  const imagePath = normalizePath(
+    await moveToPermanentPath(imageUri, '.png'),
+    true,
+  )
+
+  await Sharing.shareAsync(imagePath, {
+    mimeType: 'image/png',
+    UTI: 'image/png',
+  })
+
+  if (!wasCached) {
+    deleteAsync(imageUri)
+  }
+  deleteAsync(imagePath)
 }
 
 export async function saveImageToMediaLibrary({uri}: {uri: string}) {
-  // download the file to cache
-  // NOTE
-  // assuming PNG
-  // we're currently relying on the fact our CDN only serves pngs
-  // -prf
-  const downloadResponse = await RNFetchBlob.config({
-    fileCache: true,
-  }).fetch('GET', uri)
-  let imagePath = downloadResponse.path()
-  imagePath = normalizePath(await moveToPermanentPath(imagePath, '.png'), true)
+  let imageUri = await ExpoImage.getCachePathAsync(uri)
+  let wasCached = true
 
-  // save
+  if (!imageUri) {
+    // NOTE
+    // assuming PNG
+    // we're currently relying on the fact our CDN only serves pngs
+    // -prf
+    wasCached = false
+    imageUri = await downloadImage(uri, createPath('png'), 1e5)
+  }
+
+  const imagePath = normalizePath(
+    await moveToPermanentPath(imageUri, '.png'),
+    true,
+  )
+
   await MediaLibrary.createAssetAsync(imagePath)
+
+  if (!wasCached) {
+    deleteAsync(imageUri)
+  }
+  deleteAsync(imagePath)
 }
 
 export function getImageDim(path: string): Promise<Dimensions> {
@@ -148,23 +155,26 @@ interface DoResizeOpts {
 
 async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
   for (let i = 0; i < 9; i++) {
-    const quality = 100 - i * 10
-    const resizeRes = await ImageResizer.createResizedImage(
+    const quality = 1 - 0.1 * i
+    // TODO We have a `mode` in react-native-image-resizer. What is this and do we need it here? Can we safely remove
+    // this option? Is it used?
+    const resizeRes = await manipulateAsync(
       localUri,
-      opts.width,
-      opts.height,
-      'JPEG',
-      quality,
-      undefined,
-      undefined,
-      undefined,
-      {mode: opts.mode},
+      [{resize: {height: opts.height, width: opts.width}}],
+      {format: SaveFormat.JPEG, compress: quality},
     )
-    if (resizeRes.size < opts.maxSize) {
+    // @ts-ignore Size is available here, typing is incorrect
+    const info: FS.FileInfo & {size: number} = await getInfoAsync(
+      resizeRes.uri,
+      {
+        size: true,
+      },
+    )
+    if (info.size < opts.maxSize) {
       return {
-        path: normalizePath(resizeRes.path),
+        path: normalizePath(resizeRes.uri),
         mime: 'image/jpeg',
-        size: resizeRes.size,
+        size: info.size,
         width: resizeRes.width,
         height: resizeRes.height,
       }
@@ -183,11 +193,13 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   */
   const filename = uuid.v4()
 
-  const destinationPath = joinPath(
-    RNFS.TemporaryDirectoryPath,
-    `${filename}${ext}`,
-  )
-  await RNFS.moveFile(path, destinationPath)
+  // cacheDirectory should never be undefined unless on web. Since this only runs on native, we know that it will
+  // always be defined.
+  const destinationPath = joinPath(cacheDirectory ?? '/', `${filename}${ext}`)
+  await moveAsync({
+    from: path,
+    to: destinationPath,
+  })
   return normalizePath(destinationPath)
 }
 
@@ -210,4 +222,26 @@ function normalizePath(str: string, allPlatforms = false): string {
     }
   }
   return str
+}
+
+function createPath(ext: string) {
+  return `${cacheDirectory ?? ''}/${uuid.v4()}.${ext}`
+}
+
+async function downloadImage(uri: string, path: string, timeout: number) {
+  const downloadResumable = createDownloadResumable(uri, path, {
+    cache: true,
+  })
+
+  const to1 = setTimeout(() => downloadResumable.cancelAsync(), timeout)
+  const downloadRes = await downloadResumable.downloadAsync()
+  clearTimeout(to1)
+
+  if (!downloadRes?.uri) throw new Error()
+
+  let localUri = downloadRes.uri
+  if (!localUri.startsWith('file://')) {
+    localUri = `file://${localUri}`
+  }
+  return localUri
 }

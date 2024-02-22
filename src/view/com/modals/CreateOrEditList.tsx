@@ -13,7 +13,7 @@ import {
   AppBskyRichtextFacet,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {Text} from '../util/text/Text'
 import {ErrorMessage} from '../util/error/ErrorMessage'

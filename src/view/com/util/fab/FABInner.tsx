@@ -1,6 +1,6 @@
 import React, {ComponentProps} from 'react'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {gradients} from 'lib/styles'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'

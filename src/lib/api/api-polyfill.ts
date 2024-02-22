@@ -1,5 +1,5 @@
 import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
-import RNFS from 'react-native-fs'
+import {moveAsync} from 'expo-file-system'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
@@ -34,7 +34,7 @@ async function fetchHandler(
       // see https://github.com/facebook/react-native/issues/27099
       // -prf
       const newPath = reqBody.replace(/\.jpe?g$/, '.bin')
-      await RNFS.moveFile(reqBody, newPath)
+      await moveAsync({from: reqBody, to: newPath})
       reqBody = newPath
     }
     // NOTE
