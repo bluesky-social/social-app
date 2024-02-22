@@ -10,7 +10,7 @@ import {
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {atoms as a, useTheme, useBreakpoints, ViewStyleProp} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -22,6 +22,7 @@ import {Loader} from '#/components/Loader'
 import {logger} from '#/logger'
 import * as Dialog from '#/components/Dialog'
 import * as Toggle from '#/components/forms/Toggle'
+import * as Prompt from '#/components/Prompt'
 
 export {useDialogControl as useMutedWordsDialogControl} from '#/components/Dialog'
 
@@ -48,7 +49,6 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     error: preferencesError,
   } = usePreferencesQuery()
   const {mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
-  const {mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
   const [field, setField] = React.useState('')
   const [contentTargetEnabled, setContentTargetEnabled] = React.useState(false)
   const [tagTargetEnabled, setTagTargetEnabled] = React.useState(false)
@@ -74,13 +74,6 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     }
   }, [field, tagTargetEnabled, contentTargetEnabled, addMutedWord, setField])
 
-  const remove = React.useCallback(
-    (word: AppBskyActorDefs.MutedWord) => {
-      removeMutedWord(word)
-    },
-    [removeMutedWord],
-  )
-
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
       <Text
@@ -89,7 +82,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
       </Text>
       <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
         <Trans>
-          Posts can be muted based on their content, their tags, or both.
+          Posts can be muted based on their text, their tags, or both.
         </Trans>
       </Text>
 
@@ -115,7 +108,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             a.flex_wrap,
           ]}>
           <Toggle.Item
-            label={_(msg`Mute this tag in post content`)}
+            label={_(msg`Mute this word in post text`)}
             name="content"
             value={contentTargetEnabled}
             onChange={setContentTargetEnabled}
@@ -123,13 +116,13 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             <TargetToggle>
               <PageText size="sm" />
               <Toggle.Label>
-                <Trans>Mute in content</Trans>
+                <Trans>Mute in text</Trans>
               </Toggle.Label>
             </TargetToggle>
           </Toggle.Item>
 
           <Toggle.Item
-            label={_(msg`Mute this tag in post tags`)}
+            label={_(msg`Mute this tag`)}
             name="tag"
             value={tagTargetEnabled}
             onChange={setTagTargetEnabled}
@@ -184,57 +177,15 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             </Text>
           </View>
         ) : preferences.mutedWords.length ? (
-          [...preferences.mutedWords].reverse().map((word, i) => (
-            <View
-              key={word.value + i}
-              style={[
-                a.py_md,
-                a.px_lg,
-                a.flex_row,
-                a.align_center,
-                a.justify_between,
-                a.rounded_md,
-                i % 2 === 0 && t.atoms.bg_contrast_25,
-              ]}>
-              <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
-                {word.value}
-              </Text>
-
-              <View
-                style={[a.flex_row, a.align_center, a.justify_end, a.gap_sm]}>
-                {word.targets.map(target => (
-                  <View
-                    key={target}
-                    style={[
-                      a.py_xs,
-                      a.px_sm,
-                      a.rounded_sm,
-                      t.atoms.bg_contrast_100,
-                    ]}>
-                    <Text
-                      style={[
-                        a.text_xs,
-                        a.font_bold,
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {target}
-                    </Text>
-                  </View>
-                ))}
-
-                <Button
-                  label={_(msg`Remove mute word from your list`)}
-                  size="tiny"
-                  shape="round"
-                  variant="ghost"
-                  color="secondary"
-                  onPress={() => remove(word)}
-                  style={[a.ml_sm]}>
-                  <ButtonIcon icon={X} />
-                </Button>
-              </View>
-            </View>
-          ))
+          [...preferences.mutedWords]
+            .reverse()
+            .map((word, i) => (
+              <MutedWordRow
+                key={word.value + i}
+                word={word}
+                style={[i % 2 === 0 && t.atoms.bg_contrast_25]}
+              />
+            ))
         ) : (
           <View
             style={[a.py_md, a.px_lg, a.rounded_md, t.atoms.bg_contrast_25]}>
@@ -245,6 +196,88 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
         )}
       </View>
     </Dialog.ScrollableInner>
+  )
+}
+
+function MutedWordRow({
+  style,
+  word,
+}: ViewStyleProp & {word: AppBskyActorDefs.MutedWord}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
+  const control = Prompt.usePromptControl()
+
+  const remove = React.useCallback(async () => {
+    control.close()
+    removeMutedWord(word)
+  }, [removeMutedWord, word, control])
+
+  return (
+    <>
+      <Prompt.Outer control={control}>
+        <Prompt.Title>
+          <Trans>Are you sure?</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>
+            This will delete {word.value} from your muted words. You can always
+            add it back later.
+          </Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>
+            <ButtonText>
+              <Trans>Nevermind</Trans>
+            </ButtonText>
+          </Prompt.Cancel>
+          <Prompt.Action onPress={remove}>
+            <ButtonText>
+              <Trans>Remove</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
+
+      <View
+        style={[
+          a.py_md,
+          a.px_lg,
+          a.flex_row,
+          a.align_center,
+          a.justify_between,
+          a.rounded_md,
+          style,
+        ]}>
+        <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+          {word.value}
+        </Text>
+
+        <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_sm]}>
+          {word.targets.map(target => (
+            <View
+              key={target}
+              style={[a.py_xs, a.px_sm, a.rounded_sm, t.atoms.bg_contrast_100]}>
+              <Text
+                style={[a.text_xs, a.font_bold, t.atoms.text_contrast_medium]}>
+                {target}
+              </Text>
+            </View>
+          ))}
+
+          <Button
+            label={_(msg`Remove mute word from your list`)}
+            size="tiny"
+            shape="round"
+            variant="ghost"
+            color="secondary"
+            onPress={() => control.open()}
+            style={[a.ml_sm]}>
+            <ButtonIcon icon={X} />
+          </Button>
+        </View>
+      </View>
+    </>
   )
 }
 
