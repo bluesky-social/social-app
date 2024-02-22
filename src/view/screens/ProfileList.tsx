@@ -14,7 +14,7 @@ import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {LoadingScreen} from 'view/com/util/LoadingScreen'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {Button} from 'view/com/util/forms/Button'
 import {TextLink} from 'view/com/util/Link'
 import {ListRef} from 'view/com/util/List'
@@ -60,6 +60,7 @@ import {
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {listenSoftReset} from '#/state/events'
+import {atoms as a} from '#/alf'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -742,9 +743,8 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             {descriptionRT ? (
               <RichText
                 testID="listDescription"
-                type="lg"
-                style={pal.text}
-                richText={descriptionRT}
+                style={[a.text_md]}
+                value={descriptionRT}
               />
             ) : (
               <Text
