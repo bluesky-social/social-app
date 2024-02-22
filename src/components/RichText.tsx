@@ -221,6 +221,7 @@ function RichTextTag({
           onPress={isNative ? open : undefined}
           onPressIn={onPressIn}
           onPressOut={onPressOut}
+          // @ts-ignore
           onFocus={onFocus}
           onBlur={onBlur}
           onMouseEnter={onHoverIn}
