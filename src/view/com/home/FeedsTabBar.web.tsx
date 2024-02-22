@@ -19,19 +19,15 @@ import {NavigationProp} from 'lib/routes/types'
 export function FeedsTabBar(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
-  const {isMobile, isTablet} = useWebMediaQueries()
+  const {isMobile} = useWebMediaQueries()
   const {hasSession} = useSession()
 
   if (isMobile) {
     return <FeedsTabBarMobile {...props} />
-  } else if (isTablet) {
-    if (hasSession) {
-      return <FeedsTabBarTablet {...props} />
-    } else {
-      return <FeedsTabBarPublic />
-    }
+  } else if (hasSession) {
+    return <FeedsTabBarTablet {...props} />
   } else {
-    return null
+    return <FeedsTabBarPublic />
   }
 }
 
