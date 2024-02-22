@@ -20,7 +20,7 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
-import {RichText} from '../util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -36,6 +36,7 @@ import {FeedNameText} from '../util/FeedInfoText'
 import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {atoms as a} from '#/alf'
 
 export function FeedItem({
   post,
@@ -347,11 +348,9 @@ let PostContent = ({
         <View style={styles.postTextContainer}>
           <RichText
             testID="postText"
-            type="post-text"
-            richText={richText}
-            lineHeight={1.3}
+            value={richText}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
-            style={s.flex1}
+            style={[a.flex_1, a.text_md]}
           />
         </View>
       ) : undefined}

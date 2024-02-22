@@ -53,5 +53,6 @@ export function embedViewRecordToPostView(
     record: v.value,
     indexedAt: v.indexedAt,
     labels: v.labels,
+    embed: v.embeds?.[0],
   }
 }
