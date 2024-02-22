@@ -50,8 +50,8 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
   } = usePreferencesQuery()
   const {mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const [field, setField] = React.useState('')
-  const [contentTargetEnabled, setContentTargetEnabled] = React.useState(false)
-  const [tagTargetEnabled, setTagTargetEnabled] = React.useState(false)
+  const [contentTargetEnabled, setContentTargetEnabled] = React.useState(true)
+  const [tagTargetEnabled, setTagTargetEnabled] = React.useState(true)
   const [_error, setError] = React.useState('')
 
   const submit = React.useCallback(async () => {
@@ -114,10 +114,13 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             onChange={setContentTargetEnabled}
             style={[a.flex_1]}>
             <TargetToggle>
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Toggle.Checkbox />
+                <Toggle.Label>
+                  <Trans>Mute in text</Trans>
+                </Toggle.Label>
+              </View>
               <PageText size="sm" />
-              <Toggle.Label>
-                <Trans>Mute in text</Trans>
-              </Toggle.Label>
             </TargetToggle>
           </Toggle.Item>
 
@@ -128,10 +131,13 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             onChange={setTagTargetEnabled}
             style={[a.flex_1]}>
             <TargetToggle>
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Toggle.Checkbox />
+                <Toggle.Label>
+                  <Trans>Mute in tags</Trans>
+                </Toggle.Label>
+              </View>
               <Hashtag size="sm" />
-              <Toggle.Label>
-                <Trans>Mute in tags</Trans>
-              </Toggle.Label>
             </TargetToggle>
           </Toggle.Item>
 
@@ -306,8 +312,7 @@ function TargetToggle({children}: React.PropsWithChildren<{}>) {
           },
         ],
       ]}>
-      <View style={[a.flex_row, a.align_center, a.gap_xs]}>{children}</View>
-      <Toggle.Checkbox />
+      {children}
     </View>
   )
 }
