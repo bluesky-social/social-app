@@ -2697,7 +2697,7 @@ msgstr "密码已更新！"
 
 #: src/Navigation.tsx:160
 msgid "People followed by @{0}"
-msgstr "被 @{0} 所关注的人"
+msgstr "@{0} 关注的人"
 
 #: src/Navigation.tsx:153
 msgid "People following @{0}"
@@ -3553,7 +3553,7 @@ msgstr "在关注信息流中显示回复"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
-msgstr "显示至少包含 {value} 个{0} 的回复"
+msgstr "显示至少包含 {value} 个 {0} 的回复"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:188
 msgid "Show Reposts"
