@@ -193,18 +193,20 @@ export function TagMenu({
                     <Button
                       label="tag"
                       onPress={() => {
-                        if (isMuted) {
-                          resetUpsert()
-                          removeMutedWord({
-                            value: sanitizedTag,
-                            targets: ['tag'],
-                          })
-                        } else {
-                          resetRemove()
-                          upsertMutedWord([
-                            {value: sanitizedTag, targets: ['tag']},
-                          ])
-                        }
+                        control.close(() => {
+                          if (isMuted) {
+                            resetUpsert()
+                            removeMutedWord({
+                              value: sanitizedTag,
+                              targets: ['tag'],
+                            })
+                          } else {
+                            resetRemove()
+                            upsertMutedWord([
+                              {value: sanitizedTag, targets: ['tag']},
+                            ])
+                          }
+                        })
                       }}>
                       <View
                         style={[
