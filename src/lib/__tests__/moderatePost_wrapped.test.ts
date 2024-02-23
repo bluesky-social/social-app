@@ -248,6 +248,22 @@ describe(`hasMutedWord`, () => {
 
         expect(match).toBe(true)
       })
+
+      it(`no match: !command`, () => {
+        const rt = new RichText({
+          text: `Idk maybe a bot command`,
+        })
+        rt.detectFacetsWithoutResolution()
+
+        const match = hasMutedWord(
+          [{value: `!command`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(false)
+      })
     })
 
     describe(`e/acc`, () => {
@@ -339,6 +355,75 @@ describe(`hasMutedWord`, () => {
       it(`match: idk what this would be`, () => {
         const match = hasMutedWord(
           [{value: `idk what this would be`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: idkwhatthiswouldbe`, () => {
+        const match = hasMutedWord(
+          [{value: `idkwhatthiswouldbe`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+
+    describe(`parentheses`, () => {
+      const rt = new RichText({
+        text: `Post with context(iykyk)`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: context(iykyk)`, () => {
+        const match = hasMutedWord(
+          [{value: `context(iykyk)`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: context`, () => {
+        const match = hasMutedWord(
+          [{value: `context`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: iykyk`, () => {
+        const match = hasMutedWord(
+          [{value: `iykyk`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+
+    describe(`🦋`, () => {
+      const rt = new RichText({
+        text: `Post with 🦋`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: 🦋`, () => {
+        const match = hasMutedWord(
+          [{value: `🦋`, targets: ['content']}],
           rt.text,
           rt.facets,
           [],

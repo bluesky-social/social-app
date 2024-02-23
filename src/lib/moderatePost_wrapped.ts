@@ -14,6 +14,13 @@ type Options = Parameters<ModeratePost>[1] & {
   mutedWords?: AppBskyActorDefs.MutedWord[]
 }
 
+const REGEX = {
+  TRAILING_PUNCTUATION: /\p{P}+$/gu,
+  ESCAPE: /[-[\]{}()*+?.,\\^$|#\s]/g,
+  SEPARATORS: /[\/\-\–\—\(\)\[\]\_]+/g,
+  WORD_BOUNDARY: /[\s\n\t]+?/g,
+}
+
 export function hasMutedWord(
   mutedWords: AppBskyActorDefs.MutedWord[],
   text: string,
@@ -33,8 +40,6 @@ export function hasMutedWord(
     )
     .map(t => t.toLowerCase())
 
-  const words = text.toLowerCase().split(/\s+/)
-
   for (const mute of mutedWords) {
     const mutedWord = mute.value.toLowerCase()
 
@@ -49,40 +54,53 @@ export function hasMutedWord(
     // exact match
     if (mutedWord === text) return true
 
-    const mutedWordNoTrailingPunc = mutedWord.replace(/\p{P}+$/gu, '')
-    const reg = new RegExp(`\\W\+\?${mutedWordNoTrailingPunc}\\W\{0\}`, 'gi')
+    const mutedWordNoTrailingPunc = mutedWord.replace(
+      REGEX.TRAILING_PUNCTUATION,
+      '',
+    )
+    const escapedMutedWord = mutedWordNoTrailingPunc.replace(
+      REGEX.ESCAPE,
+      '\\$&',
+    )
+    const reg = new RegExp(`\\W\+\?${escapedMutedWord}\\W\{0\}`, 'gi')
 
     if (reg.test(text)) return true
 
     // check individual character groups
+    const words = text.toLowerCase().split(REGEX.WORD_BOUNDARY)
     for (const word of words) {
       if (word === mutedWord) return true
 
       // compare word without trailing punctuation, but allow internal
       // punctuation (such as `s@ssy`)
-      const wordNoTrailingPunc = word.replace(/\p{P}+$/gu, '')
+      const wordNoTrailingPunc = word.replace(REGEX.TRAILING_PUNCTUATION, '')
 
       if (mutedWordNoTrailingPunc === wordNoTrailingPunc) return true
       if (mutedWordNoTrailingPunc.length > wordNoTrailingPunc.length) continue
 
       // handle hyphenated, slash separated words, etc
-      const separators = /[\/\-\–\—\(\)\[\]\_]+/g
-      if (separators.test(wordNoTrailingPunc)) {
+      if (REGEX.SEPARATORS.test(wordNoTrailingPunc)) {
         // check against full normalized phrase
         const wordNormalizedSeparators = wordNoTrailingPunc.replace(
-          separators,
+          REGEX.SEPARATORS,
           ' ',
         )
         const wordNormalizedCompressed = wordNormalizedSeparators.replace(
-          /\s+?/g,
+          REGEX.WORD_BOUNDARY,
           '',
         )
         const mutedWordNormalizedSeparators = mutedWordNoTrailingPunc.replace(
-          separators,
+          REGEX.SEPARATORS,
           ' ',
         )
         const mutedWordNormalizedCompressed =
           mutedWordNormalizedSeparators.replace(/\s+?/g, '')
+        // console.log({
+        //   wordNormalizedSeparators,
+        //   wordNormalizedCompressed,
+        //   mutedWordNormalizedSeparators,
+        //   mutedWordNormalizedCompressed,
+        // })
         // hyphenated (or other sep) to spaced words
         if (wordNormalizedSeparators === mutedWordNormalizedSeparators)
           return true
@@ -91,7 +109,7 @@ export function hasMutedWord(
           return true
 
         // then individual parts
-        const wordParts = wordNoTrailingPunc.split(separators)
+        const wordParts = wordNoTrailingPunc.split(REGEX.SEPARATORS)
         for (const wp of wordParts) {
           // still retain internal punctuation
           if (wp === mutedWordNoTrailingPunc) return true
