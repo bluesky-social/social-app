@@ -6,7 +6,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "prepare": "is-ci || husky install",
+    "prepare": "is-ci || husky",
     "postinstall": "patch-package && yarn intl:compile",
     "prebuild": "expo prebuild --clean",
     "android": "expo run:android",
