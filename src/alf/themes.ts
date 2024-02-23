@@ -132,17 +132,17 @@ export const darkPalette: Palette = {
 
 export const dimPalette: Palette = {
   ...darkPalette,
-  black: `hsl(211, 28%, 8%)`,
+  black: `hsl(211, 28%, 12%)`,
 
-  contrast_25: `hsl(211, 28%, 10%)`,
-  contrast_50: `hsl(211, 28%, 13%)`,
-  contrast_100: `hsl(211, 28%, 20%)`,
+  contrast_25: `hsl(211, 28%, 15%)`,
+  contrast_50: `hsl(211, 28%, 18%)`,
+  contrast_100: `hsl(211, 28%, 24%)`,
   contrast_200: `hsl(211, 28%, 27%)`,
   contrast_300: `hsl(211, 24%, 34%)`,
   contrast_400: `hsl(211, 24%, 41%)`,
-  contrast_500: `hsl(211, 20%, 48%)`,
+  contrast_500: `hsl(211, 20%, 52%)`,
   contrast_600: `hsl(211, 20%, 55%)`,
-  contrast_700: `hsl(211, 20%, 63%)`,
+  contrast_700: `hsl(211, 20%, 67%)`,
   contrast_800: `hsl(211, 20%, 71%)`,
   contrast_900: `hsl(211, 20%, 79%)`,
   contrast_950: `hsl(211, 20%, 87%)`,
