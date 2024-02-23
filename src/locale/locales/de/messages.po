@@ -1121,7 +1121,7 @@ msgstr "CAR-Datei herunterladen"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:247
 msgid "Drop to add images"
-msgstr "Drop zum Hinzufügen von Bildern"
+msgstr "Ablegen zum Hinzufügen von Bildern"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
@@ -4204,7 +4204,7 @@ msgstr "Willkommen bei <0>Bluesky</0>"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
-msgstr "Was sind Ihre Interessen?"
+msgstr "Was sind Deine Interessen?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
@@ -4257,16 +4257,16 @@ msgstr "Ja"
 
 #: src/screens/Deactivated.tsx:130
 msgid "You are in line."
-msgstr "Sie sind in der Warteschlange."
+msgstr "Du befindest Dich in der Warteschlange."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "Sie können auch neue benutzerdefinierte Feeds entdecken, denen Sie folgen können."
+msgstr "Du kannst auch neue benutzerdefinierte Feeds entdecken und ihnen folgen."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
-msgstr "Sie können diese Einstellungen später ändern."
+msgstr "Du kannst diese Einstellungen später ändern."
 
 #: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
@@ -4295,18 +4295,18 @@ msgstr "Du hast den Verfasser blockiert oder du wurdest vom Verfasser blockiert.
 
 #: src/view/com/modals/ModerationDetails.tsx:56
 msgid "You have blocked this user. You cannot view their content."
-msgstr "Sie haben diesen Benutzer blockiert. Sie können seine Inhalte nicht sehen."
+msgstr "Du hast diesen Benutzer blockiert und kannst seine Inhalte nicht sehen."
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:57
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:92
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr "Sie haben einen ungültigen Code eingegeben. Er sollte wie XXXXX-XXXXX aussehen."
+msgstr "Du hast einen ungültigen Code eingegeben. Er sollte wie XXXXX-XXXXX aussehen."
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
-msgstr "Sie haben diesen Benutzer stummgeschaltet."
+msgstr "Du hast diesen Benutzer stummgeschaltet."
 
 #: src/view/com/feeds/ProfileFeedgens.tsx:136
 msgid "You have no feeds."
@@ -4319,7 +4319,7 @@ msgstr "Du hast keine Listen."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-msgstr "Sie haben noch keine Konten blockiert. Um ein Konto zu blockieren, gehen Sie zu seinem Profil und wählen Sie \"Konto blockieren\" aus dem Menü auf seinem Konto."
+msgstr "Du hast noch keine Konten blockiert. Um ein Konto zu blockieren, gehe auf dessen Profil und wähle \"Konto blockieren\" aus dem Menü des Kontos aus."
 
 #: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -4327,15 +4327,15 @@ msgstr "Du hast noch keine App-Passwörter erstellt. Du kannst eines erstellen, 
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-msgstr "Sie haben noch keine Konten stummgeschaltet. Um ein Konto stumm zu schalten, gehen Sie zu dessen Profil und wählen Sie \"Konto stummschalten\" aus dem Menü auf dessen Konto."
+msgstr "Du hast noch keine Konten stummgeschaltet. Um ein Konto stumm zu schalten, gehe auf dessen Profil und wähle \"Konto stummschalten\" aus dem Menü des Kontos aus."
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
-msgstr "Sie müssen 18 Jahre oder älter sein, um Inhalte für Erwachsene zu aktivieren."
+msgstr "Du musst 18 Jahre oder älter sein, um Inhalte für Erwachsene zu aktivieren."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
-msgstr "Sie müssen 18 Jahre oder älter sein, um Inhalte für Erwachsene zu aktivieren."
+msgstr "Du musst 18 Jahre oder älter sein, um Inhalte für Erwachsene zu aktivieren."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:98
 msgid "You will no longer receive notifications for this thread"
@@ -4343,7 +4343,7 @@ msgstr "Du wirst keine Mitteilungen mehr für diesen Thread erhalten"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:101
 msgid "You will now receive notifications for this thread"
-msgstr "Sie erhalten nun Mitteilungen für dieses Thread"
+msgstr "Du erhälst nun Mitteilungen für dieses Thread"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:107
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
@@ -4351,21 +4351,21 @@ msgstr "Du erhältst eine E-Mail mit einem \"Reset-Code\". Gib diesen Code hier 
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
-msgstr "Sie haben die Kontrolle"
+msgstr "Du hast die Kontrolle"
 
 #: src/screens/Deactivated.tsx:87
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:103
 msgid "You're in line"
-msgstr "Sie sind in der Warteschlange"
+msgstr "Du bist in der Warteschlange"
 
 #: src/screens/Onboarding/StepFinished.tsx:90
 msgid "You're ready to go!"
-msgstr "Sie können loslegen!"
+msgstr "Du kannst loslegen!"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Du hast das Ende deines Feeds erreicht! Finden Sie weitere Konten, denen Sie folgen können."
+msgstr "Du hast das Ende Deines Feeds erreicht! Finde weitere Konten, denen Du folgen kannst."
 
 #: src/view/com/auth/create/Step1.tsx:74
 msgid "Your account"
@@ -4373,11 +4373,11 @@ msgstr "Dein Konto"
 
 #: src/view/com/modals/DeleteAccount.tsx:67
 msgid "Your account has been deleted"
-msgstr "Ihr Konto wurde gelöscht"
+msgstr "Dein Konto wurde gelöscht"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "Ihr Kontorepository, das alle öffentlichen Datensätze enthält, kann als \"CAR\"-Datei heruntergeladen werden. Diese Datei enthält keine Medieneinbettungen, wie z. B. Bilder, oder Ihre privaten Daten, die separat abgerufen werden müssen."
+msgstr "Dein Kontodepot, das alle öffentlichen Datensätze enthält, kann als \"CAR\"-Datei heruntergeladen werden. Diese Datei enthält keine Medieneinbettungen, wie z. B. Bilder, oder Ihre privaten Daten, welche separat abgerufen werden müssen."
 
 #: src/view/com/auth/create/Step1.tsx:238
 msgid "Your birth date"
@@ -4385,11 +4385,11 @@ msgstr "Dein Geburtsdatum"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:47
 msgid "Your choice will be saved, but can be changed later in settings."
-msgstr "Ihre Wahl wird gespeichert, kann aber später in den Einstellungen geändert werden."
+msgstr "Deine Wahl wird gespeichert, kann aber später in den Einstellungen geändert werden."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr "Ihr Standard-Feed ist \"Following\""
+msgstr "Dein Standard-Feed ist \"Following\""
 
 #: src/view/com/auth/create/state.ts:110
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4411,23 +4411,23 @@ msgstr "Deine E-Mail wurde noch nicht bestätigt. Dies ist ein wichtiger Sicherh
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "Ihr Following-Feed ist leer! Folgen Sie mehr Benutzern, um zu sehen, was passiert."
+msgstr "Dein Following-Feed ist leer! Folge mehr Benutzern, um auf dem Laufenden zu bleiben."
 
 #: src/view/com/auth/create/Step2.tsx:48
 msgid "Your full handle will be"
-msgstr "Ihr vollständiger Handle lautet"
+msgstr "Dein vollständiger Handle lautet"
 
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
-msgstr "Ihr vollständiger Handle lautet <0>@{0}</0>"
+msgstr "Dein vollständiger Handle lautet <0>@{0}</0>"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr "Ihr Passwort wurde erfolgreich geändert!"
+msgstr "Dein Passwort wurde erfolgreich geändert!"
 
 #: src/view/com/composer/Composer.tsx:267
 msgid "Your post has been published"
-msgstr "Ihr Beitrag wurde veröffentlicht"
+msgstr "Dein Beitrag wurde veröffentlicht"
 
 #: src/screens/Onboarding/StepFinished.tsx:105
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
@@ -4442,7 +4442,7 @@ msgstr "Dein Profil"
 
 #: src/view/com/composer/Composer.tsx:266
 msgid "Your reply has been published"
-msgstr "Ihre Antwort wurde veröffentlicht"
+msgstr "Deine Antwort wurde veröffentlicht"
 
 #: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
