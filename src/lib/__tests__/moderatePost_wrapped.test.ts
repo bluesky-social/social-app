@@ -317,6 +317,17 @@ describe(`hasMutedWord`, () => {
 
         expect(match).toBe(true)
       })
+
+      it(`match: superbad`, () => {
+        const match = hasMutedWord(
+          [{value: `superbad`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
     })
 
     describe(`idk_what_this_would_be`, () => {
