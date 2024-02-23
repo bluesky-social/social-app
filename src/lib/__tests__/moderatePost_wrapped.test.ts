@@ -325,9 +325,9 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      it(`match: idk_what_this_would_be`, () => {
+      it(`match: idk what this would be`, () => {
         const match = hasMutedWord(
-          [{value: `idk_what_this_would_be`, targets: ['content']}],
+          [{value: `idk what this would be`, targets: ['content']}],
           rt.text,
           rt.facets,
           [],
