@@ -132,21 +132,21 @@ export const darkPalette: Palette = {
 
 export const dimPalette: Palette = {
   ...darkPalette,
-  black: `hsl(211, 28%, 12%)`,
+  black: `hsl(211, 28%, 8%)`,
 
-  contrast_25: `hsl(211, 28%, 14%)`,
-  contrast_50: `hsl(211, 28%, 17%)`,
-  contrast_100: `hsl(211, 28%, 23%)`,
-  contrast_200: `hsl(211, 28%, 29%)`,
-  contrast_300: `hsl(211, 24%, 35%)`,
+  contrast_25: `hsl(211, 28%, 10%)`,
+  contrast_50: `hsl(211, 28%, 13%)`,
+  contrast_100: `hsl(211, 28%, 20%)`,
+  contrast_200: `hsl(211, 28%, 27%)`,
+  contrast_300: `hsl(211, 24%, 34%)`,
   contrast_400: `hsl(211, 24%, 41%)`,
-  contrast_500: `hsl(211, 20%, 47%)`,
+  contrast_500: `hsl(211, 20%, 48%)`,
   contrast_600: `hsl(211, 20%, 55%)`,
   contrast_700: `hsl(211, 20%, 63%)`,
   contrast_800: `hsl(211, 20%, 71%)`,
-  contrast_900: `hsl(211, 20%, 78%)`,
-  contrast_950: `hsl(211, 20%, 86%)`,
-  contrast_975: `hsl(211, 20%, 94%)`,
+  contrast_900: `hsl(211, 20%, 79%)`,
+  contrast_950: `hsl(211, 20%, 87%)`,
+  contrast_975: `hsl(211, 20%, 95%)`,
 } as const
 
 export const light = {
@@ -397,17 +397,17 @@ export const dim: Theme = {
     shadow_sm: {
       ...atoms.shadow_sm,
       shadowOpacity: 0.7,
-      shadowColor: `hsl(211, 28%, 6%)`,
+      shadowColor: `hsl(211, 28%, 3%)`,
     },
     shadow_md: {
       ...atoms.shadow_md,
       shadowOpacity: 0.7,
-      shadowColor: `hsl(211, 28%, 6%)`,
+      shadowColor: `hsl(211, 28%, 3%)`,
     },
     shadow_lg: {
       ...atoms.shadow_lg,
       shadowOpacity: 0.7,
-      shadowColor: `hsl(211, 28%, 6%)`,
+      shadowColor: `hsl(211, 28%, 3%)`,
     },
   },
 }
