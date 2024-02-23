@@ -33,6 +33,7 @@ class ScrollForwarderView : UIView, UIGestureRecognizerDelegate {
     super.init(frame: .zero)
 
     let pg = UIPanGestureRecognizer(target: self, action: #selector(callOnPan(_:)))
+    pg.delegate = self
     self.addGestureRecognizer(pg)
 
     let tg = UITapGestureRecognizer(target: self, action: #selector(callOnPress(_:)))
@@ -51,7 +52,25 @@ class ScrollForwarderView : UIView, UIGestureRecognizerDelegate {
     fatalError("init(coder:) has not been implemented")
   }
 
+  // We don't want the pan recognizer to allow simultaneous gestures, otherwise when we scroll we might also start swiping
+  // backwards, creating a weird effect.
   func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    if gestureRecognizer is UIPanGestureRecognizer {
+      return false
+    }
+    return true
+  }
+
+  // We only want to start recognizing if this is a vertical pan. If we recognize for both vertical and horizontal
+  // pans, it interferes with the "swipe to go back" functionality on the profile.
+  override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
+      let velocity = gestureRecognizer.velocity(in: self)
+      let res = abs(velocity.y) > abs(velocity.x)
+      print(res)
+      return res
+    }
+
     return true
   }
 
