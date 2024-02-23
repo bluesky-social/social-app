@@ -9,7 +9,7 @@ import {
   useUpsertMutedWordsMutation,
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
-
+import {isNative} from '#/platform/detection'
 import {atoms as a, useTheme, useBreakpoints, ViewStyleProp} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -63,8 +63,6 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     try {
       await addMutedWord([{value, targets}])
       setField('')
-      setContentTargetEnabled(false)
-      setTagTargetEnabled(false)
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
@@ -101,20 +99,20 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             a.mb_lg,
             a.flex_row,
             a.align_center,
-            a.gap_md,
+            a.gap_sm,
             a.flex_wrap,
           ]}>
           <Toggle.Item
-            label={_(msg`Mute this word in post text`)}
+            label={_(msg`Mute this word in post text and tags`)}
             name="content"
             value={contentTargetEnabled}
             onChange={setContentTargetEnabled}
-            style={[a.flex_1]}>
+            style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
             <TargetToggle>
               <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                 <Toggle.Checkbox />
                 <Toggle.Label>
-                  <Trans>Mute in text</Trans>
+                  <Trans>Mute in text & tags</Trans>
                 </Toggle.Label>
               </View>
               <PageText size="sm" />
@@ -122,16 +120,17 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           </Toggle.Item>
 
           <Toggle.Item
-            label={_(msg`Mute this tag`)}
+            disabled={contentTargetEnabled}
+            label={_(msg`Mute this word in tags only`)}
             name="tag"
-            value={tagTargetEnabled}
+            value={contentTargetEnabled || tagTargetEnabled}
             onChange={setTagTargetEnabled}
-            style={[a.flex_1]}>
+            style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
             <TargetToggle>
               <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                 <Toggle.Checkbox />
                 <Toggle.Label>
-                  <Trans>Mute in tags</Trans>
+                  <Trans>Mute in tags only</Trans>
                 </Toggle.Label>
               </View>
               <Hashtag size="sm" />
@@ -155,8 +154,6 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             <ButtonIcon icon={Plus} />
           </Button>
         </View>
-
-        <View style={[a.flex_row, a.justify_end]} />
       </View>
 
       <Divider />
@@ -198,6 +195,8 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           </View>
         )}
       </View>
+
+      {isNative && <View style={{height: 20}} />}
 
       <Dialog.Close />
     </Dialog.ScrollableInner>
@@ -310,6 +309,9 @@ function TargetToggle({children}: React.PropsWithChildren<{}>) {
               t.name === 'light' ? t.palette.primary_50 : t.palette.primary_975,
           },
         ],
+        ctx.disabled && {
+          opacity: 0.8,
+        },
       ]}>
       {children}
     </View>
