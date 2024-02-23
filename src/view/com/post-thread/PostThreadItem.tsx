@@ -453,7 +453,7 @@ let PostThreadItemLoaded = ({
                       styles.replyLine,
                       {
                         flexGrow: 1,
-                        backgroundColor: pal.colors.border,
+                        backgroundColor: pal.colors.replyLine,
                         marginBottom: 4,
                       },
                     ]}
@@ -491,7 +491,7 @@ let PostThreadItemLoaded = ({
                         styles.replyLine,
                         {
                           flexGrow: 1,
-                          backgroundColor: pal.colors.border,
+                          backgroundColor: pal.colors.replyLine,
                           marginTop: 4,
                         },
                       ]}
