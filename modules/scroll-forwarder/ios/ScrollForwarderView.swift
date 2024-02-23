@@ -66,9 +66,7 @@ class ScrollForwarderView : UIView, UIGestureRecognizerDelegate {
   override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     if let gestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer {
       let velocity = gestureRecognizer.velocity(in: self)
-      let res = abs(velocity.y) > abs(velocity.x)
-      print(res)
-      return res
+      return abs(velocity.y) > abs(velocity.x)
     }
 
     return true
