@@ -14,7 +14,6 @@ import * as Sharing from 'expo-sharing'
 import * as MediaLibrary from 'expo-media-library'
 import {Dimensions} from './types'
 import {isAndroid} from 'platform/detection'
-import * as FS from 'fs'
 
 export async function compressIfNeeded(
   img: Image,
