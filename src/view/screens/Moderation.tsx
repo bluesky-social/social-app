@@ -92,7 +92,7 @@ export function ModerationScreen({}: Props) {
           accessibilityLabel={_(msg`Open muted words settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
-              icon="eye"
+              icon="filter"
               style={pal.text as FontAwesomeIconStyle}
             />
           </View>

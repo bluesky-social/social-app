@@ -223,7 +223,7 @@ let PostDropdownBtn = ({
           name: 'speaker.slash',
         },
         android: 'ic_lock_silent_mode',
-        web: 'comment-slash',
+        web: 'filter',
       },
     },
     hasSession &&
