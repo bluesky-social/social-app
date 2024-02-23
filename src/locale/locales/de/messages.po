@@ -3529,7 +3529,7 @@ msgstr "Angemeldet als @{0}"
 
 #: src/view/com/modals/SwitchAccount.tsx:66
 msgid "Signs {0} out of Bluesky"
-msgstr "Abmelde {0} von Bluesky"
+msgstr "Meldet {0} von Bluesky ab"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:195
