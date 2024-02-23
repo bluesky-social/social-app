@@ -153,15 +153,23 @@ interface DoResizeOpts {
 }
 
 async function doResize(localUri: string, opts: DoResizeOpts): Promise<Image> {
+  // We should run the first iteration outside of the loop. This is the only one that should resize the image and the
+  // loop can deal with lowering the quality if needed. Iterating on the resize causes problems on iOS
+  let resizeRes = await manipulateAsync(
+    localUri,
+    [{resize: {height: opts.height, width: opts.width}}],
+    {format: SaveFormat.JPEG, compress: 1},
+  )
+
   for (let i = 0; i < 9; i++) {
-    const quality = 1 - 0.1 * i
-    // TODO We have a `mode` in react-native-image-resizer. What is this and do we need it here? Can we safely remove
-    // this option? Is it used?
-    const resizeRes = await manipulateAsync(
-      localUri,
-      [{resize: {height: opts.height, width: opts.width}}],
-      {format: SaveFormat.JPEG, compress: quality},
-    )
+    if (i > 0) {
+      const quality = 0.9 - 0.1 * i
+      resizeRes = await manipulateAsync(localUri, [], {
+        format: SaveFormat.JPEG,
+        compress: quality,
+      })
+    }
+
     // @ts-ignore Size is available here, typing is incorrect
     const info: FS.FileInfo & {size: number} = await getInfoAsync(
       resizeRes.uri,
