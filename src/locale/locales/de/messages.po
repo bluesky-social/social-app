@@ -3385,7 +3385,7 @@ msgstr "Eingebettete Medien von {0} anzeigen"
 
 #: src/view/com/profile/ProfileHeader.tsx:458
 msgid "Show follows similar to {0}"
-msgstr "Zeigen Sie Folgendes ähnlich wie {0}"
+msgstr "Zeige ähnliche Konten wie {0}"
 
 #: src/view/com/post-thread/PostThreadItem.tsx:535
 #: src/view/com/post/Post.tsx:197
