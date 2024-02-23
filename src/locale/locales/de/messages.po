@@ -2207,11 +2207,11 @@ msgstr "Stummgeschaltete Konten"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Bei stummgeschalteten Konten werden ihre Beiträge aus deinem Feed und deinen Benachrichtigungen entfernt. Stummschaltungen sind völlig privat."
+msgstr "Bei stummgeschalteten Konten werden ihre Beiträge aus deinem Feed und deinen Mitteilungen entfernt. Stummschaltungen sind völlig privat."
 
 #: src/view/screens/ProfileList.tsx:276
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
-msgstr "Stummschaltung ist privat. Stummgeschaltete Konten können mit dir interagieren, aber du siehst ihre Beiträge nicht und erhältst keine Benachrichtigungen von ihnen."
+msgstr "Stummschaltung ist privat. Stummgeschaltete Konten können mit dir interagieren, aber du siehst ihre Beiträge nicht und erhältst keine Mitteilungen von ihnen."
 
 #: src/view/com/modals/BirthDateSettings.tsx:56
 msgid "My Birthday"
