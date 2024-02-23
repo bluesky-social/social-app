@@ -8,9 +8,9 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
+"PO-Revision-Date: 2024-02-23 23:00+0000 \n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: Translators in PR #2319, PythooonUser, cdfzo\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
