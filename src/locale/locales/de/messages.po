@@ -1112,7 +1112,7 @@ msgstr "Doppeltippen zum Anmelden"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Download Bluesky account data (repository)"
-msgstr "Laden Sie Ihre Bluesky-Kontodaten herunter (Repository)"
+msgstr "Öffnet ein Modal zum Herunterladen deiner Bluesky-Kontodaten (Kontodepot)"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
