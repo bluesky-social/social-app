@@ -147,6 +147,13 @@ export const dimPalette: Palette = {
   contrast_900: `hsl(211, 20%, 79%)`,
   contrast_950: `hsl(211, 20%, 87%)`,
   contrast_975: `hsl(211, 20%, 95%)`,
+
+  primary_600: `hsl(211, 95%, 39%)`,
+  primary_700: `hsl(211, 90%, 30%)`,
+  primary_800: `hsl(211, 90%, 23%)`,
+  primary_900: `hsl(211, 80%, 16%)`,
+  primary_950: `hsl(211, 80%, 13%)`,
+  primary_975: `hsl(211, 80%, 10%)`,
 } as const
 
 export const light = {
