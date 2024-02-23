@@ -12,7 +12,7 @@ import {logger} from '#/logger'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
-import * as Toggle from '#/components/forms/Toggle'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 
 export function PreferenceRow({
   labelGroup,
@@ -50,6 +50,12 @@ export function PreferenceRow({
     }
   }, [mutateAsync, enabled, modservicePreferences, labelGroup])
 
+  const labelOptions = {
+    hide: _(msg`Hide`),
+    warn: _(msg`Warn`),
+    show: _(msg`Ignore`),
+  }
+
   return (
     <View
       style={[
@@ -67,15 +73,22 @@ export function PreferenceRow({
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
         {modservicePreferences && (
-          <Toggle.Item
-            disabled={disabled}
-            name="enable"
-            value={disabled ? false : enabled}
-            onChange={onToggleEnabled}
-            label={_(msg`Enable`)}>
-            <Toggle.Label>{enabled ? 'Enabled' : 'Disabled'}</Toggle.Label>
-            <Toggle.Switch />
-          </Toggle.Item>
+          <ToggleButton.Group
+            label={_(
+              msg`Configure content filtering setting for category: ${groupInfoStrings.name.toLowerCase()}`,
+            )}
+            values={['hide']}
+            onChange={() => {}}>
+            <ToggleButton.Button name="show" label={labelOptions.show}>
+              {labelOptions.show}
+            </ToggleButton.Button>
+            <ToggleButton.Button name="warn" label={labelOptions.warn}>
+              {labelOptions.warn}
+            </ToggleButton.Button>
+            <ToggleButton.Button name="hide" label={labelOptions.hide}>
+              {labelOptions.hide}
+            </ToggleButton.Button>
+          </ToggleButton.Group>
         )}
       </View>
     </View>

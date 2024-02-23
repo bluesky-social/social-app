@@ -78,7 +78,7 @@ export function Content({
         ) : (
           <Text>
             <Trans>
-              Moderation service managed by @{sanitizeHandle(handle, '@')}
+              Moderation service managed by {sanitizeHandle(handle, '@')}
             </Trans>
           </Text>
         )}

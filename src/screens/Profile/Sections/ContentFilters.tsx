@@ -161,7 +161,7 @@ export function ProfileContentFiltersSectionInner({
         borderWidth: 0,
         paddingHorizontal: a.px_xl.paddingLeft,
       }}>
-      {isSubscribed ? (
+      {false /* TODO wanted? isSubscribed*/ ? (
         <View style={[a.flex_row, a.pr_lg, a.pt_xl]}>
           <View style={[a.gap_sm, a.flex_1]}>
             <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
@@ -185,7 +185,7 @@ export function ProfileContentFiltersSectionInner({
       ) : (
         <View style={[a.gap_sm, a.pt_xl]}>
           <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
-            This labeler moderates the following types of content.
+            This service labels the following types of content.
           </Text>
         </View>
       )}

@@ -23,7 +23,7 @@ export function Link({
   return (
     <InternalLink
       to={{
-        screen: 'ProfileModservice',
+        screen: 'Profile',
         params: {
           name: modservice.creator.handle,
         },

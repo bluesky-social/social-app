@@ -490,7 +490,7 @@ function ProfileScreenLoadedV2({
 
   const sectionTitles = useMemo<string[]>(() => {
     return [
-      showFiltersTab ? _(msg`Content Filters`) : undefined,
+      showFiltersTab ? _(msg`Content filters`) : undefined,
       showPostsTab ? _(msg`Posts`) : undefined,
       showRepliesTab ? _(msg`Replies`) : undefined,
       showMediaTab ? _(msg`Media`) : undefined,

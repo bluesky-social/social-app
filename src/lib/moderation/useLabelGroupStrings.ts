@@ -116,6 +116,10 @@ export function useLabelGroupStrings(): LabelGroupStrings {
           msg`Helpful annotations to explain intent, such as satire or parody.`,
         ),
       },
+      bot: {
+        name: _(msg`Bots`),
+        description: _(msg`Automated accounts which follow the rules.`),
+      },
       other: {
         name: _(msg`Other`),
         description: _(msg`Other content not covered by the other categories.`),

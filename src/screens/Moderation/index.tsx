@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
-import {ComAtprotoLabelDefs, LabelPreference} from '@atproto/api'
+import {ComAtprotoLabelDefs, LabelPreference, LABELS} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {LabelGroupDefinition, AppBskyModerationDefs} from '@atproto/api'
@@ -24,6 +24,7 @@ import {
   UsePreferencesQueryResponse,
   usePreferencesQuery,
   useSetContentLabelMutation,
+  usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
 import {useModServiceLabelGroupEnableMutation} from '#/state/queries/modservice'
@@ -182,6 +183,27 @@ export function ModerationScreenInner({
     [modSettingsDialogControl],
   )
 
+  const {mutateAsync: setAdultContentPref, variables: optimisticAdultContent} =
+    usePreferencesSetAdultContentMutation()
+  const adultContentEnabled = !!(
+    (optimisticAdultContent && optimisticAdultContent.enabled) ||
+    (!optimisticAdultContent && preferences.moderationOpts.adultContentEnabled)
+  )
+
+  const onToggleAdultContentEnabled = React.useCallback(
+    async (selected: boolean) => {
+      try {
+        await setAdultContentPref({
+          enabled: selected,
+        })
+      } catch (e) {
+        // TODO
+        console.error(e)
+      }
+    },
+    [setAdultContentPref],
+  )
+
   return (
     <View>
       <Dialog.Outer control={modSettingsDialogControl}>
@@ -277,16 +299,144 @@ export function ModerationScreenInner({
 
         <Text
           style={[
+            a.pt_2xl,
+            a.pb_md,
+            a.text_md,
+            a.font_bold,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Content filters</Trans>
+        </Text>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <View
+            style={[a.pt_lg, a.pb_md, a.px_lg, a.flex_row, a.justify_between]}>
+            <Text
+              style={[a.text_md, a.font_semibold, t.atoms.text_contrast_high]}>
+              <Trans>Enable adult content</Trans>
+            </Text>
+            <Toggle.Item
+              label={'Toggle adult content'}
+              name="adultContent"
+              value={adultContentEnabled}
+              onChange={onToggleAdultContentEnabled}>
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Text style={[t.atoms.text_contrast_medium]}>
+                  {adultContentEnabled ? (
+                    <Trans>Enabled</Trans>
+                  ) : (
+                    <Trans>Disabled</Trans>
+                  )}
+                </Text>
+                <Toggle.Switch />
+              </View>
+            </Toggle.Item>
+          </View>
+          {adultContentEnabled && (
+            <>
+              <Divider />
+              <LabelGroup
+                labelGroup={groups.find(g => g.id === 'porn')!.id}
+                labelers={[]}
+                preferences={preferences}
+                openModSettingsDialog={openModSettingsDialog}
+              />
+              <Divider />
+              <LabelGroup
+                labelGroup={groups.find(g => g.id === 'suggestive')!.id}
+                labelers={[]}
+                preferences={preferences}
+                openModSettingsDialog={openModSettingsDialog}
+              />
+              <Divider />
+              <LabelGroup
+                labelGroup={groups.find(g => g.id === 'nudity')!.id}
+                labelers={[]}
+                preferences={preferences}
+                openModSettingsDialog={openModSettingsDialog}
+              />
+              <Divider />
+              <LabelGroup
+                labelGroup={groups.find(g => g.id === 'violence')!.id}
+                labelers={[]}
+                preferences={preferences}
+                openModSettingsDialog={openModSettingsDialog}
+              />
+            </>
+          )}
+          <Divider />
+          <View
+            style={[a.pt_lg, a.pb_md, a.px_lg, a.flex_row, a.justify_between]}>
+            <View style={[a.flex_wrap, a.flex_1]}>
+              <Text
+                style={[
+                  a.text_md,
+                  a.font_semibold,
+                  t.atoms.text_contrast_high,
+                  a.pb_xs,
+                ]}>
+                <Trans>Hide posts by bots</Trans>
+              </Text>
+              <Text style={[t.atoms.text_contrast_medium]}>
+                <Trans>Bots are automated users which follow the rules.</Trans>
+              </Text>
+            </View>
+            <Toggle.Item
+              label={'Toggle hiding posts by bots'}
+              name="hideBots"
+              value={false}
+              onChange={undefined}>
+              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                <Text style={[t.atoms.text_contrast_medium]}>
+                  {false ? <Trans>Enabled</Trans> : <Trans>Disabled</Trans>}
+                </Text>
+                <Toggle.Switch />
+              </View>
+            </Toggle.Item>
+          </View>
+        </View>
+
+        <Text
+          style={[
             a.text_md,
             a.font_bold,
             a.pt_2xl,
             a.pb_md,
             t.atoms.text_contrast_high,
           ]}>
-          <Trans>Labelers</Trans>
+          <Trans>Advanced</Trans>
         </Text>
-
-        <View style={[a.gap_sm, a.rounded_sm, t.atoms.bg_contrast_25]}>
+        <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
+          <ModerationServiceCard.Link
+            modservice={{
+              uri: '',
+              cid: '',
+              policies: {},
+              creator: {
+                did: '',
+                handle: 'safety.bsky.app',
+                displayName: 'Bluesky Safety',
+              },
+              indexedAt: new Date().toISOString(),
+            }}>
+            <ModerationServiceCard.Card.Outer>
+              <ModerationServiceCard.Card.Avatar avatar={undefined} />
+              <ModerationServiceCard.Card.Content
+                title={getModerationServiceTitle({
+                  displayName: 'Bluesky Safety',
+                  handle: 'safety.bsky.app',
+                })}
+                handle={'safety.bsky.app'}
+                description={'Official moderation team'}
+              />
+            </ModerationServiceCard.Card.Outer>
+          </ModerationServiceCard.Link>
+          <Divider />
           {modservices.map(mod => {
             return (
               <ModerationServiceCard.Link
@@ -308,6 +458,125 @@ export function ModerationScreenInner({
               </ModerationServiceCard.Link>
             )
           })}
+        </View>
+
+        {
+          undefined /*<Text
+          style={[
+            a.text_md,
+            a.font_bold,
+            a.pt_2xl,
+            a.pb_md,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Bluesky Safety</Trans>{' '}
+          <Text style={[a.text_sm, a.pb_md, t.atoms.text_contrast_medium]}>
+            @safety.bsky.app
+          </Text>
+        </Text>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <LabelGroup
+            labelGroup={groups.find(g => g.id === 'intolerance')!.id}
+            labelers={[]}
+            preferences={preferences}
+            openModSettingsDialog={openModSettingsDialog}
+          />
+          <Divider />
+          <LabelGroup
+            labelGroup={groups.find(g => g.id === 'misrepresentation')!.id}
+            labelers={[]}
+            preferences={preferences}
+            openModSettingsDialog={openModSettingsDialog}
+          />
+          <Divider />
+          <LabelGroup
+            labelGroup={groups.find(g => g.id === 'security')!.id}
+            labelers={[]}
+            preferences={preferences}
+            openModSettingsDialog={openModSettingsDialog}
+          />
+          <Divider />
+          <LabelGroup
+            labelGroup={groups.find(g => g.id === 'spam')!.id}
+            labelers={[]}
+            preferences={preferences}
+            openModSettingsDialog={openModSettingsDialog}
+          />
+        </View>
+
+        {modservices.map(mod => {
+          return (
+            <>
+              <Text
+                style={[
+                  a.text_md,
+                  a.font_bold,
+                  a.pt_2xl,
+                  a.pb_md,
+                  t.atoms.text_contrast_high,
+                ]}>
+                {mod.creator.displayName}{' '}
+                <Text
+                  style={[a.text_sm, a.pb_md, t.atoms.text_contrast_medium]}>
+                  @{mod.creator.handle}
+                </Text>
+              </Text>
+              <View
+                style={[
+                  a.w_full,
+                  a.rounded_md,
+                  a.overflow_hidden,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                {mod.policies.labelValues
+                  .filter(label => !label.startsWith('!'))
+                  .map((label, i) => {
+                    return (
+                      <React.Fragment key={mod.did + '-' + label}>
+                        {i !== 0 && <Divider />}
+                        <LabelGroup
+                          labelGroup={LABELS[label].groupId}
+                          labelers={[]}
+                          preferences={preferences}
+                          openModSettingsDialog={openModSettingsDialog}
+                        />
+                      </React.Fragment>
+                    )
+                  })}
+              </View>
+            </>
+          )
+        })}
+
+        <Text
+          style={[
+            a.text_md,
+            a.font_bold,
+            a.pt_2xl,
+            a.pb_md,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Other</Trans>
+        </Text>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_md,
+            a.overflow_hidden,
+            t.atoms.bg_contrast_25,
+          ]}>
+          <LabelGroup
+            labelGroup={groups.find(g => g.id === 'bot')!.id}
+            labelers={[]}
+            preferences={preferences}
+            openModSettingsDialog={openModSettingsDialog}
+          />
         </View>
 
         <Text
@@ -342,7 +611,8 @@ export function ModerationScreenInner({
               </React.Fragment>
             )
           })}
-        </View>
+        </View>*/
+        }
 
         <Text
           style={[
@@ -404,11 +674,11 @@ function LabelGroup({
   const labelOptions = {
     hide: _(msg`Hide`),
     warn: _(msg`Warn`),
-    show: _(msg`Show`),
+    // show: _(msg`Show`),
   }
 
   return (
-    <View style={[a.px_md, a.pr_md, gtMobile && a.px_lg]}>
+    <View style={[a.px_lg, a.pr_md, gtMobile && a.px_lg]}>
       <View
         style={[
           a.py_md,
@@ -418,7 +688,7 @@ function LabelGroup({
           a.align_center,
         ]}>
         <View style={[a.gap_xs, {width: '50%'}]}>
-          <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+          <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
             {name}
           </Text>
           <Text style={[a.leading_tight, {maxWidth: 400}]}>{description}</Text>
@@ -431,15 +701,17 @@ function LabelGroup({
             )}
             values={[value]}
             onChange={onChangeVisibility}>
-            <ToggleButton.Button name="hide" label={labelOptions.hide}>
-              {labelOptions.hide}
-            </ToggleButton.Button>
             <ToggleButton.Button name="warn" label={labelOptions.warn}>
               {labelOptions.warn}
             </ToggleButton.Button>
-            <ToggleButton.Button name="ignore" label={labelOptions.show}>
-              {labelOptions.show}
+            <ToggleButton.Button name="hide" label={labelOptions.hide}>
+              {labelOptions.hide}
             </ToggleButton.Button>
+            {
+              undefined /*<ToggleButton.Button name="ignore" label={labelOptions.show}>
+              {labelOptions.show}
+            </ToggleButton.Button>*/
+            }
           </ToggleButton.Group>
         </View>
       </View>

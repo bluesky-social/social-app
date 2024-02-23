@@ -216,6 +216,9 @@ export const atoms = {
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
   },
+  font_semibold: {
+    fontWeight: '500',
+  },
   font_bold: {
     fontWeight: tokens.fontWeight.semibold,
   },
