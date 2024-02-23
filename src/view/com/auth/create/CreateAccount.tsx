@@ -23,7 +23,7 @@ import {Step3} from './Step3'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {TextLink} from '../../util/Link'
 import {getAgent} from 'state/session'
-import {createFullHandle} from 'lib/strings/handles'
+import {createFullHandle, validateHandle} from 'lib/strings/handles'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
@@ -78,6 +78,10 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
     }
 
     if (uiState.step === 2) {
+      if (!validateHandle(uiState.handle, uiState.userDomain).overall) {
+        return
+      }
+
       uiDispatch({type: 'set-processing', value: true})
       try {
         const res = await getAgent().resolveHandle({
