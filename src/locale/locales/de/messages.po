@@ -1704,7 +1704,7 @@ msgstr "Hm, der Feed-Server scheint offline zu sein. Bitte informiere den Eigent
 
 #: src/view/com/posts/FeedErrorMessage.tsx:102
 msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
-msgstr "Hmm, der Feed-Server hat eine schlechte Antwort gegeben. Bitte informiere den Eigentümer des Feeds über dieses Problem."
+msgstr "Hm, der Feed-Server hat eine schlechte Antwort gegeben. Bitte informiere den Eigentümer des Feeds über dieses Problem."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:96
 msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
@@ -3149,7 +3149,7 @@ msgstr "Suche"
 #: src/view/screens/Search/Search.tsx:712
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
-msgstr "Suche nach \"{query}""
+msgstr "Suche nach \"{query}\""
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
