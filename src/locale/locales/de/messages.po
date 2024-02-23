@@ -3817,7 +3817,7 @@ msgstr "Dieser Inhalt ist ohne ein Bluesky-Konto nicht sichtbar."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr "Diese Funktion befindet sich in der Beta-Phase. Sie können mehr über Repository-Exporte in <0>diesem Blogpost lesen.</0>"
+msgstr "Diese Funktion befindet sich in der Beta-Phase. Sie können mehr über Kontodepot-Exporte in <0>diesem Blogpost lesen.</0>"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
