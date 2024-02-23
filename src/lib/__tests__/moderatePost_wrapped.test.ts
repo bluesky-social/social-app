@@ -264,6 +264,22 @@ describe(`hasMutedWord`, () => {
 
         expect(match).toBe(false)
       })
+
+      it(`match: :)`, () => {
+        const rt = new RichText({
+          text: `So happy :)`,
+        })
+        rt.detectFacetsWithoutResolution()
+
+        const match = hasMutedWord(
+          [{value: `:)`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
     })
 
     describe(`e/acc`, () => {
@@ -342,7 +358,7 @@ describe(`hasMutedWord`, () => {
           [],
         )
 
-        expect(match).toBe(true)
+        expect(match).toBe(false)
       })
     })
 
@@ -371,7 +387,7 @@ describe(`hasMutedWord`, () => {
           [],
         )
 
-        expect(match).toBe(true)
+        expect(match).toBe(false)
       })
     })
 

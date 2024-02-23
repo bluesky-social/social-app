@@ -85,28 +85,25 @@ export function hasMutedWord(
           REGEX.SEPARATORS,
           ' ',
         )
-        const wordNormalizedCompressed = wordNormalizedSeparators.replace(
-          REGEX.WORD_BOUNDARY,
-          '',
-        )
         const mutedWordNormalizedSeparators = mutedWordNoTrailingPunc.replace(
           REGEX.SEPARATORS,
           ' ',
         )
-        const mutedWordNormalizedCompressed =
-          mutedWordNormalizedSeparators.replace(/\s+?/g, '')
-        // console.log({
-        //   wordNormalizedSeparators,
-        //   wordNormalizedCompressed,
-        //   mutedWordNormalizedSeparators,
-        //   mutedWordNormalizedCompressed,
-        // })
         // hyphenated (or other sep) to spaced words
         if (wordNormalizedSeparators === mutedWordNormalizedSeparators)
           return true
+
+        /* Disabled for now
+        const wordNormalizedCompressed = wordNormalizedSeparators.replace(
+          REGEX.WORD_BOUNDARY,
+          '',
+        )
+        const mutedWordNormalizedCompressed =
+          mutedWordNormalizedSeparators.replace(/\s+?/g, '')
         // hyphenated (or other sep) to non-hyphenated contiguous word
         if (mutedWordNormalizedCompressed === wordNormalizedCompressed)
           return true
+        */
 
         // then individual parts
         const wordParts = wordNoTrailingPunc.split(REGEX.SEPARATORS)
