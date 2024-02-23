@@ -45,7 +45,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     data: preferences,
     error: preferencesError,
   } = usePreferencesQuery()
-  const {mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
+  const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const [field, setField] = React.useState('')
   const [contentTargetEnabled, setContentTargetEnabled] = React.useState(true)
   const [tagTargetEnabled, setTagTargetEnabled] = React.useState(true)
@@ -139,6 +139,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
 
           <Button
             disabled={
+              isPending ||
               !field ||
               Boolean(field && !contentTargetEnabled && !tagTargetEnabled)
             }
@@ -151,7 +152,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
             <ButtonText>
               <Trans>Add</Trans>
             </ButtonText>
-            <ButtonIcon icon={Plus} />
+            <ButtonIcon icon={isPending ? Loader : Plus} />
           </Button>
         </View>
       </View>
@@ -209,7 +210,7 @@ function MutedWordRow({
 }: ViewStyleProp & {word: AppBskyActorDefs.MutedWord}) {
   const t = useTheme()
   const {_} = useLingui()
-  const {mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
+  const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
   const control = Prompt.usePromptControl()
 
   const remove = React.useCallback(async () => {
@@ -277,7 +278,7 @@ function MutedWordRow({
             color="secondary"
             onPress={() => control.open()}
             style={[a.ml_sm]}>
-            <ButtonIcon icon={X} />
+            <ButtonIcon icon={isPending ? Loader : X} />
           </Button>
         </View>
       </View>
