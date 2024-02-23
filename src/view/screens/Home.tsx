@@ -6,7 +6,7 @@ import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {FeedsTabBar} from '../com/pager/FeedsTabBar'
+import {HomeHeader} from '../com/home/HomeHeader'
 import {Pager, RenderTabBarFnProps, PagerRef} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
@@ -118,7 +118,7 @@ function HomeScreenReady({
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <FeedsTabBar
+        <HomeHeader
           key="FEEDS_TAB_BAR"
           selectedPage={props.selectedPage}
           onSelect={props.onSelect}
