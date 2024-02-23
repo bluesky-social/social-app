@@ -228,7 +228,7 @@ let PostThreadItemLoaded = ({
     return (
       <>
         {rootUri !== post.uri && (
-          <View style={{paddingLeft: 16, flexDirection: 'row', height: 16}}>
+          <View style={{paddingLeft: 16, flexDirection: 'row', height: 24}}>
             <View style={{width: 38}}>
               <View
                 style={[
@@ -245,7 +245,13 @@ let PostThreadItemLoaded = ({
 
         <View
           testID={`postThreadItem-by-${post.author.handle}`}
-          style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
+          style={[
+            styles.outer,
+            styles.outerHighlighted,
+            rootUri !== post.uri && styles.outerHighlightedWithParent,
+            pal.border,
+            pal.view,
+          ]}
           accessible={false}>
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
@@ -693,8 +699,12 @@ const styles = StyleSheet.create({
   },
   outerHighlighted: {
     paddingTop: 16,
-    paddingLeft: 8,
+    paddingLeft: 6,
     paddingRight: 8,
+  },
+  outerHighlightedWithParent: {
+    paddingTop: 0,
+    borderTopWidth: 0,
   },
   noTopBorder: {
     borderTopWidth: 0,
