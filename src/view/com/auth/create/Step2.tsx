@@ -95,14 +95,14 @@ export function Step2({
             a.gap_sm,
             t.atoms.border_contrast_low,
           ]}>
-          {uiState.error && (
+          {uiState.error ? (
             <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
               <IsValidIcon valid={false} />
               <Text style={[t.atoms.text, a.text_md, a.flex]}>
                 {uiState.error}
               </Text>
             </View>
-          )}
+          ) : undefined}
           <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
             <IsValidIcon valid={validCheck.handleChars} />
             <Text style={[t.atoms.text, a.text_md, a.flex]}>
