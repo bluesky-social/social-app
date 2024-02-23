@@ -44,16 +44,15 @@ export function hasMutedWord(
     if (!mute.targets.includes('content')) continue
     // single character, has to use includes
     if (mutedWord.length === 1 && text.includes(mutedWord)) return true
-    // has space, is phrase
-    if (/\s+?/.test(mutedWord)) {
-      const textNoPunc = text.replace(/\p{P}+/gu, '')
-      const mutedWordNoPunc = mutedWord.replace(/\p{P}+/gu, '')
-      if (textNoPunc.includes(mutedWordNoPunc)) return true
-    }
     // too long
     if (mutedWord.length > text.length) continue
     // exact match
     if (mutedWord === text) return true
+
+    const mutedWordNoTrailingPunc = mutedWord.replace(/\p{P}+$/gu, '')
+    const reg = new RegExp(`\\W\+\?${mutedWordNoTrailingPunc}\\W\{0\}`, 'gi')
+
+    if (reg.test(text)) return true
 
     // check individual character groups
     for (const word of words) {
@@ -62,19 +61,14 @@ export function hasMutedWord(
       // compare word without trailing punctuation, but allow internal
       // punctuation (such as `s@ssy`)
       const wordNoTrailingPunc = word.replace(/\p{P}+$/gu, '')
-      const mutedWordNoTrailingPunc = mutedWord.replace(/\p{P}+$/gu, '')
 
       if (mutedWordNoTrailingPunc === wordNoTrailingPunc) return true
+      if (mutedWordNoTrailingPunc.length > wordNoTrailingPunc.length) continue
 
       // handle hyphenated, slash separated words, etc
       const separators = /[\/\-\–\—\(\)\[\]\_]+/g
       if (separators.test(wordNoTrailingPunc)) {
-        const wordParts = wordNoTrailingPunc.split(separators)
-        for (const wp of wordParts) {
-          // still retain internal punctuation
-          if (wp === mutedWordNoTrailingPunc) return true
-        }
-
+        // check against full normalized phrase
         const wordNormalizedSeparators = wordNoTrailingPunc.replace(
           separators,
           ' ',
@@ -85,6 +79,13 @@ export function hasMutedWord(
         )
         if (wordNormalizedSeparators === mutedWordNormalizedSeparators)
           return true
+
+        // then individual parts
+        const wordParts = wordNoTrailingPunc.split(separators)
+        for (const wp of wordParts) {
+          // still retain internal punctuation
+          if (wp === mutedWordNoTrailingPunc) return true
+        }
       }
     }
   }

@@ -260,7 +260,7 @@ export function InlineLink({
       style={[
         {color: t.palette.primary_500},
         (hovered || focused || pressed) && {
-          outline: 0,
+          // outline: 0,
           textDecorationLine: 'underline',
           textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
         },

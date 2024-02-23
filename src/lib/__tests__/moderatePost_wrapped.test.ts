@@ -238,7 +238,7 @@ describe(`hasMutedWord`, () => {
         expect(match).toBe(true)
       })
 
-      it(`no match: command`, () => {
+      it(`match: command`, () => {
         const match = hasMutedWord(
           [{value: `command`, targets: ['content']}],
           rt.text,
@@ -246,7 +246,7 @@ describe(`hasMutedWord`, () => {
           [],
         )
 
-        expect(match).toBe(false)
+        expect(match).toBe(true)
       })
     })
 
