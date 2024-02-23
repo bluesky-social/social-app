@@ -228,7 +228,13 @@ let PostThreadItemLoaded = ({
     return (
       <>
         {rootUri !== post.uri && (
-          <View style={{paddingLeft: 16, flexDirection: 'row', height: 24}}>
+          <View
+            style={{
+              paddingLeft: 16,
+              flexDirection: 'row',
+              height: 26,
+              paddingBottom: 3,
+            }}>
             <View style={{width: 38}}>
               <View
                 style={[
