@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image as RNImage,
   AccessibilityInfo,
-  useColorScheme,
 } from 'react-native'
 import * as SplashScreen from 'expo-splash-screen'
 import {Image} from 'expo-image'
@@ -22,6 +21,7 @@ import Svg, {Path, SvgProps} from 'react-native-svg'
 
 import {isAndroid} from '#/platform/detection'
 import {Logotype} from '#/view/icons/Logotype'
+import {useColorModeTheme} from './alf/util/useColorModeTheme'
 
 // @ts-ignore
 import splashImagePointer from '../assets/splash.png'
@@ -74,8 +74,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     isLayoutReady &&
     reduceMotion !== undefined
 
-  const colorScheme = useColorScheme()
-  const isDarkMode = colorScheme === 'dark'
+  const colorTheme = useColorModeTheme()
+  const isLightMode = colorTheme === 'light'
 
   const logoAnimation = useAnimatedStyle(() => {
     return {
@@ -189,7 +189,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           <Image
             accessibilityIgnoresInvertColors
             onLoadEnd={onLoadEnd}
-            source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
+            source={{uri: isLightMode ? splashImageUri : darkSplashImageUri}}
             style={StyleSheet.absoluteFillObject}
           />
 
@@ -261,10 +261,10 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 style={[
                   StyleSheet.absoluteFillObject,
                   {
-                    backgroundColor: isDarkMode
-                      ? // special off-spec color for dark mode
-                        '#0F1824'
-                      : '#fff',
+                    backgroundColor: isLightMode
+                      ? '#fff'
+                      : // special off-spec color for dark mode
+                        '#0F1824',
                   },
                 ]}
               />
