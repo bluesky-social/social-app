@@ -35,7 +35,7 @@ jobs:
       - name: Install node 18
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version-file: .nvmrc
       - name: Check out Git repository
         uses: actions/checkout@v3
       - name: Yarn install
