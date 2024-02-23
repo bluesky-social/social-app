@@ -47,7 +47,7 @@ msgstr "<0>Willkommen bei</0><1>Bluesky</1>"
 
 #: src/view/com/profile/ProfileHeader.tsx:557
 msgid "⚠Invalid Handle"
-msgstr "⚠Ungültiger Benutzerhandle"
+msgstr "⚠Ungültiger Handle"
 
 #: src/view/com/util/moderation/LabelInfo.tsx:45
 msgid "A content warning has been applied to this {0}."
@@ -522,7 +522,7 @@ msgstr "Konto-Löschung abbrechen"
 
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
-msgstr "Benutzerhandle ändern abbrechen"
+msgstr "Handle ändern abbrechen"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:134
 msgid "Cancel image crop"
@@ -1328,7 +1328,7 @@ msgstr "Alle"
 
 #: src/view/com/modals/ChangeHandle.tsx:150
 msgid "Exits handle change process"
-msgstr "Beendet den Prozess des Benutzerhandle-Wechsels"
+msgstr "Beendet den Prozess des Handle-Wechsels"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:120
 msgid "Exits image view"
@@ -3119,7 +3119,7 @@ msgstr "Speichert alle Änderungen an Deinem Profil"
 
 #: src/view/com/modals/ChangeHandle.tsx:171
 msgid "Saves handle change to {handle}"
-msgstr "Speichert Benutzerhandle-Änderung in {handle}"
+msgstr "Speichert Handle-Änderung in {handle}"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
