@@ -3,52 +3,26 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {LABEL_GROUPS} from '@atproto/api'
-// TODO
-import {ModPrefItem} from '@atproto/api/dist/client/types/app/bsky/actor/defs'
 
 import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
-import {useModServiceLabelGroupEnableMutation} from '#/state/queries/modservice'
-import {logger} from '#/logger'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 
-export function PreferenceRow({
+export function ModerationLabelPref({
   labelGroup,
   disabled,
-  modservicePreferences,
 }: {
   labelGroup: keyof typeof LABEL_GROUPS
   disabled?: boolean
-  modservicePreferences?: ModPrefItem
 }) {
   const t = useTheme()
   const {_} = useLingui()
   const labelGroupStrings = useLabelGroupStrings()
   const groupInfoStrings = labelGroupStrings[labelGroup]
-  const {mutateAsync, variables} = useModServiceLabelGroupEnableMutation()
-  const enabled =
-    variables?.enabled ??
-    !modservicePreferences?.disabledLabelGroups?.includes(labelGroup)
 
-  const onToggleEnabled = React.useCallback(async () => {
-    try {
-      if (!modservicePreferences)
-        throw new Error(`modservicePreferences not found`)
-
-      await mutateAsync({
-        did: modservicePreferences.did,
-        group: labelGroup,
-        enabled: !enabled,
-      })
-    } catch (e: any) {
-      logger.error(`Failed to toggle label group enabled`, {
-        message: e.message,
-        labelGroup,
-      })
-    }
-  }, [mutateAsync, enabled, modservicePreferences, labelGroup])
+  // TODO add onChange behavior when mod prefs are updated
 
   const labelOptions = {
     hide: _(msg`Hide`),
@@ -62,7 +36,9 @@ export function PreferenceRow({
         a.flex_row,
         a.justify_between,
         a.gap_sm,
-        a.py_xs,
+        a.py_md,
+        a.pl_lg,
+        a.pr_md,
         a.align_center,
       ]}>
       <View style={[a.gap_xs, {width: '50%'}]}>
@@ -72,7 +48,7 @@ export function PreferenceRow({
         </Text>
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
-        {modservicePreferences && (
+        {!disabled && (
           <ToggleButton.Group
             label={_(
               msg`Configure content filtering setting for category: ${groupInfoStrings.name.toLowerCase()}`,
