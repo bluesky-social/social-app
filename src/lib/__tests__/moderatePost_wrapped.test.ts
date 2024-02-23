@@ -155,6 +155,22 @@ describe(`hasMutedWord`, () => {
 
       expect(match).toBe(false)
     })
+
+    it(`match: multiline`, () => {
+      const rt = new RichText({
+        text: `Use your\n\tbrain, Eric`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      const match = hasMutedWord(
+        [{value: 'brain', targets: ['content']}],
+        rt.text,
+        rt.facets,
+        [],
+      )
+
+      expect(match).toBe(true)
+    })
   })
 
   describe(`punctuation semi-fuzzy`, () => {
@@ -231,6 +247,124 @@ describe(`hasMutedWord`, () => {
         )
 
         expect(match).toBe(false)
+      })
+    })
+
+    describe(`e/acc`, () => {
+      const rt = new RichText({
+        text: `I'm e/acc pilled`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: e/acc`, () => {
+        const match = hasMutedWord(
+          [{value: `e/acc`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: acc`, () => {
+        const match = hasMutedWord(
+          [{value: `acc`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+
+    describe(`super-bad`, () => {
+      const rt = new RichText({
+        text: `I'm super-bad`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: super-bad`, () => {
+        const match = hasMutedWord(
+          [{value: `super-bad`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: super`, () => {
+        const match = hasMutedWord(
+          [{value: `super`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: super bad`, () => {
+        const match = hasMutedWord(
+          [{value: `super bad`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+
+    describe(`idk_what_this_would_be`, () => {
+      const rt = new RichText({
+        text: `Weird post with idk_what_this_would_be`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: idk_what_this_would_be`, () => {
+        const match = hasMutedWord(
+          [{value: `idk_what_this_would_be`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+  })
+
+  describe(`phrases`, () => {
+    describe(`I like turtles, or how I learned to stop worrying and love the internet.`, () => {
+      const rt = new RichText({
+        text: `I like turtles, or how I learned to stop worrying and love the internet.`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: stop worrying`, () => {
+        const match = hasMutedWord(
+          [{value: 'stop worrying', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: turtles, or how`, () => {
+        const match = hasMutedWord(
+          [{value: 'turtles, or how', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
       })
     })
   })
