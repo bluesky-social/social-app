@@ -4,10 +4,10 @@ import {Image} from 'react-native-image-crop-picker'
 import {Image as ExpoImage} from 'expo-image'
 import {
   cacheDirectory,
+  copyAsync,
   createDownloadResumable,
   deleteAsync,
   getInfoAsync,
-  moveAsync,
 } from 'expo-file-system'
 import uuid from 'react-native-uuid'
 import * as Sharing from 'expo-sharing'
@@ -203,7 +203,7 @@ async function moveToPermanentPath(path: string, ext = ''): Promise<string> {
   // cacheDirectory should never be undefined unless on web. Since this only runs on native, we know that it will
   // always be defined.
   const destinationPath = joinPath(cacheDirectory ?? '/', `${filename}${ext}`)
-  await moveAsync({
+  await copyAsync({
     from: path,
     to: destinationPath,
   })
