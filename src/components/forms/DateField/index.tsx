@@ -47,7 +47,7 @@ export function DateField({
         mode="date"
         timeZoneName={'Etc/UTC'}
         display="spinner"
-        themeVariant={t.name === 'dark' ? 'dark' : 'light'}
+        themeVariant={t.name === 'light' ? 'light' : 'dark'}
         value={new Date(value)}
         onChange={onChangeInternal}
       />

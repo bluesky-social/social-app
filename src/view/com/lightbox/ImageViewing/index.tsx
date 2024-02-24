@@ -122,6 +122,7 @@ function ImageViewing({
                 imageSrc={imageSrc}
                 onRequestClose={onRequestClose}
                 isScrollViewBeingDragged={isDragging}
+                showControls={showControls}
               />
             </View>
           ))}
