@@ -1466,12 +1466,8 @@ msgid "Finding similar accounts..."
 msgstr "Suche nach ähnlichen Konten..."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
-msgid "Fine-tune the content you see on your home screen."
-msgstr ""
-
-#: src/view/screens/PreferencesHomeFeed.tsx:111
-#~ msgid "Fine-tune the content you see on your home screen."
-#~ msgstr "Passe die Inhalte auf Deinem Startbildschirm an."
+msgid "Fine-tune the content you see on your Following feed."
+msgstr "Passe die Inhalte auf Deinem Following-Feed an."
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
@@ -1558,7 +1554,7 @@ msgstr "ich folge {0}"
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
 msgid "Following Feed Preferences"
-msgstr ""
+msgstr "Following-Feed-Einstellungen"
 
 #: src/view/com/profile/ProfileHeader.tsx:546
 msgid "Follows you"
@@ -1729,13 +1725,6 @@ msgstr "Hm, wir haben Probleme, diesen Feed zu finden. Möglicherweise wurde er 
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
 msgstr "Home"
-
-#: src/Navigation.tsx:247
-#: src/view/com/pager/FeedsTabBarMobile.tsx:123
-#: src/view/screens/PreferencesHomeFeed.tsx:104
-#: src/view/screens/Settings/index.tsx:543
-#~ msgid "Home Feed Preferences"
-#~ msgstr "Home-Feed-Einstellungen"
 
 #: src/view/com/auth/create/Step1.tsx:82
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:120
@@ -2094,11 +2083,11 @@ msgstr "Vergewissere dich, dass du auch wirklich dorthin gehen willst!"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
-msgstr ""
+msgstr "Darf nicht länger als 253 Zeichen sein"
 
 #: src/view/com/auth/create/Step2.tsx:109
 msgid "May only contain letters and numbers"
-msgstr ""
+msgstr "Darf nur Buchstaben und Zahlen enthalten"
 
 #: src/view/screens/Profile.tsx:182
 msgid "Media"
@@ -2190,7 +2179,7 @@ msgstr "Beliebteste Antworten zuerst"
 
 #: src/view/com/auth/create/Step2.tsx:122
 msgid "Must be at least 3 characters"
-msgstr ""
+msgstr "Muss mindestens 3 Zeichen lang sein"
 
 #: src/view/com/profile/ProfileHeader.tsx:327
 msgid "Mute Account"
@@ -3335,13 +3324,9 @@ msgstr "Setze diese Einstellung auf \"Nein\", um alle Reposts aus deinem Feed au
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Setze diese Einstellung auf \"Ja\", um Antworten in einer Thread-Ansicht anzuzeigen. Dies ist eine experimentelle Funktion."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:261
-#~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-#~ msgstr "Setze diese Einstellung auf \"Ja\", um Beispiele für deine gespeicherten Feeds in deinem folgenden Feed anzuzeigen. Dies ist eine experimentelle Funktion."
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr ""
+msgstr "Setze diese Einstellung auf \"Ja\", um Beispiele für deine gespeicherten Feeds in deinem Following-Feed anzuzeigen. Dies ist eine experimentelle Funktion."
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
