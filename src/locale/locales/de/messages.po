@@ -3810,7 +3810,7 @@ msgstr "Dies sind beliebte Konten, die Ihnen gefallen könnten:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
-msgstr "Diese {ScreenDescription} wurde gekennzeichnet:"
+msgstr "Diese {screenDescription} wurde gekennzeichnet:"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
