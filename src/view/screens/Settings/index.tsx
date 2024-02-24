@@ -241,8 +241,8 @@ export function SettingsScreen({}: Props) {
     Toast.show(_(msg`Copied build version to clipboard`))
   }, [_])
 
-  const openHomeFeedPreferences = React.useCallback(() => {
-    navigation.navigate('PreferencesHomeFeed')
+  const openFollowingFeedPreferences = React.useCallback(() => {
+    navigation.navigate('PreferencesFollowingFeed')
   }, [navigation])
 
   const openThreadsPreferences = React.useCallback(() => {
@@ -531,7 +531,7 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
-          onPress={openHomeFeedPreferences}
+          onPress={openFollowingFeedPreferences}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Home feed preferences`)}
           accessibilityHint={_(msg`Opens the home feed preferences`)}>
@@ -542,7 +542,7 @@ export function SettingsScreen({}: Props) {
             />
           </View>
           <Text type="lg" style={pal.text}>
-            <Trans>Home Feed Preferences</Trans>
+            <Trans>Following Feed Preferences</Trans>
           </Text>
         </TouchableOpacity>
         <TouchableOpacity

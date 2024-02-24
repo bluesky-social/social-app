@@ -37,11 +37,18 @@ type Props = {
   onTap: () => void
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
+  showControls: boolean
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image)
 
-const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
+const ImageItem = ({
+  imageSrc,
+  onTap,
+  onZoom,
+  onRequestClose,
+  showControls,
+}: Props) => {
   const scrollViewRef = useAnimatedRef<Animated.ScrollView>()
   const translationY = useSharedValue(0)
   const [loaded, setLoaded] = useState(false)
@@ -144,7 +151,7 @@ const ImageItem = ({imageSrc, onTap, onZoom, onRequestClose}: Props) => {
           accessibilityLabel={imageSrc.alt}
           accessibilityHint=""
           onLoad={() => setLoaded(true)}
-          enableLiveTextInteraction={!scaled}
+          enableLiveTextInteraction={showControls && !scaled}
         />
       </Animated.ScrollView>
     </GestureDetector>

@@ -26,7 +26,7 @@ export interface LinkMeta {
 export async function getLinkMeta(
   agent: BskyAgent,
   url: string,
-  timeout = 5e3,
+  timeout = 15e3,
 ): Promise<LinkMeta> {
   if (isBskyAppUrl(url)) {
     return extractBskyMeta(agent, url)

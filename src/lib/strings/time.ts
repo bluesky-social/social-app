@@ -27,7 +27,7 @@ export function ago(date: number | string | Date): string {
   } else if (diffSeconds < DAY) {
     return t`${Math.floor(diffSeconds / HOUR)}h`
   } else if (diffSeconds < MONTH) {
-    return t`${Math.floor(diffSeconds / DAY)}d`
+    return t`${Math.round(diffSeconds / DAY)}d`
   } else if (diffSeconds < YEAR) {
     return t`${Math.floor(diffSeconds / MONTH)}mo`
   } else {
