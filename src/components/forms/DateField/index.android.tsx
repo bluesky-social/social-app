@@ -98,7 +98,7 @@ export function DateField({
           timeZoneName={'Etc/UTC'}
           display="spinner"
           // @ts-ignore applies in iOS only -prf
-          themeVariant={t.name === 'dark' ? 'dark' : 'light'}
+          themeVariant={t.name === 'light' ? 'light' : 'dark'}
           value={new Date(value)}
           onChange={onChangeInternal}
         />
