@@ -53,7 +53,11 @@ export const NotFoundScreen = () => {
           type="primary"
           label={canGoBack ? _(msg`Go Back`) : _(msg`Go Home`)}
           accessibilityLabel={canGoBack ? _(msg`Go back`) : _(msg`Go home`)}
-          accessibilityHint={canGoBack ? _(msg`Returns to previous page`) : _(msg`Returns to home page`)}
+          accessibilityHint={
+            canGoBack
+              ? _(msg`Returns to previous page`)
+              : _(msg`Returns to home page`)
+          }
           onPress={onPressHome}
         />
       </View>
