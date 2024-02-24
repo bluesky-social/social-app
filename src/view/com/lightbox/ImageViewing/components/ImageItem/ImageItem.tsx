@@ -10,6 +10,7 @@ type Props = {
   onTap: () => void
   onZoom: (scaled: boolean) => void
   isScrollViewBeingDragged: boolean
+  showControls: boolean
 }
 
 const ImageItem = (_props: Props) => {
