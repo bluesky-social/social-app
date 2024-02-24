@@ -73,19 +73,19 @@ export const darkPalette: Palette = {
   white: tokens.color.gray_0,
   black: tokens.color.trueBlack,
 
-  contrast_25: tokens.color.gray_1000,
-  contrast_50: tokens.color.gray_975,
-  contrast_100: tokens.color.gray_950,
-  contrast_200: tokens.color.gray_900,
-  contrast_300: tokens.color.gray_800,
-  contrast_400: tokens.color.gray_700,
-  contrast_500: tokens.color.gray_600,
-  contrast_600: tokens.color.gray_500,
-  contrast_700: tokens.color.gray_400,
-  contrast_800: tokens.color.gray_300,
-  contrast_900: tokens.color.gray_200,
-  contrast_950: tokens.color.gray_100,
-  contrast_975: tokens.color.gray_50,
+  contrast_25: `hsl(211, 28%, 8%)`,
+  contrast_50: `hsl(211, 28%, 11%)`,
+  contrast_100: `hsl(211, 28%, 16%)`,
+  contrast_200: `hsl(211, 28%, 24%)`,
+  contrast_300: `hsl(211, 24%, 31%)`,
+  contrast_400: `hsl(211, 24%, 38%)`,
+  contrast_500: `hsl(211, 20%, 44%)`,
+  contrast_600: `hsl(211, 20%, 55%)`,
+  contrast_700: `hsl(211, 20%, 63%)`,
+  contrast_800: `hsl(211, 20%, 71%)`,
+  contrast_900: `hsl(211, 20%, 79%)`,
+  contrast_950: `hsl(211, 20%, 87%)`,
+  contrast_975: `hsl(211, 20%, 95%)`,
 
   primary_25: tokens.color.blue_25,
   primary_50: tokens.color.blue_50,
@@ -132,21 +132,28 @@ export const darkPalette: Palette = {
 
 export const dimPalette: Palette = {
   ...darkPalette,
-  black: tokens.color.gray_1000,
+  black: `hsl(211, 28%, 12%)`,
 
-  contrast_25: tokens.color.gray_975,
-  contrast_50: tokens.color.gray_950,
-  contrast_100: tokens.color.gray_900,
-  contrast_200: tokens.color.gray_800,
-  contrast_300: tokens.color.gray_700,
-  contrast_400: tokens.color.gray_600,
-  contrast_500: tokens.color.gray_500,
-  contrast_600: tokens.color.gray_400,
-  contrast_700: tokens.color.gray_300,
-  contrast_800: tokens.color.gray_200,
-  contrast_900: tokens.color.gray_100,
-  contrast_950: tokens.color.gray_50,
-  contrast_975: tokens.color.gray_25,
+  contrast_25: `hsl(211, 28%, 15%)`,
+  contrast_50: `hsl(211, 28%, 18%)`,
+  contrast_100: `hsl(211, 28%, 24%)`,
+  contrast_200: `hsl(211, 28%, 27%)`,
+  contrast_300: `hsl(211, 24%, 34%)`,
+  contrast_400: `hsl(211, 24%, 41%)`,
+  contrast_500: `hsl(211, 20%, 52%)`,
+  contrast_600: `hsl(211, 20%, 55%)`,
+  contrast_700: `hsl(211, 20%, 67%)`,
+  contrast_800: `hsl(211, 20%, 71%)`,
+  contrast_900: `hsl(211, 20%, 79%)`,
+  contrast_950: `hsl(211, 20%, 87%)`,
+  contrast_975: `hsl(211, 20%, 95%)`,
+
+  primary_600: `hsl(211, 95%, 39%)`,
+  primary_700: `hsl(211, 90%, 30%)`,
+  primary_800: `hsl(211, 90%, 23%)`,
+  primary_900: `hsl(211, 80%, 16%)`,
+  primary_950: `hsl(211, 80%, 13%)`,
+  primary_975: `hsl(211, 80%, 10%)`,
 } as const
 
 export const light = {
@@ -325,6 +332,7 @@ export const dark: Theme = {
 export const dim: Theme = {
   ...dark,
   name: 'dim',
+  palette: dimPalette,
   atoms: {
     ...dark.atoms,
     text: {
@@ -392,6 +400,21 @@ export const dim: Theme = {
     },
     border_contrast_high: {
       borderColor: dimPalette.contrast_300,
+    },
+    shadow_sm: {
+      ...atoms.shadow_sm,
+      shadowOpacity: 0.7,
+      shadowColor: `hsl(211, 28%, 3%)`,
+    },
+    shadow_md: {
+      ...atoms.shadow_md,
+      shadowOpacity: 0.7,
+      shadowColor: `hsl(211, 28%, 3%)`,
+    },
+    shadow_lg: {
+      ...atoms.shadow_lg,
+      shadowOpacity: 0.7,
+      shadowColor: `hsl(211, 28%, 3%)`,
     },
   },
 }
