@@ -927,7 +927,7 @@ msgstr "새 계정 만들기"
 
 #: src/view/screens/AppPasswords.tsx:249
 msgid "Created {0}"
-msgstr "{0} 생성됨"
+msgstr "{0}에 생성됨"
 
 #: src/view/screens/ProfileFeed.tsx:616
 msgid "Created by <0/>"
