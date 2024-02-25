@@ -554,6 +554,10 @@ msgstr "キャンセル"
 msgid "Cancel account deletion"
 msgstr "アカウントの削除をキャンセル"
 
+#: src/view/com/modals/AltImage.tsx:123
+#~ msgid "Cancel add image alt text"
+#~ msgstr "画像のALTテキストの追加をキャンセル"
+
 #: src/view/com/modals/ChangeHandle.tsx:149
 msgid "Cancel change handle"
 msgstr "ハンドルの変更をキャンセル"
@@ -583,6 +587,10 @@ msgstr "Waitlistの登録をキャンセル"
 msgctxt "action"
 msgid "Change"
 msgstr "変更"
+
+#: src/view/screens/Settings.tsx:306
+#~ msgid "Change"
+#~ msgstr "変更"
 
 #: src/view/screens/Settings/index.tsx:696
 msgid "Change handle"
@@ -657,7 +665,7 @@ msgstr "カスタムフィードを使用してあなたの体験を強化する
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 #~ msgid "Choose your algorithmic feeds"
-#~ msgstr ""
+#~ msgstr "フィードのアルゴリズムを選択"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
@@ -4733,3 +4741,4 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
+
