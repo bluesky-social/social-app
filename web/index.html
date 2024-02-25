@@ -134,43 +134,72 @@
         scrollbar-gutter: stable both-edges;
       }
 
-      /* ProseMirror */
-      .ProseMirror {
+      /* RichText composer */
+      .rt-editor {
         font: 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        min-height: 140px;
+        line-height: 24px;
+        width: 100%;
+        margin: 0 0 10px 8px;
+        position: relative;
       }
-      .ProseMirror-dark {
-        color: white;
+      .rt-editor-light {
+        --rt-caret-color: #000000;
       }
-      .ProseMirror p {
+      .rt-editor-dark {
+        --rt-caret-color: #ffffff;
+      }
+
+      .rt-overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+      }
+      .rt-segment {
+      }
+      .rt-segment-text {
+      }
+      .rt-segment-link {
+        color: #0085ff;
+      }
+
+      .rt-input {
+        caret-color: var(--rt-caret-color);
+        color: transparent;
+        font: inherit;
+        line-height: inherit;
+        background: transparent;
+        width: 100%;
+        border: 0;
         margin: 0;
+        display: block;
+        box-sizing: border-box;
+        position: relative;
+        z-index: 1;
+        resize: none;
       }
-      .ProseMirror p.is-editor-empty:first-child::before {
-        color: #8d8e96;
-        content: attr(data-placeholder);
-        float: left;
-        height: 0;
-        pointer-events: none;
+      .rt-input:focus {
+        outline: none;
       }
-      .ProseMirror .mention {
-        color: #0085ff;
+      .rt-input::selection {
+        background: #0085ff;
+        color: #ffffff;
       }
-      .ProseMirror a,
-      .ProseMirror .autolink {
-        color: #0085ff;
+      .rt-input::placeholder {
+        color: #878788;
+        opacity: 1;
       }
-      /* OLLIE: TODO -- this is not accessible */
-      /* Remove focus state on inputs */
-      .ProseMirror-focused {
-        outline: 0;
+
+      .rt-overlay,
+      .rt-input {
+        padding: 5px;
       }
-      textarea:focus,
-      input:focus {
-        outline: 0;
+
+      .rt-autocomplete {
+        z-index: 3;
       }
-      .tippy-content .items {
-        width: fit-content;
-      }
+
 
       /* Tooltips */
       [data-tooltip] {
