@@ -9,9 +9,13 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {CenteredView} from '../util/Views'
 import {isWeb} from 'platform/detection'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {useLingui} from '@lingui/react'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
+import {APP_LANGUAGES} from '#/locale/languages'
 
 export const SplashScreen = ({
   onDismiss,
@@ -98,24 +102,84 @@ export const SplashScreen = ({
 
 function Footer({styles}: {styles: ReturnType<typeof useStyles>}) {
   const pal = usePalette('default')
+  const {_} = useLingui()
+
+  const langPrefs = useLanguagePrefs()
+  const setLangPrefs = useLanguagePrefsApi()
+
+  const sanitizedLang = sanitizeAppLanguageSetting(langPrefs.appLanguage)
+
+  const onChangeAppLanguage = React.useCallback(
+    (ev: React.ChangeEvent<HTMLSelectElement>) => {
+      const value = ev.target.value
+
+      if (!value) return
+      if (sanitizedLang !== value) {
+        setLangPrefs.setAppLanguage(sanitizeAppLanguageSetting(value))
+      }
+    },
+    [sanitizedLang, setLangPrefs],
+  )
 
   return (
     <View style={[styles.footer, pal.view, pal.border]}>
       <TextLink
         href="https://bsky.social"
-        text="Business"
+        text={_(msg`Business`)}
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
         href="https://bsky.social/about/blog"
-        text="Blog"
+        text={_(msg`Blog`)}
         style={[styles.footerLink, pal.link]}
       />
       <TextLink
         href="https://bsky.social/about/join"
-        text="Jobs"
+        text={_(msg`Jobs`)}
         style={[styles.footerLink, pal.link]}
       />
+
+      <View style={styles.footerDivider} />
+
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 8,
+          alignItems: 'center',
+          flexShrink: 1,
+        }}>
+        <Text aria-hidden={true} style={[pal.textLight]}>
+          {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
+        </Text>
+        <FontAwesomeIcon
+          icon="chevron-down"
+          size={12}
+          style={[pal.textLight, {flexShrink: 0}]}
+        />
+
+        <select
+          value={sanitizedLang}
+          onChange={onChangeAppLanguage}
+          style={{
+            cursor: 'pointer',
+            MozAppearance: 'none',
+            WebkitAppearance: 'none',
+            appearance: 'none',
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            color: 'transparent',
+            background: 'transparent',
+            border: 0,
+            padding: 0,
+          }}>
+          {APP_LANGUAGES.filter(l => Boolean(l.code2)).map(l => (
+            <option key={l.code2} value={l.code2}>
+              {l.name}
+            </option>
+          ))}
+        </select>
+      </View>
     </View>
   )
 }
@@ -188,9 +252,10 @@ const useStyles = () => {
       padding: 20,
       borderTopWidth: 1,
       flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 20,
     },
-    footerLink: {
-      marginRight: 20,
-    },
+    footerDivider: {flexGrow: 1},
+    footerLink: {},
   })
 }

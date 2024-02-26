@@ -13,6 +13,7 @@ module.exports = {
     'uk',
     'ca',
     'zh-CN',
+    'it',
   ],
   catalogs: [
     {

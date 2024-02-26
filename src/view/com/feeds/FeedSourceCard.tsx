@@ -2,7 +2,7 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
-import {RichText} from '../util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
@@ -25,6 +25,7 @@ import {
 } from '#/state/queries/preferences'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {useTheme} from '#/alf'
 
 export function FeedSourceCard({
   feedUri,
@@ -82,6 +83,7 @@ export function FeedSourceCardLoaded({
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -266,8 +268,8 @@ export function FeedSourceCardLoaded({
 
       {showDescription && feed.description ? (
         <RichText
-          style={[pal.textLight, styles.description]}
-          richText={feed.description}
+          style={[t.atoms.text_contrast_high, styles.description]}
+          value={feed.description}
           numberOfLines={3}
         />
       ) : null}

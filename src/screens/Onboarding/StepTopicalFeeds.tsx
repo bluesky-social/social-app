@@ -3,7 +3,6 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {IS_PROD} from '#/env'
 import {atoms as a} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
@@ -21,22 +20,29 @@ import {
 } from '#/screens/Onboarding/Layout'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
+import {IS_PROD_SERVICE} from 'lib/constants'
+import {useSession} from 'state/session'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
   const {track} = useAnalytics()
+  const {currentAccount} = useSession()
   const {state, dispatch, interestsDisplayNames} = React.useContext(Context)
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
   const suggestedFeedUris = React.useMemo(() => {
-    if (!IS_PROD) return []
+    if (!IS_PROD_SERVICE(currentAccount?.service)) return []
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedFeedUris,
       state.interestsStepResults.apiResponse.suggestedFeedUris.default,
     ).slice(0, 10)
-  }, [state.interestsStepResults])
+  }, [
+    currentAccount?.service,
+    state.interestsStepResults.apiResponse.suggestedFeedUris,
+    state.interestsStepResults.selectedInterests,
+  ])
 
   const interestsText = React.useMemo(() => {
     const i = state.interestsStepResults.selectedInterests.map(

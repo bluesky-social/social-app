@@ -191,7 +191,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings", server.WebGeneric)
 	e.GET("/settings/language", server.WebGeneric)
 	e.GET("/settings/app-passwords", server.WebGeneric)
-	e.GET("/settings/home-feed", server.WebGeneric)
+	e.GET("/settings/following-feed", server.WebGeneric)
 	e.GET("/settings/saved-feeds", server.WebGeneric)
 	e.GET("/settings/threads", server.WebGeneric)
 	e.GET("/settings/external-embeds", server.WebGeneric)

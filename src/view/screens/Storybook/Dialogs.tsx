@@ -7,14 +7,12 @@ import {H3, P} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
 import {useDialogStateControlContext} from '#/state/dialogs'
-import {useOpenGlobalDialog} from '#/components/dialogs'
-import {ReportDialog} from '#/components/dialogs/ReportDialog'
 
 export function Dialogs() {
-  const control = Dialog.useDialogControl()
+  const scrollable = Dialog.useDialogControl()
+  const basic = Dialog.useDialogControl()
   const prompt = Prompt.usePromptControl()
   const {closeAllDialogs} = useDialogStateControlContext()
-  const openDialog = useOpenGlobalDialog()
 
   return (
     <View style={[a.gap_md]}>
@@ -23,9 +21,9 @@ export function Dialogs() {
         color="secondary"
         size="small"
         onPress={() => {
-          control.open()
+          scrollable.open()
           prompt.open()
-          openDialog(ReportDialog, {type: 'user', did: ''})
+          basic.open()
         }}
         label="Open basic dialog">
         Open all dialogs
@@ -36,7 +34,18 @@ export function Dialogs() {
         color="secondary"
         size="small"
         onPress={() => {
-          control.open()
+          scrollable.open()
+        }}
+        label="Open basic dialog">
+        Open scrollable dialog
+      </Button>
+
+      <Button
+        variant="outline"
+        color="secondary"
+        size="small"
+        onPress={() => {
+          basic.open()
         }}
         label="Open basic dialog">
         Open basic dialog
@@ -51,17 +60,6 @@ export function Dialogs() {
         Open prompt
       </Button>
 
-      <Button
-        variant="solid"
-        color="primary"
-        size="small"
-        onPress={() => {
-          openDialog(ReportDialog, {type: 'user', did: ''})
-        }}
-        label="Open prompt">
-        Open report dialog
-      </Button>
-
       <Prompt.Outer control={prompt}>
         <Prompt.Title>This is a prompt</Prompt.Title>
         <Prompt.Description>
@@ -74,9 +72,18 @@ export function Dialogs() {
         </Prompt.Actions>
       </Prompt.Outer>
 
+      <Dialog.Outer control={basic}>
+        <Dialog.Handle />
+
+        <Dialog.Inner label="test">
+          <H3 nativeID="dialog-title">Dialog</H3>
+          <P nativeID="dialog-description">A basic dialog</P>
+        </Dialog.Inner>
+      </Dialog.Outer>
+
       <Dialog.Outer
-        control={control}
-        nativeOptions={{sheet: {snapPoints: ['90%']}}}>
+        control={scrollable}
+        nativeOptions={{sheet: {snapPoints: ['100%']}}}>
         <Dialog.Handle />
 
         <Dialog.ScrollableInner
@@ -103,9 +110,13 @@ export function Dialogs() {
                 variant="outline"
                 color="primary"
                 size="small"
-                onPress={() => control.close()}
+                onPress={() =>
+                  scrollable.close(() => {
+                    console.log('CLOSED')
+                  })
+                }
                 label="Open basic dialog">
-                Close basic dialog
+                Close dialog
               </Button>
             </View>
           </View>

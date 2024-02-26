@@ -49,7 +49,7 @@ describe('Thread screen', () => {
     const post = by.id('postThreadItem-by-carla.test')
     await expect(
       element(by.id('likeCount').withAncestor(post)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('likeBtn').withAncestor(post)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(post)).atIndex(0),
@@ -57,7 +57,7 @@ describe('Thread screen', () => {
     await element(by.id('likeBtn').withAncestor(post)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(post)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can repost the root post', async () => {
@@ -85,7 +85,7 @@ describe('Thread screen', () => {
     const post = by.id('postThreadItem-by-carla.test')
     await expect(
       element(by.id('repostCount').withAncestor(post)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('repostBtn').withAncestor(post)).atIndex(0).tap()
     await expect(element(by.id('repostModal'))).toBeVisible()
     await element(by.id('repostBtn').withAncestor(by.id('repostModal'))).tap()
@@ -99,7 +99,7 @@ describe('Thread screen', () => {
     await expect(element(by.id('repostModal'))).not.toBeVisible()
     await expect(
       element(by.id('repostCount').withAncestor(post)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can report the root post', async () => {

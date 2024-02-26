@@ -22,9 +22,10 @@ import {PostAlerts} from '../moderation/PostAlerts'
 import {makeProfileLink} from 'lib/routes/links'
 import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
-import {RichText} from 'view/com/util/text/RichText'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {ContentHider} from '../moderation/ContentHider'
+import {RichText} from '#/components/RichText'
+import {atoms as a} from '#/alf'
 
 export function MaybeQuoteEmbed({
   embed,
@@ -157,11 +158,10 @@ export function QuoteEmbed({
         ) : null}
         {richText ? (
           <RichText
-            richText={richText}
-            type="post-text"
-            style={pal.text}
+            value={richText}
+            style={[a.text_md]}
             numberOfLines={20}
-            noLinks
+            disableLinks
           />
         ) : null}
         {embed && <PostEmbeds embed={embed} moderation={moderation} />}

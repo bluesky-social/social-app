@@ -23,7 +23,7 @@ import {
   Description,
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,

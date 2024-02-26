@@ -147,7 +147,7 @@ describe('Profile screen', () => {
     const posts = by.id('feedItem-by-bob.test')
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('likeBtn').withAncestor(posts)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),
@@ -155,14 +155,14 @@ describe('Profile screen', () => {
     await element(by.id('likeBtn').withAncestor(posts)).atIndex(0).tap()
     await expect(
       element(by.id('likeCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can repost posts', async () => {
     const posts = by.id('feedItem-by-bob.test')
     await expect(
       element(by.id('repostCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
     await element(by.id('repostBtn').withAncestor(posts)).atIndex(0).tap()
     await expect(element(by.id('repostModal'))).toBeVisible()
     await element(by.id('repostBtn').withAncestor(by.id('repostModal'))).tap()
@@ -176,7 +176,7 @@ describe('Profile screen', () => {
     await expect(element(by.id('repostModal'))).not.toBeVisible()
     await expect(
       element(by.id('repostCount').withAncestor(posts)).atIndex(0),
-    ).toHaveText('0')
+    ).not.toExist()
   })
 
   it('Can report posts', async () => {

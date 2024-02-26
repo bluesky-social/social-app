@@ -5,7 +5,7 @@ import Animated, {FadeInDown, FadeIn} from 'react-native-reanimated'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a, useBreakpoints, web} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints, web, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 
 import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
@@ -23,12 +23,11 @@ export function Outer({
   children,
   control,
   onClose,
-  defaultOpen,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const [isOpen, setIsOpen] = React.useState(defaultOpen)
+  const [isOpen, setIsOpen] = React.useState(false)
   const [isVisible, setIsVisible] = React.useState(true)
 
   const open = React.useCallback(() => {
@@ -159,7 +158,7 @@ export function Inner({
             shadowOpacity: t.name === 'light' ? 0.1 : 0.4,
             shadowRadius: 30,
           },
-          ...(Array.isArray(style) ? style : [style || {}]),
+          flatten(style),
         ]}>
         {children}
       </Animated.View>

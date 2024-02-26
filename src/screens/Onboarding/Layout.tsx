@@ -17,7 +17,7 @@ import {
   flatten,
   TextStyleProp,
 } from '#/alf'
-import {H2, P, leading} from '#/components/Typography'
+import {P, leading, Text} from '#/components/Typography'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ScrollView} from '#/view/com/util/Views'
@@ -209,16 +209,18 @@ export function Title({
   style,
 }: React.PropsWithChildren<TextStyleProp>) {
   return (
-    <H2
+    <Text
       style={[
         a.pb_sm,
+        a.text_4xl,
+        a.font_bold,
         {
           lineHeight: leading(a.text_4xl, a.leading_tight),
         },
         flatten(style),
       ]}>
       {children}
-    </H2>
+    </Text>
   )
 }
 

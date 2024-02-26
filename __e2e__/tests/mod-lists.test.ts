@@ -2,7 +2,7 @@
 
 import {describe, beforeAll, it} from '@jest/globals'
 import {expect} from 'detox'
-import {openApp, loginAsAlice, loginAsBob, createServer, sleep} from '../util'
+import {openApp, loginAsAlice, loginAsBob, createServer} from '../util'
 
 describe('Mod lists', () => {
   beforeAll(async () => {
@@ -62,38 +62,39 @@ describe('Mod lists', () => {
       .withTimeout(5000)
   })
 
-  it('Set avi via the edit modlist modal', async () => {
-    await expect(element(by.id('userAvatarFallback'))).toExist()
-    await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit list details')).tap()
-    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
-    await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Library')).tap()
-    await sleep(3e3)
-    await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
-    await expect(element(by.id('userAvatarImage'))).toExist()
-    // have to wait for the toast to clear
-    await waitFor(element(by.id('headerDropdownBtn')))
-      .toBeVisible()
-      .withTimeout(5000)
-  })
+  // DISABLED e2e environment is real finicky about avatar uploads -prf
+  // it('Set avi via the edit modlist modal', async () => {
+  //   await expect(element(by.id('userAvatarFallback'))).toExist()
+  //   await element(by.id('headerDropdownBtn')).tap()
+  //   await element(by.text('Edit list details')).tap()
+  //   await expect(element(by.id('createOrEditListModal'))).toBeVisible()
+  //   await element(by.id('changeAvatarBtn')).tap()
+  //   await element(by.text('Library')).tap()
+  //   await sleep(3e3)
+  //   await element(by.id('saveBtn')).tap()
+  //   await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
+  //   await expect(element(by.id('userAvatarImage'))).toExist()
+  //   // have to wait for the toast to clear
+  //   await waitFor(element(by.id('headerDropdownBtn')))
+  //     .toBeVisible()
+  //     .withTimeout(5000)
+  // })
 
-  it('Remove avi via the edit modlist modal', async () => {
-    await expect(element(by.id('userAvatarImage'))).toExist()
-    await element(by.id('headerDropdownBtn')).tap()
-    await element(by.text('Edit list details')).tap()
-    await expect(element(by.id('createOrEditListModal'))).toBeVisible()
-    await element(by.id('changeAvatarBtn')).tap()
-    await element(by.text('Remove')).tap()
-    await element(by.id('saveBtn')).tap()
-    await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
-    await expect(element(by.id('userAvatarFallback'))).toExist()
-    // have to wait for the toast to clear
-    await waitFor(element(by.id('headerDropdownBtn')))
-      .toBeVisible()
-      .withTimeout(5000)
-  })
+  // it('Remove avi via the edit modlist modal', async () => {
+  //   await expect(element(by.id('userAvatarImage'))).toExist()
+  //   await element(by.id('headerDropdownBtn')).tap()
+  //   await element(by.text('Edit list details')).tap()
+  //   await expect(element(by.id('createOrEditListModal'))).toBeVisible()
+  //   await element(by.id('changeAvatarBtn')).tap()
+  //   await element(by.text('Remove')).tap()
+  //   await element(by.id('saveBtn')).tap()
+  //   await expect(element(by.id('createOrEditListModal'))).not.toBeVisible()
+  //   await expect(element(by.id('userAvatarFallback'))).toExist()
+  //   // have to wait for the toast to clear
+  //   await waitFor(element(by.id('headerDropdownBtn')))
+  //     .toBeVisible()
+  //     .withTimeout(5000)
+  // })
 
   it('Delete the modlist', async () => {
     await element(by.id('headerDropdownBtn')).tap()

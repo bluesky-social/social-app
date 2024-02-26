@@ -5,12 +5,13 @@ import {compressIfNeeded} from './manip'
 
 let _imageCounter = 0
 async function getFile() {
-  const files = await RNFS.readDir(
+  let files = await RNFS.readDir(
     RNFS.LibraryDirectoryPath.split('/')
       .slice(0, -5)
       .concat(['Media', 'DCIM', '100APPLE'])
       .join('/'),
   )
+  files = files.filter(file => file.path.endsWith('.JPG'))
   const file = files[_imageCounter++ % files.length]
   return await compressIfNeeded({
     path: file.path,

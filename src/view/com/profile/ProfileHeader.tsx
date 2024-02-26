@@ -23,7 +23,7 @@ import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
 import {ThemedText} from '../util/text/ThemedText'
-import {RichText} from '../util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
@@ -59,6 +59,7 @@ import {useProfileShadow} from 'state/cache/profile-shadow'
 import {useOpenGlobalDialog} from '#/components/dialogs'
 import {ReportDialog} from '#/components/dialogs/ReportDialog'
 import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
+import {atoms as a} from '#/alf'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -617,12 +618,12 @@ let ProfileHeader = ({
               </Text>
             </View>
             {descriptionRT && !moderation.ui('profileView').blur ? (
-              <View pointerEvents="auto">
+              <View pointerEvents="auto" style={[styles.description]}>
                 <RichText
                   testID="profileHeaderDescription"
-                  style={[styles.description, pal.text]}
+                  style={[a.text_md]}
                   numberOfLines={15}
-                  richText={descriptionRT}
+                  value={descriptionRT}
                 />
               </View>
             ) : undefined}

@@ -27,7 +27,7 @@ import {
   SuggestedAccountCardPlaceholder,
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
-import {IconCircle} from '#/screens/Onboarding/IconCircle'
+import {IconCircle} from '#/components/IconCircle'
 
 export function Inner({
   profiles,
