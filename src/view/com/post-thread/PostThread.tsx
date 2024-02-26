@@ -437,6 +437,8 @@ function PostThreadLoaded({
       // @ts-ignore our .web version only -prf
       desktopFixedHeight
       removeClippedSubviews={isAndroid ? false : undefined}
+      updateCellsBatchingPeriod={100}
+      windowSize={11}
     />
   )
 }
