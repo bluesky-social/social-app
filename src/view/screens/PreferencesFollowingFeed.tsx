@@ -78,9 +78,9 @@ function RepliesThresholdInput({
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
-  'PreferencesHomeFeed'
+  'PreferencesFollowingFeed'
 >
-export function PreferencesHomeFeed({navigation}: Props) {
+export function PreferencesFollowingFeed({navigation}: Props) {
   const pal = usePalette('default')
   const {_} = useLingui()
   const {isTabletOrDesktop} = useWebMediaQueries()
@@ -101,14 +101,14 @@ export function PreferencesHomeFeed({navigation}: Props) {
         styles.container,
         isTabletOrDesktop && styles.desktopContainer,
       ]}>
-      <ViewHeader title={_(msg`Home Feed Preferences`)} showOnDesktop />
+      <ViewHeader title={_(msg`Following Feed Preferences`)} showOnDesktop />
       <View
         style={[
           styles.titleSection,
           isTabletOrDesktop && {paddingTop: 20, paddingBottom: 20},
         ]}>
         <Text type="xl" style={[pal.textLight, styles.description]}>
-          <Trans>Fine-tune the content you see on your home screen.</Trans>
+          <Trans>Fine-tune the content you see on your Following feed.</Trans>
         </Text>
       </View>
 
@@ -260,7 +260,7 @@ export function PreferencesHomeFeed({navigation}: Props) {
             <Text style={[pal.text, s.pb10]}>
               <Trans>
                 Set this setting to "Yes" to show samples of your saved feeds in
-                your following feed. This is an experimental feature.
+                your Following feed. This is an experimental feature.
               </Trans>
             </Text>
             <ToggleButton
