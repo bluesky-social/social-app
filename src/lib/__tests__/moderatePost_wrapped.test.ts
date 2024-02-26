@@ -192,9 +192,20 @@ describe(`hasMutedWord`, () => {
   describe(`punctuation semi-fuzzy`, () => {
     describe(`yay!`, () => {
       const rt = new RichText({
-        text: `We're federating, yay!!!`,
+        text: `We're federating, yay!`,
       })
       rt.detectFacetsWithoutResolution()
+
+      it(`match: yay!`, () => {
+        const match = hasMutedWord(
+          [{value: 'yay!', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
 
       it(`match: yay`, () => {
         const match = hasMutedWord(
@@ -223,6 +234,18 @@ describe(`hasMutedWord`, () => {
         )
 
         expect(match).toBe(true)
+      })
+
+      // single exclamation point, source has double
+      it(`no match: y!ppee!`, () => {
+        const match = hasMutedWord(
+          [{value: 'y!ppee!', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(false)
       })
     })
 
