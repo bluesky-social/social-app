@@ -379,6 +379,30 @@ describe(`hasMutedWord`, () => {
         expect(match).toBe(true)
       })
 
+      it(`no match: idk what this would be for`, () => {
+        // extra word
+        const match = hasMutedWord(
+          [{value: `idk what this would be for`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(false)
+      })
+
+      it(`match: idk`, () => {
+        // extra word
+        const match = hasMutedWord(
+          [{value: `idk`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
       it(`match: idkwhatthiswouldbe`, () => {
         const match = hasMutedWord(
           [{value: `idkwhatthiswouldbe`, targets: ['content']}],

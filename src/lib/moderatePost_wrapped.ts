@@ -16,7 +16,7 @@ type Options = Parameters<ModeratePost>[1] & {
 
 const REGEX = {
   TRAILING_PUNCTUATION: /\p{P}+$/gu,
-  ESCAPE: /[-[\]{}()*+?.,\\^$|#\s]/g,
+  ESCAPE: /[[\]{}()*+?.\\^$|\s]/g,
   SEPARATORS: /[\/\-\–\—\(\)\[\]\_]+/g,
   WORD_BOUNDARY: /[\s\n\t]+?/g,
 }
@@ -62,7 +62,7 @@ export function hasMutedWord(
       REGEX.ESCAPE,
       '\\$&',
     )
-    const reg = new RegExp(`\\W\+\?${escapedMutedWord}\\W\{0\}`, 'gi')
+    const reg = new RegExp(`\\b${escapedMutedWord}\\b`, 'gi')
 
     if (reg.test(text)) return true
 
@@ -93,7 +93,7 @@ export function hasMutedWord(
         if (wordNormalizedSeparators === mutedWordNormalizedSeparators)
           return true
 
-        /* Disabled for now
+        /* Disabled for now e.g. `super-cool` to `supercool`
         const wordNormalizedCompressed = wordNormalizedSeparators.replace(
           REGEX.WORD_BOUNDARY,
           '',
@@ -105,7 +105,7 @@ export function hasMutedWord(
           return true
         */
 
-        // then individual parts
+        // then individual parts of separated phrases/words
         const wordParts = wordNoTrailingPunc.split(REGEX.SEPARATORS)
         for (const wp of wordParts) {
           // still retain internal punctuation
