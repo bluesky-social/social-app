@@ -47,16 +47,14 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
   } = usePreferencesQuery()
   const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const [field, setField] = React.useState('')
-  const [contentTargetEnabled, setContentTargetEnabled] = React.useState(true)
-  const [tagTargetEnabled, setTagTargetEnabled] = React.useState(true)
+  const [options, setOptions] = React.useState(['content'])
   const [_error, setError] = React.useState('')
 
   const submit = React.useCallback(async () => {
     const value = field.trim()
-    const targets = [
-      tagTargetEnabled && 'tag',
-      contentTargetEnabled && 'content',
-    ].filter(Boolean) as AppBskyActorDefs.MutedWord['targets']
+    const targets = ['tag', options.includes('content') && 'content'].filter(
+      Boolean,
+    ) as AppBskyActorDefs.MutedWord['targets']
 
     if (!value || !targets.length) return
 
@@ -67,7 +65,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
     }
-  }, [field, tagTargetEnabled, contentTargetEnabled, addMutedWord, setField])
+  }, [field, options, addMutedWord, setField])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
@@ -93,68 +91,78 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           onSubmitEditing={submit}
         />
 
-        <View
+        <Toggle.Group
+          label="TODO"
+          type="radio"
+          values={options}
+          onChange={setOptions}>
+          <View
+            style={[
+              a.pt_sm,
+              a.pb_md,
+              a.flex_row,
+              a.align_center,
+              a.gap_sm,
+              a.flex_wrap,
+            ]}>
+            <Toggle.Item
+              label={_(msg`Mute this word in post text and tags`)}
+              name="content"
+              style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
+              <TargetToggle>
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <Toggle.Radio />
+                  <Toggle.Label>
+                    <Trans>Mute in text & tags</Trans>
+                  </Toggle.Label>
+                </View>
+                <PageText size="sm" />
+              </TargetToggle>
+            </Toggle.Item>
+
+            <Toggle.Item
+              label={_(msg`Mute this word in tags only`)}
+              name="tag"
+              style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
+              <TargetToggle>
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <Toggle.Radio />
+                  <Toggle.Label>
+                    <Trans>Mute in tags only</Trans>
+                  </Toggle.Label>
+                </View>
+                <Hashtag size="sm" />
+              </TargetToggle>
+            </Toggle.Item>
+
+            <Button
+              disabled={isPending || !field}
+              label={_(msg`Add mute word for configured settings`)}
+              size="small"
+              color="primary"
+              variant="solid"
+              style={[!gtMobile && [a.w_full, a.flex_0]]}
+              onPress={submit}>
+              <ButtonText>
+                <Trans>Add</Trans>
+              </ButtonText>
+              <ButtonIcon icon={isPending ? Loader : Plus} />
+            </Button>
+          </View>
+        </Toggle.Group>
+
+        <Text
           style={[
-            a.pt_sm,
-            a.mb_lg,
-            a.flex_row,
-            a.align_center,
-            a.gap_sm,
-            a.flex_wrap,
+            a.text_sm,
+            a.italic,
+            a.leading_snug,
+            t.atoms.text_contrast_medium,
           ]}>
-          <Toggle.Item
-            label={_(msg`Mute this word in post text and tags`)}
-            name="content"
-            value={contentTargetEnabled}
-            onChange={setContentTargetEnabled}
-            style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
-            <TargetToggle>
-              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                <Toggle.Checkbox />
-                <Toggle.Label>
-                  <Trans>Mute in text & tags</Trans>
-                </Toggle.Label>
-              </View>
-              <PageText size="sm" />
-            </TargetToggle>
-          </Toggle.Item>
-
-          <Toggle.Item
-            disabled={contentTargetEnabled}
-            label={_(msg`Mute this word in tags only`)}
-            name="tag"
-            value={contentTargetEnabled || tagTargetEnabled}
-            onChange={setTagTargetEnabled}
-            style={[a.flex_1, !gtMobile && [a.w_full, a.flex_0]]}>
-            <TargetToggle>
-              <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                <Toggle.Checkbox />
-                <Toggle.Label>
-                  <Trans>Mute in tags only</Trans>
-                </Toggle.Label>
-              </View>
-              <Hashtag size="sm" />
-            </TargetToggle>
-          </Toggle.Item>
-
-          <Button
-            disabled={
-              isPending ||
-              !field ||
-              Boolean(field && !contentTargetEnabled && !tagTargetEnabled)
-            }
-            label={_(msg`Add mute word for configured settings`)}
-            size="small"
-            color="primary"
-            variant="solid"
-            style={[!gtMobile && [a.w_full, a.flex_0]]}
-            onPress={submit}>
-            <ButtonText>
-              <Trans>Add</Trans>
-            </ButtonText>
-            <ButtonIcon icon={isPending ? Loader : Plus} />
-          </Button>
-        </View>
+          <Trans>
+            We recommend avoiding common words that appear in many posts, since
+            it can result in no posts being shown.
+          </Trans>
+        </Text>
       </View>
 
       <Divider />
