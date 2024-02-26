@@ -31,9 +31,10 @@ import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSession} from '#/state/session'
+import {useSession, getAgent} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
 
 let PostDropdownBtn = ({
   testID,
@@ -149,6 +150,42 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
+  const {data: mutedAccountsData} = useMyMutedAccountsQuery()
+
+  const isAuthorMuted = mutedAccountsData?.pages.some(page =>
+    page.mutes.some(mute => mute.did === postAuthor.did),
+  )
+
+  const toggleMuteAccount = async () => {
+    try {
+      const agent = getAgent()
+      if (isAuthorMuted) {
+        await agent.unmute(postAuthor.did)
+        Toast.show(`${postAuthor.handle} has been unmuted`)
+      } else {
+        await agent.mute(postAuthor.did)
+        Toast.show(`${postAuthor.handle} has been muted`)
+      }
+    } catch (e) {
+      logger.error('Error toggling mute state for account:', {error: e})
+      Toast.show('Error toggling mute state for account')
+    }
+  }
+
+  const onBlockAccount = React.useCallback(async () => {
+    try {
+      const agent = getAgent()
+      await agent.app.bsky.graph.block.create(
+        {repo: currentAccount?.did},
+        {subject: postAuthor.did, createdAt: new Date().toISOString()},
+      )
+      Toast.show(`${postAuthor.handle} has been blocked`)
+    } catch (e) {
+      logger.error('Error blocking account:', {error: e})
+      Toast.show('Error blocking account')
+    }
+  }, [postAuthor.handle, postAuthor.did, currentAccount?.did])
+
   const dropdownItems: NativeDropdownItem[] = [
     {
       label: _(msg`Translate`),
@@ -234,6 +271,36 @@ let PostDropdownBtn = ({
     {
       label: 'separator',
     },
+    hasSession &&
+      !isAuthor && {
+        label: isAuthorMuted ? _(msg`Unmute account`) : _(msg`Mute account`),
+        onPress: toggleMuteAccount,
+        testID: 'postDropdownMuteAccountBtn',
+        icon: {
+          ios: {
+            name: 'volume.slash',
+          },
+          android: 'ic_menu_block',
+          web: 'user-slash',
+        },
+      },
+    hasSession &&
+      !isAuthor && {
+        label: _(msg`Block account`),
+        onPress: onBlockAccount,
+        testID: 'postDropdownBlockAccountBtn',
+        icon: {
+          ios: {
+            name: 'person.fill.xmark',
+          },
+          android: 'ic_menu_close_clear_cancel',
+          web: 'user-slash',
+        },
+      },
+    hasSession &&
+      !isAuthor && {
+        label: 'separator',
+      },
     !isAuthor &&
       hasSession && {
         label: _(msg`Report post`),
