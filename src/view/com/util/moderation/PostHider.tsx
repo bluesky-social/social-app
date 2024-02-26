@@ -11,8 +11,10 @@ import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
-import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
-import {useOpenGlobalDialog} from '#/components/dialogs'
+import {
+  ModerationDetailsDialog,
+  useModerationDetailsDialogControl,
+} from '#/components/ModerationDetailsDialog'
 
 interface Props extends ComponentProps<typeof Link> {
   iconSize: number
@@ -33,7 +35,7 @@ export function PostHider({
   const pal = usePalette('default')
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
-  const openDialog = useOpenGlobalDialog()
+  const control = useModerationDetailsDialogControl()
   const blur = modui.blurs[0]
   const desc = useModerationCauseDescription(blur, 'content')
 
@@ -69,12 +71,14 @@ export function PostHider({
         override ? {paddingBottom: 0} : undefined,
         pal.view,
       ]}>
+      <ModerationDetailsDialog
+        control={control}
+        context="content"
+        modcause={blur}
+      />
       <Pressable
         onPress={() => {
-          openDialog(ModerationDetailsDialog, {
-            context: 'content',
-            modcause: blur,
-          })
+          control.open()
         }}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Learn more about this warning`)}

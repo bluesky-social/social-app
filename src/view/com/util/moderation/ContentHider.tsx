@@ -11,8 +11,10 @@ import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Text} from '#/components/Typography'
-import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
-import {useOpenGlobalDialog} from '#/components/dialogs'
+import {
+  ModerationDetailsDialog,
+  useModerationDetailsDialogControl,
+} from '#/components/ModerationDetailsDialog'
 
 export function ContentHider({
   testID,
@@ -32,7 +34,7 @@ export function ContentHider({
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const {gtMobile} = useBreakpoints()
-  const openDialog = useOpenGlobalDialog()
+  const control = useModerationDetailsDialogControl()
 
   const blur = modui?.blurs[0]
   const desc = useModerationCauseDescription(blur, 'content')
@@ -47,6 +49,12 @@ export function ContentHider({
 
   return (
     <View testID={testID} style={[a.overflow_hidden, style]}>
+      <ModerationDetailsDialog
+        control={control}
+        context="content"
+        modcause={blur}
+      />
+
       <View style={[a.flex_col, a.gap_xs]}>
         <Button
           variant="solid"
@@ -57,10 +65,7 @@ export function ContentHider({
             if (!modui.noOverride) {
               setOverride(v => !v)
             } else {
-              openDialog(ModerationDetailsDialog, {
-                context: 'content',
-                modcause: blur,
-              })
+              control.open()
             }
           }}
           label={desc.name}
@@ -83,10 +88,7 @@ export function ContentHider({
             variant="ghost"
             size="tiny"
             onPress={() => {
-              openDialog(ModerationDetailsDialog, {
-                context: 'content',
-                modcause: blur,
-              })
+              control.open()
             }}
             label={_(msg`Learn more`)}>
             <ButtonText

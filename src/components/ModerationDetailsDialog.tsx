@@ -7,29 +7,39 @@ import {ModerationCause} from '@atproto/api'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
-import {GlobalDialogProps} from '#/components/dialogs'
 import {Button} from '#/components/Button'
 import {InlineLink} from '#/components/Link'
 import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 
+export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
+
 export interface ModerationDetailsDialogProps {
+  control: Dialog.DialogOuterProps['control']
   context: 'account' | 'content'
   modcause: ModerationCause
 }
 
-export function ModerationDetailsDialog({
-  params,
-  cleanup,
-}: GlobalDialogProps<ModerationDetailsDialogProps>) {
+export function ModerationDetailsDialog(props: ModerationDetailsDialogProps) {
+  return (
+    <Dialog.Outer control={props.control}>
+      <Dialog.Handle />
+
+      <ModerationDetailsDialogInner {...props} />
+    </Dialog.Outer>
+  )
+}
+
+function ModerationDetailsDialogInner({
+  context,
+  modcause,
+}: ModerationDetailsDialogProps & {
+  control: Dialog.DialogOuterProps['control']
+}) {
   const {_} = useLingui()
   const labelStrings = useLabelStrings()
   const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
-  const {context, modcause} = params
-
-  // REQUIRED CLEANUP
-  const onClose = React.useCallback(() => cleanup(), [cleanup])
 
   let name
   let description
@@ -99,30 +109,26 @@ export function ModerationDetailsDialog({
   }
 
   return (
-    <Dialog.Outer defaultOpen control={control} onClose={onClose}>
-      <Dialog.Handle />
-
-      <Dialog.ScrollableInner
-        accessibilityDescribedBy="dialog-description"
-        accessibilityLabelledBy="dialog-title">
-        <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
-          {name}
-        </Text>
-        <Text nativeID="dialog-description" style={[a.text_sm]}>
-          {description}
-        </Text>
-        <View style={gtMobile && [a.flex_row, a.justify_end]}>
-          <Button
-            testID="doneBtn"
-            variant="outline"
-            color="primary"
-            size="small"
-            onPress={() => control.close()}
-            label={_(msg`Done`)}>
-            {_(msg`Done`)}
-          </Button>
-        </View>
-      </Dialog.ScrollableInner>
-    </Dialog.Outer>
+    <Dialog.ScrollableInner
+      accessibilityDescribedBy="dialog-description"
+      accessibilityLabelledBy="dialog-title">
+      <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
+        {name}
+      </Text>
+      <Text nativeID="dialog-description" style={[a.text_sm]}>
+        {description}
+      </Text>
+      <View style={gtMobile && [a.flex_row, a.justify_end]}>
+        <Button
+          testID="doneBtn"
+          variant="outline"
+          color="primary"
+          size="small"
+          onPress={() => control.close()}
+          label={_(msg`Done`)}>
+          {_(msg`Done`)}
+        </Button>
+      </View>
+    </Dialog.ScrollableInner>
   )
 }

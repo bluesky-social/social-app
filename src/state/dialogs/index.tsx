@@ -1,6 +1,7 @@
 import React from 'react'
 import {DialogControlProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs'
+import {Provider as GlobalDialogsProviderV2} from '#/components/dialogs/Context'
 
 const DialogContext = React.createContext<{
   activeDialogs: React.MutableRefObject<
@@ -28,7 +29,7 @@ export function useDialogStateControlContext() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeDialogs = React.useRef<
-    Map<string, React.MutableRefObject<DialogControlProps<{}>>>
+    Map<string, React.MutableRefObject<DialogControlProps>>
   >(new Map())
   const closeAllDialogs = React.useCallback(() => {
     activeDialogs.current.forEach(dialog => dialog.current.close())
@@ -38,7 +39,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <DialogContext.Provider value={context}>
       <DialogControlContext.Provider value={controls}>
-        <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
+        <GlobalDialogsProvider>
+          <GlobalDialogsProviderV2>{children}</GlobalDialogsProviderV2>
+        </GlobalDialogsProvider>
       </DialogControlContext.Provider>
     </DialogContext.Provider>
   )

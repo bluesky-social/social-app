@@ -11,8 +11,10 @@ import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
-import {useOpenGlobalDialog} from '#/components/dialogs'
+import {
+  ModerationDetailsDialog,
+  useModerationDetailsDialogControl,
+} from '#/components/ModerationDetailsDialog'
 
 export function PostAlerts({
   modui,
@@ -43,57 +45,67 @@ export function PostAlerts({
 }
 
 function PostInform({cause}: {cause: ModerationCause}) {
-  const openDialog = useOpenGlobalDialog()
+  const control = useModerationDetailsDialogControl()
   const desc = useModerationCauseDescription(cause, 'content')
 
   return (
-    <Button
-      label={desc.name}
-      variant="solid"
-      color="secondary"
-      size="tiny"
-      shape="default"
-      onPress={() => {
-        openDialog(ModerationDetailsDialog, {
-          context: 'content',
-          modcause: cause,
-        })
-      }}>
-      <ButtonIcon
-        icon={cause.type === 'muted' ? EyeSlash : CircleInfo}
-        position="left"
-      />{' '}
-      <ButtonText>{desc.name}</ButtonText>
-    </Button>
+    <>
+      <Button
+        label={desc.name}
+        variant="solid"
+        color="secondary"
+        size="tiny"
+        shape="default"
+        onPress={() => {
+          control.open()
+        }}>
+        <ButtonIcon
+          icon={cause.type === 'muted' ? EyeSlash : CircleInfo}
+          position="left"
+        />{' '}
+        <ButtonText>{desc.name}</ButtonText>
+      </Button>
+
+      <ModerationDetailsDialog
+        control={control}
+        context="content"
+        modcause={cause}
+      />
+    </>
   )
 }
 
 function PostAlert({cause}: {cause: ModerationCause}) {
   const t = useTheme()
-  const openDialog = useOpenGlobalDialog()
+  const control = useModerationDetailsDialogControl()
   const desc = useModerationCauseDescription(cause, 'content')
 
   return (
-    <Button
-      label={desc.name}
-      variant="solid"
-      color="secondary"
-      size="small"
-      shape="default"
-      onPress={() => {
-        openDialog(ModerationDetailsDialog, {
-          context: 'content',
-          modcause: cause,
-        })
-      }}>
-      <ButtonIcon icon={Shield} position="left" />
-      <ButtonText style={[a.flex_1, a.text_left]}>
-        {desc.name}
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {' — ' /* TODO get actual labeler */}
-          <Trans>Bluesky Safety</Trans>
-        </Text>
-      </ButtonText>
-    </Button>
+    <>
+      <Button
+        label={desc.name}
+        variant="solid"
+        color="secondary"
+        size="small"
+        shape="default"
+        onPress={() => {
+          control.open()
+        }}>
+        <ButtonIcon icon={Shield} position="left" />
+        <ButtonText style={[a.flex_1, a.text_left]}>
+          {desc.name}
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {' — ' /* TODO get actual labeler */}
+            <Trans>Bluesky Safety</Trans>
+          </Text>
+        </ButtonText>
+      </Button>
+
+      <ModerationDetailsDialog
+        control={control}
+        context="content"
+        modcause={cause}
+      />
+    </>
   )
 }

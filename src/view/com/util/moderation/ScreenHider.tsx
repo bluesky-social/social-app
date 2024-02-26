@@ -23,8 +23,10 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {s} from '#/lib/styles'
 import {CenteredView} from '../Views'
 
-import {ModerationDetailsDialog} from '#/components/dialogs/ModerationDetails'
-import {useOpenGlobalDialog} from '#/components/dialogs'
+import {
+  ModerationDetailsDialog,
+  useModerationDetailsDialogControl,
+} from '#/components/ModerationDetailsDialog'
 
 export function ScreenHider({
   testID,
@@ -46,7 +48,7 @@ export function ScreenHider({
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
-  const openDialog = useOpenGlobalDialog()
+  const control = useModerationDetailsDialogControl()
   const blur = modui.blurs[0]
   const desc = useModerationCauseDescription(blur, 'content')
 
@@ -95,10 +97,7 @@ export function ScreenHider({
             </Text>
             <TouchableWithoutFeedback
               onPress={() => {
-                openDialog(ModerationDetailsDialog, {
-                  context: 'account',
-                  modcause: blur,
-                })
+                control.open()
               }}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Learn more about this warning`)}
@@ -107,6 +106,12 @@ export function ScreenHider({
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>
+
+            <ModerationDetailsDialog
+              control={control}
+              context="account"
+              modcause={blur}
+            />
           </>
         )}{' '}
       </Text>
