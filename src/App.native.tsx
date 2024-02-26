@@ -45,7 +45,7 @@ import {Splash} from '#/Splash'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useUTMSetup} from '#/lib/utm'
+import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -54,7 +54,7 @@ function InnerApp() {
   const {resumeSession} = useSessionApi()
   const theme = useColorModeTheme()
   const {_} = useLingui()
-  useUTMSetup()
+  useIntentHandler()
 
   // init
   useEffect(() => {
