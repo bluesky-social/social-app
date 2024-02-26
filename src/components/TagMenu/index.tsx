@@ -21,6 +21,7 @@ import {
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {Loader} from '#/components/Loader'
+import {isInvalidHandle} from '#/lib/strings/handles'
 
 export function useTagMenuControl() {
   return Dialog.useDialogControl()
@@ -116,6 +117,7 @@ export function TagMenu({
                     <Search size="lg" style={[t.atoms.text_contrast_medium]} />
                     <Text
                       numberOfLines={1}
+                      ellipsizeMode="middle"
                       style={[
                         a.flex_1,
                         a.text_md,
@@ -134,7 +136,7 @@ export function TagMenu({
                   </View>
                 </Link>
 
-                {authorHandle && (
+                {authorHandle && !isInvalidHandle(authorHandle) && (
                   <>
                     <Divider />
 
@@ -176,6 +178,7 @@ export function TagMenu({
                         />
                         <Text
                           numberOfLines={1}
+                          ellipsizeMode="middle"
                           style={[
                             a.flex_1,
                             a.text_md,
@@ -239,6 +242,7 @@ export function TagMenu({
                         />
                         <Text
                           numberOfLines={1}
+                          ellipsizeMode="middle"
                           style={[
                             a.flex_1,
                             a.text_md,

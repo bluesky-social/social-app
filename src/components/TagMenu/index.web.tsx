@@ -3,6 +3,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
+import {isInvalidHandle} from '#/lib/strings/handles'
 import {EventStopper} from '#/view/com/util/EventStopper'
 import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
 import {NavigationProp} from '#/lib/routes/types'
@@ -58,25 +59,26 @@ export function TagMenu({
           web: 'magnifying-glass',
         },
       },
-      {
-        label: _(msg`See ${tag} posts by this user`),
-        onPress() {
-          navigation.navigate({
-            name: 'Search',
-            params: {
-              q: tag + (authorHandle ? ` from:${authorHandle}` : ''),
-            },
-          })
-        },
-        testID: 'tagMenuSeachByUser',
-        icon: {
-          ios: {
-            name: 'magnifyingglass',
+      authorHandle &&
+        !isInvalidHandle(authorHandle) && {
+          label: _(msg`See ${tag} posts by this user`),
+          onPress() {
+            navigation.navigate({
+              name: 'Search',
+              params: {
+                q: tag + (authorHandle ? ` from:${authorHandle}` : ''),
+              },
+            })
           },
-          android: '',
-          web: ['far', 'user'],
+          testID: 'tagMenuSeachByUser',
+          icon: {
+            ios: {
+              name: 'magnifyingglass',
+            },
+            android: '',
+            web: ['far', 'user'],
+          },
         },
-      },
       preferences && {
         label: 'separator',
       },
