@@ -245,7 +245,7 @@ describe(`hasMutedWord`, () => {
           [],
         )
 
-        expect(match).toBe(false)
+        expect(match).toBe(true)
       })
     })
 
@@ -458,6 +458,17 @@ describe(`hasMutedWord`, () => {
       it(`match: iykyk`, () => {
         const match = hasMutedWord(
           [{value: `iykyk`, targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: (iykyk)`, () => {
+        const match = hasMutedWord(
+          [{value: `(iykyk)`, targets: ['content']}],
           rt.text,
           rt.facets,
           [],

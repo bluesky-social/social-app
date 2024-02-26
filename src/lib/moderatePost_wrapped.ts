@@ -53,8 +53,9 @@ export function hasMutedWord(
     if (mutedWord.length > text.length) continue
     // exact match
     if (mutedWord === text) return true
-    // any muted phrase with space
-    if (/\s+?/.test(mutedWord) && text.includes(mutedWord)) return true
+    // any muted phrase with space or punctuation
+    if (/(?:\s|\p{P})+?/u.test(mutedWord) && text.includes(mutedWord))
+      return true
 
     // check individual character groups
     const words = text.toLowerCase().split(REGEX.WORD_BOUNDARY)
