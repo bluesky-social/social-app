@@ -2,99 +2,26 @@ import React from 'react'
 import {View} from 'react-native'
 
 import * as tokens from '#/alf/tokens'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 
 export function Palette() {
+  const t = useTheme()
   return (
     <View style={[a.gap_md]}>
       <View style={[a.flex_row, a.gap_md]}>
-        <View
-          style={[a.flex_1, {height: 60, backgroundColor: tokens.color.gray_0}]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_25},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_50},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_100},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_200},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_300},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_400},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_500},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_600},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_700},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_800},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_900},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_950},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_975},
-          ]}
-        />
-        <View
-          style={[
-            a.flex_1,
-            {height: 60, backgroundColor: tokens.color.gray_1000},
-          ]}
-        />
+        <View style={[a.flex_1, t.atoms.bg_contrast_25, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_50, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_100, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_200, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_300, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_400, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_500, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_600, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_700, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_800, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_900, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_950, {height: 60}]} />
+        <View style={[a.flex_1, t.atoms.bg_contrast_975, {height: 60}]} />
       </View>
 
       <View style={[a.flex_row, a.gap_md]}>
