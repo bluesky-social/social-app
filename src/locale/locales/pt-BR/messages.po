@@ -8,7 +8,7 @@ msgstr ""
 "Language: pt-BR\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-19 11:23\n"
+"PO-Revision-Date: 2024-02-26 11:23\n"
 "Last-Translator: gildaswise\n"
 "Language-Team: maisondasilva, MightyLoggor, gildaswise, gleydson, faeriarum\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -16,10 +16,6 @@ msgstr ""
 #: src/view/com/modals/VerifyEmail.tsx:142
 msgid "(no email)"
 msgstr "(sem email)"
-
-#: src/view/shell/desktop/RightNav.tsx:168
-#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-#~ msgstr "{0, plural, one {# convite disponível} other {# convites disponíveis}}"
 
 #: src/view/com/profile/ProfileHeader.tsx:593
 msgid "{following} following"
@@ -1471,11 +1467,7 @@ msgstr "Procurando contas semelhantes..."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
 msgid "Fine-tune the content you see on your Following feed."
-msgstr ""
-
-#: src/view/screens/PreferencesHomeFeed.tsx:111
-#~ msgid "Fine-tune the content you see on your home screen."
-#~ msgstr "Ajuste o conteúdo que você vê na sua tela inicial."
+msgstr "Ajuste o conteúdo que você vê na sua tela inicial."
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
@@ -1562,7 +1554,7 @@ msgstr "Seguindo {0}"
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
 msgid "Following Feed Preferences"
-msgstr ""
+msgstr "Configurações do feed principal"
 
 #: src/view/com/profile/ProfileHeader.tsx:546
 msgid "Follows you"
@@ -1733,13 +1725,6 @@ msgstr "Hmm, estamos com problemas para encontrar este feed. Ele pode ter sido e
 #: src/view/shell/Drawer.tsx:399
 msgid "Home"
 msgstr "Página Inicial"
-
-#: src/Navigation.tsx:247
-#: src/view/com/pager/FeedsTabBarMobile.tsx:123
-#: src/view/screens/PreferencesHomeFeed.tsx:104
-#: src/view/screens/Settings/index.tsx:543
-#~ msgid "Home Feed Preferences"
-#~ msgstr "Preferências da Página Inicial"
 
 #: src/view/com/auth/create/Step1.tsx:82
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:120
@@ -2098,11 +2083,11 @@ msgstr "Certifique-se de onde está indo!"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
-msgstr ""
+msgstr "Não pode ter mais que 253 caracteres"
 
 #: src/view/com/auth/create/Step2.tsx:109
 msgid "May only contain letters and numbers"
-msgstr ""
+msgstr "Só pode conter letras e números"
 
 #: src/view/screens/Profile.tsx:182
 msgid "Media"
@@ -2194,7 +2179,7 @@ msgstr "Respostas mais curtidas primeiro"
 
 #: src/view/com/auth/create/Step2.tsx:122
 msgid "Must be at least 3 characters"
-msgstr ""
+msgstr "Deve ter no mínimo 3 caracteres"
 
 #: src/view/com/profile/ProfileHeader.tsx:327
 msgid "Mute Account"
@@ -3339,13 +3324,9 @@ msgstr "Defina esta configuração como \"Não\" para ocultar todos os reposts d
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
 msgstr "Defina esta configuração como \"Sim\" para mostrar respostas em uma visualização de thread. Este é um recurso experimental."
 
-#: src/view/screens/PreferencesHomeFeed.tsx:261
-#~ msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
-#~ msgstr "Defina esta configuração como \"Sim\" para mostrar amostras de seus feeds salvos na sua página inicial. Este é um recurso experimental."
-
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr ""
+msgstr "Defina esta configuração como \"Sim\" para mostrar amostras de seus feeds salvos no seu feed inicial. Este é um recurso experimental."
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
