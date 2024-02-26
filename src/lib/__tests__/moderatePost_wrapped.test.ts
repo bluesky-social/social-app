@@ -249,6 +249,35 @@ describe(`hasMutedWord`, () => {
       })
     })
 
+    describe(`Why so S@assy?`, () => {
+      const rt = new RichText({
+        text: `Why so S@assy?`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      it(`match: S@assy`, () => {
+        const match = hasMutedWord(
+          [{value: 'S@assy', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+
+      it(`match: s@assy`, () => {
+        const match = hasMutedWord(
+          [{value: 's@assy', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+
     describe(`!command`, () => {
       const rt = new RichText({
         text: `Idk maybe a bot !command`,

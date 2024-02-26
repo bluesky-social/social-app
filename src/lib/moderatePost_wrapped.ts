@@ -42,23 +42,24 @@ export function hasMutedWord(
 
   for (const mute of mutedWords) {
     const mutedWord = mute.value.toLowerCase()
+    const postText = text.toLowerCase()
 
     // `content` applies to tags as well
     if (tags.includes(mutedWord)) return true
     // rest of the checks are for `content` only
     if (!mute.targets.includes('content')) continue
     // single character, has to use includes
-    if (mutedWord.length === 1 && text.includes(mutedWord)) return true
+    if (mutedWord.length === 1 && postText.includes(mutedWord)) return true
     // too long
-    if (mutedWord.length > text.length) continue
+    if (mutedWord.length > postText.length) continue
     // exact match
-    if (mutedWord === text) return true
+    if (mutedWord === postText) return true
     // any muted phrase with space or punctuation
-    if (/(?:\s|\p{P})+?/u.test(mutedWord) && text.includes(mutedWord))
+    if (/(?:\s|\p{P})+?/u.test(mutedWord) && postText.includes(mutedWord))
       return true
 
     // check individual character groups
-    const words = text.toLowerCase().split(REGEX.WORD_BOUNDARY)
+    const words = postText.split(REGEX.WORD_BOUNDARY)
     for (const word of words) {
       if (word === mutedWord) return true
 
