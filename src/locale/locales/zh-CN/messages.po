@@ -1525,7 +1525,7 @@ msgstr "正在寻找类似的账户..."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
 msgid "Fine-tune the content you see on your Following feed."
-msgstr ""
+msgstr "调整你在关注信息流上所看到的内容。"
 
 #: src/view/screens/PreferencesHomeFeed.tsx:111
 #~ msgid "Fine-tune the content you see on your home screen."
@@ -1616,7 +1616,7 @@ msgstr "正在关注 {0}"
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
 msgid "Following Feed Preferences"
-msgstr ""
+msgstr "关注信息流首选项"
 
 #: src/view/com/profile/ProfileHeader.tsx:546
 msgid "Follows you"
@@ -2172,11 +2172,11 @@ msgstr "请确认目标页面地址是否正确！"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
-msgstr ""
+msgstr "不能长于 253 个字符"
 
 #: src/view/com/auth/create/Step2.tsx:109
 msgid "May only contain letters and numbers"
-msgstr ""
+msgstr "只能包含字母和数字"
 
 #: src/view/screens/Profile.tsx:182
 msgid "Media"
@@ -2268,7 +2268,7 @@ msgstr "优先显示最多喜欢"
 
 #: src/view/com/auth/create/Step2.tsx:122
 msgid "Must be at least 3 characters"
-msgstr ""
+msgstr "需要至少 3 个字符"
 
 #: src/view/com/profile/ProfileHeader.tsx:327
 msgid "Mute Account"
@@ -3463,7 +3463,7 @@ msgstr "启用此设置项以在分层视图中显示回复。这是一个实验
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr ""
+msgstr "启用此设置项以在关注信息流中显示已保存信息流的样例。这是一个实验性功能。"
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
