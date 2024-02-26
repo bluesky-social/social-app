@@ -278,6 +278,25 @@ describe(`hasMutedWord`, () => {
       })
     })
 
+    describe(`New York Times`, () => {
+      const rt = new RichText({
+        text: `New York Times`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      // case insensitive
+      it(`match: new york times`, () => {
+        const match = hasMutedWord(
+          [{value: 'new york times', targets: ['content']}],
+          rt.text,
+          rt.facets,
+          [],
+        )
+
+        expect(match).toBe(true)
+      })
+    })
+
     describe(`!command`, () => {
       const rt = new RichText({
         text: `Idk maybe a bot !command`,
