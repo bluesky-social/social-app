@@ -92,7 +92,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
         />
 
         <Toggle.Group
-          label="TODO"
+          label={_(msg`Toggle between muted word options.`)}
           type="radio"
           values={options}
           onChange={setOptions}>

@@ -15,10 +15,10 @@ type Options = Parameters<ModeratePost>[1] & {
 }
 
 const REGEX = {
-  TRAILING_PUNCTUATION: /\p{P}+$/gu,
+  LEADING_TRAILING_PUNCTUATION: /(?:^\p{P}+|\p{P}+$)/gu,
   ESCAPE: /[[\]{}()*+?.\\^$|\s]/g,
   SEPARATORS: /[\/\-\–\—\(\)\[\]\_]+/g,
-  WORD_BOUNDARY: /[\s\n\t]+?/g,
+  WORD_BOUNDARY: /[\s\n\t\r\f\v]+?/g,
 }
 
 export function hasMutedWord(
@@ -53,39 +53,32 @@ export function hasMutedWord(
     if (mutedWord.length > text.length) continue
     // exact match
     if (mutedWord === text) return true
-
-    const mutedWordNoTrailingPunc = mutedWord.replace(
-      REGEX.TRAILING_PUNCTUATION,
-      '',
-    )
-    const escapedMutedWord = mutedWordNoTrailingPunc.replace(
-      REGEX.ESCAPE,
-      '\\$&',
-    )
-    const reg = new RegExp(`\\b${escapedMutedWord}\\b`, 'gi')
-
-    if (reg.test(text)) return true
+    // any muted phrase with space
+    if (/\s+?/.test(mutedWord) && text.includes(mutedWord)) return true
 
     // check individual character groups
     const words = text.toLowerCase().split(REGEX.WORD_BOUNDARY)
     for (const word of words) {
       if (word === mutedWord) return true
 
-      // compare word without trailing punctuation, but allow internal
+      // compare word without leading/trailing punctuation, but allow internal
       // punctuation (such as `s@ssy`)
-      const wordNoTrailingPunc = word.replace(REGEX.TRAILING_PUNCTUATION, '')
+      const wordTrimmedPunctuation = word.replace(
+        REGEX.LEADING_TRAILING_PUNCTUATION,
+        '',
+      )
 
-      if (mutedWordNoTrailingPunc === wordNoTrailingPunc) return true
-      if (mutedWordNoTrailingPunc.length > wordNoTrailingPunc.length) continue
+      if (mutedWord === wordTrimmedPunctuation) return true
+      if (mutedWord.length > wordTrimmedPunctuation.length) continue
 
       // handle hyphenated, slash separated words, etc
-      if (REGEX.SEPARATORS.test(wordNoTrailingPunc)) {
+      if (REGEX.SEPARATORS.test(wordTrimmedPunctuation)) {
         // check against full normalized phrase
-        const wordNormalizedSeparators = wordNoTrailingPunc.replace(
+        const wordNormalizedSeparators = wordTrimmedPunctuation.replace(
           REGEX.SEPARATORS,
           ' ',
         )
-        const mutedWordNormalizedSeparators = mutedWordNoTrailingPunc.replace(
+        const mutedWordNormalizedSeparators = mutedWord.replace(
           REGEX.SEPARATORS,
           ' ',
         )
@@ -106,10 +99,10 @@ export function hasMutedWord(
         */
 
         // then individual parts of separated phrases/words
-        const wordParts = wordNoTrailingPunc.split(REGEX.SEPARATORS)
+        const wordParts = wordTrimmedPunctuation.split(REGEX.SEPARATORS)
         for (const wp of wordParts) {
           // still retain internal punctuation
-          if (wp === mutedWordNoTrailingPunc) return true
+          if (wp === mutedWord) return true
         }
       }
     }

@@ -171,6 +171,22 @@ describe(`hasMutedWord`, () => {
 
       expect(match).toBe(true)
     })
+
+    it(`match: :)`, () => {
+      const rt = new RichText({
+        text: `So happy :)`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      const match = hasMutedWord(
+        [{value: `:)`, targets: ['content']}],
+        rt.text,
+        rt.facets,
+        [],
+      )
+
+      expect(match).toBe(true)
+    })
   })
 
   describe(`punctuation semi-fuzzy`, () => {
@@ -179,17 +195,6 @@ describe(`hasMutedWord`, () => {
         text: `We're federating, yay!!!`,
       })
       rt.detectFacetsWithoutResolution()
-
-      it(`match: yay!`, () => {
-        const match = hasMutedWord(
-          [{value: 'yay!', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
-
-        expect(match).toBe(true)
-      })
 
       it(`match: yay`, () => {
         const match = hasMutedWord(
@@ -263,22 +268,6 @@ describe(`hasMutedWord`, () => {
         )
 
         expect(match).toBe(false)
-      })
-
-      it(`match: :)`, () => {
-        const rt = new RichText({
-          text: `So happy :)`,
-        })
-        rt.detectFacetsWithoutResolution()
-
-        const match = hasMutedWord(
-          [{value: `:)`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
-
-        expect(match).toBe(true)
       })
     })
 
