@@ -104,18 +104,18 @@ export async function post(agent: BskyAgent, opts: PostOpts) {
 
   // add image embed if present
   if (opts.images?.length) {
-    logger.info(`Uploading images`, {
+    logger.debug(`Uploading images`, {
       count: opts.images.length,
     })
 
     const images: AppBskyEmbedImages.Image[] = []
     for (const image of opts.images) {
       opts.onStateChange?.(`Uploading image #${images.length + 1}...`)
-      logger.info(`Compressing image`)
+      logger.debug(`Compressing image`)
       await image.compress()
       const path = image.compressed?.path ?? image.path
       const {width, height} = image.compressed || image
-      logger.info(`Uploading image`)
+      logger.debug(`Uploading image`)
       const res = await uploadBlob(agent, path, 'image/jpeg')
       images.push({
         image: res.data.blob,
