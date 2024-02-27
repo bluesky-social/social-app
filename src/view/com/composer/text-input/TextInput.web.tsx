@@ -23,6 +23,7 @@ import {Portal} from '#/components/Portal'
 import {Text} from '../../util/text/Text'
 import {Trans} from '@lingui/macro'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
+import {TagDecorator} from './web/TagDecorator'
 
 export interface TextInputRef {
   focus: () => void
@@ -67,6 +68,7 @@ export const TextInput = React.forwardRef(function TextInputImpl(
     () => [
       Document,
       LinkDecorator,
+      TagDecorator,
       Mention.configure({
         HTMLAttributes: {
           class: 'mention',

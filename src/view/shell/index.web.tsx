@@ -16,6 +16,7 @@ import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -40,6 +41,7 @@ function ShellInner() {
       </ErrorBoundary>
       <Composer winHeight={0} />
       <ModalsContainer />
+      <MutedWordsDialog />
       <PortalOutlet />
       <Lightbox />
       {!isDesktop && isDrawerOpen && (

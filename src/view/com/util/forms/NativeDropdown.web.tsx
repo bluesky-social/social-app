@@ -21,6 +21,7 @@ export const DropdownMenuItem = (props: ItemProps & {testID?: string}) => {
 
   return (
     <DropdownMenu.Item
+      className="nativeDropdown-item"
       {...props}
       style={StyleSheet.flatten([
         styles.item,
@@ -232,6 +233,10 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 12,
     borderRadius: 8,
+    fontFamily:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+    outline: 0,
+    border: 0,
   },
   itemTitle: {
     fontSize: 16,
