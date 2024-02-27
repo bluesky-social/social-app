@@ -40,7 +40,7 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   private fun handleTextIntent(intent: Intent) {
     intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
       val encoded = URLEncoder.encode(it, "UTF-8")
-      "bluesky://?compose=true&text=${encoded}".toUri().let { uri ->
+      "bluesky://intent/compose?text=${encoded}".toUri().let { uri ->
         val newIntent = Intent(Intent.ACTION_VIEW, uri)
         appContext.currentActivity?.startActivity(newIntent)
       }
@@ -48,7 +48,6 @@ class ExpoReceiveAndroidIntentsModule : Module() {
   }
 
   private fun handleImageIntent(intent: Intent) {
-    // Load the URI
     val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
       intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
     } else {
@@ -86,24 +85,22 @@ class ExpoReceiveAndroidIntentsModule : Module() {
 
     val encoded = URLEncoder.encode(allParams, "UTF-8")
 
-    "bluesky://?compose=true&imageUris=${encoded}".toUri().let {
+    "bluesky://intent/compose?imageUris=${encoded}".toUri().let {
       val newIntent = Intent(Intent.ACTION_VIEW, it)
       appContext.currentActivity?.startActivity(newIntent)
     }
   }
 
   private fun getImageInfo(uri: Uri): Map<String, Any> {
-    // Load the bitmap
     val bitmap = MediaStore.Images.Media.getBitmap(appContext.currentActivity?.contentResolver, uri)
-
-    // Save it to a temp directory we can access
+    // We have to save this so that we can access it later when uploading the image.
+    // createTempFile will automatically place a unique string between "img" and "temp.jpeg"
     val file = File.createTempFile("img", "temp.jpeg", appContext.currentActivity?.cacheDir)
     val out = FileOutputStream(file)
     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out)
     out.flush()
     out.close()
 
-    // Return info
     return mapOf(
       "width" to bitmap.width,
       "height" to bitmap.height,
@@ -111,6 +108,8 @@ class ExpoReceiveAndroidIntentsModule : Module() {
     )
   }
 
+  // We will pas the width and height to the app here, since getting measurements
+  // on the RN side is a bit more involved, and we already have them here anyway.
   private fun buildUriData(info: Map<String, Any>): String {
     val path = info.getValue("path")
     val width = info.getValue("width")
