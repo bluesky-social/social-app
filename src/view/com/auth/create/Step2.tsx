@@ -133,8 +133,8 @@ function IsValidIcon({valid}: {valid: boolean}) {
   const t = useTheme()
 
   if (!valid) {
-    return <Check size="md" style={{color: t.palette.negative_500}} />
+    return <Times size="md" style={{color: t.palette.negative_500}} />
   }
 
-  return <Times size="md" style={{color: t.palette.positive_700}} />
+  return <Check size="md" style={{color: t.palette.positive_700}} />
 }
