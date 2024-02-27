@@ -11,7 +11,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {
   LabelsOnMeDialog,
   useLabelsOnMeDialogControl,
-} from '#/components/LabelsOnMe'
+} from '#/components/LabelsOnMeDialog'
 
 export function LabelsOnMe({
   details,
@@ -49,6 +49,7 @@ export function LabelsOnMe({
         size={size || 'small'}
         label={_(msg`View information about these labels`)}
         onPress={() => {
+          console.log('open')
           control.open()
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />

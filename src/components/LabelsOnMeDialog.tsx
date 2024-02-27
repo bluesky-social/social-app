@@ -4,10 +4,11 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 
-import {atoms as a, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import {Button} from '#/components/Button'
+import {capitalize} from '#/lib/strings/capitalize'
 
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
@@ -27,8 +28,8 @@ export interface LabelsOnMeDialogProps {
 }
 
 export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
+  const t = useTheme()
   const {_} = useLingui()
-  const control = Dialog.useDialogControl()
   const {gtMobile} = useBreakpoints()
   const {subject, labels} = props
   const isAccount = 'did' in subject
@@ -57,24 +58,37 @@ export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
     <Dialog.ScrollableInner
       accessibilityDescribedBy="dialog-description"
       accessibilityLabelledBy="dialog-title">
-      <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
-        <Trans>Labels on my {isAccount ? 'account' : 'content'}</Trans>
+      <Text
+        nativeID="dialog-title"
+        style={[a.text_2xl, a.font_bold, a.pb_md, a.leading_tight]}>
+        <Trans>
+          The following labels were applied to your{' '}
+          {isAccount ? 'account' : 'content'}
+        </Trans>
       </Text>
-      <Text nativeID="dialog-description" style={[a.text_sm]}>
+      <Text nativeID="dialog-description" style={[a.text_md, a.leading_snug]}>
         <Trans>
           You may appeal these labels if you feel they were placed in error.
         </Trans>
       </Text>
-      {labels.map(label => (
-        <Text key={`${label.src}-${label.val}`}>{label.val} TODO</Text>
-      ))}
+
+      <View style={[a.py_lg, a.gap_md]}>
+        {labels.map(label => (
+          <View
+            key={`${label.src}-${label.val}`}
+            style={[a.p_md, a.rounded_sm, t.atoms.bg_contrast_25]}>
+            <Text>{capitalize(label.val)}</Text>
+          </View>
+        ))}
+      </View>
+
       <View style={gtMobile && [a.flex_row, a.justify_end]}>
         <Button
           testID="doneBtn"
           variant="outline"
           color="primary"
           size="small"
-          onPress={() => control.close()}
+          onPress={() => props.control.close()}
           label={_(msg`Done`)}>
           {_(msg`Done`)}
         </Button>
