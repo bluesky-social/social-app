@@ -80,9 +80,9 @@ class ShareViewController: UIViewController {
           // We also will get the image dimensions here, sinze RN makes it difficult to get those dimensions for local files
           let data = try Data(contentsOf: dataUri)
           let image = UIImage(data: data)
-          imageUriInfo = saveImageWithInfo(image)
+          imageUriInfo = self.saveImageWithInfo(image)
         } else if let image = try await item.loadItem(forTypeIdentifier: "public.image") as? UIImage {
-          imageUriInfo = saveImageWithInfo(image)
+          imageUriInfo = self.saveImageWithInfo(image)
         }
       } catch {
         valid = false
@@ -102,7 +102,7 @@ class ShareViewController: UIViewController {
        let encoded = imageUris.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
        let url = URL(string: "\(self.appScheme)://intent/compose?imageUris=\(encoded)")
     {
-      _ = openURL(url)
+      _ = self.openURL(url)
     }
 
     self.completeRequest()
