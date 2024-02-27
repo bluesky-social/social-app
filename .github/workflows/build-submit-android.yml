@@ -49,10 +49,14 @@ jobs:
       - name: ⚙️ Install dependencies
         run: yarn install
 
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
       - name: ✏️ Write environment variables
         run: |
+          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
           echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "${{ secrets.GOOGLE_SERVICES_TOKEN }}" > google-services.json
+          echo "$json" > google-services.json
 
       - name: 🏗️ EAS Build
         run: yarn use-build-number eas build -p android --profile production --local --output build.aab --non-interactive
