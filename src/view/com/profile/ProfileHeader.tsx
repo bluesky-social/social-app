@@ -56,8 +56,7 @@ import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
 import {LabelsOnMe} from '../util/moderation/LabelsOnMe'
 import {useProfileShadow} from 'state/cache/profile-shadow'
-import {useOpenGlobalDialog} from '#/components/dialogs'
-import {ReportDialog} from '#/components/dialogs/ReportDialog'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 import {atoms as a} from '#/alf'
 
@@ -118,7 +117,7 @@ let ProfileHeader = ({
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-  const openDialog = useOpenGlobalDialog()
+  const control = useReportDialogControl()
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -281,14 +280,14 @@ let ProfileHeader = ({
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     if (NEW_REPORT_DIALOG_ENABLED) {
-      openDialog(ReportDialog, {type: 'profile', did: profile.did})
+      control.open()
     } else {
       openModal({
         name: 'report',
         did: profile.did,
       })
     }
-  }, [track, openModal, profile, openDialog])
+  }, [track, openModal, profile, control])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -402,6 +401,11 @@ let ProfileHeader = ({
 
   return (
     <View style={[pal.view]} pointerEvents="box-none">
+      <ReportDialog
+        control={control}
+        params={{type: 'profile', did: profile.did}}
+      />
+
       <View pointerEvents="none">
         {isPlaceholderProfile ? (
           <LoadingPlaceholder

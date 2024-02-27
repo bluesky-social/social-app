@@ -24,8 +24,7 @@ import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 import {atoms as a, useTheme, tokens} from '#/alf'
 import * as Toast from 'view/com/util/Toast'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
-import {useOpenGlobalDialog} from '#/components/dialogs'
-import {ReportDialog} from '#/components/dialogs/ReportDialog'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {DotGrid1x3Horizontal_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
 
 export function ProfileHeaderDropdownBtn({
@@ -41,7 +40,7 @@ export function ProfileHeaderDropdownBtn({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
-  const openDialog = useOpenGlobalDialog()
+  const control = useReportDialogControl()
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -139,14 +138,14 @@ export function ProfileHeaderDropdownBtn({
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     if (NEW_REPORT_DIALOG_ENABLED) {
-      openDialog(ReportDialog, {type: 'profile', did: profile.did})
+      control.open()
     } else {
       openModal({
         name: 'report',
         did: profile.did,
       })
     }
-  }, [track, openModal, profile, openDialog])
+  }, [track, openModal, profile, control])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -256,26 +255,35 @@ export function ProfileHeaderDropdownBtn({
   ])
 
   return dropdownItems?.length ? (
-    <NativeDropdown
-      testID="profileHeaderDropdownBtn"
-      items={dropdownItems}
-      accessibilityLabel={_(msg`More options`)}
-      accessibilityHint="">
-      <View
-        style={[
-          {
-            height: 40,
-            width: 40,
-            backgroundColor:
-              t.name === 'light' ? tokens.color.gray_50 : tokens.color.gray_900,
-          },
-          a.flex_row,
-          a.align_center,
-          a.justify_center,
-          a.rounded_full,
-        ]}>
-        <Ellipsis width={20} fill={t.atoms.text_contrast_medium.color} />
-      </View>
-    </NativeDropdown>
+    <>
+      <ReportDialog
+        control={control}
+        params={{type: 'profile', did: profile.did}}
+      />
+
+      <NativeDropdown
+        testID="profileHeaderDropdownBtn"
+        items={dropdownItems}
+        accessibilityLabel={_(msg`More options`)}
+        accessibilityHint="">
+        <View
+          style={[
+            {
+              height: 40,
+              width: 40,
+              backgroundColor:
+                t.name === 'light'
+                  ? tokens.color.gray_50
+                  : tokens.color.gray_900,
+            },
+            a.flex_row,
+            a.align_center,
+            a.justify_center,
+            a.rounded_full,
+          ]}>
+          <Ellipsis width={20} fill={t.atoms.text_contrast_medium.color} />
+        </View>
+      </NativeDropdown>
+    </>
   ) : null
 }

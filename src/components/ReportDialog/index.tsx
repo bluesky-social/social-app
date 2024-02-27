@@ -7,7 +7,6 @@ import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
 import {atoms as a, useTheme, tokens, native} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
-import {GlobalDialogProps} from '#/components/dialogs'
 import {
   Button,
   ButtonIcon,
@@ -35,22 +34,27 @@ import {
   useConfigurableProfileLabelGroups,
   getLabelGroupToLabelerMap,
 } from '#/lib/moderation'
-import {DMCA_LINK} from '#/components/dialogs/ReportDialog/const'
+import {DMCA_LINK} from '#/components/ReportDialog/const'
 import {Link} from '#/components/Link'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 // import {getAgent} from '#/state/session'
 
+export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+
 export type ReportDialogLabelIds = LabelGroupDefinition['id'] | 'other'
-export type ReportDialogProps =
-  | {
-      type: 'content'
-      uri: string
-      cid: string
-    }
-  | {
-      type: 'profile'
-      did: string
-    }
+export type ReportDialogProps = {
+  control: Dialog.DialogOuterProps['control']
+  params:
+    | {
+        type: 'content'
+        uri: string
+        cid: string
+      }
+    | {
+        type: 'profile'
+        did: string
+      }
+}
 
 function LabelGroupButton({
   name,
@@ -162,8 +166,7 @@ function SubmitView({
   goBack,
   onSubmitComplete,
   labelGroupToLabelerMap,
-}: {
-  params: ReportDialogProps
+}: ReportDialogProps & {
   selectedLabelGroup: ReportDialogLabelIds
   goBack: () => void
   onSubmitComplete: () => void
@@ -287,7 +290,6 @@ function SubmitView({
             label="Text field"
             style={{paddingRight: 60}}
             numberOfLines={6}
-            disabled={!supportedLabelers}
           />
 
           <View
@@ -335,11 +337,10 @@ function SubmitView({
   )
 }
 
-export function ReportDialogInner({
-  params,
+export function ReportDialogLoaded({
   labelGroupToLabelerMap,
-}: {
-  params: ReportDialogProps
+  ...props
+}: ReportDialogProps & {
   labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
   labelGroupToLabelerMap: ReturnType<typeof getLabelGroupToLabelerMap>
 }) {
@@ -352,7 +353,7 @@ export function ReportDialogInner({
   const labelGroupStrings = useLabelGroupStrings()
   const contentGroups = useConfigurableContentLabelGroups()
   const profileGroups = useConfigurableProfileLabelGroups()
-  const groups = params.type === 'content' ? contentGroups : profileGroups
+  const groups = props.params.type === 'content' ? contentGroups : profileGroups
   const filteredGroups = groups.filter(group => {
     return Boolean(labelGroupToLabelerMap[group.id])
   })
@@ -361,7 +362,7 @@ export function ReportDialogInner({
     let title = _(msg`Report this post`)
     let description = _(msg`Why should this post be reviewed?`)
 
-    if (params.type === 'profile') {
+    if (props.params.type === 'profile') {
       title = _(msg`Report this user`)
       description = _(msg`Why should this user be reviewed?`)
     }
@@ -370,7 +371,7 @@ export function ReportDialogInner({
       title,
       description,
     }
-  }, [_, params.type])
+  }, [_, props.params.type])
 
   const next = React.useCallback(
     (group: ReportDialogLabelIds | 'copyright') => {
@@ -387,8 +388,8 @@ export function ReportDialogInner({
     <>
       {selectedLabelGroup ? (
         <SubmitView
+          {...props}
           labelGroupToLabelerMap={labelGroupToLabelerMap}
-          params={params}
           selectedLabelGroup={selectedLabelGroup}
           goBack={() => setSelectedLabelGroup(undefined)}
           onSubmitComplete={control.close}
@@ -429,7 +430,7 @@ export function ReportDialogInner({
               />
             </Button>
 
-            {params.type === 'content' && (
+            {props.params.type === 'content' && (
               <View style={[a.pt_md, a.px_md]}>
                 <View
                   style={[
@@ -472,14 +473,7 @@ export function ReportDialogInner({
   )
 }
 
-export function ReportDialog({
-  params,
-  cleanup,
-}: GlobalDialogProps<ReportDialogProps>) {
-  // REQUIRED CLEANUP
-  const onClose = React.useCallback(() => cleanup(), [cleanup])
-  const control = Dialog.useDialogControl()
-
+function ReportDialogInner(props: ReportDialogProps) {
   const {
     isLoading: isPreferencesLoading,
     error: preferencesError,
@@ -505,24 +499,22 @@ export function ReportDialog({
       <Loader />
     </View>
   ) : error || !(preferences && modservices) ? null : ( // TODO
-    <Dialog.Outer
-      defaultOpen
-      control={control}
-      onClose={onClose}
-      nativeOptions={{
-        sheet: {
-          snapPoints: ['100%'],
-        },
-      }}>
+    <Dialog.ScrollableInner label="Report Dialog">
+      <ReportDialogLoaded
+        {...props}
+        labelers={modservices}
+        labelGroupToLabelerMap={labelGroupToLabelerMap}
+      />
+    </Dialog.ScrollableInner>
+  )
+}
+
+export function ReportDialog(props: ReportDialogProps) {
+  return (
+    <Dialog.Outer control={props.control}>
       <Dialog.Handle />
 
-      <Dialog.ScrollableInner label="Report Dialog">
-        <ReportDialogInner
-          params={params}
-          labelers={modservices}
-          labelGroupToLabelerMap={labelGroupToLabelerMap}
-        />
-      </Dialog.ScrollableInner>
+      <ReportDialogInner {...props} />
     </Dialog.Outer>
   )
 }

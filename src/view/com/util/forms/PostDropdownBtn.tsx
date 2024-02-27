@@ -34,8 +34,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {useOpenGlobalDialog} from '#/components/dialogs'
-import {ReportDialog} from '#/components/dialogs/ReportDialog'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 
 let PostDropdownBtn = ({
@@ -67,7 +66,7 @@ let PostDropdownBtn = ({
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
-  const openDialog = useOpenGlobalDialog()
+  const control = useReportDialogControl()
   const navigation = useNavigation()
 
   const rootUri = record.reply?.root?.uri || postUri
@@ -241,11 +240,7 @@ let PostDropdownBtn = ({
         label: _(msg`Report post`),
         onPress() {
           if (NEW_REPORT_DIALOG_ENABLED) {
-            openDialog(ReportDialog, {
-              type: 'content',
-              uri: postUri,
-              cid: postCid,
-            })
+            control.open()
           } else {
             openModal({
               name: 'report',
@@ -285,17 +280,32 @@ let PostDropdownBtn = ({
   ].filter(Boolean) as NativeDropdownItem[]
 
   return (
-    <EventStopper>
-      <NativeDropdown
-        testID={testID}
-        items={dropdownItems}
-        accessibilityLabel={_(msg`More post options`)}
-        accessibilityHint="">
-        <View style={style}>
-          <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
-        </View>
-      </NativeDropdown>
-    </EventStopper>
+    <>
+      <ReportDialog
+        control={control}
+        params={{
+          type: 'content',
+          uri: postUri,
+          cid: postCid,
+        }}
+      />
+
+      <EventStopper>
+        <NativeDropdown
+          testID={testID}
+          items={dropdownItems}
+          accessibilityLabel={_(msg`More post options`)}
+          accessibilityHint="">
+          <View style={style}>
+            <FontAwesomeIcon
+              icon="ellipsis"
+              size={20}
+              color={defaultCtrlColor}
+            />
+          </View>
+        </NativeDropdown>
+      </EventStopper>
+    </>
   )
 }
 
