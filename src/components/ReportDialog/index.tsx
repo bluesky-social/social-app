@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Linking} from 'react-native'
+import {View, Linking, Pressable} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
@@ -486,25 +486,36 @@ function ReportDialogInner(props: ReportDialogProps) {
   } = useModServicesDetailedInfoQuery({
     dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
   })
+  const isLoading = isPreferencesLoading || isModServicesLoading
+  const error = preferencesError || modservicesError
+
+  const [fakeLoading, setFakeLoading] = React.useState(isLoading)
+
   const labelGroupToLabelerMap = React.useMemo(() => {
     if (!modservices) return {}
     return getLabelGroupToLabelerMap(modservices)
   }, [modservices])
 
-  const isLoading = isPreferencesLoading || isModServicesLoading
-  const error = preferencesError || modservicesError
+  React.useEffect(() => {
+    // on initial load, show a loading spinner for a hot sec to prevent flash
+    if (fakeLoading) setTimeout(() => setFakeLoading(false), 500)
+  }, [fakeLoading])
 
-  return isLoading ? (
-    <View style={[{height: 500}]}>
-      <Loader />
-    </View>
-  ) : error || !(preferences && modservices) ? null : ( // TODO
+  return (
     <Dialog.ScrollableInner label="Report Dialog">
-      <ReportDialogLoaded
-        {...props}
-        labelers={modservices}
-        labelGroupToLabelerMap={labelGroupToLabelerMap}
-      />
+      {fakeLoading ? (
+        <View style={[a.align_center, {height: 100}]}>
+          <Loader size="xl" />
+          {/* Here to capture focus for a hot sec to prevent flash */}
+          <Pressable accessible={false} />
+        </View>
+      ) : error || !(preferences && modservices) ? null : ( // TODO
+        <ReportDialogLoaded
+          {...props}
+          labelers={modservices}
+          labelGroupToLabelerMap={labelGroupToLabelerMap}
+        />
+      )}
     </Dialog.ScrollableInner>
   )
 }
