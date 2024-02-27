@@ -46,7 +46,7 @@ export function LoadLatestBtn({
       accessibilityLabel={label}
       accessibilityHint="">
       <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
-      {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
+      {showIndicator && <View style={[styles.indicator]} />}
     </AnimatedTouchableOpacity>
   )
 }
@@ -81,6 +81,5 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     borderRadius: 6,
-    borderWidth: 1,
   },
 })

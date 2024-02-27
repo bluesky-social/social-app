@@ -119,17 +119,20 @@ export function FeedPage({
             style={[pal.text, {fontWeight: 'bold'}]}
             text={
               <>
-                Bluesky{' '}
+                Bluesky
                 {hasNew && (
-                  <View
-                    style={{
-                      top: -8,
-                      backgroundColor: colors.blue3,
-                      width: 8,
-                      height: 8,
-                      borderRadius: 4,
-                    }}
-                  />
+                  <>
+                    <> </>
+                    <View
+                      style={{
+                        top: -8,
+                        backgroundColor: colors.blue3,
+                        width: 8,
+                        height: 8,
+                        borderRadius: 4,
+                      }}
+                    />
+                  </>
                 )}
               </>
             }
@@ -187,7 +190,7 @@ export function FeedPage({
         <FAB
           testID="composeFAB"
           onPress={onPressCompose}
-          icon={<ComposeIcon2 strokeWidth={1.5} size={29} style={s.white} />}
+          icon={<ComposeIcon2 strokeWidth={1.5} size={30} style={s.white} />}
           accessibilityRole="button"
           accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
           accessibilityHint=""

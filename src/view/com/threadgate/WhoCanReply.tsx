@@ -143,6 +143,7 @@ function Rule({
       <Trans>
         users followed by{' '}
         <TextLink
+          type="sm"
           href={makeProfileLink(post.author)}
           text={`@${post.author.handle}`}
           style={pal.link}
@@ -157,6 +158,7 @@ function Rule({
       return (
         <Trans>
           <TextLink
+            type="sm"
             href={makeListLink(listUrip.hostname, listUrip.rkey)}
             text={list.name}
             style={pal.link}
