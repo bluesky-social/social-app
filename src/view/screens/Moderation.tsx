@@ -31,6 +31,7 @@ import {
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
 import {ScrollView} from '../com/util/Views'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export function ModerationScreen({}: Props) {
@@ -40,6 +41,7 @@ export function ModerationScreen({}: Props) {
   const {screen, track} = useAnalytics()
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {openModal} = useModalControls()
+  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -69,8 +71,8 @@ export function ModerationScreen({}: Props) {
           style={[styles.linkCard, pal.view]}
           onPress={onPressContentFiltering}
           accessibilityRole="tab"
-          accessibilityHint="Content filtering"
-          accessibilityLabel="">
+          accessibilityHint=""
+          accessibilityLabel={_(msg`Open content filtering settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="eye"
@@ -79,6 +81,23 @@ export function ModerationScreen({}: Props) {
           </View>
           <Text type="lg" style={pal.text}>
             <Trans>Content filtering</Trans>
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          testID="mutedWordsBtn"
+          style={[styles.linkCard, pal.view]}
+          onPress={() => mutedWordsDialogControl.open()}
+          accessibilityRole="tab"
+          accessibilityHint=""
+          accessibilityLabel={_(msg`Open muted words settings`)}>
+          <View style={[styles.iconContainer, pal.btn]}>
+            <FontAwesomeIcon
+              icon="filter"
+              style={pal.text as FontAwesomeIconStyle}
+            />
+          </View>
+          <Text type="lg" style={pal.text}>
+            <Trans>Muted words & tags</Trans>
           </Text>
         </TouchableOpacity>
         <Link

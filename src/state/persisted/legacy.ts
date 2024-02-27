@@ -121,7 +121,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
  * local storage AND old storage exists.
  */
 export async function migrate() {
-  logger.info('persisted state: check need to migrate')
+  logger.debug('persisted state: check need to migrate')
 
   try {
     const rawLegacyData = await AsyncStorage.getItem(
@@ -131,7 +131,7 @@ export async function migrate() {
     const alreadyMigrated = Boolean(newData)
 
     if (!alreadyMigrated && rawLegacyData) {
-      logger.info('persisted state: migrating legacy storage')
+      logger.debug('persisted state: migrating legacy storage')
 
       const legacyData = JSON.parse(rawLegacyData)
       const newData = transform(legacyData)
@@ -139,14 +139,14 @@ export async function migrate() {
 
       if (validate.success) {
         await write(newData)
-        logger.info('persisted state: migrated legacy storage')
+        logger.debug('persisted state: migrated legacy storage')
       } else {
         logger.error('persisted state: legacy data failed validation', {
           message: validate.error,
         })
       }
     } else {
-      logger.info('persisted state: no migration needed')
+      logger.debug('persisted state: no migration needed')
     }
   } catch (e: any) {
     logger.error(e, {

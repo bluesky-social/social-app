@@ -8,11 +8,11 @@ import {msg} from '@lingui/macro'
 import * as EmailValidator from 'email-validator'
 import {getAge} from 'lib/strings/time'
 import {logger} from '#/logger'
-import {createFullHandle} from '#/lib/strings/handles'
+import {createFullHandle, validateHandle} from '#/lib/strings/handles'
 import {cleanError} from '#/lib/strings/errors'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
 import {useSessionApi} from '#/state/session'
-import {DEFAULT_SERVICE, IS_PROD} from '#/lib/constants'
+import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
 import {
   DEFAULT_PROD_FEEDS,
   usePreferencesSetBirthDateMutation,
@@ -147,7 +147,7 @@ export function useSubmitCreateAccount(
             : undefined,
         })
         setBirthDate({birthDate: uiState.birthDate})
-        if (IS_PROD(uiState.serviceUrl)) {
+        if (IS_PROD_SERVICE(uiState.serviceUrl)) {
           setSavedFeeds(DEFAULT_PROD_FEEDS)
         }
       } catch (e: any) {
@@ -282,7 +282,8 @@ function compute(state: CreateAccountState): CreateAccountState {
       !!state.email &&
       !!state.password
   } else if (state.step === 2) {
-    canNext = !!state.handle
+    canNext =
+      !!state.handle && validateHandle(state.handle, state.userDomain).overall
   } else if (state.step === 3) {
     // Step 3 will automatically redirect as soon as the captcha completes
     canNext = false
