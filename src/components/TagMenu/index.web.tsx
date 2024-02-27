@@ -63,7 +63,7 @@ export function TagMenu({
       },
       authorHandle &&
         !isInvalidHandle(authorHandle) && {
-          label: _(msg`See ${truncatedTag} posts by this user`),
+          label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
             navigation.navigate({
               name: 'Search',
