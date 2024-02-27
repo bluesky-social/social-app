@@ -128,10 +128,12 @@ export function QuoteEmbed({
       ) : null}
       {richText ? (
         <RichText
+          enableTags
           value={richText}
           style={[a.text_md]}
           numberOfLines={20}
           disableLinks
+          authorHandle={quote.author.handle}
         />
       ) : null}
       {embed && <PostEmbeds embed={embed} moderation={{}} />}

@@ -32,12 +32,12 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - name: Install node 18
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
       - name: Check out Git repository
         uses: actions/checkout@v3
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Yarn install
         uses: Wandalen/wretry.action@master
         with:
