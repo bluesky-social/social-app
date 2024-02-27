@@ -94,6 +94,7 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
+      <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -117,6 +118,13 @@ const desktopStyles = StyleSheet.create({
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
   },
+  outerBottomBorder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    borderBottomWidth: 1,
+  },
 })
 
 const mobileStyles = StyleSheet.create({
@@ -136,5 +144,12 @@ const mobileStyles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
+  },
+  outerBottomBorder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    borderBottomWidth: 1,
   },
 })
