@@ -1,16 +1,14 @@
 import React from 'react'
 import * as Linking from 'expo-linking'
+import {isNative} from 'platform/detection'
 import {useComposerControls} from 'state/shell'
 import {useSession} from 'state/session'
-import {onComposeIntent} from 'lib/intents/compose'
-import {isNative} from 'platform/detection'
 
 type IntentType = 'compose'
 
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
-  const {hasSession} = useSession()
-  const {openComposer} = useComposerControls()
+  const composeIntent = useComposeIntent()
 
   React.useEffect(() => {
     const handleIncomingURL = (url: string) => {
@@ -29,16 +27,38 @@ export function useIntentHandler() {
 
       switch (intentType as IntentType) {
         case 'compose': {
-          onComposeIntent({
+          composeIntent({
             text: params.get('text'),
             imageUris: params.get('imageUris'),
-            openComposer,
-            hasSession,
           })
         }
       }
     }
 
     if (incomingUrl) handleIncomingURL(incomingUrl)
-  }, [hasSession, openComposer, incomingUrl])
+  }, [incomingUrl, composeIntent])
+}
+
+function useComposeIntent() {
+  const {openComposer} = useComposerControls()
+  const {hasSession} = useSession()
+
+  return React.useCallback(
+    ({
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      text,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      imageUris,
+    }: {
+      text: string | null
+      imageUris: string | null // unused for right now, will be used later with intents
+    }) => {
+      if (!hasSession) return
+
+      setTimeout(() => {
+        openComposer({}) // will pass in values to the composer here in the share extension
+      }, 500)
+    },
+    [openComposer, hasSession],
+  )
 }

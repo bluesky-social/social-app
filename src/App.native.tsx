@@ -45,7 +45,7 @@ import {Splash} from '#/Splash'
 import {Provider as PortalProvider} from '#/components/Portal'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useIntentHandler} from 'lib/intents/useIntentHandler'
+import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 
 SplashScreen.preventAutoHideAsync()
 
