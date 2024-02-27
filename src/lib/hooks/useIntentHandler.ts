@@ -6,6 +6,8 @@ import {useSession} from 'state/session'
 
 type IntentType = 'compose'
 
+const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
+
 export function useIntentHandler() {
   const incomingUrl = Linking.useURL()
   const composeIntent = useComposeIntent()
@@ -29,7 +31,7 @@ export function useIntentHandler() {
         case 'compose': {
           composeIntent({
             text: params.get('text'),
-            imageUris: params.get('imageUris'),
+            imageUrisStr: params.get('imageUris'),
           })
         }
       }
@@ -45,18 +47,39 @@ function useComposeIntent() {
 
   return React.useCallback(
     ({
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       text,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      imageUris,
+      imageUrisStr,
     }: {
       text: string | null
-      imageUris: string | null // unused for right now, will be used later with intents
+      imageUrisStr: string | null // unused for right now, will be used later with intents
     }) => {
       if (!hasSession) return
 
+      const imageUris = imageUrisStr
+        ?.split(',')
+        .filter(part => {
+          // For some security, we're going to filter out any image uri that is external. We don't want someone to
+          // be able to provide some link like "bluesky://intent/compose?imageUris=https://IHaveYourIpNow.com/image.jpeg
+          // and we load that image
+          if (part.includes('https://') || part.includes('http://')) {
+            return false
+          }
+          // We also should just filter out cases that don't have all the info we need
+          if (!VALID_IMAGE_REGEX.test(part)) {
+            return false
+          }
+          return true
+        })
+        .map(part => {
+          const [uri, width, height] = part.split('|')
+          return {uri, width: Number(width), height: Number(height)}
+        })
+
       setTimeout(() => {
-        openComposer({}) // will pass in values to the composer here in the share extension
+        openComposer({
+          text: text ?? undefined,
+          imageUris: isNative ? imageUris : undefined,
+        })
       }, 500)
     },
     [openComposer, hasSession],

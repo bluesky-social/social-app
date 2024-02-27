@@ -141,6 +141,7 @@ module.exports = function (config) {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
         eas: {
