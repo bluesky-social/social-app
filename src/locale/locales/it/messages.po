@@ -4431,7 +4431,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "{0}"
 
 #~ msgid "{0} {purposeLabel} List"
-#~ msgstr "Llista {purposeLabel} {0}"
+#~ msgstr "Lista {purposeLabel} {0}"
 
 #~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
 #~ msgstr "{invitesAvailable, plural, one {Codici d'invito: # available} other {Codici d'invito: # available}}"
@@ -4461,7 +4461,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Cancel·la afegir text a la imatge"
 
 #~ msgid "Change"
-#~ msgstr "Canvia"
+#~ msgstr "Canbia"
 
 #~ msgid "Danger Zone"
 #~ msgstr "Zona di Pericolo"
@@ -4470,7 +4470,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Cancella il mio account…"
 
 #~ msgid "Dev Server"
-#~ msgstr "Servidor de desenvolupament"
+#~ msgstr "Server di sviluppo"
 
 #~ msgid "Developer Tools"
 #~ msgstr "Strumenti per sviluppatori"
@@ -4479,13 +4479,13 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Scopri nuovi feeds"
 
 #~ msgid "Enter the address of your provider:"
-#~ msgstr "Introdueix l'adreça del teu proveïdor:"
+#~ msgstr "Inserisci l'indirizzo del tuo provider:"
 
 #~ msgid "following"
-#~ msgstr "seguint"
+#~ msgstr "following"
 
 #~ msgid "Hosting provider address"
-#~ msgstr "Adreça del proveïdor d'allotjament"
+#~ msgstr "Indirizzo del fornitore di hosting"
 
 #~ msgid "Invite"
 #~ msgstr "Invita"
@@ -4500,13 +4500,13 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Server di sviluppo locale"
 
 #~ msgid "Looks like this feed is only available to users with a Bluesky account. Please sign up or sign in to view this feed!"
-#~ msgstr "Parece que este canal de noticias sólo está disponible para usuarios con una cuenta Bluesky. Por favor, ¡regístrate o inicia sesión para ver este canal!"
+#~ msgstr "Sembra che questo feed sia disponibile solo per gli utenti con un account Bluesky. Per favore registrati o accedi per visualizzare questo feed!"
 
 #~ msgid "Message from server"
-#~ msgstr "Missatge del servidor"
+#~ msgstr "Messaggio dal server"
 
 #~ msgid "New Post"
-#~ msgstr "Nova publicació"
+#~ msgstr "Nuovo Post"
 
 #~ msgid "Opens invite code list"
 #~ msgstr "Apre la lista dei codici di invito"
@@ -4515,13 +4515,13 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Altro servizio"
 
 #~ msgid "Please tell us why you think this decision was incorrect."
-#~ msgstr "Por favor, dinos por qué crees que esta decisión fue incorrecta."
+#~ msgstr "Per favore spiegaci perché ritieni che questa decisione sia stata sbagliata."
 
 #~ msgid "Post"
-#~ msgstr "Publicació"
+#~ msgstr "Post"
 
 #~ msgid "Quote Post"
-#~ msgstr "Cita una publicació"
+#~ msgstr "Cita il post"
 
 #~ msgid "Reposted by"
 #~ msgstr "Repost di"
@@ -4533,7 +4533,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Seleziona Bluesky Social"
 
 #~ msgid "Send Email"
-#~ msgstr "Envia correu"
+#~ msgstr "Envia Email"
 
 #~ msgid "Something went wrong and we're not sure what."
 #~ msgstr "Qualcosa è andato storto ma non siamo sicuri di cosa."
@@ -4545,31 +4545,31 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Scorri verso l'alto per vedere di più"
 
 #~ msgid "The support form has been moved. If you need help, please<0/> or visit {HELP_DESK_URL} to get in touch with us."
-#~ msgstr "El formulari de suport ha estat traslladat. Si necessites ajuda, <0/> o visita {HELP_DESK_URL} per contactar amb nosaltres."
+#~ msgstr "Il modulo di supporto è stato spostato. Se hai bisogno di aiuto, <0/> o visita {HELP_DESK_URL} per metterti in contatto con noi."
 
 #~ msgid "This {0} has been labeled."
-#~ msgstr "Este {0} ha sido etiquetado."
+#~ msgstr "Questo {0} è stato etichettato."
 
 #~ msgid "This is the service that keeps you online."
-#~ msgstr "Aquest és el servei que et manté connectat."
+#~ msgstr "Questo è il servizio che ti mantiene online."
 
 #~ msgid "This user is included the <0/> list which you have muted."
-#~ msgstr "Questo utente è incluso nell'elenco <0/> che hai silenziato."
+#~ msgstr "Questo utente è incluso nella lista <0/> che hai silenziato."
 
 #~ msgid "Try again"
-#~ msgstr "Torna-ho a provar"
+#~ msgstr "Provalo di nuovo"
 
 #~ msgid "Use your domain as your Bluesky client service provider"
 #~ msgstr "Utilizza il tuo dominio come provider di servizi clienti Bluesky"
 
 #~ msgid "What's next?"
-#~ msgstr "¿Qué sigue?"
+#~ msgstr "Qual è il prossimo?"
 
 #~ msgid "You can change hosting providers at any time."
-#~ msgstr "Pots canviar el teu proveïdor d'allotjament quan vulguis."
+#~ msgstr "Puoi cambiare provider di hosting in qualsiasi momento."
 
 #~ msgid "Your hosting provider"
-#~ msgstr "El teu proveïdor d'allotjament"
+#~ msgstr "Il tuo fornitore di hosting"
 
 #~ msgid "Your invite codes are hidden when logged in using an App Password"
 #~ msgstr "I tuoi codici di invito vengono celati quando accedi utilizzando una password per l'app"
