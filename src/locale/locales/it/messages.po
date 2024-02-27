@@ -4461,7 +4461,7 @@ msgstr "Il tuo handle utente"
 #~ msgstr "Cancel·la afegir text a la imatge"
 
 #~ msgid "Change"
-#~ msgstr "Canbia"
+#~ msgstr "Cambia"
 
 #~ msgid "Danger Zone"
 #~ msgstr "Zona di Pericolo"
