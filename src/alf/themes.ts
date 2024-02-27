@@ -157,10 +157,10 @@ export const dimPalette: Palette = {
   primary_500: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[7]}%)`,
   primary_600: `hsl(${tokens.BLUE_HUE}, 95%, ${tokens.dimScale[6]}%)`,
   primary_700: `hsl(${tokens.BLUE_HUE}, 90%, ${tokens.dimScale[5]}%)`,
-  primary_800: `hsl(${tokens.BLUE_HUE}, 85%, ${tokens.dimScale[4]}%)`,
-  primary_900: `hsl(${tokens.BLUE_HUE}, 80%, ${tokens.dimScale[3]}%)`,
-  primary_950: `hsl(${tokens.BLUE_HUE}, 75%, ${tokens.dimScale[2]}%)`,
-  primary_975: `hsl(${tokens.BLUE_HUE}, 70%, ${tokens.dimScale[1]}%)`,
+  primary_800: `hsl(${tokens.BLUE_HUE}, 82%, ${tokens.dimScale[4]}%)`,
+  primary_900: `hsl(${tokens.BLUE_HUE}, 70%, ${tokens.dimScale[3]}%)`,
+  primary_950: `hsl(${tokens.BLUE_HUE}, 60%, ${tokens.dimScale[2]}%)`,
+  primary_975: `hsl(${tokens.BLUE_HUE}, 50%, ${tokens.dimScale[1]}%)`,
 } as const
 
 console.log(darkPalette, dimPalette)
