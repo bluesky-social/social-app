@@ -88,23 +88,27 @@ let DrawerProfileCard = ({
         @{account.handle}
       </Text>
       <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-        <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(profile?.followersCount ?? 0)}
-        </Text>{' '}
-        <Plural
-          value={profile?.followersCount || 0}
-          one="follower"
-          other="followers"
-        />
+        <Trans>
+          <Text type="xl-medium" style={pal.text}>
+            {formatCountShortOnly(profile?.followersCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followersCount || 0}
+            one="follower"
+            other="followers"
+          />
+        </Trans>{' '}
         &middot;{' '}
-        <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(profile?.followsCount ?? 0)}
-        </Text>{' '}
-        <Plural
-          value={profile?.followsCount || 0}
-          one="following"
-          other="followings"
-        />
+        <Trans>
+          <Text type="xl-medium" style={pal.text}>
+            {formatCountShortOnly(profile?.followsCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followsCount || 0}
+            one="following"
+            other="followings"
+          />
+        </Trans>
       </Text>
     </TouchableOpacity>
   )
