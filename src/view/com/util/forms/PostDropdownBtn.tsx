@@ -34,6 +34,7 @@ import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 let PostDropdownBtn = ({
   testID,
@@ -67,6 +68,7 @@ let PostDropdownBtn = ({
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
   const navigation = useNavigation()
+  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -208,6 +210,20 @@ let PostDropdownBtn = ({
         },
         android: 'ic_lock_silent_mode',
         web: 'comment-slash',
+      },
+    },
+    hasSession && {
+      label: _(msg`Mute words & tags`),
+      onPress() {
+        mutedWordsDialogControl.open()
+      },
+      testID: 'postDropdownMuteWordsBtn',
+      icon: {
+        ios: {
+          name: 'speaker.slash',
+        },
+        android: 'ic_lock_silent_mode',
+        web: 'filter',
       },
     },
     hasSession &&

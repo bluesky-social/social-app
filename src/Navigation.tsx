@@ -497,7 +497,8 @@ const LINKING = {
         },
       ])
     } else {
-      return buildStateObject('Flat', name, params)
+      const res = buildStateObject('Flat', name, params)
+      return res
     }
   },
 }

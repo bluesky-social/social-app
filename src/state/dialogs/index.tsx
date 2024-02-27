@@ -1,5 +1,6 @@
 import React from 'react'
 import {DialogControlProps} from '#/components/Dialog'
+import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 
 const DialogContext = React.createContext<{
   activeDialogs: React.MutableRefObject<
@@ -37,7 +38,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   return (
     <DialogContext.Provider value={context}>
       <DialogControlContext.Provider value={controls}>
-        {children}
+        <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
       </DialogControlContext.Provider>
     </DialogContext.Provider>
   )

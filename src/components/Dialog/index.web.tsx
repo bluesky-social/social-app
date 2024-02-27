@@ -188,7 +188,7 @@ export function Close() {
       <Button
         size="small"
         variant="ghost"
-        color="primary"
+        color="secondary"
         shape="round"
         onPress={close}
         label={_(msg`Close active dialog`)}>
