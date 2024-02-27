@@ -1,11 +1,12 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {Logo} from '#/view/icons/Logo'
 
 export function HomeHeaderLayout({children}: {children: React.ReactNode}) {
   const {isMobile} = useWebMediaQueries()
@@ -28,12 +29,23 @@ function HomeHeaderLayoutTablet({children}: {children: React.ReactNode}) {
       onLayout={e => {
         headerHeight.value = e.nativeEvent.layout.height
       }}>
+      <View style={[pal.view, styles.topBar]}>
+        <Logo width={30} />
+      </View>
       {children}
     </Animated.View>
   )
 }
 
 const styles = StyleSheet.create({
+  topBar: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 18,
+    width: '100%',
+  },
   tabBar: {
     // @ts-ignore Web only
     position: 'sticky',
@@ -42,7 +54,7 @@ const styles = StyleSheet.create({
     left: 'calc(50% - 300px)',
     width: 600,
     top: 0,
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     borderLeftWidth: 1,
     borderRightWidth: 1,
