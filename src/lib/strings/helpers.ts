@@ -16,11 +16,18 @@ export function enforceLen(
 ): string {
   str = str || ''
   if (str.length > len) {
-    if (mode === 'end') {
-      return str.slice(0, len) + (ellipsis ? '…' : '')
-    } else if (mode === 'middle') {
-      const half = Math.floor(len / 2)
-      return str.slice(0, half) + '…' + str.slice(-half)
+    if (ellipsis) {
+      if (mode === 'end') {
+        return str.slice(0, len) + '…'
+      } else if (mode === 'middle') {
+        const half = Math.floor(len / 2)
+        return str.slice(0, half) + '…' + str.slice(-half)
+      } else {
+        // fallback
+        return str.slice(0, len)
+      }
+    } else {
+      return str.slice(0, len)
     }
   }
   return str
