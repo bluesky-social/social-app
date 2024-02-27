@@ -5,6 +5,7 @@ import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {DraggableScrollView} from './DraggableScrollView'
+import {isNative} from '#/platform/detection'
 
 export interface TabBarProps {
   testID?: string
@@ -33,12 +34,13 @@ export function TabBar({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
-  // scrolls to the selected item when the page changes
   useEffect(() => {
-    scrollElRef.current?.scrollTo({
-      x:
-        (itemXs[selectedPage] || 0) - styles.contentContainer.paddingHorizontal,
-    })
+    if (isNative) {
+      scrollElRef.current?.scrollTo({
+        // Scroll into view but keep the end of the last item visible
+        x: Math.max(0, (itemXs[selectedPage] || 0) - 20),
+      })
+    }
   }, [scrollElRef, itemXs, selectedPage, styles])
 
   const onPressItem = useCallback(
