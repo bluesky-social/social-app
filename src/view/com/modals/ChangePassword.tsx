@@ -137,7 +137,7 @@ export function Component() {
         <View>
           <View style={styles.titleSection}>
             <Text type="title-lg" style={[pal.text, styles.title]}>
-              {stage !== Stages.Done ? 'Change Password' : 'Password Changed'}
+              {stage !== Stages.Done ? _(msg`Change Password`) : _(msg`Password Changed`)}
             </Text>
           </View>
 
