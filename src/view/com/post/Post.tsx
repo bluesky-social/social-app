@@ -184,10 +184,12 @@ function PostInner({
             {richText.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
+                  enableTags
                   testID="postText"
                   value={richText}
                   numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={[a.flex_1, a.text_md]}
+                  authorHandle={post.author.handle}
                 />
               </View>
             ) : undefined}

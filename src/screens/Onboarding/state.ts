@@ -232,7 +232,7 @@ export function reducer(
   })
 
   if (s.activeStep !== state.activeStep) {
-    logger.info(`onboarding: step changed`, {activeStep: state.activeStep})
+    logger.debug(`onboarding: step changed`, {activeStep: state.activeStep})
   }
 
   return state

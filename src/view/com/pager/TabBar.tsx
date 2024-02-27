@@ -4,7 +4,6 @@ import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isWeb} from 'platform/detection'
 import {DraggableScrollView} from './DraggableScrollView'
 
 export interface TabBarProps {
@@ -32,13 +31,15 @@ export function TabBar({
     [indicatorColor, pal],
   )
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
   // scrolls to the selected item when the page changes
   useEffect(() => {
     scrollElRef.current?.scrollTo({
-      x: itemXs[selectedPage] || 0,
+      x:
+        (itemXs[selectedPage] || 0) - styles.contentContainer.paddingHorizontal,
     })
-  }, [scrollElRef, itemXs, selectedPage])
+  }, [scrollElRef, itemXs, selectedPage, styles])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -63,8 +64,6 @@ export function TabBar({
     [],
   )
 
-  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
-
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
@@ -80,15 +79,17 @@ export function TabBar({
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
               onLayout={e => onItemLayout(e, i)}
-              style={[styles.item, selected && indicatorStyle]}
+              style={styles.item}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
-              <Text
-                type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
-                testID={testID ? `${testID}-${item}` : undefined}
-                style={selected ? pal.text : pal.textLight}>
-                {item}
-              </Text>
+              <View style={[styles.itemInner, selected && indicatorStyle]}>
+                <Text
+                  type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
+                  testID={testID ? `${testID}-${item}` : undefined}
+                  style={selected ? pal.text : pal.textLight}>
+                  {item}
+                </Text>
+              </View>
             </PressableWithHover>
           )
         })}
@@ -103,18 +104,18 @@ const desktopStyles = StyleSheet.create({
     width: 598,
   },
   contentContainer: {
-    columnGap: 8,
-    marginLeft: 14,
-    paddingRight: 14,
+    paddingHorizontal: 0,
     backgroundColor: 'transparent',
   },
   item: {
     paddingTop: 14,
+    paddingHorizontal: 14,
+    justifyContent: 'center',
+  },
+  itemInner: {
     paddingBottom: 12,
-    paddingHorizontal: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    justifyContent: 'center',
   },
 })
 
@@ -123,17 +124,17 @@ const mobileStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
-    columnGap: isWeb ? 0 : 20,
-    marginLeft: isWeb ? 0 : 18,
-    paddingRight: isWeb ? 0 : 36,
     backgroundColor: 'transparent',
+    paddingHorizontal: 8,
   },
   item: {
     paddingTop: 10,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+  },
+  itemInner: {
     paddingBottom: 10,
-    paddingHorizontal: isWeb ? 8 : 0,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    justifyContent: 'center',
   },
 })
