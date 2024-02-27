@@ -5,13 +5,15 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
-import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
 import {getLabelGroupsFromLabels} from '#/lib/moderation'
+import {logger} from '#/logger'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
 import {Divider} from '#/components/Divider'
+import {Button, ButtonText} from '#/components/Button'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ErrorState} from '../ErrorState'
 import {ModerationLabelPref} from '#/components/ModerationLabelPref'
@@ -72,6 +74,7 @@ export function ProfileContentFiltersSectionInner({
   moderationOpts: ModerationOpts
   modservice: AppBskyModerationDefs.ModServiceViewDetailed
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const groups = React.useMemo(() => {
     return getLabelGroupsFromLabels(modservice.policies.labelValues).filter(
@@ -83,8 +86,25 @@ export function ProfileContentFiltersSectionInner({
       mod => mod.did === modservice.creator.did && mod.enabled,
     ),
   )
+  const hasSession = true // TODO
 
-  useSetTitle(modservice.creator.displayName || modservice.creator.handle)
+  const {mutateAsync: toggleSubscription, variables} =
+    useModServiceSubscriptionMutation()
+  const isSubscribed =
+    variables?.subscribe ??
+    moderationOpts.mods.find(mod => mod.did === modservice.creator.did)
+
+  const onPressSubscribe = React.useCallback(async () => {
+    try {
+      await toggleSubscription({
+        did: modservice.creator.did,
+        subscribe: !isSubscribed,
+      })
+    } catch (e: any) {
+      // setSubscriptionError(e.message)
+      logger.error(`Failed to subscribe to labeler`, {message: e.message})
+    }
+  }, [toggleSubscription, isSubscribed, modservice])
 
   return (
     <ScrollView
@@ -93,15 +113,52 @@ export function ProfileContentFiltersSectionInner({
         borderWidth: 0,
         paddingHorizontal: a.px_xl.paddingLeft,
       }}>
-      <Text
-        style={[
-          a.pt_xl,
-          t.atoms.text_contrast_high,
-          a.leading_snug,
-          a.text_md,
-        ]}>
-        <Trans>This service labels the following types of content.</Trans>
-      </Text>
+      <View style={[a.flex_row, a.gap_md, a.pt_xl]}>
+        <View style={[a.flex_1]}>
+          <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_md]}>
+            <Trans>
+              Labels are annotations on users and content. They can be used to
+              hide, warn, and categorize the network.
+            </Trans>
+          </Text>
+          {!isSubscribed && (
+            <Text
+              style={[
+                a.pt_xl,
+                t.atoms.text_contrast_high,
+                a.leading_snug,
+                a.text_md,
+              ]}>
+              <Trans>
+                Subscribe to use these labels from @{modservice.creator.handle}:
+              </Trans>
+            </Text>
+          )}
+        </View>
+        <View>
+          <Button
+            testID="toggleSubscribeBtn"
+            size="small"
+            color={isSubscribed ? 'secondary' : 'primary'}
+            variant="solid"
+            label={
+              isSubscribed
+                ? _(msg`Unsubscribe from this labeler`)
+                : _(msg`Subscribe to this labeler`)
+            }
+            disabled={!hasSession}
+            onPress={onPressSubscribe}
+            style={a.rounded_full}>
+            <ButtonText>
+              {isSubscribed ? (
+                <Trans>Unsubscribe</Trans>
+              ) : (
+                <Trans>Subscribe</Trans>
+              )}
+            </ButtonText>
+          </Button>
+        </View>
+      </View>
       <View
         style={[
           a.mt_xl,

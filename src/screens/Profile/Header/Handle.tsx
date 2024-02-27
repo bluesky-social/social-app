@@ -43,13 +43,6 @@ export function ProfileHeaderHandle({
         ]}>
         {invalidHandle ? <Trans>⚠Invalid Handle</Trans> : `@${profile.handle}`}
       </Text>
-      {profile.associated?.modservice ? (
-        <View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
-          <Text style={[t.atoms.text, a.text_sm]}>
-            <Trans>Moderation service</Trans>
-          </Text>
-        </View>
-      ) : undefined}
     </View>
   )
 }

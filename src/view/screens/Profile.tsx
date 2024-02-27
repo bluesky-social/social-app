@@ -477,12 +477,11 @@ function ProfileScreenLoadedV2({
   )
 
   const isMe = profile.did === currentAccount?.did
-  const isModService = !!profile.associated?.modservice
   const showFiltersTab = hasSession && profile.associated?.modservice
-  const showPostsTab = !isModService
-  const showRepliesTab = hasSession && !isModService
-  const showMediaTab = !isModService
-  const showLikesTab = isMe && !isModService
+  const showPostsTab = true
+  const showRepliesTab = hasSession
+  const showMediaTab = true
+  const showLikesTab = isMe
   const showFeedsTab =
     hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
   const showListsTab =
@@ -490,12 +489,12 @@ function ProfileScreenLoadedV2({
 
   const sectionTitles = useMemo<string[]>(() => {
     return [
-      showFiltersTab ? _(msg`Content filters`) : undefined,
       showPostsTab ? _(msg`Posts`) : undefined,
       showRepliesTab ? _(msg`Replies`) : undefined,
       showMediaTab ? _(msg`Media`) : undefined,
       showLikesTab ? _(msg`Likes`) : undefined,
       showFeedsTab ? _(msg`Feeds`) : undefined,
+      showFiltersTab ? _(msg`Labels`) : undefined,
       showListsTab ? _(msg`Lists`) : undefined,
     ].filter(Boolean) as string[]
   }, [
@@ -511,9 +510,6 @@ function ProfileScreenLoadedV2({
 
   let nextIndex = 0
   let filtersIndex: number | null = null
-  if (showFiltersTab) {
-    filtersIndex = nextIndex++
-  }
   let postsIndex: number | null = null
   if (showPostsTab) {
     postsIndex = nextIndex++
@@ -533,6 +529,9 @@ function ProfileScreenLoadedV2({
   let feedsIndex: number | null = null
   if (showFeedsTab) {
     feedsIndex = nextIndex++
+  }
+  if (showFiltersTab) {
+    filtersIndex = nextIndex++
   }
   let listsIndex: number | null = null
   if (showListsTab) {
@@ -651,18 +650,6 @@ function ProfileScreenLoadedV2({
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
-        {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileContentFiltersSection
-                // ref={moderationSectionRef}
-                modServiceQuery={modServiceQuery}
-                moderationOpts={moderationOpts}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-              />
-            )
-          : null}
         {showPostsTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <FeedSection
@@ -716,6 +703,18 @@ function ProfileScreenLoadedV2({
               <ProfileFeedgens
                 ref={feedsSectionRef}
                 did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
+        {showFiltersTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileContentFiltersSection
+                // ref={moderationSectionRef}
+                modServiceQuery={modServiceQuery}
+                moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}
                 enabled={isFocused}
