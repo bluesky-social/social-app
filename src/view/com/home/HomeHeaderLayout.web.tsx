@@ -7,6 +7,14 @@ import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {Logo} from '#/view/icons/Logo'
+import {Link, TextLink} from '../util/Link'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {CogIcon} from '#/lib/icons'
 
 export function HomeHeaderLayout({children}: {children: React.ReactNode}) {
   const {isMobile} = useWebMediaQueries()
@@ -21,6 +29,7 @@ function HomeHeaderLayoutTablet({children}: {children: React.ReactNode}) {
   const pal = usePalette('default')
   const {headerMinimalShellTransform} = useMinimalShellMode()
   const {headerHeight} = useShellLayout()
+  const {_} = useLingui()
 
   return (
     // @ts-ignore the type signature for transform wrong here, translateX and translateY need to be in separate objects -prf
@@ -30,7 +39,27 @@ function HomeHeaderLayoutTablet({children}: {children: React.ReactNode}) {
         headerHeight.value = e.nativeEvent.layout.height
       }}>
       <View style={[pal.view, styles.topBar]}>
-        <Logo width={30} />
+        <TextLink
+          type="title-lg"
+          href="/settings/following-feed"
+          accessibilityLabel={_(msg`Following Feed Preferences`)}
+          accessibilityHint=""
+          text={
+            <FontAwesomeIcon
+              icon="sliders"
+              style={pal.textLight as FontAwesomeIconStyle}
+            />
+          }
+        />
+        <Logo width={28} />
+        <Link
+          href="/settings/saved-feeds"
+          hitSlop={10}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Edit Saved Feeds`)}
+          accessibilityHint={_(msg`Opens screen to edit Saved Feeds`)}>
+          <CogIcon size={22} strokeWidth={2} style={pal.textLight} />
+        </Link>
       </View>
       {children}
     </Animated.View>
@@ -39,11 +68,12 @@ function HomeHeaderLayoutTablet({children}: {children: React.ReactNode}) {
 
 const styles = StyleSheet.create({
   topBar: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 18,
-    paddingVertical: 18,
+    paddingVertical: 8,
+    marginTop: 8,
     width: '100%',
   },
   tabBar: {
