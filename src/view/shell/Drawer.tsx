@@ -100,7 +100,11 @@ let DrawerProfileCard = ({
         <Text type="xl-medium" style={pal.text}>
           {formatCountShortOnly(profile?.followsCount ?? 0)}
         </Text>{' '}
-        following
+        <Plural
+          value={profile?.followsCount || 0}
+          one="following"
+          other="followings"
+        />
       </Text>
     </TouchableOpacity>
   )
