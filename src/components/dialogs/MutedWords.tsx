@@ -260,9 +260,13 @@ function MutedWordRow({
           a.align_center,
           a.justify_between,
           a.rounded_md,
+          a.gap_md,
           style,
         ]}>
-        <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+        <Text
+          style={[a.flex_1, a.font_bold, t.atoms.text_contrast_high]}
+          numberOfLines={1}
+          ellipsizeMode="middle">
           {word.value}
         </Text>
 
