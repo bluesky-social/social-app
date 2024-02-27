@@ -203,10 +203,9 @@ function useHeaderOffset() {
   if (isDesktop || isTablet) {
     return 0
   }
-  const navBarPad = 16
-  const navBarText = 21 * fontScale
-  const tabBarPad = 20 + 3 // nav bar padding + border
-  const tabBarText = 16 * fontScale
-  const magic = 7 * fontScale
-  return navBarPad + navBarText + tabBarPad + tabBarText + magic
+  const navBarHeight = 42
+  const tabBarPad = 10 + 10 + 3 // padding + border
+  const normalLineHeight = 1.2
+  const tabBarText = 16 * normalLineHeight * fontScale
+  return navBarHeight + tabBarPad + tabBarText
 }
