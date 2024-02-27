@@ -129,7 +129,7 @@ export function Component({
       onUpdate?.()
       closeModal()
     } catch (e: any) {
-      logger.error('Failed to update user profile', {error: String(e)})
+      logger.error('Failed to update user profile', {message: String(e)})
     }
   }, [
     track,

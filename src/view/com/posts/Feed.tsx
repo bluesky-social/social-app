@@ -120,7 +120,7 @@ let Feed = ({
         onHasNew(true)
       }
     } catch (e) {
-      logger.error('Poll latest failed', {feed, error: String(e)})
+      logger.error('Poll latest failed', {feed, message: String(e)})
     }
   }, [feed, data, isFetching, onHasNew, enabled, disablePoll])
 
@@ -216,7 +216,7 @@ let Feed = ({
       await refetch()
       onHasNew?.(false)
     } catch (err) {
-      logger.error('Failed to refresh posts feed', {error: err})
+      logger.error('Failed to refresh posts feed', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, track, setIsPTRing, onHasNew])
@@ -228,7 +228,7 @@ let Feed = ({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more posts', {error: err})
+      logger.error('Failed to load more posts', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 

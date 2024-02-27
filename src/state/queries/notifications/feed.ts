@@ -67,18 +67,20 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
         page = unreads.getCachedUnreadPage()
       }
       if (!page) {
-        page = await fetchPage({
-          limit: PAGE_SIZE,
-          cursor: pageParam,
-          queryClient,
-          moderationOpts,
-          threadMutes,
-          fetchAdditionalData: true,
-        })
+        page = (
+          await fetchPage({
+            limit: PAGE_SIZE,
+            cursor: pageParam,
+            queryClient,
+            moderationOpts,
+            threadMutes,
+            fetchAdditionalData: true,
+          })
+        ).page
       }
 
       // if the first page has an unread, mark all read
-      if (!pageParam && page.items[0] && !page.items[0].notification.isRead) {
+      if (!pageParam) {
         unreads.markAllRead()
       }
 
@@ -129,23 +131,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   }, [query])
 
   return query
-}
-
-/**
- * This helper is used by the post-thread placeholder function to
- * find a post in the query-data cache
- */
-export function findPostInQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): AppBskyFeedDefs.PostView | undefined {
-  const generator = findAllPostsInQueryData(queryClient, uri)
-  const result = generator.next()
-  if (result.done) {
-    return undefined
-  } else {
-    return result.value
-  }
 }
 
 export function* findAllPostsInQueryData(

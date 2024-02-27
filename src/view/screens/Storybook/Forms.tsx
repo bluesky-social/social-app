@@ -209,6 +209,23 @@ export function Forms() {
             Show
           </ToggleButton.Button>
         </ToggleButton.Group>
+
+        <View>
+          <ToggleButton.Group
+            label="Preferences"
+            values={toggleGroupDValues}
+            onChange={setToggleGroupDValues}>
+            <ToggleButton.Button name="hide" label="Hide">
+              Hide
+            </ToggleButton.Button>
+            <ToggleButton.Button name="warn" label="Warn">
+              Warn
+            </ToggleButton.Button>
+            <ToggleButton.Button name="show" label="Show">
+              Show
+            </ToggleButton.Button>
+          </ToggleButton.Group>
+        </View>
       </View>
     </View>
   )

@@ -17,7 +17,7 @@ import {TextLink} from 'view/com/util/Link'
 import {ListRef} from 'view/com/util/List'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
 import {FAB} from 'view/com/util/fab/FAB'
 import {EmptyState} from 'view/com/util/EmptyState'
@@ -59,6 +59,7 @@ import {useComposerControls} from '#/state/shell/composer'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
+import {atoms as a} from '#/alf'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -209,7 +210,7 @@ export function ProfileFeedScreenInner({
           msg`There was an an issue updating your feeds, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up update feeds', {error: err})
+      logger.error('Failed up update feeds', {message: err})
     }
   }, [
     feedInfo,
@@ -234,7 +235,7 @@ export function ProfileFeedScreenInner({
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [isPinned, feedInfo, pinFeed, unpinFeed, resetPinFeed, resetUnpinFeed, _])
 
@@ -549,7 +550,7 @@ function AboutSection({
           msg`There was an an issue contacting the server, please check your internet connection and try again.`,
         ),
       )
-      logger.error('Failed up toggle like', {error: err})
+      logger.error('Failed up toggle like', {message: err})
     }
   }, [likeUri, isLiked, feedInfo, likeFeed, unlikeFeed, track, _])
 
@@ -575,9 +576,8 @@ function AboutSection({
         {feedInfo.description ? (
           <RichText
             testID="listDescription"
-            type="lg"
-            style={pal.text}
-            richText={feedInfo.description}
+            style={[a.text_md]}
+            value={feedInfo.description}
           />
         ) : (
           <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>

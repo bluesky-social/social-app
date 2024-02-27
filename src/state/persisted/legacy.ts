@@ -69,6 +69,7 @@ const DEPRECATED_ROOT_STATE_STORAGE_KEY = 'root'
 export function transform(legacy: Partial<LegacySchema>): Schema {
   return {
     colorMode: legacy.shell?.colorMode || defaults.colorMode,
+    darkTheme: defaults.darkTheme,
     session: {
       accounts: legacy.session?.accounts || defaults.session.accounts,
       currentAccount:
@@ -110,6 +111,8 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
     },
     hiddenPosts: defaults.hiddenPosts,
     externalEmbeds: defaults.externalEmbeds,
+    lastSelectedHomeFeed: defaults.lastSelectedHomeFeed,
+    pdsAddressHistory: defaults.pdsAddressHistory,
   }
 }
 
@@ -118,7 +121,7 @@ export function transform(legacy: Partial<LegacySchema>): Schema {
  * local storage AND old storage exists.
  */
 export async function migrate() {
-  logger.info('persisted state: check need to migrate')
+  logger.debug('persisted state: check need to migrate')
 
   try {
     const rawLegacyData = await AsyncStorage.getItem(
@@ -127,36 +130,8 @@ export async function migrate() {
     const newData = await read()
     const alreadyMigrated = Boolean(newData)
 
-    /* TODO BEGIN DEBUG — remove this eventually */
-    try {
-      if (rawLegacyData) {
-        const legacy = JSON.parse(rawLegacyData) as Partial<LegacySchema>
-        logger.info(`persisted state: debug legacy data`, {
-          hasExistingLoggedInAccount: Boolean(legacy?.session?.data),
-          numberOfExistingAccounts: legacy?.session?.accounts?.length,
-          foundExistingCurrentAccount: Boolean(
-            legacy.session?.accounts?.find(
-              a => a.did === legacy.session?.data?.did,
-            ),
-          ),
-        })
-        logger.info(`persisted state: debug new data`, {
-          hasNewData: Boolean(newData),
-          hasExistingLoggedInAccount: Boolean(newData?.session?.currentAccount),
-          numberOfExistingAccounts: newData?.session?.accounts?.length,
-          existingAccountMatchesLegacy: Boolean(
-            newData?.session?.currentAccount?.did ===
-              legacy?.session?.data?.did,
-          ),
-        })
-      }
-    } catch (e: any) {
-      logger.error(e, {message: `persisted state: legacy debugging failed`})
-    }
-    /* TODO END DEBUG */
-
     if (!alreadyMigrated && rawLegacyData) {
-      logger.info('persisted state: migrating legacy storage')
+      logger.debug('persisted state: migrating legacy storage')
 
       const legacyData = JSON.parse(rawLegacyData)
       const newData = transform(legacyData)
@@ -164,14 +139,14 @@ export async function migrate() {
 
       if (validate.success) {
         await write(newData)
-        logger.info('persisted state: migrated legacy storage')
+        logger.debug('persisted state: migrated legacy storage')
       } else {
         logger.error('persisted state: legacy data failed validation', {
-          error: validate.error,
+          message: validate.error,
         })
       }
     } else {
-      logger.info('persisted state: no migration needed')
+      logger.debug('persisted state: no migration needed')
     }
   } catch (e: any) {
     logger.error(e, {
@@ -185,7 +160,7 @@ export async function clearLegacyStorage() {
     await AsyncStorage.removeItem(DEPRECATED_ROOT_STATE_STORAGE_KEY)
   } catch (e: any) {
     logger.error(`persisted legacy store: failed to clear`, {
-      error: e.toString(),
+      message: e.toString(),
     })
   }
 }

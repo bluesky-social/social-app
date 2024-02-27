@@ -83,7 +83,11 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       accessibilityHint={_(
         msg`Expand or collapse the full post you are replying to`,
       )}>
-      <UserAvatar avatar={replyTo.author.avatar} size={50} />
+      <UserAvatar
+        avatar={replyTo.author.avatar}
+        size={50}
+        moderation={replyTo.moderation?.avatar}
+      />
       <View style={styles.replyToPost}>
         <Text type="xl-medium" style={[pal.text]}>
           {sanitizeDisplayName(
@@ -99,7 +103,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               {replyTo.text}
             </Text>
           </View>
-          {images && (
+          {images && !replyTo.moderation?.embed.blur && (
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>

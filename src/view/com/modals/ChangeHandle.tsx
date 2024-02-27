@@ -121,7 +121,7 @@ export function Inner({
       onChanged()
     } catch (err: any) {
       setError(cleanError(err))
-      logger.error('Failed to update handle', {handle, error: err})
+      logger.error('Failed to update handle', {handle, message: err})
     } finally {
     }
   }, [

@@ -13,13 +13,13 @@ export const color = {
   gray_300: `hsl(${BLUE_HUE}, 20%, 70%)`,
   gray_400: `hsl(${BLUE_HUE}, 20%, 60%)`,
   gray_500: `hsl(${BLUE_HUE}, 20%, 50%)`,
-  gray_600: `hsl(${BLUE_HUE}, 20%, 42%)`,
-  gray_700: `hsl(${BLUE_HUE}, 20%, 34%)`,
-  gray_800: `hsl(${BLUE_HUE}, 20%, 26%)`,
-  gray_900: `hsl(${BLUE_HUE}, 20%, 18%)`,
-  gray_950: `hsl(${BLUE_HUE}, 20%, 10%)`,
-  gray_975: `hsl(${BLUE_HUE}, 20%, 7%)`,
-  gray_1000: `hsl(${BLUE_HUE}, 20%, 4%)`,
+  gray_600: `hsl(${BLUE_HUE}, 24%, 42%)`,
+  gray_700: `hsl(${BLUE_HUE}, 24%, 34%)`,
+  gray_800: `hsl(${BLUE_HUE}, 28%, 26%)`,
+  gray_900: `hsl(${BLUE_HUE}, 28%, 18%)`,
+  gray_950: `hsl(${BLUE_HUE}, 28%, 10%)`,
+  gray_975: `hsl(${BLUE_HUE}, 28%, 7%)`,
+  gray_1000: `hsl(${BLUE_HUE}, 28%, 4%)`,
 
   blue_25: `hsl(${BLUE_HUE}, 99%, 97%)`,
   blue_50: `hsl(${BLUE_HUE}, 99%, 95%)`,
@@ -141,6 +141,14 @@ export const gradients = {
       [1, '#FFA6AC'],
     ],
     hover_value: '#B88BB6',
+  },
+  summer: {
+    values: [
+      [0, '#FF6A56'],
+      [0.3, '#FF9156'],
+      [1, '#FFDD87'],
+    ],
+    hover_value: '#FF9156',
   },
   nordic: {
     values: [

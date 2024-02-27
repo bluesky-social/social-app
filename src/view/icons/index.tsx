@@ -39,6 +39,7 @@ import {faComment} from '@fortawesome/free-regular-svg-icons/faComment'
 import {faCommentSlash} from '@fortawesome/free-solid-svg-icons/faCommentSlash'
 import {faComments} from '@fortawesome/free-regular-svg-icons/faComments'
 import {faCompass} from '@fortawesome/free-regular-svg-icons/faCompass'
+import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
 import {faEllipsis} from '@fortawesome/free-solid-svg-icons/faEllipsis'
 import {faEnvelope} from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import {faExclamation} from '@fortawesome/free-solid-svg-icons/faExclamation'
@@ -102,6 +103,7 @@ import {faUsersSlash} from '@fortawesome/free-solid-svg-icons/faUsersSlash'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown'
+import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter'
 
 library.add(
   faAddressCard,
@@ -143,6 +145,7 @@ library.add(
   faCommentSlash,
   faComments,
   faCompass,
+  faDownload,
   faEllipsis,
   faEnvelope,
   faEye,
@@ -206,4 +209,5 @@ library.add(
   faX,
   faXmark,
   faChevronDown,
+  faFilter,
 )

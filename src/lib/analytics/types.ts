@@ -1,14 +1,4 @@
-export type TrackEvent = (
-  event: keyof TrackPropertiesMap,
-  properties?: TrackPropertiesMap[keyof TrackPropertiesMap],
-) => Promise<void>
-
-export type ScreenEvent = (
-  name: keyof ScreenPropertiesMap,
-  properties?: ScreenPropertiesMap[keyof ScreenPropertiesMap],
-) => Promise<void>
-
-interface TrackPropertiesMap {
+export type TrackPropertiesMap = {
   // LOGIN / SIGN UP events
   'Sign In': {resumedSession: boolean} // CAN BE SERVER
   'Create Account': {} // CAN BE SERVER
@@ -16,7 +6,7 @@ interface TrackPropertiesMap {
   'Signin:PressedForgotPassword': {}
   'Signin:PressedSelectService': {}
   // COMPOSER / CREATE POST events
-  'Create Post': {imageCount: string} // CAN BE SERVER
+  'Create Post': {imageCount: string | number} // CAN BE SERVER
   'Composer:PastedPhotos': {}
   'Composer:CameraOpened': {}
   'Composer:GalleryOpened': {}
@@ -108,15 +98,15 @@ interface TrackPropertiesMap {
   'CustomFeed:Share': {}
   'CustomFeed:Pin': {
     uri: string
-    name: string
+    name?: string
   }
   'CustomFeed:Unpin': {
     uri: string
-    name: string
+    name?: string
   }
   'CustomFeed:Reorder': {
     uri: string
-    name: string
+    name?: string
     index: number
   }
   'CustomFeed:LoadMore': {}
@@ -131,9 +121,41 @@ interface TrackPropertiesMap {
   'Onboarding:Reset': {}
   'Onboarding:SuggestedFollowFollowed': {}
   'Onboarding:CustomFeedAdded': {}
+  // Onboarding v2
+  'OnboardingV2:Begin': {}
+  'OnboardingV2:StepInterests:Start': {}
+  'OnboardingV2:StepInterests:End': {
+    selectedInterests: string[]
+    selectedInterestsLength: number
+  }
+  'OnboardingV2:StepInterests:Error': {}
+  'OnboardingV2:StepSuggestedAccounts:Start': {}
+  'OnboardingV2:StepSuggestedAccounts:End': {
+    selectedAccountsLength: number
+  }
+  'OnboardingV2:StepFollowingFeed:Start': {}
+  'OnboardingV2:StepFollowingFeed:End': {}
+  'OnboardingV2:StepAlgoFeeds:Start': {}
+  'OnboardingV2:StepAlgoFeeds:End': {
+    selectedPrimaryFeeds: string[]
+    selectedPrimaryFeedsLength: number
+    selectedSecondaryFeeds: string[]
+    selectedSecondaryFeedsLength: number
+  }
+  'OnboardingV2:StepTopicalFeeds:Start': {}
+  'OnboardingV2:StepTopicalFeeds:End': {
+    selectedFeeds: string[]
+    selectedFeedsLength: number
+  }
+  'OnboardingV2:StepModeration:Start': {}
+  'OnboardingV2:StepModeration:End': {}
+  'OnboardingV2:StepFinished:Start': {}
+  'OnboardingV2:StepFinished:End': {}
+  'OnboardingV2:Complete': {}
+  'OnboardingV2:Skip': {}
 }
 
-interface ScreenPropertiesMap {
+export type ScreenPropertiesMap = {
   Login: {}
   CreateAccount: {}
   'Choose Account': {}
@@ -151,9 +173,4 @@ interface ScreenPropertiesMap {
   BlockedAccounts: {}
   MutedAccounts: {}
   SavedFeeds: {}
-}
-
-export type AnalyticsMethods = {
-  screen: ScreenEvent
-  track: TrackEvent
 }

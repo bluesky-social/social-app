@@ -1,7 +1,8 @@
 {
   "cli": {
     "version": ">= 3.8.1",
-    "promptToConfigurePushNotifications": false
+    "promptToConfigurePushNotifications": false,
+    "appVersionSource": "remote"
   },
   "build": {
     "base": {
@@ -28,12 +29,30 @@
     "production": {
       "extends": "base",
       "ios": {
-        "resourceClass": "large"
+        "resourceClass": "large",
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
+      },
+      "channel": "production"
+    },
+    "github": {
+      "extends": "base",
+      "ios": {
+        "autoIncrement": true
+      },
+      "android": {
+        "autoIncrement": true
       },
       "channel": "production"
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "ascAppId": "6444370199"
+      }
+    }
   }
 }

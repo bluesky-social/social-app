@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dimensions, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import {List, ListRef} from '../util/List'
 import {ListCard} from './ListCard'
@@ -106,7 +106,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       try {
         await refetch()
       } catch (err) {
-        logger.error('Failed to refresh lists', {error: err})
+        logger.error('Failed to refresh lists', {message: err})
       }
       setIsPTRing(false)
     }, [refetch, track, setIsPTRing])
@@ -118,7 +118,7 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
       try {
         await fetchNextPage()
       } catch (err) {
-        logger.error('Failed to load more lists', {error: err})
+        logger.error('Failed to load more lists', {message: err})
       }
     }, [isFetching, hasNextPage, isError, fetchNextPage, track])
 
@@ -182,9 +182,9 @@ export const ProfileLists = React.forwardRef<SectionRef, ProfileListsProps>(
           refreshing={isPTRing}
           onRefresh={onRefresh}
           headerOffset={headerOffset}
-          contentContainerStyle={{
-            minHeight: Dimensions.get('window').height * 1.5,
-          }}
+          contentContainerStyle={
+            isNative && {paddingBottom: headerOffset + 100}
+          }
           indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
           removeClippedSubviews={true}
           // @ts-ignore our .web version only -prf

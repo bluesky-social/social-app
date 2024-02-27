@@ -1,6 +1,11 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost, PostModeration} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  PostModeration,
+} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -21,13 +26,15 @@ import {MergeFeedAPI} from 'lib/api/feed/merge'
 import {HomeFeedAPI} from '#/lib/api/feed/home'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {precacheFeedPosts as precacheResolvedUris} from './resolve-uri'
+import {precacheFeedPostProfiles} from './profile'
 import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
+import {queryClient} from 'lib/react-query'
+import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 
 type ActorDid = string
 type AuthorFilter =
@@ -136,24 +143,41 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      const res = await api.fetch({cursor, limit: PAGE_SIZE})
-      precacheResolvedUris(queryClient, res.feed) // precache the handle->did resolution
+      try {
+        const res = await api.fetch({cursor, limit: PAGE_SIZE})
+        precacheFeedPostProfiles(queryClient, res.feed)
 
-      /*
-       * If this is a public view, we need to check if posts fail moderation.
-       * If all fail, we throw an error. If only some fail, we continue and let
-       * moderations happen later, which results in some posts being shown and
-       * some not.
-       */
-      if (!getAgent().session) {
-        assertSomePostsPassModeration(res.feed)
-      }
+        /*
+         * If this is a public view, we need to check if posts fail moderation.
+         * If all fail, we throw an error. If only some fail, we continue and let
+         * moderations happen later, which results in some posts being shown and
+         * some not.
+         */
+        if (!getAgent().session) {
+          assertSomePostsPassModeration(res.feed)
+        }
 
-      return {
-        api,
-        cursor: res.cursor,
-        feed: res.feed,
-        fetchedAt: Date.now(),
+        return {
+          api,
+          cursor: res.cursor,
+          feed: res.feed,
+          fetchedAt: Date.now(),
+        }
+      } catch (e) {
+        const feedDescParts = feedDesc.split('|')
+        const feedOwnerDid = new AtUri(feedDescParts[1]).hostname
+
+        if (
+          feedDescParts[0] === 'feedgen' &&
+          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
+        ) {
+          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
+            feedDesc,
+            jsError: e,
+          })
+        }
+
+        throw e
       }
     },
     initialPageParam: undefined,
@@ -364,23 +388,6 @@ function createApi(
   }
 }
 
-/**
- * This helper is used by the post-thread placeholder function to
- * find a post in the query-data cache
- */
-export function findPostInQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): AppBskyFeedDefs.PostView | undefined {
-  const generator = findAllPostsInQueryData(queryClient, uri)
-  const result = generator.next()
-  if (result.done) {
-    return undefined
-  } else {
-    return result.value
-  }
-}
-
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
@@ -443,4 +450,16 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   if (!somePostsPassModeration) {
     throw new Error(KnownError.FeedNSFPublic)
   }
+}
+
+export function resetProfilePostsQueries(did: string, timeout = 0) {
+  setTimeout(() => {
+    queryClient.resetQueries({
+      predicate: query =>
+        !!(
+          query.queryKey[0] === 'post-feed' &&
+          (query.queryKey[1] as string)?.includes(did)
+        ),
+    })
+  }, timeout)
 }

@@ -8,10 +8,11 @@ import {TypographyVariant} from 'lib/ThemeContext'
 import {UserAvatar} from './UserAvatar'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {isAndroid} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
 import {ModerationUI} from '@atproto/api'
+import {usePrefetchProfileQuery} from '#/state/queries/profile'
 
 interface PostMetaOpts {
   author: {
@@ -35,6 +36,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
   const pal = usePalette('default')
   const displayName = opts.author.displayName || opts.author.handle
   const handle = opts.author.handle
+  const prefetchProfileQuery = usePrefetchProfileQuery()
 
   return (
     <View style={[styles.container, opts.style]}>
@@ -66,6 +68,9 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             </>
           }
           href={makeProfileLink(opts.author)}
+          onPointerEnter={
+            isWeb ? () => prefetchProfileQuery(opts.author.did) : undefined
+          }
         />
       </View>
       {!isAndroid && (

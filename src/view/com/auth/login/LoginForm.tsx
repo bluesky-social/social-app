@@ -25,7 +25,9 @@ import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {styles} from './styles'
 import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
+import {useDialogControl} from '#/components/Dialog'
+
+import {ServerInputDialog} from '../server-input'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -58,15 +60,11 @@ export const LoginForm = ({
   const [password, setPassword] = useState<string>('')
   const passwordInputRef = useRef<TextInput>(null)
   const {_} = useLingui()
-  const {openModal} = useModalControls()
   const {login} = useSessionApi()
+  const serverInputControl = useDialogControl()
 
   const onPressSelectService = () => {
-    openModal({
-      name: 'server-input',
-      initialService: serviceUrl,
-      onSelect: setServiceUrl,
-    })
+    serverInputControl.open()
     Keyboard.dismiss()
     track('Signin:PressedSelectService')
   }
@@ -109,7 +107,7 @@ export const LoginForm = ({
       const errMsg = e.toString()
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
-        logger.info('Failed to login due to invalid credentials', {
+        logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
         setError(_(msg`Invalid username or password`))
@@ -130,6 +128,11 @@ export const LoginForm = ({
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
     <View testID="loginForm">
+      <ServerInputDialog
+        control={serverInputControl}
+        onSelect={setServiceUrl}
+      />
+
       <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
         <Trans>Sign into</Trans>
       </Text>

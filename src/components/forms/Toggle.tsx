@@ -2,9 +2,10 @@ import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
-import {useTheme, atoms as a, web, native} from '#/alf'
+import {useTheme, atoms as a, web, native, flatten, ViewStyleProp} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 
 export type ItemState = {
   name: string
@@ -49,7 +50,7 @@ export type GroupProps = React.PropsWithChildren<{
   label: string
 }>
 
-export type ItemProps = {
+export type ItemProps = ViewStyleProp & {
   type?: 'radio' | 'checkbox'
   name: string
   label: string
@@ -57,7 +58,6 @@ export type ItemProps = {
   disabled?: boolean
   onChange?: (selected: boolean) => void
   isInvalid?: boolean
-  style?: (state: ItemState) => ViewStyle
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
 }
 
@@ -125,6 +125,7 @@ export function Group({
   return (
     <GroupContext.Provider value={context}>
       <View
+        style={[a.w_full]}
         role={groupRole}
         {...(groupRole === 'radiogroup'
           ? {
@@ -224,7 +225,7 @@ export function Item({
           a.align_center,
           a.gap_sm,
           focused ? web({outline: 'none'}) : {},
-          style?.(state),
+          flatten(style),
         ]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
@@ -331,15 +332,14 @@ export function createSharedToggleStyles({
 export function Checkbox() {
   const t = useTheme()
   const {selected, hovered, focused, disabled, isInvalid} = useItemContext()
-  const {baseStyles, baseHoverStyles, indicatorStyles} =
-    createSharedToggleStyles({
-      theme: t,
-      hovered,
-      focused,
-      selected,
-      disabled,
-      isInvalid,
-    })
+  const {baseStyles, baseHoverStyles} = createSharedToggleStyles({
+    theme: t,
+    hovered,
+    focused,
+    selected,
+    disabled,
+    isInvalid,
+  })
   return (
     <View
       style={[
@@ -347,7 +347,7 @@ export function Checkbox() {
         a.align_center,
         a.border,
         a.rounded_xs,
-        t.atoms.border_contrast,
+        t.atoms.border_contrast_high,
         {
           height: 20,
           width: 20,
@@ -355,21 +355,7 @@ export function Checkbox() {
         baseStyles,
         hovered || focused ? baseHoverStyles : {},
       ]}>
-      {selected ? (
-        <View
-          style={[
-            a.absolute,
-            a.rounded_2xs,
-            {height: 12, width: 12},
-            selected
-              ? {
-                  backgroundColor: t.palette.primary_500,
-                }
-              : {},
-            indicatorStyles,
-          ]}
-        />
-      ) : null}
+      {selected ? <Checkmark size="xs" fill={t.palette.primary_500} /> : null}
     </View>
   )
 }
@@ -393,7 +379,7 @@ export function Switch() {
         a.border,
         a.rounded_full,
         t.atoms.bg,
-        t.atoms.border_contrast,
+        t.atoms.border_contrast_high,
         {
           height: 20,
           width: 30,
@@ -445,7 +431,7 @@ export function Radio() {
         a.align_center,
         a.border,
         a.rounded_full,
-        t.atoms.border_contrast,
+        t.atoms.border_contrast_high,
         {
           height: 20,
           width: 20,

@@ -14,22 +14,22 @@ export function Theming() {
 
       <Text style={[a.font_bold, a.pt_xl, a.px_md]}>theme.atoms.text</Text>
 
-      <View style={[a.flex_1, t.atoms.border, a.border_t]} />
-      <Text style={[a.font_bold, t.atoms.text_contrast_600, a.px_md]}>
-        theme.atoms.text_contrast_600
+      <View style={[a.flex_1, t.atoms.border_contrast_high, a.border_t]} />
+      <Text style={[a.font_bold, t.atoms.text_contrast_high, a.px_md]}>
+        theme.atoms.text_contrast_high
       </Text>
 
-      <View style={[a.flex_1, t.atoms.border, a.border_t]} />
-      <Text style={[a.font_bold, t.atoms.text_contrast_500, a.px_md]}>
-        theme.atoms.text_contrast_500
+      <View style={[a.flex_1, t.atoms.border_contrast_medium, a.border_t]} />
+      <Text style={[a.font_bold, t.atoms.text_contrast_medium, a.px_md]}>
+        theme.atoms.text_contrast_medium
       </Text>
 
-      <View style={[a.flex_1, t.atoms.border, a.border_t]} />
-      <Text style={[a.font_bold, t.atoms.text_contrast_400, a.px_md]}>
-        theme.atoms.text_contrast_400
+      <View style={[a.flex_1, t.atoms.border_contrast_low, a.border_t]} />
+      <Text style={[a.font_bold, t.atoms.text_contrast_low, a.px_md]}>
+        theme.atoms.text_contrast_low
       </Text>
 
-      <View style={[a.flex_1, t.atoms.border_contrast, a.border_t]} />
+      <View style={[a.flex_1, t.atoms.border_contrast_low, a.border_t]} />
 
       <View style={[a.w_full, a.gap_md]}>
         <View style={[t.atoms.bg, a.justify_center, a.p_md]}>

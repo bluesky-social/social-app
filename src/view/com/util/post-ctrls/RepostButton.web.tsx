@@ -69,19 +69,19 @@ export const RepostButton = ({
   const inner = (
     <View
       style={[
-        styles.control,
-        !big && styles.controlPad,
+        styles.btn,
+        !big && styles.btnPad,
         (isReposted
           ? styles.reposted
           : defaultControlColor) as StyleProp<ViewStyle>,
       ]}>
       <RepostIcon strokeWidth={2.2} size={big ? 24 : 20} />
-      {typeof repostCount !== 'undefined' ? (
+      {typeof repostCount !== 'undefined' && repostCount > 0 ? (
         <Text
           testID="repostCount"
           type={isReposted ? 'md-bold' : 'md'}
           style={styles.repostCount}>
-          {repostCount ?? 0}
+          {repostCount}
         </Text>
       ) : undefined}
     </View>
@@ -110,14 +110,16 @@ export const RepostButton = ({
 }
 
 const styles = StyleSheet.create({
-  control: {
-    display: 'flex',
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
-  controlPad: {
-    padding: 5,
+  btnPad: {
+    paddingTop: 5,
+    paddingBottom: 5,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   reposted: {
     color: colors.green3,

@@ -1,10 +1,12 @@
 import React, {PropsWithChildren, useMemo, useRef} from 'react'
 import {
   Dimensions,
+  GestureResponderEvent,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
@@ -19,6 +21,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {HITSLOP_10} from 'lib/constants'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {isWeb} from 'platform/detection'
 
 const ESTIMATED_BTN_HEIGHT = 50
 const ESTIMATED_SEP_HEIGHT = 16
@@ -80,21 +83,22 @@ export function DropdownButton({
   const ref1 = useRef<TouchableOpacity>(null)
   const ref2 = useRef<View>(null)
 
-  const onPress = () => {
+  const onPress = (e: GestureResponderEvent) => {
     const ref = ref1.current || ref2.current
+    const {height: winHeight} = Dimensions.get('window')
+    const pressY = e.nativeEvent.pageY
     ref?.measure(
       (
         _x: number,
         _y: number,
         width: number,
-        height: number,
+        _height: number,
         pageX: number,
         pageY: number,
       ) => {
         if (!menuWidth) {
           menuWidth = 200
         }
-        const winHeight = Dimensions.get('window').height
         let estimatedMenuHeight = 0
         for (const item of items) {
           if (item && isSep(item)) {
@@ -108,13 +112,16 @@ export function DropdownButton({
         const newX = openToRight
           ? pageX + width + rightOffset
           : pageX + width - menuWidth
-        let newY = pageY + height + bottomOffset
+
+        // Add a bit of additional room
+        let newY = pressY + bottomOffset + 20
         if (openUpwards || newY + estimatedMenuHeight > winHeight) {
           newY -= estimatedMenuHeight
         }
         createDropdownMenu(
           newX,
           newY,
+          pageY,
           menuWidth,
           items.filter(v => !!v) as DropdownItem[],
         )
@@ -168,6 +175,7 @@ export function DropdownButton({
 function createDropdownMenu(
   x: number,
   y: number,
+  pageY: number,
   width: number,
   items: DropdownItem[],
 ): RootSiblings {
@@ -185,6 +193,7 @@ function createDropdownMenu(
         onOuterPress={onOuterPress}
         x={x}
         y={y}
+        pageY={pageY}
         width={width}
         items={items}
         onPressItem={onPressItem}
@@ -198,6 +207,7 @@ type DropDownItemProps = {
   onOuterPress: () => void
   x: number
   y: number
+  pageY: number
   width: number
   items: DropdownItem[]
   onPressItem: (index: number) => void
@@ -207,6 +217,7 @@ const DropdownItems = ({
   onOuterPress,
   x,
   y,
+  pageY,
   width,
   items,
   onPressItem,
@@ -214,6 +225,7 @@ const DropdownItems = ({
   const pal = usePalette('default')
   const theme = useTheme()
   const {_} = useLingui()
+  const {height: screenHeight} = useWindowDimensions()
   const dropDownBackgroundColor =
     theme.colorScheme === 'dark' ? pal.btn : pal.view
   const separatorColor =
@@ -233,7 +245,21 @@ const DropdownItems = ({
         onPress={onOuterPress}
         accessibilityLabel={_(msg`Toggle dropdown`)}
         accessibilityHint="">
-        <View style={[styles.bg]} />
+        <View
+          style={[
+            styles.bg,
+            // On web we need to adjust the top and bottom relative to the scroll position
+            isWeb
+              ? {
+                  top: -pageY,
+                  bottom: pageY - screenHeight,
+                }
+              : {
+                  top: 0,
+                  bottom: 0,
+                },
+          ]}
+        />
       </TouchableWithoutFeedback>
       <View
         style={[
@@ -295,10 +321,8 @@ function isBtn(item: DropdownItem): item is DropdownItemButton {
 const styles = StyleSheet.create({
   bg: {
     position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
     left: 0,
+    width: '100%',
     backgroundColor: '#000',
     opacity: 0.1,
   },

@@ -1,65 +1,34 @@
 import React from 'react'
 import {View, ActivityIndicator, StyleSheet} from 'react-native'
-import {RouteProp, useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
 import {FollowingEmptyState} from 'view/com/posts/FollowingEmptyState'
 import {FollowingEndOfFeed} from 'view/com/posts/FollowingEndOfFeed'
 import {CustomFeedEmptyState} from 'view/com/posts/CustomFeedEmptyState'
-import {FeedsTabBar} from '../com/pager/FeedsTabBar'
-import {Pager, RenderTabBarFnProps} from 'view/com/pager/Pager'
+import {HomeHeader} from '../com/home/HomeHeader'
+import {Pager, RenderTabBarFnProps, PagerRef} from 'view/com/pager/Pager'
 import {FeedPage} from 'view/com/feeds/FeedPage'
 import {HomeLoggedOutCTA} from '../com/auth/HomeLoggedOutCTA'
-import {
-  useSetMinimalShellMode,
-  useSetDrawerSwipeDisabled,
-  useComposerControls,
-} from '#/state/shell'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {usePinnedFeedsInfos, FeedSourceInfo} from '#/state/queries/feed'
 import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
-import {loadString, saveString} from '#/lib/storage'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {clamp} from '#/lib/numbers'
-import {isNative} from 'platform/detection'
+import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
-  const {feeds: pinnedFeeds, isLoading: isPinnedFeedsLoading} =
+  const {feeds: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
-  const {isDesktop} = useWebMediaQueries()
-  const [initialPage, setInitialPage] = React.useState<string | undefined>(
-    undefined,
-  )
-
-  React.useEffect(() => {
-    const loadLastActivePage = async () => {
-      try {
-        const lastActivePage =
-          (await loadString('lastActivePage')) ?? 'Following'
-        setInitialPage(lastActivePage)
-      } catch {
-        setInitialPage('Following')
-      }
-    }
-    loadLastActivePage()
-  }, [])
-
-  if (
-    preferences &&
-    pinnedFeeds &&
-    initialPage !== undefined &&
-    !isPinnedFeedsLoading
-  ) {
+  if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
       <HomeScreenReady
         {...props}
         preferences={preferences}
-        pinnedFeeds={pinnedFeeds}
-        initialPage={isDesktop ? 'Following' : initialPage}
+        pinnedFeedInfos={pinnedFeedInfos}
       />
     )
   } else {
@@ -73,38 +42,15 @@ export function HomeScreen(props: Props) {
 
 function HomeScreenReady({
   preferences,
-  pinnedFeeds,
-  initialPage,
-  route,
+  pinnedFeedInfos,
 }: Props & {
   preferences: UsePreferencesQueryResponse
-  pinnedFeeds: FeedSourceInfo[]
-  initialPage: string
-  route: RouteProp<HomeTabNavigatorParams, 'Home'>
+  pinnedFeedInfos: FeedSourceInfo[]
 }) {
-  const {hasSession} = useSession()
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const {openComposer} = useComposerControls()
-  const [selectedPage, setSelectedPage] = React.useState<string>(initialPage)
-
-  /**
-   * Used to ensure that we re-compute `customFeeds` AND force a re-render of
-   * the pager with the new order of feeds.
-   */
-  const pinnedFeedOrderKey = JSON.stringify(preferences.feeds.pinned)
-
-  const selectedPageIndex = React.useMemo(() => {
-    const index = ['Following', ...preferences.feeds.pinned].indexOf(
-      selectedPage,
-    )
-    return Math.max(index, 0)
-  }, [preferences.feeds.pinned, selectedPage])
-
-  const customFeeds = React.useMemo(() => {
-    const pinned = pinnedFeeds
+  const allFeeds = React.useMemo(() => {
     const feeds: FeedDescriptor[] = []
-    for (const {uri} of pinned) {
+    feeds.push('home')
+    for (const {uri} of pinnedFeedInfos) {
       if (uri.includes('app.bsky.feed.generator')) {
         feeds.push(`feedgen|${uri}`)
       } else if (uri.includes('app.bsky.graph.list')) {
@@ -112,62 +58,48 @@ function HomeScreenReady({
       }
     }
     return feeds
-  }, [pinnedFeeds])
+  }, [pinnedFeedInfos])
 
-  const homeFeedParams = React.useMemo<FeedParams>(() => {
-    return {
-      mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
-      mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-        ? preferences.feeds.saved
-        : [],
+  const rawSelectedFeed = useSelectedFeed()
+  const setSelectedFeed = useSetSelectedFeed()
+  const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed as FeedDescriptor)
+  const selectedIndex = Math.max(0, maybeFoundIndex)
+  const selectedFeed = allFeeds[selectedIndex]
+
+  const pagerRef = React.useRef<PagerRef>(null)
+  const lastPagerReportedIndexRef = React.useRef(selectedIndex)
+  React.useLayoutEffect(() => {
+    // Since the pager is not a controlled component, adjust it imperatively
+    // if the selected index gets out of sync with what it last reported.
+    // This is supposed to only happen on the web when you use the right nav.
+    if (selectedIndex !== lastPagerReportedIndexRef.current) {
+      lastPagerReportedIndexRef.current = selectedIndex
+      pagerRef.current?.setPage(selectedIndex)
     }
-  }, [preferences])
+  }, [selectedIndex])
 
+  const {hasSession} = useSession()
+  const setMinimalShellMode = useSetMinimalShellMode()
+  const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
   useFocusEffect(
     React.useCallback(() => {
       setMinimalShellMode(false)
-      setDrawerSwipeDisabled(selectedPageIndex > 0)
+      setDrawerSwipeDisabled(selectedIndex > 0)
       return () => {
         setDrawerSwipeDisabled(false)
       }
-    }, [setDrawerSwipeDisabled, selectedPageIndex, setMinimalShellMode]),
+    }, [setDrawerSwipeDisabled, selectedIndex, setMinimalShellMode]),
   )
-
-  React.useEffect(() => {
-    if (route.params?.compose) {
-      // Get the params
-      const {text, imageUris: imageUrisStr} = route.params
-
-      // Parse and create array if on native
-      let imageUris: {uri: string; width: number; height: number}[] | undefined
-      if (isNative) {
-        imageUris = imageUrisStr?.split(',').map(part => {
-          const [uri, width, height] = part.split('|')
-          return {uri, width: Number(width), height: Number(height)}
-        })
-      }
-
-      // Open the composer
-      setTimeout(() => {
-        openComposer({text, imageUris})
-      }, 500)
-    }
-  }, [openComposer, route.params])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
       setMinimalShellMode(false)
       setDrawerSwipeDisabled(index > 0)
-      const page = ['Following', ...preferences.feeds.pinned][index]
-      setSelectedPage(page)
-      saveString('lastActivePage', page)
+      const feed = allFeeds[index]
+      setSelectedFeed(feed)
+      lastPagerReportedIndexRef.current = index
     },
-    [
-      setDrawerSwipeDisabled,
-      setSelectedPage,
-      setMinimalShellMode,
-      preferences.feeds.pinned,
-    ],
+    [setDrawerSwipeDisabled, setSelectedFeed, setMinimalShellMode, allFeeds],
   )
 
   const onPressSelected = React.useCallback(() => {
@@ -186,7 +118,7 @@ function HomeScreenReady({
   const renderTabBar = React.useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <FeedsTabBar
+        <HomeHeader
           key="FEEDS_TAB_BAR"
           selectedPage={props.selectedPage}
           onSelect={props.onSelect}
@@ -206,31 +138,41 @@ function HomeScreenReady({
     return <CustomFeedEmptyState />
   }, [])
 
+  const [homeFeed, ...customFeeds] = allFeeds
+  const homeFeedParams = React.useMemo<FeedParams>(() => {
+    return {
+      mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
+      mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
+        ? preferences.feeds.saved
+        : [],
+    }
+  }, [preferences])
+
   return hasSession ? (
     <Pager
-      key={pinnedFeedOrderKey}
+      key={allFeeds.join(',')}
+      ref={pagerRef}
       testID="homeScreen"
-      initialPage={clamp(selectedPageIndex, 0, customFeeds.length)}
+      initialPage={selectedIndex}
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}
-      tabBarPosition="top">
+      renderTabBar={renderTabBar}>
       <FeedPage
-        key="1"
+        key={homeFeed}
         testID="followingFeedPage"
-        isPageFocused={selectedPageIndex === 0}
-        feed="home"
+        isPageFocused={selectedFeed === homeFeed}
+        feed={homeFeed}
         feedParams={homeFeedParams}
         renderEmptyState={renderFollowingEmptyState}
         renderEndOfFeed={FollowingEndOfFeed}
       />
-      {customFeeds.map((f, index) => {
+      {customFeeds.map(feed => {
         return (
           <FeedPage
-            key={f}
+            key={feed}
             testID="customFeedPage"
-            isPageFocused={selectedPageIndex === 1 + index}
-            feed={f}
+            isPageFocused={selectedFeed === feed}
+            feed={feed}
             renderEmptyState={renderCustomFeedEmptyState}
           />
         )
@@ -241,8 +183,7 @@ function HomeScreenReady({
       testID="homeScreen"
       onPageSelected={onPageSelected}
       onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}
-      tabBarPosition="top">
+      renderTabBar={renderTabBar}>
       <HomeLoggedOutCTA />
     </Pager>
   )

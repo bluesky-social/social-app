@@ -22,6 +22,6 @@ export async function clear() {
   try {
     await AsyncStorage.removeItem(BSKY_STORAGE)
   } catch (e: any) {
-    logger.error(`persisted store: failed to clear`, {error: e.toString()})
+    logger.error(`persisted store: failed to clear`, {message: e.toString()})
   }
 }

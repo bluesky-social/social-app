@@ -8,7 +8,7 @@ import * as Toggle from '#/components/forms/Toggle'
 
 export type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps &
-  React.PropsWithChildren<{}>
+  React.PropsWithChildren<{testID?: string}>
 
 export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean
@@ -20,11 +20,12 @@ export function Group({children, multiple, ...props}: GroupProps) {
     <Toggle.Group type={multiple ? 'checkbox' : 'radio'} {...props}>
       <View
         style={[
+          a.w_full,
           a.flex_row,
           a.border,
           a.rounded_sm,
           a.overflow_hidden,
-          t.atoms.border,
+          t.atoms.border_contrast_low,
         ]}>
         {children}
       </View>
@@ -34,7 +35,7 @@ export function Group({children, multiple, ...props}: GroupProps) {
 
 export function Button({children, ...props}: ItemProps) {
   return (
-    <Toggle.Item {...props}>
+    <Toggle.Item {...props} style={[a.flex_grow]}>
       <ButtonInner>{children}</ButtonInner>
     </Toggle.Item>
   )
@@ -95,13 +96,14 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           borderLeftWidth: 1,
           marginLeft: -1,
         },
-        a.px_lg,
+        a.flex_grow,
         a.py_md,
         native({
-          paddingTop: 14,
+          paddingBottom: 10,
         }),
+        a.px_sm,
         t.atoms.bg,
-        t.atoms.border,
+        t.atoms.border_contrast_low,
         baseStyles,
         activeStyles,
         (state.hovered || state.focused || state.pressed) && hoverStyles,
@@ -111,7 +113,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
           style={[
             a.text_center,
             a.font_bold,
-            t.atoms.text_contrast_500,
+            t.atoms.text_contrast_medium,
             textStyles,
           ]}>
           {children}

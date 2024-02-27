@@ -2,7 +2,7 @@ import {Platform} from 'react-native'
 import type {Theme} from './ThemeContext'
 import {colors} from './styles'
 
-import {darkPalette, lightPalette} from '#/alf/themes'
+import {darkPalette, lightPalette, dimPalette} from '#/alf/themes'
 
 export const defaultTheme: Theme = {
   colorScheme: 'light',
@@ -306,7 +306,7 @@ export const darkTheme: Theme = {
 
       // non-standard
       textVeryLight: darkPalette.contrast_400,
-      replyLine: darkPalette.contrast_100,
+      replyLine: darkPalette.contrast_200,
       replyLineDot: darkPalette.contrast_200,
       unreadNotifBg: darkPalette.primary_975,
       unreadNotifBorder: darkPalette.primary_900,
@@ -333,6 +333,36 @@ export const darkTheme: Theme = {
       border: lightPalette.contrast_100,
       borderDark: lightPalette.contrast_200,
       icon: lightPalette.contrast_500,
+    },
+  },
+}
+
+export const dimTheme: Theme = {
+  ...darkTheme,
+  palette: {
+    ...darkTheme.palette,
+    default: {
+      ...darkTheme.palette.default,
+      background: dimPalette.black,
+      backgroundLight: dimPalette.contrast_50,
+      text: dimPalette.white,
+      textLight: dimPalette.contrast_700,
+      textInverted: dimPalette.black,
+      link: dimPalette.primary_500,
+      border: dimPalette.contrast_100,
+      borderDark: dimPalette.contrast_200,
+      icon: dimPalette.contrast_500,
+
+      // non-standard
+      textVeryLight: dimPalette.contrast_400,
+      replyLine: dimPalette.contrast_200,
+      replyLineDot: dimPalette.contrast_200,
+      unreadNotifBg: `hsl(211, 48%, 17%)`,
+      unreadNotifBorder: `hsl(211, 48%, 30%)`,
+      postCtrl: dimPalette.contrast_500,
+      brandText: dimPalette.primary_500,
+      emptyStateIcon: dimPalette.contrast_300,
+      borderLinkHover: dimPalette.contrast_300,
     },
   },
 }

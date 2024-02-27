@@ -1,7 +1,8 @@
 import React, {memo} from 'react'
-import {Linking, StyleProp, View, ViewStyle} from 'react-native'
+import {StyleProp, View, ViewStyle} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
   AppBskyFeedPost,
@@ -19,17 +20,21 @@ import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
+import {CommonNavigatorParams} from '#/lib/routes/types'
+import {getCurrentRoute} from 'lib/routes/helpers'
 import {getTranslatorLink} from '#/locale/helpers'
 import {usePostDeleteMutation} from '#/state/queries/post'
 import {useMutedThreads, useToggleThreadMute} from '#/state/muted-threads'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 let PostDropdownBtn = ({
   testID,
@@ -61,6 +66,9 @@ let PostDropdownBtn = ({
   const postDeleteMutation = usePostDeleteMutation()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
+  const openLink = useOpenLink()
+  const navigation = useNavigation()
+  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -80,13 +88,38 @@ let PostDropdownBtn = ({
     postDeleteMutation.mutateAsync({uri: postUri}).then(
       () => {
         Toast.show(_(msg`Post deleted`))
+
+        const route = getCurrentRoute(navigation.getState())
+        if (route.name === 'PostThread') {
+          const params = route.params as CommonNavigatorParams['PostThread']
+          if (
+            currentAccount &&
+            isAuthor &&
+            (params.name === currentAccount.handle ||
+              params.name === currentAccount.did)
+          ) {
+            const currentHref = makeProfileLink(postAuthor, 'post', params.rkey)
+            if (currentHref === href && navigation.canGoBack()) {
+              navigation.goBack()
+            }
+          }
+        }
       },
       e => {
-        logger.error('Failed to delete post', {error: e})
+        logger.error('Failed to delete post', {message: e})
         Toast.show(_(msg`Failed to delete post, please try again`))
       },
     )
-  }, [postUri, postDeleteMutation, _])
+  }, [
+    navigation,
+    postUri,
+    postDeleteMutation,
+    postAuthor,
+    currentAccount,
+    isAuthor,
+    href,
+    _,
+  ])
 
   const onToggleThreadMute = React.useCallback(() => {
     try {
@@ -99,7 +132,7 @@ let PostDropdownBtn = ({
         Toast.show(_(msg`You will now receive notifications for this thread`))
       }
     } catch (e) {
-      logger.error('Failed to toggle thread mute', {error: e})
+      logger.error('Failed to toggle thread mute', {message: e})
     }
   }, [rootUri, toggleThreadMute, _])
 
@@ -111,8 +144,8 @@ let PostDropdownBtn = ({
   }, [_, richText])
 
   const onOpenTranslate = React.useCallback(() => {
-    Linking.openURL(translatorUrl)
-  }, [translatorUrl])
+    openLink(translatorUrl)
+  }, [openLink, translatorUrl])
 
   const onHidePost = React.useCallback(() => {
     hidePost({uri: postUri})
@@ -177,6 +210,20 @@ let PostDropdownBtn = ({
         },
         android: 'ic_lock_silent_mode',
         web: 'comment-slash',
+      },
+    },
+    hasSession && {
+      label: _(msg`Mute words & tags`),
+      onPress() {
+        mutedWordsDialogControl.open()
+      },
+      testID: 'postDropdownMuteWordsBtn',
+      icon: {
+        ios: {
+          name: 'speaker.slash',
+        },
+        android: 'ic_lock_silent_mode',
+        web: 'filter',
       },
     },
     hasSession &&

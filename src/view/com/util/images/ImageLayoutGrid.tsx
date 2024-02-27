@@ -2,6 +2,7 @@ import React from 'react'
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AppBskyEmbedImages} from '@atproto/api'
 import {GalleryItem} from './Gallery'
+import {isWeb} from 'platform/detection'
 
 interface ImageLayoutGridProps {
   images: AppBskyEmbedImages.ViewImage[]
@@ -47,10 +48,10 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
     case 3:
       return (
         <View style={styles.flexRow}>
-          <View style={{flex: 2, aspectRatio: 1}}>
+          <View style={styles.threeSingle}>
             <GalleryItem {...props} index={0} imageStyle={styles.image} />
           </View>
-          <View style={{flex: 1}}>
+          <View style={styles.threeDouble}>
             <View style={styles.smallItem}>
               <GalleryItem {...props} index={1} imageStyle={styles.image} />
             </View>
@@ -88,18 +89,38 @@ function ImageLayoutGridInner(props: ImageLayoutGridInnerProps) {
   }
 }
 
-// This is used to compute margins (rather than flexbox gap) due to Yoga bugs:
+// On web we use margin to calculate gap, as aspectRatio does not properly size
+// all images on web. On native though we cannot rely on margin, since the
+// negative margin interferes with the swipe controls on pagers.
 // https://github.com/facebook/yoga/issues/1418
+// https://github.com/bluesky-social/social-app/issues/2601
 const IMAGE_GAP = 5
 
 const styles = StyleSheet.create({
-  container: {
-    marginHorizontal: -IMAGE_GAP / 2,
-    marginVertical: -IMAGE_GAP / 2,
+  container: isWeb
+    ? {
+        marginHorizontal: -IMAGE_GAP / 2,
+        marginVertical: -IMAGE_GAP / 2,
+      }
+    : {
+        gap: IMAGE_GAP,
+      },
+  flexRow: {
+    flexDirection: 'row',
+    gap: isWeb ? undefined : IMAGE_GAP,
   },
-  flexRow: {flexDirection: 'row'},
   smallItem: {flex: 1, aspectRatio: 1},
-  image: {
-    margin: IMAGE_GAP / 2,
+  image: isWeb
+    ? {
+        margin: IMAGE_GAP / 2,
+      }
+    : {},
+  threeSingle: {
+    flex: 2,
+    aspectRatio: isWeb ? 1 : undefined,
+  },
+  threeDouble: {
+    flex: 1,
+    gap: isWeb ? undefined : IMAGE_GAP,
   },
 })

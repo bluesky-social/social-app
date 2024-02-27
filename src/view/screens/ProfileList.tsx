@@ -14,7 +14,7 @@ import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {CenteredView} from 'view/com/util/Views'
 import {EmptyState} from 'view/com/util/EmptyState'
 import {LoadingScreen} from 'view/com/util/LoadingScreen'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {Button} from 'view/com/util/forms/Button'
 import {TextLink} from 'view/com/util/Link'
 import {ListRef} from 'view/com/util/List'
@@ -55,10 +55,12 @@ import {
   usePreferencesQuery,
   usePinFeedMutation,
   useUnpinFeedMutation,
+  useSetSaveFeedsMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {listenSoftReset} from '#/state/events'
+import {atoms as a} from '#/alf'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -246,9 +248,11 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     useUnpinFeedMutation()
   const isPending = isPinPending || isUnpinPending
   const {data: preferences} = usePreferencesQuery()
+  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
 
   const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
+  const isSaved = preferences?.feeds?.saved?.includes(list.uri)
 
   const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
@@ -261,7 +265,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       }
     } catch (e) {
       Toast.show(_(msg`There was an issue contacting the server`))
-      logger.error('Failed to toggle pinned feed', {error: e})
+      logger.error('Failed to toggle pinned feed', {message: e})
     }
   }, [list.uri, isPinned, pinFeed, unpinFeed, _])
 
@@ -361,6 +365,16 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       message: _(msg`Are you sure?`),
       async onPressConfirm() {
         await listDeleteMutation.mutateAsync({uri: list.uri})
+
+        if (isSaved || isPinned) {
+          const {saved, pinned} = preferences!.feeds
+
+          setSavedFeeds({
+            saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
+            pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
+          })
+        }
+
         Toast.show(_(msg`List deleted`))
         track('Lists:Delete')
         if (navigation.canGoBack()) {
@@ -370,7 +384,18 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         }
       },
     })
-  }, [openModal, list, listDeleteMutation, navigation, track, _])
+  }, [
+    openModal,
+    list,
+    listDeleteMutation,
+    navigation,
+    track,
+    _,
+    preferences,
+    isPinned,
+    isSaved,
+    setSavedFeeds,
+  ])
 
   const onPressReport = useCallback(() => {
     openModal({
@@ -718,9 +743,8 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
             {descriptionRT ? (
               <RichText
                 testID="listDescription"
-                type="lg"
-                style={pal.text}
-                richText={descriptionRT}
+                style={[a.text_md]}
+                value={descriptionRT}
               />
             ) : (
               <Text

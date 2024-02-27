@@ -11,21 +11,11 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
-module.exports = function () {
+module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
    */
   const VERSION = pkg.version
-
-  /**
-   * iOS build number. Must be incremented for each TestFlight version.
-   */
-  const IOS_BUILD_NUMBER = '1'
-
-  /**
-   * Android build number. Must be incremented for each release.
-   */
-  const ANDROID_VERSION_CODE = 58
 
   /**
    * Uses built-in Expo env vars
@@ -34,11 +24,10 @@ module.exports = function () {
    */
   const PLATFORM = process.env.EAS_BUILD_PLATFORM
 
-  /**
-   * Additional granularity for the `dist` field
-   */
   const DIST_BUILD_NUMBER =
-    PLATFORM === 'android' ? ANDROID_VERSION_CODE : IOS_BUILD_NUMBER
+    PLATFORM === 'android'
+      ? process.env.BSKY_ANDROID_VERSION_CODE
+      : process.env.BSKY_IOS_BUILD_NUMBER
 
   return {
     expo: {
@@ -57,7 +46,6 @@ module.exports = function () {
       userInterfaceStyle: 'automatic',
       splash: SPLASH_CONFIG,
       ios: {
-        buildNumber: IOS_BUILD_NUMBER,
         supportsTablet: false,
         bundleIdentifier: 'xyz.blueskyweb.app',
         config: {
@@ -85,7 +73,6 @@ module.exports = function () {
         backgroundColor: '#ffffff',
       },
       android: {
-        versionCode: ANDROID_VERSION_CODE,
         icon: './assets/icon.png',
         adaptiveIcon: {
           foregroundImage: './assets/icon-android-foreground.png',
@@ -103,6 +90,10 @@ module.exports = function () {
               {
                 scheme: 'https',
                 host: 'bsky.app',
+              },
+              {
+                scheme: 'http',
+                host: 'localhost:19006',
               },
             ],
             category: ['BROWSABLE', 'DEFAULT'],
@@ -142,6 +133,13 @@ module.exports = function () {
           'expo-updates',
           {
             username: 'blueskysocial',
+          },
+        ],
+        [
+          'expo-notifications',
+          {
+            icon: './assets/icon-android-notification.png',
+            color: '#ffffff',
           },
         ],
         './plugins/withAndroidManifestPlugin.js',

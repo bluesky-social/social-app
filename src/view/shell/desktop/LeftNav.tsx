@@ -334,7 +334,7 @@ export function DesktopLeftNav() {
             }
             iconFilled={
               <HashtagIcon
-                strokeWidth={2.5}
+                strokeWidth={4}
                 style={pal.text as FontAwesomeIconStyle}
                 size={isDesktop ? 24 : 28}
               />

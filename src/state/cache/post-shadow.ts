@@ -12,9 +12,7 @@ export type {Shadow} from './types'
 
 export interface PostShadow {
   likeUri: string | undefined
-  likeCount: number | undefined
   repostUri: string | undefined
-  repostCount: number | undefined
   isDeleted: boolean
 }
 
@@ -62,11 +60,31 @@ function mergeShadow(
   if (shadow.isDeleted) {
     return POST_TOMBSTONE
   }
+
+  const wasLiked = !!post.viewer?.like
+  const isLiked = !!shadow.likeUri
+  let likeCount = post.likeCount ?? 0
+  if (wasLiked && !isLiked) {
+    likeCount--
+  } else if (!wasLiked && isLiked) {
+    likeCount++
+  }
+  likeCount = Math.max(0, likeCount)
+
+  const wasReposted = !!post.viewer?.repost
+  const isReposted = !!shadow.repostUri
+  let repostCount = post.repostCount ?? 0
+  if (wasReposted && !isReposted) {
+    repostCount--
+  } else if (!wasReposted && isReposted) {
+    repostCount++
+  }
+  repostCount = Math.max(0, repostCount)
+
   return castAsShadow({
     ...post,
-    likeCount: 'likeCount' in shadow ? shadow.likeCount : post.likeCount,
-    repostCount:
-      'repostCount' in shadow ? shadow.repostCount : post.repostCount,
+    likeCount: likeCount,
+    repostCount: repostCount,
     viewer: {
       ...(post.viewer || {}),
       like: 'likeUri' in shadow ? shadow.likeUri : post.viewer?.like,

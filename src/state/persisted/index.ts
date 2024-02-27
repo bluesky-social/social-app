@@ -19,7 +19,7 @@ const _emitter = new EventEmitter()
  * the Provider.
  */
 export async function init() {
-  logger.info('persisted state: initializing')
+  logger.debug('persisted state: initializing')
 
   broadcast.onmessage = onBroadcastMessage
 
@@ -27,14 +27,14 @@ export async function init() {
     await migrate() // migrate old store
     const stored = await store.read() // check for new store
     if (!stored) {
-      logger.info('persisted state: initializing default storage')
+      logger.debug('persisted state: initializing default storage')
       await store.write(defaults) // opt: init new store
     }
     _state = stored || defaults // return new store
-    logger.log('persisted state: initialized')
+    logger.debug('persisted state: initialized')
   } catch (e) {
     logger.error('persisted state: failed to load root state from storage', {
-      error: e,
+      message: e,
     })
     // AsyncStorage failure, but we can still continue in memory
     return defaults
@@ -59,7 +59,7 @@ export async function write<K extends keyof Schema>(
     })
   } catch (e) {
     logger.error(`persisted state: failed writing root state to storage`, {
-      error: e,
+      message: e,
     })
   }
 }
@@ -89,7 +89,7 @@ async function onBroadcastMessage({data}: MessageEvent) {
       logger.error(
         `persisted state: failed handling update from broadcast channel`,
         {
-          error: e,
+          message: e,
         },
       )
     }

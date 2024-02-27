@@ -28,6 +28,7 @@ import {useTheme} from 'lib/ThemeContext'
 import {isUriImage} from 'lib/media/util'
 import {downloadAndResize} from 'lib/media/manip'
 import {POST_IMG_MAX} from 'lib/constants'
+import {isIOS} from 'platform/detection'
 
 export interface TextInputRef {
   focus: () => void
@@ -189,12 +190,11 @@ export const TextInput = forwardRef(function TextInputImpl(
     let i = 0
 
     return Array.from(richtext.segments()).map(segment => {
-      const isTag = AppBskyRichtextFacet.isTag(segment.facet?.features?.[0])
       return (
         <Text
           key={i++}
           style={[
-            segment.facet && !isTag ? pal.link : pal.text,
+            segment.facet ? pal.link : pal.text,
             styles.textInputFormatting,
           ]}>
           {segment.text}
@@ -252,6 +252,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     letterSpacing: 0.2,
     fontWeight: '400',
-    lineHeight: 23.4, // 1.3*16
+    // This is broken on ios right now, so don't set it there.
+    lineHeight: isIOS ? undefined : 23.4, // 1.3*16
   },
 })

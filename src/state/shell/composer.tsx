@@ -1,5 +1,9 @@
 import React from 'react'
-import {AppBskyEmbedRecord, AppBskyRichtextFacet} from '@atproto/api'
+import {
+  AppBskyEmbedRecord,
+  AppBskyRichtextFacet,
+  PostModeration,
+} from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ComposerOptsPostRef {
@@ -12,6 +16,7 @@ export interface ComposerOptsPostRef {
     avatar?: string
   }
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
+  moderation?: PostModeration
 }
 export interface ComposerOptsQuote {
   uri: string

@@ -16,7 +16,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'
 import {
@@ -53,6 +53,7 @@ import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {NavigationProp} from '#/lib/routes/types'
 
 function Loader() {
   const pal = usePalette('default')
@@ -153,7 +154,7 @@ function SearchScreenSuggestedFollows() {
       getSuggestions()
     } catch (e) {
       logger.error(`SearchScreenSuggestedFollows: failed to get suggestions`, {
-        error: e,
+        message: e,
       })
     }
   }, [currentAccount, setSuggestions, getSuggestedFollowsByActor])
@@ -190,7 +191,13 @@ type SearchResultSlice =
 
 function SearchScreenPostResults({query}: {query: string}) {
   const {_} = useLingui()
+  const {currentAccount} = useSession()
   const [isPTR, setIsPTR] = React.useState(false)
+
+  const augmentedQuery = React.useMemo(() => {
+    return augmentSearchQuery(query || '', {did: currentAccount?.did})
+  }, [query, currentAccount])
+
   const {
     isFetched,
     data: results,
@@ -200,7 +207,7 @@ function SearchScreenPostResults({query}: {query: string}) {
     fetchNextPage,
     isFetchingNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query})
+  } = useSearchPostsQuery({query: augmentedQuery})
 
   const onPullToRefresh = React.useCallback(async () => {
     setIsPTR(true)
@@ -319,12 +326,8 @@ export function SearchScreenInner({
   const pal = usePalette('default')
   const setMinimalShellMode = useSetMinimalShellMode()
   const setDrawerSwipeDisabled = useSetDrawerSwipeDisabled()
-  const {hasSession, currentAccount} = useSession()
+  const {hasSession} = useSession()
   const {isDesktop} = useWebMediaQueries()
-
-  const augmentedQuery = React.useMemo(() => {
-    return augmentSearchQuery(query || '', {did: currentAccount?.did})
-  }, [query, currentAccount])
 
   const onPageSelected = React.useCallback(
     (index: number) => {
@@ -337,7 +340,6 @@ export function SearchScreenInner({
   if (hasSession) {
     return query ? (
       <Pager
-        tabBarPosition="top"
         onPageSelected={onPageSelected}
         renderTabBar={props => (
           <CenteredView
@@ -348,7 +350,7 @@ export function SearchScreenInner({
         )}
         initialPage={0}>
         <View>
-          <SearchScreenPostResults query={augmentedQuery} />
+          <SearchScreenPostResults query={query} />
         </View>
         <View>
           <SearchScreenUserResults query={query} />
@@ -380,7 +382,6 @@ export function SearchScreenInner({
 
   return query ? (
     <Pager
-      tabBarPosition="top"
       onPageSelected={onPageSelected}
       renderTabBar={props => (
         <CenteredView
@@ -448,6 +449,7 @@ export function SearchScreenInner({
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
+  const navigation = useNavigation<NavigationProp>()
   const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
@@ -472,6 +474,27 @@ export function SearchScreen(
     React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
 
+  /**
+   * The Search screen's `q` param
+   */
+  const queryParam = props.route?.params?.q
+
+  /**
+   * If `true`, this means we received new instructions from the router. This
+   * is handled in a effect, and used to update the value of `query` locally
+   * within this screen.
+   */
+  const routeParamsMismatch = queryParam && queryParam !== query
+
+  React.useEffect(() => {
+    if (queryParam && routeParamsMismatch) {
+      // reset immediately and let local state take over
+      navigation.setParams({q: ''})
+      // update query for next search
+      setQuery(queryParam)
+    }
+  }, [queryParam, routeParamsMismatch, navigation])
+
   React.useEffect(() => {
     const loadSearchHistory = async () => {
       try {
@@ -480,7 +503,7 @@ export function SearchScreen(
           setSearchHistory(JSON.parse(history))
         }
       } catch (e: any) {
-        logger.error('Failed to load search history', e)
+        logger.error('Failed to load search history', {message: e})
       }
     }
 
@@ -558,7 +581,7 @@ export function SearchScreen(
             JSON.stringify(newHistory),
           )
         } catch (e: any) {
-          logger.error('Failed to save search history', e)
+          logger.error('Failed to save search history', {message: e})
         }
       }
     },
@@ -598,7 +621,7 @@ export function SearchScreen(
     setSearchHistory(updatedHistory)
     AsyncStorage.setItem('searchHistory', JSON.stringify(updatedHistory)).catch(
       e => {
-        logger.error('Failed to update search history', e)
+        logger.error('Failed to update search history', {message: e})
       },
     )
   }
@@ -774,6 +797,8 @@ export function SearchScreen(
             )}
           </View>
         </CenteredView>
+      ) : routeParamsMismatch ? (
+        <ActivityIndicator />
       ) : (
         <SearchScreenInner query={query} />
       )}

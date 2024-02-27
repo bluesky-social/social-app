@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dimensions, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 import {List, ListRef} from '../util/List'
 import {FeedSourceCardLoaded} from './FeedSourceCard'
@@ -103,7 +103,7 @@ export const ProfileFeedgens = React.forwardRef<
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh feeds', {error: err})
+      logger.error('Failed to refresh feeds', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -114,7 +114,7 @@ export const ProfileFeedgens = React.forwardRef<
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more feeds', {error: err})
+      logger.error('Failed to load more feeds', {message: err})
     }
   }, [isFetching, hasNextPage, isError, fetchNextPage])
 
@@ -180,9 +180,7 @@ export const ProfileFeedgens = React.forwardRef<
         refreshing={isPTRing}
         onRefresh={onRefresh}
         headerOffset={headerOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
+        contentContainerStyle={isNative && {paddingBottom: headerOffset + 100}}
         indicatorStyle={theme.colorScheme === 'dark' ? 'white' : 'black'}
         removeClippedSubviews={true}
         // @ts-ignore our .web version only -prf

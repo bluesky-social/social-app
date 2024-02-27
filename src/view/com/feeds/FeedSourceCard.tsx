@@ -2,7 +2,7 @@ import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Text} from '../util/text/Text'
-import {RichText} from '../util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
@@ -25,6 +25,7 @@ import {
 } from '#/state/queries/preferences'
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
+import {useTheme} from '#/alf'
 
 export function FeedSourceCard({
   feedUri,
@@ -82,6 +83,7 @@ export function FeedSourceCardLoaded({
   pinOnSave?: boolean
   showMinimalPlaceholder?: boolean
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
@@ -111,7 +113,7 @@ export function FeedSourceCardLoaded({
             Toast.show(_(msg`Removed from my feeds`))
           } catch (e) {
             Toast.show(_(msg`There was an issue contacting your server`))
-            logger.error('Failed to unsave feed', {error: e})
+            logger.error('Failed to unsave feed', {message: e})
           }
         },
       })
@@ -125,7 +127,7 @@ export function FeedSourceCardLoaded({
         Toast.show(_(msg`Added to my feeds`))
       } catch (e) {
         Toast.show(_(msg`There was an issue contacting your server`))
-        logger.error('Failed to save feed', {error: e})
+        logger.error('Failed to save feed', {message: e})
       }
     }
   }, [isSaved, openModal, feed, removeFeed, saveFeed, _, pinOnSave, pinFeed])
@@ -180,7 +182,7 @@ export function FeedSourceCardLoaded({
                     Toast.show(
                       _(msg`There was an issue contacting your server`),
                     )
-                    logger.error('Failed to unsave feed', {error: e})
+                    logger.error('Failed to unsave feed', {message: e})
                   }
                 },
               })
@@ -266,8 +268,8 @@ export function FeedSourceCardLoaded({
 
       {showDescription && feed.description ? (
         <RichText
-          style={[pal.textLight, styles.description]}
-          richText={feed.description}
+          style={[t.atoms.text_contrast_high, styles.description]}
+          value={feed.description}
           numberOfLines={3}
         />
       ) : null}

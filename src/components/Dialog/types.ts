@@ -1,6 +1,8 @@
 import React from 'react'
-import type {ViewStyle, AccessibilityProps} from 'react-native'
+import type {AccessibilityProps} from 'react-native'
 import {BottomSheetProps} from '@gorhom/bottom-sheet'
+
+import {ViewStyleProp} from '#/alf'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -8,17 +10,25 @@ export type DialogContextProps = {
   close: () => void
 }
 
+export type DialogControlOpenOptions = {
+  /**
+   * NATIVE ONLY
+   *
+   * Optional index of the snap point to open the bottom sheet to. Defaults to
+   * 0, which is the first snap point (i.e. "open").
+   */
+  index?: number
+}
+
 export type DialogControlProps = {
-  open: (index?: number) => void
-  close: () => void
+  open: (options?: DialogControlOpenOptions) => void
+  close: (callback?: () => void) => void
 }
 
 export type DialogOuterProps = {
   control: {
     ref: React.RefObject<DialogControlProps>
-    open: (index?: number) => void
-    close: () => void
-  }
+  } & DialogControlProps
   onClose?: () => void
   nativeOptions?: {
     sheet?: Omit<BottomSheetProps, 'children'>
@@ -26,10 +36,7 @@ export type DialogOuterProps = {
   webOptions?: {}
 }
 
-type DialogInnerPropsBase<T> = React.PropsWithChildren<{
-  style?: ViewStyle
-}> &
-  T
+type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
 export type DialogInnerProps =
   | DialogInnerPropsBase<{
       label?: undefined

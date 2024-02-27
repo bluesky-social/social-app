@@ -6,8 +6,12 @@ import {
   ViewStyle,
   DimensionValue,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HeartIcon, HeartIconSolid} from 'lib/icons'
+import {
+  HeartIcon,
+  HeartIconSolid,
+  CommentBottomArrow,
+  RepostIcon,
+} from 'lib/icons'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -61,30 +65,38 @@ export function PostLoadingPlaceholder({
         <LoadingPlaceholder width={100} height={6} style={{marginBottom: 10}} />
         <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
         <LoadingPlaceholder width="95%" height={6} style={{marginBottom: 8}} />
-        <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 15}} />
-        <View style={s.flexRow}>
-          <View style={s.flex1}>
-            <FontAwesomeIcon
-              style={{color: theme.palette.default.icon}}
-              icon={['far', 'comment']}
-              size={14}
-            />
+        <LoadingPlaceholder width="80%" height={6} style={{marginBottom: 11}} />
+        <View style={styles.postCtrls}>
+          <View style={styles.postCtrl}>
+            <View style={[styles.postBtn, {paddingLeft: 0}]}>
+              <CommentBottomArrow
+                style={[{color: theme.palette.default.icon, marginTop: 1}]}
+                strokeWidth={3}
+                size={15}
+              />
+            </View>
           </View>
-          <View style={s.flex1}>
-            <FontAwesomeIcon
-              style={{color: theme.palette.default.icon}}
-              icon="retweet"
-              size={18}
-            />
+          <View style={styles.postCtrl}>
+            <View style={styles.postBtn}>
+              <RepostIcon
+                style={{color: theme.palette.default.icon}}
+                strokeWidth={3}
+                size={20}
+              />
+            </View>
           </View>
-          <View style={s.flex1}>
-            <HeartIcon
-              style={{color: theme.palette.default.icon} as ViewStyle}
-              size={17}
-              strokeWidth={1.7}
-            />
+          <View style={styles.postCtrl}>
+            <View style={styles.postBtn}>
+              <HeartIcon
+                style={{color: theme.palette.default.icon} as ViewStyle}
+                size={16}
+                strokeWidth={3}
+              />
+            </View>
           </View>
-          <View style={s.flex1} />
+          <View style={styles.postCtrl}>
+            <View style={styles.postBtn} />
+          </View>
         </View>
       </View>
     </View>
@@ -267,6 +279,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 20,
     paddingBottom: 5,
+    paddingRight: 15,
+  },
+  postCtrls: {
+    opacity: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  postCtrl: {
+    flex: 1,
+  },
+  postBtn: {
+    padding: 5,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   avatar: {
     borderRadius: 26,

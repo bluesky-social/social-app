@@ -3,7 +3,10 @@ import {StyleSheet, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ModerationUI} from '@atproto/api'
 import {Image} from 'expo-image'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {colors} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
@@ -13,8 +16,6 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {NativeDropdown, DropdownItem} from './forms/NativeDropdown'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 export function UserBanner({
   banner,
@@ -26,6 +27,7 @@ export function UserBanner({
   onSelectNewBanner?: (img: RNImage | null) => void
 }) {
   const pal = usePalette('default')
+  const theme = useTheme()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -142,7 +144,10 @@ export function UserBanner({
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
     <Image
       testID="userBannerImage"
-      style={styles.bannerImage}
+      style={[
+        styles.bannerImage,
+        {backgroundColor: theme.palette.default.backgroundLight},
+      ]}
       resizeMode="cover"
       source={{uri: banner}}
       blurRadius={moderation?.blur ? 100 : 0}

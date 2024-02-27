@@ -139,7 +139,7 @@ function FeedgenErrorMessage({
               msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
             ),
           )
-          logger.error('Failed to remove feed', {error: err})
+          logger.error('Failed to remove feed', {message: err})
         }
       },
       onPressCancel() {

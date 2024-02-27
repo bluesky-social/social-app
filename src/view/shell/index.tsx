@@ -29,6 +29,7 @@ import {useSession} from '#/state/session'
 import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
 import {Outlet as PortalOutlet} from '#/components/Portal'
+import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -52,6 +53,8 @@ function ShellInner() {
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession, currentAccount} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
+  // start undefined
+  const currentAccountDid = React.useRef<string | undefined>(undefined)
 
   React.useEffect(() => {
     let listener = {remove() {}}
@@ -66,13 +69,10 @@ function ShellInner() {
   }, [closeAnyActiveElement])
 
   React.useEffect(() => {
-    if (currentAccount) {
+    // only runs when did changes
+    if (currentAccount && currentAccountDid.current !== currentAccount.did) {
+      currentAccountDid.current = currentAccount.did
       notifications.requestPermissionsAndRegisterToken(currentAccount)
-    }
-  }, [currentAccount])
-
-  React.useEffect(() => {
-    if (currentAccount) {
       const unsub = notifications.registerTokenChangeHandler(currentAccount)
       return unsub
     }
@@ -95,6 +95,7 @@ function ShellInner() {
       </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
+      <MutedWordsDialog />
       <PortalOutlet />
       <Lightbox />
     </>

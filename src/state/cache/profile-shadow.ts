@@ -22,15 +22,15 @@ export interface ProfileShadow {
   blockingUri: string | undefined
 }
 
-type ProfileView =
-  | AppBskyActorDefs.ProfileView
-  | AppBskyActorDefs.ProfileViewBasic
-  | AppBskyActorDefs.ProfileViewDetailed
-
-const shadows: WeakMap<ProfileView, Partial<ProfileShadow>> = new WeakMap()
+const shadows: WeakMap<
+  AppBskyActorDefs.ProfileView,
+  Partial<ProfileShadow>
+> = new WeakMap()
 const emitter = new EventEmitter()
 
-export function useProfileShadow(profile: ProfileView): Shadow<ProfileView> {
+export function useProfileShadow<
+  TProfileView extends AppBskyActorDefs.ProfileView,
+>(profile: TProfileView): Shadow<TProfileView> {
   const [shadow, setShadow] = useState(() => shadows.get(profile))
   const [prevPost, setPrevPost] = useState(profile)
   if (profile !== prevPost) {
@@ -70,10 +70,10 @@ export function updateProfileShadow(
   })
 }
 
-function mergeShadow(
-  profile: ProfileView,
+function mergeShadow<TProfileView extends AppBskyActorDefs.ProfileView>(
+  profile: TProfileView,
   shadow: Partial<ProfileShadow>,
-): Shadow<ProfileView> {
+): Shadow<TProfileView> {
   return castAsShadow({
     ...profile,
     viewer: {
@@ -89,7 +89,9 @@ function mergeShadow(
   })
 }
 
-function* findProfilesInCache(did: string): Generator<ProfileView, void> {
+function* findProfilesInCache(
+  did: string,
+): Generator<AppBskyActorDefs.ProfileView, void> {
   yield* findAllProfilesInListMembersQueryData(queryClient, did)
   yield* findAllProfilesInMyBlockedAccountsQueryData(queryClient, did)
   yield* findAllProfilesInMyMutedAccountsQueryData(queryClient, did)

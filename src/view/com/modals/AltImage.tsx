@@ -4,7 +4,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  TextInput as RNTextInput,
   useWindowDimensions,
+  ScrollView as RNScrollView,
 } from 'react-native'
 import {ScrollView, TextInput} from './util'
 import {Image} from 'expo-image'
@@ -13,6 +15,7 @@ import {gradients, s} from 'lib/styles'
 import {enforceLen} from 'lib/strings/helpers'
 import {MAX_ALT_TEXT} from 'lib/constants'
 import {useTheme} from 'lib/ThemeContext'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
 import {Text} from '../util/text/Text'
 import LinearGradient from 'react-native-linear-gradient'
 import {isWeb} from 'platform/detection'
@@ -34,6 +37,24 @@ export function Component({image}: Props) {
   const [altText, setAltText] = useState(image.altText)
   const windim = useWindowDimensions()
   const {closeModal} = useModalControls()
+  const inputRef = React.useRef<RNTextInput>(null)
+  const scrollViewRef = React.useRef<RNScrollView>(null)
+  const keyboardShown = useIsKeyboardVisible()
+
+  // Autofocus hack when we open the modal. We have to wait for the animation to complete first
+  React.useEffect(() => {
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 500)
+  }, [])
+
+  // We'd rather be at the bottom here so that we can easily dismiss the modal instead of having to scroll
+  // (especially on android, it acts weird)
+  React.useEffect(() => {
+    if (keyboardShown[0]) {
+      scrollViewRef.current?.scrollToEnd()
+    }
+  }, [keyboardShown])
 
   const imageStyles = useMemo<ImageStyle>(() => {
     const maxWidth = isWeb ? 450 : windim.width
@@ -71,6 +92,7 @@ export function Component({image}: Props) {
       testID="altTextImageModal"
       style={[pal.view, styles.scrollContainer]}
       keyboardShouldPersistTaps="always"
+      ref={scrollViewRef}
       nativeID="imageAltText">
       <View style={styles.scrollInner}>
         <View style={[pal.viewLight, styles.imageContainer]}>
@@ -83,6 +105,7 @@ export function Component({image}: Props) {
             contentFit="contain"
             accessible={true}
             accessibilityIgnoresInvertColors
+            enableLiveTextInteraction
           />
         </View>
         <TextInput
@@ -97,7 +120,8 @@ export function Component({image}: Props) {
           accessibilityLabel={_(msg`Image alt text`)}
           accessibilityHint=""
           accessibilityLabelledBy="imageAltText"
-          autoFocus
+          // @ts-ignore This is fine, type is weird on the BottomSheetTextInput
+          ref={inputRef}
         />
         <View style={styles.buttonControls}>
           <TouchableOpacity

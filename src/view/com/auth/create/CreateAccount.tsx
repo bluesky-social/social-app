@@ -13,33 +13,25 @@ import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useOnboardingDispatch} from '#/state/shell'
-import {useSessionApi} from '#/state/session'
-import {useCreateAccount, submit} from './state'
+import {useCreateAccount, useSubmitCreateAccount} from './state'
 import {useServiceQuery} from '#/state/queries/service'
-import {
-  usePreferencesSetBirthDateMutation,
-  useSetSaveFeedsMutation,
-  DEFAULT_PROD_FEEDS,
-} from '#/state/queries/preferences'
-import {FEEDBACK_FORM_URL, IS_PROD} from '#/lib/constants'
+import {FEEDBACK_FORM_URL, HITSLOP_10} from '#/lib/constants'
 
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {TextLink} from '../../util/Link'
+import {getAgent} from 'state/session'
+import {createFullHandle, validateHandle} from 'lib/strings/handles'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
   const pal = usePalette('default')
   const {_} = useLingui()
   const [uiState, uiDispatch] = useCreateAccount()
-  const onboardingDispatch = useOnboardingDispatch()
-  const {createAccount} = useSessionApi()
-  const {mutate: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {isTabletOrDesktop} = useWebMediaQueries()
+  const submit = useSubmitCreateAccount(uiState, uiDispatch)
 
   React.useEffect(() => {
     screen('CreateAccount')
@@ -84,33 +76,52 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
     if (!uiState.canNext) {
       return
     }
-    if (uiState.step < 3) {
-      uiDispatch({type: 'next'})
-    } else {
+
+    if (uiState.step === 2) {
+      if (!validateHandle(uiState.handle, uiState.userDomain).overall) {
+        return
+      }
+
+      uiDispatch({type: 'set-processing', value: true})
       try {
-        await submit({
-          onboardingDispatch,
-          createAccount,
-          uiState,
-          uiDispatch,
-          _,
+        const res = await getAgent().resolveHandle({
+          handle: createFullHandle(uiState.handle, uiState.userDomain),
         })
-        setBirthDate({birthDate: uiState.birthDate})
-        if (IS_PROD(uiState.serviceUrl)) {
-          setSavedFeeds(DEFAULT_PROD_FEEDS)
+
+        if (res.data.did) {
+          uiDispatch({
+            type: 'set-error',
+            value: _(msg`That handle is already taken.`),
+          })
+          return
         }
-      } catch {
-        // dont need to handle here
+      } catch (e) {
+        // Don't need to handle
+      } finally {
+        uiDispatch({type: 'set-processing', value: false})
+      }
+
+      if (!uiState.isCaptchaRequired) {
+        try {
+          await submit()
+        } catch {
+          // dont need to handle here
+        }
+        // We don't need to go to the next page if there wasn't a captcha required
+        return
       }
     }
+
+    uiDispatch({type: 'next'})
   }, [
-    uiState,
+    uiState.canNext,
+    uiState.step,
+    uiState.isCaptchaRequired,
+    uiState.handle,
+    uiState.userDomain,
     uiDispatch,
-    onboardingDispatch,
-    createAccount,
-    setBirthDate,
-    setSavedFeeds,
     _,
+    submit,
   ])
 
   // rendering
@@ -121,7 +132,11 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
       leadin=""
       title={_(msg`Create Account`)}
       description={_(msg`We're so excited to have you join us!`)}>
-      <ScrollView testID="createAccount" style={pal.view}>
+      <ScrollView
+        testID="createAccount"
+        style={pal.view}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag">
         <View style={styles.stepContainer}>
           {uiState.step === 1 && (
             <Step1 uiState={uiState} uiDispatch={uiDispatch} />
@@ -137,7 +152,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
           <TouchableOpacity
             onPress={onPressBackInner}
             testID="backBtn"
-            accessibilityRole="button">
+            accessibilityRole="button"
+            hitSlop={HITSLOP_10}>
             <Text type="xl" style={pal.link}>
               <Trans>Back</Trans>
             </Text>
@@ -147,7 +163,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
             <TouchableOpacity
               testID="nextBtn"
               onPress={onPressNext}
-              accessibilityRole="button">
+              accessibilityRole="button"
+              hitSlop={HITSLOP_10}>
               {uiState.isProcessing ? (
                 <ActivityIndicator />
               ) : (
@@ -163,7 +180,8 @@ export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
               accessibilityRole="button"
               accessibilityLabel={_(msg`Retry`)}
               accessibilityHint=""
-              accessibilityLiveRegion="polite">
+              accessibilityLiveRegion="polite"
+              hitSlop={HITSLOP_10}>
               <Text type="xl-bold" style={[pal.link, s.pr5]}>
                 <Trans>Retry</Trans>
               </Text>

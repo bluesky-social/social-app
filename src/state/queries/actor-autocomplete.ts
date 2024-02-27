@@ -61,6 +61,7 @@ export function useActorAutocompleteFn() {
 
   return React.useCallback(
     async ({query, limit = 8}: {query: string; limit?: number}) => {
+      query = query.toLowerCase()
       let res
       if (query) {
         try {
@@ -75,7 +76,7 @@ export function useActorAutocompleteFn() {
           })
         } catch (e) {
           logger.error('useActorSearch: searchActorsTypeahead failed', {
-            error: e,
+            message: e,
           })
         }
       }

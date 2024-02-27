@@ -88,7 +88,7 @@ export function ProfileCard({
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
         logger.error('RecommendedFollows: failed to toggle following', {
-          error: e,
+          message: e,
         })
       }
     } finally {

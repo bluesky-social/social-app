@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {
   StyleSheet,
   StyleProp,
@@ -29,6 +29,8 @@ import {ListEmbed} from './ListEmbed'
 import {isCauseALabelOnUri, isQuoteBlurred} from 'lib/moderation'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
+import {isNative} from '#/platform/detection'
+import {shareUrl} from '#/lib/sharing'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -50,6 +52,16 @@ export function PostEmbeds({
 }) {
   const pal = usePalette('default')
   const {openLightbox} = useLightboxControls()
+
+  const externalUri = AppBskyEmbedExternal.isView(embed)
+    ? embed.external.uri
+    : null
+
+  const onShareExternal = useCallback(() => {
+    if (externalUri && isNative) {
+      shareUrl(externalUri)
+    }
+  }, [externalUri])
 
   // quote post with media
   // =
@@ -164,7 +176,8 @@ export function PostEmbeds({
         anchorNoUnderline
         href={link.uri}
         style={[styles.extOuter, pal.view, pal.borderDark, style]}
-        hoverStyle={{borderColor: pal.colors.borderLinkHover}}>
+        hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+        onLongPress={onShareExternal}>
         <ExternalLinkEmbed link={link} />
       </Link>
     )
