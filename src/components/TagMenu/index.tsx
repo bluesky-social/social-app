@@ -125,7 +125,13 @@ export function TagMenu({
                         native({top: 2}),
                         t.atoms.text_contrast_medium,
                       ]}>
-                      <Trans>See {tag} posts</Trans>
+                      <Trans>
+                        See{' '}
+                        <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                          {tag}
+                        </Text>{' '}
+                        posts
+                      </Trans>
                     </Text>
                   </View>
                 </Link>
@@ -180,7 +186,14 @@ export function TagMenu({
                             native({top: 2}),
                             t.atoms.text_contrast_medium,
                           ]}>
-                          <Trans>See {tag} posts by this user</Trans>
+                          <Trans>
+                            See{' '}
+                            <Text
+                              style={[a.text_md, a.font_bold, t.atoms.text]}>
+                              {tag}
+                            </Text>{' '}
+                            posts by this user
+                          </Trans>
                         </Text>
                       </View>
                     </Link>
@@ -237,11 +250,11 @@ export function TagMenu({
                             native({top: 2}),
                             t.atoms.text_contrast_medium,
                           ]}>
-                          {isMuted ? (
-                            <Trans>Unmute {tag} posts</Trans>
-                          ) : (
-                            <Trans>Mute {tag} posts</Trans>
-                          )}
+                          {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
+                          <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                            {tag}
+                          </Text>{' '}
+                          <Trans>posts</Trans>
                         </Text>
                       </View>
                     </Button>

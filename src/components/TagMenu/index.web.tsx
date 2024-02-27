@@ -12,6 +12,7 @@ import {
   useUpsertMutedWordsMutation,
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
+import {enforceLen} from '#/lib/strings/helpers'
 
 export function useTagMenuControl() {}
 
@@ -40,11 +41,12 @@ export function TagMenu({
       )) &&
       !(optimisticRemove?.value === sanitizedTag),
   )
+  const truncatedTag = enforceLen(tag, 15, true, 'middle')
 
   const dropdownItems = React.useMemo(() => {
     return [
       {
-        label: _(msg`See ${tag} posts`),
+        label: _(msg`See ${truncatedTag} posts`),
         onPress() {
           navigation.navigate('Search', {
             q: tag,
@@ -61,7 +63,7 @@ export function TagMenu({
       },
       authorHandle &&
         !isInvalidHandle(authorHandle) && {
-          label: _(msg`See ${tag} posts by this user`),
+          label: _(msg`See ${truncatedTag} posts by this user`),
           onPress() {
             navigation.navigate({
               name: 'Search',
@@ -83,7 +85,9 @@ export function TagMenu({
         label: 'separator',
       },
       preferences && {
-        label: isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`),
+        label: isMuted
+          ? _(msg`Unmute ${truncatedTag}`)
+          : _(msg`Mute ${truncatedTag}`),
         onPress() {
           if (isMuted) {
             removeMutedWord({value: sanitizedTag, targets: ['tag']})
@@ -108,6 +112,7 @@ export function TagMenu({
     navigation,
     preferences,
     tag,
+    truncatedTag,
     sanitizedTag,
     upsertMutedWord,
     removeMutedWord,
