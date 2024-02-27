@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.69.0",
+  "version": "1.70.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -43,7 +43,7 @@
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android"
   },
   "dependencies": {
-    "@atproto/api": "^0.9.5",
+    "@atproto/api": "^0.10.0",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
