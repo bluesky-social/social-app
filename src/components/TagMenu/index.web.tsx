@@ -13,6 +13,7 @@ import {
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {enforceLen} from '#/lib/strings/helpers'
+import {web} from '#/alf'
 
 export function useTagMenuControl() {}
 
@@ -124,7 +125,10 @@ export function TagMenu({
         accessibilityLabel={_(msg`Click here to open tag menu for ${tag}`)}
         accessibilityHint=""
         // @ts-ignore
-        items={dropdownItems}>
+        items={dropdownItems}
+        triggerStyle={web({
+          textAlign: 'left',
+        })}>
         {children}
       </NativeDropdown>
     </EventStopper>
