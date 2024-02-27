@@ -13,7 +13,7 @@ interface InitialImageUri {
 export class GalleryModel {
   images: ImageModel[] = []
 
-  constructor(uris?: InitialImageUri[]) {
+  constructor(uris?: {uri: string; width: number; height: number}[]) {
     makeAutoObservable(this)
 
     if (uris) {

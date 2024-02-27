@@ -76,7 +76,10 @@ function useComposeIntent() {
         })
 
       setTimeout(() => {
-        openComposer({text, imageUris: isNative ? imageUris : null})
+        openComposer({
+          text: text ?? undefined,
+          imageUris: isNative ? imageUris : undefined,
+        })
       }, 500)
     },
     [openComposer, hasSession],
