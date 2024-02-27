@@ -8,8 +8,10 @@ import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText, ButtonIcon, ButtonSize} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {useOpenGlobalDialog} from '#/components/dialogs'
-import {LabelsOnMeDialog} from '#/components/dialogs/LabelsOnMe'
+import {
+  LabelsOnMeDialog,
+  useLabelsOnMeDialogControl,
+} from '#/components/LabelsOnMe'
 
 export function LabelsOnMe({
   details,
@@ -25,7 +27,7 @@ export function LabelsOnMe({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const isAccount = 'did' in details
-  const openDialog = useOpenGlobalDialog()
+  const control = useLabelsOnMeDialogControl()
 
   if (!labels || !currentAccount) {
     return null
@@ -39,16 +41,15 @@ export function LabelsOnMe({
 
   return (
     <View style={[a.flex_row, style]}>
+      <LabelsOnMeDialog control={control} subject={details} labels={labels} />
+
       <Button
         variant="solid"
         color="secondary"
         size={size || 'small'}
         label={_(msg`View information about these labels`)}
         onPress={() => {
-          openDialog(LabelsOnMeDialog, {
-            subject: details,
-            labels: labels!,
-          })
+          control.open()
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
         <ButtonText>
