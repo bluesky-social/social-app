@@ -44,9 +44,17 @@ const withXcodeTarget = (config, {extensionName, controllerName}) => {
           buildSettingsObj.SWIFT_EMIT_LOC_STRINGS = 'YES'
           buildSettingsObj.SWIFT_VERSION = '5.0'
           buildSettingsObj.TARGETED_DEVICE_FAMILY = `"1,2"`
+          buildSettingsObj.DEVELOPMENT_TEAM = 'B3LX46C5HS'
         }
       }
     }
+
+    pbxProject.addTargetAttribute(
+      'DevelopmentTeam',
+      'B3LX46C5HS',
+      extensionName,
+    )
+    pbxProject.addTargetAttribute('DevelopmentTeam', 'B3LX46C5HS')
 
     return config
   })

@@ -13,9 +13,7 @@ const withExtensionEntitlements = (config, {extensionName}) => {
     )
 
     const shareExtensionEntitlements = {
-      'com.apple.security.application-groups': [
-        `group.${config.ios?.bundleIdentifier}`,
-      ],
+      'com.apple.security.application-groups': [`group.app.bsky`],
     }
 
     fs.mkdirSync(path.dirname(extensionEntitlementsPath), {
