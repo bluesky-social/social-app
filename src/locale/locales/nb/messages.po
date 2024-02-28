@@ -53,7 +53,7 @@ msgstr "<0>{following} </0><1>følger</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>Velg din</0><1>Anbefalt</1><2>Strømmer</2>"
+msgstr "<0>Velg din</0><1>Anbefalt</1><2>feeder</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
