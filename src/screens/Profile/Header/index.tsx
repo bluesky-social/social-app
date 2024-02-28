@@ -42,12 +42,12 @@ interface Props {
 }
 
 let ProfileHeader = (props: Props): React.ReactNode => {
-  // if (props.profile.associated?.modservice) {
-  //   if (!props.modservice) {
-  //     return <ProfileHeaderLoading />
-  //   }
-  //   return <ProfileHeaderModerator {...props} modservice={props.modservice} />
-  // }
+  if (props.profile.associated?.modservice) {
+    if (!props.modservice) {
+      return <ProfileHeaderLoading />
+    }
+    return <ProfileHeaderModerator {...props} modservice={props.modservice} />
+  }
   return <ProfileHeaderStandard {...props} />
 }
 ProfileHeader = memo(ProfileHeader)

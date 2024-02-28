@@ -152,74 +152,86 @@ export function ProfileHeaderDropdownBtn({
     [currentAccount, profile],
   )
   const dropdownItems: DropdownItem[] = React.useMemo(() => {
-    let items: DropdownItem[] = [
-      {
-        testID: 'profileHeaderDropdownShareBtn',
-        label: isWeb ? _(msg`Copy link to profile`) : _(msg`Share`),
-        onPress: onPressShare,
+    let items: DropdownItem[] = []
+
+    if (hasSession && profile.associated?.modservice) {
+      items.push({
+        testID: 'profileHeaderDropdownFollowBtn',
+        label: _(msg`Follow Account`),
+        onPress: () => {}, // TODO
         icon: {
           ios: {
-            name: 'square.and.arrow.up',
+            name: 'plus',
           },
-          android: 'ic_menu_share',
-          web: 'share',
+          android: '',
+          web: 'plus',
         },
+      })
+    }
+    items.push({
+      testID: 'profileHeaderDropdownShareBtn',
+      label: isWeb ? _(msg`Copy Link to Profile`) : _(msg`Share`),
+      onPress: onPressShare,
+      icon: {
+        ios: {
+          name: 'square.and.arrow.up',
+        },
+        android: 'ic_menu_share',
+        web: 'share',
       },
-    ]
+    })
     if (hasSession) {
-      if (!profile.associated?.modservice) {
-        items.push({label: 'separator'})
-        items.push({
-          testID: 'profileHeaderDropdownListAddRemoveBtn',
-          label: _(msg`Add to Lists`),
-          onPress: onPressAddRemoveLists,
-          icon: {
-            ios: {
-              name: 'list.bullet',
-            },
-            android: 'ic_menu_add',
-            web: 'list',
+      items.push({label: 'separator'})
+      items.push({
+        testID: 'profileHeaderDropdownListAddRemoveBtn',
+        label: _(msg`Add to Lists`),
+        onPress: onPressAddRemoveLists,
+        icon: {
+          ios: {
+            name: 'list.bullet',
           },
-        })
-        if (!isMe) {
-          if (!profile.viewer?.blocking) {
-            if (!profile.viewer?.mutedByList) {
-              items.push({
-                testID: 'profileHeaderDropdownMuteBtn',
-                label: profile.viewer?.muted
-                  ? _(msg`Unmute Account`)
-                  : _(msg`Mute Account`),
-                onPress: profile.viewer?.muted
-                  ? onPressUnmuteAccount
-                  : onPressMuteAccount,
-                icon: {
-                  ios: {
-                    name: 'speaker.slash',
-                  },
-                  android: 'ic_lock_silent_mode',
-                  web: 'comment-slash',
-                },
-              })
-            }
-          }
-          if (!profile.viewer?.blockingByList) {
+          android: 'ic_menu_add',
+          web: 'list',
+        },
+      })
+      if (!isMe) {
+        if (!profile.viewer?.blocking) {
+          if (!profile.viewer?.mutedByList) {
             items.push({
-              testID: 'profileHeaderDropdownBlockBtn',
-              label: profile.viewer?.blocking
-                ? _(msg`Unblock Account`)
-                : _(msg`Block Account`),
-              onPress: profile.viewer?.blocking
-                ? onPressUnblockAccount
-                : onPressBlockAccount,
+              testID: 'profileHeaderDropdownMuteBtn',
+              label: profile.viewer?.muted
+                ? _(msg`Unmute Account`)
+                : _(msg`Mute Account`),
+              onPress: profile.viewer?.muted
+                ? onPressUnmuteAccount
+                : onPressMuteAccount,
               icon: {
                 ios: {
-                  name: 'person.fill.xmark',
+                  name: 'speaker.slash',
                 },
-                android: 'ic_menu_close_clear_cancel',
-                web: 'user-slash',
+                android: 'ic_lock_silent_mode',
+                web: 'comment-slash',
               },
             })
           }
+        }
+        if (!profile.viewer?.blockingByList) {
+          items.push({
+            testID: 'profileHeaderDropdownBlockBtn',
+            label: profile.viewer?.blocking
+              ? _(msg`Unblock Account`)
+              : _(msg`Block Account`),
+            onPress: profile.viewer?.blocking
+              ? onPressUnblockAccount
+              : onPressBlockAccount,
+            icon: {
+              ios: {
+                name: 'person.fill.xmark',
+              },
+              android: 'ic_menu_close_clear_cancel',
+              web: 'user-slash',
+            },
+          })
         }
       }
       items.push({

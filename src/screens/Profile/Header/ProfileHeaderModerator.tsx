@@ -30,6 +30,7 @@ import {ProfileHeaderShell} from './Shell'
 import {ProfileHeaderDropdownBtn} from './DropdownBtn'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
+import {ProfileHeaderMetrics} from './Metrics'
 import {
   Heart2_Stroke2_Corner0_Rounded as Heart,
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
@@ -170,7 +171,7 @@ let ProfileHeaderModerator = ({
                   {isSubscribed ? (
                     <Trans>Unsubscribe</Trans>
                   ) : (
-                    <Trans>Subscribe</Trans>
+                    <Trans>Subscribe to labeler</Trans>
                   )}
                 </ButtonText>
               </Button>
@@ -184,7 +185,18 @@ let ProfileHeaderModerator = ({
         </View>
         {!isPlaceholderProfile && (
           <>
-            <View style={[a.flex_row, a.gap_md, a.align_center, a.pb_md]}>
+            <ProfileHeaderMetrics profile={profile} />
+            {descriptionRT && !moderation.ui('profileView').blur ? (
+              <View pointerEvents="auto">
+                <RichText
+                  testID="profileHeaderDescription"
+                  style={t.atoms.text}
+                  numberOfLines={15}
+                  richText={descriptionRT}
+                />
+              </View>
+            ) : undefined}
+            <View style={[a.flex_row, a.gap_md, a.align_center, a.pt_md]}>
               <Button
                 testID="toggleLikeBtn"
                 size="small"
@@ -212,16 +224,6 @@ let ProfileHeaderModerator = ({
                 </InlineLink>
               )}
             </View>
-            {descriptionRT && !moderation.ui('profileView').blur ? (
-              <View pointerEvents="auto">
-                <RichText
-                  testID="profileHeaderDescription"
-                  style={t.atoms.text}
-                  numberOfLines={15}
-                  richText={descriptionRT}
-                />
-              </View>
-            ) : undefined}
           </>
         )}
       </View>

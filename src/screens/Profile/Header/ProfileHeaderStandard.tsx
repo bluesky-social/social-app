@@ -20,20 +20,16 @@ import {
   useProfileBlockMutationQueue,
 } from '#/state/queries/profile'
 import {logger} from '#/logger'
-import {pluralize} from '#/lib/strings/helpers'
-import {makeProfileLink} from 'lib/routes/links'
-import {formatCount} from 'view/com/util/numeric/format'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import {InlineLink} from '#/components/Link'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderShell} from './Shell'
 import {ProfileHeaderDropdownBtn} from './DropdownBtn'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
+import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {RichText} from 'view/com/util/text/RichText'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -146,9 +142,6 @@ let ProfileHeaderStandard = ({
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
-  const following = formatCount(profile.followsCount || 0)
-  const followers = formatCount(profile.followersCount || 0)
-  const pluralizedFollowers = pluralize(profile.followersCount || 0, 'follower')
 
   return (
     <ProfileHeaderShell
@@ -249,47 +242,7 @@ let ProfileHeaderStandard = ({
         </View>
         {!isPlaceholderProfile && (
           <>
-            <View
-              style={[a.flex_row, a.gap_sm, a.align_center, a.pb_md]}
-              pointerEvents="box-none">
-              <InlineLink
-                testID="profileHeaderFollowersButton"
-                style={a.flex_row}
-                to={makeProfileLink(profile, 'followers')}
-                label={`${followers} ${pluralizedFollowers}`}>
-                <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-                  {followers}{' '}
-                </Text>
-                <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-                  {pluralizedFollowers}
-                </Text>
-              </InlineLink>
-              <InlineLink
-                testID="profileHeaderFollowsButton"
-                style={a.flex_row}
-                to={makeProfileLink(profile, 'follows')}
-                label={_(msg`${following} following`)}>
-                <Trans>
-                  <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-                    {following}{' '}
-                  </Text>
-                  <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-                    following
-                  </Text>
-                </Trans>
-              </InlineLink>
-              <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-                {formatCount(profile.postsCount || 0)}{' '}
-                <Text
-                  style={[
-                    t.atoms.text_contrast_medium,
-                    a.font_normal,
-                    a.text_md,
-                  ]}>
-                  {pluralize(profile.postsCount || 0, 'post')}
-                </Text>
-              </Text>
-            </View>
+            <ProfileHeaderMetrics profile={profile} />
             {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
                 <RichText

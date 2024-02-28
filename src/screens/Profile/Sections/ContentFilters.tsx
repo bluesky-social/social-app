@@ -113,51 +113,26 @@ export function ProfileContentFiltersSectionInner({
         borderWidth: 0,
         paddingHorizontal: a.px_xl.paddingLeft,
       }}>
-      <View style={[a.flex_row, a.gap_md, a.pt_xl]}>
-        <View style={[a.flex_1]}>
-          <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_md]}>
+      <View style={[a.pt_xl]}>
+        <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
+          <Trans>
+            Labels are annotations on users and content. They can be used to
+            hide, warn, and categorize the network.
+          </Trans>
+        </Text>
+        {!isSubscribed && (
+          <Text
+            style={[
+              a.pt_xl,
+              t.atoms.text_contrast_high,
+              a.leading_snug,
+              a.text_sm,
+            ]}>
             <Trans>
-              Labels are annotations on users and content. They can be used to
-              hide, warn, and categorize the network.
+              Subscribe to @{modservice.creator.handle} to use these labels:
             </Trans>
           </Text>
-          {!isSubscribed && (
-            <Text
-              style={[
-                a.pt_xl,
-                t.atoms.text_contrast_high,
-                a.leading_snug,
-                a.text_md,
-              ]}>
-              <Trans>
-                Subscribe to use these labels from @{modservice.creator.handle}:
-              </Trans>
-            </Text>
-          )}
-        </View>
-        <View>
-          <Button
-            testID="toggleSubscribeBtn"
-            size="small"
-            color={isSubscribed ? 'secondary' : 'primary'}
-            variant="solid"
-            label={
-              isSubscribed
-                ? _(msg`Unsubscribe from this labeler`)
-                : _(msg`Subscribe to this labeler`)
-            }
-            disabled={!hasSession}
-            onPress={onPressSubscribe}
-            style={a.rounded_full}>
-            <ButtonText>
-              {isSubscribed ? (
-                <Trans>Unsubscribe</Trans>
-              ) : (
-                <Trans>Subscribe</Trans>
-              )}
-            </ButtonText>
-          </Button>
-        </View>
+        )}
       </View>
       <View
         style={[

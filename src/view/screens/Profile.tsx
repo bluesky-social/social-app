@@ -119,7 +119,8 @@ export function ProfileScreen({route}: Props) {
   }
   if (profile && moderationOpts) {
     if (profile.handle === 'alice.test') {
-      profile.associated = {modservice: true}
+      // TODO removeme
+      profile.associated = {modservice: true, lists: 1}
     }
     return (
       <ProfileScreenLoadedV2
@@ -480,7 +481,7 @@ function ProfileScreenLoadedV2({
   const showFiltersTab = hasSession && profile.associated?.modservice
   const showPostsTab = true
   const showRepliesTab = hasSession
-  const showMediaTab = true
+  const showMediaTab = !profile.associated?.modservice
   const showLikesTab = isMe
   const showFeedsTab =
     hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
@@ -489,13 +490,13 @@ function ProfileScreenLoadedV2({
 
   const sectionTitles = useMemo<string[]>(() => {
     return [
+      showFiltersTab ? _(msg`Labels`) : undefined,
+      showListsTab ? _(msg`Lists`) : undefined,
       showPostsTab ? _(msg`Posts`) : undefined,
       showRepliesTab ? _(msg`Replies`) : undefined,
       showMediaTab ? _(msg`Media`) : undefined,
       showLikesTab ? _(msg`Likes`) : undefined,
       showFeedsTab ? _(msg`Feeds`) : undefined,
-      showFiltersTab ? _(msg`Labels`) : undefined,
-      showListsTab ? _(msg`Lists`) : undefined,
     ].filter(Boolean) as string[]
   }, [
     showPostsTab,
@@ -511,30 +512,33 @@ function ProfileScreenLoadedV2({
   let nextIndex = 0
   let filtersIndex: number | null = null
   let postsIndex: number | null = null
-  if (showPostsTab) {
-    postsIndex = nextIndex++
-  }
   let repliesIndex: number | null = null
-  if (showRepliesTab) {
-    repliesIndex = nextIndex++
-  }
   let mediaIndex: number | null = null
-  if (showMediaTab) {
-    mediaIndex = nextIndex++
-  }
   let likesIndex: number | null = null
-  if (showLikesTab) {
-    likesIndex = nextIndex++
-  }
   let feedsIndex: number | null = null
-  if (showFeedsTab) {
-    feedsIndex = nextIndex++
-  }
+  let listsIndex: number | null = null
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
-  let listsIndex: number | null = null
-  if (showListsTab) {
+  if (showListsTab && profile.associated?.modservice) {
+    listsIndex = nextIndex++
+  }
+  if (showPostsTab) {
+    postsIndex = nextIndex++
+  }
+  if (showRepliesTab) {
+    repliesIndex = nextIndex++
+  }
+  if (showMediaTab) {
+    mediaIndex = nextIndex++
+  }
+  if (showLikesTab) {
+    likesIndex = nextIndex++
+  }
+  if (showFeedsTab) {
+    feedsIndex = nextIndex++
+  }
+  if (showListsTab && !profile.associated?.modservice) {
     listsIndex = nextIndex++
   }
 
@@ -650,6 +654,29 @@ function ProfileScreenLoadedV2({
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
+        {showFiltersTab
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileContentFiltersSection
+                // ref={moderationSectionRef}
+                modServiceQuery={modServiceQuery}
+                moderationOpts={moderationOpts}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
+        {showListsTab && !!profile.associated?.modservice
+          ? ({headerHeight, isFocused, scrollElRef}) => (
+              <ProfileLists
+                ref={listsSectionRef}
+                did={profile.did}
+                scrollElRef={scrollElRef as ListRef}
+                headerOffset={headerHeight}
+                enabled={isFocused}
+              />
+            )
+          : null}
         {showPostsTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <FeedSection
@@ -709,19 +736,7 @@ function ProfileScreenLoadedV2({
               />
             )
           : null}
-        {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileContentFiltersSection
-                // ref={moderationSectionRef}
-                modServiceQuery={modServiceQuery}
-                moderationOpts={moderationOpts}
-                scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
-              />
-            )
-          : null}
-        {showListsTab
+        {showListsTab && !profile.associated?.modservice
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 ref={listsSectionRef}
