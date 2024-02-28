@@ -3258,7 +3258,7 @@ msgstr "\"{query}\"에 대한 검색 결과"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {tag}"
-msgstr "태그 {tag}을(를) 사용한 @{authorHandle} 님의 모든 게시물 검색"
+msgstr "{tag} 태그를 사용한 @{authorHandle} 님의 모든 게시물 검색"
 
 #: src/components/TagMenu/index.tsx:90
 msgid "Search for all posts with tag {tag}"
