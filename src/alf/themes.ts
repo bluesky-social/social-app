@@ -1,6 +1,7 @@
 import * as tokens from '#/alf/tokens'
 import type {Mutable} from '#/alf/types'
 import {atoms} from '#/alf/atoms'
+import {BLUE_HUE} from '#/alf/util/colorGeneration'
 
 export type ThemeName = 'light' | 'dim' | 'dark'
 export type ReadonlyTheme = typeof light
@@ -132,35 +133,35 @@ export const darkPalette: Palette = {
 
 export const dimPalette: Palette = {
   ...darkPalette,
-  black: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[0]}%)`,
+  black: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[0]}%)`,
 
-  contrast_25: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[1]}%)`,
-  contrast_50: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[2]}%)`,
-  contrast_100: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[3]}%)`,
-  contrast_200: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[4]}%)`,
-  contrast_300: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[5]}%)`,
-  contrast_400: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[6]}%)`,
-  contrast_500: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[7]}%)`,
-  contrast_600: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[8]}%)`,
-  contrast_700: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[9]}%)`,
-  contrast_800: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[10]}%)`,
-  contrast_900: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[11]}%)`,
-  contrast_950: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[12]}%)`,
-  contrast_975: `hsl(${tokens.BLUE_HUE}, 28%, ${tokens.dimScale[13]}%)`,
+  contrast_25: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[1]}%)`,
+  contrast_50: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[2]}%)`,
+  contrast_100: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[3]}%)`,
+  contrast_200: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[4]}%)`,
+  contrast_300: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[5]}%)`,
+  contrast_400: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[6]}%)`,
+  contrast_500: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[7]}%)`,
+  contrast_600: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[8]}%)`,
+  contrast_700: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[9]}%)`,
+  contrast_800: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[10]}%)`,
+  contrast_900: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[11]}%)`,
+  contrast_950: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[12]}%)`,
+  contrast_975: `hsl(${BLUE_HUE}, 28%, ${tokens.dimScale[13]}%)`,
 
-  primary_25: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[13]}%)`,
-  primary_50: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[12]}%)`,
-  primary_100: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[11]}%)`,
-  primary_200: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[10]}%)`,
-  primary_300: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[9]}%)`,
-  primary_400: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[8]}%)`,
-  primary_500: `hsl(${tokens.BLUE_HUE}, 99%, ${tokens.dimScale[7]}%)`,
-  primary_600: `hsl(${tokens.BLUE_HUE}, 95%, ${tokens.dimScale[6]}%)`,
-  primary_700: `hsl(${tokens.BLUE_HUE}, 90%, ${tokens.dimScale[5]}%)`,
-  primary_800: `hsl(${tokens.BLUE_HUE}, 82%, ${tokens.dimScale[4]}%)`,
-  primary_900: `hsl(${tokens.BLUE_HUE}, 70%, ${tokens.dimScale[3]}%)`,
-  primary_950: `hsl(${tokens.BLUE_HUE}, 60%, ${tokens.dimScale[2]}%)`,
-  primary_975: `hsl(${tokens.BLUE_HUE}, 50%, ${tokens.dimScale[1]}%)`,
+  primary_25: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[13]}%)`,
+  primary_50: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[12]}%)`,
+  primary_100: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[11]}%)`,
+  primary_200: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[10]}%)`,
+  primary_300: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[9]}%)`,
+  primary_400: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[8]}%)`,
+  primary_500: `hsl(${BLUE_HUE}, 99%, ${tokens.dimScale[7]}%)`,
+  primary_600: `hsl(${BLUE_HUE}, 95%, ${tokens.dimScale[6]}%)`,
+  primary_700: `hsl(${BLUE_HUE}, 90%, ${tokens.dimScale[5]}%)`,
+  primary_800: `hsl(${BLUE_HUE}, 82%, ${tokens.dimScale[4]}%)`,
+  primary_900: `hsl(${BLUE_HUE}, 70%, ${tokens.dimScale[3]}%)`,
+  primary_950: `hsl(${BLUE_HUE}, 60%, ${tokens.dimScale[2]}%)`,
+  primary_975: `hsl(${BLUE_HUE}, 50%, ${tokens.dimScale[1]}%)`,
 } as const
 
 export const light = {

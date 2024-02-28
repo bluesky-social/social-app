@@ -1,20 +1,13 @@
-export const BLUE_HUE = 211
-const RED_HUE = 346
-const GREEN_HUE = 152
+import {
+  BLUE_HUE,
+  RED_HUE,
+  GREEN_HUE,
+  generateScale,
+} from '#/alf/util/colorGeneration'
 
-const stops = [
-  0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 1,
-]
-
-function generate(start: number, end: number) {
-  const range = end - start
-  return stops.map(stop => {
-    return start + range * stop
-  })
-}
-
-export const scale = generate(6, 100)
-export const dimScale = generate(12, 100)
+export const scale = generateScale(6, 100)
+// dim shifted 6% lighter
+export const dimScale = generateScale(12, 100)
 
 export const color = {
   trueBlack: '#000000',
