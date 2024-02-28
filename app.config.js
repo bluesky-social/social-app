@@ -65,6 +65,9 @@ module.exports = function (config) {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
         },
+        entitlements: {
+          'com.apple.security.application-groups': 'group.app.bsky',
+        },
       },
       androidStatusBar: {
         barStyle: 'dark-content',
@@ -88,6 +91,10 @@ module.exports = function (config) {
               {
                 scheme: 'https',
                 host: 'bsky.app',
+              },
+              {
+                scheme: 'http',
+                host: 'localhost:19006',
               },
             ],
             category: ['BROWSABLE', 'DEFAULT'],
@@ -137,9 +144,27 @@ module.exports = function (config) {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
         eas: {
+          build: {
+            experimental: {
+              ios: {
+                appExtensions: [
+                  {
+                    targetName: 'Share-with-Bluesky',
+                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    entitlements: {
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
       },

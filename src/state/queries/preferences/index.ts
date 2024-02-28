@@ -1,6 +1,10 @@
 import {useMemo} from 'react'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {LabelPreference, BskyFeedViewPreference} from '@atproto/api'
+import {
+  LabelPreference,
+  BskyFeedViewPreference,
+  AppBskyActorDefs,
+} from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
@@ -108,6 +112,7 @@ export function useModerationOpts() {
     return {
       ...moderationOpts,
       hiddenPosts,
+      mutedWords: prefs.data.mutedWords || [],
     }
   }, [currentAccount?.did, prefs.data, hiddenPosts])
   return opts
@@ -271,6 +276,48 @@ export function useUnpinFeedMutation() {
     mutationFn: async ({uri}) => {
       await getAgent().removePinnedFeed(uri)
       track('CustomFeed:Unpin', {uri})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUpsertMutedWordsMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+      await getAgent().upsertMutedWords(mutedWords)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUpdateMutedWordMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().updateMutedWord(mutedWord)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useRemoveMutedWordMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().removeMutedWord(mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

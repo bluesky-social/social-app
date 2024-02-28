@@ -460,7 +460,8 @@ const FlatNavigator = () => {
  */
 
 const LINKING = {
-  prefixes: ['bsky://', 'https://bsky.app'],
+  // TODO figure out what we are going to use
+  prefixes: ['bsky://', 'bluesky://', 'https://bsky.app'],
 
   getPathFromState(state: State) {
     // find the current node in the navigation tree
@@ -478,6 +479,11 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
+    // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
+    // intent handler hook. We should check for the trailing slash, because if there isn't one then it isn't a valid
+    // intent
+    if (path.includes('intent/')) return
+
     const [name, params] = router.matchPath(path)
     if (isNative) {
       if (name === 'Search') {
@@ -497,7 +503,8 @@ const LINKING = {
         },
       ])
     } else {
-      return buildStateObject('Flat', name, params)
+      const res = buildStateObject('Flat', name, params)
+      return res
     }
   },
 }
