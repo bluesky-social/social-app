@@ -577,4 +577,27 @@ describe(`hasMutedWord`, () => {
       })
     })
   })
+
+  describe(`languages without spaces`, () => {
+    // I love turtles, or how I learned to stop worrying and love the internet
+    describe(`私はカメが好きです、またはどのようにして心配するのをやめてインターネットを愛するようになったのか`, () => {
+      const rt = new RichText({
+        text: `私はカメが好きです、またはどのようにして心配するのをやめてインターネットを愛するようになったのか`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      // internet
+      it(`match: インターネット`, () => {
+        const match = hasMutedWord({
+          mutedWords: [{value: 'インターネット', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          languages: ['ja'],
+        })
+
+        expect(match).toBe(true)
+      })
+    })
+  })
 })
