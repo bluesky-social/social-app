@@ -77,6 +77,7 @@ import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbed
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
+import HashtagScreen from '#/screens/Hashtag'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -261,6 +262,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
           title: title(msg`External Media Preferences`),
           requireAuth: true,
         }}
+      />
+      <Stack.Screen
+        name="Hashtag"
+        getComponent={() => HashtagScreen}
+        options={{title: title(msg`Hashtag`)}}
       />
     </>
   )

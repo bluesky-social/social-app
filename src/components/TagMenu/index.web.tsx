@@ -49,8 +49,8 @@ export function TagMenu({
       {
         label: _(msg`See ${truncatedTag} posts`),
         onPress() {
-          navigation.navigate('Search', {
-            q: tag,
+          navigation.push('Hashtag', {
+            tag: tag.replace('#', ''),
           })
         },
         testID: 'tagMenuSearch',
@@ -66,11 +66,9 @@ export function TagMenu({
         !isInvalidHandle(authorHandle) && {
           label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
-            navigation.navigate({
-              name: 'Search',
-              params: {
-                q: tag + (authorHandle ? ` from:${authorHandle}` : ''),
-              },
+            navigation.push('Hashtag', {
+              tag: tag.replace('#', ''),
+              author: authorHandle,
             })
           },
           testID: 'tagMenuSeachByUser',

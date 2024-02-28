@@ -93,12 +93,8 @@ export function TagMenu({
                     e.preventDefault()
 
                     control.close(() => {
-                      // @ts-ignore :ron_swanson: "I know more than you"
-                      navigation.navigate('SearchTab', {
-                        screen: 'Search',
-                        params: {
-                          q: tag,
-                        },
+                      navigation.push('Hashtag', {
+                        tag: tag.replace('#', ''),
                       })
                     })
 
@@ -149,14 +145,9 @@ export function TagMenu({
                         e.preventDefault()
 
                         control.close(() => {
-                          // @ts-ignore :ron_swanson: "I know more than you"
-                          navigation.navigate('SearchTab', {
-                            screen: 'Search',
-                            params: {
-                              q:
-                                tag +
-                                (authorHandle ? ` from:${authorHandle}` : ''),
-                            },
+                          navigation.push('Hashtag', {
+                            tag: tag.replace('#', ''),
+                            author: authorHandle,
                           })
                         })
 
