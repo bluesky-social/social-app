@@ -89,7 +89,7 @@ export function Cancel({
       color="secondary"
       size="small"
       label={_(msg`Cancel`)}
-      onPress={close}>
+      onPress={() => close()}>
       {children}
     </Button>
   )

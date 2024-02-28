@@ -11,6 +11,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {createInput} from '#/components/forms/TextField'
+import {logger} from '#/logger'
 
 import {
   DialogOuterProps,
@@ -56,7 +57,7 @@ export function Outer({
   )
 
   const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (cb) {
+    if (cb && typeof cb === 'function') {
       closeCallback.current = cb
     }
     sheet.current?.close()
@@ -74,8 +75,16 @@ export function Outer({
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
-        closeCallback.current?.()
-        closeCallback.current = undefined
+        try {
+          closeCallback.current?.()
+        } catch (e: any) {
+          logger.error(`Dialog closeCallback failed`, {
+            message: e.message,
+          })
+        } finally {
+          closeCallback.current = undefined
+        }
+
         onClose?.()
         setOpenIndex(-1)
       }
