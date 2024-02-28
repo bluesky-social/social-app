@@ -228,14 +228,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: t.palette.negative_400,
+            backgroundColor: t.palette.negative_500,
           })
           hoverStyles.push({
-            backgroundColor: t.palette.negative_500,
+            backgroundColor: t.palette.negative_600,
           })
         } else {
           baseStyles.push({
-            backgroundColor: t.palette.negative_600,
+            backgroundColor: t.palette.negative_700,
           })
         }
       } else if (variant === 'outline') {
@@ -245,7 +245,7 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: t.palette.negative_400,
+            borderColor: t.palette.negative_500,
           })
           hoverStyles.push(a.border, {
             backgroundColor: light
@@ -265,7 +265,7 @@ export function Button({
           hoverStyles.push({
             backgroundColor: light
               ? t.palette.negative_100
-              : t.palette.negative_950,
+              : t.palette.negative_975,
           })
         }
       }

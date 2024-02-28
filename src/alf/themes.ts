@@ -1,7 +1,7 @@
 import * as tokens from '#/alf/tokens'
 import type {Mutable} from '#/alf/types'
 import {atoms} from '#/alf/atoms'
-import {BLUE_HUE} from '#/alf/util/colorGeneration'
+import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 
 export type ThemeName = 'light' | 'dim' | 'dark'
 export type ReadonlyTheme = typeof light
@@ -162,6 +162,34 @@ export const dimPalette: Palette = {
   primary_900: `hsl(${BLUE_HUE}, 70%, ${tokens.dimScale[3]}%)`,
   primary_950: `hsl(${BLUE_HUE}, 60%, ${tokens.dimScale[2]}%)`,
   primary_975: `hsl(${BLUE_HUE}, 50%, ${tokens.dimScale[1]}%)`,
+
+  positive_25: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[13]}%)`,
+  positive_50: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[12]}%)`,
+  positive_100: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[11]}%)`,
+  positive_200: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[10]}%)`,
+  positive_300: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[9]}%)`,
+  positive_400: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[8]}%)`,
+  positive_500: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[7]}%)`,
+  positive_600: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[6]}%)`,
+  positive_700: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[5]}%)`,
+  positive_800: `hsl(${GREEN_HUE}, 82%, ${tokens.dimScale[4]}%)`,
+  positive_900: `hsl(${GREEN_HUE}, 70%, ${tokens.dimScale[3]}%)`,
+  positive_950: `hsl(${GREEN_HUE}, 60%, ${tokens.dimScale[2]}%)`,
+  positive_975: `hsl(${GREEN_HUE}, 50%, ${tokens.dimScale[1]}%)`,
+
+  negative_25: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[13]}%)`,
+  negative_50: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[12]}%)`,
+  negative_100: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[11]}%)`,
+  negative_200: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[10]}%)`,
+  negative_300: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[9]}%)`,
+  negative_400: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[8]}%)`,
+  negative_500: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[7]}%)`,
+  negative_600: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[6]}%)`,
+  negative_700: `hsl(${RED_HUE}, 91%, ${tokens.dimScale[5]}%)`,
+  negative_800: `hsl(${RED_HUE}, 88%, ${tokens.dimScale[4]}%)`,
+  negative_900: `hsl(${RED_HUE}, 84%, ${tokens.dimScale[3]}%)`,
+  negative_950: `hsl(${RED_HUE}, 80%, ${tokens.dimScale[2]}%)`,
+  negative_975: `hsl(${RED_HUE}, 70%, ${tokens.dimScale[1]}%)`,
 } as const
 
 export const light = {
