@@ -163,8 +163,6 @@ export const dimPalette: Palette = {
   primary_975: `hsl(${tokens.BLUE_HUE}, 50%, ${tokens.dimScale[1]}%)`,
 } as const
 
-console.log(darkPalette, dimPalette)
-
 export const light = {
   name: 'light',
   palette: lightPalette,
