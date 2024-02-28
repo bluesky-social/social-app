@@ -3,7 +3,7 @@ import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
+import {atoms as a, TextStyleProp, flatten, useTheme, web} from '#/alf'
 import {InlineLink} from '#/components/Link'
 import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
@@ -174,48 +174,57 @@ function RichTextTag({
     control.open()
   }, [control])
 
+  const styles = [
+    style,
+    {
+      pointerEvents: 'auto',
+      color: t.palette.primary_500,
+    },
+    web({
+      cursor: 'pointer',
+    }),
+    (hovered || focused || pressed) && {
+      ...web({outline: 0}),
+      textDecorationLine: 'underline',
+      textDecorationColor: t.palette.primary_500,
+    },
+  ]
+
   /*
    * N.B. On web, this is wrapped in another pressable comopnent with a11y
-   * labels, etc. That's why only some of these props are applied here.
+   * labels, etc. Hence the conditional render.
    */
 
   return (
     <React.Fragment>
       <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
-        <Text
-          selectable={selectable}
-          {...native({
-            accessibilityLabel: _(msg`Hashtag: ${tag}`),
-            accessibilityHint: _(msg`Click here to open tag menu for ${tag}`),
-            accessibilityRole: isNative ? 'button' : undefined,
-            onPress: open,
-            onPressIn: onPressIn,
-            onPressOut: onPressOut,
-          })}
-          {...web({
-            onMouseEnter: onHoverIn,
-            onMouseLeave: onHoverOut,
-          })}
-          // @ts-ignore
-          onFocus={onFocus}
-          onBlur={onBlur}
-          style={[
-            style,
-            {
-              pointerEvents: 'auto',
-              color: t.palette.primary_500,
-            },
-            web({
-              cursor: 'pointer',
-            }),
-            (hovered || focused || pressed) && {
-              ...web({outline: 0}),
-              textDecorationLine: 'underline',
-              textDecorationColor: t.palette.primary_500,
-            },
-          ]}>
-          {tag}
-        </Text>
+        {isNative ? (
+          <Text
+            selectable={selectable}
+            accessibilityLabel={_(msg`Hashtag: ${tag}`)}
+            accessibilityHint={_(msg`Click here to open tag menu for ${tag}`)}
+            accessibilityRole={isNative ? 'button' : undefined}
+            onPress={open}
+            onPressIn={onPressIn}
+            onPressOut={onPressOut}
+            style={styles}>
+            {tag}
+          </Text>
+        ) : (
+          <Text
+            selectable={selectable}
+            // @ts-ignore web only
+            onMouseEnter={onHoverIn}
+            // @ts-ignore web only
+            onMouseLeave={onHoverOut}
+            // @ts-ignore web only
+            onFocus={onFocus}
+            // @ts-ignore web only
+            onBlur={onBlur}
+            style={styles}>
+            {tag}
+          </Text>
+        )}
       </TagMenu>
     </React.Fragment>
   )
