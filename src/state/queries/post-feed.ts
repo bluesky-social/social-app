@@ -276,7 +276,7 @@ export function usePostFeedQuery(
                             .success
                         ) {
                           return {
-                            _reactKey: `${slice._reactKey}-${i}`,
+                            _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,
