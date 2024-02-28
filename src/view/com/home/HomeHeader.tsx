@@ -1,7 +1,7 @@
 import React from 'react'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
-import {usePinnedFeedsInfos} from '#/state/queries/feed'
+import {FeedSourceInfo} from '#/state/queries/feed'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {isWeb} from 'platform/detection'
@@ -9,15 +9,22 @@ import {TabBar} from '../pager/TabBar'
 import {usePalette} from '#/lib/hooks/usePalette'
 
 export function HomeHeader(
-  props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
+  props: RenderTabBarFnProps & {
+    testID?: string
+    onPressSelected: () => void
+    feeds: FeedSourceInfo[]
+  },
 ) {
+  const {feeds} = props
   const navigation = useNavigation<NavigationProp>()
-  const {feeds, hasPinnedCustom} = usePinnedFeedsInfos()
   const pal = usePalette('default')
+
+  const hasPinnedCustom = React.useMemo<boolean>(() => {
+    return feeds.some(tab => tab.uri !== '')
+  }, [feeds])
 
   const items = React.useMemo(() => {
     const pinnedNames = feeds.map(f => f.displayName)
-
     if (!hasPinnedCustom) {
       return pinnedNames.concat('Feeds ✨')
     }
