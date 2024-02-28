@@ -25,7 +25,7 @@ const onMouseDown = (e: React.MouseEvent & {target: HTMLElement}) => {
   }
 
   e.preventDefault()
-  shouldTrigger = true
+  shouldTrigger = !shouldTrigger
 }
 
 export function WebAuxClickWrapper({children}: React.PropsWithChildren<{}>) {
