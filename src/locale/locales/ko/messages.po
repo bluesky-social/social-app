@@ -4129,7 +4129,7 @@ msgstr "계정 언뮤트"
 
 #: src/components/TagMenu/index.tsx:210
 msgid "Unmute all {tag} posts"
-msgstr "모든 {tag} 게시글 언뮤트"
+msgstr "모든 {tag} 게시물 언뮤트"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Unmute thread"
