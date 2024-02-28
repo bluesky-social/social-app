@@ -31,8 +31,10 @@ export function RichText({
     enableTags?: boolean
     authorHandle?: string
   }) {
-  const [richText, _setRichText] = React.useState<RichTextAPI>(() =>
-    value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+  const richText = React.useMemo(
+    () =>
+      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+    [value],
   )
   const styles = [a.leading_snug, flatten(style)]
 
