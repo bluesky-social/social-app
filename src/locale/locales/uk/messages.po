@@ -118,7 +118,7 @@ msgid "A new version of the app is available. Please update to continue using th
 msgstr "Доступна нова версія. Будь ласка, оновіть застосунок, щоб продовжити ним користуватися."
 
 #: src/view/com/util/ViewHeader.tsx:83
-#: src/view/screens/Search/Search.tsx:624
+#: src/view/screens/Search/Search.tsx:647
 msgid "Access navigation links and settings"
 msgstr ""
 
@@ -169,6 +169,7 @@ msgstr ""
 msgid "Account unmuted"
 msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:147
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
@@ -210,13 +211,21 @@ msgstr "Додайте подробиці"
 msgid "Add details to report"
 msgstr "Додайте подробиці до скарги"
 
-#: src/view/com/composer/Composer.tsx:446
+#: src/view/com/composer/Composer.tsx:453
 msgid "Add link card"
 msgstr "Додати попередній перегляд"
 
-#: src/view/com/composer/Composer.tsx:451
+#: src/view/com/composer/Composer.tsx:458
 msgid "Add link card:"
 msgstr "Додати попередній перегляд:"
+
+#: src/components/dialogs/MutedWords.tsx:140
+msgid "Add mute word for configured settings"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:74
+msgid "Add muted words and tags"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
@@ -341,7 +350,7 @@ msgstr ""
 msgid "App Passwords"
 msgstr "Паролі для застосунків"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:279
+#: src/view/com/util/forms/PostDropdownBtn.tsx:295
 msgid "Appeal content warning"
 msgstr "Оскаржити попередження про вміст"
 
@@ -373,15 +382,16 @@ msgstr "Оформлення"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "Ви дійсно хочете видалити пароль для застосунку \"{name}\"?"
 
-#: src/view/com/composer/Composer.tsx:143
+#: src/view/com/composer/Composer.tsx:150
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "Ви дійсно бажаєте видалити цю чернетку?"
 
+#: src/components/dialogs/MutedWords.tsx:233
 #: src/view/screens/ProfileList.tsx:365
 msgid "Are you sure?"
 msgstr "Ви впевнені?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:262
+#: src/view/com/util/forms/PostDropdownBtn.tsx:278
 msgid "Are you sure? This cannot be undone."
 msgstr "Ви впевнені? Це не можна буде скасувати."
 
@@ -407,15 +417,15 @@ msgstr "Художня або нееротична оголеність."
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:471
-#: src/view/com/post-thread/PostThread.tsx:521
-#: src/view/com/post-thread/PostThread.tsx:529
+#: src/view/com/post-thread/PostThread.tsx:472
+#: src/view/com/post-thread/PostThread.tsx:522
+#: src/view/com/post-thread/PostThread.tsx:530
 #: src/view/com/profile/ProfileHeader.tsx:649
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "Назад"
 
-#: src/view/com/post-thread/PostThread.tsx:479
+#: src/view/com/post-thread/PostThread.tsx:480
 msgctxt "action"
 msgid "Back"
 msgstr ""
@@ -463,7 +473,7 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:123
+#: src/view/screens/Moderation.tsx:142
 msgid "Blocked accounts"
 msgstr "Заблоковані облікові записи"
 
@@ -522,7 +532,7 @@ msgstr "Bluesky публічний."
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
 msgstr "Bluesky використовує систему запрошень для створення здоровішої спільноти. Якщо Ви не знаєте когось хто має запрошення, ви можете записатися до черги очікування і ми скоро надішлемо вам код запрошення."
 
-#: src/view/screens/Moderation.tsx:226
+#: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky не буде показувати ваш профіль і повідомлення відвідувачам без облікового запису. Інші застосунки можуть не слідувати цьому запиту. Це не робить ваш обліковий запис приватним."
 
@@ -574,8 +584,8 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "Може містити лише літери, цифри, пробіли, дефіси та знаки підкреслення, і мати довжину від 4 до 32 символів."
 
 #: src/components/Prompt.tsx:91
-#: src/view/com/composer/Composer.tsx:300
-#: src/view/com/composer/Composer.tsx:305
+#: src/view/com/composer/Composer.tsx:307
+#: src/view/com/composer/Composer.tsx:312
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangePassword.tsx:265
@@ -589,7 +599,7 @@ msgstr "Може містити лише літери, цифри, пробіл�
 #: src/view/com/modals/VerifyEmail.tsx:247
 #: src/view/com/modals/VerifyEmail.tsx:253
 #: src/view/com/modals/Waitlist.tsx:142
-#: src/view/screens/Search/Search.tsx:693
+#: src/view/screens/Search/Search.tsx:716
 #: src/view/shell/desktop/Search.tsx:238
 msgid "Cancel"
 msgstr "Скасувати"
@@ -752,12 +762,17 @@ msgid "Clear all storage data (restart after this)"
 msgstr ""
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:674
+#: src/view/screens/Search/Search.tsx:697
 msgid "Clear search query"
 msgstr "Очистити пошуковий запит"
 
 #: src/view/screens/Support.tsx:40
 msgid "click here"
+msgstr ""
+
+#: src/components/RichText.tsx:189
+#: src/components/TagMenu/index.web.tsx:125
+msgid "Click here to open tag menu for {tag}"
 msgstr ""
 
 #: src/screens/Onboarding/index.tsx:35
@@ -790,11 +805,15 @@ msgstr "Закрити зображення"
 msgid "Close image viewer"
 msgstr "Закрити перегляд зображення"
 
-#: src/view/shell/index.web.tsx:49
+#: src/view/shell/index.web.tsx:51
 msgid "Close navigation footer"
 msgstr "Закрити панель навігації"
 
-#: src/view/shell/index.web.tsx:50
+#: src/components/TagMenu/index.tsx:266
+msgid "Close this dialog"
+msgstr ""
+
+#: src/view/shell/index.web.tsx:52
 msgid "Closes bottom navigation bar"
 msgstr ""
 
@@ -802,7 +821,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:302
+#: src/view/com/composer/Composer.tsx:309
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -835,7 +854,7 @@ msgstr ""
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:417
+#: src/view/com/composer/Composer.tsx:424
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr ""
 
@@ -899,7 +918,7 @@ msgstr "З’єднання..."
 msgid "Contact support"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:81
+#: src/view/screens/Moderation.tsx:83
 msgid "Content filtering"
 msgstr "Фільтрування вмісту"
 
@@ -965,7 +984,7 @@ msgstr ""
 
 #: src/view/com/modals/AddAppPasswords.tsx:76
 #: src/view/com/modals/InviteCodes.tsx:152
-#: src/view/com/util/forms/PostDropdownBtn.tsx:141
+#: src/view/com/util/forms/PostDropdownBtn.tsx:143
 msgid "Copied to clipboard"
 msgstr ""
 
@@ -981,7 +1000,7 @@ msgstr "Скопіювати"
 msgid "Copy link to list"
 msgstr "Скопіювати посилання"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:182
+#: src/view/com/util/forms/PostDropdownBtn.tsx:184
 msgid "Copy link to post"
 msgstr "Скопіювати посилання"
 
@@ -989,7 +1008,7 @@ msgstr "Скопіювати посилання"
 msgid "Copy link to profile"
 msgstr "Скопіювати посилання"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:168
+#: src/view/com/util/forms/PostDropdownBtn.tsx:170
 msgid "Copy post text"
 msgstr "Скопіювати текст"
 
@@ -1045,7 +1064,7 @@ msgstr ""
 msgid "Created by you"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:448
+#: src/view/com/composer/Composer.tsx:455
 msgid "Creates a card with a thumbnail. The card links to {url}"
 msgstr ""
 
@@ -1126,11 +1145,11 @@ msgstr "Видалити мій обліковий запис"
 msgid "Delete My Account…"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:257
+#: src/view/com/util/forms/PostDropdownBtn.tsx:273
 msgid "Delete post"
 msgstr "Видалити пост"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:261
+#: src/view/com/util/forms/PostDropdownBtn.tsx:277
 msgid "Delete this post?"
 msgstr "Видалити цей пост?"
 
@@ -1157,7 +1176,7 @@ msgstr "Опис"
 #~ msgid "Developer Tools"
 #~ msgstr "Інструменти розробника"
 
-#: src/view/com/composer/Composer.tsx:211
+#: src/view/com/composer/Composer.tsx:218
 msgid "Did you want to say anything?"
 msgstr "Порожній пост. Ви хотіли щось написати?"
 
@@ -1165,15 +1184,15 @@ msgstr "Порожній пост. Ви хотіли щось написати?"
 msgid "Dim"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:144
+#: src/view/com/composer/Composer.tsx:151
 msgid "Discard"
 msgstr "Видалити"
 
-#: src/view/com/composer/Composer.tsx:138
+#: src/view/com/composer/Composer.tsx:145
 msgid "Discard draft"
 msgstr "Відкинути чернетку"
 
-#: src/view/screens/Moderation.tsx:207
+#: src/view/screens/Moderation.tsx:226
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "Попросити застосунки не показувати мій обліковий запис без входу"
 
@@ -1252,7 +1271,7 @@ msgstr ""
 msgid "Download CAR file"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:247
+#: src/view/com/composer/text-input/TextInput.web.tsx:249
 msgid "Drop to add images"
 msgstr ""
 
@@ -1324,6 +1343,7 @@ msgstr "Редагувати профіль"
 msgid "Edit Profile"
 msgstr "Редагувати профіль"
 
+#: src/view/com/home/HomeHeaderLayout.web.tsx:59
 #: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "Редагувати збережені стрічки"
@@ -1406,6 +1426,11 @@ msgstr "Кінець стрічки"
 msgid "Enter a name for this App Password"
 msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:87
+#: src/components/dialogs/MutedWords.tsx:88
+msgid "Enter a word or tag"
+msgstr ""
+
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
 msgstr ""
@@ -1459,7 +1484,7 @@ msgstr "Введіть псевдонім та пароль"
 msgid "Error receiving captcha response."
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:109
+#: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
 msgstr "Помилка:"
 
@@ -1530,7 +1555,7 @@ msgstr ""
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:108
+#: src/view/com/util/forms/PostDropdownBtn.tsx:110
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -1552,8 +1577,8 @@ msgid "Feed offline"
 msgstr "Стрічка не працює"
 
 #: src/view/com/feeds/FeedPage.tsx:143
-msgid "Feed Preferences"
-msgstr "Налаштування стрічки"
+#~ msgid "Feed Preferences"
+#~ msgstr "Налаштування стрічки"
 
 #: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:311
@@ -1601,11 +1626,11 @@ msgstr ""
 msgid "Find accounts to follow"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:439
+#: src/view/screens/Search/Search.tsx:440
 msgid "Find users on Bluesky"
 msgstr "Знайти користувачів у Bluesky"
 
-#: src/view/screens/Search/Search.tsx:437
+#: src/view/screens/Search/Search.tsx:438
 msgid "Find users with the search tool on the right"
 msgstr "Знайти користувачів за допомогою поля пошуку справа вгорі"
 
@@ -1714,6 +1739,7 @@ msgid "Following {0}"
 msgstr ""
 
 #: src/Navigation.tsx:248
+#: src/view/com/home/HomeHeaderLayout.web.tsx:45
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:83
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
@@ -1753,7 +1779,7 @@ msgstr "Забули пароль"
 msgid "Forgot Password"
 msgstr "Забули пароль"
 
-#: src/view/com/posts/FeedItem.tsx:187
+#: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr ""
@@ -1786,7 +1812,7 @@ msgstr "Назад"
 msgid "Go back to previous step"
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:724
+#: src/view/screens/Search/Search.tsx:747
 #: src/view/shell/desktop/Search.tsx:262
 msgid "Go to @{queryMaybeHandle}"
 msgstr ""
@@ -1802,6 +1828,10 @@ msgstr "Далі"
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "Псевдонім"
+
+#: src/components/RichText.tsx:188
+msgid "Hashtag: {tag}"
+msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:208
 msgid "Having trouble?"
@@ -1845,7 +1875,7 @@ msgctxt "action"
 msgid "Hide"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:216
+#: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Hide post"
 msgstr "Приховати пост"
 
@@ -1854,7 +1884,7 @@ msgstr "Приховати пост"
 msgid "Hide the content"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:220
+#: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Hide this post?"
 msgstr "Приховати цей пост?"
 
@@ -2029,7 +2059,7 @@ msgstr ""
 msgid "Input your user handle"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:224
+#: src/view/com/post-thread/PostThreadItem.tsx:226
 msgid "Invalid or unsupported post record"
 msgstr ""
 
@@ -2131,7 +2161,7 @@ msgstr "Дізнатися більше"
 msgid "Learn more about this warning"
 msgstr "Дізнатися більше про це попередження"
 
-#: src/view/screens/Moderation.tsx:243
+#: src/view/screens/Moderation.tsx:262
 msgid "Learn more about what is public on Bluesky."
 msgstr "Дізнатися більше про те, що є публічним в Bluesky."
 
@@ -2215,7 +2245,7 @@ msgstr ""
 msgid "Likes"
 msgstr "Вподобання"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:181
+#: src/view/com/post-thread/PostThreadItem.tsx:183
 msgid "Likes on this post"
 msgstr ""
 
@@ -2280,7 +2310,7 @@ msgstr "Завантажити більше постів"
 msgid "Load new notifications"
 msgstr "Завантажити нові сповіщення"
 
-#: src/view/com/feeds/FeedPage.tsx:181
+#: src/view/com/feeds/FeedPage.tsx:115
 #: src/view/screens/Profile.tsx:440
 #: src/view/screens/ProfileFeed.tsx:495
 #: src/view/screens/ProfileList.tsx:681
@@ -2310,7 +2340,7 @@ msgstr ""
 #~ msgid "Logged-out users"
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:136
+#: src/view/screens/Moderation.tsx:155
 msgid "Logged-out visibility"
 msgstr "Видимість для користувачів без облікового запису"
 
@@ -2325,6 +2355,10 @@ msgstr "Увійти до облікового запису, якого нема
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Make sure this is where you intend to go!"
 msgstr "Переконайтеся, що це дійсно той сайт, що ви збираєтеся відвідати!"
+
+#: src/components/dialogs/MutedWords.tsx:71
+msgid "Manage your muted words and tags"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
@@ -2347,7 +2381,7 @@ msgid "Mentioned users"
 msgstr "Згадані користувачі"
 
 #: src/view/com/util/ViewHeader.tsx:81
-#: src/view/screens/Search/Search.tsx:623
+#: src/view/screens/Search/Search.tsx:646
 msgid "Menu"
 msgstr "Меню"
 
@@ -2360,7 +2394,7 @@ msgid "Message from server: {0}"
 msgstr ""
 
 #: src/Navigation.tsx:115
-#: src/view/screens/Moderation.tsx:64
+#: src/view/screens/Moderation.tsx:66
 #: src/view/screens/Settings/index.tsx:625
 #: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:511
@@ -2391,7 +2425,7 @@ msgstr ""
 msgid "Moderation list updated"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:95
+#: src/view/screens/Moderation.tsx:114
 msgid "Moderation lists"
 msgstr "Списки для модерації"
 
@@ -2418,7 +2452,7 @@ msgstr "Більше стрічок"
 msgid "More options"
 msgstr "Додаткові опції"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:299
+#: src/view/com/util/forms/PostDropdownBtn.tsx:315
 msgid "More post options"
 msgstr ""
 
@@ -2430,6 +2464,14 @@ msgstr "За кількістю вподобань"
 msgid "Must be at least 3 characters"
 msgstr ""
 
+#: src/components/TagMenu/index.tsx:253
+msgid "Mute"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:91
+msgid "Mute {truncatedTag}"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:327
 msgid "Mute Account"
 msgstr "Ігнорувати обліковий запис"
@@ -2437,6 +2479,18 @@ msgstr "Ігнорувати обліковий запис"
 #: src/view/screens/ProfileList.tsx:544
 msgid "Mute accounts"
 msgstr "Ігнорувати облікові записи"
+
+#: src/components/TagMenu/index.tsx:211
+msgid "Mute all {tag} posts"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:131
+msgid "Mute in tags only"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:116
+msgid "Mute in text & tags"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:491
 msgid "Mute list"
@@ -2450,15 +2504,27 @@ msgstr "Ігнорувати ці облікові записи?"
 msgid "Mute this List"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:200
+#: src/components/dialogs/MutedWords.tsx:109
+msgid "Mute this word in post text and tags"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:124
+msgid "Mute this word in tags only"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Mute thread"
 msgstr "Ігнорувати пост"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:216
+msgid "Mute words & tags"
+msgstr ""
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
 msgstr ""
 
-#: src/view/screens/Moderation.tsx:109
+#: src/view/screens/Moderation.tsx:128
 msgid "Muted accounts"
 msgstr "Ігноровані облікові записи"
 
@@ -2470,6 +2536,10 @@ msgstr "Ігноровані облікові записи"
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "Ігноровані облікові записи автоматично вилучаються із вашої стрічки та сповіщень. Ігнорування є повністю приватним."
+
+#: src/view/screens/Moderation.tsx:100
+msgid "Muted words & tags"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:277
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2538,6 +2608,10 @@ msgstr "Ніколи не втрачайте доступ до ваших дан
 msgid "Never lose access to your followers or data."
 msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:244
+msgid "Nevermind"
+msgstr ""
+
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
 msgid "New"
@@ -2559,7 +2633,7 @@ msgstr ""
 msgid "New Password"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:192
+#: src/view/com/feeds/FeedPage.tsx:126
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -2653,8 +2727,8 @@ msgstr "Нічого не знайдено за запитом «{query}»"
 #~ msgstr ""
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:280
-#: src/view/screens/Search/Search.tsx:308
+#: src/view/screens/Search/Search.tsx:281
+#: src/view/screens/Search/Search.tsx:309
 msgid "No results found for {query}"
 msgstr "Нічого не знайдено за запитом «{query}»"
 
@@ -2688,7 +2762,7 @@ msgstr ""
 #~ msgid "Note: Bluesky is an open and public network, and enabling this will not make your profile private or limit the ability of logged in users to see your posts. This setting only limits the visibility of posts on the Bluesky app and website; third-party apps that display Bluesky content may not respect this setting, and could show your content to logged-out users."
 #~ msgstr ""
 
-#: src/view/screens/Moderation.tsx:233
+#: src/view/screens/Moderation.tsx:252
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "Примітка: Bluesky є відкритою і публічною мережею. Цей параметр обмежує видимість вашого вмісту лише у застосунках і на сайті Bluesky, але інші застосунки можуть цього не дотримуватися. Ваш вміст все ще може бути показаний відвідувачам без облікового запису іншими застосунками і вебсайтами."
 
@@ -2730,7 +2804,7 @@ msgstr "Спочатку найдавніші"
 msgid "Onboarding reset"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:375
+#: src/view/com/composer/Composer.tsx:382
 msgid "One or more images is missing alt text."
 msgstr "Для одного або кількох зображень відсутній альтернативний текст."
 
@@ -2747,13 +2821,21 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:470
-#: src/view/com/composer/Composer.tsx:471
+#: src/view/screens/Moderation.tsx:75
+msgid "Open content filtering settings"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:477
+#: src/view/com/composer/Composer.tsx:478
 msgid "Open emoji picker"
 msgstr "Емоджі"
 
 #: src/view/screens/Settings/index.tsx:712
 msgid "Open links with in-app browser"
+msgstr ""
+
+#: src/view/screens/Moderation.tsx:92
+msgid "Open muted words settings"
 msgstr ""
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:49
@@ -2832,6 +2914,7 @@ msgstr "Відкриває налаштування модерації"
 msgid "Opens password reset form"
 msgstr ""
 
+#: src/view/com/home/HomeHeaderLayout.web.tsx:60
 #: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr ""
@@ -3016,7 +3099,7 @@ msgstr "Будь ласка, вкажіть чому ви вважаєте що 
 msgid "Please Verify Your Email"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:215
+#: src/view/com/composer/Composer.tsx:222
 msgid "Please wait for your link card to finish loading"
 msgstr "Будь ласка, зачекайте доки завершиться створення попереднього перегляду для посилання"
 
@@ -3028,8 +3111,8 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:350
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/com/composer/Composer.tsx:357
+#: src/view/com/composer/Composer.tsx:365
 msgctxt "action"
 msgid "Post"
 msgstr ""
@@ -3045,7 +3128,7 @@ msgstr ""
 #~ msgid "Post"
 #~ msgstr "Пост"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:173
+#: src/view/com/post-thread/PostThreadItem.tsx:175
 msgid "Post by {0}"
 msgstr ""
 
@@ -3055,11 +3138,11 @@ msgstr ""
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:88
+#: src/view/com/util/forms/PostDropdownBtn.tsx:90
 msgid "Post deleted"
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:461
+#: src/view/com/post-thread/PostThread.tsx:462
 msgid "Post hidden"
 msgstr "Пост приховано"
 
@@ -3071,13 +3154,21 @@ msgstr "Мова посту"
 msgid "Post Languages"
 msgstr "Мови посту"
 
-#: src/view/com/post-thread/PostThread.tsx:513
+#: src/view/com/post-thread/PostThread.tsx:514
 msgid "Post not found"
 msgstr "Пост не знайдено"
+
+#: src/components/TagMenu/index.tsx:257
+msgid "posts"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:180
 msgid "Posts"
 msgstr "Пости"
+
+#: src/components/dialogs/MutedWords.tsx:77
+msgid "Posts can be muted based on their text, their tags, or both."
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -3143,11 +3234,11 @@ msgstr "Публічні, поширювані списки користувач
 msgid "Public, shareable lists which can drive feeds."
 msgstr "Публічні, поширювані списки для створення стрічок."
 
-#: src/view/com/composer/Composer.tsx:335
+#: src/view/com/composer/Composer.tsx:342
 msgid "Publish post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:335
+#: src/view/com/composer/Composer.tsx:342
 msgid "Publish reply"
 msgstr ""
 
@@ -3190,6 +3281,7 @@ msgstr "Рекомендовані стрічки"
 msgid "Recommended Users"
 msgstr "Рекомендовані користувачі"
 
+#: src/components/dialogs/MutedWords.tsx:249
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
@@ -3227,6 +3319,10 @@ msgstr "Вилучити зображення"
 msgid "Remove image preview"
 msgstr "Вилучити попередній перегляд зображення"
 
+#: src/components/dialogs/MutedWords.tsx:294
+msgid "Remove mute word from your list"
+msgstr ""
+
 #: src/view/com/modals/Repost.tsx:47
 msgid "Remove repost"
 msgstr ""
@@ -3261,7 +3357,7 @@ msgstr "Відповіді"
 msgid "Replies to this thread are disabled"
 msgstr "Відповіді до цього посту вимкнено"
 
-#: src/view/com/composer/Composer.tsx:348
+#: src/view/com/composer/Composer.tsx:355
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -3271,7 +3367,7 @@ msgid "Reply Filters"
 msgstr "Які відповіді показувати"
 
 #: src/view/com/post/Post.tsx:167
-#: src/view/com/posts/FeedItem.tsx:285
+#: src/view/com/posts/FeedItem.tsx:287
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr ""
@@ -3293,7 +3389,7 @@ msgid "Report List"
 msgstr "Поскаржитись на список"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:239
+#: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Report post"
 msgstr "Поскаржитись на пост"
 
@@ -3322,7 +3418,7 @@ msgstr "Репостити або цитувати"
 msgid "Reposted By"
 msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:205
+#: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
 msgstr ""
 
@@ -3330,7 +3426,7 @@ msgstr ""
 #~ msgid "Reposted by {0})"
 #~ msgstr ""
 
-#: src/view/com/posts/FeedItem.tsx:222
+#: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0/>"
 msgstr ""
 
@@ -3338,7 +3434,7 @@ msgstr ""
 msgid "reposted your post"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:186
+#: src/view/com/post-thread/PostThreadItem.tsx:188
 msgid "Reposts of this post"
 msgstr ""
 
@@ -3501,9 +3597,9 @@ msgstr ""
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:418
-#: src/view/screens/Search/Search.tsx:645
-#: src/view/screens/Search/Search.tsx:663
+#: src/view/screens/Search/Search.tsx:419
+#: src/view/screens/Search/Search.tsx:668
+#: src/view/screens/Search/Search.tsx:686
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:214
@@ -3513,9 +3609,17 @@ msgstr ""
 msgid "Search"
 msgstr "Пошук"
 
-#: src/view/screens/Search/Search.tsx:712
+#: src/view/screens/Search/Search.tsx:735
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:145
+msgid "Search for all posts by @{authorHandle} with tag {tag}"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:90
+msgid "Search for all posts with tag {tag}"
 msgstr ""
 
 #: src/view/screens/Search/Search.tsx:390
@@ -3531,6 +3635,22 @@ msgstr "Пошук користувачів"
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
 msgstr "Потрібен код підтвердження"
+
+#: src/components/TagMenu/index.web.tsx:50
+msgid "See {truncatedTag} posts"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:67
+msgid "See {truncatedTag} posts by user"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:128
+msgid "See <0>{tag}</0> posts"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:189
+msgid "See <0>{tag}</0> posts by this user"
+msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:163
 msgid "See this guide"
@@ -3749,7 +3869,7 @@ msgid "Share"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:295
-#: src/view/com/util/forms/PostDropdownBtn.tsx:182
+#: src/view/com/util/forms/PostDropdownBtn.tsx:184
 #: src/view/screens/ProfileList.tsx:418
 msgid "Share"
 msgstr "Поширити"
@@ -3786,9 +3906,9 @@ msgstr "Показати вбудування з {0}"
 msgid "Show follows similar to {0}"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:532
-#: src/view/com/post/Post.tsx:196
-#: src/view/com/posts/FeedItem.tsx:359
+#: src/view/com/post-thread/PostThreadItem.tsx:538
+#: src/view/com/post/Post.tsx:198
+#: src/view/com/posts/FeedItem.tsx:363
 msgid "Show More"
 msgstr ""
 
@@ -3956,7 +4076,7 @@ msgstr ""
 msgid "Something went wrong. Check your email and try again."
 msgstr ""
 
-#: src/App.native.tsx:61
+#: src/App.native.tsx:63
 msgid "Sorry! Your session expired. Please log in again."
 msgstr ""
 
@@ -4022,7 +4142,7 @@ msgstr "Підписатися на цей список"
 #~ msgid "Subscribed"
 #~ msgstr ""
 
-#: src/view/screens/Search/Search.tsx:373
+#: src/view/screens/Search/Search.tsx:374
 msgid "Suggested Follows"
 msgstr "Пропоновані підписки"
 
@@ -4066,6 +4186,14 @@ msgstr ""
 msgid "System log"
 msgstr "Системний журнал"
 
+#: src/components/dialogs/MutedWords.tsx:288
+msgid "tag"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:74
+msgid "Tag menu: {tag}"
+msgstr ""
+
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
 msgstr "Високе"
@@ -4088,6 +4216,10 @@ msgstr "Умови"
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "Умови Використання"
+
+#: src/components/dialogs/MutedWords.tsx:288
+msgid "text"
+msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
@@ -4114,7 +4246,7 @@ msgstr "Політику захисту авторського права пер
 msgid "The following steps will help customize your Bluesky experience."
 msgstr ""
 
-#: src/view/com/post-thread/PostThread.tsx:516
+#: src/view/com/post-thread/PostThread.tsx:517
 msgid "The post may have been deleted."
 msgstr "Можливо цей пост було видалено."
 
@@ -4296,7 +4428,7 @@ msgstr ""
 msgid "This name is already in use"
 msgstr ""
 
-#: src/view/com/post-thread/PostThreadItem.tsx:123
+#: src/view/com/post-thread/PostThreadItem.tsx:125
 msgid "This post has been deleted."
 msgstr "Цей пост було видалено."
 
@@ -4320,7 +4452,11 @@ msgstr ""
 msgid "This warning is only available for posts with media attached."
 msgstr "Це попередження доступне тільки для записів з прикріпленими медіа-файлами."
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:221
+#: src/components/dialogs/MutedWords.tsx:236
+msgid "This will delete {0} from your muted words. You can always add it back later."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:237
 msgid "This will hide this post from your feeds."
 msgstr "Це приховає цей пост із вашої стрічки."
 
@@ -4337,6 +4473,10 @@ msgstr "Режим гілок"
 msgid "Threads Preferences"
 msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:95
+msgid "Toggle between muted word options."
+msgstr ""
+
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
 msgstr "Розкрити/сховати"
@@ -4345,9 +4485,9 @@ msgstr "Розкрити/сховати"
 msgid "Transformations"
 msgstr "Редагування"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:679
-#: src/view/com/post-thread/PostThreadItem.tsx:681
-#: src/view/com/util/forms/PostDropdownBtn.tsx:154
+#: src/view/com/post-thread/PostThreadItem.tsx:685
+#: src/view/com/post-thread/PostThreadItem.tsx:687
+#: src/view/com/util/forms/PostDropdownBtn.tsx:156
 msgid "Translate"
 msgstr "Перекласти"
 
@@ -4416,15 +4556,24 @@ msgstr "На жаль, ви не відповідаєте вимогам для 
 msgid "Unlike"
 msgstr ""
 
+#: src/components/TagMenu/index.tsx:253
 #: src/view/screens/ProfileList.tsx:597
 msgid "Unmute"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:90
+msgid "Unmute {truncatedTag}"
 msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:326
 msgid "Unmute Account"
 msgstr "Перестати ігнорувати"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:200
+#: src/components/TagMenu/index.tsx:210
+msgid "Unmute all {tag} posts"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Unmute thread"
 msgstr "Перестати ігнорувати"
 
@@ -4633,6 +4782,10 @@ msgstr ""
 #~ msgid "We recommend \"For You\" by Skygaze:"
 #~ msgstr ""
 
+#: src/components/dialogs/MutedWords.tsx:161
+msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
+msgstr ""
+
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
 msgstr ""
@@ -4669,7 +4822,11 @@ msgstr "Ми дуже раді, що ви приєдналися!"
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:253
+#: src/components/dialogs/MutedWords.tsx:182
+msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:254
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "Даруйте, нам не вдалося виконати пошук за вашим запитом. Будь ласка, спробуйте ще раз через кілька хвилин."
 
@@ -4690,7 +4847,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "Яка проблема з {collectionName}?"
 
 #: src/view/com/auth/SplashScreen.tsx:59
-#: src/view/com/composer/Composer.tsx:279
+#: src/view/com/composer/Composer.tsx:286
 msgid "What's up?"
 msgstr "Як справи?"
 
@@ -4715,11 +4872,11 @@ msgstr "Хто може відповідати"
 msgid "Wide"
 msgstr "Широке"
 
-#: src/view/com/composer/Composer.tsx:415
+#: src/view/com/composer/Composer.tsx:422
 msgid "Write post"
 msgstr "Написати пост"
 
-#: src/view/com/composer/Composer.tsx:278
+#: src/view/com/composer/Composer.tsx:285
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "Написати відповідь"
@@ -4788,7 +4945,7 @@ msgstr "У вас немає збережених стрічок!"
 msgid "You don't have any saved feeds."
 msgstr "У вас немає збережених стрічок."
 
-#: src/view/com/post-thread/PostThread.tsx:464
+#: src/view/com/post-thread/PostThread.tsx:465
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "Ви заблокували автора або автор заблокував вас."
 
@@ -4828,6 +4985,10 @@ msgstr "Ви ще не створили жодного пароля для за�
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "Ви ще не ігноруєте жодного облікового запису. Щоб ігнорувати когось, перейдіть до їх профілю та виберіть опцію \"Ігнорувати\" у меню їх облікового запису."
 
+#: src/components/dialogs/MutedWords.tsx:202
+msgid "You haven't muted any words or tags yet"
+msgstr ""
+
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
 msgstr ""
@@ -4836,11 +4997,11 @@ msgstr ""
 msgid "You must be 18 years or older to enable adult content"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:127
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:130
+#: src/view/com/util/forms/PostDropdownBtn.tsx:132
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -4930,11 +5091,15 @@ msgstr ""
 #~ msgid "Your invite codes are hidden when logged in using an App Password"
 #~ msgstr "Ваші коди запрошення приховано, якщо ви увійшли за допомогою пароля для застосунків"
 
+#: src/components/dialogs/MutedWords.tsx:173
+msgid "Your muted words"
+msgstr ""
+
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:267
+#: src/view/com/composer/Composer.tsx:274
 msgid "Your post has been published"
 msgstr ""
 
@@ -4961,7 +5126,7 @@ msgstr "Ваш профіль"
 #~ msgid "Your profile and posts will not be visible to people visiting the Bluesky app or website without having an account and being logged in."
 #~ msgstr ""
 
-#: src/view/com/composer/Composer.tsx:266
+#: src/view/com/composer/Composer.tsx:273
 msgid "Your reply has been published"
 msgstr ""
 

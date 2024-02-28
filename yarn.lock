@@ -34,6 +34,20 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
+"@atproto/api@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.10.0.tgz#ca34dfa8f9b1e6ba021094c40cb0ff3c4c254044"
+  integrity sha512-TSVCHh3UUZLtNzh141JwLicfYTc7TvVFvQJSWeOZLHr3Sk+9hqEY+9Itaqp1DAW92r4i25ChaMc/50sg4etAWQ==
+  dependencies:
+    "@atproto/common-web" "^0.2.3"
+    "@atproto/lexicon" "^0.3.1"
+    "@atproto/syntax" "^0.1.5"
+    "@atproto/xrpc" "^0.4.1"
+    multiformats "^9.9.0"
+    tlds "^1.234.0"
+    typed-emitter "^2.1.0"
+    zod "^3.21.4"
+
 "@atproto/api@^0.9.5":
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/@atproto/api/-/api-0.9.5.tgz#630e5d9520bba38d0cd348c8028ddbb73bd074f8"
@@ -11724,6 +11738,14 @@ expo-keep-awake@~12.8.1:
   version "12.8.1"
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-12.8.1.tgz#3c8df9d86c265741b5e7bdd36965aa0c6fc17df0"
   integrity sha512-P/VZFV02Rzgj13skMwH+ceGOGZSEdaUu5n7pCS3wThh2LppZjPJ7sBxUwyzeLa3DXEVUtwLZi+BiQ91wPwy9Gg==
+
+expo-linking@^6.2.2:
+  version "6.2.2"
+  resolved "https://registry.yarnpkg.com/expo-linking/-/expo-linking-6.2.2.tgz#b7e148068ae49fd9ad814428c16fdf7a236e8aca"
+  integrity sha512-FEe6lP4f7xFT/vjoHRG+tt6EPVtkEGaWNK1smpaUevmNdyCJKqW0PDB8o8sfG6y7fly8ULe8qg3HhKh5J7aqUQ==
+  dependencies:
+    expo-constants "~15.4.3"
+    invariant "^2.2.4"
 
 expo-localization@~14.8.2:
   version "14.8.2"

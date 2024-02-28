@@ -181,6 +181,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
 
   const logoAnimations =
     reduceMotion === true ? reducedLogoAnimation : logoAnimation
+  // special off-spec color for dark mode
+  const logoBg = isDarkMode ? '#0F1824' : '#fff'
 
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
@@ -232,7 +234,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                   },
                 ]}>
                 <AnimatedLogo
-                  fill="#fff"
+                  fill={logoBg}
                   style={[{opacity: 0}, logoAnimations]}
                 />
               </Animated.View>
@@ -253,7 +255,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                     transform: [{translateY: -(insets.top / 2)}, {scale: 0.1}], // scale from 1000px to 100px
                   },
                 ]}>
-                <AnimatedLogo fill="#fff" style={[logoAnimations]} />
+                <AnimatedLogo fill={logoBg} style={[logoAnimations]} />
               </Animated.View>
             }>
             {!isAnimationComplete && (
@@ -261,10 +263,7 @@ export function Splash(props: React.PropsWithChildren<Props>) {
                 style={[
                   StyleSheet.absoluteFillObject,
                   {
-                    backgroundColor: isDarkMode
-                      ? // special off-spec color for dark mode
-                        '#0F1824'
-                      : '#fff',
+                    backgroundColor: logoBg,
                   },
                 ]}
               />
