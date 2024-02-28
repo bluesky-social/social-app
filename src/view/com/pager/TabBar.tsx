@@ -5,6 +5,7 @@ import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {DraggableScrollView} from './DraggableScrollView'
+import {isNative} from '#/platform/detection'
 
 export interface TabBarProps {
   testID?: string
@@ -14,6 +15,10 @@ export interface TabBarProps {
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
 }
+
+// How much of the previous/next item we're showing
+// to give the user a hint there's more to scroll.
+const OFFSCREEN_ITEM_WIDTH = 20
 
 export function TabBar({
   testID,
@@ -25,6 +30,7 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
+  const itemRefs = useRef<Array<Element>>([])
   const [itemXs, setItemXs] = useState<number[]>([])
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
@@ -33,12 +39,58 @@ export function TabBar({
   const {isDesktop, isTablet} = useWebMediaQueries()
   const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
-  // scrolls to the selected item when the page changes
   useEffect(() => {
-    scrollElRef.current?.scrollTo({
-      x:
-        (itemXs[selectedPage] || 0) - styles.contentContainer.paddingHorizontal,
-    })
+    if (isNative) {
+      // On native, the primary interaction is swiping.
+      // We adjust the scroll little by little on every tab change.
+      // Scroll into view but keep the end of the previous item visible.
+      let x = itemXs[selectedPage] || 0
+      x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
+      scrollElRef.current?.scrollTo({x})
+    } else {
+      // On the web, the primary interaction is tapping.
+      // Scrolling under tap feels disorienting so only adjust the scroll offset
+      // when tapping on an item out of view--and we adjust by almost an entire page.
+      const parent = scrollElRef?.current?.getScrollableNode?.()
+      if (!parent) {
+        return
+      }
+      const parentRect = parent.getBoundingClientRect()
+      if (!parentRect) {
+        return
+      }
+      const {
+        left: parentLeft,
+        right: parentRight,
+        width: parentWidth,
+      } = parentRect
+      const child = itemRefs.current[selectedPage]
+      if (!child) {
+        return
+      }
+      const childRect = child.getBoundingClientRect?.()
+      if (!childRect) {
+        return
+      }
+      const {left: childLeft, right: childRight, width: childWidth} = childRect
+      let dx = 0
+      if (childRight >= parentRight) {
+        dx += childRight - parentRight
+        dx += parentWidth - childWidth - OFFSCREEN_ITEM_WIDTH
+      } else if (childLeft <= parentLeft) {
+        dx -= parentLeft - childLeft
+        dx -= parentWidth - childWidth - OFFSCREEN_ITEM_WIDTH
+      }
+      let x = parent.scrollLeft + dx
+      x = Math.max(0, x)
+      x = Math.min(x, parent.scrollWidth - parentWidth)
+      if (dx !== 0) {
+        parent.scroll({
+          left: x,
+          behavior: 'smooth',
+        })
+      }
+    }
   }, [scrollElRef, itemXs, selectedPage, styles])
 
   const onPressItem = useCallback(
@@ -78,6 +130,7 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
+              ref={node => (itemRefs.current[i] = node)}
               onLayout={e => onItemLayout(e, i)}
               style={styles.item}
               hoverStyle={pal.viewLight}
@@ -94,6 +147,7 @@ export function TabBar({
           )
         })}
       </DraggableScrollView>
+      <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -117,6 +171,13 @@ const desktopStyles = StyleSheet.create({
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
   },
+  outerBottomBorder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    borderBottomWidth: 1,
+  },
 })
 
 const mobileStyles = StyleSheet.create({
@@ -136,5 +197,12 @@ const mobileStyles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
+  },
+  outerBottomBorder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    borderBottomWidth: 1,
   },
 })
