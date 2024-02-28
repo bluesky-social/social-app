@@ -1,21 +1,31 @@
 import React from 'react'
 import {Platform} from 'react-native'
 
+let shouldTrigger = false
 const onMouseUp = (e: React.MouseEvent & {target: HTMLElement}) => {
   // Only handle whenever it is the middle button
-  if (e.button !== 1 || e.target.closest('a') || e.target.tagName === 'A') {
+  if (
+    !shouldTrigger ||
+    e.button !== 1 ||
+    e.target.closest('a') ||
+    e.target.tagName === 'A'
+  ) {
     return
   }
 
   e.target.dispatchEvent(
     new MouseEvent('click', {metaKey: true, bubbles: true}),
   )
+  shouldTrigger = false
 }
-
-const onMouseDown = (e: React.MouseEvent) => {
+const onMouseDown = (e: React.MouseEvent & {target: HTMLElement}) => {
   // Prevents the middle click scroll from enabling
-  if (e.button !== 1) return
+  if (e.button !== 1 || e.target.closest('a') || e.target.tagName === 'A') {
+    return
+  }
+
   e.preventDefault()
+  shouldTrigger = true
 }
 
 export function WebAuxClickWrapper({children}: React.PropsWithChildren<{}>) {
