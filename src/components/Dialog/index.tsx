@@ -12,6 +12,7 @@ import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {createInput} from '#/components/forms/TextField'
 import {logger} from '#/logger'
+import {useDialogStateContext} from '#/state/dialogs'
 
 import {
   DialogOuterProps,
@@ -37,6 +38,7 @@ export function Outer({
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
   const closeCallback = React.useRef<() => void>()
+  const {openDialogs} = useDialogStateContext()
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
@@ -50,10 +52,11 @@ export function Outer({
 
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      openDialogs.current.add(control.id)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
     },
-    [setOpenIndex],
+    [setOpenIndex, openDialogs, control.id],
   )
 
   const close = React.useCallback<DialogControlProps['close']>(cb => {
@@ -85,11 +88,12 @@ export function Outer({
           closeCallback.current = undefined
         }
 
+        openDialogs.current.delete(control.id)
         onClose?.()
         setOpenIndex(-1)
       }
     },
-    [onClose, setOpenIndex],
+    [onClose, setOpenIndex, openDialogs, control.id],
   )
 
   const context = React.useMemo(() => ({close}), [close])

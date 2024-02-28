@@ -3,7 +3,7 @@ import React from 'react'
 import {useDialogStateContext} from '#/state/dialogs'
 import {
   DialogContextProps,
-  DialogControlProps,
+  DialogControlRefProps,
   DialogOuterProps,
 } from '#/components/Dialog/types'
 
@@ -17,7 +17,7 @@ export function useDialogContext() {
 
 export function useDialogControl(): DialogOuterProps['control'] {
   const id = React.useId()
-  const control = React.useRef<DialogControlProps>({
+  const control = React.useRef<DialogControlRefProps>({
     open: () => {},
     close: () => {},
   })
@@ -32,8 +32,13 @@ export function useDialogControl(): DialogOuterProps['control'] {
   }, [id, activeDialogs])
 
   return {
+    id,
     ref: control,
-    open: () => control.current.open(),
-    close: cb => control.current.close(cb),
+    open: () => {
+      control.current.open()
+    },
+    close: cb => {
+      control.current.close(cb)
+    },
   }
 }
