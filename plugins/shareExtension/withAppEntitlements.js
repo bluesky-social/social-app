@@ -4,7 +4,7 @@ const withAppEntitlements = config => {
   // eslint-disable-next-line no-shadow
   return withEntitlementsPlist(config, async config => {
     config.modResults['com.apple.security.application-groups'] = [
-      `group.bsky.app`,
+      `group.app.bsky`,
     ]
     return config
   })
