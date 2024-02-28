@@ -1,7 +1,6 @@
 import React from 'react'
 import {RenderTabBarFnProps} from 'view/com/pager/Pager'
 import {HomeHeaderLayout} from './HomeHeaderLayout'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {usePinnedFeedsInfos} from '#/state/queries/feed'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
@@ -10,16 +9,6 @@ import {TabBar} from '../pager/TabBar'
 import {usePalette} from '#/lib/hooks/usePalette'
 
 export function HomeHeader(
-  props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
-) {
-  const {isDesktop} = useWebMediaQueries()
-  if (isDesktop) {
-    return null
-  }
-  return <HomeHeaderInner {...props} />
-}
-
-export function HomeHeaderInner(
   props: RenderTabBarFnProps & {testID?: string; onPressSelected: () => void},
 ) {
   const navigation = useNavigation<NavigationProp>()

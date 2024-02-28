@@ -7,7 +7,6 @@ import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
 import {InlineLink} from '#/components/Link'
 import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
-import {getAgent} from '#/state/session'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {isNative} from '#/platform/detection'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -20,7 +19,6 @@ export function RichText({
   style,
   numberOfLines,
   disableLinks,
-  resolveFacets = false,
   selectable,
   enableTags = false,
   authorHandle,
@@ -30,30 +28,15 @@ export function RichText({
     testID?: string
     numberOfLines?: number
     disableLinks?: boolean
-    resolveFacets?: boolean
     enableTags?: boolean
     authorHandle?: string
   }) {
-  const detected = React.useRef(false)
-  const [richText, setRichText] = React.useState<RichTextAPI>(() =>
-    value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+  const richText = React.useMemo(
+    () =>
+      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+    [value],
   )
   const styles = [a.leading_snug, flatten(style)]
-
-  React.useEffect(() => {
-    if (!resolveFacets) return
-
-    async function detectFacets() {
-      const rt = new RichTextAPI({text: richText.text})
-      await rt.detectFacets(getAgent())
-      setRichText(rt)
-    }
-
-    if (!detected.current) {
-      detected.current = true
-      detectFacets()
-    }
-  }, [richText, setRichText, resolveFacets])
 
   const {text, facets} = richText
 

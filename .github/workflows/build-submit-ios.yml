@@ -60,6 +60,9 @@ jobs:
           # change unless the yarn version changes as well.
           key: ${{ runner.os }}-pods-${{ hashFiles('yarn.lock') }}
 
+      - name: 🔤 Compile translations
+        run: yarn intl:build
+
       - name: ✏️ Write environment variables
         run: |
           echo "${{ secrets.ENV_TOKEN }}" > .env

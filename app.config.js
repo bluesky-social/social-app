@@ -89,6 +89,10 @@ module.exports = function (config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
+              {
+                scheme: 'http',
+                host: 'localhost:19006',
+              },
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
@@ -137,6 +141,7 @@ module.exports = function (config) {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
         eas: {

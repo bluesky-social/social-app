@@ -10,7 +10,7 @@ import {
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {isNative} from '#/platform/detection'
-import {atoms as a, useTheme, useBreakpoints, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, useBreakpoints, ViewStyleProp, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -260,9 +260,21 @@ function MutedWordRow({
           a.align_center,
           a.justify_between,
           a.rounded_md,
+          a.gap_md,
           style,
         ]}>
-        <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+        <Text
+          style={[
+            a.flex_1,
+            a.leading_snug,
+            a.w_full,
+            a.font_bold,
+            t.atoms.text_contrast_high,
+            web({
+              overflowWrap: 'break-word',
+              wordBreak: 'break-word',
+            }),
+          ]}>
           {word.value}
         </Text>
 
