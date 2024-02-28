@@ -119,7 +119,7 @@ class ShareViewController: UIViewController {
       // extension does.
       if let dir = FileManager()
         .containerURL(
-          forSecurityApplicationGroupIdentifier: "group.\(Bundle.main.bundleIdentifier?.replacingOccurrences(of: ".Share-with-Bluesky", with: "") ?? "")")
+          forSecurityApplicationGroupIdentifier: "group.app.bsky")
       {
         let filePath = "\(dir.absoluteString)\(ProcessInfo.processInfo.globallyUniqueString).jpeg"
 
