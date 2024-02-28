@@ -4323,7 +4323,7 @@ msgstr "팔로우한 사용자의 게시물이 부족합니다. 대신 <0/>의 �
 
 #: src/components/dialogs/MutedWords.tsx:161
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr "많은 게시물에 자주 등장하는 단어는 게시물이 표시되지 않을 수 있으므로 피하는 것이 좋습니다."
+msgstr "게시물이 표시되지 않을 수 있으므로 많은 게시물에 자주 등장하는 단어는 피하는 것이 좋습니다."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
