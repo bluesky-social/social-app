@@ -3262,7 +3262,7 @@ msgstr "태그 {tag}을(를) 사용한 @{authorHandle} 님의 모든 게시물 �
 
 #: src/components/TagMenu/index.tsx:90
 msgid "Search for all posts with tag {tag}"
-msgstr "태그 {태그}을(를) 사용한 모든 게시물 검색"
+msgstr "태그 {tag}을(를) 사용한 모든 게시물 검색"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
