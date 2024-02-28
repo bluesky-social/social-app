@@ -14,7 +14,7 @@ const withExtensionEntitlements = (config, {extensionName}) => {
 
     const shareExtensionEntitlements = {
       'com.apple.security.application-groups': [
-        `group.${config.ios?.bundleIdentifier}`,
+        `group.bsky.app`,
       ],
     }
 
