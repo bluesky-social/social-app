@@ -21,7 +21,7 @@ import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
-  const {feeds: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
+  const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
@@ -124,10 +124,11 @@ function HomeScreenReady({
           onSelect={props.onSelect}
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
+          feeds={pinnedFeedInfos}
         />
       )
     },
-    [onPressSelected],
+    [onPressSelected, pinnedFeedInfos],
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
