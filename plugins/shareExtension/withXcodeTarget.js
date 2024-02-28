@@ -49,6 +49,13 @@ const withXcodeTarget = (config, {extensionName, controllerName}) => {
       }
     }
 
+    pbxProject.addTargetAttribute(
+      'DevelopmentTeam',
+      'B3LX46C5HS',
+      extensionName,
+    )
+    pbxProject.addTargetAttribute('DevelopmentTeam', 'B3LX46C5HS')
+
     return config
   })
 }
