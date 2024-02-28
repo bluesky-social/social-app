@@ -14,8 +14,21 @@ import {
 } from '#/state/queries/preferences'
 import {enforceLen} from '#/lib/strings/helpers'
 import {web} from '#/alf'
+import * as Dialog from '#/components/Dialog'
 
-export function useTagMenuControl() {}
+export function useTagMenuControl(): Dialog.DialogControlProps {
+  return {
+    id: '',
+    // @ts-ignore
+    ref: null,
+    open: () => {
+      throw new Error(`TagMenu controls are only available on native platforms`)
+    },
+    close: () => {
+      throw new Error(`TagMenu controls are only available on native platforms`)
+    },
+  }
+}
 
 export function TagMenu({
   children,
