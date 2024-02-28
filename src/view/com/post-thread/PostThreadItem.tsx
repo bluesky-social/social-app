@@ -94,6 +94,8 @@ export function PostThreadItem({
   if (richText && moderation) {
     return (
       <PostThreadItemLoaded
+        // Safeguard from clobbering per-post state below:
+        key={postShadowed.uri}
         post={postShadowed}
         prevPost={prevPost}
         nextPost={nextPost}

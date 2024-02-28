@@ -20,12 +20,14 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = useSetMinimalShellMode()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
+  const didJustRestoreScroll = useSharedValue<boolean>(false)
 
   useEffect(() => {
     if (isWeb) {
       return listenToForcedWindowScroll(() => {
         startDragOffset.value = null
         startMode.value = null
+        didJustRestoreScroll.value = true
       })
     }
   })
@@ -86,6 +88,11 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
           mode.value = newValue
         }
       } else {
+        if (didJustRestoreScroll.value) {
+          didJustRestoreScroll.value = false
+          // Don't hide/show navbar based on scroll restoratoin.
+          return
+        }
         // On the web, we don't try to follow the drag because we don't know when it ends.
         // Instead, show/hide immediately based on whether we're scrolling up or down.
         const dy = e.contentOffset.y - (startDragOffset.value ?? 0)
@@ -98,7 +105,14 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         }
       }
     },
-    [headerHeight, mode, setMode, startDragOffset, startMode],
+    [
+      headerHeight,
+      mode,
+      setMode,
+      startDragOffset,
+      startMode,
+      didJustRestoreScroll,
+    ],
   )
 
   return (

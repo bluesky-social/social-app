@@ -12,6 +12,8 @@ import {
   useUpsertMutedWordsMutation,
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
+import {enforceLen} from '#/lib/strings/helpers'
+import {web} from '#/alf'
 
 export function useTagMenuControl() {}
 
@@ -40,11 +42,12 @@ export function TagMenu({
       )) &&
       !(optimisticRemove?.value === sanitizedTag),
   )
+  const truncatedTag = enforceLen(tag, 15, true, 'middle')
 
   const dropdownItems = React.useMemo(() => {
     return [
       {
-        label: _(msg`See ${tag} posts`),
+        label: _(msg`See ${truncatedTag} posts`),
         onPress() {
           navigation.navigate('Search', {
             q: tag,
@@ -61,7 +64,7 @@ export function TagMenu({
       },
       authorHandle &&
         !isInvalidHandle(authorHandle) && {
-          label: _(msg`See ${tag} posts by this user`),
+          label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
             navigation.navigate({
               name: 'Search',
@@ -83,7 +86,9 @@ export function TagMenu({
         label: 'separator',
       },
       preferences && {
-        label: isMuted ? _(msg`Unmute ${tag}`) : _(msg`Mute ${tag}`),
+        label: isMuted
+          ? _(msg`Unmute ${truncatedTag}`)
+          : _(msg`Mute ${truncatedTag}`),
         onPress() {
           if (isMuted) {
             removeMutedWord({value: sanitizedTag, targets: ['tag']})
@@ -108,6 +113,7 @@ export function TagMenu({
     navigation,
     preferences,
     tag,
+    truncatedTag,
     sanitizedTag,
     upsertMutedWord,
     removeMutedWord,
@@ -119,7 +125,10 @@ export function TagMenu({
         accessibilityLabel={_(msg`Click here to open tag menu for ${tag}`)}
         accessibilityHint=""
         // @ts-ignore
-        items={dropdownItems}>
+        items={dropdownItems}
+        triggerStyle={web({
+          textAlign: 'left',
+        })}>
         {children}
       </NativeDropdown>
     </EventStopper>
