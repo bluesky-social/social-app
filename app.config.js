@@ -156,7 +156,9 @@ module.exports = function (config) {
                     targetName: 'Share-with-Bluesky',
                     bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
                     entitlements: {
-                      'com.apple.security.application-groups': 'group.app.bsky',
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
                     },
                   },
                 ],
