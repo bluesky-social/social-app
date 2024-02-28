@@ -21,12 +21,17 @@ const REGEX = {
   WORD_BOUNDARY: /[\s\n\t\r\f\v]+?/g,
 }
 
-export function hasMutedWord(
-  mutedWords: AppBskyActorDefs.MutedWord[],
-  text: string,
-  facets?: AppBskyRichtextFacet.Main[],
-  outlineTags?: string[],
-) {
+export function hasMutedWord({
+  mutedWords,
+  text,
+  facets,
+  outlineTags,
+}: {
+  mutedWords: AppBskyActorDefs.MutedWord[]
+  text: string
+  facets?: AppBskyRichtextFacet.Main[]
+  outlineTags?: string[]
+}) {
   const tags = ([] as string[])
     .concat(outlineTags || [])
     .concat(
@@ -134,19 +139,26 @@ export function moderatePost_wrapped(
   }
 
   if (AppBskyFeedPost.isRecord(subject.record)) {
-    let muted = hasMutedWord(
+    let muted = hasMutedWord({
       mutedWords,
-      subject.record.text,
-      subject.record.facets || [],
-      subject.record.tags || [],
-    )
+      text: subject.record.text,
+      facets: subject.record.facets || [],
+      outlineTags: subject.record.tags || [],
+    })
 
     if (
       subject.record.embed &&
       AppBskyEmbedImages.isMain(subject.record.embed)
     ) {
       for (const image of subject.record.embed.images) {
-        muted = muted || hasMutedWord(mutedWords, image.alt, [], [])
+        muted =
+          muted ||
+          hasMutedWord({
+            mutedWords,
+            text: image.alt,
+            facets: [],
+            outlineTags: [],
+          })
       }
     }
 
@@ -172,17 +184,23 @@ export function moderatePost_wrapped(
       if (AppBskyFeedPost.isRecord(subject.embed.record.value)) {
         embedHidden =
           embedHidden ||
-          hasMutedWord(
+          hasMutedWord({
             mutedWords,
-            subject.embed.record.value.text,
-            subject.embed.record.value.facets,
-            subject.embed.record.value.tags,
-          )
+            text: subject.embed.record.value.text,
+            facets: subject.embed.record.value.facets,
+            outlineTags: subject.embed.record.value.tags,
+          })
 
         if (AppBskyEmbedImages.isMain(subject.embed.record.value.embed)) {
           for (const image of subject.embed.record.value.embed.images) {
             embedHidden =
-              embedHidden || hasMutedWord(mutedWords, image.alt, [], [])
+              embedHidden ||
+              hasMutedWord({
+                mutedWords,
+                text: image.alt,
+                facets: [],
+                outlineTags: [],
+              })
           }
         }
       }
