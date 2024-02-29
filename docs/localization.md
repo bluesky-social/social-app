@@ -49,7 +49,7 @@ const text = t`Hello World`;
 ```
 
 We can then run `yarn intl:extract` to update the catalog in `src/locale/locales/{locale}/messages.po`. This will add the new string to the catalog.
-We can then run `yarn intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files. 
+We can then run `yarn intl:compile` to update the translation files in `src/locale/locales/{locale}/messages.js`. This will add the new string to the translation files.
 The configuration for translations is defined in `lingui.config.js`
 
 So the workflow is as follows:
@@ -114,6 +114,6 @@ export function Welcome() {
 
 
 ### Credits
-Please check each individual `messages.po` file for the credits of the translators. We are very grateful for their help! 
+Please check each individual `messages.po` file for the credits of the translators. We are very grateful for their help!
 
 If you would like to translate the Bluesky app into your language, please open a PR or issue on this repo.

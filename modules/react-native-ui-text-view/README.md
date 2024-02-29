@@ -29,7 +29,7 @@ All of our children are placed into `RNUITextView`, which is the main native vie
 
 We next map each child into the view. We have to be careful here to check if the child's `children` prop is a string. If
 it is, that means we have encountered what was once an RN `Text` component. RN doesn't let us pass plain text as
-children outside of `Text`, so we instead just pass the text into the `text` prop on `RNUITextViewChild`. We continue 
+children outside of `Text`, so we instead just pass the text into the `text` prop on `RNUITextViewChild`. We continue
 down the tree, until we run out of children.
 
 On the native side, we make use of the shadow view to calculate text container dimensions before the views are mounted.
