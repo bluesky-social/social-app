@@ -13,10 +13,7 @@ export function Links() {
       <H1>Links</H1>
 
       <View style={[a.gap_md, a.align_start]}>
-        <InlineLink
-          to="https://bsky.social"
-          warnOnMismatchingTextChild
-          style={[a.text_md]}>
+        <InlineLink to="https://bsky.social" style={[a.text_md]}>
           External
         </InlineLink>
         <InlineLink to="https://bsky.social" style={[a.text_md, t.atoms.text]}>
@@ -27,16 +24,10 @@ export function Links() {
           style={[a.text_md, t.atoms.text_contrast_low]}>
           External with custom children
         </InlineLink>
-        <InlineLink
-          to="https://bsky.social"
-          warnOnMismatchingTextChild
-          style={[a.text_lg]}>
+        <InlineLink to="https://bsky.social" style={[a.text_lg]}>
           https://bsky.social
         </InlineLink>
-        <InlineLink
-          to="https://bsky.app/profile/bsky.app"
-          warnOnMismatchingTextChild
-          style={[a.text_md]}>
+        <InlineLink to="https://bsky.app/profile/bsky.app" style={[a.text_md]}>
           Internal
         </InlineLink>
 
