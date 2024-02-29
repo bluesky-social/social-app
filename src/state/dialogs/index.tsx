@@ -1,20 +1,32 @@
 import React from 'react'
-import {DialogControlProps} from '#/components/Dialog'
+import {DialogControlRefProps} from '#/components/Dialog'
+import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 
 const DialogContext = React.createContext<{
+  /**
+   * The currently active `useDialogControl` hooks.
+   */
   activeDialogs: React.MutableRefObject<
-    Map<string, React.MutableRefObject<DialogControlProps>>
+    Map<string, React.MutableRefObject<DialogControlRefProps>>
   >
+  /**
+   * The currently open dialogs, referenced by their IDs, generated from
+   * `useId`.
+   */
+  openDialogs: React.MutableRefObject<Set<string>>
 }>({
   activeDialogs: {
     current: new Map(),
   },
+  openDialogs: {
+    current: new Set(),
+  },
 })
 
 const DialogControlContext = React.createContext<{
-  closeAllDialogs(): void
+  closeAllDialogs(): boolean
 }>({
-  closeAllDialogs: () => {},
+  closeAllDialogs: () => false,
 })
 
 export function useDialogStateContext() {
@@ -27,17 +39,22 @@ export function useDialogStateControlContext() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeDialogs = React.useRef<
-    Map<string, React.MutableRefObject<DialogControlProps>>
+    Map<string, React.MutableRefObject<DialogControlRefProps>>
   >(new Map())
+  const openDialogs = React.useRef<Set<string>>(new Set())
+
   const closeAllDialogs = React.useCallback(() => {
     activeDialogs.current.forEach(dialog => dialog.current.close())
+    return openDialogs.current.size > 0
   }, [])
-  const context = React.useMemo(() => ({activeDialogs}), [])
+
+  const context = React.useMemo(() => ({activeDialogs, openDialogs}), [])
   const controls = React.useMemo(() => ({closeAllDialogs}), [closeAllDialogs])
+
   return (
     <DialogContext.Provider value={context}>
       <DialogControlContext.Provider value={controls}>
-        {children}
+        <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
       </DialogControlContext.Provider>
     </DialogContext.Provider>
   )

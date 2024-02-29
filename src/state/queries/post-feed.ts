@@ -1,6 +1,11 @@
 import React, {useCallback, useEffect, useRef} from 'react'
 import {AppState} from 'react-native'
-import {AppBskyFeedDefs, AppBskyFeedPost, PostModeration} from '@atproto/api'
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  PostModeration,
+} from '@atproto/api'
 import {
   useInfiniteQuery,
   InfiniteData,
@@ -29,6 +34,7 @@ import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
 import {queryClient} from 'lib/react-query'
+import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
 
 type ActorDid = string
 type AuthorFilter =
@@ -137,24 +143,41 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
-      const res = await api.fetch({cursor, limit: PAGE_SIZE})
-      precacheFeedPostProfiles(queryClient, res.feed)
+      try {
+        const res = await api.fetch({cursor, limit: PAGE_SIZE})
+        precacheFeedPostProfiles(queryClient, res.feed)
 
-      /*
-       * If this is a public view, we need to check if posts fail moderation.
-       * If all fail, we throw an error. If only some fail, we continue and let
-       * moderations happen later, which results in some posts being shown and
-       * some not.
-       */
-      if (!getAgent().session) {
-        assertSomePostsPassModeration(res.feed)
-      }
+        /*
+         * If this is a public view, we need to check if posts fail moderation.
+         * If all fail, we throw an error. If only some fail, we continue and let
+         * moderations happen later, which results in some posts being shown and
+         * some not.
+         */
+        if (!getAgent().session) {
+          assertSomePostsPassModeration(res.feed)
+        }
 
-      return {
-        api,
-        cursor: res.cursor,
-        feed: res.feed,
-        fetchedAt: Date.now(),
+        return {
+          api,
+          cursor: res.cursor,
+          feed: res.feed,
+          fetchedAt: Date.now(),
+        }
+      } catch (e) {
+        const feedDescParts = feedDesc.split('|')
+        const feedOwnerDid = new AtUri(feedDescParts[1]).hostname
+
+        if (
+          feedDescParts[0] === 'feedgen' &&
+          BSKY_FEED_OWNER_DIDS.includes(feedOwnerDid)
+        ) {
+          logger.error(`Bluesky feed may be offline: ${feedOwnerDid}`, {
+            feedDesc,
+            jsError: e,
+          })
+        }
+
+        throw e
       }
     },
     initialPageParam: undefined,
@@ -253,7 +276,7 @@ export function usePostFeedQuery(
                             .success
                         ) {
                           return {
-                            _reactKey: `${slice._reactKey}-${i}`,
+                            _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
                             uri: item.post.uri,
                             post: item.post,
                             record: item.post.record,

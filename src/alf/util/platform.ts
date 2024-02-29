@@ -1,25 +1,25 @@
-import {Platform} from 'react-native'
+import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
 
 export function web(value: any) {
-  return Platform.select({
-    web: value,
-  })
+  if (isWeb) {
+    return value
+  }
 }
 
 export function ios(value: any) {
-  return Platform.select({
-    ios: value,
-  })
+  if (isIOS) {
+    return value
+  }
 }
 
 export function android(value: any) {
-  return Platform.select({
-    android: value,
-  })
+  if (isAndroid) {
+    return value
+  }
 }
 
 export function native(value: any) {
-  return Platform.select({
-    native: value,
-  })
+  if (isNative) {
+    return value
+  }
 }

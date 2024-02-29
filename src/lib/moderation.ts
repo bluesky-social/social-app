@@ -67,6 +67,13 @@ export function describeModerationCause(
       description: 'You have hidden this post',
     }
   }
+  // @ts-ignore Temporary extension to the moderation system -prf
+  if (cause.type === 'muted-word') {
+    return {
+      name: 'Post hidden by muted word',
+      description: `You've chosen to hide a word or tag within this post.`,
+    }
+  }
   return cause.labelDef.strings[context].en
 }
 

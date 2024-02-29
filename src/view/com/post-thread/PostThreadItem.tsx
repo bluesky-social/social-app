@@ -94,6 +94,8 @@ export function PostThreadItem({
   if (richText && moderation) {
     return (
       <PostThreadItemLoaded
+        // Safeguard from clobbering per-post state below:
+        key={postShadowed.uri}
         post={postShadowed}
         prevPost={prevPost}
         nextPost={nextPost}
@@ -327,9 +329,11 @@ let PostThreadItemLoaded = ({
                     styles.postTextLargeContainer,
                   ]}>
                   <RichText
+                    enableTags
+                    selectable
                     value={richText}
                     style={[a.flex_1, a.text_xl]}
-                    selectable
+                    authorHandle={post.author.handle}
                   />
                 </View>
               ) : undefined}
@@ -521,9 +525,11 @@ let PostThreadItemLoaded = ({
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
                     <RichText
+                      enableTags
                       value={richText}
                       style={[a.flex_1, a.text_md]}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                      authorHandle={post.author.handle}
                     />
                   </View>
                 ) : undefined}
