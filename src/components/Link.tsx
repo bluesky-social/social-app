@@ -1,5 +1,5 @@
 import React from 'react'
-import {GestureResponderEvent, Linking} from 'react-native'
+import {GestureResponderEvent} from 'react-native'
 import {
   useLinkProps,
   useNavigation,
@@ -20,6 +20,7 @@ import {
 import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
 import {Text, TextProps} from '#/components/Typography'
+import {useOpenLink} from 'state/preferences/in-app-browser'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -51,11 +52,12 @@ type BaseLinkProps = Pick<
   warnOnMismatchingTextChild?: boolean
 
   /**
-   * Callback for when the link is pressed.
+   * Callback for when the link is pressed. Prevent default and return `false`
+   * to exit early and prevent navigation.
    *
    * DO NOT use this for navigation, that's what the `to` prop is for.
    */
-  onPress?: (e: GestureResponderEvent) => void
+  onPress?: (e: GestureResponderEvent) => void | false
 
   /**
    * Web-only attribute. Sets `download` attr on web.
@@ -79,10 +81,13 @@ export function useLink({
   })
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
+  const openLink = useOpenLink()
 
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
-      outerOnPress?.(e)
+      const exitEarlyIfFalse = outerOnPress?.(e)
+
+      if (exitEarlyIfFalse === false) return
 
       const requiresWarning = Boolean(
         warnOnMismatchingTextChild &&
@@ -103,7 +108,7 @@ export function useLink({
         e.preventDefault()
 
         if (isExternal) {
-          Linking.openURL(href)
+          openLink(href)
         } else {
           /**
            * A `GestureResponderEvent`, but cast to `any` to avoid using a bunch
@@ -121,7 +126,7 @@ export function useLink({
             href.startsWith('http') ||
             href.startsWith('mailto')
           ) {
-            Linking.openURL(href)
+            openLink(href)
           } else {
             closeModal() // close any active modals
 
@@ -142,15 +147,16 @@ export function useLink({
       }
     },
     [
-      href,
-      isExternal,
-      warnOnMismatchingTextChild,
-      navigation,
-      action,
-      displayText,
-      closeModal,
-      openModal,
       outerOnPress,
+      warnOnMismatchingTextChild,
+      displayText,
+      isExternal,
+      href,
+      openModal,
+      openLink,
+      closeModal,
+      action,
+      navigation,
     ],
   )
 
@@ -257,7 +263,7 @@ export function InlineLink({
       style={[
         {color: t.palette.primary_500},
         (hovered || focused || pressed) && {
-          outline: 0,
+          ...web({outline: 0}),
           textDecorationLine: 'underline',
           textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
         },

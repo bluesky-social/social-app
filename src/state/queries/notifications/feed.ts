@@ -133,23 +133,6 @@ export function useNotificationFeedQuery(opts?: {enabled?: boolean}) {
   return query
 }
 
-/**
- * This helper is used by the post-thread placeholder function to
- * find a post in the query-data cache
- */
-export function findPostInQueryData(
-  queryClient: QueryClient,
-  uri: string,
-): AppBskyFeedDefs.PostView | undefined {
-  const generator = findAllPostsInQueryData(queryClient, uri)
-  const result = generator.next()
-  if (result.done) {
-    return undefined
-  } else {
-    return result.value
-  }
-}
-
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,

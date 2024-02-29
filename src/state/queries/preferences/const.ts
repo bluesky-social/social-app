@@ -49,4 +49,6 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
+  mutedWords: [],
+  hiddenPosts: [],
 }
