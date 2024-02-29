@@ -41,13 +41,17 @@ export function hasMutedWord({
   facets,
   outlineTags,
   languages,
+  isOwnPost,
 }: {
   mutedWords: AppBskyActorDefs.MutedWord[]
   text: string
   facets?: AppBskyRichtextFacet.Main[]
   outlineTags?: string[]
   languages?: string[]
+  isOwnPost: boolean
 }) {
+  if (isOwnPost) return false
+
   const exception = LANGUAGE_EXCEPTIONS.includes(languages?.[0] || '')
   const tags = ([] as string[])
     .concat(outlineTags || [])
@@ -142,6 +146,7 @@ export function moderatePost_wrapped(
 ) {
   const {hiddenPosts = [], mutedWords = [], ...options} = opts
   const moderations = moderatePost(subject, options)
+  const isOwnPost = subject.author.did === opts.userDid
 
   if (hiddenPosts.includes(subject.uri)) {
     moderations.content.filter = true
@@ -163,6 +168,7 @@ export function moderatePost_wrapped(
       facets: subject.record.facets || [],
       outlineTags: subject.record.tags || [],
       languages: subject.record.langs,
+      isOwnPost,
     })
 
     if (
@@ -178,6 +184,7 @@ export function moderatePost_wrapped(
             facets: [],
             outlineTags: [],
             languages: subject.record.langs,
+            isOwnPost,
           })
       }
     }
@@ -210,6 +217,7 @@ export function moderatePost_wrapped(
             facets: subject.embed.record.value.facets,
             outlineTags: subject.embed.record.value.tags,
             languages: subject.embed.record.value.langs,
+            isOwnPost,
           })
 
         if (AppBskyEmbedImages.isMain(subject.embed.record.value.embed)) {
@@ -222,6 +230,7 @@ export function moderatePost_wrapped(
                 facets: [],
                 outlineTags: [],
                 languages: subject.embed.record.value.langs,
+                isOwnPost,
               })
           }
         }
