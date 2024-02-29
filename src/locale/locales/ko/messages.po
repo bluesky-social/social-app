@@ -680,10 +680,10 @@ msgstr "기후"
 msgid "Close"
 msgstr "닫기"
 
-#: src/components/Dialog/index.web.tsx:80
-#: src/components/Dialog/index.web.tsx:194
+#: src/components/Dialog/index.web.tsx:84
+#: src/components/Dialog/index.web.tsx:198
 msgid "Close active dialog"
-msgstr "활성 대화 상자 닫기"
+msgstr "열려 있는 대화 상자 닫기"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
 msgid "Close alert"
