@@ -19,7 +19,7 @@ export function useIntentHandler() {
       // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
       // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
       // path parameter is in pathname rather than in hostname.
-      if (url.includes('bluesky://') && !url.includes('bluesky:///')) {
+      if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
         url = url.replace('bluesky://', 'bluesky:///')
       }
 
