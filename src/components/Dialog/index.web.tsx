@@ -12,6 +12,7 @@ import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {useDialogStateContext} from '#/state/dialogs'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -29,18 +30,21 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
   const [isVisible, setIsVisible] = React.useState(true)
+  const {openDialogs} = useDialogStateContext()
 
   const open = React.useCallback(() => {
     setIsOpen(true)
-  }, [setIsOpen])
+    openDialogs.current.add(control.id)
+  }, [setIsOpen, openDialogs, control.id])
 
   const close = React.useCallback(async () => {
     setIsVisible(false)
     await new Promise(resolve => setTimeout(resolve, 150))
     setIsOpen(false)
     setIsVisible(true)
+    openDialogs.current.delete(control.id)
     onClose?.()
-  }, [onClose, setIsOpen])
+  }, [onClose, setIsOpen, openDialogs, control.id])
 
   useImperativeHandle(
     control.ref,
