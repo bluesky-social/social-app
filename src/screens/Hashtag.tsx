@@ -18,6 +18,7 @@ import {
 import {List} from 'view/com/util/List'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {sanitizeHandle} from 'lib/strings/handles'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -39,7 +40,7 @@ export default function HashtagScreen({
     const queryTag = !tag.startsWith('#') ? `#${tag}` : tag
 
     if (!author) return queryTag
-    return `${queryTag} from:${author}`
+    return `${queryTag} from:${sanitizeHandle(author)}`
   }, [tag, author])
 
   const headerTitle = React.useMemo(() => {
@@ -83,7 +84,9 @@ export default function HashtagScreen({
     <View style={a.flex_1}>
       <ViewHeader
         title={headerTitle}
-        subtitle={author ? `${_(msg`By`)} ${author}` : undefined}
+        subtitle={
+          author ? `${_(msg`By`)} ${sanitizeHandle(author)}` : undefined
+        }
         canGoBack={true}
       />
       <ListMaybePlaceholder
@@ -106,7 +109,9 @@ export default function HashtagScreen({
           ListHeaderComponent={
             <ListHeaderDesktop
               title={headerTitle}
-              subtitle={author ? `${_(msg`By`)} ${author}` : undefined}
+              subtitle={
+                author ? `${_(msg`By`)} ${sanitizeHandle(author)}` : undefined
+              }
             />
           }
           ListFooterComponent={
