@@ -10,7 +10,14 @@ import {
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {isNative} from '#/platform/detection'
-import {atoms as a, useTheme, useBreakpoints, ViewStyleProp, web} from '#/alf'
+import {
+  atoms as a,
+  useTheme,
+  useBreakpoints,
+  ViewStyleProp,
+  web,
+  native,
+} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
@@ -173,7 +180,14 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
                 backgroundColor: t.palette.negative_400,
               },
             ]}>
-            <Text style={[a.italic]}>{error}</Text>
+            <Text
+              style={[
+                a.italic,
+                {color: t.palette.white},
+                native({marginTop: 2}),
+              ]}>
+              {error}
+            </Text>
           </View>
         )}
 
