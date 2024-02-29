@@ -91,7 +91,10 @@ export function QuoteEmbed({
   const richText = React.useMemo(
     () =>
       quote.text.trim()
-        ? new RichTextAPI({text: quote.text, facets: quote.facets})
+        ? new RichTextAPI({
+            text: quote.text,
+            facets: quote.facets?.filter(f => !!f.features[0].tag),
+          })
         : undefined,
     [quote.text, quote.facets],
   )
@@ -132,7 +135,6 @@ export function QuoteEmbed({
           value={richText}
           style={[a.text_md]}
           numberOfLines={20}
-          disableLinks
           authorHandle={quote.author.handle}
         />
       ) : null}
