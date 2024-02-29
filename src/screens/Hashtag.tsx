@@ -1,5 +1,5 @@
 import React from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
+import {ListRenderItemInfo} from 'react-native'
 import {atoms as a} from '#/alf'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSetMinimalShellMode} from 'state/shell'
@@ -19,6 +19,7 @@ import {List} from 'view/com/util/List'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {CenteredView} from 'view/com/util/Views'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -81,7 +82,7 @@ export default function HashtagScreen({
   }, [isFetching, hasNextPage, error, fetchNextPage])
 
   return (
-    <View style={a.flex_1}>
+    <CenteredView style={a.flex_1}>
       <ViewHeader
         title={headerTitle}
         subtitle={
@@ -124,6 +125,6 @@ export default function HashtagScreen({
           }
         />
       )}
-    </View>
+    </CenteredView>
   )
 }
