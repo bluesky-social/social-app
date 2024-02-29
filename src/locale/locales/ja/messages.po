@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-29 18:05+0900\n"
+"PO-Revision-Date: 2024-02-29 18:16+0900\n"
 "Last-Translator: reindex-ot\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot\n"
 "Plural-Forms: \n"
@@ -2177,7 +2177,7 @@ msgstr "ミュートワードとタグの管理"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
-msgstr "253文字以上にはできません"
+msgstr "253文字より長くはできません"
 
 #: src/view/com/auth/create/Step2.tsx:109
 msgid "May only contain letters and numbers"
@@ -4768,3 +4768,4 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:65
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
+
