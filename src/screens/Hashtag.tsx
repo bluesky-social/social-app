@@ -32,20 +32,22 @@ const keyExtractor = (item: PostView, index: number) => {
 export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
-  const {tag, author} = route.params
+  const {tag: routeTag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
   const [isPTR, setIsPTR] = React.useState(false)
 
-  const query = React.useMemo(() => {
-    const queryTag = !tag.startsWith('#') ? `#${tag}` : tag
+  const tag = React.useMemo(() => {
+    return routeTag.replace('%23', '#')
+  }, [routeTag])
 
-    if (!author) return queryTag
-    return `${queryTag} from:${sanitizeHandle(author)}`
+  const queryParam = React.useMemo(() => {
+    if (!author) return tag
+    return `${tag} from:${sanitizeHandle(tag)}`
   }, [tag, author])
 
   const headerTitle = React.useMemo(() => {
-    return `#${enforceLen(tag.toLowerCase(), 24, true, 'middle')}`
+    return enforceLen(tag.toLowerCase(), 24, true, 'middle')
   }, [tag])
 
   const {
@@ -58,7 +60,7 @@ export default function HashtagScreen({
     refetch,
     fetchNextPage,
     hasNextPage,
-  } = useSearchPostsQuery({query})
+  } = useSearchPostsQuery({query: queryParam})
 
   const posts = React.useMemo(() => {
     return data?.pages.flatMap(page => page.posts) || []
@@ -85,9 +87,7 @@ export default function HashtagScreen({
     <CenteredView style={a.flex_1}>
       <ViewHeader
         title={headerTitle}
-        subtitle={
-          author ? `${_(msg`From`)} @${sanitizeHandle(author)}` : undefined
-        }
+        subtitle={author ? _(msg`From @${sanitizeHandle(author)}`) : undefined}
         canGoBack={true}
       />
       <ListMaybePlaceholder
@@ -112,9 +112,7 @@ export default function HashtagScreen({
             <ListHeaderDesktop
               title={headerTitle}
               subtitle={
-                author
-                  ? `${_(msg`From`)} @${sanitizeHandle(author)}`
-                  : undefined
+                author ? _(msg`From @${sanitizeHandle(author)}`) : undefined
               }
             />
           }
