@@ -104,9 +104,9 @@ export function TagMenu({
           : _(msg`Mute ${truncatedTag}`),
         onPress() {
           if (isMuted) {
-            removeMutedWord({value: sanitizedTag, targets: ['tag']})
+            removeMutedWord({value: tag, targets: ['tag']})
           } else {
-            upsertMutedWord([{value: sanitizedTag, targets: ['tag']}])
+            upsertMutedWord([{value: tag, targets: ['tag']}])
           }
         },
         testID: 'tagMenuMute',
@@ -127,7 +127,6 @@ export function TagMenu({
     preferences,
     tag,
     truncatedTag,
-    sanitizedTag,
     upsertMutedWord,
     removeMutedWord,
   ])

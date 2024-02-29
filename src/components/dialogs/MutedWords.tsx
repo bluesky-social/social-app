@@ -2,7 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyActorDefs} from '@atproto/api'
+import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 
 import {
   usePreferencesQuery,
@@ -48,24 +48,28 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
   const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
   const [field, setField] = React.useState('')
   const [options, setOptions] = React.useState(['content'])
-  const [_error, setError] = React.useState('')
+  const [error, setError] = React.useState('')
 
   const submit = React.useCallback(async () => {
-    const value = field.trim()
+    const sanitizedValue = sanitizeMutedWordValue(field)
     const targets = ['tag', options.includes('content') && 'content'].filter(
       Boolean,
     ) as AppBskyActorDefs.MutedWord['targets']
 
-    if (!value || !targets.length) return
+    if (!sanitizedValue || !targets.length) {
+      setField('')
+      setError(_(msg`Please enter a valid word, tag, or phrase to mute`))
+    }
 
     try {
-      await addMutedWord([{value, targets}])
+      // send raw value and rely on server as sanitization source of truth
+      await addMutedWord([{value: field, targets}])
       setField('')
     } catch (e: any) {
       logger.error(`Failed to save muted word`, {message: e.message})
       setError(e.message)
     }
-  }, [field, options, addMutedWord, setField])
+  }, [_, field, options, addMutedWord, setField])
 
   return (
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
@@ -87,7 +91,12 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           label={_(msg`Enter a word or tag`)}
           placeholder={_(msg`Enter a word or tag`)}
           value={field}
-          onChangeText={setField}
+          onChangeText={value => {
+            if (error) {
+              setError('')
+            }
+            setField(value)
+          }}
           onSubmitEditing={submit}
         />
 
@@ -99,7 +108,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           <View
             style={[
               a.pt_sm,
-              a.pb_md,
+              a.py_sm,
               a.flex_row,
               a.align_center,
               a.gap_sm,
@@ -151,8 +160,26 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
           </View>
         </Toggle.Group>
 
+        {error && (
+          <View
+            style={[
+              a.mb_lg,
+              a.flex_row,
+              a.rounded_sm,
+              a.p_md,
+              a.mb_xs,
+              t.atoms.bg_contrast_25,
+              {
+                backgroundColor: t.palette.negative_400,
+              },
+            ]}>
+            <Text style={[a.italic]}>{error}</Text>
+          </View>
+        )}
+
         <Text
           style={[
+            a.pt_xs,
             a.text_sm,
             a.italic,
             a.leading_snug,
