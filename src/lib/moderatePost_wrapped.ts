@@ -21,12 +21,34 @@ const REGEX = {
   WORD_BOUNDARY: /[\s\n\t\r\f\v]+?/g,
 }
 
-export function hasMutedWord(
-  mutedWords: AppBskyActorDefs.MutedWord[],
-  text: string,
-  facets?: AppBskyRichtextFacet.Main[],
-  outlineTags?: string[],
-) {
+/**
+ * List of 2-letter lang codes for languages that either don't use spaces, or
+ * don't use spaces in a way conducive to word-based filtering.
+ *
+ * For these, we use a simple `String.includes` to check for a match.
+ */
+const LANGUAGE_EXCEPTIONS = [
+  'ja', // Japanese
+  'zh', // Chinese
+  'ko', // Korean
+  'th', // Thai
+  'vi', // Vietnamese
+]
+
+export function hasMutedWord({
+  mutedWords,
+  text,
+  facets,
+  outlineTags,
+  languages,
+}: {
+  mutedWords: AppBskyActorDefs.MutedWord[]
+  text: string
+  facets?: AppBskyRichtextFacet.Main[]
+  outlineTags?: string[]
+  languages?: string[]
+}) {
+  const exception = LANGUAGE_EXCEPTIONS.includes(languages?.[0] || '')
   const tags = ([] as string[])
     .concat(outlineTags || [])
     .concat(
@@ -48,8 +70,9 @@ export function hasMutedWord(
     if (tags.includes(mutedWord)) return true
     // rest of the checks are for `content` only
     if (!mute.targets.includes('content')) continue
-    // single character, has to use includes
-    if (mutedWord.length === 1 && postText.includes(mutedWord)) return true
+    // single character or other exception, has to use includes
+    if ((mutedWord.length === 1 || exception) && postText.includes(mutedWord))
+      return true
     // too long
     if (mutedWord.length > postText.length) continue
     // exact match
@@ -134,19 +157,28 @@ export function moderatePost_wrapped(
   }
 
   if (AppBskyFeedPost.isRecord(subject.record)) {
-    let muted = hasMutedWord(
+    let muted = hasMutedWord({
       mutedWords,
-      subject.record.text,
-      subject.record.facets || [],
-      subject.record.tags || [],
-    )
+      text: subject.record.text,
+      facets: subject.record.facets || [],
+      outlineTags: subject.record.tags || [],
+      languages: subject.record.langs,
+    })
 
     if (
       subject.record.embed &&
       AppBskyEmbedImages.isMain(subject.record.embed)
     ) {
       for (const image of subject.record.embed.images) {
-        muted = muted || hasMutedWord(mutedWords, image.alt, [], [])
+        muted =
+          muted ||
+          hasMutedWord({
+            mutedWords,
+            text: image.alt,
+            facets: [],
+            outlineTags: [],
+            languages: subject.record.langs,
+          })
       }
     }
 
@@ -172,17 +204,25 @@ export function moderatePost_wrapped(
       if (AppBskyFeedPost.isRecord(subject.embed.record.value)) {
         embedHidden =
           embedHidden ||
-          hasMutedWord(
+          hasMutedWord({
             mutedWords,
-            subject.embed.record.value.text,
-            subject.embed.record.value.facets,
-            subject.embed.record.value.tags,
-          )
+            text: subject.embed.record.value.text,
+            facets: subject.embed.record.value.facets,
+            outlineTags: subject.embed.record.value.tags,
+            languages: subject.embed.record.value.langs,
+          })
 
         if (AppBskyEmbedImages.isMain(subject.embed.record.value.embed)) {
           for (const image of subject.embed.record.value.embed.images) {
             embedHidden =
-              embedHidden || hasMutedWord(mutedWords, image.alt, [], [])
+              embedHidden ||
+              hasMutedWord({
+                mutedWords,
+                text: image.alt,
+                facets: [],
+                outlineTags: [],
+                languages: subject.embed.record.value.langs,
+              })
           }
         }
       }

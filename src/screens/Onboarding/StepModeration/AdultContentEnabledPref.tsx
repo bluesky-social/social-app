@@ -118,7 +118,7 @@ export function AdultContentEnabledPref({
           </Trans>
         </Prompt.Description>
         <Prompt.Actions>
-          <Prompt.Action onPress={prompt.close}>
+          <Prompt.Action onPress={() => prompt.close()}>
             <Trans>OK</Trans>
           </Prompt.Action>
         </Prompt.Actions>

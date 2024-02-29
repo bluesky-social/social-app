@@ -190,7 +190,7 @@ export function Close() {
         variant="ghost"
         color="secondary"
         shape="round"
-        onPress={close}
+        onPress={() => close()}
         label={_(msg`Close active dialog`)}>
         <ButtonIcon icon={X} size="md" />
       </Button>
