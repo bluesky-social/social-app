@@ -16,6 +16,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: ['outlineTag'],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -32,6 +33,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: ['outlineTag'],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -48,6 +50,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: ['outlineTag'],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -64,6 +67,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(false)
@@ -85,6 +89,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -101,6 +106,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(false)
@@ -117,6 +123,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -135,6 +142,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -151,6 +159,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(false)
@@ -167,6 +176,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -183,6 +193,7 @@ describe(`hasMutedWord`, () => {
         text: rt.text,
         facets: rt.facets,
         outlineTags: [],
+        isOwnPost: false,
       })
 
       expect(match).toBe(true)
@@ -202,6 +213,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -213,6 +225,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -231,6 +244,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -243,6 +257,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -261,6 +276,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -272,6 +288,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -291,6 +308,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -309,6 +327,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -320,6 +339,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -336,6 +356,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(false)
@@ -354,6 +375,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -365,6 +387,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -383,6 +406,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -394,6 +418,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -405,6 +430,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -416,6 +442,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(false)
@@ -434,6 +461,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -448,6 +476,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(false)
@@ -460,6 +489,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -471,6 +501,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(false)
@@ -489,6 +520,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -500,6 +532,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -511,6 +544,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -522,6 +556,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -540,6 +575,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -560,6 +596,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -571,6 +608,7 @@ describe(`hasMutedWord`, () => {
           text: rt.text,
           facets: rt.facets,
           outlineTags: [],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
@@ -594,10 +632,61 @@ describe(`hasMutedWord`, () => {
           facets: rt.facets,
           outlineTags: [],
           languages: ['ja'],
+          isOwnPost: false,
         })
 
         expect(match).toBe(true)
       })
+    })
+  })
+
+  describe(`doesn't mute own post`, () => {
+    it(`does mute if it isn't own post`, () => {
+      const rt = new RichText({
+        text: `Mute words!`,
+      })
+
+      const match = hasMutedWord({
+        mutedWords: [{value: 'words', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
+
+      expect(match).toBe(true)
+    })
+
+    it(`doesn't mute own post when muted word is in text`, () => {
+      const rt = new RichText({
+        text: `Mute words!`,
+      })
+
+      const match = hasMutedWord({
+        mutedWords: [{value: 'words', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: true,
+      })
+
+      expect(match).toBe(false)
+    })
+
+    it(`doesn't mute own post when muted word is in tags`, () => {
+      const rt = new RichText({
+        text: `Mute #words!`,
+      })
+
+      const match = hasMutedWord({
+        mutedWords: [{value: 'words', targets: ['tags']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: true,
+      })
+
+      expect(match).toBe(false)
     })
   })
 })
