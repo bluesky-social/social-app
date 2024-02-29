@@ -120,7 +120,7 @@ export default function HashtagScreen({
           }
           ListFooterComponent={
             <ListFooter
-              isFetching={isFetching}
+              isFetching={isFetching && !isRefetching}
               isError={isError}
               error={error?.name}
               onRetry={fetchNextPage}
