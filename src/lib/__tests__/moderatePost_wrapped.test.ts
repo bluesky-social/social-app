@@ -11,12 +11,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'outlineTag', targets: ['tag']}],
-        rt.text,
-        rt.facets,
-        ['outlineTag'],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'outlineTag', targets: ['tag']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: ['outlineTag'],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -27,12 +28,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'inlineTag', targets: ['tag']}],
-        rt.text,
-        rt.facets,
-        ['outlineTag'],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'inlineTag', targets: ['tag']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: ['outlineTag'],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -43,12 +45,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'inlineTag', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        ['outlineTag'],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'inlineTag', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: ['outlineTag'],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -59,12 +62,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'inlineTag', targets: ['tag']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'inlineTag', targets: ['tag']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(false)
     })
@@ -80,12 +84,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: '希', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: '希', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -96,12 +101,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'politics', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'politics', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(false)
     })
@@ -112,12 +118,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'javascript', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'javascript', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -130,12 +137,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'javascript', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'javascript', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -146,12 +154,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'ai', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'ai', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(false)
     })
@@ -162,12 +171,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: 'brain', targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: 'brain', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -178,12 +188,13 @@ describe(`hasMutedWord`, () => {
       })
       rt.detectFacetsWithoutResolution()
 
-      const match = hasMutedWord(
-        [{value: `:)`, targets: ['content']}],
-        rt.text,
-        rt.facets,
-        [],
-      )
+      const match = hasMutedWord({
+        mutedWords: [{value: `:)`, targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
 
       expect(match).toBe(true)
     })
@@ -197,23 +208,25 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: yay!`, () => {
-        const match = hasMutedWord(
-          [{value: 'yay!', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'yay!', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: yay`, () => {
-        const match = hasMutedWord(
-          [{value: 'yay', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'yay', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -226,24 +239,26 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: y!ppee`, () => {
-        const match = hasMutedWord(
-          [{value: 'y!ppee', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'y!ppee', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       // single exclamation point, source has double
       it(`no match: y!ppee!`, () => {
-        const match = hasMutedWord(
-          [{value: 'y!ppee!', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'y!ppee!', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -256,23 +271,25 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: S@assy`, () => {
-        const match = hasMutedWord(
-          [{value: 'S@assy', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'S@assy', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: s@assy`, () => {
-        const match = hasMutedWord(
-          [{value: 's@assy', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 's@assy', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -286,12 +303,13 @@ describe(`hasMutedWord`, () => {
 
       // case insensitive
       it(`match: new york times`, () => {
-        const match = hasMutedWord(
-          [{value: 'new york times', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'new york times', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -304,23 +322,25 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: !command`, () => {
-        const match = hasMutedWord(
-          [{value: `!command`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `!command`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: command`, () => {
-        const match = hasMutedWord(
-          [{value: `command`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `command`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -331,12 +351,13 @@ describe(`hasMutedWord`, () => {
         })
         rt.detectFacetsWithoutResolution()
 
-        const match = hasMutedWord(
-          [{value: `!command`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `!command`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(false)
       })
@@ -349,23 +370,25 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: e/acc`, () => {
-        const match = hasMutedWord(
-          [{value: `e/acc`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `e/acc`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: acc`, () => {
-        const match = hasMutedWord(
-          [{value: `acc`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `acc`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -378,45 +401,49 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: super-bad`, () => {
-        const match = hasMutedWord(
-          [{value: `super-bad`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `super-bad`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: super`, () => {
-        const match = hasMutedWord(
-          [{value: `super`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `super`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: super bad`, () => {
-        const match = hasMutedWord(
-          [{value: `super bad`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `super bad`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: superbad`, () => {
-        const match = hasMutedWord(
-          [{value: `superbad`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `superbad`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(false)
       })
@@ -429,47 +456,53 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: idk what this would be`, () => {
-        const match = hasMutedWord(
-          [{value: `idk what this would be`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `idk what this would be`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`no match: idk what this would be for`, () => {
         // extra word
-        const match = hasMutedWord(
-          [{value: `idk what this would be for`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [
+            {value: `idk what this would be for`, targets: ['content']},
+          ],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(false)
       })
 
       it(`match: idk`, () => {
         // extra word
-        const match = hasMutedWord(
-          [{value: `idk`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `idk`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: idkwhatthiswouldbe`, () => {
-        const match = hasMutedWord(
-          [{value: `idkwhatthiswouldbe`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `idkwhatthiswouldbe`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(false)
       })
@@ -482,45 +515,49 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: context(iykyk)`, () => {
-        const match = hasMutedWord(
-          [{value: `context(iykyk)`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `context(iykyk)`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: context`, () => {
-        const match = hasMutedWord(
-          [{value: `context`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `context`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: iykyk`, () => {
-        const match = hasMutedWord(
-          [{value: `iykyk`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `iykyk`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: (iykyk)`, () => {
-        const match = hasMutedWord(
-          [{value: `(iykyk)`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `(iykyk)`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -533,12 +570,13 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: 🦋`, () => {
-        const match = hasMutedWord(
-          [{value: `🦋`, targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: `🦋`, targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
@@ -553,26 +591,102 @@ describe(`hasMutedWord`, () => {
       rt.detectFacetsWithoutResolution()
 
       it(`match: stop worrying`, () => {
-        const match = hasMutedWord(
-          [{value: 'stop worrying', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'stop worrying', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
 
       it(`match: turtles, or how`, () => {
-        const match = hasMutedWord(
-          [{value: 'turtles, or how', targets: ['content']}],
-          rt.text,
-          rt.facets,
-          [],
-        )
+        const match = hasMutedWord({
+          mutedWords: [{value: 'turtles, or how', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          isOwnPost: false,
+        })
 
         expect(match).toBe(true)
       })
+    })
+  })
+
+  describe(`languages without spaces`, () => {
+    // I love turtles, or how I learned to stop worrying and love the internet
+    describe(`私はカメが好きです、またはどのようにして心配するのをやめてインターネットを愛するようになったのか`, () => {
+      const rt = new RichText({
+        text: `私はカメが好きです、またはどのようにして心配するのをやめてインターネットを愛するようになったのか`,
+      })
+      rt.detectFacetsWithoutResolution()
+
+      // internet
+      it(`match: インターネット`, () => {
+        const match = hasMutedWord({
+          mutedWords: [{value: 'インターネット', targets: ['content']}],
+          text: rt.text,
+          facets: rt.facets,
+          outlineTags: [],
+          languages: ['ja'],
+          isOwnPost: false,
+        })
+
+        expect(match).toBe(true)
+      })
+    })
+  })
+
+  describe(`doesn't mute own post`, () => {
+    it(`does mute if it isn't own post`, () => {
+      const rt = new RichText({
+        text: `Mute words!`,
+      })
+
+      const match = hasMutedWord({
+        mutedWords: [{value: 'words', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: false,
+      })
+
+      expect(match).toBe(true)
+    })
+
+    it(`doesn't mute own post when muted word is in text`, () => {
+      const rt = new RichText({
+        text: `Mute words!`,
+      })
+
+      const match = hasMutedWord({
+        mutedWords: [{value: 'words', targets: ['content']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: true,
+      })
+
+      expect(match).toBe(false)
+    })
+
+    it(`doesn't mute own post when muted word is in tags`, () => {
+      const rt = new RichText({
+        text: `Mute #words!`,
+      })
+
+      const match = hasMutedWord({
+        mutedWords: [{value: 'words', targets: ['tags']}],
+        text: rt.text,
+        facets: rt.facets,
+        outlineTags: [],
+        isOwnPost: true,
+      })
+
+      expect(match).toBe(false)
     })
   })
 })

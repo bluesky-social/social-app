@@ -3,6 +3,7 @@ import * as Linking from 'expo-linking'
 import {isNative} from 'platform/detection'
 import {useComposerControls} from 'state/shell'
 import {useSession} from 'state/session'
+import {useCloseAllActiveElements} from 'state/util'
 
 type IntentType = 'compose'
 
@@ -42,6 +43,7 @@ export function useIntentHandler() {
 }
 
 function useComposeIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
   const {openComposer} = useComposerControls()
   const {hasSession} = useSession()
 
@@ -54,6 +56,8 @@ function useComposeIntent() {
       imageUrisStr: string | null // unused for right now, will be used later with intents
     }) => {
       if (!hasSession) return
+
+      closeAllActiveElements()
 
       const imageUris = imageUrisStr
         ?.split(',')
@@ -82,6 +86,6 @@ function useComposeIntent() {
         })
       }, 500)
     },
-    [openComposer, hasSession],
+    [hasSession, closeAllActiveElements, openComposer],
   )
 }

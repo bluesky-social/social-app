@@ -17,11 +17,12 @@ import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
+import {useSetTitle} from '#/lib/hooks/useSetTitle'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
   const {data: preferences} = usePreferencesQuery()
-  const {feeds: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
+  const {data: pinnedFeedInfos, isLoading: isPinnedFeedsLoading} =
     usePinnedFeedsInfos()
   if (preferences && pinnedFeedInfos && !isPinnedFeedsLoading) {
     return (
@@ -65,6 +66,8 @@ function HomeScreenReady({
   const maybeFoundIndex = allFeeds.indexOf(rawSelectedFeed as FeedDescriptor)
   const selectedIndex = Math.max(0, maybeFoundIndex)
   const selectedFeed = allFeeds[selectedIndex]
+
+  useSetTitle(pinnedFeedInfos[selectedIndex]?.displayName)
 
   const pagerRef = React.useRef<PagerRef>(null)
   const lastPagerReportedIndexRef = React.useRef(selectedIndex)
@@ -124,10 +127,11 @@ function HomeScreenReady({
           onSelect={props.onSelect}
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
+          feeds={pinnedFeedInfos}
         />
       )
     },
-    [onPressSelected],
+    [onPressSelected, pinnedFeedInfos],
   )
 
   const renderFollowingEmptyState = React.useCallback(() => {
