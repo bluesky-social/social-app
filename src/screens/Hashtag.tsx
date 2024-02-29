@@ -92,11 +92,12 @@ export default function HashtagScreen({
       />
       <ListMaybePlaceholder
         isLoading={isLoading || isRefetching}
-        isError={true}
-        isEmpty={posts.length < 2}
+        isError={isError}
+        isEmpty={posts.length < 1}
         onRetry={refetch}
+        empty={_(msg`We couldn't find any results for that hashtag.`)}
       />
-      {!isLoading && posts.length > 1 && (
+      {!isLoading && posts.length > 0 && (
         <List<PostView>
           data={posts}
           renderItem={renderItem}
