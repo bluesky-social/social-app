@@ -2189,7 +2189,7 @@ msgstr "검토 설정"
 msgid "Moderator has chosen to set a general warning on the content."
 msgstr "중재자가 콘텐츠에 일반 경고를 설정했습니다."
 
-#: src/view/shell/desktop/Feeds.tsx:63
+#: src/view/shell/desktop/Feeds.tsx:65
 msgid "More feeds"
 msgstr "피드 더 보기"
 
