@@ -16,6 +16,8 @@ import {
   ListMaybeLoading,
 } from '#/components/Lists'
 import {List} from 'view/com/util/List'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -30,6 +32,7 @@ export default function HashtagScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {_} = useLingui()
   const [isPTR, setIsPTR] = React.useState(false)
 
   const query = React.useMemo(() => {
@@ -79,7 +82,7 @@ export default function HashtagScreen({
     <View style={a.flex_1}>
       <ViewHeader
         title={headerTitle}
-        subtitle={author ? `By ${author}` : undefined}
+        subtitle={author ? `${_(msg`By`)} ${author}` : undefined}
         canGoBack={true}
       />
       <ListMaybeLoading isLoading={isLoading} />
@@ -97,7 +100,7 @@ export default function HashtagScreen({
           ListHeaderComponent={
             <ListHeaderDesktop
               title={headerTitle}
-              subtitle={author ? `By ${author}` : undefined}
+              subtitle={author ? `${_(msg`By`)} ${author}` : undefined}
             />
           }
           ListFooterComponent={
