@@ -50,7 +50,7 @@ export function TagMenu({
         label: _(msg`See ${truncatedTag} posts`),
         onPress() {
           navigation.push('Hashtag', {
-            tag: tag.replace('#', ''),
+            tag: tag.slice(1).replaceAll('#', '%23'),
           })
         },
         testID: 'tagMenuSearch',
@@ -67,7 +67,7 @@ export function TagMenu({
           label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
             navigation.push('Hashtag', {
-              tag: tag.replace('#', ''),
+              tag: tag.slice(1).replaceAll('#', '%23'),
               author: authorHandle,
             })
           },

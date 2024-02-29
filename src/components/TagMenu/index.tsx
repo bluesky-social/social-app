@@ -94,7 +94,7 @@ export function TagMenu({
 
                     control.close(() => {
                       navigation.push('Hashtag', {
-                        tag: tag.replace('#', ''),
+                        tag: tag.slice(1).replaceAll('#', '%23'),
                       })
                     })
 
@@ -146,7 +146,7 @@ export function TagMenu({
 
                         control.close(() => {
                           navigation.push('Hashtag', {
-                            tag: tag.replace('#', ''),
+                            tag: tag.slice(1).replaceAll('#', '%23'),
                             author: authorHandle,
                           })
                         })
