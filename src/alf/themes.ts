@@ -440,17 +440,17 @@ export const dim: Theme = {
     shadow_sm: {
       ...atoms.shadow_sm,
       shadowOpacity: 0.7,
-      shadowColor: `hsl(211, 28%, 3%)`,
+      shadowColor: `hsl(${BLUE_HUE}, 28%, 6%)`,
     },
     shadow_md: {
       ...atoms.shadow_md,
       shadowOpacity: 0.7,
-      shadowColor: `hsl(211, 28%, 3%)`,
+      shadowColor: `hsl(${BLUE_HUE}, 28%, 6%)`,
     },
     shadow_lg: {
       ...atoms.shadow_lg,
       shadowOpacity: 0.7,
-      shadowColor: `hsl(211, 28%, 3%)`,
+      shadowColor: `hsl(${BLUE_HUE}, 28%, 6%)`,
     },
   },
 }
