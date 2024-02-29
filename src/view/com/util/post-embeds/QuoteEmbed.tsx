@@ -93,7 +93,9 @@ export function QuoteEmbed({
       quote.text.trim()
         ? new RichTextAPI({
             text: quote.text,
-            facets: quote.facets?.filter(f => !!f.features[0].tag),
+            facets: quote.facets?.filter(
+              f => !!f.features[0].tag || !!f.features[0].did,
+            ),
           })
         : undefined,
     [quote.text, quote.facets],
