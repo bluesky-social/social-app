@@ -2045,7 +2045,7 @@ msgstr "Disconnettiti dall'account"
 
 #: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
-msgstr "Visibilità degli utenti non connettati"
+msgstr "Visibilità degli utenti disconnessi"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:133
 msgid "Login to account that is not listed"
