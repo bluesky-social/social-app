@@ -45,7 +45,7 @@ export default function HashtagScreen({
   }, [tag, author])
 
   const headerTitle = React.useMemo(() => {
-    return `#${enforceLen(tag.toLowerCase(), 24)}`
+    return `#${enforceLen(tag.toLowerCase(), 24, true, 'middle')}`
   }, [tag])
 
   const {
@@ -86,7 +86,7 @@ export default function HashtagScreen({
       <ViewHeader
         title={headerTitle}
         subtitle={
-          author ? `${_(msg`By`)} ${sanitizeHandle(author)}` : undefined
+          author ? `${_(msg`From`)} @${sanitizeHandle(author)}` : undefined
         }
         canGoBack={true}
       />
@@ -112,7 +112,9 @@ export default function HashtagScreen({
             <ListHeaderDesktop
               title={headerTitle}
               subtitle={
-                author ? `${_(msg`By`)} ${sanitizeHandle(author)}` : undefined
+                author
+                  ? `${_(msg`From`)} @${sanitizeHandle(author)}`
+                  : undefined
               }
             />
           }
