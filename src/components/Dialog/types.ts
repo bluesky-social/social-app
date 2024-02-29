@@ -6,8 +6,26 @@ import {ViewStyleProp} from '#/alf'
 
 type A11yProps = Required<AccessibilityProps>
 
+/**
+ * Mutated by useImperativeHandle to provide a public API for controlling the
+ * dialog. The methods here will actually become the handlers defined within
+ * the `Dialog.Outer` component.
+ */
+export type DialogControlRefProps = {
+  open: (options?: DialogControlOpenOptions) => void
+  close: (callback?: () => void) => void
+}
+
+/**
+ * The return type of the useDialogControl hook.
+ */
+export type DialogControlProps = DialogControlRefProps & {
+  id: string
+  ref: React.RefObject<DialogControlRefProps>
+}
+
 export type DialogContextProps = {
-  close: () => void
+  close: DialogControlProps['close']
 }
 
 export type DialogControlOpenOptions = {
@@ -20,15 +38,8 @@ export type DialogControlOpenOptions = {
   index?: number
 }
 
-export type DialogControlProps = {
-  open: (options?: DialogControlOpenOptions) => void
-  close: (callback?: () => void) => void
-}
-
 export type DialogOuterProps = {
-  control: {
-    ref: React.RefObject<DialogControlProps>
-  } & DialogControlProps
+  control: DialogControlProps
   onClose?: () => void
   nativeOptions?: {
     sheet?: Omit<BottomSheetProps, 'children'>
