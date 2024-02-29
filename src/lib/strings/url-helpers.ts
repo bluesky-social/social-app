@@ -161,7 +161,7 @@ export function linkRequiresWarning(uri: string, label: string) {
   if (host.endsWith('bsky.app') || host.endsWith('bsky.social')) {
     // if this is a link to internal content,
     // warn if it represents itself as a URL to another app
-    return labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain)
+    return !!labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain)
   } else {
     // if this is a link to external content,
     // warn if the label doesnt match the target
