@@ -3,6 +3,7 @@ import {useLightboxControls} from './lightbox'
 import {useModalControls} from './modals'
 import {useComposerControls} from './shell/composer'
 import {useSetDrawerOpen} from './shell/drawer-open'
+import {useDialogStateControlContext} from 'state/dialogs'
 
 /**
  * returns true if something was closed
@@ -35,11 +36,19 @@ export function useCloseAllActiveElements() {
   const {closeLightbox} = useLightboxControls()
   const {closeAllModals} = useModalControls()
   const {closeComposer} = useComposerControls()
+  const {closeAllDialogs: closeAlfDialogs} = useDialogStateControlContext()
   const setDrawerOpen = useSetDrawerOpen()
   return useCallback(() => {
     closeLightbox()
     closeAllModals()
     closeComposer()
+    closeAlfDialogs()
     setDrawerOpen(false)
-  }, [closeLightbox, closeAllModals, closeComposer, setDrawerOpen])
+  }, [
+    closeLightbox,
+    closeAllModals,
+    closeComposer,
+    closeAlfDialogs,
+    setDrawerOpen,
+  ])
 }

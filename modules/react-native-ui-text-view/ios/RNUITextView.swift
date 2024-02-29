@@ -108,14 +108,26 @@ class RNUITextView: UIView {
       fractionOfDistanceBetweenInsertionPoints: nil
     )
 
+    var lastUpperBound: String.Index? = nil
     for child in self.reactSubviews() {
       if let child = child as? RNUITextViewChild, let childText = child.text {
         let fullText = self.textView.attributedText.string
-        let range = fullText.range(of: childText)
-
+        
+        // We want to skip over the children we have already checked, otherwise we could run into
+        // collisions of similar strings (i.e. links that get shortened to the same hostname but
+        // different paths)
+        let range = fullText.range(of: childText, options: [], range: (lastUpperBound ?? String.Index(utf16Offset: 0, in: fullText) )..<fullText.endIndex)
+        
         if let lowerBound = range?.lowerBound, let upperBound = range?.upperBound {
-          if charIndex >= lowerBound.utf16Offset(in: fullText) && charIndex <= upperBound.utf16Offset(in: fullText) {
+          let lowerOffset = lowerBound.utf16Offset(in: fullText)
+          let upperOffset = upperBound.utf16Offset(in: fullText)
+          
+          if charIndex >= lowerOffset,
+             charIndex <= upperOffset
+          {
             return child
+          } else {
+            lastUpperBound = upperBound
           }
         }
       }

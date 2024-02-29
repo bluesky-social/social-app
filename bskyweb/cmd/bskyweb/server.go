@@ -202,6 +202,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/support/tos", server.WebGeneric)
 	e.GET("/support/community-guidelines", server.WebGeneric)
 	e.GET("/support/copyright", server.WebGeneric)
+	e.GET("/intent/compose", server.WebGeneric)
 
 	// profile endpoints; only first populates info
 	e.GET("/profile/:handleOrDID", server.WebProfile)

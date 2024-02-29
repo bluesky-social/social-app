@@ -6,8 +6,13 @@ import {ViewStyleProp} from '#/alf'
 
 type A11yProps = Required<AccessibilityProps>
 
+export type DialogControlProps = {
+  open: (options?: DialogControlOpenOptions) => void
+  close: (callback?: () => void) => void
+}
+
 export type DialogContextProps = {
-  close: () => void
+  close: DialogControlProps['close']
 }
 
 export type DialogControlOpenOptions = {
@@ -18,11 +23,6 @@ export type DialogControlOpenOptions = {
    * 0, which is the first snap point (i.e. "open").
    */
   index?: number
-}
-
-export type DialogControlProps = {
-  open: (options?: DialogControlOpenOptions) => void
-  close: (callback?: () => void) => void
 }
 
 export type DialogOuterProps = {
