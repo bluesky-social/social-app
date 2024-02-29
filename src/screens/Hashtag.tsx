@@ -50,6 +50,7 @@ export default function HashtagScreen({
     data,
     isFetching,
     isLoading,
+    isRefetching,
     isError,
     error,
     refetch,
@@ -86,9 +87,10 @@ export default function HashtagScreen({
         canGoBack={true}
       />
       <ListMaybePlaceholder
-        isLoading={isLoading}
-        isError={isError}
+        isLoading={isLoading || isRefetching}
+        isError={true}
         isEmpty={posts.length < 2}
+        onRetry={refetch}
       />
       {!isLoading && posts.length > 1 && (
         <List<PostView>
@@ -112,7 +114,7 @@ export default function HashtagScreen({
               isFetching={isFetching}
               isError={isError}
               error={error?.name}
-              onRetry={hasNextPage ? fetchNextPage : refetch}
+              onRetry={fetchNextPage}
             />
           }
         />

@@ -123,15 +123,6 @@ export function ListHeaderDesktop({
   )
 }
 
-function ListMaybeLoading({isLoading}: {isLoading: boolean}) {
-  if (!isLoading) return
-  return (
-    <View style={[a.w_full, a.align_center, {top: 100}]}>
-      <Loader size="xl" />
-    </View>
-  )
-}
-
 export function ListMaybePlaceholder({
   isLoading,
   isEmpty,
@@ -162,10 +153,6 @@ export function ListMaybePlaceholder({
 
   if (!isEmpty) return null
 
-  if (isLoading) {
-    return <ListMaybeLoading isLoading={isLoading} />
-  }
-
   return (
     <View
       style={[
@@ -176,46 +163,67 @@ export function ListMaybePlaceholder({
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}>
-      <View style={[a.w_full, a.align_center, a.gap_lg]}>
-        <Text style={[a.font_bold, a.text_3xl]}>
-          <Trans>Page not found</Trans>
-        </Text>
-        {isEmpty && (
-          <Text style={[a.text_md, a.text_center, t.atoms.text_contrast_high]}>
-            {empty ? (
-              empty
-            ) : (
-              <Trans>
-                We're sorry! We can't find the page you were looking for.
-              </Trans>
+      {isLoading ? (
+        <View style={[a.w_full, a.align_center, {top: 100}]}>
+          <Loader size="xl" />
+        </View>
+      ) : (
+        <>
+          <View style={[a.w_full, a.align_center, a.gap_lg]}>
+            <Text style={[a.font_bold, a.text_3xl]}>
+              {isError ? (
+                <Trans>Oops!</Trans>
+              ) : isEmpty ? (
+                <Trans>Page not found</Trans>
+              ) : undefined}
+            </Text>
+
+            {isError ? (
+              <Text
+                style={[a.text_md, a.text_center, t.atoms.text_contrast_high]}>
+                {error ? error : <Trans>Something went wrong!</Trans>}
+              </Text>
+            ) : isEmpty ? (
+              <Text
+                style={[a.text_md, a.text_center, t.atoms.text_contrast_high]}>
+                {empty ? (
+                  empty
+                ) : (
+                  <Trans>
+                    We're sorry! We can't find the page you were looking for.
+                  </Trans>
+                )}
+              </Text>
+            ) : undefined}
+          </View>
+          <View style={[a.w_full, a.px_lg, a.gap_md]}>
+            {isError && onRetry && (
+              <Button
+                variant="solid"
+                color="primary"
+                label="Click here"
+                onPress={onRetry}
+                size="large"
+                style={[
+                  a.rounded_sm,
+                  a.overflow_hidden,
+                  {paddingVertical: 10},
+                ]}>
+                Retry
+              </Button>
             )}
-          </Text>
-        )}
-        {isError && (
-          <Text style={[a.text_md]}>
-            {error ? error : <Trans>Something went wrong!</Trans>}
-          </Text>
-        )}
-      </View>
-      <View style={[a.w_full, a.px_lg]}>
-        {isError && onRetry && (
-          <Button
-            variant="solid"
-            color="primary"
-            size="large"
-            label="Click here">
-            Go Back
-          </Button>
-        )}
-        <Button
-          variant="solid"
-          color={isError && onRetry ? 'secondary' : 'primary'}
-          size="large"
-          label="Click here"
-          onPress={onGoBack}>
-          Go Back
-        </Button>
-      </View>
+            <Button
+              variant="solid"
+              color={isError && onRetry ? 'secondary' : 'primary'}
+              label="Click here"
+              onPress={onGoBack}
+              size="large"
+              style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
+              Go Back
+            </Button>
+          </View>
+        </>
+      )}
     </View>
   )
 }
