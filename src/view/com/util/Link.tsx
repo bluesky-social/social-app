@@ -180,7 +180,7 @@ export const TextLink = memo(function TextLink({
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
 
-  if (disableMismatchWarning && typeof text !== 'string') {
+  if (!disableMismatchWarning && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
   }
 
