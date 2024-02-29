@@ -93,9 +93,7 @@ export function QuoteEmbed({
       quote.text.trim()
         ? new RichTextAPI({
             text: quote.text,
-            facets: quote.facets?.filter(
-              f => !!f.features[0].tag || !!f.features[0].did,
-            ),
+            facets: quote.facets,
           })
         : undefined,
     [quote.text, quote.facets],
@@ -132,13 +130,15 @@ export function QuoteEmbed({
         <PostAlerts moderation={moderation} style={styles.alert} />
       ) : null}
       {richText ? (
-        <RichText
-          enableTags
-          value={richText}
-          style={[a.text_md]}
-          numberOfLines={20}
-          authorHandle={quote.author.handle}
-        />
+        <View pointerEvents="none">
+          <RichText
+            enableTags
+            value={richText}
+            style={[a.text_md]}
+            numberOfLines={20}
+            authorHandle={quote.author.handle}
+          />
+        </View>
       ) : null}
       {embed && <PostEmbeds embed={embed} moderation={{}} />}
     </Link>
