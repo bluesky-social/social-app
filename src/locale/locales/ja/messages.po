@@ -3473,11 +3473,11 @@ msgstr "年齢を設定"
 
 #: src/view/screens/Settings/index.tsx:488
 msgid "Set color theme to dark"
-msgstr "カラーテーマを暗いものに設定します"
+msgstr "カラーテーマを暗い物に設定します"
 
 #: src/view/screens/Settings/index.tsx:481
 msgid "Set color theme to light"
-msgstr "カラーテーマをライトに設定します"
+msgstr "カラーテーマを明るい物に設定します"
 
 #: src/view/screens/Settings/index.tsx:475
 msgid "Set color theme to system setting"
@@ -3485,11 +3485,11 @@ msgstr "デバイスで設定したカラーテーマを使用するように設
 
 #: src/view/screens/Settings/index.tsx:514
 msgid "Set dark theme to the dark theme"
-msgstr "ダークテーマを暗いものに設定します"
+msgstr "ダークテーマを暗い物に設定します"
 
 #: src/view/screens/Settings/index.tsx:507
 msgid "Set dark theme to the dim theme"
-msgstr "ダークテーマを暗いものに設定します"
+msgstr "ダークテーマを暗い物に設定します"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
