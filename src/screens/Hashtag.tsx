@@ -13,7 +13,7 @@ import {enforceLen} from 'lib/strings/helpers'
 import {
   ListFooter,
   ListHeaderDesktop,
-  ListMaybeLoading,
+  ListMaybePlaceholder,
 } from '#/components/Lists'
 import {List} from 'view/com/util/List'
 import {msg} from '@lingui/macro'
@@ -85,8 +85,12 @@ export default function HashtagScreen({
         subtitle={author ? `${_(msg`By`)} ${author}` : undefined}
         canGoBack={true}
       />
-      <ListMaybeLoading isLoading={isLoading} />
-      {!isLoading && (
+      <ListMaybePlaceholder
+        isLoading={isLoading}
+        isError={isError}
+        isEmpty={posts.length < 2}
+      />
+      {!isLoading && posts.length > 1 && (
         <List<PostView>
           data={posts}
           renderItem={renderItem}

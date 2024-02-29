@@ -1,11 +1,15 @@
 import React from 'react'
 import {atoms as a, useTheme} from '#/alf'
-import {Text, View} from 'react-native'
+import {View} from 'react-native'
 import {Loader} from '#/components/Loader'
 import {Trans} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Button} from '#/components/Button'
+import {Text} from '#/components/Typography'
+import {StackActions} from '@react-navigation/native'
+import {useNavigation} from '@react-navigation/core'
+import {NavigationProp} from 'lib/routes/types'
 
 export function ListFooter({
   isFetching,
@@ -94,14 +98,6 @@ function ListFooterMaybeError({
     </View>
   )
 }
-export function ListMaybeLoading({isLoading}: {isLoading: boolean}) {
-  if (!isLoading) return
-  return (
-    <View style={[a.w_full, a.align_center, {top: 100}]}>
-      <Loader size="xl" />
-    </View>
-  )
-}
 
 export function ListHeaderDesktop({
   title,
@@ -117,10 +113,109 @@ export function ListHeaderDesktop({
 
   return (
     <View style={[a.w_full, a.py_lg, a.px_xl, a.gap_xs]}>
-      <Text style={[a.text_3xl, a.font_bold, t.atoms.text]}>{title}</Text>
+      <Text style={[a.text_3xl, a.font_bold]}>{title}</Text>
       {subtitle ? (
-        <Text style={[a.text_md, t.atoms.text]}>{subtitle}</Text>
+        <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+          {subtitle}
+        </Text>
       ) : undefined}
+    </View>
+  )
+}
+
+function ListMaybeLoading({isLoading}: {isLoading: boolean}) {
+  if (!isLoading) return
+  return (
+    <View style={[a.w_full, a.align_center, {top: 100}]}>
+      <Loader size="xl" />
+    </View>
+  )
+}
+
+export function ListMaybePlaceholder({
+  isLoading,
+  isEmpty,
+  isError,
+  empty,
+  error,
+  onRetry,
+}: {
+  isLoading: boolean
+  isEmpty: boolean
+  isError: boolean
+  empty?: string
+  error?: string
+  onRetry?: () => Promise<unknown>
+}) {
+  const navigation = useNavigation<NavigationProp>()
+  const t = useTheme()
+
+  const canGoBack = navigation.canGoBack()
+  const onGoBack = React.useCallback(() => {
+    if (canGoBack) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('HomeTab')
+      navigation.dispatch(StackActions.popToTop())
+    }
+  }, [navigation, canGoBack])
+
+  if (!isEmpty) return null
+
+  if (isLoading) {
+    return <ListMaybeLoading isLoading={isLoading} />
+  }
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.align_center,
+        a.border_t,
+        a.justify_between,
+        t.atoms.border_contrast_low,
+        {paddingTop: 175, paddingBottom: 110},
+      ]}>
+      <View style={[a.w_full, a.align_center, a.gap_lg]}>
+        <Text style={[a.font_bold, a.text_3xl]}>
+          <Trans>Page not found</Trans>
+        </Text>
+        {isEmpty && (
+          <Text style={[a.text_md, a.text_center, t.atoms.text_contrast_high]}>
+            {empty ? (
+              empty
+            ) : (
+              <Trans>
+                We're sorry! We can't find the page you were looking for.
+              </Trans>
+            )}
+          </Text>
+        )}
+        {isError && (
+          <Text style={[a.text_md]}>
+            {error ? error : <Trans>Something went wrong!</Trans>}
+          </Text>
+        )}
+      </View>
+      <View style={[a.w_full, a.px_lg]}>
+        {isError && onRetry && (
+          <Button
+            variant="solid"
+            color="primary"
+            size="large"
+            label="Click here">
+            Go Back
+          </Button>
+        )}
+        <Button
+          variant="solid"
+          color={isError && onRetry ? 'secondary' : 'primary'}
+          size="large"
+          label="Click here"
+          onPress={onGoBack}>
+          Go Back
+        </Button>
+      </View>
     </View>
   )
 }

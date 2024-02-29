@@ -13,6 +13,7 @@ import Animated from 'react-native-reanimated'
 import {useSetDrawerOpen} from '#/state/shell'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useTheme} from '#/alf'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
@@ -41,6 +42,7 @@ export function ViewHeader({
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const t = useTheme()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -116,7 +118,14 @@ export function ViewHeader({
             <View
               style={[styles.titleContainer, {marginTop: -3}]}
               pointerEvents="auto">
-              <Text style={[pal.text, styles.subtitle]}>{subtitle}</Text>
+              <Text
+                style={[
+                  pal.text,
+                  styles.subtitle,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {subtitle}
+              </Text>
             </View>
           ) : undefined}
         </View>
