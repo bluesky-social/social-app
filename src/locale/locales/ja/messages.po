@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-22 17:35+0900\n"
+"PO-Revision-Date: 2024-02-29 17:35+0900\n"
 "Last-Translator: reindex-ot\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot\n"
 "Plural-Forms: \n"
@@ -774,7 +774,7 @@ msgstr "初期設定を完了してアカウントを使い始める"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
-msgstr "チャレンジを完了する"
+msgstr "テストをクリアしてください"
 
 #: src/view/com/composer/Composer.tsx:417
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -3485,7 +3485,7 @@ msgstr "デバイスで設定したカラーテーマを使用するように設
 
 #: src/view/screens/Settings/index.tsx:514
 msgid "Set dark theme to the dark theme"
-msgstr "ダークテーマをダークに設定します"
+msgstr "ダークテーマを暗いものに設定します"
 
 #: src/view/screens/Settings/index.tsx:507
 msgid "Set dark theme to the dim theme"
@@ -4741,4 +4741,3 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:28
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
-
