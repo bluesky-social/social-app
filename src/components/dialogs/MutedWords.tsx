@@ -69,7 +69,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     }
 
     try {
-      // send raw value and rely on server as sanitization source of truth
+      // send raw value and rely on SDK as sanitization source of truth
       await addMutedWord([{value: field, targets}])
       setField('')
     } catch (e: any) {
