@@ -105,8 +105,7 @@ export function RichText({
             to={link.uri}
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
-            dataSet={WORD_WRAP}
-            warnOnMismatchingLabel>
+            dataSet={WORD_WRAP}>
             {toShortUrl(segment.text)}
           </InlineLink>,
         )
