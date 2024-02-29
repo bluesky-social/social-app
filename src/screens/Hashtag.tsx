@@ -32,23 +32,23 @@ const keyExtractor = (item: PostView, index: number) => {
 export default function HashtagScreen({
   route,
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
-  const {tag: routeTag, author} = route.params
+  const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
   const [isPTR, setIsPTR] = React.useState(false)
 
-  const tag = React.useMemo(() => {
-    return routeTag.replace('%23', '#')
-  }, [routeTag])
+  const fullTag = React.useMemo(() => {
+    return `#${tag.replace('%23', '#')}`
+  }, [tag])
 
   const queryParam = React.useMemo(() => {
-    if (!author) return tag
-    return `${tag} from:${sanitizeHandle(tag)}`
-  }, [tag, author])
+    if (!author) return fullTag
+    return `${fullTag} from:${sanitizeHandle(author)}`
+  }, [fullTag, author])
 
   const headerTitle = React.useMemo(() => {
-    return enforceLen(tag.toLowerCase(), 24, true, 'middle')
-  }, [tag])
+    return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
+  }, [fullTag])
 
   const {
     data,

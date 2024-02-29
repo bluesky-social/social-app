@@ -1,10 +1,9 @@
 import React from 'react'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
 import {Loader} from '#/components/Loader'
 import {Trans} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {StackActions} from '@react-navigation/native'
@@ -106,10 +105,10 @@ export function ListHeaderDesktop({
   title: string
   subtitle?: string
 }) {
-  const {isDesktop} = useWebMediaQueries()
+  const {gtTablet} = useBreakpoints()
   const t = useTheme()
 
-  if (!isDesktop) return null
+  if (!gtTablet) return null
 
   return (
     <View style={[a.w_full, a.py_lg, a.px_xl, a.gap_xs]}>
