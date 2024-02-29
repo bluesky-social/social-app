@@ -66,6 +66,7 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
     if (!sanitizedValue || !targets.length) {
       setField('')
       setError(_(msg`Please enter a valid word, tag, or phrase to mute`))
+      return
     }
 
     try {
