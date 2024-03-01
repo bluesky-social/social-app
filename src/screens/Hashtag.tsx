@@ -1,5 +1,5 @@
 import React from 'react'
-import {ListRenderItemInfo} from 'react-native'
+import {ListRenderItemInfo, Pressable} from 'react-native'
 import {atoms as a} from '#/alf'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSetMinimalShellMode} from 'state/shell'
@@ -20,6 +20,9 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {CenteredView} from 'view/com/util/Views'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
+import {shareUrl} from 'lib/sharing'
+import {HITSLOP_10} from 'lib/constants'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -77,6 +80,15 @@ export default function HashtagScreen({
     }, [setMinimalShellMode]),
   )
 
+  const onShare = React.useCallback(() => {
+    const url = new URL('https://bsky.app')
+    url.pathname = `/hashtag/${tag}`
+    if (author) {
+      url.searchParams.set('author', author)
+    }
+    shareUrl(url.toString())
+  }, [tag, author])
+
   const onRefresh = React.useCallback(async () => {
     setIsPTR(true)
     await refetch()
@@ -94,6 +106,17 @@ export default function HashtagScreen({
         title={headerTitle}
         subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
         canGoBack={true}
+        renderButton={() => (
+          <Pressable
+            accessibilityRole="button"
+            onPress={onShare}
+            hitSlop={HITSLOP_10}>
+            <ArrowOutOfBox_Stroke2_Corner0_Rounded
+              size="lg"
+              onPress={onShare}
+            />
+          </Pressable>
+        )}
       />
       <ListMaybePlaceholder
         isLoading={isLoading || isRefetching}
