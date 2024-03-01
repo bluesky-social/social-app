@@ -130,15 +130,14 @@ export function QuoteEmbed({
         <PostAlerts moderation={moderation} style={styles.alert} />
       ) : null}
       {richText ? (
-        <View pointerEvents="none">
-          <RichText
-            enableTags
-            value={richText}
-            style={[a.text_md]}
-            numberOfLines={20}
-            authorHandle={quote.author.handle}
-          />
-        </View>
+        <RichText
+          enableTags
+          disableLinks
+          value={richText}
+          style={[a.text_md]}
+          numberOfLines={20}
+          authorHandle={quote.author.handle}
+        />
       ) : null}
       {embed && <PostEmbeds embed={embed} moderation={{}} />}
     </Link>
