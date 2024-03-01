@@ -38,7 +38,7 @@ export default function HashtagScreen({
   const [isPTR, setIsPTR] = React.useState(false)
 
   const fullTag = React.useMemo(() => {
-    return `#${tag.replace('%23', '#')}`
+    return `#${tag.replaceAll('%23', '#')}`
   }, [tag])
 
   const queryParam = React.useMemo(() => {
