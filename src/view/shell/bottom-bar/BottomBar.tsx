@@ -27,7 +27,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {emitSoftReset} from '#/state/events'
+import {emitSearchTrigger, emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
@@ -82,10 +82,13 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     [track, navigation],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
-  const onPressSearch = React.useCallback(
-    () => onPressTab('Search'),
-    [onPressTab],
-  )
+  const onPressSearch = React.useCallback(() => {
+    const captured = emitSearchTrigger()
+
+    if (!captured) {
+      onPressTab('Search')
+    }
+  }, [onPressTab])
   const onPressFeeds = React.useCallback(
     () => onPressTab('Feeds'),
     [onPressTab],
