@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions} from 'react-native'
+import {View, Dimensions, Keyboard} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetScrollView,
@@ -78,6 +78,7 @@ export function Outer({
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
+        Keyboard.dismiss()
         try {
           closeCallback.current?.()
         } catch (e: any) {
@@ -190,8 +191,15 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
 
 export function Handle() {
   const t = useTheme()
+
+  const onTouchStart = React.useCallback(() => {
+    Keyboard.dismiss()
+  }, [])
+
   return (
-    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
+    <View
+      style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}
+      onTouchStart={onTouchStart}>
       <View
         style={[
           a.rounded_sm,
