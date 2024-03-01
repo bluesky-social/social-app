@@ -9,6 +9,10 @@ import BottomSheet, {
   WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Animated, {
+  useAnimatedReaction,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
@@ -22,10 +26,6 @@ import {
   DialogInnerProps,
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
-import Animated, {
-  useAnimatedReaction,
-  useAnimatedStyle,
-} from 'react-native-reanimated'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
