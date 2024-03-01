@@ -9,10 +9,7 @@ import BottomSheet, {
   WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Animated, {
-  useAnimatedReaction,
-  useAnimatedStyle,
-} from 'react-native-reanimated'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
@@ -35,11 +32,6 @@ export const Input = createInput(BottomSheetTextInput)
 function Backdrop(props: BottomSheetBackdropProps) {
   const t = useTheme()
   const bottomSheet = useBottomSheet()
-
-  useAnimatedReaction(
-    () => props.animatedPosition,
-    c => console.log({v: c.value}),
-  )
 
   const animatedStyle = useAnimatedStyle(() => {
     const opacity =
