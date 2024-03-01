@@ -132,10 +132,10 @@ export function QuoteEmbed({
       {richText ? (
         <RichText
           enableTags
-          disableLinks
           value={richText}
           style={[a.text_md]}
           numberOfLines={20}
+          disableLinks
           authorHandle={quote.author.handle}
         />
       ) : null}
