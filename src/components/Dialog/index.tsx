@@ -1,10 +1,11 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions, Keyboard} from 'react-native'
+import {View, Dimensions, Keyboard, Pressable} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
   BottomSheetTextInput,
   BottomSheetView,
+  useBottomSheet,
   WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -33,6 +34,7 @@ export const Input = createInput(BottomSheetTextInput)
 
 function Backdrop(props: BottomSheetBackdropProps) {
   const t = useTheme()
+  const bottomSheet = useBottomSheet()
 
   useAnimatedReaction(
     () => props.animatedPosition,
@@ -48,12 +50,15 @@ function Backdrop(props: BottomSheetBackdropProps) {
     }
   })
 
+  const onPress = React.useCallback(() => {
+    bottomSheet.close()
+  }, [bottomSheet])
+
   return (
     <Animated.View
       style={[
         t.atoms.bg_contrast_300,
         {
-          backgroundColor: 'red',
           top: 0,
           left: 0,
           right: 0,
@@ -61,8 +66,15 @@ function Backdrop(props: BottomSheetBackdropProps) {
           position: 'absolute',
         },
         animatedStyle,
-      ]}
-    />
+      ]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Dialog backdrop"
+        accessibilityHint="Press the backdrop to close the dialog"
+        style={{flex: 1}}
+        onPress={onPress}
+      />
+    </Animated.View>
   )
 }
 
