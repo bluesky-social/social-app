@@ -117,7 +117,7 @@ export function ViewHeader({
           {subtitle ? (
             <View
               style={[styles.titleContainer, {marginTop: -3}]}
-              pointerEvents="auto">
+              pointerEvents="none">
               <Text
                 style={[
                   pal.text,

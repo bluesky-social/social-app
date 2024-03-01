@@ -50,6 +50,11 @@ export default function HashtagScreen({
     return enforceLen(fullTag.toLowerCase(), 24, true, 'middle')
   }, [fullTag])
 
+  const sanitizedAuthor = React.useMemo(() => {
+    if (!author) return
+    return sanitizeHandle(author)
+  }, [author])
+
   const {
     data,
     isFetching,
@@ -87,7 +92,7 @@ export default function HashtagScreen({
     <CenteredView style={a.flex_1}>
       <ViewHeader
         title={headerTitle}
-        subtitle={author ? _(msg`From @${sanitizeHandle(author)}`) : undefined}
+        subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
         canGoBack={true}
       />
       <ListMaybePlaceholder
@@ -111,9 +116,7 @@ export default function HashtagScreen({
           ListHeaderComponent={
             <ListHeaderDesktop
               title={headerTitle}
-              subtitle={
-                author ? _(msg`From @${sanitizeHandle(author)}`) : undefined
-              }
+              subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
             />
           }
           ListFooterComponent={
