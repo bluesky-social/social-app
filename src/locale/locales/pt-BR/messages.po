@@ -3450,7 +3450,7 @@ msgstr "Defina esta configuração como \"Sim\" para mostrar respostas em uma vi
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "Defina esta configuração como \"Sim\" para mostrar amostras de seus feeds salvos no seu feed inicial. Este é um recurso experimental."
+msgstr "Defina esta configuração como \"Sim\" para exibir amostras de seus feeds salvos no seu feed inicial. Este é um recurso experimental."
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
