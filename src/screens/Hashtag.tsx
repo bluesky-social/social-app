@@ -1,6 +1,6 @@
 import React from 'react'
 import {ListRenderItemInfo, Pressable} from 'react-native'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSetMinimalShellMode} from 'state/shell'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -23,6 +23,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
 import {shareUrl} from 'lib/sharing'
 import {HITSLOP_10} from 'lib/constants'
+import {isNative} from 'platform/detection'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -37,6 +38,7 @@ export default function HashtagScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const [isPTR, setIsPTR] = React.useState(false)
 
@@ -101,28 +103,33 @@ export default function HashtagScreen({
   }, [isFetching, hasNextPage, error, fetchNextPage])
 
   return (
-    <CenteredView style={a.flex_1}>
+    <CenteredView style={a.flex_1} sideBorders={gtMobile}>
       <ViewHeader
         title={headerTitle}
         subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-        canGoBack={true}
-        renderButton={() => (
-          <Pressable
-            accessibilityRole="button"
-            onPress={onShare}
-            hitSlop={HITSLOP_10}>
-            <ArrowOutOfBox_Stroke2_Corner0_Rounded
-              size="lg"
-              onPress={onShare}
-            />
-          </Pressable>
-        )}
+        canGoBack
+        renderButton={
+          isNative
+            ? () => (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={onShare}
+                  hitSlop={HITSLOP_10}>
+                  <ArrowOutOfBox_Stroke2_Corner0_Rounded
+                    size="lg"
+                    onPress={onShare}
+                  />
+                </Pressable>
+              )
+            : undefined
+        }
       />
       <ListMaybePlaceholder
         isLoading={isLoading || isRefetching}
         isError={isError}
         isEmpty={posts.length < 1}
         onRetry={refetch}
+        notFoundType="results"
         empty={_(msg`We couldn't find any results for that hashtag.`)}
       />
       {!isLoading && posts.length > 0 && (
