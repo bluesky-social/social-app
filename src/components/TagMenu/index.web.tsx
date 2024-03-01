@@ -22,10 +22,13 @@ export function TagMenu({
   tag,
   authorHandle,
 }: React.PropsWithChildren<{
+  /**
+   * This should be the sanitized tag value from the facet itself, not the
+   * "display" value with a leading `#`.
+   */
   tag: string
   authorHandle?: string
 }>) {
-  const sanitizedTag = tag.replace(/^#/, '')
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {data: preferences} = usePreferencesQuery()
@@ -35,14 +38,14 @@ export function TagMenu({
     useRemoveMutedWordMutation()
   const isMuted = Boolean(
     (preferences?.mutedWords?.find(
-      m => m.value === sanitizedTag && m.targets.includes('tag'),
+      m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(
-        m => m.value === sanitizedTag && m.targets.includes('tag'),
+        m => m.value === tag && m.targets.includes('tag'),
       )) &&
-      !(optimisticRemove?.value === sanitizedTag),
+      !(optimisticRemove?.value === tag),
   )
-  const truncatedTag = enforceLen(tag, 15, true, 'middle')
+  const truncatedTag = '#' + enforceLen(tag, 15, true, 'middle')
 
   const dropdownItems = React.useMemo(() => {
     return [
@@ -50,7 +53,7 @@ export function TagMenu({
         label: _(msg`See ${truncatedTag} posts`),
         onPress() {
           navigation.push('Hashtag', {
-            tag: tag.slice(1).replaceAll('#', '%23'),
+            tag: tag.replaceAll('#', '%23'),
           })
         },
         testID: 'tagMenuSearch',
@@ -67,7 +70,7 @@ export function TagMenu({
           label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
             navigation.push('Hashtag', {
-              tag: tag.slice(1).replaceAll('#', '%23'),
+              tag: tag.replaceAll('#', '%23'),
               author: authorHandle,
             })
           },
@@ -89,9 +92,9 @@ export function TagMenu({
           : _(msg`Mute ${truncatedTag}`),
         onPress() {
           if (isMuted) {
-            removeMutedWord({value: sanitizedTag, targets: ['tag']})
+            removeMutedWord({value: tag, targets: ['tag']})
           } else {
-            upsertMutedWord([{value: sanitizedTag, targets: ['tag']}])
+            upsertMutedWord([{value: tag, targets: ['tag']}])
           }
         },
         testID: 'tagMenuMute',
@@ -112,7 +115,6 @@ export function TagMenu({
     preferences,
     tag,
     truncatedTag,
-    sanitizedTag,
     upsertMutedWord,
     removeMutedWord,
   ])
