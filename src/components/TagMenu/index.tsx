@@ -215,14 +215,12 @@ export function TagMenu({
                           if (isMuted) {
                             resetUpsert()
                             removeMutedWord({
-                              value: sanitizedTag,
+                              value: tag,
                               targets: ['tag'],
                             })
                           } else {
                             resetRemove()
-                            upsertMutedWord([
-                              {value: sanitizedTag, targets: ['tag']},
-                            ])
+                            upsertMutedWord([{value: tag, targets: ['tag']}])
                           }
                         })
                       }}>
