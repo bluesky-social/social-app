@@ -85,6 +85,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const onPressSearch = React.useCallback(() => {
     const captured = emitSearchTrigger()
 
+    // We don't want to do the navigation if the trigger has been captured,
+    // as that would reset the search page and you'll lose the search results
+    // you were looking at before.
     if (!captured) {
       onPressTab('Search')
     }
