@@ -20,8 +20,6 @@ import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
 import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
 
-const HASH_CHAR_LENGTH = 1
-
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
 
@@ -38,11 +36,18 @@ function getDecorations(doc: ProsemirrorNode) {
           continue
 
         const [trailingPunc = ''] = tag.match(TRAILING_PUNCTUATION_REGEX) || []
-        const from = match.index + matchedString.indexOf(tag)
-        const to = from + (tag.length - trailingPunc.length)
+        const matchedFrom = match.index + matchedString.indexOf(tag)
+        const matchedTo = matchedFrom + (tag.length - trailingPunc.length)
+
+        /*
+         * The match is exclusive of `#` so we need to adjust the start of the
+         * highlight by -1 to include the `#`
+         */
+        const start = pos + matchedFrom - 1
+        const end = pos + matchedTo
 
         decorations.push(
-          Decoration.inline(pos + from - HASH_CHAR_LENGTH, pos + to, {
+          Decoration.inline(start, end, {
             class: 'autolink',
           }),
         )
