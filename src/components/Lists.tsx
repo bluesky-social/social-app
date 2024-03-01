@@ -9,6 +9,7 @@ import {Text} from '#/components/Typography'
 import {StackActions} from '@react-navigation/native'
 import {useNavigation} from '@react-navigation/core'
 import {NavigationProp} from 'lib/routes/types'
+import {router} from '#/routes'
 
 export function ListFooter({
   isFetching,
@@ -139,6 +140,7 @@ export function ListMaybePlaceholder({
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
+  const {gtTablet} = useBreakpoints()
 
   const canGoBack = navigation.canGoBack()
   const onGoBack = React.useCallback(() => {
@@ -146,7 +148,14 @@ export function ListMaybePlaceholder({
       navigation.goBack()
     } else {
       navigation.navigate('HomeTab')
-      navigation.dispatch(StackActions.popToTop())
+
+      // Checking the state for routes ensures that web doesn't encounter errors while going back
+      if (navigation.getState()?.routes) {
+        navigation.dispatch(StackActions.push(...router.matchPath('/')))
+      } else {
+        navigation.navigate('HomeTab')
+        navigation.dispatch(StackActions.popToTop())
+      }
     }
   }, [navigation, canGoBack])
 
@@ -157,8 +166,7 @@ export function ListMaybePlaceholder({
       style={[
         a.flex_1,
         a.align_center,
-        a.border_t,
-        a.justify_between,
+        !gtTablet ? [a.justify_between, a.border_t] : a.gap_5xl,
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}>
@@ -195,7 +203,8 @@ export function ListMaybePlaceholder({
               </Text>
             ) : undefined}
           </View>
-          <View style={[a.w_full, a.px_lg, a.gap_md]}>
+          <View
+            style={[a.gap_md, !gtTablet ? [a.w_full, a.px_lg] : {width: 350}]}>
             {isError && onRetry && (
               <Button
                 variant="solid"
