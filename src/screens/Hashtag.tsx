@@ -1,6 +1,6 @@
 import React from 'react'
 import {ListRenderItemInfo, Pressable} from 'react-native'
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSetMinimalShellMode} from 'state/shell'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -38,6 +38,7 @@ export default function HashtagScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
+  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
   const [isPTR, setIsPTR] = React.useState(false)
 
@@ -102,7 +103,7 @@ export default function HashtagScreen({
   }, [isFetching, hasNextPage, error, fetchNextPage])
 
   return (
-    <CenteredView style={a.flex_1} sideBorders>
+    <CenteredView style={a.flex_1} sideBorders={gtMobile}>
       <ViewHeader
         title={headerTitle}
         subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
