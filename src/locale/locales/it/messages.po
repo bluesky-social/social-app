@@ -2600,7 +2600,7 @@ msgstr "Immagini per adulti."
 
 #: src/view/screens/ProfileFeed.tsx:353 src/view/screens/ProfileList.tsx:580
 msgid "Pin to home"
-msgstr "Fissa sulla pagina principale"
+msgstr "Fissa sulla home page"
 
 #: src/view/screens/SavedFeeds.tsx:88
 msgid "Pinned Feeds"
