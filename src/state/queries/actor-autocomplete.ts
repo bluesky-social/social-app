@@ -10,7 +10,10 @@ import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {isJustAMute} from '#/lib/moderation'
 
-const DEFAULT_MOD_OPTS = DEFAULT_LOGGED_OUT_PREFERENCES.moderationOpts
+const DEFAULT_MOD_OPTS = {
+  userDid: undefined,
+  prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+}
 
 export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
 

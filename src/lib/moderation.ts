@@ -2,8 +2,6 @@ import React from 'react'
 import {
   ModerationCause,
   ModerationUI,
-  LABEL_GROUPS,
-  LabelGroupDefinition,
   AppBskyModerationDefs,
 } from '@atproto/api'
 
@@ -27,54 +25,19 @@ export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
 }
 
-export function getLabelGroupsFromLabels(labels: string[]) {
-  const groups: LabelGroupDefinition[] = []
-
-  for (const label of labels) {
-    for (const group in LABEL_GROUPS) {
-      const def = LABEL_GROUPS[group as LabelGroupDefinition['id']]
-      if (def.labels.find(l => l.id === label)) {
-        groups.push(def)
-      }
-    }
-  }
-
-  return Array.from(groups)
-}
-
-export function getConfigurableLabelGroups() {
-  return Object.values(LABEL_GROUPS).filter(group => group.configurable)
-}
-
-export function useConfigurableLabelGroups() {
-  return React.useMemo(() => getConfigurableLabelGroups(), [])
-}
-
 export function useConfigurableContentLabelGroups() {
-  return React.useMemo(() => {
-    const groups = getConfigurableLabelGroups()
-    return groups.filter(group => {
-      return group.labels.every(l => l.targets.includes('content'))
-    })
-  }, [])
+  // TODO removeme
+  return []
 }
 
 export function useConfigurableProfileLabelGroups() {
-  return React.useMemo(() => {
-    const groups = getConfigurableLabelGroups()
-    return groups.filter(group => {
-      return group.labels.every(l => l.targets.includes('profile'))
-    })
-  }, [])
+  // TODO removeme
+  return []
 }
 
 export function useConfigurableAccountLabelGroups() {
-  return React.useMemo(() => {
-    const groups = getConfigurableLabelGroups()
-    return groups.filter(group => {
-      return group.labels.every(l => l.targets.includes('account'))
-    })
-  }, [])
+  // TODO removeme
+  return []
 }
 
 export function getModerationServiceTitle({
@@ -87,32 +50,4 @@ export function getModerationServiceTitle({
   return displayName
     ? sanitizeDisplayName(displayName)
     : sanitizeHandle(handle, '@')
-}
-
-export function getLabelGroupToLabelerMap(
-  labelers: AppBskyModerationDefs.ModServiceViewDetailed[],
-) {
-  if (!labelers) return {}
-
-  const groups: Partial<
-    Record<
-      LabelGroupDefinition['id'] | 'other',
-      AppBskyModerationDefs.ModServiceViewDetailed[]
-    >
-  > = {
-    // `other` reports go to all labelers TODO confirm this
-    other: labelers,
-  }
-
-  for (const modservice of labelers) {
-    const labelGroups = getLabelGroupsFromLabels(
-      modservice.policies.labelValues,
-    )
-    for (const group of labelGroups) {
-      const g = (groups[group.id] = groups[group.id] || [])
-      g.push(modservice)
-    }
-  }
-
-  return groups
 }

@@ -1,4 +1,4 @@
-import {ComAtprotoLabelDefs, DEFAULT_LABEL_GROUP_SETTINGS} from '@atproto/api'
+import {ComAtprotoLabelDefs, DEFAULT_LABEL_SETTINGS} from '@atproto/api'
 
 import {
   LabelGroup,
@@ -21,12 +21,9 @@ export type LabelGroupConfig = {
  *
  * TODO(pwi)
  */
-export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_GROUP_SETTINGS =
+export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS =
   Object.fromEntries(
-    Object.entries(DEFAULT_LABEL_GROUP_SETTINGS).map(([key, _pref]) => [
-      key,
-      'hide',
-    ]),
+    Object.entries(DEFAULT_LABEL_SETTINGS).map(([key, _pref]) => [key, 'hide']),
   )
 
 export const CONFIGURABLE_LABEL_GROUPS: Record<

@@ -4,7 +4,6 @@ import {
   LabelPreference,
   BskyFeedViewPreference,
   ModerationOpts,
-  LabelGroupDefinition,
 } from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
@@ -77,17 +76,20 @@ export function useModerationOpts() {
   const override = useContext(moderationOptsOverrideContext)
   const prefs = usePreferencesQuery()
   const hiddenPosts = useHiddenPosts()
-  const opts = useMemo(() => {
+  const opts = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
       return override
     }
     if (!prefs.data) {
       return
     }
-    const moderationOpts = prefs.data.moderationOpts
+    const moderationPrefs = prefs.data.moderationPrefs
     return {
-      ...moderationOpts,
-      hiddenPosts,
+      userDid: '', // TODO
+      prefs: {
+        ...moderationPrefs,
+        hiddenPosts,
+      },
     }
   }, [override, prefs.data, hiddenPosts])
   return opts
@@ -130,13 +132,15 @@ export function useSetContentLabelMutation() {
 
   return useMutation({
     mutationFn: async ({
-      labelGroup,
+      label,
       visibility,
+      labelerDid,
     }: {
-      labelGroup: LabelGroupDefinition['id']
+      label: string
       visibility: LabelPreference
+      labelerDid?: string
     }) => {
-      await getAgent().setContentLabelPref(labelGroup, visibility)
+      await getAgent().setContentLabelPref(label, visibility, labelerDid)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

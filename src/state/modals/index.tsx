@@ -119,10 +119,6 @@ export interface AddAppPasswordModal {
   name: 'add-app-password'
 }
 
-export interface ContentFilteringSettingsModal {
-  name: 'content-filtering-settings'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -182,7 +178,6 @@ export type Modal =
   | SwitchAccountModal
 
   // Curation
-  | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
   | PostLanguagesSettingsModal
 

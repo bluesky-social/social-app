@@ -26,10 +26,11 @@ export function useModServiceInfoQuery({
     enabled: !!did && enabled !== false,
     queryKey: modServiceInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.moderation.getService({
-        did: did as string,
+      const res = await getAgent().app.bsky.moderation.getServices({
+        dids: [did as string],
+        detailed: true,
       })
-      return res.data
+      return res.data.views[0] as AppBskyModerationDefs.ModServiceViewDetailed
     },
   })
 }
@@ -40,7 +41,7 @@ export function useModServicesInfoQuery({dids}: {dids: string[]}) {
     queryKey: modServicesInfoQueryKey(dids),
     queryFn: async () => {
       const res = await getAgent().app.bsky.moderation.getServices({dids})
-      return res.data.views
+      return res.data.views as AppBskyModerationDefs.ModServiceView[]
     },
   })
 }
@@ -50,23 +51,11 @@ export function useModServicesDetailedInfoQuery({dids}: {dids: string[]}) {
     enabled: !!dids.length,
     queryKey: modServicesDetailedInfoQueryKey(dids),
     queryFn: async () => {
-      const views: AppBskyModerationDefs.ModServiceViewDetailed[] = []
-
-      await Promise.all(
-        dids.map(did => {
-          return getAgent()
-            .app.bsky.moderation.getService({did})
-            .then(res => {
-              views.push(res.data)
-            })
-            .catch(e => {
-              console.error(e)
-              return null
-            })
-        }),
-      )
-
-      return views
+      const res = await getAgent().app.bsky.moderation.getServices({
+        dids,
+        detailed: true,
+      })
+      return res.data.views as AppBskyModerationDefs.ModServiceViewDetailed[]
     },
   })
 }
@@ -87,53 +76,6 @@ export function useModServiceSubscriptionMutation() {
       } else {
         await getAgent().removeModService(did)
       }
-    },
-    onSuccess() {
-      queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useModServiceEnableMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    async mutationFn({did, enabled}: {did: string; enabled: boolean}) {
-      // TODO
-      z.object({
-        did: z.string(),
-        enabled: z.boolean(),
-      }).parse({did, enabled})
-      await getAgent().setModServiceEnabled(did, enabled)
-      await queryClient.invalidateQueries({
-        queryKey: preferencesQueryKey,
-      })
-    },
-  })
-}
-
-export function useModServiceLabelGroupEnableMutation() {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    async mutationFn({
-      did,
-      group,
-      enabled,
-    }: {
-      did: string
-      group: string
-      enabled: boolean
-    }) {
-      // TODO
-      z.object({
-        did: z.string(),
-        group: z.string(),
-        enabled: z.boolean(),
-      }).parse({did, group, enabled})
-      await getAgent().setModServiceLabelGroupEnabled(did, group, enabled)
     },
     onSuccess() {
       queryClient.invalidateQueries({

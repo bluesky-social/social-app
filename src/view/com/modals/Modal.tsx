@@ -22,7 +22,6 @@ import * as ChangeHandleModal from './ChangeHandle'
 import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
-import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as BirthDateSettingsModal from './BirthDateSettings'
@@ -113,9 +112,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'add-app-password') {
     snapPoints = AddAppPassword.snapPoints
     element = <AddAppPassword.Component />
-  } else if (activeModal?.name === 'content-filtering-settings') {
-    snapPoints = ContentFilteringSettingsModal.snapPoints
-    element = <ContentFilteringSettingsModal.Component />
   } else if (activeModal?.name === 'content-languages-settings') {
     snapPoints = ContentLanguagesSettingsModal.snapPoints
     element = <ContentLanguagesSettingsModal.Component />

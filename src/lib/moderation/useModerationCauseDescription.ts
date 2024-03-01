@@ -1,4 +1,4 @@
-import {ModerationCause} from '@atproto/api'
+import {ModerationCause, LABELS} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useLabelStrings} from './useLabelStrings'
@@ -76,8 +76,9 @@ export function useModerationCauseDescription(
     }
   }
   if (cause.type === 'label') {
-    if (cause.labelDef.id in labelStrings) {
-      const strings = labelStrings[cause.labelDef.id]
+    if (cause.labelDef.identifier in labelStrings) {
+      const strings =
+        labelStrings[cause.labelDef.identifier as keyof typeof LABELS]
       return {
         name:
           context === 'account' ? strings.account.name : strings.content.name,
@@ -88,8 +89,8 @@ export function useModerationCauseDescription(
       }
     }
     return {
-      name: cause.labelDef.id,
-      description: _(msg`Labeled ${cause.labelDef.id}`),
+      name: cause.labelDef.identifier,
+      description: _(msg`Labeled ${cause.labelDef.identifier}`),
     }
   }
   // should never happen

@@ -302,7 +302,6 @@ let FeedItemInner = ({
             moderation={moderation}
             richText={richText}
             postEmbed={post.embed}
-            postAuthor={post.author}
           />
           <PostCtrls
             post={post}

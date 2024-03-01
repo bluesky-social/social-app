@@ -423,10 +423,10 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   let somePostsPassModeration = false
 
   for (const item of feed) {
-    const moderation = moderatePost(
-      item.post,
-      DEFAULT_LOGGED_OUT_PREFERENCES.moderationOpts,
-    )
+    const moderation = moderatePost(item.post, {
+      userDid: undefined,
+      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+    })
 
     if (!moderation.ui('contentList').filter) {
       // we have a sfw post

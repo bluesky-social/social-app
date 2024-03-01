@@ -2,25 +2,29 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {LABEL_GROUPS} from '@atproto/api'
 
-import {useLabelGroupStrings} from '#/lib/moderation/useLabelGroupStrings'
+import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 
 export function ModerationLabelPref({
-  labelGroup,
+  label,
   disabled,
 }: {
-  labelGroup: keyof typeof LABEL_GROUPS
+  label: string
   disabled?: boolean
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const labelGroupStrings = useLabelGroupStrings()
-  const groupInfoStrings = labelGroupStrings[labelGroup]
+  const allLabelStrings = useLabelStrings()
+  const labelStrings = allLabelStrings[label] || {
+    general: {
+      name: label,
+      description: `Labeled "${label}"`,
+    },
+  }
 
   // TODO add onChange behavior when mod prefs are updated
 
@@ -42,16 +46,16 @@ export function ModerationLabelPref({
         a.align_center,
       ]}>
       <View style={[a.gap_xs, {width: '50%'}]}>
-        <Text style={[a.font_bold]}>{groupInfoStrings.name}</Text>
+        <Text style={[a.font_bold]}>{labelStrings.general.name}</Text>
         <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
-          {groupInfoStrings.description}
+          {labelStrings.general.description}
         </Text>
       </View>
       <View style={[a.justify_center, {minHeight: 35}]}>
         {!disabled && (
           <ToggleButton.Group
             label={_(
-              msg`Configure content filtering setting for category: ${groupInfoStrings.name.toLowerCase()}`,
+              msg`Configure content filtering setting for category: ${labelStrings.general.name.toLowerCase()}`,
             )}
             values={['hide']}
             onChange={() => {}}>

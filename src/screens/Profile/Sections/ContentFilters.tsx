@@ -6,7 +6,6 @@ import {useLingui} from '@lingui/react'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
-import {getLabelGroupsFromLabels} from '#/lib/moderation'
 import {logger} from '#/logger'
 
 import {useTheme, atoms as a} from '#/alf'
@@ -76,15 +75,8 @@ export function ProfileContentFiltersSectionInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const groups = React.useMemo(() => {
-    return getLabelGroupsFromLabels(modservice.policies.labelValues).filter(
-      def => def.configurable,
-    )
-  }, [modservice.policies.labelValues])
   const isEnabled = Boolean(
-    moderationOpts.mods.find(
-      mod => mod.did === modservice.creator.did && mod.enabled,
-    ),
+    moderationOpts.prefs.mods.find(mod => mod.did === modservice.creator.did),
   )
   const hasSession = true // TODO
 
@@ -92,7 +84,7 @@ export function ProfileContentFiltersSectionInner({
     useModServiceSubscriptionMutation()
   const isSubscribed =
     variables?.subscribe ??
-    moderationOpts.mods.find(mod => mod.did === modservice.creator.did)
+    moderationOpts.prefs.mods.find(mod => mod.did === modservice.creator.did)
 
   const onPressSubscribe = React.useCallback(async () => {
     try {
@@ -142,7 +134,8 @@ export function ProfileContentFiltersSectionInner({
           a.border,
           t.atoms.border_contrast_low,
         ]}>
-        {groups.map((def, i) => {
+        {
+          undefined /* TODO modservice.policies.labelValues.map((def, i) => {
           return (
             <React.Fragment key={def.id}>
               {i !== 0 && <Divider />}
@@ -152,7 +145,8 @@ export function ProfileContentFiltersSectionInner({
               />
             </React.Fragment>
           )
-        })}
+        })*/
+        }
       </View>
 
       <View style={{height: 100}} />

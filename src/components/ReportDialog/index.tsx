@@ -32,7 +32,6 @@ import {
   getModerationServiceTitle,
   useConfigurableContentLabelGroups,
   useConfigurableProfileLabelGroups,
-  getLabelGroupToLabelerMap,
 } from '#/lib/moderation'
 import {DMCA_LINK} from '#/components/ReportDialog/const'
 import {Link} from '#/components/Link'
@@ -165,12 +164,10 @@ function SubmitView({
   selectedLabelGroup,
   goBack,
   onSubmitComplete,
-  labelGroupToLabelerMap,
 }: ReportDialogProps & {
   selectedLabelGroup: ReportDialogLabelIds
   goBack: () => void
   onSubmitComplete: () => void
-  labelGroupToLabelerMap: ReturnType<typeof getLabelGroupToLabelerMap>
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -178,7 +175,7 @@ function SubmitView({
   const groupInfoStrings = labelGroupStrings[selectedLabelGroup]
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
-  const supportedLabelers = labelGroupToLabelerMap[selectedLabelGroup]
+  const supportedLabelers = [] //labelGroupToLabelerMap[selectedLabelGroup]
   const [selectedServices, setSelectedServices] = React.useState<string[]>(
     supportedLabelers?.map(labeler => labeler.creator.did) || [],
   )

@@ -1,10 +1,9 @@
-import {LABELS} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useMemo} from 'react'
 
 export type LabelStrings = Record<
-  keyof typeof LABELS,
+  string,
   {
     general: {name: string; description: string}
     account: {name: string; description: string}

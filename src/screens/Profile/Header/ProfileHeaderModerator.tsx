@@ -69,7 +69,7 @@ let ProfileHeaderModerator = ({
     useModServiceSubscriptionMutation()
   const isSubscribed =
     variables?.subscribe ??
-    preferences?.moderationOpts.mods.find(mod => mod.did === profile.did)
+    preferences?.moderationPrefs.mods.find(mod => mod.did === profile.did)
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()

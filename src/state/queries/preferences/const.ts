@@ -34,14 +34,15 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
     pinned: [],
     unpinned: [],
   },
-  moderationOpts: {
-    userDid: '',
+  moderationPrefs: {
     adultContentEnabled: false,
-    labelGroups: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
+    labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
     mods: [],
   },
   feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
+  mutedWords: [],
+  hiddenPosts: [],
 }

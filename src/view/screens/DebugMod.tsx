@@ -47,14 +47,13 @@ const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
 ) as (keyof typeof LABELS)[]
 
-const MOCK_MOD_OPTS = {
-  userDid: '',
+const MOCK_MOD_PREFS = {
   adultContentEnabled: true,
   labelGroups: {},
   mods: [
     {
       did: 'did:plc:fake-labeler',
-      enabled: true,
+      labels: {},
     },
   ],
 }
@@ -225,12 +224,13 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
   const modOpts = React.useMemo(() => {
     return {
-      ...MOCK_MOD_OPTS,
       userDid: isLoggedOut ? '' : isTargetMe ? did : 'did:web:alice.test',
-      adultContentEnabled: !noAdult,
-      labelGroups: {
-        [LABELS[label[0] as keyof typeof LABELS].groupId]:
-          visibility[0] as LabelPreference,
+      prefs: {
+        ...MOCK_MOD_PREFS,
+        adultContentEnabled: !noAdult,
+        labels: {
+          [label[0]]: visibility[0] as LabelPreference,
+        },
       },
     }
   }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did])
@@ -353,11 +353,8 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       targetFixed = 'content'
                     }
                     const disabled =
-                      !LABELS[labelValue].targets.includes(
-                        targetFixed as LabelTarget,
-                      ) ||
-                      (isSelfLabel &&
-                        LABELS[labelValue].flags.includes('no-self'))
+                      isSelfLabel &&
+                      LABELS[labelValue].flags.includes('no-self')
                     return (
                       <Toggle.Item
                         key={labelValue}

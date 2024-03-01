@@ -86,7 +86,7 @@ export function ModerationScreen(
     data: modservices,
     error: modservicesError,
   } = useModServicesDetailedInfoQuery({
-    dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
+    dids: preferences ? preferences.moderationPrefs.mods.map(m => m.did) : [],
   })
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()
@@ -149,7 +149,7 @@ export function ModerationScreenInner({
     usePreferencesSetAdultContentMutation()
   const adultContentEnabled = !!(
     (optimisticAdultContent && optimisticAdultContent.enabled) ||
-    (!optimisticAdultContent && preferences.moderationOpts.adultContentEnabled)
+    (!optimisticAdultContent && preferences.moderationPrefs.adultContentEnabled)
   )
 
   const onToggleAdultContentEnabled = React.useCallback(
@@ -323,7 +323,9 @@ export function ModerationScreenInner({
             modservice={{
               uri: '',
               cid: '',
-              policies: {},
+              policies: {
+                labelValues: [],
+              },
               creator: {
                 did: '',
                 handle: 'safety.bsky.app',
@@ -360,7 +362,7 @@ export function ModerationScreenInner({
                         handle: mod.creator.handle,
                       })}
                       handle={mod.creator.handle}
-                      description={mod.description}
+                      description={mod.creator.description || ''}
                     />
                   </ModerationServiceCard.Card.Outer>
                 </ModerationServiceCard.Link>
