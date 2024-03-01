@@ -23,6 +23,7 @@ import {CenteredView} from 'view/com/util/Views'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
 import {shareUrl} from 'lib/sharing'
 import {HITSLOP_10} from 'lib/constants'
+import {isNative} from 'platform/detection'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -106,17 +107,21 @@ export default function HashtagScreen({
         title={headerTitle}
         subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
         canGoBack={true}
-        renderButton={() => (
-          <Pressable
-            accessibilityRole="button"
-            onPress={onShare}
-            hitSlop={HITSLOP_10}>
-            <ArrowOutOfBox_Stroke2_Corner0_Rounded
-              size="lg"
-              onPress={onShare}
-            />
-          </Pressable>
-        )}
+        renderButton={
+          isNative
+            ? () => (
+                <Pressable
+                  accessibilityRole="button"
+                  onPress={onShare}
+                  hitSlop={HITSLOP_10}>
+                  <ArrowOutOfBox_Stroke2_Corner0_Rounded
+                    size="lg"
+                    onPress={onShare}
+                  />
+                </Pressable>
+              )
+            : undefined
+        }
       />
       <ListMaybePlaceholder
         isLoading={isLoading || isRefetching}
