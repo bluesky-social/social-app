@@ -34,6 +34,10 @@ export function TagMenu({
   authorHandle,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
+  /**
+   * This should be the sanitized tag value from the facet itself, not the
+   * "display" value with a leading `#`.
+   */
   tag: string
   authorHandle?: string
 }>) {
@@ -52,16 +56,16 @@ export function TagMenu({
     variables: optimisticRemove,
     reset: resetRemove,
   } = useRemoveMutedWordMutation()
+  const displayTag = '#' + tag
 
-  const sanitizedTag = tag.replace(/^#/, '')
   const isMuted = Boolean(
     (preferences?.mutedWords?.find(
-      m => m.value === sanitizedTag && m.targets.includes('tag'),
+      m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(
-        m => m.value === sanitizedTag && m.targets.includes('tag'),
+        m => m.value === tag && m.targets.includes('tag'),
       )) &&
-      !(optimisticRemove?.value === sanitizedTag),
+      !(optimisticRemove?.value === tag),
   )
 
   return (
@@ -71,7 +75,7 @@ export function TagMenu({
       <Dialog.Outer control={control}>
         <Dialog.Handle />
 
-        <Dialog.Inner label={_(msg`Tag menu: ${tag}`)}>
+        <Dialog.Inner label={_(msg`Tag menu: ${displayTag}`)}>
           {isPreferencesLoading ? (
             <View style={[a.w_full, a.align_center]}>
               <Loader size="lg" />
@@ -87,18 +91,14 @@ export function TagMenu({
                   t.atoms.bg_contrast_25,
                 ]}>
                 <Link
-                  label={_(msg`Search for all posts with tag ${tag}`)}
-                  to={makeSearchLink({query: tag})}
+                  label={_(msg`Search for all posts with tag ${displayTag}`)}
+                  to={makeSearchLink({query: displayTag})}
                   onPress={e => {
                     e.preventDefault()
 
                     control.close(() => {
-                      // @ts-ignore :ron_swanson: "I know more than you"
-                      navigation.navigate('SearchTab', {
-                        screen: 'Search',
-                        params: {
-                          q: tag,
-                        },
+                      navigation.push('Hashtag', {
+                        tag: tag.replaceAll('#', '%23'),
                       })
                     })
 
@@ -128,7 +128,7 @@ export function TagMenu({
                       <Trans>
                         See{' '}
                         <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                          {tag}
+                          {displayTag}
                         </Text>{' '}
                         posts
                       </Trans>
@@ -142,21 +142,19 @@ export function TagMenu({
 
                     <Link
                       label={_(
-                        msg`Search for all posts by @${authorHandle} with tag ${tag}`,
+                        msg`Search for all posts by @${authorHandle} with tag ${displayTag}`,
                       )}
-                      to={makeSearchLink({query: tag, from: authorHandle})}
+                      to={makeSearchLink({
+                        query: displayTag,
+                        from: authorHandle,
+                      })}
                       onPress={e => {
                         e.preventDefault()
 
                         control.close(() => {
-                          // @ts-ignore :ron_swanson: "I know more than you"
-                          navigation.navigate('SearchTab', {
-                            screen: 'Search',
-                            params: {
-                              q:
-                                tag +
-                                (authorHandle ? ` from:${authorHandle}` : ''),
-                            },
+                          navigation.push('Hashtag', {
+                            tag: tag.replaceAll('#', '%23'),
+                            author: authorHandle,
                           })
                         })
 
@@ -190,7 +188,7 @@ export function TagMenu({
                             See{' '}
                             <Text
                               style={[a.text_md, a.font_bold, t.atoms.text]}>
-                              {tag}
+                              {displayTag}
                             </Text>{' '}
                             posts by this user
                           </Trans>
@@ -207,8 +205,8 @@ export function TagMenu({
                     <Button
                       label={
                         isMuted
-                          ? _(msg`Unmute all ${tag} posts`)
-                          : _(msg`Mute all ${tag} posts`)
+                          ? _(msg`Unmute all ${displayTag} posts`)
+                          : _(msg`Mute all ${displayTag} posts`)
                       }
                       onPress={() => {
                         control.close(() => {
@@ -250,7 +248,7 @@ export function TagMenu({
                           ]}>
                           {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
                           <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                            {tag}
+                            {displayTag}
                           </Text>{' '}
                           <Trans>posts</Trans>
                         </Text>

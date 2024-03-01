@@ -120,6 +120,7 @@ export function RichText({
         <RichTextTag
           key={key}
           text={segment.text}
+          tag={tag.tag}
           style={styles}
           selectable={selectable}
           authorHandle={authorHandle}
@@ -145,12 +146,14 @@ export function RichText({
 }
 
 function RichTextTag({
-  text: tag,
+  text,
+  tag,
   style,
   selectable,
   authorHandle,
 }: {
   text: string
+  tag: string
   selectable?: boolean
   authorHandle?: string
 } & TextStyleProp) {
@@ -184,8 +187,8 @@ function RichTextTag({
         <Text
           selectable={selectable}
           {...native({
-            accessibilityLabel: _(msg`Hashtag: ${tag}`),
-            accessibilityHint: _(msg`Click here to open tag menu for ${tag}`),
+            accessibilityLabel: _(msg`Hashtag: #${tag}`),
+            accessibilityHint: _(msg`Click here to open tag menu for #${tag}`),
             accessibilityRole: isNative ? 'button' : undefined,
             onPress: open,
             onPressIn: onPressIn,
@@ -213,7 +216,7 @@ function RichTextTag({
               textDecorationColor: t.palette.primary_500,
             },
           ]}>
-          {tag}
+          {text}
         </Text>
       </TagMenu>
     </React.Fragment>
