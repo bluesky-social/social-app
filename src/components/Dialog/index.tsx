@@ -1,10 +1,11 @@
 import React, {useImperativeHandle} from 'react'
 import {View, Dimensions, Keyboard} from 'react-native'
 import BottomSheet, {
-  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
   BottomSheetScrollView,
   BottomSheetTextInput,
   BottomSheetView,
+  WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
@@ -20,11 +21,50 @@ import {
   DialogInnerProps,
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
+import Animated, {
+  useAnimatedReaction,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
+
+function Backdrop(props: BottomSheetBackdropProps) {
+  const t = useTheme()
+
+  useAnimatedReaction(
+    () => props.animatedPosition,
+    c => console.log({v: c.value}),
+  )
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const opacity =
+      (Math.abs(WINDOW_HEIGHT - props.animatedPosition.value) - 50) / 1000
+
+    return {
+      opacity: Math.min(Math.max(opacity, 0), 0.55),
+    }
+  })
+
+  return (
+    <Animated.View
+      style={[
+        t.atoms.bg_contrast_300,
+        {
+          backgroundColor: 'red',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: 'absolute',
+        },
+        animatedStyle,
+      ]}
+    />
+  )
+}
 
 export function Outer({
   children,
@@ -114,15 +154,7 @@ export function Outer({
           ref={sheet}
           index={openIndex}
           backgroundStyle={{backgroundColor: 'transparent'}}
-          backdropComponent={props => (
-            <BottomSheetBackdrop
-              opacity={0.4}
-              appearsOnIndex={0}
-              disappearsOnIndex={-1}
-              {...props}
-              style={[flatten(props.style), t.atoms.bg_contrast_300]}
-            />
-          )}
+          backdropComponent={Backdrop}
           handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
           handleStyle={{display: 'none'}}
           onChange={onChange}>
