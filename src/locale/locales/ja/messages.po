@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-02-29 18:16+0900\n"
+"PO-Revision-Date: 2024-03-01 11:18+0900\n"
 "Last-Translator: reindex-ot\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot\n"
 "Plural-Forms: \n"
@@ -179,11 +179,11 @@ msgstr "リンクカードを追加："
 
 #: src/components/dialogs/MutedWords.tsx:140
 msgid "Add mute word for configured settings"
-msgstr "設定するミュートワードを追加"
+msgstr "ミュートするワードを設定に追加"
 
 #: src/components/dialogs/MutedWords.tsx:74
 msgid "Add muted words and tags"
-msgstr "ミュートをするワードとタグを追加"
+msgstr "ミュートするワードとタグを追加"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
@@ -473,10 +473,6 @@ msgstr "Blueskyは開かれています。"
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
 msgid "Bluesky is public."
 msgstr "Blueskyはパブリックです。"
-
-#: src/view/com/modals/Waitlist.tsx:70
-msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-msgstr "Blueskyはより健全なコミュニティーを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistにお申し込みいただくと招待状をお送りします。"
 
 #: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
@@ -1931,6 +1927,10 @@ msgstr "無効またはサポートされていない投稿のレコード"
 msgid "Invalid username or password"
 msgstr "無効なユーザー名またはパスワード"
 
+#: src/view/screens/Settings.tsx:411
+#~ msgid "Invite"
+#~ msgstr ""
+
 #: src/view/shell/Drawer.tsx:645
 #~ msgid "Invite codes: {invitesAvailable} available"
 #~ msgstr ""
@@ -2173,7 +2173,7 @@ msgstr "意図した場所であることを確認してください！"
 
 #: src/components/dialogs/MutedWords.tsx:71
 msgid "Manage your muted words and tags"
-msgstr "ミュートワードとタグの管理"
+msgstr "ミュートしたワードとタグの管理"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
@@ -2293,7 +2293,7 @@ msgstr "アカウントをミュート"
 
 #: src/components/TagMenu/index.tsx:211
 msgid "Mute all {tag} posts"
-msgstr "すべての{tag}の投稿のミュートを解除"
+msgstr "すべての{tag}の投稿をミュート"
 
 #: src/components/dialogs/MutedWords.tsx:131
 msgid "Mute in tags only"
@@ -2301,7 +2301,7 @@ msgstr "タグのみミュート"
 
 #: src/components/dialogs/MutedWords.tsx:116
 msgid "Mute in text & tags"
-msgstr "テキストをタグをミュート"
+msgstr "テキストとタグをミュート"
 
 #: src/view/screens/ProfileList.tsx:491
 msgid "Mute list"
@@ -2350,7 +2350,7 @@ msgstr "ミュート中のアカウントの投稿は、フィードや通知か
 
 #: src/view/screens/Moderation.tsx:100
 msgid "Muted words & tags"
-msgstr "ミュートをしたワードとタグ"
+msgstr "ミュートしたワードとタグ"
 
 #: src/view/screens/ProfileList.tsx:277
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2622,7 +2622,7 @@ msgstr "アプリ内ブラウザーでリンクを開く"
 
 #: src/view/screens/Moderation.tsx:92
 msgid "Open muted words settings"
-msgstr "ミュートをしたワードの設定を開く"
+msgstr "ミュートしたワードの設定を開く"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:49
 msgid "Open navigation"
@@ -2675,6 +2675,10 @@ msgstr "フォロワーのリストを開きます"
 #: src/view/com/profile/ProfileHeader.tsx:594
 msgid "Opens following list"
 msgstr "フォロー中のリストを開きます"
+
+#: src/view/screens/Settings.tsx:412
+#~ msgid "Opens invite code list"
+#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:774
 msgid "Opens modal for account deletion confirmation. Requires email code."
@@ -2838,6 +2842,10 @@ msgstr "アプリパスワードにつける名前を入力してください。
 #: src/view/com/modals/AddAppPasswords.tsx:145
 msgid "Please enter a unique name for this App Password or use our randomly generated one."
 msgstr "このアプリパスワードに固有の名前を入力するか、ランダムに生成された名前を使用してください。"
+
+#: src/view/com/auth/create/Step2.tsx:282
+#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
+#~ msgstr ""
 
 #: src/view/com/auth/create/state.ts:103
 msgid "Please enter your email."
@@ -4137,7 +4145,7 @@ msgstr "この警告は、メディアが添付されている投稿にのみ使
 
 #: src/components/dialogs/MutedWords.tsx:236
 msgid "This will delete {0} from your muted words. You can always add it back later."
-msgstr "ミュートをしたワードから「{0}」が削除されます。後で戻すことができます。"
+msgstr "ミュートしたワードから「{0}」が削除されます。後で戻すことができます。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:237
 msgid "This will hide this post from your feeds."
@@ -4638,7 +4646,7 @@ msgstr "ミュートしているアカウントはまだありません。アカ
 
 #: src/components/dialogs/MutedWords.tsx:202
 msgid "You haven't muted any words or tags yet"
-msgstr "ワードやタグをまだミュートにしていません"
+msgstr "ワードやタグをまだミュートしていません"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
@@ -4740,7 +4748,7 @@ msgstr "フルハンドルは<0>@{0}</0>になります"
 
 #: src/components/dialogs/MutedWords.tsx:173
 msgid "Your muted words"
-msgstr "ミュートをしたワード"
+msgstr "ミュートしたワード"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
@@ -4768,4 +4776,3 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:65
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
-
