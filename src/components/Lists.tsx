@@ -31,6 +31,7 @@ export function ListFooter({
         a.align_center,
         a.justify_center,
         a.border_t,
+        a.pb_lg,
         t.atoms.border_contrast_low,
         {height: 100},
       ]}>
