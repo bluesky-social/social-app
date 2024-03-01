@@ -140,7 +140,7 @@ export function ListMaybePlaceholder({
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
-  const {gtTablet} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
 
   const canGoBack = navigation.canGoBack()
   const onGoBack = React.useCallback(() => {
@@ -166,7 +166,7 @@ export function ListMaybePlaceholder({
       style={[
         a.flex_1,
         a.align_center,
-        !gtTablet ? [a.justify_between, a.border_t] : a.gap_5xl,
+        !gtMobile ? [a.justify_between, a.border_t] : a.gap_5xl,
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}>
@@ -204,7 +204,7 @@ export function ListMaybePlaceholder({
             ) : undefined}
           </View>
           <View
-            style={[a.gap_md, !gtTablet ? [a.w_full, a.px_lg] : {width: 350}]}>
+            style={[a.gap_md, !gtMobile ? [a.w_full, a.px_lg] : {width: 350}]}>
             {isError && onRetry && (
               <Button
                 variant="solid"
