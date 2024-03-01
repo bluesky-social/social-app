@@ -33,4 +33,5 @@ export const router = new Router({
   TermsOfService: '/support/tos',
   CommunityGuidelines: '/support/community-guidelines',
   CopyrightPolicy: '/support/copyright',
+  Hashtag: '/hashtag/:tag',
 })
