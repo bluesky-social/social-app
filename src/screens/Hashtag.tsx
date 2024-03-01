@@ -102,11 +102,11 @@ export default function HashtagScreen({
   }, [isFetching, hasNextPage, error, fetchNextPage])
 
   return (
-    <CenteredView style={a.flex_1}>
+    <CenteredView style={a.flex_1} sideBorders>
       <ViewHeader
         title={headerTitle}
         subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
-        canGoBack={true}
+        canGoBack
         renderButton={
           isNative
             ? () => (
@@ -128,6 +128,7 @@ export default function HashtagScreen({
         isError={isError}
         isEmpty={posts.length < 1}
         onRetry={refetch}
+        notFoundType="results"
         empty={_(msg`We couldn't find any results for that hashtag.`)}
       />
       {!isLoading && posts.length > 0 && (

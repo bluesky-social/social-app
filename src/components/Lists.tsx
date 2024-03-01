@@ -129,6 +129,7 @@ export function ListMaybePlaceholder({
   isError,
   empty,
   error,
+  notFoundType = 'page',
   onRetry,
 }: {
   isLoading: boolean
@@ -136,6 +137,7 @@ export function ListMaybePlaceholder({
   isError: boolean
   empty?: string
   error?: string
+  notFoundType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
 }) {
   const navigation = useNavigation<NavigationProp>()
@@ -181,7 +183,13 @@ export function ListMaybePlaceholder({
               {isError ? (
                 <Trans>Oops!</Trans>
               ) : isEmpty ? (
-                <Trans>Page not found</Trans>
+                <>
+                  {notFoundType === 'results' ? (
+                    <Trans>No results found</Trans>
+                  ) : (
+                    <Trans>Page not found</Trans>
+                  )}
+                </>
               ) : undefined}
             </Text>
 
