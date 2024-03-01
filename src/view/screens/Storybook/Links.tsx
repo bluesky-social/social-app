@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {useTheme, atoms as a} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {InlineLink, Link} from '#/components/Link'
-import {H1, H3, Text} from '#/components/Typography'
+import {H1, Text} from '#/components/Typography'
 
 export function Links() {
   const t = useTheme()
@@ -13,31 +13,19 @@ export function Links() {
       <H1>Links</H1>
 
       <View style={[a.gap_md, a.align_start]}>
-        <InlineLink
-          to="https://bsky.social"
-          warnOnMismatchingTextChild
-          style={[a.text_md]}>
-          External
+        <InlineLink to="https://google.com" style={[a.text_lg]}>
+          https://google.com
         </InlineLink>
-        <InlineLink to="https://bsky.social" style={[a.text_md, t.atoms.text]}>
-          <H3>External with custom children</H3>
+        <InlineLink to="https://google.com" style={[a.text_lg]}>
+          External with custom children (google.com)
         </InlineLink>
         <InlineLink
           to="https://bsky.social"
           style={[a.text_md, t.atoms.text_contrast_low]}>
-          External with custom children
+          Internal (bsky.social)
         </InlineLink>
-        <InlineLink
-          to="https://bsky.social"
-          warnOnMismatchingTextChild
-          style={[a.text_lg]}>
-          https://bsky.social
-        </InlineLink>
-        <InlineLink
-          to="https://bsky.app/profile/bsky.app"
-          warnOnMismatchingTextChild
-          style={[a.text_md]}>
-          Internal
+        <InlineLink to="https://bsky.app/profile/bsky.app" style={[a.text_md]}>
+          Internal (bsky.app)
         </InlineLink>
 
         <Link
