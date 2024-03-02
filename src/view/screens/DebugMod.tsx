@@ -10,11 +10,12 @@ import {
   AppBskyActorDefs,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  LabelTarget,
   LabelPreference,
   ModerationDecision,
   ModerationBehavior,
   RichText,
+  ComAtprotoLabelDefs,
+  interpretLabelValueDefinition,
 } from '@atproto/api'
 import {moderationOptsOverrideContext} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
@@ -30,6 +31,7 @@ import {H1, H3, P, Text} from '#/components/Typography'
 import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
+import * as TextField from '#/components/forms/TextField'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {
@@ -42,21 +44,11 @@ import {ProfileCard} from '../com/profile/ProfileCard'
 import {FeedItem} from '../com/posts/FeedItem'
 import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
 import {PostThreadItem} from '../com/post-thread/PostThreadItem'
+import {Divider} from '#/components/Divider'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
 ) as (keyof typeof LABELS)[]
-
-const MOCK_MOD_PREFS = {
-  adultContentEnabled: true,
-  labelGroups: {},
-  mods: [
-    {
-      did: 'did:plc:fake-labeler',
-      labels: {},
-    },
-  ],
-}
 
 export const DebugModScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
@@ -68,6 +60,20 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const [label, setLabel] = React.useState<string[]>([LABEL_VALUES[0]])
   const [target, setTarget] = React.useState<string[]>(['account'])
   const [visibility, setVisiblity] = React.useState<string[]>(['hide'])
+  const [customLabelDef, setCustomLabelDef] =
+    React.useState<ComAtprotoLabelDefs.LabelValueDefinition>({
+      identifier: 'x-custom',
+      blurs: 'content',
+      severity: 'alert',
+      locales: [
+        {
+          lang: 'en',
+          name: 'Custom label',
+          description: 'A custom label created in this test environment',
+        },
+      ],
+    })
+  const [view, setView] = React.useState<string[]>(['post'])
   const labelStrings = useLabelStrings()
   const {currentAccount} = useSession()
 
@@ -226,14 +232,22 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
     return {
       userDid: isLoggedOut ? '' : isTargetMe ? did : 'did:web:alice.test',
       prefs: {
-        ...MOCK_MOD_PREFS,
         adultContentEnabled: !noAdult,
         labels: {
           [label[0]]: visibility[0] as LabelPreference,
         },
+        mods: [
+          {
+            did: 'did:plc:fake-labeler',
+            labels: {[label[0]]: visibility[0] as LabelPreference},
+          },
+        ],
+      },
+      labelDefs: {
+        'did:plc:fake-labeler': [interpretLabelValueDefinition(customLabelDef)],
       },
     }
-  }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did])
+  }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef])
 
   const profileModeration = React.useMemo(() => {
     return moderateProfile(profile, modOpts)
@@ -247,8 +261,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       <ScrollView>
         <CenteredView style={[t.atoms.bg, a.px_lg, a.py_lg]}>
           <H1 style={[a.text_5xl, a.font_bold, a.pb_lg]}>Moderation states</H1>
-
-          <Heading title="Config" />
 
           <Heading title="" subtitle="Scenario" />
           <ToggleButton.Group
@@ -268,169 +280,291 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
 
           {scenario[0] === 'label' && (
             <>
-              <Toggle.Group
-                label="Toggle"
-                type="checkbox"
-                values={scenarioSwitches}
-                onChange={setScenarioSwitches}>
-                <View style={[a.gap_md, a.flex_row, a.flex_wrap, a.pt_md]}>
-                  <Toggle.Item name="targetMe" label="Target is me">
-                    <Toggle.Checkbox />
-                    <Toggle.Label>Target is me</Toggle.Label>
-                  </Toggle.Item>
-                  <Toggle.Item name="following" label="Following target">
-                    <Toggle.Checkbox />
-                    <Toggle.Label>Following target</Toggle.Label>
-                  </Toggle.Item>
-                  <Toggle.Item name="selfLabel" label="Self label">
-                    <Toggle.Checkbox />
-                    <Toggle.Label>Self label</Toggle.Label>
-                  </Toggle.Item>
-                  <Toggle.Item name="noAdult" label="Adult disabled">
-                    <Toggle.Checkbox />
-                    <Toggle.Label>Adult disabled</Toggle.Label>
-                  </Toggle.Item>
-                  <Toggle.Item name="loggedOut" label="Logged out">
-                    <Toggle.Checkbox />
-                    <Toggle.Label>Logged out</Toggle.Label>
-                  </Toggle.Item>
+              <View
+                style={[
+                  a.border,
+                  a.rounded_sm,
+                  a.mt_lg,
+                  a.mb_lg,
+                  a.p_lg,
+                  t.atoms.border_contrast_medium,
+                ]}>
+                <Toggle.Group
+                  label="Toggle"
+                  type="radio"
+                  values={label}
+                  onChange={setLabel}>
+                  <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+                    {LABEL_VALUES.map(labelValue => {
+                      let targetFixed = target[0]
+                      if (
+                        targetFixed !== 'account' &&
+                        targetFixed !== 'profile'
+                      ) {
+                        targetFixed = 'content'
+                      }
+                      const disabled =
+                        isSelfLabel &&
+                        LABELS[labelValue].flags.includes('no-self')
+                      return (
+                        <Toggle.Item
+                          key={labelValue}
+                          name={labelValue}
+                          label={labelStrings[labelValue].general.name}
+                          disabled={disabled}
+                          style={disabled ? {opacity: 0.5} : undefined}>
+                          <Toggle.Radio />
+                          <Toggle.Label>{labelValue}</Toggle.Label>
+                        </Toggle.Item>
+                      )
+                    })}
+                    <Toggle.Item
+                      name="x-custom"
+                      label="Custom label"
+                      disabled={isSelfLabel}
+                      style={isSelfLabel ? {opacity: 0.5} : undefined}>
+                      <Toggle.Radio />
+                      <Toggle.Label>Custom label</Toggle.Label>
+                    </Toggle.Item>
+                  </View>
+                </Toggle.Group>
+
+                {label[0] === 'x-custom' && (
+                  <CustomLabelForm
+                    def={customLabelDef}
+                    setDef={setCustomLabelDef}
+                  />
+                )}
+
+                <Toggle.Group
+                  label="Toggle"
+                  type="checkbox"
+                  values={scenarioSwitches}
+                  onChange={setScenarioSwitches}>
+                  <View style={[a.gap_md, a.flex_row, a.flex_wrap, a.pt_md]}>
+                    <Toggle.Item name="targetMe" label="Target is me">
+                      <Toggle.Checkbox />
+                      <Toggle.Label>Target is me</Toggle.Label>
+                    </Toggle.Item>
+                    <Toggle.Item name="following" label="Following target">
+                      <Toggle.Checkbox />
+                      <Toggle.Label>Following target</Toggle.Label>
+                    </Toggle.Item>
+                    <Toggle.Item name="selfLabel" label="Self label">
+                      <Toggle.Checkbox />
+                      <Toggle.Label>Self label</Toggle.Label>
+                    </Toggle.Item>
+                    <Toggle.Item name="noAdult" label="Adult disabled">
+                      <Toggle.Checkbox />
+                      <Toggle.Label>Adult disabled</Toggle.Label>
+                    </Toggle.Item>
+                    <Toggle.Item name="loggedOut" label="Logged out">
+                      <Toggle.Checkbox />
+                      <Toggle.Label>Logged out</Toggle.Label>
+                    </Toggle.Item>
+                  </View>
+                </Toggle.Group>
+              </View>
+
+              <View style={[a.flex_row, a.flex_wrap, a.gap_md]}>
+                <View>
+                  <Text
+                    style={[
+                      a.font_bold,
+                      a.text_xs,
+                      t.atoms.text,
+                      a.pl_md,
+                      a.pb_xs,
+                    ]}>
+                    Target
+                  </Text>
+                  <View
+                    style={[
+                      a.border,
+                      a.rounded_full,
+                      a.px_md,
+                      a.py_sm,
+                      t.atoms.border_contrast_medium,
+                      t.atoms.bg,
+                    ]}>
+                    <Toggle.Group
+                      label="Target"
+                      type="radio"
+                      values={target}
+                      onChange={setTarget}>
+                      <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+                        <Toggle.Item name="account" label="Account">
+                          <Toggle.Radio />
+                          <Toggle.Label>Account</Toggle.Label>
+                        </Toggle.Item>
+                        <Toggle.Item name="profile" label="Profile">
+                          <Toggle.Radio />
+                          <Toggle.Label>Profile</Toggle.Label>
+                        </Toggle.Item>
+                        <Toggle.Item name="post" label="Post">
+                          <Toggle.Radio />
+                          <Toggle.Label>Post</Toggle.Label>
+                        </Toggle.Item>
+                        <Toggle.Item name="embed" label="Embed">
+                          <Toggle.Radio />
+                          <Toggle.Label>Embed</Toggle.Label>
+                        </Toggle.Item>
+                      </View>
+                    </Toggle.Group>
+                  </View>
                 </View>
-              </Toggle.Group>
-              <View style={{height: 10}} />
-
-              <Heading title="" subtitle="Target" />
-              <ToggleButton.Group
-                label="Target"
-                values={target}
-                onChange={setTarget}>
-                <ToggleButton.Button name="account" label="Account">
-                  Account
-                </ToggleButton.Button>
-                <ToggleButton.Button name="profile" label="Profile">
-                  Profile
-                </ToggleButton.Button>
-                <ToggleButton.Button name="post" label="Post">
-                  Post
-                </ToggleButton.Button>
-                <ToggleButton.Button name="embed" label="Embed">
-                  Embed
-                </ToggleButton.Button>
-              </ToggleButton.Group>
-
-              <View style={{height: 10}} />
-
-              <Heading title="" subtitle="Preference" />
-              <ToggleButton.Group
-                label="Visiblity"
-                values={visibility}
-                onChange={setVisiblity}>
-                <ToggleButton.Button name="hide" label="Hide">
-                  Hide
-                </ToggleButton.Button>
-                <ToggleButton.Button name="warn" label="Warn">
-                  Warn
-                </ToggleButton.Button>
-                <ToggleButton.Button name="ignore" label="Ignore">
-                  Ignore
-                </ToggleButton.Button>
-              </ToggleButton.Group>
-
-              <View style={{height: 10}} />
-
-              <Heading title="" subtitle="Label" />
-              <Toggle.Group
-                label="Toggle"
-                type="radio"
-                values={label}
-                onChange={setLabel}>
-                <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
-                  {LABEL_VALUES.map(labelValue => {
-                    let targetFixed = target[0]
-                    if (
-                      targetFixed !== 'account' &&
-                      targetFixed !== 'profile'
-                    ) {
-                      targetFixed = 'content'
-                    }
-                    const disabled =
-                      isSelfLabel &&
-                      LABELS[labelValue].flags.includes('no-self')
-                    return (
-                      <Toggle.Item
-                        key={labelValue}
-                        name={labelValue}
-                        label={labelStrings[labelValue].general.name}
-                        disabled={disabled}
-                        style={disabled ? {opacity: 0.5} : undefined}>
-                        <Toggle.Radio />
-                        <Toggle.Label>{labelValue}</Toggle.Label>
-                      </Toggle.Item>
-                    )
-                  })}
-                </View>
-              </Toggle.Group>
+                {LABELS[label[0] as keyof typeof LABELS]?.configurable !==
+                  false && (
+                  <View>
+                    <Text
+                      style={[
+                        a.font_bold,
+                        a.text_xs,
+                        t.atoms.text,
+                        a.pl_md,
+                        a.pb_xs,
+                      ]}>
+                      Preference
+                    </Text>
+                    <View
+                      style={[
+                        a.border,
+                        a.rounded_full,
+                        a.px_md,
+                        a.py_sm,
+                        t.atoms.border_contrast_medium,
+                        t.atoms.bg,
+                      ]}>
+                      <Toggle.Group
+                        label="Preference"
+                        type="radio"
+                        values={visibility}
+                        onChange={setVisiblity}>
+                        <View
+                          style={[
+                            a.flex_row,
+                            a.gap_md,
+                            a.flex_wrap,
+                            a.align_center,
+                          ]}>
+                          <Toggle.Item name="hide" label="Hide">
+                            <Toggle.Radio />
+                            <Toggle.Label>Hide</Toggle.Label>
+                          </Toggle.Item>
+                          <Toggle.Item name="warn" label="Warn">
+                            <Toggle.Radio />
+                            <Toggle.Label>Warn</Toggle.Label>
+                          </Toggle.Item>
+                          <Toggle.Item name="ignore" label="Ignore">
+                            <Toggle.Radio />
+                            <Toggle.Label>Ignore</Toggle.Label>
+                          </Toggle.Item>
+                        </View>
+                      </Toggle.Group>
+                    </View>
+                  </View>
+                )}
+              </View>
             </>
           )}
 
           <Spacer />
 
-          <Heading title="Post" subtitle="in feed" />
-          <MockPostFeedItem post={post} moderation={postModeration} />
+          <Heading title="" subtitle="Results" />
 
-          <Spacer />
+          <ToggleButton.Group label="Results" values={view} onChange={setView}>
+            <ToggleButton.Button name="post" label="Post">
+              Post
+            </ToggleButton.Button>
+            <ToggleButton.Button name="notifications" label="Notifications">
+              Notifications
+            </ToggleButton.Button>
+            <ToggleButton.Button name="account" label="Account">
+              Account
+            </ToggleButton.Button>
+            <ToggleButton.Button name="data" label="Data">
+              Data
+            </ToggleButton.Button>
+          </ToggleButton.Group>
 
-          <Heading title="Post" subtitle="viewed directly" />
-          <MockPostThreadItem post={post} moderation={postModeration} />
+          <View
+            style={[
+              a.border,
+              a.rounded_sm,
+              a.mt_lg,
+              a.p_md,
+              t.atoms.border_contrast_medium,
+            ]}>
+            {view[0] === 'post' && (
+              <>
+                <Heading title="Post" subtitle="in feed" />
+                <MockPostFeedItem post={post} moderation={postModeration} />
 
-          <Spacer />
+                <Heading title="Post" subtitle="viewed directly" />
+                <MockPostThreadItem post={post} moderation={postModeration} />
 
-          <Heading title="Post" subtitle="reply in thread" />
-          <MockPostThreadItem post={post} moderation={postModeration} reply />
+                <Heading title="Post" subtitle="reply in thread" />
+                <MockPostThreadItem
+                  post={post}
+                  moderation={postModeration}
+                  reply
+                />
+              </>
+            )}
 
-          <Spacer />
+            {view[0] === 'notifications' && (
+              <>
+                <Heading title="Notification" subtitle="quote or reply" />
+                <MockNotifItem notif={replyNotif} moderationOpts={modOpts} />
 
-          <Heading title="Notification" subtitle="quote or reply" />
-          <MockNotifItem notif={replyNotif} moderationOpts={modOpts} />
+                <Spacer />
 
-          <Spacer />
+                <Heading title="Notification" subtitle="follow or like" />
+                <MockNotifItem notif={followNotif} moderationOpts={modOpts} />
+              </>
+            )}
 
-          {(target[0] === 'account' || target[0] === 'profile') && (
-            <>
-              <Heading title="Notification" subtitle="follow or like" />
-              <MockNotifItem notif={followNotif} moderationOpts={modOpts} />
+            {view[0] === 'account' && (
+              <>
+                <Heading title="Account" subtitle="in listing" />
+                <MockAccountCard
+                  profile={profile}
+                  moderation={profileModeration}
+                />
 
-              <Spacer />
+                <Spacer />
 
-              <Heading title="Account" subtitle="in listing" />
-              <MockAccountCard
-                profile={profile}
-                moderation={profileModeration}
-              />
+                <Heading title="Account" subtitle="viewing directly" />
+                <MockAccountScreen
+                  profile={profile}
+                  moderation={profileModeration}
+                  moderationOpts={modOpts}
+                />
+              </>
+            )}
 
-              <Spacer />
-
-              <Heading title="Account" subtitle="viewing directly" />
-              <MockAccountScreen
-                profile={profile}
-                moderation={profileModeration}
-                moderationOpts={modOpts}
-              />
-
-              <Spacer />
-            </>
-          )}
-
-          <ModerationUIView
-            label="Profile Moderation UI"
-            mod={profileModeration}
-          />
-          <ModerationUIView label="Post Moderation UI" mod={postModeration} />
-          <DataView
-            label={label[0]}
-            data={LABELS[label[0] as keyof typeof LABELS]}
-          />
-          <DataView label="Profile Moderation Data" data={profileModeration} />
-          <DataView label="Post Moderation Data" data={postModeration} />
+            {view[0] === 'data' && (
+              <>
+                <ModerationUIView
+                  label="Profile Moderation UI"
+                  mod={profileModeration}
+                />
+                <ModerationUIView
+                  label="Post Moderation UI"
+                  mod={postModeration}
+                />
+                <DataView
+                  label={label[0]}
+                  data={LABELS[label[0] as keyof typeof LABELS]}
+                />
+                <DataView
+                  label="Profile Moderation Data"
+                  data={profileModeration}
+                />
+                <DataView label="Post Moderation Data" data={postModeration} />
+              </>
+            )}
+          </View>
 
           <View style={{height: 400}} />
         </CenteredView>
@@ -448,6 +582,101 @@ function Heading({title, subtitle}: {title: string; subtitle?: string}) {
         <H3 style={[t.atoms.text_contrast_medium, a.text_lg]}>{subtitle}</H3>
       )}
     </H3>
+  )
+}
+
+function CustomLabelForm({
+  def,
+  setDef,
+}: {
+  def: ComAtprotoLabelDefs.LabelValueDefinition
+  setDef: React.Dispatch<
+    React.SetStateAction<ComAtprotoLabelDefs.LabelValueDefinition>
+  >
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.flex_row,
+        a.flex_wrap,
+        a.gap_md,
+        t.atoms.bg_contrast_50,
+        a.rounded_md,
+        a.p_md,
+        a.mt_md,
+      ]}>
+      <View>
+        <Text style={[a.font_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
+          Blurs
+        </Text>
+        <View
+          style={[
+            a.border,
+            a.rounded_full,
+            a.px_md,
+            a.py_sm,
+            t.atoms.border_contrast_medium,
+            t.atoms.bg,
+          ]}>
+          <Toggle.Group
+            label="Blurs"
+            type="radio"
+            values={[def.blurs]}
+            onChange={values => setDef(v => ({...v, blurs: values[0]}))}>
+            <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
+              <Toggle.Item name="content" label="Content">
+                <Toggle.Radio />
+                <Toggle.Label>Content</Toggle.Label>
+              </Toggle.Item>
+              <Toggle.Item name="media" label="Media">
+                <Toggle.Radio />
+                <Toggle.Label>Media</Toggle.Label>
+              </Toggle.Item>
+              <Toggle.Item name="none" label="None">
+                <Toggle.Radio />
+                <Toggle.Label>None</Toggle.Label>
+              </Toggle.Item>
+            </View>
+          </Toggle.Group>
+        </View>
+      </View>
+      <View>
+        <Text style={[a.font_bold, a.text_xs, t.atoms.text, a.pl_md, a.pb_xs]}>
+          Severity
+        </Text>
+        <View
+          style={[
+            a.border,
+            a.rounded_full,
+            a.px_md,
+            a.py_sm,
+            t.atoms.border_contrast_medium,
+            t.atoms.bg,
+          ]}>
+          <Toggle.Group
+            label="Severity"
+            type="radio"
+            values={[def.severity]}
+            onChange={values => setDef(v => ({...v, severity: values[0]}))}>
+            <View style={[a.flex_row, a.gap_md, a.flex_wrap, a.align_center]}>
+              <Toggle.Item name="alert" label="Alert">
+                <Toggle.Radio />
+                <Toggle.Label>Alert</Toggle.Label>
+              </Toggle.Item>
+              <Toggle.Item name="inform" label="Inform">
+                <Toggle.Radio />
+                <Toggle.Label>Inform</Toggle.Label>
+              </Toggle.Item>
+              <Toggle.Item name="none" label="None">
+                <Toggle.Radio />
+                <Toggle.Label>None</Toggle.Label>
+              </Toggle.Item>
+            </View>
+          </Toggle.Group>
+        </View>
+      </View>
+    </View>
   )
 }
 
