@@ -180,6 +180,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/", server.WebHome)
 
 	// generic routes
+	e.GET("/hashtag/:tag", server.WebGeneric)
 	e.GET("/search", server.WebGeneric)
 	e.GET("/feeds", server.WebGeneric)
 	e.GET("/notifications", server.WebGeneric)

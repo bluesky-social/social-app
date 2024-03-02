@@ -114,7 +114,6 @@ export function RichText({
             href={link.uri}
             style={[style, lineHeightStyle, pal.link, {pointerEvents: 'auto'}]}
             dataSet={WORD_WRAP}
-            warnOnMismatchingLabel
             selectable={selectable}
           />,
         )
