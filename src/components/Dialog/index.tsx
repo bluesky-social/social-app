@@ -1,16 +1,21 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions} from 'react-native'
+import {View, Dimensions, Keyboard, Pressable} from 'react-native'
 import BottomSheet, {
-  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
   BottomSheetScrollView,
   BottomSheetTextInput,
   BottomSheetView,
+  useBottomSheet,
+  WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {createInput} from '#/components/forms/TextField'
+import {logger} from '#/logger'
+import {useDialogStateContext} from '#/state/dialogs'
 
 import {
   DialogOuterProps,
@@ -24,6 +29,47 @@ export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
 
+function Backdrop(props: BottomSheetBackdropProps) {
+  const t = useTheme()
+  const bottomSheet = useBottomSheet()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const opacity =
+      (Math.abs(WINDOW_HEIGHT - props.animatedPosition.value) - 50) / 1000
+
+    return {
+      opacity: Math.min(Math.max(opacity, 0), 0.55),
+    }
+  })
+
+  const onPress = React.useCallback(() => {
+    bottomSheet.close()
+  }, [bottomSheet])
+
+  return (
+    <Animated.View
+      style={[
+        t.atoms.bg_contrast_300,
+        {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: 'absolute',
+        },
+        animatedStyle,
+      ]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Dialog backdrop"
+        accessibilityHint="Press the backdrop to close the dialog"
+        style={{flex: 1}}
+        onPress={onPress}
+      />
+    </Animated.View>
+  )
+}
+
 export function Outer({
   children,
   control,
@@ -36,6 +82,7 @@ export function Outer({
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
   const closeCallback = React.useRef<() => void>()
+  const {openDialogs} = useDialogStateContext()
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
@@ -49,14 +96,15 @@ export function Outer({
 
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
+      openDialogs.current.add(control.id)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
     },
-    [setOpenIndex],
+    [setOpenIndex, openDialogs, control.id],
   )
 
   const close = React.useCallback<DialogControlProps['close']>(cb => {
-    if (cb) {
+    if (cb && typeof cb === 'function') {
       closeCallback.current = cb
     }
     sheet.current?.close()
@@ -74,13 +122,23 @@ export function Outer({
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
-        closeCallback.current?.()
-        closeCallback.current = undefined
+        Keyboard.dismiss()
+        try {
+          closeCallback.current?.()
+        } catch (e: any) {
+          logger.error(`Dialog closeCallback failed`, {
+            message: e.message,
+          })
+        } finally {
+          closeCallback.current = undefined
+        }
+
+        openDialogs.current.delete(control.id)
         onClose?.()
         setOpenIndex(-1)
       }
     },
-    [onClose, setOpenIndex],
+    [onClose, setOpenIndex, openDialogs, control.id],
   )
 
   const context = React.useMemo(() => ({close}), [close])
@@ -100,15 +158,7 @@ export function Outer({
           ref={sheet}
           index={openIndex}
           backgroundStyle={{backgroundColor: 'transparent'}}
-          backdropComponent={props => (
-            <BottomSheetBackdrop
-              opacity={0.4}
-              appearsOnIndex={0}
-              disappearsOnIndex={-1}
-              {...props}
-              style={[flatten(props.style), t.atoms.bg_contrast_300]}
-            />
-          )}
+          backdropComponent={Backdrop}
           handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
           handleStyle={{display: 'none'}}
           onChange={onChange}>
@@ -177,8 +227,15 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
 
 export function Handle() {
   const t = useTheme()
+
+  const onTouchStart = React.useCallback(() => {
+    Keyboard.dismiss()
+  }, [])
+
   return (
-    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
+    <View
+      style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}
+      onTouchStart={onTouchStart}>
       <View
         style={[
           a.rounded_sm,

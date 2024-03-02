@@ -49,7 +49,7 @@ type BaseLinkProps = Pick<
    *
    * Note: atm this only works for `InlineLink`s with a string child.
    */
-  warnOnMismatchingTextChild?: boolean
+  disableMismatchWarning?: boolean
 
   /**
    * Callback for when the link is pressed. Prevent default and return `false`
@@ -69,7 +69,7 @@ export function useLink({
   to,
   displayText,
   action = 'push',
-  warnOnMismatchingTextChild,
+  disableMismatchWarning,
   onPress: outerOnPress,
 }: BaseLinkProps & {
   displayText: string
@@ -90,7 +90,7 @@ export function useLink({
       if (exitEarlyIfFalse === false) return
 
       const requiresWarning = Boolean(
-        warnOnMismatchingTextChild &&
+        !disableMismatchWarning &&
           displayText &&
           isExternal &&
           linkRequiresWarning(href, displayText),
@@ -148,7 +148,7 @@ export function useLink({
     },
     [
       outerOnPress,
-      warnOnMismatchingTextChild,
+      disableMismatchWarning,
       displayText,
       isExternal,
       href,
@@ -167,7 +167,7 @@ export function useLink({
   }
 }
 
-export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
+export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
   Omit<ButtonProps, 'onPress' | 'disabled' | 'label'>
 
 /**
@@ -226,7 +226,7 @@ export function InlineLink({
   children,
   to,
   action = 'push',
-  warnOnMismatchingTextChild,
+  disableMismatchWarning,
   style,
   onPress: outerOnPress,
   download,
@@ -239,7 +239,7 @@ export function InlineLink({
     to,
     displayText: stringChildren ? children : '',
     action,
-    warnOnMismatchingTextChild,
+    disableMismatchWarning,
     onPress: outerOnPress,
   })
   const {

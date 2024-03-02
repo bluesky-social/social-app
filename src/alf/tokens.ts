@@ -1,25 +1,32 @@
-const BLUE_HUE = 211
-const RED_HUE = 346
-const GREEN_HUE = 152
+import {
+  BLUE_HUE,
+  RED_HUE,
+  GREEN_HUE,
+  generateScale,
+} from '#/alf/util/colorGeneration'
+
+export const scale = generateScale(6, 100)
+// dim shifted 6% lighter
+export const dimScale = generateScale(12, 100)
 
 export const color = {
   trueBlack: '#000000',
 
-  gray_0: `hsl(${BLUE_HUE}, 20%, 100%)`,
-  gray_25: `hsl(${BLUE_HUE}, 20%, 97%)`,
-  gray_50: `hsl(${BLUE_HUE}, 20%, 95%)`,
-  gray_100: `hsl(${BLUE_HUE}, 20%, 90%)`,
-  gray_200: `hsl(${BLUE_HUE}, 20%, 80%)`,
-  gray_300: `hsl(${BLUE_HUE}, 20%, 70%)`,
-  gray_400: `hsl(${BLUE_HUE}, 20%, 60%)`,
-  gray_500: `hsl(${BLUE_HUE}, 20%, 50%)`,
-  gray_600: `hsl(${BLUE_HUE}, 24%, 42%)`,
-  gray_700: `hsl(${BLUE_HUE}, 24%, 34%)`,
-  gray_800: `hsl(${BLUE_HUE}, 28%, 26%)`,
-  gray_900: `hsl(${BLUE_HUE}, 28%, 18%)`,
-  gray_950: `hsl(${BLUE_HUE}, 28%, 10%)`,
-  gray_975: `hsl(${BLUE_HUE}, 28%, 7%)`,
-  gray_1000: `hsl(${BLUE_HUE}, 28%, 4%)`,
+  gray_0: `hsl(${BLUE_HUE}, 20%, ${scale[14]}%)`,
+  gray_25: `hsl(${BLUE_HUE}, 20%, ${scale[13]}%)`,
+  gray_50: `hsl(${BLUE_HUE}, 20%, ${scale[12]}%)`,
+  gray_100: `hsl(${BLUE_HUE}, 20%, ${scale[11]}%)`,
+  gray_200: `hsl(${BLUE_HUE}, 20%, ${scale[10]}%)`,
+  gray_300: `hsl(${BLUE_HUE}, 20%, ${scale[9]}%)`,
+  gray_400: `hsl(${BLUE_HUE}, 20%, ${scale[8]}%)`,
+  gray_500: `hsl(${BLUE_HUE}, 20%, ${scale[7]}%)`,
+  gray_600: `hsl(${BLUE_HUE}, 24%, ${scale[6]}%)`,
+  gray_700: `hsl(${BLUE_HUE}, 24%, ${scale[5]}%)`,
+  gray_800: `hsl(${BLUE_HUE}, 28%, ${scale[4]}%)`,
+  gray_900: `hsl(${BLUE_HUE}, 28%, ${scale[3]}%)`,
+  gray_950: `hsl(${BLUE_HUE}, 28%, ${scale[2]}%)`,
+  gray_975: `hsl(${BLUE_HUE}, 28%, ${scale[1]}%)`,
+  gray_1000: `hsl(${BLUE_HUE}, 28%, ${scale[0]}%)`,
 
   blue_25: `hsl(${BLUE_HUE}, 99%, 97%)`,
   blue_50: `hsl(${BLUE_HUE}, 99%, 95%)`,

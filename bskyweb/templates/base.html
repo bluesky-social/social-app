@@ -44,6 +44,12 @@
       scrollbar-gutter: stable both-edges;
     }
 
+    /* Buttons and inputs have a font set by UA, so we'll have to reset that */
+    button, input, textarea {
+      font: inherit;
+      line-height: inherit;
+    }
+
     /* Color theming */
     /* Default will always be white */
     :root {

@@ -18,6 +18,8 @@ import {Mark} from '@tiptap/core'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
 import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
+import {URL_REGEX} from '@atproto/api'
+
 import {isValidDomain} from 'lib/strings/url-helpers'
 
 export const LinkDecorator = Mark.create({
@@ -78,8 +80,7 @@ function linkDecorator() {
 
 function iterateUris(str: string, cb: (from: number, to: number) => void) {
   let match
-  const re =
-    /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/gim
+  const re = URL_REGEX
   while ((match = re.exec(str))) {
     let uri = match[2]
     if (!uri.startsWith('http')) {
