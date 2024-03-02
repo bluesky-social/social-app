@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-03-02 09:27+0900\n"
+"PO-Revision-Date: 2024-03-02 18:05+0900\n"
 "Last-Translator: reindex-ot\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot\n"
 "Plural-Forms: \n"
@@ -456,8 +456,6 @@ msgstr "Blueskyは開かれています。"
 msgid "Bluesky is public."
 msgstr "Blueskyはパブリックです。"
 
-msgstr "Blueskyはより健全なコミュニティーを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistにお申し込みいただくと招待状をお送りします。"
-
 #: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィールや投稿を表示しません。他のアプリはこのリクエストに応じない場合があります。この設定はあなたのアカウントを非公開にするものではありません。"
@@ -524,7 +522,6 @@ msgstr "英数字、スペース、ハイフン、アンダースコアのみが
 #: src/view/com/modals/Repost.tsx:87
 #: src/view/com/modals/VerifyEmail.tsx:247
 #: src/view/com/modals/VerifyEmail.tsx:253
-#: src/view/com/modals/Waitlist.tsx:142
 #: src/view/screens/Search/Search.tsx:716
 #: src/view/shell/desktop/Search.tsx:238
 msgid "Cancel"
@@ -564,10 +561,6 @@ msgstr "引用をキャンセル"
 #: src/view/shell/desktop/Search.tsx:234
 msgid "Cancel search"
 msgstr "検索をキャンセル"
-
-#: src/view/com/modals/Waitlist.tsx:136
-msgid "Cancel waitlist signup"
-msgstr "Waitlistの登録をキャンセル"
 
 #: src/view/screens/Settings/index.tsx:334
 msgctxt "action"
@@ -818,10 +811,6 @@ msgstr "成人向けコンテンツを有効にするために年齢を確認し
 #: src/view/com/modals/VerifyEmail.tsx:165
 msgid "Confirmation code"
 msgstr "確認コード"
-
-#: src/view/com/modals/Waitlist.tsx:120
-msgid "Confirms signing up {email} to the waitlist"
-msgstr "{email}のWaitlistへの登録を確認"
 
 #: src/view/com/auth/create/CreateAccount.tsx:193
 #: src/view/com/auth/login/LoginForm.tsx:278
@@ -1261,7 +1250,6 @@ msgstr "教育"
 #: src/view/com/auth/create/Step1.tsx:199
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:156
 #: src/view/com/modals/ChangeEmail.tsx:141
-#: src/view/com/modals/Waitlist.tsx:88
 msgid "Email"
 msgstr "メールアドレス"
 
@@ -1346,10 +1334,6 @@ msgstr "アカウントの作成に使用したメールアドレスを入力し
 msgid "Enter your birth date"
 msgstr "誕生日を入力してください"
 
-#: src/view/com/modals/Waitlist.tsx:78
-msgid "Enter your email"
-msgstr "メールアドレスを入力してください"
-
 #: src/view/com/auth/create/Step1.tsx:195
 msgid "Enter your email address"
 msgstr "メールアドレスを入力してください"
@@ -1394,10 +1378,6 @@ msgstr "画像表示を終了"
 #: src/view/shell/desktop/Search.tsx:235
 msgid "Exits inputting search query"
 msgstr "検索クエリの入力を終了"
-
-#: src/view/com/modals/Waitlist.tsx:138
-msgid "Exits signing up for waitlist with {email}"
-msgstr "{email}でWaitlistへの登録を終了"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
@@ -1887,10 +1867,6 @@ msgstr "サインアップ時に使用したユーザー名またはメールア
 #~ msgid "Input the verification code we have texted to you"
 #~ msgstr ""
 
-#: src/view/com/modals/Waitlist.tsx:90
-msgid "Input your email to get on the Bluesky waitlist"
-msgstr "BlueskyのWaitlistに登録するメールアドレスを入力"
-
 #: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Input your password"
 msgstr "あなたのパスワードを入力"
@@ -1915,19 +1891,6 @@ msgstr "あなたがフォローした人の投稿が随時表示されます。
 #: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "仕事"
-
-#: src/view/com/modals/Waitlist.tsx:67
-msgid "Join the waitlist"
-msgstr "Waitlistに参加"
-
-#: src/view/com/auth/create/Step1.tsx:174
-#: src/view/com/auth/create/Step1.tsx:178
-msgid "Join the waitlist."
-msgstr "Waitlistに参加します。"
-
-#: src/view/com/modals/Waitlist.tsx:128
-msgid "Join Waitlist"
-msgstr "Waitlistに参加"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
@@ -3755,10 +3718,6 @@ msgstr "ソフトウェア開発"
 #~ msgid "Something went wrong and we're not sure what."
 #~ msgstr ""
 
-#: src/view/com/modals/Waitlist.tsx:51
-msgid "Something went wrong. Check your email and try again."
-msgstr "なんらかの問題が発生しました。メールアドレスを確認し、もう一度お試しください。"
-
 #: src/App.native.tsx:63
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "申し訳ありません！セッションの有効期限が切れました。もう一度ログインしてください。"
@@ -4680,10 +4639,6 @@ msgstr "あなたのデフォルトフィードは「Following」です"
 msgid "Your email appears to be invalid."
 msgstr "メールアドレスが無効なようです。"
 
-#: src/view/com/modals/Waitlist.tsx:109
-msgid "Your email has been saved! We'll be in touch soon."
-msgstr "メールアドレスが保存されました！すぐにご連絡いたします。"
-
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
 msgstr "メールアドレスは更新されましたが、確認されていません。次のステップとして、新しいメールアドレスを確認してください。"
@@ -4734,4 +4689,3 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:65
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
-
