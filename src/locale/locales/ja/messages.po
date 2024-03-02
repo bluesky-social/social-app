@@ -2289,11 +2289,11 @@ msgstr "このリストをミュート"
 
 #: src/components/dialogs/MutedWords.tsx:109
 msgid "Mute this word in post text and tags"
-msgstr "投稿のテキストをタグでこのワードをミュートにする"
+msgstr "投稿のテキストをタグでこのワードをミュート"
 
 #: src/components/dialogs/MutedWords.tsx:124
 msgid "Mute this word in tags only"
-msgstr "タグのみでこのワードをミュートにする"
+msgstr "タグのみでこのワードをミュート"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Mute thread"
@@ -4734,3 +4734,4 @@ msgstr "返信を公開しました"
 #: src/view/com/auth/create/Step2.tsx:65
 msgid "Your user handle"
 msgstr "あなたのユーザーハンドル"
+
