@@ -58,7 +58,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const [scenarioSwitches, setScenarioSwitches] = React.useState<string[]>([])
   const [label, setLabel] = React.useState<string[]>([LABEL_VALUES[0]])
   const [target, setTarget] = React.useState<string[]>(['account'])
-  const [visibility, setVisiblity] = React.useState<string[]>(['hide'])
+  const [visibility, setVisiblity] = React.useState<string[]>(['warn'])
   const [customLabelDef, setCustomLabelDef] =
     React.useState<ComAtprotoLabelDefs.LabelValueDefinition>({
       identifier: 'custom',
@@ -340,34 +340,74 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   </>
                 )}
 
-                <Toggle.Group
-                  label="Toggle"
-                  type="checkbox"
-                  values={scenarioSwitches}
-                  onChange={setScenarioSwitches}>
-                  <View style={[a.gap_md, a.flex_row, a.flex_wrap, a.pt_md]}>
-                    <Toggle.Item name="targetMe" label="Target is me">
-                      <Toggle.Checkbox />
-                      <Toggle.Label>Target is me</Toggle.Label>
-                    </Toggle.Item>
-                    <Toggle.Item name="following" label="Following target">
-                      <Toggle.Checkbox />
-                      <Toggle.Label>Following target</Toggle.Label>
-                    </Toggle.Item>
-                    <Toggle.Item name="selfLabel" label="Self label">
-                      <Toggle.Checkbox />
-                      <Toggle.Label>Self label</Toggle.Label>
-                    </Toggle.Item>
-                    <Toggle.Item name="noAdult" label="Adult disabled">
-                      <Toggle.Checkbox />
-                      <Toggle.Label>Adult disabled</Toggle.Label>
-                    </Toggle.Item>
-                    <Toggle.Item name="loggedOut" label="Logged out">
-                      <Toggle.Checkbox />
-                      <Toggle.Label>Logged out</Toggle.Label>
-                    </Toggle.Item>
-                  </View>
-                </Toggle.Group>
+                <View style={{height: 10}} />
+
+                <SmallToggler label="Advanced">
+                  <Toggle.Group
+                    label="Toggle"
+                    type="checkbox"
+                    values={scenarioSwitches}
+                    onChange={setScenarioSwitches}>
+                    <View style={[a.gap_md, a.flex_row, a.flex_wrap, a.pt_md]}>
+                      <Toggle.Item name="targetMe" label="Target is me">
+                        <Toggle.Checkbox />
+                        <Toggle.Label>Target is me</Toggle.Label>
+                      </Toggle.Item>
+                      <Toggle.Item name="following" label="Following target">
+                        <Toggle.Checkbox />
+                        <Toggle.Label>Following target</Toggle.Label>
+                      </Toggle.Item>
+                      <Toggle.Item name="selfLabel" label="Self label">
+                        <Toggle.Checkbox />
+                        <Toggle.Label>Self label</Toggle.Label>
+                      </Toggle.Item>
+                      <Toggle.Item name="noAdult" label="Adult disabled">
+                        <Toggle.Checkbox />
+                        <Toggle.Label>Adult disabled</Toggle.Label>
+                      </Toggle.Item>
+                      <Toggle.Item name="loggedOut" label="Logged out">
+                        <Toggle.Checkbox />
+                        <Toggle.Label>Logged out</Toggle.Label>
+                      </Toggle.Item>
+                    </View>
+                  </Toggle.Group>
+
+                  {LABELS[label[0] as keyof typeof LABELS]?.configurable !==
+                    false && (
+                    <View style={[a.mt_md]}>
+                      <Text
+                        style={[a.font_bold, a.text_xs, t.atoms.text, a.pb_sm]}>
+                        Preference
+                      </Text>
+                      <Toggle.Group
+                        label="Preference"
+                        type="radio"
+                        values={visibility}
+                        onChange={setVisiblity}>
+                        <View
+                          style={[
+                            a.flex_row,
+                            a.gap_md,
+                            a.flex_wrap,
+                            a.align_center,
+                          ]}>
+                          <Toggle.Item name="hide" label="Hide">
+                            <Toggle.Radio />
+                            <Toggle.Label>Hide</Toggle.Label>
+                          </Toggle.Item>
+                          <Toggle.Item name="warn" label="Warn">
+                            <Toggle.Radio />
+                            <Toggle.Label>Warn</Toggle.Label>
+                          </Toggle.Item>
+                          <Toggle.Item name="ignore" label="Ignore">
+                            <Toggle.Radio />
+                            <Toggle.Label>Ignore</Toggle.Label>
+                          </Toggle.Item>
+                        </View>
+                      </Toggle.Group>
+                    </View>
+                  )}
+                </SmallToggler>
               </View>
 
               <View style={[a.flex_row, a.flex_wrap, a.gap_md]}>
@@ -417,57 +457,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                     </Toggle.Group>
                   </View>
                 </View>
-                {LABELS[label[0] as keyof typeof LABELS]?.configurable !==
-                  false && (
-                  <View>
-                    <Text
-                      style={[
-                        a.font_bold,
-                        a.text_xs,
-                        t.atoms.text,
-                        a.pl_md,
-                        a.pb_xs,
-                      ]}>
-                      Preference
-                    </Text>
-                    <View
-                      style={[
-                        a.border,
-                        a.rounded_full,
-                        a.px_md,
-                        a.py_sm,
-                        t.atoms.border_contrast_medium,
-                        t.atoms.bg,
-                      ]}>
-                      <Toggle.Group
-                        label="Preference"
-                        type="radio"
-                        values={visibility}
-                        onChange={setVisiblity}>
-                        <View
-                          style={[
-                            a.flex_row,
-                            a.gap_md,
-                            a.flex_wrap,
-                            a.align_center,
-                          ]}>
-                          <Toggle.Item name="hide" label="Hide">
-                            <Toggle.Radio />
-                            <Toggle.Label>Hide</Toggle.Label>
-                          </Toggle.Item>
-                          <Toggle.Item name="warn" label="Warn">
-                            <Toggle.Radio />
-                            <Toggle.Label>Warn</Toggle.Label>
-                          </Toggle.Item>
-                          <Toggle.Item name="ignore" label="Ignore">
-                            <Toggle.Radio />
-                            <Toggle.Label>Ignore</Toggle.Label>
-                          </Toggle.Item>
-                        </View>
-                      </Toggle.Group>
-                    </View>
-                  </View>
-                )}
               </View>
             </>
           )}
@@ -706,6 +695,33 @@ function Toggler({label, children}: React.PropsWithChildren<{label: string}>) {
         </Button>
         {show && children}
       </View>
+    </View>
+  )
+}
+
+function SmallToggler({
+  label,
+  children,
+}: React.PropsWithChildren<{label: string}>) {
+  const t = useTheme()
+  const [show, setShow] = React.useState(false)
+  return (
+    <View>
+      <View style={[a.flex_row]}>
+        <Button
+          variant="ghost"
+          color="secondary"
+          label="Toggle visibility"
+          size="tiny"
+          onPress={() => setShow(!show)}>
+          <ButtonText>{label}</ButtonText>
+          <ButtonIcon
+            icon={show ? ChevronTop : ChevronBottom}
+            position="right"
+          />
+        </Button>
+      </View>
+      {show && children}
     </View>
   )
 }
