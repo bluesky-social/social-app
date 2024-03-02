@@ -83,6 +83,7 @@ let ProfileHeaderStandard = ({
           _(
             msg`Following ${sanitizeDisplayName(
               profile.displayName || profile.handle,
+              moderation.ui('displayName'),
             )}`,
           ),
         )
@@ -104,6 +105,7 @@ let ProfileHeaderStandard = ({
           _(
             msg`No longer following ${sanitizeDisplayName(
               profile.displayName || profile.handle,
+              moderation.ui('displayName'),
             )}`,
           ),
         )

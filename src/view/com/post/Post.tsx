@@ -149,6 +149,7 @@ function PostInner({
         <View style={styles.layoutContent}>
           <PostMeta
             author={post.author}
+            moderation={moderation}
             authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={itemHref}

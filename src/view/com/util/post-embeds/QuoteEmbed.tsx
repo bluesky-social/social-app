@@ -144,6 +144,7 @@ export function QuoteEmbed({
         <View pointerEvents="none">
           <PostMeta
             author={quote.author}
+            moderation={moderation}
             showAvatar
             authorHasWarning={false}
             postHref={itemHref}

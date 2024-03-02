@@ -13,7 +13,7 @@ export function sanitizeDisplayName(
   moderation?: ModerationUI,
 ): string {
   if (moderation?.blur) {
-    return `⚠ Display name hidden`
+    return ''
   }
   if (typeof str === 'string') {
     return str.replace(CHECK_MARKS_RE, '').replace(CONTROL_CHARS_RE, '').trim()

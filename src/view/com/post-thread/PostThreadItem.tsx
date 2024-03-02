@@ -268,6 +268,7 @@ let PostThreadItemLoaded = ({
                     {sanitizeDisplayName(
                       post.author.displayName ||
                         sanitizeHandle(post.author.handle),
+                      moderation.ui('displayName'),
                     )}
                   </Text>
                 </Link>
@@ -469,6 +470,7 @@ let PostThreadItemLoaded = ({
                 }>
                 <PostMeta
                   author={post.author}
+                  moderation={moderation}
                   authorHasWarning={!!post.author.labels?.length}
                   timestamp={post.indexedAt}
                   postHref={postHref}

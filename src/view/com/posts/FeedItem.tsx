@@ -231,6 +231,7 @@ let FeedItemInner = ({
                     numberOfLines={1}
                     text={sanitizeDisplayName(
                       reason.by.displayName || sanitizeHandle(reason.by.handle),
+                      moderation.ui('displayName'),
                     )}
                     href={makeProfileLink(reason.by)}
                   />
@@ -266,6 +267,7 @@ let FeedItemInner = ({
         <View style={styles.layoutContent}>
           <PostMeta
             author={post.author}
+            moderation={moderation}
             authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}

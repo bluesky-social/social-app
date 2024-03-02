@@ -31,7 +31,6 @@ import {H1, H3, P, Text} from '#/components/Typography'
 import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
-import * as TextField from '#/components/forms/TextField'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {
@@ -62,7 +61,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
   const [visibility, setVisiblity] = React.useState<string[]>(['hide'])
   const [customLabelDef, setCustomLabelDef] =
     React.useState<ComAtprotoLabelDefs.LabelValueDefinition>({
-      identifier: 'x-custom',
+      identifier: 'custom',
       blurs: 'content',
       severity: 'alert',
       locales: [
@@ -319,7 +318,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                       )
                     })}
                     <Toggle.Item
-                      name="x-custom"
+                      name="custom"
                       label="Custom label"
                       disabled={isSelfLabel}
                       style={isSelfLabel ? {opacity: 0.5} : undefined}>
@@ -329,7 +328,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   </View>
                 </Toggle.Group>
 
-                {label[0] === 'x-custom' ? (
+                {label[0] === 'custom' ? (
                   <CustomLabelForm
                     def={customLabelDef}
                     setDef={setCustomLabelDef}
