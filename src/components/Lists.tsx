@@ -2,7 +2,8 @@ import React from 'react'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
 import {Loader} from '#/components/Loader'
-import {Trans} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {cleanError} from 'lib/strings/errors'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -58,6 +59,7 @@ function ListFooterMaybeError({
   onRetry?: () => Promise<unknown>
 }) {
   const t = useTheme()
+  const {_} = useLingui()
 
   if (!isError) return null
 
@@ -83,7 +85,7 @@ function ListFooterMaybeError({
         </Text>
         <Button
           variant="gradient"
-          label="Press to retry"
+          label={_(msg`Press to retry`)}
           style={[
             a.align_center,
             a.justify_center,
@@ -93,7 +95,7 @@ function ListFooterMaybeError({
             a.py_sm,
           ]}
           onPress={onRetry}>
-          Retry
+          <Trans>Retry</Trans>
         </Button>
       </View>
     </View>
@@ -144,6 +146,7 @@ export function ListMaybePlaceholder({
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
+  const {_} = useLingui()
 
   const canGoBack = navigation.canGoBack()
   const onGoBack = React.useCallback(() => {
@@ -218,7 +221,7 @@ export function ListMaybePlaceholder({
               <Button
                 variant="solid"
                 color="primary"
-                label="Click here"
+                label={_(msg`Click here`)}
                 onPress={onRetry}
                 size="large"
                 style={[
@@ -226,17 +229,17 @@ export function ListMaybePlaceholder({
                   a.overflow_hidden,
                   {paddingVertical: 10},
                 ]}>
-                Retry
+                <Trans>Retry</Trans>
               </Button>
             )}
             <Button
               variant="solid"
               color={isError && onRetry ? 'secondary' : 'primary'}
-              label="Click here"
+              label={_(msg`Click here`)}
               onPress={onGoBack}
               size="large"
               style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
-              Go Back
+              <Trans>Go Back</Trans>
             </Button>
           </View>
         </>
