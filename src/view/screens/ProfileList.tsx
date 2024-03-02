@@ -60,7 +60,7 @@ import {
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {listenSoftReset} from '#/state/events'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -699,6 +699,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
     ref,
   ) {
     const pal = usePalette('default')
+    const t = useTheme()
     const {_} = useLingui()
     const {isMobile} = useWebMediaQueries()
     const {currentAccount} = useSession()
@@ -792,7 +793,7 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
                 paddingBottom: isMobile ? 14 : 18,
               },
             ]}>
-            <Text type="lg-bold">
+            <Text type="lg-bold" style={t.atoms.text}>
               <Trans>Users</Trans>
             </Text>
             {isOwner && (
@@ -817,14 +818,18 @@ const AboutSection = React.forwardRef<SectionRef, AboutSectionProps>(
         </View>
       )
     }, [
-      pal,
-      list,
       isMobile,
+      pal.border,
+      pal.textLight,
+      pal.colors.link,
+      pal.link,
       descriptionRT,
       isCurateList,
       isOwner,
-      onPressAddUser,
+      list.creator,
+      t.atoms.text,
       _,
+      onPressAddUser,
     ])
 
     const renderEmptyState = useCallback(() => {
