@@ -157,17 +157,11 @@ export function linkRequiresWarning(uri: string, label: string) {
 
   const host = urip.hostname.toLowerCase()
 
-  if (host === 'bsky.app') {
+  // Hosts that end with bsky.app or bsky.social should be trusted by default.
+  if (host.endsWith('bsky.app') || host.endsWith('bsky.social')) {
     // if this is a link to internal content,
     // warn if it represents itself as a URL to another app
-    if (
-      labelDomain &&
-      labelDomain !== 'bsky.app' &&
-      isPossiblyAUrl(labelDomain)
-    ) {
-      return true
-    }
-    return false
+    return !!labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain)
   } else {
     // if this is a link to external content,
     // warn if the label doesnt match the target

@@ -91,7 +91,10 @@ export function QuoteEmbed({
   const richText = React.useMemo(
     () =>
       quote.text.trim()
-        ? new RichTextAPI({text: quote.text, facets: quote.facets})
+        ? new RichTextAPI({
+            text: quote.text,
+            facets: quote.facets,
+          })
         : undefined,
     [quote.text, quote.facets],
   )
