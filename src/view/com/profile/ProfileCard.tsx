@@ -123,8 +123,8 @@ export function ProfileCardPills({
 }) {
   const pal = usePalette('default')
 
-  const informs = moderation.ui('profileList').informs
-  if (!followedBy && !informs.length) {
+  const modui = moderation.ui('profileList')
+  if (!followedBy && !modui.inform && !modui.alert) {
     return null
   }
 
@@ -137,17 +137,31 @@ export function ProfileCardPills({
           </Text>
         </View>
       )}
-      {informs.map(inform => (
+      {modui.alerts.map(alert => (
+        <ProfileCardPillModerationCause
+          key={getModerationCauseKey(alert)}
+          cause={alert}
+          severity="alert"
+        />
+      ))}
+      {modui.informs.map(inform => (
         <ProfileCardPillModerationCause
           key={getModerationCauseKey(inform)}
           cause={inform}
+          severity="inform"
         />
       ))}
     </View>
   )
 }
 
-function ProfileCardPillModerationCause({cause}: {cause: ModerationCause}) {
+function ProfileCardPillModerationCause({
+  cause,
+  severity,
+}: {
+  cause: ModerationCause
+  severity: 'alert' | 'inform'
+}) {
   const pal = usePalette('default')
   const {name} = useModerationCauseDescription(cause, 'account')
   return (
@@ -155,7 +169,7 @@ function ProfileCardPillModerationCause({cause}: {cause: ModerationCause}) {
       style={[s.mt5, pal.btn, styles.pill]}
       key={getModerationCauseKey(cause)}>
       <Text type="xs" style={pal.text}>
-        {cause?.type === 'label' ? '⚠' : ''}
+        {severity === 'alert' ? '⚠ ' : ''}
         {name}
       </Text>
     </View>
