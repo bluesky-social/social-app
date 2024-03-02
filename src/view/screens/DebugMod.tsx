@@ -329,11 +329,16 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   </View>
                 </Toggle.Group>
 
-                {label[0] === 'x-custom' && (
+                {label[0] === 'x-custom' ? (
                   <CustomLabelForm
                     def={customLabelDef}
                     setDef={setCustomLabelDef}
                   />
+                ) : (
+                  <>
+                    <View style={{height: 10}} />
+                    <Divider />
+                  </>
                 )}
 
                 <Toggle.Group
@@ -516,9 +521,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
               <>
                 <Heading title="Notification" subtitle="quote or reply" />
                 <MockNotifItem notif={replyNotif} moderationOpts={modOpts} />
-
-                <Spacer />
-
+                <View style={{height: 20}} />
                 <Heading title="Notification" subtitle="follow or like" />
                 <MockNotifItem notif={followNotif} moderationOpts={modOpts} />
               </>
@@ -531,8 +534,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                   profile={profile}
                   moderation={profileModeration}
                 />
-
-                <Spacer />
 
                 <Heading title="Account" subtitle="viewing directly" />
                 <MockAccountScreen
@@ -771,7 +772,7 @@ function MockPostFeedItem({
   const t = useTheme()
   if (moderation.ui('contentList').filter) {
     return (
-      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
+      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md, a.mb_lg]}>
         Filtered from the feed
       </P>
     )
@@ -839,7 +840,7 @@ function MockAccountCard({
 
   if (moderation.ui('profileList').filter) {
     return (
-      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
+      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md, a.mb_lg]}>
         Filtered from the listing
       </P>
     )
