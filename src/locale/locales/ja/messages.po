@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-03-01 11:18+0900\n"
+"PO-Revision-Date: 2024-03-02 09:27+0900\n"
 "Last-Translator: reindex-ot\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot\n"
 "Plural-Forms: \n"
@@ -17,27 +17,9 @@ msgstr ""
 msgid "(no email)"
 msgstr "メールがありません"
 
-#: src/view/shell/desktop/RightNav.tsx:168
-#~ msgid "{0, plural, one {# invite code available} other {# invite codes available}}"
-#~ msgstr ""
-
 #: src/view/com/profile/ProfileHeader.tsx:593
 msgid "{following} following"
 msgstr "{following} フォロー"
-
-#: src/view/shell/desktop/RightNav.tsx:151
-#~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
-#~ msgstr ""
-
-#: src/view/screens/Settings.tsx:435
-#: src/view/shell/Drawer.tsx:664
-#~ msgid "{invitesAvailable} invite code available"
-#~ msgstr ""
-
-#: src/view/screens/Settings.tsx:437
-#: src/view/shell/Drawer.tsx:666
-#~ msgid "{invitesAvailable} invite codes available"
-#~ msgstr ""
 
 #: src/view/shell/Drawer.tsx:440
 msgid "{numUnreadNotifications} unread"
@@ -474,6 +456,8 @@ msgstr "Blueskyは開かれています。"
 msgid "Bluesky is public."
 msgstr "Blueskyはパブリックです。"
 
+msgstr "Blueskyはより健全なコミュニティーを構築するために招待状を使用します。招待状をお持ちでない場合、Waitlistにお申し込みいただくと招待状をお送りします。"
+
 #: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのプロフィールや投稿を表示しません。他のアプリはこのリクエストに応じない場合があります。この設定はあなたのアカウントを非公開にするものではありません。"
@@ -904,7 +888,6 @@ msgid "Cooking"
 msgstr "料理"
 
 #: src/view/com/modals/AddAppPasswords.tsx:195
-#: src/view/com/modals/InviteCodes.tsx:182
 msgid "Copied"
 msgstr "コピーしました"
 
@@ -913,7 +896,6 @@ msgid "Copied build version to clipboard"
 msgstr "ビルドバージョンをクリップボードにコピーしました"
 
 #: src/view/com/modals/AddAppPasswords.tsx:76
-#: src/view/com/modals/InviteCodes.tsx:152
 #: src/view/com/util/forms/PostDropdownBtn.tsx:143
 msgid "Copied to clipboard"
 msgstr "クリップボードにコピーしました"
@@ -1163,8 +1145,6 @@ msgstr "完了"
 #: src/view/com/modals/ContentFilteringSettings.tsx:88
 #: src/view/com/modals/ContentFilteringSettings.tsx:96
 #: src/view/com/modals/crop-image/CropImage.web.tsx:152
-#: src/view/com/modals/InviteCodes.tsx:80
-#: src/view/com/modals/InviteCodes.tsx:123
 #: src/view/com/modals/ListAddRemoveUsers.tsx:142
 #: src/view/screens/PreferencesFollowingFeed.tsx:311
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
@@ -1927,14 +1907,6 @@ msgstr "無効またはサポートされていない投稿のレコード"
 msgid "Invalid username or password"
 msgstr "無効なユーザー名またはパスワード"
 
-#: src/view/screens/Settings.tsx:411
-#~ msgid "Invite"
-#~ msgstr ""
-
-#: src/view/shell/Drawer.tsx:645
-#~ msgid "Invite codes: {invitesAvailable} available"
-#~ msgstr ""
-
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
 msgstr "あなたがフォローした人の投稿が随時表示されます。"
@@ -2417,7 +2389,7 @@ msgstr "フォロワーやデータへのアクセスを失うことはありま
 
 #: src/components/dialogs/MutedWords.tsx:244
 msgid "Nevermind"
-msgstr "気にしない"
+msgstr "やめておく"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2675,10 +2647,6 @@ msgstr "フォロワーのリストを開きます"
 #: src/view/com/profile/ProfileHeader.tsx:594
 msgid "Opens following list"
 msgstr "フォロー中のリストを開きます"
-
-#: src/view/screens/Settings.tsx:412
-#~ msgid "Opens invite code list"
-#~ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:774
 msgid "Opens modal for account deletion confirmation. Requires email code."
@@ -3369,19 +3337,19 @@ msgstr "必要なセキュリティの手順"
 
 #: src/components/TagMenu/index.web.tsx:50
 msgid "See {truncatedTag} posts"
-msgstr "{truncatedTag}の投稿を表示"
+msgstr "「{truncatedTag}」の投稿を表示 （全ユーザー）"
 
 #: src/components/TagMenu/index.web.tsx:67
 msgid "See {truncatedTag} posts by user"
-msgstr "ユーザーによる{truncatedTag}の投稿を表示"
+msgstr "「{truncatedTag}」の投稿を表示 （このユーザーのみ）"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{tag}</0> posts"
-msgstr "<0>{tag}</0>の投稿を表示"
+msgstr "「<0>{tag}</0>」の投稿を表示（全ユーザー）"
 
 #: src/components/TagMenu/index.tsx:189
 msgid "See <0>{tag}</0> posts by this user"
-msgstr "ユーザーによる<0>{tag}</0>の投稿を表示"
+msgstr "「<0>{tag}</0>」の投稿を表示 （このユーザーのみ）"
 
 #: src/view/screens/SavedFeeds.tsx:163
 msgid "See this guide"
@@ -4319,10 +4287,6 @@ msgstr "このアプリパスワードとハンドルを使って他のアプリ
 #~ msgid "Use your domain as your Bluesky client service provider"
 #~ msgstr ""
 
-#: src/view/com/modals/InviteCodes.tsx:200
-msgid "Used by:"
-msgstr "使用者："
-
 #: src/view/com/modals/ModerationDetails.tsx:54
 msgid "User Blocked"
 msgstr "ブロック中のユーザー"
@@ -4739,12 +4703,6 @@ msgstr "フルハンドルは"
 #: src/view/com/modals/ChangeHandle.tsx:270
 msgid "Your full handle will be <0>@{0}</0>"
 msgstr "フルハンドルは<0>@{0}</0>になります"
-
-#: src/view/screens/Settings.tsx:430
-#: src/view/shell/desktop/RightNav.tsx:137
-#: src/view/shell/Drawer.tsx:660
-#~ msgid "Your invite codes are hidden when logged in using an App Password"
-#~ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:173
 msgid "Your muted words"
