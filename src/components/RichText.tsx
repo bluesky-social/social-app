@@ -78,40 +78,31 @@ export function RichText({
     const link = segment.link
     const mention = segment.mention
     const tag = segment.tag
-    if (
-      mention &&
-      AppBskyRichtextFacet.validateMention(mention).success &&
-      !disableLinks
-    ) {
+    if (mention && AppBskyRichtextFacet.validateMention(mention).success) {
       els.push(
         <InlineLink
           selectable={selectable}
           key={key}
           to={`/profile/${mention.did}`}
-          style={[...styles, {pointerEvents: 'auto'}]}
+          style={[...styles, {pointerEvents: disableLinks ? 'none' : 'auto'}]}
           // @ts-ignore TODO
           dataSet={WORD_WRAP}>
           {segment.text}
         </InlineLink>,
       )
     } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-      if (disableLinks) {
-        els.push(toShortUrl(segment.text))
-      } else {
-        els.push(
-          <InlineLink
-            selectable={selectable}
-            key={key}
-            to={link.uri}
-            style={[...styles, {pointerEvents: 'auto'}]}
-            // @ts-ignore TODO
-            dataSet={WORD_WRAP}>
-            {toShortUrl(segment.text)}
-          </InlineLink>,
-        )
-      }
+      els.push(
+        <InlineLink
+          selectable={selectable}
+          key={key}
+          to={link.uri}
+          style={[...styles, {pointerEvents: disableLinks ? 'none' : 'auto'}]}
+          // @ts-ignore TODO
+          dataSet={WORD_WRAP}>
+          {toShortUrl(segment.text)}
+        </InlineLink>,
+      )
     } else if (
-      !disableLinks &&
       enableTags &&
       tag &&
       AppBskyRichtextFacet.validateTag(tag).success
@@ -124,6 +115,7 @@ export function RichText({
           style={styles}
           selectable={selectable}
           authorHandle={authorHandle}
+          disableLinks={disableLinks}
         />,
       )
     } else {
@@ -136,7 +128,7 @@ export function RichText({
     <Text
       selectable={selectable}
       testID={testID}
-      style={styles}
+      style={[styles, {pointerEvents: disableLinks ? 'none' : 'auto'}]}
       numberOfLines={numberOfLines}
       // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
@@ -151,11 +143,13 @@ function RichTextTag({
   style,
   selectable,
   authorHandle,
+  disableLinks,
 }: {
   text: string
   tag: string
   selectable?: boolean
   authorHandle?: string
+  disableLinks?: boolean
 } & TextStyleProp) {
   const t = useTheme()
   const {_} = useLingui()
@@ -204,7 +198,7 @@ function RichTextTag({
           style={[
             style,
             {
-              pointerEvents: 'auto',
+              pointerEvents: disableLinks ? 'none' : 'auto',
               color: t.palette.primary_500,
             },
             web({
