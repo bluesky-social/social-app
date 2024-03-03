@@ -52,7 +52,7 @@ export function HomeHeader(
   )
 
   return (
-    <HomeHeaderLayout>
+    <HomeHeaderLayout tabBarAnchor={props.tabBarAnchor}>
       <TabBar
         key={items.join(',')}
         onPressSelected={props.onPressSelected}

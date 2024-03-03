@@ -485,12 +485,19 @@ const LINKING = {
   },
 
   getStateFromPath(path: string) {
+    const [name, params] = router.matchPath(path)
+
     // Any time we receive a url that starts with `intent/` we want to ignore it here. It will be handled in the
     // intent handler hook. We should check for the trailing slash, because if there isn't one then it isn't a valid
     // intent
-    if (path.includes('intent/')) return
+    // On web, there is no route state that's created by default, so we should initialize it as the home route. On
+    // native, since the home tab and the home screen are defined as initial routes, we don't need to return a state
+    // since it will be created by react-navigation.
+    if (path.includes('intent/')) {
+      if (isNative) return
+      return buildStateObject('Flat', 'Home', params)
+    }
 
-    const [name, params] = router.matchPath(path)
     if (isNative) {
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
