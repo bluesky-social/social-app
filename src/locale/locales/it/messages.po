@@ -2041,7 +2041,7 @@ msgstr "Log"
 #: src/screens/Deactivated.tsx:149 src/screens/Deactivated.tsx:152
 #: src/screens/Deactivated.tsx:178 src/screens/Deactivated.tsx:181
 msgid "Log out"
-msgstr "Disconnettiti dall'account"
+msgstr "Disconnetta l'account"
 
 #: src/view/screens/Moderation.tsx:136
 msgid "Logged-out visibility"
@@ -3473,7 +3473,7 @@ msgstr "Accedere a"
 #: src/view/screens/Settings/index.tsx:100
 #: src/view/screens/Settings/index.tsx:103
 msgid "Sign out"
-msgstr "Disconnettiti"
+msgstr "Disconnetta"
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:275
 #: src/view/shell/bottom-bar/BottomBar.tsx:276
