@@ -147,6 +147,9 @@ export function feedUriToHref(url: string): string {
  */
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
+  const isExternal = isExternalUrl(uri)
+
+  if (!isExternal) return false
 
   let urip
   try {
