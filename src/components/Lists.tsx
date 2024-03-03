@@ -9,6 +9,7 @@ import {Text} from '#/components/Typography'
 import {StackActions} from '@react-navigation/native'
 import {useNavigation} from '@react-navigation/core'
 import {NavigationProp} from 'lib/routes/types'
+import {router} from '#/routes'
 
 export function ListFooter({
   isFetching,
@@ -30,6 +31,7 @@ export function ListFooter({
         a.align_center,
         a.justify_center,
         a.border_t,
+        a.pb_lg,
         t.atoms.border_contrast_low,
         {height: 100},
       ]}>
@@ -128,6 +130,7 @@ export function ListMaybePlaceholder({
   isError,
   empty,
   error,
+  notFoundType = 'page',
   onRetry,
 }: {
   isLoading: boolean
@@ -135,10 +138,12 @@ export function ListMaybePlaceholder({
   isError: boolean
   empty?: string
   error?: string
+  notFoundType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
 
   const canGoBack = navigation.canGoBack()
   const onGoBack = React.useCallback(() => {
@@ -146,7 +151,14 @@ export function ListMaybePlaceholder({
       navigation.goBack()
     } else {
       navigation.navigate('HomeTab')
-      navigation.dispatch(StackActions.popToTop())
+
+      // Checking the state for routes ensures that web doesn't encounter errors while going back
+      if (navigation.getState()?.routes) {
+        navigation.dispatch(StackActions.push(...router.matchPath('/')))
+      } else {
+        navigation.navigate('HomeTab')
+        navigation.dispatch(StackActions.popToTop())
+      }
     }
   }, [navigation, canGoBack])
 
@@ -157,8 +169,7 @@ export function ListMaybePlaceholder({
       style={[
         a.flex_1,
         a.align_center,
-        a.border_t,
-        a.justify_between,
+        !gtMobile ? [a.justify_between, a.border_t] : a.gap_5xl,
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}>
@@ -173,7 +184,13 @@ export function ListMaybePlaceholder({
               {isError ? (
                 <Trans>Oops!</Trans>
               ) : isEmpty ? (
-                <Trans>Page not found</Trans>
+                <>
+                  {notFoundType === 'results' ? (
+                    <Trans>No results found</Trans>
+                  ) : (
+                    <Trans>Page not found</Trans>
+                  )}
+                </>
               ) : undefined}
             </Text>
 
@@ -195,7 +212,8 @@ export function ListMaybePlaceholder({
               </Text>
             ) : undefined}
           </View>
-          <View style={[a.w_full, a.px_lg, a.gap_md]}>
+          <View
+            style={[a.gap_md, !gtMobile ? [a.w_full, a.px_lg] : {width: 350}]}>
             {isError && onRetry && (
               <Button
                 variant="solid"

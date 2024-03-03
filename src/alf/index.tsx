@@ -17,7 +17,7 @@ const breakpoints: {
   [key: string]: number
 } = {
   gtMobile: 800,
-  gtTablet: 1200,
+  gtTablet: 1300,
 }
 function getActiveBreakpoints({width}: {width: number}) {
   const active: (keyof typeof breakpoints)[] = Object.keys(breakpoints).filter(
