@@ -123,8 +123,7 @@ function HomeScreenReady({
       return (
         <HomeHeader
           key="FEEDS_TAB_BAR"
-          selectedPage={props.selectedPage}
-          onSelect={props.onSelect}
+          {...props}
           testID="homeScreenFeedTabs"
           onPressSelected={onPressSelected}
           feeds={pinnedFeedInfos}
