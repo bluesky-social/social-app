@@ -144,6 +144,7 @@ module.exports = function (config) {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
