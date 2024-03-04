@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native'
 import {TextInput, ScrollView} from './util'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import * as Toast from '../util/Toast'
 import {Text} from '../util/text/Text'
 import {s, colors, gradients} from 'lib/styles'

@@ -1,7 +1,7 @@
 import React from 'react'
 import {LabelPreference} from '@atproto/api'
 import {StyleSheet, Pressable, View, Linking} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {ScrollView} from './util'
 import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'

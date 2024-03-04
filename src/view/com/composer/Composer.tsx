@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {RichText} from '@atproto/api'
 import {useAnalytics} from 'lib/analytics/analytics'
