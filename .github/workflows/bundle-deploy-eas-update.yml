@@ -32,14 +32,14 @@ jobs:
       - name: 🔤 Compile Translations
         run: yarn intl:build
 
-      - name: ✏️ Write environment variables
-        run: |
-          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
-          echo "${{ secrets.ENV_TOKEN }}" > .env
-          echo "$json" > google-services.json
+#      - name: ✏️ Write environment variables
+#        run: |
+#          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+#          echo "${{ secrets.ENV_TOKEN }}" > .env
+#          echo "$json" > google-services.json
 
-      - name: 📦 Create Bundle
-        run: npx expo export
+      - name: 🏗️ Create Bundle
+        run: yarn export
 
-      - name: 🚀 Deploy to Server
-        run: echo "Later"
+      - name: 📦 Package Bundle and 🚀 Deploy
+        run: yarn make-deploy-bundle
