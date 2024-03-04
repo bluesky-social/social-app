@@ -23,15 +23,20 @@ jobs:
           node-version-file: .nvmrc
           cache: yarn
 
-      - name: ⚙️ Install dependencies
+      - name: ⚙️ Install Dependencies
         run: yarn install
 
       - name: ⛏️ Setup Expo
         run: yarn global add eas-cli-local-build-plugin
 
-      - name: 🔤 Compile translations
+      - name: 🔤 Compile Translations
         run: yarn intl:build
 
+      - name: ✏️ Write environment variables
+        run: |
+          export json='${{ secrets.GOOGLE_SERVICES_TOKEN }}'
+          echo "${{ secrets.ENV_TOKEN }}" > .env
+          echo "$json" > google-services.json
 
       - name: 📦 Create Bundle
         run: npx expo export
