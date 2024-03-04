@@ -146,38 +146,43 @@ export function Outer({
   return (
     isOpen && (
       <Portal>
-        <BottomSheet
-          enableDynamicSizing={!hasSnapPoints}
-          enablePanDownToClose
-          keyboardBehavior="interactive"
-          android_keyboardInputMode="adjustResize"
-          keyboardBlurBehavior="restore"
-          topInset={insets.top}
-          {...sheetOptions}
-          snapPoints={sheetOptions.snapPoints || ['100%']}
-          ref={sheet}
-          index={openIndex}
-          backgroundStyle={{backgroundColor: 'transparent'}}
-          backdropComponent={Backdrop}
-          handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-          handleStyle={{display: 'none'}}
-          onChange={onChange}>
-          <Context.Provider value={context}>
-            <View
-              style={[
-                a.absolute,
-                a.inset_0,
-                t.atoms.bg,
-                {
-                  borderTopLeftRadius: 40,
-                  borderTopRightRadius: 40,
-                  height: Dimensions.get('window').height * 2,
-                },
-              ]}
-            />
-            {children}
-          </Context.Provider>
-        </BottomSheet>
+        <View
+          accessibilityViewIsModal
+          style={[a.absolute, a.inset_0]}
+          importantForAccessibility="yes">
+          <BottomSheet
+            enableDynamicSizing={!hasSnapPoints}
+            enablePanDownToClose
+            keyboardBehavior="interactive"
+            android_keyboardInputMode="adjustResize"
+            keyboardBlurBehavior="restore"
+            topInset={insets.top}
+            {...sheetOptions}
+            snapPoints={sheetOptions.snapPoints || ['100%']}
+            ref={sheet}
+            index={openIndex}
+            backgroundStyle={{backgroundColor: 'transparent'}}
+            backdropComponent={Backdrop}
+            handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
+            handleStyle={{display: 'none'}}
+            onChange={onChange}>
+            <Context.Provider value={context}>
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  t.atoms.bg,
+                  {
+                    borderTopLeftRadius: 40,
+                    borderTopRightRadius: 40,
+                    height: Dimensions.get('window').height * 2,
+                  },
+                ]}
+              />
+              {children}
+            </Context.Provider>
+          </BottomSheet>
+        </View>
       </Portal>
     )
   )
