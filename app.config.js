@@ -118,6 +118,7 @@ module.exports = function (config) {
           alg: 'rsa-v1_5-sha256',
         },
       },
+      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -133,12 +134,6 @@ module.exports = function (config) {
               buildToolsVersion: '34.0.0',
               kotlinVersion: '1.8.0',
             },
-          },
-        ],
-        [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
           },
         ],
         [
