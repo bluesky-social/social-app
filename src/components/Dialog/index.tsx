@@ -147,9 +147,11 @@ export function Outer({
     isOpen && (
       <Portal>
         <View
+          // iOS
           accessibilityViewIsModal
-          style={[a.absolute, a.inset_0]}
-          importantForAccessibility="yes">
+          // Android
+          importantForAccessibility="yes"
+          style={[a.absolute, a.inset_0]}>
           <BottomSheet
             enableDynamicSizing={!hasSnapPoints}
             enablePanDownToClose
