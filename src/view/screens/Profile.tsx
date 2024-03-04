@@ -37,7 +37,7 @@ import {listenSoftReset} from '#/state/events'
 import {isInvalidHandle} from '#/lib/strings/handles'
 
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
-import {ProfileContentFiltersSection} from '#/screens/Profile/Sections/ContentFilters'
+import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 
 interface SectionRef {
@@ -139,7 +139,11 @@ function ProfileScreenLoaded({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
-  const modServiceQuery = useLabelerInfoQuery({
+  const {
+    data: labelerInfo,
+    error: labelerError,
+    isLoading: isLabelerLoading,
+  } = useLabelerInfoQuery({
     did: profile.did,
     enabled: !!profile.associated?.labeler,
   })
@@ -312,7 +316,7 @@ function ProfileScreenLoaded({
     return (
       <ProfileHeader
         profile={profile}
-        modservice={modServiceQuery.data}
+        labeler={labelerInfo}
         descriptionRT={hasDescription ? descriptionRT : null}
         moderationOpts={moderationOpts}
         hideBackButton={hideBackButton}
@@ -321,7 +325,7 @@ function ProfileScreenLoaded({
     )
   }, [
     profile,
-    modServiceQuery,
+    labelerInfo,
     descriptionRT,
     hasDescription,
     moderationOpts,
@@ -344,9 +348,11 @@ function ProfileScreenLoaded({
         renderHeader={renderHeader}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
-              <ProfileContentFiltersSection
+              <ProfileLabelsSection
                 // ref={moderationSectionRef}
-                modServiceQuery={modServiceQuery}
+                labelerInfo={labelerInfo}
+                labelerError={labelerError}
+                isLabelerLoading={isLabelerLoading}
                 moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
                 headerOffset={headerHeight}

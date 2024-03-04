@@ -10,7 +10,7 @@ import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {usePalette} from 'lib/hooks/usePalette'
 
 import {ProfileHeaderStandard} from './ProfileHeaderStandard'
-import {ProfileHeaderModerator} from './ProfileHeaderModerator'
+import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -34,7 +34,7 @@ export {ProfileHeaderLoading}
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  modservice: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -43,10 +43,10 @@ interface Props {
 
 let ProfileHeader = (props: Props): React.ReactNode => {
   if (props.profile.associated?.labeler) {
-    if (!props.modservice) {
+    if (!props.labeler) {
       return <ProfileHeaderLoading />
     }
-    return <ProfileHeaderModerator {...props} modservice={props.modservice} />
+    return <ProfileHeaderLabeler {...props} labeler={props.labeler} />
   }
   return <ProfileHeaderStandard {...props} />
 }

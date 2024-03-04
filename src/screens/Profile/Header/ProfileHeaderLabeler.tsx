@@ -38,16 +38,16 @@ import {
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  modservice: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: AppBskyLabelerDefs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
   isPlaceholderProfile?: boolean
 }
 
-let ProfileHeaderModerator = ({
+let ProfileHeaderLabeler = ({
   profile: profileUnshadowed,
-  modservice,
+  labeler,
   descriptionRT,
   moderationOpts,
   hideBackButton = false,
@@ -74,12 +74,12 @@ let ProfileHeaderModerator = ({
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
   const [likeUri, setLikeUri] = React.useState<string>(
-    modservice.viewer?.like || '',
+    labeler.viewer?.like || '',
   )
   const isLiked = !!likeUri
 
   const onToggleLiked = React.useCallback(async () => {
-    if (!modservice) {
+    if (!labeler) {
       return
     }
     try {
@@ -90,7 +90,7 @@ let ProfileHeaderModerator = ({
         track('CustomFeed:Unlike')
         setLikeUri('')
       } else {
-        const res = await likeMod({uri: modservice.uri, cid: modservice.cid})
+        const res = await likeMod({uri: labeler.uri, cid: labeler.cid})
         track('CustomFeed:Like')
         setLikeUri(res.uri)
       }
@@ -102,7 +102,7 @@ let ProfileHeaderModerator = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [modservice, likeUri, isLiked, likeMod, unlikeMod, track, _])
+  }, [labeler, likeUri, isLiked, likeMod, unlikeMod, track, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -213,13 +213,13 @@ let ProfileHeaderModerator = ({
                 )}
               </Button>
 
-              {typeof modservice.likeCount === 'number' && (
+              {typeof labeler.likeCount === 'number' && (
                 <InlineLink
                   to={'#todo'}
                   style={[t.atoms.text_contrast_medium, a.font_bold]}>
                   <Trans>
-                    Liked by {modservice.likeCount}{' '}
-                    {pluralize(modservice.likeCount, 'user')}
+                    Liked by {labeler.likeCount}{' '}
+                    {pluralize(labeler.likeCount, 'user')}
                   </Trans>
                 </InlineLink>
               )}
@@ -230,5 +230,5 @@ let ProfileHeaderModerator = ({
     </ProfileHeaderShell>
   )
 }
-ProfileHeaderModerator = memo(ProfileHeaderModerator)
-export {ProfileHeaderModerator}
+ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
+export {ProfileHeaderLabeler}
