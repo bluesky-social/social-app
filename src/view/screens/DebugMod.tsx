@@ -38,7 +38,7 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
 } from '#/components/icons/Chevron'
 import {ScreenHider} from '../com/util/moderation/ScreenHider'
-import {ProfileHeader} from '../com/profile/ProfileHeader'
+import {ProfileHeader} from '#/screens/Profile/Header'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {FeedItem} from '../com/posts/FeedItem'
 import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
