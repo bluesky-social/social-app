@@ -113,10 +113,10 @@ let ProfileHeaderShell = ({
             t.atoms.bg,
             {borderColor: t.atoms.bg.backgroundColor},
             styles.avi,
-            profile.associated?.modservice && styles.aviLabeler,
+            profile.associated?.labeler && styles.aviLabeler,
           ]}>
           <UserAvatar
-            type={profile.associated?.modservice ? 'labeler' : 'user'}
+            type={profile.associated?.labeler ? 'labeler' : 'user'}
             size={90}
             avatar={profile.avatar}
             moderation={moderation.ui('avatar')}

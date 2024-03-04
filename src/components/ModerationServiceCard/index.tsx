@@ -2,16 +2,16 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyModerationDefs} from '@atproto/api'
+import {AppBskyLabelerDefs} from '@atproto/api'
 
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {useModServiceInfoQuery} from '#/state/queries/modservice'
+import {useLabelerInfoQuery} from '#/state/queries/labeler'
 
 export * as Card from '#/components/ModerationServiceCard/Card'
 
 type ModerationServiceProps = {
-  modservice: AppBskyModerationDefs.ModServiceViewDetailed
+  modservice: AppBskyLabelerDefs.LabelerViewDetailed
 }
 
 export function Link({
@@ -54,10 +54,10 @@ export function Loader({
   loading?: React.ComponentType<{}>
   error?: React.ComponentType<{error: string}>
   component: React.ComponentType<{
-    modservice: AppBskyModerationDefs.ModServiceViewDetailed
+    modservice: AppBskyLabelerDefs.LabelerViewDetailed
   }>
 }) {
-  const {isLoading, data, error} = useModServiceInfoQuery({did})
+  const {isLoading, data, error} = useLabelerInfoQuery({did})
 
   return isLoading ? (
     LoadingComponent ? (

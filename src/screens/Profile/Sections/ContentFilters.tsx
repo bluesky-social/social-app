@@ -1,11 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyModerationDefs, ModerationOpts} from '@atproto/api'
+import {AppBskyLabelerDefs, ModerationOpts} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
-import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
+import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {logger} from '#/logger'
 
 import {useTheme, atoms as a} from '#/alf'
@@ -22,7 +22,7 @@ export function ProfileContentFiltersSection({
   moderationOpts,
 }: {
   modServiceQuery: {
-    data: AppBskyModerationDefs.ModServiceViewDetailed | undefined
+    data: AppBskyLabelerDefs.LabelerViewDetailed | undefined
     isLoading: boolean
     error: Error | null
   }
@@ -71,7 +71,7 @@ export function ProfileContentFiltersSectionInner({
   modservice,
 }: {
   moderationOpts: ModerationOpts
-  modservice: AppBskyModerationDefs.ModServiceViewDetailed
+  modservice: AppBskyLabelerDefs.LabelerViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -81,7 +81,7 @@ export function ProfileContentFiltersSectionInner({
   const hasSession = true // TODO
 
   const {mutateAsync: toggleSubscription, variables} =
-    useModServiceSubscriptionMutation()
+    useLabelerSubscriptionMutation()
   const isSubscribed =
     variables?.subscribe ??
     moderationOpts.prefs.mods.find(mod => mod.did === modservice.creator.did)

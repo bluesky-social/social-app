@@ -18,9 +18,7 @@ export function ProfileHeaderHandle({
   const blockHide = profile.viewer?.blocking || profile.viewer?.blockedBy
   return (
     <View style={[a.flex_row, a.gap_xs, a.align_center]} pointerEvents="none">
-      {profile.viewer?.followedBy &&
-      !blockHide &&
-      !profile.associated?.modservice ? (
+      {profile.viewer?.followedBy && !blockHide ? (
         <View style={[t.atoms.bg_contrast_50, a.rounded_xs, a.px_sm, a.py_xs]}>
           <Text style={[t.atoms.text, a.text_sm]}>
             <Trans>Follows you</Trans>

@@ -1,21 +1,18 @@
 import {z} from 'zod'
 import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {AppBskyModerationDefs} from '@atproto/api'
+import {AppBskyLabelerDefs} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 
-export const modServiceInfoQueryKey = (did: string) => ['mod-service-info', did]
-export const modServicesInfoQueryKey = (dids: string[]) => [
-  'mod-services-info',
-  dids,
-]
-export const modServicesDetailedInfoQueryKey = (dids: string[]) => [
-  'mod-services-detailed-info',
+export const labelerInfoQueryKey = (did: string) => ['labeler-info', did]
+export const labelersInfoQueryKey = (dids: string[]) => ['labelers-info', dids]
+export const labelersDetailedInfoQueryKey = (dids: string[]) => [
+  'labelers-detailed-info',
   dids,
 ]
 
-export function useModServiceInfoQuery({
+export function useLabelerInfoQuery({
   did,
   enabled,
 }: {
@@ -24,43 +21,43 @@ export function useModServiceInfoQuery({
 }) {
   return useQuery({
     enabled: !!did && enabled !== false,
-    queryKey: modServiceInfoQueryKey(did as string),
+    queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.moderation.getServices({
+      const res = await getAgent().app.bsky.labeler.getServices({
         dids: [did as string],
         detailed: true,
       })
-      return res.data.views[0] as AppBskyModerationDefs.ModServiceViewDetailed
+      return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed
     },
   })
 }
 
-export function useModServicesInfoQuery({dids}: {dids: string[]}) {
+export function useLabelersInfoQuery({dids}: {dids: string[]}) {
   return useQuery({
     enabled: !!dids.length,
-    queryKey: modServicesInfoQueryKey(dids),
+    queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.moderation.getServices({dids})
-      return res.data.views as AppBskyModerationDefs.ModServiceView[]
+      const res = await getAgent().app.bsky.labeler.getServices({dids})
+      return res.data.views as AppBskyLabelerDefs.LabelerView[]
     },
   })
 }
 
-export function useModServicesDetailedInfoQuery({dids}: {dids: string[]}) {
+export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
   return useQuery({
     enabled: !!dids.length,
-    queryKey: modServicesDetailedInfoQueryKey(dids),
+    queryKey: labelersDetailedInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await getAgent().app.bsky.moderation.getServices({
+      const res = await getAgent().app.bsky.labeler.getServices({
         dids,
         detailed: true,
       })
-      return res.data.views as AppBskyModerationDefs.ModServiceViewDetailed[]
+      return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
     },
   })
 }
 
-export function useModServiceSubscriptionMutation() {
+export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({

@@ -154,7 +154,7 @@ export function ProfileHeaderDropdownBtn({
   const dropdownItems: DropdownItem[] = React.useMemo(() => {
     let items: DropdownItem[] = []
 
-    if (hasSession && profile.associated?.modservice) {
+    if (hasSession && profile.associated?.labeler) {
       items.push({
         testID: 'profileHeaderDropdownFollowBtn',
         label: _(msg`Follow Account`),
@@ -251,7 +251,7 @@ export function ProfileHeaderDropdownBtn({
   }, [
     isMe,
     hasSession,
-    profile.associated?.modservice,
+    profile.associated?.labeler,
     profile.viewer?.muted,
     profile.viewer?.mutedByList,
     profile.viewer?.blocking,

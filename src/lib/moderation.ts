@@ -1,9 +1,5 @@
 import React from 'react'
-import {
-  ModerationCause,
-  ModerationUI,
-  AppBskyModerationDefs,
-} from '@atproto/api'
+import {ModerationCause, ModerationUI, AppBskyLabelerDefs} from '@atproto/api'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'

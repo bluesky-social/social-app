@@ -2,7 +2,7 @@ import React, {memo, useMemo} from 'react'
 import {View} from 'react-native'
 import {
   AppBskyActorDefs,
-  AppBskyModerationDefs,
+  AppBskyLabelerDefs,
   ModerationOpts,
   moderateProfile,
   RichText as RichTextAPI,
@@ -16,7 +16,7 @@ import {useAnalytics} from 'lib/analytics/analytics'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {useProfileShadow} from 'state/cache/profile-shadow'
-import {useModServiceSubscriptionMutation} from '#/state/queries/modservice'
+import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
 import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {logger} from '#/logger'
 import {Haptics} from '#/lib/haptics'
@@ -38,7 +38,7 @@ import {
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
-  modservice: AppBskyModerationDefs.ModServiceViewDetailed
+  modservice: AppBskyLabelerDefs.LabelerViewDetailed
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -66,7 +66,7 @@ let ProfileHeaderModerator = ({
   )
   const {data: preferences} = usePreferencesQuery()
   const {mutateAsync: toggleSubscription, variables} =
-    useModServiceSubscriptionMutation()
+    useLabelerSubscriptionMutation()
   const isSubscribed =
     variables?.subscribe ??
     preferences?.moderationPrefs.mods.find(mod => mod.did === profile.did)

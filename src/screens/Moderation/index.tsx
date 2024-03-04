@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyModerationDefs} from '@atproto/api'
+import {AppBskyLabelerDefs} from '@atproto/api'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
@@ -24,7 +24,7 @@ import {
   usePreferencesQuery,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
-import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
+import {useLabelersDetailedInfoQuery} from '#/state/queries/labeler'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -85,7 +85,7 @@ export function ModerationScreen(
     isLoading: isModServicesLoading,
     data: modservices,
     error: modservicesError,
-  } = useModServicesDetailedInfoQuery({
+  } = useLabelersDetailedInfoQuery({
     dids: preferences ? preferences.moderationPrefs.mods.map(m => m.did) : [],
   })
   const {gtMobile} = useBreakpoints()
@@ -131,7 +131,7 @@ export function ModerationScreenInner({
   modservices,
 }: {
   preferences: UsePreferencesQueryResponse
-  modservices: AppBskyModerationDefs.ModServiceViewDetailed[]
+  modservices: AppBskyLabelerDefs.LabelerViewDetailed[]
 }) {
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()

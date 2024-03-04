@@ -36,7 +36,7 @@ import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileExtraInfoQuery} from '#/state/queries/profile-extra-info'
-import {useModServiceInfoQuery} from '#/state/queries/modservice'
+import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
 import {cleanError} from '#/lib/strings/errors'
@@ -118,10 +118,6 @@ export function ProfileScreen({route}: Props) {
     )
   }
   if (profile && moderationOpts) {
-    if (profile.handle === 'alice.test') {
-      // TODO removeme
-      profile.associated = {modservice: true, lists: 1}
-    }
     return (
       <ProfileScreenLoadedV2
         profile={profile}
@@ -451,9 +447,9 @@ function ProfileScreenLoadedV2({
   const setMinimalShellMode = useSetMinimalShellMode()
   const {openComposer} = useComposerControls()
   const {screen, track} = useAnalytics()
-  const modServiceQuery = useModServiceInfoQuery({
+  const modServiceQuery = useLabelerInfoQuery({
     did: profile.did,
-    enabled: !!profile.associated?.modservice,
+    enabled: !!profile.associated?.labeler,
   })
   const [currentPage, setCurrentPage] = React.useState(0)
   const {_} = useLingui()
@@ -478,10 +474,10 @@ function ProfileScreenLoadedV2({
   )
 
   const isMe = profile.did === currentAccount?.did
-  const showFiltersTab = hasSession && profile.associated?.modservice
+  const showFiltersTab = hasSession && profile.associated?.labeler
   const showPostsTab = true
   const showRepliesTab = hasSession
-  const showMediaTab = !profile.associated?.modservice
+  const showMediaTab = !profile.associated?.labeler
   const showLikesTab = isMe
   const showFeedsTab =
     hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
@@ -520,7 +516,7 @@ function ProfileScreenLoadedV2({
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
-  if (showListsTab && profile.associated?.modservice) {
+  if (showListsTab && profile.associated?.labeler) {
     listsIndex = nextIndex++
   }
   if (showPostsTab) {
@@ -538,7 +534,7 @@ function ProfileScreenLoadedV2({
   if (showFeedsTab) {
     feedsIndex = nextIndex++
   }
-  if (showListsTab && !profile.associated?.modservice) {
+  if (showListsTab && !profile.associated?.labeler) {
     listsIndex = nextIndex++
   }
 
@@ -666,7 +662,7 @@ function ProfileScreenLoadedV2({
               />
             )
           : null}
-        {showListsTab && !!profile.associated?.modservice
+        {showListsTab && !!profile.associated?.labeler
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 ref={listsSectionRef}
@@ -736,7 +732,7 @@ function ProfileScreenLoadedV2({
               />
             )
           : null}
-        {showListsTab && !profile.associated?.modservice
+        {showListsTab && !profile.associated?.labeler
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLists
                 ref={listsSectionRef}

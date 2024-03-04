@@ -2,7 +2,7 @@ import React from 'react'
 import {View, Linking, Pressable} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyModerationDefs, LabelGroupDefinition} from '@atproto/api'
+import {AppBskyLabelerDefs, LabelGroupDefinition} from '@atproto/api'
 
 import {atoms as a, useTheme, tokens, native} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -27,7 +27,7 @@ import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/view/com/util/Toast'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useModServicesDetailedInfoQuery} from '#/state/queries/modservice'
+import {useLabelersDetailedInfoQuery} from '#/state/queries/labeler'
 import {
   getModerationServiceTitle,
   useConfigurableContentLabelGroups,
@@ -338,7 +338,7 @@ export function ReportDialogLoaded({
   labelGroupToLabelerMap,
   ...props
 }: ReportDialogProps & {
-  labelers: AppBskyModerationDefs.ModServiceViewDetailed[]
+  labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
   labelGroupToLabelerMap: ReturnType<typeof getLabelGroupToLabelerMap>
 }) {
   const t = useTheme()
@@ -480,7 +480,7 @@ function ReportDialogInner(props: ReportDialogProps) {
     isLoading: isModServicesLoading,
     data: modservices,
     error: modservicesError,
-  } = useModServicesDetailedInfoQuery({
+  } = useLabelersDetailedInfoQuery({
     dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
   })
   const isLoading = isPreferencesLoading || isModServicesLoading
