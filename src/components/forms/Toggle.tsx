@@ -301,7 +301,7 @@ export function createSharedToggleStyles({
   if (isInvalid) {
     base.push({
       backgroundColor:
-        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_975,
       borderColor:
         t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
     })
@@ -310,7 +310,7 @@ export function createSharedToggleStyles({
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
-        borderColor: t.palette.negative_500,
+        borderColor: t.palette.negative_600,
       })
     }
   }

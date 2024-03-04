@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.70.0",
+  "version": "1.71.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -44,7 +44,7 @@
     "update-extensions": "scripts/updateExtensions.sh"
   },
   "dependencies": {
-    "@atproto/api": "^0.10.0",
+    "@atproto/api": "^0.10.4",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",

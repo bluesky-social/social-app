@@ -1,12 +1,15 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions} from 'react-native'
+import {View, Dimensions, Keyboard, Pressable} from 'react-native'
 import BottomSheet, {
-  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
   BottomSheetScrollView,
   BottomSheetTextInput,
   BottomSheetView,
+  useBottomSheet,
+  WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 
 import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
@@ -25,6 +28,47 @@ export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
+
+function Backdrop(props: BottomSheetBackdropProps) {
+  const t = useTheme()
+  const bottomSheet = useBottomSheet()
+
+  const animatedStyle = useAnimatedStyle(() => {
+    const opacity =
+      (Math.abs(WINDOW_HEIGHT - props.animatedPosition.value) - 50) / 1000
+
+    return {
+      opacity: Math.min(Math.max(opacity, 0), 0.55),
+    }
+  })
+
+  const onPress = React.useCallback(() => {
+    bottomSheet.close()
+  }, [bottomSheet])
+
+  return (
+    <Animated.View
+      style={[
+        t.atoms.bg_contrast_300,
+        {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: 'absolute',
+        },
+        animatedStyle,
+      ]}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Dialog backdrop"
+        accessibilityHint="Press the backdrop to close the dialog"
+        style={{flex: 1}}
+        onPress={onPress}
+      />
+    </Animated.View>
+  )
+}
 
 export function Outer({
   children,
@@ -78,6 +122,7 @@ export function Outer({
   const onChange = React.useCallback(
     (index: number) => {
       if (index === -1) {
+        Keyboard.dismiss()
         try {
           closeCallback.current?.()
         } catch (e: any) {
@@ -113,15 +158,7 @@ export function Outer({
           ref={sheet}
           index={openIndex}
           backgroundStyle={{backgroundColor: 'transparent'}}
-          backdropComponent={props => (
-            <BottomSheetBackdrop
-              opacity={0.4}
-              appearsOnIndex={0}
-              disappearsOnIndex={-1}
-              {...props}
-              style={[flatten(props.style), t.atoms.bg_contrast_300]}
-            />
-          )}
+          backdropComponent={Backdrop}
           handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
           handleStyle={{display: 'none'}}
           onChange={onChange}>
@@ -190,8 +227,15 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
 
 export function Handle() {
   const t = useTheme()
+
+  const onTouchStart = React.useCallback(() => {
+    Keyboard.dismiss()
+  }, [])
+
   return (
-    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
+    <View
+      style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}
+      onTouchStart={onTouchStart}>
       <View
         style={[
           a.rounded_sm,
