@@ -18494,10 +18494,10 @@ react-native-svg@14.1.0:
     css-select "^5.1.0"
     css-tree "^1.1.3"
 
-react-native-uitextview@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.1.3.tgz#9143d7e2354501e1fd9e7e13c664b4cb81413d80"
-  integrity sha512-mhjCMu0Y8L13BAc9MM/7ICVRZF49LUZqhXas8lkdXW9SPn4meztN5MZKMaZgBLI4l6djhSi2So3WLAltMcJu+g==
+react-native-uitextview@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-uitextview/-/react-native-uitextview-1.1.4.tgz#da5e87c1ac26db385d3614ed7e03db43157217df"
+  integrity sha512-1ox/pmMAz0Qq78HGI0Bnsu0yhLZFRWyhUCBqew6u02/KuqZ0sFZOw/80WPAfjInM7GXpBTKgwWj1o/QhQKozgw==
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"
