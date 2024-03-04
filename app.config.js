@@ -109,9 +109,14 @@ module.exports = function (config) {
         favicon: './assets/favicon.png',
       },
       updates: {
+        url: 'http://localhost:3000/api/manifest',
         enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
+        fallbackToCacheTimeout: 30000,
+        codeSigningCertificate: './code-signing/certificate.pem',
+        codeSigningMetadata: {
+          keyid: 'main',
+          alg: 'rsa-v1_5-sha256',
+        },
       },
       plugins: [
         'expo-localization',
