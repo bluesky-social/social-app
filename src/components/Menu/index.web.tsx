@@ -53,17 +53,10 @@ export function Trigger({
     onOut: onMouseLeave,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const {
-    state: pressed,
-    onIn: onPressIn,
-    onOut: onPressOut,
-  } = useInteractionState()
 
   return (
     <DropdownMenu.Trigger asChild>
       <Pressable
-        onPressIn={onPressIn}
-        onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
         style={flatten([web({outline: 0})])}
@@ -77,7 +70,7 @@ export function Trigger({
           state: {
             hovered,
             focused,
-            pressed,
+            pressed: false,
           },
           handlers: {},
         })}

@@ -14,7 +14,7 @@ export function Menus() {
       <Menu.Root>
         <Menu.Trigger>
           {({state, handlers}) => {
-            console.log(state)
+            console.log(state.hovered, state.focused, state.pressed)
             return <Text {...handlers}>Open</Text>
           }}
         </Menu.Trigger>

@@ -9,6 +9,9 @@ export type TriggerChildProps =
       isNative: true
       control: Dialog.DialogOuterProps['control']
       state: {
+        /**
+         * Web only, `false` on native
+         */
         hovered: false
         focused: boolean
         pressed: boolean
@@ -27,7 +30,10 @@ export type TriggerChildProps =
       state: {
         hovered: boolean
         focused: boolean
-        pressed: boolean
+        /**
+         * Native only, `false` on web
+         */
+        pressed: false
       }
       handlers: {}
     }
