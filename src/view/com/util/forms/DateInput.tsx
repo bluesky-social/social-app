@@ -52,6 +52,10 @@ export function DateInput(props: Props) {
     setShow(true)
   }, [setShow])
 
+  const onCancel = useCallback(() => {
+    setShow(false)
+  }, [])
+
   return (
     <View>
       {isAndroid && (
@@ -83,7 +87,7 @@ export function DateInput(props: Props) {
           date={props.value}
           onDateChange={onChangeInternal}
           onConfirm={onChangeInternal}
-          onCancel={() => {}}
+          onCancel={onCancel}
           mode="date"
           testID={props.testID ? `${props.testID}-datepicker` : undefined}
           accessibilityLabel={props.accessibilityLabel}

@@ -47,6 +47,10 @@ export function DateField({
     [onChangeDate, setOpen],
   )
 
+  const onCancel = React.useCallback(() => {
+    setOpen(false)
+  }, [])
+
   return (
     <View style={[atoms.relative, atoms.w_full]}>
       <Pressable
@@ -89,7 +93,8 @@ export function DateField({
           open={isAndroid}
           theme={t.name === 'light' ? 'light' : 'dark'}
           date={new Date(value)}
-          onDateChange={onChangeInternal}
+          onConfirm={onChangeInternal}
+          onCancel={onCancel}
           mode="date"
           testID={`${testID}-datepicker`}
           aria-label={label}
