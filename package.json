@@ -45,7 +45,6 @@
   },
   "dependencies": {
     "@atproto/api": "^0.10.4",
-    "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
@@ -150,7 +149,6 @@
     "react-native": "0.73.2",
     "react-native-date-picker": "^4.4.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
-    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.14.0",
     "react-native-get-random-values": "~1.8.0",
     "react-native-image-crop-picker": "^0.38.1",
@@ -170,7 +168,6 @@
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "13.6.4",
     "react-responsive": "^9.0.2",
-    "rn-fetch-blob": "^0.12.0",
     "sentry-expo": "~7.0.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
