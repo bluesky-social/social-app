@@ -80,11 +80,10 @@ export function ProfileLabelsSectionInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const isEnabled = Boolean(
-    moderationOpts.prefs.mods.find(mod => mod.did === labelerInfo.creator.did),
-  )
-  const hasSession = true // TODO
   const {labelValues} = labelerInfo.policies
+  const isSubscribed = moderationOpts.prefs.mods.find(
+    mod => mod.did === labelerInfo.creator.did,
+  )
   const labelDefs = React.useMemo(() => {
     const customDefs = interpretLabelValueDefinitions(labelerInfo)
     return labelValues
@@ -93,24 +92,6 @@ export function ProfileLabelsSectionInner({
         def => def && def?.configurable,
       ) as InterprettedLabelValueDefinition[]
   }, [labelerInfo, labelValues])
-
-  const {mutateAsync: toggleSubscription, variables} =
-    useLabelerSubscriptionMutation()
-  const isSubscribed =
-    variables?.subscribe ??
-    moderationOpts.prefs.mods.find(mod => mod.did === labelerInfo.creator.did)
-
-  const onPressSubscribe = React.useCallback(async () => {
-    try {
-      await toggleSubscription({
-        did: labelerInfo.creator.did,
-        subscribe: !isSubscribed,
-      })
-    } catch (e: any) {
-      // setSubscriptionError(e.message)
-      logger.error(`Failed to subscribe to labeler`, {message: e.message})
-    }
-  }, [toggleSubscription, isSubscribed, labelerInfo])
 
   return (
     <ScrollView
@@ -164,12 +145,14 @@ export function ProfileLabelsSectionInner({
           ]}>
           {labelDefs.map((labelDef, i) => {
             return (
-              <React.Fragment key={labelDef?.identifier}>
+              <React.Fragment key={labelDef.identifier}>
                 {i !== 0 && <Divider />}
-                <ModerationLabelPref
-                  disabled={isEnabled ? undefined : true}
-                  labelValueDefinition={labelDef}
-                />
+                <View style={[a.py_lg, a.px_md]}>
+                  <ModerationLabelPref
+                    disabled={isSubscribed ? undefined : true}
+                    labelValueDefinition={labelDef}
+                  />
+                </View>
               </React.Fragment>
             )
           })}
