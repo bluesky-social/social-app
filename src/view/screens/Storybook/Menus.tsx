@@ -1,22 +1,38 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Menu from '#/components/Menu'
 import {MagnifyingGlass2_Stroke2_Corner0_Rounded as Search} from '#/components/icons/MagnifyingGlass2'
 // import {useDialogStateControlContext} from '#/state/dialogs'
 
 export function Menus() {
+  const t = useTheme()
+  const menuControl = Menu.useMenuControl()
   // const {closeAllDialogs} = useDialogStateControlContext()
 
   return (
     <View style={[a.gap_md]}>
       <View style={[a.flex_row, a.align_start]}>
-        <Menu.Root>
+        <Menu.Root control={menuControl}>
           <Menu.Trigger style={[a.flex_1]}>
-            {({handlers}) => {
-              return <Text {...handlers}>Open</Text>
+            {({state, handlers}) => {
+              return (
+                <Text
+                  {...handlers}
+                  style={[
+                    a.py_sm,
+                    a.px_md,
+                    a.rounded_sm,
+                    t.atoms.bg_contrast_50,
+                    (state.hovered || state.focused || state.pressed) && [
+                      t.atoms.bg_contrast_200,
+                    ],
+                  ]}>
+                  Open
+                </Text>
+              )
             }}
           </Menu.Trigger>
 
@@ -29,7 +45,9 @@ export function Menus() {
 
               <Menu.Divider />
 
-              <Menu.Item label="Another item" onPress={() => {}}>
+              <Menu.Item
+                label="Another item"
+                onPress={() => menuControl.close()}>
                 <Menu.ItemText>Another item</Menu.ItemText>
               </Menu.Item>
             </Menu.Group>

@@ -18,6 +18,10 @@ import {
 
 export {useDialogControl as useMenuControl} from '#/components/Dialog'
 
+export function useMemoControlContext() {
+  return React.useContext(Context)
+}
+
 export function Root({
   children,
   control,
@@ -157,7 +161,7 @@ export function Group({children, style}: GroupProps) {
       {React.Children.toArray(children).map((child, i) => {
         // ignore null children, like Dividers
         return React.isValidElement(child) && child.props.children ? (
-          <React.Fragment>
+          <React.Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}

@@ -18,34 +18,60 @@ import {
 import {Context} from '#/components/Menu/context'
 
 export function useMenuControl(): Dialog.DialogControlProps {
-  return {
-    id: '',
-    // @ts-ignore
-    ref: null,
-    open: () => {
-      throw new Error(`Menu controls are only available on native platforms`)
-    },
-    close: () => {
-      throw new Error(`Menu controls are only available on native platforms`)
-    },
-  }
+  const id = React.useId()
+  const [isOpen, setIsOpen] = React.useState(false)
+
+  return React.useMemo(
+    () => ({
+      id,
+      ref: {current: null},
+      isOpen,
+      open() {
+        setIsOpen(true)
+      },
+      close() {
+        setIsOpen(false)
+      },
+    }),
+    [id, isOpen, setIsOpen],
+  )
+}
+
+export function useMemoControlContext() {
+  return React.useContext(Context)
 }
 
 export function Root({
   children,
+  control,
 }: React.PropsWithChildren<{
   control?: Dialog.DialogOuterProps['control']
 }>) {
+  const defaultControl = useMenuControl()
   const context = React.useMemo<ContextType>(
     () => ({
-      control: null,
+      control: control || defaultControl,
     }),
-    [],
+    [control, defaultControl],
+  )
+  const onOpenChange = React.useCallback(
+    (open: boolean) => {
+      if (context.control.isOpen && !open) {
+        context.control.close()
+      } else if (!context.control.isOpen && open) {
+        context.control.open()
+      }
+    },
+    [context.control],
   )
 
   return (
     <Context.Provider value={context}>
-      <DropdownMenu.Root>{children}</DropdownMenu.Root>
+      <DropdownMenu.Root
+        open={context.control.isOpen}
+        onOpenChange={onOpenChange}>
+        {children}
+      </DropdownMenu.Root>
     </Context.Provider>
   )
 }
@@ -56,6 +82,7 @@ export function Trigger({
 }: ViewStyleProp & {
   children(props: TriggerChildProps): React.ReactNode
 }) {
+  const {control} = React.useContext(Context)
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -69,13 +96,16 @@ export function Trigger({
         onFocus={onFocus}
         onBlur={onBlur}
         style={flatten([style, web({outline: 0})])}
+        onPointerDown={() => {
+          control.open()
+        }}
         {...web({
           onMouseEnter,
           onMouseLeave,
         })}>
         {children({
           isNative: false,
-          control: null,
+          control,
           state: {
             hovered,
             focused,
@@ -94,7 +124,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content sideOffset={5} loop>
-        <View style={[a.rounded_sm, t.atoms.bg_contrast_50, {padding: 6}]}>
+        <View style={[a.rounded_sm, a.p_xs, t.atoms.bg_contrast_50]}>
           {children}
         </View>
 
@@ -122,6 +152,7 @@ export function Item({children, label, onPress}: ItemProps) {
         className="radix-dropdown-item"
         accessibilityHint=""
         accessibilityLabel={label}
+        onPress={onPress}
         onFocus={onFocus}
         onBlur={onBlur}
         style={flatten([
@@ -129,7 +160,7 @@ export function Item({children, label, onPress}: ItemProps) {
           a.align_center,
           a.gap_sm,
           a.py_sm,
-          a.px_md,
+          a.px_sm,
           a.rounded_xs,
           {minHeight: 36},
           web({outline: 0}),
@@ -181,12 +212,13 @@ export function Divider() {
   const t = useTheme()
   return (
     <DropdownMenu.Separator
-      style={{
-        height: 1,
-        backgroundColor: t.atoms.bg_contrast_100.backgroundColor,
-        marginTop: 6,
-        marginBottom: 6,
-      }}
+      style={flatten([
+        a.my_xs,
+        t.atoms.bg_contrast_100,
+        {
+          height: 1,
+        },
+      ])}
     />
   )
 }

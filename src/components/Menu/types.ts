@@ -5,7 +5,7 @@ import * as Dialog from '#/components/Dialog'
 import {TextStyleProp, ViewStyleProp} from '#/alf'
 
 export type ContextType = {
-  control: Dialog.DialogOuterProps['control'] | null
+  control: Dialog.DialogOuterProps['control']
 }
 
 export type TriggerChildProps =
@@ -30,7 +30,7 @@ export type TriggerChildProps =
     }
   | {
       isNative: false
-      control: null
+      control: Dialog.DialogOuterProps['control']
       state: {
         hovered: boolean
         focused: boolean
