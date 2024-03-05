@@ -55,7 +55,6 @@ export type TriggerChildProps =
       props: {}
     }
 
-// TODO test id
 export type ItemProps = React.PropsWithChildren<
   Omit<PressableProps, 'style'> &
     ViewStyleProp & {
