@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
+import {StatsigProvider} from 'statsig-react-native-expo'
 
 import 'view/icons'
 
@@ -54,21 +55,29 @@ function InnerApp() {
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
-        <LoggedOutViewProvider>
-          <SelectedFeedProvider>
-            <UnreadNotifsProvider>
-              <ThemeProvider theme={theme}>
-                {/* All components should be within this provider */}
-                <RootSiblingParent>
-                  <SafeAreaProvider>
-                    <Shell />
-                  </SafeAreaProvider>
-                </RootSiblingParent>
-                <ToastContainer />
-              </ThemeProvider>
-            </UnreadNotifsProvider>
-          </SelectedFeedProvider>
-        </LoggedOutViewProvider>
+        <StatsigProvider
+          sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
+          mountKey={currentAccount?.did}
+          waitForInitialization={true}
+          user={{
+            userID: currentAccount?.did,
+          }}>
+          <LoggedOutViewProvider>
+            <SelectedFeedProvider>
+              <UnreadNotifsProvider>
+                <ThemeProvider theme={theme}>
+                  {/* All components should be within this provider */}
+                  <RootSiblingParent>
+                    <SafeAreaProvider>
+                      <Shell />
+                    </SafeAreaProvider>
+                  </RootSiblingParent>
+                  <ToastContainer />
+                </ThemeProvider>
+              </UnreadNotifsProvider>
+            </SelectedFeedProvider>
+          </LoggedOutViewProvider>
+        </StatsigProvider>
       </React.Fragment>
     </Alf>
   )
