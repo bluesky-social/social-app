@@ -1,7 +1,14 @@
 import React from 'react'
-import {StatsigProvider} from 'statsig-react-native-expo'
+import {
+  StatsigProvider,
+  useGate as useStatsigGate,
+} from 'statsig-react-native-expo'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
+
+export function useGate(gateName: string) {
+  return useStatsigGate(gateName)
+}
 
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount} = useSession()
