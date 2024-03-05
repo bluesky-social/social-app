@@ -1,8 +1,5 @@
 import React from 'react'
 import {View, Pressable} from 'react-native'
-import DateTimePicker, {
-  BaseProps as DateTimePickerProps,
-} from '@react-native-community/datetimepicker'
 
 import {useTheme, atoms} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -15,6 +12,7 @@ import {
   localizeDate,
   toSimpleDateString,
 } from '#/components/forms/DateField/utils'
+import DatePicker from 'react-native-date-picker'
 
 export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label
@@ -38,16 +36,12 @@ export function DateField({
   const {chromeFocus, chromeError, chromeErrorHover} =
     TextField.useSharedInputStyles()
 
-  const onChangeInternal = React.useCallback<
-    Required<DateTimePickerProps>['onChange']
-  >(
-    (_event, date) => {
+  const onChangeInternal = React.useCallback(
+    (date: Date) => {
       setOpen(false)
 
-      if (date) {
-        const formatted = toSimpleDateString(date)
-        onChangeDate(formatted)
-      }
+      const formatted = toSimpleDateString(date)
+      onChangeDate(formatted)
     },
     [onChangeDate, setOpen],
   )
@@ -89,18 +83,15 @@ export function DateField({
       </Pressable>
 
       {open && (
-        <DateTimePicker
+        <DatePicker
+          theme={t.name === 'light' ? 'light' : 'dark'}
+          date={new Date(value)}
+          onDateChange={onChangeInternal}
+          mode="date"
+          testID={`${testID}-datepicker`}
           aria-label={label}
           accessibilityLabel={label}
           accessibilityHint={undefined}
-          testID={`${testID}-datepicker`}
-          mode="date"
-          timeZoneName={'Etc/UTC'}
-          display="spinner"
-          // @ts-ignore applies in iOS only -prf
-          themeVariant={t.name === 'light' ? 'light' : 'dark'}
-          value={new Date(value)}
-          onChange={onChangeInternal}
         />
       )}
     </View>
