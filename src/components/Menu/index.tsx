@@ -166,9 +166,7 @@ export function Group({children, style}: GroupProps) {
         style,
       ]}>
       {flattenReactChildren(children).map((child, i) => {
-        // ignore null children, like Dividers
-        // @ts-ignore
-        return React.isValidElement(child) && child.props?.children ? (
+        return React.isValidElement(child) && child.type === Item ? (
           <React.Fragment key={i}>
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
