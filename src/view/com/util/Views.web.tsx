@@ -104,8 +104,10 @@ export const FlatList_INTERNAL = React.forwardRef(function FlatListImpl<ItemT>(
       props.dataSet.stableGutters = '1'
     }
   }
+  // TODO FABRIC
   return (
     <Animated.FlatList
+      // @ts-ignore
       ref={ref}
       contentContainerStyle={[
         styles.contentContainer,

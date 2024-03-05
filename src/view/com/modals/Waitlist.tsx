@@ -10,7 +10,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {Text} from '../util/text/Text'
 import {s, gradients} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'

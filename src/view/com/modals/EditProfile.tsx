@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {AppBskyActorDefs} from '@atproto/api'
 import {Text} from '../util/text/Text'
@@ -125,6 +125,7 @@ export function Component({
         newUserAvatar,
         newUserBanner,
       })
+
       Toast.show(_(msg`Profile updated`))
       onUpdate?.()
       closeModal()
