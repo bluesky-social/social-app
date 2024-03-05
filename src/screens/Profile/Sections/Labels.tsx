@@ -141,8 +141,6 @@ export function ProfileLabelsSectionInner({
       ) as InterprettedLabelValueDefinition[]
   }, [labelerInfo, labelValues])
 
-  console.log(headerHeight, scrollElRef.current)
-
   return (
     <ScrollView
       ref={scrollElRef}
@@ -195,20 +193,15 @@ export function ProfileLabelsSectionInner({
           ) : null}
         </View>
         {labelDefs.length > 0 && (
-          <View
-            style={[a.mt_xl, t.atoms.bg_contrast_25, a.rounded_md, a.py_xs]}>
-            {labelDefs.map((labelDef, i) => {
+          <View style={[a.mt_xl, a.gap_sm]}>
+            {labelDefs.map(labelDef => {
               return (
-                <React.Fragment key={labelDef.identifier}>
-                  {i !== 0 && <Divider />}
-                  <View style={[a.py_md, a.px_md]}>
-                    <ModerationLabelPref
-                      disabled={isSubscribed ? undefined : true}
-                      labelValueDefinition={labelDef}
-                      labelerDid={labelerInfo.creator.did}
-                    />
-                  </View>
-                </React.Fragment>
+                <ModerationLabelPref
+                  key={labelDef.identifier}
+                  disabled={isSubscribed ? undefined : true}
+                  labelValueDefinition={labelDef}
+                  labelerDid={labelerInfo.creator.did}
+                />
               )
             })}
           </View>
