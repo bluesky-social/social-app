@@ -112,6 +112,8 @@ export const PagerWithHeader = React.forwardRef<PagerRef, PagerWithHeaderProps>(
       (scrollRef: AnimatedRef<any> | null, atIndex: number) => {
         scrollRefs.modify(refs => {
           'worklet'
+          // TODO FABRIC
+          // @ts-ignore
           refs[atIndex] = scrollRef
           return refs
         })
