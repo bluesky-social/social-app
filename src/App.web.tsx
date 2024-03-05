@@ -4,7 +4,6 @@ import React, {useState, useEffect} from 'react'
 import {QueryClientProvider} from '@tanstack/react-query'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
-import {StatsigProvider} from 'statsig-react-native-expo'
 
 import 'view/icons'
 
@@ -33,6 +32,7 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 
 function InnerApp() {
@@ -55,13 +55,7 @@ function InnerApp() {
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
-        <StatsigProvider
-          sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
-          mountKey={currentAccount?.did}
-          waitForInitialization={true}
-          user={{
-            userID: currentAccount?.did,
-          }}>
+        <StatsigProvider>
           <LoggedOutViewProvider>
             <SelectedFeedProvider>
               <UnreadNotifsProvider>
