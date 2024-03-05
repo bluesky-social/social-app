@@ -208,14 +208,15 @@ let FeedItemInner = ({
                   reason.by.displayName || reason.by.handle,
                 )}`,
               )}>
-              <FontAwesomeIcon
-                icon="retweet"
-                style={{
-                  marginRight: 4,
-                  color: pal.colors.textLight,
-                  minWidth: 16,
-                }}
-              />
+              {/* TODO FABRIC */}
+              {/*<FontAwesomeIcon*/}
+              {/*  icon="retweet"*/}
+              {/*  style={{*/}
+              {/*    marginRight: 4,*/}
+              {/*    color: pal.colors.textLight,*/}
+              {/*    minWidth: 16,*/}
+              {/*  }}*/}
+              {/*/>*/}
               <Text
                 type="sm-bold"
                 style={pal.textLight}
@@ -271,14 +272,15 @@ let FeedItemInner = ({
           />
           {!isThreadChild && replyAuthorDid !== '' && (
             <View style={[s.flexRow, s.mb2, s.alignCenter]}>
-              <FontAwesomeIcon
-                icon="reply"
-                size={9}
-                style={[
-                  {color: pal.colors.textLight} as FontAwesomeIconStyle,
-                  s.mr5,
-                ]}
-              />
+              {/* TODO FABRIC */}
+              {/*<FontAwesomeIcon*/}
+              {/*  icon="reply"*/}
+              {/*  size={9}*/}
+              {/*  style={[*/}
+              {/*    {color: pal.colors.textLight} as FontAwesomeIconStyle,*/}
+              {/*    s.mr5,*/}
+              {/*  ]}*/}
+              {/*/>*/}
               <Text
                 type="md"
                 style={[pal.textLight, s.mr2]}

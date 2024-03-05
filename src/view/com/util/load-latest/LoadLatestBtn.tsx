@@ -45,7 +45,8 @@ export function LoadLatestBtn({
       accessibilityRole="button"
       accessibilityLabel={label}
       accessibilityHint="">
-      <FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />
+      {/* TODO FABRIC */}
+      {/*<FontAwesomeIcon icon="angle-up" color={pal.colors.text} size={19} />*/}
       {showIndicator && <View style={[styles.indicator, pal.borderDark]} />}
     </AnimatedTouchableOpacity>
   )

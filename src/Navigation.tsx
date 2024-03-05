@@ -29,7 +29,6 @@ import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
 import {usePalette} from 'lib/hooks/usePalette'
 import {bskyTitle} from 'lib/strings/headings'
-import {JSX} from 'react/jsx-runtime'
 import {timeout} from 'lib/async/timeout'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
@@ -78,6 +77,7 @@ import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStack
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import HashtagScreen from '#/screens/Hashtag'
+import {Text, View} from 'react-native'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -277,19 +277,23 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  const tabBar = React.useCallback(
-    (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
-      <BottomBar {...props} />
-    ),
-    [],
-  )
+  {
+    /* TODO FABRIC */
+  }
+  // const tabBar = React.useCallback(
+  //   (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
+  //     <BottomBar {...props} />
+  //   ),
+  //   [],
+  // )
 
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
-      tabBar={tabBar}>
+      // tabBar={tabBar}
+    >
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
       <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />

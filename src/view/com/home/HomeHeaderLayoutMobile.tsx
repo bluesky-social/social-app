@@ -52,16 +52,16 @@ export function HomeHeaderLayoutMobile({
               msg`Access profile and other navigation links`,
             )}
             hitSlop={HITSLOP_10}>
-            <FontAwesomeIcon
-              icon="bars"
-              size={18}
-              color={pal.colors.textLight}
-            />
+            {/* TODO FABRIC */}
+            {/*<FontAwesomeIcon*/}
+            {/*  icon="bars"*/}
+            {/*  size={18}*/}
+            {/*  color={pal.colors.textLight}*/}
+            {/*/>*/}
           </TouchableOpacity>
         </View>
-        <View>
-          <Logo width={30} />
-        </View>
+        {/* TODO FABRIC */}
+        <View>{/*<Logo width={30} />*/}</View>
         <View
           style={[
             atoms.flex_row,
@@ -71,10 +71,9 @@ export function HomeHeaderLayoutMobile({
             pal.view,
             {width: 100},
           ]}>
+          {/* TODO FABRIC */}
           {IS_DEV && (
-            <Link2 to="/sys/debug">
-              <ColorPalette size="md" />
-            </Link2>
+            <Link2 to="/sys/debug">{/*<ColorPalette size="md" />*/}</Link2>
           )}
           <Link
             testID="viewHeaderHomeFeedPrefsBtn"
@@ -83,10 +82,11 @@ export function HomeHeaderLayoutMobile({
             accessibilityRole="button"
             accessibilityLabel={_(msg`Following Feed Preferences`)}
             accessibilityHint="">
-            <FontAwesomeIcon
-              icon="sliders"
-              style={pal.textLight as FontAwesomeIconStyle}
-            />
+            {/* TODO FABRIC */}
+            {/*<FontAwesomeIcon*/}
+            {/*  icon="sliders"*/}
+            {/*  style={pal.textLight as FontAwesomeIconStyle}*/}
+            {/*/>*/}
           </Link>
         </View>
       </View>

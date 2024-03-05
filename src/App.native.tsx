@@ -70,14 +70,14 @@ function InnerApp() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <Alf theme={theme}>
-        <Splash isReady={!isInitialLoad}>
-          <React.Fragment
-            // Resets the entire tree below when it changes:
-            key={currentAccount?.did}>
-            <LoggedOutViewProvider>
-              <SelectedFeedProvider>
-                <UnreadNotifsProvider>
-                  <ThemeProvider theme={theme}>
+        <React.Fragment
+          // Resets the entire tree below when it changes:
+          key={currentAccount?.did}>
+          <LoggedOutViewProvider>
+            <SelectedFeedProvider>
+              <UnreadNotifsProvider>
+                <ThemeProvider theme={theme}>
+                  <DialogStateProvider>
                     {/* All components should be within this provider */}
                     <RootSiblingParent>
                       <GestureHandlerRootView style={s.h100pct}>
@@ -85,12 +85,12 @@ function InnerApp() {
                         <Shell />
                       </GestureHandlerRootView>
                     </RootSiblingParent>
-                  </ThemeProvider>
-                </UnreadNotifsProvider>
-              </SelectedFeedProvider>
-            </LoggedOutViewProvider>
-          </React.Fragment>
-        </Splash>
+                  </DialogStateProvider>
+                </ThemeProvider>
+              </UnreadNotifsProvider>
+            </SelectedFeedProvider>
+          </LoggedOutViewProvider>
+        </React.Fragment>
       </Alf>
     </SafeAreaProvider>
   )
@@ -119,15 +119,13 @@ function App() {
             <MutedThreadsProvider>
               <InvitesStateProvider>
                 <ModalStateProvider>
-                  <DialogStateProvider>
-                    <LightboxStateProvider>
-                      <I18nProvider>
-                        <PortalProvider>
-                          <InnerApp />
-                        </PortalProvider>
-                      </I18nProvider>
-                    </LightboxStateProvider>
-                  </DialogStateProvider>
+                  <LightboxStateProvider>
+                    <I18nProvider>
+                      <PortalProvider>
+                        <InnerApp />
+                      </PortalProvider>
+                    </I18nProvider>
+                  </LightboxStateProvider>
                 </ModalStateProvider>
               </InvitesStateProvider>
             </MutedThreadsProvider>
