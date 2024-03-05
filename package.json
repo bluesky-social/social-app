@@ -149,6 +149,7 @@
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
     "react-native": "0.73.2",
+    "react-native-date-picker": "^4.4.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.14.0",

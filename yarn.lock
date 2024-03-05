@@ -18301,6 +18301,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-date-picker@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.4.0.tgz#fe5b6eb8d85a4a30b2991ada5169a30ce5023ead"
+  integrity sha512-Axx3byihwwhKRLRVjPAr/UaEysapkRcKmjjM8/05UaVm4Q0xDn2RFUcRdy1QAahhRcjLjlVYhepxvU5bdgy7ZQ==
+
 react-native-dotenv@^3.3.1:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.9.tgz#621c5b0c1d0c5c7f569bfe5a1d804bec7885c010"
