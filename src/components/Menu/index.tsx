@@ -117,7 +117,9 @@ export function Item({children, label, style, onPress}: ItemProps) {
         a.gap_sm,
         a.p_md,
         a.rounded_md,
+        a.border,
         t.atoms.bg_contrast_25,
+        t.atoms.border_contrast_low,
         {minHeight: 48},
         style,
         (focused || pressed) && [t.atoms.bg_contrast_50],
@@ -135,7 +137,7 @@ export function ItemText({children, style}: ItemTextProps) {
         a.text_md,
         a.font_bold,
         t.atoms.text_contrast_medium,
-        {paddingTop: 2},
+        {paddingTop: 3},
         style,
       ]}>
       {children}
@@ -170,6 +172,7 @@ export function Group({children, style}: GroupProps) {
               // @ts-ignore
               style: {
                 borderRadius: 0,
+                borderWidth: 0,
               },
             })}
           </React.Fragment>

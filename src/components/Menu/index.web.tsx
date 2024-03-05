@@ -121,7 +121,13 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
   return (
     <DropdownMenu.Portal>
       <DropdownMenu.Content sideOffset={5} loop aria-label="Test">
-        <View style={[a.rounded_sm, a.p_xs, t.atoms.bg_contrast_50]}>
+        <View
+          style={[
+            a.rounded_sm,
+            a.p_xs,
+            t.atoms.bg_contrast_50,
+            t.atoms.shadow_md,
+          ]}>
           {children}
         </View>
 
