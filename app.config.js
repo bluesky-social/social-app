@@ -128,6 +128,7 @@ module.exports = function (config) {
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
               kotlinVersion: '1.8.0',
+              newArchEnabled: true,
             },
           },
         ],
