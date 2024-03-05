@@ -115,10 +115,10 @@ export function usePreferencesSetContentLabelMutation() {
   return useMutation<
     void,
     unknown,
-    {labelGroup: ConfigurableLabelGroup; visibility: LabelPreference}
+    {label: string; visibility: LabelPreference; labelerDid: string | undefined}
   >({
-    mutationFn: async ({labelGroup, visibility}) => {
-      await getAgent().setContentLabelPref(labelGroup, visibility)
+    mutationFn: async ({label, visibility, labelerDid}) => {
+      await getAgent().setContentLabelPref(label, visibility, labelerDid)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

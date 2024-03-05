@@ -137,7 +137,7 @@ let ProfileHeaderLabeler = ({
       isPlaceholderProfile={isPlaceholderProfile}>
       <View style={[a.px_lg, a.pt_md, a.pb_sm]} pointerEvents="box-none">
         <View
-          style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_sm]}
+          style={[a.flex_row, a.justify_end, a.gap_sm, a.pb_lg]}
           pointerEvents="box-none">
           {isMe ? (
             <Button

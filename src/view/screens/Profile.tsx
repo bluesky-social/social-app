@@ -156,7 +156,7 @@ function ProfileScreenLoaded({
   const likesSectionRef = React.useRef<SectionRef>(null)
   const feedsSectionRef = React.useRef<SectionRef>(null)
   const listsSectionRef = React.useRef<SectionRef>(null)
-  const filtersSectionRef = React.useRef<SectionRef>(null)
+  const labelsSectionRef = React.useRef<SectionRef>(null)
 
   useSetTitle(combinedDisplayName(profile))
 
@@ -237,7 +237,7 @@ function ProfileScreenLoaded({
   const scrollSectionToTop = React.useCallback(
     (index: number) => {
       if (index === filtersIndex) {
-        filtersSectionRef.current?.scrollToTop()
+        labelsSectionRef.current?.scrollToTop()
       } else if (index === postsIndex) {
         postsSectionRef.current?.scrollToTop()
       } else if (index === repliesIndex) {
@@ -347,16 +347,15 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}>
         {showFiltersTab
-          ? ({headerHeight, isFocused, scrollElRef}) => (
+          ? ({headerHeight, scrollElRef}) => (
               <ProfileLabelsSection
-                // ref={moderationSectionRef}
+                ref={labelsSectionRef}
                 labelerInfo={labelerInfo}
                 labelerError={labelerError}
                 isLabelerLoading={isLabelerLoading}
                 moderationOpts={moderationOpts}
                 scrollElRef={scrollElRef as ListRef}
-                headerOffset={headerHeight}
-                enabled={isFocused}
+                headerHeight={headerHeight}
               />
             )
           : null}
