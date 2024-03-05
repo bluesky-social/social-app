@@ -1,7 +1,8 @@
 import React from 'react'
 import {View, Pressable} from 'react-native'
 
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {logger} from '#/logger'
+import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
@@ -9,7 +10,7 @@ import {Text} from '#/components/Typography'
 import {Context} from '#/components/Menu/context'
 import {
   ContextType,
-  TriggerChildProps,
+  TriggerProps,
   ItemProps,
   GroupProps,
   ItemTextProps,
@@ -39,11 +40,7 @@ export function Root({
   return <Context.Provider value={context}>{children}</Context.Provider>
 }
 
-export function Trigger({
-  children,
-}: ViewStyleProp & {
-  children(props: TriggerChildProps): React.ReactNode
-}) {
+export function Trigger({children, label}: TriggerProps) {
   const {control} = React.useContext(Context)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
@@ -52,11 +49,7 @@ export function Trigger({
     onOut: onPressOut,
   } = useInteractionState()
 
-  if (!control) {
-    throw new Error('Menu.Trigger must be used within a Menu.Root')
-  }
-
-  return children({
+  const child = children({
     isNative: true,
     control,
     state: {
@@ -72,14 +65,22 @@ export function Trigger({
       onPressOut,
     },
   })
+
+  if (!React.isValidElement(child)) {
+    logger.error(
+      'Menu.Trigger children must be a function that returns a valid element',
+    )
+    return null
+  }
+
+  return React.cloneElement(child, {
+    ...child.props,
+    accessibilityLabel: label,
+  })
 }
 
 export function Outer({children}: React.PropsWithChildren<{}>) {
   const {control} = React.useContext(Context)
-
-  if (!control) {
-    throw new Error('Menu.Outer must be used within a Menu.Root')
-  }
 
   return (
     <Dialog.Outer control={control}>

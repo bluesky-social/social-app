@@ -8,6 +8,10 @@ export type ContextType = {
   control: Dialog.DialogOuterProps['control']
 }
 
+export type TriggerProps = ViewStyleProp & {
+  children(props: TriggerChildProps): React.ReactNode
+  label: string
+}
 export type TriggerChildProps =
   | {
       isNative: true

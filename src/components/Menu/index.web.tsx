@@ -4,12 +4,12 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {atoms as a, useTheme, flatten, web, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, flatten, web} from '#/alf'
 import {Text} from '#/components/Typography'
 
 import {
   ContextType,
-  TriggerChildProps,
+  TriggerProps,
   ItemProps,
   GroupProps,
   ItemTextProps,
@@ -76,12 +76,7 @@ export function Root({
   )
 }
 
-export function Trigger({
-  children,
-  style,
-}: ViewStyleProp & {
-  children(props: TriggerChildProps): React.ReactNode
-}) {
+export function Trigger({children, label, style}: TriggerProps) {
   const {control} = React.useContext(Context)
   const {
     state: hovered,
@@ -93,6 +88,8 @@ export function Trigger({
   return (
     <DropdownMenu.Trigger asChild>
       <Pressable
+        accessibilityHint=""
+        accessibilityLabel={label}
         onFocus={onFocus}
         onBlur={onBlur}
         style={flatten([style, web({outline: 0})])}
@@ -123,7 +120,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
 
   return (
     <DropdownMenu.Portal>
-      <DropdownMenu.Content sideOffset={5} loop>
+      <DropdownMenu.Content sideOffset={5} loop aria-label="Test">
         <View style={[a.rounded_sm, a.p_xs, t.atoms.bg_contrast_50]}>
           {children}
         </View>
