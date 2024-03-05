@@ -131,6 +131,7 @@ let UserAvatar = ({
         width: size,
         height: size,
         borderRadius: size > 32 ? 8 : 3,
+        overflow: 'hidden',
         backgroundColor,
       }
     }
@@ -138,6 +139,7 @@ let UserAvatar = ({
       width: size,
       height: size,
       borderRadius: Math.floor(size / 2),
+      overflow: 'hidden',
       backgroundColor,
     }
   }, [type, size, backgroundColor])
@@ -159,7 +161,11 @@ let UserAvatar = ({
 
   return avatar &&
     !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
-    <View style={{width: size, height: size}}>
+    <View
+      style={{
+        width: size,
+        height: size,
+      }}>
       {usePlainRNImage ? (
         <Image
           accessibilityIgnoresInvertColors
