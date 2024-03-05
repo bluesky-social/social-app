@@ -11554,6 +11554,11 @@ expo-camera@~14.0.4:
   dependencies:
     invariant "^2.2.4"
 
+expo-clipboard@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/expo-clipboard/-/expo-clipboard-5.0.1.tgz#a62a021a9444740d180d60f915cca8242a323716"
+  integrity sha512-JH853QJPr5W3h87If3aDTnMK+ESSIrwzU2TdfZrqZttVDY2pMIf/w37mVHHNYodXM4ATHXadtOkjKbAa0DWwUg==
+
 expo-constants@~15.4.0:
   version "15.4.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-15.4.1.tgz#f76f347cf687b6630e1e3b9a385a4e42771671a4"
