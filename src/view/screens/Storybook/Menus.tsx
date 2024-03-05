@@ -17,10 +17,10 @@ export function Menus() {
       <View style={[a.flex_row, a.align_start]}>
         <Menu.Root control={menuControl}>
           <Menu.Trigger label="Open basic menu" style={[a.flex_1]}>
-            {({state, handlers}) => {
+            {({state, props}) => {
               return (
                 <Text
-                  {...handlers}
+                  {...props}
                   style={[
                     a.py_sm,
                     a.px_md,

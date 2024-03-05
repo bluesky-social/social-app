@@ -2,7 +2,6 @@ import React from 'react'
 import {View, Pressable} from 'react-native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
-import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -50,7 +49,7 @@ export function Trigger({children, label}: TriggerProps) {
     onOut: onPressOut,
   } = useInteractionState()
 
-  const child = children({
+  return children({
     isNative: true,
     control,
     state: {
@@ -58,25 +57,14 @@ export function Trigger({children, label}: TriggerProps) {
       focused,
       pressed,
     },
-    handlers: {
+    props: {
       onPress: control.open,
       onFocus,
       onBlur,
       onPressIn,
       onPressOut,
+      accessibilityLabel: label,
     },
-  })
-
-  if (!React.isValidElement(child)) {
-    logger.error(
-      'Menu.Trigger children must be a function that returns a valid element',
-    )
-    return null
-  }
-
-  return React.cloneElement(child, {
-    ...child.props,
-    accessibilityLabel: label,
   })
 }
 

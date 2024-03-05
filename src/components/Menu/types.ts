@@ -25,12 +25,20 @@ export type TriggerChildProps =
         focused: boolean
         pressed: boolean
       }
-      handlers: {
+      /**
+       * We don't necessarily know what these will be spread on to, so we
+       * should add props one-by-one.
+       *
+       * On web, these properties are applied to a parent `Pressable`, so this
+       * object is empty.
+       */
+      props: {
         onPress: () => void
         onFocus: () => void
         onBlur: () => void
         onPressIn: () => void
         onPressOut: () => void
+        accessibilityLabel: string
       }
     }
   | {
@@ -44,7 +52,7 @@ export type TriggerChildProps =
          */
         pressed: false
       }
-      handlers: {}
+      props: {}
     }
 
 // TODO test id

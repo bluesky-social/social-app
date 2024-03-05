@@ -108,7 +108,7 @@ export function Trigger({children, label, style}: TriggerProps) {
             focused,
             pressed: false,
           },
-          handlers: {},
+          props: {},
         })}
       </Pressable>
     </DropdownMenu.Trigger>
