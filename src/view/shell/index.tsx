@@ -96,16 +96,15 @@ function ShellInner() {
         style={containerPadding}
         importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
-          {/* TODO FABRIC */}
-          {/*<Drawer*/}
-          {/*  renderDrawerContent={renderDrawerContent}*/}
-          {/*  open={isDrawerOpen}*/}
-          {/*  onOpen={onOpenDrawer}*/}
-          {/*  onClose={onCloseDrawer}*/}
-          {/*  swipeEdgeWidth={winDim.width / 2}*/}
-          {/*  swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>*/}
-          <TabsNavigator />
-          {/*</Drawer>*/}
+          <Drawer
+            renderDrawerContent={renderDrawerContent}
+            open={isDrawerOpen}
+            onOpen={onOpenDrawer}
+            onClose={onCloseDrawer}
+            swipeEdgeWidth={winDim.width / 2}
+            swipeEnabled={!canGoBack && hasSession && !isDrawerSwipeDisabled}>
+            <TabsNavigator />
+          </Drawer>
         </ErrorBoundary>
       </View>
       <Composer winHeight={winDim.height} />

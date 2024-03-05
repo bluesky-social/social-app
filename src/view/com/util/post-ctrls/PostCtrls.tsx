@@ -217,22 +217,21 @@ let PostCtrls = ({
             } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
             accessibilityHint=""
             hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
-            {/* TODO FABRIC */}
-            {/*<ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />*/}
+            <ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />
           </TouchableOpacity>
         </View>
       )}
       <View style={big ? styles.ctrlBig : styles.ctrl}>
-        {/*  <PostDropdownBtn*/}
-        {/*    testID="postDropdownBtn"*/}
-        {/*    postAuthor={post.author}*/}
-        {/*    postCid={post.cid}*/}
-        {/*    postUri={post.uri}*/}
-        {/*    record={record}*/}
-        {/*    richText={richText}*/}
-        {/*    showAppealLabelItem={showAppealLabelItem}*/}
-        {/*    style={styles.btnPad}*/}
-        {/*  />*/}
+        <PostDropdownBtn
+          testID="postDropdownBtn"
+          postAuthor={post.author}
+          postCid={post.cid}
+          postUri={post.uri}
+          record={record}
+          richText={richText}
+          showAppealLabelItem={showAppealLabelItem}
+          style={styles.btnPad}
+        />
       </View>
     </View>
   )

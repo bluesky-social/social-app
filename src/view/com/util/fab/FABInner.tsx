@@ -46,8 +46,7 @@ export function FABInner({testID, icon, ...props}: FABProps) {
           start={{x: 0, y: 0}}
           end={{x: 1, y: 1}}
           style={[styles.inner, size]}>
-          {/* TODO FABRIC */}
-          {/*{icon}*/}
+          {icon}
         </LinearGradient>
       </Animated.View>
     </TouchableWithoutFeedback>

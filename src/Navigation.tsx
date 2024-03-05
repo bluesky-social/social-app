@@ -277,23 +277,19 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
  * in 3 distinct tab-stacks with a different root screen on each.
  */
 function TabsNavigator() {
-  {
-    /* TODO FABRIC */
-  }
-  // const tabBar = React.useCallback(
-  //   (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
-  //     <BottomBar {...props} />
-  //   ),
-  //   [],
-  // )
+  const tabBar = React.useCallback(
+    (props: JSX.IntrinsicAttributes & BottomTabBarProps) => (
+      <BottomBar {...props} />
+    ),
+    [],
+  )
 
   return (
     <Tab.Navigator
       initialRouteName="HomeTab"
       backBehavior="initialRoute"
       screenOptions={{headerShown: false, lazy: true}}
-      // tabBar={tabBar}
-    >
+      tabBar={tabBar}>
       <Tab.Screen name="HomeTab" getComponent={() => HomeTabNavigator} />
       <Tab.Screen name="SearchTab" getComponent={() => SearchTabNavigator} />
       <Tab.Screen name="FeedsTab" getComponent={() => FeedsTabNavigator} />
