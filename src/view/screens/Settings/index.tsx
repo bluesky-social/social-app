@@ -24,7 +24,7 @@ import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {NavigationProp} from 'lib/routes/types'
 import {HandIcon, HashtagIcon} from 'lib/icons'
-import Clipboard from '@react-native-clipboard/clipboard'
+import {setStringAsync} from 'expo-clipboard'
 import {makeProfileLink} from 'lib/routes/links'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useModalControls} from '#/state/modals'
@@ -235,7 +235,7 @@ export function SettingsScreen({}: Props) {
   }, [onboardingDispatch, _])
 
   const onPressBuildInfo = React.useCallback(() => {
-    Clipboard.setString(
+    setStringAsync(
       `Build version: ${AppInfo.appVersion}; Platform: ${Platform.OS}`,
     )
     Toast.show(_(msg`Copied build version to clipboard`))
