@@ -67,7 +67,9 @@ export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }
 
+// TODO FABRIC
 export function isExternalUrl(url: string): boolean {
+  return true
   return !isBskyAppUrl(url) && url.startsWith('http')
 }
 
