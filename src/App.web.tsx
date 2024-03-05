@@ -1,7 +1,7 @@
 import 'lib/sentry' // must be near top
 
 import React, {useState, useEffect} from 'react'
-import {QueryClientProvider} from '@tanstack/react-query'
+import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
 import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {RootSiblingParent} from 'react-native-root-siblings'
 
@@ -13,7 +13,11 @@ import {init as initPersistedState} from '#/state/persisted'
 import {Shell} from 'view/shell/index'
 import {ToastContainer} from 'view/com/util/Toast.web'
 import {ThemeProvider} from 'lib/ThemeContext'
-import {queryClient} from 'lib/react-query'
+import {
+  queryClient,
+  asyncStoragePersister,
+  dehydrateOptions,
+} from 'lib/react-query'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
 import {Provider as DialogStateProvider} from 'state/dialogs'
@@ -88,7 +92,9 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
@@ -110,7 +116,7 @@ function App() {
           </PrefsStateProvider>
         </ShellStateProvider>
       </SessionProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   )
 }
 

@@ -6,7 +6,10 @@ import {getAgent} from '#/state/session'
 import {preferencesQueryKey} from '#/state/queries/preferences'
 
 export const labelerInfoQueryKey = (did: string) => ['labeler-info', did]
-export const labelersInfoQueryKey = (dids: string[]) => ['labelers-info', dids]
+export const labelersInfoQueryKey = (dids: string[]) => [
+  'labelers-info',
+  dids.sort(),
+]
 export const labelersDetailedInfoQueryKey = (dids: string[]) => [
   'labelers-detailed-info',
   dids,
@@ -47,6 +50,7 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersDetailedInfoQueryKey(dids),
+    gcTime: 1000 * 60 * 60 * 6, // 6 hours
     queryFn: async () => {
       const res = await getAgent().app.bsky.labeler.getServices({
         dids,
