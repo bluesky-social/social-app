@@ -189,6 +189,7 @@
     "@testing-library/react-native": "^11.5.2",
     "@tsconfig/react-native": "^2.0.3",
     "@types/he": "^1.1.2",
+    "@types/invariant": "^2.2.37",
     "@types/jest": "^29.4.0",
     "@types/lodash.chunk": "^4.2.7",
     "@types/lodash.debounce": "^4.0.7",
