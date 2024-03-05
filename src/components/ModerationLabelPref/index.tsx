@@ -17,7 +17,6 @@ export function ModerationLabelPref({
   labelValueDefinition: InterprettedLabelValueDefinition
   disabled?: boolean
 }) {
-  console.log({labelValueDefinition})
   const t = useTheme()
   const allLabelStrings = useLabelStrings()
   const labelStrings = labelValueDefinition.locales[0] // TODO look up locale

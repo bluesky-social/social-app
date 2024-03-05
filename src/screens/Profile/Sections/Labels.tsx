@@ -135,19 +135,12 @@ export function ProfileLabelsSectionInner({
         ) : null}
       </View>
       {labelDefs.length > 0 && (
-        <View
-          style={[
-            a.mt_xl,
-            t.atoms.bg_contrast_25,
-            a.rounded_md,
-            a.border,
-            t.atoms.border_contrast_low,
-          ]}>
+        <View style={[a.mt_xl, t.atoms.bg_contrast_25, a.rounded_md, a.py_xs]}>
           {labelDefs.map((labelDef, i) => {
             return (
               <React.Fragment key={labelDef.identifier}>
                 {i !== 0 && <Divider />}
-                <View style={[a.py_lg, a.px_md]}>
+                <View style={[a.py_md, a.px_md]}>
                   <ModerationLabelPref
                     disabled={isSubscribed ? undefined : true}
                     labelValueDefinition={labelDef}
