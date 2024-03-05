@@ -128,9 +128,7 @@ export function useLabelStrings(): LabelStrings {
       porn: {
         general: {
           name: _(msg`Pornography`),
-          description: _(
-            msg`Images of full-frontal nudity (genitalia) in any sexualized context, or explicit sexual activity (meaning contact with genitalia or breasts) even if partially covered. Includes graphic sexual cartoons (often jokes/memes).`,
-          ),
+          description: _(msg`Explicit sexual images.`),
         },
         account: {
           name: _(msg`Adult Content`),
@@ -148,9 +146,7 @@ export function useLabelStrings(): LabelStrings {
       sexual: {
         general: {
           name: _(msg`Sexually Suggestive`),
-          description: _(
-            msg`Content that does not meet the level of "pornography", but is still sexual. Some common examples have been selfies and "hornyposting" with underwear on, or partially naked (naked but covered, eg with hands or from side perspective). Sheer/see-through nipples may end up in this category.`,
-          ),
+          description: _(msg`Does not include nudity.`),
         },
         account: {
           name: _(msg`Suggestive Content`),
@@ -168,9 +164,7 @@ export function useLabelStrings(): LabelStrings {
       nudity: {
         general: {
           name: _(msg`Nudity`),
-          description: _(
-            msg`Nudity which is not sexual, or that is primarily "artistic" in nature. For example: breastfeeding; classic art paintings and sculptures; newspaper images with some nudity; fashion modeling. "Erotic photography" is likely to end up in sexual or porn.`,
-          ),
+          description: _(msg`Including non-sexual and artistic.`),
         },
         account: {
           name: _(msg`Adult Content`),
@@ -187,10 +181,8 @@ export function useLabelStrings(): LabelStrings {
       },
       gore: {
         general: {
-          name: _(msg`Gore`),
-          description: _(
-            msg`Intended for shocking images, typically involving blood or visible wounds.`,
-          ),
+          name: _(msg`Violent / Bloody`),
+          description: _(msg`Gore, self-harm, torture`),
         },
         account: {
           name: _(msg`Graphic Imagery (Gore)`),

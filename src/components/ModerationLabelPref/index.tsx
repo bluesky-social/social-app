@@ -87,7 +87,7 @@ export function ModerationLabelPref({
           a.justify_between,
           a.gap_sm,
           a.align_center,
-          t.atoms.bg_contrast_50,
+          t.atoms.bg_contrast_25,
           a.px_lg,
           a.py_lg,
           a.rounded_sm,

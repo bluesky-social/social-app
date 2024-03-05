@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {AppBskyLabelerDefs, LABELS} from '@atproto/api'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
@@ -38,7 +38,7 @@ import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {getModerationServiceTitle} from '#/lib/moderation'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
-import {ModerationLabelPref} from '#/components/ModerationLabelPref'
+import {SimpleModerationLabelPref} from '#/components/ModerationLabelPref/SimpleModerationLabelPref'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -297,13 +297,25 @@ export function ModerationScreenInner({
           {adultContentEnabled && (
             <>
               <Divider />
-              <ModerationLabelPref labelGroup="porn" />
+              <SimpleModerationLabelPref
+                labelValueDefinition={LABELS.porn}
+                labelerDid={undefined}
+              />
               <Divider />
-              <ModerationLabelPref labelGroup="suggestive" />
+              <SimpleModerationLabelPref
+                labelValueDefinition={LABELS.sexual}
+                labelerDid={undefined}
+              />
               <Divider />
-              <ModerationLabelPref labelGroup="nudity" />
+              <SimpleModerationLabelPref
+                labelValueDefinition={LABELS.nudity}
+                labelerDid={undefined}
+              />
               <Divider />
-              <ModerationLabelPref labelGroup="violence" />
+              <SimpleModerationLabelPref
+                labelValueDefinition={LABELS.gore}
+                labelerDid={undefined}
+              />
             </>
           )}
         </View>

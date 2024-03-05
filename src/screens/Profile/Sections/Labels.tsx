@@ -154,7 +154,7 @@ export function ProfileLabelsSectionInner({
       <View
         style={[
           a.pt_xl,
-          a.px_xl,
+          a.px_lg,
           isNative && a.border_t,
           t.atoms.border_contrast_low,
         ]}>
