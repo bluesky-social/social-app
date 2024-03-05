@@ -1,4 +1,8 @@
+import React from 'react'
+import {Props as SVGIconProps} from '#/components/icons/common'
+
 import * as Dialog from '#/components/Dialog'
+import {TextStyleProp, ViewStyleProp} from '#/alf'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control'] | null
@@ -37,3 +41,18 @@ export type TriggerChildProps =
       }
       handlers: {}
     }
+
+export type ItemProps = React.PropsWithChildren<
+  ViewStyleProp & {
+    label: string
+    onPress: () => void
+  }
+>
+
+export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
+export type ItemIconProps = React.PropsWithChildren<{
+  icon: React.ComponentType<SVGIconProps>
+  position?: 'left' | 'right'
+}>
+
+export type GroupProps = React.PropsWithChildren<ViewStyleProp & {}>
