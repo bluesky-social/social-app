@@ -45,7 +45,7 @@ module.exports = function (config) {
       splash: SPLASH_CONFIG,
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'com.haileyok.bluesky',
         config: {
           usesNonExemptEncryption: false,
         },
@@ -60,13 +60,9 @@ module.exports = function (config) {
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
         },
-        associatedDomains: ['applinks:bsky.app', 'applinks:staging.bsky.app'],
         splash: {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
-        },
-        entitlements: {
-          'com.apple.security.application-groups': 'group.app.bsky',
         },
       },
       androidStatusBar: {
@@ -121,7 +117,7 @@ module.exports = function (config) {
           {
             ios: {
               deploymentTarget: '13.4',
-              newArchEnabled: false,
+              newArchEnabled: true,
             },
             android: {
               compileSdkVersion: 34,
@@ -145,7 +141,6 @@ module.exports = function (config) {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
-        './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
         eas: {
