@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
+import {LinearGradient} from 'expo-linear-gradient'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
