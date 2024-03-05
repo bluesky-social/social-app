@@ -1,5 +1,5 @@
 import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
-import {moveAsync} from 'expo-file-system'
+import {cacheDirectory, copyAsync, moveAsync} from 'expo-file-system'
 
 const GET_TIMEOUT = 15e3 // 15s
 const POST_TIMEOUT = 60e3 // 60s
@@ -33,12 +33,26 @@ async function fetchHandler(
       // we get around that by renaming the file ext to .bin
       // see https://github.com/facebook/react-native/issues/27099
       // -prf
-      const newPath = reqBody.replace(/\.jpe?g$/, '.bin')
-      await moveAsync({
-        from: reqBody,
-        to: newPath,
-      })
-      reqBody = newPath
+
+      // On some platforms, moving this file is not possible. We will attempt to move it (this is optimal, since
+      // we don't create duplicates) and if there is an error, we will instead copy the file to the cache directory
+      const fileName = reqBody.split('/').pop() ?? ''
+      const newPath = `${cacheDirectory ?? ''}${fileName.replace(
+        /\.jpe?g$/,
+        '.bin',
+      )}`
+      try {
+        await moveAsync({
+          from: reqBody,
+          to: newPath,
+        })
+        reqBody = newPath
+      } catch (e) {
+        await copyAsync({
+          from: reqBody,
+          to: newPath,
+        })
+      }
     }
     // NOTE
     // React native treats bodies with {uri: string} as file uploads to pull from cache
