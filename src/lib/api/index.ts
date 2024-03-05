@@ -1,3 +1,4 @@
+import {deleteAsync} from 'expo-file-system'
 import {
   AppBskyEmbedImages,
   AppBskyEmbedExternal,
@@ -39,10 +40,14 @@ export async function uploadBlob(
     })
   } else {
     // `blob` should be a path to a file in the local FS
-    return agent.uploadBlob(
+    const res = await agent.uploadBlob(
       blob, // this will be special-cased by the fetch monkeypatch in /src/state/lib/api.ts
       {encoding},
     )
+    try {
+      deleteAsync(blob)
+    } catch (e) {} // Don't need to handle
+    return res
   }
 }
 
