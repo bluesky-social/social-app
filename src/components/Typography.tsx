@@ -1,6 +1,6 @@
 import React from 'react'
 import {Text as RNText, TextStyle, TextProps as RNTextProps} from 'react-native'
-import {UITextView} from 'react-native-ui-text-view'
+import {UITextView} from 'react-native-uitextview'
 
 import {useTheme, atoms, web, flatten} from '#/alf'
 import {isIOS} from '#/platform/detection'

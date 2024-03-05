@@ -3,7 +3,7 @@ import {Text as RNText, TextProps} from 'react-native'
 import {s, lh} from 'lib/styles'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
 import {isIOS} from 'platform/detection'
-import {UITextView} from 'react-native-ui-text-view'
+import {UITextView} from 'react-native-uitextview'
 
 export type CustomTextProps = TextProps & {
   type?: TypographyVariant
