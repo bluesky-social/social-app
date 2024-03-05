@@ -13,6 +13,7 @@ import {
   toSimpleDateString,
 } from '#/components/forms/DateField/utils'
 import DatePicker from 'react-native-date-picker'
+import {isAndroid} from 'platform/detection'
 
 export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label
@@ -84,6 +85,8 @@ export function DateField({
 
       {open && (
         <DatePicker
+          modal={isAndroid}
+          open={isAndroid}
           theme={t.name === 'light' ? 'light' : 'dark'}
           date={new Date(value)}
           onDateChange={onChangeInternal}

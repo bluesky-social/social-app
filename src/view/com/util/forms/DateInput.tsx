@@ -77,9 +77,13 @@ export function DateInput(props: Props) {
       )}
       {(isIOS || show) && (
         <DatePicker
+          modal={isAndroid}
+          open={isAndroid}
           theme={theme.colorScheme}
           date={props.value}
           onDateChange={onChangeInternal}
+          onConfirm={onChangeInternal}
+          onCancel={() => {}}
           mode="date"
           testID={props.testID ? `${props.testID}-datepicker` : undefined}
           accessibilityLabel={props.accessibilityLabel}
