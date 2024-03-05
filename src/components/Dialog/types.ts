@@ -1,6 +1,6 @@
 import React from 'react'
 import type {AccessibilityProps} from 'react-native'
-import {BottomSheetProps} from '@gorhom/bottom-sheet'
+import {BottomSheetProps} from '@discord/bottom-sheet/src'
 
 import {ViewStyleProp} from '#/alf'
 
