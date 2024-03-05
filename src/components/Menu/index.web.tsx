@@ -140,8 +140,9 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Item({children, label, onPress}: ItemProps) {
+export function Item({children, label, onPress, ...rest}: ItemProps) {
   const t = useTheme()
+  const {control} = React.useContext(Context)
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -150,12 +151,23 @@ export function Item({children, label, onPress}: ItemProps) {
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
 
   return (
-    <DropdownMenu.Item asChild onSelect={onPress}>
+    <DropdownMenu.Item asChild>
       <Pressable
+        {...rest}
         className="radix-dropdown-item"
         accessibilityHint=""
         accessibilityLabel={label}
-        onPress={onPress}
+        onPress={e => {
+          onPress(e)
+
+          /**
+           * Ported forward from Radix
+           * @see https://www.radix-ui.com/primitives/docs/components/dropdown-menu#item
+           */
+          if (!e.defaultPrevented) {
+            control.close()
+          }
+        }}
         onFocus={onFocus}
         onBlur={onBlur}
         style={flatten([
@@ -163,9 +175,8 @@ export function Item({children, label, onPress}: ItemProps) {
           a.align_center,
           a.gap_sm,
           a.py_sm,
-          a.px_sm,
           a.rounded_xs,
-          {minHeight: 36},
+          {minHeight: 32, paddingHorizontal: 10},
           web({outline: 0}),
           (hovered || focused) && [
             web({outline: '0 !important'}),
@@ -185,7 +196,7 @@ export function Item({children, label, onPress}: ItemProps) {
 export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
   return (
-    <Text style={[a.font_bold, t.atoms.text_contrast_high, style]}>
+    <Text style={[a.flex_1, a.font_bold, t.atoms.text_contrast_high, style]}>
       {children}
     </Text>
   )
@@ -198,9 +209,12 @@ export function ItemIcon({icon: Comp, position = 'left'}: ItemIconProps) {
       size="md"
       fill={t.atoms.text_contrast_medium.color}
       style={[
-        {
-          marginLeft: position === 'left' ? -2 : 0,
-          marginRight: position === 'right' ? -2 : 0,
+        position === 'left' && {
+          marginLeft: -2,
+        },
+        position === 'right' && {
+          marginRight: -2,
+          marginLeft: 12,
         },
       ]}
     />

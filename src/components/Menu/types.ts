@@ -1,6 +1,7 @@
 import React from 'react'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {GestureResponderEvent, PressableProps} from 'react-native'
 
+import {Props as SVGIconProps} from '#/components/icons/common'
 import * as Dialog from '#/components/Dialog'
 import {TextStyleProp, ViewStyleProp} from '#/alf'
 
@@ -46,11 +47,13 @@ export type TriggerChildProps =
       handlers: {}
     }
 
+// TODO test id
 export type ItemProps = React.PropsWithChildren<
-  ViewStyleProp & {
-    label: string
-    onPress: () => void
-  }
+  Omit<PressableProps, 'style'> &
+    ViewStyleProp & {
+      label: string
+      onPress: (e: GestureResponderEvent) => void
+    }
 >
 
 export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>

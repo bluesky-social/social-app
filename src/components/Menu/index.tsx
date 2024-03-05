@@ -1,5 +1,6 @@
 import React from 'react'
 import {View, Pressable} from 'react-native'
+import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
@@ -80,21 +81,26 @@ export function Trigger({children, label}: TriggerProps) {
 }
 
 export function Outer({children}: React.PropsWithChildren<{}>) {
-  const {control} = React.useContext(Context)
+  const context = React.useContext(Context)
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={context.control}>
       <Dialog.Handle />
-      <Dialog.ScrollableInner label="Menu TODO">
-        <View style={[a.gap_lg]}>{children}</View>
-        <View style={{height: a.gap_lg.gap}} />
-      </Dialog.ScrollableInner>
+
+      {/* Re-wrap with context since Dialogs are portal-ed to root */}
+      <Context.Provider value={context}>
+        <Dialog.ScrollableInner label="Menu TODO">
+          <View style={[a.gap_lg]}>{children}</View>
+          <View style={{height: a.gap_lg.gap}} />
+        </Dialog.ScrollableInner>
+      </Context.Provider>
     </Dialog.Outer>
   )
 }
 
-export function Item({children, label, style, onPress}: ItemProps) {
+export function Item({children, label, style, onPress, ...rest}: ItemProps) {
   const t = useTheme()
+  const {control} = React.useContext(Context)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -104,9 +110,16 @@ export function Item({children, label, style, onPress}: ItemProps) {
 
   return (
     <Pressable
+      {...rest}
       accessibilityHint=""
       accessibilityLabel={label}
-      onPress={onPress}
+      onPress={e => {
+        onPress(e)
+
+        if (!e.defaultPrevented) {
+          control?.close()
+        }
+      }}
       onFocus={onFocus}
       onBlur={onBlur}
       onPressIn={onPressIn}
@@ -115,12 +128,12 @@ export function Item({children, label, style, onPress}: ItemProps) {
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        a.p_md,
+        a.px_md,
         a.rounded_md,
         a.border,
         t.atoms.bg_contrast_25,
         t.atoms.border_contrast_low,
-        {minHeight: 48},
+        {minHeight: 44, paddingVertical: 10},
         style,
         (focused || pressed) && [t.atoms.bg_contrast_50],
       ]}>
@@ -133,7 +146,10 @@ export function ItemText({children, style}: ItemTextProps) {
   const t = useTheme()
   return (
     <Text
+      numberOfLines={1}
+      ellipsizeMode="middle"
       style={[
+        a.flex_1,
         a.text_md,
         a.font_bold,
         t.atoms.text_contrast_medium,
@@ -161,7 +177,7 @@ export function Group({children, style}: GroupProps) {
         t.atoms.border_contrast_low,
         style,
       ]}>
-      {React.Children.toArray(children).map((child, i) => {
+      {flattenReactChildren(children).map((child, i) => {
         // ignore null children, like Dividers
         return React.isValidElement(child) && child.props.children ? (
           <React.Fragment key={i}>
