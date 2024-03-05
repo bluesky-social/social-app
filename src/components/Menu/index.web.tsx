@@ -170,6 +170,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
         }}
         onFocus={onFocus}
         onBlur={onBlur}
+        // need `flatten` here for Radix compat
         style={flatten([
           a.flex_row,
           a.align_center,
