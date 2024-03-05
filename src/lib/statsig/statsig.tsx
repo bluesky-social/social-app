@@ -19,6 +19,7 @@ export function Provider({children}: {children: React.ReactNode}) {
       user={statsigUser}
       waitForInitialization={true}
       options={{
+        disableLocalStorage: true,
         environment: {
           tier:
             process.env.NODE_ENV === 'development'
