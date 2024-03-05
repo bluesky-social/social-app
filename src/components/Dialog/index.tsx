@@ -15,7 +15,7 @@ import {useTheme, atoms as a, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 import {createInput} from '#/components/forms/TextField'
 import {logger} from '#/logger'
-import {useDialogStateContext} from '#/state/dialogs'
+import {useDialogStateControlContext} from '#/state/dialogs'
 
 import {
   DialogOuterProps,
@@ -82,7 +82,7 @@ export function Outer({
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
   const closeCallback = React.useRef<() => void>()
-  const {openDialogs} = useDialogStateContext()
+  const {setDialogIsOpen} = useDialogStateControlContext()
 
   /*
    * Used to manage open/closed, but index is otherwise handled internally by `BottomSheet`
@@ -96,11 +96,11 @@ export function Outer({
 
   const open = React.useCallback<DialogControlProps['open']>(
     ({index} = {}) => {
-      openDialogs.current.add(control.id)
+      setDialogIsOpen(control.id, true)
       // can be set to any index of `snapPoints`, but `0` is the first i.e. "open"
       setOpenIndex(index || 0)
     },
-    [setOpenIndex, openDialogs, control.id],
+    [setOpenIndex, setDialogIsOpen, control.id],
   )
 
   const close = React.useCallback<DialogControlProps['close']>(cb => {
@@ -133,12 +133,12 @@ export function Outer({
           closeCallback.current = undefined
         }
 
-        openDialogs.current.delete(control.id)
+        setDialogIsOpen(control.id, false)
         onClose?.()
         setOpenIndex(-1)
       }
     },
-    [onClose, setOpenIndex, openDialogs, control.id],
+    [onClose, setOpenIndex, setDialogIsOpen, control.id],
   )
 
   const context = React.useMemo(() => ({close}), [close])
@@ -146,38 +146,45 @@ export function Outer({
   return (
     isOpen && (
       <Portal>
-        <BottomSheet
-          enableDynamicSizing={!hasSnapPoints}
-          enablePanDownToClose
-          keyboardBehavior="interactive"
-          android_keyboardInputMode="adjustResize"
-          keyboardBlurBehavior="restore"
-          topInset={insets.top}
-          {...sheetOptions}
-          snapPoints={sheetOptions.snapPoints || ['100%']}
-          ref={sheet}
-          index={openIndex}
-          backgroundStyle={{backgroundColor: 'transparent'}}
-          backdropComponent={Backdrop}
-          handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
-          handleStyle={{display: 'none'}}
-          onChange={onChange}>
-          <Context.Provider value={context}>
-            <View
-              style={[
-                a.absolute,
-                a.inset_0,
-                t.atoms.bg,
-                {
-                  borderTopLeftRadius: 40,
-                  borderTopRightRadius: 40,
-                  height: Dimensions.get('window').height * 2,
-                },
-              ]}
-            />
-            {children}
-          </Context.Provider>
-        </BottomSheet>
+        <View
+          // iOS
+          accessibilityViewIsModal
+          // Android
+          importantForAccessibility="yes"
+          style={[a.absolute, a.inset_0]}>
+          <BottomSheet
+            enableDynamicSizing={!hasSnapPoints}
+            enablePanDownToClose
+            keyboardBehavior="interactive"
+            android_keyboardInputMode="adjustResize"
+            keyboardBlurBehavior="restore"
+            topInset={insets.top}
+            {...sheetOptions}
+            snapPoints={sheetOptions.snapPoints || ['100%']}
+            ref={sheet}
+            index={openIndex}
+            backgroundStyle={{backgroundColor: 'transparent'}}
+            backdropComponent={Backdrop}
+            handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
+            handleStyle={{display: 'none'}}
+            onChange={onChange}>
+            <Context.Provider value={context}>
+              <View
+                style={[
+                  a.absolute,
+                  a.inset_0,
+                  t.atoms.bg,
+                  {
+                    borderTopLeftRadius: 40,
+                    borderTopRightRadius: 40,
+                    height: Dimensions.get('window').height * 2,
+                  },
+                ]}
+              />
+              {children}
+            </Context.Provider>
+          </BottomSheet>
+        </View>
       </Portal>
     )
   )
