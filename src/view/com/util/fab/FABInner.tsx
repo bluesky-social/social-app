@@ -58,16 +58,19 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
+    overflow: 'hidden',
   },
   sizeLarge: {
     width: 70,
     height: 70,
     borderRadius: 35,
+    overflow: 'hidden',
   },
   outer: {
     // @ts-ignore web-only
     position: isWeb ? 'fixed' : 'absolute',
     zIndex: 1,
+    overflow: 'hidden',
   },
   inner: {
     justifyContent: 'center',
