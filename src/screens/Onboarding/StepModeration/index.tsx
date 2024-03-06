@@ -3,13 +3,10 @@ import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 import Animated, {Easing, Layout} from 'react-native-reanimated'
+import {LABELS} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
-import {
-  configurableAdultLabelGroups,
-  configurableOtherLabelGroups,
-  usePreferencesSetAdultContentMutation,
-} from 'state/queries/preferences'
+import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
 import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -52,7 +49,7 @@ export function StepModeration() {
 
   const adultContentEnabled = !!(
     (variables && variables.enabled) ||
-    (!variables && preferences?.adultContentEnabled)
+    (!variables && preferences?.moderationPrefs.adultContentEnabled)
   )
 
   const onContinue = React.useCallback(() => {
@@ -86,22 +83,28 @@ export function StepModeration() {
           <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {adultContentEnabled &&
-              configurableAdultLabelGroups.map((g, index) => (
-                <React.Fragment key={index}>
-                  {index === 0 && <AnimatedDivider />}
-                  <ModerationOption labelGroup={g} isMounted={isMounted} />
-                  <AnimatedDivider />
-                </React.Fragment>
-              ))}
-
-            {configurableOtherLabelGroups.map((g, index) => (
-              <React.Fragment key={index}>
-                {!adultContentEnabled && index === 0 && <AnimatedDivider />}
-                <ModerationOption labelGroup={g} isMounted={isMounted} />
+            {adultContentEnabled && (
+              <>
                 <AnimatedDivider />
-              </React.Fragment>
-            ))}
+                <ModerationOption
+                  labelValueDefinition={LABELS.porn}
+                  isMounted={isMounted}
+                />
+                <ModerationOption
+                  labelValueDefinition={LABELS.sexual}
+                  isMounted={isMounted}
+                />
+                <ModerationOption
+                  labelValueDefinition={LABELS.nudity}
+                  isMounted={isMounted}
+                />
+                <ModerationOption
+                  labelValueDefinition={LABELS.gore}
+                  isMounted={isMounted}
+                />
+                <AnimatedDivider />
+              </>
+            )}
           </View>
         </>
       )}

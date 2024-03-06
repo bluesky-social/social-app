@@ -57,7 +57,7 @@ export function AdultContentEnabledPref({
     try {
       mutate({
         enabled: !(
-          variables?.enabled ?? preferences?.moderationOpts.adultContentEnabled
+          variables?.enabled ?? preferences?.moderationPrefs.adultContentEnabled
         ),
       })
     } catch (e) {
@@ -79,7 +79,7 @@ export function AdultContentEnabledPref({
             label={_(msg`Enable adult content in your feeds`)}
             value={
               variables?.enabled ??
-              preferences?.moderationOpts.adultContentEnabled
+              preferences?.moderationPrefs.adultContentEnabled
             }
             onChange={onToggleAdultContent}>
             <View

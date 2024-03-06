@@ -36,7 +36,7 @@ export function StepTopicalFeeds() {
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedFeedUris,
-      state.interestsStepResults.apiResponse.suggestedFeedUris.default,
+      state.interestsStepResults.apiResponse.suggestedFeedUris.default || [],
     ).slice(0, 10)
   }, [
     currentAccount?.service,
