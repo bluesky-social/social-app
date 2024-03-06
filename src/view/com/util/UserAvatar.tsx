@@ -131,6 +131,7 @@ let UserAvatar = ({
         width: size,
         height: size,
         borderRadius: size > 32 ? 8 : 3,
+        overflow: 'hidden',
         backgroundColor,
       }
     }
@@ -138,6 +139,7 @@ let UserAvatar = ({
       width: size,
       height: size,
       borderRadius: Math.floor(size / 2),
+      overflow: 'hidden',
       backgroundColor,
     }
   }, [type, size, backgroundColor])
