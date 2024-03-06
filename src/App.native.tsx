@@ -46,6 +46,8 @@ import {Provider as PortalProvider} from '#/components/Portal'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
+import {StatusBar} from 'expo-status-bar'
+import {isAndroid} from 'platform/detection'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -69,6 +71,7 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      {isAndroid && <StatusBar />}
       <Alf theme={theme}>
         <Splash isReady={!isInitialLoad}>
           <React.Fragment

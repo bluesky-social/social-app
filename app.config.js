@@ -11,6 +11,17 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
+const SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0c7cff',
+  image: './assets/splash.png',
+  resizeMode: 'cover',
+}
+const DARK_SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0f141b',
+  image: './assets/splash-dark.png',
+  resizeMode: 'cover',
+}
+
 module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -70,8 +81,8 @@ module.exports = function (config) {
         },
       },
       androidStatusBar: {
-        barStyle: 'dark-content',
-        backgroundColor: '#ffffff',
+        barStyle: 'light-content',
+        backgroundColor: '#00000000',
       },
       android: {
         icon: './assets/icon.png',
@@ -101,8 +112,8 @@ module.exports = function (config) {
           },
         ],
         splash: {
-          ...SPLASH_CONFIG,
-          dark: DARK_SPLASH_CONFIG,
+          ...SPLASH_CONFIG_ANDROID,
+          dark: DARK_SPLASH_CONFIG_ANDROID,
         },
       },
       web: {
@@ -146,6 +157,7 @@ module.exports = function (config) {
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
