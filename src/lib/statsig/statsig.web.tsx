@@ -1,11 +1,14 @@
-import './slowdown'
 import React from 'react'
 import {StatsigProvider, useGate as useStatsigGate} from 'statsig-react'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
 
 export function useGate(gateName: string) {
-  return useStatsigGate(gateName)
+  const {isLoading, value} = useStatsigGate(gateName)
+  if (isLoading) {
+    console.error('Did not expected isLoading to ever be true.')
+  }
+  return value
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
@@ -22,9 +25,9 @@ export function Provider({children}: {children: React.ReactNode}) {
       sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
       mountKey={statsigUser.userID}
       user={statsigUser}
-      waitForCache={true}
-      waitForInitialization={false}
+      waitForInitialization={true}
       options={{
+        initTimeoutMs: 1,
         environment: {
           tier:
             process.env.NODE_ENV === 'development'
