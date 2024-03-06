@@ -34,6 +34,15 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 import * as Menu from '#/components/Menu'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
+import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 
 let PostDropdownBtn = ({
   testID,
@@ -172,7 +181,7 @@ let PostDropdownBtn = ({
               label={_(msg`Translate`)}
               onPress={onOpenTranslate}>
               <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+              <Menu.ItemIcon icon={Translate} position="right" />
             </Menu.Item>
 
             <Menu.Item
@@ -193,7 +202,7 @@ let PostDropdownBtn = ({
               <Menu.ItemText>
                 {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               </Menu.ItemText>
-              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+              <Menu.ItemIcon icon={Share} position="right" />
             </Menu.Item>
           </Menu.Group>
 
@@ -213,7 +222,10 @@ let PostDropdownBtn = ({
                       ? _(msg`Unmute thread`)
                       : _(msg`Mute thread`)}
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                  <Menu.ItemIcon
+                    icon={isThreadMuted ? Unmute : Mute}
+                    position="right"
+                  />
                 </Menu.Item>
 
                 <Menu.Item
@@ -221,7 +233,7 @@ let PostDropdownBtn = ({
                   label={_(msg`Mute words & tags`)}
                   onPress={() => mutedWordsDialogControl.open()}>
                   <Menu.ItemText>{_(msg`Mute words & tags`)}</Menu.ItemText>
-                  <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                  <Menu.ItemIcon icon={Filter} position="right" />
                 </Menu.Item>
 
                 {!isAuthor && !isPostHidden && (
@@ -239,7 +251,7 @@ let PostDropdownBtn = ({
                       })
                     }}>
                     <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
-                    <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                    <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
                 )}
               </Menu.Group>
@@ -261,7 +273,7 @@ let PostDropdownBtn = ({
                   })
                 }}>
                 <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                <Menu.ItemIcon icon={Warning} position="right" />
               </Menu.Item>
             )}
 
@@ -278,7 +290,7 @@ let PostDropdownBtn = ({
                   })
                 }}>
                 <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
-                <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                <Menu.ItemIcon icon={Trash} position="right" />
               </Menu.Item>
             )}
 
@@ -299,7 +311,7 @@ let PostDropdownBtn = ({
                   <Menu.ItemText>
                     {_(msg`Appeal content warning`)}
                   </Menu.ItemText>
-                  <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+                  <Menu.ItemIcon icon={CircleInfo} position="right" />
                 </Menu.Item>
               </>
             )}
