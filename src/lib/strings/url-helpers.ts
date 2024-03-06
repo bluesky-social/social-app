@@ -148,15 +148,15 @@ export function feedUriToHref(url: string): string {
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
 
+  // If the uri started with a / we know it is internal.
+  if (uri.startsWith('/')) {
+    return false
+  }
+
   let urip
   try {
     urip = new URL(uri)
   } catch {
-    // If the uri started with a / we know it is internal.
-    if (uri.startsWith('/')) {
-      return false
-    }
-
     return true
   }
 
