@@ -152,14 +152,17 @@ export function linkRequiresWarning(uri: string, label: string) {
   try {
     urip = new URL(uri)
   } catch {
+    // If the uri started with a / we know it is internal.
+    if (uri.startsWith('/')) {
+      return false
+    }
+
     return true
   }
 
   const host = urip.hostname.toLowerCase()
-
   // Hosts that end with bsky.app or bsky.social should be trusted by default.
   if (
-    uri.startsWith('/') ||
     host.endsWith('bsky.app') ||
     host.endsWith('bsky.social') ||
     host.endsWith('blueskyweb.xyz')
