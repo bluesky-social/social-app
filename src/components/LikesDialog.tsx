@@ -1,5 +1,5 @@
 import React, {useMemo, useCallback} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, FlatList, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
@@ -55,6 +55,7 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
+    return []
   }, [data])
 
   const onEndReached = useCallback(async () => {
@@ -92,7 +93,7 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
         <ActivityIndicator />
       ) : resolveError || isError ? (
         <ErrorMessage message={cleanError(resolveError || error)} />
-      ) : likes?.length === 0 ? (
+      ) : likes.length === 0 ? (
         <View style={[t.atoms.bg_contrast_50, a.px_md, a.py_xl, a.rounded_md]}>
           <Text style={[a.text_center]}>
             <Trans>
@@ -100,18 +101,18 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
             </Trans>
           </Text>
         </View>
-      ) : (
-        <Dialog.FlatList
-          data={likes}
-          keyExtractor={item => item.actor.did}
-          onEndReached={onEndReached}
-          renderItem={renderItem}
-          initialNumToRender={15}
-          ListFooterComponent={
-            <ListFooterComponent isFetching={isFetchingNextPage} />
-          }
-        />
-      )}
+      ) : null}
+      <FlatList
+        data={likes}
+        keyExtractor={item => item.actor.did}
+        onEndReached={onEndReached}
+        renderItem={renderItem}
+        initialNumToRender={15}
+        ListFooterComponent={
+          <ListFooterComponent isFetching={isFetchingNextPage} />
+        }
+        style={{height: 400}}
+      />
       <View style={[gtMobile && [a.flex_row, a.justify_end], a.mt_md]}>
         <Button
           testID="doneBtn"
