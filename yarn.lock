@@ -11622,15 +11622,15 @@ expo-eas-client@~0.11.0:
   resolved "https://registry.yarnpkg.com/expo-eas-client/-/expo-eas-client-0.11.0.tgz#0f25aa497849cade7ebef55c0631093a87e58b07"
   integrity sha512-99W0MUGe3U4/MY1E9UeJ4uKNI39mN8/sOGA0Le8XC47MTbwbLoVegHR3C5y2fXLwLn7EpfNxAn5nlxYjY3gD2A==
 
+expo-file-system@^16.0.7, expo-file-system@~16.0.7:
+  version "16.0.7"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-16.0.7.tgz#0b3bd920a602b1c474d57a6b51202986113e1ef8"
+  integrity sha512-BELr1Agj6WK0PKVMcD0rqC3fP5unKfp2KW8/sNhtTHgdzQ/F0Pylq9pTk9u7KEu0ZbEdTpk5EMarLMPwffi3og==
+
 expo-file-system@~16.0.0:
   version "16.0.1"
   resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-16.0.1.tgz#326b7c2f6e53e1a0eaafc9769578aafb3f9c9f43"
   integrity sha512-/U6ufN2wRPgg4m2a9sqbL3dThqQsysT022qulEXWnUTmNaqnzYSk9ihjDWqoqjXLi9slQLsyok5t6CNzhM7HPw==
-
-expo-file-system@~16.0.7:
-  version "16.0.7"
-  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-16.0.7.tgz#0b3bd920a602b1c474d57a6b51202986113e1ef8"
-  integrity sha512-BELr1Agj6WK0PKVMcD0rqC3fP5unKfp2KW8/sNhtTHgdzQ/F0Pylq9pTk9u7KEu0ZbEdTpk5EMarLMPwffi3og==
 
 expo-font@~11.10.3:
   version "11.10.3"
@@ -18296,6 +18296,11 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-date-picker@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.4.0.tgz#fe5b6eb8d85a4a30b2991ada5169a30ce5023ead"
+  integrity sha512-Axx3byihwwhKRLRVjPAr/UaEysapkRcKmjjM8/05UaVm4Q0xDn2RFUcRdy1QAahhRcjLjlVYhepxvU5bdgy7ZQ==
+
 react-native-dotenv@^3.3.1:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.9.tgz#621c5b0c1d0c5c7f569bfe5a1d804bec7885c010"
@@ -18335,11 +18340,6 @@ react-native-get-random-values@~1.8.0:
   integrity sha512-H/zghhun0T+UIJLmig3+ZuBCvF66rdbiWUfRSNS6kv5oDSpa1ZiVyvRWtuPesQpT8dXj+Bv7WJRQOUP+5TB1sA==
   dependencies:
     fast-base64-decode "^1.0.0"
-
-react-native-haptic-feedback@^1.14.0:
-  version "1.14.0"
-  resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-1.14.0.tgz#b50f49dedda4980b3c37c5780823f753cf3ee717"
-  integrity sha512-dSXZ6gAzl+W/L7BPjOpnT0bx0cgQiSr0sB3DjyDJbGIdVr4ISaktZC6gC9xYFTv2kMq0+KtbKi+dpd0WtxYZMw==
 
 react-native-image-crop-picker@^0.38.1:
   version "0.38.1"
@@ -18423,11 +18423,6 @@ react-native-uuid@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-native-uuid/-/react-native-uuid-2.0.1.tgz#ed4e2dfb1683eddb66967eb5dca140dfe1abddb9"
   integrity sha512-cptnoIbL53GTCrWlb/+jrDC6tvb7ypIyzbXNJcpR3Vab0mkeaaVd5qnB3f0whXYzS+SMoSQLcUUB0gEWqkPC0g==
-
-react-native-version-number@^0.3.6:
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/react-native-version-number/-/react-native-version-number-0.3.6.tgz#dd8b1435fc217df0a166d7e4a61fdc993f3e7437"
-  integrity sha512-TdyXiK90NiwmSbmAUlUBOV6WI1QGoqtvZZzI5zQY4fKl67B3ZrZn/h+Wy/OYIKKFMfePSiyfeIs8LtHGOZ/NgA==
 
 react-native-web-webview@^1.0.2:
   version "1.0.2"
