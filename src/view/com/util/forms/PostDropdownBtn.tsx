@@ -1,5 +1,11 @@
 import React, {memo} from 'react'
-import {StyleProp, ViewStyle, Pressable} from 'react-native'
+import {
+  StyleProp,
+  ViewStyle,
+  Pressable,
+  View,
+  PressableProps,
+} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
@@ -32,6 +38,7 @@ import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
+import {atoms as a, useTheme as useAlf, web} from '#/alf'
 import * as Menu from '#/components/Menu'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
@@ -53,6 +60,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   showAppealLabelItem,
+  hitSlop,
 }: {
   testID: string
   postAuthor: AppBskyActorDefs.ProfileViewBasic
@@ -62,9 +70,11 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   showAppealLabelItem?: boolean
+  hitSlop?: PressableProps['hitSlop']
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
+  const alf = useAlf()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const {openModal} = useModalControls()
@@ -162,16 +172,40 @@ let PostDropdownBtn = ({
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`Open post menu`)}>
-          {({props}) => (
-            <Pressable testID={testID} style={style} {...props}>
-              <FontAwesomeIcon
-                icon="ellipsis"
-                size={20}
-                color={defaultCtrlColor}
-              />
-            </Pressable>
-          )}
+        <Menu.Trigger label={_(msg`Open post options menu`)}>
+          {({props, state}) => {
+            const styles = [
+              style,
+              a.rounded_full,
+              (state.hovered || state.focused || state.pressed) && [
+                web({outline: 0}),
+                alf.atoms.bg_contrast_25,
+              ],
+            ]
+            return isWeb ? (
+              <View {...props} testID={testID} style={styles}>
+                <FontAwesomeIcon
+                  icon="ellipsis"
+                  size={20}
+                  color={defaultCtrlColor}
+                  style={{pointerEvents: 'none'}}
+                />
+              </View>
+            ) : (
+              <Pressable
+                {...props}
+                hitSlop={hitSlop}
+                testID={testID}
+                style={styles}>
+                <FontAwesomeIcon
+                  icon="ellipsis"
+                  size={20}
+                  color={defaultCtrlColor}
+                  style={{pointerEvents: 'none'}}
+                />
+              </Pressable>
+            )
+          }}
         </Menu.Trigger>
 
         <Menu.Outer>
