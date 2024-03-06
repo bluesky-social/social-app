@@ -131,7 +131,6 @@ let UserAvatar = ({
         width: size,
         height: size,
         borderRadius: size > 32 ? 8 : 3,
-        overflow: 'hidden',
         backgroundColor,
       }
     }
@@ -139,7 +138,6 @@ let UserAvatar = ({
       width: size,
       height: size,
       borderRadius: Math.floor(size / 2),
-      overflow: 'hidden',
       backgroundColor,
     }
   }, [type, size, backgroundColor])
@@ -166,7 +164,7 @@ let UserAvatar = ({
         <Image
           accessibilityIgnoresInvertColors
           testID="userAvatarImage"
-          style={aviStyle}
+          style={[aviStyle, {overflow: 'hidden'}]}
           resizeMode="cover"
           source={{uri: avatar}}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
@@ -174,7 +172,7 @@ let UserAvatar = ({
       ) : (
         <HighPriorityImage
           testID="userAvatarImage"
-          style={aviStyle}
+          style={[aviStyle, {overflow: 'hidden'}]}
           contentFit="cover"
           source={{uri: avatar}}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
