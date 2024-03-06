@@ -18270,10 +18270,10 @@ react-native-drawer-layout@^4.0.0-alpha.3:
   dependencies:
     use-latest-callback "^0.1.9"
 
-react-native-gesture-handler@~2.16.0-rc.0:
-  version "2.16.0-rc.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.16.0-rc.0.tgz#ed9bbd7840fe84446402ec1d26c65e8e3ab07323"
-  integrity sha512-7y7UKLnDBq5BndVZQed1BC0CtXSVYg27XNL6Fu2vhmkvxVPtsHFOW1XMMCVajIi4ySnf4JNO/LbEQeOlJVXsYQ==
+react-native-gesture-handler@~2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.15.0.tgz#f8e6c0451a7bdf065edb7b9be605480db402baa0"
+  integrity sha512-cmMGW8k86o/xgVTBZZOPohvR5re4Vh65PUxH4HbBBJAYTog4aN4wTVTUlnoky01HuSN8/X4h3tI/K3XLPoDnsg==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
