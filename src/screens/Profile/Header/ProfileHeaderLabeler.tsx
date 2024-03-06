@@ -35,6 +35,8 @@ import {
   Heart2_Stroke2_Corner0_Rounded as Heart,
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 } from '#/components/icons/Heart2'
+import {LikesDialog} from '#/components/LikesDialog'
+import * as Dialog from '#/components/Dialog'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -56,10 +58,11 @@ let ProfileHeaderLabeler = ({
   const profile: Shadow<AppBskyActorDefs.ProfileViewDetailed> =
     useProfileShadow(profileUnshadowed)
   const t = useTheme()
-  const {currentAccount, hasSession} = useSession()
   const {_} = useLingui()
+  const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
+  const likesControl = Dialog.useDialogControl()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -196,7 +199,7 @@ let ProfileHeaderLabeler = ({
                 />
               </View>
             ) : undefined}
-            <View style={[a.flex_row, a.gap_md, a.align_center, a.pt_md]}>
+            <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_md]}>
               <Button
                 testID="toggleLikeBtn"
                 size="small"
@@ -214,19 +217,34 @@ let ProfileHeaderLabeler = ({
               </Button>
 
               {typeof labeler.likeCount === 'number' && (
-                <InlineLink
-                  to={'#todo'}
-                  style={[t.atoms.text_contrast_medium, a.font_bold]}>
-                  <Trans>
-                    Liked by {labeler.likeCount}{' '}
-                    {pluralize(labeler.likeCount, 'user')}
-                  </Trans>
-                </InlineLink>
+                <Button
+                  variant="ghost"
+                  size="tiny"
+                  onPress={() => likesControl.open()}
+                  label={_(
+                    msg`Liked by ${labeler.likeCount} ${pluralize(
+                      labeler.likeCount,
+                      'user',
+                    )}`,
+                  )}>
+                  <ButtonText
+                    style={[
+                      t.atoms.text_contrast_medium,
+                      a.font_bold,
+                      a.text_sm,
+                    ]}>
+                    <Trans>
+                      Liked by {labeler.likeCount}{' '}
+                      {pluralize(labeler.likeCount, 'user')}
+                    </Trans>
+                  </ButtonText>
+                </Button>
               )}
             </View>
           </>
         )}
       </View>
+      <LikesDialog control={likesControl} uri={labeler.uri} />
     </ProfileHeaderShell>
   )
 }

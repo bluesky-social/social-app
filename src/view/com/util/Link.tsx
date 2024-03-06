@@ -49,6 +49,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
+  onBeforePress?: () => void
 }
 
 export const Link = memo(function Link({
@@ -62,6 +63,7 @@ export const Link = memo(function Link({
   accessible,
   anchorNoUnderline,
   navigationAction,
+  onBeforePress,
   ...props
 }: Props) {
   const {closeModal} = useModalControls()
@@ -71,6 +73,7 @@ export const Link = memo(function Link({
 
   const onPress = React.useCallback(
     (e?: Event) => {
+      onBeforePress?.()
       if (typeof href === 'string') {
         return onPressInner(
           closeModal,
@@ -82,7 +85,7 @@ export const Link = memo(function Link({
         )
       }
     },
-    [closeModal, navigation, navigationAction, href, openLink],
+    [closeModal, navigation, navigationAction, href, openLink, onBeforePress],
   )
 
   if (noFeedback) {

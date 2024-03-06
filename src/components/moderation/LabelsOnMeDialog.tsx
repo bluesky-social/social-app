@@ -32,7 +32,6 @@ export interface LabelsOnMeDialogProps {
 }
 
 export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
-  const t = useTheme()
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {subject, labels} = props
@@ -120,6 +119,7 @@ function Label({
   control: Dialog.DialogOuterProps['control']
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   const {labeler, strings} = useLabelInfo(label)
   return (
     <View
@@ -148,7 +148,11 @@ function Label({
         </InlineLink>
       </View>
       <View>
-        <Button variant="solid" color="secondary" size="small">
+        <Button
+          variant="solid"
+          color="secondary"
+          size="small"
+          label={_(msg`Appeal`)}>
           <ButtonText>
             <Trans>Appeal</Trans>
           </ButtonText>

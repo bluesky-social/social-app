@@ -16,6 +16,7 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 export {Input} from '#/components/forms/TextField'
+export {FlatList} from 'react-native'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 

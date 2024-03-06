@@ -2,6 +2,7 @@ import React, {useImperativeHandle} from 'react'
 import {View, Dimensions} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdrop,
+  BottomSheetFlatList,
   BottomSheetScrollView,
   BottomSheetTextInput,
   BottomSheetView,
@@ -23,6 +24,7 @@ export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
+export const FlatList = BottomSheetFlatList
 
 export function Outer({
   children,

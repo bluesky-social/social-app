@@ -31,6 +31,7 @@ export function ProfileCard({
   noBorder,
   followers,
   renderButton,
+  onPress,
   style,
 }: {
   testID?: string
@@ -42,6 +43,7 @@ export function ProfileCard({
   renderButton?: (
     profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
   ) => React.ReactNode
+  onPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -68,6 +70,7 @@ export function ProfileCard({
       ]}
       href={makeProfileLink(profile)}
       title={profile.handle}
+      onBeforePress={onPress}
       asAnchor
       anchorNoUnderline>
       <View style={styles.layout}>
@@ -233,11 +236,13 @@ export function ProfileCardWithFollowBtn({
   noBg,
   noBorder,
   followers,
+  onPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
+  onPress?: () => void
 }) {
   const {currentAccount} = useSession()
   const isMe = profile.did === currentAccount?.did
@@ -253,6 +258,7 @@ export function ProfileCardWithFollowBtn({
           ? undefined
           : profileShadow => <FollowButton profile={profileShadow} />
       }
+      onPress={onPress}
     />
   )
 }

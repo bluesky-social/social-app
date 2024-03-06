@@ -38,7 +38,7 @@ import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {getModerationServiceTitle} from '#/lib/moderation'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
-import {GlobalModerationLabelPref} from '#/components/ModerationLabelPref/SimpleModerationLabelPref'
+import {GlobalModerationLabelPref} from '#/components/moderation/GlobalModerationLabelPref'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
