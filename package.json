@@ -44,7 +44,7 @@
     "update-extensions": "scripts/updateExtensions.sh"
   },
   "dependencies": {
-    "@atproto/api": "^0.10.4",
+    "@atproto/api": "^0.10.5",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
