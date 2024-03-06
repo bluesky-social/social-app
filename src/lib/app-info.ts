@@ -1,5 +1,4 @@
-import VersionNumber from 'react-native-version-number'
-import * as Updates from 'expo-updates'
-export const updateChannel = Updates.channel
-
-export const appVersion = `${VersionNumber.appVersion} (${VersionNumber.buildVersion})`
+import {nativeBuildVersion, nativeApplicationVersion} from 'expo-application'
+import {channel} from 'expo-updates'
+export const updateChannel = channel
+export const appVersion = `${nativeApplicationVersion} (${nativeBuildVersion})`
