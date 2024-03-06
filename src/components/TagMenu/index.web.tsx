@@ -9,7 +9,7 @@ import {NativeDropdown} from '#/view/com/util/forms/NativeDropdown'
 import {NavigationProp} from '#/lib/routes/types'
 import {
   usePreferencesQuery,
-  useUpsertMutedWordsMutation,
+  useAddMutedWordMutation,
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {enforceLen} from '#/lib/strings/helpers'
@@ -45,17 +45,16 @@ export function TagMenu({
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {data: preferences} = usePreferencesQuery()
-  const {mutateAsync: upsertMutedWord, variables: optimisticUpsert} =
-    useUpsertMutedWordsMutation()
+  const {mutateAsync: addMutedWord, variables: optimisticAdd} =
+    useAddMutedWordMutation()
   const {mutateAsync: removeMutedWord, variables: optimisticRemove} =
     useRemoveMutedWordMutation()
   const isMuted = Boolean(
     (preferences?.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
-      optimisticUpsert?.find(
-        m => m.value === tag && m.targets.includes('tag'),
-      )) &&
+      (optimisticAdd?.value === tag &&
+        optimisticAdd.targets.includes('tag'))) &&
       !(optimisticRemove?.value === tag),
   )
   const truncatedTag = '#' + enforceLen(tag, 15, true, 'middle')
@@ -107,7 +106,7 @@ export function TagMenu({
           if (isMuted) {
             removeMutedWord({value: tag, targets: ['tag']})
           } else {
-            upsertMutedWord([{value: tag, targets: ['tag']}])
+            addMutedWord({value: tag, targets: ['tag']})
           }
         },
         testID: 'tagMenuMute',
@@ -128,7 +127,7 @@ export function TagMenu({
     preferences,
     tag,
     truncatedTag,
-    upsertMutedWord,
+    addMutedWord,
     removeMutedWord,
   ])
 

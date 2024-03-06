@@ -284,12 +284,12 @@ export function useUnpinFeedMutation() {
   })
 }
 
-export function useUpsertMutedWordsMutation() {
+export function useAddMutedWordMutation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
-      await getAgent().upsertMutedWords(mutedWords)
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().addMutedWord(mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

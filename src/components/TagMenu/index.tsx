@@ -17,7 +17,7 @@ import {makeSearchLink} from '#/lib/routes/links'
 import {NavigationProp} from '#/lib/routes/types'
 import {
   usePreferencesQuery,
-  useUpsertMutedWordsMutation,
+  useAddMutedWordMutation,
   useRemoveMutedWordMutation,
 } from '#/state/queries/preferences'
 import {Loader} from '#/components/Loader'
@@ -47,10 +47,10 @@ export function TagMenu({
   const {isLoading: isPreferencesLoading, data: preferences} =
     usePreferencesQuery()
   const {
-    mutateAsync: upsertMutedWord,
-    variables: optimisticUpsert,
-    reset: resetUpsert,
-  } = useUpsertMutedWordsMutation()
+    mutateAsync: addMutedWord,
+    variables: optimisticAdd,
+    reset: resetAdd,
+  } = useAddMutedWordMutation()
   const {
     mutateAsync: removeMutedWord,
     variables: optimisticRemove,
@@ -62,9 +62,8 @@ export function TagMenu({
     (preferences?.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
-      optimisticUpsert?.find(
-        m => m.value === tag && m.targets.includes('tag'),
-      )) &&
+      (optimisticAdd?.value === tag &&
+        optimisticAdd.targets.includes('tag'))) &&
       !(optimisticRemove?.value === tag),
   )
 
@@ -211,14 +210,14 @@ export function TagMenu({
                       onPress={() => {
                         control.close(() => {
                           if (isMuted) {
-                            resetUpsert()
+                            resetAdd()
                             removeMutedWord({
                               value: tag,
                               targets: ['tag'],
                             })
                           } else {
                             resetRemove()
-                            upsertMutedWord([{value: tag, targets: ['tag']}])
+                            addMutedWord({value: tag, targets: ['tag']})
                           }
                         })
                       }}>
