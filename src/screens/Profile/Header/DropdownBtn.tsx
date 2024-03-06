@@ -270,7 +270,7 @@ export function ProfileHeaderDropdownBtn({
     <>
       <ReportDialog
         control={control}
-        params={{type: 'profile', did: profile.did}}
+        params={{type: 'account', did: profile.did}}
       />
 
       <NativeDropdown

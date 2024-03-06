@@ -25,21 +25,6 @@ export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
 }
 
-export function useConfigurableContentLabelGroups() {
-  // TODO removeme
-  return []
-}
-
-export function useConfigurableProfileLabelGroups() {
-  // TODO removeme
-  return []
-}
-
-export function useConfigurableAccountLabelGroups() {
-  // TODO removeme
-  return []
-}
-
 export function getModerationServiceTitle({
   displayName,
   handle,

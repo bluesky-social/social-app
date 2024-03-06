@@ -94,18 +94,22 @@ export function useMyLabelers() {
     dids.push(BSKY_LABELER_DID)
   }
   const labelers = useLabelersDetailedInfoQuery({dids})
-  return labelers.data || []
+  return {
+    isLoading: prefs.isLoading || labelers.isLoading,
+    error: prefs.error || labelers.error,
+    data: labelers.data,
+  }
 }
 
 export function useLabelDefinitions() {
   const labelers = useMyLabelers()
   return {
     labelDefs: Object.fromEntries(
-      labelers.map(labeler => [
+      (labelers.data || []).map(labeler => [
         labeler.creator.did,
         interpretLabelValueDefinitions(labeler),
       ]),
     ),
-    labelers,
+    labelers: labelers.data || [],
   }
 }

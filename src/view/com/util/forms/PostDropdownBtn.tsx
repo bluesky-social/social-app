@@ -284,7 +284,7 @@ let PostDropdownBtn = ({
       <ReportDialog
         control={control}
         params={{
-          type: 'content',
+          type: 'post',
           uri: postUri,
           cid: postCid,
         }}

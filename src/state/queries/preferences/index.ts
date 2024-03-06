@@ -10,7 +10,6 @@ import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
 import {getAgent, useSession} from '#/state/session'
 import {
-  ConfigurableLabelGroup,
   UsePreferencesQueryResponse,
   ThreadViewPreferences,
 } from '#/state/queries/preferences/types'
