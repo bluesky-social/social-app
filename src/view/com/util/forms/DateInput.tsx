@@ -81,6 +81,7 @@ export function DateInput(props: Props) {
       )}
       {(isIOS || show) && (
         <DatePicker
+          timeZoneOffsetInMinutes={0}
           modal={isAndroid}
           open={isAndroid}
           theme={theme.colorScheme}
