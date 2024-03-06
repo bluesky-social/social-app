@@ -13,6 +13,7 @@ import {
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences'
+import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -30,7 +31,7 @@ export function ModerationLabelPref({
   labelerDid: string | undefined
   disabled?: boolean
 }) {
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
@@ -57,16 +58,12 @@ export function ModerationLabelPref({
     labelValueDefinition,
     'ignore',
   )
-
-  const allLabelStrings = useGlobalLabelStrings()
-  const labelStrings = labelValueDefinition.locales[0] // TODO look up locale
-    ? labelValueDefinition.locales[0]
-    : labelValueDefinition.identifier in allLabelStrings
-    ? allLabelStrings[labelValueDefinition.identifier]
-    : {
-        name: labelValueDefinition.identifier,
-        description: `Labeled "${labelValueDefinition.identifier}"`,
-      }
+  const globalLabelStrings = useGlobalLabelStrings()
+  const labelStrings = getLabelStrings(
+    i18n.locale,
+    globalLabelStrings,
+    labelValueDefinition,
+  )
 
   const canWarn = !(
     labelValueDefinition.blurs === 'none' &&

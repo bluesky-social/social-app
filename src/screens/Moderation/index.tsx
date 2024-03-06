@@ -38,7 +38,7 @@ import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {getModerationServiceTitle} from '#/lib/moderation'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
-import {SimpleModerationLabelPref} from '#/components/ModerationLabelPref/SimpleModerationLabelPref'
+import {GlobalModerationLabelPref} from '#/components/ModerationLabelPref/SimpleModerationLabelPref'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -294,13 +294,13 @@ export function ModerationScreenInner({
           {adultContentEnabled && (
             <>
               <Divider />
-              <SimpleModerationLabelPref labelValueDefinition={LABELS.porn} />
+              <GlobalModerationLabelPref labelValueDefinition={LABELS.porn} />
               <Divider />
-              <SimpleModerationLabelPref labelValueDefinition={LABELS.sexual} />
+              <GlobalModerationLabelPref labelValueDefinition={LABELS.sexual} />
               <Divider />
-              <SimpleModerationLabelPref labelValueDefinition={LABELS.nudity} />
+              <GlobalModerationLabelPref labelValueDefinition={LABELS.nudity} />
               <Divider />
-              <SimpleModerationLabelPref labelValueDefinition={LABELS.gore} />
+              <GlobalModerationLabelPref labelValueDefinition={LABELS.gore} />
             </>
           )}
         </View>

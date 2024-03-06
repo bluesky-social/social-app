@@ -14,7 +14,7 @@ import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 
-export function SimpleModerationLabelPref({
+export function GlobalModerationLabelPref({
   labelValueDefinition,
   disabled,
 }: {

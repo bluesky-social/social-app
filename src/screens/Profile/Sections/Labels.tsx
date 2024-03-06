@@ -25,7 +25,7 @@ import {Divider} from '#/components/Divider'
 import {Button, ButtonText} from '#/components/Button'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ErrorState} from '../ErrorState'
-import {ModerationLabelPref} from '#/components/ModerationLabelPref'
+import {ModerationLabelPref} from '#/components/moderation/ModerationLabelPref'
 
 interface LabelsSectionProps {
   isLabelerLoading: boolean
