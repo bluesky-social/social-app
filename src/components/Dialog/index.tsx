@@ -119,27 +119,21 @@ export function Outer({
     [open, close],
   )
 
-  const onChange = React.useCallback(
-    (index: number) => {
-      if (index === -1) {
-        Keyboard.dismiss()
-        try {
-          closeCallback.current?.()
-        } catch (e: any) {
-          logger.error(`Dialog closeCallback failed`, {
-            message: e.message,
-          })
-        } finally {
-          closeCallback.current = undefined
-        }
-
-        setDialogIsOpen(control.id, false)
-        onClose?.()
-        setOpenIndex(-1)
-      }
-    },
-    [onClose, setOpenIndex, setDialogIsOpen, control.id],
-  )
+  const onCloseInner = React.useCallback(() => {
+    Keyboard.dismiss()
+    try {
+      closeCallback.current?.()
+    } catch (e: any) {
+      logger.error(`Dialog closeCallback failed`, {
+        message: e.message,
+      })
+    } finally {
+      closeCallback.current = undefined
+    }
+    setDialogIsOpen(control.id, false)
+    onClose?.()
+    setOpenIndex(-1)
+  }, [control.id, onClose, setDialogIsOpen])
 
   const context = React.useMemo(() => ({close}), [close])
 
@@ -167,7 +161,7 @@ export function Outer({
             backdropComponent={Backdrop}
             handleIndicatorStyle={{backgroundColor: t.palette.primary_500}}
             handleStyle={{display: 'none'}}
-            onChange={onChange}>
+            onClose={onCloseInner}>
             <Context.Provider value={context}>
               <View
                 style={[
