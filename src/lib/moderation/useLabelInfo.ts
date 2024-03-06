@@ -41,7 +41,7 @@ export function getDefinition(
   // check local definitions
   const customDef =
     !label.val.startsWith('!') &&
-    labelDefs[label.src].find(
+    labelDefs[label.src]?.find(
       def => def.identifier === label.val && def.definedBy === label.src,
     )
   if (customDef) {

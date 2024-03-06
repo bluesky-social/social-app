@@ -3,7 +3,6 @@ import {ActivityIndicator, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {BottomSheetFlatList} from '@gorhom/bottom-sheet'
 
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {useLikedByQuery} from '#/state/queries/post-liked-by'

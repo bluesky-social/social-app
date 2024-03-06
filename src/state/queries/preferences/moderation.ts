@@ -1,15 +1,8 @@
 import {
-  ComAtprotoLabelDefs,
-  AppBskyLabelerDefs,
   DEFAULT_LABEL_SETTINGS,
-  LABELS,
   BSKY_LABELER_DID,
-  interpretLabelValueDefinition,
   interpretLabelValueDefinitions,
-  InterprettedLabelValueDefinition,
 } from '@atproto/api'
-import {useLingui} from '@lingui/react'
-import * as bcp47Match from 'bcp-47-match'
 
 import {
   LabelGroup,
@@ -17,10 +10,6 @@ import {
 } from '#/state/queries/preferences/types'
 import {usePreferencesQuery} from './index'
 import {useLabelersDetailedInfoQuery} from '../labeler'
-import {
-  useGlobalLabelStrings,
-  GlobalLabelStrings,
-} from '#/lib/moderation/useGlobalLabelStrings'
 
 export type LabelGroupConfig = {
   id: LabelGroup
