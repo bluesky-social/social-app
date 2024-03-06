@@ -23,7 +23,6 @@ import {Haptics} from '#/lib/haptics'
 import {pluralize} from '#/lib/strings/helpers'
 
 import {atoms as a, useTheme} from '#/alf'
-import {InlineLink} from '#/components/Link'
 import {Button, ButtonText} from '#/components/Button'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderShell} from './Shell'
@@ -37,6 +36,8 @@ import {
 } from '#/components/icons/Heart2'
 import {LikesDialog} from '#/components/LikesDialog'
 import * as Dialog from '#/components/Dialog'
+import {DialogOuterProps} from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -63,6 +64,8 @@ let ProfileHeaderLabeler = ({
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
   const likesControl = Dialog.useDialogControl()
+  const cantSubscribePrompt = Prompt.usePromptControl()
+
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -73,6 +76,10 @@ let ProfileHeaderLabeler = ({
   const isSubscribed =
     variables?.subscribe ??
     preferences?.moderationPrefs.mods.find(mod => mod.did === profile.did)
+  const canSubscribe =
+    isSubscribed || preferences
+      ? preferences.moderationPrefs.mods.length < 10
+      : false
   const {mutateAsync: likeMod, isPending: isLikePending} = useLikeMutation()
   const {mutateAsync: unlikeMod, isPending: isUnlikePending} =
     useUnlikeMutation()
@@ -116,6 +123,10 @@ let ProfileHeaderLabeler = ({
   }, [track, openModal, profile])
 
   const onPressSubscribe = React.useCallback(async () => {
+    if (!canSubscribe) {
+      cantSubscribePrompt.open()
+      return
+    }
     try {
       await toggleSubscription({
         did: profile.did,
@@ -125,7 +136,13 @@ let ProfileHeaderLabeler = ({
       // setSubscriptionError(e.message)
       logger.error(`Failed to subscribe to labeler`, {message: e.message})
     }
-  }, [toggleSubscription, isSubscribed, profile])
+  }, [
+    toggleSubscription,
+    isSubscribed,
+    profile,
+    canSubscribe,
+    cantSubscribePrompt,
+  ])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -160,7 +177,7 @@ let ProfileHeaderLabeler = ({
               <Button
                 testID="toggleSubscribeBtn"
                 size="small"
-                color={isSubscribed ? 'secondary' : 'primary'}
+                color={isSubscribed || !canSubscribe ? 'secondary' : 'primary'}
                 variant="solid"
                 label={
                   isSubscribed
@@ -170,7 +187,8 @@ let ProfileHeaderLabeler = ({
                 disabled={!hasSession}
                 onPress={onPressSubscribe}
                 style={a.rounded_full}>
-                <ButtonText>
+                <ButtonText
+                  style={!canSubscribe && [t.atoms.text_contrast_low]}>
                   {isSubscribed ? (
                     <Trans>Unsubscribe</Trans>
                   ) : (
@@ -245,8 +263,30 @@ let ProfileHeaderLabeler = ({
         )}
       </View>
       <LikesDialog control={likesControl} uri={labeler.uri} />
+      <CantSubscribePrompt control={cantSubscribePrompt} />
     </ProfileHeaderShell>
   )
 }
 ProfileHeaderLabeler = memo(ProfileHeaderLabeler)
 export {ProfileHeaderLabeler}
+
+function CantSubscribePrompt({
+  control,
+}: {
+  control: DialogOuterProps['control']
+}) {
+  return (
+    <Prompt.Outer control={control}>
+      <Prompt.Title>Unable to subscribe</Prompt.Title>
+      <Prompt.Description>
+        <Trans>
+          We're sorry! You can only subscribe to ten labelers, and you've
+          reached your limit of ten.
+        </Trans>
+      </Prompt.Description>
+      <Prompt.Actions>
+        <Prompt.Action onPress={control.close}>OK</Prompt.Action>
+      </Prompt.Actions>
+    </Prompt.Outer>
+  )
+}
