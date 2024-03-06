@@ -21,15 +21,12 @@ import {useGate} from '#/lib/statsig/statsig'
 
 function TestGate() {
   const {isLoading, value} = useGate('test_gate')
-  let color = 'black'
-  let text = 'Loading...'
-  if (!isLoading) {
-    color = value ? 'green' : 'red'
-    text = value ? 'PASS' : 'FAIL'
-  }
+  let color = value ? 'green' : 'red'
+  let text = value ? 'PASS' : 'FAIL'
   return (
     <div
       style={{
+        opacity: isLoading ? 0.2 : 1,
         position: 'fixed',
         left: '50%',
         transform: 'translateX(-50%)',

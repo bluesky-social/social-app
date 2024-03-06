@@ -1,0 +1,38 @@
+import './slowdown'
+import React from 'react'
+import {StatsigProvider, useGate as useStatsigGate} from 'statsig-react'
+import {useSession} from '../../state/session'
+import {sha256} from 'js-sha256'
+
+export function useGate(gateName: string) {
+  return useStatsigGate(gateName)
+}
+
+export function Provider({children}: {children: React.ReactNode}) {
+  const {currentAccount} = useSession()
+  const statsigUser = React.useMemo(() => {
+    let userID
+    if (currentAccount?.did) {
+      userID = sha256(currentAccount?.did)
+    }
+    return {userID}
+  }, [currentAccount?.did])
+  return (
+    <StatsigProvider
+      sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
+      mountKey={statsigUser.userID}
+      user={statsigUser}
+      waitForCache={true}
+      waitForInitialization={false}
+      options={{
+        environment: {
+          tier:
+            process.env.NODE_ENV === 'development'
+              ? 'development'
+              : 'production',
+        },
+      }}>
+      {children}
+    </StatsigProvider>
+  )
+}
