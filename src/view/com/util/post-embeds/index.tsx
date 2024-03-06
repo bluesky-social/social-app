@@ -26,7 +26,7 @@ import {MaybeQuoteEmbed} from './QuoteEmbed'
 import {AutoSizedImage} from '../images/AutoSizedImage'
 import {ListEmbed} from './ListEmbed'
 import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {ContentHider} from '../moderation/ContentHider'
+import {ContentHider} from '../../../../components/moderation/ContentHider'
 import {isNative} from '#/platform/detection'
 import {shareUrl} from '#/lib/sharing'
 

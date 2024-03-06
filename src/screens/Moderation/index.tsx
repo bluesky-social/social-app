@@ -82,17 +82,17 @@ export function ModerationScreen(
     data: preferences,
   } = usePreferencesQuery()
   const {
-    isLoading: isModServicesLoading,
-    data: modservices,
-    error: modservicesError,
+    isLoading: isLabelersLoading,
+    data: labelers,
+    error: labelersError,
   } = useLabelersDetailedInfoQuery({
     dids: preferences ? preferences.moderationPrefs.mods.map(m => m.did) : [],
   })
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()
 
-  const isLoading = isPreferencesLoading || isModServicesLoading
-  const error = preferencesError || modservicesError
+  const isLoading = isPreferencesLoading || isLabelersLoading
+  const error = preferencesError || labelersError
 
   return (
     <CenteredView
@@ -109,7 +109,7 @@ export function ModerationScreen(
         <View style={[a.w_full, a.align_center, a.pt_2xl]}>
           <Loader size="xl" fill={t.atoms.text.color} />
         </View>
-      ) : error || !(preferences && modservices) ? (
+      ) : error || !(preferences && labelers) ? (
         <ErrorState
           error={
             preferencesError?.toString() ||
@@ -117,10 +117,7 @@ export function ModerationScreen(
           }
         />
       ) : (
-        <ModerationScreenInner
-          preferences={preferences}
-          modservices={modservices}
-        />
+        <ModerationScreenInner preferences={preferences} labelers={labelers} />
       )}
     </CenteredView>
   )
@@ -128,10 +125,10 @@ export function ModerationScreen(
 
 export function ModerationScreenInner({
   preferences,
-  modservices,
+  labelers,
 }: {
   preferences: UsePreferencesQueryResponse
-  modservices: AppBskyLabelerDefs.LabelerViewDetailed[]
+  labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
 }) {
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
@@ -297,25 +294,13 @@ export function ModerationScreenInner({
           {adultContentEnabled && (
             <>
               <Divider />
-              <SimpleModerationLabelPref
-                labelValueDefinition={LABELS.porn}
-                labelerDid={undefined}
-              />
+              <SimpleModerationLabelPref labelValueDefinition={LABELS.porn} />
               <Divider />
-              <SimpleModerationLabelPref
-                labelValueDefinition={LABELS.sexual}
-                labelerDid={undefined}
-              />
+              <SimpleModerationLabelPref labelValueDefinition={LABELS.sexual} />
               <Divider />
-              <SimpleModerationLabelPref
-                labelValueDefinition={LABELS.nudity}
-                labelerDid={undefined}
-              />
+              <SimpleModerationLabelPref labelValueDefinition={LABELS.nudity} />
               <Divider />
-              <SimpleModerationLabelPref
-                labelValueDefinition={LABELS.gore}
-                labelerDid={undefined}
-              />
+              <SimpleModerationLabelPref labelValueDefinition={LABELS.gore} />
             </>
           )}
         </View>
@@ -332,7 +317,7 @@ export function ModerationScreenInner({
         </Text>
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
           <ModerationServiceCard.Link
-            modservice={{
+            labeler={{
               uri: '',
               cid: '',
               policies: {
@@ -357,13 +342,11 @@ export function ModerationScreenInner({
               />
             </ModerationServiceCard.Card.Outer>
           </ModerationServiceCard.Link>
-          {modservices.map(mod => {
+          {labelers.map(mod => {
             return (
-              <>
+              <React.Fragment key={mod.creator.did}>
                 <Divider />
-                <ModerationServiceCard.Link
-                  modservice={mod}
-                  key={mod.creator.did}>
+                <ModerationServiceCard.Link labeler={mod}>
                   <ModerationServiceCard.Card.Outer>
                     <ModerationServiceCard.Card.Avatar
                       avatar={mod.creator.avatar}
@@ -378,7 +361,7 @@ export function ModerationScreenInner({
                     />
                   </ModerationServiceCard.Card.Outer>
                 </ModerationServiceCard.Link>
-              </>
+              </React.Fragment>
             )
           })}
         </View>

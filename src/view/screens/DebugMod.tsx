@@ -28,7 +28,7 @@ import {
 import {atoms as a, useTheme} from '#/alf'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {H1, H3, P, Text} from '#/components/Typography'
-import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
+import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import * as Toggle from '#/components/forms/Toggle'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -37,7 +37,7 @@ import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronBottom,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
 } from '#/components/icons/Chevron'
-import {ScreenHider} from '../com/util/moderation/ScreenHider'
+import {ScreenHider} from '../../components/moderation/ScreenHider'
 import {ProfileHeader} from '#/screens/Profile/Header'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {FeedItem} from '../com/posts/FeedItem'
@@ -73,7 +73,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       ],
     })
   const [view, setView] = React.useState<string[]>(['post'])
-  const labelStrings = useLabelStrings()
+  const labelStrings = useGlobalLabelStrings()
   const {currentAccount} = useSession()
 
   const isTargetMe =
@@ -309,7 +309,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                         <Toggle.Item
                           key={labelValue}
                           name={labelValue}
-                          label={labelStrings[labelValue].general.name}
+                          label={labelStrings[labelValue].name}
                           disabled={disabled}
                           style={disabled ? {opacity: 0.5} : undefined}>
                           <Toggle.Radio />

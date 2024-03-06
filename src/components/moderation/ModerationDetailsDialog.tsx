@@ -4,19 +4,20 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ModerationCause} from '@atproto/api'
 
-import {atoms as a, useBreakpoints} from '#/alf'
+import {listUriToHref} from '#/lib/strings/url-helpers'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+
+import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import {Button} from '#/components/Button'
 import {InlineLink} from '#/components/Link'
-import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
-import {listUriToHref} from '#/lib/strings/url-helpers'
+import {makeProfileLink} from '#/lib/routes/links'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
 
 export interface ModerationDetailsDialogProps {
   control: Dialog.DialogOuterProps['control']
-  context: 'account' | 'content'
   modcause: ModerationCause
 }
 
@@ -24,21 +25,20 @@ export function ModerationDetailsDialog(props: ModerationDetailsDialogProps) {
   return (
     <Dialog.Outer control={props.control}>
       <Dialog.Handle />
-
       <ModerationDetailsDialogInner {...props} />
     </Dialog.Outer>
   )
 }
 
 function ModerationDetailsDialogInner({
-  context,
   modcause,
+  control,
 }: ModerationDetailsDialogProps & {
   control: Dialog.DialogOuterProps['control']
 }) {
+  const t = useTheme()
   const {_} = useLingui()
-  const labelStrings = useLabelStrings()
-  const control = Dialog.useDialogControl()
+  const desc = useModerationCauseDescription(modcause)
   const {gtMobile} = useBreakpoints()
 
   let name
@@ -95,13 +95,8 @@ function ModerationDetailsDialogInner({
       description = _(msg`You have muted this user.`)
     }
   } else if (modcause.type === 'label') {
-    if (modcause.labelDef.id in labelStrings) {
-      name = labelStrings[modcause.labelDef.id][context].name
-      description = labelStrings[modcause.labelDef.id][context].description
-    } else {
-      name = modcause.labelDef.id
-      description = _(msg`Labeled ${modcause.labelDef.id}`)
-    }
+    name = desc.name
+    description = desc.description
   } else {
     // should never happen
     name = ''
@@ -112,12 +107,38 @@ function ModerationDetailsDialogInner({
     <Dialog.ScrollableInner
       accessibilityDescribedBy="dialog-description"
       accessibilityLabelledBy="dialog-title">
-      <Text nativeID="dialog-title" style={[a.text_2xl, a.font_bold]}>
+      <Text
+        nativeID="dialog-title"
+        style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_md]}>
         {name}
       </Text>
-      <Text nativeID="dialog-description" style={[a.text_sm]}>
+      <Text
+        nativeID="dialog-description"
+        style={[t.atoms.text, a.text_md, a.mb_md]}>
         {description}
       </Text>
+      {modcause.type === 'label' && (
+        <View
+          style={[
+            t.atoms.bg_contrast_50,
+            a.mb_md,
+            a.px_lg,
+            a.py_lg,
+            a.rounded_sm,
+          ]}>
+          <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>
+            <Trans>
+              This label was applied by{' '}
+              <InlineLink
+                to={makeProfileLink({did: modcause.label.src, handle: ''})}
+                onPress={() => control.close()}>
+                {desc.source}
+              </InlineLink>
+              .
+            </Trans>
+          </Text>
+        </View>
+      )}
       <View style={gtMobile && [a.flex_row, a.justify_end]}>
         <Button
           testID="doneBtn"

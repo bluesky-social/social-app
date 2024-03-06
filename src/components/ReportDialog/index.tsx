@@ -112,7 +112,7 @@ function LabelGroupButton({
   )
 }
 
-function ModServiceToggle({title}: {title: string}) {
+function LabelerToggle({title}: {title: string}) {
   const t = useTheme()
   const ctx = Toggle.useItemContext()
 
@@ -260,7 +260,7 @@ function SubmitView({
                     key={labeler.creator.did}
                     name={labeler.creator.did}
                     label={title}>
-                    <ModServiceToggle title={title} />
+                    <LabelerToggle title={title} />
                   </Toggle.Item>
                 )
               })}
@@ -477,21 +477,21 @@ function ReportDialogInner(props: ReportDialogProps) {
     data: preferences,
   } = usePreferencesQuery()
   const {
-    isLoading: isModServicesLoading,
-    data: modservices,
-    error: modservicesError,
+    isLoading: isLabelersLoading,
+    data: labelers,
+    error: labelersError,
   } = useLabelersDetailedInfoQuery({
-    dids: preferences ? preferences.moderationOpts.mods.map(m => m.did) : [],
+    dids: preferences ? preferences.moderationPrefs.mods.map(m => m.did) : [],
   })
-  const isLoading = isPreferencesLoading || isModServicesLoading
-  const error = preferencesError || modservicesError
+  const isLoading = isPreferencesLoading || isLabelersLoading
+  const error = preferencesError || labelersError
 
   const [fakeLoading, setFakeLoading] = React.useState(isLoading)
 
   const labelGroupToLabelerMap = React.useMemo(() => {
-    if (!modservices) return {}
-    return getLabelGroupToLabelerMap(modservices)
-  }, [modservices])
+    if (!labelers) return {}
+    return getLabelGroupToLabelerMap(labelers)
+  }, [labelers])
 
   React.useEffect(() => {
     // on initial load, show a loading spinner for a hot sec to prevent flash
@@ -506,10 +506,10 @@ function ReportDialogInner(props: ReportDialogProps) {
           {/* Here to capture focus for a hot sec to prevent flash */}
           <Pressable accessible={false} />
         </View>
-      ) : error || !(preferences && modservices) ? null : ( // TODO
+      ) : error || !(preferences && labelers) ? null : ( // TODO
         <ReportDialogLoaded
           {...props}
-          labelers={modservices}
+          labelers={labelers}
           labelGroupToLabelerMap={labelGroupToLabelerMap}
         />
       )}

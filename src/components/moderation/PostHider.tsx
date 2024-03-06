@@ -1,20 +1,20 @@
 import React, {ComponentProps} from 'react'
 import {StyleSheet, Pressable, View, ViewStyle, StyleProp} from 'react-native'
 import {ModerationUI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
-import {addStyle} from 'lib/styles'
-import {ShieldExclamation} from 'lib/icons'
 import {useLingui} from '@lingui/react'
 import {Trans, msg} from '@lingui/macro'
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {addStyle} from 'lib/styles'
+
+import {useTheme, atoms as a} from '#/alf'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
-} from '#/components/ModerationDetailsDialog'
+} from '#/components/moderation/ModerationDetailsDialog'
+import {Text} from '#/components/Typography'
+// import {Link} from '#/components/Link' TODO this imposes some styles that screw things up
+import {Link} from '#/view/com/util/Link'
 
 interface Props extends ComponentProps<typeof Link> {
   iconSize: number
@@ -32,12 +32,12 @@ export function PostHider({
   iconStyles,
   ...props
 }: Props) {
-  const pal = usePalette('default')
+  const t = useTheme()
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
   const blur = modui.blurs[0]
-  const desc = useModerationCauseDescription(blur, 'content')
+  const desc = useModerationCauseDescription(blur)
 
   if (!blur) {
     return (
@@ -45,7 +45,6 @@ export function PostHider({
         testID={testID}
         style={style}
         href={href}
-        noFeedback
         accessible={false}
         {...props}>
         {children}
@@ -53,7 +52,6 @@ export function PostHider({
     )
   }
 
-  const isMute = blur.type === 'muted'
   return !override ? (
     <Pressable
       onPress={() => {
@@ -67,15 +65,18 @@ export function PostHider({
       }
       accessibilityLabel=""
       style={[
-        styles.description,
+        a.flex_row,
+        a.align_center,
+        a.gap_sm,
+        a.py_md,
+        {
+          paddingLeft: 6,
+          paddingRight: 18,
+        },
         override ? {paddingBottom: 0} : undefined,
-        pal.view,
+        t.atoms.bg,
       ]}>
-      <ModerationDetailsDialog
-        control={control}
-        context="content"
-        modcause={blur}
-      />
+      <ModerationDetailsDialog control={control} modcause={blur} />
       <Pressable
         onPress={() => {
           control.open()
@@ -85,32 +86,24 @@ export function PostHider({
         accessibilityHint="">
         <View
           style={[
-            pal.viewLight,
+            t.atoms.bg_contrast_25,
+            a.align_center,
+            a.justify_center,
             {
               width: iconSize,
               height: iconSize,
               borderRadius: iconSize,
-              alignItems: 'center',
-              justifyContent: 'center',
             },
             iconStyles,
           ]}>
-          {isMute ? (
-            <FontAwesomeIcon
-              icon={['far', 'eye-slash']}
-              size={14}
-              color={pal.colors.textLight}
-            />
-          ) : (
-            <ShieldExclamation size={14} style={pal.textLight} />
-          )}
+          <desc.icon size="sm" fill={t.atoms.text_contrast_medium.color} />
         </View>
       </Pressable>
-      <Text type="sm" style={[{flex: 1}, pal.textLight]} numberOfLines={1}>
+      <Text style={[t.atoms.text_contrast_medium, a.flex_1]} numberOfLines={1}>
         {desc.name}
       </Text>
       {!modui.noOverride && (
-        <Text type="sm" style={[styles.showBtn, pal.link]}>
+        <Text style={[{color: t.palette.primary_500}]}>
           {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
         </Text>
       )}
@@ -120,26 +113,14 @@ export function PostHider({
       testID={testID}
       style={addStyle(style, styles.child)}
       href={href}
-      noFeedback>
+      accessible={false}
+      {...props}>
       {children}
     </Link>
   )
 }
 
 const styles = StyleSheet.create({
-  description: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingVertical: 10,
-    paddingLeft: 6,
-    paddingRight: 18,
-    marginTop: 1,
-  },
-  showBtn: {
-    marginLeft: 'auto',
-    alignSelf: 'center',
-  },
   child: {
     borderWidth: 0,
     borderTopWidth: 0,

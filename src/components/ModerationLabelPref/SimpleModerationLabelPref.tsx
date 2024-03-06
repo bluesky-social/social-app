@@ -4,7 +4,7 @@ import {InterprettedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
-import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
+import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
@@ -30,10 +30,10 @@ export function SimpleModerationLabelPref({
   const savedPref = preferences?.moderationPrefs.labels[identifier]
   const pref = variables?.visibility ?? savedPref ?? 'warn'
 
-  const allLabelStrings = useLabelStrings()
+  const allLabelStrings = useGlobalLabelStrings()
   const labelStrings =
     labelValueDefinition.identifier in allLabelStrings
-      ? allLabelStrings[labelValueDefinition.identifier].general
+      ? allLabelStrings[labelValueDefinition.identifier]
       : {
           name: labelValueDefinition.identifier,
           description: `Labeled "${labelValueDefinition.identifier}"`,

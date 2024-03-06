@@ -11,7 +11,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import {
   LabelsOnMeDialog,
   useLabelsOnMeDialogControl,
-} from '#/components/LabelsOnMeDialog'
+} from '#/components/moderation/LabelsOnMeDialog'
 
 export function LabelsOnMe({
   details,

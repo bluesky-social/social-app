@@ -1,11 +1,26 @@
-import {ComAtprotoLabelDefs, DEFAULT_LABEL_SETTINGS} from '@atproto/api'
+import {
+  ComAtprotoLabelDefs,
+  AppBskyLabelerDefs,
+  DEFAULT_LABEL_SETTINGS,
+  LABELS,
+  BSKY_LABELER_DID,
+  interpretLabelValueDefinition,
+  interpretLabelValueDefinitions,
+  InterprettedLabelValueDefinition,
+} from '@atproto/api'
+import {useLingui} from '@lingui/react'
+import * as bcp47Match from 'bcp-47-match'
 
 import {
   LabelGroup,
   ConfigurableLabelGroup,
 } from '#/state/queries/preferences/types'
-
-export type Label = ComAtprotoLabelDefs.Label
+import {usePreferencesQuery} from './index'
+import {useLabelersDetailedInfoQuery} from '../labeler'
+import {
+  useGlobalLabelStrings,
+  GlobalLabelStrings,
+} from '#/lib/moderation/useGlobalLabelStrings'
 
 export type LabelGroupConfig = {
   id: LabelGroup
@@ -18,8 +33,6 @@ export type LabelGroupConfig = {
 
 /**
  * More strict than our default settings for logged in users.
- *
- * TODO(pwi)
  */
 export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS =
   Object.fromEntries(
@@ -83,4 +96,27 @@ export const CONFIGURABLE_LABEL_GROUPS: Record<
     warning: 'Impersonation',
     values: ['impersonation'],
   },
+}
+
+export function useMyLabelers() {
+  const prefs = usePreferencesQuery()
+  const dids = prefs.data?.moderationPrefs.mods.map(m => m.did) || []
+  if (!dids.includes(BSKY_LABELER_DID)) {
+    dids.push(BSKY_LABELER_DID)
+  }
+  const labelers = useLabelersDetailedInfoQuery({dids})
+  return labelers.data || []
+}
+
+export function useLabelDefinitions() {
+  const labelers = useMyLabelers()
+  return {
+    labelDefs: Object.fromEntries(
+      labelers.map(labeler => [
+        labeler.creator.did,
+        interpretLabelValueDefinitions(labeler),
+      ]),
+    ),
+    labelers,
+  }
 }

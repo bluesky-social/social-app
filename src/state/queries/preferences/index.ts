@@ -8,7 +8,7 @@ import {
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
-import {getAgent} from '#/state/session'
+import {getAgent, useSession} from '#/state/session'
 import {
   ConfigurableLabelGroup,
   UsePreferencesQueryResponse,
@@ -21,6 +21,7 @@ import {
 } from '#/state/queries/preferences/const'
 import {STALE} from '#/state/queries'
 import {useHiddenPosts} from '#/state/preferences/hidden-posts'
+import {useLabelDefinitions} from '#/state/queries/preferences/moderation'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -74,7 +75,9 @@ export const moderationOptsOverrideContext = createContext<
 
 export function useModerationOpts() {
   const override = useContext(moderationOptsOverrideContext)
+  const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
+  const {labelDefs} = useLabelDefinitions()
   const hiddenPosts = useHiddenPosts()
   const opts = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
@@ -85,13 +88,14 @@ export function useModerationOpts() {
     }
     const moderationPrefs = prefs.data.moderationPrefs
     return {
-      userDid: '', // TODO
+      userDid: currentAccount?.did,
       prefs: {
         ...moderationPrefs,
         hiddenPosts,
       },
+      labelDefs,
     }
-  }, [override, prefs.data, hiddenPosts])
+  }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
   return opts
 }
 

@@ -13,12 +13,12 @@ import {Shadow} from '#/state/cache/types'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 
 import {atoms as a, useTheme} from '#/alf'
-import {LabelsOnMe} from 'view/com/util/moderation/LabelsOnMe'
+import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {BlurView} from 'view/com/util/BlurView'
 import {LoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {UserBanner} from 'view/com/util/UserBanner'
-import {ProfileHeaderAlerts} from 'view/com/util/moderation/ProfileHeaderAlerts'
+import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 
 interface Props {
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>

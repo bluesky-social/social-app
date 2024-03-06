@@ -4,11 +4,15 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 
+import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeHandle} from '#/lib/strings/handles'
+
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
-import {Button} from '#/components/Button'
-import {capitalize} from '#/lib/strings/capitalize'
+import {Button, ButtonText} from '#/components/Button'
+import {InlineLink} from '#/components/Link'
 
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
@@ -61,12 +65,13 @@ export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
       <Text
         nativeID="dialog-title"
         style={[a.text_2xl, a.font_bold, a.pb_md, a.leading_tight]}>
-        <Trans>
-          The following labels were applied to your{' '}
-          {isAccount ? 'account' : 'content'}
-        </Trans>
+        {isAccount ? (
+          <Trans>Labels on your account</Trans>
+        ) : (
+          <Trans>Labels on your content</Trans>
+        )}
       </Text>
-      <Text nativeID="dialog-description" style={[a.text_md, a.leading_snug]}>
+      <Text nativeID="dialog-description" style={[a.text_sm, a.leading_snug]}>
         <Trans>
           You may appeal these labels if you feel they were placed in error.
         </Trans>
@@ -74,11 +79,11 @@ export function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
 
       <View style={[a.py_lg, a.gap_md]}>
         {labels.map(label => (
-          <View
-            key={`${label.src}-${label.val}`}
-            style={[a.p_md, a.rounded_sm, t.atoms.bg_contrast_25]}>
-            <Text>{capitalize(label.val)}</Text>
-          </View>
+          <Label
+            key={`${label.val}-${label.src}`}
+            label={label}
+            control={props.control}
+          />
         ))}
       </View>
 
@@ -104,5 +109,51 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 
       <LabelsOnMeDialogInner {...props} />
     </Dialog.Outer>
+  )
+}
+
+function Label({
+  label,
+  control,
+}: {
+  label: ComAtprotoLabelDefs.Label
+  control: Dialog.DialogOuterProps['control']
+}) {
+  const t = useTheme()
+  const {labeler, strings} = useLabelInfo(label)
+  return (
+    <View
+      key={`${label.src}-${label.val}`}
+      style={[
+        a.p_md,
+        a.rounded_sm,
+        // t.atoms.bg_contrast_25,
+        a.border,
+        t.atoms.border_contrast_low,
+        a.gap_sm,
+        a.flex_row,
+      ]}>
+      <View style={[a.flex_1, a.gap_xs]}>
+        <Text style={[a.font_bold, a.text_md, t.atoms.text]}>
+          {strings.name}
+        </Text>
+        <Text style={[t.atoms.text]}>{strings.description}</Text>
+        <InlineLink
+          to={makeProfileLink(
+            labeler ? labeler.creator : {did: label.src, handle: ''},
+          )}
+          onPress={() => control.close()}
+          style={[]}>
+          {labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src}
+        </InlineLink>
+      </View>
+      <View>
+        <Button variant="solid" color="secondary" size="small">
+          <ButtonText>
+            <Trans>Appeal</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+    </View>
   )
 }

@@ -2,31 +2,26 @@ import React from 'react'
 import {
   TouchableWithoutFeedback,
   StyleProp,
-  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
 import {ModerationUI} from '@atproto/api'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {Text} from '../text/Text'
-import {Button} from '../forms/Button'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {s} from '#/lib/styles'
-import {CenteredView} from '../Views'
 
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {NavigationProp} from 'lib/routes/types'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+
+import {useTheme, atoms as a} from '#/alf'
+import {CenteredView} from '#/view/com/util/Views'
+import {Text} from '#/components/Typography'
+import {Button, ButtonText} from '#/components/Button'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
-} from '#/components/ModerationDetailsDialog'
+} from '#/components/moderation/ModerationDetailsDialog'
 
 export function ScreenHider({
   testID,
@@ -42,15 +37,14 @@ export function ScreenHider({
   style?: StyleProp<ViewStyle>
   containerStyle?: StyleProp<ViewStyle>
 }>) {
-  const pal = usePalette('default')
-  const palInverted = usePalette('inverted')
+  const t = useTheme()
   const {_} = useLingui()
   const [override, setOverride] = React.useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const control = useModerationDetailsDialogControl()
   const blur = modui.blurs[0]
-  const desc = useModerationCauseDescription(blur, 'content')
+  const desc = useModerationCauseDescription(blur)
 
   if (!blur || override) {
     return (
@@ -66,25 +60,53 @@ export function ScreenHider({
   )
   return (
     <CenteredView
-      style={[styles.container, pal.view, containerStyle]}
+      style={[
+        a.flex_1,
+        {
+          paddingTop: 100,
+          paddingBottom: 150,
+        },
+        t.atoms.bg,
+        containerStyle,
+      ]}
       sideBorders>
-      <View style={styles.iconContainer}>
-        <View style={[styles.icon, palInverted.view]}>
-          <FontAwesomeIcon
-            icon={isNoPwi ? ['far', 'eye-slash'] : 'exclamation'}
-            style={pal.textInverted as FontAwesomeIconStyle}
-            size={24}
-          />
+      <View style={[a.align_center, a.mb_md]}>
+        <View
+          style={[
+            t.atoms.bg_contrast_975,
+            a.align_center,
+            a.justify_center,
+            {
+              borderRadius: 25,
+              width: 50,
+              height: 50,
+            },
+          ]}>
+          <desc.icon width={24} fill={t.atoms.bg.backgroundColor} />
         </View>
       </View>
-      <Text type="title-2xl" style={[styles.title, pal.text]}>
+      <Text
+        style={[
+          a.text_4xl,
+          a.font_semibold,
+          a.text_center,
+          a.mb_md,
+          t.atoms.text,
+        ]}>
         {isNoPwi ? (
           <Trans>Sign-in Required</Trans>
         ) : (
           <Trans>Content Warning</Trans>
         )}
       </Text>
-      <Text type="2xl" style={[styles.description, pal.textLight]}>
+      <Text
+        style={[
+          a.text_lg,
+          a.mb_md,
+          a.px_lg,
+          a.text_center,
+          t.atoms.text_contrast_medium,
+        ]}>
         {isNoPwi ? (
           <Trans>
             This account has requested that users sign in to view their profile.
@@ -92,7 +114,7 @@ export function ScreenHider({
         ) : (
           <>
             <Trans>This {screenDescription} has been flagged:</Trans>
-            <Text type="2xl-medium" style={[pal.text, s.ml5]}>
+            <Text style={[a.text_lg, a.font_semibold, t.atoms.text, a.ml_xs]}>
               {desc.name}.{' '}
             </Text>
             <TouchableWithoutFeedback
@@ -102,87 +124,48 @@ export function ScreenHider({
               accessibilityRole="button"
               accessibilityLabel={_(msg`Learn more about this warning`)}
               accessibilityHint="">
-              <Text type="2xl" style={pal.link}>
+              <Text style={[a.text_lg, {color: t.palette.primary_500}]}>
                 <Trans>Learn More</Trans>
               </Text>
             </TouchableWithoutFeedback>
 
-            <ModerationDetailsDialog
-              control={control}
-              context="account"
-              modcause={blur}
-            />
+            <ModerationDetailsDialog control={control} modcause={blur} />
           </>
         )}{' '}
       </Text>
-      {isMobile && <View style={styles.spacer} />}
-      <View style={styles.btnContainer}>
+      {isMobile && <View style={a.flex_1} />}
+      <View style={[a.flex_row, a.justify_center, a.my_md, a.gap_md]}>
         <Button
-          type="inverted"
+          variant="solid"
+          color="primary"
+          size="large"
+          style={[a.rounded_full]}
+          label={_(msg`Go back`)}
           onPress={() => {
             if (navigation.canGoBack()) {
               navigation.goBack()
             } else {
               navigation.navigate('Home')
             }
-          }}
-          style={styles.btn}>
-          <Text type="button-lg" style={pal.textInverted}>
+          }}>
+          <ButtonText>
             <Trans>Go back</Trans>
-          </Text>
+          </ButtonText>
         </Button>
         {!modui.noOverride && (
           <Button
-            type="default"
-            onPress={() => setOverride(v => !v)}
-            style={styles.btn}>
-            <Text type="button-lg" style={pal.text}>
+            variant="solid"
+            color="secondary"
+            size="large"
+            style={[a.rounded_full]}
+            label={_(msg`Show anyway`)}
+            onPress={() => setOverride(v => !v)}>
+            <ButtonText>
               <Trans>Show anyway</Trans>
-            </Text>
+            </ButtonText>
           </Button>
         )}
       </View>
     </CenteredView>
   )
 }
-
-const styles = StyleSheet.create({
-  spacer: {
-    flex: 1,
-  },
-  container: {
-    flex: 1,
-    paddingTop: 100,
-    paddingBottom: 150,
-  },
-  iconContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  icon: {
-    borderRadius: 25,
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  description: {
-    marginBottom: 10,
-    paddingHorizontal: 20,
-    textAlign: 'center',
-  },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginVertical: 10,
-    gap: 10,
-  },
-  btn: {
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-  },
-})

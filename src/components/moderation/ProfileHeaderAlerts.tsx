@@ -1,20 +1,18 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {ModerationCause, ModerationDecision} from '@atproto/api'
-import {Text} from '../text/Text'
+
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {getModerationCauseKey} from 'lib/moderation'
-import {Trans} from '@lingui/macro'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {Shield_Stroke2_Corner0_Rounded as Shield} from '#/components/icons/Shield'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Text} from '#/components/Typography'
 import {
   ModerationDetailsDialog,
   useModerationDetailsDialogControl,
-} from '#/components/ModerationDetailsDialog'
+} from '#/components/moderation/ModerationDetailsDialog'
 
 export function ProfileHeaderAlerts({
   moderation,
@@ -46,7 +44,7 @@ export function ProfileHeaderAlerts({
 
 function ProfileInform({cause}: {cause: ModerationCause}) {
   const control = useModerationDetailsDialogControl()
-  const desc = useModerationCauseDescription(cause, 'account')
+  const desc = useModerationCauseDescription(cause)
 
   return (
     <>
@@ -59,18 +57,11 @@ function ProfileInform({cause}: {cause: ModerationCause}) {
         onPress={() => {
           control.open()
         }}>
-        <ButtonIcon
-          icon={cause.type === 'muted' ? EyeSlash : CircleInfo}
-          position="left"
-        />{' '}
+        <ButtonIcon icon={desc.icon} position="left" />{' '}
         <ButtonText>{desc.name}</ButtonText>
       </Button>
 
-      <ModerationDetailsDialog
-        control={control}
-        context="account"
-        modcause={cause}
-      />
+      <ModerationDetailsDialog control={control} modcause={cause} />
     </>
   )
 }
@@ -78,7 +69,7 @@ function ProfileInform({cause}: {cause: ModerationCause}) {
 function ProfileAlert({cause}: {cause: ModerationCause}) {
   const t = useTheme()
   const control = useModerationDetailsDialogControl()
-  const desc = useModerationCauseDescription(cause, 'account')
+  const desc = useModerationCauseDescription(cause)
 
   return (
     <>
@@ -91,20 +82,18 @@ function ProfileAlert({cause}: {cause: ModerationCause}) {
         onPress={() => {
           control.open()
         }}>
-        <ButtonIcon icon={Shield} position="left" />
+        <ButtonIcon icon={desc.icon} position="left" />
         <ButtonText style={[a.flex_1, a.text_left]}>
           {desc.name}
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {' — ' /* TODO get actual labeler */}
-            <Trans>Bluesky Safety</Trans>
-          </Text>
+          {desc.source && (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              {' — '}
+              {sanitizeDisplayName(desc.source)}
+            </Text>
+          )}
         </ButtonText>
       </Button>
-      <ModerationDetailsDialog
-        control={control}
-        context="account"
-        modcause={cause}
-      />
+      <ModerationDetailsDialog control={control} modcause={cause} />
     </>
   )
 }

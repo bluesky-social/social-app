@@ -11,12 +11,12 @@ import {useLabelerInfoQuery} from '#/state/queries/labeler'
 export * as Card from '#/components/ModerationServiceCard/Card'
 
 type ModerationServiceProps = {
-  modservice: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: AppBskyLabelerDefs.LabelerViewDetailed
 }
 
 export function Link({
   children,
-  modservice,
+  labeler,
 }: ModerationServiceProps & Pick<LinkProps, 'children'>) {
   const {_} = useLingui()
 
@@ -25,11 +25,11 @@ export function Link({
       to={{
         screen: 'Profile',
         params: {
-          name: modservice.creator.handle,
+          name: labeler.creator.handle,
         },
       }}
       label={_(
-        msg`View the moderation service provided by @${modservice.creator.handle}`,
+        msg`View the moderation service provided by @${labeler.creator.handle}`,
       )}>
       {children}
     </InternalLink>
@@ -54,7 +54,7 @@ export function Loader({
   loading?: React.ComponentType<{}>
   error?: React.ComponentType<{error: string}>
   component: React.ComponentType<{
-    modservice: AppBskyLabelerDefs.LabelerViewDetailed
+    labeler: AppBskyLabelerDefs.LabelerViewDetailed
   }>
 }) {
   const {isLoading, data, error} = useLabelerInfoQuery({did})
@@ -68,6 +68,6 @@ export function Loader({
       <ErrorComponent error={error?.message || 'Unknown error'} />
     ) : null
   ) : (
-    <Component modservice={data} />
+    <Component labeler={data} />
   )
 }

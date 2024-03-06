@@ -4,7 +4,7 @@ import {InterprettedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
-import {useLabelStrings} from '#/lib/moderation/useLabelStrings'
+import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
 import {
   useLabelBehaviorDescription,
   useLabelLongBehaviorDescription,
@@ -58,11 +58,11 @@ export function ModerationLabelPref({
     'ignore',
   )
 
-  const allLabelStrings = useLabelStrings()
+  const allLabelStrings = useGlobalLabelStrings()
   const labelStrings = labelValueDefinition.locales[0] // TODO look up locale
     ? labelValueDefinition.locales[0]
     : labelValueDefinition.identifier in allLabelStrings
-    ? allLabelStrings[labelValueDefinition.identifier].general
+    ? allLabelStrings[labelValueDefinition.identifier]
     : {
         name: labelValueDefinition.identifier,
         description: `Labeled "${labelValueDefinition.identifier}"`,
