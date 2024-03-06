@@ -51,7 +51,7 @@ function updateDocument(theme: ThemeName) {
     // set color to 'theme-color' meta tag
     setTimeout(() => {
       meta?.setAttribute('content', getBackgroundColor(theme))
-    }, 100)
+    }, 500)
   }
 }
 
