@@ -70,7 +70,7 @@ export function ContentHider({
         style={
           gtMobile ? [a.py_lg, a.px_xl, a.gap_sm] : [a.py_md, a.px_lg, a.gap_sm]
         }>
-        <ButtonIcon icon={desc.icon} position="left" />{' '}
+        <ButtonIcon icon={desc.icon} position="left" />
         <ButtonText style={[a.flex_1, a.text_left]}>{desc.name}</ButtonText>
         {!modui.noOverride && (
           <ButtonText>
