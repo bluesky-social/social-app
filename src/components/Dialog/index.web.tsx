@@ -12,7 +12,7 @@ import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
-import {useDialogStateContext} from '#/state/dialogs'
+import {useDialogStateControlContext} from '#/state/dialogs'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -30,21 +30,21 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
   const [isVisible, setIsVisible] = React.useState(true)
-  const {openDialogs} = useDialogStateContext()
+  const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = React.useCallback(() => {
     setIsOpen(true)
-    openDialogs.current.add(control.id)
-  }, [setIsOpen, openDialogs, control.id])
+    setDialogIsOpen(control.id, true)
+  }, [setIsOpen, setDialogIsOpen, control.id])
 
   const close = React.useCallback(async () => {
     setIsVisible(false)
     await new Promise(resolve => setTimeout(resolve, 150))
     setIsOpen(false)
     setIsVisible(true)
-    openDialogs.current.delete(control.id)
+    setDialogIsOpen(control.id, false)
     onClose?.()
-  }, [onClose, setIsOpen, openDialogs, control.id])
+  }, [onClose, setIsOpen, setDialogIsOpen, control.id])
 
   useImperativeHandle(
     control.ref,
