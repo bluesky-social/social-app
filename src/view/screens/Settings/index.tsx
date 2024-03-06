@@ -531,7 +531,7 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openFollowingFeedPreferences}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Home feed preferences`)}
+          accessibilityLabel={_(msg`Following feed preferences`)}
           accessibilityHint={_(msg`Opens the home feed preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
