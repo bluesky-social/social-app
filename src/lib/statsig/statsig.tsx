@@ -1,11 +1,11 @@
 import React from 'react'
 
 export function useGate(_gateName: string) {
-  // TODO
+  // Not enabled for native yet.
   return false
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
-  // TODO
+  // Not enabled for native yet.
   return children
 }
