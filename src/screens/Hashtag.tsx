@@ -22,6 +22,7 @@ import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOut
 import {shareUrl} from 'lib/sharing'
 import {HITSLOP_10} from 'lib/constants'
 import {isNative} from 'platform/detection'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -37,6 +38,7 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
   const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = React.useState(false)
 
   const fullTag = React.useMemo(() => {
@@ -154,6 +156,8 @@ export default function HashtagScreen({
               onRetry={fetchNextPage}
             />
           }
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
         />
       )}
     </>
