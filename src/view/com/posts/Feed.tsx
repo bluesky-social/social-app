@@ -327,6 +327,8 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
+        initialNumToRender={7}
+        windowSize={9}
       />
     </View>
   )

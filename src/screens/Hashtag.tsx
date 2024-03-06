@@ -154,6 +154,8 @@ export default function HashtagScreen({
               onRetry={fetchNextPage}
             />
           }
+          windowSize={9}
+          initialNumToRender={7}
         />
       )}
     </>
