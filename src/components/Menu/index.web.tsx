@@ -125,7 +125,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
           style={[
             a.rounded_sm,
             a.p_xs,
-            t.atoms.bg_contrast_50,
+            t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
           ]}>
           {children}
@@ -133,7 +133,10 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
 
         <DropdownMenu.Arrow
           className="DropdownMenuArrow"
-          fill={t.atoms.bg_contrast_50.backgroundColor}
+          fill={
+            (t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25)
+              .backgroundColor
+          }
         />
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
@@ -181,7 +184,9 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
           web({outline: 0}),
           (hovered || focused) && [
             web({outline: '0 !important'}),
-            t.atoms.bg_contrast_25,
+            t.name === 'light'
+              ? t.atoms.bg_contrast_25
+              : t.atoms.bg_contrast_50,
           ],
         ])}
         {...web({
