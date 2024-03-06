@@ -43,6 +43,7 @@ import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unre
 import * as persisted from '#/state/persisted'
 import {Splash} from '#/Splash'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
@@ -77,21 +78,23 @@ function InnerApp() {
           <React.Fragment
             // Resets the entire tree below when it changes:
             key={currentAccount?.did}>
-            <LoggedOutViewProvider>
-              <SelectedFeedProvider>
-                <UnreadNotifsProvider>
-                  <ThemeProvider theme={theme}>
-                    {/* All components should be within this provider */}
-                    <RootSiblingParent>
-                      <GestureHandlerRootView style={s.h100pct}>
-                        <TestCtrls />
-                        <Shell />
-                      </GestureHandlerRootView>
-                    </RootSiblingParent>
-                  </ThemeProvider>
-                </UnreadNotifsProvider>
-              </SelectedFeedProvider>
-            </LoggedOutViewProvider>
+            <StatsigProvider>
+              <LoggedOutViewProvider>
+                <SelectedFeedProvider>
+                  <UnreadNotifsProvider>
+                    <ThemeProvider theme={theme}>
+                      {/* All components should be within this provider */}
+                      <RootSiblingParent>
+                        <GestureHandlerRootView style={s.h100pct}>
+                          <TestCtrls />
+                          <Shell />
+                        </GestureHandlerRootView>
+                      </RootSiblingParent>
+                    </ThemeProvider>
+                  </UnreadNotifsProvider>
+                </SelectedFeedProvider>
+              </LoggedOutViewProvider>
+            </StatsigProvider>
           </React.Fragment>
         </Splash>
       </Alf>

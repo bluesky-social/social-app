@@ -179,6 +179,8 @@
     "react-responsive": "^9.0.2",
     "rn-fetch-blob": "^0.12.0",
     "sentry-expo": "~7.0.1",
+    "statsig-react": "^1.36.0",
+    "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "use-deep-compare": "^1.1.0",
