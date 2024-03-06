@@ -4986,13 +4986,6 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-community/datetimepicker@7.6.1":
-  version "7.6.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-7.6.1.tgz#98bdee01e3df490526ee1125e438c2030becac1f"
-  integrity sha512-g66Q2Kd9Uw3eRL7kkrTsGhi+eXxNoPDRFYH6z78sZQuYjPkUQgJDDMUYgBmaBsQx/fKMtemPrCj1ulGmyi0OSw==
-  dependencies:
-    invariant "^2.2.4"
-
 "@react-native-community/eslint-config@^3.0.0":
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/eslint-config/-/eslint-config-3.2.0.tgz#42f677d5fff385bccf1be1d3b8faa8c086cf998d"
@@ -18562,6 +18555,11 @@ react-native-appstate-hook@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/react-native-appstate-hook/-/react-native-appstate-hook-1.0.6.tgz#cbc16e7b89cfaea034cabd999f00e99053cabd06"
   integrity sha512-0hPVyf5yLxCSVrrNEuGqN1ZnSSj3Ye2gZex0NtcK/AHYwMc0rXWFNZjBKOoZSouspqu3hXBbQ6NOUSTzrME1AQ==
+
+react-native-date-picker@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.4.0.tgz#fe5b6eb8d85a4a30b2991ada5169a30ce5023ead"
+  integrity sha512-Axx3byihwwhKRLRVjPAr/UaEysapkRcKmjjM8/05UaVm4Q0xDn2RFUcRdy1QAahhRcjLjlVYhepxvU5bdgy7ZQ==
 
 react-native-dotenv@^3.3.1:
   version "3.4.9"
