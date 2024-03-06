@@ -17,30 +17,6 @@ import {useCloseAllActiveElements} from '#/state/util'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {useGate} from '#/lib/statsig/statsig'
-
-function TestGate() {
-  const value = useGate('test_gate')
-  let color = value ? 'green' : 'red'
-  let text = value ? 'PASS' : 'FAIL'
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        backgroundColor: color,
-        width: 200,
-        height: 200,
-        color: 'white',
-        fontSize: 30,
-        zIndex: 100,
-        fontFamily: 'monospace',
-      }}>
-      {text}
-    </div>
-  )
-}
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -60,7 +36,6 @@ function ShellInner() {
 
   return (
     <>
-      <TestGate />
       <ErrorBoundary>
         <FlatNavigator />
       </ErrorBoundary>
