@@ -4,26 +4,35 @@ import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
 
 export function useGate(gateName: string) {
-  return useStatsigGate(gateName)
+  const {isLoading, value} = useStatsigGate(gateName)
+  if (isLoading) {
+    console.error('Did not expected isLoading to ever be true.')
+  }
+  return value
+}
+
+function toStatsigUser(did: string | undefined) {
+  let userID: string | undefined
+  if (did) {
+    userID = sha256(did)
+  }
+  return {userID}
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount} = useSession()
-  const statsigUser = React.useMemo(() => {
-    let userID
-    if (currentAccount?.did) {
-      userID = sha256(currentAccount?.did)
-    }
-    return {userID}
-  }, [currentAccount?.did])
+  const currentStatsigUser = React.useMemo(
+    () => toStatsigUser(currentAccount?.did),
+    [currentAccount?.did],
+  )
   return (
     <StatsigProvider
       sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
-      mountKey={statsigUser.userID}
-      user={statsigUser}
+      mountKey={currentStatsigUser.userID}
+      user={currentStatsigUser}
       waitForInitialization={true}
       options={{
-        disableLocalStorage: true,
+        initTimeoutMs: 1,
         environment: {
           tier:
             process.env.NODE_ENV === 'development'
