@@ -108,11 +108,6 @@ module.exports = function (config) {
       web: {
         favicon: './assets/favicon.png',
       },
-      updates: {
-        enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
-      },
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -130,12 +125,6 @@ module.exports = function (config) {
               kotlinVersion: '1.8.0',
               newArchEnabled: true,
             },
-          },
-        ],
-        [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
           },
         ],
         [

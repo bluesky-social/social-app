@@ -4,17 +4,14 @@
  */
 
 import {Platform} from 'react-native'
-import * as info from 'expo-updates'
 import {init} from 'sentry-expo'
 import {nativeApplicationVersion, nativeBuildVersion} from 'expo-application'
 
 /**
  * Matches the build profile `channel` props in `eas.json`
  */
-const buildChannel = (info.channel || 'development') as
-  | 'development'
-  | 'preview'
-  | 'production'
+// TODO FABRIC expo updates .info
+const buildChannel = 'development' as 'development' | 'preview' | 'production'
 
 /**
  * Examples:
