@@ -330,7 +330,7 @@ let Feed = ({
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
         initialNumToRender={initialNumToRender}
-        windowSize={9}
+        windowSize={11}
       />
     </View>
   )

@@ -157,7 +157,7 @@ export default function HashtagScreen({
             />
           }
           initialNumToRender={initialNumToRender}
-          windowSize={9}
+          windowSize={11}
         />
       )}
     </>
