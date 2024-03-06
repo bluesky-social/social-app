@@ -161,7 +161,8 @@ export function linkRequiresWarning(uri: string, label: string) {
   if (
     uri.startsWith('/') ||
     host.endsWith('bsky.app') ||
-    host.endsWith('bsky.social')
+    host.endsWith('bsky.social') ||
+    host.endsWith('blueskyweb.xyz')
   ) {
     // if this is a link to internal content,
     // warn if it represents itself as a URL to another app
