@@ -856,9 +856,7 @@ export function SettingsScreen({}: Props) {
             accessibilityRole="button"
             onPress={onPressBuildInfo}>
             <Text type="sm" style={[styles.buildInfo, pal.textLight]}>
-              <Trans>
-                Build version {AppInfo.appVersion} {AppInfo.updateChannel}
-              </Trans>
+              <Trans>Build version {AppInfo.appVersion}</Trans>
             </Text>
           </TouchableOpacity>
           <Text type="sm" style={[pal.textLight]}>
