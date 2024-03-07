@@ -18,6 +18,9 @@ import {
 } from './NativeDropdown'
 import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
+import {useDialogControl} from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
+import {ButtonText} from '#/components/Button'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -29,7 +32,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
-import {msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
@@ -68,8 +71,8 @@ let PostDropdownBtn = ({
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
   const navigation = useNavigation()
-  const {mutedWordsDialogControl, confirmDialogControl} =
-    useGlobalDialogsControlContext()
+  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const deletePromptControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -273,14 +276,7 @@ let PostDropdownBtn = ({
     isAuthor && {
       label: _(msg`Delete post`),
       onPress() {
-        confirmDialogControl.open({
-          title: _(msg`Delete this post?`),
-          description: _(
-            msg`If you delete this post, you won't be able to recover it.`,
-          ),
-          confirm: _(msg`Delete Post`),
-          onConfirm: onDeletePost,
-        })
+        deletePromptControl.open()
       },
       testID: 'postDropdownDeleteBtn',
       icon: {
@@ -321,6 +317,24 @@ let PostDropdownBtn = ({
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
         </View>
       </NativeDropdown>
+      <Prompt.Outer control={deletePromptControl}>
+        <Prompt.Title>
+          <Trans>Delete this post?</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>
+            If you remove this post, you won't be able to recover it.
+          </Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>Cancel</Prompt.Cancel>
+          <Prompt.Action onPress={onDeletePost} color="negative">
+            <ButtonText>
+              <Trans>Delete</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
     </EventStopper>
   )
 }

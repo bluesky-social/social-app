@@ -5,10 +5,9 @@ import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
-import {Button} from '#/components/Button'
+import {Button, ButtonColor} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
-import {DialogExtraOpts} from '#/components/Dialog'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
@@ -20,11 +19,11 @@ const Context = React.createContext<{
   descriptionId: '',
 })
 
-export function Outer<T extends DialogExtraOpts<T>>({
+export function Outer({
   children,
   control,
 }: React.PropsWithChildren<{
-  control: Dialog.DialogOuterProps<T>['control']
+  control: Dialog.DialogOuterProps['control']
 }>) {
   const titleId = React.useId()
   const descriptionId = React.useId()
@@ -35,7 +34,7 @@ export function Outer<T extends DialogExtraOpts<T>>({
   )
 
   return (
-    <Dialog.Outer<T> control={control}>
+    <Dialog.Outer control={control}>
       <Context.Provider value={context}>
         <Dialog.Handle />
 
@@ -98,8 +97,9 @@ export function Cancel({
 
 export function Action({
   children,
+  color = 'primary',
   onPress,
-}: React.PropsWithChildren<{onPress?: () => void}>) {
+}: React.PropsWithChildren<{onPress?: () => void; color?: ButtonColor}>) {
   const {_} = useLingui()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
@@ -109,7 +109,7 @@ export function Action({
   return (
     <Button
       variant="solid"
-      color="primary"
+      color={color}
       size="small"
       label={_(msg`Confirm`)}
       onPress={handleOnPress}>

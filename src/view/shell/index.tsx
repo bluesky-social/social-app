@@ -30,7 +30,6 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {ConfirmDialog} from '#/components/dialogs/ConfirmDialog'
 import {useDialogStateContext} from '#/state/dialogs'
 
 function ShellInner() {
@@ -110,7 +109,6 @@ function ShellInner() {
       </View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
-      <ConfirmDialog />
       <MutedWordsDialog />
       <PortalOutlet />
       <Lightbox />
