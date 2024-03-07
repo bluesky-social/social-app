@@ -98,7 +98,7 @@ export function TagMenu({
 
                     control.close(() => {
                       navigation.push('Hashtag', {
-                        tag: tag.replaceAll('#', '%23'),
+                        tag: encodeURIComponent(tag),
                       })
                     })
 
@@ -153,7 +153,7 @@ export function TagMenu({
 
                         control.close(() => {
                           navigation.push('Hashtag', {
-                            tag: tag.replaceAll('#', '%23'),
+                            tag: encodeURIComponent(tag),
                             author: authorHandle,
                           })
                         })
