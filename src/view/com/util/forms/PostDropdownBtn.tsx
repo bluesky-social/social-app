@@ -313,6 +313,7 @@ let PostDropdownBtn = ({
           <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
         </View>
       </NativeDropdown>
+
       <Prompt.Outer control={deletePromptControl}>
         <Prompt.Title>
           <Trans>Delete this post?</Trans>
@@ -331,6 +332,7 @@ let PostDropdownBtn = ({
           </Prompt.Action>
         </Prompt.Actions>
       </Prompt.Outer>
+
       <Prompt.Outer control={hidePromptControl}>
         <Prompt.Title>
           <Trans>Hide this post?</Trans>
