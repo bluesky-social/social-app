@@ -148,6 +148,11 @@ export function feedUriToHref(url: string): string {
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
 
+  // If the uri started with a / we know it is internal.
+  if (uri.startsWith('/')) {
+    return false
+  }
+
   let urip
   try {
     urip = new URL(uri)
@@ -156,9 +161,12 @@ export function linkRequiresWarning(uri: string, label: string) {
   }
 
   const host = urip.hostname.toLowerCase()
-
   // Hosts that end with bsky.app or bsky.social should be trusted by default.
-  if (host.endsWith('bsky.app') || host.endsWith('bsky.social')) {
+  if (
+    host.endsWith('bsky.app') ||
+    host.endsWith('bsky.social') ||
+    host.endsWith('blueskyweb.xyz')
+  ) {
     // if this is a link to internal content,
     // warn if it represents itself as a URL to another app
     return !!labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain)

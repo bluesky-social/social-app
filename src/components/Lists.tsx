@@ -1,6 +1,7 @@
 import React from 'react'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
+import {CenteredView} from 'view/com/util/Views'
 import {Loader} from '#/components/Loader'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -145,7 +146,7 @@ export function ListMaybePlaceholder({
 }) {
   const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
+  const {gtMobile, gtTablet} = useBreakpoints()
   const {_} = useLingui()
 
   const canGoBack = navigation.canGoBack()
@@ -168,14 +169,16 @@ export function ListMaybePlaceholder({
   if (!isEmpty) return null
 
   return (
-    <View
+    <CenteredView
       style={[
         a.flex_1,
         a.align_center,
-        !gtMobile ? [a.justify_between, a.border_t] : a.gap_5xl,
+        !gtMobile ? a.justify_between : a.gap_5xl,
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
-      ]}>
+      ]}
+      sideBorders={gtMobile}
+      topBorder={!gtTablet}>
       {isLoading ? (
         <View style={[a.w_full, a.align_center, {top: 100}]}>
           <Loader size="xl" />
@@ -244,6 +247,6 @@ export function ListMaybePlaceholder({
           </View>
         </>
       )}
-    </View>
+    </CenteredView>
   )
 }
