@@ -3,6 +3,8 @@ import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
+import {IS_DEV} from '#/env'
+import {isWeb} from '#/platform/detection'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
@@ -309,7 +311,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
-      window.agent = agent
+      // @ts-ignore
+      if (IS_DEV && isWeb) window.agent = agent
       queryClient.clear()
       upsertAccount(account)
 
@@ -349,7 +352,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           {networkErrorCallback: clearCurrentAccount},
         ),
       })
-      window.agent = agent
+      // @ts-ignore
+      if (IS_DEV && isWeb) window.agent = agent
 
       let canReusePrevSession = false
       try {

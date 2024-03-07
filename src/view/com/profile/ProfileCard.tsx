@@ -166,7 +166,7 @@ function ProfileCardPillModerationCause({
   severity: 'alert' | 'inform'
 }) {
   const pal = usePalette('default')
-  const {name} = useModerationCauseDescription(cause, 'account')
+  const {name} = useModerationCauseDescription(cause)
   return (
     <View
       style={[s.mt5, pal.btn, styles.pill]}

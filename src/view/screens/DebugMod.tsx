@@ -38,7 +38,7 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
 } from '#/components/icons/Chevron'
 import {ScreenHider} from '../../components/moderation/ScreenHider'
-import {ProfileHeader} from '#/screens/Profile/Header'
+import {ProfileHeaderStandard} from '#/screens/Profile/Header/ProfileHeaderStandard'
 import {ProfileCard} from '../com/profile/ProfileCard'
 import {FeedItem} from '../com/posts/FeedItem'
 import {FeedItem as NotifFeedItem} from '../com/notifications/FeedItem'
@@ -243,7 +243,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         ],
       },
       labelDefs: {
-        'did:plc:fake-labeler': [interpretLabelValueDefinition(customLabelDef)],
+        'did:plc:fake-labeler': [interpretLabelValueDefinition(customLabelDef, 'did:plc:fake-labeler')],
       },
     }
   }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef])
@@ -880,7 +880,7 @@ function MockAccountScreen({
         style={{}}
         screenDescription="profile"
         modui={moderation.ui('profileView')}>
-        <ProfileHeader
+        <ProfileHeaderStandard
           // @ts-ignore ProfileViewBasic is close enough -prf
           profile={profile}
           moderationOpts={moderationOpts}

@@ -62,7 +62,6 @@ export function Forms() {
             value={value}
             onChangeText={setValue}
             label="Text field"
-            disabled
           />
         </View>
 

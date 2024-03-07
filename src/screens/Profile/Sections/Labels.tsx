@@ -54,6 +54,7 @@ export const ProfileLabelsSection = React.forwardRef<
   const {height: minHeight} = useSafeAreaFrame()
 
   const onScrollToTop = React.useCallback(() => {
+    // @ts-ignore TODO fix this
     scrollElRef.current?.scrollTo({
       animated: isNative,
       x: 0,
@@ -143,6 +144,7 @@ export function ProfileLabelsSectionInner({
 
   return (
     <ScrollView
+      // @ts-ignore TODO fix this
       ref={scrollElRef}
       scrollEventThrottle={1}
       contentContainerStyle={{
