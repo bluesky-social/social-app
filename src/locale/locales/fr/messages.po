@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-03-06 01:20+0000\n"
+"PO-Revision-Date: 2024-03-07 01:30+0000\n"
 "Last-Translator: surfdude29\n"
 "Language-Team: Stanislas Signoud (@signez.fr), surfdude29\n"
 "Plural-Forms: \n"
@@ -165,7 +165,7 @@ msgstr "Ajouter un mot masqué pour les paramètres configurés"
 
 #: src/components/dialogs/MutedWords.tsx:74
 msgid "Add muted words and tags"
-msgstr "Ajouter des mots et des étiquettes masqués"
+msgstr "Ajouter des mots et des mots-clés masqués"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
@@ -669,7 +669,7 @@ msgstr "cliquez ici"
 #: src/components/RichText.tsx:189
 #: src/components/TagMenu/index.web.tsx:125
 msgid "Click here to open tag menu for {tag}"
-msgstr "Cliquez ici pour ouvrir le menu d’étiquette pour {tag}"
+msgstr "Cliquez ici pour ouvrir le menu de mot-clé pour {tag}"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -1297,7 +1297,7 @@ msgstr "Entrer un nom pour ce mot de passe d’application"
 #: src/components/dialogs/MutedWords.tsx:87
 #: src/components/dialogs/MutedWords.tsx:88
 msgid "Enter a word or tag"
-msgstr "Saisir un mot ou une étiquette"
+msgstr "Saisir un mot ou un mot-clé"
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
@@ -2109,7 +2109,7 @@ msgstr "Assurez-vous que c’est bien là que vous avez l’intention d’aller 
 
 #: src/components/dialogs/MutedWords.tsx:71
 msgid "Manage your muted words and tags"
-msgstr "Gérer les mots et les étiquettes masqués"
+msgstr "Gérer les mots et les mots-clés masqués"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
@@ -2233,11 +2233,11 @@ msgstr "Masquer tous les posts {tag}"
 
 #: src/components/dialogs/MutedWords.tsx:131
 msgid "Mute in tags only"
-msgstr "Masquer dans les étiquettes uniquement"
+msgstr "Masquer dans les mots-clés uniquement"
 
 #: src/components/dialogs/MutedWords.tsx:116
 msgid "Mute in text & tags"
-msgstr "Masquer dans le texte et les étiquettes"
+msgstr "Masquer dans le texte et les mots-clés"
 
 #: src/view/screens/ProfileList.tsx:491
 msgid "Mute list"
@@ -2253,11 +2253,11 @@ msgstr "Masquer cette liste"
 
 #: src/components/dialogs/MutedWords.tsx:109
 msgid "Mute this word in post text and tags"
-msgstr "Masquer ce mot dans le texte du post et les étiquettes"
+msgstr "Masquer ce mot dans le texte du post et les mots-clés"
 
 #: src/components/dialogs/MutedWords.tsx:124
 msgid "Mute this word in tags only"
-msgstr "Masquer ce mot dans les étiquettes uniquement"
+msgstr "Masquer ce mot dans les mots-clés uniquement"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Mute thread"
@@ -2265,7 +2265,7 @@ msgstr "Masquer ce fil de discussion"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:216
 msgid "Mute words & tags"
-msgstr "Masquer les mots et les étiquettes"
+msgstr "Masquer les mots et les mots-clés"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2286,7 +2286,7 @@ msgstr "Les comptes masqués voient leurs posts supprimés de votre fil d’actu
 
 #: src/view/screens/Moderation.tsx:100
 msgid "Muted words & tags"
-msgstr "Les mots et les étiquettes masqués"
+msgstr "Les mots et les mots-clés masqués"
 
 #: src/view/screens/ProfileList.tsx:277
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2851,7 +2851,7 @@ msgstr "Posts"
 
 #: src/components/dialogs/MutedWords.tsx:77
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr "Les posts peuvent être masqués en fonction de leur texte, de leurs étiquettes ou des deux."
+msgstr "Les posts peuvent être masqués en fonction de leur texte, de leurs mots-clés ou des deux."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -3258,11 +3258,11 @@ msgstr "Recherche de « {query} »"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {tag}"
-msgstr "Rechercher tous les posts de @{authorHandle} avec l’étiquette {tag}"
+msgstr "Rechercher tous les posts de @{authorHandle} avec le mot-clé {tag}"
 
 #: src/components/TagMenu/index.tsx:90
 msgid "Search for all posts with tag {tag}"
-msgstr "Rechercher tous les posts avec l’étiquette {tag}"
+msgstr "Rechercher tous les posts avec le mot-clé {tag}"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
@@ -3774,11 +3774,11 @@ msgstr "Journal système"
 
 #: src/components/dialogs/MutedWords.tsx:288
 msgid "tag"
-msgstr "étiquette"
+msgstr "mot-clé"
 
 #: src/components/TagMenu/index.tsx:74
 msgid "Tag menu: {tag}"
-msgstr "Menu d’étiquette : {tag}"
+msgstr "Menu de mot-clé : {tag}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
@@ -4497,7 +4497,7 @@ msgstr "Vous n’avez encore masqué aucun compte. Pour désactiver un compte, a
 
 #: src/components/dialogs/MutedWords.tsx:202
 msgid "You haven't muted any words or tags yet"
-msgstr "Vous n’avez pas encore masqué de mot ou d’étiquette"
+msgstr "Vous n’avez pas encore masqué de mot ou de mot-clé"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
