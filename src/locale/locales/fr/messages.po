@@ -35,7 +35,7 @@ msgstr "<0>{following} </0><1>abonnements</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
-msgstr "<0>Choisissez vos</0><1>fils d’actualité</1><2>recommandés</2>"
+msgstr "<0>Choisissez vos</0><1>fils d’actu</1><2>recommandés</2>"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
 msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
@@ -195,7 +195,7 @@ msgstr "Ajouté à mes fils d’actu"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:173
 msgid "Adjust the number of likes a reply must have to be shown in your feed."
-msgstr "Définissez le nombre de likes qu’une réponse doit avoir pour être affichée dans votre fil d’actualité."
+msgstr "Définissez le nombre de likes qu’une réponse doit avoir pour être affichée dans votre fil d’actu."
 
 #: src/view/com/modals/SelfLabel.tsx:75
 msgid "Adult Content"
@@ -2282,7 +2282,7 @@ msgstr "Comptes masqués"
 
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
-msgstr "Les comptes masqués voient leurs posts supprimés de votre fil d’actualité et de vos notifications. Cette option est totalement privée."
+msgstr "Les comptes masqués voient leurs posts supprimés de votre fil d’actu et de vos notifications. Cette option est totalement privée."
 
 #: src/view/screens/Moderation.tsx:100
 msgid "Muted words & tags"
