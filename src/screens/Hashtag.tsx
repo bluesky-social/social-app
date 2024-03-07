@@ -1,6 +1,5 @@
 import React from 'react'
 import {ListRenderItemInfo, Pressable} from 'react-native'
-import {atoms as a, useBreakpoints} from '#/alf'
 import {useFocusEffect} from '@react-navigation/native'
 import {useSetMinimalShellMode} from 'state/shell'
 import {ViewHeader} from 'view/com/util/ViewHeader'
@@ -19,11 +18,11 @@ import {List} from 'view/com/util/List'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {CenteredView} from 'view/com/util/Views'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
 import {shareUrl} from 'lib/sharing'
 import {HITSLOP_10} from 'lib/constants'
 import {isNative} from 'platform/detection'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />
@@ -38,12 +37,12 @@ export default function HashtagScreen({
 }: NativeStackScreenProps<CommonNavigatorParams, 'Hashtag'>) {
   const {tag, author} = route.params
   const setMinimalShellMode = useSetMinimalShellMode()
-  const {gtMobile} = useBreakpoints()
   const {_} = useLingui()
+  const initialNumToRender = useInitialNumToRender()
   const [isPTR, setIsPTR] = React.useState(false)
 
   const fullTag = React.useMemo(() => {
-    return `#${tag.replaceAll('%23', '#')}`
+    return `#${decodeURIComponent(tag)}`
   }, [tag])
 
   const queryParam = React.useMemo(() => {
@@ -84,7 +83,7 @@ export default function HashtagScreen({
 
   const onShare = React.useCallback(() => {
     const url = new URL('https://bsky.app')
-    url.pathname = `/hashtag/${tag}`
+    url.pathname = `/hashtag/${decodeURIComponent(tag)}`
     if (author) {
       url.searchParams.set('author', author)
     }
@@ -103,7 +102,7 @@ export default function HashtagScreen({
   }, [isFetching, hasNextPage, error, fetchNextPage])
 
   return (
-    <CenteredView style={a.flex_1} sideBorders={gtMobile}>
+    <>
       <ViewHeader
         title={headerTitle}
         subtitle={author ? _(msg`From @${sanitizedAuthor}`) : undefined}
@@ -157,8 +156,10 @@ export default function HashtagScreen({
               onRetry={fetchNextPage}
             />
           }
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
         />
       )}
-    </CenteredView>
+    </>
   )
 }

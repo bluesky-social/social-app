@@ -81,9 +81,6 @@ function ShellInner() {
     }
   }, [currentAccount])
 
-  // const importantForAccessibility =
-  //   openDialogs.length > 0 ? 'no-hide-descendants' : undefined
-
   return (
     <>
       <Animated.View
