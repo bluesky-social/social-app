@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import React, {useMemo} from 'react'
 import {AtUri, ComAtprotoModerationDefs} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 
 import {Text} from '../../util/text/Text'
 import {UsePaletteValue, usePalette} from 'lib/hooks/usePalette'
@@ -48,16 +49,18 @@ const CollectionToReasonsMap: Record<string, ReasonMap> = {
 }
 const AccountReportReasons = {
   [ComAtprotoModerationDefs.REASONMISLEADING]: {
-    title: 'Misleading Account',
-    description: 'Impersonation or false claims about identity or affiliation',
+    title: <Trans>Misleading Account</Trans>,
+    description: (
+      <Trans>Impersonation or false claims about identity or affiliation</Trans>
+    ),
   },
   [ComAtprotoModerationDefs.REASONSPAM]: {
-    title: 'Frequently Posts Unwanted Content',
-    description: 'Spam; excessive mentions or replies',
+    title: <Trans>Frequently Posts Unwanted Content</Trans>,
+    description: <Trans>Spam; excessive mentions or replies</Trans>,
   },
   [ComAtprotoModerationDefs.REASONVIOLATION]: {
-    title: 'Name or Description Violates Community Standards',
-    description: 'Terms used violate community standards',
+    title: <Trans>Name or Description Violates Community Standards</Trans>,
+    description: <Trans>Terms used violate community standards</Trans>,
   },
 }
 
