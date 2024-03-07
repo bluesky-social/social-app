@@ -325,7 +325,7 @@ msgstr "Écrivez-vous en <0>{0}</0> ?"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
-msgstr "L’art"
+msgstr "Art"
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -2554,7 +2554,7 @@ msgstr "Ouvrir le sélecteur d’emoji"
 
 #: src/view/screens/Settings/index.tsx:712
 msgid "Open links with in-app browser"
-msgstr "Ouvrir des liens avec le navigateur dans l’appli"
+msgstr "Ouvrir des liens avec le navigateur interne à l’appli"
 
 #: src/view/screens/Moderation.tsx:92
 msgid "Open muted words settings"
