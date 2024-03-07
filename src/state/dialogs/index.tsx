@@ -13,12 +13,14 @@ const DialogContext = React.createContext<{
    * The currently open dialogs, referenced by their IDs, generated from
    * `useId`.
    */
-  openDialogs: string[]
+  openDialogs: React.MutableRefObject<Set<string>>
 }>({
   activeDialogs: {
     current: new Map(),
   },
-  openDialogs: [],
+  openDialogs: {
+    current: new Set(),
+  },
 })
 
 const DialogControlContext = React.createContext<{
@@ -41,22 +43,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const activeDialogs = React.useRef<
     Map<string, React.MutableRefObject<DialogControlRefProps>>
   >(new Map())
-  const [openDialogs, setOpenDialogs] = React.useState<string[]>([])
+  const openDialogs = React.useRef<Set<string>>(new Set())
 
   const closeAllDialogs = React.useCallback(() => {
     activeDialogs.current.forEach(dialog => dialog.current.close())
-    return openDialogs.length > 0
-  }, [openDialogs])
+    return openDialogs.current.size > 0
+  }, [])
 
-  const setDialogIsOpen = React.useCallback(
-    (id: string, isOpen: boolean) => {
-      setOpenDialogs(prev => {
-        const filtered = prev.filter(dialogId => dialogId !== id) as string[]
-        return isOpen ? [...filtered, id] : filtered
-      })
-    },
-    [setOpenDialogs],
-  )
+  const setDialogIsOpen = React.useCallback((id: string, isOpen: boolean) => {
+    if (isOpen) {
+      openDialogs.current.add(id)
+    } else {
+      openDialogs.current.delete(id)
+    }
+  }, [])
 
   const context = React.useMemo(
     () => ({activeDialogs, openDialogs}),

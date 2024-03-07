@@ -30,7 +30,6 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {useDialogStateContext} from '#/state/dialogs'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -56,7 +55,6 @@ function ShellInner() {
   const closeAnyActiveElement = useCloseAnyActiveElement()
   // start undefined
   const currentAccountDid = React.useRef<string | undefined>(undefined)
-  const {openDialogs} = useDialogStateContext()
 
   React.useEffect(() => {
     let listener = {remove() {}}
@@ -86,15 +84,13 @@ function ShellInner() {
    * navigating within content beneath an open dialog.
    *
    * @see https://reactnative.dev/docs/accessibility#importantforaccessibility-android
-   */
-  const importantForAccessibility =
-    openDialogs.length > 0 ? 'no-hide-descendants' : undefined
+  //  */
+  // const importantForAccessibility =
+  //   openDialogs.length > 0 ? 'no-hide-descendants' : undefined
 
   return (
     <>
-      <View
-        style={containerPadding}
-        importantForAccessibility={importantForAccessibility}>
+      <View style={containerPadding}>
         <ErrorBoundary>
           <Drawer
             renderDrawerContent={renderDrawerContent}
