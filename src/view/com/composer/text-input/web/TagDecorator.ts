@@ -18,28 +18,36 @@ import {Mark} from '@tiptap/core'
 import {Plugin, PluginKey} from '@tiptap/pm/state'
 import {Node as ProsemirrorNode} from '@tiptap/pm/model'
 import {Decoration, DecorationSet} from '@tiptap/pm/view'
+import {TAG_REGEX, TRAILING_PUNCTUATION_REGEX} from '@atproto/api'
 
 function getDecorations(doc: ProsemirrorNode) {
   const decorations: Decoration[] = []
 
   doc.descendants((node, pos) => {
     if (node.isText && node.text) {
-      const regex = /(?:^|\s)(#[^\d\s]\S*)(?=\s)?/g
+      const regex = TAG_REGEX
       const textContent = node.textContent
 
       let match
       while ((match = regex.exec(textContent))) {
-        const [matchedString, tag] = match
+        const [matchedString, _, tag] = match
 
-        if (tag.length > 66) continue
+        if (!tag || tag.replace(TRAILING_PUNCTUATION_REGEX, '').length > 64)
+          continue
 
-        const [trailingPunc = ''] = tag.match(/\p{P}+$/u) || []
+        const [trailingPunc = ''] = tag.match(TRAILING_PUNCTUATION_REGEX) || []
+        const matchedFrom = match.index + matchedString.indexOf(tag)
+        const matchedTo = matchedFrom + (tag.length - trailingPunc.length)
 
-        const from = match.index + matchedString.indexOf(tag)
-        const to = from + (tag.length - trailingPunc.length)
+        /*
+         * The match is exclusive of `#` so we need to adjust the start of the
+         * highlight by -1 to include the `#`
+         */
+        const start = pos + matchedFrom - 1
+        const end = pos + matchedTo
 
         decorations.push(
-          Decoration.inline(pos + from, pos + to, {
+          Decoration.inline(start, end, {
             class: 'autolink',
           }),
         )

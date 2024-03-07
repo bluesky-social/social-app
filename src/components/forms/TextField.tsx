@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 
 import {HITSLOP_20} from 'lib/constants'
-import {useTheme, atoms as a, web, tokens, android} from '#/alf'
+import {useTheme, atoms as a, web, android} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
@@ -110,7 +110,7 @@ export function useSharedInputStyles() {
       {
         backgroundColor:
           t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
-        borderColor: tokens.color.red_500,
+        borderColor: t.palette.negative_500,
       },
     ]
 

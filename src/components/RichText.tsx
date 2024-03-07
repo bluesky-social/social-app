@@ -7,7 +7,6 @@ import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
 import {InlineLink} from '#/components/Link'
 import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
-import {getAgent} from '#/state/session'
 import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
 import {isNative} from '#/platform/detection'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -20,7 +19,6 @@ export function RichText({
   style,
   numberOfLines,
   disableLinks,
-  resolveFacets = false,
   selectable,
   enableTags = false,
   authorHandle,
@@ -30,30 +28,15 @@ export function RichText({
     testID?: string
     numberOfLines?: number
     disableLinks?: boolean
-    resolveFacets?: boolean
     enableTags?: boolean
     authorHandle?: string
   }) {
-  const detected = React.useRef(false)
-  const [richText, setRichText] = React.useState<RichTextAPI>(() =>
-    value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+  const richText = React.useMemo(
+    () =>
+      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+    [value],
   )
   const styles = [a.leading_snug, flatten(style)]
-
-  React.useEffect(() => {
-    if (!resolveFacets) return
-
-    async function detectFacets() {
-      const rt = new RichTextAPI({text: richText.text})
-      await rt.detectFacets(getAgent())
-      setRichText(rt)
-    }
-
-    if (!detected.current) {
-      detected.current = true
-      detectFacets()
-    }
-  }, [richText, setRichText, resolveFacets])
 
   const {text, facets} = richText
 
@@ -122,8 +105,7 @@ export function RichText({
             to={link.uri}
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
-            dataSet={WORD_WRAP}
-            warnOnMismatchingLabel>
+            dataSet={WORD_WRAP}>
             {toShortUrl(segment.text)}
           </InlineLink>,
         )
@@ -138,6 +120,7 @@ export function RichText({
         <RichTextTag
           key={key}
           text={segment.text}
+          tag={tag.tag}
           style={styles}
           selectable={selectable}
           authorHandle={authorHandle}
@@ -163,12 +146,14 @@ export function RichText({
 }
 
 function RichTextTag({
-  text: tag,
+  text,
+  tag,
   style,
   selectable,
   authorHandle,
 }: {
   text: string
+  tag: string
   selectable?: boolean
   authorHandle?: string
 } & TextStyleProp) {
@@ -202,8 +187,8 @@ function RichTextTag({
         <Text
           selectable={selectable}
           {...native({
-            accessibilityLabel: _(msg`Hashtag: ${tag}`),
-            accessibilityHint: _(msg`Click here to open tag menu for ${tag}`),
+            accessibilityLabel: _(msg`Hashtag: #${tag}`),
+            accessibilityHint: _(msg`Click here to open tag menu for #${tag}`),
             accessibilityRole: isNative ? 'button' : undefined,
             onPress: open,
             onPressIn: onPressIn,
@@ -231,7 +216,7 @@ function RichTextTag({
               textDecorationColor: t.palette.primary_500,
             },
           ]}>
-          {tag}
+          {text}
         </Text>
       </TagMenu>
     </React.Fragment>

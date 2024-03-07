@@ -46,7 +46,7 @@ export function ContentHider({
     )
   }
 
-  const isMute = moderation.cause?.type === 'muted'
+  const isMute = ['muted', 'muted-word'].includes(moderation.cause?.type || '')
   const desc = describeModerationCause(moderation.cause, 'content')
   return (
     <View testID={testID} style={[styles.outer, style]}>

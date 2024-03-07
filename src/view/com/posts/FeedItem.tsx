@@ -70,6 +70,8 @@ export function FeedItem({
   if (richText && moderation) {
     return (
       <FeedItemInner
+        // Safeguard from clobbering per-post state below:
+        key={postShadowed.uri}
         post={postShadowed}
         record={record}
         reason={reason}

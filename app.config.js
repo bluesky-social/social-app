@@ -11,6 +11,17 @@ const DARK_SPLASH_CONFIG = {
   resizeMode: 'cover',
 }
 
+const SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0c7cff',
+  image: './assets/splash.png',
+  resizeMode: 'cover',
+}
+const DARK_SPLASH_CONFIG_ANDROID = {
+  backgroundColor: '#0f141b',
+  image: './assets/splash-dark.png',
+  resizeMode: 'cover',
+}
+
 module.exports = function (config) {
   /**
    * App version number. Should be incremented as part of a release cycle.
@@ -65,10 +76,13 @@ module.exports = function (config) {
           ...SPLASH_CONFIG,
           dark: DARK_SPLASH_CONFIG,
         },
+        entitlements: {
+          'com.apple.security.application-groups': 'group.app.bsky',
+        },
       },
       androidStatusBar: {
-        barStyle: 'dark-content',
-        backgroundColor: '#ffffff',
+        barStyle: 'light-content',
+        backgroundColor: '#00000000',
       },
       android: {
         icon: './assets/icon.png',
@@ -89,13 +103,17 @@ module.exports = function (config) {
                 scheme: 'https',
                 host: 'bsky.app',
               },
+              {
+                scheme: 'http',
+                host: 'localhost:19006',
+              },
             ],
             category: ['BROWSABLE', 'DEFAULT'],
           },
         ],
         splash: {
-          ...SPLASH_CONFIG,
-          dark: DARK_SPLASH_CONFIG,
+          ...SPLASH_CONFIG_ANDROID,
+          dark: DARK_SPLASH_CONFIG_ANDROID,
         },
       },
       web: {
@@ -114,12 +132,14 @@ module.exports = function (config) {
           {
             ios: {
               deploymentTarget: '13.4',
+              newArchEnabled: false,
             },
             android: {
               compileSdkVersion: 34,
               targetSdkVersion: 34,
               buildToolsVersion: '34.0.0',
               kotlinVersion: '1.8.0',
+              newArchEnabled: false,
             },
           },
         ],
@@ -133,13 +153,33 @@ module.exports = function (config) {
           'expo-notifications',
           {
             icon: './assets/icon-android-notification.png',
-            color: '#ffffff',
+            color: '#1185fe',
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/withAndroidManifestFCMIconPlugin.js',
+        './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
         eas: {
+          build: {
+            experimental: {
+              ios: {
+                appExtensions: [
+                  {
+                    targetName: 'Share-with-Bluesky',
+                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    entitlements: {
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
       },

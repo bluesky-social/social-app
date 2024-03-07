@@ -15,7 +15,7 @@ import {emitSoftReset} from '#/state/events'
 export function DesktopFeeds() {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {feeds: pinnedFeedInfos} = usePinnedFeedsInfos()
+  const {data: pinnedFeedInfos} = usePinnedFeedsInfos()
   const selectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
   const navigation = useNavigation<NavigationProp>()
@@ -25,7 +25,9 @@ export function DesktopFeeds() {
     }
     return getCurrentRoute(state)
   })
-
+  if (!pinnedFeedInfos) {
+    return null
+  }
   return (
     <View style={[styles.container, pal.view]}>
       {pinnedFeedInfos.map(feedInfo => {
