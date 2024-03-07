@@ -73,6 +73,7 @@ let PostDropdownBtn = ({
   const navigation = useNavigation()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const deletePromptControl = useDialogControl()
+  const hidePromptControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -235,12 +236,7 @@ let PostDropdownBtn = ({
       !isPostHidden && {
         label: _(msg`Hide post`),
         onPress() {
-          openModal({
-            name: 'confirm',
-            title: _(msg`Hide this post?`),
-            message: _(msg`This will hide this post from your feeds.`),
-            onPressConfirm: onHidePost,
-          })
+          hidePromptControl.open()
         },
         testID: 'postDropdownHideBtn',
         icon: {
@@ -331,6 +327,22 @@ let PostDropdownBtn = ({
           <Prompt.Action onPress={onDeletePost} color="negative">
             <ButtonText>
               <Trans>Delete</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
+      <Prompt.Outer control={hidePromptControl}>
+        <Prompt.Title>
+          <Trans>Hide this post?</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>This post will be hidden from your feeds.</Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>Cancel</Prompt.Cancel>
+          <Prompt.Action onPress={onHidePost}>
+            <ButtonText>
+              <Trans>Hide</Trans>
             </ButtonText>
           </Prompt.Action>
         </Prompt.Actions>
