@@ -25,6 +25,7 @@ export function Outer({
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
 }>) {
+  const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
   const descriptionId = React.useId()
 
@@ -41,7 +42,7 @@ export function Outer({
         <Dialog.Inner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[{width: 'auto', maxWidth: 400}]}>
+          style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
           {children}
         </Dialog.Inner>
       </Context.Provider>
