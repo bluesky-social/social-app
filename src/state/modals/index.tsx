@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {StyleProp, ViewStyle} from 'react-native'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 

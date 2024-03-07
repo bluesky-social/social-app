@@ -243,7 +243,9 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         ],
       },
       labelDefs: {
-        'did:plc:fake-labeler': [interpretLabelValueDefinition(customLabelDef, 'did:plc:fake-labeler')],
+        'did:plc:fake-labeler': [
+          interpretLabelValueDefinition(customLabelDef, 'did:plc:fake-labeler'),
+        ],
       },
     }
   }, [label, visibility, noAdult, isLoggedOut, isTargetMe, did, customLabelDef])
@@ -703,7 +705,6 @@ function SmallToggler({
   label,
   children,
 }: React.PropsWithChildren<{label: string}>) {
-  const t = useTheme()
   const [show, setShow] = React.useState(false)
   return (
     <View>

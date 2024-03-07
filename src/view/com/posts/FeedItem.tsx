@@ -33,7 +33,6 @@ import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
-import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {atoms as a} from '#/alf'
@@ -106,17 +105,10 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {currentAccount} = useSession()
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const isModeratedPost = !!moderation.causes.find(
-    cause =>
-      cause?.type === 'label' &&
-      cause.label.src !== currentAccount?.did &&
-      cause.label.uri === post.uri,
-  )
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {

@@ -11,7 +11,6 @@ import {useLingui} from '@lingui/react'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {useScrollHandlers} from '#/lib/ScrollContext'
-import {runOnJS} from 'react-native-reanimated'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {lookupLabelValueDefinition} from '#/lib/moderation'
 import {ListRef} from '#/view/com/util/List'
@@ -21,8 +20,6 @@ import {isNative} from '#/platform/detection'
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
-import {Divider} from '#/components/Divider'
-import {Button, ButtonText} from '#/components/Button'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ErrorState} from '../ErrorState'
 import {ModerationLabelPref} from '#/components/moderation/ModerationLabelPref'
@@ -113,7 +110,6 @@ export function ProfileLabelsSectionInner({
   scrollElRef: ListRef
   headerHeight: number
 }) {
-  const {_} = useLingui()
   const t = useTheme()
   const contextScrollHandlers = useScrollHandlers()
 
