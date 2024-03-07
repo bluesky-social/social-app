@@ -278,7 +278,8 @@ let PostDropdownBtn = ({
           description: _(
             msg`If you delete this post, you won't be able to recover it.`,
           ),
-          confirm: _(msg`Delete Post`),
+          confirm: _(msg`Delete`),
+          confirmColor: 'negative',
           onConfirm: onDeletePost,
         })
       },

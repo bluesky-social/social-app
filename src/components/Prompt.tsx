@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
-import {Button} from '#/components/Button'
+import {Button, ButtonColor} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
 import {DialogExtraOpts} from '#/components/Dialog'
@@ -71,7 +71,7 @@ export function Description({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function Actions({children}: React.PropsWithChildren<{}>) {
+export function Actions({children}: React.PropsWithChildren) {
   return (
     <View style={[a.w_full, a.flex_row, a.gap_sm, a.justify_end]}>
       {children}
@@ -98,8 +98,9 @@ export function Cancel({
 
 export function Action({
   children,
+  color = 'primary',
   onPress,
-}: React.PropsWithChildren<{onPress?: () => void}>) {
+}: React.PropsWithChildren<{onPress?: () => void; color?: ButtonColor}>) {
   const {_} = useLingui()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
@@ -109,7 +110,7 @@ export function Action({
   return (
     <Button
       variant="solid"
-      color="primary"
+      color={color}
       size="small"
       label={_(msg`Confirm`)}
       onPress={handleOnPress}>

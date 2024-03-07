@@ -20,7 +20,9 @@ export function ConfirmDialog() {
       </Prompt.Description>
       <Prompt.Actions>
         <Prompt.Cancel>Cancel</Prompt.Cancel>
-        <Prompt.Action onPress={options?.onConfirm}>
+        <Prompt.Action
+          onPress={options?.onConfirm}
+          color={options.confirmColor}>
           {options.confirm ? options.confirm : <Trans>Confirm</Trans>}
         </Prompt.Action>
       </Prompt.Actions>
