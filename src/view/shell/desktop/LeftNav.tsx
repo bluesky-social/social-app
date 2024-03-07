@@ -391,7 +391,7 @@ export function DesktopLeftNav() {
               <FontAwesomeIcon
                 icon="hand"
                 style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 20 : 26}
+                size={isDesktop ? 23 : 26}
               />
             }
             label={_(msg`Moderation`)}
