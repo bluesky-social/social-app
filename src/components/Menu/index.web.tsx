@@ -32,6 +32,7 @@ export function useMenuControl(): Dialog.DialogControlProps {
       close() {
         setIsOpen(false)
       },
+      options: {},
     }),
     [id, isOpen, setIsOpen],
   )

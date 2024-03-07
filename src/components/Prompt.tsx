@@ -8,6 +8,7 @@ import {Text} from '#/components/Typography'
 import {Button} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
+import {DialogExtraOpts} from '#/components/Dialog'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 
@@ -19,11 +20,11 @@ const Context = React.createContext<{
   descriptionId: '',
 })
 
-export function Outer({
+export function Outer<T extends DialogExtraOpts<T>>({
   children,
   control,
 }: React.PropsWithChildren<{
-  control: Dialog.DialogOuterProps['control']
+  control: Dialog.DialogOuterProps<T>['control']
 }>) {
   const titleId = React.useId()
   const descriptionId = React.useId()
@@ -34,7 +35,7 @@ export function Outer({
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer<T> control={control}>
       <Context.Provider value={context}>
         <Dialog.Handle />
 

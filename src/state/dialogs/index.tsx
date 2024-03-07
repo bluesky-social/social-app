@@ -7,7 +7,7 @@ const DialogContext = React.createContext<{
    * The currently active `useDialogControl` hooks.
    */
   activeDialogs: React.MutableRefObject<
-    Map<string, React.MutableRefObject<DialogControlRefProps>>
+    Map<string, React.MutableRefObject<DialogControlRefProps<any>>>
   >
   /**
    * The currently open dialogs, referenced by their IDs, generated from

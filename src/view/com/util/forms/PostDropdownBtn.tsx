@@ -68,7 +68,8 @@ let PostDropdownBtn = ({
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
   const navigation = useNavigation()
-  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const {mutedWordsDialogControl, confirmDialogControl} =
+    useGlobalDialogsControlContext()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -272,11 +273,13 @@ let PostDropdownBtn = ({
     isAuthor && {
       label: _(msg`Delete post`),
       onPress() {
-        openModal({
-          name: 'confirm',
+        confirmDialogControl.open({
           title: _(msg`Delete this post?`),
-          message: _(msg`Are you sure? This cannot be undone.`),
-          onPressConfirm: onDeletePost,
+          description: _(
+            msg`If you delete this post, you won't be able to recover it.`,
+          ),
+          confirm: _(msg`Delete Post`),
+          onConfirm: onDeletePost,
         })
       },
       testID: 'postDropdownDeleteBtn',

@@ -8,7 +8,11 @@ import {useLingui} from '@lingui/react'
 import {useTheme, atoms as a, useBreakpoints, web, flatten} from '#/alf'
 import {Portal} from '#/components/Portal'
 
-import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
+import {
+  DialogOuterProps,
+  DialogInnerProps,
+  DialogExtraOpts,
+} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
@@ -20,11 +24,11 @@ export {Input} from '#/components/forms/TextField'
 
 const stopPropagation = (e: any) => e.stopPropagation()
 
-export function Outer({
+export function Outer<T extends DialogExtraOpts<T> = {}>({
   children,
   control,
   onClose,
-}: React.PropsWithChildren<DialogOuterProps>) {
+}: React.PropsWithChildren<DialogOuterProps<T>>) {
   const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()

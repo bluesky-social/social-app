@@ -21,6 +21,7 @@ import {
   DialogOuterProps,
   DialogControlProps,
   DialogInnerProps,
+  DialogExtraOpts,
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 
@@ -70,12 +71,12 @@ function Backdrop(props: BottomSheetBackdropProps) {
   )
 }
 
-export function Outer({
+export function Outer<T extends DialogExtraOpts<T> = {}>({
   children,
   control,
   onClose,
   nativeOptions,
-}: React.PropsWithChildren<DialogOuterProps>) {
+}: React.PropsWithChildren<DialogOuterProps<T>>) {
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
   const sheetOptions = nativeOptions?.sheet || {}
