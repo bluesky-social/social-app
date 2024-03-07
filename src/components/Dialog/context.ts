@@ -21,8 +21,9 @@ export function useDialogControl(): DialogOuterProps['control'] {
     open: () => {},
     close: () => {},
   })
-  const {activeDialogs, openDialogs} = useDialogStateContext()
-  const isOpen = openDialogs.includes(id)
+  const {activeDialogs} = useDialogStateContext()
+
+  const [isOpen, setIsOpen] = React.useState(false)
 
   React.useEffect(() => {
     activeDialogs.current.set(id, control)
@@ -38,9 +39,11 @@ export function useDialogControl(): DialogOuterProps['control'] {
       ref: control,
       isOpen,
       open: () => {
+        setIsOpen(true)
         control.current.open()
       },
       close: cb => {
+        setIsOpen(false)
         control.current.close(cb)
       },
     }),
