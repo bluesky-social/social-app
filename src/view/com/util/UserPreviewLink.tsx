@@ -13,6 +13,7 @@ interface UserPreviewLinkProps {
 export function UserPreviewLink(
   props: React.PropsWithChildren<UserPreviewLinkProps>,
 ) {
+  foo.bar()
   const prefetchProfileQuery = usePrefetchProfileQuery()
   return (
     <Link
