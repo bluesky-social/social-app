@@ -3,7 +3,7 @@ import {View, PressableProps} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button} from '#/components/Button'
 
@@ -71,8 +71,16 @@ export function Description({children}: React.PropsWithChildren<{}>) {
 }
 
 export function Actions({children}: React.PropsWithChildren<{}>) {
+  const {gtMobile} = useBreakpoints()
+
   return (
-    <View style={[a.w_full, a.flex_row, a.gap_sm, a.justify_end]}>
+    <View
+      style={[
+        a.w_full,
+        a.gap_sm,
+        a.justify_end,
+        gtMobile ? [a.flex_row] : [a.flex_col, a.pt_md],
+      ]}>
       {children}
     </View>
   )
@@ -82,12 +90,13 @@ export function Cancel({
   children,
 }: React.PropsWithChildren<{onPress?: PressableProps['onPress']}>) {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   return (
     <Button
       variant="solid"
       color="secondary"
-      size="small"
+      size={gtMobile ? 'small' : 'medium'}
       label={_(msg`Cancel`)}
       onPress={() => close()}>
       {children}
@@ -100,6 +109,7 @@ export function Action({
   onPress,
 }: React.PropsWithChildren<{onPress?: () => void}>) {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
     close()
@@ -109,7 +119,7 @@ export function Action({
     <Button
       variant="solid"
       color="primary"
-      size="small"
+      size={gtMobile ? 'small' : 'medium'}
       label={_(msg`Confirm`)}
       onPress={handleOnPress}>
       {children}
