@@ -321,7 +321,7 @@ msgstr "Vous confirmez ? Cela ne pourra pas être annulé."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
-msgstr "Ecrivez-vous en <0>{0}</0> ?"
+msgstr "Écrivez-vous en <0>{0}</0> ?"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
@@ -431,7 +431,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre fournisseur d’hébergement. L’hébergement personnalisé est désormais disponible en version bêta pour les développeurs."
+msgstr "Bluesky est un réseau ouvert où vous pouvez choisir votre hébergeur. L’auto-hébergement est désormais disponible en version bêta pour les développeurs."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
@@ -600,7 +600,7 @@ msgstr "Vérifier mon statut"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
-msgstr "Consultez quelques fils d’actualité recommandés. Appuyez sur + pour les ajouter à votre liste de fils d’actu."
+msgstr "Consultez quelques fils d’actu recommandés. Appuyez sur + pour les ajouter à votre liste de fils d’actu."
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
 msgid "Check out some recommended users. Follow them to see similar users."
@@ -669,11 +669,11 @@ msgstr "cliquez ici"
 #: src/components/RichText.tsx:189
 #: src/components/TagMenu/index.web.tsx:125
 msgid "Click here to open tag menu for {tag}"
-msgstr "Cliquez ici pour ouvrir le menu d'étiquette pour {tag}"
+msgstr "Cliquez ici pour ouvrir le menu d’étiquette pour {tag}"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
-msgstr "Le climat"
+msgstr "Climat"
 
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
@@ -735,7 +735,7 @@ msgstr "Comédie"
 
 #: src/screens/Onboarding/index.tsx:27
 msgid "Comics"
-msgstr "Les bandes dessinées"
+msgstr "Bandes dessinées"
 
 #: src/Navigation.tsx:227
 #: src/view/screens/CommunityGuidelines.tsx:32
@@ -867,7 +867,7 @@ msgstr "Passer à l’étape suivante sans suivre aucun compte"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
-msgstr "La cuisine"
+msgstr "Cuisine"
 
 #: src/view/com/modals/AddAppPasswords.tsx:195
 #: src/view/com/modals/InviteCodes.tsx:182
@@ -962,7 +962,7 @@ msgstr "Crée une carte avec une miniature. La carte pointe vers {url}"
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
-msgstr "La culture"
+msgstr "Culture"
 
 #: src/view/com/auth/server-input/index.tsx:95
 #: src/view/com/auth/server-input/index.tsx:96
@@ -1054,7 +1054,7 @@ msgstr "Vous vouliez dire quelque chose ?"
 
 #: src/view/screens/Settings/index.tsx:504
 msgid "Dim"
-msgstr "Faible"
+msgstr "Atténué"
 
 #: src/view/com/composer/Composer.tsx:151
 msgid "Discard"
@@ -1145,7 +1145,7 @@ msgstr "Déposer pour ajouter des images"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr "En raison des politiques d’Apple, le contenu pour adultes ne peut être activé que via le Web après l’enregistrement est terminé."
+msgstr "En raison des politiques d’Apple, le contenu pour adultes ne peut être activé que via le Web une fois l’inscription terminée."
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1230,7 +1230,7 @@ msgstr "Modifier votre description de profil"
 
 #: src/screens/Onboarding/index.tsx:34
 msgid "Education"
-msgstr "L’éducation"
+msgstr "Éducation"
 
 #: src/view/com/auth/create/Step1.tsx:199
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:156
@@ -1462,7 +1462,7 @@ msgstr "Les fils d’actu sont des algorithmes personnalisés qui se construisen
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:76
 msgid "Feeds can be topical as well!"
-msgstr "Les fils d’actu peuvent également être thématique !"
+msgstr "Les fils d’actu peuvent également être thématiques !"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
@@ -1663,11 +1663,11 @@ msgstr "Pseudo"
 
 #: src/components/RichText.tsx:188
 msgid "Hashtag: {tag}"
-msgstr "Hashtag: {tag}"
+msgstr "Hashtag : {tag}"
 
 #: src/view/com/auth/create/CreateAccount.tsx:208
 msgid "Having trouble?"
-msgstr "Vous avez des problèmes ?"
+msgstr "Un souci ?"
 
 #: src/view/shell/desktop/RightNav.tsx:90
 #: src/view/shell/Drawer.tsx:321
@@ -2323,7 +2323,7 @@ msgstr "Le nom est requis"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
-msgstr "La nature"
+msgstr "Nature"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:219
@@ -3228,7 +3228,7 @@ msgstr "Enregistre le changement de pseudo en {handle}"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
-msgstr "La science"
+msgstr "Science"
 
 #: src/view/screens/ProfileList.tsx:854
 msgid "Scroll to top"
@@ -3254,7 +3254,7 @@ msgstr "Recherche"
 #: src/view/screens/Search/Search.tsx:735
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
-msgstr "Recherche de « {query} »"
+msgstr "Recherche de « {query} »"
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {tag}"
@@ -3410,7 +3410,7 @@ msgstr "Change le thème de couleur en fonction du paramètre système"
 
 #: src/view/screens/Settings/index.tsx:514
 msgid "Set dark theme to the dark theme"
-msgstr "Définir le thème sombre sur le thème sombre"
+msgstr "Choisir le thème le plus sombre comme thème sombre"
 
 #: src/view/screens/Settings/index.tsx:507
 msgid "Set dark theme to the dim theme"
@@ -4175,7 +4175,7 @@ msgstr "Utiliser le fournisseur par défaut"
 #: src/view/com/modals/InAppBrowserConsent.tsx:56
 #: src/view/com/modals/InAppBrowserConsent.tsx:58
 msgid "Use in-app browser"
-msgstr "Utiliser le navigateur dans l’appli"
+msgstr "Utiliser le navigateur interne à l’appli"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:66
 #: src/view/com/modals/InAppBrowserConsent.tsx:68
@@ -4310,7 +4310,7 @@ msgstr "Nous pensons également que vous aimerez « For You » de Skygaze :"
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr "Nous estimons à {estimatedTime} pour que votre compte soit prêt."
+msgstr "Nous estimons que votre compte sera prêt dans {estimatedTime}."
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
@@ -4409,7 +4409,7 @@ msgstr "Rédigez votre réponse"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
-msgstr "Écrivains"
+msgstr "Écrivain·e·s"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
 #: src/view/screens/PreferencesFollowingFeed.tsx:129
@@ -4497,7 +4497,7 @@ msgstr "Vous n’avez encore masqué aucun compte. Pour désactiver un compte, a
 
 #: src/components/dialogs/MutedWords.tsx:202
 msgid "You haven't muted any words or tags yet"
-msgstr "Vous n’avez pas encore masquer des mots ou des étiquettes"
+msgstr "Vous n’avez pas encore masqué de mot ou d’étiquette"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
@@ -4593,7 +4593,7 @@ msgstr "Votre pseudo complet sera <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:173
 msgid "Your muted words"
-msgstr "Votre mots masqués"
+msgstr "Vos mots masqués"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
