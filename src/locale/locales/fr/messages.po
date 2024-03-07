@@ -1954,7 +1954,7 @@ msgstr "Quitter Bluesky"
 
 #: src/screens/Deactivated.tsx:128
 msgid "left to go."
-msgstr "avant la fin."
+msgstr "devant vous dans la file."
 
 #: src/view/screens/Settings/index.tsx:278
 msgid "Legacy storage cleared, you need to restart the app now."
