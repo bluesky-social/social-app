@@ -23,6 +23,16 @@ import {
 import {Loader} from '#/components/Loader'
 import {isInvalidHandle} from '#/lib/strings/handles'
 
+type TagMenuProps = {
+  control: Dialog.DialogOuterProps['control']
+  /**
+   * This should be the sanitized tag value from the facet itself, not the
+   * "display" value with a leading `#`.
+   */
+  tag: string
+  authorHandle?: string
+}
+
 export function useTagMenuControl() {
   return Dialog.useDialogControl()
 }
@@ -32,15 +42,20 @@ export function TagMenu({
   control,
   tag,
   authorHandle,
-}: React.PropsWithChildren<{
-  control: Dialog.DialogOuterProps['control']
-  /**
-   * This should be the sanitized tag value from the facet itself, not the
-   * "display" value with a leading `#`.
-   */
-  tag: string
-  authorHandle?: string
-}>) {
+}: React.PropsWithChildren<TagMenuProps>) {
+  return (
+    <>
+      {children}
+
+      <Dialog.Outer control={control}>
+        <Dialog.Handle />
+        <TagMenuInner control={control} tag={tag} authorHandle={authorHandle} />
+      </Dialog.Outer>
+    </>
+  )
+}
+
+function TagMenuInner({control, tag, authorHandle}: TagMenuProps) {
   const {_} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
@@ -69,36 +84,86 @@ export function TagMenu({
   )
 
   return (
-    <>
-      {children}
+    <Dialog.Inner label={_(msg`Tag menu: ${displayTag}`)}>
+      {isPreferencesLoading ? (
+        <View style={[a.w_full, a.align_center]}>
+          <Loader size="lg" />
+        </View>
+      ) : (
+        <>
+          <View
+            style={[
+              a.rounded_md,
+              a.border,
+              a.mb_md,
+              t.atoms.border_contrast_low,
+              t.atoms.bg_contrast_25,
+            ]}>
+            <Link
+              label={_(msg`Search for all posts with tag ${displayTag}`)}
+              to={makeSearchLink({query: displayTag})}
+              onPress={e => {
+                e.preventDefault()
 
-      <Dialog.Outer control={control}>
-        <Dialog.Handle />
+                control.close(() => {
+                  navigation.push('Hashtag', {
+                    tag: tag.replaceAll('#', '%23'),
+                  })
+                })
 
-        <Dialog.Inner label={_(msg`Tag menu: ${displayTag}`)}>
-          {isPreferencesLoading ? (
-            <View style={[a.w_full, a.align_center]}>
-              <Loader size="lg" />
-            </View>
-          ) : (
-            <>
+                return false
+              }}>
               <View
                 style={[
-                  a.rounded_md,
-                  a.border,
-                  a.mb_md,
-                  t.atoms.border_contrast_low,
-                  t.atoms.bg_contrast_25,
+                  a.w_full,
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_start,
+                  a.gap_md,
+                  a.px_lg,
+                  a.py_md,
                 ]}>
+                <Search size="lg" style={[t.atoms.text_contrast_medium]} />
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  style={[
+                    a.flex_1,
+                    a.text_md,
+                    a.font_bold,
+                    native({top: 2}),
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Trans>
+                    See{' '}
+                    <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                      {displayTag}
+                    </Text>{' '}
+                    posts
+                  </Trans>
+                </Text>
+              </View>
+            </Link>
+
+            {authorHandle && !isInvalidHandle(authorHandle) && (
+              <>
+                <Divider />
+
                 <Link
-                  label={_(msg`Search for all posts with tag ${displayTag}`)}
-                  to={makeSearchLink({query: displayTag})}
+                  label={_(
+                    msg`Search for all posts by @${authorHandle} with tag ${displayTag}`,
+                  )}
+                  to={makeSearchLink({
+                    query: displayTag,
+                    from: authorHandle,
+                  })}
                   onPress={e => {
                     e.preventDefault()
 
                     control.close(() => {
                       navigation.push('Hashtag', {
                         tag: tag.replaceAll('#', '%23'),
+                        author: authorHandle,
                       })
                     })
 
@@ -114,7 +179,7 @@ export function TagMenu({
                       a.px_lg,
                       a.py_md,
                     ]}>
-                    <Search size="lg" style={[t.atoms.text_contrast_medium]} />
+                    <Person size="lg" style={[t.atoms.text_contrast_medium]} />
                     <Text
                       numberOfLines={1}
                       ellipsizeMode="middle"
@@ -130,146 +195,81 @@ export function TagMenu({
                         <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
                           {displayTag}
                         </Text>{' '}
-                        posts
+                        posts by this user
                       </Trans>
                     </Text>
                   </View>
                 </Link>
+              </>
+            )}
 
-                {authorHandle && !isInvalidHandle(authorHandle) && (
-                  <>
-                    <Divider />
+            {preferences ? (
+              <>
+                <Divider />
 
-                    <Link
-                      label={_(
-                        msg`Search for all posts by @${authorHandle} with tag ${displayTag}`,
-                      )}
-                      to={makeSearchLink({
-                        query: displayTag,
-                        from: authorHandle,
-                      })}
-                      onPress={e => {
-                        e.preventDefault()
-
-                        control.close(() => {
-                          navigation.push('Hashtag', {
-                            tag: tag.replaceAll('#', '%23'),
-                            author: authorHandle,
-                          })
+                <Button
+                  label={
+                    isMuted
+                      ? _(msg`Unmute all ${displayTag} posts`)
+                      : _(msg`Mute all ${displayTag} posts`)
+                  }
+                  onPress={() => {
+                    control.close(() => {
+                      if (isMuted) {
+                        resetUpsert()
+                        removeMutedWord({
+                          value: tag,
+                          targets: ['tag'],
                         })
-
-                        return false
-                      }}>
-                      <View
-                        style={[
-                          a.w_full,
-                          a.flex_row,
-                          a.align_center,
-                          a.justify_start,
-                          a.gap_md,
-                          a.px_lg,
-                          a.py_md,
-                        ]}>
-                        <Person
-                          size="lg"
-                          style={[t.atoms.text_contrast_medium]}
-                        />
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="middle"
-                          style={[
-                            a.flex_1,
-                            a.text_md,
-                            a.font_bold,
-                            native({top: 2}),
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          <Trans>
-                            See{' '}
-                            <Text
-                              style={[a.text_md, a.font_bold, t.atoms.text]}>
-                              {displayTag}
-                            </Text>{' '}
-                            posts by this user
-                          </Trans>
-                        </Text>
-                      </View>
-                    </Link>
-                  </>
-                )}
-
-                {preferences ? (
-                  <>
-                    <Divider />
-
-                    <Button
-                      label={
-                        isMuted
-                          ? _(msg`Unmute all ${displayTag} posts`)
-                          : _(msg`Mute all ${displayTag} posts`)
+                      } else {
+                        resetRemove()
+                        upsertMutedWord([{value: tag, targets: ['tag']}])
                       }
-                      onPress={() => {
-                        control.close(() => {
-                          if (isMuted) {
-                            resetUpsert()
-                            removeMutedWord({
-                              value: tag,
-                              targets: ['tag'],
-                            })
-                          } else {
-                            resetRemove()
-                            upsertMutedWord([{value: tag, targets: ['tag']}])
-                          }
-                        })
-                      }}>
-                      <View
-                        style={[
-                          a.w_full,
-                          a.flex_row,
-                          a.align_center,
-                          a.justify_start,
-                          a.gap_md,
-                          a.px_lg,
-                          a.py_md,
-                        ]}>
-                        <Mute
-                          size="lg"
-                          style={[t.atoms.text_contrast_medium]}
-                        />
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="middle"
-                          style={[
-                            a.flex_1,
-                            a.text_md,
-                            a.font_bold,
-                            native({top: 2}),
-                            t.atoms.text_contrast_medium,
-                          ]}>
-                          {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
-                          <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
-                            {displayTag}
-                          </Text>{' '}
-                          <Trans>posts</Trans>
-                        </Text>
-                      </View>
-                    </Button>
-                  </>
-                ) : null}
-              </View>
+                    })
+                  }}>
+                  <View
+                    style={[
+                      a.w_full,
+                      a.flex_row,
+                      a.align_center,
+                      a.justify_start,
+                      a.gap_md,
+                      a.px_lg,
+                      a.py_md,
+                    ]}>
+                    <Mute size="lg" style={[t.atoms.text_contrast_medium]} />
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="middle"
+                      style={[
+                        a.flex_1,
+                        a.text_md,
+                        a.font_bold,
+                        native({top: 2}),
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {isMuted ? _(msg`Unmute`) : _(msg`Mute`)}{' '}
+                      <Text style={[a.text_md, a.font_bold, t.atoms.text]}>
+                        {displayTag}
+                      </Text>{' '}
+                      <Trans>posts</Trans>
+                    </Text>
+                  </View>
+                </Button>
+              </>
+            ) : null}
+          </View>
 
-              <Button
-                label={_(msg`Close this dialog`)}
-                size="small"
-                variant="ghost"
-                color="secondary"
-                onPress={() => control.close()}>
-                <ButtonText>Cancel</ButtonText>
-              </Button>
-            </>
-          )}
-        </Dialog.Inner>
-      </Dialog.Outer>
-    </>
+          <Button
+            label={_(msg`Close this dialog`)}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            onPress={() => control.close()}>
+            <ButtonText>Cancel</ButtonText>
+          </Button>
+        </>
+      )}
+    </Dialog.Inner>
   )
 }
