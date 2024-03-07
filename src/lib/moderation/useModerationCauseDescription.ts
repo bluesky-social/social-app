@@ -5,7 +5,7 @@ import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/queries/preferences'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
-import {TriangleExclamation_Stroke2_Corner2_Rounded as TriangleExclamation} from '#/components/icons/TriangleExclamation'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
@@ -25,7 +25,7 @@ export function useModerationCauseDescription(
   const {labelDefs, labelers} = useLabelDefinitions()
   if (!cause) {
     return {
-      icon: TriangleExclamation,
+      icon: Warning,
       name: _(msg`Content Warning`),
       description: _(
         msg`Moderator has chosen to set a general warning on the content.`,
@@ -101,7 +101,7 @@ export function useModerationCauseDescription(
         def.identifier === '!no-unauthenticated'
           ? EyeSlash
           : def.severity === 'alert'
-          ? TriangleExclamation
+          ? Warning
           : CircleInfo,
       name: strings.name,
       description: strings.description,
