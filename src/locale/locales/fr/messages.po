@@ -157,7 +157,7 @@ msgstr "Ajouter une carte de lien"
 
 #: src/view/com/composer/Composer.tsx:458
 msgid "Add link card:"
-msgstr "Ajouter une carte de lien :"
+msgstr "Ajouter une carte de lien :"
 
 #: src/components/dialogs/MutedWords.tsx:140
 msgid "Add mute word for configured settings"
@@ -169,7 +169,7 @@ msgstr "Ajouter des mots et des mots-clés masqués"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
-msgstr "Ajoutez l’enregistrement DNS suivant à votre domaine :"
+msgstr "Ajoutez l’enregistrement DNS suivant à votre domaine :"
 
 #: src/view/com/profile/ProfileHeader.tsx:310
 msgid "Add to Lists"
@@ -216,7 +216,7 @@ msgstr "Tous les fils d’actu que vous avez enregistrés, au même endroit."
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr "Avez-vous déjà un code ?"
+msgstr "Avez-vous déjà un code ?"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -304,20 +304,20 @@ msgstr "Affichage"
 
 #: src/view/screens/AppPasswords.tsx:224
 msgid "Are you sure you want to delete the app password \"{name}\"?"
-msgstr "Êtes-vous sûr de vouloir supprimer le mot de passe de l’application « {name} » ?"
+msgstr "Êtes-vous sûr de vouloir supprimer le mot de passe de l’application « {name} » ?"
 
 #: src/view/com/composer/Composer.tsx:150
 msgid "Are you sure you'd like to discard this draft?"
-msgstr "Êtes-vous sûr de vouloir rejeter ce brouillon ?"
+msgstr "Êtes-vous sûr de vouloir rejeter ce brouillon ?"
 
 #: src/components/dialogs/MutedWords.tsx:233
 #: src/view/screens/ProfileList.tsx:365
 msgid "Are you sure?"
-msgstr "Vous confirmez ?"
+msgstr "Vous confirmez ?"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:278
 msgid "Are you sure? This cannot be undone."
-msgstr "Vous confirmez ? Cela ne pourra pas être annulé."
+msgstr "Vous confirmez ? Cela ne pourra pas être annulé."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
@@ -365,7 +365,7 @@ msgstr "Date de naissance"
 
 #: src/view/screens/Settings/index.tsx:340
 msgid "Birthday:"
-msgstr "Date de naissance :"
+msgstr "Date de naissance :"
 
 #: src/view/com/profile/ProfileHeader.tsx:239
 #: src/view/com/profile/ProfileHeader.tsx:346
@@ -382,7 +382,7 @@ msgstr "Liste de blocage"
 
 #: src/view/screens/ProfileList.tsx:316
 msgid "Block these accounts?"
-msgstr "Bloquer ces comptes ?"
+msgstr "Bloquer ces comptes ?"
 
 #: src/view/screens/ProfileList.tsx:320
 msgid "Block this List"
@@ -608,11 +608,11 @@ msgstr "Consultez quelques comptes recommandés. Suivez-les pour voir des person
 
 #: src/view/com/modals/DeleteAccount.tsx:169
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail contenant un code de confirmation à saisir ci-dessous :"
+msgstr "Consultez votre boîte de réception, vous avez du recevoir un e-mail contenant un code de confirmation à saisir ci-dessous :"
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
-msgstr "Choisir « Tout le monde » ou « Personne »"
+msgstr "Choisir « Tout le monde » ou « Personne »"
 
 #: src/view/screens/Settings/index.tsx:697
 msgid "Choose a new Bluesky username or create"
@@ -760,7 +760,7 @@ msgstr "Rédiger une réponse"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr "Configurer les paramètres de filtrage de contenu pour la catégorie : {0}"
+msgstr "Configurer les paramètres de filtrage de contenu pour la catégorie : {0}"
 
 #: src/components/Prompt.tsx:113
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -1031,7 +1031,7 @@ msgstr "Supprimer le post"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:277
 msgid "Delete this post?"
-msgstr "Supprimer ce post ?"
+msgstr "Supprimer ce post ?"
 
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:70
 msgid "Deleted"
@@ -1050,7 +1050,7 @@ msgstr "Description"
 
 #: src/view/com/composer/Composer.tsx:218
 msgid "Did you want to say anything?"
-msgstr "Vous vouliez dire quelque chose ?"
+msgstr "Vous vouliez dire quelque chose ?"
 
 #: src/view/screens/Settings/index.tsx:504
 msgid "Dim"
@@ -1087,11 +1087,11 @@ msgstr "Afficher le nom"
 
 #: src/view/com/modals/ChangeHandle.tsx:487
 msgid "Domain verified!"
-msgstr "Domaine vérifié !"
+msgstr "Domaine vérifié !"
 
 #: src/view/com/auth/create/Step1.tsx:170
 msgid "Don't have an invite code?"
-msgstr "Pas de code d’invitation ?"
+msgstr "Pas de code d’invitation ?"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
 #: src/view/com/modals/EditImage.tsx:333
@@ -1259,7 +1259,7 @@ msgstr "Adresse e-mail vérifiée"
 
 #: src/view/screens/Settings/index.tsx:312
 msgid "Email:"
-msgstr "E-mail :"
+msgstr "E-mail :"
 
 #: src/view/com/modals/EmbedConsent.tsx:113
 msgid "Enable {0} only"
@@ -1313,7 +1313,7 @@ msgstr "Entrez le domaine que vous voulez utiliser"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:107
 msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
-msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » afin changer votre mot de passe."
+msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. Nous vous enverrons un « code de réinitialisation » afin changer votre mot de passe."
 
 #: src/view/com/auth/create/Step1.tsx:251
 #: src/view/com/modals/BirthDateSettings.tsx:74
@@ -1346,7 +1346,7 @@ msgstr "Erreur de réception de la réponse captcha."
 
 #: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
-msgstr "Erreur :"
+msgstr "Erreur :"
 
 #: src/view/com/modals/Threadgate.tsx:76
 msgid "Everybody"
@@ -1488,7 +1488,7 @@ msgstr "Recherche de comptes similaires…"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "Affine le contenu affiché sur votre fil d’actu « Following »."
+msgstr "Affine le contenu affiché sur votre fil d’actu « Following »."
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
@@ -1576,7 +1576,7 @@ msgstr "Suit {0}"
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
 msgid "Following Feed Preferences"
-msgstr "Préférences en matière de fil d’actu « Following »"
+msgstr "Préférences en matière de fil d’actu « Following »"
 
 #: src/view/com/profile/ProfileHeader.tsx:546
 msgid "Follows you"
@@ -1684,7 +1684,7 @@ msgstr "Voici quelques fils d’actu thématiques populaires. Vous pouvez choisi
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "Voici quelques fils d’actu thématiques basés sur vos centres d’intérêt : {interestsText}. Vous pouvez choisir d’en suivre autant que vous le souhaitez."
+msgstr "Voici quelques fils d’actu thématiques basés sur vos centres d’intérêt : {interestsText}. Vous pouvez choisir d’en suivre autant que vous le souhaitez."
 
 #: src/view/com/modals/AddAppPasswords.tsx:153
 msgid "Here is your app password."
@@ -1714,7 +1714,7 @@ msgstr "Cacher ce contenu"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Hide this post?"
-msgstr "Cacher ce post ?"
+msgstr "Cacher ce post ?"
 
 #: src/view/com/notifications/FeedItem.tsx:315
 msgid "Hide user list"
@@ -1759,7 +1759,7 @@ msgstr "Hébergeur"
 
 #: src/view/com/modals/InAppBrowserConsent.tsx:44
 msgid "How should we open this link?"
-msgstr "Comment ouvrir ce lien ?"
+msgstr "Comment ouvrir ce lien ?"
 
 #: src/view/com/modals/VerifyEmail.tsx:214
 msgid "I have a code"
@@ -1869,11 +1869,11 @@ msgstr "Code d’invitation refusé. Vérifiez que vous l’avez saisi correctem
 
 #: src/view/com/modals/InviteCodes.tsx:170
 msgid "Invite codes: {0} available"
-msgstr "Code d’invitation : {0} disponible"
+msgstr "Code d’invitation : {0} disponible"
 
 #: src/view/com/modals/InviteCodes.tsx:169
 msgid "Invite codes: 1 available"
-msgstr "Invitations : 1 code dispo"
+msgstr "Invitations : 1 code dispo"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
@@ -1920,7 +1920,7 @@ msgstr "Langues"
 
 #: src/view/com/auth/create/StepHeader.tsx:20
 msgid "Last step!"
-msgstr "Dernière étape !"
+msgstr "Dernière étape !"
 
 #: src/view/com/util/moderation/ContentHider.tsx:103
 msgid "Learn more"
@@ -1963,11 +1963,11 @@ msgstr "Stockage ancien effacé, vous devez redémarrer l’application maintena
 #: src/view/com/auth/login/Login.tsx:128
 #: src/view/com/auth/login/Login.tsx:144
 msgid "Let's get your password reset!"
-msgstr "Réinitialisez votre mot de passe !"
+msgstr "Réinitialisez votre mot de passe !"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
-msgstr "Allons-y !"
+msgstr "Allons-y !"
 
 #: src/view/com/util/UserAvatar.tsx:248
 #: src/view/com/util/UserBanner.tsx:62
@@ -2105,7 +2105,7 @@ msgstr "Se connecter à un compte qui n’est pas listé"
 
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Make sure this is where you intend to go!"
-msgstr "Assurez-vous que c’est bien là que vous avez l’intention d’aller !"
+msgstr "Assurez-vous que c’est bien là que vous avez l’intention d’aller !"
 
 #: src/components/dialogs/MutedWords.tsx:71
 msgid "Manage your muted words and tags"
@@ -2138,7 +2138,7 @@ msgstr "Menu"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:197
 msgid "Message from server: {0}"
-msgstr "Message du serveur : {0}"
+msgstr "Message du serveur : {0}"
 
 #: src/Navigation.tsx:115
 #: src/view/screens/Moderation.tsx:66
@@ -2245,7 +2245,7 @@ msgstr "Masquer la liste"
 
 #: src/view/screens/ProfileList.tsx:275
 msgid "Mute these accounts?"
-msgstr "Masquer ces comptes ?"
+msgstr "Masquer ces comptes ?"
 
 #: src/view/screens/ProfileList.tsx:279
 msgid "Mute this List"
@@ -2449,7 +2449,7 @@ msgstr "Ne suit plus {0}"
 
 #: src/view/com/notifications/Feed.tsx:109
 msgid "No notifications yet!"
-msgstr "Pas encore de notifications !"
+msgstr "Pas encore de notifications !"
 
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
 #: src/view/com/composer/text-input/web/Autocomplete.tsx:191
@@ -2458,7 +2458,7 @@ msgstr "Aucun résultat"
 
 #: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
-msgstr "Aucun résultat trouvé pour « {query} »"
+msgstr "Aucun résultat trouvé pour « {query} »"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
 #: src/view/screens/Search/Search.tsx:281
@@ -2490,7 +2490,7 @@ msgstr "Pas maintenant"
 
 #: src/view/screens/Moderation.tsx:252
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
-msgstr "Remarque : Bluesky est un réseau ouvert et public. Ce paramètre limite uniquement la visibilité de votre contenu sur l’application et le site Web de Bluesky, et d’autres applications peuvent ne pas respecter ce paramètre. Votre contenu peut toujours être montré aux personnes non connectées par d’autres applications et sites Web."
+msgstr "Remarque : Bluesky est un réseau ouvert et public. Ce paramètre limite uniquement la visibilité de votre contenu sur l’application et le site Web de Bluesky, et d’autres applications peuvent ne pas respecter ce paramètre. Votre contenu peut toujours être montré aux personnes non connectées par d’autres applications et sites Web."
 
 #: src/Navigation.tsx:450
 #: src/view/screens/Notifications.tsx:124
@@ -2508,11 +2508,11 @@ msgstr "Nudité"
 
 #: src/view/com/util/ErrorBoundary.tsx:35
 msgid "Oh no!"
-msgstr "Oh non !"
+msgstr "Oh non !"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:128
 msgid "Oh no! Something went wrong."
-msgstr "Oh non ! Il y a eu un problème."
+msgstr "Oh non ! Il y a eu un problème."
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
@@ -2537,7 +2537,7 @@ msgstr "Seul {0} peut répondre."
 #: src/view/screens/AppPasswords.tsx:65
 #: src/view/screens/Profile.tsx:106
 msgid "Oops!"
-msgstr "Oups !"
+msgstr "Oups !"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
@@ -2667,7 +2667,7 @@ msgstr "Option {0} sur {numItems}"
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
-msgstr "Ou une combinaison de ces options :"
+msgstr "Ou une combinaison de ces options :"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:138
 msgid "Other account"
@@ -2699,7 +2699,7 @@ msgstr "Mise à jour du mot de passe"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
 msgid "Password updated!"
-msgstr "Mot de passe mis à jour !"
+msgstr "Mot de passe mis à jour !"
 
 #: src/Navigation.tsx:160
 msgid "People followed by @{0}"
@@ -2777,12 +2777,12 @@ msgstr "Veuillez entrer votre e-mail."
 
 #: src/view/com/modals/DeleteAccount.tsx:191
 msgid "Please enter your password as well:"
-msgstr "Veuillez également entrer votre mot de passe :"
+msgstr "Veuillez également entrer votre mot de passe :"
 
 #: src/view/com/modals/AppealLabel.tsx:72
 #: src/view/com/modals/AppealLabel.tsx:75
 msgid "Please tell us why you think this content warning was incorrectly applied!"
-msgstr "Dites-nous donc pourquoi vous pensez que cet avertissement de contenu a été appliqué à tort !"
+msgstr "Dites-nous donc pourquoi vous pensez que cet avertissement de contenu a été appliqué à tort !"
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
@@ -2966,7 +2966,7 @@ msgstr "Supprimer"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:108
 msgid "Remove {0} from my feeds?"
-msgstr "Supprimer {0} de mes fils d’actu ?"
+msgstr "Supprimer {0} de mes fils d’actu ?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -3003,11 +3003,11 @@ msgstr "Supprimer le repost"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:175
 msgid "Remove this feed from my feeds?"
-msgstr "Supprimer ce fil d’actu ?"
+msgstr "Supprimer ce fil d’actu ?"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:132
 msgid "Remove this feed from your saved feeds?"
-msgstr "Supprimer ce fil d’actu de vos fils d’actu enregistrés ?"
+msgstr "Supprimer ce fil d’actu de vos fils d’actu enregistrés ?"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:199
 #: src/view/com/modals/UserAddRemoveLists.tsx:152
@@ -3426,23 +3426,23 @@ msgstr "Définit le mot de passe"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:225
 msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
-msgstr "Choisissez « Non » pour cacher toutes les citations sur votre fils d’actu. Les reposts seront toujours visibles."
+msgstr "Choisissez « Non » pour cacher toutes les citations sur votre fils d’actu. Les reposts seront toujours visibles."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:122
 msgid "Set this setting to \"No\" to hide all replies from your feed."
-msgstr "Choisissez « Non » pour cacher toutes les réponses dans votre fils d’actu."
+msgstr "Choisissez « Non » pour cacher toutes les réponses dans votre fils d’actu."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:191
 msgid "Set this setting to \"No\" to hide all reposts from your feed."
-msgstr "Choisissez « Non » pour cacher toutes les reposts de votre fils d’actu."
+msgstr "Choisissez « Non » pour cacher toutes les reposts de votre fils d’actu."
 
 #: src/view/screens/PreferencesThreads.tsx:122
 msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
-msgstr "Choisissez « Oui » pour afficher les réponses dans un fil de discussion. C’est une fonctionnalité expérimentale."
+msgstr "Choisissez « Oui » pour afficher les réponses dans un fil de discussion. C’est une fonctionnalité expérimentale."
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:261
 msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your Following feed. This is an experimental feature."
-msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’actu enregistrés dans votre fil d’actu « Following ». C’est une fonctionnalité expérimentale."
+msgstr "Choisissez « Oui » pour afficher des échantillons de vos fils d’actu enregistrés dans votre fil d’actu « Following ». C’est une fonctionnalité expérimentale."
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
@@ -3532,15 +3532,15 @@ msgstr "Afficher les citations"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "Afficher les citations dans le fil d’actu « Following »"
+msgstr "Afficher les citations dans le fil d’actu « Following »"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr "Afficher les citations dans le fil d’actu « Following »"
+msgstr "Afficher les citations dans le fil d’actu « Following »"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr "Afficher les reposts dans le fil d’actu « Following »"
+msgstr "Afficher les reposts dans le fil d’actu « Following »"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 msgid "Show Replies"
@@ -3552,11 +3552,11 @@ msgstr "Afficher les réponses des personnes que vous suivez avant toutes les au
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr "Afficher les réponses dans le fil d’actu « Following »"
+msgstr "Afficher les réponses dans le fil d’actu « Following »"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr "Afficher les réponses dans le fil d’actu « Following »"
+msgstr "Afficher les réponses dans le fil d’actu « Following »"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3568,7 +3568,7 @@ msgstr "Afficher les reposts"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr "Afficher les reposts dans le fil d’actu « Following »"
+msgstr "Afficher les reposts dans le fil d’actu « Following »"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -3680,7 +3680,7 @@ msgstr "Quelque chose n’a pas marché. Vérifiez vos e-mails et réessayez."
 
 #: src/App.native.tsx:63
 msgid "Sorry! Your session expired. Please log in again."
-msgstr "Désolé ! Votre session a expiré. Essayez de vous reconnecter."
+msgstr "Désolé ! Votre session a expiré. Essayez de vous reconnecter."
 
 #: src/view/screens/PreferencesThreads.tsx:69
 msgid "Sort Replies"
@@ -3688,7 +3688,7 @@ msgstr "Trier les réponses"
 
 #: src/view/screens/PreferencesThreads.tsx:72
 msgid "Sort replies to the same post by:"
-msgstr "Trier les réponses au même post par :"
+msgstr "Trier les réponses au même post par :"
 
 #: src/screens/Onboarding/index.tsx:30
 msgid "Sports"
@@ -3778,7 +3778,7 @@ msgstr "mot-clé"
 
 #: src/components/TagMenu/index.tsx:74
 msgid "Tag menu: {tag}"
-msgstr "Menu de mot-clé : {tag}"
+msgstr "Menu de mot-clé : {tag}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
@@ -3850,7 +3850,7 @@ msgstr "Nos conditions d’utilisation ont été déplacées vers"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:150
 msgid "There are many feeds to try:"
-msgstr "Il existe de nombreux fils d’actu à essayer :"
+msgstr "Il existe de nombreux fils d’actu à essayer :"
 
 #: src/view/screens/ProfileFeed.tsx:550
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -3915,7 +3915,7 @@ msgstr "Il y a eu un problème lors de la récupération de vos mots de passe d�
 #: src/view/com/profile/ProfileHeader.tsx:250
 #: src/view/com/profile/ProfileHeader.tsx:272
 msgid "There was an issue! {0}"
-msgstr "Il y a eu un problème ! {0}"
+msgstr "Il y a eu un problème ! {0}"
 
 #: src/view/screens/ProfileList.tsx:288
 #: src/view/screens/ProfileList.tsx:307
@@ -3926,19 +3926,19 @@ msgstr "Il y a eu un problème. Veuillez vérifier votre connexion Internet et r
 
 #: src/view/com/util/ErrorBoundary.tsx:36
 msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
-msgstr "Un problème inattendu s’est produit dans l’application. N’hésitez pas à nous faire savoir si cela vous est arrivé !"
+msgstr "Un problème inattendu s’est produit dans l’application. N’hésitez pas à nous faire savoir si cela vous est arrivé !"
 
 #: src/screens/Deactivated.tsx:106
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr "Il y a eu un afflux de nouveaux personnes sur Bluesky ! Nous activerons ton compte dès que possible."
+msgstr "Il y a eu un afflux de nouveaux personnes sur Bluesky ! Nous activerons ton compte dès que possible."
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
-msgstr "Voici des comptes populaires qui pourraient vous intéresser :"
+msgstr "Voici des comptes populaires qui pourraient vous intéresser :"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:88
 msgid "This {screenDescription} has been flagged:"
-msgstr "Ce {screenDescription} a été signalé :"
+msgstr "Ce {screenDescription} a été signalé :"
 
 #: src/view/com/util/moderation/ScreenHider.tsx:83
 msgid "This account has requested that users sign in to view their profile."
@@ -3946,7 +3946,7 @@ msgstr "Ce compte a demandé aux personnes de se connecter pour voir son profil.
 
 #: src/view/com/modals/EmbedConsent.tsx:68
 msgid "This content is hosted by {0}. Do you want to enable external media?"
-msgstr "Ce contenu est hébergé par {0}. Voulez-vous activer les médias externes ?"
+msgstr "Ce contenu est hébergé par {0}. Voulez-vous activer les médias externes ?"
 
 #: src/view/com/modals/ModerationDetails.tsx:67
 msgid "This content is not available because one of the users involved has blocked the other."
@@ -3968,11 +3968,11 @@ msgstr "Ce fil d’actu reçoit actuellement un trafic important, il est tempora
 #: src/view/screens/ProfileFeed.tsx:476
 #: src/view/screens/ProfileList.tsx:661
 msgid "This feed is empty!"
-msgstr "Ce fil d’actu est vide !"
+msgstr "Ce fil d’actu est vide !"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:37
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "Ce fil d’actu est vide ! Vous devriez peut-être suivre plus de comptes ou ajuster vos paramètres de langue."
+msgstr "Ce fil d’actu est vide ! Vous devriez peut-être suivre plus de comptes ou ajuster vos paramètres de langue."
 
 #: src/view/com/modals/BirthDateSettings.tsx:61
 msgid "This information is not shared with other users."
@@ -3984,11 +3984,11 @@ msgstr "Ceci est important au cas où vous auriez besoin de changer d’e-mail o
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
-msgstr "Ce lien vous conduit au site Web suivant :"
+msgstr "Ce lien vous conduit au site Web suivant :"
 
 #: src/view/screens/ProfileList.tsx:834
 msgid "This list is empty!"
-msgstr "Cette liste est vide !"
+msgstr "Cette liste est vide !"
 
 #: src/view/com/modals/AddAppPasswords.tsx:106
 msgid "This name is already in use"
@@ -4162,7 +4162,7 @@ msgstr "Mise à jour…"
 
 #: src/view/com/modals/ChangeHandle.tsx:455
 msgid "Upload a text file to:"
-msgstr "Envoyer un fichier texte vers :"
+msgstr "Envoyer un fichier texte vers :"
 
 #: src/view/screens/AppPasswords.tsx:195
 msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
@@ -4188,7 +4188,7 @@ msgstr "Utilisez-le pour vous connecter à l’autre application avec votre iden
 
 #: src/view/com/modals/InviteCodes.tsx:200
 msgid "Used by:"
-msgstr "Utilisé par :"
+msgstr "Utilisé par :"
 
 #: src/view/com/modals/ModerationDetails.tsx:54
 msgid "User Blocked"
@@ -4248,7 +4248,7 @@ msgstr "comptes suivis par <0/>"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
-msgstr "Comptes dans « {0} »"
+msgstr "Comptes dans « {0} »"
 
 #: src/view/screens/Settings/index.tsx:910
 msgid "Verify email"
@@ -4306,7 +4306,7 @@ msgstr "Avertir"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr "Nous pensons également que vous aimerez « For You » de Skygaze :"
+msgstr "Nous pensons également que vous aimerez « For You » de Skygaze :"
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4314,7 +4314,7 @@ msgstr "Nous estimons que votre compte sera prêt dans {estimatedTime}."
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "Nous espérons que vous passerez un excellent moment. N’oubliez pas que Bluesky est :"
+msgstr "Nous espérons que vous passerez un excellent moment. N’oubliez pas que Bluesky est :"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -4326,7 +4326,7 @@ msgstr "Nous vous recommandons d’éviter les mots communs qui apparaissent dan
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
-msgstr "Nous vous recommandons notre fil d’actu « Discover » :"
+msgstr "Nous vous recommandons notre fil d’actu « Discover » :"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
@@ -4346,7 +4346,7 @@ msgstr "Nous utiliserons ces informations pour personnaliser votre expérience."
 
 #: src/view/com/auth/create/CreateAccount.tsx:134
 msgid "We're so excited to have you join us!"
-msgstr "Nous sommes ravis de vous accueillir !"
+msgstr "Nous sommes ravis de vous accueillir !"
 
 #: src/view/screens/ProfileList.tsx:86
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -4362,7 +4362,7 @@ msgstr "Nous sommes désolés, mais votre recherche a été annulée. Veuillez r
 
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
-msgstr "Nous sommes désolés ! La page que vous recherchez est introuvable."
+msgstr "Nous sommes désolés ! La page que vous recherchez est introuvable."
 
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
 msgid "Welcome to <0>Bluesky</0>"
@@ -4370,29 +4370,29 @@ msgstr "Bienvenue sur <0>Bluesky</0>"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
-msgstr "Quels sont vos centres d’intérêt ?"
+msgstr "Quels sont vos centres d’intérêt ?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
-msgstr "Quel est le problème avec cette {collectionName} ?"
+msgstr "Quel est le problème avec cette {collectionName} ?"
 
 #: src/view/com/auth/SplashScreen.tsx:59
 #: src/view/com/composer/Composer.tsx:286
 msgid "What's up?"
-msgstr "Quoi de neuf ?"
+msgstr "Quoi de neuf ?"
 
 #: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
 msgid "Which languages are used in this post?"
-msgstr "Quelles sont les langues utilisées dans ce post ?"
+msgstr "Quelles sont les langues utilisées dans ce post ?"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
 msgid "Which languages would you like to see in your algorithmic feeds?"
-msgstr "Quelles langues aimeriez-vous voir apparaître dans vos fils d’actu algorithmiques ?"
+msgstr "Quelles langues aimeriez-vous voir apparaître dans vos fils d’actu algorithmiques ?"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
 #: src/view/com/modals/Threadgate.tsx:66
 msgid "Who can reply"
-msgstr "Qui peut répondre ?"
+msgstr "Qui peut répondre ?"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
@@ -4441,7 +4441,7 @@ msgstr "Vous pouvez maintenant vous connecter avec votre nouveau mot de passe."
 
 #: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
-msgstr "Vous n’avez encore aucun code d’invitation ! Nous vous en enverrons lorsque vous serez sur Bluesky depuis un peu plus longtemps."
+msgstr "Vous n’avez encore aucun code d’invitation ! Nous vous en enverrons lorsque vous serez sur Bluesky depuis un peu plus longtemps."
 
 #: src/view/screens/SavedFeeds.tsx:102
 msgid "You don't have any pinned feeds."
@@ -4449,7 +4449,7 @@ msgstr "Vous n’avez encore aucun fil épinglé."
 
 #: src/view/screens/Feeds.tsx:452
 msgid "You don't have any saved feeds!"
-msgstr "Vous n’avez encore aucun fil enregistré !"
+msgstr "Vous n’avez encore aucun fil enregistré !"
 
 #: src/view/screens/SavedFeeds.tsx:135
 msgid "You don't have any saved feeds."
@@ -4485,7 +4485,7 @@ msgstr "Vous n’avez aucune liste."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-msgstr "Vous n’avez pas encore bloqué de comptes. Pour bloquer un compte, accédez à son profil et sélectionnez « Bloquer le compte » dans le menu de son compte."
+msgstr "Vous n’avez pas encore bloqué de comptes. Pour bloquer un compte, accédez à son profil et sélectionnez « Bloquer le compte » dans le menu de son compte."
 
 #: src/view/screens/AppPasswords.tsx:87
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -4493,7 +4493,7 @@ msgstr "Vous n’avez encore créé aucun mot de passe pour l’appli. Vous pouv
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-msgstr "Vous n’avez encore masqué aucun compte. Pour désactiver un compte, allez sur son profil et sélectionnez « Masquer le compte » dans le menu de son compte."
+msgstr "Vous n’avez encore masqué aucun compte. Pour désactiver un compte, allez sur son profil et sélectionnez « Masquer le compte » dans le menu de son compte."
 
 #: src/components/dialogs/MutedWords.tsx:202
 msgid "You haven't muted any words or tags yet"
@@ -4517,7 +4517,7 @@ msgstr "Vous recevrez désormais des notifications pour ce fil de discussion"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:107
 msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
-msgstr "Vous recevrez un e-mail contenant un « code de réinitialisation ». Saisissez ce code ici, puis votre nouveau mot de passe."
+msgstr "Vous recevrez un e-mail contenant un « code de réinitialisation ». Saisissez ce code ici, puis votre nouveau mot de passe."
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
@@ -4531,11 +4531,11 @@ msgstr "Vous êtes dans la file d’attente"
 
 #: src/screens/Onboarding/StepFinished.tsx:90
 msgid "You're ready to go!"
-msgstr "Vous êtes prêt à partir !"
+msgstr "Vous êtes prêt à partir !"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Vous avez atteint la fin de votre fil d’actu ! Trouvez d’autres comptes à suivre."
+msgstr "Vous avez atteint la fin de votre fil d’actu ! Trouvez d’autres comptes à suivre."
 
 #: src/view/com/auth/create/Step1.tsx:74
 msgid "Your account"
@@ -4547,7 +4547,7 @@ msgstr "Votre compte a été supprimé"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr "Le dépôt de votre compte, qui contient toutes les données publiques, peut être téléchargé sous la forme d’un fichier « CAR ». Ce fichier n’inclut pas les éléments multimédias, tels que les images, ni vos données privées, qui doivent être récupérées séparément."
+msgstr "Le dépôt de votre compte, qui contient toutes les données publiques, peut être téléchargé sous la forme d’un fichier « CAR ». Ce fichier n’inclut pas les éléments multimédias, tels que les images, ni vos données privées, qui doivent être récupérées séparément."
 
 #: src/view/com/auth/create/Step1.tsx:238
 msgid "Your birth date"
@@ -4559,7 +4559,7 @@ msgstr "Votre choix sera enregistré, mais vous pourrez le modifier ultérieurem
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr "Votre fil d’actu par défaut est « Following »"
+msgstr "Votre fil d’actu par défaut est « Following »"
 
 #: src/view/com/auth/create/state.ts:110
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4569,7 +4569,7 @@ msgstr "Votre e-mail semble être invalide."
 
 #: src/view/com/modals/Waitlist.tsx:109
 msgid "Your email has been saved! We'll be in touch soon."
-msgstr "Votre e-mail a été enregistré ! Nous vous contacterons bientôt."
+msgstr "Votre e-mail a été enregistré ! Nous vous contacterons bientôt."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
@@ -4581,7 +4581,7 @@ msgstr "Votre e-mail n’a pas encore été vérifié. Il s’agit d’une mesur
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "Votre fil d’actu des comptes suivis est vide ! Suivez plus de comptes pour voir ce qui se passe."
+msgstr "Votre fil d’actu des comptes suivis est vide ! Suivez plus de comptes pour voir ce qui se passe."
 
 #: src/view/com/auth/create/Step2.tsx:83
 msgid "Your full handle will be"
@@ -4597,7 +4597,7 @@ msgstr "Vos mots masqués"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr "Votre mot de passe a été modifié avec succès !"
+msgstr "Votre mot de passe a été modifié avec succès !"
 
 #: src/view/com/composer/Composer.tsx:274
 msgid "Your post has been published"
