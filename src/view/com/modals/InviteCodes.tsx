@@ -10,7 +10,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import Clipboard from '@react-native-clipboard/clipboard'
+import {setStringAsync} from 'expo-clipboard'
 import {Text} from '../util/text/Text'
 import {Button} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
@@ -148,7 +148,7 @@ function InviteCode({
   const uses = invite.uses
 
   const onPress = React.useCallback(() => {
-    Clipboard.setString(invite.code)
+    setStringAsync(invite.code)
     Toast.show(_(msg`Copied to clipboard`))
     setInviteCopied(invite.code)
   }, [setInviteCopied, invite, _])

@@ -18,7 +18,6 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
 import {isNative, isWeb} from 'platform/detection'
-import {BlurView} from '../util/BlurView'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {Text} from '../util/text/Text'
@@ -649,9 +648,7 @@ let ProfileHeader = ({
           accessibilityLabel={_(msg`Back`)}
           accessibilityHint="">
           <View style={styles.backBtnWrapper}>
-            <BlurView style={styles.backBtn} blurType="dark">
-              <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
-            </BlurView>
+            <FontAwesomeIcon size={18} icon="angle-left" style={s.white} />
           </View>
         </TouchableWithoutFeedback>
       )}

@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import Clipboard from '@react-native-clipboard/clipboard'
+import {setStringAsync} from 'expo-clipboard'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import * as Toast from '../util/Toast'
 import {
@@ -321,9 +321,7 @@ function CustomHandleForm({
   // events
   // =
   const onPressCopy = React.useCallback(() => {
-    Clipboard.setString(
-      isDNSForm ? `did=${currentAccount.did}` : currentAccount.did,
-    )
+    setStringAsync(isDNSForm ? `did=${currentAccount.did}` : currentAccount.did)
     Toast.show('Copied to clipboard')
   }, [currentAccount, isDNSForm])
   const onChangeHandle = React.useCallback(

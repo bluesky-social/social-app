@@ -9,7 +9,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import Clipboard from '@react-native-clipboard/clipboard'
+import {setStringAsync} from 'expo-clipboard'
 import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
@@ -72,7 +72,7 @@ export function Component({}: {}) {
 
   const onCopy = React.useCallback(() => {
     if (appPassword) {
-      Clipboard.setString(appPassword)
+      setStringAsync(appPassword)
       Toast.show(_(msg`Copied to clipboard`))
       setWasCopied(true)
     }
