@@ -9,12 +9,12 @@ import {useLikedByQuery} from '#/state/queries/post-liked-by'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
-import {Button} from '#/components/Button'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {Loader} from '#/components/Loader'
 
 interface LikesDialogProps {
   control: Dialog.DialogOuterProps['control']
@@ -34,23 +34,24 @@ export function LikesDialog(props: LikesDialogProps) {
 export function LikesDialogInner({control, uri}: LikesDialogProps) {
   const {_} = useLingui()
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
 
   const {
     data: resolvedUri,
     error: resolveError,
-    isFetching: isFetchingResolvedUri,
+    isFetched: hasFetchedResolvedUri,
   } = useResolveUriQuery(uri)
   const {
     data,
-    isFetching,
-    isFetched,
+    isFetching: isFetchingLikedBy,
+    isFetched: hasFetchedLikedBy,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
     isError,
-    error,
+    error: likedByError,
   } = useLikedByQuery(resolvedUri?.uri)
+
+  const isLoading = !hasFetchedResolvedUri || !hasFetchedLikedBy
   const likes = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
@@ -59,13 +60,13 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
   }, [data])
 
   const onEndReached = useCallback(async () => {
-    if (isFetching || !hasNextPage || isError) return
+    if (isFetchingLikedBy || !hasNextPage || isError) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more likes', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage])
+  }, [isFetchingLikedBy, hasNextPage, isError, fetchNextPage])
 
   const renderItem = useCallback(
     ({item}: {item: GetLikes.Like}) => {
@@ -81,18 +82,17 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
   )
 
   return (
-    <Dialog.Inner
-      accessibilityLabelledBy="dialog-title"
-      accessibilityDescribedBy="">
-      <Text
-        nativeID="dialog-title"
-        style={[a.text_2xl, a.font_bold, a.pb_md, a.leading_tight]}>
+    <Dialog.Inner label={_(msg`Users that have liked this content or profile`)}>
+      <Text style={[a.text_2xl, a.font_bold, a.leading_tight, a.pb_lg]}>
         <Trans>Liked by</Trans>
       </Text>
-      {isFetchingResolvedUri || !isFetched ? (
-        <ActivityIndicator />
-      ) : resolveError || isError ? (
-        <ErrorMessage message={cleanError(resolveError || error)} />
+
+      {isLoading ? (
+        <View style={{minHeight: 300}}>
+          <Loader size="xl" />
+        </View>
+      ) : resolveError || likedByError || !data ? (
+        <ErrorMessage message={cleanError(resolveError || likedByError)} />
       ) : likes.length === 0 ? (
         <View style={[t.atoms.bg_contrast_50, a.px_md, a.py_xl, a.rounded_md]}>
           <Text style={[a.text_center]}>
@@ -101,29 +101,20 @@ export function LikesDialogInner({control, uri}: LikesDialogProps) {
             </Trans>
           </Text>
         </View>
-      ) : null}
-      <FlatList
-        data={likes}
-        keyExtractor={item => item.actor.did}
-        onEndReached={onEndReached}
-        renderItem={renderItem}
-        initialNumToRender={15}
-        ListFooterComponent={
-          <ListFooterComponent isFetching={isFetchingNextPage} />
-        }
-        style={{height: 400}}
-      />
-      <View style={[gtMobile && [a.flex_row, a.justify_end], a.mt_md]}>
-        <Button
-          testID="doneBtn"
-          variant="outline"
-          color="primary"
-          size="small"
-          onPress={() => control.close()}
-          label={_(msg`Done`)}>
-          {_(msg`Done`)}
-        </Button>
-      </View>
+      ) : (
+        <FlatList
+          data={likes}
+          keyExtractor={item => item.actor.did}
+          onEndReached={onEndReached}
+          renderItem={renderItem}
+          initialNumToRender={15}
+          ListFooterComponent={
+            <ListFooterComponent isFetching={isFetchingNextPage} />
+          }
+        />
+      )}
+
+      <Dialog.Close />
     </Dialog.Inner>
   )
 }
