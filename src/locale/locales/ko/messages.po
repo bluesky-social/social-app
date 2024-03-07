@@ -1614,8 +1614,8 @@ msgstr "비밀번호 분실"
 msgid "Forgot Password"
 msgstr "비밀번호 분실"
 
-#: src/screens/Hashtag.tsx:109
-#: src/screens/Hashtag.tsx:149
+#: src/screens/Hashtag.tsx:108
+#: src/screens/Hashtag.tsx:148
 msgid "From @{sanitizedAuthor}"
 msgstr "@{sanitizedAuthor} 님의 태그"
 
@@ -2468,7 +2468,7 @@ msgstr "아직 알림이 없습니다."
 msgid "No result"
 msgstr "결과 없음"
 
-#: src/components/Lists.tsx:189
+#: src/components/Lists.tsx:192
 msgid "No results found"
 msgstr "결과를 찾을 수 없습니다"
 
@@ -2550,11 +2550,11 @@ msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다.
 msgid "Only {0} can reply."
 msgstr "{0}만 답글을 달 수 있습니다."
 
-#: src/components/Lists.tsx:81
+#: src/components/Lists.tsx:82
 msgid "Oops, something went wrong!"
 msgstr "이런, 뭔가 잘못되었습니다!"
 
-#: src/components/Lists.tsx:185
+#: src/components/Lists.tsx:188
 #: src/view/screens/AppPasswords.tsx:65
 #: src/view/screens/Profile.tsx:106
 msgid "Oops!"
@@ -2698,7 +2698,7 @@ msgstr "다른 계정"
 msgid "Other..."
 msgstr "기타…"
 
-#: src/components/Lists.tsx:191
+#: src/components/Lists.tsx:194
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
 msgstr "페이지를 찾을 수 없습니다"
@@ -3700,7 +3700,7 @@ msgstr "이 단계 건너뛰기"
 msgid "Software Dev"
 msgstr "소프트웨어 개발"
 
-#: src/components/Lists.tsx:200
+#: src/components/Lists.tsx:203
 msgid "Something went wrong!"
 msgstr "뭔가 잘못되었습니다!"
 
@@ -3914,7 +3914,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
-#: src/view/com/posts/Feed.tsx:263
+#: src/view/com/posts/Feed.tsx:265
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 이곳을 탭하여 다시 시도하세요."
 
@@ -4338,7 +4338,7 @@ msgstr "경고"
 msgid "We also think you'll like \"For You\" by Skygaze:"
 msgstr "Skygaze의 \"For You\"를 사용해 볼 수도 있습니다:"
 
-#: src/screens/Hashtag.tsx:133
+#: src/screens/Hashtag.tsx:132
 msgid "We couldn't find any results for that hashtag."
 msgstr "해당 해시태그에 대한 결과를 찾을 수 없습니다."
 
@@ -4394,7 +4394,7 @@ msgstr "죄송하지만 현재 뮤트한 단어를 불러올 수 없습니다. �
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다시 시도해 주세요."
 
-#: src/components/Lists.tsx:208
+#: src/components/Lists.tsx:211
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "죄송합니다. 페이지를 찾을 수 없습니다."
