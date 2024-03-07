@@ -1,8 +1,10 @@
 import {AppState, AppStateStatus} from 'react-native'
-import {QueryClient, focusManager, Query} from '@tanstack/react-query'
-import {isNative} from '#/platform/detection'
+import {QueryClient, focusManager} from '@tanstack/react-query'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import {PersistQueryClientProviderProps} from '@tanstack/react-query-persist-client'
+
+import {isNative} from '#/platform/detection'
 
 // any query keys in this array will be persisted to AsyncStorage
 const STORED_CACHE_QUERY_KEYS = ['labelers-detailed-info']
@@ -59,11 +61,10 @@ export const asyncStoragePersister = createAsyncStoragePersister({
   key: 'queryCache',
 })
 
-export const dehydrateOptions = {
-  shouldDehydrateMutation: (_: any) => false,
-  shouldDehydrateQuery: (query: any) => {
-    // something is wrong with useQuery's exported types, so we have to coerce here
-    const q = query as Query
-    return STORED_CACHE_QUERY_KEYS.includes(String(q.queryKey[0]))
-  },
-}
+export const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
+  {
+    shouldDehydrateMutation: (_: any) => false,
+    shouldDehydrateQuery: query => {
+      return STORED_CACHE_QUERY_KEYS.includes(String(query.queryKey[0]))
+    },
+  }
