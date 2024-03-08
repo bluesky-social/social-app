@@ -67,8 +67,21 @@ export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }
 
+export function isRelativeUrl(url: string): boolean {
+  return /^\/[^/]/.test(url)
+}
+
+export function isBskyRSSUrl(url: string): boolean {
+  return (
+    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
+    /\/rss\/?$/.test(url)
+  )
+}
+
 export function isExternalUrl(url: string): boolean {
-  return !isBskyAppUrl(url) && url.startsWith('http')
+  const external = !isBskyAppUrl(url) && url.startsWith('http')
+  const rss = isBskyRSSUrl(url)
+  return external || rss
 }
 
 export function isBskyPostUrl(url: string): boolean {
@@ -149,7 +162,7 @@ export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
 
   // If the uri started with a / we know it is internal.
-  if (uri.startsWith('/')) {
+  if (isRelativeUrl(uri)) {
     return false
   }
 
