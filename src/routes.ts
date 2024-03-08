@@ -24,7 +24,7 @@ export const router = new Router({
   Debug: '/sys/debug',
   Log: '/sys/log',
   AppPasswords: '/settings/app-passwords',
-  PreferencesHomeFeed: '/settings/home-feed',
+  PreferencesFollowingFeed: '/settings/following-feed',
   PreferencesThreads: '/settings/threads',
   PreferencesExternalEmbeds: '/settings/external-embeds',
   SavedFeeds: '/settings/saved-feeds',
@@ -33,4 +33,5 @@ export const router = new Router({
   TermsOfService: '/support/tos',
   CommunityGuidelines: '/support/community-guidelines',
   CopyrightPolicy: '/support/copyright',
+  Hashtag: '/hashtag/:tag',
 })

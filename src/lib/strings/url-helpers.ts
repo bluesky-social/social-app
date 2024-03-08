@@ -1,5 +1,5 @@
 import {AtUri} from '@atproto/api'
-import {PROD_SERVICE} from 'lib/constants'
+import {BSKY_SERVICE} from 'lib/constants'
 import TLDs from 'tlds'
 import psl from 'psl'
 
@@ -28,7 +28,7 @@ export function makeRecordUri(
 export function toNiceDomain(url: string): string {
   try {
     const urlp = new URL(url)
-    if (`https://${urlp.host}` === PROD_SERVICE) {
+    if (`https://${urlp.host}` === BSKY_SERVICE) {
       return 'Bluesky Social'
     }
     return urlp.host ? urlp.host : url
@@ -148,6 +148,11 @@ export function feedUriToHref(url: string): string {
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
 
+  // If the uri started with a / we know it is internal.
+  if (uri.startsWith('/')) {
+    return false
+  }
+
   let urip
   try {
     urip = new URL(uri)
@@ -156,18 +161,15 @@ export function linkRequiresWarning(uri: string, label: string) {
   }
 
   const host = urip.hostname.toLowerCase()
-
-  if (host === 'bsky.app') {
+  // Hosts that end with bsky.app or bsky.social should be trusted by default.
+  if (
+    host.endsWith('bsky.app') ||
+    host.endsWith('bsky.social') ||
+    host.endsWith('blueskyweb.xyz')
+  ) {
     // if this is a link to internal content,
     // warn if it represents itself as a URL to another app
-    if (
-      labelDomain &&
-      labelDomain !== 'bsky.app' &&
-      isPossiblyAUrl(labelDomain)
-    ) {
-      return true
-    }
-    return false
+    return !!labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain)
   } else {
     // if this is a link to external content,
     // warn if the label doesnt match the target

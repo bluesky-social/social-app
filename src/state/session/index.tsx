@@ -7,7 +7,6 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {IS_PROD} from '#/lib/constants'
 import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
@@ -36,7 +35,6 @@ export type SessionState = {
 }
 export type StateContext = SessionState & {
   hasSession: boolean
-  isSandbox: boolean
 }
 export type ApiContext = {
   createAccount: (props: {
@@ -84,7 +82,6 @@ const StateContext = React.createContext<StateContext>({
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
-  isSandbox: false,
 })
 
 const ApiContext = React.createContext<ApiContext>({
@@ -136,7 +133,7 @@ function createPersistSessionHandler(
       accessJwt: session?.accessJwt,
     }
 
-    logger.info(`session: persistSession`, {
+    logger.debug(`session: persistSession`, {
       event,
       deactivated: refreshedAccount.deactivated,
     })
@@ -323,7 +320,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const logout = React.useCallback<ApiContext['logout']>(async () => {
-    logger.info(`session: logout`)
+    logger.debug(`session: logout`)
     clearCurrentAccount()
     setStateAndPersist(s => {
       return {
@@ -377,7 +374,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       if (canReusePrevSession) {
-        logger.info(`session: attempting to reuse previous session`)
+        logger.debug(`session: attempting to reuse previous session`)
 
         agent.session = prevSession
         __globalAgent = agent
@@ -387,7 +384,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         if (prevSession.deactivated) {
           // don't attempt to resume
           // use will be taken to the deactivated screen
-          logger.info(`session: reusing session for deactivated account`)
+          logger.debug(`session: reusing session for deactivated account`)
           return
         }
 
@@ -413,7 +410,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             __globalAgent = PUBLIC_BSKY_AGENT
           })
       } else {
-        logger.info(`session: attempting to resume using previous session`)
+        logger.debug(`session: attempting to resume using previous session`)
 
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
@@ -434,7 +431,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       }
 
       async function resumeSessionWithFreshAccount(): Promise<SessionAccount> {
-        logger.info(`session: resumeSessionWithFreshAccount`)
+        logger.debug(`session: resumeSessionWithFreshAccount`)
 
         await networkRetry(1, () => agent.resumeSession(prevSession))
 
@@ -555,11 +552,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     return persisted.onUpdate(() => {
       const session = persisted.get('session')
 
-      logger.info(`session: persisted onUpdate`, {})
+      logger.debug(`session: persisted onUpdate`, {})
 
       if (session.currentAccount && session.currentAccount.refreshJwt) {
         if (session.currentAccount?.did !== state.currentAccount?.did) {
-          logger.info(`session: persisted onUpdate, switching accounts`, {
+          logger.debug(`session: persisted onUpdate, switching accounts`, {
             from: {
               did: state.currentAccount?.did,
               handle: state.currentAccount?.handle,
@@ -572,7 +569,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           initSession(session.currentAccount)
         } else {
-          logger.info(`session: persisted onUpdate, updating session`, {})
+          logger.debug(`session: persisted onUpdate, updating session`, {})
 
           /*
            * Use updated session in this tab's agent. Do not call
@@ -610,9 +607,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     () => ({
       ...state,
       hasSession: !!state.currentAccount,
-      isSandbox: state.currentAccount
-        ? !IS_PROD(state.currentAccount?.service)
-        : false,
     }),
     [state],
   )

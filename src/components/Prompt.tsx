@@ -41,7 +41,7 @@ export function Outer({
         <Dialog.Inner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={{width: 'auto', maxWidth: 400}}>
+          style={[{width: 'auto', maxWidth: 400}]}>
           {children}
         </Dialog.Inner>
       </Context.Provider>
@@ -89,7 +89,7 @@ export function Cancel({
       color="secondary"
       size="small"
       label={_(msg`Cancel`)}
-      onPress={close}>
+      onPress={() => close()}>
       {children}
     </Button>
   )

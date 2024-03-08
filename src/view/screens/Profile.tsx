@@ -491,6 +491,8 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     height: '100%',
+    // @ts-ignore Web-only.
+    overflowAnchor: 'none', // Fixes jumps when switching tabs while scrolled down.
   },
   loading: {
     paddingVertical: 10,

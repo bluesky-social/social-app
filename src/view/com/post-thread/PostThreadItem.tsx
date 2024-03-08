@@ -11,7 +11,7 @@ import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {PostThreadFollowBtn} from 'view/com/post-thread/PostThreadFollowBtn'
 import {Link, TextLink} from '../util/Link'
-import {RichText} from '../util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {Text} from '../util/text/Text'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
@@ -27,7 +27,6 @@ import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostHider} from '../util/moderation/PostHider'
 import {ContentHider} from '../util/moderation/ContentHider'
 import {PostAlerts} from '../util/moderation/PostAlerts'
-import {PostSandboxWarning} from '../util/PostSandboxWarning'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {usePalette} from 'lib/hooks/usePalette'
 import {formatCount} from '../util/numeric/format'
@@ -44,6 +43,8 @@ import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {ThreadPost} from '#/state/queries/post-thread'
 import {useSession} from 'state/session'
 import {WhoCanReply} from '../threadgate/WhoCanReply'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {atoms as a} from '#/alf'
 
 export function PostThreadItem({
   post,
@@ -93,6 +94,8 @@ export function PostThreadItem({
   if (richText && moderation) {
     return (
       <PostThreadItemLoaded
+        // Safeguard from clobbering per-post state below:
+        key={postShadowed.uri}
         post={postShadowed}
         prevPost={prevPost}
         nextPost={nextPost}
@@ -164,8 +167,6 @@ let PostThreadItemLoaded = ({
     () => countLines(richText?.text) >= MAX_POST_LINES,
   )
   const {currentAccount} = useSession()
-  const hasEngagement = post.likeCount || post.repostCount
-
   const rootUri = record.reply?.root?.uri || post.uri
   const postHref = React.useMemo(() => {
     const urip = new AtUri(post.uri)
@@ -248,7 +249,6 @@ let PostThreadItemLoaded = ({
           testID={`postThreadItem-by-${post.author.handle}`}
           style={[styles.outer, styles.outerHighlighted, pal.border, pal.view]}
           accessible={false}>
-          <PostSandboxWarning />
           <View style={[styles.layout]}>
             <View style={[styles.layoutAvi, {paddingBottom: 8}]}>
               <PreviewableUserAvatar
@@ -329,11 +329,11 @@ let PostThreadItemLoaded = ({
                     styles.postTextLargeContainer,
                   ]}>
                   <RichText
-                    type="post-text-lg"
-                    richText={richText}
-                    lineHeight={1.3}
-                    style={s.flex1}
+                    enableTags
                     selectable
+                    value={richText}
+                    style={[a.flex_1, a.text_xl]}
+                    authorHandle={post.author.handle}
                   />
                 </View>
               ) : undefined}
@@ -357,9 +357,16 @@ let PostThreadItemLoaded = ({
               translatorUrl={translatorUrl}
               needsTranslation={needsTranslation}
             />
-            {hasEngagement ? (
+            {post.repostCount !== 0 || post.likeCount !== 0 ? (
+              // Show this section unless we're *sure* it has no engagement.
               <View style={[styles.expandedInfo, pal.border]}>
-                {post.repostCount ? (
+                {post.repostCount == null && post.likeCount == null && (
+                  // If we're still loading and not sure, assume this post has engagement.
+                  // This lets us avoid a layout shift for the common case (embedded post with likes/reposts).
+                  // TODO: embeds should include metrics to avoid us having to guess.
+                  <LoadingPlaceholder width={50} height={20} />
+                )}
+                {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={repostsHref}
@@ -374,10 +381,8 @@ let PostThreadItemLoaded = ({
                       {pluralize(post.repostCount, 'repost')}
                     </Text>
                   </Link>
-                ) : (
-                  <></>
-                )}
-                {post.likeCount ? (
+                ) : null}
+                {post.likeCount != null && post.likeCount !== 0 ? (
                   <Link
                     style={styles.expandedInfoItem}
                     href={likesHref}
@@ -392,13 +397,9 @@ let PostThreadItemLoaded = ({
                       {pluralize(post.likeCount, 'like')}
                     </Text>
                   </Link>
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </View>
-            ) : (
-              <></>
-            )}
+            ) : null}
             <View style={[s.pl10, s.pr10, s.pb5]}>
               <PostCtrls
                 big
@@ -438,8 +439,6 @@ let PostThreadItemLoaded = ({
                 ? {marginRight: 4}
                 : {marginLeft: 2, marginRight: 2}
             }>
-            <PostSandboxWarning />
-
             <View
               style={{
                 flexDirection: 'row',
@@ -454,7 +453,7 @@ let PostThreadItemLoaded = ({
                       styles.replyLine,
                       {
                         flexGrow: 1,
-                        backgroundColor: pal.colors.border,
+                        backgroundColor: pal.colors.replyLine,
                         marginBottom: 4,
                       },
                     ]}
@@ -492,7 +491,7 @@ let PostThreadItemLoaded = ({
                         styles.replyLine,
                         {
                           flexGrow: 1,
-                          backgroundColor: pal.colors.border,
+                          backgroundColor: pal.colors.replyLine,
                           marginTop: 4,
                         },
                       ]}
@@ -526,11 +525,11 @@ let PostThreadItemLoaded = ({
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
                     <RichText
-                      type="post-text"
-                      richText={richText}
-                      style={[pal.text, s.flex1]}
-                      lineHeight={1.3}
+                      enableTags
+                      value={richText}
+                      style={[a.flex_1, a.text_md]}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                      authorHandle={post.author.handle}
                     />
                   </View>
                 ) : undefined}

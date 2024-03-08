@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="theme-color">
     <!--
       This viewport works for phones with notches.
       It's optimized for gestures by disabling global zoom.
@@ -10,6 +11,11 @@
       name="viewport"
       content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1.00001, viewport-fit=cover"
     />
+    <!--
+      Preconnect to essential domains
+    -->
+    <link rel="preconnect" href="https://bsky.social">
+    <link rel="preconnect" href="https://bsky.network">
     <title>%WEB_TITLE%</title>
     <style>
       /**
@@ -40,6 +46,12 @@
         -webkit-text-size-adjust: 100%;
         height: calc(100% + env(safe-area-inset-top));
         scrollbar-gutter: stable both-edges;
+      }
+
+      /* Buttons and inputs have a font set by UA, so we'll have to reset that */
+      button, input, textarea {
+        font: inherit;
+        line-height: inherit;
       }
 
       /* Color theming */
@@ -202,6 +214,12 @@
       [data-tooltip]:hover::after,
       [data-tooltip]:hover::before {
         display:block;
+      }
+
+      /* NativeDropdown component */
+      .radix-dropdown-item:focus,
+      .nativeDropdown-item:focus {
+        outline: none;
       }
     </style>
   </head>

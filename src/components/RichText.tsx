@@ -1,11 +1,15 @@
 import React from 'react'
 import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
-import {atoms as a, TextStyleProp} from '#/alf'
+import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
 import {InlineLink} from '#/components/Link'
-import {Text} from '#/components/Typography'
+import {Text, TextProps} from '#/components/Typography'
 import {toShortUrl} from 'lib/strings/url-helpers'
-import {getAgent} from '#/state/session'
+import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {isNative} from '#/platform/detection'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -15,34 +19,24 @@ export function RichText({
   style,
   numberOfLines,
   disableLinks,
-  resolveFacets = false,
-}: TextStyleProp & {
-  value: RichTextAPI | string
-  testID?: string
-  numberOfLines?: number
-  disableLinks?: boolean
-  resolveFacets?: boolean
-}) {
-  const detected = React.useRef(false)
-  const [richText, setRichText] = React.useState<RichTextAPI>(() =>
-    value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+  selectable,
+  enableTags = false,
+  authorHandle,
+}: TextStyleProp &
+  Pick<TextProps, 'selectable'> & {
+    value: RichTextAPI | string
+    testID?: string
+    numberOfLines?: number
+    disableLinks?: boolean
+    enableTags?: boolean
+    authorHandle?: string
+  }) {
+  const richText = React.useMemo(
+    () =>
+      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
+    [value],
   )
-  const styles = [a.leading_normal, style]
-
-  React.useEffect(() => {
-    if (!resolveFacets) return
-
-    async function detectFacets() {
-      const rt = new RichTextAPI({text: richText.text})
-      await rt.detectFacets(getAgent())
-      setRichText(rt)
-    }
-
-    if (!detected.current) {
-      detected.current = true
-      detectFacets()
-    }
-  }, [richText, setRichText, resolveFacets])
+  const styles = [a.leading_snug, flatten(style)]
 
   const {text, facets} = richText
 
@@ -50,6 +44,7 @@ export function RichText({
     if (text.length <= 5 && /^\p{Extended_Pictographic}+$/u.test(text)) {
       return (
         <Text
+          selectable={selectable}
           testID={testID}
           style={[
             {
@@ -65,6 +60,7 @@ export function RichText({
     }
     return (
       <Text
+        selectable={selectable}
         testID={testID}
         style={styles}
         numberOfLines={numberOfLines}
@@ -81,6 +77,7 @@ export function RichText({
   for (const segment of richText.segments()) {
     const link = segment.link
     const mention = segment.mention
+    const tag = segment.tag
     if (
       mention &&
       AppBskyRichtextFacet.validateMention(mention).success &&
@@ -88,6 +85,7 @@ export function RichText({
     ) {
       els.push(
         <InlineLink
+          selectable={selectable}
           key={key}
           to={`/profile/${mention.did}`}
           style={[...styles, {pointerEvents: 'auto'}]}
@@ -102,16 +100,32 @@ export function RichText({
       } else {
         els.push(
           <InlineLink
+            selectable={selectable}
             key={key}
             to={link.uri}
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
-            dataSet={WORD_WRAP}
-            warnOnMismatchingLabel>
+            dataSet={WORD_WRAP}>
             {toShortUrl(segment.text)}
           </InlineLink>,
         )
       }
+    } else if (
+      !disableLinks &&
+      enableTags &&
+      tag &&
+      AppBskyRichtextFacet.validateTag(tag).success
+    ) {
+      els.push(
+        <RichTextTag
+          key={key}
+          text={segment.text}
+          tag={tag.tag}
+          style={styles}
+          selectable={selectable}
+          authorHandle={authorHandle}
+        />,
+      )
     } else {
       els.push(segment.text)
     }
@@ -120,6 +134,7 @@ export function RichText({
 
   return (
     <Text
+      selectable={selectable}
       testID={testID}
       style={styles}
       numberOfLines={numberOfLines}
@@ -127,5 +142,83 @@ export function RichText({
       dataSet={WORD_WRAP}>
       {els}
     </Text>
+  )
+}
+
+function RichTextTag({
+  text,
+  tag,
+  style,
+  selectable,
+  authorHandle,
+}: {
+  text: string
+  tag: string
+  selectable?: boolean
+  authorHandle?: string
+} & TextStyleProp) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const control = useTagMenuControl()
+  const {
+    state: hovered,
+    onIn: onHoverIn,
+    onOut: onHoverOut,
+  } = useInteractionState()
+  const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
+  const {
+    state: pressed,
+    onIn: onPressIn,
+    onOut: onPressOut,
+  } = useInteractionState()
+
+  const open = React.useCallback(() => {
+    control.open()
+  }, [control])
+
+  /*
+   * N.B. On web, this is wrapped in another pressable comopnent with a11y
+   * labels, etc. That's why only some of these props are applied here.
+   */
+
+  return (
+    <React.Fragment>
+      <TagMenu control={control} tag={tag} authorHandle={authorHandle}>
+        <Text
+          selectable={selectable}
+          {...native({
+            accessibilityLabel: _(msg`Hashtag: #${tag}`),
+            accessibilityHint: _(msg`Click here to open tag menu for #${tag}`),
+            accessibilityRole: isNative ? 'button' : undefined,
+            onPress: open,
+            onPressIn: onPressIn,
+            onPressOut: onPressOut,
+          })}
+          {...web({
+            onMouseEnter: onHoverIn,
+            onMouseLeave: onHoverOut,
+          })}
+          // @ts-ignore
+          onFocus={onFocus}
+          onBlur={onBlur}
+          style={[
+            style,
+            {
+              pointerEvents: 'auto',
+              color: t.palette.primary_500,
+            },
+            web({
+              cursor: 'pointer',
+            }),
+            (hovered || focused || pressed) && {
+              ...web({outline: 0}),
+              textDecorationLine: 'underline',
+              textDecorationColor: t.palette.primary_500,
+            },
+          ]}>
+          {text}
+        </Text>
+      </TagMenu>
+    </React.Fragment>
   )
 }
