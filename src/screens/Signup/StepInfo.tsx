@@ -62,7 +62,7 @@ export function StepInfo() {
             a.rounded_sm,
             a.px_md,
             a.gap_xs,
-            {paddingVertical: isAndroid ? 12 : 9},
+            {paddingVertical: isAndroid ? 14 : 9},
             t.atoms.bg_contrast_25,
           ]}
           onPress={onPressSelectService}>

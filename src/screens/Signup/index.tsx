@@ -65,10 +65,6 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
   }, [_, serviceInfo, isError])
 
-  React.useEffect(() => {
-    console.log('ISLOADING!!!!:', state.isLoading)
-  }, [state.isLoading])
-
   const onNextPress = React.useCallback(async () => {
     if (state.activeStep === SignupStep.HANDLE) {
       try {
