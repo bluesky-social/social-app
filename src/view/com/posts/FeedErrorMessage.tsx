@@ -9,13 +9,14 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {logger} from '#/logger'
-import {useModalControls} from '#/state/modals'
 import {msg as msgLingui, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {FeedDescriptor} from '#/state/queries/post-feed'
 import {EmptyState} from '../util/EmptyState'
 import {cleanError} from '#/lib/strings/errors'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import * as Prompt from '#/components/Prompt'
+import {ButtonText} from '#/components/Button'
 
 export enum KnownError {
   Block = 'Block',
@@ -118,35 +119,29 @@ function FeedgenErrorMessage({
   )
   const [_, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
-  const {openModal, closeModal} = useModalControls()
+  const removePromptControl = Prompt.usePromptControl()
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 
   const onViewProfile = React.useCallback(() => {
     navigation.navigate('Profile', {name: ownerDid})
   }, [navigation, ownerDid])
 
+  const onPressRemoveFeed = React.useCallback(() => {
+    removePromptControl.open()
+  }, [removePromptControl])
+
   const onRemoveFeed = React.useCallback(async () => {
-    openModal({
-      name: 'confirm',
-      title: _l(msgLingui`Remove feed`),
-      message: _l(msgLingui`Remove this feed from your saved feeds?`),
-      async onPressConfirm() {
-        try {
-          await removeFeed({uri})
-        } catch (err) {
-          Toast.show(
-            _l(
-              msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
-            ),
-          )
-          logger.error('Failed to remove feed', {message: err})
-        }
-      },
-      onPressCancel() {
-        closeModal()
-      },
-    })
-  }, [openModal, closeModal, uri, removeFeed, _l])
+    try {
+      await removeFeed({uri})
+    } catch (err) {
+      Toast.show(
+        _l(
+          msgLingui`There was an an issue removing this feed. Please check your internet connection and try again.`,
+        ),
+      )
+      logger.error('Failed to remove feed', {message: err})
+    }
+  }, [uri, removeFeed, _l])
 
   const cta = React.useMemo(() => {
     switch (knownError) {
@@ -179,27 +174,45 @@ function FeedgenErrorMessage({
   }, [knownError, onViewProfile, onRemoveFeed, _l])
 
   return (
-    <View
-      style={[
-        pal.border,
-        pal.viewLight,
-        {
-          borderTopWidth: 1,
-          paddingHorizontal: 20,
-          paddingVertical: 18,
-          gap: 12,
-        },
-      ]}>
-      <Text style={pal.text}>{msg}</Text>
+    <>
+      <View
+        style={[
+          pal.border,
+          pal.viewLight,
+          {
+            borderTopWidth: 1,
+            paddingHorizontal: 20,
+            paddingVertical: 18,
+            gap: 12,
+          },
+        ]}>
+        <Text style={pal.text}>{msg}</Text>
 
-      {rawError?.message && (
-        <Text style={pal.textLight}>
-          <Trans>Message from server: {rawError.message}</Trans>
-        </Text>
-      )}
+        {rawError?.message && (
+          <Text style={pal.textLight}>
+            <Trans>Message from server: {rawError.message}</Trans>
+          </Text>
+        )}
 
-      {cta}
-    </View>
+        {cta}
+      </View>
+      <Prompt.Outer control={removePromptControl}>
+        <Prompt.Title>
+          <Trans>Remove feed?</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>Remove this feed from your saved feeds?</Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>Cancel</Prompt.Cancel>
+          <Prompt.Action onPress={onPressRemoveFeed} color="negative">
+            <ButtonText>
+              <Trans>Remove</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
+    </>
   )
 }
 

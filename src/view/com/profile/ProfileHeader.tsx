@@ -57,6 +57,8 @@ import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {atoms as a} from '#/alf'
+import * as Prompt from '#/components/Prompt'
+import {ButtonText} from '#/components/Button'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -101,6 +103,8 @@ let ProfileHeader = ({
   const requireAuth = useRequireAuth()
   const {_} = useLingui()
   const {openModal} = useModalControls()
+  const blockPromptControl = Prompt.usePromptControl()
+  const unblockPromptControl = Prompt.usePromptControl()
   const {openLightbox} = useLightboxControls()
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
@@ -232,50 +236,6 @@ let ProfileHeader = ({
     }
   }, [track, queueUnmute, _])
 
-  const onPressBlockAccount = React.useCallback(async () => {
-    track('ProfileHeader:BlockAccountButtonClicked')
-    openModal({
-      name: 'confirm',
-      title: _(msg`Block Account`),
-      message: _(
-        msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-      ),
-      onPressConfirm: async () => {
-        try {
-          await queueBlock()
-          Toast.show(_(msg`Account blocked`))
-        } catch (e: any) {
-          if (e?.name !== 'AbortError') {
-            logger.error('Failed to block account', {message: e})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`))
-          }
-        }
-      },
-    })
-  }, [track, queueBlock, openModal, _])
-
-  const onPressUnblockAccount = React.useCallback(async () => {
-    track('ProfileHeader:UnblockAccountButtonClicked')
-    openModal({
-      name: 'confirm',
-      title: _(msg`Unblock Account`),
-      message: _(
-        msg`The account will be able to interact with you after unblocking.`,
-      ),
-      onPressConfirm: async () => {
-        try {
-          await queueUnblock()
-          Toast.show(_(msg`Account unblocked`))
-        } catch (e: any) {
-          if (e?.name !== 'AbortError') {
-            logger.error('Failed to unblock account', {message: e})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`))
-          }
-        }
-      },
-    })
-  }, [track, queueUnblock, openModal, _])
-
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     openModal({
@@ -283,6 +243,41 @@ let ProfileHeader = ({
       did: profile.did,
     })
   }, [track, openModal, profile])
+
+  const onPressBlockAccount = React.useCallback(async () => {
+    track('ProfileHeader:BlockAccountButtonClicked')
+    blockPromptControl.open()
+  }, [track, blockPromptControl])
+
+  const onPressUnblockAccount = React.useCallback(async () => {
+    track('ProfileHeader:UnblockAccountButtonClicked')
+    unblockPromptControl.open()
+  }, [track, unblockPromptControl])
+
+  const blockAccount = React.useCallback(async () => {
+    try {
+      await queueBlock()
+      Toast.show(_(msg`Account blocked`))
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to block account', {message: e})
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+      }
+    }
+  }, [_, queueBlock])
+
+  const unblockAccount = React.useCallback(async () => {
+    track('ProfileHeader:UnblockAccountButtonClicked')
+    try {
+      await queueUnblock()
+      Toast.show(_(msg`Account unblocked`))
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unblock account', {message: e})
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+      }
+    }
+  }, [_, queueUnblock, track])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -372,20 +367,20 @@ let ProfileHeader = ({
     }
     return items
   }, [
-    isMe,
+    _,
+    onPressShare,
     hasSession,
-    profile.viewer?.muted,
-    profile.viewer?.mutedByList,
+    onPressAddRemoveLists,
+    isMe,
     profile.viewer?.blocking,
     profile.viewer?.blockingByList,
-    onPressShare,
+    profile.viewer?.mutedByList,
+    profile.viewer?.muted,
+    onPressReportAccount,
     onPressUnmuteAccount,
     onPressMuteAccount,
     onPressUnblockAccount,
     onPressBlockAccount,
-    onPressReportAccount,
-    onPressAddRemoveLists,
-    _,
   ])
 
   const blockHide =
@@ -670,6 +665,45 @@ let ProfileHeader = ({
           />
         </View>
       </TouchableWithoutFeedback>
+
+      <Prompt.Outer control={blockPromptControl}>
+        <Prompt.Title>
+          <Trans>Block Account?</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>
+            Blocked accounts cannot reply in your threads, mention you, or
+            otherwise interact with you.
+          </Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>Cancel</Prompt.Cancel>
+          <Prompt.Action onPress={blockAccount}>
+            <ButtonText>
+              <Trans>Block</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
+
+      <Prompt.Outer control={unblockPromptControl}>
+        <Prompt.Title>
+          <Trans>Unblock Account?</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>
+            The account will be able to interact with you after unblocking.
+          </Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>Cancel</Prompt.Cancel>
+          <Prompt.Action onPress={unblockAccount}>
+            <ButtonText>
+              <Trans>Unblock</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
     </View>
   )
 }
