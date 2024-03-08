@@ -32,13 +32,16 @@ import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/componen
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import {InlineLink, Link} from '#/components/Link'
+import {Button} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {getModerationServiceTitle} from '#/lib/moderation'
 import * as ModerationServiceCard from '#/components/ModerationServiceCard'
 import {GlobalModerationLabelPref} from '#/components/moderation/GlobalModerationLabelPref'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -133,10 +136,12 @@ export function ModerationScreenInner({
   preferences: UsePreferencesQueryResponse
   labelers?: AppBskyLabelerDefs.LabelerViewDetailed[]
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {gtMobile} = useBreakpoints()
+  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -187,6 +192,29 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
+          <Button
+            testID="mutedWordsBtn"
+            label={_(msg`Open muted words and tags settings`)}
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              a.p_lg,
+              a.gap_sm,
+            ]}
+            onPress={() => mutedWordsDialogControl.open()}>
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <Filter size="md" style={[t.atoms.text_contrast_medium]} />
+              <Text style={[a.text_md]}>
+                <Trans>Muted words & tags</Trans>
+              </Text>
+            </View>
+            <ChevronRight
+              size="sm"
+              style={[t.atoms.text_contrast_low, a.self_end]}
+            />
+          </Button>
+          <Divider />
           <Link
             testID="moderationlistsBtn"
             style={[
