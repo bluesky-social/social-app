@@ -300,13 +300,19 @@ export function ModerationScreenInner({
             t.atoms.bg_contrast_25,
           ]}>
           <View
-            style={[a.pt_lg, a.pb_md, a.px_lg, a.flex_row, a.justify_between]}>
+            style={[
+              a.py_lg,
+              a.px_lg,
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+            ]}>
             <Text
               style={[a.text_md, a.font_semibold, t.atoms.text_contrast_high]}>
               <Trans>Enable adult content</Trans>
             </Text>
             <Toggle.Item
-              label={'Toggle adult content'}
+              label={_(msg`Toggle to enable or disable adult content`)}
               name="adultContent"
               value={adultContentEnabled}
               onChange={onToggleAdultContentEnabled}>
