@@ -78,6 +78,7 @@ import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStack
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import HashtagScreen from '#/screens/Hashtag'
+import {logEvent} from './lib/statsig/statsig'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -649,11 +650,14 @@ function logModuleInitTime() {
     return
   }
   didInit = true
+
   const initMs = Math.round(
     // @ts-ignore Emitted by Metro in the bundle prelude
     performance.now() - global.__BUNDLE_START_TIME__,
   )
   console.log(`Time to first paint: ${initMs} ms`)
+  logEvent('init', initMs)
+
   if (__DEV__) {
     // This log is noisy, so keep false committed
     const shouldLog = false
