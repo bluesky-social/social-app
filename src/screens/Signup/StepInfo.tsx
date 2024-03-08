@@ -1,14 +1,14 @@
 import React from 'react'
-import {atoms as a, useTheme} from '#/alf'
-import {useLingui} from '@lingui/react'
 import {Keyboard, TouchableOpacity, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
-import {msg, Trans} from '@lingui/macro'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {Label} from '#/components/forms/DateField'
 import {ServerInputDialog} from 'view/com/auth/server-input'
@@ -21,6 +21,7 @@ import {Text} from '#/components/Typography'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {DateInput} from 'view/com/util/forms/DateInput'
 import {isAndroid, isIOS} from 'platform/detection'
+
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
     logger.error(`Create account: handled invalid date for birthDate`, {
