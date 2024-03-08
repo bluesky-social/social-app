@@ -69,7 +69,8 @@ export function Root({
     <Context.Provider value={context}>
       <DropdownMenu.Root
         open={context.control.isOpen}
-        onOpenChange={onOpenChange}>
+        onOpenChange={onOpenChange}
+        modal={false}>
         {children}
       </DropdownMenu.Root>
     </Context.Provider>
