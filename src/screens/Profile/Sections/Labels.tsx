@@ -4,7 +4,7 @@ import {
   AppBskyLabelerDefs,
   ModerationOpts,
   interpretLabelValueDefinitions,
-  InterprettedLabelValueDefinition,
+  InterpretedLabelValueDefinition,
 } from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -126,8 +126,8 @@ export function ProfileLabelsSectionInner({
   })
 
   const {labelValues} = labelerInfo.policies
-  const isSubscribed = moderationOpts.prefs.mods.find(
-    mod => mod.did === labelerInfo.creator.did,
+  const isSubscribed = moderationOpts.prefs.labelers.find(
+    l => l.did === labelerInfo.creator.did,
   )
   const labelDefs = React.useMemo(() => {
     const customDefs = interpretLabelValueDefinitions(labelerInfo)
@@ -135,7 +135,7 @@ export function ProfileLabelsSectionInner({
       .map(val => lookupLabelValueDefinition(val, customDefs))
       .filter(
         def => def && def?.configurable,
-      ) as InterprettedLabelValueDefinition[]
+      ) as InterpretedLabelValueDefinition[]
   }, [labelerInfo, labelValues])
 
   return (

@@ -37,7 +37,7 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   moderationPrefs: {
     adultContentEnabled: false,
     labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
-    mods: [],
+    labelers: [],
   },
   feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,

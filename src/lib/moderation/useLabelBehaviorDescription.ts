@@ -1,9 +1,9 @@
-import {InterprettedLabelValueDefinition, LabelPreference} from '@atproto/api'
+import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
 export function useLabelBehaviorDescription(
-  labelValueDef: InterprettedLabelValueDefinition,
+  labelValueDef: InterpretedLabelValueDefinition,
   pref: LabelPreference,
 ) {
   const {_} = useLingui()
@@ -39,7 +39,7 @@ export function useLabelBehaviorDescription(
 }
 
 export function useLabelLongBehaviorDescription(
-  labelValueDef: InterprettedLabelValueDefinition,
+  labelValueDef: InterpretedLabelValueDefinition,
   pref: LabelPreference,
 ) {
   const {_} = useLingui()

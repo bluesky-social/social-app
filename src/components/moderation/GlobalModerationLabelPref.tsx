@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {InterprettedLabelValueDefinition, LabelPreference} from '@atproto/api'
+import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 
@@ -18,7 +18,7 @@ export function GlobalModerationLabelPref({
   labelValueDefinition,
   disabled,
 }: {
-  labelValueDefinition: InterprettedLabelValueDefinition
+  labelValueDefinition: InterpretedLabelValueDefinition
   disabled?: boolean
 }) {
   const {_} = useLingui()

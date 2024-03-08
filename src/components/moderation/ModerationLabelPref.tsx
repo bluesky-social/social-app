@@ -1,6 +1,6 @@
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {InterprettedLabelValueDefinition, LabelPreference} from '@atproto/api'
+import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
@@ -27,7 +27,7 @@ export function ModerationLabelPref({
   labelerDid,
   disabled,
 }: {
-  labelValueDefinition: InterprettedLabelValueDefinition
+  labelValueDefinition: InterpretedLabelValueDefinition
   labelerDid: string | undefined
   disabled?: boolean
 }) {
@@ -39,9 +39,8 @@ export function ModerationLabelPref({
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetContentLabelMutation()
   const savedPref = labelerDid
-    ? preferences?.moderationPrefs.mods.find(m => m.did === labelerDid)?.labels[
-        identifier
-      ]
+    ? preferences?.moderationPrefs.labelers.find(l => l.did === labelerDid)
+        ?.labels[identifier]
     : preferences?.moderationPrefs.labels[identifier]
   const pref = variables?.visibility ?? savedPref ?? 'warn'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {LabelPreference, InterprettedLabelValueDefinition} from '@atproto/api'
+import {LabelPreference, InterpretedLabelValueDefinition} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import Animated, {Easing, Layout, FadeIn} from 'react-native-reanimated'
@@ -18,7 +18,7 @@ export function ModerationOption({
   labelValueDefinition,
   isMounted,
 }: {
-  labelValueDefinition: InterprettedLabelValueDefinition
+  labelValueDefinition: InterpretedLabelValueDefinition
   isMounted: React.MutableRefObject<boolean>
 }) {
   const {_} = useLingui()

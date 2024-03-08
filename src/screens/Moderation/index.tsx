@@ -86,7 +86,9 @@ export function ModerationScreen(
     data: labelers,
     error: labelersError,
   } = useLabelersDetailedInfoQuery({
-    dids: preferences ? preferences.moderationPrefs.mods.map(m => m.did) : [],
+    dids: preferences
+      ? preferences.moderationPrefs.labelers.map(l => l.did)
+      : [],
   })
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()

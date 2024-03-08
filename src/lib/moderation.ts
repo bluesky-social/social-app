@@ -1,7 +1,7 @@
 import {
   ModerationCause,
   ModerationUI,
-  InterprettedLabelValueDefinition,
+  InterpretedLabelValueDefinition,
   LABELS,
 } from '@atproto/api'
 
@@ -39,8 +39,8 @@ export function getModerationServiceTitle({
 
 export function lookupLabelValueDefinition(
   labelValue: string,
-  customDefs: InterprettedLabelValueDefinition[] | undefined,
-): InterprettedLabelValueDefinition | undefined {
+  customDefs: InterpretedLabelValueDefinition[] | undefined,
+): InterpretedLabelValueDefinition | undefined {
   let def
   if (!labelValue.startsWith('!') && customDefs) {
     def = customDefs.find(d => d.identifier === labelValue)

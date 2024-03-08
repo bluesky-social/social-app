@@ -3,7 +3,7 @@ import {
   AppBskyLabelerDefs,
   LABELS,
   interpretLabelValueDefinition,
-  InterprettedLabelValueDefinition,
+  InterpretedLabelValueDefinition,
 } from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
@@ -16,7 +16,7 @@ import {useLabelDefinitions} from '#/state/queries/preferences'
 
 export interface LabelInfo {
   label: ComAtprotoLabelDefs.Label
-  def: InterprettedLabelValueDefinition
+  def: InterpretedLabelValueDefinition
   strings: ComAtprotoLabelDefs.LabelValueDefinitionStrings
   labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
 }
@@ -35,9 +35,9 @@ export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
 }
 
 export function getDefinition(
-  labelDefs: Record<string, InterprettedLabelValueDefinition[]>,
+  labelDefs: Record<string, InterpretedLabelValueDefinition[]>,
   label: ComAtprotoLabelDefs.Label,
-): InterprettedLabelValueDefinition {
+): InterpretedLabelValueDefinition {
   // check local definitions
   const customDef =
     !label.val.startsWith('!') &&
@@ -60,6 +60,7 @@ export function getDefinition(
       identifier: label.val,
       severity: 'none',
       blurs: 'none',
+      defaultSetting: 'ignore',
       locales: [],
     },
     label.src,
@@ -69,7 +70,7 @@ export function getDefinition(
 export function getLabelStrings(
   locale: string,
   globalLabelStrings: GlobalLabelStrings,
-  def: InterprettedLabelValueDefinition,
+  def: InterpretedLabelValueDefinition,
 ): ComAtprotoLabelDefs.LabelValueDefinitionStrings {
   if (!def.definedBy) {
     // global definition, look up strings

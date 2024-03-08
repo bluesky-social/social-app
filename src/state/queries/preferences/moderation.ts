@@ -17,7 +17,7 @@ export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS
 
 export function useMyLabelers() {
   const prefs = usePreferencesQuery()
-  const dids = prefs.data?.moderationPrefs.mods.map(m => m.did) || []
+  const dids = prefs.data?.moderationPrefs.labelers.map(l => l.did) || []
   if (!dids.includes(BSKY_LABELER_DID)) {
     dids.push(BSKY_LABELER_DID)
   }

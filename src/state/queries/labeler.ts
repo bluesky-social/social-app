@@ -73,9 +73,9 @@ export function useLabelerSubscriptionMutation() {
       }).parse({did, subscribe})
 
       if (subscribe) {
-        await getAgent().addModService(did)
+        await getAgent().addLabeler(did)
       } else {
-        await getAgent().removeModService(did)
+        await getAgent().removeLabeler(did)
       }
     },
     onSuccess() {

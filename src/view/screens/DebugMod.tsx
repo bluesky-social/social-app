@@ -64,6 +64,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
       identifier: 'custom',
       blurs: 'content',
       severity: 'alert',
+      defaultSetting: 'warn',
       locales: [
         {
           lang: 'en',
@@ -235,7 +236,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
         labels: {
           [label[0]]: visibility[0] as LabelPreference,
         },
-        mods: [
+        labelers: [
           {
             did: 'did:plc:fake-labeler',
             labels: {[label[0]]: visibility[0] as LabelPreference},
