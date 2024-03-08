@@ -81,14 +81,15 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
+  const labelerDids = preferences
+    ? preferences.moderationPrefs.labelers.map(l => l.did)
+    : []
   const {
     isLoading: isLabelersLoading,
     data: labelers,
     error: labelersError,
   } = useLabelersDetailedInfoQuery({
-    dids: preferences
-      ? preferences.moderationPrefs.labelers.map(l => l.did)
-      : [],
+    dids: labelerDids,
   })
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()
@@ -111,7 +112,7 @@ export function ModerationScreen(
         <View style={[a.w_full, a.align_center, a.pt_2xl]}>
           <Loader size="xl" fill={t.atoms.text.color} />
         </View>
-      ) : error || !(preferences && labelers) ? (
+      ) : error || !preferences ? (
         <ErrorState
           error={
             preferencesError?.toString() ||
@@ -127,10 +128,10 @@ export function ModerationScreen(
 
 export function ModerationScreenInner({
   preferences,
-  labelers,
+  labelers = [],
 }: {
   preferences: UsePreferencesQueryResponse
-  labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+  labelers?: AppBskyLabelerDefs.LabelerViewDetailed[]
 }) {
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
