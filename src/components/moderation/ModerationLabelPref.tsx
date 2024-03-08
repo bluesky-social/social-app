@@ -1,5 +1,5 @@
 import React from 'react'
-import {Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {InterpretedLabelValueDefinition, LabelPreference} from '@atproto/api'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
@@ -20,9 +20,9 @@ import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
 import * as Dialog from '#/components/Dialog'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {ArrowTriangleBottom_Stroke2_Corner1_Rounded as ArrowTriangleBottom} from '../icons/ArrowTriangle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 import {Check_Stroke2_Corner0_Rounded as Check} from '../icons/Check'
+import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '../icons/Gear'
 
 export function ModerationLabelPref({
   labelValueDefinition,
@@ -86,57 +86,57 @@ export function ModerationLabelPref({
 
   return (
     <>
-      <Pressable
+      <Button
         onPress={() => control.open()}
-        accessibilityLabel={settingDesc}
-        accessibilityHint=""
-        style={[
-          a.flex_row,
-          a.justify_between,
-          a.gap_sm,
-          a.align_center,
-          t.atoms.bg_contrast_25,
-          a.px_lg,
-          a.py_lg,
-          a.rounded_sm,
-        ]}>
-        <Text style={[a.font_bold]}>{labelStrings.name}</Text>
-
-        <Text
-          style={[t.atoms.text_contrast_medium, a.flex_1]}
-          numberOfLines={1}>
-          {labelStrings.description}
-        </Text>
-        {!disabled && (
+        label={settingDesc}
+        disabled={disabled}>
+        {({hovered, focused, pressed}) => (
           <View
             style={[
-              {width: 100},
+              a.w_full,
               a.flex_row,
-              a.align_center,
-              a.justify_end,
-              a.gap_xs,
-              a.rounded_2xs,
+              a.justify_between,
+              a.gap_sm,
+              a.align_start,
+              a.px_lg,
+              a.py_lg,
+              a.rounded_sm,
+              t.atoms.bg_contrast_25,
+              (hovered || focused || pressed) && [t.atoms.bg_contrast_50],
             ]}>
-            {!disabled && (
-              <Text style={[t.atoms.text_contrast_medium, a.font_semibold]}>
-                {settingDesc}
+            <View style={[a.gap_xs]}>
+              <Text style={[a.font_bold]}>{labelStrings.name}</Text>
+              <Text
+                style={[t.atoms.text_contrast_medium, a.leading_snug]}
+                numberOfLines={1}>
+                {labelStrings.description}
               </Text>
-            )}
-            {!cantConfigure && (
-              <ArrowTriangleBottom
-                width={8}
-                fill={t.atoms.text_contrast_medium.color}
-              />
+            </View>
+
+            {!disabled && (
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_end,
+                  a.gap_xs,
+                  a.rounded_2xs,
+                ]}>
+                <Text style={[t.atoms.text_contrast_medium, a.font_semibold]}>
+                  {settingDesc}
+                </Text>
+                <Gear size="sm" fill={t.atoms.text_contrast_low.color} />
+              </View>
             )}
           </View>
         )}
-      </Pressable>
+      </Button>
 
       <Dialog.Outer control={control}>
         <Dialog.Handle />
 
         <Dialog.Inner
-          label={_(msg`Settings: ${labelValueDefinition.identifier}`)}
+          label={_(msg`Settings for ${labelValueDefinition.identifier}`)}
           style={[a.gap_sm]}>
           <Text style={[a.text_2xl, a.font_bold, a.pb_xs, t.atoms.text]}>
             {labelStrings.name}
@@ -144,10 +144,21 @@ export function ModerationLabelPref({
           <Text style={[a.text_md, a.pb_sm, t.atoms.text_contrast_medium]}>
             {labelStrings.description}
           </Text>
+
           {cantConfigure && (
-            <View style={[a.flex_row, a.gap_xs, a.align_center, a.pb_sm]}>
+            <View
+              style={[
+                a.flex_row,
+                a.gap_xs,
+                a.align_center,
+                a.py_md,
+                a.px_lg,
+                a.rounded_sm,
+                t.atoms.bg_contrast_25,
+              ]}>
               <CircleInfo size="md" fill={t.atoms.text_contrast_medium.color} />
-              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+
+              <Text style={[t.atoms.text_contrast_medium]}>
                 {adultDisabled ? (
                   <Trans>
                     Adult content must be enabled to configure this label.
@@ -167,18 +178,8 @@ export function ModerationLabelPref({
               </Text>
             </View>
           )}
-          {disabled || cantConfigure ? (
-            <Button
-              label={_(msg`Close`)}
-              size="large"
-              variant="solid"
-              color="secondary"
-              onPress={() => control.close()}>
-              <ButtonText style={[a.flex_1, a.text_left]}>
-                <Trans>Close</Trans>
-              </ButtonText>
-            </Button>
-          ) : (
+
+          {!cantConfigure && (
             <>
               <Button
                 label={hideLabel}
@@ -234,6 +235,8 @@ export function ModerationLabelPref({
               </Button>
             </>
           )}
+
+          <Dialog.Close />
         </Dialog.Inner>
       </Dialog.Outer>
     </>
