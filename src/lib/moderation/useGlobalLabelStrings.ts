@@ -57,8 +57,8 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         description: _(msg`Does not include nudity.`),
       },
       nudity: {
-        name: _(msg`Nudity`),
-        description: _(msg`Including non-sexual and artistic.`),
+        name: _(msg`Non-sexual Nudity`),
+        description: _(msg`E.g. artistic nudes.`),
       },
       gore: {
         name: _(msg`Violent / Bloody`),
