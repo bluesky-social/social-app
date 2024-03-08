@@ -36,7 +36,7 @@ export function DateField({
   )
 
   return (
-    <View style={[atoms.relative, atoms.w_full]}>
+    <View style={[atoms.relative, atoms.w_full, atoms.align_center]}>
       <DatePicker
         theme={t.name === 'light' ? 'light' : 'dark'}
         date={new Date(value)}

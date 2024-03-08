@@ -125,8 +125,8 @@ export function useSharedInputStyles() {
 
 export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   label: string
-  value: string
-  onChangeText: (value: string) => void
+  value?: string
+  onChangeText?: (value: string) => void
   isInvalid?: boolean
 }
 

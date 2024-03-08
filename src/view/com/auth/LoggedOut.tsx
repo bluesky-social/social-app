@@ -7,7 +7,6 @@ import {useNavigation} from '@react-navigation/native'
 
 import {isIOS, isNative} from 'platform/detection'
 import {Login} from 'view/com/auth/login/Login'
-import {CreateAccount} from 'view/com/auth/create/CreateAccount'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -22,6 +21,7 @@ import {
 import {useSession} from '#/state/session'
 import {Text} from '#/view/com/util/text/Text'
 import {NavigationProp} from 'lib/routes/types'
+import {Signup} from '#/screens/Signup'
 
 enum ScreenState {
   S_LoginOrCreateAccount,
@@ -148,7 +148,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
           />
         ) : undefined}
         {screenState === ScreenState.S_CreateAccount ? (
-          <CreateAccount
+          <Signup
             onPressBack={() =>
               setScreenState(ScreenState.S_LoginOrCreateAccount)
             }
