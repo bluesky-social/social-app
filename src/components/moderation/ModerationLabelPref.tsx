@@ -43,7 +43,11 @@ export function ModerationLabelPref({
     ? preferences?.moderationPrefs.labelers.find(l => l.did === labelerDid)
         ?.labels[identifier]
     : preferences?.moderationPrefs.labels[identifier]
-  const pref = variables?.visibility ?? savedPref ?? 'warn'
+  const pref =
+    variables?.visibility ??
+    savedPref ??
+    labelValueDefinition.defaultSetting ??
+    'warn'
 
   const settingDesc = useLabelBehaviorDescription(labelValueDefinition, pref)
   const hideLabel = useLabelLongBehaviorDescription(
