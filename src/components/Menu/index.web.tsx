@@ -129,6 +129,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
           {children}
         </View>
 
+        {/* Disabled until we can fix positioning
         <DropdownMenu.Arrow
           className="DropdownMenuArrow"
           fill={
@@ -136,6 +137,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
               .backgroundColor
           }
         />
+          */}
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   )
