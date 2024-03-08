@@ -17,6 +17,7 @@ import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
 
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
+import {InlineLink} from '#/components/Link'
 import * as Dialog from '#/components/Dialog'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {ArrowTriangleBottom_Stroke2_Corner1_Rounded as ArrowTriangleBottom} from '../icons/ArrowTriangle'
@@ -36,13 +37,15 @@ export function ModerationLabelPref({
   const t = useTheme()
   const control = Dialog.useDialogControl()
 
+  const isGlobalLabel = !labelValueDefinition.definedBy
   const {identifier} = labelValueDefinition
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetContentLabelMutation()
-  const savedPref = labelerDid
-    ? preferences?.moderationPrefs.labelers.find(l => l.did === labelerDid)
-        ?.labels[identifier]
-    : preferences?.moderationPrefs.labels[identifier]
+  const savedPref =
+    labelerDid && !isGlobalLabel
+      ? preferences?.moderationPrefs.labelers.find(l => l.did === labelerDid)
+          ?.labels[identifier]
+      : preferences?.moderationPrefs.labels[identifier]
   const pref =
     variables?.visibility ??
     savedPref ??
@@ -74,8 +77,9 @@ export function ModerationLabelPref({
     labelValueDefinition.severity === 'none'
   )
   const adultOnly = labelValueDefinition.flags.includes('adult')
-  const cantConfigure =
+  const adultDisabled =
     adultOnly && !preferences?.moderationPrefs.adultContentEnabled
+  const cantConfigure = isGlobalLabel || adultDisabled
 
   const onSelectPref = (newPref: LabelPreference) =>
     mutate({label: identifier, visibility: newPref, labelerDid})
@@ -144,9 +148,22 @@ export function ModerationLabelPref({
             <View style={[a.flex_row, a.gap_xs, a.align_center, a.pb_sm]}>
               <CircleInfo size="md" fill={t.atoms.text_contrast_medium.color} />
               <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-                <Trans>
-                  Adult content must be enabled to configure this label.
-                </Trans>
+                {adultDisabled ? (
+                  <Trans>
+                    Adult content must be enabled to configure this label.
+                  </Trans>
+                ) : isGlobalLabel ? (
+                  <Trans>
+                    {labelStrings.name} is configured in your{' '}
+                    <InlineLink
+                      to="/moderation"
+                      onPress={() => control.close()}
+                      style={a.text_md}>
+                      global moderation settings
+                    </InlineLink>
+                    .
+                  </Trans>
+                ) : null}
               </Text>
             </View>
           )}
