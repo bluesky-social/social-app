@@ -4,7 +4,6 @@ import {
   Keyboard,
   StyleSheet,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native'
 import {CreateAccountState, CreateAccountDispatch, is18} from './state'
@@ -19,7 +18,6 @@ import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {isWeb} from 'platform/detection'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
 import {logger} from '#/logger'
 import {
   FontAwesomeIcon,
@@ -49,17 +47,12 @@ export function Step1({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {openModal} = useModalControls()
   const serverInputControl = useDialogControl()
 
   const onPressSelectService = React.useCallback(() => {
     serverInputControl.open()
     Keyboard.dismiss()
   }, [serverInputControl])
-
-  const onPressWaitlist = React.useCallback(() => {
-    openModal({name: 'waitlist'})
-  }, [openModal])
 
   const birthDate = React.useMemo(() => {
     return sanitizeDate(uiState.birthDate)
@@ -164,23 +157,7 @@ export function Step1({
             </View>
           )}
 
-          {!uiState.inviteCode && uiState.isInviteCodeRequired ? (
-            <View style={[s.flexRow, s.alignCenter]}>
-              <Text style={pal.text}>
-                <Trans>Don't have an invite code?</Trans>{' '}
-              </Text>
-              <TouchableWithoutFeedback
-                onPress={onPressWaitlist}
-                accessibilityLabel={_(msg`Join the waitlist.`)}
-                accessibilityHint="">
-                <View style={styles.touchable}>
-                  <Text style={pal.link}>
-                    <Trans>Join the waitlist.</Trans>
-                  </Text>
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          ) : (
+          {uiState.inviteCode ? (
             <>
               <View style={s.pb20}>
                 <Text
@@ -260,7 +237,7 @@ export function Step1({
                 />
               )}
             </>
-          )}
+          ) : undefined}
         </>
       )}
     </View>

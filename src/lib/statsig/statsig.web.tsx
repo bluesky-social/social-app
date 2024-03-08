@@ -1,5 +1,9 @@
 import React from 'react'
-import {StatsigProvider, useGate as useStatsigGate} from 'statsig-react'
+import {
+  Statsig,
+  StatsigProvider,
+  useGate as useStatsigGate,
+} from 'statsig-react'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
 
@@ -11,6 +15,14 @@ const statsigOptions = {
   // This ensures the UI is always consistent and doesn't update mid-session.
   // Note this makes cold load (no local storage) and private mode return `false` for all gates.
   initTimeoutMs: 1,
+}
+
+export function logEvent(
+  eventName: string,
+  value?: string | number | null,
+  metadata?: Record<string, string> | null,
+) {
+  Statsig.logEvent(eventName, value, metadata)
 }
 
 export function useGate(gateName: string) {
