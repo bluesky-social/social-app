@@ -167,7 +167,7 @@ export const TextInput = forwardRef(function TextInputImpl(
 
       const uris = files.map(f => f.uri)
       const uri = uris.find(isUriImage)
-      console.log('onPaste', uri, uris, files)
+
       if (uri) {
         onPhotoPasted(uri)
       }
