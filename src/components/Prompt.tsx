@@ -72,8 +72,17 @@ export function Description({children}: React.PropsWithChildren<{}>) {
 }
 
 export function Actions({children}: React.PropsWithChildren<{}>) {
+  const {gtMobile} = useBreakpoints()
+
   return (
-    <View style={[a.w_full, a.flex_row, a.gap_sm, a.justify_end]}>
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.gap_sm,
+        a.justify_end,
+        gtMobile && [a.pb_4xl],
+      ]}>
       {children}
     </View>
   )
