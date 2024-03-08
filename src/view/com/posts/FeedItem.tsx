@@ -298,6 +298,7 @@ let FeedItemInner = ({
             moderation={moderation}
             richText={richText}
             postEmbed={post.embed}
+            postAuthor={post.author}
           />
           <PostCtrls
             post={post}
@@ -316,10 +317,12 @@ let PostContent = ({
   moderation,
   richText,
   postEmbed,
+  postAuthor,
 }: {
   moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
+  postAuthor: AppBskyFeedDefs.PostView['author']
 }): React.ReactNode => {
   const pal = usePalette('default')
   const {_} = useLingui()
