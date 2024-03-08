@@ -4,6 +4,7 @@ import {
   LabelPreference,
   BskyFeedViewPreference,
   ModerationOpts,
+  AppBskyActorDefs,
 } from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
@@ -92,6 +93,7 @@ export function useModerationOpts() {
         ...moderationPrefs,
         hiddenPosts,
       },
+      mutedWords: prefs.data.mutedWords || [], // TODO
       labelDefs,
     }
   }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
@@ -171,7 +173,7 @@ export function usePreferencesSetBirthDateMutation() {
 
   return useMutation<void, unknown, {birthDate: Date}>({
     mutationFn: async ({birthDate}: {birthDate: Date}) => {
-      await getAgent().setPersonalDetails({birthDate})
+      await getAgent().setPersonalDetails({birthDate: birthDate.toISOString()})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
@@ -278,6 +280,48 @@ export function useUnpinFeedMutation() {
     mutationFn: async ({uri}) => {
       await getAgent().removePinnedFeed(uri)
       track('CustomFeed:Unpin', {uri})
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUpsertMutedWordsMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWords: AppBskyActorDefs.MutedWord[]) => {
+      await getAgent().upsertMutedWords(mutedWords)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useUpdateMutedWordMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().updateMutedWord(mutedWord)
+      // triggers a refetch
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
+    },
+  })
+}
+
+export function useRemoveMutedWordMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (mutedWord: AppBskyActorDefs.MutedWord) => {
+      await getAgent().removeMutedWord(mutedWord)
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,

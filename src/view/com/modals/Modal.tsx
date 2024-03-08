@@ -19,7 +19,6 @@ import * as EditImageModal from './AltImage'
 import * as ReportModal from './report/Modal'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
-import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
@@ -103,9 +102,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'waitlist') {
-    snapPoints = WaitlistModal.snapPoints
-    element = <WaitlistModal.Component />
   } else if (activeModal?.name === 'invite-codes') {
     snapPoints = InviteCodesModal.snapPoints
     element = <InviteCodesModal.Component />

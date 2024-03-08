@@ -16,6 +16,7 @@ import {Dialogs} from './Dialogs'
 import {Breakpoints} from './Breakpoints'
 import {Shadows} from './Shadows'
 import {Icons} from './Icons'
+import {Menus} from './Menus'
 
 export function Storybook() {
   const t = useTheme()
@@ -84,6 +85,8 @@ export function Storybook() {
           <Icons />
           <Links />
           <Forms />
+          <Dialogs />
+          <Menus />
           <Breakpoints />
         </View>
       </CenteredView>

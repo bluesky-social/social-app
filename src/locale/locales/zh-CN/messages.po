@@ -76,7 +76,7 @@ msgid "A new version of the app is available. Please update to continue using th
 msgstr "App 新版本已发布，请更新以继续使用。"
 
 #: src/view/com/util/ViewHeader.tsx:83
-#: src/view/screens/Search/Search.tsx:624
+#: src/view/screens/Search/Search.tsx:647
 msgid "Access navigation links and settings"
 msgstr "访问导航链接及设置"
 
@@ -127,6 +127,7 @@ msgstr "已取消屏蔽账户"
 msgid "Account unmuted"
 msgstr "已取消隐藏账户"
 
+#: src/components/dialogs/MutedWords.tsx:147
 #: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
@@ -168,13 +169,21 @@ msgstr "添加细节"
 msgid "Add details to report"
 msgstr "补充反馈详细内容"
 
-#: src/view/com/composer/Composer.tsx:446
+#: src/view/com/composer/Composer.tsx:453
 msgid "Add link card"
 msgstr "添加链接卡片"
 
-#: src/view/com/composer/Composer.tsx:451
+#: src/view/com/composer/Composer.tsx:458
 msgid "Add link card:"
 msgstr "添加链接卡片:"
+
+#: src/components/dialogs/MutedWords.tsx:140
+msgid "Add mute word for configured settings"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:74
+msgid "Add muted words and tags"
+msgstr ""
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
@@ -295,7 +304,7 @@ msgstr "App 专用密码设置"
 msgid "App Passwords"
 msgstr "App 专用密码"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:279
+#: src/view/com/util/forms/PostDropdownBtn.tsx:295
 msgid "Appeal content warning"
 msgstr "申诉内容警告"
 
@@ -319,15 +328,16 @@ msgstr "外观"
 msgid "Are you sure you want to delete the app password \"{name}\"?"
 msgstr "你确定要删除这条 App 专用密码 \"{name}\"？"
 
-#: src/view/com/composer/Composer.tsx:143
+#: src/view/com/composer/Composer.tsx:150
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "你确定要丢弃此草稿吗？"
 
+#: src/components/dialogs/MutedWords.tsx:233
 #: src/view/screens/ProfileList.tsx:365
 msgid "Are you sure?"
 msgstr "你确定吗？"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:262
+#: src/view/com/util/forms/PostDropdownBtn.tsx:278
 msgid "Are you sure? This cannot be undone."
 msgstr "你确定吗？此操作无法撤销。"
 
@@ -349,15 +359,15 @@ msgstr "艺术作品或非色情的裸体。"
 #: src/view/com/auth/login/LoginForm.tsx:259
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/modals/report/InputIssueDetails.tsx:46
-#: src/view/com/post-thread/PostThread.tsx:471
-#: src/view/com/post-thread/PostThread.tsx:521
-#: src/view/com/post-thread/PostThread.tsx:529
+#: src/view/com/post-thread/PostThread.tsx:472
+#: src/view/com/post-thread/PostThread.tsx:522
+#: src/view/com/post-thread/PostThread.tsx:530
 #: src/view/com/profile/ProfileHeader.tsx:649
 #: src/view/com/util/ViewHeader.tsx:81
 msgid "Back"
 msgstr "返回"
 
-#: src/view/com/post-thread/PostThread.tsx:479
+#: src/view/com/post-thread/PostThread.tsx:480
 msgctxt "action"
 msgid "Back"
 msgstr "返回"
@@ -405,7 +415,7 @@ msgstr "屏蔽这个列表"
 msgid "Blocked"
 msgstr "已屏蔽"
 
-#: src/view/screens/Moderation.tsx:123
+#: src/view/screens/Moderation.tsx:142
 msgid "Blocked accounts"
 msgstr "已屏蔽账户"
 
@@ -464,7 +474,7 @@ msgstr "Bluesky 为公众而生。"
 msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
 msgstr "Bluesky 使用邀请制来打造更健康的社群环境。 如果你不认识拥有邀请码的人，你可以先填写并提交候补列表，我们会尽快审核并发送邀请码。"
 
-#: src/view/screens/Moderation.tsx:226
+#: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky 不会向未登录的用户显示你的个人资料和帖子。但其他应用可能不会遵照此请求，这无法确保你的账户隐私。"
 
@@ -516,8 +526,8 @@ msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must 
 msgstr "只能包含字母、数字、空格、破折号及下划线。 长度必须至少 4 个字符，但不超过 32 个字符。"
 
 #: src/components/Prompt.tsx:91
-#: src/view/com/composer/Composer.tsx:300
-#: src/view/com/composer/Composer.tsx:305
+#: src/view/com/composer/Composer.tsx:307
+#: src/view/com/composer/Composer.tsx:312
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangePassword.tsx:265
@@ -531,7 +541,7 @@ msgstr "只能包含字母、数字、空格、破折号及下划线。 长度�
 #: src/view/com/modals/VerifyEmail.tsx:247
 #: src/view/com/modals/VerifyEmail.tsx:253
 #: src/view/com/modals/Waitlist.tsx:142
-#: src/view/screens/Search/Search.tsx:693
+#: src/view/screens/Search/Search.tsx:716
 #: src/view/shell/desktop/Search.tsx:238
 msgid "Cancel"
 msgstr "取消"
@@ -678,13 +688,18 @@ msgid "Clear all storage data (restart after this)"
 msgstr "清除所有数据（并重启）"
 
 #: src/view/com/util/forms/SearchInput.tsx:88
-#: src/view/screens/Search/Search.tsx:674
+#: src/view/screens/Search/Search.tsx:697
 msgid "Clear search query"
 msgstr "清除搜索历史记录"
 
 #: src/view/screens/Support.tsx:40
 msgid "click here"
 msgstr "点击这里"
+
+#: src/components/RichText.tsx:189
+#: src/components/TagMenu/index.web.tsx:125
+msgid "Click here to open tag menu for {tag}"
+msgstr ""
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -716,11 +731,15 @@ msgstr "关闭图片"
 msgid "Close image viewer"
 msgstr "关闭图片查看器"
 
-#: src/view/shell/index.web.tsx:49
+#: src/view/shell/index.web.tsx:51
 msgid "Close navigation footer"
 msgstr "关闭导航页脚"
 
-#: src/view/shell/index.web.tsx:50
+#: src/components/TagMenu/index.tsx:266
+msgid "Close this dialog"
+msgstr ""
+
+#: src/view/shell/index.web.tsx:52
 msgid "Closes bottom navigation bar"
 msgstr "关闭底栏"
 
@@ -728,7 +747,7 @@ msgstr "关闭底栏"
 msgid "Closes password update alert"
 msgstr "关闭密码更新警告"
 
-#: src/view/com/composer/Composer.tsx:302
+#: src/view/com/composer/Composer.tsx:309
 msgid "Closes post composer and discards post draft"
 msgstr "关闭帖子编辑页并丢弃草稿"
 
@@ -761,7 +780,7 @@ msgstr "完成引导并开始使用你的账户"
 msgid "Complete the challenge"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:417
+#: src/view/com/composer/Composer.tsx:424
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "撰写帖子的长度最多为 {MAX_GRAPHEME_LENGTH} 个字符"
 
@@ -825,7 +844,7 @@ msgstr "连接中..."
 msgid "Contact support"
 msgstr "联系支持"
 
-#: src/view/screens/Moderation.tsx:81
+#: src/view/screens/Moderation.tsx:83
 msgid "Content filtering"
 msgstr "内容过滤"
 
@@ -891,7 +910,7 @@ msgstr "已复制构建版本号至剪贴板"
 
 #: src/view/com/modals/AddAppPasswords.tsx:76
 #: src/view/com/modals/InviteCodes.tsx:152
-#: src/view/com/util/forms/PostDropdownBtn.tsx:141
+#: src/view/com/util/forms/PostDropdownBtn.tsx:143
 msgid "Copied to clipboard"
 msgstr "已复制至剪贴板"
 
@@ -907,7 +926,7 @@ msgstr "复制"
 msgid "Copy link to list"
 msgstr "复制列表链接"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:182
+#: src/view/com/util/forms/PostDropdownBtn.tsx:184
 msgid "Copy link to post"
 msgstr "复制帖子链接"
 
@@ -915,7 +934,7 @@ msgstr "复制帖子链接"
 msgid "Copy link to profile"
 msgstr "复制个人资料链接"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:168
+#: src/view/com/util/forms/PostDropdownBtn.tsx:170
 msgid "Copy post text"
 msgstr "复制帖子文字"
 
@@ -971,7 +990,7 @@ msgstr "由 <0/> 创建"
 msgid "Created by you"
 msgstr "由你创建"
 
-#: src/view/com/composer/Composer.tsx:448
+#: src/view/com/composer/Composer.tsx:455
 msgid "Creates a card with a thumbnail. The card links to {url}"
 msgstr "创建带有缩略图的卡片。该卡片链接到 {url}"
 
@@ -1048,11 +1067,11 @@ msgstr "删除我的账户"
 msgid "Delete My Account…"
 msgstr "删除我的账户…"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:257
+#: src/view/com/util/forms/PostDropdownBtn.tsx:273
 msgid "Delete post"
 msgstr "删除帖子"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:261
+#: src/view/com/util/forms/PostDropdownBtn.tsx:277
 msgid "Delete this post?"
 msgstr "删除这条帖子？"
 
@@ -1075,7 +1094,7 @@ msgstr "描述"
 #~ msgid "Developer Tools"
 #~ msgstr "开发者工具"
 
-#: src/view/com/composer/Composer.tsx:211
+#: src/view/com/composer/Composer.tsx:218
 msgid "Did you want to say anything?"
 msgstr "有什么想说的吗？"
 
@@ -1083,15 +1102,15 @@ msgstr "有什么想说的吗？"
 msgid "Dim"
 msgstr "暗淡"
 
-#: src/view/com/composer/Composer.tsx:144
+#: src/view/com/composer/Composer.tsx:151
 msgid "Discard"
 msgstr "丢弃"
 
-#: src/view/com/composer/Composer.tsx:138
+#: src/view/com/composer/Composer.tsx:145
 msgid "Discard draft"
 msgstr "丢弃草稿"
 
-#: src/view/screens/Moderation.tsx:207
+#: src/view/screens/Moderation.tsx:226
 msgid "Discourage apps from showing my account to logged-out users"
 msgstr "阻止应用向未登录用户显示我的账户"
 
@@ -1170,7 +1189,7 @@ msgstr ""
 msgid "Download CAR file"
 msgstr ""
 
-#: src/view/com/composer/text-input/TextInput.web.tsx:247
+#: src/view/com/composer/text-input/TextInput.web.tsx:249
 msgid "Drop to add images"
 msgstr "拖放即可添加图片"
 
@@ -1242,6 +1261,7 @@ msgstr "编辑资料"
 msgid "Edit Profile"
 msgstr "编辑资料"
 
+#: src/view/com/home/HomeHeaderLayout.web.tsx:59
 #: src/view/screens/Feeds.tsx:355
 msgid "Edit Saved Feeds"
 msgstr "编辑保存的信息流"
@@ -1324,6 +1344,11 @@ msgstr "结束信息流"
 msgid "Enter a name for this App Password"
 msgstr "为此 App 专用密码命名"
 
+#: src/components/dialogs/MutedWords.tsx:87
+#: src/components/dialogs/MutedWords.tsx:88
+msgid "Enter a word or tag"
+msgstr ""
+
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
 msgstr "输入验证码"
@@ -1373,7 +1398,7 @@ msgstr "输入你的用户名和密码"
 msgid "Error receiving captcha response."
 msgstr ""
 
-#: src/view/screens/Search/Search.tsx:109
+#: src/view/screens/Search/Search.tsx:110
 msgid "Error:"
 msgstr "错误："
 
@@ -1444,7 +1469,7 @@ msgstr "创建 App 专用密码失败。"
 msgid "Failed to create the list. Check your internet connection and try again."
 msgstr "无法创建列表。请检查你的互联网连接并重试。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:108
+#: src/view/com/util/forms/PostDropdownBtn.tsx:110
 msgid "Failed to delete post, please try again"
 msgstr "无法删除帖子，请重试"
 
@@ -1466,8 +1491,8 @@ msgid "Feed offline"
 msgstr "信息流已离线"
 
 #: src/view/com/feeds/FeedPage.tsx:143
-msgid "Feed Preferences"
-msgstr "信息流首选项"
+#~ msgid "Feed Preferences"
+#~ msgstr "信息流首选项"
 
 #: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:311
@@ -1511,11 +1536,11 @@ msgstr "最终确定"
 msgid "Find accounts to follow"
 msgstr "寻找一些账户关注"
 
-#: src/view/screens/Search/Search.tsx:439
+#: src/view/screens/Search/Search.tsx:440
 msgid "Find users on Bluesky"
 msgstr "寻找一些正在使用 Bluesky 的用户"
 
-#: src/view/screens/Search/Search.tsx:437
+#: src/view/screens/Search/Search.tsx:438
 msgid "Find users with the search tool on the right"
 msgstr "使用右侧的工具来搜索用户"
 
@@ -1612,6 +1637,7 @@ msgid "Following {0}"
 msgstr "正在关注 {0}"
 
 #: src/Navigation.tsx:248
+#: src/view/com/home/HomeHeaderLayout.web.tsx:45
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:83
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
 #: src/view/screens/Settings/index.tsx:543
@@ -1651,7 +1677,7 @@ msgstr "忘记密码"
 msgid "Forgot Password"
 msgstr "忘记密码"
 
-#: src/view/com/posts/FeedItem.tsx:187
+#: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
 msgid "From <0/>"
 msgstr "来自 <0/>"
@@ -1684,7 +1710,7 @@ msgstr "返回"
 msgid "Go back to previous step"
 msgstr "返回上一步"
 
-#: src/view/screens/Search/Search.tsx:724
+#: src/view/screens/Search/Search.tsx:747
 #: src/view/shell/desktop/Search.tsx:262
 msgid "Go to @{queryMaybeHandle}"
 msgstr "转到 @{queryMaybeHandle}"
@@ -1700,6 +1726,10 @@ msgstr "转到下一个"
 #: src/view/com/modals/ChangeHandle.tsx:265
 msgid "Handle"
 msgstr "用户识别符"
+
+#: src/components/RichText.tsx:188
+msgid "Hashtag: {tag}"
+msgstr ""
 
 #: src/view/com/auth/create/CreateAccount.tsx:208
 msgid "Having trouble?"
@@ -1739,7 +1769,7 @@ msgctxt "action"
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:216
+#: src/view/com/util/forms/PostDropdownBtn.tsx:232
 msgid "Hide post"
 msgstr "隐藏帖子"
 
@@ -1748,7 +1778,7 @@ msgstr "隐藏帖子"
 msgid "Hide the content"
 msgstr "隐藏内容"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:220
+#: src/view/com/util/forms/PostDropdownBtn.tsx:236
 msgid "Hide this post?"
 msgstr "隐藏这条帖子？"
 
@@ -1897,7 +1927,7 @@ msgstr "输入你的密码"
 msgid "Input your user handle"
 msgstr "输入你的用户识别符"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:224
+#: src/view/com/post-thread/PostThreadItem.tsx:226
 msgid "Invalid or unsupported post record"
 msgstr "帖子记录无效或不受支持"
 
@@ -1999,7 +2029,7 @@ msgstr "了解详情"
 msgid "Learn more about this warning"
 msgstr "了解关于这个警告的更多详情"
 
-#: src/view/screens/Moderation.tsx:243
+#: src/view/screens/Moderation.tsx:262
 msgid "Learn more about what is public on Bluesky."
 msgstr "了解有关 Bluesky 公开内容的更多详情。"
 
@@ -2075,7 +2105,7 @@ msgstr "点赞你的帖子"
 msgid "Likes"
 msgstr "点赞"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:181
+#: src/view/com/post-thread/PostThreadItem.tsx:183
 msgid "Likes on this post"
 msgstr "点赞这条帖子"
 
@@ -2132,7 +2162,7 @@ msgstr "加载更多帖子"
 msgid "Load new notifications"
 msgstr "加载新的通知"
 
-#: src/view/com/feeds/FeedPage.tsx:181
+#: src/view/com/feeds/FeedPage.tsx:115
 #: src/view/screens/Profile.tsx:440
 #: src/view/screens/ProfileFeed.tsx:495
 #: src/view/screens/ProfileList.tsx:681
@@ -2158,7 +2188,7 @@ msgstr "日志"
 msgid "Log out"
 msgstr "登出"
 
-#: src/view/screens/Moderation.tsx:136
+#: src/view/screens/Moderation.tsx:155
 msgid "Logged-out visibility"
 msgstr "未登录用户可见性"
 
@@ -2169,6 +2199,10 @@ msgstr "登录未列出的账户"
 #: src/view/com/modals/LinkWarning.tsx:65
 msgid "Make sure this is where you intend to go!"
 msgstr "请确认！"
+
+#: src/components/dialogs/MutedWords.tsx:71
+msgid "Manage your muted words and tags"
+msgstr ""
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
@@ -2191,7 +2225,7 @@ msgid "Mentioned users"
 msgstr "提到的用户"
 
 #: src/view/com/util/ViewHeader.tsx:81
-#: src/view/screens/Search/Search.tsx:623
+#: src/view/screens/Search/Search.tsx:646
 msgid "Menu"
 msgstr "菜单"
 
@@ -2200,7 +2234,7 @@ msgid "Message from server: {0}"
 msgstr "来自服务器的信息：{0}"
 
 #: src/Navigation.tsx:115
-#: src/view/screens/Moderation.tsx:64
+#: src/view/screens/Moderation.tsx:66
 #: src/view/screens/Settings/index.tsx:625
 #: src/view/shell/desktop/LeftNav.tsx:397
 #: src/view/shell/Drawer.tsx:511
@@ -2231,7 +2265,7 @@ msgstr "限制列表已创建"
 msgid "Moderation list updated"
 msgstr "限制列表已更新"
 
-#: src/view/screens/Moderation.tsx:95
+#: src/view/screens/Moderation.tsx:114
 msgid "Moderation lists"
 msgstr "限制列表"
 
@@ -2258,7 +2292,7 @@ msgstr "更多信息流"
 msgid "More options"
 msgstr "更多选项"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:299
+#: src/view/com/util/forms/PostDropdownBtn.tsx:315
 msgid "More post options"
 msgstr "更多帖子选项"
 
@@ -2270,6 +2304,14 @@ msgstr "最多点赞优先"
 msgid "Must be at least 3 characters"
 msgstr ""
 
+#: src/components/TagMenu/index.tsx:253
+msgid "Mute"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:91
+msgid "Mute {truncatedTag}"
+msgstr ""
+
 #: src/view/com/profile/ProfileHeader.tsx:327
 msgid "Mute Account"
 msgstr "隐藏账户"
@@ -2277,6 +2319,18 @@ msgstr "隐藏账户"
 #: src/view/screens/ProfileList.tsx:544
 msgid "Mute accounts"
 msgstr "隐藏账户"
+
+#: src/components/TagMenu/index.tsx:211
+msgid "Mute all {tag} posts"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:131
+msgid "Mute in tags only"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:116
+msgid "Mute in text & tags"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:491
 msgid "Mute list"
@@ -2290,15 +2344,27 @@ msgstr "隐藏这些账户？"
 msgid "Mute this List"
 msgstr "隐藏这个列表"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:200
+#: src/components/dialogs/MutedWords.tsx:109
+msgid "Mute this word in post text and tags"
+msgstr ""
+
+#: src/components/dialogs/MutedWords.tsx:124
+msgid "Mute this word in tags only"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Mute thread"
 msgstr "隐藏讨论串"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:216
+msgid "Mute words & tags"
+msgstr ""
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
 msgstr "已隐藏"
 
-#: src/view/screens/Moderation.tsx:109
+#: src/view/screens/Moderation.tsx:128
 msgid "Muted accounts"
 msgstr "已隐藏账户"
 
@@ -2310,6 +2376,10 @@ msgstr "已隐藏账户"
 #: src/view/screens/ModerationMutedAccounts.tsx:115
 msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
 msgstr "已隐藏的账户将不会在你的通知或时间线中显示，被隐藏账户将不会收到通知。"
+
+#: src/view/screens/Moderation.tsx:100
+msgid "Muted words & tags"
+msgstr ""
 
 #: src/view/screens/ProfileList.tsx:277
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2374,6 +2444,10 @@ msgstr "永远不会失去对你的关注者和数据的访问。"
 msgid "Never lose access to your followers or data."
 msgstr "永远不会失去对你的关注者或数据的访问。"
 
+#: src/components/dialogs/MutedWords.tsx:244
+msgid "Nevermind"
+msgstr ""
+
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
 msgid "New"
@@ -2395,7 +2469,7 @@ msgstr "新密码"
 msgid "New Password"
 msgstr "新密码"
 
-#: src/view/com/feeds/FeedPage.tsx:192
+#: src/view/com/feeds/FeedPage.tsx:126
 msgctxt "action"
 msgid "New post"
 msgstr "新帖子"
@@ -2480,8 +2554,8 @@ msgid "No results found for \"{query}\""
 msgstr "未找到\"{query}\"的结果"
 
 #: src/view/com/modals/ListAddRemoveUsers.tsx:127
-#: src/view/screens/Search/Search.tsx:280
-#: src/view/screens/Search/Search.tsx:308
+#: src/view/screens/Search/Search.tsx:281
+#: src/view/screens/Search/Search.tsx:309
 msgid "No results found for {query}"
 msgstr "未找到 {query} 的结果"
 
@@ -2507,7 +2581,7 @@ msgstr "未找到"
 msgid "Not right now"
 msgstr "不是现在"
 
-#: src/view/screens/Moderation.tsx:233
+#: src/view/screens/Moderation.tsx:252
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
 msgstr "注意：Bluesky 是一个开放的公共网络。此设置项仅限制你的内容在 Bluesky 应用和网站上的可见性，其他应用可能不尊从此设置项，仍可能会向未登录的用户显示你的动态。"
 
@@ -2545,7 +2619,7 @@ msgstr "最旧的回复优先"
 msgid "Onboarding reset"
 msgstr "重新开始引导流程"
 
-#: src/view/com/composer/Composer.tsx:375
+#: src/view/com/composer/Composer.tsx:382
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文字。"
 
@@ -2562,14 +2636,22 @@ msgstr "Oops！"
 msgid "Open"
 msgstr "打开"
 
-#: src/view/com/composer/Composer.tsx:470
-#: src/view/com/composer/Composer.tsx:471
+#: src/view/screens/Moderation.tsx:75
+msgid "Open content filtering settings"
+msgstr ""
+
+#: src/view/com/composer/Composer.tsx:477
+#: src/view/com/composer/Composer.tsx:478
 msgid "Open emoji picker"
 msgstr "打开 emoji 选择器"
 
 #: src/view/screens/Settings/index.tsx:712
 msgid "Open links with in-app browser"
 msgstr "在内置浏览器中打开链接"
+
+#: src/view/screens/Moderation.tsx:92
+msgid "Open muted words settings"
+msgstr ""
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:49
 msgid "Open navigation"
@@ -2647,6 +2729,7 @@ msgstr "打开限制设置"
 msgid "Opens password reset form"
 msgstr "打开密码重置申请"
 
+#: src/view/com/home/HomeHeaderLayout.web.tsx:60
 #: src/view/screens/Feeds.tsx:356
 msgid "Opens screen to edit Saved Feeds"
 msgstr "打开用于编辑已保存信息流的界面"
@@ -2822,7 +2905,7 @@ msgstr "请告诉我们你认为此内容警告被错误设置的原因！"
 msgid "Please Verify Your Email"
 msgstr "请验证你的电子邮箱"
 
-#: src/view/com/composer/Composer.tsx:215
+#: src/view/com/composer/Composer.tsx:222
 msgid "Please wait for your link card to finish loading"
 msgstr "请等待你的链接卡片加载完成"
 
@@ -2834,8 +2917,8 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情内容"
 
-#: src/view/com/composer/Composer.tsx:350
-#: src/view/com/composer/Composer.tsx:358
+#: src/view/com/composer/Composer.tsx:357
+#: src/view/com/composer/Composer.tsx:365
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -2845,7 +2928,7 @@ msgctxt "description"
 msgid "Post"
 msgstr "发布"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:173
+#: src/view/com/post-thread/PostThreadItem.tsx:175
 msgid "Post by {0}"
 msgstr "发布者 {0}"
 
@@ -2855,11 +2938,11 @@ msgstr "发布者 {0}"
 msgid "Post by @{0}"
 msgstr "发布者 @{0}"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:88
+#: src/view/com/util/forms/PostDropdownBtn.tsx:90
 msgid "Post deleted"
 msgstr "已删除帖子"
 
-#: src/view/com/post-thread/PostThread.tsx:461
+#: src/view/com/post-thread/PostThread.tsx:462
 msgid "Post hidden"
 msgstr "已隐藏帖子"
 
@@ -2871,13 +2954,21 @@ msgstr "帖子语言"
 msgid "Post Languages"
 msgstr "帖子语言"
 
-#: src/view/com/post-thread/PostThread.tsx:513
+#: src/view/com/post-thread/PostThread.tsx:514
 msgid "Post not found"
 msgstr "无法找到帖子"
+
+#: src/components/TagMenu/index.tsx:257
+msgid "posts"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:180
 msgid "Posts"
 msgstr "帖子"
+
+#: src/components/dialogs/MutedWords.tsx:77
+msgid "Posts can be muted based on their text, their tags, or both."
+msgstr ""
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -2943,11 +3034,11 @@ msgstr "公开且可共享的批量隐藏或屏蔽列表。"
 msgid "Public, shareable lists which can drive feeds."
 msgstr "公开且可共享的列表，可作为信息流使用。"
 
-#: src/view/com/composer/Composer.tsx:335
+#: src/view/com/composer/Composer.tsx:342
 msgid "Publish post"
 msgstr "发布帖子"
 
-#: src/view/com/composer/Composer.tsx:335
+#: src/view/com/composer/Composer.tsx:342
 msgid "Publish reply"
 msgstr "发布回复"
 
@@ -2981,6 +3072,7 @@ msgstr "推荐信息流"
 msgid "Recommended Users"
 msgstr "推荐的用户"
 
+#: src/components/dialogs/MutedWords.tsx:249
 #: src/view/com/modals/ListAddRemoveUsers.tsx:264
 #: src/view/com/modals/SelfLabel.tsx:83
 #: src/view/com/modals/UserAddRemoveLists.tsx:219
@@ -3018,6 +3110,10 @@ msgstr "删除图片"
 msgid "Remove image preview"
 msgstr "删除图片预览"
 
+#: src/components/dialogs/MutedWords.tsx:294
+msgid "Remove mute word from your list"
+msgstr ""
+
 #: src/view/com/modals/Repost.tsx:47
 msgid "Remove repost"
 msgstr "删除转发"
@@ -3052,7 +3148,7 @@ msgstr "回复"
 msgid "Replies to this thread are disabled"
 msgstr "对此讨论串的回复已被禁用"
 
-#: src/view/com/composer/Composer.tsx:348
+#: src/view/com/composer/Composer.tsx:355
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -3062,7 +3158,7 @@ msgid "Reply Filters"
 msgstr "回复过滤器"
 
 #: src/view/com/post/Post.tsx:167
-#: src/view/com/posts/FeedItem.tsx:285
+#: src/view/com/posts/FeedItem.tsx:287
 msgctxt "description"
 msgid "Reply to <0/>"
 msgstr "回复 <0/>"
@@ -3084,7 +3180,7 @@ msgid "Report List"
 msgstr "举报列表"
 
 #: src/view/com/modals/report/SendReportButton.tsx:37
-#: src/view/com/util/forms/PostDropdownBtn.tsx:239
+#: src/view/com/util/forms/PostDropdownBtn.tsx:255
 msgid "Report post"
 msgstr "举报帖子"
 
@@ -3109,11 +3205,11 @@ msgstr "转发或引用帖子"
 msgid "Reposted By"
 msgstr "转发"
 
-#: src/view/com/posts/FeedItem.tsx:205
+#: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
 msgstr "由 {0} 转发"
 
-#: src/view/com/posts/FeedItem.tsx:222
+#: src/view/com/posts/FeedItem.tsx:224
 msgid "Reposted by <0/>"
 msgstr "由 <0/> 转发"
 
@@ -3121,7 +3217,7 @@ msgstr "由 <0/> 转发"
 msgid "reposted your post"
 msgstr "转发你的帖子"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:186
+#: src/view/com/post-thread/PostThreadItem.tsx:188
 msgid "Reposts of this post"
 msgstr "转发这条帖子"
 
@@ -3272,9 +3368,9 @@ msgstr "滚动到顶部"
 #: src/view/com/modals/ListAddRemoveUsers.tsx:75
 #: src/view/com/util/forms/SearchInput.tsx:67
 #: src/view/com/util/forms/SearchInput.tsx:79
-#: src/view/screens/Search/Search.tsx:418
-#: src/view/screens/Search/Search.tsx:645
-#: src/view/screens/Search/Search.tsx:663
+#: src/view/screens/Search/Search.tsx:419
+#: src/view/screens/Search/Search.tsx:668
+#: src/view/screens/Search/Search.tsx:686
 #: src/view/shell/bottom-bar/BottomBar.tsx:159
 #: src/view/shell/desktop/LeftNav.tsx:324
 #: src/view/shell/desktop/Search.tsx:214
@@ -3284,10 +3380,18 @@ msgstr "滚动到顶部"
 msgid "Search"
 msgstr "搜索"
 
-#: src/view/screens/Search/Search.tsx:712
+#: src/view/screens/Search/Search.tsx:735
 #: src/view/shell/desktop/Search.tsx:255
 msgid "Search for \"{query}\""
 msgstr "搜索 \"{query}\""
+
+#: src/components/TagMenu/index.tsx:145
+msgid "Search for all posts by @{authorHandle} with tag {tag}"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:90
+msgid "Search for all posts with tag {tag}"
+msgstr ""
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
@@ -3298,6 +3402,22 @@ msgstr "搜索用户"
 #: src/view/com/modals/ChangeEmail.tsx:110
 msgid "Security Step Required"
 msgstr "所需的安全步骤"
+
+#: src/components/TagMenu/index.web.tsx:50
+msgid "See {truncatedTag} posts"
+msgstr ""
+
+#: src/components/TagMenu/index.web.tsx:67
+msgid "See {truncatedTag} posts by user"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:128
+msgid "See <0>{tag}</0> posts"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:189
+msgid "See <0>{tag}</0> posts by this user"
+msgstr ""
 
 #: src/view/screens/SavedFeeds.tsx:163
 msgid "See this guide"
@@ -3504,7 +3624,7 @@ msgid "Share"
 msgstr "分享"
 
 #: src/view/com/profile/ProfileHeader.tsx:295
-#: src/view/com/util/forms/PostDropdownBtn.tsx:182
+#: src/view/com/util/forms/PostDropdownBtn.tsx:184
 #: src/view/screens/ProfileList.tsx:418
 msgid "Share"
 msgstr "分享"
@@ -3537,9 +3657,9 @@ msgstr "显示来自 {0} 的嵌入内容"
 msgid "Show follows similar to {0}"
 msgstr "显示类似于 {0} 的关注者"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:532
-#: src/view/com/post/Post.tsx:196
-#: src/view/com/posts/FeedItem.tsx:359
+#: src/view/com/post-thread/PostThreadItem.tsx:538
+#: src/view/com/post/Post.tsx:198
+#: src/view/com/posts/FeedItem.tsx:363
 msgid "Show More"
 msgstr "显示更多"
 
@@ -3707,7 +3827,7 @@ msgstr "程序开发"
 msgid "Something went wrong. Check your email and try again."
 msgstr "出了点问题，请检查你的电子邮箱并重试。"
 
-#: src/App.native.tsx:61
+#: src/App.native.tsx:63
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "很抱歉，你的会话已过期，请重新登录。"
 
@@ -3765,7 +3885,7 @@ msgstr "订阅 {0} 信息流"
 msgid "Subscribe to this list"
 msgstr "订阅这个列表"
 
-#: src/view/screens/Search/Search.tsx:373
+#: src/view/screens/Search/Search.tsx:374
 msgid "Suggested Follows"
 msgstr "推荐的关注者"
 
@@ -3809,6 +3929,14 @@ msgstr "系统"
 msgid "System log"
 msgstr "系统日志"
 
+#: src/components/dialogs/MutedWords.tsx:288
+msgid "tag"
+msgstr ""
+
+#: src/components/TagMenu/index.tsx:74
+msgid "Tag menu: {tag}"
+msgstr ""
+
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
 msgstr "高"
@@ -3831,6 +3959,10 @@ msgstr "条款"
 #: src/view/shell/Drawer.tsx:256
 msgid "Terms of Service"
 msgstr "服务条款"
+
+#: src/components/dialogs/MutedWords.tsx:288
+msgid "text"
+msgstr ""
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
@@ -3857,7 +3989,7 @@ msgstr "版权许可已迁移至 <0/>"
 msgid "The following steps will help customize your Bluesky experience."
 msgstr "以下步骤将帮助定制你的 Bluesky 体验。"
 
-#: src/view/com/post-thread/PostThread.tsx:516
+#: src/view/com/post-thread/PostThread.tsx:517
 msgid "The post may have been deleted."
 msgstr "此帖子似乎已被删除。"
 
@@ -4023,7 +4155,7 @@ msgstr "此列表为空！"
 msgid "This name is already in use"
 msgstr "该名称已被使用"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:123
+#: src/view/com/post-thread/PostThreadItem.tsx:125
 msgid "This post has been deleted."
 msgstr "此帖已被删除。"
 
@@ -4047,7 +4179,11 @@ msgstr "此用户包含在你已隐藏的 <0/> 列表中。"
 msgid "This warning is only available for posts with media attached."
 msgstr "此警告仅适用于附带媒体的帖子。"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:221
+#: src/components/dialogs/MutedWords.tsx:236
+msgid "This will delete {0} from your muted words. You can always add it back later."
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:237
 msgid "This will hide this post from your feeds."
 msgstr "这将在你的信息流中隐藏此帖子。"
 
@@ -4064,6 +4200,10 @@ msgstr "分层模式"
 msgid "Threads Preferences"
 msgstr "讨论串首选项"
 
+#: src/components/dialogs/MutedWords.tsx:95
+msgid "Toggle between muted word options."
+msgstr ""
+
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
 msgstr "切换下拉菜单"
@@ -4072,9 +4212,9 @@ msgstr "切换下拉菜单"
 msgid "Transformations"
 msgstr "转换"
 
-#: src/view/com/post-thread/PostThreadItem.tsx:679
-#: src/view/com/post-thread/PostThreadItem.tsx:681
-#: src/view/com/util/forms/PostDropdownBtn.tsx:154
+#: src/view/com/post-thread/PostThreadItem.tsx:685
+#: src/view/com/post-thread/PostThreadItem.tsx:687
+#: src/view/com/util/forms/PostDropdownBtn.tsx:156
 msgid "Translate"
 msgstr "翻译"
 
@@ -4139,15 +4279,24 @@ msgstr "很遗憾，你不符合创建账户的要求。"
 msgid "Unlike"
 msgstr "取消喜欢"
 
+#: src/components/TagMenu/index.tsx:253
 #: src/view/screens/ProfileList.tsx:597
 msgid "Unmute"
 msgstr "取消隐藏"
+
+#: src/components/TagMenu/index.web.tsx:90
+msgid "Unmute {truncatedTag}"
+msgstr ""
 
 #: src/view/com/profile/ProfileHeader.tsx:326
 msgid "Unmute Account"
 msgstr "取消隐藏账户"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:200
+#: src/components/TagMenu/index.tsx:210
+msgid "Unmute all {tag} posts"
+msgstr ""
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:202
 msgid "Unmute thread"
 msgstr "取消隐藏讨论串"
 
@@ -4344,6 +4493,10 @@ msgstr "我们希望你在此度过愉快的时光。请记住，Bluesky 是："
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr "我们已经看完了你关注的帖子。这是来自 <0/> 的最新消息。"
 
+#: src/components/dialogs/MutedWords.tsx:161
+msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
+msgstr ""
+
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
 msgstr "我们推荐我们的 \"Discover\" 信息流:"
@@ -4372,7 +4525,11 @@ msgstr "我们非常高兴你加入我们！"
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
 msgstr "很抱歉，我们无法解析此列表。如果问题持续发生，请联系列表创建者，@{handleOrDid}。"
 
-#: src/view/screens/Search/Search.tsx:253
+#: src/components/dialogs/MutedWords.tsx:182
+msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
+msgstr ""
+
+#: src/view/screens/Search/Search.tsx:254
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "很抱歉，无法完成你的搜索。请稍后再试。"
 
@@ -4393,7 +4550,7 @@ msgid "What is the issue with this {collectionName}?"
 msgstr "这个 {collectionName} 有什么问题？"
 
 #: src/view/com/auth/SplashScreen.tsx:59
-#: src/view/com/composer/Composer.tsx:279
+#: src/view/com/composer/Composer.tsx:286
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
 
@@ -4414,11 +4571,11 @@ msgstr "谁可以回复"
 msgid "Wide"
 msgstr "宽"
 
-#: src/view/com/composer/Composer.tsx:415
+#: src/view/com/composer/Composer.tsx:422
 msgid "Write post"
 msgstr "撰写帖子"
 
-#: src/view/com/composer/Composer.tsx:278
+#: src/view/com/composer/Composer.tsx:285
 #: src/view/com/composer/Prompt.tsx:33
 msgid "Write your reply"
 msgstr "撰写你的回复"
@@ -4475,7 +4632,7 @@ msgstr "你目前还没有任何保存的信息流！"
 msgid "You don't have any saved feeds."
 msgstr "你目前还没有任何保存的信息流。"
 
-#: src/view/com/post-thread/PostThread.tsx:464
+#: src/view/com/post-thread/PostThread.tsx:465
 msgid "You have blocked the author or you have been blocked by the author."
 msgstr "你已屏蔽该作者，或你已被该作者屏蔽。"
 
@@ -4515,6 +4672,10 @@ msgstr "你尚未创建任何 App 专用密码，可以通过点击下面的按�
 msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
 msgstr "你还没有隐藏任何账号。要隐藏账号，请转到其个人资料并在其账号上的菜单中选择 \"隐藏账号\"。"
 
+#: src/components/dialogs/MutedWords.tsx:202
+msgid "You haven't muted any words or tags yet"
+msgstr ""
+
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
 msgstr "你必须年满18岁及以上才能启用成人内容。"
@@ -4523,11 +4684,11 @@ msgstr "你必须年满18岁及以上才能启用成人内容。"
 msgid "You must be 18 years or older to enable adult content"
 msgstr "你必须年满18岁及以上才能启用成人内容"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:127
+#: src/view/com/util/forms/PostDropdownBtn.tsx:129
 msgid "You will no longer receive notifications for this thread"
 msgstr "你将不再收到这条讨论串的通知"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:130
+#: src/view/com/util/forms/PostDropdownBtn.tsx:132
 msgid "You will now receive notifications for this thread"
 msgstr "你将收到这条讨论串的通知"
 
@@ -4613,11 +4774,15 @@ msgstr "你的完整用户识别符将修改为 <0>@{0}</0>"
 #~ msgid "Your invite codes are hidden when logged in using an App Password"
 #~ msgstr "在使用 App 专用密码登录时，你的邀请码将被隐藏"
 
+#: src/components/dialogs/MutedWords.tsx:173
+msgid "Your muted words"
+msgstr ""
+
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
 msgstr "你的密码已更改成功！"
 
-#: src/view/com/composer/Composer.tsx:267
+#: src/view/com/composer/Composer.tsx:274
 msgid "Your post has been published"
 msgstr "你的帖子已发送"
 
@@ -4632,7 +4797,7 @@ msgstr "你的帖子、点赞和屏蔽是公开可见的，而隐藏不可见。
 msgid "Your profile"
 msgstr "你的个人资料"
 
-#: src/view/com/composer/Composer.tsx:266
+#: src/view/com/composer/Composer.tsx:273
 msgid "Your reply has been published"
 msgstr "你的回复已发送"
 

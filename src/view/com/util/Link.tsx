@@ -162,7 +162,7 @@ export const TextLink = memo(function TextLink({
   dataSet,
   title,
   onPress,
-  warnOnMismatchingLabel,
+  disableMismatchWarning,
   navigationAction,
   ...orgProps
 }: {
@@ -175,7 +175,7 @@ export const TextLink = memo(function TextLink({
   lineHeight?: number
   dataSet?: any
   title?: string
-  warnOnMismatchingLabel?: boolean
+  disableMismatchWarning?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
@@ -183,14 +183,14 @@ export const TextLink = memo(function TextLink({
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
 
-  if (warnOnMismatchingLabel && typeof text !== 'string') {
+  if (!disableMismatchWarning && typeof text !== 'string') {
     console.error('Unable to detect mismatching label')
   }
 
   props.onPress = React.useCallback(
     (e?: Event) => {
       const requiresWarning =
-        warnOnMismatchingLabel &&
+        !disableMismatchWarning &&
         linkRequiresWarning(href, typeof text === 'string' ? text : '')
       if (requiresWarning) {
         e?.preventDefault?.()
@@ -230,7 +230,7 @@ export const TextLink = memo(function TextLink({
       navigation,
       href,
       text,
-      warnOnMismatchingLabel,
+      disableMismatchWarning,
       navigationAction,
       openLink,
     ],

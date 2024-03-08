@@ -12,6 +12,7 @@ import {DialogOuterProps, DialogInnerProps} from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
 import {Button, ButtonIcon} from '#/components/Button'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {useDialogStateControlContext} from '#/state/dialogs'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -30,18 +31,21 @@ export function Outer({
   const {gtMobile} = useBreakpoints()
   const [isOpen, setIsOpen] = React.useState(false)
   const [isVisible, setIsVisible] = React.useState(true)
+  const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = React.useCallback(() => {
     setIsOpen(true)
-  }, [setIsOpen])
+    setDialogIsOpen(control.id, true)
+  }, [setIsOpen, setDialogIsOpen, control.id])
 
   const close = React.useCallback(async () => {
     setIsVisible(false)
     await new Promise(resolve => setTimeout(resolve, 150))
     setIsOpen(false)
     setIsVisible(true)
+    setDialogIsOpen(control.id, false)
     onClose?.()
-  }, [onClose, setIsOpen])
+  }, [onClose, setIsOpen, setDialogIsOpen, control.id])
 
   useImperativeHandle(
     control.ref,
@@ -189,9 +193,9 @@ export function Close() {
       <Button
         size="small"
         variant="ghost"
-        color="primary"
+        color="secondary"
         shape="round"
-        onPress={close}
+        onPress={() => close()}
         label={_(msg`Close active dialog`)}>
         <ButtonIcon icon={X} size="md" />
       </Button>

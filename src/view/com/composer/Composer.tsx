@@ -71,6 +71,8 @@ export const ComposePost = observer(function ComposePost({
   quote: initQuote,
   mention: initMention,
   openPicker,
+  text: initText,
+  imageUris: initImageUris,
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
@@ -91,7 +93,9 @@ export const ComposePost = observer(function ComposePost({
   const [error, setError] = useState('')
   const [richtext, setRichText] = useState(
     new RichText({
-      text: initMention
+      text: initText
+        ? initText
+        : initMention
         ? insertMentionAt(
             `@${initMention}`,
             initMention.length + 1,
@@ -110,7 +114,10 @@ export const ComposePost = observer(function ComposePost({
   const [labels, setLabels] = useState<string[]>([])
   const [threadgate, setThreadgate] = useState<ThreadgateSetting[]>([])
   const [suggestedLinks, setSuggestedLinks] = useState<Set<string>>(new Set())
-  const gallery = useMemo(() => new GalleryModel(), [])
+  const gallery = useMemo(
+    () => new GalleryModel(initImageUris),
+    [initImageUris],
+  )
   const onClose = useCallback(() => {
     closeComposer()
   }, [closeComposer])

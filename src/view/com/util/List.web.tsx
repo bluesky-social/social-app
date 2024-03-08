@@ -172,7 +172,7 @@ function ListImpl<ItemT>(
       <View
         ref={containerRef}
         style={[
-          styles.contentContainer,
+          !isMobile && styles.sideBorders,
           contentContainerStyle,
           desktopFixedHeight ? styles.minHeightViewport : null,
           pal.border,
@@ -304,7 +304,7 @@ export const List = memo(React.forwardRef(ListImpl)) as <ItemT>(
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  sideBorders: {
     borderLeftWidth: 1,
     borderRightWidth: 1,
   },

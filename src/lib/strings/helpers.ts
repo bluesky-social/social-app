@@ -8,10 +8,27 @@ export function pluralize(n: number, base: string, plural?: string): string {
   return base + 's'
 }
 
-export function enforceLen(str: string, len: number, ellipsis = false): string {
+export function enforceLen(
+  str: string,
+  len: number,
+  ellipsis = false,
+  mode: 'end' | 'middle' = 'end',
+): string {
   str = str || ''
   if (str.length > len) {
-    return str.slice(0, len) + (ellipsis ? '...' : '')
+    if (ellipsis) {
+      if (mode === 'end') {
+        return str.slice(0, len) + '…'
+      } else if (mode === 'middle') {
+        const half = Math.floor(len / 2)
+        return str.slice(0, half) + '…' + str.slice(-half)
+      } else {
+        // fallback
+        return str.slice(0, len)
+      }
+    } else {
+      return str.slice(0, len)
+    }
   }
   return str
 }

@@ -13,6 +13,7 @@ import {
 } from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 
 export type ItemState = {
   name: string
@@ -314,7 +315,7 @@ export function createSharedToggleStyles({
   if (isInvalid) {
     base.push({
       backgroundColor:
-        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_975,
       borderColor:
         t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
     })
@@ -323,7 +324,7 @@ export function createSharedToggleStyles({
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
-        borderColor: t.palette.negative_500,
+        borderColor: t.palette.negative_600,
       })
     }
   }
@@ -345,15 +346,14 @@ export function createSharedToggleStyles({
 export function Checkbox() {
   const t = useTheme()
   const {selected, hovered, focused, disabled, isInvalid} = useItemContext()
-  const {baseStyles, baseHoverStyles, indicatorStyles} =
-    createSharedToggleStyles({
-      theme: t,
-      hovered,
-      focused,
-      selected,
-      disabled,
-      isInvalid,
-    })
+  const {baseStyles, baseHoverStyles} = createSharedToggleStyles({
+    theme: t,
+    hovered,
+    focused,
+    selected,
+    disabled,
+    isInvalid,
+  })
   return (
     <View
       style={[
@@ -369,21 +369,7 @@ export function Checkbox() {
         baseStyles,
         hovered || focused ? baseHoverStyles : {},
       ]}>
-      {selected ? (
-        <View
-          style={[
-            a.absolute,
-            a.rounded_2xs,
-            {height: 12, width: 12},
-            selected
-              ? {
-                  backgroundColor: t.palette.primary_500,
-                }
-              : {},
-            indicatorStyles,
-          ]}
-        />
-      ) : null}
+      {selected ? <Checkmark size="xs" fill={t.palette.primary_500} /> : null}
     </View>
   )
 }

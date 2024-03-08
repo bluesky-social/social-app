@@ -84,6 +84,16 @@ export function useModerationCauseDescription(
       }
     }
   }
+  // TODO
+  // if (cause.type === 'muted-word') {
+  //   return {
+  //     icon: EyeSlash,
+  //     name: _(msg`Post hidden by muted word`),
+  //     description: _(
+  //       msg`You've chosen to hide a word or tag within this post.`,
+  //     ),
+  //   }
+  // }
   // @ts-ignore Temporary extension to the moderation system -prf
   if (cause.type === 'hidden') {
     return {

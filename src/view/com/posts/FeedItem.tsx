@@ -69,6 +69,8 @@ export function FeedItem({
   if (richText && moderation) {
     return (
       <FeedItemInner
+        // Safeguard from clobbering per-post state below:
+        key={postShadowed.uri}
         post={postShadowed}
         record={record}
         reason={reason}
@@ -339,10 +341,12 @@ let PostContent = ({
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
+            enableTags
             testID="postText"
             value={richText}
             numberOfLines={limitLines ? MAX_POST_LINES : undefined}
             style={[a.flex_1, a.text_md]}
+            authorHandle={postAuthor.handle}
           />
         </View>
       ) : undefined}

@@ -44,6 +44,12 @@
       scrollbar-gutter: stable both-edges;
     }
 
+    /* Buttons and inputs have a font set by UA, so we'll have to reset that */
+    button, input, textarea {
+      font: inherit;
+      line-height: inherit;
+    }
+
     /* Color theming */
     /* Default will always be white */
     :root {
@@ -204,6 +210,12 @@
     [data-tooltip]:hover::after,
     [data-tooltip]:hover::before {
       display:block;
+    }
+
+    /* NativeDropdown component */
+    .radix-dropdown-item:focus,
+    .nativeDropdown-item:focus {
+      outline: none;
     }
   </style>
   {% include "scripts.html" %}

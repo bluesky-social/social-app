@@ -228,6 +228,7 @@ let FeedItem = ({
               text={sanitizeDisplayName(
                 authors[0].displayName || authors[0].handle,
               )}
+              disableMismatchWarning
             />
             {authors.length > 1 ? (
               <>
