@@ -29,6 +29,8 @@ import {isUriImage} from 'lib/media/util'
 import {downloadAndResize} from 'lib/media/manip'
 import {POST_IMG_MAX} from 'lib/constants'
 import {isIOS} from 'platform/detection'
+import {sha256} from 'js-sha256'
+import {GalleryModel} from '#/state/models/media/gallery'
 
 export interface TextInputRef {
   focus: () => void
@@ -41,10 +43,11 @@ interface TextInputProps extends ComponentProps<typeof RNTextInput> {
   placeholder: string
   suggestedLinks: Set<string>
   setRichText: (v: RichText | ((v: RichText) => RichText)) => void
-  onPhotoPasted: (uri: string) => void
+  onPhotoPasted: (uri: string, hash?: string) => void
   onPressPublish: (richtext: RichText) => Promise<void>
   onSuggestedLinksChanged: (uris: Set<string>) => void
   onError: (err: string) => void
+  gallery: GalleryModel
 }
 
 interface Selection {
@@ -57,6 +60,7 @@ export const TextInput = forwardRef(function TextInputImpl(
     richtext,
     placeholder,
     suggestedLinks,
+    gallery,
     setRichText,
     onPhotoPasted,
     onSuggestedLinksChanged,
@@ -113,6 +117,12 @@ export const TextInput = forwardRef(function TextInputImpl(
             for (const feature of facet.features) {
               if (AppBskyRichtextFacet.isLink(feature)) {
                 if (isUriImage(feature.uri)) {
+                  const hash = sha256(feature.uri).substring(0, 5)
+
+                  if (gallery.images.some(image => image.hash === hash)) {
+                    return
+                  }
+
                   const res = await downloadAndResize({
                     uri: feature.uri,
                     width: POST_IMG_MAX.width,
@@ -123,7 +133,7 @@ export const TextInput = forwardRef(function TextInputImpl(
                   })
 
                   if (res !== undefined) {
-                    onPhotoPasted(res.path)
+                    onPhotoPasted(res.path, hash)
                   }
                 } else {
                   set.add(feature.uri)
@@ -145,6 +155,7 @@ export const TextInput = forwardRef(function TextInputImpl(
       suggestedLinks,
       onSuggestedLinksChanged,
       onPhotoPasted,
+      gallery,
     ],
   )
 
@@ -156,7 +167,7 @@ export const TextInput = forwardRef(function TextInputImpl(
 
       const uris = files.map(f => f.uri)
       const uri = uris.find(isUriImage)
-
+      console.log('onPaste', uri, uris, files)
       if (uri) {
         onPhotoPasted(uri)
       }
