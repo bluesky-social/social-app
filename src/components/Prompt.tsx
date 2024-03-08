@@ -39,12 +39,12 @@ export function Outer({
       <Context.Provider value={context}>
         <Dialog.Handle />
 
-        <Dialog.Inner
+        <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
           style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
           {children}
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Context.Provider>
     </Dialog.Outer>
   )
@@ -80,7 +80,7 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
         a.w_full,
         a.gap_sm,
         a.justify_end,
-        gtMobile ? [a.flex_row] : [a.flex_col, a.pt_md],
+        gtMobile ? [a.flex_row] : [a.flex_col, a.pt_md, a.pb_4xl],
       ]}>
       {children}
     </View>
