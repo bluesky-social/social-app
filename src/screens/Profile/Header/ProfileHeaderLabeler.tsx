@@ -9,7 +9,7 @@ import {
 } from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {useModalControls} from '#/state/modals'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -210,9 +210,9 @@ let ProfileHeaderLabeler = ({
               <View pointerEvents="auto">
                 <RichText
                   testID="profileHeaderDescription"
-                  style={t.atoms.text}
+                  style={[a.text_md]}
                   numberOfLines={15}
-                  richText={descriptionRT}
+                  value={descriptionRT}
                 />
               </View>
             ) : undefined}
