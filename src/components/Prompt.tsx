@@ -3,7 +3,7 @@ import {View, PressableProps} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button} from '#/components/Button'
 
@@ -25,6 +25,7 @@ export function Outer({
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
 }>) {
+  const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
   const descriptionId = React.useId()
 
@@ -38,12 +39,12 @@ export function Outer({
       <Context.Provider value={context}>
         <Dialog.Handle />
 
-        <Dialog.Inner
+        <Dialog.ScrollableInner
           accessibilityLabelledBy={titleId}
           accessibilityDescribedBy={descriptionId}
-          style={[{width: 'auto', maxWidth: 400}]}>
+          style={[gtMobile ? {width: 'auto', maxWidth: 400} : a.w_full]}>
           {children}
-        </Dialog.Inner>
+        </Dialog.ScrollableInner>
       </Context.Provider>
     </Dialog.Outer>
   )
@@ -71,8 +72,17 @@ export function Description({children}: React.PropsWithChildren<{}>) {
 }
 
 export function Actions({children}: React.PropsWithChildren<{}>) {
+  const {gtMobile} = useBreakpoints()
+
   return (
-    <View style={[a.w_full, a.flex_row, a.gap_sm, a.justify_end]}>
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.gap_sm,
+        a.justify_end,
+        gtMobile && [a.pb_4xl],
+      ]}>
       {children}
     </View>
   )
