@@ -20,6 +20,7 @@ import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {ArrowTriangleBottom_Stroke2_Corner1_Rounded as ArrowTriangleBottom} from '../icons/ArrowTriangle'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 import {Check_Stroke2_Corner0_Rounded as Check} from '../icons/Check'
 
 export function ModerationLabelPref({
@@ -68,6 +69,9 @@ export function ModerationLabelPref({
     labelValueDefinition.blurs === 'none' &&
     labelValueDefinition.severity === 'none'
   )
+  const adultOnly = labelValueDefinition.flags.includes('adult')
+  const cantConfigure =
+    adultOnly && !preferences?.moderationPrefs.adultContentEnabled
 
   const onSelectPref = (newPref: LabelPreference) =>
     mutate({label: identifier, visibility: newPref, labelerDid})
@@ -110,10 +114,12 @@ export function ModerationLabelPref({
                 {settingDesc}
               </Text>
             )}
-            <ArrowTriangleBottom
-              width={8}
-              fill={t.atoms.text_contrast_medium.color}
-            />
+            {!cantConfigure && (
+              <ArrowTriangleBottom
+                width={8}
+                fill={t.atoms.text_contrast_medium.color}
+              />
+            )}
           </View>
         )}
       </Pressable>
@@ -130,7 +136,17 @@ export function ModerationLabelPref({
           <Text style={[a.text_md, a.pb_sm, t.atoms.text_contrast_medium]}>
             {labelStrings.description}
           </Text>
-          {disabled ? (
+          {cantConfigure && (
+            <View style={[a.flex_row, a.gap_xs, a.align_center, a.pb_sm]}>
+              <CircleInfo size="md" fill={t.atoms.text_contrast_medium.color} />
+              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                <Trans>
+                  Adult content must be enabled to configure this label.
+                </Trans>
+              </Text>
+            </View>
+          )}
+          {disabled || cantConfigure ? (
             <Button
               label={_(msg`Close`)}
               size="large"
