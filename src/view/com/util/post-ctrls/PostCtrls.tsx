@@ -231,6 +231,7 @@ let PostCtrls = ({
           richText={richText}
           showAppealLabelItem={showAppealLabelItem}
           style={styles.btnPad}
+          hitSlop={big ? HITSLOP_20 : HITSLOP_10}
         />
       </View>
     </View>
