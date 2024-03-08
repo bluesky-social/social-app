@@ -157,7 +157,7 @@ export function Step1({
             </View>
           )}
 
-          {uiState.inviteCode ? (
+          {!uiState.isInviteCodeRequired || uiState.inviteCode ? (
             <>
               <View style={s.pb20}>
                 <Text
