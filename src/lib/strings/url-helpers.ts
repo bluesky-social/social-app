@@ -3,6 +3,8 @@ import {BSKY_SERVICE} from 'lib/constants'
 import TLDs from 'tlds'
 import psl from 'psl'
 
+export const BSKY_APP_HOST = 'https://bsky.app'
+
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
@@ -234,4 +236,9 @@ export function splitApexDomain(hostname: string): [string, string] {
     hostnamep.subdomain ? `${hostnamep.subdomain}.` : '',
     hostnamep.domain,
   ]
+}
+
+export function createBskyAppAbsoluteUrl(path: string): string {
+  const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '')
+  return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
 }
