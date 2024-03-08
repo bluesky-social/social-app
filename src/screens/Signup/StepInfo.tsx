@@ -20,7 +20,7 @@ import {Policies} from 'view/com/auth/create/Policies'
 import {Text} from '#/components/Typography'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {DateInput} from 'view/com/util/forms/DateInput'
-import {isIOS} from 'platform/detection'
+import {isAndroid, isIOS} from 'platform/detection'
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
     logger.error(`Create account: handled invalid date for birthDate`, {
@@ -62,7 +62,7 @@ export function StepInfo() {
             a.rounded_sm,
             a.px_md,
             a.gap_xs,
-            {paddingVertical: 8},
+            {paddingVertical: isAndroid ? 12 : 9},
             t.atoms.bg_contrast_25,
           ]}
           onPress={onPressSelectService}>
