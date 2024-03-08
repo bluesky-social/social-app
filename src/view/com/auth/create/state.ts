@@ -18,6 +18,7 @@ import {
   usePreferencesSetBirthDateMutation,
   useSetSaveFeedsMutation,
 } from 'state/queries/preferences'
+import {LayoutAnimation} from 'react-native'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
@@ -216,9 +217,13 @@ function createReducer({_}: {_: I18nContext['_']}) {
         return compute({...state, error: action.value})
       }
       case 'set-processing': {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
         return compute({...state, isProcessing: action.value})
       }
       case 'set-service-url': {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
         return compute({
           ...state,
           serviceUrl: action.value,
@@ -229,6 +234,8 @@ function createReducer({_}: {_: I18nContext['_']}) {
         })
       }
       case 'set-service-description': {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+
         return compute({
           ...state,
           serviceDescription: action.value,
@@ -239,6 +246,10 @@ function createReducer({_}: {_: I18nContext['_']}) {
         return compute({...state, userDomain: action.value})
       }
       case 'set-invite-code': {
+        if (!state.inviteCode || !action.value) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        }
+
         return compute({...state, inviteCode: action.value})
       }
       case 'set-email': {
