@@ -211,7 +211,7 @@ export function ModerationScreenInner({
             onPress={() => mutedWordsDialogControl.open()}>
             <View style={[a.flex_row, a.align_center, a.gap_md]}>
               <Filter size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_sm, a.font_bold]}>
                 <Trans>Muted words & tags</Trans>
               </Text>
             </View>
@@ -233,7 +233,7 @@ export function ModerationScreenInner({
             to="/moderation/modlists">
             <View style={[a.flex_row, a.align_center, a.gap_md]}>
               <Group size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_sm, a.font_bold]}>
                 <Trans>Moderation lists</Trans>
               </Text>
             </View>
@@ -255,7 +255,7 @@ export function ModerationScreenInner({
             to="/moderation/muted-accounts">
             <View style={[a.flex_row, a.align_center, a.gap_md]}>
               <Person size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_sm, a.font_bold]}>
                 <Trans>Muted accounts</Trans>
               </Text>
             </View>
@@ -277,7 +277,7 @@ export function ModerationScreenInner({
             to="/moderation/blocked-accounts">
             <View style={[a.flex_row, a.align_center, a.gap_md]}>
               <CircleBanSign size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_sm, a.font_bold]}>
                 <Trans>Blocked accounts</Trans>
               </Text>
             </View>
@@ -351,11 +351,7 @@ export function ModerationScreenInner({
                         a.justify_between,
                       ]}>
                       <Text
-                        style={[
-                          a.text_md,
-                          a.font_semibold,
-                          t.atoms.text_contrast_high,
-                        ]}>
+                        style={[a.font_semibold, t.atoms.text_contrast_high]}>
                         <Trans>Enable adult content</Trans>
                       </Text>
                       <Toggle.Item
