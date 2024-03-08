@@ -1,4 +1,5 @@
 import {useCallback, useReducer} from 'react'
+import {LayoutAnimation} from 'react-native'
 import {
   ComAtprotoServerDescribeServer,
   ComAtprotoServerCreateAccount,
@@ -18,7 +19,6 @@ import {
   usePreferencesSetBirthDateMutation,
   useSetSaveFeedsMutation,
 } from 'state/queries/preferences'
-import {LayoutAnimation} from 'react-native'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
