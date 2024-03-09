@@ -19,10 +19,11 @@ import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
 import * as Dialog from '#/components/Dialog'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {Button} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
-import {Check_Stroke2_Corner0_Rounded as Check} from '../icons/Check'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '../icons/Gear'
+import * as Toggle from '#/components/forms/Toggle'
+import {Divider} from '#/components/Divider'
 
 export function ModerationLabelPref({
   labelValueDefinition,
@@ -51,6 +52,7 @@ export function ModerationLabelPref({
     savedPref ??
     labelValueDefinition.defaultSetting ??
     'warn'
+  const [selected, setSelected] = React.useState<LabelPreference[]>([pref])
 
   const settingDesc = useLabelBehaviorDescription(labelValueDefinition, pref)
   const hideLabel = useLabelLongBehaviorDescription(
@@ -81,8 +83,31 @@ export function ModerationLabelPref({
     adultOnly && !preferences?.moderationPrefs.adultContentEnabled
   const cantConfigure = isGlobalLabel || adultDisabled
 
-  const onSelectPref = (newPref: LabelPreference) =>
-    mutate({label: identifier, visibility: newPref, labelerDid})
+  const onSettingChange = React.useCallback(
+    (newPrefs: LabelPreference[]) => {
+      setSelected(newPrefs)
+      mutate({label: identifier, visibility: newPrefs[0], labelerDid})
+    },
+    [mutate, labelerDid, identifier],
+  )
+
+  const settings = [
+    {
+      pref: 'hide',
+      label: hideLabel,
+    },
+    canWarn && {
+      pref: 'warn',
+      label: warnLabel,
+    },
+    {
+      pref: 'ignore',
+      label: ignoreLabel,
+    },
+  ].filter(Boolean) as {
+    pref: LabelPreference
+    label: string
+  }[]
 
   return (
     <>
@@ -180,60 +205,42 @@ export function ModerationLabelPref({
           )}
 
           {!cantConfigure && (
-            <>
-              <Button
-                label={hideLabel}
-                size="large"
-                variant="solid"
-                color={pref === 'hide' ? 'primary' : 'secondary'}
-                onPress={() => {
-                  onSelectPref('hide')
-                  control.close()
-                }}>
-                <ButtonText style={[a.flex_1, a.text_left]}>
-                  {hideLabel}
-                </ButtonText>
-                {pref === 'hide' && (
-                  <ButtonIcon icon={Check} position="right" />
-                )}
-              </Button>
+            <Toggle.Group<LabelPreference>
+              type="radio"
+              values={selected}
+              onChange={onSettingChange}
+              label={_(
+                msg`Configure filtering settings for ${labelStrings.name}`,
+              )}>
+              <View
+                style={[
+                  a.rounded_md,
+                  a.overflow_hidden,
+                  t.atoms.bg_contrast_25,
+                ]}>
+                {settings.map((s, i) => (
+                  <>
+                    {i !== 0 && <Divider />}
 
-              {canWarn && (
-                <Button
-                  label={warnLabel}
-                  size="large"
-                  variant="solid"
-                  color={pref === 'warn' ? 'primary' : 'secondary'}
-                  onPress={() => {
-                    onSelectPref('warn')
-                    control.close()
-                  }}>
-                  <ButtonText style={[a.flex_1, a.text_left]}>
-                    {warnLabel}
-                  </ButtonText>
-                  {pref === 'warn' && (
-                    <ButtonIcon icon={Check} position="right" />
-                  )}
-                </Button>
-              )}
-
-              <Button
-                label={ignoreLabel}
-                size="large"
-                variant="solid"
-                color={!disabled && pref === 'ignore' ? 'primary' : 'secondary'}
-                onPress={() => {
-                  onSelectPref('ignore')
-                  control.close()
-                }}>
-                <ButtonText style={[a.flex_1, a.text_left]}>
-                  {ignoreLabel}
-                </ButtonText>
-                {pref === 'ignore' && (
-                  <ButtonIcon icon={Check} position="right" />
-                )}
-              </Button>
-            </>
+                    <Toggle.Item name={s.pref} label={s.label}>
+                      <View
+                        style={[
+                          a.flex_1,
+                          a.flex_row,
+                          a.align_center,
+                          a.gap_md,
+                          a.py_md,
+                          a.px_lg,
+                          t.atoms.bg_contrast_25,
+                        ]}>
+                        <Toggle.Radio />
+                        <Text>{s.label}</Text>
+                      </View>
+                    </Toggle.Item>
+                  </>
+                ))}
+              </View>
+            </Toggle.Group>
           )}
 
           <Dialog.Close />
