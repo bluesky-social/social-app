@@ -21,7 +21,7 @@ import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
 import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 
-import {atoms as a, useTheme, tokens} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import * as Toast from 'view/com/util/Toast'
 import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
@@ -283,11 +283,8 @@ export function ProfileHeaderDropdownBtn({
             {
               height: 40,
               width: 40,
-              backgroundColor:
-                t.name === 'light'
-                  ? tokens.color.gray_50
-                  : tokens.color.gray_900,
             },
+            t.atoms.bg_contrast_25,
             a.flex_row,
             a.align_center,
             a.justify_center,
