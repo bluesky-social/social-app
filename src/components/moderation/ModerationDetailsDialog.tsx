@@ -94,15 +94,12 @@ function ModerationDetailsDialogInner({
       name = _(msg`Account Muted`)
       description = _(msg`You have muted this user.`)
     }
-    // TODO
-    // } else if (cause.type === 'muted-word') {
-    //   return {
-    //     icon: EyeSlash,
-    //     name: _(msg`Post hidden by muted word`),
-    //     description: _(
-    //       msg`You've chosen to hide a word or tag within this post.`,
-    //     ),
-    //   }
+  } else if (modcause.type === 'mute-word') {
+    name = _(msg`Post Hidden by Muted Word`)
+    description = _(msg`You've chosen to hide a word or tag within this post.`)
+  } else if (modcause.type === 'hidden') {
+    name = _(msg`Post Hidden by You`)
+    description = _(msg`You have hidden this post.`)
   } else if (modcause.type === 'label') {
     name = desc.name
     description = desc.description

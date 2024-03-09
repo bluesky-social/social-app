@@ -25,6 +25,7 @@ import {
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
 import {useLabelersDetailedInfoQuery} from '#/state/queries/labeler'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -34,6 +35,7 @@ import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Perso
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
+import {Button} from '#/components/Button'
 import {InlineLink, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {getModerationServiceTitle} from '#/lib/moderation'
@@ -132,10 +134,12 @@ export function ModerationScreenInner({
   preferences: UsePreferencesQueryResponse
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
 }) {
+  const {_} = useLingui()
   const t = useTheme()
   const setMinimalShellMode = useSetMinimalShellMode()
   const {screen} = useAnalytics()
   const {gtMobile} = useBreakpoints()
+  const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -186,6 +190,29 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
+          <Button
+            testID="mutewordsBtn"
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              a.p_lg,
+              a.gap_sm,
+            ]}
+            label={_(msg`Muted words & tags`)}
+            onPress={() => mutedWordsDialogControl.open()}>
+            <View style={[a.flex_row, a.align_center, a.gap_md]}>
+              <Group size="md" style={[t.atoms.text_contrast_medium]} />
+              <Text style={[a.text_md]}>
+                <Trans>Muted words & tags</Trans>
+              </Text>
+            </View>
+            <ChevronRight
+              size="sm"
+              style={[t.atoms.text_contrast_low, a.self_end]}
+            />
+          </Button>
+          <Divider />
           <Link
             testID="moderationlistsBtn"
             style={[

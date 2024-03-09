@@ -38,11 +38,11 @@ export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
     adultContentEnabled: false,
     labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
     labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
   },
   feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
-  mutedWords: [],
-  hiddenPosts: [],
 }

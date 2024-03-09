@@ -20,7 +20,6 @@ import {
   DEFAULT_LOGGED_OUT_PREFERENCES,
 } from '#/state/queries/preferences/const'
 import {STALE} from '#/state/queries'
-import {useHiddenPosts} from '#/state/preferences/hidden-posts'
 import {useLabelDefinitions} from '#/state/queries/preferences/moderation'
 
 export * from '#/state/queries/preferences/types'
@@ -78,7 +77,6 @@ export function useModerationOpts() {
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
   const {labelDefs} = useLabelDefinitions()
-  const hiddenPosts = useHiddenPosts()
   const opts = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
       return override
@@ -86,17 +84,12 @@ export function useModerationOpts() {
     if (!prefs.data) {
       return
     }
-    const moderationPrefs = prefs.data.moderationPrefs
     return {
       userDid: currentAccount?.did,
-      prefs: {
-        ...moderationPrefs,
-        hiddenPosts,
-      },
-      mutedWords: prefs.data.mutedWords || [], // TODO
+      prefs: prefs.data.moderationPrefs,
       labelDefs,
     }
-  }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
+  }, [override, currentAccount, labelDefs, prefs.data])
   return opts
 }
 

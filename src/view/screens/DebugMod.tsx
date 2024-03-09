@@ -242,6 +242,8 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
             labels: {[label[0]]: visibility[0] as LabelPreference},
           },
         ],
+        mutedWords: [],
+        hiddenPosts: [],
       },
       labelDefs: {
         'did:plc:fake-labeler': [
