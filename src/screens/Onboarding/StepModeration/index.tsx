@@ -99,7 +99,7 @@ export function StepModeration() {
                   isMounted={isMounted}
                 />
                 <ModerationOption
-                  labelValueDefinition={LABELS.gore}
+                  labelValueDefinition={LABELS['graphic-media']}
                   isMounted={isMounted}
                 />
                 <AnimatedDivider />

@@ -384,7 +384,7 @@ export function ModerationScreenInner({
                         />
                         <Divider />
                         <GlobalModerationLabelPref
-                          labelValueDefinition={LABELS.gore}
+                          labelValueDefinition={LABELS['graphic-media']}
                         />
                       </>
                     )}

@@ -42,9 +42,11 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         name: _(msg`Non-sexual Nudity`),
         description: _(msg`E.g. artistic nudes.`),
       },
-      gore: {
-        name: _(msg`Violent / Bloody`),
-        description: _(msg`Gore, self-harm, torture`),
+      'graphic-media': {
+        name: _(msg`Graphic Media`),
+        description: _(
+          msg`Explicit or potentially disturbing media, including graphic violence, severe injuries, or other visuals that may be shocking or upsetting to some viewers.`,
+        ),
       },
     }),
     [_],
