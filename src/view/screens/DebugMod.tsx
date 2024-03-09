@@ -593,7 +593,7 @@ function CustomLabelForm({
         a.flex_row,
         a.flex_wrap,
         a.gap_md,
-        t.atoms.bg_contrast_50,
+        t.atoms.bg_contrast_25,
         a.rounded_md,
         a.p_md,
         a.mt_md,
@@ -789,7 +789,7 @@ function MockPostFeedItem({
   const t = useTheme()
   if (moderation.ui('contentList').filter) {
     return (
-      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md, a.mb_lg]}>
+      <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md, a.mb_lg]}>
         Filtered from the feed
       </P>
     )
@@ -838,7 +838,7 @@ function MockNotifItem({
   const t = useTheme()
   if (shouldFilterNotif(notif.notification, moderationOpts)) {
     return (
-      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md]}>
+      <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md]}>
         Filtered from the feed
       </P>
     )
@@ -857,7 +857,7 @@ function MockAccountCard({
 
   if (moderation.ui('profileList').filter) {
     return (
-      <P style={[t.atoms.bg_contrast_50, a.px_lg, a.py_md, a.mb_lg]}>
+      <P style={[t.atoms.bg_contrast_25, a.px_lg, a.py_md, a.mb_lg]}>
         Filtered from the listing
       </P>
     )
