@@ -48,6 +48,18 @@ export function Provider({children}: {children: React.ReactNode}) {
     () => toStatsigUser(currentAccount?.did),
     [currentAccount?.did],
   )
+
+  React.useEffect(() => {
+    function refresh() {
+      // Intentionally refetching the config using the JS SDK rather than React SDK
+      // so that the new config is stored in cache but isn't used during this session.
+      // It will kick in for the next reload.
+      Statsig.updateUser(currentStatsigUser)
+    }
+    const id = setInterval(refresh, 3 * 60e3 /* 3 min */)
+    return () => clearInterval(id)
+  }, [currentStatsigUser])
+
   return (
     <StatsigProvider
       sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
