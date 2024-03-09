@@ -1663,7 +1663,7 @@ msgstr "Pseudo"
 
 #: src/components/RichText.tsx:188
 msgid "Hashtag: {tag}"
-msgstr "Hashtag : {tag}"
+msgstr "Mot-clé : {tag}"
 
 #: src/view/com/auth/create/CreateAccount.tsx:208
 msgid "Having trouble?"
