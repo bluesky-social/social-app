@@ -300,7 +300,7 @@ export function ModerationScreenInner({
               label={_(msg`Confirm your birthdate`)}
               size="small"
               variant="solid"
-              color="tertiary"
+              color="secondary"
               onPress={() => {
                 openModal({name: 'birth-date-settings'})
               }}

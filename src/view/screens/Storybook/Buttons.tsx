@@ -20,7 +20,7 @@ export function Buttons() {
       <H1>Buttons</H1>
 
       <View style={[a.flex_row, a.flex_wrap, a.gap_md, a.align_start]}>
-        {['primary', 'secondary', 'tertiary', 'negative'].map(color => (
+        {['primary', 'secondary', 'negative'].map(color => (
           <View key={color} style={[a.gap_md, a.align_start]}>
             {['solid', 'outline', 'ghost'].map(variant => (
               <React.Fragment key={variant}>

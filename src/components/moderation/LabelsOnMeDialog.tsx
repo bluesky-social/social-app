@@ -149,7 +149,7 @@ function Label({
       <View>
         <Button
           variant="solid"
-          color="tertiary"
+          color="secondary"
           size="small"
           label={_(msg`Appeal`)}
           onPress={() => onPressAppeal(label)}>
@@ -245,7 +245,7 @@ function AppealForm({
         <Button
           testID="backBtn"
           variant="solid"
-          color="tertiary"
+          color="secondary"
           size="small"
           onPress={onPressBack}
           label={_(msg`Back`)}>

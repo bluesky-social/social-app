@@ -51,7 +51,7 @@ function ProfileInform({cause}: {cause: ModerationCause}) {
       <Button
         label={desc.name}
         variant="solid"
-        color="tertiary"
+        color="secondary"
         size="tiny"
         shape="default"
         onPress={() => {
@@ -76,7 +76,7 @@ function ProfileAlert({cause}: {cause: ModerationCause}) {
       <Button
         label={desc.name}
         variant="solid"
-        color="tertiary"
+        color="secondary"
         size="small"
         shape="default"
         onPress={() => {

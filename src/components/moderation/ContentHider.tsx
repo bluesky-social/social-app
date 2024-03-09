@@ -53,7 +53,7 @@ export function ContentHider({
 
       <Button
         variant="solid"
-        color="tertiary"
+        color="secondary"
         size="large"
         shape="default"
         onPress={() => {

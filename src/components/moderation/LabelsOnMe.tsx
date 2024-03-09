@@ -45,7 +45,7 @@ export function LabelsOnMe({
 
       <Button
         variant="solid"
-        color="tertiary"
+        color="secondary"
         size={size || 'small'}
         label={_(msg`View information about these labels`)}
         onPress={() => {
