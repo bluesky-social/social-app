@@ -283,117 +283,93 @@ export function ModerationScreenInner({
           </Link>
         </View>
 
-        {ageNotSet || !isUnderage ? (
-          <>
-            <Text
-              style={[
-                a.pt_2xl,
-                a.pb_md,
-                a.text_md,
-                a.font_bold,
-                t.atoms.text_contrast_high,
-              ]}>
-              <Trans>Content filters</Trans>
-            </Text>
+        <Text
+          style={[
+            a.pt_2xl,
+            a.pb_md,
+            a.text_md,
+            a.font_bold,
+            t.atoms.text_contrast_high,
+          ]}>
+          <Trans>Content filters</Trans>
+        </Text>
 
-            <View style={[a.gap_md]}>
-              {ageNotSet ? (
-                <>
-                  <View
-                    style={[
-                      a.w_full,
-                      a.rounded_md,
-                      a.overflow_hidden,
-                      t.atoms.bg_contrast_25,
-                      a.py_md,
-                      a.px_lg,
-                      a.flex_row,
-                      a.align_center,
-                      a.justify_between,
-                    ]}>
-                    <Text style={[a.text_md, t.atoms.text_contrast_high]}>
-                      <Trans>Confirm your age:</Trans>
-                    </Text>
-                    <Button
-                      label={_(msg`Confirm your birthdate`)}
-                      size="small"
-                      variant="solid"
-                      color="secondary"
-                      onPress={() => {
-                        openModal({name: 'birth-date-settings'})
-                      }}>
-                      <ButtonText>
-                        <Trans>Set birthdate</Trans>
-                      </ButtonText>
-                    </Button>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <View
-                    style={[
-                      a.w_full,
-                      a.rounded_md,
-                      a.overflow_hidden,
-                      t.atoms.bg_contrast_25,
-                    ]}>
-                    <View
-                      style={[
-                        a.py_lg,
-                        a.px_lg,
-                        a.flex_row,
-                        a.align_center,
-                        a.justify_between,
-                      ]}>
-                      <Text
-                        style={[a.font_semibold, t.atoms.text_contrast_high]}>
-                        <Trans>Enable adult content</Trans>
-                      </Text>
-                      <Toggle.Item
-                        label={_(
-                          msg`Toggle to enable or disable adult content`,
+        <View style={[a.gap_md]}>
+          {ageNotSet && (
+            <Button
+              label={_(msg`Confirm your birthdate`)}
+              size="small"
+              variant="solid"
+              color="tertiary"
+              onPress={() => {
+                openModal({name: 'birth-date-settings'})
+              }}
+              style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
+              <ButtonText>
+                <Trans>Confirm your age:</Trans>
+              </ButtonText>
+              <ButtonText>
+                <Trans>Set birthdate</Trans>
+              </ButtonText>
+            </Button>
+          )}
+          <View
+            style={[
+              a.w_full,
+              a.rounded_md,
+              a.overflow_hidden,
+              t.atoms.bg_contrast_25,
+            ]}>
+            {!ageNotSet && !isUnderage && (
+              <>
+                <View
+                  style={[
+                    a.py_lg,
+                    a.px_lg,
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                  ]}>
+                  <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
+                    <Trans>Enable adult content</Trans>
+                  </Text>
+                  <Toggle.Item
+                    label={_(msg`Toggle to enable or disable adult content`)}
+                    name="adultContent"
+                    value={adultContentEnabled}
+                    onChange={onToggleAdultContentEnabled}>
+                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                      <Text style={[t.atoms.text_contrast_medium]}>
+                        {adultContentEnabled ? (
+                          <Trans>Enabled</Trans>
+                        ) : (
+                          <Trans>Disabled</Trans>
                         )}
-                        name="adultContent"
-                        value={adultContentEnabled}
-                        onChange={onToggleAdultContentEnabled}>
-                        <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                          <Text style={[t.atoms.text_contrast_medium]}>
-                            {adultContentEnabled ? (
-                              <Trans>Enabled</Trans>
-                            ) : (
-                              <Trans>Disabled</Trans>
-                            )}
-                          </Text>
-                          <Toggle.Switch />
-                        </View>
-                      </Toggle.Item>
+                      </Text>
+                      <Toggle.Switch />
                     </View>
-                    {adultContentEnabled && (
-                      <>
-                        <Divider />
-                        <GlobalModerationLabelPref
-                          labelValueDefinition={LABELS.porn}
-                        />
-                        <Divider />
-                        <GlobalModerationLabelPref
-                          labelValueDefinition={LABELS.sexual}
-                        />
-                        <Divider />
-                        <GlobalModerationLabelPref
-                          labelValueDefinition={LABELS['graphic-media']}
-                        />
-                      </>
-                    )}
-                    <Divider />
-                    <GlobalModerationLabelPref
-                      labelValueDefinition={LABELS.nudity}
-                    />
-                  </View>
-                </>
-              )}
-            </View>
-          </>
-        ) : null}
+                  </Toggle.Item>
+                </View>
+                <Divider />
+              </>
+            )}
+            {!isUnderage && adultContentEnabled && (
+              <>
+                <GlobalModerationLabelPref labelValueDefinition={LABELS.porn} />
+                <Divider />
+                <GlobalModerationLabelPref
+                  labelValueDefinition={LABELS.sexual}
+                />
+                <Divider />
+                <GlobalModerationLabelPref
+                  labelValueDefinition={LABELS['graphic-media']}
+                />
+                <Divider />
+              </>
+            )}
+            <GlobalModerationLabelPref labelValueDefinition={LABELS.nudity} />
+          </View>
+        </View>
 
         <Text
           style={[

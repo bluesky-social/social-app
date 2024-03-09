@@ -44,9 +44,7 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
       },
       'graphic-media': {
         name: _(msg`Graphic Media`),
-        description: _(
-          msg`Explicit or potentially disturbing media, including graphic violence, severe injuries, or other visuals that may be shocking or upsetting to some viewers.`,
-        ),
+        description: _(msg`Explicit or potentially disturbing media.`),
       },
     }),
     [_],
