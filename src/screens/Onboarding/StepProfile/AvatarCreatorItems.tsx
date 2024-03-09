@@ -1,13 +1,11 @@
 import React from 'react'
-import {FlatList, ListRenderItemInfo, Pressable, View} from 'react-native'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import {ListRenderItemInfo, Pressable, View} from 'react-native'
+// Using the FlatList from RNGH allows us to nest the scroll views on Android. The default FlatList won't allow
+// scrolling inside of the vertical ScrollView
+import {FlatList} from 'react-native-gesture-handler'
 
-import {atoms as a, useTheme} from '#/alf'
-import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
+import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import {Avatar} from '#/screens/Onboarding/StepProfile/index'
 import {
   AvatarColor,
   avatarColors,
@@ -15,75 +13,44 @@ import {
   EmojiName,
   emojiNames,
 } from '#/screens/Onboarding/StepProfile/types'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 
-const WITH_TIMING_CONFIG = {duration: 150}
-
-function AnimatedCircle({
-  selected,
-  children,
-}: React.PropsWithChildren<{selected: boolean}>) {
+function Circle({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const {isTabletOrDesktop} = useWebMediaQueries()
-  const size = useSharedValue(selected ? 1.2 : 1)
 
   const styles = React.useMemo(
     () => ({
-      imageContainer: [
+      container: [
         a.rounded_full,
         a.overflow_hidden,
         a.align_center,
         a.justify_center,
-        {height: 150, width: 150, borderWidth: 2},
+        t.atoms.bg_contrast_25,
+        web({borderWidth: 2}),
+        native({borderWidth: 1}),
+        {
+          height: 60,
+          width: 60,
+          margin: 4,
+        },
       ],
-      paletteContainer: {
-        height: 70,
-        width: 70,
-        margin: isTabletOrDesktop ? 8 : 2,
-      },
     }),
-    [isTabletOrDesktop],
+    [t.atoms.bg_contrast_25],
   )
 
-  React.useEffect(() => {
-    if (selected && size.value !== 1.2) {
-      size.value = withTiming(1.2, WITH_TIMING_CONFIG)
-    } else if (!selected && size.value !== 1) {
-      size.value = withTiming(1, WITH_TIMING_CONFIG)
-    }
-  }, [selected, size])
-
-  // On mobile we want to expand the height/width of the container so the items around it get moved as well. On
-  // desktop, we don't want anything around the item to move so we just increase the scale.
-  const animatedStyle = useAnimatedStyle(() => {
-    if (isTabletOrDesktop) {
-      return {
-        transform: [{scale: size.value}],
-      }
-    }
-    return {
-      height: 70 * size.value,
-      width: 70 * size.value,
-    }
-  })
-
   return (
-    <Animated.View
-      style={[
-        styles.imageContainer,
-        styles.paletteContainer,
-        t.atoms.border_contrast_high,
-        animatedStyle,
-      ]}>
+    <View style={[styles.container, t.atoms.border_contrast_high]}>
       {children}
-    </Animated.View>
+    </View>
   )
 }
 
-function ColorItem({color}: {color: AvatarColor}) {
-  const avatar = useAvatar()
-  const setAvatar = useSetAvatar()
-
+function ColorItem({
+  color,
+  setAvatar,
+}: {
+  color: AvatarColor
+  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
+}) {
   const onPress = React.useCallback(() => {
     setAvatar(prev => ({
       ...prev,
@@ -92,20 +59,26 @@ function ColorItem({color}: {color: AvatarColor}) {
   }, [color, setAvatar])
 
   return (
-    <AnimatedCircle selected={avatar.backgroundColor === color}>
+    <Circle>
       <Pressable
         accessibilityRole="button"
         style={[a.h_full, a.w_full, {backgroundColor: color}]}
         onPress={onPress}
       />
-    </AnimatedCircle>
+    </Circle>
   )
 }
 
-function EmojiItem({emojiName}: {emojiName: EmojiName}) {
+function EmojiItem({
+  emojiName,
+  avatar,
+  setAvatar,
+}: {
+  emojiName: EmojiName
+  avatar: Avatar
+  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
+}) {
   const t = useTheme()
-  const avatar = useAvatar()
-  const setAvatar = useSetAvatar()
   const Icon = React.useMemo(() => emojiItems[emojiName].component, [emojiName])
 
   const onPress = React.useCallback(() => {
@@ -115,60 +88,87 @@ function EmojiItem({emojiName}: {emojiName: EmojiName}) {
     }))
   }, [emojiName, setAvatar])
 
+  const selected = React.useMemo(
+    () => avatar.placeholder.name === emojiName,
+    [avatar.placeholder.name, emojiName],
+  )
+
   return (
-    <AnimatedCircle selected={avatar.placeholder.name === emojiName}>
+    <Circle>
       <Pressable
         accessibilityRole="button"
         style={[a.flex_1, a.justify_center, a.align_center]}
         onPress={onPress}>
-        <Icon style={[t.atoms.text_contrast_medium]} height={40} width={40} />
+        <Icon
+          style={selected ? t.atoms.text : t.atoms.text_contrast_low}
+          height={30}
+          width={30}
+        />
       </Pressable>
-    </AnimatedCircle>
+    </Circle>
   )
 }
 
-function colorRenderItem({item}: ListRenderItemInfo<AvatarColor>) {
-  return <ColorItem color={item} />
-}
-function emojiRenderItem({item}: ListRenderItemInfo<EmojiName>) {
-  return <EmojiItem emojiName={item} />
-}
-
-export function AvatarCreatorItems({type}: {type: 'emojis' | 'colors'}) {
-  const {isTabletOrDesktop} = useWebMediaQueries()
+export function AvatarCreatorItems({
+  type,
+  avatar,
+  setAvatar,
+}: {
+  type: 'emojis' | 'colors'
+  avatar: Avatar
+  setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
+}) {
+  const {gtMobile} = useBreakpoints()
 
   const styles = React.useMemo(
     () => ({
-      flatListOuter: isTabletOrDesktop
+      flatListOuter: gtMobile
         ? {
-            height: 435,
+            height: 338,
           }
-        : [a.flex_row, a.align_center, {height: 100}],
+        : [a.flex_row, a.align_center, {height: 70}],
     }),
-    [isTabletOrDesktop],
+    [gtMobile],
+  )
+
+  const colorRenderItem = React.useCallback(
+    ({item}: ListRenderItemInfo<AvatarColor>) => {
+      return <ColorItem color={item} setAvatar={setAvatar} />
+    },
+    [setAvatar],
+  )
+
+  const emojiRenderItem = React.useCallback(
+    ({item}: ListRenderItemInfo<EmojiName>) => {
+      return (
+        <EmojiItem emojiName={item} avatar={avatar} setAvatar={setAvatar} />
+      )
+    },
+    [avatar, setAvatar],
   )
 
   return (
     <View
       style={[
         styles.flatListOuter,
-        isTabletOrDesktop && type === 'colors' && {width: 125},
+        gtMobile && type === 'colors' && {width: 125},
       ]}>
       <FlatList<any>
         // Changing the value of numColumns on the fly isn't supported, so we want the flatlist to re-render whenever
         // the size of the screen changes. Should only happen when `isTabletOrDesktop` changes.
-        key={isTabletOrDesktop ? 0 : 1}
+        key={gtMobile ? 0 : 1}
         data={type === 'colors' ? avatarColors : emojiNames}
         renderItem={type === 'colors' ? colorRenderItem : emojiRenderItem}
-        style={[isTabletOrDesktop && {marginHorizontal: 10}]}
+        keyExtractor={item => item}
+        style={[gtMobile && {marginHorizontal: 10}]}
         contentContainerStyle={[
           a.align_center,
-          isTabletOrDesktop && type === 'colors' && a.pr_xs,
-          !isTabletOrDesktop && {paddingHorizontal: 40},
+          gtMobile && type === 'colors' && a.pr_xs,
+          !gtMobile && {paddingHorizontal: 40},
         ]}
-        numColumns={isTabletOrDesktop && type === 'emojis' ? 4 : undefined}
-        showsHorizontalScrollIndicator={isTabletOrDesktop && type === 'colors'}
-        horizontal={!isTabletOrDesktop}
+        numColumns={gtMobile && type === 'emojis' ? 4 : undefined}
+        showsHorizontalScrollIndicator={gtMobile && type === 'colors'}
+        horizontal={!gtMobile}
       />
     </View>
   )

@@ -15,7 +15,7 @@ export interface PlaceholderCanvasRef {
 // "screenshot".
 export const PlaceholderCanvas = React.forwardRef<PlaceholderCanvasRef, {}>(
   function PlaceholderCanvas({}, ref) {
-    const avatar = useAvatar()
+    const {avatar} = useAvatar()
     const viewshotRef = React.useRef()
     const Icon = avatar.placeholder.component
 

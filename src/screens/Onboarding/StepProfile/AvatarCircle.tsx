@@ -1,42 +1,40 @@
 import React from 'react'
-import {LayoutAnimation, Pressable, PressableProps, View} from 'react-native'
-import {Image} from 'expo-image'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
-import {useAvatar, useSetAvatar} from '#/screens/Onboarding/StepProfile/index'
+import {atoms as a, native, useTheme, web} from '#/alf'
+import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
+import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
+import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Image as ExpoImage} from 'expo-image'
+import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
 
-import {atoms as a, useTheme} from '#/alf'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {openPicker} from 'lib/media/picker.shared'
-import {isNative, isWeb} from 'platform/detection'
-import {openCropper} from 'lib/media/picker'
-import {compressIfNeeded} from 'lib/media/manip'
-
-export function AvatarBottomButton({...props}: PressableProps) {
+function AvatarBottomButton({...props}: TouchableOpacityProps) {
   const t = useTheme()
 
   return (
-    <Pressable
+    <TouchableOpacity
       {...props}
       style={[
         a.absolute,
         a.rounded_full,
         a.align_center,
         a.justify_center,
-        t.name === 'light' ? t.atoms.bg_contrast_800 : t.atoms.bg_contrast_200,
+        {backgroundColor: t.palette.primary_500},
         {height: 48, width: 48, bottom: 2, right: 2},
       ]}>
       {props.children}
-    </Pressable>
+    </TouchableOpacity>
   )
 }
 
-export function AvatarCircle() {
+export function AvatarCircle({
+  openLibrary,
+  openCreator,
+}: {
+  openLibrary: () => unknown
+  openCreator: () => unknown
+}) {
   const t = useTheme()
-  const avatar = useAvatar()
-  const setAvatar = useSetAvatar()
-  const Icon = avatar.placeholder.component
-  const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
+  const {avatar} = useAvatar()
 
   const styles = React.useMemo(
     () => ({
@@ -45,84 +43,42 @@ export function AvatarCircle() {
         a.overflow_hidden,
         a.align_center,
         a.justify_center,
-        t.atoms.border_contrast_high,
+        t.atoms.border_contrast_low,
+        t.atoms.bg_contrast_25,
         {
-          height: 150,
-          width: 150,
-          borderWidth: 2,
-          backgroundColor: avatar.backgroundColor,
+          height: 200,
+          width: 200,
         },
+        web({borderWidth: 2}),
+        native({borderWidth: 1}),
       ],
     }),
-    [avatar.backgroundColor, t.atoms.border_contrast_high],
+    [t.atoms.bg_contrast_25, t.atoms.border_contrast_low],
   )
-
-  const onCameraPress = React.useCallback(async () => {
-    if (!(await requestPhotoAccessIfNeeded())) {
-      return
-    }
-
-    const items = await openPicker({
-      aspect: [1, 1],
-    })
-    let image = items[0]
-    if (!image) return
-
-    // TODO we need an alf modal for the cropper
-    if (!isWeb) {
-      image = await openCropper({
-        mediaType: 'photo',
-        cropperCircleOverlay: true,
-        height: image.height,
-        width: image.width,
-        path: image.path,
-      })
-    }
-    image = await compressIfNeeded(image, 1000000)
-
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    // If we are on mobile, prefetching the image will load the image into memory before we try and display it,
-    // stopping any brief flickers.
-    if (isNative) {
-      await Image.prefetch(image.path)
-    }
-
-    setAvatar(prev => ({
-      ...prev,
-      image,
-    }))
-  }, [requestPhotoAccessIfNeeded, setAvatar])
-
-  const onPressRemoveAvatar = React.useCallback(() => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-    setAvatar(prev => ({
-      ...prev,
-      image: undefined,
-    }))
-  }, [setAvatar])
-
-  if (avatar.image) {
-    return (
-      <View>
-        <Image
-          source={avatar.image.path}
-          style={styles.imageContainer}
-          accessibilityIgnoresInvertColors
-        />
-        <AvatarBottomButton onPress={onPressRemoveAvatar}>
-          <Times size="lg" style={{color: t.palette.white}} />
-        </AvatarBottomButton>
-      </View>
-    )
-  }
 
   return (
     <View>
-      <View style={styles.imageContainer}>
-        <Icon height={85} width={85} style={{color: t.palette.white}} />
-      </View>
-      <AvatarBottomButton onPress={onCameraPress}>
-        <Camera size="xl" style={{color: t.palette.white}} />
+      {avatar.useCreatedAvatar ? (
+        <AvatarCreatorCircle avatar={avatar} size={200} />
+      ) : avatar.image ? (
+        <ExpoImage
+          source={avatar.image.path}
+          style={styles.imageContainer}
+          accessibilityIgnoresInvertColors
+          transition={{duration: 300, effect: 'cross-dissolve'}}
+        />
+      ) : (
+        <View style={styles.imageContainer}>
+          <ImageIcon
+            height={100}
+            width={100}
+            style={{color: t.palette.contrast_200}}
+          />
+        </View>
+      )}
+      <AvatarBottomButton
+        onPress={avatar.useCreatedAvatar ? openCreator : openLibrary}>
+        <Pencil size="md" style={{color: t.palette.white}} />
       </AvatarBottomButton>
     </View>
   )

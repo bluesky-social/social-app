@@ -54,9 +54,11 @@ export type DialogInnerProps =
       label?: undefined
       accessibilityLabelledBy: A11yProps['aria-labelledby']
       accessibilityDescribedBy: string
+      noHorizontalPadding?: boolean
     }>
   | DialogInnerPropsBase<{
       label: string
       accessibilityLabelledBy?: undefined
       accessibilityDescribedBy?: undefined
+      noHorizontalPadding?: boolean
     }>

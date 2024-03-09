@@ -184,12 +184,17 @@ export function Outer({
   )
 }
 
-export function Inner({children, style}: DialogInnerProps) {
+export function Inner({
+  children,
+  style,
+  noHorizontalPadding,
+}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetView
       style={[
-        a.p_xl,
+        a.py_xl,
+        !noHorizontalPadding && a.px_xl,
         {
           paddingTop: 40,
           borderTopLeftRadius: 40,
