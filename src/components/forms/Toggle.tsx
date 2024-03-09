@@ -5,7 +5,6 @@ import {HITSLOP_10} from 'lib/constants'
 import {
   useTheme,
   atoms as a,
-  web,
   native,
   flatten,
   ViewStyleProp,
@@ -228,13 +227,7 @@ export function Item({
         onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.gap_sm,
-          focused ? web({outline: 'none'}) : {},
-          flatten(style),
-        ]}>
+        style={[a.flex_row, a.align_center, a.gap_sm, flatten(style)]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
     </ItemContext.Provider>
@@ -271,7 +264,6 @@ export function Label({
 export function createSharedToggleStyles({
   theme: t,
   hovered,
-  focused,
   selected,
   disabled,
   isInvalid,
@@ -294,7 +286,7 @@ export function createSharedToggleStyles({
       borderColor: t.palette.primary_500,
     })
 
-    if (hovered || focused) {
+    if (hovered) {
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.primary_100 : t.palette.primary_800,
@@ -303,7 +295,7 @@ export function createSharedToggleStyles({
       })
     }
   } else {
-    if (hovered || focused) {
+    if (hovered) {
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.contrast_50 : t.palette.contrast_100,
@@ -320,7 +312,7 @@ export function createSharedToggleStyles({
         t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
     })
 
-    if (hovered || focused) {
+    if (hovered) {
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
@@ -367,7 +359,7 @@ export function Checkbox() {
           width: 20,
         },
         baseStyles,
-        hovered || focused ? baseHoverStyles : {},
+        hovered ? baseHoverStyles : {},
       ]}>
       {selected ? <Checkmark size="xs" fill={t.palette.primary_500} /> : null}
     </View>
@@ -399,7 +391,7 @@ export function Switch() {
           width: 30,
         },
         baseStyles,
-        hovered || focused ? baseHoverStyles : {},
+        hovered ? baseHoverStyles : {},
       ]}>
       <View
         style={[
@@ -451,7 +443,7 @@ export function Radio() {
           width: 20,
         },
         baseStyles,
-        hovered || focused ? baseHoverStyles : {},
+        hovered ? baseHoverStyles : {},
       ]}>
       {selected ? (
         <View

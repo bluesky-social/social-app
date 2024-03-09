@@ -108,7 +108,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         t.atoms.border_contrast_low,
         baseStyles,
         activeStyles,
-        (state.hovered || state.focused || state.pressed) && hoverStyles,
+        (state.hovered || state.pressed) && hoverStyles,
       ]}>
       {typeof children === 'string' ? (
         <Text
