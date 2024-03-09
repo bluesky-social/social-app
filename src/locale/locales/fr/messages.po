@@ -3414,7 +3414,7 @@ msgstr "Choisir le thème le plus sombre comme thème sombre"
 
 #: src/view/screens/Settings/index.tsx:507
 msgid "Set dark theme to the dim theme"
-msgstr "Définir le thème sombre sur le thème faible"
+msgstr "Choisir le thème atténué comme thème sombre"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
