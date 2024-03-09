@@ -1,9 +1,14 @@
 import React from 'react'
-import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
+import {
+  BskyAgent,
+  AtpPersistSessionHandler,
+  BSKY_LABELER_DID,
+} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
 import {IS_DEV} from '#/env'
+import {IS_TEST_USER} from '#/lib/constants'
 import {isWeb} from '#/platform/detection'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
@@ -257,6 +262,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         deactivated,
       }
 
+      await configureModeration(agent, account)
+
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
           account,
@@ -299,6 +306,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         accessJwt: agent.session.accessJwt,
         deactivated: isSessionDeactivated(agent.session.accessJwt),
       }
+
+      await configureModeration(agent, account)
 
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
@@ -354,6 +363,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
+      await configureModeration(agent, account)
 
       let canReusePrevSession = false
       try {
@@ -647,6 +657,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
     </StateContext.Provider>
   )
+}
+
+async function configureModeration(agent: BskyAgent, account: SessionAccount) {
+  if (IS_TEST_USER(account.handle)) {
+    console.warn('USING TEST ENV MODERATION')
+    const did = (await agent.resolveHandle({handle: 'mod-authority.test'})).data
+      .did
+    BskyAgent.configure({modAuthorities: [did]})
+  } else {
+    BskyAgent.configure({modAuthorities: [BSKY_LABELER_DID]})
+  }
 }
 
 export function useSession() {

@@ -21,10 +21,10 @@ import {ScrollView} from '#/view/com/util/Views'
 
 import {
   UsePreferencesQueryResponse,
+  useMyLabelers,
   usePreferencesQuery,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
-import {useLabelersDetailedInfoQuery} from '#/state/queries/labeler'
 
 import {logger} from '#/logger'
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
@@ -86,16 +86,11 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const labelerDids = preferences
-    ? preferences.moderationPrefs.labelers.map(l => l.did)
-    : []
   const {
     isLoading: isLabelersLoading,
     data: labelers,
     error: labelersError,
-  } = useLabelersDetailedInfoQuery({
-    dids: labelerDids,
-  })
+  } = useMyLabelers()
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()
 
@@ -411,36 +406,10 @@ export function ModerationScreenInner({
           <Trans>Advanced</Trans>
         </Text>
         <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
-          <ModerationServiceCard.Link
-            labeler={{
-              uri: '',
-              cid: '',
-              policies: {
-                labelValues: [],
-              },
-              creator: {
-                did: '',
-                handle: 'safety.bsky.app',
-                displayName: 'Bluesky Safety',
-              },
-              indexedAt: new Date().toISOString(),
-            }}>
-            <ModerationServiceCard.Card.Outer>
-              <ModerationServiceCard.Card.Avatar avatar={undefined} />
-              <ModerationServiceCard.Card.Content
-                title={getModerationServiceTitle({
-                  displayName: 'Bluesky Safety',
-                  handle: 'safety.bsky.app',
-                })}
-                handle={'safety.bsky.app'}
-                description={'Official moderation team'}
-              />
-            </ModerationServiceCard.Card.Outer>
-          </ModerationServiceCard.Link>
-          {labelers.map(mod => {
+          {labelers.map((mod, i) => {
             return (
               <React.Fragment key={mod.creator.did}>
-                <Divider />
+                {i !== 0 && <Divider />}
                 <ModerationServiceCard.Link labeler={mod}>
                   <ModerationServiceCard.Card.Outer>
                     <ModerationServiceCard.Card.Avatar
