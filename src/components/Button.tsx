@@ -20,6 +20,7 @@ export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
   | 'primary'
   | 'secondary'
+  | 'tertiary'
   | 'negative'
   | 'gradient_sky'
   | 'gradient_midnight'
@@ -224,6 +225,43 @@ export function Button({
           })
         }
       }
+    } else if (color === 'tertiary') {
+      if (variant === 'solid') {
+        if (!disabled) {
+          baseStyles.push({
+            backgroundColor: t.palette.contrast_25,
+          })
+          hoverStyles.push({
+            backgroundColor: t.palette.contrast_50,
+          })
+        } else {
+          baseStyles.push({
+            backgroundColor: t.palette.contrast_50,
+          })
+        }
+      } else if (variant === 'outline') {
+        baseStyles.push(a.border, t.atoms.bg, {
+          borderWidth: 1,
+        })
+
+        if (!disabled) {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.contrast_200,
+          })
+          hoverStyles.push(t.atoms.bg_contrast_25)
+        } else {
+          baseStyles.push(a.border, {
+            borderColor: t.palette.contrast_100,
+          })
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push(t.atoms.bg)
+          hoverStyles.push({
+            backgroundColor: t.palette.contrast_50,
+          })
+        }
+      }
     } else if (color === 'negative') {
       if (variant === 'solid') {
         if (!disabled) {
@@ -323,6 +361,7 @@ export function Button({
       const gradient = {
         primary: tokens.gradients.sky,
         secondary: tokens.gradients.sky,
+        tertiary: tokens.gradients.sky,
         negative: tokens.gradients.sky,
         gradient_sky: tokens.gradients.sky,
         gradient_midnight: tokens.gradients.midnight,
@@ -477,6 +516,38 @@ export function useSharedButtonTextStyles() {
         } else {
           baseStyles.push({
             color: t.palette.contrast_300,
+          })
+        }
+      }
+    } else if (color === 'tertiary') {
+      if (variant === 'solid' || variant === 'gradient') {
+        if (!disabled) {
+          baseStyles.push({
+            color: t.palette.contrast_700,
+          })
+        } else {
+          baseStyles.push({
+            color: t.palette.contrast_400,
+          })
+        }
+      } else if (variant === 'outline') {
+        if (!disabled) {
+          baseStyles.push({
+            color: t.palette.contrast_500,
+          })
+        } else {
+          baseStyles.push({
+            color: t.palette.contrast_300,
+          })
+        }
+      } else if (variant === 'ghost') {
+        if (!disabled) {
+          baseStyles.push({
+            color: t.palette.contrast_400,
+          })
+        } else {
+          baseStyles.push({
+            color: t.palette.contrast_200,
           })
         }
       }
