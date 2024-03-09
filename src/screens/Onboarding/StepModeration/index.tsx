@@ -95,16 +95,16 @@ export function StepModeration() {
                   isMounted={isMounted}
                 />
                 <ModerationOption
-                  labelValueDefinition={LABELS.nudity}
-                  isMounted={isMounted}
-                />
-                <ModerationOption
                   labelValueDefinition={LABELS['graphic-media']}
                   isMounted={isMounted}
                 />
                 <AnimatedDivider />
               </>
             )}
+            <ModerationOption
+              labelValueDefinition={LABELS.nudity}
+              isMounted={isMounted}
+            />
           </View>
         </>
       )}

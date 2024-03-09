@@ -380,14 +380,14 @@ export function ModerationScreenInner({
                         />
                         <Divider />
                         <GlobalModerationLabelPref
-                          labelValueDefinition={LABELS.nudity}
-                        />
-                        <Divider />
-                        <GlobalModerationLabelPref
                           labelValueDefinition={LABELS['graphic-media']}
                         />
                       </>
                     )}
+                    <Divider />
+                    <GlobalModerationLabelPref
+                      labelValueDefinition={LABELS.nudity}
+                    />
                   </View>
                 </>
               )}
