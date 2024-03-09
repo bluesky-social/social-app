@@ -31,7 +31,7 @@ import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
@@ -249,9 +249,9 @@ let ProfileHeaderStandard = ({
               <View pointerEvents="auto">
                 <RichText
                   testID="profileHeaderDescription"
-                  style={t.atoms.text}
+                  style={[a.text_md]}
                   numberOfLines={15}
-                  richText={descriptionRT}
+                  value={descriptionRT}
                 />
               </View>
             ) : undefined}

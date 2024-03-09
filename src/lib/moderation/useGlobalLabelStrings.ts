@@ -18,12 +18,6 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         name: _(msg`Content Blocked`),
         description: _(msg`This content has been hidden by the moderators.`),
       },
-      '!no-promote': {
-        name: _(msg`Moderator Filter`),
-        description: _(
-          msg`Moderator has chosen to filter the content from feeds.`,
-        ),
-      },
       '!warn': {
         name: _(msg`Content Warning`),
         description: _(
@@ -34,18 +28,6 @@ export function useGlobalLabelStrings(): GlobalLabelStrings {
         name: _(msg`Sign-in Required`),
         description: _(
           msg`This user has requested that their content only be shown to signed-in users.`,
-        ),
-      },
-      'dmca-violation': {
-        name: _(msg`Copyright Violation`),
-        description: _(
-          msg`This content has received a DMCA takedown request. It will be restored if the concerns can be resolved.`,
-        ),
-      },
-      doxxing: {
-        name: _(msg`Doxxing`),
-        description: _(
-          msg`This content has been reported to include private information about someone without their consent.`,
         ),
       },
       porn: {

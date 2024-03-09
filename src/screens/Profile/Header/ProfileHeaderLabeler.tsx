@@ -9,7 +9,7 @@ import {
 } from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {RichText} from 'view/com/util/text/RichText'
+import {RichText} from '#/components/RichText'
 import {useModalControls} from '#/state/modals'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useAnalytics} from 'lib/analytics/analytics'
@@ -24,6 +24,7 @@ import {pluralize} from '#/lib/strings/helpers'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {Text} from '#/components/Typography'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderShell} from './Shell'
 import {ProfileHeaderDropdownBtn} from './DropdownBtn'
@@ -86,6 +87,8 @@ let ProfileHeaderLabeler = ({
     labeler.viewer?.like || '',
   )
   const isLiked = !!likeUri
+  const likeCount =
+    isLiked && likeUri ? (labeler.likeCount || 0) + 1 : labeler.likeCount || 0
 
   const onToggleLiked = React.useCallback(async () => {
     if (!labeler) {
@@ -210,13 +213,13 @@ let ProfileHeaderLabeler = ({
               <View pointerEvents="auto">
                 <RichText
                   testID="profileHeaderDescription"
-                  style={t.atoms.text}
+                  style={[a.text_md]}
                   numberOfLines={15}
-                  richText={descriptionRT}
+                  value={descriptionRT}
                 />
               </View>
             ) : undefined}
-            <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_md]}>
+            <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_lg]}>
               <Button
                 testID="toggleLikeBtn"
                 size="small"
@@ -235,26 +238,25 @@ let ProfileHeaderLabeler = ({
 
               {typeof labeler.likeCount === 'number' && (
                 <Button
-                  variant="ghost"
                   size="tiny"
                   onPress={() => likesControl.open()}
                   label={_(
-                    msg`Liked by ${labeler.likeCount} ${pluralize(
-                      labeler.likeCount,
-                      'user',
-                    )}`,
+                    msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`,
                   )}>
-                  <ButtonText
-                    style={[
-                      t.atoms.text_contrast_medium,
-                      a.font_bold,
-                      a.text_sm,
-                    ]}>
-                    <Trans>
-                      Liked by {labeler.likeCount}{' '}
-                      {pluralize(labeler.likeCount, 'user')}
-                    </Trans>
-                  </ButtonText>
+                  {({hovered, focused, pressed}) => (
+                    <Text
+                      style={[
+                        a.font_bold,
+                        a.text_sm,
+                        t.atoms.text_contrast_medium,
+                        (hovered || focused || pressed) &&
+                          t.atoms.text_contrast_high,
+                      ]}>
+                      <Trans>
+                        Liked by {likeCount} {pluralize(likeCount, 'user')}
+                      </Trans>
+                    </Text>
+                  )}
                 </Button>
               )}
             </View>
