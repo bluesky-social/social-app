@@ -35,10 +35,9 @@ import {
   Heart2_Stroke2_Corner0_Rounded as Heart,
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 } from '#/components/icons/Heart2'
-import {LikesDialog} from '#/components/LikesDialog'
-import * as Dialog from '#/components/Dialog'
 import {DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import {Link} from '#/components/Link'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -64,7 +63,6 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
-  const likesControl = Dialog.useDialogControl()
   const cantSubscribePrompt = Prompt.usePromptControl()
 
   const moderation = useMemo(
@@ -237,9 +235,14 @@ let ProfileHeaderLabeler = ({
               </Button>
 
               {typeof labeler.likeCount === 'number' && (
-                <Button
+                <Link
+                  to={{
+                    screen: 'ProfileLabelerLikedBy',
+                    params: {
+                      name: labeler.creator.handle || labeler.creator.did,
+                    },
+                  }}
                   size="tiny"
-                  onPress={() => likesControl.open()}
                   label={_(
                     msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`,
                   )}>
@@ -257,13 +260,12 @@ let ProfileHeaderLabeler = ({
                       </Trans>
                     </Text>
                   )}
-                </Button>
+                </Link>
               )}
             </View>
           </>
         )}
       </View>
-      <LikesDialog control={likesControl} uri={labeler.uri} />
       <CantSubscribePrompt control={cantSubscribePrompt} />
     </ProfileHeaderShell>
   )

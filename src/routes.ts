@@ -21,6 +21,7 @@ export const router = new Router({
   PostRepostedBy: '/profile/:name/post/:rkey/reposted-by',
   ProfileFeed: '/profile/:name/feed/:rkey',
   ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
+  ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
   Log: '/sys/log',

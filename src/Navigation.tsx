@@ -80,6 +80,7 @@ import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import HashtagScreen from '#/screens/Hashtag'
 import {logEvent} from './lib/statsig/statsig'
+import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -197,6 +198,11 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
       <Stack.Screen
         name="ProfileFeedLikedBy"
         getComponent={() => ProfileFeedLikedByScreen}
+        options={{title: title(msg`Liked by`)}}
+      />
+      <Stack.Screen
+        name="ProfileLabelerLikedBy"
+        getComponent={() => ProfileLabelerLikedByScreen}
         options={{title: title(msg`Liked by`)}}
       />
       <Stack.Screen
