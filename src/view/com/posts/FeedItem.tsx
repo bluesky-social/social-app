@@ -294,12 +294,14 @@ let FeedItemInner = ({
             </View>
           )}
           <LabelsOnMyPost post={post} />
-          <PostContent
-            moderation={moderation}
-            richText={richText}
-            postEmbed={post.embed}
-            postAuthor={post.author}
-          />
+          <View style={[a.pb_sm]}>
+            <PostContent
+              moderation={moderation}
+              richText={richText}
+              postEmbed={post.embed}
+              postAuthor={post.author}
+            />
+          </View>
           <PostCtrls
             post={post}
             record={record}
@@ -362,9 +364,7 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <View style={[a.pb_sm]}>
-          <PostEmbeds embed={postEmbed} moderation={moderation} />
-        </View>
+        <PostEmbeds embed={postEmbed} moderation={moderation} />
       ) : null}
     </ContentHider>
   )
