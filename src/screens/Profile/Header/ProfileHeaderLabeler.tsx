@@ -84,9 +84,7 @@ let ProfileHeaderLabeler = ({
   const [likeUri, setLikeUri] = React.useState<string>(
     labeler.viewer?.like || '',
   )
-  const isLiked = !!likeUri
-  const likeCount =
-    isLiked && likeUri ? (labeler.likeCount || 0) + 1 : labeler.likeCount || 0
+  const [likeCount, setLikeCount] = React.useState(labeler.likeCount || 0)
 
   const onToggleLiked = React.useCallback(async () => {
     if (!labeler) {
@@ -95,13 +93,15 @@ let ProfileHeaderLabeler = ({
     try {
       Haptics.default()
 
-      if (isLiked && likeUri) {
+      if (likeUri) {
         await unlikeMod({uri: likeUri})
         track('CustomFeed:Unlike')
+        setLikeCount(c => c - 1)
         setLikeUri('')
       } else {
         const res = await likeMod({uri: labeler.uri, cid: labeler.cid})
         track('CustomFeed:Like')
+        setLikeCount(c => c + 1)
         setLikeUri(res.uri)
       }
     } catch (e: any) {
@@ -112,7 +112,7 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, likeUri, isLiked, likeMod, unlikeMod, track, _])
+  }, [labeler, likeUri, likeMod, unlikeMod, track, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -227,14 +227,14 @@ let ProfileHeaderLabeler = ({
                 label={_(msg`Like this feed`)}
                 disabled={!hasSession || isLikePending || isUnlikePending}
                 onPress={onToggleLiked}>
-                {isLiked ? (
+                {likeUri ? (
                   <HeartFilled fill={t.palette.negative_400} />
                 ) : (
                   <Heart fill={t.atoms.text_contrast_medium.color} />
                 )}
               </Button>
 
-              {typeof labeler.likeCount === 'number' && (
+              {typeof likeCount === 'number' && (
                 <Link
                   to={{
                     screen: 'ProfileLabelerLikedBy',
