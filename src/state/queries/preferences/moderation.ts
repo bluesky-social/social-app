@@ -17,8 +17,12 @@ export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS
 
 export function useMyLabelers() {
   const prefs = usePreferencesQuery()
-  const dids = BskyAgent.modAuthoritiesHeader.concat(
-    prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
+  const dids = Array.from(
+    new Set(
+      BskyAgent.modAuthoritiesHeader.concat(
+        prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
+      ),
+    ),
   )
   const labelers = useLabelersDetailedInfoQuery({dids})
   return {
