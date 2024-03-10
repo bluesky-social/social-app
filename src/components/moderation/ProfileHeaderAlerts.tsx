@@ -57,7 +57,7 @@ function ProfileInform({cause}: {cause: ModerationCause}) {
         onPress={() => {
           control.open()
         }}>
-        <ButtonIcon icon={desc.icon} position="left" />{' '}
+        <ButtonIcon icon={desc.icon} position="left" />
         <ButtonText>{desc.name}</ButtonText>
       </Button>
 
