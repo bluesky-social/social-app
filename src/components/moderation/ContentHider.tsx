@@ -61,7 +61,11 @@ export function ContentHider({
         }}
         label={desc.name}
         accessibilityHint={
-          override ? _(msg`Hide the content`) : _(msg`Show the content`)
+          modui.noOverride
+            ? _(msg`Learn more about the moderation applied to this content.`)
+            : override
+            ? _(msg`Hide the content`)
+            : _(msg`Show the content`)
         }>
         {state => (
           <View
@@ -119,7 +123,9 @@ export function ContentHider({
           onPress={() => {
             control.open()
           }}
-          label={_(msg`Learn more`)}
+          label={_(
+            msg`Learn more about the moderation applied to this content.`,
+          )}
           style={[a.pt_sm]}>
           {state => (
             <Text
@@ -127,6 +133,7 @@ export function ContentHider({
                 a.flex_1,
                 a.text_sm,
                 a.font_normal,
+                a.leading_snug,
                 t.atoms.text_contrast_medium,
                 a.text_left,
               ]}>

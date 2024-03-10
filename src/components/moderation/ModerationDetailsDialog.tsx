@@ -7,10 +7,10 @@ import {ModerationCause} from '@atproto/api'
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {isNative} from '#/platform/detection'
+import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
-import {Button} from '#/components/Button'
 import {InlineLink} from '#/components/Link'
 import {makeProfileLink} from '#/lib/routes/links'
 
@@ -39,7 +39,6 @@ function ModerationDetailsDialogInner({
   const t = useTheme()
   const {_} = useLingui()
   const desc = useModerationCauseDescription(modcause)
-  const {gtMobile} = useBreakpoints()
 
   let name
   let description
@@ -110,28 +109,16 @@ function ModerationDetailsDialogInner({
   }
 
   return (
-    <Dialog.ScrollableInner
-      accessibilityDescribedBy="dialog-description"
-      accessibilityLabelledBy="dialog-title">
-      <Text
-        nativeID="dialog-title"
-        style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_md]}>
+    <Dialog.ScrollableInner label={_(msg`Moderation details`)}>
+      <Text style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
         {name}
       </Text>
-      <Text
-        nativeID="dialog-description"
-        style={[t.atoms.text, a.text_md, a.mb_md]}>
+      <Text style={[t.atoms.text, a.text_md, a.mb_md, a.leading_snug]}>
         {description}
       </Text>
+
       {modcause.type === 'label' && (
-        <View
-          style={[
-            t.atoms.bg_contrast_50,
-            a.mb_md,
-            a.px_lg,
-            a.py_lg,
-            a.rounded_sm,
-          ]}>
+        <View style={[t.atoms.bg_contrast_25, a.px_lg, a.py_lg, a.rounded_sm]}>
           <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>
             <Trans>
               This label was applied by{' '}
@@ -145,17 +132,10 @@ function ModerationDetailsDialogInner({
           </Text>
         </View>
       )}
-      <View style={gtMobile && [a.flex_row, a.justify_end]}>
-        <Button
-          testID="doneBtn"
-          variant="outline"
-          color="primary"
-          size="small"
-          onPress={() => control.close()}
-          label={_(msg`Done`)}>
-          {_(msg`Done`)}
-        </Button>
-      </View>
+
+      {isNative && <View style={{height: 40}} />}
+
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
