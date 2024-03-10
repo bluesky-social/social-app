@@ -21,6 +21,7 @@ import {
 } from '#/state/queries/preferences/const'
 import {STALE} from '#/state/queries'
 import {useLabelDefinitions} from '#/state/queries/preferences/moderation'
+import {useHiddenPosts} from '#/state/preferences'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -77,6 +78,7 @@ export function useModerationOpts() {
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
   const {labelDefs} = useLabelDefinitions()
+  const hiddenPosts = useHiddenPosts() // TODO move this into pds-stored prefs
   const opts = useMemo<ModerationOpts | undefined>(() => {
     if (override) {
       return override
@@ -86,10 +88,10 @@ export function useModerationOpts() {
     }
     return {
       userDid: currentAccount?.did,
-      prefs: prefs.data.moderationPrefs,
+      prefs: {...prefs.data.moderationPrefs, hiddenPosts: hiddenPosts || []},
       labelDefs,
     }
-  }, [override, currentAccount, labelDefs, prefs.data])
+  }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])
   return opts
 }
 
