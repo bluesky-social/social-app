@@ -473,14 +473,14 @@ export function SettingsScreen({}: Props) {
               left
               onSelect={() => setColorMode('system')}
               accessibilityHint={_(msg`Set color theme to system setting`)}
-              style={styles.textBtns}
+              style={{width: '33.33333333333333333333%'}}
             />
             <SelectableBtn
               selected={colorMode === 'light'}
               label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
               accessibilityHint={_(msg`Set color theme to light`)}
-              style={styles.textBtns}
+              style={{width: '33.33333333333333333333%'}}
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
@@ -488,7 +488,7 @@ export function SettingsScreen({}: Props) {
               right
               onSelect={() => setColorMode('dark')}
               accessibilityHint={_(msg`Set color theme to dark`)}
-              style={styles.textBtns}
+              style={{width: '33.33333333333333333333%'}}
             />
           </View>
         </View>
@@ -508,7 +508,7 @@ export function SettingsScreen({}: Props) {
                   left
                   onSelect={() => setDarkTheme('dim')}
                   accessibilityHint={_(msg`Set dark theme to the dim theme`)}
-                  style={styles.textBtns}
+                  style={{width: '50%'}}
                 />
                 <SelectableBtn
                   selected={darkTheme === 'dark'}
@@ -516,7 +516,7 @@ export function SettingsScreen({}: Props) {
                   right
                   onSelect={() => setDarkTheme('dark')}
                   accessibilityHint={_(msg`Set dark theme to the dark theme`)}
-                  style={styles.textBtns}
+                  style={{width: '50%'}}
                 />
               </View>
             </View>
@@ -1023,10 +1023,6 @@ const styles = StyleSheet.create({
 
   selectableBtns: {
     flexDirection: 'row',
-  },
-
-  textBtns: {
-    boxSizing: 'content-box',
   },
 
   btn: {
