@@ -60,7 +60,9 @@ export function ModerationLabelPref({
 
   // adjust the pref based on whether warn is available
   let prefAdjusted = pref
-  if (!canWarn && pref === 'warn') {
+  if (adultDisabled) {
+    prefAdjusted = 'hide'
+  } else if (!canWarn && pref === 'warn') {
     prefAdjusted = 'ignore'
   }
 
