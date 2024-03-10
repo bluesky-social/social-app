@@ -109,9 +109,9 @@ let DefaultAvatar = ({
         <Path
           d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"
           stroke="white"
-          stroke-width="2"
-          stroke-linecap="square"
-          stroke-linejoin="round"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="round"
         />
       </Svg>
     )
