@@ -2,12 +2,10 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
-import Animated, {Easing, Layout} from 'react-native-reanimated'
 import {LABELS} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
 import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
-import {Divider} from '#/components/Divider'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
@@ -24,14 +22,6 @@ import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOp
 import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
 import {IconCircle} from '#/components/IconCircle'
-
-function AnimatedDivider() {
-  return (
-    <Animated.View layout={Layout.easing(Easing.ease).duration(200)}>
-      <Divider />
-    </Animated.View>
-  )
-}
 
 export function StepModeration() {
   const {_} = useLingui()
@@ -83,28 +73,19 @@ export function StepModeration() {
           <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {adultContentEnabled && (
-              <>
-                <AnimatedDivider />
-                <ModerationOption
-                  labelValueDefinition={LABELS.porn}
-                  isMounted={isMounted}
-                />
-                <ModerationOption
-                  labelValueDefinition={LABELS.sexual}
-                  isMounted={isMounted}
-                />
-                <ModerationOption
-                  labelValueDefinition={LABELS['graphic-media']}
-                  isMounted={isMounted}
-                />
-                <AnimatedDivider />
-              </>
-            )}
             <ModerationOption
-              labelValueDefinition={LABELS.nudity}
-              isMounted={isMounted}
+              labelValueDefinition={LABELS.porn}
+              disabled={!adultContentEnabled}
             />
+            <ModerationOption
+              labelValueDefinition={LABELS.sexual}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption
+              labelValueDefinition={LABELS['graphic-media']}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption labelValueDefinition={LABELS.nudity} />
           </View>
         </>
       )}
