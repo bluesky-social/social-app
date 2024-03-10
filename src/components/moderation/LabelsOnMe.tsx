@@ -49,11 +49,10 @@ export function LabelsOnMe({
         size={size || 'small'}
         label={_(msg`View information about these labels`)}
         onPress={() => {
-          console.log('open')
           control.open()
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
-        <ButtonText>
+        <ButtonText style={[a.leading_snug, a.italic]}>
           {labels.length}{' '}
           {labels.length === 1 ? (
             <Trans>
