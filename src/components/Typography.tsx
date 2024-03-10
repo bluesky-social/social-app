@@ -1,5 +1,10 @@
 import React from 'react'
-import {Text as RNText, TextStyle, TextProps as RNTextProps} from 'react-native'
+import {
+  Text as RNText,
+  StyleProp,
+  TextStyle,
+  TextProps as RNTextProps,
+} from 'react-native'
 import {UITextView} from 'react-native-ui-text-view'
 
 import {useTheme, atoms, web, flatten} from '#/alf'
@@ -34,7 +39,7 @@ export function leading<
  * If the `lineHeight` value is > 2, we assume it's an absolute value and
  * returns it as-is.
  */
-function normalizeTextStyles(styles: TextStyle[]) {
+export function normalizeTextStyles(styles: StyleProp<TextStyle>) {
   const s = flatten(styles)
   // should always be defined on these components
   const fontSize = s.fontSize || atoms.text_md.fontSize

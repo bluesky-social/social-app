@@ -83,7 +83,7 @@ function PostAlert({cause}: {cause: ModerationCause}) {
           control.open()
         }}>
         <ButtonIcon icon={desc.icon} position="left" />
-        <ButtonText style={[a.flex_1, a.text_left]}>
+        <ButtonText style={[a.flex_1, a.text_left, a.italic, a.leading_snug]}>
           {desc.name}
           {desc.source && (
             <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
