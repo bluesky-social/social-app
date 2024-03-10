@@ -35,10 +35,9 @@ import {
   Heart2_Stroke2_Corner0_Rounded as Heart,
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
 } from '#/components/icons/Heart2'
-import {LikesDialog} from '#/components/LikesDialog'
-import * as Dialog from '#/components/Dialog'
 import {DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import {Link} from '#/components/Link'
 
 interface Props {
   profile: AppBskyActorDefs.ProfileViewDetailed
@@ -64,7 +63,6 @@ let ProfileHeaderLabeler = ({
   const {currentAccount, hasSession} = useSession()
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
-  const likesControl = Dialog.useDialogControl()
   const cantSubscribePrompt = Prompt.usePromptControl()
 
   const moderation = useMemo(
@@ -86,9 +84,7 @@ let ProfileHeaderLabeler = ({
   const [likeUri, setLikeUri] = React.useState<string>(
     labeler.viewer?.like || '',
   )
-  const isLiked = !!likeUri
-  const likeCount =
-    isLiked && likeUri ? (labeler.likeCount || 0) + 1 : labeler.likeCount || 0
+  const [likeCount, setLikeCount] = React.useState(labeler.likeCount || 0)
 
   const onToggleLiked = React.useCallback(async () => {
     if (!labeler) {
@@ -97,13 +93,15 @@ let ProfileHeaderLabeler = ({
     try {
       Haptics.default()
 
-      if (isLiked && likeUri) {
+      if (likeUri) {
         await unlikeMod({uri: likeUri})
         track('CustomFeed:Unlike')
+        setLikeCount(c => c - 1)
         setLikeUri('')
       } else {
         const res = await likeMod({uri: labeler.uri, cid: labeler.cid})
         track('CustomFeed:Like')
+        setLikeCount(c => c + 1)
         setLikeUri(res.uri)
       }
     } catch (e: any) {
@@ -114,7 +112,7 @@ let ProfileHeaderLabeler = ({
       )
       logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [labeler, likeUri, isLiked, likeMod, unlikeMod, track, _])
+  }, [labeler, likeUri, likeMod, unlikeMod, track, _])
 
   const onPressEditProfile = React.useCallback(() => {
     track('ProfileHeader:EditProfileButtonClicked')
@@ -229,17 +227,22 @@ let ProfileHeaderLabeler = ({
                 label={_(msg`Like this feed`)}
                 disabled={!hasSession || isLikePending || isUnlikePending}
                 onPress={onToggleLiked}>
-                {isLiked ? (
+                {likeUri ? (
                   <HeartFilled fill={t.palette.negative_400} />
                 ) : (
                   <Heart fill={t.atoms.text_contrast_medium.color} />
                 )}
               </Button>
 
-              {typeof labeler.likeCount === 'number' && (
-                <Button
+              {typeof likeCount === 'number' && (
+                <Link
+                  to={{
+                    screen: 'ProfileLabelerLikedBy',
+                    params: {
+                      name: labeler.creator.handle || labeler.creator.did,
+                    },
+                  }}
                   size="tiny"
-                  onPress={() => likesControl.open()}
                   label={_(
                     msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`,
                   )}>
@@ -257,13 +260,12 @@ let ProfileHeaderLabeler = ({
                       </Trans>
                     </Text>
                   )}
-                </Button>
+                </Link>
               )}
             </View>
           </>
         )}
       </View>
-      <LikesDialog control={likesControl} uri={labeler.uri} />
       <CantSubscribePrompt control={cantSubscribePrompt} />
     </ProfileHeaderShell>
   )
