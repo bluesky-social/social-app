@@ -56,6 +56,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
           lineHeight={1.2}
+          disableMismatchWarning
           text={
             <>
               {sanitizeDisplayName(

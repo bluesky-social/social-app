@@ -280,6 +280,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   accessibilityHint?: string
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
+  disableMismatchWarning?: boolean
   onPointerEnter?: () => void
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
@@ -291,6 +292,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   numberOfLines,
   lineHeight,
   navigationAction,
+  disableMismatchWarning,
   ...props
 }: TextLinkOnWebOnlyProps) {
   if (isWeb) {
@@ -305,6 +307,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
         lineHeight={lineHeight}
         title={props.title}
         navigationAction={navigationAction}
+        disableMismatchWarning={disableMismatchWarning}
         {...props}
       />
     )
