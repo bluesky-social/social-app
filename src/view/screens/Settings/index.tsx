@@ -473,14 +473,14 @@ export function SettingsScreen({}: Props) {
               left
               onSelect={() => setColorMode('system')}
               accessibilityHint={_(msg`Set color theme to system setting`)}
-              style={{width: '33.33333333333333333333%'}}
+              style={{width: '33.33%'}}
             />
             <SelectableBtn
               selected={colorMode === 'light'}
               label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
               accessibilityHint={_(msg`Set color theme to light`)}
-              style={{width: '33.33333333333333333333%'}}
+              style={{width: '33.33%'}}
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
@@ -488,7 +488,7 @@ export function SettingsScreen({}: Props) {
               right
               onSelect={() => setColorMode('dark')}
               accessibilityHint={_(msg`Set color theme to dark`)}
-              style={{width: '33.33333333333333333333%'}}
+              style={{width: '33.33%'}}
             />
           </View>
         </View>
