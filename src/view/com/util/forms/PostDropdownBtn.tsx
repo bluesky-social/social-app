@@ -1,5 +1,11 @@
 import React, {memo} from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
+import {
+  StyleProp,
+  ViewStyle,
+  Pressable,
+  View,
+  PressableProps,
+} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
@@ -12,10 +18,6 @@ import {
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
-import {
-  NativeDropdown,
-  DropdownItem as NativeDropdownItem,
-} from './NativeDropdown'
 import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
 import {useModalControls} from '#/state/modals'
@@ -36,6 +38,19 @@ import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
+import {atoms as a, useTheme as useAlf, web} from '#/alf'
+import * as Menu from '#/components/Menu'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
+import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
+import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
+import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+
 let PostDropdownBtn = ({
   testID,
   postAuthor,
@@ -45,6 +60,7 @@ let PostDropdownBtn = ({
   richText,
   style,
   showAppealLabelItem,
+  hitSlop,
 }: {
   testID: string
   postAuthor: AppBskyActorDefs.ProfileViewBasic
@@ -54,9 +70,11 @@ let PostDropdownBtn = ({
   richText: RichTextAPI
   style?: StyleProp<ViewStyle>
   showAppealLabelItem?: boolean
+  hitSlop?: PressableProps['hitSlop']
 }): React.ReactNode => {
   const {hasSession, currentAccount} = useSession()
   const theme = useTheme()
+  const alf = useAlf()
   const {_} = useLingui()
   const defaultCtrlColor = theme.palette.default.postCtrl
   const {openModal} = useModalControls()
@@ -151,173 +169,189 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
-  const dropdownItems: NativeDropdownItem[] = [
-    {
-      label: _(msg`Translate`),
-      onPress() {
-        onOpenTranslate()
-      },
-      testID: 'postDropdownTranslateBtn',
-      icon: {
-        ios: {
-          name: 'character.book.closed',
-        },
-        android: 'ic_menu_sort_alphabetically',
-        web: 'language',
-      },
-    },
-    {
-      label: _(msg`Copy post text`),
-      onPress() {
-        onCopyPostText()
-      },
-      testID: 'postDropdownCopyTextBtn',
-      icon: {
-        ios: {
-          name: 'doc.on.doc',
-        },
-        android: 'ic_menu_edit',
-        web: ['far', 'paste'],
-      },
-    },
-    {
-      label: isWeb ? _(msg`Copy link to post`) : _(msg`Share`),
-      onPress() {
-        const url = toShareUrl(href)
-        shareUrl(url)
-      },
-      testID: 'postDropdownShareBtn',
-      icon: {
-        ios: {
-          name: 'square.and.arrow.up',
-        },
-        android: 'ic_menu_share',
-        web: 'share',
-      },
-    },
-    hasSession && {
-      label: 'separator',
-    },
-    hasSession && {
-      label: isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`),
-      onPress() {
-        onToggleThreadMute()
-      },
-      testID: 'postDropdownMuteThreadBtn',
-      icon: {
-        ios: {
-          name: 'speaker.slash',
-        },
-        android: 'ic_lock_silent_mode',
-        web: 'comment-slash',
-      },
-    },
-    hasSession && {
-      label: _(msg`Mute words & tags`),
-      onPress() {
-        mutedWordsDialogControl.open()
-      },
-      testID: 'postDropdownMuteWordsBtn',
-      icon: {
-        ios: {
-          name: 'speaker.slash',
-        },
-        android: 'ic_lock_silent_mode',
-        web: 'filter',
-      },
-    },
-    hasSession &&
-      !isAuthor &&
-      !isPostHidden && {
-        label: _(msg`Hide post`),
-        onPress() {
-          openModal({
-            name: 'confirm',
-            title: _(msg`Hide this post?`),
-            message: _(msg`This will hide this post from your feeds.`),
-            onPressConfirm: onHidePost,
-          })
-        },
-        testID: 'postDropdownHideBtn',
-        icon: {
-          ios: {
-            name: 'eye.slash',
-          },
-          android: 'ic_menu_delete',
-          web: ['far', 'eye-slash'],
-        },
-      },
-    {
-      label: 'separator',
-    },
-    !isAuthor &&
-      hasSession && {
-        label: _(msg`Report post`),
-        onPress() {
-          openModal({
-            name: 'report',
-            uri: postUri,
-            cid: postCid,
-          })
-        },
-        testID: 'postDropdownReportBtn',
-        icon: {
-          ios: {
-            name: 'exclamationmark.triangle',
-          },
-          android: 'ic_menu_report_image',
-          web: 'circle-exclamation',
-        },
-      },
-    isAuthor && {
-      label: _(msg`Delete post`),
-      onPress() {
-        openModal({
-          name: 'confirm',
-          title: _(msg`Delete this post?`),
-          message: _(msg`Are you sure? This cannot be undone.`),
-          onPressConfirm: onDeletePost,
-        })
-      },
-      testID: 'postDropdownDeleteBtn',
-      icon: {
-        ios: {
-          name: 'trash',
-        },
-        android: 'ic_menu_delete',
-        web: ['far', 'trash-can'],
-      },
-    },
-    showAppealLabelItem && {
-      label: 'separator',
-    },
-    showAppealLabelItem && {
-      label: _(msg`Appeal content warning`),
-      onPress() {
-        openModal({name: 'appeal-label', uri: postUri, cid: postCid})
-      },
-      testID: 'postDropdownAppealBtn',
-      icon: {
-        ios: {
-          name: 'exclamationmark.triangle',
-        },
-        android: 'ic_menu_report_image',
-        web: 'circle-exclamation',
-      },
-    },
-  ].filter(Boolean) as NativeDropdownItem[]
-
   return (
-    <EventStopper>
-      <NativeDropdown
-        testID={testID}
-        items={dropdownItems}
-        accessibilityLabel={_(msg`More post options`)}
-        accessibilityHint="">
-        <View style={style}>
-          <FontAwesomeIcon icon="ellipsis" size={20} color={defaultCtrlColor} />
-        </View>
-      </NativeDropdown>
+    <EventStopper onKeyDown={false}>
+      <Menu.Root>
+        <Menu.Trigger label={_(msg`Open post options menu`)}>
+          {({props, state}) => {
+            const styles = [
+              style,
+              a.rounded_full,
+              (state.hovered || state.focused || state.pressed) && [
+                web({outline: 0}),
+                alf.atoms.bg_contrast_25,
+              ],
+            ]
+            return isWeb ? (
+              <View {...props} testID={testID} style={styles}>
+                <FontAwesomeIcon
+                  icon="ellipsis"
+                  size={20}
+                  color={defaultCtrlColor}
+                  style={{pointerEvents: 'none'}}
+                />
+              </View>
+            ) : (
+              <Pressable
+                {...props}
+                hitSlop={hitSlop}
+                testID={testID}
+                style={styles}>
+                <FontAwesomeIcon
+                  icon="ellipsis"
+                  size={20}
+                  color={defaultCtrlColor}
+                  style={{pointerEvents: 'none'}}
+                />
+              </Pressable>
+            )
+          }}
+        </Menu.Trigger>
+
+        <Menu.Outer>
+          <Menu.Group>
+            <Menu.Item
+              testID="postDropdownTranslateBtn"
+              label={_(msg`Translate`)}
+              onPress={onOpenTranslate}>
+              <Menu.ItemText>{_(msg`Translate`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={Translate} position="right" />
+            </Menu.Item>
+
+            <Menu.Item
+              testID="postDropdownCopyTextBtn"
+              label={_(msg`Copy post text`)}
+              onPress={onCopyPostText}>
+              <Menu.ItemText>{_(msg`Copy post text`)}</Menu.ItemText>
+              <Menu.ItemIcon icon={ClipboardIcon} position="right" />
+            </Menu.Item>
+
+            <Menu.Item
+              testID="postDropdownShareBtn"
+              label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
+              onPress={() => {
+                const url = toShareUrl(href)
+                shareUrl(url)
+              }}>
+              <Menu.ItemText>
+                {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Share} position="right" />
+            </Menu.Item>
+          </Menu.Group>
+
+          {hasSession && (
+            <>
+              <Menu.Divider />
+
+              <Menu.Group>
+                <Menu.Item
+                  testID="postDropdownMuteThreadBtn"
+                  label={
+                    isThreadMuted ? _(msg`Unmute thread`) : _(msg`Mute thread`)
+                  }
+                  onPress={onToggleThreadMute}>
+                  <Menu.ItemText>
+                    {isThreadMuted
+                      ? _(msg`Unmute thread`)
+                      : _(msg`Mute thread`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={isThreadMuted ? Unmute : Mute}
+                    position="right"
+                  />
+                </Menu.Item>
+
+                <Menu.Item
+                  testID="postDropdownMuteWordsBtn"
+                  label={_(msg`Mute words & tags`)}
+                  onPress={() => mutedWordsDialogControl.open()}>
+                  <Menu.ItemText>{_(msg`Mute words & tags`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Filter} position="right" />
+                </Menu.Item>
+
+                {!isAuthor && !isPostHidden && (
+                  <Menu.Item
+                    testID="postDropdownHideBtn"
+                    label={_(msg`Hide post`)}
+                    onPress={() => {
+                      openModal({
+                        name: 'confirm',
+                        title: _(msg`Hide this post?`),
+                        message: _(
+                          msg`This will hide this post from your feeds.`,
+                        ),
+                        onPressConfirm: onHidePost,
+                      })
+                    }}>
+                    <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
+                    <Menu.ItemIcon icon={EyeSlash} position="right" />
+                  </Menu.Item>
+                )}
+              </Menu.Group>
+            </>
+          )}
+
+          <Menu.Divider />
+
+          <Menu.Group>
+            {!isAuthor && (
+              <Menu.Item
+                testID="postDropdownReportBtn"
+                label={_(msg`Report post`)}
+                onPress={() => {
+                  openModal({
+                    name: 'report',
+                    uri: postUri,
+                    cid: postCid,
+                  })
+                }}>
+                <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={Warning} position="right" />
+              </Menu.Item>
+            )}
+
+            {isAuthor && (
+              <Menu.Item
+                testID="postDropdownDeleteBtn"
+                label={_(msg`Delete post`)}
+                onPress={() => {
+                  openModal({
+                    name: 'confirm',
+                    title: _(msg`Delete this post?`),
+                    message: _(msg`Are you sure? This cannot be undone.`),
+                    onPressConfirm: onDeletePost,
+                  })
+                }}>
+                <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
+                <Menu.ItemIcon icon={Trash} position="right" />
+              </Menu.Item>
+            )}
+
+            {showAppealLabelItem && (
+              <>
+                <Menu.Divider />
+
+                <Menu.Item
+                  testID="postDropdownAppealBtn"
+                  label={_(msg`Appeal content warning`)}
+                  onPress={() => {
+                    openModal({
+                      name: 'appeal-label',
+                      uri: postUri,
+                      cid: postCid,
+                    })
+                  }}>
+                  <Menu.ItemText>
+                    {_(msg`Appeal content warning`)}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={CircleInfo} position="right" />
+                </Menu.Item>
+              </>
+            )}
+          </Menu.Group>
+        </Menu.Outer>
+      </Menu.Root>
     </EventStopper>
   )
 }
