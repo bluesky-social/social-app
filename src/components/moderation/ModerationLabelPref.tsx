@@ -15,7 +15,6 @@ import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
-import * as Dialog from '#/components/Dialog'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
 import * as ToggleButton from '#/components/forms/ToggleButton'
 
@@ -30,7 +29,6 @@ export function ModerationLabelPref({
 }) {
   const {_, i18n} = useLingui()
   const t = useTheme()
-  const control = Dialog.useDialogControl()
 
   const isGlobalLabel = !labelValueDefinition.definedBy
   const {identifier} = labelValueDefinition
@@ -96,16 +94,14 @@ export function ModerationLabelPref({
           <View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_xs]}>
             <CircleInfo size="sm" fill={t.atoms.text_contrast_high.color} />
 
-            <Text style={[t.atoms.text_contrast_high, a.font_semibold]}>
+            <Text
+              style={[t.atoms.text_contrast_medium, a.font_semibold, a.italic]}>
               {adultDisabled ? (
                 <Trans>Adult content is disabled.</Trans>
               ) : isGlobalLabel ? (
                 <Trans>
                   Configured in{' '}
-                  <InlineLink
-                    to="/moderation"
-                    onPress={() => control.close()}
-                    style={a.text_sm}>
+                  <InlineLink to="/moderation" style={a.text_sm}>
                     moderation settings
                   </InlineLink>
                   .
