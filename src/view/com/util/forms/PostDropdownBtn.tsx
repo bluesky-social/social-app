@@ -39,7 +39,7 @@ import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
-import {atoms as a, useTheme as useAlf, web} from '#/alf'
+import {atoms as a, useTheme as useAlf} from '#/alf'
 import * as Menu from '#/components/Menu'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
@@ -186,10 +186,7 @@ let PostDropdownBtn = ({
               const styles = [
                 style,
                 a.rounded_full,
-                (state.hovered || state.focused || state.pressed) && [
-                  web({outline: 0}),
-                  alf.atoms.bg_contrast_25,
-                ],
+                (state.hovered || state.pressed) && [alf.atoms.bg_contrast_25],
               ]
               return isWeb ? (
                 <View {...props} testID={testID} style={styles}>
