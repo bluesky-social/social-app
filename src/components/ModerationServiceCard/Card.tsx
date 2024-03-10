@@ -36,7 +36,7 @@ export function Outer({
 }
 
 export function Avatar({avatar}: {avatar?: string}) {
-  return <UserAvatar type="list" size={40} avatar={avatar} />
+  return <UserAvatar type="labeler" size={40} avatar={avatar} />
 }
 
 export function Title({value}: {value: string}) {
