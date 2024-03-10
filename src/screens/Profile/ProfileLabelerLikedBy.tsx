@@ -6,7 +6,7 @@ import {useFocusEffect} from '@react-navigation/native'
 
 import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
-import {LikedByList as PostLikedByComponent} from '#/components/LikedByList'
+import {LikedByList} from '#/components/LikedByList'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 
@@ -43,8 +43,8 @@ export function ProfileLabelerLikedByScreen({
           },
         ],
       ]}>
-      <ViewHeader showBorder title={_(msg`Liked By`)} />
-      <PostLikedByComponent uri={uri} />
+      <ViewHeader title={_(msg`Liked By`)} />
+      <LikedByList uri={uri} />
     </View>
   )
 }
