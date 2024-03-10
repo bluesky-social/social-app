@@ -3,6 +3,8 @@ import {BSKY_SERVICE} from 'lib/constants'
 import TLDs from 'tlds'
 import psl from 'psl'
 
+export const BSKY_APP_HOST = 'https://bsky.app'
+
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
     let i = str.lastIndexOf(tld)
@@ -67,8 +69,21 @@ export function isBskyAppUrl(url: string): boolean {
   return url.startsWith('https://bsky.app/')
 }
 
+export function isRelativeUrl(url: string): boolean {
+  return /^\/[^/]/.test(url)
+}
+
+export function isBskyRSSUrl(url: string): boolean {
+  return (
+    (url.startsWith('https://bsky.app/') || isRelativeUrl(url)) &&
+    /\/rss\/?$/.test(url)
+  )
+}
+
 export function isExternalUrl(url: string): boolean {
-  return !isBskyAppUrl(url) && url.startsWith('http')
+  const external = !isBskyAppUrl(url) && url.startsWith('http')
+  const rss = isBskyRSSUrl(url)
+  return external || rss
 }
 
 export function isBskyPostUrl(url: string): boolean {
@@ -149,7 +164,7 @@ export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
 
   // If the uri started with a / we know it is internal.
-  if (uri.startsWith('/')) {
+  if (isRelativeUrl(uri)) {
     return false
   }
 
@@ -221,4 +236,9 @@ export function splitApexDomain(hostname: string): [string, string] {
     hostnamep.subdomain ? `${hostnamep.subdomain}.` : '',
     hostnamep.domain,
   ]
+}
+
+export function createBskyAppAbsoluteUrl(path: string): string {
+  const sanitizedPath = path.replace(BSKY_APP_HOST, '').replace(/^\/+/, '')
+  return `${BSKY_APP_HOST.replace(/\/$/, '')}/${sanitizedPath}`
 }

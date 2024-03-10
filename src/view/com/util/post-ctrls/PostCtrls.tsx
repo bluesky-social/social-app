@@ -210,9 +210,7 @@ let PostCtrls = ({
             style={[styles.btn]}
             onPress={onShare}
             accessibilityRole="button"
-            accessibilityLabel={`${
-              post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-            } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+            accessibilityLabel={`${_(msg`Share`)}`}
             accessibilityHint=""
             hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
             <ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />
@@ -228,6 +226,7 @@ let PostCtrls = ({
           record={record}
           richText={richText}
           style={styles.btnPad}
+          hitSlop={big ? HITSLOP_20 : HITSLOP_10}
         />
       </View>
     </View>
