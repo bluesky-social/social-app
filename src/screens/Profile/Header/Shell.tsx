@@ -80,7 +80,7 @@ let ProfileHeaderShell = ({
 
       {children}
 
-      <View style={[a.px_lg]} pointerEvents="box-none">
+      <View style={[a.px_lg, a.pb_sm]} pointerEvents="box-none">
         <ProfileHeaderAlerts moderation={moderation} />
         {isMe && (
           <LabelsOnMe details={{did: profile.did}} labels={profile.labels} />

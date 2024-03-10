@@ -152,10 +152,7 @@ export function QuoteEmbed({
           />
         </View>
         {moderation ? (
-          <PostAlerts
-            modui={moderation.ui('contentView')}
-            style={styles.alert}
-          />
+          <PostAlerts modui={moderation.ui('contentView')} style={[a.py_xs]} />
         ) : null}
         {richText ? (
           <RichText

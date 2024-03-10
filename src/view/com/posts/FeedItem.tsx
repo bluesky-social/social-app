@@ -340,7 +340,7 @@ let PostContent = ({
       modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts modui={moderation.ui('contentList')} style={styles.alert} />
+      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_xs]} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText

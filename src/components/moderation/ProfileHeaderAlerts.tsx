@@ -27,7 +27,7 @@ export function ProfileHeaderAlerts({
   }
 
   return (
-    <View style={[a.flex_col, a.gap_xs, a.mb_sm, style]}>
+    <View style={[a.flex_col, a.gap_xs, style]}>
       {modui.inform && (
         <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
           {modui.informs.map(cause => (

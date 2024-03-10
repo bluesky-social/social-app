@@ -297,7 +297,7 @@ let PostThreadItemLoaded = ({
               <PostAlerts
                 modui={moderation.ui('contentView')}
                 includeMute
-                style={styles.alert}
+                style={[a.pt_2xs, a.pb_sm]}
               />
               {richText?.text ? (
                 <View
@@ -488,7 +488,7 @@ let PostThreadItemLoaded = ({
                 <LabelsOnMyPost post={post} />
                 <PostAlerts
                   modui={moderation.ui('contentList')}
-                  style={styles.alert}
+                  style={[a.pt_xs, a.pb_sm]}
                 />
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
