@@ -52,32 +52,56 @@ export function ContentHider({
       <ModerationDetailsDialog control={control} modcause={blur} />
 
       <Button
-        variant="solid"
-        color="secondary"
-        size="large"
-        shape="default"
         onPress={() => {
           if (!modui.noOverride) {
             setOverride(v => !v)
           } else {
+            console.log('OPEN')
             control.open()
           }
         }}
         label={desc.name}
         accessibilityHint={
           override ? _(msg`Hide the content`) : _(msg`Show the content`)
-        }
-        style={
-          gtMobile ? [a.py_lg, a.px_xl, a.gap_sm] : [a.py_md, a.px_lg, a.gap_sm]
         }>
-        <ButtonIcon icon={desc.icon} position="left" />
-        <ButtonText style={[a.flex_1, a.text_left]}>{desc.name}</ButtonText>
-        {!modui.noOverride && (
-          <ButtonText>
-            {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
-          </ButtonText>
+        {state => (
+          <View
+            style={[
+              a.flex_row,
+              a.w_full,
+              a.justify_start,
+              a.align_center,
+              a.py_md,
+              a.px_lg,
+              a.gap_sm,
+              a.rounded_sm,
+              t.atoms.bg_contrast_25,
+              (state.hovered || state.pressed) && t.atoms.bg_contrast_50,
+            ]}>
+            <desc.icon
+              size="lg"
+              fill={t.atoms.text_contrast_medium.color}
+              style={{marginLeft: -2}}
+            />
+            <Text
+              style={[
+                a.flex_1,
+                a.text_left,
+                a.font_bold,
+                a.italic,
+                t.atoms.text_contrast_medium,
+              ]}>
+              {desc.name}
+            </Text>
+            {!modui.noOverride && (
+              <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+                {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
+              </Text>
+            )}
+          </View>
         )}
       </Button>
+
       {desc.source && blur.type === 'label' && !override && (
         <Button
           variant="ghost"
@@ -104,6 +128,7 @@ export function ContentHider({
           </ButtonText>
         </Button>
       )}
+
       {override && <View style={childContainerStyle}>{children}</View>}
     </View>
   )

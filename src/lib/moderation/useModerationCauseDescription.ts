@@ -5,13 +5,14 @@ import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 import {useLabelDefinitions} from '#/state/queries/preferences'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
 
+import {Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 
 export interface ModerationCauseDescription {
-  icon: any
+  icon: React.ComponentType<SVGIconProps>
   name: string
   description: string
   source?: string
