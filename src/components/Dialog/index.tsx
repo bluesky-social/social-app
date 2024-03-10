@@ -1,7 +1,6 @@
 import React, {useImperativeHandle} from 'react'
 import {View, Dimensions, Keyboard, Pressable} from 'react-native'
 import BottomSheet, {
-  BottomSheetFlatList,
   BottomSheetBackdropProps,
   BottomSheetScrollView,
   BottomSheetTextInput,
@@ -29,7 +28,6 @@ export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
-export const FlatList = BottomSheetFlatList
 
 function Backdrop(props: BottomSheetBackdropProps) {
   const t = useTheme()

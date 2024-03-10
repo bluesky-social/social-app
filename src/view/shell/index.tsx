@@ -101,7 +101,6 @@ function ShellInner() {
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
-      <PortalOutlet />
       <Lightbox />
       <PortalOutlet />
     </>
