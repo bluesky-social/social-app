@@ -8,8 +8,8 @@ import {useModerationCauseDescription} from '#/lib/moderation/useModerationCause
 import {isJustAMute} from '#/lib/moderation'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
+import {atoms as a, useTheme, useBreakpoints, web} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {
   ModerationDetailsDialog,
@@ -32,8 +32,8 @@ export function ContentHider({
 }>) {
   const t = useTheme()
   const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
   const {gtMobile} = useBreakpoints()
+  const [override, setOverride] = React.useState(false)
   const control = useModerationDetailsDialogControl()
 
   const blur = modui?.blurs[0]
@@ -56,7 +56,6 @@ export function ContentHider({
           if (!modui.noOverride) {
             setOverride(v => !v)
           } else {
-            console.log('OPEN')
             control.open()
           }
         }}
@@ -71,15 +70,16 @@ export function ContentHider({
               a.w_full,
               a.justify_start,
               a.align_center,
-              a.py_md,
-              a.px_lg,
+              a.py_sm,
+              a.px_md,
               a.gap_sm,
               a.rounded_sm,
               t.atoms.bg_contrast_25,
+              gtMobile && [a.py_md, a.px_lg],
               (state.hovered || state.pressed) && t.atoms.bg_contrast_50,
             ]}>
             <desc.icon
-              size="lg"
+              size={gtMobile ? 'lg' : 'md'}
               fill={t.atoms.text_contrast_medium.color}
               style={{marginLeft: -2}}
             />
@@ -89,12 +89,24 @@ export function ContentHider({
                 a.text_left,
                 a.font_bold,
                 a.italic,
+                a.leading_snug,
                 t.atoms.text_contrast_medium,
+                web({
+                  marginBottom: 1,
+                }),
               ]}>
               {desc.name}
             </Text>
             {!modui.noOverride && (
-              <Text style={[a.font_bold, t.atoms.text_contrast_high]}>
+              <Text
+                style={[
+                  a.font_bold,
+                  a.leading_snug,
+                  t.atoms.text_contrast_high,
+                  web({
+                    marginBottom: 1,
+                  }),
+                ]}>
                 {override ? <Trans>Hide</Trans> : <Trans>Show</Trans>}
               </Text>
             )}
