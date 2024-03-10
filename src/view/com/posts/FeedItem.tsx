@@ -144,7 +144,7 @@ let FeedItemInner = ({
       borderColor: pal.colors.border,
       paddingBottom:
         isThreadLastChild || (!isThreadChild && !isThreadParent)
-          ? 6
+          ? 8
           : undefined,
     },
     isThreadChild ? styles.outerSmallTop : undefined,
@@ -362,7 +362,9 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <PostEmbeds embed={postEmbed} moderation={moderation} />
+        <View style={[a.pb_sm]}>
+          <PostEmbeds embed={postEmbed} moderation={moderation} />
+        </View>
       ) : null}
     </ContentHider>
   )

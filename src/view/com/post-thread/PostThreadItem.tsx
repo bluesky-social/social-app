@@ -315,7 +315,9 @@ let PostThreadItemLoaded = ({
                 </View>
               ) : undefined}
               {post.embed && (
-                <PostEmbeds embed={post.embed} moderation={moderation} />
+                <View style={[a.pb_sm]}>
+                  <PostEmbeds embed={post.embed} moderation={moderation} />
+                </View>
               )}
             </ContentHider>
             <ExpandedPostDetails
@@ -510,7 +512,9 @@ let PostThreadItemLoaded = ({
                   />
                 ) : undefined}
                 {post.embed && (
-                  <PostEmbeds embed={post.embed} moderation={moderation} />
+                  <View style={[a.pb_xs]}>
+                    <PostEmbeds embed={post.embed} moderation={moderation} />
+                  </View>
                 )}
                 <PostCtrls
                   post={post}
