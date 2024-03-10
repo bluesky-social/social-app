@@ -9,6 +9,7 @@ import {
 } from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
 import {RichText} from '#/components/RichText'
 import {useModalControls} from '#/state/modals'
 import {usePreferencesQuery} from '#/state/queries/preferences'
@@ -21,6 +22,7 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {logger} from '#/logger'
 import {Haptics} from '#/lib/haptics'
 import {pluralize} from '#/lib/strings/helpers'
+import {isModAuthority} from '#/lib/moderation'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -172,7 +174,7 @@ let ProfileHeaderLabeler = ({
                 <Trans>Edit Profile</Trans>
               </ButtonText>
             </Button>
-          ) : (
+          ) : !isModAuthority(profile.did) ? (
             <>
               <Button
                 testID="toggleSubscribeBtn"
@@ -197,7 +199,7 @@ let ProfileHeaderLabeler = ({
                 </ButtonText>
               </Button>
             </>
-          )}
+          ) : null}
           <ProfileHeaderDropdownBtn profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_xs, a.pb_md]}>
@@ -217,52 +219,57 @@ let ProfileHeaderLabeler = ({
                 />
               </View>
             ) : undefined}
-            <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_lg]}>
-              <Button
-                testID="toggleLikeBtn"
-                size="small"
-                color="secondary"
-                variant="solid"
-                shape="round"
-                label={_(msg`Like this feed`)}
-                disabled={!hasSession || isLikePending || isUnlikePending}
-                onPress={onToggleLiked}>
-                {likeUri ? (
-                  <HeartFilled fill={t.palette.negative_400} />
-                ) : (
-                  <Heart fill={t.atoms.text_contrast_medium.color} />
-                )}
-              </Button>
-
-              {typeof likeCount === 'number' && (
-                <Link
-                  to={{
-                    screen: 'ProfileLabelerLikedBy',
-                    params: {
-                      name: labeler.creator.handle || labeler.creator.did,
-                    },
-                  }}
-                  size="tiny"
-                  label={_(
-                    msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`,
-                  )}>
-                  {({hovered, focused, pressed}) => (
-                    <Text
-                      style={[
-                        a.font_bold,
-                        a.text_sm,
-                        t.atoms.text_contrast_medium,
-                        (hovered || focused || pressed) &&
-                          t.atoms.text_contrast_high,
-                      ]}>
-                      <Trans>
-                        Liked by {likeCount} {pluralize(likeCount, 'user')}
-                      </Trans>
-                    </Text>
+            {!isModAuthority(profile.did) && (
+              <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_lg]}>
+                <Button
+                  testID="toggleLikeBtn"
+                  size="small"
+                  color="secondary"
+                  variant="solid"
+                  shape="round"
+                  label={_(msg`Like this feed`)}
+                  disabled={!hasSession || isLikePending || isUnlikePending}
+                  onPress={onToggleLiked}>
+                  {likeUri ? (
+                    <HeartFilled fill={t.palette.negative_400} />
+                  ) : (
+                    <Heart fill={t.atoms.text_contrast_medium.color} />
                   )}
-                </Link>
-              )}
-            </View>
+                </Button>
+
+                {typeof likeCount === 'number' && (
+                  <Link
+                    to={{
+                      screen: 'ProfileLabelerLikedBy',
+                      params: {
+                        name: labeler.creator.handle || labeler.creator.did,
+                      },
+                    }}
+                    size="tiny"
+                    label={_(
+                      msg`Liked by ${likeCount} ${pluralize(
+                        likeCount,
+                        'user',
+                      )}`,
+                    )}>
+                    {({hovered, focused, pressed}) => (
+                      <Text
+                        style={[
+                          a.font_bold,
+                          a.text_sm,
+                          t.atoms.text_contrast_medium,
+                          (hovered || focused || pressed) &&
+                            t.atoms.text_contrast_high,
+                        ]}>
+                        <Trans>
+                          Liked by {likeCount} {pluralize(likeCount, 'user')}
+                        </Trans>
+                      </Text>
+                    )}
+                  </Link>
+                )}
+              </View>
+            )}
           </>
         )}
       </View>

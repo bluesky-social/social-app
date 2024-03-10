@@ -12,7 +12,7 @@ import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
-import {lookupLabelValueDefinition} from '#/lib/moderation'
+import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
 import {ListRef} from '#/view/com/util/List'
 import {SectionRef} from './types'
 import {isNative} from '#/platform/detection'
@@ -127,9 +127,7 @@ export function ProfileLabelsSectionInner({
   })
 
   const {labelValues} = labelerInfo.policies
-  const isSubscribed = moderationOpts.prefs.labelers.find(
-    l => l.did === labelerInfo.creator.did,
-  )
+  const isSubscribed = isLabelerSubscribed(labelerInfo, moderationOpts)
   const labelDefs = React.useMemo(() => {
     const customDefs = interpretLabelValueDefinitions(labelerInfo)
     return labelValues
