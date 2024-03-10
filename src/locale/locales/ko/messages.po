@@ -449,10 +449,6 @@ msgstr "Bluesky는 열려 있습니다."
 msgid "Bluesky is public."
 msgstr "Bluesky는 공개적입니다."
 
-#: src/view/com/modals/Waitlist.tsx:70
-#~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-#~ msgstr "Bluesky는 더 건강한 커뮤니티를 구축하기 위해 초대 방식을 사용합니다. 초대해 준 사람이 없는 경우 대기자 명단에 등록하면 곧 초대를 보내겠습니다."
-
 #: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "로그아웃한 사용자에게 내 프로필과 게시물을 표시하지 않습니다. 다른 앱에서는 이 설정을 따르지 않을 수 있습니다. 내 계정을 비공개로 전환하지는 않습니다."
@@ -550,10 +546,6 @@ msgstr "게시물 인용 취소"
 #: src/view/shell/desktop/Search.tsx:234
 msgid "Cancel search"
 msgstr "검색 취소"
-
-#: src/view/com/modals/Waitlist.tsx:136
-#~ msgid "Cancel waitlist signup"
-#~ msgstr "대기자 명단 등록 취소"
 
 #: src/view/screens/Settings/index.tsx:334
 msgctxt "action"
@@ -803,10 +795,6 @@ msgstr "성인 콘텐츠를 사용하려면 나이를 확인하세요."
 #: src/view/com/modals/VerifyEmail.tsx:165
 msgid "Confirmation code"
 msgstr "확인 코드"
-
-#: src/view/com/modals/Waitlist.tsx:120
-#~ msgid "Confirms signing up {email} to the waitlist"
-#~ msgstr "{email}을(를) 대기자 명단에 등록합니다"
 
 #: src/view/com/auth/create/CreateAccount.tsx:193
 #: src/view/com/auth/login/LoginForm.tsx:278
@@ -1095,10 +1083,6 @@ msgstr "표시 이름"
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다."
 
-#: src/view/com/auth/create/Step1.tsx:170
-#~ msgid "Don't have an invite code?"
-#~ msgstr "초대 코드가 없나요?"
-
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
 #: src/view/com/modals/EditImage.tsx:333
 #: src/view/com/modals/ListAddRemoveUsers.tsx:144
@@ -1325,10 +1309,6 @@ msgstr "계정을 만들 때 사용한 이메일을 입력하세요. 새 비밀�
 msgid "Enter your birth date"
 msgstr "생년월일을 입력하세요"
 
-#: src/view/com/modals/Waitlist.tsx:78
-#~ msgid "Enter your email"
-#~ msgstr "이메일을 입력하세요"
-
 #: src/view/com/auth/create/Step1.tsx:172
 msgid "Enter your email address"
 msgstr "이메일 주소를 입력하세요"
@@ -1369,10 +1349,6 @@ msgstr "이미지 보기를 종료합니다"
 #: src/view/shell/desktop/Search.tsx:235
 msgid "Exits inputting search query"
 msgstr "검색어 입력을 종료합니다"
-
-#: src/view/com/modals/Waitlist.tsx:138
-#~ msgid "Exits signing up for waitlist with {email}"
-#~ msgstr "{email}을(를) 대기자 명단에 등록하는 것을 종료합니다"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
@@ -1849,10 +1825,6 @@ msgstr "{identifier}에 연결된 비밀번호를 입력합니다"
 msgid "Input the username or email address you used at signup"
 msgstr "가입 시 사용한 사용자 이름 또는 이메일 주소를 입력합니다"
 
-#: src/view/com/modals/Waitlist.tsx:90
-#~ msgid "Input your email to get on the Bluesky waitlist"
-#~ msgstr "Bluesky 대기자 명단에 등록하려면 이메일을 입력합니다"
-
 #: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Input your password"
 msgstr "비밀번호를 입력합니다"
@@ -1898,19 +1870,6 @@ msgstr "내가 팔로우하는 사람들의 게시물이 올라오는 대로 표
 #: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "채용"
-
-#: src/view/com/modals/Waitlist.tsx:67
-#~ msgid "Join the waitlist"
-#~ msgstr "대기자 명단 등록"
-
-#: src/view/com/auth/create/Step1.tsx:174
-#: src/view/com/auth/create/Step1.tsx:178
-#~ msgid "Join the waitlist."
-#~ msgstr "대기자 명단에 등록하세요."
-
-#: src/view/com/modals/Waitlist.tsx:128
-#~ msgid "Join Waitlist"
-#~ msgstr "대기자 명단 등록"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
@@ -2212,10 +2171,6 @@ msgstr "피드 더 보기"
 #: src/view/screens/ProfileList.tsx:617
 msgid "More options"
 msgstr "옵션 더 보기"
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:315
-#~ msgid "More post options"
-#~ msgstr "게시물 옵션 더 보기"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
@@ -3715,10 +3670,6 @@ msgstr "소프트웨어 개발"
 msgid "Something went wrong!"
 msgstr "뭔가 잘못되었습니다!"
 
-#: src/view/com/modals/Waitlist.tsx:51
-#~ msgid "Something went wrong. Check your email and try again."
-#~ msgstr "문제가 발생했습니다. 이메일을 확인한 후 다시 시도하세요."
-
 #: src/App.native.tsx:66
 msgid "Sorry! Your session expired. Please log in again."
 msgstr "죄송합니다. 세션이 만료되었습니다. 다시 로그인해 주세요."
@@ -4613,10 +4564,6 @@ msgstr "기본 피드는 \"팔로우 중\"입니다"
 #: src/view/com/modals/ChangePassword.tsx:54
 msgid "Your email appears to be invalid."
 msgstr "이메일이 잘못된 것 같습니다."
-
-#: src/view/com/modals/Waitlist.tsx:109
-#~ msgid "Your email has been saved! We'll be in touch soon."
-#~ msgstr "이메일이 저장되었습니다! 가까운 시일 내에 연락드리겠습니다."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
