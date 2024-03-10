@@ -8,23 +8,18 @@ export function useLabelBehaviorDescription(
 ) {
   const {_} = useLingui()
   if (pref === 'ignore') {
-    return _(msg`Disabled`)
+    return _(msg`Off`)
   }
-  if (labelValueDef.blurs === 'content') {
+  if (labelValueDef.blurs === 'content' || labelValueDef.blurs === 'media') {
     if (pref === 'hide') {
       return _(msg`Hide`)
     }
     return _(msg`Warn`)
-  } else if (labelValueDef.blurs === 'media') {
-    if (pref === 'hide') {
-      return _(msg`Hide`)
-    }
-    return _(msg`Blur images`)
   } else if (labelValueDef.severity === 'alert') {
     if (pref === 'hide') {
       return _(msg`Hide`)
     }
-    return _(msg`Show warning`)
+    return _(msg`Warn`)
   } else if (labelValueDef.severity === 'inform') {
     if (pref === 'hide') {
       return _(msg`Hide`)

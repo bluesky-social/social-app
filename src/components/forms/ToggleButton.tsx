@@ -103,7 +103,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         native({
           paddingBottom: 10,
         }),
-        a.px_sm,
+        a.px_md,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         baseStyles,

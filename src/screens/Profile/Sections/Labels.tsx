@@ -20,6 +20,7 @@ import {isNative} from '#/platform/detection'
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Loader} from '#/components/Loader'
+import {Divider} from '#/components/Divider'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ErrorState} from '../ErrorState'
 import {ModerationLabelPref} from '#/components/moderation/ModerationLabelPref'
@@ -191,15 +192,24 @@ export function ProfileLabelsSectionInner({
           ) : null}
         </View>
         {labelDefs.length > 0 && (
-          <View style={[a.mt_xl, a.gap_sm]}>
-            {labelDefs.map(labelDef => {
+          <View
+            style={[
+              a.mt_xl,
+              a.w_full,
+              a.rounded_md,
+              a.overflow_hidden,
+              t.atoms.bg_contrast_25,
+            ]}>
+            {labelDefs.map((labelDef, i) => {
               return (
-                <ModerationLabelPref
-                  key={labelDef.identifier}
-                  disabled={isSubscribed ? undefined : true}
-                  labelValueDefinition={labelDef}
-                  labelerDid={labelerInfo.creator.did}
-                />
+                <React.Fragment key={labelDef.identifier}>
+                  {i !== 0 && <Divider />}
+                  <ModerationLabelPref
+                    disabled={isSubscribed ? undefined : true}
+                    labelValueDefinition={labelDef}
+                    labelerDid={labelerInfo.creator.did}
+                  />
+                </React.Fragment>
               )
             })}
           </View>

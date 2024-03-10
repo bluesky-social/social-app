@@ -5,10 +5,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {useGlobalLabelStrings} from '#/lib/moderation/useGlobalLabelStrings'
-import {
-  useLabelBehaviorDescription,
-  useLabelLongBehaviorDescription,
-} from '#/lib/moderation/useLabelBehaviorDescription'
+import {useLabelBehaviorDescription} from '#/lib/moderation/useLabelBehaviorDescription'
 import {
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
@@ -19,11 +16,8 @@ import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
 import * as Dialog from '#/components/Dialog'
-import {Button} from '#/components/Button'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
-import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '../icons/Gear'
-import * as Toggle from '#/components/forms/Toggle'
-import {Divider} from '#/components/Divider'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 
 export function ModerationLabelPref({
   labelValueDefinition,
@@ -52,18 +46,34 @@ export function ModerationLabelPref({
     savedPref ??
     labelValueDefinition.defaultSetting ??
     'warn'
-  const [selected, setSelected] = React.useState<LabelPreference[]>([pref])
 
-  const settingDesc = useLabelBehaviorDescription(labelValueDefinition, pref)
-  const hideLabel = useLabelLongBehaviorDescription(
-    labelValueDefinition,
-    'hide',
+  // does the 'warn' setting make sense for this label?
+  const canWarn = !(
+    labelValueDefinition.blurs === 'none' &&
+    labelValueDefinition.severity === 'none'
   )
-  const warnLabel = useLabelLongBehaviorDescription(
+  // is this label adult only?
+  const adultOnly = labelValueDefinition.flags.includes('adult')
+  // is this label disabled because it's adult only?
+  const adultDisabled =
+    adultOnly && !preferences?.moderationPrefs.adultContentEnabled
+  // are there any reasons we cant configure this label here?
+  const cantConfigure = isGlobalLabel || adultDisabled
+
+  // adjust the pref based on whether warn is available
+  let prefAdjusted = pref
+  if (!canWarn && pref === 'warn') {
+    prefAdjusted = 'ignore'
+  }
+
+  // grab localized descriptions of the label and its settings
+  const currentPrefLabel = useLabelBehaviorDescription(
     labelValueDefinition,
-    'warn',
+    prefAdjusted,
   )
-  const ignoreLabel = useLabelLongBehaviorDescription(
+  const hideLabel = useLabelBehaviorDescription(labelValueDefinition, 'hide')
+  const warnLabel = useLabelBehaviorDescription(labelValueDefinition, 'warn')
+  const ignoreLabel = useLabelBehaviorDescription(
     labelValueDefinition,
     'ignore',
   )
@@ -74,178 +84,73 @@ export function ModerationLabelPref({
     labelValueDefinition,
   )
 
-  const canWarn = !(
-    labelValueDefinition.blurs === 'none' &&
-    labelValueDefinition.severity === 'none'
-  )
-  const adultOnly = labelValueDefinition.flags.includes('adult')
-  const adultDisabled =
-    adultOnly && !preferences?.moderationPrefs.adultContentEnabled
-  const cantConfigure = isGlobalLabel || adultDisabled
-
-  const onSettingChange = React.useCallback(
-    (newPrefs: LabelPreference[]) => {
-      setSelected(newPrefs)
-      mutate({label: identifier, visibility: newPrefs[0], labelerDid})
-    },
-    [mutate, labelerDid, identifier],
-  )
-
-  const settings = [
-    {
-      pref: 'hide',
-      label: hideLabel,
-    },
-    canWarn && {
-      pref: 'warn',
-      label: warnLabel,
-    },
-    {
-      pref: 'ignore',
-      label: ignoreLabel,
-    },
-  ].filter(Boolean) as {
-    pref: LabelPreference
-    label: string
-  }[]
-
   return (
-    <>
-      <Button
-        onPress={() => control.open()}
-        label={settingDesc}
-        disabled={disabled}>
-        {({hovered, focused, pressed}) => (
-          <View
-            style={[
-              a.w_full,
-              a.flex_row,
-              a.justify_between,
-              a.gap_sm,
-              a.align_start,
-              a.px_lg,
-              a.py_lg,
-              a.rounded_sm,
-              t.atoms.bg_contrast_25,
-              (hovered || focused || pressed) && [t.atoms.bg_contrast_50],
-            ]}>
-            <View style={[a.gap_xs]}>
-              <Text style={[a.font_bold]}>{labelStrings.name}</Text>
-              <Text
-                style={[t.atoms.text_contrast_medium, a.leading_snug]}
-                numberOfLines={1}>
-                {labelStrings.description}
-              </Text>
-            </View>
+    <View style={[a.flex_row, a.gap_sm, a.px_lg, a.py_lg, a.justify_between]}>
+      <View style={[a.gap_xs, a.flex_1]}>
+        <Text style={[a.font_bold]}>{labelStrings.name}</Text>
+        <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
+          {labelStrings.description}
+        </Text>
 
-            {!disabled && (
-              <View
-                style={[
-                  a.flex_row,
-                  a.align_center,
-                  a.justify_end,
-                  a.gap_xs,
-                  a.rounded_2xs,
-                ]}>
-                <Text style={[t.atoms.text_contrast_medium, a.font_semibold]}>
-                  {settingDesc}
-                </Text>
-                <Gear size="sm" fill={t.atoms.text_contrast_low.color} />
-              </View>
-            )}
+        {cantConfigure && (
+          <View style={[a.flex_row, a.gap_xs, a.align_center, a.mt_xs]}>
+            <CircleInfo size="sm" fill={t.atoms.text_contrast_high.color} />
+
+            <Text style={[t.atoms.text_contrast_high, a.font_semibold]}>
+              {adultDisabled ? (
+                <Trans>Adult content is disabled.</Trans>
+              ) : isGlobalLabel ? (
+                <Trans>
+                  Configured in{' '}
+                  <InlineLink
+                    to="/moderation"
+                    onPress={() => control.close()}
+                    style={a.text_sm}>
+                    moderation settings
+                  </InlineLink>
+                  .
+                </Trans>
+              ) : null}
+            </Text>
           </View>
         )}
-      </Button>
-
-      <Dialog.Outer control={control}>
-        <Dialog.Handle />
-
-        <Dialog.Inner
-          label={_(msg`Settings for ${labelValueDefinition.identifier}`)}
-          style={[a.gap_sm]}>
-          <Text style={[a.text_2xl, a.font_bold, a.pb_xs, t.atoms.text]}>
-            {labelStrings.name}
+      </View>
+      {disabled ? (
+        <></>
+      ) : cantConfigure ? (
+        <View style={[{minHeight: 35}, a.px_sm, a.py_md]}>
+          <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+            {currentPrefLabel}
           </Text>
-          <Text style={[a.text_md, a.pb_sm, t.atoms.text_contrast_medium]}>
-            {labelStrings.description}
-          </Text>
-
-          {cantConfigure && (
-            <View
-              style={[
-                a.flex_row,
-                a.gap_xs,
-                a.align_center,
-                a.py_md,
-                a.px_lg,
-                a.rounded_sm,
-                t.atoms.bg_contrast_25,
-              ]}>
-              <CircleInfo size="md" fill={t.atoms.text_contrast_medium.color} />
-
-              <Text style={[t.atoms.text_contrast_medium]}>
-                {adultDisabled ? (
-                  <Trans>
-                    Adult content must be enabled to configure this label.
-                  </Trans>
-                ) : isGlobalLabel ? (
-                  <Trans>
-                    {labelStrings.name} is configured in your{' '}
-                    <InlineLink
-                      to="/moderation"
-                      onPress={() => control.close()}
-                      style={a.text_md}>
-                      global moderation settings
-                    </InlineLink>
-                    .
-                  </Trans>
-                ) : null}
-              </Text>
-            </View>
-          )}
-
-          {!cantConfigure && (
-            <Toggle.Group<LabelPreference>
-              type="radio"
-              values={selected}
-              onChange={onSettingChange}
-              label={_(
-                msg`Configure filtering settings for ${labelStrings.name}`,
-              )}>
-              <View
-                style={[
-                  a.rounded_md,
-                  a.overflow_hidden,
-                  t.atoms.bg_contrast_25,
-                ]}>
-                {settings.map((s, i) => (
-                  <>
-                    {i !== 0 && <Divider />}
-
-                    <Toggle.Item name={s.pref} label={s.label}>
-                      <View
-                        style={[
-                          a.flex_1,
-                          a.flex_row,
-                          a.align_center,
-                          a.gap_md,
-                          a.py_md,
-                          a.px_lg,
-                          t.atoms.bg_contrast_25,
-                        ]}>
-                        <Toggle.Radio />
-                        <Text>{s.label}</Text>
-                      </View>
-                    </Toggle.Item>
-                  </>
-                ))}
-              </View>
-            </Toggle.Group>
-          )}
-
-          <Dialog.Close />
-        </Dialog.Inner>
-      </Dialog.Outer>
-    </>
+        </View>
+      ) : (
+        <View style={[{minHeight: 35}]}>
+          <ToggleButton.Group
+            label={_(
+              msg`Configure content filtering setting for category: ${labelStrings.name.toLowerCase()}`,
+            )}
+            values={[prefAdjusted]}
+            onChange={newPref =>
+              mutate({
+                label: identifier,
+                visibility: newPref[0] as LabelPreference,
+                labelerDid,
+              })
+            }>
+            <ToggleButton.Button name="ignore" label={ignoreLabel}>
+              {ignoreLabel}
+            </ToggleButton.Button>
+            {canWarn && (
+              <ToggleButton.Button name="warn" label={warnLabel}>
+                {warnLabel}
+              </ToggleButton.Button>
+            )}
+            <ToggleButton.Button name="hide" label={hideLabel}>
+              {hideLabel}
+            </ToggleButton.Button>
+          </ToggleButton.Group>
+        </View>
+      )}
+    </View>
   )
 }
