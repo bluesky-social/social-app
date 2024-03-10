@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: quiple\n"
-"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi\n"
+"Last-Translator: heartade\n"
+"Language-Team: quiple, lens0021, HaruChanHeart, hazzzi, heartade\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -629,7 +629,7 @@ msgstr "맞춤 피드를 구동할 알고리즘을 선택하세요."
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
 msgid "Choose the algorithms that power your experience with custom feeds."
-msgstr "맞춤 피드를 통해 사용자 경험을 강화하는 알고리즘을 선택합니다."
+msgstr "맞춤 피드를 통해 사용자 경험을 강화하는 알고리즘을 선택하세요."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
@@ -1461,11 +1461,11 @@ msgstr "피드는 콘텐츠를 큐레이션하기 위해 사용자에 의해 만
 
 #: src/view/screens/SavedFeeds.tsx:156
 msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
-msgstr "피드는 사용자가 약간의 코딩 전문 지식으로 구축할 수 있는 맞춤 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
+msgstr "피드는 사용자가 약간의 코딩 전문 지식만으로 구축할 수 있는 맞춤 알고리즘입니다. <0/>에서 자세한 내용을 확인하세요."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:76
 msgid "Feeds can be topical as well!"
-msgstr "피드도 화제가 될 수 있습니다!"
+msgstr "주제 기반 피드도 있습니다!"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
@@ -1495,7 +1495,7 @@ msgstr "팔로우 중 피드에 표시되는 콘텐츠를 미세 조정합니다
 
 #: src/view/screens/PreferencesThreads.tsx:60
 msgid "Fine-tune the discussion threads."
-msgstr "토론 스레드를 미세 조정합니다."
+msgstr "대화 스레드를 미세 조정합니다."
 
 #: src/screens/Onboarding/index.tsx:38
 msgid "Fitness"
@@ -1541,7 +1541,7 @@ msgstr "선택한 계정을 팔로우하고 다음 단계를 계속 진행합니
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
-msgstr "일부 사용자를 팔로우하여 시작하세요. 관심 있는 사용자를 기반으로 더 많은 사용자를 추천해 드릴 수 있습니다."
+msgstr "시작하려면 사용자 몇 명을 팔로우해 보세요. 누구에게 관심이 있는지를 기반으로 더 많은 사용자를 추천해 드릴 수 있습니다."
 
 #: src/view/com/profile/ProfileCard.tsx:194
 msgid "Followed by {0}"
@@ -1571,7 +1571,7 @@ msgstr "팔로우 중"
 
 #: src/view/com/profile/ProfileHeader.tsx:149
 msgid "Following {0}"
-msgstr "{0} 팔로우 중"
+msgstr "{0} 님을 팔로우했습니다"
 
 #: src/Navigation.tsx:249
 #: src/view/com/home/HomeHeaderLayout.web.tsx:50
@@ -2357,11 +2357,11 @@ msgstr "{0}에서 임베드를 불러오지 않습니다"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 않습니다."
+msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 마세요."
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 않습니다."
+msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 마세요."
 
 #: src/components/dialogs/MutedWords.tsx:293
 msgid "Nevermind"
@@ -4380,7 +4380,7 @@ msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
 #: src/view/com/auth/create/CreateAccount.tsx:134
 msgid "We're so excited to have you join us!"
-msgstr "당신과 함께하게 되어 정말 기쁘네요!"
+msgstr "함께하게 되어 정말 기뻐요!"
 
 #: src/view/screens/ProfileList.tsx:86
 msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
@@ -4405,7 +4405,7 @@ msgstr "<0>Bluesky</0>에 오신 것을 환영합니다"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
-msgstr "관심사가 어떻게 되나요?"
+msgstr "어떤 관심사가 있으신가요?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
@@ -4616,7 +4616,7 @@ msgstr "이메일이 아직 인증되지 않았습니다. 이는 중요한 보�
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "팔로우 중인 피드가 비어 있습니다! 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
+msgstr "팔로우 중 피드가 비어 있습니다! 더 많은 사용자를 팔로우하여 무슨 일이 일어나고 있는지 확인하세요."
 
 #: src/view/com/auth/create/Step2.tsx:83
 msgid "Your full handle will be"
