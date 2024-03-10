@@ -9,7 +9,7 @@ import {isJustAMute} from '#/lib/moderation'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 
 import {atoms as a, useTheme, useBreakpoints, web} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {
   ModerationDetailsDialog,
@@ -116,28 +116,33 @@ export function ContentHider({
 
       {desc.source && blur.type === 'label' && !override && (
         <Button
-          variant="ghost"
-          size="tiny"
           onPress={() => {
             control.open()
           }}
           label={_(msg`Learn more`)}
-          style={[]}>
-          <ButtonText
-            style={[
-              a.flex_1,
-              a.text_sm,
-              a.font_normal,
-              t.atoms.text_contrast_medium,
-              a.text_left,
-            ]}>
-            <Trans>
-              {sanitizeDisplayName(desc.source)}.{' '}
-              <Text style={[{color: t.palette.primary_500}, a.text_sm]}>
-                Learn more.
-              </Text>
-            </Trans>
-          </ButtonText>
+          style={[a.pt_sm]}>
+          {state => (
+            <Text
+              style={[
+                a.flex_1,
+                a.text_sm,
+                a.font_normal,
+                t.atoms.text_contrast_medium,
+                a.text_left,
+              ]}>
+              <Trans>
+                This post was labeled by {sanitizeDisplayName(desc.source!)}.{' '}
+                <Text
+                  style={[
+                    {color: t.palette.primary_500},
+                    a.text_sm,
+                    state.hovered && [web({textDecoration: 'underline'})],
+                  ]}>
+                  Learn more.
+                </Text>
+              </Trans>
+            </Text>
+          )}
         </Button>
       )}
 
