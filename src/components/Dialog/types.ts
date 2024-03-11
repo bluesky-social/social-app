@@ -22,6 +22,7 @@ export type DialogControlRefProps = {
 export type DialogControlProps = DialogControlRefProps & {
   id: string
   ref: React.RefObject<DialogControlRefProps>
+  isOpen?: boolean
 }
 
 export type DialogContextProps = {

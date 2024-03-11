@@ -30,6 +30,8 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
+import {useDialogStateContext} from 'state/dialogs'
+import Animated from 'react-native-reanimated'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -53,6 +55,7 @@ function ShellInner() {
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession, currentAccount} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
+  const {importantForAccessibility} = useDialogStateContext()
   // start undefined
   const currentAccountDid = React.useRef<string | undefined>(undefined)
 
@@ -80,7 +83,9 @@ function ShellInner() {
 
   return (
     <>
-      <View style={containerPadding}>
+      <Animated.View
+        style={containerPadding}
+        importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
           <Drawer
             renderDrawerContent={renderDrawerContent}
@@ -92,7 +97,7 @@ function ShellInner() {
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
-      </View>
+      </Animated.View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />
