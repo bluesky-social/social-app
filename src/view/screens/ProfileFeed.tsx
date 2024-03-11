@@ -553,18 +553,21 @@ function AboutSection({
 
   return (
     <View style={[styles.aboutSectionContainer]}>
-      {feedInfo.description ? (
-        <RichText
-          testID="listDescription"
-          style={[a.text_md]}
-          value={feedInfo.description}
-        />
-      ) : (
-        <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
-          <Trans>No description</Trans>
-        </Text>
-      )}
-      <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+      <View style={[a.pt_sm]}>
+        {feedInfo.description ? (
+          <RichText
+            testID="listDescription"
+            style={[a.text_md]}
+            value={feedInfo.description}
+          />
+        ) : (
+          <Text type="lg" style={[{fontStyle: 'italic'}, pal.textLight]}>
+            <Trans>No description</Trans>
+          </Text>
+        )}
+      </View>
+
+      <View style={[a.flex_row, a.gap_md, a.align_center, a.pb_sm]}>
         <NewButton
           size="small"
           variant="solid"
