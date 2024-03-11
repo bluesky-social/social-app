@@ -7,7 +7,6 @@ import {
 } from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 import {
   AppBskyActorDefs,
   ModerationOpts,
@@ -17,7 +16,7 @@ import {
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {NavigationProp} from 'lib/routes/types'
-import {isNative, isWeb} from 'platform/detection'
+import {isNative} from 'platform/detection'
 import {BlurView} from '../util/BlurView'
 import * as Toast from '../util/Toast'
 import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
@@ -28,14 +27,11 @@ import {UserAvatar} from '../util/UserAvatar'
 import {UserBanner} from '../util/UserBanner'
 import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
 import {formatCount} from '../util/numeric/format'
-import {NativeDropdown, DropdownItem} from '../util/forms/NativeDropdown'
 import {Link} from '../util/Link'
 import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 import {useModalControls} from '#/state/modals'
 import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
-  RQKEY as profileQueryKey,
-  useProfileMuteMutationQueue,
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
 } from '#/state/queries/profile'
@@ -46,9 +42,7 @@ import {BACK_HITSLOP} from 'lib/constants'
 import {isInvalidHandle, sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
 import {pluralize} from 'lib/strings/helpers'
-import {toShareUrl} from 'lib/strings/url-helpers'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {shareUrl} from 'lib/sharing'
 import {s, colors} from 'lib/styles'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
@@ -57,6 +51,7 @@ import {useRequireAuth} from '#/state/session'
 import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {atoms as a} from '#/alf'
+import {ProfileMenu} from 'view/com/profile/ProfileMenu'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -108,19 +103,11 @@ let ProfileHeader = ({
   const {isDesktop} = useWebMediaQueries()
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
-  const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
-  const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
-  const queryClient = useQueryClient()
+  const [__, queueUnblock] = useProfileBlockMutationQueue(profile)
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
-
-  const invalidateProfileQuery = React.useCallback(() => {
-    queryClient.invalidateQueries({
-      queryKey: profileQueryKey(profile.did),
-    })
-  }, [queryClient, profile.did])
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -189,72 +176,7 @@ let ProfileHeader = ({
     })
   }, [track, openModal, profile])
 
-  const onPressShare = React.useCallback(() => {
-    track('ProfileHeader:ShareButtonClicked')
-    shareUrl(toShareUrl(makeProfileLink(profile)))
-  }, [track, profile])
-
-  const onPressAddRemoveLists = React.useCallback(() => {
-    track('ProfileHeader:AddToListsButtonClicked')
-    openModal({
-      name: 'user-add-remove-lists',
-      subject: profile.did,
-      handle: profile.handle,
-      displayName: profile.displayName || profile.handle,
-      onAdd: invalidateProfileQuery,
-      onRemove: invalidateProfileQuery,
-    })
-  }, [track, profile, openModal, invalidateProfileQuery])
-
-  const onPressMuteAccount = React.useCallback(async () => {
-    track('ProfileHeader:MuteAccountButtonClicked')
-    try {
-      await queueMute()
-      Toast.show(_(msg`Account muted`))
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        logger.error('Failed to mute account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
-      }
-    }
-  }, [track, queueMute, _])
-
-  const onPressUnmuteAccount = React.useCallback(async () => {
-    track('ProfileHeader:UnmuteAccountButtonClicked')
-    try {
-      await queueUnmute()
-      Toast.show(_(msg`Account unmuted`))
-    } catch (e: any) {
-      if (e?.name !== 'AbortError') {
-        logger.error('Failed to unmute account', {message: e})
-        Toast.show(_(msg`There was an issue! ${e.toString()}`))
-      }
-    }
-  }, [track, queueUnmute, _])
-
-  const onPressBlockAccount = React.useCallback(async () => {
-    track('ProfileHeader:BlockAccountButtonClicked')
-    openModal({
-      name: 'confirm',
-      title: _(msg`Block Account`),
-      message: _(
-        msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-      ),
-      onPressConfirm: async () => {
-        try {
-          await queueBlock()
-          Toast.show(_(msg`Account blocked`))
-        } catch (e: any) {
-          if (e?.name !== 'AbortError') {
-            logger.error('Failed to block account', {message: e})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`))
-          }
-        }
-      },
-    })
-  }, [track, queueBlock, openModal, _])
-
-  const onPressUnblockAccount = React.useCallback(async () => {
+  const onPressUnblockAccount = React.useCallback(() => {
     track('ProfileHeader:UnblockAccountButtonClicked')
     openModal({
       name: 'confirm',
@@ -274,119 +196,12 @@ let ProfileHeader = ({
         }
       },
     })
-  }, [track, queueUnblock, openModal, _])
-
-  const onPressReportAccount = React.useCallback(() => {
-    track('ProfileHeader:ReportAccountButtonClicked')
-    openModal({
-      name: 'report',
-      did: profile.did,
-    })
-  }, [track, openModal, profile])
+  }, [_, openModal, queueUnblock, track])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
-  const dropdownItems: DropdownItem[] = React.useMemo(() => {
-    let items: DropdownItem[] = [
-      {
-        testID: 'profileHeaderDropdownShareBtn',
-        label: isWeb ? _(msg`Copy link to profile`) : _(msg`Share`),
-        onPress: onPressShare,
-        icon: {
-          ios: {
-            name: 'square.and.arrow.up',
-          },
-          android: 'ic_menu_share',
-          web: 'share',
-        },
-      },
-    ]
-    if (hasSession) {
-      items.push({label: 'separator'})
-      items.push({
-        testID: 'profileHeaderDropdownListAddRemoveBtn',
-        label: _(msg`Add to Lists`),
-        onPress: onPressAddRemoveLists,
-        icon: {
-          ios: {
-            name: 'list.bullet',
-          },
-          android: 'ic_menu_add',
-          web: 'list',
-        },
-      })
-      if (!isMe) {
-        if (!profile.viewer?.blocking) {
-          if (!profile.viewer?.mutedByList) {
-            items.push({
-              testID: 'profileHeaderDropdownMuteBtn',
-              label: profile.viewer?.muted
-                ? _(msg`Unmute Account`)
-                : _(msg`Mute Account`),
-              onPress: profile.viewer?.muted
-                ? onPressUnmuteAccount
-                : onPressMuteAccount,
-              icon: {
-                ios: {
-                  name: 'speaker.slash',
-                },
-                android: 'ic_lock_silent_mode',
-                web: 'comment-slash',
-              },
-            })
-          }
-        }
-        if (!profile.viewer?.blockingByList) {
-          items.push({
-            testID: 'profileHeaderDropdownBlockBtn',
-            label: profile.viewer?.blocking
-              ? _(msg`Unblock Account`)
-              : _(msg`Block Account`),
-            onPress: profile.viewer?.blocking
-              ? onPressUnblockAccount
-              : onPressBlockAccount,
-            icon: {
-              ios: {
-                name: 'person.fill.xmark',
-              },
-              android: 'ic_menu_close_clear_cancel',
-              web: 'user-slash',
-            },
-          })
-        }
-        items.push({
-          testID: 'profileHeaderDropdownReportBtn',
-          label: _(msg`Report Account`),
-          onPress: onPressReportAccount,
-          icon: {
-            ios: {
-              name: 'exclamationmark.triangle',
-            },
-            android: 'ic_menu_report_image',
-            web: 'circle-exclamation',
-          },
-        })
-      }
-    }
-    return items
-  }, [
-    isMe,
-    hasSession,
-    profile.viewer?.muted,
-    profile.viewer?.mutedByList,
-    profile.viewer?.blocking,
-    profile.viewer?.blockingByList,
-    onPressShare,
-    onPressUnmuteAccount,
-    onPressMuteAccount,
-    onPressUnblockAccount,
-    onPressBlockAccount,
-    onPressReportAccount,
-    onPressAddRemoveLists,
-    _,
-  ])
 
   const blockHide =
     !isMe && (profile.viewer?.blocking || profile.viewer?.blockedBy)
@@ -516,17 +331,7 @@ let ProfileHeader = ({
               )}
             </>
           ) : null}
-          {dropdownItems?.length ? (
-            <NativeDropdown
-              testID="profileHeaderDropdownBtn"
-              items={dropdownItems}
-              accessibilityLabel={_(msg`More options`)}
-              accessibilityHint="">
-              <View style={[styles.btn, styles.secondaryBtn, pal.btn]}>
-                <FontAwesomeIcon icon="ellipsis" size={20} style={[pal.text]} />
-              </View>
-            </NativeDropdown>
-          ) : undefined}
+          <ProfileMenu profile={profile} />
         </View>
         <View pointerEvents="none">
           <Text

@@ -125,6 +125,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
             a.p_xs,
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
+            {minWidth: 170},
           ]}>
           {children}
         </View>
