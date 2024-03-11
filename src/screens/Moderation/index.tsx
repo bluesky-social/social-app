@@ -4,7 +4,7 @@ import {useFocusEffect} from '@react-navigation/native'
 import {ComAtprotoLabelDefs} from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyLabelerDefs, LABELS} from '@atproto/api'
+import {LABELS} from '@atproto/api'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
 import {NativeStackScreenProps, CommonNavigatorParams} from '#/lib/routes/types'
@@ -86,16 +86,11 @@ export function ModerationScreen(
     error: preferencesError,
     data: preferences,
   } = usePreferencesQuery()
-  const {
-    isLoading: isLabelersLoading,
-    data: labelers,
-    error: labelersError,
-  } = useMyLabelers()
   const {gtMobile} = useBreakpoints()
   const {height} = useSafeAreaFrame()
 
-  const isLoading = isPreferencesLoading || isLabelersLoading
-  const error = preferencesError || labelersError
+  const isLoading = isPreferencesLoading
+  const error = preferencesError
 
   return (
     <CenteredView
@@ -120,7 +115,7 @@ export function ModerationScreen(
           }
         />
       ) : (
-        <ModerationScreenInner preferences={preferences} labelers={labelers} />
+        <ModerationScreenInner preferences={preferences} />
       )}
     </CenteredView>
   )
@@ -128,10 +123,8 @@ export function ModerationScreen(
 
 export function ModerationScreenInner({
   preferences,
-  labelers = [],
 }: {
   preferences: UsePreferencesQueryResponse
-  labelers?: AppBskyLabelerDefs.LabelerViewDetailed[]
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -140,6 +133,11 @@ export function ModerationScreenInner({
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const {openModal} = useModalControls()
+  const {
+    isLoading: isLabelersLoading,
+    data: labelers,
+    error: labelersError,
+  } = useMyLabelers()
 
   useFocusEffect(
     React.useCallback(() => {
@@ -381,30 +379,43 @@ export function ModerationScreenInner({
           ]}>
           <Trans>Advanced</Trans>
         </Text>
-        <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
-          {labelers.map((mod, i) => {
-            return (
-              <React.Fragment key={mod.creator.did}>
-                {i !== 0 && <Divider />}
-                <ModerationServiceCard.Link labeler={mod}>
-                  <ModerationServiceCard.Card.Outer>
-                    <ModerationServiceCard.Card.Avatar
-                      avatar={mod.creator.avatar}
-                    />
-                    <ModerationServiceCard.Card.Content
-                      title={getModerationServiceTitle({
-                        displayName: mod.creator.displayName,
-                        handle: mod.creator.handle,
-                      })}
-                      handle={mod.creator.handle}
-                      description={mod.creator.description || ''}
-                    />
-                  </ModerationServiceCard.Card.Outer>
-                </ModerationServiceCard.Link>
-              </React.Fragment>
-            )
-          })}
-        </View>
+
+        {isLabelersLoading ? (
+          <Loader />
+        ) : labelersError || !labelers ? (
+          <View style={[a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
+            <Text>
+              <Trans>
+                We were unable to load your configured labelers at this time.
+              </Trans>
+            </Text>
+          </View>
+        ) : (
+          <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
+            {labelers.map((mod, i) => {
+              return (
+                <React.Fragment key={mod.creator.did}>
+                  {i !== 0 && <Divider />}
+                  <ModerationServiceCard.Link labeler={mod}>
+                    <ModerationServiceCard.Card.Outer>
+                      <ModerationServiceCard.Card.Avatar
+                        avatar={mod.creator.avatar}
+                      />
+                      <ModerationServiceCard.Card.Content
+                        title={getModerationServiceTitle({
+                          displayName: mod.creator.displayName,
+                          handle: mod.creator.handle,
+                        })}
+                        handle={mod.creator.handle}
+                        description={mod.creator.description || ''}
+                      />
+                    </ModerationServiceCard.Card.Outer>
+                  </ModerationServiceCard.Link>
+                </React.Fragment>
+              )
+            })}
+          </View>
+        )}
 
         <Text
           style={[
