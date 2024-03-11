@@ -281,7 +281,7 @@ export function ProfileFeedScreenInner({
               : undefined
           }
           avatarType="algo">
-          <View style={[a.flex_row, a.gap_sm]}>
+          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
             {feedInfo && hasSession && (
               <NewButton
                 testID={isPinned ? 'unpinBtn' : 'pinBtn'}
@@ -302,8 +302,8 @@ export function ProfileFeedScreenInner({
                   const styles = [
                     a.justify_center,
                     a.align_center,
-                    a.rounded_sm,
-                    {height: 40, width: 40},
+                    a.rounded_full,
+                    {height: 36, width: 36},
                     t.atoms.bg_contrast_50,
                     (state.hovered || state.pressed) && [
                       t.atoms.bg_contrast_100,
