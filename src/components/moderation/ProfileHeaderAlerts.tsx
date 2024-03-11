@@ -55,7 +55,7 @@ function ProfileLabel({cause}: {cause: ModerationCause}) {
         }}
         style={[a.px_sm, a.py_xs, a.gap_xs]}>
         <ButtonIcon icon={desc.icon} position="left" />
-        <ButtonText style={[a.flex_1, a.text_left, a.leading_snug]}>
+        <ButtonText style={[a.text_left, a.leading_snug]}>
           {desc.name}
         </ButtonText>
       </Button>

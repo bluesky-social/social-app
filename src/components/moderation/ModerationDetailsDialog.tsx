@@ -114,14 +114,14 @@ function ModerationDetailsDialogInner({
       <Text style={[t.atoms.text, a.text_2xl, a.font_bold, a.mb_sm]}>
         {name}
       </Text>
-      <Text style={[t.atoms.text, a.text_md, a.mb_md, a.leading_snug]}>
+      <Text style={[t.atoms.text, a.text_md, a.mb_lg, a.leading_snug]}>
         {description}
       </Text>
 
       {modcause.type === 'label' && (
         <>
           <Divider />
-          <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_md]}>
+          <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
             <Trans>
               This label was applied by{' '}
               <InlineLink

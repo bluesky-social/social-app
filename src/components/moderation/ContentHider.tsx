@@ -75,12 +75,11 @@ export function ContentHider({
               a.justify_start,
               a.align_center,
               a.py_md,
-              a.pl_md,
-              a.pr_lg,
+              a.px_lg,
               a.gap_xs,
               a.rounded_sm,
               t.atoms.bg_contrast_25,
-              gtMobile && [a.py_md, a.px_lg, a.gap_sm],
+              gtMobile && [a.gap_sm],
               (state.hovered || state.pressed) && t.atoms.bg_contrast_50,
             ]}>
             <desc.icon
