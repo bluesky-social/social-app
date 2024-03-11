@@ -1,10 +1,10 @@
 import React from 'react'
+import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
+import {Image as ExpoImage} from 'expo-image'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
-import {TouchableOpacity, TouchableOpacityProps, View} from 'react-native'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
-import {Image as ExpoImage} from 'expo-image'
+import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
 
 function AvatarBottomButton({...props}: TouchableOpacityProps) {
@@ -69,7 +69,7 @@ export function AvatarCircle({
         />
       ) : (
         <View style={styles.imageContainer}>
-          <ImageIcon
+          <StreamingLive
             height={100}
             width={100}
             style={{color: t.palette.contrast_200}}

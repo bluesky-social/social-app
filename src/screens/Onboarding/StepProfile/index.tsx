@@ -2,6 +2,7 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {Image as ExpoImage} from 'expo-image'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {StreamingLive_Stroke2_Corner0_Rounded as StreamingLive} from '#/components/icons/StreamingLive'
@@ -28,7 +29,6 @@ import {openPicker} from 'lib/media/picker.shared'
 import {isNative, isWeb} from 'platform/detection'
 import {openCropper} from 'lib/media/picker'
 import {compressIfNeeded} from 'lib/media/manip'
-import {Image as ExpoImage} from 'expo-image/build/Image'
 import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
 
 export interface Avatar {

@@ -1,8 +1,8 @@
 import React from 'react'
-import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
-import ViewShot from 'react-native-view-shot'
 import {View} from 'react-native'
+import ViewShot from 'react-native-view-shot'
 
+import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
 import {atoms as a} from '#/alf'
 
 const SIZE_MULTIPLIER = 1.5
