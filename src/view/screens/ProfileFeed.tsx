@@ -379,7 +379,7 @@ export function ProfileFeedScreenInner({
         </ProfileSubpageHeader>
         <AboutSection
           feedOwnerDid={feedInfo.creatorDid}
-          feedRkey={feedInfo.rkey}
+          feedRkey={feedInfo.route.params.rkey}
           feedInfo={feedInfo}
         />
       </>
