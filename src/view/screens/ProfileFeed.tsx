@@ -1,11 +1,10 @@
 import React, {useMemo, useCallback} from 'react'
-import {Dimensions, StyleSheet, View} from 'react-native'
+import {Dimensions, StyleSheet, View, Pressable} from 'react-native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {usePalette} from 'lib/hooks/usePalette'
 import {HeartIcon, HeartIconSolid} from 'lib/icons'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
@@ -29,7 +28,6 @@ import {shareUrl} from 'lib/sharing'
 import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {makeCustomFeedLink} from 'lib/routes/links'
@@ -59,7 +57,16 @@ import {useComposerControls} from '#/state/shell/composer'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {isNative} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import * as Menu from '#/components/Menu'
+import {HITSLOP_20} from '#/lib/constants'
+import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {isWeb} from '#/platform/detection'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {Button as NewButton, ButtonText} from '#/components/Button'
 
 const SECTION_TITLES = ['Posts', 'About']
 
@@ -148,7 +155,7 @@ export function ProfileFeedScreenInner({
   feedInfo: FeedSourceFeedInfo
 }) {
   const {_} = useLingui()
-  const pal = usePalette('default')
+  const t = useTheme()
   const {hasSession, currentAccount} = useSession()
   const {openModal} = useModalControls()
   const {openComposer} = useComposerControls()
@@ -263,67 +270,6 @@ export function ProfileFeedScreenInner({
     [feedSectionRef],
   )
 
-  // render
-  // =
-
-  const dropdownItems: DropdownItem[] = React.useMemo(() => {
-    return [
-      hasSession && {
-        testID: 'feedHeaderDropdownToggleSavedBtn',
-        label: isSaved ? _(msg`Remove from my feeds`) : _(msg`Add to my feeds`),
-        onPress: isSavePending || isRemovePending ? undefined : onToggleSaved,
-        icon: isSaved
-          ? {
-              ios: {
-                name: 'trash',
-              },
-              android: 'ic_delete',
-              web: ['far', 'trash-can'],
-            }
-          : {
-              ios: {
-                name: 'plus',
-              },
-              android: '',
-              web: 'plus',
-            },
-      },
-      hasSession && {
-        testID: 'feedHeaderDropdownReportBtn',
-        label: _(msg`Report feed`),
-        onPress: onPressReport,
-        icon: {
-          ios: {
-            name: 'exclamationmark.triangle',
-          },
-          android: 'ic_menu_report_image',
-          web: 'circle-exclamation',
-        },
-      },
-      {
-        testID: 'feedHeaderDropdownShareBtn',
-        label: _(msg`Share feed`),
-        onPress: onPressShare,
-        icon: {
-          ios: {
-            name: 'square.and.arrow.up',
-          },
-          android: 'ic_menu_share',
-          web: 'share',
-        },
-      },
-    ].filter(Boolean) as DropdownItem[]
-  }, [
-    hasSession,
-    onToggleSaved,
-    onPressReport,
-    onPressShare,
-    isSaved,
-    isSavePending,
-    isRemovePending,
-    _,
-  ])
-
   const renderHeader = useCallback(() => {
     return (
       <ProfileSubpageHeader
@@ -338,55 +284,117 @@ export function ProfileFeedScreenInner({
             : undefined
         }
         avatarType="algo">
-        {feedInfo && hasSession && (
-          <>
-            <Button
-              disabled={isSavePending || isRemovePending}
-              type="default"
-              label={isSaved ? _(msg`Unsave`) : _(msg`Save`)}
-              onPress={onToggleSaved}
-              style={styles.btn}
-            />
-            <Button
+        <View style={[a.flex_row, a.gap_sm]}>
+          {feedInfo && hasSession && (
+            <NewButton
               testID={isPinned ? 'unpinBtn' : 'pinBtn'}
               disabled={isPinPending || isUnpinPending}
-              type={isPinned ? 'default' : 'inverted'}
-              label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
-              onPress={onTogglePinned}
-              style={styles.btn}
-            />
-          </>
-        )}
-        <NativeDropdown
-          testID="headerDropdownBtn"
-          items={dropdownItems}
-          accessibilityLabel={_(msg`More options`)}
-          accessibilityHint="">
-          <View style={[pal.viewLight, styles.btn]}>
-            <FontAwesomeIcon
-              icon="ellipsis"
-              size={20}
-              color={pal.colors.text}
-            />
-          </View>
-        </NativeDropdown>
+              size="small"
+              variant="solid"
+              color={isPinned ? 'secondary' : 'primary'}
+              label={isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)}
+              onPress={onTogglePinned}>
+              <ButtonText>
+                {isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
+              </ButtonText>
+            </NewButton>
+          )}
+          <Menu.Root>
+            <Menu.Trigger label={_(msg`Open feed options menu`)}>
+              {({props, state}) => {
+                const styles = [
+                  a.justify_center,
+                  a.align_center,
+                  a.rounded_sm,
+                  {height: 40, width: 40},
+                  t.atoms.bg_contrast_50,
+                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_100],
+                ]
+                return isWeb ? (
+                  <View {...props} style={styles} testID="headerDropdownBtn">
+                    <Ellipsis
+                      size="lg"
+                      fill={t.atoms.text_contrast_medium.color}
+                    />
+                  </View>
+                ) : (
+                  <Pressable
+                    {...props}
+                    hitSlop={HITSLOP_20}
+                    style={styles}
+                    testID="headerDropdownBtn">
+                    <Ellipsis
+                      size="lg"
+                      fill={t.atoms.text_contrast_medium.color}
+                    />
+                  </Pressable>
+                )
+              }}
+            </Menu.Trigger>
+
+            <Menu.Outer>
+              <Menu.Group>
+                {hasSession && (
+                  <>
+                    <Menu.Item
+                      disabled={isSavePending || isRemovePending}
+                      testID="feedHeaderDropdownToggleSavedBtn"
+                      label={
+                        isSaved
+                          ? _(msg`Remove from my feeds`)
+                          : _(msg`Add to my feeds`)
+                      }
+                      onPress={onToggleSaved}>
+                      <Menu.ItemText>
+                        {isSaved
+                          ? _(msg`Remove from my feeds`)
+                          : _(msg`Add to my feeds`)}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon
+                        icon={isSaved ? Trash : Plus}
+                        position="right"
+                      />
+                    </Menu.Item>
+
+                    <Menu.Item
+                      testID="feedHeaderDropdownReportBtn"
+                      label={_(msg`Report feed`)}
+                      onPress={onPressReport}>
+                      <Menu.ItemText>{_(msg`Report feed`)}</Menu.ItemText>
+                      <Menu.ItemIcon icon={CircleInfo} position="right" />
+                    </Menu.Item>
+                  </>
+                )}
+
+                <Menu.Item
+                  testID="feedHeaderDropdownShareBtn"
+                  label={_(msg`Share feed`)}
+                  onPress={onPressShare}>
+                  <Menu.ItemText>{_(msg`Share feed`)}</Menu.ItemText>
+                  <Menu.ItemIcon icon={Share} position="right" />
+                </Menu.Item>
+              </Menu.Group>
+            </Menu.Outer>
+          </Menu.Root>
+        </View>
       </ProfileSubpageHeader>
     )
   }, [
     _,
     hasSession,
-    pal,
     feedInfo,
     isPinned,
     onTogglePinned,
     onToggleSaved,
-    dropdownItems,
     currentAccount?.did,
     isPinPending,
     isRemovePending,
     isSavePending,
     isSaved,
     isUnpinPending,
+    onPressReport,
+    onPressShare,
+    t,
   ])
 
   return (

@@ -92,7 +92,7 @@ export function Trigger({children, label, style}: TriggerProps) {
         accessibilityLabel={label}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={flatten([style, focused && web({outline: 0})])}
+        style={flatten([style])}
         onPointerDown={() => control.open()}
         {...web({
           onMouseEnter,
