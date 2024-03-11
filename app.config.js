@@ -153,10 +153,11 @@ module.exports = function (config) {
           'expo-notifications',
           {
             icon: './assets/icon-android-notification.png',
-            color: '#ffffff',
+            color: '#1185fe',
           },
         ],
         './plugins/withAndroidManifestPlugin.js',
+        './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),

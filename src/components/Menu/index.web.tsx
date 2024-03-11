@@ -92,10 +92,8 @@ export function Trigger({children, label, style}: TriggerProps) {
         accessibilityLabel={label}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={flatten([style, web({outline: 0})])}
-        onPointerDown={() => {
-          control.open()
-        }}
+        style={flatten([style, focused && web({outline: 0})])}
+        onPointerDown={() => control.open()}
         {...web({
           onMouseEnter,
           onMouseLeave,
@@ -131,6 +129,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
           {children}
         </View>
 
+        {/* Disabled until we can fix positioning
         <DropdownMenu.Arrow
           className="DropdownMenuArrow"
           fill={
@@ -138,6 +137,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
               .backgroundColor
           }
         />
+          */}
       </DropdownMenu.Content>
     </DropdownMenu.Portal>
   )
