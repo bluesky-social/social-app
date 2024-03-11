@@ -4,7 +4,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useIsFocused, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {usePalette} from 'lib/hooks/usePalette'
-import {HeartIcon, HeartIconSolid} from 'lib/icons'
 import {CommonNavigatorParams} from 'lib/routes/types'
 import {makeRecordUri} from 'lib/strings/url-helpers'
 import {s} from 'lib/styles'
@@ -62,6 +61,10 @@ import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
+import {
+  Heart2_Stroke2_Corner0_Rounded as HeartOutline,
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+} from '#/components/icons/Heart2'
 import {Button as NewButton, ButtonText} from '#/components/Button'
 
 const SECTION_TITLES = ['Posts']
@@ -511,6 +514,7 @@ function AboutSection({
   feedRkey: string
   feedInfo: FeedSourceFeedInfo
 }) {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const [likeUri, setLikeUri] = React.useState(feedInfo.likeUri)
@@ -561,25 +565,26 @@ function AboutSection({
         </Text>
       )}
       <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
-        <Button
-          type="default"
+        <NewButton
+          size="small"
+          variant="solid"
+          color="secondary"
+          shape="round"
+          label={_(msg`Like this feed`)}
           testID="toggleLikeBtn"
-          accessibilityLabel={_(msg`Like this feed`)}
-          accessibilityHint=""
           disabled={!hasSession || isLikePending || isUnlikePending}
-          onPress={onToggleLiked}
-          style={{paddingHorizontal: 10}}>
+          onPress={onToggleLiked}>
           {isLiked ? (
-            <HeartIconSolid size={19} style={s.likeColor} />
+            <HeartFilled size="md" fill={s.likeColor.color} />
           ) : (
-            <HeartIcon strokeWidth={3} size={19} style={pal.textLight} />
+            <HeartOutline size="md" fill={t.atoms.text_contrast_medium.color} />
           )}
-        </Button>
+        </NewButton>
         {typeof likeCount === 'number' && (
           <TextLink
             href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             text={_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
-            style={[pal.textLight, s.semiBold]}
+            style={[t.atoms.text_contrast_medium, s.semiBold]}
           />
         )}
       </View>
