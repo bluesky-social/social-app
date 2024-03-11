@@ -5,6 +5,11 @@ import * as WebBrowser from 'expo-web-browser'
 import {isNative} from '#/platform/detection'
 import {useModalControls} from '../modals'
 import {usePalette} from 'lib/hooks/usePalette'
+import {
+  isBskyRSSUrl,
+  isRelativeUrl,
+  createBskyAppAbsoluteUrl,
+} from 'lib/strings/url-helpers'
 
 type StateContext = persisted.Schema['useInAppBrowser']
 type SetContext = (v: persisted.Schema['useInAppBrowser']) => void
@@ -57,6 +62,10 @@ export function useOpenLink() {
 
   const openLink = React.useCallback(
     (url: string, override?: boolean) => {
+      if (isBskyRSSUrl(url) && isRelativeUrl(url)) {
+        url = createBskyAppAbsoluteUrl(url)
+      }
+
       if (isNative && !url.startsWith('mailto:')) {
         if (override === undefined && enabled === undefined) {
           openModal({
