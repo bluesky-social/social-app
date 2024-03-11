@@ -1,5 +1,9 @@
 import React from 'react'
-import {StatsigProvider, useGate as useStatsigGate} from 'statsig-react'
+import {
+  Statsig,
+  StatsigProvider,
+  useGate as useStatsigGate,
+} from 'statsig-react'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
 
@@ -11,6 +15,14 @@ const statsigOptions = {
   // This ensures the UI is always consistent and doesn't update mid-session.
   // Note this makes cold load (no local storage) and private mode return `false` for all gates.
   initTimeoutMs: 1,
+}
+
+export function logEvent(
+  eventName: string,
+  value?: string | number | null,
+  metadata?: Record<string, string> | null,
+) {
+  Statsig.logEvent(eventName, value, metadata)
 }
 
 export function useGate(gateName: string) {
@@ -36,6 +48,18 @@ export function Provider({children}: {children: React.ReactNode}) {
     () => toStatsigUser(currentAccount?.did),
     [currentAccount?.did],
   )
+
+  React.useEffect(() => {
+    function refresh() {
+      // Intentionally refetching the config using the JS SDK rather than React SDK
+      // so that the new config is stored in cache but isn't used during this session.
+      // It will kick in for the next reload.
+      Statsig.updateUser(currentStatsigUser)
+    }
+    const id = setInterval(refresh, 3 * 60e3 /* 3 min */)
+    return () => clearInterval(id)
+  }, [currentStatsigUser])
+
   return (
     <StatsigProvider
       sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"
