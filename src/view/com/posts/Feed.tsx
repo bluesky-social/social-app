@@ -32,6 +32,7 @@ import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -84,6 +85,7 @@ let Feed = ({
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount} = useSession()
+  const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = React.useState(false)
   const checkForNewRef = React.useRef<(() => void) | null>(null)
   const lastFetchRef = React.useRef<number>(Date.now())
@@ -327,6 +329,8 @@ let Feed = ({
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
+        initialNumToRender={initialNumToRender}
+        windowSize={11}
       />
     </View>
   )

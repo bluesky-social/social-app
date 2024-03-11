@@ -32,8 +32,11 @@ interface AddedProps {
 export function CenteredView({
   style,
   sideBorders,
+  topBorder,
   ...props
-}: React.PropsWithChildren<ViewProps & {sideBorders?: boolean}>) {
+}: React.PropsWithChildren<
+  ViewProps & {sideBorders?: boolean; topBorder?: boolean}
+>) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
   if (!isMobile) {
@@ -43,6 +46,12 @@ export function CenteredView({
     style = addStyle(style, {
       borderLeftWidth: 1,
       borderRightWidth: 1,
+    })
+    style = addStyle(style, pal.border)
+  }
+  if (topBorder) {
+    style = addStyle(style, {
+      borderTopWidth: 1,
     })
     style = addStyle(style, pal.border)
   }

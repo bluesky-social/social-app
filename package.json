@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.71.0",
+  "version": "1.72.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -44,7 +44,7 @@
     "update-extensions": "scripts/updateExtensions.sh"
   },
   "dependencies": {
-    "@atproto/api": "^0.10.4",
+    "@atproto/api": "^0.10.5",
     "@braintree/sanitize-url": "^6.0.2",
     "@discord/bottom-sheet": "https://github.com/bluesky-social/react-native-bottom-sheet.git#discord-fork-4.6.1",
     "@emoji-mart/react": "^1.1.1",
@@ -57,6 +57,7 @@
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.3.1",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@react-native-async-storage/async-storage": "^1.22.3",
     "@react-native-masked-view/masked-view": "0.3.0",
     "@react-native-menu/menu": "^0.8.0",
@@ -143,7 +144,9 @@
     "react": "18.2.0",
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
+    "react-keyed-flatten-children": "^3.0.0",
     "react-native": "~0.73.5",
+    "react-native-date-picker": "^4.4.0",
     "react-native-date-picker": "^4.4.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-gesture-handler": "~2.15.0",
@@ -166,6 +169,8 @@
     "react-native-webview": "~13.8.1",
     "react-responsive": "^9.0.2",
     "sentry-expo": "~7.2.0",
+    "statsig-react": "^1.36.0",
+    "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "zeego": "^1.6.2",
