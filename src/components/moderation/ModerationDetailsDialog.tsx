@@ -6,13 +6,14 @@ import {ModerationCause} from '@atproto/api'
 
 import {listUriToHref} from '#/lib/strings/url-helpers'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
+import {makeProfileLink} from '#/lib/routes/links'
 
 import {isNative} from '#/platform/detection'
 import {useTheme, atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import {InlineLink} from '#/components/Link'
-import {makeProfileLink} from '#/lib/routes/links'
+import {Divider} from '#/components/Divider'
 
 export {useDialogControl as useModerationDetailsDialogControl} from '#/components/Dialog'
 
@@ -118,19 +119,21 @@ function ModerationDetailsDialogInner({
       </Text>
 
       {modcause.type === 'label' && (
-        <View style={[t.atoms.bg_contrast_25, a.px_lg, a.py_lg, a.rounded_sm]}>
-          <Text style={[t.atoms.text, a.text_sm, a.leading_snug]}>
+        <>
+          <Divider />
+          <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_md]}>
             <Trans>
               This label was applied by{' '}
               <InlineLink
                 to={makeProfileLink({did: modcause.label.src, handle: ''})}
-                onPress={() => control.close()}>
+                onPress={() => control.close()}
+                style={a.text_md}>
                 {desc.source}
               </InlineLink>
               .
             </Trans>
           </Text>
-        </View>
+        </>
       )}
 
       {isNative && <View style={{height: 40}} />}

@@ -74,16 +74,17 @@ export function ContentHider({
               a.w_full,
               a.justify_start,
               a.align_center,
-              a.py_sm,
-              a.px_md,
-              a.gap_sm,
+              a.py_md,
+              a.pl_md,
+              a.pr_lg,
+              a.gap_xs,
               a.rounded_sm,
               t.atoms.bg_contrast_25,
-              gtMobile && [a.py_md, a.px_lg],
+              gtMobile && [a.py_md, a.px_lg, a.gap_sm],
               (state.hovered || state.pressed) && t.atoms.bg_contrast_50,
             ]}>
             <desc.icon
-              size={gtMobile ? 'lg' : 'md'}
+              size="md"
               fill={t.atoms.text_contrast_medium.color}
               style={{marginLeft: -2}}
             />
@@ -92,7 +93,6 @@ export function ContentHider({
                 a.flex_1,
                 a.text_left,
                 a.font_bold,
-                a.italic,
                 a.leading_snug,
                 t.atoms.text_contrast_medium,
                 web({
@@ -126,7 +126,7 @@ export function ContentHider({
           label={_(
             msg`Learn more about the moderation applied to this content.`,
           )}
-          style={[a.pt_sm]}>
+          style={[a.pt_xs]}>
           {state => (
             <Text
               style={[
@@ -138,7 +138,7 @@ export function ContentHider({
                 a.text_left,
               ]}>
               <Trans>
-                This post was labeled by {sanitizeDisplayName(desc.source!)}.{' '}
+                Labeled by {sanitizeDisplayName(desc.source!)}.{' '}
                 <Text
                   style={[
                     {color: t.palette.primary_500},

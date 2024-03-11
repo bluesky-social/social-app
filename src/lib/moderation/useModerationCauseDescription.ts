@@ -102,7 +102,7 @@ export function useModerationCauseDescription(
     }
   }
   if (cause.type === 'label') {
-    const def = getDefinition(labelDefs, cause.label)
+    const def = cause.labelDef || getDefinition(labelDefs, cause.label)
     const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
     const labeler = labelers.find(l => l.creator.did === cause.label.src)
     return {

@@ -52,7 +52,7 @@ export function LabelsOnMe({
           control.open()
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
-        <ButtonText style={[a.leading_snug, a.italic]}>
+        <ButtonText style={[a.leading_snug]}>
           {labels.length}{' '}
           {labels.length === 1 ? (
             <Trans>
