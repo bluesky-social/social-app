@@ -11760,6 +11760,14 @@ expo-clipboard@^5.0.1:
   resolved "https://registry.yarnpkg.com/expo-clipboard/-/expo-clipboard-5.0.1.tgz#a62a021a9444740d180d60f915cca8242a323716"
   integrity sha512-JH853QJPr5W3h87If3aDTnMK+ESSIrwzU2TdfZrqZttVDY2pMIf/w37mVHHNYodXM4ATHXadtOkjKbAa0DWwUg==
 
+expo-constants@^13.0.2:
+  version "13.2.4"
+  resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-13.2.4.tgz#eab4a553f074b2c60ad7a158d3b82e3484a94606"
+  integrity sha512-Zobau8EuTk2GgafwkfGnWM6CmSLB7X8qnQXVuXe0nd3v92hfQUmRWGhJwH88uxXj3LrfqctM6PaJ8taG1vxfBw==
+  dependencies:
+    "@expo/config" "~7.0.0"
+    uuid "^3.3.2"
+
 expo-constants@~15.4.0:
   version "15.4.1"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-15.4.1.tgz#f76f347cf687b6630e1e3b9a385a4e42771671a4"
@@ -11780,6 +11788,13 @@ expo-constants@~15.4.5:
   integrity sha512-1pVVjwk733hbbIjtQcvUFCme540v4gFemdNlaxM2UXKbfRCOh2hzgKN5joHMOysoXQe736TTUrRj7UaZI5Yyhg==
   dependencies:
     "@expo/config" "~8.5.0"
+
+expo-device@~4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/expo-device/-/expo-device-4.1.1.tgz#5de94144113ffb7fa0f37fa3d70e452113954c10"
+  integrity sha512-It0SGtKcvzQSf+Co6zdPdB63zZvG2/rDolB1lqswMNKj03Y7KVU41s5tcQCqNczj7tmeN3CJy7A8YhYGKdb7gA==
+  dependencies:
+    ua-parser-js "^0.7.19"
 
 expo-device@~5.9.3:
   version "5.9.3"
@@ -18421,11 +18436,6 @@ react-keyed-flatten-children@^3.0.0:
   integrity sha512-tSH6gvOyQjt3qtjG+kU9sTypclL1672yjpVufcE3aHNM0FhvjBUQZqsb/awIux4zEuVC3k/DP4p0GdTT/QUt/Q==
   dependencies:
     react-is "^18.2.0"
-
-react-native-date-picker@^4.4.0:
-  version "4.4.0"
-  resolved "https://registry.yarnpkg.com/react-native-date-picker/-/react-native-date-picker-4.4.0.tgz#fe5b6eb8d85a4a30b2991ada5169a30ce5023ead"
-  integrity sha512-Axx3byihwwhKRLRVjPAr/UaEysapkRcKmjjM8/05UaVm4Q0xDn2RFUcRdy1QAahhRcjLjlVYhepxvU5bdgy7ZQ==
 
 react-native-date-picker@^4.4.0:
   version "4.4.0"
