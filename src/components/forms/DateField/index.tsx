@@ -1,13 +1,11 @@
 import React from 'react'
 import {View} from 'react-native'
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from '@react-native-community/datetimepicker'
 
 import {useTheme, atoms} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import {DateFieldProps} from '#/components/forms/DateField/types'
+import DatePicker from 'react-native-date-picker'
 
 export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label
@@ -28,7 +26,7 @@ export function DateField({
   const t = useTheme()
 
   const onChangeInternal = React.useCallback(
-    (event: DateTimePickerEvent, date: Date | undefined) => {
+    (date: Date | undefined) => {
       if (date) {
         const formatted = toSimpleDateString(date)
         onChangeDate(formatted)
@@ -39,17 +37,15 @@ export function DateField({
 
   return (
     <View style={[atoms.relative, atoms.w_full]}>
-      <DateTimePicker
+      <DatePicker
+        theme={t.name === 'light' ? 'light' : 'dark'}
+        date={new Date(value)}
+        onDateChange={onChangeInternal}
+        mode="date"
+        testID={`${testID}-datepicker`}
         aria-label={label}
         accessibilityLabel={label}
         accessibilityHint={undefined}
-        testID={`${testID}-datepicker`}
-        mode="date"
-        timeZoneName={'Etc/UTC'}
-        display="spinner"
-        themeVariant={t.name === 'light' ? 'light' : 'dark'}
-        value={new Date(value)}
-        onChange={onChangeInternal}
       />
     </View>
   )

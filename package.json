@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.71.0",
+  "version": "1.72.0",
   "private": true,
   "engines": {
     "node": ">=18"
@@ -44,7 +44,7 @@
     "update-extensions": "scripts/updateExtensions.sh"
   },
   "dependencies": {
-    "@atproto/api": "^0.10.4",
+    "@atproto/api": "^0.10.5",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
@@ -58,11 +58,11 @@
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.3.1",
+    "@radix-ui/react-dropdown-menu": "^2.0.6",
     "@react-native-async-storage/async-storage": "1.21.0",
     "@react-native-camera-roll/camera-roll": "^5.2.2",
     "@react-native-clipboard/clipboard": "^1.10.0",
     "@react-native-community/blur": "^4.3.0",
-    "@react-native-community/datetimepicker": "7.6.1",
     "@react-native-masked-view/masked-view": "0.3.0",
     "@react-native-menu/menu": "^0.8.0",
     "@react-native-picker/picker": "2.6.1",
@@ -148,8 +148,10 @@
     "react-avatar-editor": "^13.0.0",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.2.0",
+    "react-keyed-flatten-children": "^3.0.0",
     "react-native": "0.73.2",
     "react-native-appstate-hook": "^1.0.6",
+    "react-native-date-picker": "^4.4.0",
     "react-native-drawer-layout": "^4.0.0-alpha.3",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "~2.14.0",
@@ -177,6 +179,8 @@
     "react-responsive": "^9.0.2",
     "rn-fetch-blob": "^0.12.0",
     "sentry-expo": "~7.0.1",
+    "statsig-react": "^1.36.0",
+    "statsig-react-native-expo": "^4.6.1",
     "tippy.js": "^6.3.7",
     "tlds": "^1.234.0",
     "use-deep-compare": "^1.1.0",

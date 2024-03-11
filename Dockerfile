@@ -31,7 +31,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm use $NODE_VERSION && \
   npm install --global yarn && \
   yarn && \
-  yarn intl:compile && \
+  yarn intl:build && \
   yarn build-web
 
 # DEBUG

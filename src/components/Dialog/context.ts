@@ -31,14 +31,17 @@ export function useDialogControl(): DialogOuterProps['control'] {
     }
   }, [id, activeDialogs])
 
-  return {
-    id,
-    ref: control,
-    open: () => {
-      control.current.open()
-    },
-    close: cb => {
-      control.current.close(cb)
-    },
-  }
+  return React.useMemo<DialogOuterProps['control']>(
+    () => ({
+      id,
+      ref: control,
+      open: () => {
+        control.current.open()
+      },
+      close: cb => {
+        control.current.close(cb)
+      },
+    }),
+    [id, control],
+  )
 }

@@ -32,6 +32,7 @@ import {
 import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import * as persisted from '#/state/persisted'
 import {Provider as PortalProvider} from '#/components/Portal'
+import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 
 function InnerApp() {
@@ -54,21 +55,23 @@ function InnerApp() {
       <React.Fragment
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
-        <LoggedOutViewProvider>
-          <SelectedFeedProvider>
-            <UnreadNotifsProvider>
-              <ThemeProvider theme={theme}>
-                {/* All components should be within this provider */}
-                <RootSiblingParent>
-                  <SafeAreaProvider>
-                    <Shell />
-                  </SafeAreaProvider>
-                </RootSiblingParent>
-                <ToastContainer />
-              </ThemeProvider>
-            </UnreadNotifsProvider>
-          </SelectedFeedProvider>
-        </LoggedOutViewProvider>
+        <StatsigProvider>
+          <LoggedOutViewProvider>
+            <SelectedFeedProvider>
+              <UnreadNotifsProvider>
+                <ThemeProvider theme={theme}>
+                  {/* All components should be within this provider */}
+                  <RootSiblingParent>
+                    <SafeAreaProvider>
+                      <Shell />
+                    </SafeAreaProvider>
+                  </RootSiblingParent>
+                  <ToastContainer />
+                </ThemeProvider>
+              </UnreadNotifsProvider>
+            </SelectedFeedProvider>
+          </LoggedOutViewProvider>
+        </StatsigProvider>
       </React.Fragment>
     </Alf>
   )

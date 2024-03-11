@@ -7,7 +7,7 @@ import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/
 export const DEFAULT_HOME_FEED_PREFS: UsePreferencesQueryResponse['feedViewPrefs'] =
   {
     hideReplies: false,
-    hideRepliesByUnfollowed: false,
+    hideRepliesByUnfollowed: true,
     hideRepliesByLikeCount: 0,
     hideReposts: false,
     hideQuotePosts: false,
