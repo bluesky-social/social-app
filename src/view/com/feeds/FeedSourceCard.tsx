@@ -6,8 +6,6 @@ import {RichText} from '#/components/RichText'
 import {usePalette} from 'lib/hooks/usePalette'
 import {s} from 'lib/styles'
 import {UserAvatar} from '../util/UserAvatar'
-import {useNavigation} from '@react-navigation/native'
-import {NavigationProp} from 'lib/routes/types'
 import {pluralize} from 'lib/strings/helpers'
 import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
@@ -26,6 +24,7 @@ import {
 import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {useTheme} from '#/alf'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 
 export function FeedSourceCard({
   feedUri,
@@ -86,7 +85,7 @@ export function FeedSourceCardLoaded({
   const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const {openModal} = useModalControls()
 
   const {isPending: isSavePending, mutateAsync: saveFeed} =
