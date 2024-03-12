@@ -93,6 +93,10 @@ export function Cancel({
   children,
   cta,
 }: React.PropsWithChildren<{
+  /**
+   * Optional i18n string, used in lieu of `children` for simple buttons. If
+   * undefined (and `children` is undefined), it will default to "Cancel".
+   */
   cta?: string
 }>) {
   const {_} = useLingui()
@@ -122,6 +126,10 @@ export function Action({
 }: React.PropsWithChildren<{
   onPress: () => void
   color?: ButtonColor
+  /**
+   * Optional i18n string, used in lieu of `children` for simple buttons. If
+   * undefined (and `children` is undefined), it will default to "Confirm".
+   */
   cta?: string
 }>) {
   const {_} = useLingui()
