@@ -56,7 +56,6 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Menu from '#/components/Menu'
 import {HITSLOP_20} from '#/lib/constants'
 import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
-import {isWeb} from '#/platform/detection'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -304,28 +303,20 @@ export function ProfileFeedScreenInner({
             <Menu.Root>
               <Menu.Trigger label={_(msg`Open feed options menu`)}>
                 {({props, state}) => {
-                  const styles = [
-                    a.justify_center,
-                    a.align_center,
-                    a.rounded_full,
-                    {height: 36, width: 36},
-                    t.atoms.bg_contrast_50,
-                    (state.hovered || state.pressed) && [
-                      t.atoms.bg_contrast_100,
-                    ],
-                  ]
-                  return isWeb ? (
-                    <View {...props} style={styles} testID="headerDropdownBtn">
-                      <Ellipsis
-                        size="lg"
-                        fill={t.atoms.text_contrast_medium.color}
-                      />
-                    </View>
-                  ) : (
+                  return (
                     <Pressable
                       {...props}
                       hitSlop={HITSLOP_20}
-                      style={styles}
+                      style={[
+                        a.justify_center,
+                        a.align_center,
+                        a.rounded_full,
+                        {height: 36, width: 36},
+                        t.atoms.bg_contrast_50,
+                        (state.hovered || state.pressed) && [
+                          t.atoms.bg_contrast_100,
+                        ],
+                      ]}
                       testID="headerDropdownBtn">
                       <Ellipsis
                         size="lg"
