@@ -126,11 +126,6 @@ export function PostThread({
         )}: "${rootPostRecord!.text}"`
       : '',
   )
-  useEffect(() => {
-    if (rootPost) {
-      onCanReply(!rootPost.viewer?.replyDisabled)
-    }
-  }, [rootPost, onCanReply])
 
   // On native, this is going to start out `true`. We'll toggle it to `false` after the initial render if flushed.
   // This ensures that the first render contains no parents--even if they are already available in the cache.
@@ -175,6 +170,14 @@ export function PostThread({
 
     return null
   }, [thread, skeleton?.highlightedPost, isThreadError, _, threadError])
+
+  useEffect(() => {
+    if (error) {
+      onCanReply(false)
+    } else if (rootPost) {
+      onCanReply(!rootPost.viewer?.replyDisabled)
+    }
+  }, [rootPost, onCanReply, error])
 
   // construct content
   const posts = React.useMemo(() => {
@@ -367,7 +370,7 @@ export function PostThread({
         errorTitle={error?.title}
         errorMessage={error?.message}
       />
-      {thread && (
+      {!error && thread && (
         <List
           ref={ref}
           data={posts}

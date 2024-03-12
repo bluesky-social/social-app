@@ -57,12 +57,13 @@ export function Error({
             a.text_md,
             a.text_center,
             t.atoms.text_contrast_high,
-            {width: 450, lineHeight: 1.4},
+            {lineHeight: 1.4},
+            gtMobile && {width: 450},
           ]}>
           {message}
         </Text>
       </View>
-      <View style={[a.gap_md, !gtMobile ? [a.w_full, a.px_lg] : {width: 350}]}>
+      <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
         {onRetry && (
           <Button
             variant="solid"
