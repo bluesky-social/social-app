@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import * as Dialog from '#/components/Dialog'
@@ -132,7 +132,13 @@ export function Trigger({children, label}: TriggerProps) {
   )
 }
 
-export function Outer({children}: React.PropsWithChildren<{}>) {
+export function Outer({
+  children,
+  style,
+}: React.PropsWithChildren<{
+  showCancel?: boolean
+  style?: StyleProp<ViewStyle>
+}>) {
   const t = useTheme()
 
   return (
@@ -144,6 +150,7 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
             a.p_xs,
             t.name === 'light' ? t.atoms.bg : t.atoms.bg_contrast_25,
             t.atoms.shadow_md,
+            style,
           ]}>
           {children}
         </View>
