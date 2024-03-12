@@ -1,11 +1,5 @@
 import React, {memo} from 'react'
-import {
-  StyleProp,
-  ViewStyle,
-  Pressable,
-  View,
-  PressableProps,
-} from 'react-native'
+import {StyleProp, ViewStyle, Pressable, PressableProps} from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useNavigation} from '@react-navigation/native'
@@ -38,7 +32,7 @@ import {isWeb} from '#/platform/detection'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
-import {atoms as a, useTheme as useAlf, web} from '#/alf'
+import {atoms as a, useTheme as useAlf} from '#/alf'
 import * as Menu from '#/components/Menu'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
@@ -174,29 +168,18 @@ let PostDropdownBtn = ({
       <Menu.Root>
         <Menu.Trigger label={_(msg`Open post options menu`)}>
           {({props, state}) => {
-            const styles = [
-              style,
-              a.rounded_full,
-              (state.hovered || state.focused || state.pressed) && [
-                web({outline: 0}),
-                alf.atoms.bg_contrast_25,
-              ],
-            ]
-            return isWeb ? (
-              <View {...props} testID={testID} style={styles}>
-                <FontAwesomeIcon
-                  icon="ellipsis"
-                  size={20}
-                  color={defaultCtrlColor}
-                  style={{pointerEvents: 'none'}}
-                />
-              </View>
-            ) : (
+            return (
               <Pressable
                 {...props}
                 hitSlop={hitSlop}
                 testID={testID}
-                style={styles}>
+                style={[
+                  style,
+                  a.rounded_full,
+                  (state.hovered || state.pressed) && [
+                    alf.atoms.bg_contrast_50,
+                  ],
+                ]}>
                 <FontAwesomeIcon
                   icon="ellipsis"
                   size={20}

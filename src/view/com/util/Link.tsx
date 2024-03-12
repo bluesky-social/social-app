@@ -11,14 +11,9 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native'
-import {
-  useLinkProps,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {useLinkProps, StackActions} from '@react-navigation/native'
 import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
-import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {
   convertBskyAppUrlIfNeeded,
@@ -32,6 +27,10 @@ import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
+import {
+  DebouncedNavigationProp,
+  useNavigationDeduped,
+} from 'lib/hooks/useNavigationDeduped'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -65,7 +64,7 @@ export const Link = memo(function Link({
   ...props
 }: Props) {
   const {closeModal} = useModalControls()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
 
@@ -176,7 +175,7 @@ export const TextLink = memo(function TextLink({
   navigationAction?: 'push' | 'replace' | 'navigate'
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
 
@@ -335,7 +334,7 @@ const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/']
 // -prf
 function onPressInner(
   closeModal = () => {},
-  navigation: NavigationProp,
+  navigation: DebouncedNavigationProp,
   href: string,
   navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   openLink: (href: string) => void,
