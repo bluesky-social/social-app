@@ -19,7 +19,7 @@ export function useMyLabelers() {
   const prefs = usePreferencesQuery()
   const dids = Array.from(
     new Set(
-      BskyAgent.modAuthoritiesHeader.concat(
+      BskyAgent.appLabelers.concat(
         prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
       ),
     ),

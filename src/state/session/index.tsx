@@ -664,9 +664,9 @@ async function configureModeration(agent: BskyAgent, account: SessionAccount) {
     console.warn('USING TEST ENV MODERATION')
     const did = (await agent.resolveHandle({handle: 'mod-authority.test'})).data
       .did
-    BskyAgent.configure({modAuthorities: [did]})
+    BskyAgent.configure({appLabelers: [did]})
   } else {
-    BskyAgent.configure({modAuthorities: [BSKY_LABELER_DID]})
+    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
   }
 }
 

@@ -22,7 +22,7 @@ import {useLikeMutation, useUnlikeMutation} from '#/state/queries/like'
 import {logger} from '#/logger'
 import {Haptics} from '#/lib/haptics'
 import {pluralize} from '#/lib/strings/helpers'
-import {isModAuthority} from '#/lib/moderation'
+import {isAppLabeler} from '#/lib/moderation'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -174,7 +174,7 @@ let ProfileHeaderLabeler = ({
                 <Trans>Edit Profile</Trans>
               </ButtonText>
             </Button>
-          ) : !isModAuthority(profile.did) ? (
+          ) : !isAppLabeler(profile.did) ? (
             <>
               <Button
                 testID="toggleSubscribeBtn"
@@ -219,7 +219,7 @@ let ProfileHeaderLabeler = ({
                 />
               </View>
             ) : undefined}
-            {!isModAuthority(profile.did) && (
+            {!isAppLabeler(profile.did) && (
               <View style={[a.flex_row, a.gap_xs, a.align_center, a.pt_lg]}>
                 <Button
                   testID="toggleLikeBtn"

@@ -54,16 +54,16 @@ export function lookupLabelValueDefinition(
   return def
 }
 
-export function isModAuthority(
+export function isAppLabeler(
   labeler:
     | string
     | AppBskyLabelerDefs.LabelerView
     | AppBskyLabelerDefs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
-    return BskyAgent.modAuthoritiesHeader.includes(labeler)
+    return BskyAgent.appLabelers.includes(labeler)
   }
-  return BskyAgent.modAuthoritiesHeader.includes(labeler.creator.did)
+  return BskyAgent.appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(
@@ -74,7 +74,7 @@ export function isLabelerSubscribed(
   modOpts: ModerationOpts,
 ) {
   labeler = typeof labeler === 'string' ? labeler : labeler.creator.did
-  if (isModAuthority(labeler)) {
+  if (isAppLabeler(labeler)) {
     return true
   }
   return modOpts.prefs.labelers.find(l => l.did === labeler)
