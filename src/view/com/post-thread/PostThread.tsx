@@ -273,7 +273,7 @@ export function PostThread({
   const onScrollToTop = bumpMaxParentsIfNeeded
 
   const onEndReached = React.useCallback(() => {
-    if (isFetching || posts.length <= maxReplies) return
+    if (isFetching || posts.length < maxReplies) return
     setMaxReplies(prev => prev + 50)
   }, [isFetching, maxReplies, posts.length])
 
