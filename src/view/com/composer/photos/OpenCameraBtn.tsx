@@ -14,6 +14,7 @@ import {isMobileWeb, isNative} from 'platform/detection'
 import {logger} from '#/logger'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {saveImageToMediaLibrary} from 'lib/media/manip'
 
 type Props = {
   gallery: GalleryModel
@@ -38,6 +39,7 @@ export function OpenCameraBtn({gallery}: Props) {
         freeStyleCropEnabled: true,
       })
 
+      saveImageToMediaLibrary({uri: img.path})
       gallery.add(img)
     } catch (err: any) {
       // ignore
