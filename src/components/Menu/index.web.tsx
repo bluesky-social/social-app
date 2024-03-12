@@ -135,7 +135,10 @@ export function Trigger({children, label}: TriggerProps) {
 export function Outer({
   children,
   style,
-}: React.PropsWithChildren<{style?: StyleProp<ViewStyle>}>) {
+}: React.PropsWithChildren<{
+  showCancel?: boolean
+  style?: StyleProp<ViewStyle>
+}>) {
   const t = useTheme()
 
   return (

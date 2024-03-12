@@ -75,7 +75,10 @@ export function Trigger({children, label}: TriggerProps) {
 export function Outer({
   children,
   showCancel,
-}: React.PropsWithChildren<{showCancel?: boolean, style?: StyleProp<ViewStyle>}>) {
+}: React.PropsWithChildren<{
+  showCancel?: boolean
+  style?: StyleProp<ViewStyle>
+}>) {
   const context = React.useContext(Context)
 
   return (
