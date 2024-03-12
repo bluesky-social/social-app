@@ -1595,7 +1595,7 @@ msgstr "Mot de passe oublié"
 #: src/screens/Hashtag.tsx:108
 #: src/screens/Hashtag.tsx:148
 msgid "From @{sanitizedAuthor}"
-msgstr ""
+msgstr "De @{sanitizedAuthor}"
 
 #: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
@@ -2429,7 +2429,7 @@ msgstr "Aucun résultat"
 
 #: src/components/Lists.tsx:192
 msgid "No results found"
-msgstr ""
+msgstr "Aucun résultat trouvé"
 
 #: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
@@ -2511,7 +2511,7 @@ msgstr "Seul {0} peut répondre."
 
 #: src/components/Lists.tsx:82
 msgid "Oops, something went wrong!"
-msgstr ""
+msgstr "Oups, quelque chose n’a pas marché !"
 
 #: src/components/Lists.tsx:188
 #: src/view/screens/AppPasswords.tsx:65
@@ -2546,7 +2546,7 @@ msgstr "Navigation ouverte"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "Open post options menu"
-msgstr ""
+msgstr "Ouvrir le menu d’options du post"
 
 #: src/view/screens/Settings/index.tsx:804
 msgid "Open storybook page"
@@ -4303,7 +4303,7 @@ msgstr "Nous pensons également que vous aimerez « For You » de Skygaze :"
 
 #: src/screens/Hashtag.tsx:132
 msgid "We couldn't find any results for that hashtag."
-msgstr ""
+msgstr "Nous n’avons trouvé aucun résultat pour ce mot-clé."
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
