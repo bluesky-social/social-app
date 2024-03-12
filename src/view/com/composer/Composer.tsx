@@ -64,7 +64,6 @@ import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import * as Prompt from '#/components/Prompt'
-import {ButtonText} from '#/components/Button'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -489,22 +488,15 @@ export const ComposePost = observer(function ComposePost({
           <CharProgress count={graphemeLength} />
         </View>
       </View>
-      <Prompt.Outer control={discardPromptControl}>
-        <Prompt.Title>
-          <Trans>Discard draft?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>Are you sure you'd like to discard this draft?</Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onClose} color="negative">
-            <ButtonText>
-              <Trans>Discard</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+
+      <Prompt.Basic
+        control={discardPromptControl}
+        title={_(msg`Discard draft?`)}
+        description={_(msg`Are you sure you'd like to discard this draft?`)}
+        onConfirm={onClose}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
     </KeyboardAvoidingView>
   )
 })

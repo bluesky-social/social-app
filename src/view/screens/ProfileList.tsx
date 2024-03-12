@@ -62,7 +62,6 @@ import {useAnalytics} from '#/lib/analytics/analytics'
 import {listenSoftReset} from '#/state/events'
 import {atoms as a, useTheme} from '#/alf'
 import * as Prompt from '#/components/Prompt'
-import {ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
@@ -598,64 +597,37 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         </View>
       </NativeDropdown>
 
-      <Prompt.Outer control={deleteListPromptControl}>
-        <Prompt.Title>
-          <Trans>Delete List?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            If you delete this list, you won't be able to recover it.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onPressDelete} color="negative">
-            <ButtonText>
-              <Trans>Delete</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={deleteListPromptControl}
+        title={_(msg`Delete this list?`)}
+        description={_(
+          msg`If you delete this list, you won't be able to recover it.`,
+        )}
+        onConfirm={onPressDelete}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
 
-      <Prompt.Outer control={subscribeMutePromptControl}>
-        <Prompt.Title>
-          <Trans>Mute these accounts?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            Muting is private. Muted accounts can interact with you, but you
-            will not see their posts or receive notifications from them.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onSubscribeMute}>
-            <ButtonText>
-              <Trans>Mute List</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={subscribeMutePromptControl}
+        title={_(msg`Mute these accounts?`)}
+        description={_(
+          msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
+        )}
+        onConfirm={onSubscribeMute}
+        confirmButtonCta={_(msg`Mute list`)}
+      />
 
-      <Prompt.Outer control={subscribeBlockPromptControl}>
-        <Prompt.Title>
-          <Trans>Hide this post?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            Blocking is public. Blocked accounts cannot reply in your threads,
-            mention you, or otherwise interact with you.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onSubscribeBlock}>
-            <ButtonText>
-              <Trans>Block List</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={subscribeBlockPromptControl}
+        title={_(msg`Block these accounts?`)}
+        description={_(
+          msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+        )}
+        onConfirm={onSubscribeBlock}
+        confirmButtonCta={_(msg`Block list`)}
+        confirmButtonColor="negative"
+      />
     </ProfileSubpageHeader>
   )
 }

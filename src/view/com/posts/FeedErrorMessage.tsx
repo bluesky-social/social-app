@@ -16,7 +16,6 @@ import {EmptyState} from '../util/EmptyState'
 import {cleanError} from '#/lib/strings/errors'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
 import * as Prompt from '#/components/Prompt'
-import {ButtonText} from '#/components/Button'
 
 export enum KnownError {
   Block = 'Block',
@@ -196,22 +195,15 @@ function FeedgenErrorMessage({
 
         {cta}
       </View>
-      <Prompt.Outer control={removePromptControl}>
-        <Prompt.Title>
-          <Trans>Remove feed?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>Remove this feed from your saved feeds?</Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onPressRemoveFeed} color="negative">
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+
+      <Prompt.Basic
+        control={removePromptControl}
+        title={_l(msgLingui`Remove feed?`)}
+        description={_l(msgLingui`Remove this feed from your saved feeds`)}
+        onConfirm={onPressRemoveFeed}
+        confirmButtonCta={_l(msgLingui`Remove`)}
+        confirmButtonColor="negative"
+      />
     </>
   )
 }

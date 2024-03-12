@@ -16,7 +16,6 @@ import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
 import {useDialogControl} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
-import {ButtonText} from '#/components/Button'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -28,7 +27,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
@@ -336,22 +335,13 @@ let PostDropdownBtn = ({
         confirmButtonColor="negative"
       />
 
-      <Prompt.Outer control={hidePromptControl}>
-        <Prompt.Title>
-          <Trans>Hide this post?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>This post will be hidden from your feeds.</Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onHidePost}>
-            <ButtonText>
-              <Trans>Hide</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={hidePromptControl}
+        title={_(msg`Hide this post?`)}
+        description={_(msg`This post will be hidden from feeds.`)}
+        onConfirm={onHidePost}
+        confirmButtonCta={_(msg`Hide`)}
+      />
     </EventStopper>
   )
 }

@@ -24,7 +24,6 @@ import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {useTheme} from '#/alf'
 import * as Prompt from '#/components/Prompt'
-import {ButtonText} from '#/components/Button'
 import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 
 export function FeedSourceCard({
@@ -274,24 +273,16 @@ export function FeedSourceCardLoaded({
         ) : null}
       </Pressable>
 
-      <Prompt.Outer control={removePromptControl}>
-        <Prompt.Title>
-          <Trans>Remove from my feeds?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            Are you sure you want to remove {feed.displayName} from your feeds?
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onUnsave}>
-            <ButtonText>
-              <Trans>Hide</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={removePromptControl}
+        title={_(msg`Remove from my feeds?`)}
+        description={_(
+          msg`Are you sure you want to remove ${feed.displayName} from your feeds?`,
+        )}
+        onConfirm={onUnsave}
+        confirmButtonCta={_(msg`Remove`)}
+        confirmButtonColor="negative"
+      />
     </>
   )
 }

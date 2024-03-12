@@ -58,7 +58,6 @@ import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {atoms as a} from '#/alf'
 import * as Prompt from '#/components/Prompt'
-import {ButtonText} from '#/components/Button'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -666,44 +665,26 @@ let ProfileHeader = ({
         </View>
       </TouchableWithoutFeedback>
 
-      <Prompt.Outer control={blockPromptControl}>
-        <Prompt.Title>
-          <Trans>Block Account?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            Blocked accounts cannot reply in your threads, mention you, or
-            otherwise interact with you.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={blockAccount}>
-            <ButtonText>
-              <Trans>Block</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={blockPromptControl}
+        title={_(msg`Block Account?`)}
+        description={_(
+          msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+        )}
+        onConfirm={blockAccount}
+        confirmButtonCta={_(msg`Block`)}
+        confirmButtonColor="negative"
+      />
 
-      <Prompt.Outer control={unblockPromptControl}>
-        <Prompt.Title>
-          <Trans>Unblock Account?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            The account will be able to interact with you after unblocking.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={unblockAccount}>
-            <ButtonText>
-              <Trans>Unblock</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={unblockPromptControl}
+        title={_(msg`Unblock Account?`)}
+        description={_(
+          msg`The account will be able to interact with you after unblocking.`,
+        )}
+        onConfirm={unblockAccount}
+        confirmButtonCta={_(msg`Unblock`)}
+      />
     </View>
   )
 }

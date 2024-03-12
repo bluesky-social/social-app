@@ -31,7 +31,6 @@ import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {cleanError} from '#/lib/strings/errors'
 import * as Prompt from '#/components/Prompt'
 import {useDialogControl} from '#/components/Dialog'
-import {ButtonText} from '#/components/Button'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
@@ -258,24 +257,17 @@ function AppPassword({
         </Text>
       </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />
-      <Prompt.Outer control={control}>
-        <Prompt.Title>
-          <Trans>Delete app password?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            Are you sure you want to delete the app password "{name}"?
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onDelete} color="negative">
-            <ButtonText>
-              <Trans>Delete</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Delete app password?`)}
+        description={_(
+          msg`Are you sure you want to delete the app password "${name}"?`,
+        )}
+        onConfirm={onDelete}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
     </TouchableOpacity>
   )
 }
