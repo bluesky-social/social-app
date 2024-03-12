@@ -296,7 +296,7 @@ export function ProfileFeedScreenInner({
                 label={isPinned ? _(msg`Unpin from home`) : _(msg`Pin to home`)}
                 onPress={onTogglePinned}>
                 <ButtonText>
-                  {isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
+                  {isPinned ? _(msg`Unpin`) : _(msg`Pin to Home`)}
                 </ButtonText>
               </NewButton>
             )}
