@@ -254,9 +254,9 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
         </View>
 
         {isNative && <View style={{height: 20}} />}
-
-        <Dialog.Close />
       </View>
+
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }

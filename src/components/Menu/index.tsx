@@ -16,6 +16,10 @@ import {
   ItemTextProps,
   ItemIconProps,
 } from '#/components/Menu/types'
+import {Button, ButtonText} from '#/components/Button'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {isNative} from 'platform/detection'
 
 export {useDialogControl as useMenuControl} from '#/components/Dialog'
 
@@ -68,7 +72,10 @@ export function Trigger({children, label}: TriggerProps) {
   })
 }
 
-export function Outer({children}: React.PropsWithChildren<{}>) {
+export function Outer({
+  children,
+  showCancel,
+}: React.PropsWithChildren<{showCancel?: boolean}>) {
   const context = React.useContext(Context)
 
   return (
@@ -78,7 +85,10 @@ export function Outer({children}: React.PropsWithChildren<{}>) {
       {/* Re-wrap with context since Dialogs are portal-ed to root */}
       <Context.Provider value={context}>
         <Dialog.ScrollableInner label="Menu TODO">
-          <View style={[a.gap_lg]}>{children}</View>
+          <View style={[a.gap_lg]}>
+            {children}
+            {isNative && showCancel && <Cancel />}
+          </View>
           <View style={{height: a.gap_lg.gap}} />
         </Dialog.ScrollableInner>
       </Context.Provider>
@@ -182,6 +192,22 @@ export function Group({children, style}: GroupProps) {
         ) : null
       })}
     </View>
+  )
+}
+
+function Cancel() {
+  const {_} = useLingui()
+  const {control} = React.useContext(Context)
+
+  return (
+    <Button
+      label={_(msg`Close this dialog`)}
+      size="small"
+      variant="ghost"
+      color="secondary"
+      onPress={() => control.close()}>
+      <ButtonText>Cancel</ButtonText>
+    </Button>
   )
 }
 
