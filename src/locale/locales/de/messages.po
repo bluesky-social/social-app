@@ -2197,10 +2197,6 @@ msgstr "Mehr Feeds"
 msgid "More options"
 msgstr "Mehr Optionen"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:315
-#~ msgid "More post options"
-#~ msgstr "Mehr Optionen für Beiträge"
-
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
 msgstr "Beliebteste Antworten zuerst"
