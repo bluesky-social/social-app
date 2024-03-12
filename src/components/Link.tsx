@@ -228,6 +228,7 @@ export function InlineLink({
   onPress: outerOnPress,
   download,
   selectable,
+  label,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -255,7 +256,8 @@ export function InlineLink({
   return (
     <Text
       selectable={selectable}
-      label={href}
+      accessibilityHint=""
+      accessibilityLabel={label || href}
       {...rest}
       style={[
         {color: t.palette.primary_500},
