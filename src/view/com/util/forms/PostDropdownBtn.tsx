@@ -25,7 +25,7 @@ import {useLanguagePrefs} from '#/state/preferences'
 import {useHiddenPosts, useHiddenPostsApi} from '#/state/preferences'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {logger} from '#/logger'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 import {isWeb} from '#/platform/detection'
@@ -34,6 +34,7 @@ import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 import {atoms as a, useTheme as useAlf} from '#/alf'
 import * as Menu from '#/components/Menu'
+import * as Prompt from '#/components/Prompt'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
@@ -44,6 +45,7 @@ import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {ButtonText} from '#/components/Button'
 
 let PostDropdownBtn = ({
   testID,
@@ -81,6 +83,14 @@ let PostDropdownBtn = ({
   const openLink = useOpenLink()
   const navigation = useNavigation()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const loggedInWarningControl = Prompt.usePromptControl()
+
+  const isNoPwi = React.useMemo(() => {
+    // I don't think this is right, but I can't get moderateProfile to give me the label name
+    return !!postAuthor.labels?.find(
+      label => label.val === '!no-unauthenticated',
+    )
+  }, [postAuthor])
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -163,6 +173,11 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
+  const onSharePost = React.useCallback(() => {
+    const url = toShareUrl(href)
+    shareUrl(url)
+  }, [href])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -213,8 +228,11 @@ let PostDropdownBtn = ({
               testID="postDropdownShareBtn"
               label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               onPress={() => {
-                const url = toShareUrl(href)
-                shareUrl(url)
+                if (isNoPwi) {
+                  loggedInWarningControl.open()
+                } else {
+                  onSharePost()
+                }
               }}>
               <Menu.ItemText>
                 {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
@@ -335,6 +353,29 @@ let PostDropdownBtn = ({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
+      <Prompt.Outer control={loggedInWarningControl}>
+        <Prompt.Title>
+          <Trans>Note about sharing</Trans>
+        </Prompt.Title>
+        <Prompt.Description>
+          <Trans>
+            This post is only visible to logged in users. It wouldn't be visible
+            to anyone who isn't logged in.
+          </Trans>
+        </Prompt.Description>
+        <Prompt.Actions>
+          <Prompt.Cancel>
+            <ButtonText>
+              <Trans>Cancel</Trans>
+            </ButtonText>
+          </Prompt.Cancel>
+          <Prompt.Action onPress={onSharePost}>
+            <ButtonText>
+              <Trans>Share anyway</Trans>
+            </ButtonText>
+          </Prompt.Action>
+        </Prompt.Actions>
+      </Prompt.Outer>
     </EventStopper>
   )
 }
