@@ -206,9 +206,11 @@ export function ProfileFeedScreenInner({
       if (isSaved) {
         await removeFeed({uri: feedInfo.uri})
         resetRemoveFeed()
+        Toast.show(_(msg`Removed from your feeds`))
       } else {
         await saveFeed({uri: feedInfo.uri})
         resetSaveFeed()
+        Toast.show(_(msg`Saved to your feeds`))
       }
     } catch (err) {
       Toast.show(
@@ -344,13 +346,13 @@ export function ProfileFeedScreenInner({
                         label={
                           isSaved
                             ? _(msg`Remove from my feeds`)
-                            : _(msg`Add to my feeds`)
+                            : _(msg`Save to my feeds`)
                         }
                         onPress={onToggleSaved}>
                         <Menu.ItemText>
                           {isSaved
                             ? _(msg`Remove from my feeds`)
-                            : _(msg`Add to my feeds`)}
+                            : _(msg`Save to my feeds`)}
                         </Menu.ItemText>
                         <Menu.ItemIcon
                           icon={isSaved ? Trash : Plus}
