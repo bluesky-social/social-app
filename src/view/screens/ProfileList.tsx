@@ -56,6 +56,8 @@ import {
   usePinFeedMutation,
   useUnpinFeedMutation,
   useSetSaveFeedsMutation,
+  useSaveFeedMutation,
+  useRemoveFeedMutation,
 } from '#/state/queries/preferences'
 import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
@@ -243,16 +245,43 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
   const isOwner = list.creator.did === currentAccount?.did
+
+  const {isPending: isSavePending, mutateAsync: saveFeed} =
+    useSaveFeedMutation()
+  const {isPending: isRemovePending, mutateAsync: removeFeed} =
+    useRemoveFeedMutation()
   const {isPending: isPinPending, mutateAsync: pinFeed} = usePinFeedMutation()
   const {isPending: isUnpinPending, mutateAsync: unpinFeed} =
     useUnpinFeedMutation()
-  const isPending = isPinPending || isUnpinPending
+
+  const isSaving = isSavePending || isRemovePending
+  const isPinning = isPinPending || isUnpinPending
+
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
 
-  const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
-  const isSaved = preferences?.feeds?.saved?.includes(list.uri)
+  const isPinned =
+    isPinPending ||
+    (!isUnpinPending && preferences?.feeds?.pinned?.includes(list.uri))
+  const isSaved =
+    isSavePending ||
+    (!isRemovePending && preferences?.feeds?.saved?.includes(list.uri))
+
+  const onToggleSaved = React.useCallback(async () => {
+    Haptics.default()
+
+    try {
+      if (isSaved) {
+        await removeFeed({uri: list.uri})
+      } else {
+        await saveFeed({uri: list.uri})
+      }
+    } catch (e) {
+      Toast.show(_(msg`There was an issue contacting the server`))
+      logger.error('Failed to toggle saved feed', {message: e})
+    }
+  }, [list.uri, isSaved, saveFeed, removeFeed, _])
 
   const onTogglePinned = React.useCallback(async () => {
     Haptics.default()
@@ -467,12 +496,12 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       })
     }
-    if (isModList && isPinned) {
+    if (isModList && isSaved) {
       items.push({label: 'separator'})
       items.push({
         testID: 'listHeaderDropdownUnpinBtn',
-        label: _(msg`Unpin moderation list`),
-        onPress: isPending ? undefined : () => unpinFeed({uri: list.uri}),
+        label: _(msg`Unsave moderation list`),
+        onPress: isSaving ? undefined : () => removeFeed({uri: list.uri}),
         icon: {
           ios: {
             name: 'pin',
@@ -524,9 +553,9 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     onPressReport,
     _,
     isModList,
-    isPinned,
-    unpinFeed,
-    isPending,
+    isSaved,
+    isSaving,
+    removeFeed,
     list.uri,
     isCurateList,
     isMuting,
@@ -574,21 +603,33 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       isOwner={list.creator.did === currentAccount?.did}
       creator={list.creator}
       avatarType="list">
-      {isCurateList || isPinned ? (
+      {(isCurateList || isSaved) && (
+        <Button
+          type={isSaved ? 'default' : 'inverted'}
+          label={isSaved ? _(msg`Unsave`) : _(msg`Save`)}
+          onPress={onToggleSaved}
+          disabled={isSaving}
+          style={styles.btn}
+        />
+      )}
+      {isCurateList && (
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
           type={isPinned ? 'default' : 'inverted'}
           label={isPinned ? _(msg`Unpin`) : _(msg`Pin to home`)}
           onPress={onTogglePinned}
-          disabled={isPending}
+          disabled={isPinning}
+          style={styles.btn}
         />
-      ) : isModList ? (
+      )}
+      {isModList && !isSaved ? (
         isBlocking ? (
           <Button
             testID="unblockBtn"
             type="default"
             label={_(msg`Unblock`)}
             onPress={onUnsubscribeBlock}
+            style={styles.btn}
           />
         ) : isMuting ? (
           <Button
@@ -596,6 +637,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
             type="default"
             label={_(msg`Unmute`)}
             onPress={onUnsubscribeMute}
+            style={styles.btn}
           />
         ) : (
           <NativeDropdown
