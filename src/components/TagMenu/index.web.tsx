@@ -87,7 +87,7 @@ export function TagMenu({
               author: authorHandle,
             })
           },
-          testID: 'tagMenuSeachByUser',
+          testID: 'tagMenuSearchByUser',
           icon: {
             ios: {
               name: 'magnifyingglass',
