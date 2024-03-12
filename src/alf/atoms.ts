@@ -111,6 +111,12 @@ export const atoms = {
   flex_row: {
     flexDirection: 'row',
   },
+  flex_col_reverse: {
+    flexDirection: 'column-reverse',
+  },
+  flex_row_reverse: {
+    flexDirection: 'row-reverse',
+  },
   flex_wrap: {
     flexWrap: 'wrap',
   },

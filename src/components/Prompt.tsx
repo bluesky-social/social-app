@@ -1,11 +1,11 @@
 import React from 'react'
-import {View, PressableProps} from 'react-native'
+import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
-import {Button} from '#/components/Button'
+import {Button, ButtonColor, ButtonText} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
 
@@ -22,8 +22,10 @@ const Context = React.createContext<{
 export function Outer({
   children,
   control,
+  testID,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
+  testID?: string
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -35,7 +37,7 @@ export function Outer({
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} testID={testID}>
       <Context.Provider value={context}>
         <Dialog.Handle />
 
@@ -80,7 +82,9 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
         a.w_full,
         a.gap_sm,
         a.justify_end,
-        gtMobile ? [a.flex_row] : [a.flex_col, a.pt_md, a.pb_4xl],
+        gtMobile
+          ? [a.flex_row, a.flex_row_reverse, a.justify_start]
+          : [a.flex_col, a.pt_md, a.pb_4xl],
       ]}>
       {children}
     </View>
@@ -89,18 +93,29 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 
 export function Cancel({
   children,
-}: React.PropsWithChildren<{onPress?: PressableProps['onPress']}>) {
+  cta,
+}: React.PropsWithChildren<{
+  /**
+   * Optional i18n string, used in lieu of `children` for simple buttons. If
+   * undefined (and `children` is undefined), it will default to "Cancel".
+   */
+  cta?: string
+}>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
+  const onPress = React.useCallback(() => {
+    close()
+  }, [close])
+
   return (
     <Button
       variant="solid"
       color="secondary"
       size={gtMobile ? 'small' : 'medium'}
-      label={_(msg`Cancel`)}
-      onPress={() => close()}>
-      {children}
+      label={cta || _(msg`Cancel`)}
+      onPress={onPress}>
+      {children ? children : <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>}
     </Button>
   )
 }
@@ -108,22 +123,70 @@ export function Cancel({
 export function Action({
   children,
   onPress,
-}: React.PropsWithChildren<{onPress?: () => void}>) {
+  color = 'primary',
+  cta,
+  testID,
+}: React.PropsWithChildren<{
+  onPress: () => void
+  color?: ButtonColor
+  /**
+   * Optional i18n string, used in lieu of `children` for simple buttons. If
+   * undefined (and `children` is undefined), it will default to "Confirm".
+   */
+  cta?: string
+  testID?: string
+}>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
     close()
-    onPress?.()
+    onPress()
   }, [close, onPress])
+
   return (
     <Button
       variant="solid"
-      color="primary"
+      color={color}
       size={gtMobile ? 'small' : 'medium'}
-      label={_(msg`Confirm`)}
-      onPress={handleOnPress}>
-      {children}
+      label={cta || _(msg`Confirm`)}
+      onPress={handleOnPress}
+      testID={testID}>
+      {children ? children : <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>}
     </Button>
+  )
+}
+
+export function Basic({
+  control,
+  title,
+  description,
+  cancelButtonCta,
+  confirmButtonCta,
+  onConfirm,
+  confirmButtonColor,
+}: React.PropsWithChildren<{
+  control: Dialog.DialogOuterProps['control']
+  title: string
+  description: string
+  cancelButtonCta?: string
+  confirmButtonCta?: string
+  onConfirm: () => void
+  confirmButtonColor?: ButtonColor
+}>) {
+  return (
+    <Outer control={control} testID="confirmModal">
+      <Title>{title}</Title>
+      <Description>{description}</Description>
+      <Actions>
+        <Action
+          cta={confirmButtonCta}
+          onPress={onConfirm}
+          color={confirmButtonColor}
+          testID="confirmBtn"
+        />
+        <Cancel cta={cancelButtonCta} />
+      </Actions>
+    </Outer>
   )
 }

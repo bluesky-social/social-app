@@ -14,6 +14,8 @@ import {useTheme} from 'lib/ThemeContext'
 import {shareUrl} from 'lib/sharing'
 import * as Toast from '../Toast'
 import {EventStopper} from '../EventStopper'
+import {useDialogControl} from '#/components/Dialog'
+import * as Prompt from '#/components/Prompt'
 import {useModalControls} from '#/state/modals'
 import {makeProfileLink} from '#/lib/routes/links'
 import {CommonNavigatorParams} from '#/lib/routes/types'
@@ -81,6 +83,8 @@ let PostDropdownBtn = ({
   const openLink = useOpenLink()
   const navigation = useNavigation()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const deletePromptControl = useDialogControl()
+  const hidePromptControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
@@ -257,16 +261,7 @@ let PostDropdownBtn = ({
                   <Menu.Item
                     testID="postDropdownHideBtn"
                     label={_(msg`Hide post`)}
-                    onPress={() => {
-                      openModal({
-                        name: 'confirm',
-                        title: _(msg`Hide this post?`),
-                        message: _(
-                          msg`This will hide this post from your feeds.`,
-                        ),
-                        onPressConfirm: onHidePost,
-                      })
-                    }}>
+                    onPress={hidePromptControl.open}>
                     <Menu.ItemText>{_(msg`Hide post`)}</Menu.ItemText>
                     <Menu.ItemIcon icon={EyeSlash} position="right" />
                   </Menu.Item>
@@ -298,14 +293,7 @@ let PostDropdownBtn = ({
               <Menu.Item
                 testID="postDropdownDeleteBtn"
                 label={_(msg`Delete post`)}
-                onPress={() => {
-                  openModal({
-                    name: 'confirm',
-                    title: _(msg`Delete this post?`),
-                    message: _(msg`Are you sure? This cannot be undone.`),
-                    onPressConfirm: onDeletePost,
-                  })
-                }}>
+                onPress={deletePromptControl.open}>
                 <Menu.ItemText>{_(msg`Delete post`)}</Menu.ItemText>
                 <Menu.ItemIcon icon={Trash} position="right" />
               </Menu.Item>
@@ -335,6 +323,25 @@ let PostDropdownBtn = ({
           </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
+
+      <Prompt.Basic
+        control={deletePromptControl}
+        title={_(msg`Delete this post?`)}
+        description={_(
+          msg`If you remove this post, you won't be able to recover it.`,
+        )}
+        onConfirm={onDeletePost}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
+
+      <Prompt.Basic
+        control={hidePromptControl}
+        title={_(msg`Hide this post?`)}
+        description={_(msg`This post will be hidden from feeds.`)}
+        onConfirm={onHidePost}
+        confirmButtonCta={_(msg`Hide`)}
+      />
     </EventStopper>
   )
 }
