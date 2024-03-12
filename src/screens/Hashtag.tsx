@@ -42,7 +42,7 @@ export default function HashtagScreen({
   const [isPTR, setIsPTR] = React.useState(false)
 
   const fullTag = React.useMemo(() => {
-    return `#${tag.replaceAll('%23', '#')}`
+    return `#${decodeURIComponent(tag)}`
   }, [tag])
 
   const queryParam = React.useMemo(() => {
@@ -83,7 +83,7 @@ export default function HashtagScreen({
 
   const onShare = React.useCallback(() => {
     const url = new URL('https://bsky.app')
-    url.pathname = `/hashtag/${tag}`
+    url.pathname = `/hashtag/${decodeURIComponent(tag)}`
     if (author) {
       url.searchParams.set('author', author)
     }
