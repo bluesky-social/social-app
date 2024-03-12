@@ -238,13 +238,14 @@ function FeedCardInner({feed}: {feed: FeedSourceInfo; config: FeedConfig}) {
           />
         </View>
 
-        <View style={[a.pt_2xs, a.flex_grow]}>
+        <View style={[a.pt_2xs, a.flex_1, a.flex_grow]}>
           <Text
             style={[
               a.text_md,
               a.font_bold,
               ctx.selected && styles.textSelected,
-            ]}>
+            ]}
+            numberOfLines={1}>
             {feed.displayName}
           </Text>
           <Text
