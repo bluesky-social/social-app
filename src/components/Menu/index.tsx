@@ -195,7 +195,7 @@ export function Group({children, style}: GroupProps) {
   )
 }
 
-export function Cancel() {
+function Cancel() {
   const {_} = useLingui()
   const {control} = React.useContext(Context)
 
