@@ -185,7 +185,7 @@ let ProfileMenu = ({
         <Menu.Outer>
           <Menu.Group>
             <Menu.Item
-              testID="profileShareBtn"
+              testID="profileHeaderDropdownShareBtn"
               label={_(msg`Share`)}
               onPress={onPressShare}>
               <Menu.ItemText>
