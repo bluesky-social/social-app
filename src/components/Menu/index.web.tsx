@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react'
 import {View, Pressable} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -14,6 +16,7 @@ import {
   GroupProps,
   ItemTextProps,
   ItemIconProps,
+  RadixPassThroughTriggerProps,
 } from '#/components/Menu/types'
 import {Context} from '#/components/Menu/context'
 
@@ -76,7 +79,24 @@ export function Root({
   )
 }
 
-export function Trigger({children, label, style}: TriggerProps) {
+const RadixTriggerPassThrough = React.forwardRef(
+  (
+    props: {
+      children: (
+        props: RadixPassThroughTriggerProps & {
+          ref: React.Ref<any>
+        },
+      ) => React.ReactNode
+    },
+    ref,
+  ) => {
+    // @ts-expect-error Radix provides no types of this stuff
+    return props.children({...props, ref})
+  },
+)
+RadixTriggerPassThrough.displayName = 'RadixTriggerPassThrough'
+
+export function Trigger({children, label}: TriggerProps) {
   const {control} = React.useContext(Context)
   const {
     state: hovered,
@@ -87,28 +107,27 @@ export function Trigger({children, label, style}: TriggerProps) {
 
   return (
     <DropdownMenu.Trigger asChild>
-      <Pressable
-        accessibilityHint=""
-        accessibilityLabel={label}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        style={flatten([style, focused && web({outline: 0})])}
-        onPointerDown={() => control.open()}
-        {...web({
-          onMouseEnter,
-          onMouseLeave,
-        })}>
-        {children({
-          isNative: false,
-          control,
-          state: {
-            hovered,
-            focused,
-            pressed: false,
-          },
-          props: {},
-        })}
-      </Pressable>
+      <RadixTriggerPassThrough>
+        {props =>
+          children({
+            isNative: false,
+            control,
+            state: {
+              hovered,
+              focused,
+              pressed: false,
+            },
+            props: {
+              ...props,
+              onFocus: onFocus,
+              onBlur: onBlur,
+              onMouseEnter,
+              onMouseLeave,
+              accessibilityLabel: label,
+            },
+          })
+        }
+      </RadixTriggerPassThrough>
     </DropdownMenu.Trigger>
   )
 }
