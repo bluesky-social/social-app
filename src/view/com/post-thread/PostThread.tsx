@@ -87,7 +87,7 @@ export function PostThread({
     error: threadError,
     refetch,
     data: thread,
-  } = usePostThreadQuery(uri, !!preferences)
+  } = usePostThreadQuery(uri)
 
   const treeView = React.useMemo(
     () =>
