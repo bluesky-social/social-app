@@ -1,6 +1,5 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {ModerationUI} from '@atproto/api'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react'
@@ -18,7 +17,10 @@ import {isAndroid, isNative} from 'platform/detection'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 import {EventStopper} from 'view/com/util/EventStopper'
 import * as Menu from '#/components/Menu'
-import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
+import {
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+  Camera_Stroke2_Corner0_Rounded as Camera,
+} from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 
@@ -94,12 +96,7 @@ export function UserBanner({
                 />
               )}
               <View style={[styles.editButtonContainer, pal.btn]}>
-                <FontAwesomeIcon
-                  icon="camera"
-                  size={12}
-                  style={{color: colors.white}}
-                  color={pal.text.color as string}
-                />
+                <CameraFilled height={16} width={16} style={{color: 'black'}} />
               </View>
             </TouchableOpacity>
           )}

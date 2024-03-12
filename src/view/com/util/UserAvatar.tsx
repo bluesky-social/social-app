@@ -17,9 +17,11 @@ import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isWeb, isAndroid, isNative} from 'platform/detection'
 import {UserPreviewLink} from './UserPreviewLink'
-import {EventStopper} from 'view/com/util/EventStopper'
 import * as Menu from '#/components/Menu'
-import {Camera_Stroke2_Corner0_Rounded as Camera} from '#/components/icons/Camera'
+import {
+  Camera_Stroke2_Corner0_Rounded as Camera,
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+} from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 
@@ -264,78 +266,72 @@ let EditableUserAvatar = ({
   }, [onSelectNewAvatar])
 
   return (
-    <EventStopper onKeyDown={false}>
-      <Menu.Root>
-        <Menu.Trigger label={_(msg`Edit avatar`)}>
-          {({props}) => (
-            <TouchableOpacity {...props} activeOpacity={0.8}>
-              {avatar ? (
-                <HighPriorityImage
-                  testID="userAvatarImage"
-                  style={aviStyle}
-                  source={{uri: avatar}}
-                  accessibilityRole="image"
-                />
-              ) : (
-                <DefaultAvatar type={type} size={size} />
-              )}
-              <View style={[styles.editButtonContainer, pal.btn]}>
-                <FontAwesomeIcon
-                  icon="camera"
-                  size={12}
-                  color={pal.text.color as string}
-                />
-              </View>
-            </TouchableOpacity>
-          )}
-        </Menu.Trigger>
-        <Menu.Outer showCancel>
-          <Menu.Group>
-            {isNative && (
-              <Menu.Item
-                testID="changeAvatarCameraBtn"
-                label={_(msg`Upload from Camera`)}
-                onPress={onOpenCamera}>
-                <Menu.ItemText>
-                  <Trans>Upload from Camera</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon icon={Camera} />
-              </Menu.Item>
+    <Menu.Root>
+      <Menu.Trigger label={_(msg`Edit avatar`)}>
+        {({props}) => (
+          <TouchableOpacity {...props} activeOpacity={0.8}>
+            {avatar ? (
+              <HighPriorityImage
+                testID="userAvatarImage"
+                style={aviStyle}
+                source={{uri: avatar}}
+                accessibilityRole="image"
+              />
+            ) : (
+              <DefaultAvatar type={type} size={size} />
             )}
-
+            <View style={[styles.editButtonContainer, pal.btn]}>
+              <CameraFilled height={16} width={16} style={{color: 'black'}} />
+            </View>
+          </TouchableOpacity>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer showCancel>
+        <Menu.Group>
+          {isNative && (
             <Menu.Item
-              testID="changeAvatarLibraryBtn"
-              label={_(msg`Upload from Library`)}
-              onPress={onOpenLibrary}>
+              testID="changeAvatarCameraBtn"
+              label={_(msg`Upload from Camera`)}
+              onPress={onOpenCamera}>
               <Menu.ItemText>
-                {isNative ? (
-                  <Trans>Upload from Library</Trans>
-                ) : (
-                  <Trans>Upload from Files</Trans>
-                )}
+                <Trans>Upload from Camera</Trans>
               </Menu.ItemText>
-              <Menu.ItemIcon icon={Library} />
+              <Menu.ItemIcon icon={Camera} />
             </Menu.Item>
-          </Menu.Group>
-          {!!avatar && (
-            <>
-              <Menu.Divider />
-              <Menu.Group>
-                <Menu.Item
-                  testID="changeAvatarRemoveBtn"
-                  label={_(`Remove Avatar`)}
-                  onPress={onRemoveAvatar}>
-                  <Menu.ItemText>
-                    <Trans>Remove Avatar</Trans>
-                  </Menu.ItemText>
-                  <Menu.ItemIcon icon={Trash} />
-                </Menu.Item>
-              </Menu.Group>
-            </>
           )}
-        </Menu.Outer>
-      </Menu.Root>
-    </EventStopper>
+
+          <Menu.Item
+            testID="changeAvatarLibraryBtn"
+            label={_(msg`Upload from Library`)}
+            onPress={onOpenLibrary}>
+            <Menu.ItemText>
+              {isNative ? (
+                <Trans>Upload from Library</Trans>
+              ) : (
+                <Trans>Upload from Files</Trans>
+              )}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Library} />
+          </Menu.Item>
+        </Menu.Group>
+        {!!avatar && (
+          <>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                testID="changeAvatarRemoveBtn"
+                label={_(`Remove Avatar`)}
+                onPress={onRemoveAvatar}>
+                <Menu.ItemText>
+                  <Trans>Remove Avatar</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Trash} />
+              </Menu.Item>
+            </Menu.Group>
+          </>
+        )}
+      </Menu.Outer>
+    </Menu.Root>
   )
 }
 EditableUserAvatar = memo(EditableUserAvatar)
