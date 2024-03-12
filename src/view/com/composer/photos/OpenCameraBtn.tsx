@@ -35,7 +35,9 @@ export function OpenCameraBtn({gallery}: Props) {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
-      await requestMediaPermission()
+      if (!mediaPermissionRes?.granted && mediaPermissionRes?.canAskAgain) {
+        await requestMediaPermission()
+      }
 
       const img = await openCamera({
         width: POST_IMG_MAX.width,
