@@ -1,20 +1,20 @@
-import React from 'react'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
-  StyleSheet,
-  StyleProp,
-  View,
-  ViewStyle,
-  DimensionValue,
-} from 'react-native'
-import {
+  CommentBottomArrow,
   HeartIcon,
   HeartIconSolid,
-  CommentBottomArrow,
   RepostIcon,
 } from 'lib/icons'
 import {s} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
+import React from 'react'
+import {
+  DimensionValue,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native'
 
 export function LoadingPlaceholder({
   width,

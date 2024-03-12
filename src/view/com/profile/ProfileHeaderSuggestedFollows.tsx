@@ -1,27 +1,28 @@
-import React from 'react'
-import {View, StyleSheet, Pressable, ScrollView} from 'react-native'
 import {AppBskyActorDefs, moderateProfile} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-
-import * as Toast from '../util/Toast'
+import {Trans} from '@lingui/macro'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
-import {Button} from 'view/com/util/forms/Button'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {Link} from 'view/com/util/Link'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {isWeb} from 'platform/detection'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import React from 'react'
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native'
+import {Button} from 'view/com/util/forms/Button'
+import {Link} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import {UserAvatar} from 'view/com/util/UserAvatar'
+
 import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {Trans} from '@lingui/macro'
+import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+
+import * as Toast from '../util/Toast'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14

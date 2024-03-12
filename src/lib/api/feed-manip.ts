@@ -1,11 +1,12 @@
 import {
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedRecord,
 } from '@atproto/api'
-import {ReasonFeedSource} from './feed/types'
+
 import {isPostInLanguage} from '../../locale/helpers'
+import {ReasonFeedSource} from './feed/types'
 type FeedViewPost = AppBskyFeedDefs.FeedViewPost
 
 export type FeedTunerFn = (

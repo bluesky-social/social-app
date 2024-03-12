@@ -1,8 +1,8 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
-import {Text, H3} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {H3, Text} from '#/components/Typography'
 
 export function Breakpoints() {
   const t = useTheme()

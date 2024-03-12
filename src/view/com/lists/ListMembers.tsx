@@ -1,3 +1,8 @@
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -6,22 +11,19 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
-import {List, ListRef} from '../util/List'
-import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {ProfileCard} from '../profile/ProfileCard'
-import {Button} from '../util/forms/Button'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useListMembersQuery} from '#/state/queries/list-members'
+
+import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
+import {useListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
-import {cleanError} from '#/lib/strings/errors'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+
+import {ProfileCard} from '../profile/ProfileCard'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {List, ListRef} from '../util/List'
+import {ProfileCardFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_ITEM = {_reactKey: '__empty__'}

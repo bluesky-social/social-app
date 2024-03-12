@@ -1,17 +1,17 @@
-import React, {useCallback} from 'react'
-import {TouchableOpacity, StyleSheet} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
-import {GalleryModel} from 'state/models/media/gallery'
-import {HITSLOP_10} from 'lib/constants'
-import {isNative} from 'platform/detection'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {usePhotoLibraryPermission} from 'lib/hooks/usePermissions'
+import {isNative} from 'platform/detection'
+import React, {useCallback} from 'react'
+import {StyleSheet, TouchableOpacity} from 'react-native'
+import {GalleryModel} from 'state/models/media/gallery'
 
 type Props = {
   gallery: GalleryModel

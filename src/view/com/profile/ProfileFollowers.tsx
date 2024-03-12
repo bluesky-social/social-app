@@ -1,15 +1,17 @@
+import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {List} from '../util/List'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ProfileCardWithFollowBtn} from './ProfileCard'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
 import {useProfileFollowersQuery} from '#/state/queries/profile-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {logger} from '#/logger'
-import {cleanError} from '#/lib/strings/errors'
+
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List} from '../util/List'
+import {LoadingScreen} from '../util/LoadingScreen'
+import {CenteredView} from '../util/Views'
+import {ProfileCardWithFollowBtn} from './ProfileCard'
 
 export function ProfileFollowers({name}: {name: string}) {
   const [isPTRing, setIsPTRing] = React.useState(false)

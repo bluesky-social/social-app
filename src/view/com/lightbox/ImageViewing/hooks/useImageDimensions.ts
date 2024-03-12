@@ -8,6 +8,7 @@
 
 import {useEffect, useState} from 'react'
 import {Image, ImageURISource} from 'react-native'
+
 import {Dimensions, ImageSource} from '../@types'
 
 const CACHE_SIZE = 50

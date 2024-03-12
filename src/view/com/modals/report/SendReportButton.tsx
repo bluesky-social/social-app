@@ -1,15 +1,16 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {colors, gradients, s} from 'lib/styles'
 import React from 'react'
-import LinearGradient from 'react-native-linear-gradient'
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
+
 import {Text} from '../../util/text/Text'
-import {s, gradients, colors} from 'lib/styles'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 
 export function SendReportButton({
   onPress,

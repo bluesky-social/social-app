@@ -1,8 +1,9 @@
 import {Platform} from 'react-native'
-import type {Theme} from './ThemeContext'
-import {colors} from './styles'
 
-import {darkPalette, lightPalette, dimPalette} from '#/alf/themes'
+import {darkPalette, dimPalette, lightPalette} from '#/alf/themes'
+
+import {colors} from './styles'
+import type {Theme} from './ThemeContext'
 
 export const defaultTheme: Theme = {
   colorScheme: 'light',

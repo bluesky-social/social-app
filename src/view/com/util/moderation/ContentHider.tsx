@@ -1,15 +1,17 @@
-import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
 import {ModerationUI, PostModeration} from '@atproto/api'
-import {Text} from '../text/Text'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {usePalette} from 'lib/hooks/usePalette'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
-import {useModalControls} from '#/state/modals'
 import {isPostMediaBlurred} from 'lib/moderation'
+import React from 'react'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+
+import {useModalControls} from '#/state/modals'
+
+import {Text} from '../text/Text'
 
 export function ContentHider({
   testID,

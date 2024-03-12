@@ -16,24 +16,26 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useEffect, useRef} from 'react'
 import {AppBskyFeedDefs} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
-  useQueryClient,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
+import {useEffect, useRef} from 'react'
+
+import {useMutedThreads} from '#/state/muted-threads'
+
+import {STALE} from '..'
 import {useModerationOpts} from '../preferences'
+import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
+import {FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
 import {fetchPage} from './util'
-import {FeedPage} from './types'
-import {useMutedThreads} from '#/state/muted-threads'
-import {STALE} from '..'
-import {embedViewRecordToPostView, getEmbeddedPost} from '../util'
 
-export type {NotificationType, FeedNotification, FeedPage} from './types'
+export type {FeedNotification, FeedPage, NotificationType} from './types'
 
 const PAGE_SIZE = 30
 

@@ -1,12 +1,14 @@
-import React from 'react'
-import {RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {HomeHeaderLayout} from './HomeHeaderLayout'
-import {FeedSourceInfo} from '#/state/queries/feed'
 import {useNavigation} from '@react-navigation/native'
 import {NavigationProp} from 'lib/routes/types'
 import {isWeb} from 'platform/detection'
-import {TabBar} from '../pager/TabBar'
+import React from 'react'
+import {RenderTabBarFnProps} from 'view/com/pager/Pager'
+
 import {usePalette} from '#/lib/hooks/usePalette'
+import {FeedSourceInfo} from '#/state/queries/feed'
+
+import {TabBar} from '../pager/TabBar'
+import {HomeHeaderLayout} from './HomeHeaderLayout'
 
 export function HomeHeader(
   props: RenderTabBarFnProps & {

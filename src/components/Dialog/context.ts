@@ -1,11 +1,11 @@
 import React from 'react'
 
-import {useDialogStateContext} from '#/state/dialogs'
 import {
   DialogContextProps,
   DialogControlRefProps,
   DialogOuterProps,
 } from '#/components/Dialog/types'
+import {useDialogStateContext} from '#/state/dialogs'
 
 export const Context = React.createContext<DialogContextProps>({
   close: () => {},

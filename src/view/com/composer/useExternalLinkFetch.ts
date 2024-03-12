@@ -1,24 +1,25 @@
-import {useState, useEffect} from 'react'
-import {ImageModel} from 'state/models/media/image'
 import * as apilib from 'lib/api/index'
-import {getLinkMeta} from 'lib/link-meta/link-meta'
+import {POST_IMG_MAX} from 'lib/constants'
 import {
-  getPostAsQuote,
   getFeedAsEmbed,
   getListAsEmbed,
+  getPostAsQuote,
 } from 'lib/link-meta/bsky'
+import {getLinkMeta} from 'lib/link-meta/link-meta'
 import {downloadAndResize} from 'lib/media/manip'
 import {
-  isBskyPostUrl,
   isBskyCustomFeedUrl,
   isBskyListUrl,
+  isBskyPostUrl,
 } from 'lib/strings/url-helpers'
+import {useEffect, useState} from 'react'
+import {ImageModel} from 'state/models/media/image'
 import {ComposerOpts} from 'state/shell/composer'
-import {POST_IMG_MAX} from 'lib/constants'
+
 import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
-import {useGetPost} from '#/state/queries/post'
 import {useFetchDid} from '#/state/queries/handle'
+import {useGetPost} from '#/state/queries/post'
+import {getAgent} from '#/state/session'
 
 export function useExternalLinkFetch({
   setQuote,

@@ -1,9 +1,9 @@
 import {ComAtprotoServerDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
-import {STALE} from '#/state/queries'
 import {cleanError} from '#/lib/strings/errors'
+import {STALE} from '#/state/queries'
+import {getAgent} from '#/state/session'
 
 function isInviteAvailable(invite: ComAtprotoServerDefs.InviteCode): boolean {
   return invite.available - invite.uses.length > 0 && !invite.disabled

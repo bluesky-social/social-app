@@ -1,17 +1,18 @@
-import React from 'react'
-import {TouchableOpacity, StyleSheet, Keyboard} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {usePalette} from 'lib/hooks/usePalette'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {HITSLOP_10} from 'lib/constants'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {usePalette} from 'lib/hooks/usePalette'
+import React from 'react'
+import {Keyboard, StyleSheet, TouchableOpacity} from 'react-native'
+
+import {isNative} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {isNative} from '#/platform/detection'
 
 export function ThreadgateBtn({
   threadgate,

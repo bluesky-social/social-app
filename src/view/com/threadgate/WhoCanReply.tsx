@@ -1,21 +1,22 @@
-import React from 'react'
-import {StyleProp, View, ViewStyle} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedThreadgate,
   AppBskyGraphDefs,
   AtUri,
 } from '@atproto/api'
-import {Trans} from '@lingui/macro'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {Text} from '../util/text/Text'
-import {TextLink} from '../util/Link'
-import {makeProfileLink, makeListLink} from '#/lib/routes/links'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {Trans} from '@lingui/macro'
+import React from 'react'
+import {StyleProp, View, ViewStyle} from 'react-native'
 
+import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {makeListLink, makeProfileLink} from '#/lib/routes/links'
 import {colors} from '#/lib/styles'
+
+import {TextLink} from '../util/Link'
+import {Text} from '../util/text/Text'
 
 export function WhoCanReply({
   post,

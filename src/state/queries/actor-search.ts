@@ -1,8 +1,8 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {QueryClient, useQuery} from '@tanstack/react-query'
 
-import {getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
+import {getAgent} from '#/state/session'
 
 export const RQKEY = (prefix: string) => ['actor-search', prefix]
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {useCommonSVGProps, Props} from '#/components/icons/common'
+import {Props, useCommonSVGProps} from '#/components/icons/common'
 
 export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   function LogoImpl(props: Props, ref) {

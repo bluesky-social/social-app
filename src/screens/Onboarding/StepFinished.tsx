@@ -1,33 +1,32 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
 
-import {logger} from '#/logger'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText, ButtonIcon} from '#/components/Button'
-import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {IconCircle} from '#/components/IconCircle'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {Growth_Stroke2_Corner0_Rounded as Growth} from '#/components/icons/Growth'
+import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Trending2_Stroke2_Corner2_Rounded as Trending} from '#/components/icons/Trending2'
-import {Text} from '#/components/Typography'
-import {useOnboardingDispatch} from '#/state/shell'
 import {Loader} from '#/components/Loader'
-import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
-import {getAgent} from '#/state/session'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/lib/analytics/analytics'
-
-import {Context} from '#/screens/Onboarding/state'
+import {logger} from '#/logger'
 import {
-  Title,
   Description,
   OnboardingControls,
+  Title,
 } from '#/screens/Onboarding/Layout'
-import {IconCircle} from '#/components/IconCircle'
+import {Context} from '#/screens/Onboarding/state'
 import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,
 } from '#/screens/Onboarding/util'
+import {useSetSaveFeedsMutation} from '#/state/queries/preferences'
+import {getAgent} from '#/state/session'
+import {useOnboardingDispatch} from '#/state/shell'
 
 export function StepFinished() {
   const {_} = useLingui()

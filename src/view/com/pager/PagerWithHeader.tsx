@@ -1,26 +1,28 @@
 import * as React from 'react'
 import {
   LayoutChangeEvent,
+  NativeScrollEvent,
   ScrollView,
   StyleSheet,
   View,
-  NativeScrollEvent,
 } from 'react-native'
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
+  AnimatedRef,
   runOnJS,
   runOnUI,
   scrollTo,
-  useAnimatedRef,
-  AnimatedRef,
   SharedValue,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-import {TabBar} from './TabBar'
+
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {ListMethods} from '../util/List'
 import {ScrollProvider} from '#/lib/ScrollContext'
+
+import {ListMethods} from '../util/List'
+import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number

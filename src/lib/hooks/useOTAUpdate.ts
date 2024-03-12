@@ -1,9 +1,10 @@
+import {t} from '@lingui/macro'
 import * as Updates from 'expo-updates'
 import {useCallback, useEffect} from 'react'
 import {AppState} from 'react-native'
+
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {t} from '@lingui/macro'
 
 export function useOTAUpdate() {
   const {openModal} = useModalControls()

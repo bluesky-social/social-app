@@ -1,5 +1,5 @@
 import {AppBskyFeedGetActorFeeds} from '@atproto/api'
-import {useInfiniteQuery, InfiniteData, QueryKey} from '@tanstack/react-query'
+import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
 

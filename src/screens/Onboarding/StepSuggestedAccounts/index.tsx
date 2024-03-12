@@ -1,33 +1,32 @@
+import {AppBskyActorDefs} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
 
 import {atoms as a, useBreakpoints} from '#/alf'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {Loader} from '#/components/Loader'
 import * as Toggle from '#/components/forms/Toggle'
-import {useModerationOpts} from '#/state/queries/preferences'
+import {IconCircle} from '#/components/IconCircle'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
 import {
-  Title,
   Description,
   OnboardingControls,
+  Title,
 } from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
 import {
   SuggestedAccountCard,
   SuggestedAccountCardPlaceholder,
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
-import {IconCircle} from '#/components/IconCircle'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfilesQuery} from '#/state/queries/profile'
 
 export function Inner({
   profiles,

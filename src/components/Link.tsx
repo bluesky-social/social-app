@@ -1,23 +1,23 @@
+import {sanitizeUrl} from '@braintree/sanitize-url'
+import {StackActions, useLinkProps} from '@react-navigation/native'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 import React from 'react'
 import {GestureResponderEvent} from 'react-native'
-import {useLinkProps, StackActions} from '@react-navigation/native'
-import {sanitizeUrl} from '@braintree/sanitize-url'
+import {useOpenLink} from 'state/preferences/in-app-browser'
 
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {isWeb} from '#/platform/detection'
-import {useTheme, web, flatten, TextStyleProp, atoms as a} from '#/alf'
+import {atoms as a, flatten, TextStyleProp, useTheme, web} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Text, TextProps} from '#/components/Typography'
 import {AllNavigatorParams} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
 } from '#/lib/strings/url-helpers'
-import {useModalControls} from '#/state/modals'
+import {isWeb} from '#/platform/detection'
 import {router} from '#/routes'
-import {Text, TextProps} from '#/components/Typography'
-import {useOpenLink} from 'state/preferences/in-app-browser'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
+import {useModalControls} from '#/state/modals'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.

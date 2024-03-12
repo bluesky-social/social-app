@@ -1,8 +1,8 @@
 import {
-  BskyPreferences,
-  LabelPreference,
-  BskyThreadViewPreference,
   BskyFeedViewPreference,
+  BskyPreferences,
+  BskyThreadViewPreference,
+  LabelPreference,
 } from '@atproto/api'
 
 export const configurableAdultLabelGroups = [

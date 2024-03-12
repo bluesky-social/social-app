@@ -1,13 +1,14 @@
-import React from 'react'
-import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createClient, SegmentClient} from '@segment/analytics-react-native'
 import {sha256} from 'js-sha256'
+import React from 'react'
+import {AppState, AppStateStatus} from 'react-native'
 import {Native} from 'sentry-expo'
 
-import {useSession, SessionAccount} from '#/state/session'
-import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 import {logger} from '#/logger'
+import {SessionAccount, useSession} from '#/state/session'
+
+import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
 
 type AppInfo = {
   build?: string | undefined

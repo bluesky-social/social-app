@@ -1,11 +1,13 @@
+import {useQueryClient} from '@tanstack/react-query'
 import React from 'react'
 import {Pressable, View} from 'react-native'
-import {navigate} from '../../../Navigation'
+
 import {useModalControls} from '#/state/modals'
-import {useQueryClient} from '@tanstack/react-query'
-import {useSessionApi} from '#/state/session'
 import {useSetFeedViewPreferencesMutation} from '#/state/queries/preferences'
+import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+
+import {navigate} from '../../../Navigation'
 
 /**
  * This utility component is only included in the test simulator

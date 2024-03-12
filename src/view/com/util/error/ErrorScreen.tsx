@@ -1,18 +1,19 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from '../text/Text'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Button} from '../forms/Button'
-import {CenteredView} from '../Views'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {ViewHeader} from 'view/com/util/ViewHeader'
+import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useTheme} from 'lib/ThemeContext'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+
+import {Button} from '../forms/Button'
+import {Text} from '../text/Text'
+import {CenteredView} from '../Views'
 
 export function ErrorScreen({
   title,

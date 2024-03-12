@@ -1,19 +1,21 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import {ScrollView} from '../util'
-import {Text} from '../../util/text/Text'
+import {Trans} from '@lingui/macro'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {deviceLocales} from 'platform/detection'
-import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
-import {LanguageToggle} from './LanguageToggle'
-import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
-import {Trans} from '@lingui/macro'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+
 import {useModalControls} from '#/state/modals'
 import {
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
+
+import {LANGUAGES, LANGUAGES_MAP_CODE2} from '../../../../locale/languages'
+import {Text} from '../../util/text/Text'
+import {ScrollView} from '../util'
+import {ConfirmLanguagesButton} from './ConfirmLanguagesButton'
+import {LanguageToggle} from './LanguageToggle'
 
 export const snapPoints = ['100%']
 

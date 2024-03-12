@@ -1,27 +1,29 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
-  AppBskyEmbedRecord,
-  AppBskyFeedPost,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecordWithMedia,
-  ModerationUI,
   AppBskyEmbedExternal,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyEmbedRecordWithMedia,
+  AppBskyFeedPost,
+  ModerationUI,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
-import {PostMeta} from '../PostMeta'
-import {Link} from '../Link'
-import {Text} from '../text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {PostEmbeds} from '.'
-import {PostAlerts} from '../moderation/PostAlerts'
-import {makeProfileLink} from 'lib/routes/links'
-import {InfoCircleIcon} from 'lib/icons'
 import {Trans} from '@lingui/macro'
-import {RichText} from '#/components/RichText'
+import {usePalette} from 'lib/hooks/usePalette'
+import {InfoCircleIcon} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import React from 'react'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+import {ComposerOptsQuote} from 'state/shell/composer'
+
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+
+import {Link} from '../Link'
+import {PostAlerts} from '../moderation/PostAlerts'
+import {PostMeta} from '../PostMeta'
+import {Text} from '../text/Text'
+import {PostEmbeds} from '.'
 
 export function MaybeQuoteEmbed({
   embed,

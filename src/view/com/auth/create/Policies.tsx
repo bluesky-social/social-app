@@ -1,14 +1,15 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors, s} from 'lib/styles'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+
 import {TextLink} from '../../util/Link'
 import {Text} from '../../util/text/Text'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

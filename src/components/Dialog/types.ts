@@ -1,6 +1,6 @@
+import {BottomSheetProps} from '@gorhom/bottom-sheet'
 import React from 'react'
 import type {AccessibilityProps} from 'react-native'
-import {BottomSheetProps} from '@gorhom/bottom-sheet'
 
 import {ViewStyleProp} from '#/alf'
 

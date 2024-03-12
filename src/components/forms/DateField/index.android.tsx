@@ -1,19 +1,18 @@
+import {isAndroid} from 'platform/detection'
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
+import DatePicker from 'react-native-date-picker'
 
-import {useTheme, atoms} from '#/alf'
-import {Text} from '#/components/Typography'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import * as TextField from '#/components/forms/TextField'
-import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
-
+import {atoms, useTheme} from '#/alf'
 import {DateFieldProps} from '#/components/forms/DateField/types'
 import {
   localizeDate,
   toSimpleDateString,
 } from '#/components/forms/DateField/utils'
-import DatePicker from 'react-native-date-picker'
-import {isAndroid} from 'platform/detection'
+import * as TextField from '#/components/forms/TextField'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
+import {Text} from '#/components/Typography'
 
 export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label

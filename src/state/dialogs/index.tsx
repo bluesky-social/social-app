@@ -1,5 +1,6 @@
 import React from 'react'
 import {SharedValue, useSharedValue} from 'react-native-reanimated'
+
 import {DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
 

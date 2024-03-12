@@ -1,12 +1,12 @@
 import {
-  LabelPreference,
   ComAtprotoLabelDefs,
+  LabelPreference,
   ModerationOpts,
 } from '@atproto/api'
 
 import {
-  LabelGroup,
   ConfigurableLabelGroup,
+  LabelGroup,
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 

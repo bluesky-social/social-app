@@ -1,15 +1,17 @@
-import React, {useMemo, useCallback, useState} from 'react'
-import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {List} from '../util/List'
+import React, {useCallback, useMemo, useState} from 'react'
+import {ActivityIndicator, StyleSheet, View} from 'react-native'
+
+import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+
 import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {ErrorMessage} from '../util/error/ErrorMessage'
-import {logger} from '#/logger'
+import {List} from '../util/List'
 import {LoadingScreen} from '../util/LoadingScreen'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {usePostRepostedByQuery} from '#/state/queries/post-reposted-by'
-import {cleanError} from '#/lib/strings/errors'
+import {CenteredView} from '../util/Views'
 
 export function PostRepostedBy({uri}: {uri: string}) {
   const [isPTRing, setIsPTRing] = useState(false)

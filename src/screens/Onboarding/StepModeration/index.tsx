@@ -1,32 +1,31 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
 import Animated, {Easing, Layout} from 'react-native-reanimated'
-
-import {atoms as a} from '#/alf'
 import {
   configurableAdultLabelGroups,
   configurableOtherLabelGroups,
   usePreferencesSetAdultContentMutation,
 } from 'state/queries/preferences'
-import {Divider} from '#/components/Divider'
+
+import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
+import {IconCircle} from '#/components/IconCircle'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {usePreferencesQuery} from '#/state/queries/preferences'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/lib/analytics/analytics'
-
 import {
   Description,
   OnboardingControls,
   Title,
 } from '#/screens/Onboarding/Layout'
-import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
-import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
-import {IconCircle} from '#/components/IconCircle'
+import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
+import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 
 function AnimatedDivider() {
   return (

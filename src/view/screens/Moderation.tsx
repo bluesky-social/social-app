@@ -1,3 +1,16 @@
+import {ComAtprotoLabelDefs} from '@atproto/api'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {s} from 'lib/styles'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -5,33 +18,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {ComAtprotoLabelDefs} from '@atproto/api'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {CenteredView} from '../com/util/Views'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Link, TextLink} from '../com/util/Link'
-import {Text} from '../com/util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useSetMinimalShellMode} from '#/state/shell'
+
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useModalControls} from '#/state/modals'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {ToggleButton} from '../com/util/forms/ToggleButton'
-import {useSession} from '#/state/session'
 import {
   useProfileQuery,
   useProfileUpdateMutation,
 } from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useSetMinimalShellMode} from '#/state/shell'
+
+import {ToggleButton} from '../com/util/forms/ToggleButton'
+import {Link, TextLink} from '../com/util/Link'
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
+import {CenteredView} from '../com/util/Views'
 import {ScrollView} from '../com/util/Views'
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Moderation'>
 export function ModerationScreen({}: Props) {

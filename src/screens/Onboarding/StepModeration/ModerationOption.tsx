@@ -1,19 +1,19 @@
+import {LabelPreference} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
-import {LabelPreference} from '@atproto/api'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-import Animated, {Easing, Layout, FadeIn} from 'react-native-reanimated'
+import Animated, {Easing, FadeIn, Layout} from 'react-native-reanimated'
 
+import {atoms as a, useTheme} from '#/alf'
+import * as ToggleButton from '#/components/forms/ToggleButton'
+import {Text} from '#/components/Typography'
 import {
   CONFIGURABLE_LABEL_GROUPS,
   ConfigurableLabelGroup,
   usePreferencesQuery,
   usePreferencesSetContentLabelMutation,
 } from '#/state/queries/preferences'
-import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 
 export function ModerationOption({
   labelGroup,

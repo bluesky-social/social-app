@@ -1,14 +1,14 @@
-import React from 'react'
-import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-
-import {s} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {Text} from '#/view/com/util/text/Text'
-import {Button} from '#/view/com/util/forms/Button'
+import {s} from 'lib/styles'
+import React from 'react'
+import {View} from 'react-native'
+
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
 import {Logo} from '#/view/icons/Logo'
 
 let NavSignupCard = ({}: {}): React.ReactNode => {

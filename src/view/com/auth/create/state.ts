@@ -1,23 +1,24 @@
-import {useCallback, useReducer} from 'react'
 import {
-  ComAtprotoServerDescribeServer,
   ComAtprotoServerCreateAccount,
+  ComAtprotoServerDescribeServer,
 } from '@atproto/api'
-import {I18nContext, useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {I18nContext, useLingui} from '@lingui/react'
 import * as EmailValidator from 'email-validator'
 import {getAge} from 'lib/strings/time'
-import {logger} from '#/logger'
-import {createFullHandle, validateHandle} from '#/lib/strings/handles'
-import {cleanError} from '#/lib/strings/errors'
-import {useOnboardingDispatch} from '#/state/shell/onboarding'
-import {useSessionApi} from '#/state/session'
-import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
+import {useCallback, useReducer} from 'react'
 import {
   DEFAULT_PROD_FEEDS,
   usePreferencesSetBirthDateMutation,
   useSetSaveFeedsMutation,
 } from 'state/queries/preferences'
+
+import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
+import {cleanError} from '#/lib/strings/errors'
+import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {logger} from '#/logger'
+import {useSessionApi} from '#/state/session'
+import {useOnboardingDispatch} from '#/state/shell/onboarding'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago

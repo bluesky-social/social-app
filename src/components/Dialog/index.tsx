@@ -1,5 +1,3 @@
-import React, {useImperativeHandle} from 'react'
-import {View, Dimensions, Keyboard, Pressable} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
@@ -8,23 +6,24 @@ import BottomSheet, {
   useBottomSheet,
   WINDOW_HEIGHT,
 } from '@gorhom/bottom-sheet'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import React, {useImperativeHandle} from 'react'
+import {Dimensions, Keyboard, Pressable, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
-import {useTheme, atoms as a, flatten} from '#/alf'
-import {Portal} from '#/components/Portal'
+import {atoms as a, flatten, useTheme} from '#/alf'
+import {Context} from '#/components/Dialog/context'
+import {
+  DialogControlProps,
+  DialogInnerProps,
+  DialogOuterProps,
+} from '#/components/Dialog/types'
 import {createInput} from '#/components/forms/TextField'
+import {Portal} from '#/components/Portal'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
 
-import {
-  DialogOuterProps,
-  DialogControlProps,
-  DialogInnerProps,
-} from '#/components/Dialog/types'
-import {Context} from '#/components/Dialog/context'
-
-export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)

@@ -1,7 +1,7 @@
 import {AtUri} from '@atproto/api'
 import {BSKY_SERVICE} from 'lib/constants'
-import TLDs from 'tlds'
 import psl from 'psl'
+import TLDs from 'tlds'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
 

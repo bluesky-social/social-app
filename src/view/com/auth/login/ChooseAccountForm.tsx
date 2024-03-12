@@ -1,21 +1,23 @@
-import React from 'react'
-import {ScrollView, TouchableOpacity, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {Text} from '../../util/text/Text'
-import {UserAvatar} from '../../util/UserAvatar'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {styles} from './styles'
-import {useSession, useSessionApi, SessionAccount} from '#/state/session'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors, s} from 'lib/styles'
+import React from 'react'
+import {ScrollView, TouchableOpacity, View} from 'react-native'
+
 import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+
+import {Text} from '../../util/text/Text'
+import {UserAvatar} from '../../util/UserAvatar'
+import {styles} from './styles'
 
 function AccountItem({
   account,

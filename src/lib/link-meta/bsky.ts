@@ -1,11 +1,13 @@
 import {AppBskyFeedPost, BskyAgent} from '@atproto/api'
 import * as apilib from 'lib/api/index'
-import {LikelyType, LinkMeta} from './link-meta'
+import {ComposerOptsQuote} from 'state/shell/composer'
+
+import {useFetchDid} from '#/state/queries/handle'
+import {useGetPost} from '#/state/queries/post'
+
 // import {match as matchRoute} from 'view/routes'
 import {convertBskyAppUrlIfNeeded, makeRecordUri} from '../strings/url-helpers'
-import {ComposerOptsQuote} from 'state/shell/composer'
-import {useGetPost} from '#/state/queries/post'
-import {useFetchDid} from '#/state/queries/handle'
+import {LikelyType, LinkMeta} from './link-meta'
 
 // TODO
 // import {Home} from 'view/screens/Home'

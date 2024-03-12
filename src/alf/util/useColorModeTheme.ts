@@ -1,10 +1,10 @@
+import * as SystemUI from 'expo-system-ui'
+import {isWeb} from 'platform/detection'
 import React from 'react'
 import {ColorSchemeName, useColorScheme} from 'react-native'
-
 import {useThemePrefs} from 'state/shell'
-import {isWeb} from 'platform/detection'
-import {ThemeName, light, dark, dim} from '#/alf/themes'
-import * as SystemUI from 'expo-system-ui'
+
+import {dark, dim, light, ThemeName} from '#/alf/themes'
 
 export function useColorModeTheme(): ThemeName {
   const colorScheme = useColorScheme()

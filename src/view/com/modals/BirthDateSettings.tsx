@@ -1,3 +1,10 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError} from 'lib/strings/errors'
+import {colors, s} from 'lib/styles'
+import {isWeb} from 'platform/detection'
 import React, {useState} from 'react'
 import {
   ActivityIndicator,
@@ -5,23 +12,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Text} from '../util/text/Text'
-import {DateInput} from '../util/forms/DateInput'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {cleanError} from 'lib/strings/errors'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
 import {
   usePreferencesQuery,
-  usePreferencesSetBirthDateMutation,
   UsePreferencesQueryResponse,
+  usePreferencesSetBirthDateMutation,
 } from '#/state/queries/preferences'
-import {logger} from '#/logger'
+
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {DateInput} from '../util/forms/DateInput'
+import {Text} from '../util/text/Text'
 
 export const snapPoints = ['50%', '90%']
 

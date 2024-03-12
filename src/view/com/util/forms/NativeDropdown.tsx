@@ -1,13 +1,13 @@
-import React from 'react'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as DropdownMenu from 'zeego/dropdown-menu'
-import {Pressable, StyleSheet, Platform, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
-import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useTheme} from 'lib/ThemeContext'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {isWeb} from 'platform/detection'
+import React from 'react'
+import {Platform, Pressable, StyleSheet, View, ViewStyle} from 'react-native'
+import * as DropdownMenu from 'zeego/dropdown-menu'
+import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 
 // Custom Dropdown Menu Components
 // ==

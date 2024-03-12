@@ -1,27 +1,29 @@
-import React from 'react'
-import {
-  TouchableWithoutFeedback,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native'
+import {ModerationUI} from '@atproto/api'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
-import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {Text} from '../text/Text'
-import {Button} from '../forms/Button'
 import {describeModerationCause} from 'lib/moderation'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
+import {NavigationProp} from 'lib/routes/types'
+import React from 'react'
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  View,
+  ViewStyle,
+} from 'react-native'
+
 import {s} from '#/lib/styles'
+import {useModalControls} from '#/state/modals'
+
+import {Button} from '../forms/Button'
+import {Text} from '../text/Text'
 import {CenteredView} from '../Views'
 
 export function ScreenHider({

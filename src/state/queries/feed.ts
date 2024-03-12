@@ -1,24 +1,24 @@
 import {
-  useQuery,
-  useInfiniteQuery,
-  InfiniteData,
-  QueryKey,
-  useMutation,
-} from '@tanstack/react-query'
-import {
-  AtUri,
-  RichText,
   AppBskyFeedDefs,
   AppBskyGraphDefs,
   AppBskyUnspeccedGetPopularFeedGenerators,
+  AtUri,
+  RichText,
 } from '@atproto/api'
+import {
+  InfiniteData,
+  QueryKey,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query'
 
-import {router} from '#/routes'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {getAgent} from '#/state/session'
-import {usePreferencesQuery} from '#/state/queries/preferences'
+import {router} from '#/routes'
 import {STALE} from '#/state/queries'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {getAgent} from '#/state/session'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'

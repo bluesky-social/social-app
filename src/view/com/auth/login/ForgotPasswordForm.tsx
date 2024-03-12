@@ -1,4 +1,20 @@
-import React, {useState, useEffect} from 'react'
+import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {BskyAgent} from '@atproto/api'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import * as EmailValidator from 'email-validator'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isNetworkError} from 'lib/strings/errors'
+import {cleanError} from 'lib/strings/errors'
+import {toNiceDomain} from 'lib/strings/url-helpers'
+import {s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import React, {useEffect, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -6,28 +22,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import * as EmailValidator from 'email-validator'
-import {BskyAgent} from '@atproto/api'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {Text} from '../../util/text/Text'
-import {s} from 'lib/styles'
-import {toNiceDomain} from 'lib/strings/url-helpers'
-import {isNetworkError} from 'lib/strings/errors'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {cleanError} from 'lib/strings/errors'
-import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {styles} from './styles'
-import {useDialogControl} from '#/components/Dialog'
 
+import {useDialogControl} from '#/components/Dialog'
+import {logger} from '#/logger'
+
+import {Text} from '../../util/text/Text'
 import {ServerInputDialog} from '../server-input'
+import {styles} from './styles'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

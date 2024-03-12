@@ -1,19 +1,19 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 
-import {s} from 'lib/styles'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {ScrollView} from './util'
-import {usePalette} from 'lib/hooks/usePalette'
-
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {
   useOpenLink,
   useSetInAppBrowser,
 } from '#/state/preferences/in-app-browser'
+
+import {Button} from '../util/forms/Button'
+import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
 
 export const snapPoints = [350]
 

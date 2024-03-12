@@ -1,13 +1,15 @@
-import React from 'react'
-import {Pressable, StyleProp, StyleSheet, ViewStyle} from 'react-native'
 import {ModerationUI} from '@atproto/api'
-import {Text} from '../text/Text'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ShieldExclamation} from 'lib/icons'
 import {describeModerationCause} from 'lib/moderation'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import React from 'react'
+import {Pressable, StyleProp, StyleSheet, ViewStyle} from 'react-native'
+
 import {useModalControls} from '#/state/modals'
+
+import {Text} from '../text/Text'
 
 export function PostAlerts({
   moderation,

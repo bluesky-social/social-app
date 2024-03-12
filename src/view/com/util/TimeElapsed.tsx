@@ -1,5 +1,6 @@
-import React from 'react'
 import {ago} from 'lib/strings/time'
+import React from 'react'
+
 import {useTickEveryMinute} from '#/state/shell'
 
 // FIXME(dan): Figure out why the false positives

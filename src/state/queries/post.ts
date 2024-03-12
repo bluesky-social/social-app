@@ -1,11 +1,12 @@
-import {useCallback} from 'react'
 import {AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
-import {Shadow} from '#/state/cache/types'
-import {getAgent} from '#/state/session'
-import {updatePostShadow} from '#/state/cache/post-shadow'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useCallback} from 'react'
+
 import {track} from '#/lib/analytics/analytics'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
+import {updatePostShadow} from '#/state/cache/post-shadow'
+import {Shadow} from '#/state/cache/types'
+import {getAgent} from '#/state/session'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
 

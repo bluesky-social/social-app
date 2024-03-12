@@ -1,12 +1,12 @@
 import React from 'react'
 import {StyleSheet, TextProps} from 'react-native'
 import Svg, {
-  Path,
   Defs,
   LinearGradient,
+  Path,
+  PathProps,
   Stop,
   SvgProps,
-  PathProps,
 } from 'react-native-svg'
 
 import {colors} from '#/lib/styles'

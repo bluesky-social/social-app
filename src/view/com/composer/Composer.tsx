@@ -1,5 +1,21 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {RichText} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useAnalytics} from 'lib/analytics/analytics'
+import * as apilib from 'lib/api/index'
+import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError} from 'lib/strings/errors'
+import {insertMentionAt} from 'lib/strings/mention-manip'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {colors, gradients, s} from 'lib/styles'
 import {observer} from 'mobx-react-lite'
+import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {
   ActivityIndicator,
   BackHandler,
@@ -12,57 +28,43 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {RichText} from '@atproto/api'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {ExternalEmbed} from './ExternalEmbed'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {GalleryModel} from 'state/models/media/gallery'
+import {ComposerOpts} from 'state/shell/composer'
+import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+
+import {logger} from '#/logger'
+import {emitPostCreated} from '#/state/events'
+import {useModalControls, useModals} from '#/state/modals'
+import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  toPostLanguages,
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+} from '#/state/preferences/languages'
+import {useProfileQuery} from '#/state/queries/profile'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {getAgent, useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
+
+import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
+import {CharProgress} from './char-progress/CharProgress'
+import {ExternalEmbed} from './ExternalEmbed'
+import {LabelsBtn} from './labels/LabelsBtn'
+import {Gallery} from './photos/Gallery'
+import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
+import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import {TextInput, TextInputRef} from './text-input/TextInput'
-import {CharProgress} from './char-progress/CharProgress'
-import {UserAvatar} from '../util/UserAvatar'
-import * as apilib from 'lib/api/index'
-import {ComposerOpts} from 'state/shell/composer'
-import {s, colors, gradients} from 'lib/styles'
-import {cleanError} from 'lib/strings/errors'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
-import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
-import {GalleryModel} from 'state/models/media/gallery'
-import {Gallery} from './photos/Gallery'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
-import {LabelsBtn} from './labels/LabelsBtn'
-import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {SuggestedLanguage} from './select-language/SuggestedLanguage'
-import {insertMentionAt} from 'lib/strings/mention-manip'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModals, useModalControls} from '#/state/modals'
-import {useRequireAltTextEnabled} from '#/state/preferences'
-import {
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-  toPostLanguages,
-} from '#/state/preferences/languages'
-import {useSession, getAgent} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useComposerControls} from '#/state/shell/composer'
-import {emitPostCreated} from '#/state/events'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {logger} from '#/logger'
-import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({

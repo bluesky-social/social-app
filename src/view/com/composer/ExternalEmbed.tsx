@@ -1,3 +1,9 @@
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {ExternalEmbedDraft} from 'lib/api/index'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -5,14 +11,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+
 import {AutoSizedImage} from '../util/images/AutoSizedImage'
 import {Text} from '../util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ExternalEmbedDraft} from 'lib/api/index'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 export const ExternalEmbed = ({
   link,

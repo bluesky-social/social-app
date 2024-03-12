@@ -1,6 +1,7 @@
 import React from 'react'
-import * as persisted from '#/state/persisted'
+
 import {isWeb} from '#/platform/detection'
+import * as persisted from '#/state/persisted'
 
 type StateContext = string
 type SetContext = (v: string) => void

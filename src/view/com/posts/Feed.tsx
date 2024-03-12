@@ -1,3 +1,9 @@
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useQueryClient} from '@tanstack/react-query'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {useTheme} from 'lib/ThemeContext'
 import React, {memo} from 'react'
 import {
   ActivityIndicator,
@@ -8,31 +14,27 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {useQueryClient} from '@tanstack/react-query'
-import {List, ListRef} from '../util/List'
-import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {FeedErrorMessage} from './FeedErrorMessage'
-import {FeedSlice} from './FeedSlice'
-import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useTheme} from 'lib/ThemeContext'
+
+import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
 import {logger} from '#/logger'
-import {
-  RQKEY,
-  FeedDescriptor,
-  FeedParams,
-  usePostFeedQuery,
-  pollLatest,
-} from '#/state/queries/post-feed'
 import {isWeb} from '#/platform/detection'
 import {listenPostCreated} from '#/state/events'
-import {useSession} from '#/state/session'
 import {STALE} from '#/state/queries'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {
+  FeedDescriptor,
+  FeedParams,
+  pollLatest,
+  RQKEY,
+  usePostFeedQuery,
+} from '#/state/queries/post-feed'
+import {useSession} from '#/state/session'
+
+import {List, ListRef} from '../util/List'
+import {PostFeedLoadingPlaceholder} from '../util/LoadingPlaceholder'
+import {LoadMoreRetryBtn} from '../util/LoadMoreRetryBtn'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
-import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {FeedErrorMessage} from './FeedErrorMessage'
+import {FeedSlice} from './FeedSlice'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}

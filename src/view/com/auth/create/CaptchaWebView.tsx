@@ -1,7 +1,7 @@
 import React from 'react'
+import {StyleSheet} from 'react-native'
 import {WebView, WebViewNavigation} from 'react-native-webview'
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
-import {StyleSheet} from 'react-native'
 import {CreateAccountState} from 'view/com/auth/create/state'
 
 const ALLOWED_HOSTS = [

@@ -1,5 +1,3 @@
-import React, {useCallback, useEffect, useRef} from 'react'
-import {AppState} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -7,34 +5,38 @@ import {
   PostModeration,
 } from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
-import {useFeedTuners} from '../preferences/feed-tuners'
-import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
-import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
-import {FollowingFeedAPI} from 'lib/api/feed/following'
 import {AuthorFeedAPI} from 'lib/api/feed/author'
-import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {CustomFeedAPI} from 'lib/api/feed/custom'
+import {FollowingFeedAPI} from 'lib/api/feed/following'
+import {LikesFeedAPI} from 'lib/api/feed/likes'
 import {ListFeedAPI} from 'lib/api/feed/list'
 import {MergeFeedAPI} from 'lib/api/feed/merge'
+import {FeedAPI, ReasonFeedSource} from 'lib/api/feed/types'
+import {FeedTuner, FeedTunerFn, NoopFeedTuner} from 'lib/api/feed-manip'
+import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
+import {queryClient} from 'lib/react-query'
+import React, {useCallback, useEffect, useRef} from 'react'
+import {AppState} from 'react-native'
+
 import {HomeFeedAPI} from '#/lib/api/feed/home'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {precacheFeedPostProfiles} from './profile'
-import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
+import {getAgent} from '#/state/session'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
-import {embedViewRecordToPostView, getEmbeddedPost} from './util'
+
+import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from './preferences'
-import {queryClient} from 'lib/react-query'
-import {BSKY_FEED_OWNER_DIDS} from 'lib/constants'
+import {precacheFeedPostProfiles} from './profile'
+import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 type ActorDid = string
 type AuthorFilter =

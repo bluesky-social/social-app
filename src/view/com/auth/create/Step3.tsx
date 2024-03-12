@@ -1,20 +1,20 @@
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {createFullHandle} from 'lib/strings/handles'
+import {useTheme} from 'lib/ThemeContext'
+import {nanoid} from 'nanoid/non-secure'
+import {isWeb} from 'platform/detection'
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
+import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+
 import {
-  CreateAccountState,
   CreateAccountDispatch,
+  CreateAccountState,
   useSubmitCreateAccount,
 } from './state'
 import {StepHeader} from './StepHeader'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {isWeb} from 'platform/detection'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-
-import {nanoid} from 'nanoid/non-secure'
-import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
-import {useTheme} from 'lib/ThemeContext'
-import {createFullHandle} from 'lib/strings/handles'
 
 const CAPTCHA_PATH = '/gate/signup'
 

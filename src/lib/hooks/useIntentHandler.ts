@@ -1,8 +1,8 @@
-import React from 'react'
 import * as Linking from 'expo-linking'
 import {isNative} from 'platform/detection'
-import {useComposerControls} from 'state/shell'
+import React from 'react'
 import {useSession} from 'state/session'
+import {useComposerControls} from 'state/shell'
 import {useCloseAllActiveElements} from 'state/util'
 
 type IntentType = 'compose'

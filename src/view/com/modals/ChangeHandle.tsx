@@ -1,37 +1,39 @@
-import React, {useState} from 'react'
-import Clipboard from '@react-native-clipboard/clipboard'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import * as Toast from '../util/Toast'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import Clipboard from '@react-native-clipboard/clipboard'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {cleanError} from 'lib/strings/errors'
+import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
+import {s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
+import React, {useState} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ScrollView, TextInput} from './util'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {SelectableBtn} from '../util/forms/SelectableBtn'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {s} from 'lib/styles'
-import {createFullHandle, makeValidHandle} from 'lib/strings/handles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {cleanError} from 'lib/strings/errors'
+
 import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
+import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {useServiceQuery} from '#/state/queries/service'
-import {useUpdateHandleMutation, useFetchDid} from '#/state/queries/handle'
 import {
+  getAgent,
+  SessionAccount,
   useSession,
   useSessionApi,
-  SessionAccount,
-  getAgent,
 } from '#/state/session'
+
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {Button} from '../util/forms/Button'
+import {SelectableBtn} from '../util/forms/SelectableBtn'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {ScrollView, TextInput} from './util'
 
 export const snapPoints = ['100%']
 

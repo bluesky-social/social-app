@@ -1,12 +1,12 @@
+import {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
+import {t} from '@lingui/macro'
 import React, {useMemo} from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
-import {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
 import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {t} from '@lingui/macro'
 
 export function createCustomBackdrop(
   onClose?: (() => void) | undefined,

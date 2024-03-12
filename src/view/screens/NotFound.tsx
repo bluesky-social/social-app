@@ -1,19 +1,21 @@
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
-  useNavigation,
   StackActions,
   useFocusEffect,
+  useNavigation,
 } from '@react-navigation/native'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Text} from '../com/util/text/Text'
-import {Button} from 'view/com/util/forms/Button'
-import {NavigationProp} from 'lib/routes/types'
 import {usePalette} from 'lib/hooks/usePalette'
+import {NavigationProp} from 'lib/routes/types'
 import {s} from 'lib/styles'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+import {Button} from 'view/com/util/forms/Button'
+
 import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
 
 export const NotFoundScreen = () => {
   const pal = usePalette('default')

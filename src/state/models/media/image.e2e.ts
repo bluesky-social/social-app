@@ -1,9 +1,9 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {makeAutoObservable} from 'mobx'
-import {POST_IMG_MAX} from 'lib/constants'
 import {ActionCrop} from 'expo-image-manipulator'
-import {Position} from 'react-avatar-editor'
+import {POST_IMG_MAX} from 'lib/constants'
 import {Dimensions} from 'lib/media/types'
+import {makeAutoObservable} from 'mobx'
+import {Position} from 'react-avatar-editor'
+import {Image as RNImage} from 'react-native-image-crop-picker'
 
 export interface ImageManipulationAttributes {
   aspectRatio?: '4:3' | '1:1' | '3:4' | 'None'

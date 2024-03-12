@@ -1,33 +1,33 @@
-import React from 'react'
-import {
-  ViewStyle,
-  TextInput,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native'
-import {useNavigation, StackActions} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
   moderateProfile,
   ProfileModeration,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-
-import {s} from '#/lib/styles'
-import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {sanitizeHandle} from '#/lib/strings/handles'
-import {makeProfileLink} from '#/lib/routes/links'
-import {Link} from '#/view/com/util/Link'
+import {StackActions, useNavigation} from '@react-navigation/native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {MagnifyingGlassIcon2} from 'lib/icons'
 import {NavigationProp} from 'lib/routes/types'
+import React from 'react'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from '#/view/com/util/UserAvatar'
+
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {s} from '#/lib/styles'
 import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {useModerationOpts} from '#/state/queries/preferences'
+import {Link} from '#/view/com/util/Link'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 
 export const MATCH_HANDLE =
   /@?([a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*(?:\.[a-zA-Z]{2,}))/

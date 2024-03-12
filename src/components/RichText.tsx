@@ -1,15 +1,15 @@
-import React from 'react'
-import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
-import {useLingui} from '@lingui/react'
+import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
-
-import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
-import {InlineLink} from '#/components/Link'
-import {Text, TextProps} from '#/components/Typography'
+import {useLingui} from '@lingui/react'
 import {toShortUrl} from 'lib/strings/url-helpers'
-import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
-import {isNative} from '#/platform/detection'
+import React from 'react'
+
+import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {InlineLink} from '#/components/Link'
+import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {Text, TextProps} from '#/components/Typography'
+import {isNative} from '#/platform/detection'
 
 const WORD_WRAP = {wordWrap: 1}
 

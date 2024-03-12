@@ -1,3 +1,20 @@
+import {
+  AppBskyFeedDefs,
+  AppBskyFeedPost,
+  AtUri,
+  RichText as RichTextAPI,
+} from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+import {Haptics} from 'lib/haptics'
+import {CommentBottomArrow, HeartIcon, HeartIconSolid} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
+import {shareUrl} from 'lib/sharing'
+import {pluralize} from 'lib/strings/helpers'
+import {toShareUrl} from 'lib/strings/url-helpers'
+import {s} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
 import React, {memo, useCallback} from 'react'
 import {
   StyleProp,
@@ -6,35 +23,20 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {Text} from '../text/Text'
-import {PostDropdownBtn} from '../forms/PostDropdownBtn'
-import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
-import {s} from 'lib/styles'
-import {pluralize} from 'lib/strings/helpers'
-import {useTheme} from 'lib/ThemeContext'
-import {RepostButton} from './RepostButton'
-import {Haptics} from 'lib/haptics'
-import {HITSLOP_10, HITSLOP_20} from 'lib/constants'
+
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
+import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
 import {
   usePostLikeMutationQueue,
   usePostRepostMutationQueue,
 } from '#/state/queries/post'
-import {useComposerControls} from '#/state/shell/composer'
-import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
-import {toShareUrl} from 'lib/strings/url-helpers'
-import {shareUrl} from 'lib/sharing'
-import {makeProfileLink} from 'lib/routes/links'
+import {useComposerControls} from '#/state/shell/composer'
+
+import {PostDropdownBtn} from '../forms/PostDropdownBtn'
+import {Text} from '../text/Text'
+import {RepostButton} from './RepostButton'
 
 let PostCtrls = ({
   big,

@@ -1,8 +1,9 @@
+import {Trans} from '@lingui/macro'
+import {usePalette} from 'lib/hooks/usePalette'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Trans} from '@lingui/macro'
+
 import {CreateAccountState} from './state'
 
 export function StepHeader({

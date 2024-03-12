@@ -1,29 +1,27 @@
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-
-import {IS_DEV} from '#/env'
-import {isWeb} from '#/platform/detection'
-import {useOnboardingDispatch} from '#/state/shell'
 
 import {
-  useTheme,
   atoms as a,
-  useBreakpoints,
-  web,
-  native,
   flatten,
+  native,
   TextStyleProp,
+  useBreakpoints,
+  useTheme,
+  web,
 } from '#/alf'
-import {P, leading, Text} from '#/components/Typography'
-import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Button, ButtonIcon} from '#/components/Button'
-import {ScrollView} from '#/view/com/util/Views'
+import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {createPortalGroup} from '#/components/Portal'
-
+import {leading, P, Text} from '#/components/Typography'
+import {IS_DEV} from '#/env'
+import {isWeb} from '#/platform/detection'
 import {Context} from '#/screens/Onboarding/state'
+import {useOnboardingDispatch} from '#/state/shell'
+import {ScrollView} from '#/view/com/util/Views'
 
 const COL_WIDTH = 500
 

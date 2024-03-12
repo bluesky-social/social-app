@@ -1,30 +1,32 @@
+import {AtUri} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
+import {usePalette} from 'lib/hooks/usePalette'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {pluralize} from 'lib/strings/helpers'
+import {s} from 'lib/styles'
 import React from 'react'
 import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {RichText} from '#/components/RichText'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {UserAvatar} from '../util/UserAvatar'
-import {pluralize} from 'lib/strings/helpers'
-import {AtUri} from '@atproto/api'
 import * as Toast from 'view/com/util/Toast'
-import {sanitizeHandle} from 'lib/strings/handles'
+
+import {useTheme} from '#/alf'
+import {RichText} from '#/components/RichText'
 import {logger} from '#/logger'
 import {useModalControls} from '#/state/modals'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {FeedSourceInfo, useFeedSourceInfoQuery} from '#/state/queries/feed'
 import {
   usePinFeedMutation,
-  UsePreferencesQueryResponse,
   usePreferencesQuery,
-  useSaveFeedMutation,
+  UsePreferencesQueryResponse,
   useRemoveFeedMutation,
+  useSaveFeedMutation,
 } from '#/state/queries/preferences'
-import {useFeedSourceInfoQuery, FeedSourceInfo} from '#/state/queries/feed'
 import {FeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {useTheme} from '#/alf'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
+
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export function FeedSourceCard({
   feedUri,

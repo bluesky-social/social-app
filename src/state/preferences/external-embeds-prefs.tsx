@@ -1,6 +1,7 @@
-import React from 'react'
-import * as persisted from '#/state/persisted'
 import {EmbedPlayerSource} from 'lib/strings/embed-player'
+import React from 'react'
+
+import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['externalEmbeds']
 type SetContext = (source: EmbedPlayerSource, value: 'show' | 'hide') => void

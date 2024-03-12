@@ -1,13 +1,14 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {IconProp} from '@fortawesome/fontawesome-svg-core'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {Text} from './text/Text'
-import {UserGroupIcon} from 'lib/icons'
 import {usePalette} from 'lib/hooks/usePalette'
+import {UserGroupIcon} from 'lib/icons'
+import React from 'react'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+
+import {Text} from './text/Text'
 
 export function EmptyState({
   testID,

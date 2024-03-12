@@ -1,6 +1,6 @@
-import React from 'react'
-import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
+import {useTheme} from 'lib/ThemeContext'
+import React from 'react'
 
 export function useCustomPalette<T>({light, dark}: {light: T; dark: T}) {
   const theme = useTheme()

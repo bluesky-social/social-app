@@ -1,14 +1,16 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {ScrollView} from '../util/Views'
-import {Text} from '../util/text/Text'
+
 import {usePalette} from '#/lib/hooks/usePalette'
-import {colors, s} from '#/lib/styles'
-import {TextLink} from '../util/Link'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {colors, s} from '#/lib/styles'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+
+import {TextLink} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {ScrollView} from '../util/Views'
 
 export function HomeLoggedOutCTA() {
   const pal = usePalette('default')

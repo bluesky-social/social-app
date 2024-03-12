@@ -1,20 +1,21 @@
-import React, {useEffect, useState} from 'react'
-import {
-  NativeSyntheticEvent,
-  NativeScrollEvent,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  View,
-  ScrollView,
-} from 'react-native'
-import {FlatList_INTERNAL} from './Views'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {Text} from './text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {clamp} from 'lib/numbers'
-import {s, colors} from 'lib/styles'
+import {colors, s} from 'lib/styles'
 import {isAndroid} from 'platform/detection'
+import React, {useEffect, useState} from 'react'
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Pressable,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
+
+import {Text} from './text/Text'
+import {FlatList_INTERNAL} from './Views'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}

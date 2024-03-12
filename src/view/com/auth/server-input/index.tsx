@@ -1,17 +1,17 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {BSKY_SERVICE} from 'lib/constants'
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
-import {BSKY_SERVICE} from 'lib/constants'
-import * as persisted from '#/state/persisted'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Text, P} from '#/components/Typography'
 import {Button, ButtonText} from '#/components/Button'
-import * as ToggleButton from '#/components/forms/ToggleButton'
+import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import * as ToggleButton from '#/components/forms/ToggleButton'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {P, Text} from '#/components/Typography'
+import * as persisted from '#/state/persisted'
 
 export function ServerInputDialog({
   control,

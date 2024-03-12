@@ -2,9 +2,11 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetFeed as GetCustomFeed,
 } from '@atproto/api'
-import {FeedAPI, FeedAPIResponse} from './types'
-import {getAgent} from '#/state/session'
+
 import {getContentLanguages} from '#/state/preferences/languages'
+import {getAgent} from '#/state/session'
+
+import {FeedAPI, FeedAPIResponse} from './types'
 
 export class CustomFeedAPI implements FeedAPI {
   constructor(public params: GetCustomFeed.QueryParams) {}

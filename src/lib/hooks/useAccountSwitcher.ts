@@ -1,11 +1,11 @@
 import {useCallback} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useAnalytics} from '#/lib/analytics/analytics'
-import {useSessionApi, SessionAccount} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {useCloseAllActiveElements} from '#/state/util'
+import {isWeb} from '#/platform/detection'
+import {SessionAccount, useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useCloseAllActiveElements} from '#/state/util'
+import * as Toast from '#/view/com/util/Toast'
 
 export function useAccountSwitcher() {
   const {track} = useAnalytics()

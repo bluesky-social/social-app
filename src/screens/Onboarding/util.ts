@@ -2,6 +2,7 @@ import {AppBskyGraphFollow, AppBskyGraphGetFollows} from '@atproto/api'
 
 import {until} from '#/lib/async/until'
 import {getAgent} from '#/state/session'
+
 import {PRIMARY_FEEDS} from './StepAlgoFeeds'
 
 function shuffle(array: any) {

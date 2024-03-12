@@ -1,6 +1,8 @@
 import {AppBskyFeedDefs} from '@atproto/api'
-import {FeedAPI, FeedAPIResponse} from './types'
+
 import {getAgent} from '#/state/session'
+
+import {FeedAPI, FeedAPIResponse} from './types'
 
 export class FollowingFeedAPI implements FeedAPI {
   constructor() {}

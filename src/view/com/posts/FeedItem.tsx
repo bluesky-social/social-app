@@ -1,5 +1,3 @@
-import React, {memo, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
@@ -11,32 +9,36 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {ReasonFeedSource, isReasonFeedSource} from 'lib/api/feed/types'
-import {Link, TextLinkOnWebOnly, TextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {UserInfoText} from '../util/UserInfoText'
-import {PostMeta} from '../util/PostMeta'
-import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {PostEmbeds} from '../util/post-embeds'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {PostAlerts} from '../util/moderation/PostAlerts'
-import {RichText} from '#/components/RichText'
-import {PreviewableUserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {isReasonFeedSource, ReasonFeedSource} from 'lib/api/feed/types'
+import {MAX_POST_LINES} from 'lib/constants'
+import {isEmbedByEmbedder} from 'lib/embeds'
 import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {isEmbedByEmbedder} from 'lib/embeds'
-import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
-import {useComposerControls} from '#/state/shell/composer'
-import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
-import {FeedNameText} from '../util/FeedInfoText'
-import {useSession} from '#/state/session'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {s} from 'lib/styles'
+import React, {memo, useMemo, useState} from 'react'
+import {StyleSheet, View} from 'react-native'
+
 import {atoms as a} from '#/alf'
+import {RichText} from '#/components/RichText'
+import {POST_TOMBSTONE, Shadow, usePostShadow} from '#/state/cache/post-shadow'
+import {useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
+
+import {FeedNameText} from '../util/FeedInfoText'
+import {Link, TextLink, TextLinkOnWebOnly} from '../util/Link'
+import {ContentHider} from '../util/moderation/ContentHider'
+import {PostAlerts} from '../util/moderation/PostAlerts'
+import {PostCtrls} from '../util/post-ctrls/PostCtrls'
+import {PostEmbeds} from '../util/post-embeds'
+import {PostMeta} from '../util/PostMeta'
+import {Text} from '../util/text/Text'
+import {PreviewableUserAvatar} from '../util/UserAvatar'
+import {UserInfoText} from '../util/UserInfoText'
 
 export function FeedItem({
   post,

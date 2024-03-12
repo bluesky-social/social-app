@@ -1,19 +1,21 @@
 import {
-  AtUri,
+  AppBskyGraphDefs,
   AppBskyGraphGetList,
   AppBskyGraphList,
-  AppBskyGraphDefs,
+  AtUri,
   Facet,
 } from '@atproto/api'
-import {Image as RNImage} from 'react-native-image-crop-picker'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
-import {useSession, getAgent} from '../session'
-import {invalidate as invalidateMyLists} from './my-lists'
-import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
 import {STALE} from '#/state/queries'
+
+import {getAgent, useSession} from '../session'
+import {invalidate as invalidateMyLists} from './my-lists'
+import {RQKEY as PROFILE_LISTS_RQKEY} from './profile-lists'
 
 export const RQKEY = (uri: string) => ['list', uri]
 

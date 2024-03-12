@@ -1,3 +1,17 @@
+import {AppBskyFeedDefs} from '@atproto/api'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {NavigationProp} from 'lib/routes/types'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {s} from 'lib/styles'
 import React, {useEffect, useRef} from 'react'
 import {
   ActivityIndicator,
@@ -6,45 +20,33 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {AppBskyFeedDefs} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {List, ListMethods} from '../util/List'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {PostThreadItem} from './PostThreadItem'
-import {ComposePrompt} from '../composer/Prompt'
-import {ViewHeader} from '../util/ViewHeader'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
-import {
-  ThreadNode,
-  ThreadPost,
-  ThreadNotFound,
-  ThreadBlocked,
-  usePostThreadQuery,
-  sortThread,
-} from '#/state/queries/post-thread'
-import {useNavigation} from '@react-navigation/native'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
+
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {cleanError} from '#/lib/strings/errors'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
-  UsePreferencesQueryResponse,
+  sortThread,
+  ThreadBlocked,
+  ThreadNode,
+  ThreadNotFound,
+  ThreadPost,
+  usePostThreadQuery,
+} from '#/state/queries/post-thread'
+import {
   useModerationOpts,
   usePreferencesQuery,
+  UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+
+import {ComposePrompt} from '../composer/Prompt'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List, ListMethods} from '../util/List'
+import {LoadingScreen} from '../util/LoadingScreen'
+import {Text} from '../util/text/Text'
+import {ViewHeader} from '../util/ViewHeader'
+import {CenteredView} from '../util/Views'
+import {PostThreadItem} from './PostThreadItem'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
 // are prepended. This seems to be an optimal number based on *shrug*.

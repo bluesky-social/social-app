@@ -1,13 +1,15 @@
-import React, {useEffect, useRef} from 'react'
-import {Animated, TouchableOpacity, StyleSheet, View} from 'react-native'
+import {AppBskyActorDefs} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import {usePalette} from 'lib/hooks/usePalette'
+import React, {useEffect, useRef} from 'react'
+import {Animated, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-import {useGrapheme} from '../hooks/useGrapheme'
+
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
-import {Trans} from '@lingui/macro'
-import {AppBskyActorDefs} from '@atproto/api'
+
+import {useGrapheme} from '../hooks/useGrapheme'
 
 export function Autocomplete({
   prefix,

@@ -1,11 +1,11 @@
-import React from 'react'
-import {StyleSheet, Text, View, Pressable} from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-import {s, colors, gradients} from 'lib/styles'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {colors, gradients, s} from 'lib/styles'
+import React from 'react'
+import {Pressable, StyleSheet, Text, View} from 'react-native'
+import LinearGradient from 'react-native-linear-gradient'
 
 export const ConfirmLanguagesButton = ({
   onPress,

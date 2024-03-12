@@ -1,13 +1,13 @@
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {Trans, msg} from '@lingui/macro'
 
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Text, P} from '#/components/Typography'
 import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
 import {InlineLink, Link} from '#/components/Link'
+import {P, Text} from '#/components/Typography'
 import {getAgent, useSession} from '#/state/session'
 
 export function ExportCarDialog({

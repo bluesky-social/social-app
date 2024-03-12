@@ -1,11 +1,11 @@
+import {HITSLOP_10} from 'lib/constants'
 import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
-import {HITSLOP_10} from 'lib/constants'
-import {useTheme, atoms as a, web, native, flatten, ViewStyleProp} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, flatten, native, useTheme, ViewStyleProp, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
+import {Text} from '#/components/Typography'
 
 export type ItemState = {
   name: string

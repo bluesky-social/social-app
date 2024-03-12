@@ -1,37 +1,36 @@
-import React from 'react'
-import {Keyboard, View} from 'react-native'
+import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
+import React from 'react'
+import {Keyboard, View} from 'react-native'
 
-import {
-  usePreferencesQuery,
-  useUpsertMutedWordsMutation,
-  useRemoveMutedWordMutation,
-} from '#/state/queries/preferences'
-import {isNative} from '#/platform/detection'
 import {
   atoms as a,
-  useTheme,
+  native,
   useBreakpoints,
+  useTheme,
   ViewStyleProp,
   web,
-  native,
 } from '#/alf'
-import {Text} from '#/components/Typography'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
 import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/PageText'
-import {Divider} from '#/components/Divider'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
-import {logger} from '#/logger'
-import * as Dialog from '#/components/Dialog'
-import * as Toggle from '#/components/forms/Toggle'
 import * as Prompt from '#/components/Prompt'
-
-import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {Text} from '#/components/Typography'
+import {logger} from '#/logger'
+import {isNative} from '#/platform/detection'
+import {
+  usePreferencesQuery,
+  useRemoveMutedWordMutation,
+  useUpsertMutedWordsMutation,
+} from '#/state/queries/preferences'
 
 export function MutedWordsDialog() {
   const {mutedWordsDialogControl: control} = useGlobalDialogsControlContext()

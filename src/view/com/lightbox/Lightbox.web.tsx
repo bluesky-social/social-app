@@ -1,29 +1,31 @@
-import React, {useCallback, useEffect, useState} from 'react'
-import {
-  Image,
-  ImageStyle,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  View,
-  Pressable,
-} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {colors, s} from 'lib/styles'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
-import {Text} from '../util/text/Text'
-import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {colors, s} from 'lib/styles'
+import React, {useCallback, useEffect, useState} from 'react'
 import {
-  useLightbox,
-  useLightboxControls,
+  Image,
+  ImageStyle,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
+
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {
   ImagesLightbox,
   ProfileImageLightbox,
+  useLightbox,
+  useLightboxControls,
 } from '#/state/lightbox'
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+
+import {Text} from '../util/text/Text'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
 
 interface Img {
   uri: string

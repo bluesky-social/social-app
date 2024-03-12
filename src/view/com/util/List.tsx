@@ -1,11 +1,13 @@
+import {addStyle} from 'lib/styles'
 import React, {memo} from 'react'
 import {FlatListProps, RefreshControl} from 'react-native'
-import {FlatList_INTERNAL} from './Views'
-import {addStyle} from 'lib/styles'
-import {useScrollHandlers} from '#/lib/ScrollContext'
 import {runOnJS, useSharedValue} from 'react-native-reanimated'
+
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useScrollHandlers} from '#/lib/ScrollContext'
+
+import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
 export type ListProps<ItemT> = Omit<

@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import {logger} from '#/logger'
 import {defaults, Schema, schema} from '#/state/persisted/schema'
-import {write, read} from '#/state/persisted/store'
+import {read, write} from '#/state/persisted/store'
 
 /**
  * The shape of the serialized data from our legacy Mobx store.

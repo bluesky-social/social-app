@@ -1,15 +1,17 @@
+import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
 import React, {useCallback, useMemo, useState} from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {CenteredView} from '../util/Views'
-import {List} from '../util/List'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
-import {logger} from '#/logger'
-import {LoadingScreen} from '../util/LoadingScreen'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {usePostLikedByQuery} from '#/state/queries/post-liked-by'
+
 import {cleanError} from '#/lib/strings/errors'
+import {logger} from '#/logger'
+import {usePostLikedByQuery} from '#/state/queries/post-liked-by'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
+
+import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {List} from '../util/List'
+import {LoadingScreen} from '../util/LoadingScreen'
+import {CenteredView} from '../util/Views'
 
 export function PostLikedBy({uri}: {uri: string}) {
   const [isPTRing, setIsPTRing] = useState(false)

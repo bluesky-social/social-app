@@ -1,25 +1,24 @@
-import React from 'react'
-import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
-import flattenReactChildren from 'react-keyed-flatten-children'
-
-import {atoms as a, useTheme} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Text} from '#/components/Typography'
-
-import {Context} from '#/components/Menu/context'
-import {
-  ContextType,
-  TriggerProps,
-  ItemProps,
-  GroupProps,
-  ItemTextProps,
-  ItemIconProps,
-} from '#/components/Menu/types'
-import {Button, ButtonText} from '#/components/Button'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {isNative} from 'platform/detection'
+import React from 'react'
+import flattenReactChildren from 'react-keyed-flatten-children'
+import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
+
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import * as Dialog from '#/components/Dialog'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {Context} from '#/components/Menu/context'
+import {
+  ContextType,
+  GroupProps,
+  ItemIconProps,
+  ItemProps,
+  ItemTextProps,
+  TriggerProps,
+} from '#/components/Menu/types'
+import {Text} from '#/components/Typography'
 
 export {useDialogControl as useMenuControl} from '#/components/Dialog'
 

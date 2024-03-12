@@ -1,6 +1,10 @@
+import {AppBskyEmbedExternal} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Image, ImageLoadEventData} from 'expo-image'
 import {EmbedPlayerParams, getGifDims} from 'lib/strings/embed-player'
 import React from 'react'
-import {Image, ImageLoadEventData} from 'expo-image'
 import {
   ActivityIndicator,
   GestureResponderEvent,
@@ -9,13 +13,10 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useExternalEmbedsPrefs} from 'state/preferences'
 import {useModalControls} from 'state/modals'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-import {AppBskyEmbedExternal} from '@atproto/api'
+import {useExternalEmbedsPrefs} from 'state/preferences'
+
+import {isIOS, isNative, isWeb} from '#/platform/detection'
 
 export function ExternalGifEmbed({
   link,

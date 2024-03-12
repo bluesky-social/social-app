@@ -1,3 +1,13 @@
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {HITSLOP_10} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {MagnifyingGlassIcon} from 'lib/icons'
+import {useTheme} from 'lib/ThemeContext'
 import React from 'react'
 import {
   StyleProp,
@@ -7,16 +17,6 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {HITSLOP_10} from 'lib/constants'
-import {MagnifyingGlassIcon} from 'lib/icons'
-import {useTheme} from 'lib/ThemeContext'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 
 interface Props {
   query: string

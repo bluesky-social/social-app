@@ -1,18 +1,20 @@
-import React, {memo} from 'react'
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from './text/Text'
-import {TextLinkOnWebOnly} from './Link'
-import {niceDate} from 'lib/strings/time'
+import {ModerationUI} from '@atproto/api'
 import {usePalette} from 'lib/hooks/usePalette'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {UserAvatar} from './UserAvatar'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {niceDate} from 'lib/strings/time'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
-import {TimeElapsed} from './TimeElapsed'
-import {makeProfileLink} from 'lib/routes/links'
-import {ModerationUI} from '@atproto/api'
+import React, {memo} from 'react'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+
 import {usePrefetchProfileQuery} from '#/state/queries/profile'
+
+import {TextLinkOnWebOnly} from './Link'
+import {Text} from './text/Text'
+import {TimeElapsed} from './TimeElapsed'
+import {UserAvatar} from './UserAvatar'
 
 interface PostMetaOpts {
   author: {

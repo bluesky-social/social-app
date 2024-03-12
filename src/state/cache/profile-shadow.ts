@@ -1,7 +1,11 @@
-import {useEffect, useState, useMemo} from 'react'
-import EventEmitter from 'eventemitter3'
 import {AppBskyActorDefs} from '@atproto/api'
+import EventEmitter from 'eventemitter3'
+import {queryClient} from 'lib/react-query'
+import {useEffect, useMemo, useState} from 'react'
+
 import {batchedUpdates} from '#/lib/batchedUpdates'
+
+import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
@@ -11,9 +15,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '.
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
-import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
-import {Shadow, castAsShadow} from './types'
-import {queryClient} from 'lib/react-query'
+import {castAsShadow, Shadow} from './types'
 export type {Shadow} from './types'
 
 export interface ProfileShadow {

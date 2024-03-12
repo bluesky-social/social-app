@@ -1,7 +1,8 @@
 import {AppBskyFeedDefs, AppBskyFeedPost} from '@atproto/api'
+import * as bcp47Match from 'bcp-47-match'
 import lande from 'lande'
 import {hasProp} from 'lib/type-guards'
-import * as bcp47Match from 'bcp-47-match'
+
 import {
   AppLanguage,
   LANGUAGES_MAP_CODE2,

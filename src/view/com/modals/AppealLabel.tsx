@@ -1,17 +1,19 @@
+import {ComAtprotoModerationDefs} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {usePalette} from 'lib/hooks/usePalette'
+import {colors, s} from 'lib/styles'
 import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {ComAtprotoModerationDefs} from '@atproto/api'
-import {ScrollView, TextInput} from './util'
-import {Text} from '../util/text/Text'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
-import {CharProgress} from '../composer/char-progress/CharProgress'
-import {getAgent} from '#/state/session'
-import * as Toast from '../util/Toast'
+
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {useModalControls} from '#/state/modals'
+import {getAgent} from '#/state/session'
+
+import {CharProgress} from '../composer/char-progress/CharProgress'
+import {Text} from '../util/text/Text'
+import * as Toast from '../util/Toast'
+import {ScrollView, TextInput} from './util'
 
 export const snapPoints = ['40%']
 

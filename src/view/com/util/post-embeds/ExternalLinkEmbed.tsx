@@ -1,15 +1,16 @@
-import React from 'react'
+import {AppBskyEmbedExternal} from '@atproto/api'
 import {Image} from 'expo-image'
-import {Text} from '../text/Text'
-import {StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {AppBskyEmbedExternal} from '@atproto/api'
-import {toNiceDomain} from 'lib/strings/url-helpers'
 import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
-import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
-import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {toNiceDomain} from 'lib/strings/url-helpers'
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 import {useExternalEmbedsPrefs} from 'state/preferences'
+import {ExternalGifEmbed} from 'view/com/util/post-embeds/ExternalGifEmbed'
+import {ExternalPlayer} from 'view/com/util/post-embeds/ExternalPlayerEmbed'
+
+import {Text} from '../text/Text'
 
 export const ExternalLinkEmbed = ({
   link,

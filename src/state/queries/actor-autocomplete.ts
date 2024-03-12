@@ -1,17 +1,18 @@
-import React from 'react'
-import {AppBskyActorDefs, ModerationOpts, moderateProfile} from '@atproto/api'
+import {AppBskyActorDefs, moderateProfile, ModerationOpts} from '@atproto/api'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
+import React from 'react'
 
+import {isInvalidHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {getAgent} from '#/state/session'
-import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {STALE} from '#/state/queries'
+import {useMyFollowsQuery} from '#/state/queries/my-follows'
+import {getAgent} from '#/state/session'
+
 import {
   DEFAULT_LOGGED_OUT_PREFERENCES,
   getModerationOpts,
   useModerationOpts,
 } from './preferences'
-import {isInvalidHandle} from '#/lib/strings/handles'
 
 const DEFAULT_MOD_OPTS = getModerationOpts({
   userDid: '',

@@ -1,18 +1,20 @@
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {ago} from 'lib/strings/time'
+import {s} from 'lib/styles'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
-import {ScrollView} from '../com/util/Views'
-import {s} from 'lib/styles'
-import {ViewHeader} from '../com/util/ViewHeader'
-import {Text} from '../com/util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
+
 import {getEntries} from '#/logger/logDump'
-import {ago} from 'lib/strings/time'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 import {useSetMinimalShellMode} from '#/state/shell'
+
+import {Text} from '../com/util/text/Text'
+import {ViewHeader} from '../com/util/ViewHeader'
+import {ScrollView} from '../com/util/Views'
 
 export function LogScreen({}: NativeStackScreenProps<
   CommonNavigatorParams,

@@ -1,8 +1,8 @@
 import React from 'react'
-import {Text as RNText, TextStyle, TextProps as RNTextProps} from 'react-native'
+import {Text as RNText, TextProps as RNTextProps, TextStyle} from 'react-native'
 import {UITextView} from 'react-native-ui-text-view'
 
-import {useTheme, atoms, web, flatten} from '#/alf'
+import {atoms, flatten, useTheme, web} from '#/alf'
 import {isIOS, isNative} from '#/platform/detection'
 
 export type TextProps = RNTextProps & {

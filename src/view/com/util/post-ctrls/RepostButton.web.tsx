@@ -1,19 +1,20 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle, Pressable} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {RepostIcon} from 'lib/icons'
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {Text} from '../text/Text'
+import React from 'react'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 
-import {
-  NativeDropdown,
-  DropdownItem as NativeDropdownItem,
-} from '../forms/NativeDropdown'
-import {EventStopper} from '../EventStopper'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
 import {useRequireAuth} from '#/state/session'
 import {useSession} from '#/state/session'
+
+import {EventStopper} from '../EventStopper'
+import {
+  DropdownItem as NativeDropdownItem,
+  NativeDropdown,
+} from '../forms/NativeDropdown'
+import {Text} from '../text/Text'
 
 interface Props {
   isReposted: boolean

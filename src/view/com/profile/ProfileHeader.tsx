@@ -1,3 +1,24 @@
+import {
+  AppBskyActorDefs,
+  moderateProfile,
+  ModerationOpts,
+  RichText as RichTextAPI,
+} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {BACK_HITSLOP} from 'lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {makeProfileLink} from 'lib/routes/links'
+import {NavigationProp} from 'lib/routes/types'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
+import {isInvalidHandle, sanitizeHandle} from 'lib/strings/handles'
+import {pluralize} from 'lib/strings/helpers'
+import {colors, s} from 'lib/styles'
+import {isNative} from 'platform/detection'
 import React, {memo, useMemo} from 'react'
 import {
   StyleSheet,
@@ -5,53 +26,34 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
-import {
-  AppBskyActorDefs,
-  ModerationOpts,
-  moderateProfile,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {NavigationProp} from 'lib/routes/types'
-import {isNative} from 'platform/detection'
-import {BlurView} from '../util/BlurView'
-import * as Toast from '../util/Toast'
-import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
-import {Text} from '../util/text/Text'
-import {ThemedText} from '../util/text/ThemedText'
+import {useProfileShadow} from 'state/cache/profile-shadow'
+import {ProfileMenu} from 'view/com/profile/ProfileMenu'
+
+import {atoms as a} from '#/alf'
 import {RichText} from '#/components/RichText'
-import {UserAvatar} from '../util/UserAvatar'
-import {UserBanner} from '../util/UserBanner'
-import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
-import {formatCount} from '../util/numeric/format'
-import {Link} from '../util/Link'
-import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
+import {logger} from '#/logger'
+import {Shadow} from '#/state/cache/types'
+import {ProfileImageLightbox, useLightboxControls} from '#/state/lightbox'
 import {useModalControls} from '#/state/modals'
-import {useLightboxControls, ProfileImageLightbox} from '#/state/lightbox'
 import {
   useProfileBlockMutationQueue,
   useProfileFollowMutationQueue,
 } from '#/state/queries/profile'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {BACK_HITSLOP} from 'lib/constants'
-import {isInvalidHandle, sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {pluralize} from 'lib/strings/helpers'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
-import {s, colors} from 'lib/styles'
-import {logger} from '#/logger'
 import {useSession} from '#/state/session'
-import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
+
+import {BlurView} from '../util/BlurView'
+import {Link} from '../util/Link'
+import {LoadingPlaceholder} from '../util/LoadingPlaceholder'
 import {LabelInfo} from '../util/moderation/LabelInfo'
-import {useProfileShadow} from 'state/cache/profile-shadow'
-import {atoms as a} from '#/alf'
-import {ProfileMenu} from 'view/com/profile/ProfileMenu'
+import {ProfileHeaderAlerts} from '../util/moderation/ProfileHeaderAlerts'
+import {formatCount} from '../util/numeric/format'
+import {Text} from '../util/text/Text'
+import {ThemedText} from '../util/text/ThemedText'
+import * as Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
+import {UserBanner} from '../util/UserBanner'
+import {ProfileHeaderSuggestedFollows} from './ProfileHeaderSuggestedFollows'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')

@@ -1,23 +1,25 @@
-import React, {useState} from 'react'
-import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {Slider} from '@miblanchard/react-native-slider'
-import {Text} from '../com/util/text/Text'
-import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isWeb} from 'platform/detection'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import debounce from 'lodash.debounce'
+import {isWeb} from 'platform/detection'
+import React, {useState} from 'react'
+import {ScrollView, StyleSheet, TouchableOpacity, View} from 'react-native'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
-import debounce from 'lodash.debounce'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from '#/state/queries/preferences'
+
+import {Text} from '../com/util/text/Text'
 
 function RepliesThresholdInput({
   enabled,

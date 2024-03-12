@@ -1,11 +1,11 @@
-import React from 'react'
-import {StyleProp, StyleSheet, Pressable, View, ViewStyle} from 'react-native'
-import {Image} from 'expo-image'
-import {clamp} from 'lib/numbers'
-import {Dimensions} from 'lib/media/types'
-import * as imageSizes from 'lib/media/image-sizes'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {Image} from 'expo-image'
+import * as imageSizes from 'lib/media/image-sizes'
+import {Dimensions} from 'lib/media/types'
+import {clamp} from 'lib/numbers'
+import React from 'react'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 
 const MIN_ASPECT_RATIO = 0.33 // 1/3
 const MAX_ASPECT_RATIO = 10 // 10/1

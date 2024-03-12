@@ -1,12 +1,13 @@
 import {AppBskyFeedDefs, AppBskyFeedSearchPosts} from '@atproto/api'
 import {
-  useInfiniteQuery,
   InfiniteData,
-  QueryKey,
   QueryClient,
+  QueryKey,
+  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'
+
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 
 const searchPostsQueryKey = ({query}: {query: string}) => [

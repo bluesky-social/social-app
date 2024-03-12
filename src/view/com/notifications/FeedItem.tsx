@@ -1,19 +1,11 @@
-import React, {memo, useMemo, useState, useEffect} from 'react'
-import {
-  Animated,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-  View,
-} from 'react-native'
 import {
   AppBskyEmbedImages,
+  AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  moderateProfile,
   ModerationOpts,
   ProfileModeration,
-  moderateProfile,
-  AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -21,28 +13,38 @@ import {
   FontAwesomeIconStyle,
   Props,
 } from '@fortawesome/react-native-fontawesome'
-import {FeedNotification} from '#/state/queries/notifications/feed'
-import {s, colors} from 'lib/styles'
-import {niceDate} from 'lib/strings/time'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
+import {usePalette} from 'lib/hooks/usePalette'
+import {HeartIconSolid} from 'lib/icons'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {pluralize} from 'lib/strings/helpers'
-import {HeartIconSolid} from 'lib/icons'
-import {Text} from '../util/text/Text'
-import {UserAvatar, PreviewableUserAvatar} from '../util/UserAvatar'
-import {UserPreviewLink} from '../util/UserPreviewLink'
-import {ImageHorzList} from '../util/images/ImageHorzList'
-import {Post} from '../post/Post'
-import {Link, TextLink} from '../util/Link'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
-import {formatCount} from '../util/numeric/format'
-import {makeProfileLink} from 'lib/routes/links'
-import {TimeElapsed} from '../util/TimeElapsed'
+import {niceDate} from 'lib/strings/time'
+import {colors, s} from 'lib/styles'
 import {isWeb} from 'platform/detection'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import React, {memo, useEffect, useMemo, useState} from 'react'
+import {
+  Animated,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native'
+
+import {FeedNotification} from '#/state/queries/notifications/feed'
+
 import {FeedSourceCard} from '../feeds/FeedSourceCard'
+import {Post} from '../post/Post'
+import {ImageHorzList} from '../util/images/ImageHorzList'
+import {Link, TextLink} from '../util/Link'
+import {formatCount} from '../util/numeric/format'
+import {Text} from '../util/text/Text'
+import {TimeElapsed} from '../util/TimeElapsed'
+import {PreviewableUserAvatar, UserAvatar} from '../util/UserAvatar'
+import {UserPreviewLink} from '../util/UserPreviewLink'
 
 const MAX_AUTHORS = 5
 

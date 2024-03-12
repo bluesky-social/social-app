@@ -1,4 +1,5 @@
 import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
+
 import {useMinimalShellMode as useMinimalShellModeState} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 

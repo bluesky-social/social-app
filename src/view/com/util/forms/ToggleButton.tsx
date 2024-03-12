@@ -1,11 +1,12 @@
-import React from 'react'
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
-import {Text} from '../text/Text'
-import {Button, ButtonType} from './Button'
-import {useTheme} from 'lib/ThemeContext'
 import {choose} from 'lib/functions'
 import {colors} from 'lib/styles'
+import {useTheme} from 'lib/ThemeContext'
 import {TypographyVariant} from 'lib/ThemeContext'
+import React from 'react'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+
+import {Text} from '../text/Text'
+import {Button, ButtonType} from './Button'
 
 export function ToggleButton({
   testID,

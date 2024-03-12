@@ -1,31 +1,32 @@
-import React from 'react'
-import {StyleSheet, View, ActivityIndicator, Pressable} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {track} from '#/lib/analytics/analytics'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ViewHeader} from 'view/com/util/ViewHeader'
-import {ScrollView, CenteredView} from 'view/com/util/Views'
-import {Text} from 'view/com/util/text/Text'
-import {s, colors} from 'lib/styles'
-import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import * as Toast from 'view/com/util/Toast'
 import {Haptics} from 'lib/haptics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {colors, s} from 'lib/styles'
+import React from 'react'
+import {ActivityIndicator, Pressable, StyleSheet, View} from 'react-native'
+import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {TextLink} from 'view/com/util/Link'
+import {Text} from 'view/com/util/text/Text'
+import * as Toast from 'view/com/util/Toast'
+import {ViewHeader} from 'view/com/util/ViewHeader'
+import {CenteredView, ScrollView} from 'view/com/util/Views'
+
+import {track} from '#/lib/analytics/analytics'
 import {logger} from '#/logger'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {
-  usePreferencesQuery,
   usePinFeedMutation,
-  useUnpinFeedMutation,
+  usePreferencesQuery,
   useSetSaveFeedsMutation,
+  useUnpinFeedMutation,
 } from '#/state/queries/preferences'
+import {useSetMinimalShellMode} from '#/state/shell'
 
 const HITSLOP_TOP = {
   top: 20,

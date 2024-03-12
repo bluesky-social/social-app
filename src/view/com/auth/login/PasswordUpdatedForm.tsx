@@ -1,12 +1,13 @@
-import React, {useEffect} from 'react'
-import {TouchableOpacity, View} from 'react-native'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {Text} from '../../util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {styles} from './styles'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {usePalette} from 'lib/hooks/usePalette'
+import {s} from 'lib/styles'
+import React, {useEffect} from 'react'
+import {TouchableOpacity, View} from 'react-native'
+
+import {Text} from '../../util/text/Text'
+import {styles} from './styles'
 
 export const PasswordUpdatedForm = ({
   onPressNext,

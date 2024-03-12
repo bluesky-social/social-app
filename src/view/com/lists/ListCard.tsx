@@ -1,18 +1,20 @@
-import React from 'react'
-import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
-import {Link} from '../util/Link'
-import {Text} from '../util/text/Text'
-import {RichText as RichTextCom} from '#/components/RichText'
-import {UserAvatar} from '../util/UserAvatar'
-import {s} from 'lib/styles'
+import {AppBskyGraphDefs, AtUri, RichText} from '@atproto/api'
+import {Trans} from '@lingui/macro'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useSession} from '#/state/session'
+import {makeProfileLink} from 'lib/routes/links'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
-import {makeProfileLink} from 'lib/routes/links'
-import {Trans} from '@lingui/macro'
+import {s} from 'lib/styles'
+import React from 'react'
+import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
+
 import {atoms as a} from '#/alf'
+import {RichText as RichTextCom} from '#/components/RichText'
+import {useSession} from '#/state/session'
+
+import {Link} from '../util/Link'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export const ListCard = ({
   testID,

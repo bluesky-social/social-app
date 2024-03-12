@@ -1,11 +1,12 @@
-import React, {isValidElement, memo, useRef, startTransition} from 'react'
-import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
-import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {useScrollHandlers} from '#/lib/ScrollContext'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {addStyle} from 'lib/styles'
+import React, {isValidElement, memo, startTransition, useRef} from 'react'
+import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
+
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useScrollHandlers} from '#/lib/ScrollContext'
 
 export type ListMethods = any // TODO: Better types.
 export type ListProps<ItemT> = Omit<

@@ -1,13 +1,12 @@
-import React from 'react'
-import {View, PressableProps} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import React from 'react'
+import {PressableProps, View} from 'react-native'
 
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
-import {Text} from '#/components/Typography'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
-
 import * as Dialog from '#/components/Dialog'
+import {Text} from '#/components/Typography'
 
 export {useDialogControl as usePromptControl} from '#/components/Dialog'
 

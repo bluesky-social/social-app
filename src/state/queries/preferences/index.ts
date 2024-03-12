@@ -1,33 +1,33 @@
-import {useMemo} from 'react'
-import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query'
 import {
-  LabelPreference,
-  BskyFeedViewPreference,
   AppBskyActorDefs,
+  BskyFeedViewPreference,
+  LabelPreference,
 } from '@atproto/api'
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useMemo} from 'react'
 
 import {track} from '#/lib/analytics/analytics'
 import {getAge} from '#/lib/strings/time'
-import {useSession, getAgent} from '#/state/session'
-import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
-import {
-  ConfigurableLabelGroup,
-  UsePreferencesQueryResponse,
-  ThreadViewPreferences,
-} from '#/state/queries/preferences/types'
-import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
+import {useHiddenPosts} from '#/state/preferences/hidden-posts'
+import {STALE} from '#/state/queries'
 import {
   DEFAULT_HOME_FEED_PREFS,
-  DEFAULT_THREAD_VIEW_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
+  DEFAULT_THREAD_VIEW_PREFS,
 } from '#/state/queries/preferences/const'
+import {DEFAULT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {getModerationOpts} from '#/state/queries/preferences/moderation'
-import {STALE} from '#/state/queries'
-import {useHiddenPosts} from '#/state/preferences/hidden-posts'
+import {
+  ConfigurableLabelGroup,
+  ThreadViewPreferences,
+  UsePreferencesQueryResponse,
+} from '#/state/queries/preferences/types'
+import {temp__migrateLabelPref} from '#/state/queries/preferences/util'
+import {getAgent, useSession} from '#/state/session'
 
-export * from '#/state/queries/preferences/types'
-export * from '#/state/queries/preferences/moderation'
 export * from '#/state/queries/preferences/const'
+export * from '#/state/queries/preferences/moderation'
+export * from '#/state/queries/preferences/types'
 
 export const preferencesQueryKey = ['getPreferences']
 
