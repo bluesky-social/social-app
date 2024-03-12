@@ -27,7 +27,8 @@ import {ListSparkle_Stroke2_Corner0_Rounded as List} from '#/components/icons/Li
 import {Mute_Stroke2_Corner0_Rounded as Mute} from '#/components/icons/Mute'
 import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/icons/Speaker'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {CircleBan_Stroke2_Corner0_Rounded as Block} from '#/components/icons/CircleBan'
+import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/icons/PersonCheck'
+import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
 import {logger} from '#/logger'
 import {Shadow} from 'state/cache/types'
 
@@ -247,7 +248,11 @@ let ProfileMenu = ({
                             <Trans>Block Account</Trans>
                           )}
                         </Menu.ItemText>
-                        <Menu.ItemIcon icon={Block} />
+                        <Menu.ItemIcon
+                          icon={
+                            profile.viewer?.blocking ? PersonCheck : PersonX
+                          }
+                        />
                       </Menu.Item>
                     )}
                     <Menu.Item
