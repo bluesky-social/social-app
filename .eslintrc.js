@@ -7,10 +7,18 @@ module.exports = {
     'prettier',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'detox', 'react', 'lingui'],
+  plugins: [
+    '@typescript-eslint',
+    'detox',
+    'react',
+    'lingui',
+    'simple-import-sort',
+  ],
   rules: {
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',
@@ -30,5 +38,9 @@ module.exports = {
   ],
   settings: {
     componentWrapperFunctions: ['observer'],
+  },
+  parserOptions: {
+    sourceType: 'module',
+    ecmaVersion: 'latest',
   },
 }
