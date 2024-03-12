@@ -449,10 +449,6 @@ msgstr "Bluesky ist offen."
 msgid "Bluesky is public."
 msgstr "Bluesky ist öffentlich."
 
-#: src/view/com/modals/Waitlist.tsx:70
-#~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-#~ msgstr "Bluesky nutzt Einladungen, um eine gesündere Community aufzubauen. Wenn du niemanden kennst, der eine Einladung hat, kannst du dich auf die Warteliste setzen lassen und wir schicken dir bald eine zu."
-
 #: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky zeigt dein Profil und deine Beiträge nicht für abgemeldete Nutzer an. Andere Apps kommen dieser Aufforderung möglicherweise nicht nach."
@@ -550,10 +546,6 @@ msgstr "Beitrag zitieren abbrechen"
 #: src/view/shell/desktop/Search.tsx:234
 msgid "Cancel search"
 msgstr "Suche abbrechen"
-
-#: src/view/com/modals/Waitlist.tsx:136
-#~ msgid "Cancel waitlist signup"
-#~ msgstr "Anmeldung zur Warteliste abbrechen"
 
 #: src/view/screens/Settings/index.tsx:334
 msgctxt "action"
@@ -1425,10 +1417,6 @@ msgstr "Feed von {0}"
 msgid "Feed offline"
 msgstr "Feed offline"
 
-#: src/view/com/feeds/FeedPage.tsx:143
-#~ msgid "Feed Preferences"
-#~ msgstr "Feed-Einstellungen"
-
 #: src/view/shell/desktop/RightNav.tsx:61
 #: src/view/shell/Drawer.tsx:311
 msgid "Feedback"
@@ -1882,19 +1870,6 @@ msgstr "Es zeigt die Beiträge der Personen an, denen du folgst, sobald sie ersc
 #: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "Jobs"
-
-#: src/view/com/modals/Waitlist.tsx:67
-#~ msgid "Join the waitlist"
-#~ msgstr "Der Warteliste beitreten"
-
-#: src/view/com/auth/create/Step1.tsx:174
-#: src/view/com/auth/create/Step1.tsx:178
-#~ msgid "Join the waitlist."
-#~ msgstr "Der Warteliste beitreten."
-
-#: src/view/com/modals/Waitlist.tsx:128
-#~ msgid "Join Waitlist"
-#~ msgstr "Warteliste beitreten"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
@@ -4597,10 +4572,6 @@ msgstr "Dein Standard-Feed ist \"Following\""
 #: src/view/com/modals/ChangePassword.tsx:54
 msgid "Your email appears to be invalid."
 msgstr "Deine E-Mail scheint ungültig zu sein."
-
-#: src/view/com/modals/Waitlist.tsx:109
-#~ msgid "Your email has been saved! We'll be in touch soon."
-#~ msgstr "Deine E-Mail wurde gespeichert! Wir werden uns bald bei dir melden."
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
