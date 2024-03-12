@@ -11,6 +11,7 @@ const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
 import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
+import {useMediaQuery} from 'react-responsive'
 
 export function LoadLatestBtn({
   onPress,
@@ -26,6 +27,9 @@ export function LoadLatestBtn({
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {fabMinimalShellTransform} = useMinimalShellMode()
 
+  // move button inline if it starts overlapping the left nav
+  const isTallViewport = useMediaQuery({minHeight: 700})
+
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
   const showBottomBar = hasSession ? isMobile : isTabletOrMobile
@@ -34,8 +38,11 @@ export function LoadLatestBtn({
     <AnimatedTouchableOpacity
       style={[
         styles.loadLatest,
-        isDesktop && styles.loadLatestDesktop,
-        isTablet && styles.loadLatestTablet,
+        isDesktop &&
+          (isTallViewport
+            ? styles.loadLatestOutOfLine
+            : styles.loadLatestInline),
+        isTablet && styles.loadLatestInline,
         pal.borderDark,
         pal.view,
         showBottomBar && fabMinimalShellTransform,
@@ -65,11 +72,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loadLatestTablet: {
+  loadLatestInline: {
     // @ts-ignore web only
     left: 'calc(50vw - 282px)',
   },
-  loadLatestDesktop: {
+  loadLatestOutOfLine: {
     // @ts-ignore web only
     left: 'calc(50vw - 382px)',
   },
