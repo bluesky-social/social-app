@@ -22,8 +22,10 @@ const Context = React.createContext<{
 export function Outer({
   children,
   control,
+  testID,
 }: React.PropsWithChildren<{
   control: Dialog.DialogOuterProps['control']
+  testID?: string
 }>) {
   const {gtMobile} = useBreakpoints()
   const titleId = React.useId()
@@ -35,7 +37,7 @@ export function Outer({
   )
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} testID={testID}>
       <Context.Provider value={context}>
         <Dialog.Handle />
 
@@ -123,6 +125,7 @@ export function Action({
   onPress,
   color = 'primary',
   cta,
+  testID,
 }: React.PropsWithChildren<{
   onPress: () => void
   color?: ButtonColor
@@ -131,6 +134,7 @@ export function Action({
    * undefined (and `children` is undefined), it will default to "Confirm".
    */
   cta?: string
+  testID?: string
 }>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
@@ -146,7 +150,8 @@ export function Action({
       color={color}
       size={gtMobile ? 'small' : 'medium'}
       label={cta || _(msg`Confirm`)}
-      onPress={handleOnPress}>
+      onPress={handleOnPress}
+      testID={testID}>
       {children ? children : <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>}
     </Button>
   )
@@ -170,7 +175,7 @@ export function Basic({
   confirmButtonColor?: ButtonColor
 }>) {
   return (
-    <Outer control={control}>
+    <Outer control={control} testID="confirmModal">
       <Title>{title}</Title>
       <Description>{description}</Description>
       <Actions>
@@ -178,6 +183,7 @@ export function Basic({
           cta={confirmButtonCta}
           onPress={onConfirm}
           color={confirmButtonColor}
+          testID="confirmBtn"
         />
         <Cancel cta={cancelButtonCta} />
       </Actions>

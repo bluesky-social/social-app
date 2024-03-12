@@ -49,7 +49,7 @@ import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModals, useModalControls} from '#/state/modals'
+import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useLanguagePrefs,
@@ -64,6 +64,7 @@ import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import * as Prompt from '#/components/Prompt'
+import {useDialogStateControlContext} from 'state/dialogs'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -77,8 +78,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
-  const {isModalActive, activeModals} = useModals()
-  const {closeModal} = useModalControls()
+  const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -89,6 +89,7 @@ export const ComposePost = observer(function ComposePost({
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
   const discardPromptControl = Prompt.usePromptControl()
+  const {closeAllDialogs} = useDialogStateControlContext()
 
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
@@ -137,9 +138,7 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (activeModals.some(modal => modal.name === 'confirm')) {
-        closeModal()
-      }
+      closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
       }
@@ -150,9 +149,8 @@ export const ComposePost = observer(function ComposePost({
   }, [
     graphemeLength,
     gallery.isEmpty,
-    activeModals,
+    closeAllDialogs,
     discardPromptControl,
-    closeModal,
     onClose,
   ])
   // android back button
