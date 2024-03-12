@@ -117,6 +117,7 @@ export function PostThread({
   const [maxParents, setMaxParents] = React.useState(
     isWeb ? Infinity : PARENTS_CHUNK_SIZE,
   )
+  const [maxReplies, setMaxReplies] = React.useState(50)
 
   useSetTitle(
     rootPost && !isNoPwi
@@ -199,11 +200,6 @@ export function PostThread({
           let startIndex = Math.max(0, parents.length - maxParents)
           if (startIndex === 0) {
             arr.push(TOP_COMPONENT)
-          } else {
-            // When progressively revealing parents, rendering a placeholder
-            // here will cause scrolling jumps. Don't add it unless you test it.
-            // QT'ing this thread is a great way to test all the scrolling hacks:
-            // https://bsky.app/profile/www.mozzius.dev/post/3kjqhblh6qk2o
           }
           for (let i = startIndex; i < parents.length; i++) {
             arr.push(parents[i])
@@ -216,10 +212,13 @@ export function PostThread({
       }
       for (let i = 0; i < replies.length; i++) {
         arr.push(replies[i])
+        if (i === maxReplies) {
+          break
+        }
       }
     }
     return arr
-  }, [skeleton, deferParents, maxParents])
+  }, [skeleton, deferParents, maxParents, maxReplies])
 
   // This is only used on the web to keep the post in view when its parents load.
   // On native, we rely on `maintainVisibleContentPosition` instead.
@@ -269,6 +268,11 @@ export function PostThread({
   }, [])
   const onMomentumScrollEnd = bumpMaxParentsIfNeeded
   const onScrollToTop = bumpMaxParentsIfNeeded
+
+  const onEndReached = React.useCallback(() => {
+    if (isFetching || posts.length <= maxReplies) return
+    setMaxReplies(prev => prev + 50)
+  }, [isFetching, maxReplies, posts.length])
 
   const renderItem = React.useCallback(
     ({item, index}: {item: RowItem; index: number}) => {
@@ -371,6 +375,8 @@ export function PostThread({
           keyExtractor={keyExtractor}
           onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
           onStartReached={onStartReached}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={2}
           onMomentumScrollEnd={onMomentumScrollEnd}
           onScrollToTop={onScrollToTop}
           maintainVisibleContentPosition={
