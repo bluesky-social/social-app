@@ -1595,7 +1595,7 @@ msgstr "Passwort vergessen"
 #: src/screens/Hashtag.tsx:108
 #: src/screens/Hashtag.tsx:148
 msgid "From @{sanitizedAuthor}"
-msgstr "Aus @{sanitizedAuthor}"
+msgstr "Von @{sanitizedAuthor}"
 
 #: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
@@ -3270,7 +3270,7 @@ msgstr "Siehe {truncatedTag}-Beiträge"
 
 #: src/components/TagMenu/index.web.tsx:83
 msgid "See {truncatedTag} posts by user"
-msgstr "Siehe {truncatedTag}-Beiträge von diesem Benutzer"
+msgstr "Siehe {truncatedTag}-Beiträge des Benutzers"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
