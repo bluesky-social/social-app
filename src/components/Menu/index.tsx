@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Pressable, ViewStyle} from 'react-native'
+import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
 import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -70,7 +70,7 @@ export function Trigger({children, label}: TriggerProps) {
 
 export function Outer({
   children,
-}: React.PropsWithChildren<{style?: ViewStyle | ViewStyle[]}>) {
+}: React.PropsWithChildren<{style?: StyleProp<ViewStyle>}>) {
   const context = React.useContext(Context)
 
   return (

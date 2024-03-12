@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Pressable, ViewStyle} from 'react-native'
+import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import * as Dialog from '#/components/Dialog'
@@ -116,7 +116,7 @@ export function Trigger({children, label, style}: TriggerProps) {
 export function Outer({
   children,
   style,
-}: React.PropsWithChildren<{style?: ViewStyle | ViewStyle[]}>) {
+}: React.PropsWithChildren<{style?: StyleProp<ViewStyle>}>) {
   const t = useTheme()
 
   return (
