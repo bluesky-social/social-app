@@ -15,6 +15,7 @@ import {logger} from '#/logger'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
 import {saveImageToMediaLibrary} from 'lib/media/manip'
+import * as MediaLibrary from 'expo-media-library'
 
 type Props = {
   gallery: GalleryModel
@@ -25,6 +26,8 @@ export function OpenCameraBtn({gallery}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const [mediaPermissionRes, requestMediaPermission] =
+    MediaLibrary.usePermissions()
 
   const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
@@ -32,6 +35,7 @@ export function OpenCameraBtn({gallery}: Props) {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
+      await requestMediaPermission()
 
       const img = await openCamera({
         width: POST_IMG_MAX.width,
@@ -39,13 +43,21 @@ export function OpenCameraBtn({gallery}: Props) {
         freeStyleCropEnabled: true,
       })
 
-      saveImageToMediaLibrary({uri: img.path})
+      if (mediaPermissionRes) {
+        saveImageToMediaLibrary({uri: img.path})
+      }
       gallery.add(img)
     } catch (err: any) {
       // ignore
       logger.warn('Error using camera', {error: err})
     }
-  }, [gallery, track, requestCameraAccessIfNeeded])
+  }, [
+    gallery,
+    track,
+    requestCameraAccessIfNeeded,
+    mediaPermissionRes,
+    requestMediaPermission,
+  ])
 
   const shouldShowCameraButton = isNative || isMobileWeb
   if (!shouldShowCameraButton) {
