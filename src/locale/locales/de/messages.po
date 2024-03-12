@@ -664,7 +664,7 @@ msgstr "Klicke hier, um das Tag-Menü für {tag} zu öffnen"
 
 #: src/components/RichText.tsx:191
 msgid "Click here to open tag menu for #{tag}"
-msgstr ""
+msgstr "Klicke hier, um das Tag-Menü für #{tag} zu öffnen"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -1595,7 +1595,7 @@ msgstr "Passwort vergessen"
 #: src/screens/Hashtag.tsx:108
 #: src/screens/Hashtag.tsx:148
 msgid "From @{sanitizedAuthor}"
-msgstr ""
+msgstr "Aus @{sanitizedAuthor}"
 
 #: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
@@ -1954,7 +1954,7 @@ msgstr "Licht"
 
 #: src/view/com/util/post-ctrls/PostCtrls.tsx:182
 msgid "Like"
-msgstr ""
+msgstr "Liken"
 
 #: src/view/screens/ProfileFeed.tsx:591
 msgid "Like this feed"
@@ -2429,7 +2429,7 @@ msgstr "Kein Ergebnis"
 
 #: src/components/Lists.tsx:192
 msgid "No results found"
-msgstr ""
+msgstr "Keine Ergebnisse gefunden"
 
 #: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
@@ -2511,7 +2511,7 @@ msgstr "Nur {0} kann antworten."
 
 #: src/components/Lists.tsx:82
 msgid "Oops, something went wrong!"
-msgstr ""
+msgstr "Ups, da ist etwas schief gelaufen!"
 
 #: src/components/Lists.tsx:188
 #: src/view/screens/AppPasswords.tsx:65
@@ -2546,7 +2546,7 @@ msgstr "Navigation öffnen"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "Open post options menu"
-msgstr ""
+msgstr "Menü der Beitragsoptionen öffnen"
 
 #: src/view/screens/Settings/index.tsx:804
 msgid "Open storybook page"
@@ -2758,7 +2758,7 @@ msgstr "Bitte gib einen eindeutigen Namen für dieses App-Passwort ein oder verw
 
 #: src/components/dialogs/MutedWords.tsx:68
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr ""
+msgstr "Bitte gib ein gültiges Wort, einen Tag oder eine Phrase zum Stummschalten ein"
 
 #: src/view/com/auth/create/state.ts:103
 msgid "Please enter your email."
@@ -3266,27 +3266,19 @@ msgstr "Sicherheitsschritt erforderlich"
 
 #: src/components/TagMenu/index.web.tsx:66
 msgid "See {truncatedTag} posts"
-msgstr ""
+msgstr "Siehe {truncatedTag} Beiträge"
 
 #: src/components/TagMenu/index.web.tsx:83
 msgid "See {truncatedTag} posts by user"
-msgstr ""
+msgstr "Siehe {truncatedTag} Beiträge von diesem Benutzer"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
-msgstr ""
+msgstr "Siehe <0>{displayTag}</0> Beiträge"
 
 #: src/components/TagMenu/index.tsx:187
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr ""
-
-#: src/components/TagMenu/index.tsx:128
-#~ msgid "See <0>{tag}</0> posts"
-#~ msgstr ""
-
-#: src/components/TagMenu/index.tsx:189
-#~ msgid "See <0>{tag}</0> posts by this user"
-#~ msgstr ""
+msgstr "Siehe <0>{displayTag}</0> Beiträge von diesem Benutzer"
 
 #: src/view/screens/SavedFeeds.tsx:163
 msgid "See this guide"
@@ -4311,7 +4303,7 @@ msgstr "Wir glauben auch, dass dir \"For You\" von Skygaze gefallen wird:"
 
 #: src/screens/Hashtag.tsx:132
 msgid "We couldn't find any results for that hashtag."
-msgstr ""
+msgstr "Wir konnten keine Ergebnisse für diesen Hashtag finden."
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
