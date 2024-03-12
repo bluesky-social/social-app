@@ -1,11 +1,11 @@
 import React from 'react'
-import {View, PressableProps} from 'react-native'
+import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
-import {Button, ButtonColor} from '#/components/Button'
+import {Button, ButtonColor, ButtonText} from '#/components/Button'
 
 import * as Dialog from '#/components/Dialog'
 
@@ -89,42 +89,88 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
 
 export function Cancel({
   children,
-}: React.PropsWithChildren<{onPress?: PressableProps['onPress']}>) {
+  cta,
+}: React.PropsWithChildren<{
+  cta?: string
+}>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
+  const onPress = React.useCallback(() => {
+    close()
+  }, [close])
+
   return (
     <Button
       variant="solid"
       color="secondary"
       size={gtMobile ? 'small' : 'medium'}
-      label={_(msg`Cancel`)}
-      onPress={() => close()}>
-      {children}
+      label={cta || _(msg`Cancel`)}
+      onPress={onPress}>
+      {children ? children : <ButtonText>{cta || _(msg`Cancel`)}</ButtonText>}
     </Button>
   )
 }
 
 export function Action({
   children,
-  color = 'primary',
   onPress,
-}: React.PropsWithChildren<{onPress?: () => void; color?: ButtonColor}>) {
+  color = 'primary',
+  cta,
+}: React.PropsWithChildren<{
+  onPress: () => void
+  color?: ButtonColor
+  cta?: string
+}>) {
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {close} = Dialog.useDialogContext()
   const handleOnPress = React.useCallback(() => {
     close()
-    onPress?.()
+    onPress()
   }, [close, onPress])
+
   return (
     <Button
       variant="solid"
       color={color}
       size={gtMobile ? 'small' : 'medium'}
-      label={_(msg`Confirm`)}
+      label={cta || _(msg`Confirm`)}
       onPress={handleOnPress}>
-      {children}
+      {children ? children : <ButtonText>{cta || _(msg`Confirm`)}</ButtonText>}
     </Button>
+  )
+}
+
+export function Basic({
+  control,
+  title,
+  description,
+  cancelButtonCta,
+  confirmButtonCta,
+  onConfirm,
+  confirmButtonColor,
+}: React.PropsWithChildren<{
+  control: Dialog.DialogOuterProps['control']
+  title: string
+  description: string
+  cancelButtonCta?: string
+  confirmButtonCta?: string
+  onConfirm: () => void
+  confirmButtonColor?: ButtonColor
+}>) {
+  return (
+    <Outer control={control}>
+      <Title>{title}</Title>
+      <Description>{description}</Description>
+      <Actions>
+        <Action
+          cta={confirmButtonCta}
+          onPress={onConfirm}
+          color={confirmButtonColor}
+        />
+        <Cancel cta={cancelButtonCta} />
+      </Actions>
+    </Outer>
   )
 }

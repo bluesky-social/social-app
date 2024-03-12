@@ -325,24 +325,16 @@ let PostDropdownBtn = ({
         </Menu.Outer>
       </Menu.Root>
 
-      <Prompt.Outer control={deletePromptControl}>
-        <Prompt.Title>
-          <Trans>Delete this post?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            If you remove this post, you won't be able to recover it.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action onPress={onDeletePost} color="negative">
-            <ButtonText>
-              <Trans>Delete</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={deletePromptControl}
+        title={_(msg`Delete this post?`)}
+        description={_(
+          msg`If you remove this post, you won't be able to recover it.`,
+        )}
+        onConfirm={onDeletePost}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
 
       <Prompt.Outer control={hidePromptControl}>
         <Prompt.Title>
