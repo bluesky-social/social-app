@@ -119,6 +119,10 @@ export function Trigger({children, label}: TriggerProps) {
             },
             props: {
               ...props,
+              // disable on web, use `onPress`
+              onPointerDown: () => false,
+              onPress: () =>
+                control.isOpen ? control.close() : control.open(),
               onFocus: onFocus,
               onBlur: onBlur,
               onMouseEnter,
