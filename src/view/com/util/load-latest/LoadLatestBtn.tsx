@@ -1,17 +1,17 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import Animated from 'react-native-reanimated'
+import {useMediaQuery} from 'react-responsive'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {colors} from 'lib/styles'
 import {HITSLOP_20} from 'lib/constants'
 import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import Animated from 'react-native-reanimated'
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity)
 import {isWeb} from 'platform/detection'
 import {useSession} from 'state/session'
-import {useMediaQuery} from 'react-responsive'
 
 export function LoadLatestBtn({
   onPress,
