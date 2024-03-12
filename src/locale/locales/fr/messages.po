@@ -449,10 +449,6 @@ msgstr "Bluesky est ouvert."
 msgid "Bluesky is public."
 msgstr "Bluesky est public."
 
-#: src/view/com/modals/Waitlist.tsx:70
-#~ msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
-#~ msgstr "Bluesky distribue des invitations pour construire une communauté plus saine. Si personne ne peut vous donner une invitation, vous pouvez vous inscrire sur notre liste d’attente et nous vous en enverrons une bientôt."
-
 #: src/view/screens/Moderation.tsx:245
 msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
 msgstr "Bluesky n’affichera pas votre profil et vos posts à des personnes non connectées. Il est possible que d’autres applications n’honorent pas cette demande. Cela ne privatise pas votre compte."
@@ -550,10 +546,6 @@ msgstr "Annuler la citation"
 #: src/view/shell/desktop/Search.tsx:234
 msgid "Cancel search"
 msgstr "Annuler la recherche"
-
-#: src/view/com/modals/Waitlist.tsx:136
-#~ msgid "Cancel waitlist signup"
-#~ msgstr "Annuler l’inscription sur la liste d’attente"
 
 #: src/view/screens/Settings/index.tsx:334
 msgctxt "action"
@@ -672,7 +664,7 @@ msgstr "Cliquez ici pour ouvrir le menu de mot-clé pour {tag}"
 
 #: src/components/RichText.tsx:191
 msgid "Click here to open tag menu for #{tag}"
-msgstr ""
+msgstr "Cliquez ici pour ouvrir le menu de mot-clé pour #{tag}"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -803,10 +795,6 @@ msgstr "Confirmez votre âge pour activer le contenu pour adultes."
 #: src/view/com/modals/VerifyEmail.tsx:165
 msgid "Confirmation code"
 msgstr "Code de confirmation"
-
-#: src/view/com/modals/Waitlist.tsx:120
-#~ msgid "Confirms signing up {email} to the waitlist"
-#~ msgstr "Confirme l’inscription de {email} sur la liste d’attente"
 
 #: src/view/com/auth/create/CreateAccount.tsx:193
 #: src/view/com/auth/login/LoginForm.tsx:278
@@ -1321,10 +1309,6 @@ msgstr "Saisissez l’e-mail que vous avez utilisé pour créer votre compte. No
 msgid "Enter your birth date"
 msgstr "Saisissez votre date de naissance"
 
-#: src/view/com/modals/Waitlist.tsx:78
-#~ msgid "Enter your email"
-#~ msgstr "Entrez votre e-mail"
-
 #: src/view/com/auth/create/Step1.tsx:172
 msgid "Enter your email address"
 msgstr "Entrez votre e-mail"
@@ -1365,10 +1349,6 @@ msgstr "Sort de la vue de l’image"
 #: src/view/shell/desktop/Search.tsx:235
 msgid "Exits inputting search query"
 msgstr "Sort de la saisie de la recherche"
-
-#: src/view/com/modals/Waitlist.tsx:138
-#~ msgid "Exits signing up for waitlist with {email}"
-#~ msgstr "Sort de l’inscription sur la liste d’attente avec {email}"
 
 #: src/view/com/lightbox/Lightbox.web.tsx:163
 msgid "Expand alt text"
@@ -1845,10 +1825,6 @@ msgstr "Entrez le mot de passe associé à {identifier}"
 msgid "Input the username or email address you used at signup"
 msgstr "Entrez le pseudo ou l’adresse e-mail que vous avez utilisé lors de l’inscription"
 
-#: src/view/com/modals/Waitlist.tsx:90
-#~ msgid "Input your email to get on the Bluesky waitlist"
-#~ msgstr "Entrez votre e-mail pour vous inscrire sur la liste d’attente de Bluesky"
-
 #: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Input your password"
 msgstr "Entrez votre mot de passe"
@@ -1894,19 +1870,6 @@ msgstr "Il affiche les posts des personnes que vous suivez au fur et à mesure q
 #: src/view/com/auth/SplashScreen.web.tsx:138
 msgid "Jobs"
 msgstr "Emplois"
-
-#: src/view/com/modals/Waitlist.tsx:67
-#~ msgid "Join the waitlist"
-#~ msgstr "S’inscrire sur la liste d’attente"
-
-#: src/view/com/auth/create/Step1.tsx:174
-#: src/view/com/auth/create/Step1.tsx:178
-#~ msgid "Join the waitlist."
-#~ msgstr "S’inscrire sur la liste d’attente."
-
-#: src/view/com/modals/Waitlist.tsx:128
-#~ msgid "Join Waitlist"
-#~ msgstr "S’inscrire sur la liste d’attente"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
@@ -2208,10 +2171,6 @@ msgstr "Plus de fils d’actu"
 #: src/view/screens/ProfileList.tsx:617
 msgid "More options"
 msgstr "Plus d’options"
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:315
-#~ msgid "More post options"
-#~ msgstr "Plus d’options de post"
 
 #: src/view/screens/PreferencesThreads.tsx:82
 msgid "Most-liked replies first"
@@ -3709,11 +3668,7 @@ msgstr "Développement de logiciels"
 
 #: src/components/Lists.tsx:203
 msgid "Something went wrong!"
-msgstr ""
-
-#: src/view/com/modals/Waitlist.tsx:51
-#~ msgid "Something went wrong. Check your email and try again."
-#~ msgstr "Quelque chose n’a pas marché. Vérifiez vos e-mails et réessayez."
+msgstr "Quelque chose n’a pas marché !"
 
 #: src/App.native.tsx:66
 msgid "Sorry! Your session expired. Please log in again."
