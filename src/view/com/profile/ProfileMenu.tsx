@@ -33,6 +33,7 @@ import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Per
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
 import {logger} from '#/logger'
 import {Shadow} from 'state/cache/types'
+import * as Prompt from '#/components/Prompt'
 
 let ProfileMenu = ({
   profile,
@@ -52,6 +53,8 @@ let ProfileMenu = ({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const [, queueUnfollow] = useProfileFollowMutationQueue(profile)
+
+  const blockPromptControl = Prompt.usePromptControl()
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -102,49 +105,31 @@ let ProfileMenu = ({
     }
   }, [profile.viewer?.muted, track, queueUnmute, _, queueMute])
 
-  const onPressBlockAccount = React.useCallback(async () => {
+  const blockAccount = React.useCallback(async () => {
     if (profile.viewer?.blocking) {
       track('ProfileHeader:UnblockAccountButtonClicked')
-      openModal({
-        name: 'confirm',
-        title: _(msg`Unblock Account`),
-        message: _(
-          msg`The account will be able to interact with you after unblocking.`,
-        ),
-        onPressConfirm: async () => {
-          try {
-            await queueUnblock()
-            Toast.show(_(msg`Account unblocked`))
-          } catch (e: any) {
-            if (e?.name !== 'AbortError') {
-              logger.error('Failed to unblock account', {message: e})
-              Toast.show(_(msg`There was an issue! ${e.toString()}`))
-            }
-          }
-        },
-      })
+      try {
+        await queueUnblock()
+        Toast.show(_(msg`Account unblocked`))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to unblock account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        }
+      }
     } else {
       track('ProfileHeader:BlockAccountButtonClicked')
-      openModal({
-        name: 'confirm',
-        title: _(msg`Block Account`),
-        message: _(
-          msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-        ),
-        onPressConfirm: async () => {
-          try {
-            await queueBlock()
-            Toast.show(_(msg`Account blocked`))
-          } catch (e: any) {
-            if (e?.name !== 'AbortError') {
-              logger.error('Failed to block account', {message: e})
-              Toast.show(_(msg`There was an issue! ${e.toString()}`))
-            }
-          }
-        },
-      })
+      try {
+        await queueBlock()
+        Toast.show(_(msg`Account blocked`))
+      } catch (e: any) {
+        if (e?.name !== 'AbortError') {
+          logger.error('Failed to block account', {message: e})
+          Toast.show(_(msg`There was an issue! ${e.toString()}`))
+        }
+      }
     }
-  }, [profile.viewer?.blocking, track, openModal, _, queueUnblock, queueBlock])
+  }, [profile.viewer?.blocking, track, _, queueUnblock, queueBlock])
 
   const onPressUnfollowAccount = React.useCallback(async () => {
     track('ProfileHeader:UnfollowButtonClicked')
@@ -268,7 +253,7 @@ let ProfileMenu = ({
                             ? _(msg`Unblock Account`)
                             : _(msg`Block Account`)
                         }
-                        onPress={onPressBlockAccount}>
+                        onPress={() => blockPromptControl.open()}>
                         <Menu.ItemText>
                           {profile.viewer?.blocking ? (
                             <Trans>Unblock Account</Trans>
@@ -299,6 +284,29 @@ let ProfileMenu = ({
           )}
         </Menu.Outer>
       </Menu.Root>
+
+      <Prompt.Basic
+        control={blockPromptControl}
+        title={
+          profile.viewer?.blocking
+            ? _(msg`Unblock Account?`)
+            : _(msg`Block Account?`)
+        }
+        description={
+          profile.viewer?.blocking
+            ? _(
+                msg`The account will be able to interact with you after unblocking.`,
+              )
+            : _(
+                msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+              )
+        }
+        onConfirm={blockAccount}
+        confirmButtonCta={
+          profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
+        }
+        confirmButtonColor="negative"
+      />
     </EventStopper>
   )
 }

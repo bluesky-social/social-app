@@ -52,6 +52,7 @@ import {LabelInfo} from '../util/moderation/LabelInfo'
 import {useProfileShadow} from 'state/cache/profile-shadow'
 import {atoms as a} from '#/alf'
 import {ProfileMenu} from 'view/com/profile/ProfileMenu'
+import * as Prompt from '#/components/Prompt'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const pal = usePalette('default')
@@ -104,6 +105,7 @@ let ProfileHeader = ({
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const [__, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const unblockPromptControl = Prompt.usePromptControl()
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
@@ -176,7 +178,7 @@ let ProfileHeader = ({
     })
   }, [track, openModal, profile])
 
-  const onPressUnblockAccount = React.useCallback(async () => {
+  const unblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
     try {
       await queueUnblock()
@@ -233,7 +235,7 @@ let ProfileHeader = ({
             profile.viewer?.blockingByList ? null : (
               <TouchableOpacity
                 testID="unblockBtn"
-                onPress={onPressUnblockAccount}
+                onPress={() => unblockPromptControl.open()}
                 style={[styles.btn, styles.mainBtn, pal.btn]}
                 accessibilityRole="button"
                 accessibilityLabel={_(msg`Unblock`)}
@@ -466,6 +468,18 @@ let ProfileHeader = ({
           />
         </View>
       </TouchableWithoutFeedback>
+      <Prompt.Basic
+        control={unblockPromptControl}
+        title={_(msg`Unblock Account?`)}
+        description={_(
+          msg`The account will be able to interact with you after unblocking.`,
+        )}
+        onConfirm={unblockAccount}
+        confirmButtonCta={
+          profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
+        }
+        confirmButtonColor="negative"
+      />
     </View>
   )
 }
