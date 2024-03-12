@@ -20,6 +20,7 @@ import {useModalControls} from 'state/modals'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
+  useProfileFollowMutationQueue,
   useProfileMuteMutationQueue,
 } from 'state/queries/profile'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as Share} from '#/components/icons/ArrowOutOfBox'
@@ -29,6 +30,7 @@ import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute} from '#/components/
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/icons/PersonCheck'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
+import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
 import {logger} from '#/logger'
 import {Shadow} from 'state/cache/types'
 
@@ -49,6 +51,7 @@ let ProfileMenu = ({
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const [, queueUnfollow] = useProfileFollowMutationQueue(profile)
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -143,6 +146,19 @@ let ProfileMenu = ({
     }
   }, [profile.viewer?.blocking, track, openModal, _, queueUnblock, queueBlock])
 
+  const onPressUnfollowAccount = React.useCallback(async () => {
+    track('ProfileHeader:UnfollowButtonClicked')
+    try {
+      await queueUnfollow()
+      Toast.show(_(msg`Account unfollowed`))
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unfollow account', {message: e})
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+      }
+    }
+  }, [_, queueUnfollow, track])
+
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
     openModal({
@@ -210,6 +226,18 @@ let ProfileMenu = ({
                 </Menu.Item>
                 {!isSelf && (
                   <>
+                    {profile.viewer?.following &&
+                      (profile.viewer.blocking || profile.viewer.blockedBy) && (
+                        <Menu.Item
+                          testID="profileHeaderDropdownUnfollowBtn"
+                          label={_(msg`Unfollow Account`)}
+                          onPress={onPressUnfollowAccount}>
+                          <Menu.ItemText>
+                            <Trans>Unfollow Account</Trans>
+                          </Menu.ItemText>
+                          <Menu.ItemIcon icon={UserMinus} />
+                        </Menu.Item>
+                      )}
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
                         <Menu.Item
