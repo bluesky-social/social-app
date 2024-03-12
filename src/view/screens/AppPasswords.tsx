@@ -263,8 +263,9 @@ function AppPassword({
           <Trans>Delete app password?</Trans>
         </Prompt.Title>
         <Prompt.Description>
-          <Trans>Are you sure you want to delete the app password "
-          {name}"?</Trans>
+          <Trans>
+            Are you sure you want to delete the app password "{name}"?
+          </Trans>
         </Prompt.Description>
         <Prompt.Actions>
           <Prompt.Cancel>Cancel</Prompt.Cancel>
