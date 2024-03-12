@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, StyleSheet} from 'react-native'
+import * as MediaLibrary from 'expo-media-library'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -14,8 +15,6 @@ import {isMobileWeb, isNative} from 'platform/detection'
 import {logger} from '#/logger'
 import {useLingui} from '@lingui/react'
 import {msg} from '@lingui/macro'
-import {saveImageToMediaLibrary} from 'lib/media/manip'
-import * as MediaLibrary from 'expo-media-library'
 
 type Props = {
   gallery: GalleryModel
@@ -45,8 +44,10 @@ export function OpenCameraBtn({gallery}: Props) {
         freeStyleCropEnabled: true,
       })
 
+      // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
+      // the image even without these permissions
       if (mediaPermissionRes) {
-        saveImageToMediaLibrary({uri: img.path})
+        await MediaLibrary.createAssetAsync(img.path)
       }
       gallery.add(img)
     } catch (err: any) {
