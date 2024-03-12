@@ -7,6 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
+import {useTheme as useAlfTheme} from '#/alf'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
@@ -35,6 +36,7 @@ export function UserBanner({
 }) {
   const pal = usePalette('default')
   const theme = useTheme()
+  const t = useAlfTheme()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
@@ -96,7 +98,7 @@ export function UserBanner({
                 />
               )}
               <View style={[styles.editButtonContainer, pal.btn]}>
-                <CameraFilled height={16} width={16} style={{color: 'black'}} />
+                <CameraFilled height={14} width={14} style={t.atoms.text} />
               </View>
             </TouchableOpacity>
           )}

@@ -24,6 +24,7 @@ import {
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {useTheme} from '#/alf'
 
 export type UserAvatarType = 'user' | 'algo' | 'list'
 
@@ -203,6 +204,7 @@ let EditableUserAvatar = ({
   avatar,
   onSelectNewAvatar,
 }: EditableUserAvatarProps): React.ReactNode => {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -281,7 +283,7 @@ let EditableUserAvatar = ({
               <DefaultAvatar type={type} size={size} />
             )}
             <View style={[styles.editButtonContainer, pal.btn]}>
-              <CameraFilled height={16} width={16} style={{color: 'black'}} />
+              <CameraFilled height={14} width={14} style={t.atoms.text} />
             </View>
           </TouchableOpacity>
         )}
