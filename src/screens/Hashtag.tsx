@@ -129,7 +129,7 @@ export default function HashtagScreen({
         isEmpty={posts.length < 1}
         onRetry={refetch}
         notFoundType="results"
-        empty={_(msg`We couldn't find any results for that hashtag.`)}
+        emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
       />
       {!isLoading && posts.length > 0 && (
         <List<PostView>

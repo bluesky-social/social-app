@@ -3,25 +3,25 @@ import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
 import {CenteredView} from 'view/com/util/Views'
 import {Loader} from '#/components/Loader'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
-import {StackActions} from '@react-navigation/native'
-import {useNavigation} from '@react-navigation/core'
-import {NavigationProp} from 'lib/routes/types'
-import {router} from '#/routes'
+import {Error} from '#/components/Error'
+import {useLingui} from '@lingui/react'
 
 export function ListFooter({
   isFetching,
   isError,
   error,
   onRetry,
+  height,
 }: {
-  isFetching: boolean
-  isError: boolean
+  isFetching?: boolean
+  isError?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
+  height?: number
 }) {
   const t = useTheme()
 
@@ -30,11 +30,10 @@ export function ListFooter({
       style={[
         a.w_full,
         a.align_center,
-        a.justify_center,
         a.border_t,
         a.pb_lg,
         t.atoms.border_contrast_low,
-        {height: 100},
+        {height: height ?? 180, paddingTop: 30},
       ]}>
       {isFetching ? (
         <Loader size="xl" />
@@ -54,7 +53,7 @@ function ListFooterMaybeError({
   error,
   onRetry,
 }: {
-  isError: boolean
+  isError?: boolean
   error?: string
   onRetry?: () => Promise<unknown>
 }) {
@@ -129,121 +128,72 @@ export function ListMaybePlaceholder({
   isLoading,
   isEmpty,
   isError,
-  empty,
-  error,
+  emptyTitle,
+  emptyMessage,
+  errorTitle,
+  errorMessage,
   notFoundType = 'page',
   onRetry,
 }: {
   isLoading: boolean
-  isEmpty: boolean
-  isError: boolean
-  empty?: string
-  error?: string
+  isEmpty?: boolean
+  isError?: boolean
+  emptyTitle?: string
+  emptyMessage?: string
+  errorTitle?: string
+  errorMessage?: string
   notFoundType?: 'page' | 'results'
+  notFound?: string
   onRetry?: () => Promise<unknown>
 }) {
-  const navigation = useNavigation<NavigationProp>()
   const t = useTheme()
+  const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
 
-  const canGoBack = navigation.canGoBack()
-  const onGoBack = React.useCallback(() => {
-    if (canGoBack) {
-      navigation.goBack()
-    } else {
-      navigation.navigate('HomeTab')
+  if (isEmpty) {
+    return (
+      <Error
+        title={
+          emptyTitle ??
+          (notFoundType === 'results'
+            ? _(msg`No results found`)
+            : _(msg`Page not found`))
+        }
+        message={
+          emptyMessage ??
+          _(msg`We're sorry! We can't find the page you were looking for.`)
+        }
+        onRetry={onRetry}
+      />
+    )
+  }
 
-      // Checking the state for routes ensures that web doesn't encounter errors while going back
-      if (navigation.getState()?.routes) {
-        navigation.dispatch(StackActions.push(...router.matchPath('/')))
-      } else {
-        navigation.navigate('HomeTab')
-        navigation.dispatch(StackActions.popToTop())
-      }
-    }
-  }, [navigation, canGoBack])
+  if (isError) {
+    return (
+      <Error
+        title={errorTitle ?? _(msg`Oops!`)}
+        message={errorMessage ?? _(`Something went wrong!`)}
+        onRetry={onRetry}
+      />
+    )
+  }
 
-  if (!isEmpty) return null
-
-  return (
-    <CenteredView
-      style={[
-        a.flex_1,
-        a.align_center,
-        !gtMobile ? a.justify_between : a.gap_5xl,
-        t.atoms.border_contrast_low,
-        {paddingTop: 175, paddingBottom: 110},
-      ]}
-      sideBorders={gtMobile}
-      topBorder={!gtTablet}>
-      {isLoading ? (
+  if (isLoading) {
+    return (
+      <CenteredView
+        style={[
+          a.flex_1,
+          a.align_center,
+          !gtMobile ? a.justify_between : a.gap_5xl,
+          t.atoms.border_contrast_low,
+          {paddingTop: 175, paddingBottom: 110},
+        ]}
+        sideBorders={gtMobile}
+        topBorder={!gtTablet}>
         <View style={[a.w_full, a.align_center, {top: 100}]}>
           <Loader size="xl" />
         </View>
-      ) : (
-        <>
-          <View style={[a.w_full, a.align_center, a.gap_lg]}>
-            <Text style={[a.font_bold, a.text_3xl]}>
-              {isError ? (
-                <Trans>Oops!</Trans>
-              ) : isEmpty ? (
-                <>
-                  {notFoundType === 'results' ? (
-                    <Trans>No results found</Trans>
-                  ) : (
-                    <Trans>Page not found</Trans>
-                  )}
-                </>
-              ) : undefined}
-            </Text>
-
-            {isError ? (
-              <Text
-                style={[a.text_md, a.text_center, t.atoms.text_contrast_high]}>
-                {error ? error : <Trans>Something went wrong!</Trans>}
-              </Text>
-            ) : isEmpty ? (
-              <Text
-                style={[a.text_md, a.text_center, t.atoms.text_contrast_high]}>
-                {empty ? (
-                  empty
-                ) : (
-                  <Trans>
-                    We're sorry! We can't find the page you were looking for.
-                  </Trans>
-                )}
-              </Text>
-            ) : undefined}
-          </View>
-          <View
-            style={[a.gap_md, !gtMobile ? [a.w_full, a.px_lg] : {width: 350}]}>
-            {isError && onRetry && (
-              <Button
-                variant="solid"
-                color="primary"
-                label="Click here"
-                onPress={onRetry}
-                size="large"
-                style={[
-                  a.rounded_sm,
-                  a.overflow_hidden,
-                  {paddingVertical: 10},
-                ]}>
-                Retry
-              </Button>
-            )}
-            <Button
-              variant="solid"
-              color={isError && onRetry ? 'secondary' : 'primary'}
-              label="Click here"
-              onPress={onGoBack}
-              size="large"
-              style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
-              Go Back
-            </Button>
-          </View>
-        </>
-      )}
-    </CenteredView>
-  )
+      </CenteredView>
+    )
+  }
 }

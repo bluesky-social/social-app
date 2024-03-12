@@ -62,7 +62,10 @@ export type ThreadNode =
   | ThreadBlocked
   | ThreadUnknown
 
-export function usePostThreadQuery(uri: string | undefined) {
+export function usePostThreadQuery(
+  uri: string | undefined,
+  enabled: boolean = true,
+) {
   const queryClient = useQueryClient()
   return useQuery<ThreadNode, Error>({
     gcTime: 0,
@@ -76,7 +79,7 @@ export function usePostThreadQuery(uri: string | undefined) {
       }
       return {type: 'unknown', uri: uri!}
     },
-    enabled: !!uri,
+    enabled: !!uri && enabled,
     placeholderData: () => {
       if (!uri) {
         return undefined
