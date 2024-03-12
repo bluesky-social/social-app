@@ -11,7 +11,7 @@ import {FeedDescriptor} from '#/state/queries/post-feed'
 import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
 import {Feed} from 'view/com/posts/Feed'
-import {TextLink} from 'view/com/util/Link'
+import {InlineLink} from '#/components/Link'
 import {ListRef} from 'view/com/util/List'
 import {Button} from 'view/com/util/forms/Button'
 import {Text} from 'view/com/util/text/Text'
@@ -567,13 +567,13 @@ function AboutSection({
         )}
       </View>
 
-      <View style={[a.flex_row, a.gap_md, a.align_center, a.pb_sm]}>
+      <View style={[a.flex_row, a.gap_sm, a.align_center, a.pb_sm]}>
         <NewButton
           size="small"
           variant="solid"
           color="secondary"
           shape="round"
-          label={_(msg`Like this feed`)}
+          label={isLiked ? _(msg`Unlike this feed`) : _(msg`Like this feed`)}
           testID="toggleLikeBtn"
           disabled={!hasSession || isLikePending || isUnlikePending}
           onPress={onToggleLiked}>
@@ -584,11 +584,12 @@ function AboutSection({
           )}
         </NewButton>
         {typeof likeCount === 'number' && (
-          <TextLink
-            href={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
-            text={_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
-            style={[t.atoms.text_contrast_medium, s.semiBold]}
-          />
+          <InlineLink
+            label={_(msg`View users who like this feed`)}
+            to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
+            style={[t.atoms.text_contrast_medium, a.font_bold]}>
+            {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
+          </InlineLink>
         )}
       </View>
     </View>
