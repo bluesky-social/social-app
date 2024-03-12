@@ -191,7 +191,7 @@ let PostDropdownBtn = ({
           }}
         </Menu.Trigger>
 
-        <Menu.Outer>
+        <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
               testID="postDropdownTranslateBtn"

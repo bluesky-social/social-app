@@ -327,7 +327,7 @@ export function ProfileFeedScreenInner({
                 }}
               </Menu.Trigger>
 
-              <Menu.Outer>
+              <Menu.Outer showCancel>
                 <Menu.Group>
                   {hasSession && (
                     <>
