@@ -1,17 +1,13 @@
 import React from 'react'
 import {GestureResponderEvent} from 'react-native'
-import {
-  useLinkProps,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {useLinkProps, StackActions} from '@react-navigation/native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {isWeb} from '#/platform/detection'
 import {useTheme, web, flatten, TextStyleProp, atoms as a} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
-import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {AllNavigatorParams} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
@@ -21,6 +17,7 @@ import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
 import {Text, TextProps} from '#/components/Typography'
 import {useOpenLink} from 'state/preferences/in-app-browser'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -74,7 +71,7 @@ export function useLink({
 }: BaseLinkProps & {
   displayText: string
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const {href} = useLinkProps<AllNavigatorParams>({
     to:
       typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
