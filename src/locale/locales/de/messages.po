@@ -2546,7 +2546,7 @@ msgstr "Navigation öffnen"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "Open post options menu"
-msgstr "Menü der Beitragsoptionen öffnen"
+msgstr "Beitragsoptionsmenü öffnen"
 
 #: src/view/screens/Settings/index.tsx:804
 msgid "Open storybook page"
