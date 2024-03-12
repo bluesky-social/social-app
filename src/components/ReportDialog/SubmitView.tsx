@@ -21,6 +21,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/view/com/util/Toast'
 
 import {ReportDialogProps} from './types'
+import {getAgent} from '#/state/session'
 
 export function SubmitView({
   params,
@@ -41,10 +42,11 @@ export function SubmitView({
   const [selectedServices, setSelectedServices] = React.useState<string[]>(
     labelers?.map(labeler => labeler.creator.did) || [],
   )
+  const [error, setError] = React.useState('')
 
   const submit = React.useCallback(async () => {
     setSubmitting(true)
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    setError('')
 
     const $type =
       params.type === 'account'
@@ -58,15 +60,39 @@ export function SubmitView({
       },
       reason: details,
     }
-    console.log(report)
-    // await getAgent().createModerationReport(report)
+    const results = await Promise.all(
+      selectedServices.map(did =>
+        getAgent()
+          .withProxy('atproto_labeler', did)
+          .createModerationReport(report)
+          .then(
+            _ => true,
+            _ => false,
+          ),
+      ),
+    )
 
     setSubmitting(false)
 
-    Toast.show(`Thank you. Your report has been sent.`)
-
-    onSubmitComplete()
-  }, [params, details, selectedReportOption, onSubmitComplete])
+    if (results.includes(true)) {
+      Toast.show(_(msg`Thank you. Your report has been sent.`))
+      onSubmitComplete()
+    } else {
+      setError(
+        _(
+          msg`There was an issue sending your report. Please check your internet connection.`,
+        ),
+      )
+    }
+  }, [
+    _,
+    params,
+    details,
+    selectedReportOption,
+    selectedServices,
+    onSubmitComplete,
+    setError,
+  ])
 
   return (
     <View style={[a.gap_2xl]}>
@@ -163,17 +189,22 @@ export function SubmitView({
       </View>
 
       <View style={[a.flex_row, a.align_center, a.justify_end, a.gap_lg]}>
-        {!selectedServices.length && (
-          <Text
-            style={[
-              a.flex_1,
-              a.italic,
-              a.leading_snug,
-              t.atoms.text_contrast_medium,
-            ]}>
-            <Trans>You must select at least one labeler for a report</Trans>
-          </Text>
-        )}
+        {!selectedServices.length ||
+          (error && (
+            <Text
+              style={[
+                a.flex_1,
+                a.italic,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+              ]}>
+              {error ? (
+                error
+              ) : (
+                <Trans>You must select at least one labeler for a report</Trans>
+              )}
+            </Text>
+          ))}
 
         <Button
           size="large"
