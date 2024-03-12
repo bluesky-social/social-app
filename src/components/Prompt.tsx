@@ -80,7 +80,9 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
         a.w_full,
         a.gap_sm,
         a.justify_end,
-        gtMobile ? [a.flex_row] : [a.flex_col, a.pt_md, a.pb_4xl],
+        gtMobile
+          ? [a.flex_row, a.flex_row_reverse, a.justify_start]
+          : [a.flex_col, a.pt_md, a.pb_4xl],
       ]}>
       {children}
     </View>
