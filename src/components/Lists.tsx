@@ -1,6 +1,8 @@
 import React from 'react'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+
 import {CenteredView} from 'view/com/util/Views'
 import {Loader} from '#/components/Loader'
 import {msg, Trans} from '@lingui/macro'
@@ -8,7 +10,6 @@ import {cleanError} from 'lib/strings/errors'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {Error} from '#/components/Error'
-import {useLingui} from '@lingui/react'
 
 export function ListFooter({
   isFetching,
