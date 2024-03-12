@@ -3266,19 +3266,19 @@ msgstr "Sicherheitsschritt erforderlich"
 
 #: src/components/TagMenu/index.web.tsx:66
 msgid "See {truncatedTag} posts"
-msgstr "Siehe {truncatedTag} Beiträge"
+msgstr "Siehe {truncatedTag}-Beiträge"
 
 #: src/components/TagMenu/index.web.tsx:83
 msgid "See {truncatedTag} posts by user"
-msgstr "Siehe {truncatedTag} Beiträge von diesem Benutzer"
+msgstr "Siehe {truncatedTag}-Beiträge von diesem Benutzer"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
-msgstr "Siehe <0>{displayTag}</0> Beiträge"
+msgstr "Siehe <0>{displayTag}</0>-Beiträge"
 
 #: src/components/TagMenu/index.tsx:187
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr "Siehe <0>{displayTag}</0> Beiträge von diesem Benutzer"
+msgstr "Siehe <0>{displayTag}</0>-Beiträge von diesem Benutzer"
 
 #: src/view/screens/SavedFeeds.tsx:163
 msgid "See this guide"
