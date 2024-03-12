@@ -1661,7 +1661,7 @@ msgstr "Handle"
 
 #: src/Navigation.tsx:270
 msgid "Hashtag"
-msgstr ""
+msgstr "Hashtag"
 
 #: src/components/RichText.tsx:190
 msgid "Hashtag: #{tag}"
