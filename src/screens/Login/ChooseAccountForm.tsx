@@ -1,0 +1,183 @@
+import React from 'react'
+import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import flattenReactChildren from 'react-keyed-flatten-children'
+
+import {useAnalytics} from 'lib/analytics/analytics'
+import {UserAvatar} from '../../view/com/util/UserAvatar'
+import {colors} from 'lib/styles'
+import {styles} from '../../view/com/auth/login/styles'
+import {useSession, useSessionApi, SessionAccount} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import * as Toast from '#/view/com/util/Toast'
+import {Button} from '#/components/Button'
+import {atoms as a, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
+import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+
+function Group({children}: {children: React.ReactNode}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.rounded_md,
+        a.overflow_hidden,
+        a.border,
+        t.atoms.border_contrast_low,
+      ]}>
+      {flattenReactChildren(children).map((child, i) => {
+        return React.isValidElement(child) ? (
+          <React.Fragment key={i}>
+            {i > 0 ? (
+              <View style={[a.border_b, t.atoms.border_contrast_low]} />
+            ) : null}
+            {React.cloneElement(child, {
+              // @ts-ignore
+              style: {
+                borderRadius: 0,
+                borderWidth: 0,
+              },
+            })}
+          </React.Fragment>
+        ) : null
+      })}
+    </View>
+  )
+}
+
+function AccountItem({
+  account,
+  onSelect,
+  isCurrentAccount,
+}: {
+  account: SessionAccount
+  onSelect: (account: SessionAccount) => void
+  isCurrentAccount: boolean
+}) {
+  const t = useTheme()
+  const {_} = useLingui()
+  const {data: profile} = useProfileQuery({did: account.did})
+
+  const onPress = React.useCallback(() => {
+    onSelect(account)
+  }, [account, onSelect])
+
+  return (
+    <TouchableOpacity
+      testID={`chooseAccountBtn-${account.handle}`}
+      key={account.did}
+      style={[a.flex_1]}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={_(msg`Sign in as ${account.handle}`)}
+      accessibilityHint={_(msg`Double tap to sign in`)}>
+      <View style={[a.flex_1, a.flex_row, a.align_center, {height: 48}]}>
+        <View style={a.p_md}>
+          <UserAvatar avatar={profile?.avatar} size={24} />
+        </View>
+        <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
+          <Text style={[a.font_bold]}>
+            {profile?.displayName || account.handle}{' '}
+          </Text>
+          <Text style={[t.atoms.text_contrast_medium]}>{account.handle}</Text>
+        </Text>
+        {isCurrentAccount ? (
+          <Check size="sm" style={[{color: colors.green3}, a.mr_md]} />
+        ) : (
+          <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+        )}
+      </View>
+    </TouchableOpacity>
+  )
+}
+export const ChooseAccountForm = ({
+  onSelectAccount,
+  onPressBack,
+}: {
+  onSelectAccount: (account?: SessionAccount) => void
+  onPressBack: () => void
+}) => {
+  const {track, screen} = useAnalytics()
+  const {_} = useLingui()
+  const t = useTheme()
+  const {accounts, currentAccount} = useSession()
+  const {initSession} = useSessionApi()
+  const {setShowLoggedOut} = useLoggedOutViewControls()
+
+  React.useEffect(() => {
+    screen('Choose Account')
+  }, [screen])
+
+  const onSelect = React.useCallback(
+    async (account: SessionAccount) => {
+      if (account.accessJwt) {
+        if (account.did === currentAccount?.did) {
+          setShowLoggedOut(false)
+          Toast.show(_(msg`Already signed in as @${account.handle}`))
+        } else {
+          await initSession(account)
+          track('Sign In', {resumedSession: true})
+          setTimeout(() => {
+            Toast.show(_(msg`Signed in as @${account.handle}`))
+          }, 100)
+        }
+      } else {
+        onSelectAccount(account)
+      }
+    },
+    [currentAccount, track, initSession, onSelectAccount, setShowLoggedOut, _],
+  )
+
+  return (
+    <ScrollView testID="chooseAccountForm" style={styles.maxHeight}>
+      <Text style={[a.mt_md, a.mb_lg, a.font_bold]}>
+        <Trans>Sign in as...</Trans>
+      </Text>
+      <Group>
+        {accounts.map(account => (
+          <AccountItem
+            key={account.did}
+            account={account}
+            onSelect={onSelect}
+            isCurrentAccount={account.did === currentAccount?.did}
+          />
+        ))}
+        <TouchableOpacity
+          testID="chooseNewAccountBtn"
+          style={[a.flex_1]}
+          onPress={() => onSelectAccount(undefined)}
+          accessibilityRole="button"
+          accessibilityLabel={_(msg`Login to account that is not listed`)}
+          accessibilityHint="">
+          <View style={[a.flex_row, a.flex_row, a.align_center, {height: 48}]}>
+            <Text
+              style={[
+                a.align_baseline,
+                a.flex_1,
+                a.flex_row,
+                a.py_sm,
+                {paddingLeft: 48},
+              ]}>
+              <Trans>Other account</Trans>
+            </Text>
+            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+          </View>
+        </TouchableOpacity>
+      </Group>
+      <View style={[a.flex_row, a.mt_lg]}>
+        <Button
+          label={_(msg`Back`)}
+          variant="solid"
+          color="secondary"
+          size="small"
+          onPress={onPressBack}>
+          <Trans>Back</Trans>
+        </Button>
+        <View style={[a.flex_1]} />
+      </View>
+    </ScrollView>
+  )
+}

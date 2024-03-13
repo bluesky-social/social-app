@@ -154,6 +154,12 @@ export const atoms = {
   align_end: {
     alignItems: 'flex-end',
   },
+  align_baseline: {
+    alignItems: 'baseline',
+  },
+  align_stretch: {
+    alignItems: 'stretch',
+  },
   self_auto: {
     alignSelf: 'auto',
   },
