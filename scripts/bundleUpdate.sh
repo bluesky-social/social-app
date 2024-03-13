@@ -1,4 +1,7 @@
 #!/bin/bash
+set -o errexit
+set -o pipefail
+set -o nounset
 
 rm -rf bundleTempDir
 rm -rf bundle.tar.gz
@@ -16,10 +19,7 @@ tar czvf bundle.tar.gz ./*
 
 echo "Deploying to $DEPLOYMENT_URL..."
 
-curl -o - --form "bundle=@./bundle.tar.gz" \
---user "bsky:$DENNIS_API_KEY" \
---basic "$DEPLOYMENT_URL" \
-/
+curl -o - --form "bundle=@./bundle.tar.gz" --user "bsky:$DENIS_API_KEY" --basic "$DEPLOYMENT_URL"
 
 cd ..
 
