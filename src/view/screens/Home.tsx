@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ActivityIndicator, StyleSheet} from 'react-native'
+import {View, ActivityIndicator, StyleSheet, Alert} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -18,6 +18,7 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import * as Updates from 'expo-updates'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -60,6 +61,37 @@ function HomeScreenReady({
     }
     return feeds
   }, [pinnedFeedInfos])
+
+  React.useEffect(() => {
+    ;(async () => {
+      try {
+        const update = await Updates.checkForUpdateAsync()
+
+        if (update.isAvailable) {
+          Alert.alert(
+            'Update is available!',
+            'Do you want to install it now?',
+            [
+              {
+                text: 'Cancel',
+                style: 'cancel',
+              },
+              {
+                text: 'Install',
+                style: 'default',
+                onPress: async () => {
+                  await Updates.fetchUpdateAsync()
+                  await Updates.reloadAsync()
+                },
+              },
+            ],
+          )
+        }
+      } catch (error) {
+        Alert.alert('Error', `${error}`)
+      }
+    })()
+  }, [])
 
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
