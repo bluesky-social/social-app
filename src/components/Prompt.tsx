@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {isNative} from '#/platform/detection'
 import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, ButtonColor, ButtonText} from '#/components/Button'
@@ -84,7 +85,8 @@ export function Actions({children}: React.PropsWithChildren<{}>) {
         a.justify_end,
         gtMobile
           ? [a.flex_row, a.flex_row_reverse, a.justify_start]
-          : [a.flex_col, a.pt_md, a.pb_4xl],
+          : [a.flex_col],
+        isNative && [a.pb_4xl],
       ]}>
       {children}
     </View>
