@@ -2,6 +2,14 @@ export type LogEvents = {
   init: {
     initMs: number
   }
+  'post:create': {
+    imageCount: number
+    isReply: boolean
+    hasLink: boolean
+    hasQuote: boolean
+    langs: string
+    logContext: 'Composer'
+  }
   'post:like': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
