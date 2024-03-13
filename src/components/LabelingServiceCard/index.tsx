@@ -98,7 +98,7 @@ export function Content({children}: React.PropsWithChildren<{}>) {
 }
 
 /**
- * The canonical view for a moderation service. Use this or compose your own.
+ * The canonical view for a labeling service. Use this or compose your own.
  */
 export function Default({
   labeler,
@@ -139,7 +139,7 @@ export function Link({
         },
       }}
       label={_(
-        msg`View the moderation service provided by @${labeler.creator.handle}`,
+        msg`View the labeling service provided by @${labeler.creator.handle}`,
       )}>
       {children}
     </InternalLink>
