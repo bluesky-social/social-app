@@ -17,7 +17,7 @@ tar czvf bundle.tar.gz ./*
 
 echo "Deploying to $DEPLOYMENT_URL..."
 
-curl -o - -I --form 'bundle=@./bundle.tar.gz' \
+curl -o - --form 'bundle=@./bundle.tar.gz' \
 --user "bsky:$DENNIS_API_KEY" \
 --basic "$DEPLOYMENT_URL" \
 /
