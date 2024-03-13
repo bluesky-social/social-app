@@ -23,15 +23,23 @@ type FlatJSONRecord = Record<
   string | number | boolean | null | undefined
 >
 
+let getCurrentRouteName: () => string | null | undefined = () => null
+
+export function attachRouteToLogEvents(
+  getRouteName: () => string | null | undefined,
+) {
+  getCurrentRouteName = getRouteName
+}
+
 export function logEvent<E extends keyof Events>(
   eventName: E & string,
-  metadata: Events[E] & FlatJSONRecord,
+  rawMetadata?: Events[E] & FlatJSONRecord,
 ) {
-  Statsig.logEvent(
-    eventName,
-    null,
-    metadata as Record<string, string>, // Close enough and it works.
-  )
+  const fullMetadata = {
+    ...rawMetadata,
+  } as Record<string, string> // Statsig typings are unnecessarily strict here.
+  fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
+  Statsig.logEvent(eventName, null, fullMetadata)
 }
 
 export function useGate(gateName: string) {
