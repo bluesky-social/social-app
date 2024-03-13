@@ -127,7 +127,7 @@ export function ContentHider({
           label={_(
             msg`Learn more about the moderation applied to this content.`,
           )}
-          style={[a.pt_xs]}>
+          style={[a.pt_sm]}>
           {state => (
             <Text
               style={[
@@ -138,17 +138,19 @@ export function ContentHider({
                 t.atoms.text_contrast_medium,
                 a.text_left,
               ]}>
-              <Trans>
-                Labeled by {sanitizeDisplayName(desc.source!)}.{' '}
-                <Text
-                  style={[
-                    {color: t.palette.primary_500},
-                    a.text_sm,
-                    state.hovered && [web({textDecoration: 'underline'})],
-                  ]}>
-                  Learn more.
-                </Text>
-              </Trans>
+              {desc.sourceType === 'user' ? (
+                <Trans>Labeled by the author.</Trans>
+              ) : (
+                <Trans>Labeled by {sanitizeDisplayName(desc.source!)}.</Trans>
+              )}{' '}
+              <Text
+                style={[
+                  {color: t.palette.primary_500},
+                  a.text_sm,
+                  state.hovered && [web({textDecoration: 'underline'})],
+                ]}>
+                <Trans>Learn more.</Trans>
+              </Text>
             </Text>
           )}
         </Button>

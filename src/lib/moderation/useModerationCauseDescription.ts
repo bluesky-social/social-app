@@ -1,4 +1,4 @@
-import {ModerationCause} from '@atproto/api'
+import {ModerationCause, ModerationCauseSource} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useGlobalLabelStrings} from './useGlobalLabelStrings'
@@ -16,6 +16,7 @@ export interface ModerationCauseDescription {
   name: string
   description: string
   source?: string
+  sourceType?: ModerationCauseSource['type']
 }
 
 export function useModerationCauseDescription(
@@ -114,7 +115,11 @@ export function useModerationCauseDescription(
           : CircleInfo,
       name: strings.name,
       description: strings.description,
-      source: labeler?.creator.displayName || labeler?.creator.handle,
+      source:
+        labeler?.creator.displayName ||
+        (labeler?.creator.handle ? '@' + labeler?.creator.handle : undefined) ||
+        cause.label.src,
+      sourceType: cause.source.type,
     }
   }
   // should never happen
