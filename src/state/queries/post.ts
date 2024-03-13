@@ -121,10 +121,12 @@ function usePostLikeMutation(
     Error,
     {uri: string; cid: string} // the post's uri and cid
   >({
-    mutationFn: post => getAgent().like(post.uri, post.cid),
+    mutationFn: post => {
+      logEvent('post:like', {logContext})
+      return getAgent().like(post.uri, post.cid)
+    },
     onSuccess() {
       track('Post:Like')
-      logEvent('post:like', {logContext})
     },
   })
 }
@@ -133,10 +135,12 @@ function usePostUnlikeMutation(
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
 ) {
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
-    mutationFn: ({likeUri}) => getAgent().deleteLike(likeUri),
+    mutationFn: ({likeUri}) => {
+      logEvent('post:unlike', {logContext})
+      return getAgent().deleteLike(likeUri)
+    },
     onSuccess() {
       track('Post:Unlike')
-      logEvent('post:unlike', {logContext})
     },
   })
 }
