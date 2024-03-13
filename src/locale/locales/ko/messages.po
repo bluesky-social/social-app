@@ -53,10 +53,6 @@ msgstr "⚠ 잘못된 핸들"
 msgid "A content warning has been applied to this {0}."
 msgstr "이 {0}에 콘텐츠 경고가 적용되었습니다."
 
-#: src/lib/hooks/useOTAUpdate.ts:16
-#~ msgid "A new version of the app is available. Please update to continue using the app."
-#~ msgstr "새 버전의 앱을 사용할 수 있습니다. 앱을 계속 사용하려면 업데이트하세요."
-
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:647
 msgid "Access navigation links and settings"
@@ -324,10 +320,6 @@ msgstr "이 초안을 삭제하시겠습니까?"
 msgid "Are you sure?"
 msgstr "정말인가요?"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:322
-#~ msgid "Are you sure? This cannot be undone."
-#~ msgstr "정말인가요? 되돌릴 수 없습니다."
-
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
 msgid "Are you writing in <0>{0}</0>?"
 msgstr "{0}(으)로 쓰고 있나요?"
@@ -402,10 +394,6 @@ msgstr "리스트 차단"
 #: src/view/screens/ProfileList.tsx:623
 msgid "Block these accounts?"
 msgstr "이 계정들을 차단하시겠습니까?"
-
-#: src/view/screens/ProfileList.tsx:320
-#~ msgid "Block this List"
-#~ msgstr "이 리스트 차단"
 
 #: src/view/com/lists/ListCard.tsx:110
 #: src/view/com/util/post-embeds/QuoteEmbed.tsx:61
@@ -784,12 +772,6 @@ msgstr "{0} 카테고리에 대한 콘텐츠 필터링 설정 구성"
 msgid "Confirm"
 msgstr "확인"
 
-#: src/view/com/modals/Confirm.tsx:75
-#: src/view/com/modals/Confirm.tsx:78
-#~ msgctxt "action"
-#~ msgid "Confirm"
-#~ msgstr "확인"
-
 #: src/view/com/modals/ChangeEmail.tsx:193
 #: src/view/com/modals/ChangeEmail.tsx:195
 msgid "Confirm Change"
@@ -913,10 +895,6 @@ msgstr "리스트 링크 복사"
 msgid "Copy link to post"
 msgstr "게시물 링크 복사"
 
-#: src/view/com/profile/ProfileHeader.tsx:295
-#~ msgid "Copy link to profile"
-#~ msgstr "프로필 링크 복사"
-
 #: src/view/com/util/forms/PostDropdownBtn.tsx:210
 #: src/view/com/util/forms/PostDropdownBtn.tsx:212
 msgid "Copy post text"
@@ -961,14 +939,6 @@ msgstr "새 계정 만들기"
 #: src/view/screens/AppPasswords.tsx:246
 msgid "Created {0}"
 msgstr "{0}에 생성됨"
-
-#: src/view/screens/ProfileFeed.tsx:616
-#~ msgid "Created by <0/>"
-#~ msgstr "<0/> 님이 만듦"
-
-#: src/view/screens/ProfileFeed.tsx:614
-#~ msgid "Created by you"
-#~ msgstr "내가 만듦"
 
 #: src/view/com/composer/Composer.tsx:453
 msgid "Creates a card with a thumbnail. The card links to {url}"
@@ -1831,11 +1801,6 @@ msgstr "이미지"
 msgid "Image alt text"
 msgstr "이미지 대체 텍스트"
 
-#: src/view/com/util/UserAvatar.tsx:311
-#: src/view/com/util/UserBanner.tsx:118
-#~ msgid "Image options"
-#~ msgstr "이미지 옵션"
-
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:138
 msgid "Input code sent to your email for password reset"
 msgstr "비밀번호 재설정을 위해 이메일로 전송된 코드를 입력합니다"
@@ -1989,11 +1954,6 @@ msgstr "비밀번호를 재설정해 봅시다!"
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
 msgstr "출발!"
-
-#: src/view/com/util/UserAvatar.tsx:248
-#: src/view/com/util/UserBanner.tsx:62
-#~ msgid "Library"
-#~ msgstr "라이브러리"
 
 #: src/view/screens/Settings/index.tsx:479
 msgid "Light"
@@ -2263,10 +2223,6 @@ msgstr "리스트 뮤트"
 msgid "Mute these accounts?"
 msgstr "이 계정들을 뮤트하시겠습니까?"
 
-#: src/view/screens/ProfileList.tsx:279
-#~ msgid "Mute this List"
-#~ msgstr "이 리스트 뮤트"
-
 #: src/components/dialogs/MutedWords.tsx:127
 msgid "Mute this word in post text and tags"
 msgstr "게시물 글 및 태그에서 이 단어 뮤트하기"
@@ -2368,10 +2324,6 @@ msgstr "팔로워와 데이터에 대한 접근 권한을 잃지 마세요."
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
 msgstr "팔로워 또는 데이터에 대한 접근 권한을 잃지 마세요."
-
-#: src/components/dialogs/MutedWords.tsx:293
-#~ msgid "Nevermind"
-#~ msgstr "취소"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -3007,10 +2959,6 @@ msgstr "추천 사용자"
 #: src/view/com/posts/FeedErrorMessage.tsx:204
 msgid "Remove"
 msgstr "제거"
-
-#: src/view/com/feeds/FeedSourceCard.tsx:108
-#~ msgid "Remove {0} from my feeds?"
-#~ msgstr "{0}을(를) 내 피드에서 제거하시겠습니까?"
 
 #: src/view/com/util/AccountDropdownBtn.tsx:22
 msgid "Remove account"
@@ -4095,10 +4043,6 @@ msgstr "이 경고는 미디어가 첨부된 게시물에만 사용할 수 있�
 #: src/components/dialogs/MutedWords.tsx:284
 msgid "This will delete {0} from your muted words. You can always add it back later."
 msgstr "뮤트한 단어에서 {0}이(가) 삭제됩니다. 나중에 언제든지 다시 추가할 수 있습니다."
-
-#: src/view/com/util/forms/PostDropdownBtn.tsx:282
-#~ msgid "This will hide this post from your feeds."
-#~ msgstr "피드에서 이 게시물을 숨깁니다."
 
 #: src/view/screens/PreferencesThreads.tsx:53
 #: src/view/screens/Settings/index.tsx:565
