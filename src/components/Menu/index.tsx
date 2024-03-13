@@ -17,7 +17,7 @@ import {
   ItemIconProps,
 } from '#/components/Menu/types'
 import {Button, ButtonText} from '#/components/Button'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {isNative} from 'platform/detection'
 
@@ -209,7 +209,9 @@ function Cancel() {
       variant="ghost"
       color="secondary"
       onPress={() => control.close()}>
-      <ButtonText>Cancel</ButtonText>
+      <ButtonText>
+        <Trans>Cancel</Trans>
+      </ButtonText>
     </Button>
   )
 }
