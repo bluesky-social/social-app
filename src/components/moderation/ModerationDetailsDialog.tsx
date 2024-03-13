@@ -124,12 +124,16 @@ function ModerationDetailsDialogInner({
           <Text style={[t.atoms.text, a.text_md, a.leading_snug, a.mt_lg]}>
             <Trans>
               This label was applied by{' '}
-              <InlineLink
-                to={makeProfileLink({did: modcause.label.src, handle: ''})}
-                onPress={() => control.close()}
-                style={a.text_md}>
-                @{desc.source}
-              </InlineLink>
+              {modcause.source.type === 'user' ? (
+                'the author'
+              ) : (
+                <InlineLink
+                  to={makeProfileLink({did: modcause.label.src, handle: ''})}
+                  onPress={() => control.close()}
+                  style={a.text_md}>
+                  @{desc.source}
+                </InlineLink>
+              )}
               .
             </Trans>
           </Text>
