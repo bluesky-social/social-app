@@ -325,7 +325,8 @@ msgstr "アプリパスワードの設定"
 msgid "App Passwords"
 msgstr "アプリパスワード"
 
-#: src/view/com/util/forms/PostDropdownBtn.tsx:295
+#: src/view/com/util/forms/PostDropdownBtn.tsx:337
+#: src/view/com/util/forms/PostDropdownBtn.tsx:346
 msgid "Appeal content warning"
 msgstr "コンテンツの警告に異議を申し立てる"
 
@@ -565,7 +566,6 @@ msgstr "英数字、スペース、ハイフン、アンダースコアのみが
 #: src/view/com/modals/Repost.tsx:87
 #: src/view/com/modals/VerifyEmail.tsx:247
 #: src/view/com/modals/VerifyEmail.tsx:253
-#: src/view/com/modals/Waitlist.tsx:142
 #: src/view/screens/Search/Search.tsx:716
 #: src/view/shell/desktop/Search.tsx:238
 msgid "Cancel"
