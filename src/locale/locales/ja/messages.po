@@ -54,7 +54,7 @@ msgstr "{following} フォロー"
 
 #: src/view/shell/Drawer.tsx:440
 msgid "{numUnreadNotifications} unread"
-msgstr "{numUnreadNotifications} 件の未読"
+msgstr "{numUnreadNotifications}件の未読"
 
 #: src/Navigation.tsx:147
 #~ msgid "@{0}"
@@ -478,7 +478,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタム ホスティングは、開発者向けのベータ版で利用できるようになりました。"
+msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 カスタムホスティングは、開発者向けのベータ版で利用できるようになりました。"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
@@ -1833,7 +1833,7 @@ msgstr "人気のあるフィードを紹介します。好きなだけフォロ
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr "{interestsText} への興味に基づいたおすすめです。好きなだけフォローすることができます。"
+msgstr "{interestsText}への興味に基づいたおすすめです。好きなだけフォローすることができます。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:153
 msgid "Here is your app password."
@@ -4361,7 +4361,7 @@ msgstr "このコンテンツはBlueskyのアカウントがないと閲覧で�
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr "この機能はベータ版です。 リポジトリのエクスポートの詳細については、以下を参照してください。<0>このブログ投稿</0>"
+msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、以下を参照してください。<0>このブログ投稿</0>"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -4746,7 +4746,7 @@ msgstr "あなたのアカウントが準備できるまで{estimatedTime}ほど
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr "素敵なひとときをお過ごしください。 覚えておいてください、Blueskyは："
+msgstr "素敵なひとときをお過ごしください。覚えておいてください、Blueskyは："
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 #~ msgid "We ran out of posts from your follows. Here's the latest from"
