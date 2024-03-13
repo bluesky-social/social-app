@@ -1,5 +1,6 @@
 import React, {useCallback} from 'react'
 import {TouchableOpacity, StyleSheet} from 'react-native'
+import * as MediaLibrary from 'expo-media-library'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -24,12 +25,17 @@ export function OpenCameraBtn({gallery}: Props) {
   const {track} = useAnalytics()
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
+  const [mediaPermissionRes, requestMediaPermission] =
+    MediaLibrary.usePermissions()
 
   const onPressTakePicture = useCallback(async () => {
     track('Composer:CameraOpened')
     try {
       if (!(await requestCameraAccessIfNeeded())) {
         return
+      }
+      if (!mediaPermissionRes?.granted && mediaPermissionRes?.canAskAgain) {
+        await requestMediaPermission()
       }
 
       const img = await openCamera({
@@ -38,12 +44,23 @@ export function OpenCameraBtn({gallery}: Props) {
         freeStyleCropEnabled: true,
       })
 
+      // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
+      // the image even without these permissions
+      if (mediaPermissionRes) {
+        await MediaLibrary.createAssetAsync(img.path)
+      }
       gallery.add(img)
     } catch (err: any) {
       // ignore
       logger.warn('Error using camera', {error: err})
     }
-  }, [gallery, track, requestCameraAccessIfNeeded])
+  }, [
+    gallery,
+    track,
+    requestCameraAccessIfNeeded,
+    mediaPermissionRes,
+    requestMediaPermission,
+  ])
 
   const shouldShowCameraButton = isNative || isMobileWeb
   if (!shouldShowCameraButton) {
