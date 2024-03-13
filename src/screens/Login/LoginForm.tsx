@@ -6,28 +6,31 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
+import {Trans, msg} from '@lingui/macro'
+
 import {useAnalytics} from 'lib/analytics/analytics'
-import {Text} from '../../util/text/Text'
 import {s} from 'lib/styles'
 import {createFullHandle} from 'lib/strings/handles'
 import {toNiceDomain} from 'lib/strings/url-helpers'
 import {isNetworkError} from 'lib/strings/errors'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useTheme} from 'lib/ThemeContext'
 import {useSessionApi} from '#/state/session'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
-import {styles} from './styles'
+import {styles} from '../../view/com/auth/login/styles'
 import {useLingui} from '@lingui/react'
 import {useDialogControl} from '#/components/Dialog'
-
-import {ServerInputDialog} from '../server-input'
+import {ServerInputDialog} from '../../view/com/auth/server-input'
+import {Button} from '#/components/Button'
+import {isAndroid} from '#/platform/detection'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Text} from '#/components/Typography'
+import * as TextField from '#/components/forms/TextField'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
+import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
+import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -40,7 +43,6 @@ export const LoginForm = ({
   setServiceUrl,
   onPressRetryConnect,
   onPressBack,
-  onPressForgotPassword,
 }: {
   error: string
   serviceUrl: string
@@ -53,8 +55,7 @@ export const LoginForm = ({
   onPressForgotPassword: () => void
 }) => {
   const {track} = useAnalytics()
-  const pal = usePalette('default')
-  const theme = useTheme()
+  const t = useTheme()
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [identifier, setIdentifier] = useState<string>(initialHandle)
   const [password, setPassword] = useState<string>('')
@@ -62,6 +63,7 @@ export const LoginForm = ({
   const {_} = useLingui()
   const {login} = useSessionApi()
   const serverInputControl = useDialogControl()
+  const {gtMobile} = useBreakpoints()
 
   const onPressSelectService = () => {
     serverInputControl.open()
@@ -127,55 +129,54 @@ export const LoginForm = ({
 
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
-    <View testID="loginForm">
+    <View testID="loginForm" style={[a.gap_lg, !gtMobile && a.px_lg]}>
       <ServerInputDialog
         control={serverInputControl}
         onSelect={setServiceUrl}
       />
 
-      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-        <Trans>Sign into</Trans>
-      </Text>
-      <View style={[pal.borderDark, styles.group]}>
-        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <FontAwesomeIcon
-            icon="globe"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TouchableOpacity
-            testID="loginSelectServiceButton"
-            style={styles.textBtn}
-            onPress={onPressSelectService}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Select service`)}
-            accessibilityHint={_(msg`Sets server for the Bluesky client`)}>
-            <Text type="xl" style={[pal.text, styles.textBtnLabel]}>
-              {toNiceDomain(serviceUrl)}
-            </Text>
-            <View style={[pal.btn, styles.textBtnFakeInnerBtn]}>
-              <FontAwesomeIcon
-                icon="pen"
-                size={12}
-                style={pal.textLight as FontAwesomeIconStyle}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
+      <View>
+        <TextField.Label>
+          <Trans>Hosting provider</Trans>
+        </TextField.Label>
+        <TouchableOpacity
+          accessibilityRole="button"
+          style={[
+            a.w_full,
+            a.flex_row,
+            a.align_center,
+            a.rounded_sm,
+            a.px_md,
+            a.gap_xs,
+            {paddingVertical: isAndroid ? 14 : 9},
+            t.atoms.bg_contrast_25,
+          ]}
+          onPress={onPressSelectService}>
+          <TextField.Icon icon={Globe} />
+          <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
+          <View
+            style={[
+              a.rounded_sm,
+              t.atoms.bg_contrast_100,
+              {marginLeft: 'auto', left: 6, padding: 6},
+            ]}>
+            <Pencil
+              style={{color: t.palette.contrast_500}}
+              height={18}
+              width={18}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
-      <Text type="sm-bold" style={[pal.text, styles.groupLabel]}>
-        <Trans>Account</Trans>
-      </Text>
-      <View style={[pal.borderDark, styles.group]}>
-        <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
-          <FontAwesomeIcon
-            icon="at"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TextInput
+      <View>
+        <TextField.Label>
+          <Trans>Account</Trans>
+        </TextField.Label>
+        <TextField.Root>
+          <TextField.Icon icon={At} />
+          <TextField.Input
             testID="loginUsernameInput"
-            style={[pal.text, styles.textInput]}
-            placeholder={_(msg`Username or email address`)}
-            placeholderTextColor={pal.colors.textLight}
+            label={_(msg`Username or email address`)}
             autoCapitalize="none"
             autoFocus
             autoCorrect={false}
@@ -186,35 +187,29 @@ export const LoginForm = ({
               passwordInputRef.current?.focus()
             }}
             blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-            keyboardAppearance={theme.colorScheme}
             value={identifier}
             onChangeText={str =>
               setIdentifier((str || '').toLowerCase().trim())
             }
             editable={!isProcessing}
-            accessibilityLabel={_(msg`Username or email address`)}
             accessibilityHint={_(
               msg`Input the username or email address you used at signup`,
             )}
           />
-        </View>
-        <View style={[pal.borderDark, styles.groupContent]}>
-          <FontAwesomeIcon
-            icon="lock"
-            style={[pal.textLight, styles.groupContentIcon]}
-          />
-          <TextInput
+        </TextField.Root>
+      </View>
+      <View>
+        <TextField.Root>
+          <TextField.Icon icon={Lock} />
+          <TextField.Input
             testID="loginPasswordInput"
-            ref={passwordInputRef}
-            style={[pal.text, styles.textInput]}
-            placeholder="Password"
-            placeholderTextColor={pal.colors.textLight}
+            inputRef={passwordInputRef}
+            label={_(msg`Password`)}
             autoCapitalize="none"
             autoCorrect={false}
             autoComplete="password"
             returnKeyType="done"
             enablesReturnKeyAutomatically={true}
-            keyboardAppearance={theme.colorScheme}
             secureTextEntry={true}
             textContentType="password"
             clearButtonMode="while-editing"
@@ -223,14 +218,13 @@ export const LoginForm = ({
             onSubmitEditing={onPressNext}
             blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
             editable={!isProcessing}
-            accessibilityLabel={_(msg`Password`)}
             accessibilityHint={
               identifier === ''
                 ? _(msg`Input your password`)
                 : _(msg`Input the password tied to ${identifier}`)
             }
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             testID="forgotPasswordButton"
             style={styles.textInputInnerBtn}
             onPress={onPressForgotPassword}
@@ -240,57 +234,57 @@ export const LoginForm = ({
             <Text style={pal.link}>
               <Trans>Forgot</Trans>
             </Text>
-          </TouchableOpacity>
-        </View>
+          </TouchableOpacity> */}
+        </TextField.Root>
       </View>
       {error ? (
-        <View style={styles.error}>
-          <View style={styles.errorIcon}>
-            <FontAwesomeIcon icon="exclamation" style={s.white} size={10} />
-          </View>
-          <View style={s.flex1}>
+        <View style={[styles.error, {marginHorizontal: 0}]}>
+          <Warning style={s.white} size="sm" />
+          <View style={(a.flex_1, a.ml_sm)}>
             <Text style={[s.white, s.bold]}>{error}</Text>
           </View>
         </View>
       ) : undefined}
-      <View style={[s.flexRow, s.alignCenter, s.pl20, s.pr20]}>
-        <TouchableOpacity onPress={onPressBack} accessibilityRole="button">
-          <Text type="xl" style={[pal.link, s.pl5]}>
-            <Trans>Back</Trans>
-          </Text>
-        </TouchableOpacity>
+      <View style={[a.flex_row, a.align_center]}>
+        <Button
+          label={_(msg`Back`)}
+          variant="solid"
+          color="secondary"
+          size="small"
+          onPress={onPressBack}>
+          {_(msg`Back`)}
+        </Button>
         <View style={s.flex1} />
         {!serviceDescription && error ? (
-          <TouchableOpacity
+          <Button
             testID="loginRetryButton"
-            onPress={onPressRetryConnect}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries login`)}>
-            <Text type="xl-bold" style={[pal.link, s.pr5]}>
-              <Trans>Retry</Trans>
-            </Text>
-          </TouchableOpacity>
+            label={_(msg`Retry`)}
+            accessibilityHint={_(msg`Retries login`)}
+            variant="solid"
+            color="secondary"
+            size="small"
+            onPress={onPressRetryConnect}>
+            {_(msg`Retry`)}
+          </Button>
         ) : !serviceDescription ? (
           <>
             <ActivityIndicator />
-            <Text type="xl" style={[pal.textLight, s.pl10]}>
+            <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
               <Trans>Connecting...</Trans>
             </Text>
           </>
         ) : isProcessing ? (
           <ActivityIndicator />
         ) : isReady ? (
-          <TouchableOpacity
-            testID="loginNextButton"
-            onPress={onPressNext}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Go to next`)}
-            accessibilityHint={_(msg`Navigates to the next screen`)}>
-            <Text type="xl-bold" style={[pal.link, s.pr5]}>
-              <Trans>Next</Trans>
-            </Text>
-          </TouchableOpacity>
+          <Button
+            label={_(msg`Next`)}
+            accessibilityHint={_(msg`Navigates to the next screen`)}
+            variant="solid"
+            color="primary"
+            size="small"
+            onPress={onPressNext}>
+            {_(msg`Next`)}
+          </Button>
         ) : undefined}
       </View>
     </View>

@@ -13,7 +13,7 @@ import {useProfileQuery} from '#/state/queries/profile'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {Button} from '#/components/Button'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -106,6 +106,7 @@ export const ChooseAccountForm = ({
   const {accounts, currentAccount} = useSession()
   const {initSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const {gtMobile} = useBreakpoints()
 
   React.useEffect(() => {
     screen('Choose Account')
@@ -133,50 +134,54 @@ export const ChooseAccountForm = ({
 
   return (
     <ScrollView testID="chooseAccountForm" style={styles.maxHeight}>
-      <Text style={[a.mt_md, a.mb_lg, a.font_bold]}>
-        <Trans>Sign in as...</Trans>
-      </Text>
-      <Group>
-        {accounts.map(account => (
-          <AccountItem
-            key={account.did}
-            account={account}
-            onSelect={onSelect}
-            isCurrentAccount={account.did === currentAccount?.did}
-          />
-        ))}
-        <TouchableOpacity
-          testID="chooseNewAccountBtn"
-          style={[a.flex_1]}
-          onPress={() => onSelectAccount(undefined)}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Login to account that is not listed`)}
-          accessibilityHint="">
-          <View style={[a.flex_row, a.flex_row, a.align_center, {height: 48}]}>
-            <Text
-              style={[
-                a.align_baseline,
-                a.flex_1,
-                a.flex_row,
-                a.py_sm,
-                {paddingLeft: 48},
-              ]}>
-              <Trans>Other account</Trans>
-            </Text>
-            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
-          </View>
-        </TouchableOpacity>
-      </Group>
-      <View style={[a.flex_row, a.mt_lg]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="small"
-          onPress={onPressBack}>
-          <Trans>Back</Trans>
-        </Button>
-        <View style={[a.flex_1]} />
+      <View style={!gtMobile && a.px_lg}>
+        <Text
+          style={[a.mt_md, a.mb_lg, a.font_bold, t.atoms.text_contrast_medium]}>
+          <Trans>Sign in as...</Trans>
+        </Text>
+        <Group>
+          {accounts.map(account => (
+            <AccountItem
+              key={account.did}
+              account={account}
+              onSelect={onSelect}
+              isCurrentAccount={account.did === currentAccount?.did}
+            />
+          ))}
+          <TouchableOpacity
+            testID="chooseNewAccountBtn"
+            style={[a.flex_1]}
+            onPress={() => onSelectAccount(undefined)}
+            accessibilityRole="button"
+            accessibilityLabel={_(msg`Login to account that is not listed`)}
+            accessibilityHint="">
+            <View
+              style={[a.flex_row, a.flex_row, a.align_center, {height: 48}]}>
+              <Text
+                style={[
+                  a.align_baseline,
+                  a.flex_1,
+                  a.flex_row,
+                  a.py_sm,
+                  {paddingLeft: 48},
+                ]}>
+                <Trans>Other account</Trans>
+              </Text>
+              <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+            </View>
+          </TouchableOpacity>
+        </Group>
+        <View style={[a.flex_row, a.mt_lg]}>
+          <Button
+            label={_(msg`Back`)}
+            variant="solid"
+            color="secondary"
+            size="small"
+            onPress={onPressBack}>
+            {_(msg`Back`)}
+          </Button>
+          <View style={[a.flex_1]} />
+        </View>
       </View>
     </ScrollView>
   )

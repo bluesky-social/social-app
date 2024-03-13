@@ -1,4 +1,5 @@
 import React from 'react'
+import {KeyboardAvoidingView} from 'react-native'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {useLingui} from '@lingui/react'
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
@@ -9,12 +10,11 @@ import {useServiceQuery} from '#/state/queries/service'
 import {msg} from '@lingui/macro'
 import {logger} from '#/logger'
 import {atoms as a} from '#/alf'
-import {KeyboardAvoidingView} from 'react-native'
 import {ChooseAccountForm} from './ChooseAccountForm'
 import {ForgotPasswordForm} from '#/view/com/auth/login/ForgotPasswordForm'
 import {SetNewPasswordForm} from '#/view/com/auth/login/SetNewPasswordForm'
 import {PasswordUpdatedForm} from '#/view/com/auth/login/PasswordUpdatedForm'
-import {LoginForm} from '#/view/com/auth/login/LoginForm'
+import {LoginForm} from '#/screens/Login/LoginForm'
 
 enum Forms {
   Login,

@@ -14,6 +14,7 @@ import {useTheme, atoms as a, web, android} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {mergeRefs} from '#/lib/merge-refs'
 
 const Context = React.createContext<{
   inputRef: React.RefObject<TextInput> | null
@@ -128,6 +129,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value: string
   onChangeText: (value: string) => void
   isInvalid?: boolean
+  inputRef?: React.RefObject<TextInput>
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -137,6 +139,7 @@ export function createInput(Component: typeof TextInput) {
     value,
     onChangeText,
     isInvalid,
+    inputRef,
     ...rest
   }: InputProps) {
     const t = useTheme()
@@ -161,19 +164,22 @@ export function createInput(Component: typeof TextInput) {
       )
     }
 
+    const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
+
     return (
       <>
         <Component
           accessibilityHint={undefined}
           {...rest}
           accessibilityLabel={label}
-          ref={ctx.inputRef}
+          ref={refs}
           value={value}
           onChangeText={onChangeText}
           onFocus={ctx.onFocus}
           onBlur={ctx.onBlur}
           placeholder={placeholder || label}
           placeholderTextColor={t.palette.contrast_500}
+          keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           hitSlop={HITSLOP_20}
           style={[
             a.relative,
