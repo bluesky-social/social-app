@@ -23,6 +23,7 @@ export function HomeHeaderLayoutMobile({
   children,
 }: {
   children: React.ReactNode
+  tabBarAnchor: JSX.Element | null | undefined
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
@@ -103,7 +104,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     flexDirection: 'column',
-    borderBottomWidth: 1,
   },
   topBar: {
     flexDirection: 'row',

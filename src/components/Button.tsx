@@ -27,7 +27,7 @@ export type ButtonColor =
   | 'gradient_sunset'
   | 'gradient_nordic'
   | 'gradient_bonfire'
-export type ButtonSize = 'tiny' | 'small' | 'large'
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large'
 export type ButtonShape = 'round' | 'square' | 'default'
 export type VariantProps = {
   /**
@@ -165,7 +165,7 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: tokens.color.blue_500,
+            borderColor: t.palette.primary_500,
           })
           hoverStyles.push(a.border, {
             backgroundColor: light
@@ -174,7 +174,7 @@ export function Button({
           })
         } else {
           baseStyles.push(a.border, {
-            borderColor: light ? tokens.color.blue_200 : tokens.color.blue_900,
+            borderColor: light ? t.palette.primary_200 : t.palette.primary_900,
           })
         }
       } else if (variant === 'ghost') {
@@ -191,20 +191,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: light
-              ? tokens.color.gray_50
-              : tokens.color.gray_900,
+            backgroundColor: t.palette.contrast_50,
           })
           hoverStyles.push({
-            backgroundColor: light
-              ? tokens.color.gray_100
-              : tokens.color.gray_950,
+            backgroundColor: t.palette.contrast_100,
           })
         } else {
           baseStyles.push({
-            backgroundColor: light
-              ? tokens.color.gray_200
-              : tokens.color.gray_950,
+            backgroundColor: t.palette.contrast_200,
           })
         }
       } else if (variant === 'outline') {
@@ -214,21 +208,19 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: light ? tokens.color.gray_300 : tokens.color.gray_700,
+            borderColor: t.palette.contrast_300,
           })
-          hoverStyles.push(a.border, t.atoms.bg_contrast_50)
+          hoverStyles.push(t.atoms.bg_contrast_50)
         } else {
           baseStyles.push(a.border, {
-            borderColor: light ? tokens.color.gray_200 : tokens.color.gray_800,
+            borderColor: t.palette.contrast_200,
           })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
           baseStyles.push(t.atoms.bg)
           hoverStyles.push({
-            backgroundColor: light
-              ? tokens.color.gray_100
-              : tokens.color.gray_900,
+            backgroundColor: t.palette.contrast_100,
           })
         }
       }
@@ -236,14 +228,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: t.palette.negative_400,
+            backgroundColor: t.palette.negative_500,
           })
           hoverStyles.push({
-            backgroundColor: t.palette.negative_500,
+            backgroundColor: t.palette.negative_600,
           })
         } else {
           baseStyles.push({
-            backgroundColor: t.palette.negative_600,
+            backgroundColor: t.palette.negative_700,
           })
         }
       } else if (variant === 'outline') {
@@ -253,7 +245,7 @@ export function Button({
 
         if (!disabled) {
           baseStyles.push(a.border, {
-            borderColor: t.palette.negative_400,
+            borderColor: t.palette.negative_500,
           })
           hoverStyles.push(a.border, {
             backgroundColor: light
@@ -273,7 +265,7 @@ export function Button({
           hoverStyles.push({
             backgroundColor: light
               ? t.palette.negative_100
-              : t.palette.negative_950,
+              : t.palette.negative_975,
           })
         }
       }
@@ -282,6 +274,8 @@ export function Button({
     if (shape === 'default') {
       if (size === 'large') {
         baseStyles.push({paddingVertical: 15}, a.px_2xl, a.rounded_sm, a.gap_md)
+      } else if (size === 'medium') {
+        baseStyles.push({paddingVertical: 12}, a.px_2xl, a.rounded_sm, a.gap_md)
       } else if (size === 'small') {
         baseStyles.push({paddingVertical: 9}, a.px_lg, a.rounded_sm, a.gap_sm)
       } else if (size === 'tiny') {
@@ -461,31 +455,31 @@ export function useSharedButtonTextStyles() {
       if (variant === 'solid' || variant === 'gradient') {
         if (!disabled) {
           baseStyles.push({
-            color: light ? tokens.color.gray_700 : tokens.color.gray_100,
+            color: t.palette.contrast_700,
           })
         } else {
           baseStyles.push({
-            color: light ? tokens.color.gray_400 : tokens.color.gray_700,
+            color: t.palette.contrast_400,
           })
         }
       } else if (variant === 'outline') {
         if (!disabled) {
           baseStyles.push({
-            color: light ? tokens.color.gray_600 : tokens.color.gray_300,
+            color: t.palette.contrast_600,
           })
         } else {
           baseStyles.push({
-            color: light ? tokens.color.gray_400 : tokens.color.gray_700,
+            color: t.palette.contrast_300,
           })
         }
       } else if (variant === 'ghost') {
         if (!disabled) {
           baseStyles.push({
-            color: light ? tokens.color.gray_600 : tokens.color.gray_300,
+            color: t.palette.contrast_600,
           })
         } else {
           baseStyles.push({
-            color: light ? tokens.color.gray_400 : tokens.color.gray_600,
+            color: t.palette.contrast_300,
           })
         }
       }
