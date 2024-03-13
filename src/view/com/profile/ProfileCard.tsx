@@ -230,7 +230,9 @@ export function ProfileCardWithFollowBtn({
       renderButton={
         isMe
           ? undefined
-          : profileShadow => <FollowButton profile={profileShadow} />
+          : profileShadow => (
+              <FollowButton profile={profileShadow} logContext="ProfileCard" />
+            )
       }
     />
   )
