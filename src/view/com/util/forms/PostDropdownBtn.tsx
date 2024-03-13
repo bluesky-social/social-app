@@ -85,11 +85,13 @@ let PostDropdownBtn = ({
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
   const deletePromptControl = useDialogControl()
   const hidePromptControl = useDialogControl()
+  const loggedOutWarningPromptControl = useDialogControl()
 
   const rootUri = record.reply?.root?.uri || postUri
   const isThreadMuted = mutedThreads.includes(rootUri)
   const isPostHidden = hiddenPosts && hiddenPosts.includes(postUri)
   const isAuthor = postAuthor.did === currentAccount?.did
+
   const href = React.useMemo(() => {
     const urip = new AtUri(postUri)
     return makeProfileLink(postAuthor, 'post', urip.rkey)
@@ -167,6 +169,17 @@ let PostDropdownBtn = ({
     hidePost({uri: postUri})
   }, [postUri, hidePost])
 
+  const shouldShowLoggedOutWarning = React.useMemo(() => {
+    return !!postAuthor.labels?.find(
+      label => label.val === '!no-unauthenticated',
+    )
+  }, [postAuthor])
+
+  const onSharePost = React.useCallback(() => {
+    const url = toShareUrl(href)
+    shareUrl(url)
+  }, [href])
+
   return (
     <EventStopper onKeyDown={false}>
       <Menu.Root>
@@ -217,8 +230,11 @@ let PostDropdownBtn = ({
               testID="postDropdownShareBtn"
               label={isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
               onPress={() => {
-                const url = toShareUrl(href)
-                shareUrl(url)
+                if (shouldShowLoggedOutWarning) {
+                  loggedOutWarningPromptControl.open()
+                } else {
+                  onSharePost()
+                }
               }}>
               <Menu.ItemText>
                 {isWeb ? _(msg`Copy link to post`) : _(msg`Share`)}
@@ -341,6 +357,16 @@ let PostDropdownBtn = ({
         description={_(msg`This post will be hidden from feeds.`)}
         onConfirm={onHidePost}
         confirmButtonCta={_(msg`Hide`)}
+      />
+
+      <Prompt.Basic
+        control={loggedOutWarningPromptControl}
+        title={_(msg`Note about sharing`)}
+        description={_(
+          msg`This post is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+        )}
+        onConfirm={onSharePost}
+        confirmButtonCta={_(msg`Share anyway`)}
       />
     </EventStopper>
   )
