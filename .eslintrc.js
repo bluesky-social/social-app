@@ -17,7 +17,29 @@ module.exports = {
   rules: {
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
-    'simple-import-sort/imports': 'error',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          // Side effect imports.
+          ['^\\u0000'],
+          // Node.js builtins prefixed with `node:`.
+          ['^node:'],
+          // Packages.
+          // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
+          // React/React Native priortized, followed by expo
+          [
+            '^(react/(.*)$)|^(react$)|^(react-native(.*)$)',
+            '^(expo(.*)$)|^(expo$)',
+            '^@?\\w',
+            '^',
+          ],
+          // Relative imports.
+          // Anything that starts with a dot or a #
+          ['^#', '^\\.'],
+        ],
+      },
+    ],
     'simple-import-sort/exports': 'error',
   },
   ignorePatterns: [
