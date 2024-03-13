@@ -35,9 +35,8 @@ module.exports = {
             '^(?!(?:alf|components|lib|locale|logger|platform|screens|state|view)(?:$|\\/))@?\\w',
           ],
           // Relative imports.
-          // Anything that starts with a dot
-          // due to unprefixed relative imports being used, we whitelist
-          // the relative paths we use
+          // Ideally, anything that starts with a dot or #
+          // due to unprefixed relative imports being used, we whitelist the relative paths we use
           // (?:$|\\/) matches end of string or /
           [
             '^(?:#\\/)?(?:lib|state|logger|platform|locale)(?:$|\\/)',
