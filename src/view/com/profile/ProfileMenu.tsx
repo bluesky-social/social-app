@@ -334,7 +334,7 @@ let ProfileMenu = ({
         confirmButtonCta={
           profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
         }
-        confirmButtonColor="negative"
+        confirmButtonColor={profile.viewer?.blocking ? undefined : 'negative'}
       />
     </EventStopper>
   )
