@@ -26,6 +26,9 @@ jobs:
       - name: ⚙️ Install Dependencies
         run: yarn install
 
+      - name: 🪛 Install jq
+        uses: dcarbone/install-jq-action@v2
+
       - name: ⛏️ Setup Expo
         run: yarn global add eas-cli-local-build-plugin
 
