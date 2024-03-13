@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
-"Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
+"Last-Translator: Mikan Harada <i@3kn.jp>\n"
 "Language-Team: Frudrax Cheng, Simon Chan, U2FsdGVkX1, Mikan Harada\n"
 "Plural-Forms: \n"
 
@@ -179,11 +179,11 @@ msgstr "添加链接卡片:"
 
 #: src/components/dialogs/MutedWords.tsx:158
 msgid "Add mute word for configured settings"
-msgstr ""
+msgstr "为配置的设置添加隐藏词"
 
 #: src/components/dialogs/MutedWords.tsx:87
 msgid "Add muted words and tags"
-msgstr ""
+msgstr "添加隐藏词和话题标签"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
@@ -740,7 +740,7 @@ msgstr "关闭导航页脚"
 
 #: src/components/TagMenu/index.tsx:262
 msgid "Close this dialog"
-msgstr ""
+msgstr "关闭该窗口"
 
 #: src/view/shell/index.web.tsx:52
 msgid "Closes bottom navigation bar"
@@ -1352,7 +1352,7 @@ msgstr "为此应用专用密码命名"
 #: src/components/dialogs/MutedWords.tsx:100
 #: src/components/dialogs/MutedWords.tsx:101
 msgid "Enter a word or tag"
-msgstr ""
+msgstr "输入一个词或标签"
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
@@ -1685,7 +1685,7 @@ msgstr "忘记密码"
 #: src/screens/Hashtag.tsx:108
 #: src/screens/Hashtag.tsx:148
 msgid "From @{sanitizedAuthor}"
-msgstr ""
+msgstr "来自 @{sanitizedAuthor}"
 
 #: src/view/com/posts/FeedItem.tsx:189
 msgctxt "from-feed"
@@ -1739,15 +1739,15 @@ msgstr "用户识别符"
 
 #: src/Navigation.tsx:270
 msgid "Hashtag"
-msgstr ""
+msgstr "话题标签"
 
 #: src/components/RichText.tsx:188
 #~ msgid "Hashtag: {tag}"
-#~ msgstr ""
+#~ msgstr "话题标签：{tag}"
 
 #: src/components/RichText.tsx:190
 msgid "Hashtag: #{tag}"
-msgstr ""
+msgstr "话题标签：#{tag}"
 
 #: src/view/com/auth/create/CreateAccount.tsx:208
 msgid "Having trouble?"
@@ -2220,7 +2220,7 @@ msgstr "请确认目标页面地址是否正确！"
 
 #: src/components/dialogs/MutedWords.tsx:83
 msgid "Manage your muted words and tags"
-msgstr ""
+msgstr "管理你的隐藏词和话题标签"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
@@ -2324,11 +2324,11 @@ msgstr "需要至少 3 个字符"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
-msgstr ""
+msgstr "隐藏"
 
 #: src/components/TagMenu/index.web.tsx:105
 msgid "Mute {truncatedTag}"
-msgstr ""
+msgstr "隐藏 {truncatedTag}"
 
 #: src/view/com/profile/ProfileHeader.tsx:327
 msgid "Mute Account"
@@ -2340,19 +2340,19 @@ msgstr "隐藏账户"
 
 #: src/components/TagMenu/index.tsx:209
 msgid "Mute all {displayTag} posts"
-msgstr ""
+msgstr "隐藏所有 {displayTag} 的帖子"
 
 #: src/components/TagMenu/index.tsx:211
 #~ msgid "Mute all {tag} posts"
-#~ msgstr ""
+#~ msgstr "隐藏所有 {tag} 的帖子"
 
 #: src/components/dialogs/MutedWords.tsx:149
 msgid "Mute in tags only"
-msgstr ""
+msgstr "仅隐藏话题标签"
 
 #: src/components/dialogs/MutedWords.tsx:134
 msgid "Mute in text & tags"
-msgstr ""
+msgstr "隐藏文本和话题标签"
 
 #: src/view/screens/ProfileList.tsx:491
 msgid "Mute list"
@@ -2368,11 +2368,11 @@ msgstr "隐藏这个列表"
 
 #: src/components/dialogs/MutedWords.tsx:127
 msgid "Mute this word in post text and tags"
-msgstr ""
+msgstr "在帖子文本和话题标签中隐藏该词"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Mute this word in tags only"
-msgstr ""
+msgstr "仅在话题标签中隐藏该词"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:251
 #: src/view/com/util/forms/PostDropdownBtn.tsx:257
@@ -2382,7 +2382,7 @@ msgstr "隐藏讨论串"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:267
 #: src/view/com/util/forms/PostDropdownBtn.tsx:269
 msgid "Mute words & tags"
-msgstr ""
+msgstr "隐藏词和话题标签"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2403,7 +2403,7 @@ msgstr "已隐藏的账户将不会在你的通知或时间线中显示，被隐
 
 #: src/view/screens/Moderation.tsx:100
 msgid "Muted words & tags"
-msgstr ""
+msgstr "已隐藏词和话题标签"
 
 #: src/view/screens/ProfileList.tsx:277
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2470,7 +2470,7 @@ msgstr "永远不会失去对你的关注者或数据的访问。"
 
 #: src/components/dialogs/MutedWords.tsx:293
 msgid "Nevermind"
-msgstr ""
+msgstr "放弃"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2575,7 +2575,7 @@ msgstr "没有结果"
 
 #: src/components/Lists.tsx:192
 msgid "No results found"
-msgstr ""
+msgstr "未找到结果"
 
 #: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
@@ -2657,7 +2657,7 @@ msgstr "只有 {0} 可以回复。"
 
 #: src/components/Lists.tsx:82
 msgid "Oops, something went wrong!"
-msgstr ""
+msgstr "糟糕，发生了一些错误！"
 
 #: src/components/Lists.tsx:188
 #: src/view/screens/AppPasswords.tsx:65
@@ -2671,12 +2671,12 @@ msgstr "开启"
 
 #: src/view/screens/Moderation.tsx:75
 msgid "Open content filtering settings"
-msgstr ""
+msgstr "打开内容过滤设置"
 
 #: src/view/com/composer/Composer.tsx:477
 #: src/view/com/composer/Composer.tsx:478
 msgid "Open emoji picker"
-msgstr "开启表情符号选择器"
+msgstr "打开表情符号选择器"
 
 #: src/view/screens/Settings/index.tsx:712
 msgid "Open links with in-app browser"
@@ -2684,7 +2684,7 @@ msgstr "在内置浏览器中打开链接"
 
 #: src/view/screens/Moderation.tsx:92
 msgid "Open muted words settings"
-msgstr ""
+msgstr "打开隐藏词设置"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:50
 msgid "Open navigation"
@@ -2692,7 +2692,7 @@ msgstr "开启导航"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:175
 msgid "Open post options menu"
-msgstr ""
+msgstr "打开帖子选项菜单"
 
 #: src/view/screens/Settings/index.tsx:804
 msgid "Open storybook page"
@@ -2920,7 +2920,7 @@ msgstr "请输入此应用专用密码的唯一名称，或使用我们提供的
 
 #: src/components/dialogs/MutedWords.tsx:68
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr ""
+msgstr "请输入一个有效的词、话题标签或短语"
 
 #: src/view/com/auth/create/state.ts:170
 #~ msgid "Please enter the code you received by SMS."
@@ -3002,7 +3002,7 @@ msgstr "无法找到帖子"
 
 #: src/components/TagMenu/index.tsx:253
 msgid "posts"
-msgstr ""
+msgstr "帖子"
 
 #: src/view/screens/Profile.tsx:180
 msgid "Posts"
@@ -3010,7 +3010,7 @@ msgstr "帖子"
 
 #: src/components/dialogs/MutedWords.tsx:90
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr ""
+msgstr "帖子可以根据其文本、话题标签或两者来隐藏。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -3154,7 +3154,7 @@ msgstr "删除图片预览"
 
 #: src/components/dialogs/MutedWords.tsx:343
 msgid "Remove mute word from your list"
-msgstr ""
+msgstr "从你的隐藏词列表中删除"
 
 #: src/view/com/modals/Repost.tsx:47
 msgid "Remove repost"
@@ -3430,19 +3430,19 @@ msgstr "搜索 \"{query}\""
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr ""
+msgstr "搜索 @{authorHandle} 带有 {displayTag} 的所有帖子"
 
 #: src/components/TagMenu/index.tsx:145
 #~ msgid "Search for all posts by @{authorHandle} with tag {tag}"
-#~ msgstr ""
+#~ msgstr "搜索 @{authorHandle} 带有 {tag} 的所有帖子"
 
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
-msgstr ""
+msgstr "搜索所有带有 {displayTag} 的帖子"
 
 #: src/components/TagMenu/index.tsx:90
 #~ msgid "Search for all posts with tag {tag}"
-#~ msgstr ""
+#~ msgstr "搜索所有带有 {tag} 的帖子"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
@@ -3456,27 +3456,27 @@ msgstr "所需的安全步骤"
 
 #: src/components/TagMenu/index.web.tsx:66
 msgid "See {truncatedTag} posts"
-msgstr ""
+msgstr "查看 {truncatedTag} 的帖子"
 
 #: src/components/TagMenu/index.web.tsx:83
 msgid "See {truncatedTag} posts by user"
-msgstr ""
+msgstr "按用户查看 {truncatedTag} 的帖子"
 
 #: src/components/TagMenu/index.tsx:128
 msgid "See <0>{displayTag}</0> posts"
-msgstr ""
+msgstr "查看 <0>{displayTag}</0> 的帖子"
 
 #: src/components/TagMenu/index.tsx:187
 msgid "See <0>{displayTag}</0> posts by this user"
-msgstr ""
+msgstr "查看该用户 <0>{displayTag}</0> 的帖子"
 
 #: src/components/TagMenu/index.tsx:128
 #~ msgid "See <0>{tag}</0> posts"
-#~ msgstr ""
+#~ msgstr "查看 <0>{tag}</0> 的帖子"
 
 #: src/components/TagMenu/index.tsx:189
 #~ msgid "See <0>{tag}</0> posts by this user"
-#~ msgstr ""
+#~ msgstr "查看该用户 <0>{tag}</0> 的帖子"
 
 #: src/view/screens/SavedFeeds.tsx:163
 msgid "See this guide"
@@ -3886,7 +3886,7 @@ msgstr "程序开发"
 
 #: src/components/Lists.tsx:203
 msgid "Something went wrong!"
-msgstr ""
+msgstr "出了点问题！"
 
 #: src/view/com/modals/Waitlist.tsx:51
 #~ msgid "Something went wrong. Check your email and try again."
@@ -3996,15 +3996,15 @@ msgstr "系统日志"
 
 #: src/components/dialogs/MutedWords.tsx:337
 msgid "tag"
-msgstr ""
+msgstr "话题标签"
 
 #: src/components/TagMenu/index.tsx:78
 msgid "Tag menu: {displayTag}"
-msgstr ""
+msgstr "话题标签菜单：{displayTag}"
 
 #: src/components/TagMenu/index.tsx:74
 #~ msgid "Tag menu: {tag}"
-#~ msgstr ""
+#~ msgstr "话题标签菜单：{tag}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
@@ -4031,7 +4031,7 @@ msgstr "服务条款"
 
 #: src/components/dialogs/MutedWords.tsx:337
 msgid "text"
-msgstr ""
+msgstr "文本"
 
 #: src/view/com/modals/AppealLabel.tsx:70
 #: src/view/com/modals/report/InputIssueDetails.tsx:51
@@ -4250,7 +4250,7 @@ msgstr "此警告仅适用于附带媒体的帖子。"
 
 #: src/components/dialogs/MutedWords.tsx:285
 msgid "This will delete {0} from your muted words. You can always add it back later."
-msgstr ""
+msgstr "这将从你的隐藏词中删除 {0}。你随时可以重新添加。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:282
 msgid "This will hide this post from your feeds."
@@ -4271,7 +4271,7 @@ msgstr "讨论串首选项"
 
 #: src/components/dialogs/MutedWords.tsx:113
 msgid "Toggle between muted word options."
-msgstr ""
+msgstr "在隐藏词选项之间切换。"
 
 #: src/view/com/util/forms/DropdownButton.tsx:246
 msgid "Toggle dropdown"
@@ -4355,7 +4355,7 @@ msgstr "取消隐藏"
 
 #: src/components/TagMenu/index.web.tsx:104
 msgid "Unmute {truncatedTag}"
-msgstr ""
+msgstr "取消隐藏 {truncatedTag}"
 
 #: src/view/com/profile/ProfileHeader.tsx:326
 msgid "Unmute Account"
@@ -4363,7 +4363,7 @@ msgstr "取消隐藏账户"
 
 #: src/components/TagMenu/index.tsx:208
 msgid "Unmute all {displayTag} posts"
-msgstr ""
+msgstr "取消隐藏所有 {displayTag} 帖子"
 
 #: src/components/TagMenu/index.tsx:210
 #~ msgid "Unmute all {tag} posts"
@@ -4557,7 +4557,7 @@ msgstr "我们认为还你会喜欢 Skygaze 所维护的 \"For You\":"
 
 #: src/screens/Hashtag.tsx:132
 msgid "We couldn't find any results for that hashtag."
-msgstr ""
+msgstr "找不到任何与该话题标签相关的结果。"
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
@@ -4573,7 +4573,7 @@ msgstr "我们已经看完了你关注的帖子。这是来自 <0/> 的最新消
 
 #: src/components/dialogs/MutedWords.tsx:204
 msgid "We recommend avoiding common words that appear in many posts, since it can result in no posts being shown."
-msgstr ""
+msgstr "不建议您使用会出现在许多帖子中的常见词汇，这可能导致你的时间线上没有帖子可显示。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
@@ -4605,7 +4605,7 @@ msgstr "很抱歉，我们无法解析此列表。如果问题持续发生，请
 
 #: src/components/dialogs/MutedWords.tsx:230
 msgid "We're sorry, but we weren't able to load your muted words at this time. Please try again."
-msgstr ""
+msgstr "很抱歉，我们无法加载你的隐藏词列表。请重试。"
 
 #: src/view/screens/Search/Search.tsx:254
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
@@ -4753,7 +4753,7 @@ msgstr "你还没有隐藏任何账号。要隐藏账号，请转到其个人资
 
 #: src/components/dialogs/MutedWords.tsx:250
 msgid "You haven't muted any words or tags yet"
-msgstr ""
+msgstr "你还没有隐藏任何词或话题标签"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:175
 msgid "You must be 18 or older to enable adult content."
@@ -4855,7 +4855,7 @@ msgstr "你的完整用户识别符将修改为 <0>@{0}</0>"
 
 #: src/components/dialogs/MutedWords.tsx:221
 msgid "Your muted words"
-msgstr ""
+msgstr "你的隐藏词"
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
