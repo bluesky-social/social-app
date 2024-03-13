@@ -18,7 +18,7 @@ const ANDROID_METADATA_ASSETS = METADATA.fileMetadata.android.assets
 const PACKAGE_JSON = require('../package.json')
 
 const getMd5 = async path => {
-  return new Promise((res, rej) => {
+  return new Promise(res => {
     const hash = crypto.createHash('md5')
     const rStream = fs.createReadStream(path)
     rStream.on('data', data => {
@@ -80,12 +80,12 @@ const moveFiles = async () => {
 
   const versionParts = PACKAGE_JSON.version.split('.')
   versionParts.pop()
-  const clientVersion = versionParts.join('.')
+  const runtimeVersion = versionParts.join('.')
 
   const result = {
     version: 0,
     bundler: 'metro',
-    clientVersion,
+    runtimeVersion,
     fileMetadata: {
       ios: {
         bundle: iosNewPath,
