@@ -6,6 +6,7 @@ import {
 } from 'statsig-react-native-expo'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
+import {Events} from './events'
 
 const statsigOptions = {
   environment: {
@@ -17,12 +18,20 @@ const statsigOptions = {
   initTimeoutMs: 1,
 }
 
-export function logEvent(
-  eventName: string,
-  value?: string | number | null,
-  metadata?: Record<string, string> | null,
+type FlatJSONRecord = Record<
+  string,
+  string | number | boolean | null | undefined
+>
+
+export function logEvent<E extends keyof Events>(
+  eventName: E & string,
+  metadata: Events[E] & FlatJSONRecord,
 ) {
-  Statsig.logEvent(eventName, value, metadata)
+  Statsig.logEvent(
+    eventName,
+    null,
+    metadata as Record<string, string>, // Close enough and it works.
+  )
 }
 
 export function useGate(gateName: string) {

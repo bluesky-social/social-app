@@ -656,7 +656,9 @@ function logModuleInitTime() {
     performance.now() - global.__BUNDLE_START_TIME__,
   )
   console.log(`Time to first paint: ${initMs} ms`)
-  logEvent('init', initMs)
+  logEvent('init', {
+    initMs,
+  })
 
   if (__DEV__) {
     // This log is noisy, so keep false committed
