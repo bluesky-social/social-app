@@ -60,7 +60,10 @@ let PostCtrls = ({
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
   const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
-  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post)
+  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
+    post,
+    logContext,
+  )
   const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(

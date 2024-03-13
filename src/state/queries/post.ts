@@ -147,12 +147,13 @@ function usePostUnlikeMutation(
 
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
 ) {
   const postUri = post.uri
   const postCid = post.cid
   const initialRepostUri = post.viewer?.repost
-  const repostMutation = usePostRepostMutation()
-  const unrepostMutation = usePostUnrepostMutation()
+  const repostMutation = usePostRepostMutation(logContext)
+  const unrepostMutation = usePostUnrepostMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialRepostUri,
@@ -200,22 +201,32 @@ export function usePostRepostMutationQueue(
   return [queueRepost, queueUnrepost]
 }
 
-function usePostRepostMutation() {
+function usePostRepostMutation(
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+) {
   return useMutation<
     {uri: string}, // responds with the uri of the repost
     Error,
     {uri: string; cid: string} // the post's uri and cid
   >({
-    mutationFn: post => getAgent().repost(post.uri, post.cid),
+    mutationFn: post => {
+      logEvent('post:repost', {logContext})
+      return getAgent().repost(post.uri, post.cid)
+    },
     onSuccess() {
       track('Post:Repost')
     },
   })
 }
 
-function usePostUnrepostMutation() {
+function usePostUnrepostMutation(
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+) {
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
-    mutationFn: ({repostUri}) => getAgent().deleteRepost(repostUri),
+    mutationFn: ({repostUri}) => {
+      logEvent('post:unrepost', {logContext})
+      return getAgent().deleteRepost(repostUri)
+    },
     onSuccess() {
       track('Post:Unrepost')
     },
