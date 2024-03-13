@@ -79,7 +79,7 @@ export function ContentHider({
               a.gap_xs,
               a.rounded_sm,
               t.atoms.bg_contrast_25,
-              gtMobile && [a.gap_sm],
+              gtMobile && [a.gap_sm, a.py_lg, a.mt_xs, a.px_xl],
               (state.hovered || state.pressed) && t.atoms.bg_contrast_50,
             ]}>
             <desc.icon
@@ -93,6 +93,7 @@ export function ContentHider({
                 a.text_left,
                 a.font_bold,
                 a.leading_snug,
+                gtMobile && [a.font_semibold],
                 t.atoms.text_contrast_medium,
                 web({
                   marginBottom: 1,
@@ -105,6 +106,7 @@ export function ContentHider({
                 style={[
                   a.font_bold,
                   a.leading_snug,
+                  gtMobile && [a.font_semibold],
                   t.atoms.text_contrast_high,
                   web({
                     marginBottom: 1,
