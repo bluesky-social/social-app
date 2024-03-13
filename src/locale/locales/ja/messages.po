@@ -250,7 +250,7 @@ msgstr "高度な設定"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr "保存したすべてのフィードを1箇所にまとめます。"
+msgstr "保存したすべてのフィードを１箇所にまとめます。"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
@@ -309,7 +309,7 @@ msgstr "アプリパスワードの名前には、英数字、スペース、ハ
 
 #: src/view/com/modals/AddAppPasswords.tsx:99
 msgid "App Password names must be at least 4 characters long."
-msgstr "アプリパスワードの名前は長さが4文字以上である必要があります。"
+msgstr "アプリパスワードの名前は長さが４文字以上である必要があります。"
 
 #: src/view/screens/Settings/index.tsx:675
 msgid "App password settings"
@@ -2759,7 +2759,7 @@ msgstr "オンボーディングのリセット"
 
 #: src/view/com/composer/Composer.tsx:382
 msgid "One or more images is missing alt text."
-msgstr "1つもしくは複数の画像にALTテキストがありません。"
+msgstr "１つもしくは複数の画像にALTテキストがありません。"
 
 #: src/view/com/threadgate/WhoCanReply.tsx:100
 msgid "Only {0} can reply."
@@ -3690,11 +3690,11 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
-msgstr "1番目のフィードのアルゴリズムを選択してください"
+msgstr "１番目のフィードのアルゴリズムを選択してください"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:142
 msgid "Select your secondary algorithmic feeds"
-msgstr "2番目のフィードのアルゴリズムを選択してください"
+msgstr "２番目のフィードのアルゴリズムを選択してください"
 
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
@@ -4361,7 +4361,7 @@ msgstr "このコンテンツはBlueskyのアカウントがないと閲覧で�
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、以下を参照してください。<0>このブログ投稿</0>"
+msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、以下を参照してください。<0>このブログの投稿</0>"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
