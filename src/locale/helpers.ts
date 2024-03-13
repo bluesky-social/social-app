@@ -17,6 +17,15 @@ export function code2ToCode3(lang: string): string {
 
 export function code3ToCode2(lang: string): string {
   if (lang.length === 3) {
+    // `zh` is actually mapped to 16 3-letter language codes, but we can only
+    // ever map it to one which is currently `chi` (macrolanguage). We only need
+    // the `cmn` specifically because that's what `lande` will return.
+    // https://en.wikipedia.org/wiki/ISO_639_macrolanguage#zho
+    // https://github.com/fabiospampinato/lande#languages
+    if (lang === 'cmn') {
+      return 'zh'
+    }
+
     return LANGUAGES_MAP_CODE3[lang]?.code2 || lang
   }
   return lang
@@ -24,6 +33,11 @@ export function code3ToCode2(lang: string): string {
 
 export function code3ToCode2Strict(lang: string): string | undefined {
   if (lang.length === 3) {
+    // See the comment above for details
+    if (lang === 'cmn') {
+      return 'zh'
+    }
+
     return LANGUAGES_MAP_CODE3[lang]?.code2
   }
 
@@ -38,44 +52,40 @@ export function codeToLanguageName(lang: string): string {
 export function getPostLanguage(
   post: AppBskyFeedDefs.PostView,
 ): string | undefined {
+  const record = post.record
+
   let candidates: string[] = []
-  let postText: string = ''
-  if (hasProp(post.record, 'text') && typeof post.record.text === 'string') {
-    postText = post.record.text
+  let text: string = ''
+
+  if (AppBskyFeedPost.isRecord(record)) {
+    if (hasProp(record, 'text') && typeof record.text === 'string') {
+      text = record.text.trim()
+    }
+
+    if (hasProp(record, 'langs') && Array.isArray(record.langs)) {
+      candidates = record.langs
+    }
   }
 
-  if (
-    AppBskyFeedPost.isRecord(post.record) &&
-    hasProp(post.record, 'langs') &&
-    Array.isArray(post.record.langs)
-  ) {
-    candidates = post.record.langs
-  }
-
-  // if there's only one declared language, use that
-  if (candidates?.length === 1) {
+  // If there's only one declared language, use that
+  if (candidates.length === 1) {
     return candidates[0]
   }
 
-  // no text? can't determine
-  if (postText.trim().length === 0) {
+  // If there's no text, we can't determine the language
+  if (text.length === 0) {
     return undefined
   }
 
-  // run the language model
-  let langsProbabilityMap = lande(postText)
+  const hasMultiple = candidates.length > 1
+  const probabilities = lande(text).filter(([code, probability]) => {
+    // - Uncertain languages tend to hover around 0.0002, so skip over them
+    // - If we have multiple candidates, narrow it down to that
+    return probability >= 0.0002 && (!hasMultiple || candidates.includes(code))
+  })
 
-  // filter down using declared languages
-  if (candidates?.length) {
-    langsProbabilityMap = langsProbabilityMap.filter(
-      ([lang, _probability]: [string, number]) => {
-        return candidates.includes(code3ToCode2(lang))
-      },
-    )
-  }
-
-  if (langsProbabilityMap[0]) {
-    return code3ToCode2(langsProbabilityMap[0][0])
+  if (probabilities.length !== 0) {
+    return code3ToCode2(probabilities[0][0])
   }
 }
 
