@@ -411,6 +411,8 @@ let ProfileHeader = ({
                 <RichText
                   testID="profileHeaderDescription"
                   style={[a.text_md]}
+                  authorHandle={profile.handle}
+                  enableTags
                   numberOfLines={15}
                   value={descriptionRT}
                 />
