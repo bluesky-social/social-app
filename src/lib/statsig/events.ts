@@ -1,4 +1,4 @@
-export type Events = {
+export type LogEvents = {
   init: {
     initMs: number
   }

@@ -5,7 +5,7 @@ import {Shadow} from '#/state/cache/types'
 import {getAgent} from '#/state/session'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {track} from '#/lib/analytics/analytics'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
@@ -59,7 +59,8 @@ export function useGetPost() {
 
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+  logContext: LogEvents['post:like']['logContext'] &
+    LogEvents['post:unlike']['logContext'],
 ) {
   const postUri = post.uri
   const postCid = post.cid
@@ -113,9 +114,7 @@ export function usePostLikeMutationQueue(
   return [queueLike, queueUnlike]
 }
 
-function usePostLikeMutation(
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
-) {
+function usePostLikeMutation(logContext: LogEvents['post:like']['logContext']) {
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
@@ -132,7 +131,7 @@ function usePostLikeMutation(
 }
 
 function usePostUnlikeMutation(
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+  logContext: LogEvents['post:unlike']['logContext'],
 ) {
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => {
@@ -147,7 +146,8 @@ function usePostUnlikeMutation(
 
 export function usePostRepostMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+  logContext: LogEvents['post:repost']['logContext'] &
+    LogEvents['post:unrepost']['logContext'],
 ) {
   const postUri = post.uri
   const postCid = post.cid
@@ -202,7 +202,7 @@ export function usePostRepostMutationQueue(
 }
 
 function usePostRepostMutation(
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+  logContext: LogEvents['post:repost']['logContext'],
 ) {
   return useMutation<
     {uri: string}, // responds with the uri of the repost
@@ -220,7 +220,7 @@ function usePostRepostMutation(
 }
 
 function usePostUnrepostMutation(
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+  logContext: LogEvents['post:unrepost']['logContext'],
 ) {
   return useMutation<void, Error, {postUri: string; repostUri: string}>({
     mutationFn: ({repostUri}) => {

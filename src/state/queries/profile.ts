@@ -26,7 +26,7 @@ import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
 import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
 import {STALE} from '#/state/queries'
 import {track} from '#/lib/analytics/analytics'
-import {logEvent} from '#/lib/statsig/statsig'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {ThreadNode} from './post-thread'
 
 export const RQKEY = (did: string) => ['profile', did]
@@ -187,13 +187,8 @@ export function useProfileUpdateMutation() {
 
 export function useProfileFollowMutationQueue(
   profile: Shadow<AppBskyActorDefs.ProfileViewDetailed>,
-  logContext:
-    | 'RecommendedFollowsItem'
-    | 'PostThreadItem'
-    | 'ProfileCard'
-    | 'ProfileHeader'
-    | 'ProfileHeaderSuggestedFollows'
-    | 'ProfileMenu',
+  logContext: LogEvents['profile:follow']['logContext'] &
+    LogEvents['profile:unfollow']['logContext'],
 ) {
   const did = profile.did
   const initialFollowingUri = profile.viewer?.following
@@ -246,13 +241,7 @@ export function useProfileFollowMutationQueue(
 }
 
 function useProfileFollowMutation(
-  logContext:
-    | 'RecommendedFollowsItem'
-    | 'PostThreadItem'
-    | 'ProfileCard'
-    | 'ProfileHeader'
-    | 'ProfileHeaderSuggestedFollows'
-    | 'ProfileMenu',
+  logContext: LogEvents['profile:follow']['logContext'],
 ) {
   return useMutation<{uri: string; cid: string}, Error, {did: string}>({
     mutationFn: async ({did}) => {
@@ -266,13 +255,7 @@ function useProfileFollowMutation(
 }
 
 function useProfileUnfollowMutation(
-  logContext:
-    | 'RecommendedFollowsItem'
-    | 'PostThreadItem'
-    | 'ProfileCard'
-    | 'ProfileHeader'
-    | 'ProfileHeaderSuggestedFollows'
-    | 'ProfileMenu',
+  logContext: LogEvents['profile:unfollow']['logContext'],
 ) {
   return useMutation<void, Error, {did: string; followUri: string}>({
     mutationFn: async ({followUri}) => {
