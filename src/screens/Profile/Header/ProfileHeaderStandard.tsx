@@ -26,12 +26,13 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderShell} from './Shell'
-import {ProfileHeaderDropdownBtn} from './DropdownBtn'
+import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
 import {ProfileHeaderSuggestedFollows} from '#/view/com/profile/ProfileHeaderSuggestedFollows'
 import {RichText} from '#/components/RichText'
+import * as Prompt from '#/components/Prompt'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 
@@ -64,6 +65,7 @@ let ProfileHeaderStandard = ({
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
+  const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
 
   const onPressEditProfile = React.useCallback(() => {
@@ -118,27 +120,18 @@ let ProfileHeaderStandard = ({
     })
   }
 
-  const onPressUnblockAccount = React.useCallback(async () => {
+  const unblockAccount = React.useCallback(async () => {
     track('ProfileHeader:UnblockAccountButtonClicked')
-    openModal({
-      name: 'confirm',
-      title: _(msg`Unblock Account`),
-      message: _(
-        msg`The account will be able to interact with you after unblocking.`,
-      ),
-      onPressConfirm: async () => {
-        try {
-          await queueUnblock()
-          Toast.show(_(msg`Account unblocked`))
-        } catch (e: any) {
-          if (e?.name !== 'AbortError') {
-            logger.error('Failed to unblock account', {message: e})
-            Toast.show(_(msg`There was an issue! ${e.toString()}`))
-          }
-        }
-      },
-    })
-  }, [track, queueUnblock, openModal, _])
+    try {
+      await queueUnblock()
+      Toast.show(_(msg`Account unblocked`))
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unblock account', {message: e})
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+      }
+    }
+  }, [_, queueUnblock, track])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -177,7 +170,7 @@ let ProfileHeaderStandard = ({
                 variant="solid"
                 label={_(msg`Unblock`)}
                 disabled={!hasSession}
-                onPress={onPressUnblockAccount}
+                onPress={() => unblockPromptControl.open()}
                 style={a.rounded_full}>
                 <ButtonText>
                   <Trans context="action">Unblock</Trans>
@@ -236,7 +229,7 @@ let ProfileHeaderStandard = ({
               </Button>
             </>
           ) : null}
-          <ProfileHeaderDropdownBtn profile={profile} />
+          <ProfileMenu profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_xs, a.pb_sm]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
@@ -271,6 +264,18 @@ let ProfileHeaderStandard = ({
           }}
         />
       )}
+      <Prompt.Basic
+        control={unblockPromptControl}
+        title={_(msg`Unblock Account?`)}
+        description={_(
+          msg`The account will be able to interact with you after unblocking.`,
+        )}
+        onConfirm={unblockAccount}
+        confirmButtonCta={
+          profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
+        }
+        confirmButtonColor="negative"
+      />
     </ProfileHeaderShell>
   )
 }

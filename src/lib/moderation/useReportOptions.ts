@@ -13,6 +13,7 @@ interface ReportOptions {
   account: ReportOption[]
   post: ReportOption[]
   list: ReportOption[]
+  feedgen: ReportOption[]
   other: ReportOption[]
 }
 

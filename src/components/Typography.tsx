@@ -8,7 +8,7 @@ import {
 import {UITextView} from 'react-native-ui-text-view'
 
 import {useTheme, atoms, web, flatten} from '#/alf'
-import {isIOS} from '#/platform/detection'
+import {isIOS, isNative} from '#/platform/detection'
 
 export type TextProps = RNTextProps & {
   /**
@@ -45,11 +45,11 @@ export function normalizeTextStyles(styles: StyleProp<TextStyle>) {
   const fontSize = s.fontSize || atoms.text_md.fontSize
 
   if (s?.lineHeight) {
-    if (s.lineHeight <= 2) {
+    if (s.lineHeight !== 0 && s.lineHeight <= 2) {
       s.lineHeight = Math.round(fontSize * s.lineHeight)
     }
-  } else {
-    s.lineHeight = fontSize
+  } else if (!isNative) {
+    s.lineHeight = s.fontSize
   }
 
   return s

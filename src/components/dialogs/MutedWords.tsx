@@ -254,9 +254,9 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
         </View>
 
         {isNative && <View style={{height: 20}} />}
-
-        <Dialog.Close />
       </View>
+
+      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
@@ -277,29 +277,16 @@ function MutedWordRow({
 
   return (
     <>
-      <Prompt.Outer control={control}>
-        <Prompt.Title>
-          <Trans>Are you sure?</Trans>
-        </Prompt.Title>
-        <Prompt.Description>
-          <Trans>
-            This will delete {word.value} from your muted words. You can always
-            add it back later.
-          </Trans>
-        </Prompt.Description>
-        <Prompt.Actions>
-          <Prompt.Cancel>
-            <ButtonText>
-              <Trans>Nevermind</Trans>
-            </ButtonText>
-          </Prompt.Cancel>
-          <Prompt.Action onPress={remove}>
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
-          </Prompt.Action>
-        </Prompt.Actions>
-      </Prompt.Outer>
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Are you sure?`)}
+        description={_(
+          msg`This will delete ${word.value} from your muted words. You can always add it back later.`,
+        )}
+        onConfirm={remove}
+        confirmButtonCta={_(msg`Remove`)}
+        confirmButtonColor="negative"
+      />
 
       <View
         style={[

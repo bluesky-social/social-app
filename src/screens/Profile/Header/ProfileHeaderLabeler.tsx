@@ -29,7 +29,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import * as Toast from '#/view/com/util/Toast'
 import {ProfileHeaderShell} from './Shell'
-import {ProfileHeaderDropdownBtn} from './DropdownBtn'
+import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
 import {ProfileHeaderMetrics} from './Metrics'
@@ -200,7 +200,7 @@ let ProfileHeaderLabeler = ({
               </Button>
             </>
           ) : null}
-          <ProfileHeaderDropdownBtn profile={profile} />
+          <ProfileMenu profile={profile} />
         </View>
         <View style={[a.flex_col, a.gap_xs, a.pb_md]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />

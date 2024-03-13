@@ -46,6 +46,7 @@ export type DialogOuterProps = {
     sheet?: Omit<BottomSheetProps, 'children'>
   }
   webOptions?: {}
+  testID?: string
 }
 
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T
