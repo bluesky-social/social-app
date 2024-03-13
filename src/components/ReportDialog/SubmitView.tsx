@@ -4,7 +4,7 @@ import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyLabelerDefs} from '@atproto/api'
 
-import {getModerationServiceTitle} from '#/lib/moderation'
+import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
 
 import {atoms as a, useTheme, tokens, native} from '#/alf'
@@ -140,7 +140,7 @@ export function SubmitView({
           onChange={setSelectedServices}>
           <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
             {labelers.map(labeler => {
-              const title = getModerationServiceTitle({
+              const title = getLabelingServiceTitle({
                 displayName: labeler.creator.displayName,
                 handle: labeler.creator.handle,
               })

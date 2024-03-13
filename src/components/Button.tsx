@@ -391,7 +391,7 @@ export function Button({
           ]}>
           <LinearGradient
             colors={
-              state.hovered || state.pressed || state.focused
+              state.hovered || state.pressed
                 ? gradientHoverColors
                 : gradientColors
             }

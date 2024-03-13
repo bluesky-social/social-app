@@ -39,8 +39,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {InlineLink, Link} from '#/components/Link'
 import {Button, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
-import {getModerationServiceTitle} from '#/lib/moderation'
-import * as ModerationServiceCard from '#/components/ModerationServiceCard'
+import * as LabelingService from '#/components/LabelingServiceCard'
 import {GlobalModerationLabelPref} from '#/components/moderation/GlobalModerationLabelPref'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useModalControls} from '#/state/modals'
@@ -396,21 +395,26 @@ export function ModerationScreenInner({
               return (
                 <React.Fragment key={mod.creator.did}>
                   {i !== 0 && <Divider />}
-                  <ModerationServiceCard.Link labeler={mod}>
-                    <ModerationServiceCard.Card.Outer>
-                      <ModerationServiceCard.Card.Avatar
-                        avatar={mod.creator.avatar}
+                  <LabelingService.Link labeler={mod}>
+                    {state => (
+                      <LabelingService.Default
+                        labeler={mod}
+                        style={[
+                          i === 0 && {
+                            borderTopLeftRadius: a.rounded_sm.borderRadius,
+                            borderTopRightRadius: a.rounded_sm.borderRadius,
+                          },
+                          i === labelers.length - 1 && {
+                            borderBottomLeftRadius: a.rounded_sm.borderRadius,
+                            borderBottomRightRadius: a.rounded_sm.borderRadius,
+                          },
+                          (state.hovered || state.pressed) && [
+                            t.atoms.bg_contrast_50,
+                          ],
+                        ]}
                       />
-                      <ModerationServiceCard.Card.Content
-                        title={getModerationServiceTitle({
-                          displayName: mod.creator.displayName,
-                          handle: mod.creator.handle,
-                        })}
-                        handle={mod.creator.handle}
-                        description={mod.creator.description || ''}
-                      />
-                    </ModerationServiceCard.Card.Outer>
-                  </ModerationServiceCard.Link>
+                    )}
+                  </LabelingService.Link>
                 </React.Fragment>
               )
             })}

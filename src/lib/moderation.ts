@@ -28,7 +28,7 @@ export function isJustAMute(modui: ModerationUI): boolean {
   return modui.filters.length === 1 && modui.filters[0].type === 'muted'
 }
 
-export function getModerationServiceTitle({
+export function getLabelingServiceTitle({
   displayName,
   handle,
 }: {
