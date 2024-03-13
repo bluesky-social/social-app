@@ -75,6 +75,7 @@ export function Outer({
   control,
   onClose,
   nativeOptions,
+  testID,
 }: React.PropsWithChildren<DialogOuterProps>) {
   const t = useTheme()
   const sheet = React.useRef<BottomSheet>(null)
@@ -145,7 +146,8 @@ export function Outer({
           accessibilityViewIsModal
           // Android
           importantForAccessibility="yes"
-          style={[a.absolute, a.inset_0]}>
+          style={[a.absolute, a.inset_0]}
+          testID={testID}>
           <BottomSheet
             enableDynamicSizing={!hasSnapPoints}
             enablePanDownToClose
