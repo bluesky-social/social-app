@@ -33,7 +33,7 @@ export function attachRouteToLogEvents(
 
 export function logEvent<E extends keyof Events>(
   eventName: E & string,
-  rawMetadata?: Events[E] & FlatJSONRecord,
+  rawMetadata: Events[E] & FlatJSONRecord,
 ) {
   const fullMetadata = {
     ...rawMetadata,

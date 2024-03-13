@@ -52,7 +52,10 @@ let ProfileMenu = ({
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
-  const [, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ProfileMenu',
+  )
 
   const blockPromptControl = Prompt.usePromptControl()
 

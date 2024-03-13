@@ -14,4 +14,22 @@ export type Events = {
   'post:unrepost': {
     logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
   }
+  'profile:follow': {
+    logContext:
+      | 'RecommendedFollowsItem'
+      | 'PostThreadItem'
+      | 'ProfileCard'
+      | 'ProfileHeader'
+      | 'ProfileHeaderSuggestedFollows'
+      | 'ProfileMenu'
+  }
+  'profile:unfollow': {
+    logContext:
+      | 'RecommendedFollowsItem'
+      | 'ProfileCard'
+      | 'PostThreadItem'
+      | 'ProfileHeader'
+      | 'ProfileHeaderSuggestedFollows'
+      | 'ProfileMenu'
+  }
 }

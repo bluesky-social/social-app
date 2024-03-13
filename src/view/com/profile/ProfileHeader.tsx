@@ -103,7 +103,10 @@ let ProfileHeader = ({
   const invalidHandle = isInvalidHandle(profile.handle)
   const {isDesktop} = useWebMediaQueries()
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ProfileHeader',
+  )
   const [__, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const moderation = useMemo(
