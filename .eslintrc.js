@@ -28,15 +28,28 @@ module.exports = {
           // Packages.
           // Things that start with a letter (or digit or underscore), or `@` followed by a letter.
           // React/React Native priortized, followed by expo
+          // Followed by all packages excluding unprefixed relative ones
           [
-            '^(react/(.*)$)|^(react$)|^(react-native(.*)$)',
+            '^(react\\/(.*)$)|^(react$)|^(react-native(.*)$)',
             '^(expo(.*)$)|^(expo$)',
-            '^@?\\w',
-            '^',
+            '^(?!(?:alf|components|lib|locale|logger|platform|screens|state|view)(?:$|\\/))@?\\w',
           ],
           // Relative imports.
-          // Anything that starts with a dot or a #
-          ['^#', '^\\.'],
+          // Anything that starts with a dot
+          // due to unprefixed relative imports being used, we whitelist
+          // the relative paths we use
+          // (?:$|\\/) matches end of string or /
+          [
+            '^(?:#\\/)?(?:lib|state|logger|platform|locale)(?:$|\\/)',
+            '^(?:#\\/)?view(?:$|\\/)',
+            '^(?:#\\/)?screens(?:$|\\/)',
+            '^(?:#\\/)?alf(?:$|\\/)',
+            '^(?:#\\/)?components(?:$|\\/)',
+            '^#\\/',
+            '^\\.',
+          ],
+          // anything else - hopefully we don't have any of these
+          ['^'],
         ],
       },
     ],
