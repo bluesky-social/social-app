@@ -5,6 +5,7 @@ import {Shadow} from '#/state/cache/types'
 import {getAgent} from '#/state/session'
 import {updatePostShadow} from '#/state/cache/post-shadow'
 import {track} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 
 export const RQKEY = (postUri: string) => ['post', postUri]
@@ -58,12 +59,13 @@ export function useGetPost() {
 
 export function usePostLikeMutationQueue(
   post: Shadow<AppBskyFeedDefs.PostView>,
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
 ) {
   const postUri = post.uri
   const postCid = post.cid
   const initialLikeUri = post.viewer?.like
-  const likeMutation = usePostLikeMutation()
-  const unlikeMutation = usePostUnlikeMutation()
+  const likeMutation = usePostLikeMutation(logContext)
+  const unlikeMutation = usePostUnlikeMutation(logContext)
 
   const queueToggle = useToggleMutationQueue({
     initialState: initialLikeUri,
@@ -111,7 +113,9 @@ export function usePostLikeMutationQueue(
   return [queueLike, queueUnlike]
 }
 
-function usePostLikeMutation() {
+function usePostLikeMutation(
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+) {
   return useMutation<
     {uri: string}, // responds with the uri of the like
     Error,
@@ -120,15 +124,19 @@ function usePostLikeMutation() {
     mutationFn: post => getAgent().like(post.uri, post.cid),
     onSuccess() {
       track('Post:Like')
+      logEvent('post:like', {logContext})
     },
   })
 }
 
-function usePostUnlikeMutation() {
+function usePostUnlikeMutation(
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post',
+) {
   return useMutation<void, Error, {postUri: string; likeUri: string}>({
     mutationFn: ({likeUri}) => getAgent().deleteLike(likeUri),
     onSuccess() {
       track('Post:Unlike')
+      logEvent('post:unlike', {logContext})
     },
   })
 }
