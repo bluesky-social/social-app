@@ -131,8 +131,8 @@ function ReportOptionButton({
   description: string
 }) {
   const t = useTheme()
-  const {hovered, focused, pressed} = useButtonContext()
-  const interacted = hovered || focused || pressed
+  const {hovered, pressed} = useButtonContext()
+  const interacted = hovered || pressed
 
   const styles = React.useMemo(() => {
     return {
