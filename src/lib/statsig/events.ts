@@ -26,8 +26,8 @@ export type LogEvents = {
   'profile:unfollow': {
     logContext:
       | 'RecommendedFollowsItem'
-      | 'ProfileCard'
       | 'PostThreadItem'
+      | 'ProfileCard'
       | 'ProfileHeader'
       | 'ProfileHeaderSuggestedFollows'
       | 'ProfileMenu'
