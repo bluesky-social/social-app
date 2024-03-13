@@ -180,14 +180,16 @@ function AppealForm({
       const $type = !isAccountReport
         ? 'com.atproto.repo.strongRef'
         : 'com.atproto.admin.defs#repoRef'
-      await getAgent().createModerationReport({
-        reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-        subject: {
-          $type,
-          ...subject,
-        },
-        reason: details,
-      })
+      await getAgent()
+        .withProxy('atproto_labeler', label.src)
+        .createModerationReport({
+          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          subject: {
+            $type,
+            ...subject,
+          },
+          reason: details,
+        })
       Toast.show(_(msg`Appeal submitted.`))
     } finally {
       control.close()
