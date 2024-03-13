@@ -399,7 +399,7 @@ msgstr "戻る"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr "{interestsText} への興味に基づいたおすすめです。"
+msgstr "{interestsText}への興味に基づいたおすすめ"
 
 #: src/view/screens/Settings/index.tsx:523
 msgid "Basics"
