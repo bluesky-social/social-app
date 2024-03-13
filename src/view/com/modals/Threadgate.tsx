@@ -1,10 +1,3 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {colors, s} from 'lib/styles'
-import isEqual from 'lodash.isequal'
-import {isWeb} from 'platform/detection'
 import React, {useState} from 'react'
 import {
   Pressable,
@@ -14,13 +7,18 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import {ScrollView} from 'view/com/modals/util'
-
-import {useModalControls} from '#/state/modals'
-import {useMyListsQuery} from '#/state/queries/my-lists'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
-
 import {Text} from '../util/text/Text'
+import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
+import {ScrollView} from 'view/com/modals/util'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {useMyListsQuery} from '#/state/queries/my-lists'
+import isEqual from 'lodash.isequal'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 
 export const snapPoints = ['60%']
 

@@ -1,10 +1,8 @@
 import {AppBskyFeedDefs} from '@atproto/api'
-
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
-
-import {CustomFeedAPI} from './custom'
-import {FollowingFeedAPI} from './following'
 import {FeedAPI, FeedAPIResponse} from './types'
+import {FollowingFeedAPI} from './following'
+import {CustomFeedAPI} from './custom'
+import {PROD_DEFAULT_FEED} from '#/lib/constants'
 
 // HACK
 // the feed API does not include any facilities for passing down

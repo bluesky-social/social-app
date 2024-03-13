@@ -1,16 +1,15 @@
+import React from 'react'
+import {View, TouchableOpacity, StyleSheet} from 'react-native'
+import {TextInput} from '../util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {CharProgress} from '../../composer/char-progress/CharProgress'
+import {Text} from '../../util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {s} from 'lib/styles'
-import React from 'react'
-import {StyleSheet, TouchableOpacity, View} from 'react-native'
-
-import {CharProgress} from '../../composer/char-progress/CharProgress'
-import {Text} from '../../util/text/Text'
-import {TextInput} from '../util'
 import {SendReportButton} from './SendReportButton'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function InputIssueDetails({
   details,

@@ -1,21 +1,20 @@
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {usePalette} from 'lib/hooks/usePalette'
-import {clamp} from 'lib/numbers'
-import {colors, s} from 'lib/styles'
-import {isAndroid} from 'platform/detection'
 import React, {useEffect, useState} from 'react'
 import {
-  NativeScrollEvent,
   NativeSyntheticEvent,
+  NativeScrollEvent,
   Pressable,
   RefreshControl,
-  ScrollView,
   StyleSheet,
   View,
+  ScrollView,
 } from 'react-native'
-
-import {Text} from './text/Text'
 import {FlatList_INTERNAL} from './Views'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
+import {Text} from './text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {clamp} from 'lib/numbers'
+import {s, colors} from 'lib/styles'
+import {isAndroid} from 'platform/detection'
 
 const HEADER_ITEM = {_reactKey: '__header__'}
 const SELECTOR_ITEM = {_reactKey: '__selector__'}

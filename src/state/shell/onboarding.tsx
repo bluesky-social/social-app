@@ -1,7 +1,6 @@
 import React from 'react'
-
-import {track} from '#/lib/analytics/analytics'
 import * as persisted from '#/state/persisted'
+import {track} from '#/lib/analytics/analytics'
 
 export const OnboardingScreenSteps = {
   Welcome: 'Welcome',

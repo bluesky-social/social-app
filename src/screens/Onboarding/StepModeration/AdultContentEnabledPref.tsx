@@ -1,18 +1,18 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {UseMutateFunction} from '@tanstack/react-query'
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
+import {UseMutateFunction} from '@tanstack/react-query'
 
+import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {logger} from '#/logger'
+import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import * as Prompt from '#/components/Prompt'
-import {Text} from '#/components/Typography'
-import {logger} from '#/logger'
 import {isIOS} from '#/platform/detection'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import * as Toast from '#/view/com/util/Toast'
 
 function Card({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()

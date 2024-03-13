@@ -1,29 +1,28 @@
-import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {HITSLOP_10} from 'lib/constants'
-import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams} from 'lib/routes/types'
-import {shareUrl} from 'lib/sharing'
-import {sanitizeHandle} from 'lib/strings/handles'
-import {enforceLen} from 'lib/strings/helpers'
-import {isNative} from 'platform/detection'
 import React from 'react'
 import {ListRenderItemInfo, Pressable} from 'react-native'
-import {useSearchPostsQuery} from 'state/queries/search-posts'
+import {useFocusEffect} from '@react-navigation/native'
 import {useSetMinimalShellMode} from 'state/shell'
-import {Post} from 'view/com/post/Post'
-import {List} from 'view/com/util/List'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-
-import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {useSearchPostsQuery} from 'state/queries/search-posts'
+import {Post} from 'view/com/post/Post'
+import {PostView} from '@atproto/api/dist/client/types/app/bsky/feed/defs'
+import {enforceLen} from 'lib/strings/helpers'
 import {
   ListFooter,
   ListHeaderDesktop,
   ListMaybePlaceholder,
 } from '#/components/Lists'
+import {List} from 'view/com/util/List'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {ArrowOutOfBox_Stroke2_Corner0_Rounded} from '#/components/icons/ArrowOutOfBox'
+import {shareUrl} from 'lib/sharing'
+import {HITSLOP_10} from 'lib/constants'
+import {isNative} from 'platform/detection'
+import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 
 const renderItem = ({item}: ListRenderItemInfo<PostView>) => {
   return <Post post={item} />

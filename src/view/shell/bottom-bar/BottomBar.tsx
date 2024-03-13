@@ -1,44 +1,42 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
+import React, {ComponentProps} from 'react'
+import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
+import Animated from 'react-native-reanimated'
 import {StackActions} from '@react-navigation/native'
+import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Text} from 'view/com/util/text/Text'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {useDedupe} from 'lib/hooks/useDedupe'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {usePalette} from 'lib/hooks/usePalette'
+import {clamp} from 'lib/numbers'
 import {
-  BellIcon,
-  BellIconSolid,
-  HashtagIcon,
   HomeIcon,
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  HashtagIcon,
+  BellIcon,
+  BellIconSolid,
 } from 'lib/icons'
-import {clamp} from 'lib/numbers'
+import {usePalette} from 'lib/hooks/usePalette'
 import {getTabState, TabState} from 'lib/routes/helpers'
-import {s} from 'lib/styles'
-import React, {ComponentProps} from 'react'
-import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
-import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Text} from 'view/com/util/text/Text'
+import {styles} from './BottomBarStyles'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
+import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-
-import {emitSoftReset} from '#/state/events'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {emitSoftReset} from '#/state/events'
+import {useSession} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Button} from '#/view/com/util/forms/Button'
+import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-
-import {styles} from './BottomBarStyles'
+import {useDedupe} from 'lib/hooks/useDedupe'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 

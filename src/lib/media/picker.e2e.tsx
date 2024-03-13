@@ -1,8 +1,7 @@
-import RNFS from 'react-native-fs'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-
-import {compressIfNeeded} from './manip'
+import RNFS from 'react-native-fs'
 import {CropperOptions} from './types'
+import {compressIfNeeded} from './manip'
 
 let _imageCounter = 0
 async function getFile() {

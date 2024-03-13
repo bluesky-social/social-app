@@ -1,67 +1,66 @@
-import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import React, {useCallback, useMemo} from 'react'
+import {Pressable, StyleSheet, View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
 import {useNavigation} from '@react-navigation/native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AppBskyGraphDefs, AtUri, RichText as RichTextAPI} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
+import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
+import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
+import {Feed} from 'view/com/posts/Feed'
+import {Text} from 'view/com/util/text/Text'
+import {NativeDropdown, DropdownItem} from 'view/com/util/forms/NativeDropdown'
+import {CenteredView} from 'view/com/util/Views'
+import {EmptyState} from 'view/com/util/EmptyState'
+import {LoadingScreen} from 'view/com/util/LoadingScreen'
+import {RichText} from '#/components/RichText'
+import {Button} from 'view/com/util/forms/Button'
+import {TextLink} from 'view/com/util/Link'
+import {ListRef} from 'view/com/util/List'
+import * as Toast from 'view/com/util/Toast'
+import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
+import {FAB} from 'view/com/util/fab/FAB'
 import {Haptics} from 'lib/haptics'
+import {FeedDescriptor} from '#/state/queries/post-feed'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useSetTitle} from 'lib/hooks/useSetTitle'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from 'lib/icons'
-import {makeListLink, makeProfileLink} from 'lib/routes/links'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
+import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {NavigationProp} from 'lib/routes/types'
-import {shareUrl} from 'lib/sharing'
-import {sanitizeHandle} from 'lib/strings/handles'
 import {toShareUrl} from 'lib/strings/url-helpers'
+import {shareUrl} from 'lib/sharing'
 import {s} from 'lib/styles'
-import React, {useCallback, useMemo} from 'react'
-import {Pressable, StyleSheet, View} from 'react-native'
-import {PagerWithHeader} from 'view/com/pager/PagerWithHeader'
-import {Feed} from 'view/com/posts/Feed'
-import {ProfileSubpageHeader} from 'view/com/profile/ProfileSubpageHeader'
-import {EmptyState} from 'view/com/util/EmptyState'
-import {FAB} from 'view/com/util/fab/FAB'
-import {Button} from 'view/com/util/forms/Button'
-import {DropdownItem, NativeDropdown} from 'view/com/util/forms/NativeDropdown'
-import {TextLink} from 'view/com/util/Link'
-import {ListRef} from 'view/com/util/List'
-import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-import {LoadingScreen} from 'view/com/util/LoadingScreen'
-import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
-import {CenteredView} from 'view/com/util/Views'
-
-import {atoms as a, useTheme} from '#/alf'
-import {RichText} from '#/components/RichText'
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
+import {sanitizeHandle} from 'lib/strings/handles'
+import {makeProfileLink, makeListLink} from 'lib/routes/links'
+import {ComposeIcon2} from 'lib/icons'
+import {ListMembers} from '#/view/com/lists/ListMembers'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {
+  useListQuery,
+  useListMuteMutation,
   useListBlockMutation,
   useListDeleteMutation,
-  useListMuteMutation,
-  useListQuery,
 } from '#/state/queries/list'
-import {FeedDescriptor} from '#/state/queries/post-feed'
-import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
-import {
-  usePinFeedMutation,
-  usePreferencesQuery,
-  useSetSaveFeedsMutation,
-  useUnpinFeedMutation,
-} from '#/state/queries/preferences'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {truncateAndInvalidate} from '#/state/queries/util'
+import {cleanError} from '#/lib/strings/errors'
 import {useSession} from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useComposerControls} from '#/state/shell/composer'
-import {ListMembers} from '#/view/com/lists/ListMembers'
+import {isNative, isWeb} from '#/platform/detection'
+import {truncateAndInvalidate} from '#/state/queries/util'
+import {
+  usePreferencesQuery,
+  usePinFeedMutation,
+  useUnpinFeedMutation,
+  useSetSaveFeedsMutation,
+} from '#/state/queries/preferences'
+import {logger} from '#/logger'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {listenSoftReset} from '#/state/events'
+import {atoms as a, useTheme} from '#/alf'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']

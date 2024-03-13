@@ -1,59 +1,59 @@
+import React from 'react'
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TextInput,
+  Pressable,
+  Platform,
+} from 'react-native'
+import {ScrollView, CenteredView} from '#/view/com/util/Views'
+import {List} from '#/view/com/util/List'
 import {AppBskyActorDefs, AppBskyFeedDefs, moderateProfile} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+
+import {logger} from '#/logger'
 import {
   NativeStackScreenProps,
   SearchTabNavigatorParams,
 } from 'lib/routes/types'
-import {useTheme} from 'lib/ThemeContext'
-import React from 'react'
-import {
-  ActivityIndicator,
-  Platform,
-  Pressable,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native'
+import {Text} from '#/view/com/util/text/Text'
 import {ProfileCardFeedLoadingPlaceholder} from 'view/com/util/LoadingPlaceholder'
-
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {HITSLOP_10} from '#/lib/constants'
-import {usePalette} from '#/lib/hooks/usePalette'
-import {MagnifyingGlassIcon} from '#/lib/icons'
-import {NavigationProp} from '#/lib/routes/types'
-import {augmentSearchQuery} from '#/lib/strings/helpers'
-import {s} from '#/lib/styles'
-import {logger} from '#/logger'
-import {isNative, isWeb} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
-import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-import {useActorSearch} from '#/state/queries/actor-search'
-import {useModerationOpts} from '#/state/queries/preferences'
-import {useSearchPostsQuery} from '#/state/queries/search-posts'
-import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
-import {useSession} from '#/state/session'
-import {useSetDrawerOpen} from '#/state/shell'
-import {useSetDrawerSwipeDisabled, useSetMinimalShellMode} from '#/state/shell'
+import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
+import {Post} from '#/view/com/post/Post'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
-import {Post} from '#/view/com/post/Post'
-import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
-import {List} from '#/view/com/util/List'
-import {Text} from '#/view/com/util/text/Text'
-import {CenteredView, ScrollView} from '#/view/com/util/Views'
+import {HITSLOP_10} from '#/lib/constants'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {useSession} from '#/state/session'
+import {useGetSuggestedFollowersByActor} from '#/state/queries/suggested-follows'
+import {useSearchPostsQuery} from '#/state/queries/search-posts'
+import {useActorSearch} from '#/state/queries/actor-search'
+import {useActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {useSetDrawerOpen} from '#/state/shell'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {MagnifyingGlassIcon} from '#/lib/icons'
+import {useModerationOpts} from '#/state/queries/preferences'
 import {
   MATCH_HANDLE,
   SearchLinkCard,
   SearchProfileCard,
 } from '#/view/shell/desktop/Search'
+import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
+import {isNative, isWeb} from '#/platform/detection'
+import {listenSoftReset} from '#/state/events'
+import {s} from '#/lib/styles'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {NavigationProp} from '#/lib/routes/types'
 
 function Loader() {
   const pal = usePalette('default')

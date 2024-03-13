@@ -1,24 +1,22 @@
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import lande from 'lande'
 import React, {useEffect, useState} from 'react'
 import {StyleSheet, View} from 'react-native'
-
-import {usePalette} from '#/lib/hooks/usePalette'
-import {s} from '#/lib/styles'
+import lande from 'lande'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Text} from '../../util/text/Text'
+import {Button} from '../../util/forms/Button'
 import {code3ToCode2Strict, codeToLanguageName} from '#/locale/helpers'
 import {
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
 } from '#/state/preferences/languages'
-
-import {Button} from '../../util/forms/Button'
-import {Text} from '../../util/text/Text'
+import {usePalette} from '#/lib/hooks/usePalette'
+import {s} from '#/lib/styles'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
 
 // fallbacks for safari
 const onIdle = globalThis.requestIdleCallback || (cb => setTimeout(cb, 1))

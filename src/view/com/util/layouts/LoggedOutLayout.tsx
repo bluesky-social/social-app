@@ -1,10 +1,9 @@
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-
 import {Text} from '../text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 
 export const LoggedOutLayout = ({
   leadin,

@@ -1,10 +1,10 @@
-import {afterEach, expect, jest, test} from '@jest/globals'
+import {jest, expect, test, afterEach} from '@jest/globals'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import * as persisted from '#/state/persisted'
-import {migrate} from '#/state/persisted/legacy'
 import {defaults} from '#/state/persisted/schema'
+import {migrate} from '#/state/persisted/legacy'
 import * as store from '#/state/persisted/store'
+import * as persisted from '#/state/persisted'
 
 const write = jest.mocked(store.write)
 const read = jest.mocked(store.read)

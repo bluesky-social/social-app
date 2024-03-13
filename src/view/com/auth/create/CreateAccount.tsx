@@ -1,9 +1,3 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {createFullHandle, validateHandle} from 'lib/strings/handles'
-import {s} from 'lib/styles'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -12,19 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {getAgent} from 'state/session'
-import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
-
-import {FEEDBACK_FORM_URL, HITSLOP_10} from '#/lib/constants'
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {useServiceQuery} from '#/state/queries/service'
-
-import {TextLink} from '../../util/Link'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
+import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useCreateAccount, useSubmitCreateAccount} from './state'
+import {useServiceQuery} from '#/state/queries/service'
+import {FEEDBACK_FORM_URL, HITSLOP_10} from '#/lib/constants'
+
 import {Step1} from './Step1'
 import {Step2} from './Step2'
 import {Step3} from './Step3'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {TextLink} from '../../util/Link'
+import {getAgent} from 'state/session'
+import {createFullHandle, validateHandle} from 'lib/strings/handles'
 
 export function CreateAccount({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()

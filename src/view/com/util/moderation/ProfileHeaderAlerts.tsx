@@ -1,19 +1,17 @@
+import React from 'react'
+import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {ProfileModeration} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Text} from '../text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {ShieldExclamation} from 'lib/icons'
 import {
   describeModerationCause,
   getProfileModerationCauses,
 } from 'lib/moderation'
-import React from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {useModalControls} from '#/state/modals'
-
-import {Text} from '../text/Text'
 
 export function ProfileHeaderAlerts({
   moderation,

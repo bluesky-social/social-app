@@ -1,11 +1,9 @@
-import {makeProfileLink} from 'lib/routes/links'
-import {isWeb} from 'platform/detection'
 import React from 'react'
 import {StyleProp, ViewStyle} from 'react-native'
-
-import {usePrefetchProfileQuery} from '#/state/queries/profile'
-
 import {Link} from './Link'
+import {isWeb} from 'platform/detection'
+import {makeProfileLink} from 'lib/routes/links'
+import {usePrefetchProfileQuery} from '#/state/queries/profile'
 
 interface UserPreviewLinkProps {
   did: string

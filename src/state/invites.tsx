@@ -1,5 +1,4 @@
 import React from 'react'
-
 import * as persisted from '#/state/persisted'
 
 type StateContext = persisted.Schema['invites']

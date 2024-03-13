@@ -1,7 +1,6 @@
 import React from 'react'
-
-import {AppLanguage} from '#/locale/languages'
 import * as persisted from '#/state/persisted'
+import {AppLanguage} from '#/locale/languages'
 
 type SetStateCb = (
   s: persisted.Schema['languagePrefs'],

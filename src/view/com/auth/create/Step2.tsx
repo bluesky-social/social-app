@@ -1,24 +1,22 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {usePalette} from 'lib/hooks/usePalette'
+import React from 'react'
+import {View} from 'react-native'
+import {CreateAccountState, CreateAccountDispatch} from './state'
+import {Text} from 'view/com/util/text/Text'
+import {StepHeader} from './StepHeader'
+import {s} from 'lib/styles'
+import {TextInput} from '../util/TextInput'
 import {
   createFullHandle,
   IsValidHandle,
   validateHandle,
 } from 'lib/strings/handles'
-import {s} from 'lib/styles'
-import React from 'react'
-import {View} from 'react-native'
-import {Text} from 'view/com/util/text/Text'
-
+import {usePalette} from 'lib/hooks/usePalette'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {atoms as a, useTheme} from '#/alf'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-
-import {TextInput} from '../util/TextInput'
-import {CreateAccountDispatch, CreateAccountState} from './state'
-import {StepHeader} from './StepHeader'
+import {useFocusEffect} from '@react-navigation/native'
 
 /** STEP 3: Your user handle
  * @field User handle

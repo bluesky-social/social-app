@@ -1,6 +1,6 @@
+import {Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {dedupArray} from 'lib/functions'
-import {Platform} from 'react-native'
 
 export const isIOS = Platform.OS === 'ios'
 export const isAndroid = Platform.OS === 'android'

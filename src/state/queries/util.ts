@@ -1,10 +1,10 @@
+import {QueryClient, QueryKey, InfiniteData} from '@tanstack/react-query'
 import {
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
   AppBskyFeedDefs,
   AppBskyFeedPost,
 } from '@atproto/api'
-import {InfiniteData, QueryClient, QueryKey} from '@tanstack/react-query'
 
 export function truncateAndInvalidate<T = any>(
   queryClient: QueryClient,

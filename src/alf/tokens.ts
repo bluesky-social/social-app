@@ -1,8 +1,8 @@
 import {
   BLUE_HUE,
-  generateScale,
-  GREEN_HUE,
   RED_HUE,
+  GREEN_HUE,
+  generateScale,
 } from '#/alf/util/colorGeneration'
 
 export const scale = generateScale(6, 100)

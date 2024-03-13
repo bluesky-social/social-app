@@ -1,26 +1,25 @@
-import {AppBskyFeedDefs, RichText as BskRichText} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {HeartIcon} from 'lib/icons'
-import {sanitizeHandle} from 'lib/strings/handles'
 import React from 'react'
 import {View} from 'react-native'
-import {Button} from 'view/com/util/forms/Button'
-import {RichText} from 'view/com/util/text/RichText'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {AppBskyFeedDefs, RichText as BskRichText} from '@atproto/api'
 import {Text} from 'view/com/util/text/Text'
-import * as Toast from 'view/com/util/Toast'
+import {RichText} from 'view/com/util/text/RichText'
+import {Button} from 'view/com/util/forms/Button'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {logger} from '#/logger'
+import * as Toast from 'view/com/util/Toast'
+import {HeartIcon} from 'lib/icons'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {sanitizeHandle} from 'lib/strings/handles'
 import {
-  usePinFeedMutation,
   usePreferencesQuery,
+  usePinFeedMutation,
   useRemoveFeedMutation,
 } from '#/state/queries/preferences'
+import {logger} from '#/logger'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function RecommendedFeedsItem({
   item,

@@ -1,12 +1,11 @@
-import {sha256} from 'js-sha256'
 import React from 'react'
 import {
   Statsig,
   StatsigProvider,
   useGate as useStatsigGate,
 } from 'statsig-react'
-
 import {useSession} from '../../state/session'
+import {sha256} from 'js-sha256'
 
 const statsigOptions = {
   environment: {

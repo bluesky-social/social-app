@@ -3,9 +3,9 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import {Button} from '#/components/Button'
+import {H3, P} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
-import {H3, P} from '#/components/Typography'
 import {useDialogStateControlContext} from '#/state/dialogs'
 
 export function Dialogs() {

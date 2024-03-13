@@ -1,12 +1,11 @@
-import Picker from '@emoji-mart/react'
 import React from 'react'
+import Picker from '@emoji-mart/react'
 import {
   StyleSheet,
   TouchableWithoutFeedback,
   useWindowDimensions,
   View,
 } from 'react-native'
-
 import {textInputWebEmitter} from '../TextInput.web'
 
 const HEIGHT_OFFSET = 40

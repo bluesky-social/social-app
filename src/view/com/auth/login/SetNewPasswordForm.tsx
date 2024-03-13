@@ -1,26 +1,24 @@
-import {BskyAgent} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isNetworkError} from 'lib/strings/errors'
-import {cleanError} from 'lib/strings/errors'
-import {checkAndFormatResetCode} from 'lib/strings/password'
-import {s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import React, {useEffect, useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native'
-
-import {logger} from '#/logger'
-
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {BskyAgent} from '@atproto/api'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {Text} from '../../util/text/Text'
+import {s} from 'lib/styles'
+import {isNetworkError} from 'lib/strings/errors'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {cleanError} from 'lib/strings/errors'
+import {checkAndFormatResetCode} from 'lib/strings/password'
+import {logger} from '#/logger'
 import {styles} from './styles'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export const SetNewPasswordForm = ({
   error,

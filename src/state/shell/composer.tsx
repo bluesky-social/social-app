@@ -1,10 +1,9 @@
+import React from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
   PostModeration,
 } from '@atproto/api'
-import React from 'react'
-
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 export interface ComposerOptsPostRef {

@@ -1,6 +1,6 @@
+import {useEffect, useState} from 'react'
 import {useNavigation} from '@react-navigation/native'
 import {getTabState, TabState} from 'lib/routes/helpers'
-import {useEffect, useState} from 'react'
 
 export function useTabFocusEffect(
   tabName: string,

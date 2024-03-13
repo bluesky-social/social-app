@@ -1,6 +1,5 @@
-import {focusManager, QueryClient} from '@tanstack/react-query'
 import {AppState, AppStateStatus} from 'react-native'
-
+import {QueryClient, focusManager} from '@tanstack/react-query'
 import {isNative} from '#/platform/detection'
 
 focusManager.setEventListener(onFocus => {

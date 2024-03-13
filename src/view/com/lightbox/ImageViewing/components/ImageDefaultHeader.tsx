@@ -5,10 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import {t} from '@lingui/macro'
-import {createHitslop} from 'lib/constants'
 import React from 'react'
-import {SafeAreaView, StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {createHitslop} from 'lib/constants'
+import {SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
+import {t} from '@lingui/macro'
 
 type Props = {
   onRequestClose: () => void

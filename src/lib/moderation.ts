@@ -1,4 +1,4 @@
-import {ModerationCause, PostModeration, ProfileModeration} from '@atproto/api'
+import {ModerationCause, ProfileModeration, PostModeration} from '@atproto/api'
 
 export interface ModerationCauseDescription {
   name: string

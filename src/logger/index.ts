@@ -1,10 +1,10 @@
 import format from 'date-fns/format'
 import {nanoid} from 'nanoid/non-secure'
 
+import {Sentry} from '#/logger/sentry'
 import * as env from '#/env'
 import {DebugContext} from '#/logger/debugContext'
 import {add} from '#/logger/logDump'
-import {Sentry} from '#/logger/sentry'
 
 export enum LogLevel {
   Debug = 'debug',

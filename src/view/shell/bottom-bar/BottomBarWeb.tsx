@@ -1,39 +1,37 @@
+import React from 'react'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useNavigationState} from '@react-navigation/native'
+import Animated from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigationState} from '@react-navigation/native'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {usePalette} from 'lib/hooks/usePalette'
+import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+import {styles} from './BottomBarStyles'
+import {clamp} from 'lib/numbers'
 import {
   BellIcon,
   BellIconSolid,
-  HashtagIcon,
   HomeIcon,
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
+  HashtagIcon,
   UserIcon,
   UserIconSolid,
 } from 'lib/icons'
-import {clamp} from 'lib/numbers'
-import {getCurrentRoute, isTab} from 'lib/routes/helpers'
+import {Link} from 'view/com/util/Link'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {makeProfileLink} from 'lib/routes/links'
 import {CommonNavigatorParams} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import React from 'react'
-import {View} from 'react-native'
-import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {Link} from 'view/com/util/Link'
-
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {Button} from '#/view/com/util/forms/Button'
 import {Text} from '#/view/com/util/text/Text'
+import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-
-import {styles} from './BottomBarStyles'
 
 export function BottomBarWeb() {
   const {_} = useLingui()

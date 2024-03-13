@@ -1,16 +1,14 @@
-import {AtUri} from '@atproto/api'
-import {Trans} from '@lingui/macro'
-import {usePalette} from 'lib/hooks/usePalette'
-import {makeProfileLink} from 'lib/routes/links'
 import React, {memo} from 'react'
 import {StyleSheet, View} from 'react-native'
-import Svg, {Circle, Line} from 'react-native-svg'
-
 import {FeedPostSlice} from '#/state/queries/post-feed'
-
+import {AtUri} from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
+import Svg, {Circle, Line} from 'react-native-svg'
 import {FeedItem} from './FeedItem'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
+import {Trans} from '@lingui/macro'
 
 let FeedSlice = ({slice}: {slice: FeedPostSlice}): React.ReactNode => {
   if (slice.isThread && slice.items.length > 3) {

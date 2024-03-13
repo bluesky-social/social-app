@@ -1,9 +1,9 @@
 import {AppBskyGraphDefs} from '@atproto/api'
-import {QueryClient, useQuery} from '@tanstack/react-query'
+import {useQuery, QueryClient} from '@tanstack/react-query'
 
 import {accumulate} from '#/lib/async/accumulate'
+import {useSession, getAgent} from '#/state/session'
 import {STALE} from '#/state/queries'
-import {getAgent, useSession} from '#/state/session'
 
 export type MyListsFilter =
   | 'all'

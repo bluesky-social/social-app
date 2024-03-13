@@ -2,22 +2,20 @@
  * A kind of companion API to ./feed.ts. See that file for more info.
  */
 
-import {useQueryClient} from '@tanstack/react-query'
-import * as Notifications from 'expo-notifications'
 import React from 'react'
-import {AppState} from 'react-native'
-
+import * as Notifications from 'expo-notifications'
+import {useQueryClient} from '@tanstack/react-query'
 import BroadcastChannel from '#/lib/broadcast'
-import {logger} from '#/logger'
+import {useSession, getAgent} from '#/state/session'
+import {useModerationOpts} from '../preferences'
+import {fetchPage} from './util'
+import {CachedFeedPage, FeedPage} from './types'
 import {isNative} from '#/platform/detection'
 import {useMutedThreads} from '#/state/muted-threads'
-import {getAgent, useSession} from '#/state/session'
-
-import {useModerationOpts} from '../preferences'
-import {truncateAndInvalidate} from '../util'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {CachedFeedPage, FeedPage} from './types'
-import {fetchPage} from './util'
+import {logger} from '#/logger'
+import {truncateAndInvalidate} from '../util'
+import {AppState} from 'react-native'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 

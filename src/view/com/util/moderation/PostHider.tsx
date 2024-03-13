@@ -1,18 +1,16 @@
+import React, {ComponentProps} from 'react'
+import {StyleSheet, Pressable, View, ViewStyle, StyleProp} from 'react-native'
 import {ModerationUI} from '@atproto/api'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import {usePalette} from 'lib/hooks/usePalette'
-import {ShieldExclamation} from 'lib/icons'
-import {describeModerationCause} from 'lib/moderation'
-import {addStyle} from 'lib/styles'
-import React, {ComponentProps} from 'react'
-import {Pressable, StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
-
-import {useModalControls} from '#/state/modals'
-
 import {Link} from '../Link'
 import {Text} from '../text/Text'
+import {addStyle} from 'lib/styles'
+import {describeModerationCause} from 'lib/moderation'
+import {ShieldExclamation} from 'lib/icons'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
 
 interface Props extends ComponentProps<typeof Link> {
   iconSize: number

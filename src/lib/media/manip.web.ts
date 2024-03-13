@@ -1,7 +1,6 @@
-import {Image as RNImage} from 'react-native-image-crop-picker'
-
 import {Dimensions} from './types'
-import {blobToDataUri, getDataUriSize} from './util'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {getDataUriSize, blobToDataUri} from './util'
 
 export async function compressIfNeeded(
   img: RNImage,

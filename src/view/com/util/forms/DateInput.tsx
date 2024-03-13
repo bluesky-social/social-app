@@ -1,18 +1,17 @@
+import React, {useState, useCallback} from 'react'
+import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {getLocales} from 'expo-localization'
-import {usePalette} from 'lib/hooks/usePalette'
+import {isIOS, isAndroid} from 'platform/detection'
+import {Button, ButtonType} from './Button'
+import {Text} from '../text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
 import {useTheme} from 'lib/ThemeContext'
-import {isAndroid, isIOS} from 'platform/detection'
-import React, {useCallback, useState} from 'react'
-import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
+import {usePalette} from 'lib/hooks/usePalette'
+import {getLocales} from 'expo-localization'
 import DatePicker from 'react-native-date-picker'
-
-import {Text} from '../text/Text'
-import {Button, ButtonType} from './Button'
 
 const LOCALE = getLocales()[0]
 

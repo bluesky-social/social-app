@@ -1,13 +1,11 @@
-import {ComAtprotoLabelDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
 import React from 'react'
 import {Pressable, StyleProp, View, ViewStyle} from 'react-native'
-
-import {useModalControls} from '#/state/modals'
-
+import {ComAtprotoLabelDefs} from '@atproto/api'
 import {Text} from '../text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export function LabelInfo({
   details,

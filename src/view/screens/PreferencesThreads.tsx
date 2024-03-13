@@ -1,10 +1,3 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -13,17 +6,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {RadioGroup} from 'view/com/util/forms/RadioGroup'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Text} from '../com/util/text/Text'
+import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {RadioGroup} from 'view/com/util/forms/RadioGroup'
+import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
-
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   usePreferencesQuery,
   useSetThreadViewPreferencesMutation,
 } from '#/state/queries/preferences'
-
-import {Text} from '../com/util/text/Text'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PreferencesThreads'>
 export function PreferencesThreads({navigation}: Props) {

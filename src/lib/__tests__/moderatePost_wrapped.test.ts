@@ -1,5 +1,5 @@
+import {describe, it, expect} from '@jest/globals'
 import {RichText} from '@atproto/api'
-import {describe, expect, it} from '@jest/globals'
 
 import {hasMutedWord} from '../moderatePost_wrapped'
 

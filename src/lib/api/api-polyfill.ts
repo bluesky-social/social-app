@@ -1,4 +1,4 @@
-import {BskyAgent, jsonToLex, stringifyLex} from '@atproto/api'
+import {BskyAgent, stringifyLex, jsonToLex} from '@atproto/api'
 import RNFS from 'react-native-fs'
 
 const GET_TIMEOUT = 15e3 // 15s

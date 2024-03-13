@@ -1,31 +1,32 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useQuery} from '@tanstack/react-query'
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
+import {useQuery} from '@tanstack/react-query'
 
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Toggle from '#/components/forms/Toggle'
-import {IconCircle} from '#/components/IconCircle'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise} from '#/components/icons/ArrowRotateCounterClockwise'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSad} from '#/components/icons/Emoji'
-import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/lib/analytics/analytics'
-import {capitalize} from '#/lib/strings/capitalize'
 import {logger} from '#/logger'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {EmojiSad_Stroke2_Corner0_Rounded as EmojiSad} from '#/components/icons/Emoji'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as ArrowRotateCounterClockwise} from '#/components/icons/ArrowRotateCounterClockwise'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Loader} from '#/components/Loader'
+import * as Toggle from '#/components/forms/Toggle'
+import {getAgent} from '#/state/session'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {Text} from '#/components/Typography'
+import {useOnboardingDispatch} from '#/state/shell'
+import {capitalize} from '#/lib/strings/capitalize'
+
+import {Context, ApiResponseMap} from '#/screens/Onboarding/state'
 import {
+  Title,
   Description,
   OnboardingControls,
-  Title,
 } from '#/screens/Onboarding/Layout'
-import {ApiResponseMap, Context} from '#/screens/Onboarding/state'
 import {InterestButton} from '#/screens/Onboarding/StepInterests/InterestButton'
-import {getAgent} from '#/state/session'
-import {useOnboardingDispatch} from '#/state/shell'
+import {IconCircle} from '#/components/IconCircle'
 
 export function StepInterests() {
   const {_} = useLingui()

@@ -1,22 +1,20 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {colors, gradients, s} from 'lib/styles'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-
-import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {s, colors, gradients} from 'lib/styles'
+import {Text} from '../util/text/Text'
+import {ScrollView} from './util'
+import {usePalette} from 'lib/hooks/usePalette'
 import {
   EmbedPlayerSource,
   embedPlayerSources,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {useSetExternalEmbedPref} from '#/state/preferences/external-embeds-prefs'
-
-import {Text} from '../util/text/Text'
-import {ScrollView} from './util'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 export const snapPoints = [450]
 

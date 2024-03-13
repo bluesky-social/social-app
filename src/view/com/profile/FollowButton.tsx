@@ -1,14 +1,12 @@
-import {AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import React from 'react'
 import {StyleProp, TextStyle, View} from 'react-native'
-
-import {Shadow} from '#/state/cache/types'
-import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-
+import {AppBskyActorDefs} from '@atproto/api'
 import {Button, ButtonType} from '../util/forms/Button'
 import * as Toast from '../util/Toast'
+import {useProfileFollowMutationQueue} from '#/state/queries/profile'
+import {Shadow} from '#/state/cache/types'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export function FollowButton({
   unfollowedType = 'inverted',

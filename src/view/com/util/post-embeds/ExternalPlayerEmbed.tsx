@@ -1,12 +1,3 @@
-import {AppBskyEmbedExternal} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
-import {Image} from 'expo-image'
-import {NavigationProp} from 'lib/routes/types'
-import {EmbedPlayerParams, getPlayerAspect} from 'lib/strings/embed-player'
-import {isNative} from 'platform/detection'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -22,12 +13,20 @@ import Animated, {
   useAnimatedRef,
   useFrameCallback,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {Image} from 'expo-image'
 import {WebView} from 'react-native-webview'
-import {useModalControls} from 'state/modals'
-import {useExternalEmbedsPrefs} from 'state/preferences'
-
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useNavigation} from '@react-navigation/native'
+import {AppBskyEmbedExternal} from '@atproto/api'
+import {EmbedPlayerParams, getPlayerAspect} from 'lib/strings/embed-player'
 import {EventStopper} from '../EventStopper'
+import {isNative} from 'platform/detection'
+import {NavigationProp} from 'lib/routes/types'
+import {useExternalEmbedsPrefs} from 'state/preferences'
+import {useModalControls} from 'state/modals'
 
 interface ShouldStartLoadRequest {
   url: string

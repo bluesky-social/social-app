@@ -1,33 +1,31 @@
+import {useCallback} from 'react'
 import {
+  AtUri,
   AppBskyActorDefs,
-  AppBskyActorGetProfile,
   AppBskyActorProfile,
+  AppBskyActorGetProfile,
+  AppBskyFeedDefs,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
-  AppBskyFeedDefs,
-  AtUri,
 } from '@atproto/api'
 import {
-  QueryClient,
-  useMutation,
   useQuery,
   useQueryClient,
+  useMutation,
+  QueryClient,
 } from '@tanstack/react-query'
-import {useCallback} from 'react'
 import {Image as RNImage} from 'react-native-image-crop-picker'
-
-import {track} from '#/lib/analytics/analytics'
+import {useSession, getAgent} from '../session'
+import {updateProfileShadow} from '../cache/profile-shadow'
 import {uploadBlob} from '#/lib/api'
 import {until} from '#/lib/async/until'
-import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {Shadow} from '#/state/cache/types'
-import {STALE} from '#/state/queries'
 import {resetProfilePostsQueries} from '#/state/queries/post-feed'
-
-import {updateProfileShadow} from '../cache/profile-shadow'
-import {getAgent, useSession} from '../session'
-import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {useToggleMutationQueue} from '#/lib/hooks/useToggleMutationQueue'
 import {RQKEY as RQKEY_MY_MUTED} from './my-muted-accounts'
+import {RQKEY as RQKEY_MY_BLOCKED} from './my-blocked-accounts'
+import {STALE} from '#/state/queries'
+import {track} from '#/lib/analytics/analytics'
 import {ThreadNode} from './post-thread'
 
 export const RQKEY = (did: string) => ['profile', did]

@@ -1,16 +1,15 @@
-import {Trans} from '@lingui/macro'
-import {StackActions} from '@react-navigation/native'
-import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
-import {cleanError} from 'lib/strings/errors'
 import React from 'react'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
 import {CenteredView} from 'view/com/util/Views'
-
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button} from '#/components/Button'
 import {Loader} from '#/components/Loader'
+import {Trans} from '@lingui/macro'
+import {cleanError} from 'lib/strings/errors'
+import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
+import {StackActions} from '@react-navigation/native'
 import {router} from '#/routes'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 
 export function ListFooter({
   isFetching,

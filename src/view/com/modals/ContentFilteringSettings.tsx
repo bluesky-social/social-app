@@ -1,31 +1,29 @@
-import {LabelPreference} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {colors, gradients, s} from 'lib/styles'
-import {isIOS} from 'platform/detection'
 import React from 'react'
-import {Linking, Pressable, StyleSheet, View} from 'react-native'
+import {LabelPreference} from '@atproto/api'
+import {StyleSheet, Pressable, View, Linking} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-
+import {ScrollView} from './util'
+import {s, colors, gradients} from 'lib/styles'
+import {Text} from '../util/text/Text'
+import {TextLink} from '../util/Link'
+import {ToggleButton} from '../util/forms/ToggleButton'
+import {Button} from '../util/forms/Button'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isIOS} from 'platform/detection'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {
-  CONFIGURABLE_LABEL_GROUPS,
-  ConfigurableLabelGroup,
   usePreferencesQuery,
-  UsePreferencesQueryResponse,
-  usePreferencesSetAdultContentMutation,
   usePreferencesSetContentLabelMutation,
+  usePreferencesSetAdultContentMutation,
+  ConfigurableLabelGroup,
+  CONFIGURABLE_LABEL_GROUPS,
+  UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
-
-import {Button} from '../util/forms/Button'
-import {ToggleButton} from '../util/forms/ToggleButton'
-import {TextLink} from '../util/Link'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import {ScrollView} from './util'
 
 export const snapPoints = ['90%']
 

@@ -1,5 +1,5 @@
-import {isNative} from 'platform/detection'
 import {useMediaQuery} from 'react-responsive'
+import {isNative} from 'platform/detection'
 
 export function useWebMediaQueries() {
   const isDesktop = useMediaQuery({minWidth: 1300})

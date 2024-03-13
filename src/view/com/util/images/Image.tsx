@@ -1,5 +1,5 @@
-import {Image, ImageProps, ImageSource} from 'expo-image'
 import React from 'react'
+import {Image, ImageProps, ImageSource} from 'expo-image'
 
 interface HighPriorityImageProps extends ImageProps {
   source: ImageSource

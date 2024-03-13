@@ -1,5 +1,4 @@
 import {Linking} from 'react-native'
-
 import {isNative, isWeb} from './detection'
 
 export async function getInitialURL(): Promise<string | undefined> {

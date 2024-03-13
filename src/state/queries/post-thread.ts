@@ -1,16 +1,15 @@
 import {
-  AppBskyEmbedRecord,
   AppBskyFeedDefs,
-  AppBskyFeedGetPostThread,
   AppBskyFeedPost,
+  AppBskyFeedGetPostThread,
+  AppBskyEmbedRecord,
 } from '@atproto/api'
-import {QueryClient, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient, QueryClient} from '@tanstack/react-query'
 
-import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {getAgent} from '#/state/session'
-
-import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
+import {UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from './post-feed'
+import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from './notifications/feed'
 import {precacheThreadPostProfiles} from './profile'
 import {getEmbeddedPost} from './util'
 

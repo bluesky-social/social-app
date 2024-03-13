@@ -1,16 +1,14 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {RepostIcon} from 'lib/icons'
-import {colors, gradients, s} from 'lib/styles'
 import React from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-
-import {useModalControls} from '#/state/modals'
-
+import {s, colors, gradients} from 'lib/styles'
 import {Text} from '../util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {RepostIcon} from 'lib/icons'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = [250]
 

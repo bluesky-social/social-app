@@ -1,14 +1,13 @@
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {clamp} from 'lib/numbers'
-import {gradients} from 'lib/styles'
 import React, {ComponentProps} from 'react'
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import Animated from 'react-native-reanimated'
+import {gradients} from 'lib/styles'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-
+import {clamp} from 'lib/numbers'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {isWeb} from '#/platform/detection'
+import Animated from 'react-native-reanimated'
 
 export interface FABProps
   extends ComponentProps<typeof TouchableWithoutFeedback> {

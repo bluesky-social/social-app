@@ -1,15 +1,13 @@
-import {AppBskyFeedDefs} from '@atproto/api'
+import {useEffect, useState, useMemo} from 'react'
 import EventEmitter from 'eventemitter3'
-import {queryClient} from 'lib/react-query'
-import {useEffect, useMemo, useState} from 'react'
-
+import {AppBskyFeedDefs} from '@atproto/api'
 import {batchedUpdates} from '#/lib/batchedUpdates'
-
+import {Shadow, castAsShadow} from './types'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '../queries/notifications/feed'
 import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '../queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInThreadQueryData} from '../queries/post-thread'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '../queries/search-posts'
-import {castAsShadow, Shadow} from './types'
+import {queryClient} from 'lib/react-query'
 export type {Shadow} from './types'
 
 export interface PostShadow {

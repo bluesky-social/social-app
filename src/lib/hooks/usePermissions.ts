@@ -1,7 +1,7 @@
 import {Camera} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library'
-import {isWeb} from 'platform/detection'
 import {Linking} from 'react-native'
+import {isWeb} from 'platform/detection'
 import {Alert} from 'view/com/util/Alert'
 
 const openPermissionAlert = (perm: string) => {

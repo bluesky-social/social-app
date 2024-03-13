@@ -1,19 +1,17 @@
-import {ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {listUriToHref} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-
-import {useModalControls} from '#/state/modals'
-
-import {Button} from '../util/forms/Button'
-import {TextLink} from '../util/Link'
+import {ModerationUI} from '@atproto/api'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s} from 'lib/styles'
 import {Text} from '../util/text/Text'
+import {TextLink} from '../util/Link'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
+import {listUriToHref} from 'lib/strings/url-helpers'
+import {Button} from '../util/forms/Button'
+import {useModalControls} from '#/state/modals'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 export const snapPoints = [300]
 

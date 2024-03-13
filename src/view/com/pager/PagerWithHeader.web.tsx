@@ -2,12 +2,10 @@ import * as React from 'react'
 import {FlatList, ScrollView, StyleSheet, View} from 'react-native'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {Pager, PagerRef, RenderTabBarFnProps} from 'view/com/pager/Pager'
-
+import {TabBar} from './TabBar'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-
 import {ListMethods} from '../util/List'
-import {TabBar} from './TabBar'
 
 export interface PagerWithHeaderChildParams {
   headerHeight: number

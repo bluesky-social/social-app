@@ -1,12 +1,12 @@
-import {addStyle} from 'lib/styles'
 import React, {
-  forwardRef,
-  PropsWithChildren,
-  Ref,
-  useCallback,
   useState,
+  useCallback,
+  PropsWithChildren,
+  forwardRef,
+  Ref,
 } from 'react'
 import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {addStyle} from 'lib/styles'
 
 interface PressableWithHover extends PressableProps {
   hoverStyle: StyleProp<ViewStyle>

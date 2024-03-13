@@ -3,9 +3,9 @@
  * avoid future conflicts and/or circular deps
  */
 
-import * as info from 'expo-updates'
 import {Platform} from 'react-native'
 import app from 'react-native-version-number'
+import * as info from 'expo-updates'
 import {init} from 'sentry-expo'
 
 /**

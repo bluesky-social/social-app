@@ -1,9 +1,8 @@
 import {
-  Image as RNImage,
   openCamera as openCameraFn,
   openCropper as openCropperFn,
+  Image as RNImage,
 } from 'react-native-image-crop-picker'
-
 import {CameraOpts, CropperOptions} from './types'
 export {openPicker} from './picker.shared'
 

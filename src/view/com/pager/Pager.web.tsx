@@ -1,7 +1,7 @@
-import {s} from 'lib/styles'
 import React from 'react'
 import {flushSync} from 'react-dom'
 import {View} from 'react-native'
+import {s} from 'lib/styles'
 
 export interface RenderTabBarFnProps {
   selectedPage: number

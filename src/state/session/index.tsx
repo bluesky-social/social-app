@@ -1,18 +1,17 @@
-import {AtpPersistSessionHandler, BskyAgent} from '@atproto/api'
+import React from 'react'
+import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
-import React from 'react'
 
-import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
-import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
+import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-
-import {emitSessionDropped} from '../events'
+import {track} from '#/lib/analytics/analytics'
+import {hasProp} from '#/lib/type-guards'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 

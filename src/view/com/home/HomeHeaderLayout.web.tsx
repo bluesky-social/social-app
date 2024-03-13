@@ -1,22 +1,20 @@
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
+import Animated from 'react-native-reanimated'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
+import {Logo} from '#/view/icons/Logo'
+import {Link} from '../util/Link'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import React from 'react'
-import {StyleSheet, View} from 'react-native'
-import Animated from 'react-native-reanimated'
-
+import {msg} from '@lingui/macro'
 import {CogIcon} from '#/lib/icons'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useShellLayout} from '#/state/shell/shell-layout'
-import {Logo} from '#/view/icons/Logo'
-
-import {Link} from '../util/Link'
-import {HomeHeaderLayoutMobile} from './HomeHeaderLayoutMobile'
 
 export function HomeHeaderLayout(props: {
   children: React.ReactNode

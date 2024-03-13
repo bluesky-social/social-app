@@ -1,5 +1,4 @@
 import {ModerationUI} from '@atproto/api'
-
 import {describeModerationCause} from '../moderation'
 
 // \u2705 = ✅

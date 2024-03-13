@@ -1,11 +1,3 @@
-import {Trans} from '@lingui/macro'
-import {ReactRenderer} from '@tiptap/react'
-import {
-  SuggestionKeyDownProps,
-  SuggestionOptions,
-  SuggestionProps,
-} from '@tiptap/suggestion'
-import {usePalette} from 'lib/hooks/usePalette'
 import React, {
   forwardRef,
   useEffect,
@@ -13,13 +5,19 @@ import React, {
   useState,
 } from 'react'
 import {Pressable, StyleSheet, View} from 'react-native'
+import {ReactRenderer} from '@tiptap/react'
 import tippy, {Instance as TippyInstance} from 'tippy.js'
+import {
+  SuggestionOptions,
+  SuggestionProps,
+  SuggestionKeyDownProps,
+} from '@tiptap/suggestion'
+import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
+import {usePalette} from 'lib/hooks/usePalette'
 import {Text} from 'view/com/util/text/Text'
 import {UserAvatar} from 'view/com/util/UserAvatar'
-
-import {ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
-
 import {useGrapheme} from '../hooks/useGrapheme'
+import {Trans} from '@lingui/macro'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean

@@ -1,28 +1,27 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
-import {s} from 'lib/styles'
-import {isIOS, isNative} from 'platform/detection'
 import React from 'react'
-import {Pressable, View} from 'react-native'
-import {CreateAccount} from 'view/com/auth/create/CreateAccount'
-import {Login} from 'view/com/auth/login/Login'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import {View, Pressable} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
+import {useNavigation} from '@react-navigation/native'
 
-import {useSession} from '#/state/session'
+import {isIOS, isNative} from 'platform/detection'
+import {Login} from 'view/com/auth/login/Login'
+import {CreateAccount} from 'view/com/auth/create/CreateAccount'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {SplashScreen} from './SplashScreen'
+import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   useLoggedOutView,
   useLoggedOutViewControls,
 } from '#/state/shell/logged-out'
-import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useSession} from '#/state/session'
 import {Text} from '#/view/com/util/text/Text'
-
-import {SplashScreen} from './SplashScreen'
+import {NavigationProp} from 'lib/routes/types'
 
 enum ScreenState {
   S_LoginOrCreateAccount,

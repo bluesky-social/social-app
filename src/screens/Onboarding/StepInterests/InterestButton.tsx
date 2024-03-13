@@ -1,10 +1,11 @@
 import React from 'react'
-import {TextStyle, View, ViewStyle} from 'react-native'
+import {View, ViewStyle, TextStyle} from 'react-native'
 
-import {atoms as a, native, useTheme} from '#/alf'
+import {useTheme, atoms as a, native} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
 import {Text} from '#/components/Typography'
 import {capitalize} from '#/lib/strings/capitalize'
+
 import {Context} from '#/screens/Onboarding/state'
 
 export function InterestButton({interest}: {interest: string}) {

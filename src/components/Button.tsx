@@ -1,19 +1,19 @@
 import React from 'react'
 import {
-  AccessibilityProps,
   Pressable,
-  PressableProps,
-  StyleProp,
-  StyleSheet,
   Text,
+  PressableProps,
   TextProps,
-  TextStyle,
-  View,
   ViewStyle,
+  AccessibilityProps,
+  View,
+  TextStyle,
+  StyleSheet,
+  StyleProp,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
+import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'

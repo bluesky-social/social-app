@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import {logger} from '#/logger'
 import {Schema, schema} from '#/state/persisted/schema'
+import {logger} from '#/logger'
 
 const BSKY_STORAGE = 'BSKY_STORAGE'
 

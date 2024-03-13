@@ -1,5 +1,5 @@
-import {colors} from 'lib/styles'
 import {StyleSheet} from 'react-native'
+import {colors} from 'lib/styles'
 
 export const styles = StyleSheet.create({
   bottomBar: {

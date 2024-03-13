@@ -1,9 +1,7 @@
 import {AppBskyActorDefs} from '@atproto/api'
 import {useQuery} from '@tanstack/react-query'
-
+import {useSession, getAgent} from '../session'
 import {STALE} from '#/state/queries'
-
-import {getAgent, useSession} from '../session'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000

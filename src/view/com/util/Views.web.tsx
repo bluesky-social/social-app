@@ -12,9 +12,6 @@
  * need to match layout but which aren't scrolled.
  */
 
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {addStyle} from 'lib/styles'
 import React from 'react'
 import {
   FlatListProps,
@@ -23,6 +20,9 @@ import {
   View,
   ViewProps,
 } from 'react-native'
+import {addStyle} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import Animated from 'react-native-reanimated'
 
 interface AddedProps {

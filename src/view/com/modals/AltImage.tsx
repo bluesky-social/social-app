@@ -1,30 +1,28 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {Image} from 'expo-image'
-import {MAX_ALT_TEXT} from 'lib/constants'
-import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {usePalette} from 'lib/hooks/usePalette'
-import {enforceLen} from 'lib/strings/helpers'
-import {gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isWeb} from 'platform/detection'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useMemo, useCallback, useState} from 'react'
 import {
   ImageStyle,
-  ScrollView as RNScrollView,
   StyleSheet,
-  TextInput as RNTextInput,
   TouchableOpacity,
-  useWindowDimensions,
   View,
+  TextInput as RNTextInput,
+  useWindowDimensions,
+  ScrollView as RNScrollView,
 } from 'react-native'
-import LinearGradient from 'react-native-linear-gradient'
-import {ImageModel} from 'state/models/media/image'
-
-import {useModalControls} from '#/state/modals'
-
-import {Text} from '../util/text/Text'
 import {ScrollView, TextInput} from './util'
+import {Image} from 'expo-image'
+import {usePalette} from 'lib/hooks/usePalette'
+import {gradients, s} from 'lib/styles'
+import {enforceLen} from 'lib/strings/helpers'
+import {MAX_ALT_TEXT} from 'lib/constants'
+import {useTheme} from 'lib/ThemeContext'
+import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
+import {Text} from '../util/text/Text'
+import LinearGradient from 'react-native-linear-gradient'
+import {isWeb} from 'platform/detection'
+import {ImageModel} from 'state/models/media/image'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
+import {useModalControls} from '#/state/modals'
 
 export const snapPoints = ['100%']
 

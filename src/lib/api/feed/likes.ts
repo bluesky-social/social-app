@@ -2,10 +2,8 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetActorLikes as GetActorLikes,
 } from '@atproto/api'
-
-import {getAgent} from '#/state/session'
-
 import {FeedAPI, FeedAPIResponse} from './types'
+import {getAgent} from '#/state/session'
 
 export class LikesFeedAPI implements FeedAPI {
   constructor(public params: GetActorLikes.QueryParams) {}

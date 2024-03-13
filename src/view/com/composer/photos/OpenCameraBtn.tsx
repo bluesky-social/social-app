@@ -1,21 +1,20 @@
+import React, {useCallback} from 'react'
+import {TouchableOpacity, StyleSheet} from 'react-native'
+import * as MediaLibrary from 'expo-media-library'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import * as MediaLibrary from 'expo-media-library'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {usePalette} from 'lib/hooks/usePalette'
-import {useCameraPermission} from 'lib/hooks/usePermissions'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {openCamera} from 'lib/media/picker'
-import {isMobileWeb, isNative} from 'platform/detection'
-import React, {useCallback} from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {useCameraPermission} from 'lib/hooks/usePermissions'
+import {HITSLOP_10, POST_IMG_MAX} from 'lib/constants'
 import {GalleryModel} from 'state/models/media/gallery'
-
+import {isMobileWeb, isNative} from 'platform/detection'
 import {logger} from '#/logger'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 type Props = {
   gallery: GalleryModel

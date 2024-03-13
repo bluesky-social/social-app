@@ -1,13 +1,13 @@
 import React from 'react'
 import Animated, {
   Easing,
-  useAnimatedStyle,
   useSharedValue,
+  useAnimatedStyle,
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
 
-import {atoms as a, flatten, useTheme} from '#/alf'
+import {atoms as a, useTheme, flatten} from '#/alf'
 import {Props, useCommonSVGProps} from '#/components/icons/common'
 import {Loader_Stroke2_Corner0_Rounded as Icon} from '#/components/icons/Loader'
 

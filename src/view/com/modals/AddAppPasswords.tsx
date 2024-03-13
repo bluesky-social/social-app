@@ -1,26 +1,24 @@
+import React, {useState} from 'react'
+import {StyleSheet, TextInput, View, TouchableOpacity} from 'react-native'
+import {Text} from '../util/text/Text'
+import {Button} from '../util/forms/Button'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isNative} from 'platform/detection'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import Clipboard from '@react-native-clipboard/clipboard'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {isNative} from 'platform/detection'
-import React, {useState} from 'react'
-import {StyleSheet, TextInput, TouchableOpacity, View} from 'react-native'
-
+import * as Toast from '../util/Toast'
 import {logger} from '#/logger'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {
-  useAppPasswordCreateMutation,
   useAppPasswordsQuery,
+  useAppPasswordCreateMutation,
 } from '#/state/queries/app-passwords'
-
-import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
 
 export const snapPoints = ['70%']
 

@@ -1,13 +1,13 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Trans} from '@lingui/macro'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import {useMediaQuery} from 'react-responsive'
-import {Button} from 'view/com/util/forms/Button'
-import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
 import {Text} from 'view/com/util/text/Text'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {TitleColumnLayout} from 'view/com/util/layouts/TitleColumnLayout'
+import {Button} from 'view/com/util/forms/Button'
+import {Trans} from '@lingui/macro'
 
 type Props = {
   next: () => void

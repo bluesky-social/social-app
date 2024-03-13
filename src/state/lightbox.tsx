@@ -1,6 +1,5 @@
-import {AppBskyActorDefs} from '@atproto/api'
 import React from 'react'
-
+import {AppBskyActorDefs} from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 interface Lightbox {

@@ -1,8 +1,8 @@
 import {
   Image,
+  NativeSyntheticEvent,
   ImageLoadEventData,
   ImageSourcePropType,
-  NativeSyntheticEvent,
 } from 'react-native'
 export default Image
 export const HighPriorityImage = Image

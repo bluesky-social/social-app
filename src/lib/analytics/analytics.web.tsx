@@ -1,12 +1,11 @@
+import React from 'react'
 import {createClient} from '@segment/analytics-react'
 import {sha256} from 'js-sha256'
-import React from 'react'
 import {Browser} from 'sentry-expo'
 
-import {logger} from '#/logger'
-import {SessionAccount, useSession} from '#/state/session'
-
 import {ScreenPropertiesMap, TrackPropertiesMap} from './types'
+import {useSession, SessionAccount} from '#/state/session'
+import {logger} from '#/logger'
 
 type SegmentClient = ReturnType<typeof createClient>
 

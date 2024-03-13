@@ -1,29 +1,27 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {cleanError} from 'lib/strings/errors'
-import {colors, gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import {isAndroid} from 'platform/detection'
 import React from 'react'
 import {
-  ActivityIndicator,
   SafeAreaView,
+  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native'
+import {TextInput, ScrollView} from './util'
 import LinearGradient from 'react-native-linear-gradient'
-
-import {useModalControls} from '#/state/modals'
-import {getAgent, useSession, useSessionApi} from '#/state/session'
-
-import {resetToTab} from '../../../Navigation'
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
-import {ScrollView, TextInput} from './util'
+import {Text} from '../util/text/Text'
+import {s, colors, gradients} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {cleanError} from 'lib/strings/errors'
+import {resetToTab} from '../../../Navigation'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
+import {useSession, useSessionApi, getAgent} from '#/state/session'
+import {isAndroid} from 'platform/detection'
 
 export const snapPoints = isAndroid ? ['90%'] : ['55%']
 

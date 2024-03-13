@@ -1,24 +1,22 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import * as MediaLibrary from 'expo-media-library'
-import {saveImageToMediaLibrary, shareImageModal} from 'lib/media/manip'
-import {colors, s} from 'lib/styles'
-import {isIOS} from 'platform/detection'
 import React from 'react'
 import {LayoutAnimation, StyleSheet, View} from 'react-native'
-
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import ImageView from './ImageViewing'
+import {shareImageModal, saveImageToMediaLibrary} from 'lib/media/manip'
+import * as Toast from '../util/Toast'
+import {Text} from '../util/text/Text'
+import {s, colors} from 'lib/styles'
+import {Button} from '../util/forms/Button'
+import {isIOS} from 'platform/detection'
+import * as MediaLibrary from 'expo-media-library'
 import {
-  ImagesLightbox,
-  ProfileImageLightbox,
   useLightbox,
   useLightboxControls,
+  ProfileImageLightbox,
+  ImagesLightbox,
 } from '#/state/lightbox'
-
-import {Button} from '../util/forms/Button'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import ImageView from './ImageViewing'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function Lightbox() {
   const {activeLightbox} = useLightbox()

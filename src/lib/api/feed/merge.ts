@@ -1,16 +1,14 @@
 import {AppBskyFeedDefs, AppBskyFeedGetTimeline} from '@atproto/api'
-import {bundleAsync} from 'lib/async/bundle'
-import {timeout} from 'lib/async/timeout'
-import {feedUriToHref} from 'lib/strings/url-helpers'
 import shuffle from 'lodash.shuffle'
-
-import {getContentLanguages} from '#/state/preferences/languages'
-import {FeedParams} from '#/state/queries/post-feed'
-import {getAgent} from '#/state/session'
-
+import {timeout} from 'lib/async/timeout'
+import {bundleAsync} from 'lib/async/bundle'
+import {feedUriToHref} from 'lib/strings/url-helpers'
 import {FeedTuner} from '../feed-manip'
-import {FeedTunerFn} from '../feed-manip'
 import {FeedAPI, FeedAPIResponse, ReasonFeedSource} from './types'
+import {FeedParams} from '#/state/queries/post-feed'
+import {FeedTunerFn} from '../feed-manip'
+import {getAgent} from '#/state/session'
+import {getContentLanguages} from '#/state/preferences/languages'
 
 const REQUEST_WAIT_MS = 500 // 500ms
 const POST_AGE_CUTOFF = 60e3 * 60 * 24 // 24hours

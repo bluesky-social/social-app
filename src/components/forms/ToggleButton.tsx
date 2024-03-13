@@ -1,9 +1,10 @@
 import React from 'react'
-import {AccessibilityProps, TextStyle, View, ViewStyle} from 'react-native'
+import {View, AccessibilityProps, TextStyle, ViewStyle} from 'react-native'
 
-import {atoms as a, native, useTheme} from '#/alf'
-import * as Toggle from '#/components/forms/Toggle'
+import {atoms as a, useTheme, native} from '#/alf'
 import {Text} from '#/components/Typography'
+
+import * as Toggle from '#/components/forms/Toggle'
 
 export type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps &

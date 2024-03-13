@@ -1,31 +1,29 @@
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {colors, s} from 'lib/styles'
 import React, {useCallback, useEffect, useState} from 'react'
 import {
   Image,
   ImageStyle,
-  Pressable,
-  StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  StyleSheet,
   View,
+  Pressable,
 } from 'react-native'
-
-import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 import {
-  ImagesLightbox,
-  ProfileImageLightbox,
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {colors, s} from 'lib/styles'
+import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
+import {Text} from '../util/text/Text'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {
   useLightbox,
   useLightboxControls,
+  ImagesLightbox,
+  ProfileImageLightbox,
 } from '#/state/lightbox'
-
-import {Text} from '../util/text/Text'
-import ImageDefaultHeader from './ImageViewing/components/ImageDefaultHeader'
+import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 interface Img {
   uri: string

@@ -17,9 +17,9 @@
 import {AtUri} from '@atproto/api'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
+import {useSession, getAgent} from '#/state/session'
 import {RQKEY as LIST_MEMBERS_RQKEY} from '#/state/queries/list-members'
-import {getAgent, useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 // sanity limit is SANITY_PAGE_LIMIT*PAGE_SIZE total records
 const SANITY_PAGE_LIMIT = 1000

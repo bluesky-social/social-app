@@ -1,5 +1,4 @@
 import {z} from 'zod'
-
 import {deviceLocales} from '#/platform/detection'
 
 const externalEmbedOptions = ['show', 'hide'] as const

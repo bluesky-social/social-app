@@ -1,8 +1,7 @@
 import {ComAtprotoServerCreateAppPassword} from '@atproto/api'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useQuery, useQueryClient, useMutation} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-
 import {getAgent} from '../session'
 
 export const RQKEY = () => ['app-passwords']

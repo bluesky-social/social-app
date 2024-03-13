@@ -1,7 +1,6 @@
 import React from 'react'
-
-import {track} from '#/lib/analytics/analytics'
 import * as persisted from '#/state/persisted'
+import {track} from '#/lib/analytics/analytics'
 
 type StateContext = persisted.Schema['mutedThreads']
 type ToggleContext = (uri: string) => boolean

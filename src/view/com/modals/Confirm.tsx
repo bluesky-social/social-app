@@ -1,9 +1,3 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {cleanError} from 'lib/strings/errors'
-import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
 import React, {useState} from 'react'
 import {
   ActivityIndicator,
@@ -11,12 +5,16 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
+import {Text} from '../util/text/Text'
+import {s, colors} from 'lib/styles'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import {cleanError} from 'lib/strings/errors'
+import {usePalette} from 'lib/hooks/usePalette'
+import {isWeb} from 'platform/detection'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 import type {ConfirmModal} from '#/state/modals'
 import {useModalControls} from '#/state/modals'
-
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
 
 export const snapPoints = ['50%']
 

@@ -1,8 +1,8 @@
+import {useEffect} from 'react'
 import {useNavigation} from '@react-navigation/native'
+
 import {NavigationProp} from 'lib/routes/types'
 import {bskyTitle} from 'lib/strings/headings'
-import {useEffect} from 'react'
-
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 
 export function useSetTitle(title?: string) {

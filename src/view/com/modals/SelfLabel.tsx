@@ -1,18 +1,16 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {colors, s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
 import React, {useState} from 'react'
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
-import {ScrollView} from 'view/com/modals/util'
-
-import {useModalControls} from '#/state/modals'
-
+import {Text} from '../util/text/Text'
+import {s, colors} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {isWeb} from 'platform/detection'
 import {Button} from '../util/forms/Button'
 import {SelectableBtn} from '../util/forms/SelectableBtn'
-import {Text} from '../util/text/Text'
+import {ScrollView} from 'view/com/modals/util'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useModalControls} from '#/state/modals'
 
 const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
 

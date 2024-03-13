@@ -1,4 +1,4 @@
-import {StyleProp, TextStyle, ViewStyle} from 'react-native'
+import {StyleProp, ViewStyle, TextStyle} from 'react-native'
 
 type LiteralToCommon<T extends PropertyKey> = T extends number
   ? number

@@ -1,9 +1,3 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useNavigation} from '@react-navigation/native'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {NavigationProp} from 'lib/routes/types'
 import React from 'react'
 import {
   StyleProp,
@@ -12,11 +6,15 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-
-import {isWeb} from '#/platform/detection'
-import {useSetDrawerOpen} from '#/state/shell'
-
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useNavigation} from '@react-navigation/native'
 import {CenteredView} from './Views'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {NavigationProp} from 'lib/routes/types'
+import {useSetDrawerOpen} from '#/state/shell'
+import {isWeb} from '#/platform/detection'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 

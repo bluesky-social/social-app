@@ -1,27 +1,25 @@
-import {Trans} from '@lingui/macro'
-import {useFocusEffect} from '@react-navigation/native'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {s} from 'lib/styles'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
-import {
-  useExternalEmbedsPrefs,
-  useSetExternalEmbedPref,
-} from 'state/preferences'
-import {ToggleButton} from 'view/com/util/forms/ToggleButton'
-
+import {useFocusEffect} from '@react-navigation/native'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
+import {s} from 'lib/styles'
+import {Text} from '../com/util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {
   EmbedPlayerSource,
   externalEmbedLabels,
 } from '#/lib/strings/embed-player'
 import {useSetMinimalShellMode} from '#/state/shell'
-
-import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
-import {Text} from '../com/util/text/Text'
+import {Trans} from '@lingui/macro'
 import {ScrollView} from '../com/util/Views'
+import {
+  useExternalEmbedsPrefs,
+  useSetExternalEmbedPref,
+} from 'state/preferences'
+import {ToggleButton} from 'view/com/util/forms/ToggleButton'
+import {SimpleViewHeader} from '../com/util/SimpleViewHeader'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,

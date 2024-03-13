@@ -1,15 +1,13 @@
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
 import React from 'react'
-import {Platform, SafeAreaView} from 'react-native'
+import {SafeAreaView, Platform} from 'react-native'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-
-import {useOnboardingDispatch, useOnboardingState} from '#/state/shell'
-import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
-
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
+import {Welcome} from './onboarding/Welcome'
 import {RecommendedFeeds} from './onboarding/RecommendedFeeds'
 import {RecommendedFollows} from './onboarding/RecommendedFollows'
-import {Welcome} from './onboarding/Welcome'
+import {useSetMinimalShellMode} from '#/state/shell/minimal-mode'
+import {useOnboardingState, useOnboardingDispatch} from '#/state/shell'
 
 export function Onboarding() {
   const pal = usePalette('default')

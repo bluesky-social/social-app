@@ -1,7 +1,7 @@
 import React from 'react'
 import {View} from 'react-native'
 
-import {atoms as a, useTheme} from '#/alf'
+import {useTheme, atoms as a} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {InlineLink, Link} from '#/components/Link'
 import {H1, Text} from '#/components/Typography'

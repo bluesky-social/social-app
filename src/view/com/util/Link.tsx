@@ -1,38 +1,36 @@
-import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions, useLinkProps} from '@react-navigation/native'
+import React, {ComponentProps, memo, useMemo} from 'react'
 import {
-  DebouncedNavigationProp,
-  useNavigationDeduped,
-} from 'lib/hooks/useNavigationDeduped'
+  GestureResponderEvent,
+  Platform,
+  StyleProp,
+  TextStyle,
+  TextProps,
+  View,
+  ViewStyle,
+  Pressable,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from 'react-native'
+import {useLinkProps, StackActions} from '@react-navigation/native'
+import {Text} from './text/Text'
+import {TypographyVariant} from 'lib/ThemeContext'
+import {router} from '../../../routes'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
 } from 'lib/strings/url-helpers'
-import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
-import React, {ComponentProps, memo, useMemo} from 'react'
-import {
-  GestureResponderEvent,
-  Platform,
-  Pressable,
-  StyleProp,
-  TextProps,
-  TextStyle,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  ViewStyle,
-} from 'react-native'
-import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
-
+import {sanitizeUrl} from '@braintree/sanitize-url'
+import {PressableWithHover} from './PressableWithHover'
+import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
-
-import {router} from '../../../routes'
-import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
-import {PressableWithHover} from './PressableWithHover'
-import {Text} from './text/Text'
+import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
+import {
+  DebouncedNavigationProp,
+  useNavigationDeduped,
+} from 'lib/hooks/useNavigationDeduped'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>

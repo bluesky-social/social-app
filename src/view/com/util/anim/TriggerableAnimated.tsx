@@ -1,6 +1,6 @@
-import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 import React from 'react'
 import {Animated, StyleProp, View, ViewStyle} from 'react-native'
+import {useAnimatedValue} from 'lib/hooks/useAnimatedValue'
 
 type CreateAnimFn = (interp: Animated.Value) => Animated.CompositeAnimation
 type FinishCb = () => void

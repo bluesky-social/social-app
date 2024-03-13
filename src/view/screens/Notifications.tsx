@@ -1,39 +1,37 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import React from 'react'
+import {View} from 'react-native'
 import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {ComposeIcon2} from 'lib/icons'
 import {
   NativeStackScreenProps,
   NotificationsTabNavigatorParams,
 } from 'lib/routes/types'
-import {colors, s} from 'lib/styles'
-import React from 'react'
-import {View} from 'react-native'
+import {ViewHeader} from '../com/util/ViewHeader'
+import {Feed} from '../com/notifications/Feed'
 import {TextLink} from 'view/com/util/Link'
 import {ListMethods} from 'view/com/util/List'
 import {LoadLatestBtn} from 'view/com/util/load-latest/LoadLatestBtn'
-
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {MainScrollProvider} from '../com/util/MainScrollProvider'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {s, colors} from 'lib/styles'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
-import {emitSoftReset, listenSoftReset} from '#/state/events'
-import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {
   useUnreadNotifications,
   useUnreadNotificationsApi,
 } from '#/state/queries/notifications/unread'
+import {RQKEY as NOTIFS_RQKEY} from '#/state/queries/notifications/feed'
+import {listenSoftReset, emitSoftReset} from '#/state/events'
 import {truncateAndInvalidate} from '#/state/queries/util'
-import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
-
-import {Feed} from '../com/notifications/Feed'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isNative} from '#/platform/detection'
 import {FAB} from '../com/util/fab/FAB'
-import {MainScrollProvider} from '../com/util/MainScrollProvider'
-import {ViewHeader} from '../com/util/ViewHeader'
+import {ComposeIcon2} from 'lib/icons'
+import {useComposerControls} from '#/state/shell/composer'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,

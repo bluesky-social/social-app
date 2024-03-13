@@ -1,5 +1,5 @@
+import {web, native} from '#/alf/util/platform'
 import * as tokens from '#/alf/tokens'
-import {native, web} from '#/alf/util/platform'
 
 export const atoms = {
   /*

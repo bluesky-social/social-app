@@ -1,9 +1,9 @@
-import {i18n} from '@lingui/core'
 import {useEffect} from 'react'
+import {i18n} from '@lingui/core'
 
+import {useLanguagePrefs} from '#/state/preferences'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
-import {useLanguagePrefs} from '#/state/preferences'
 
 /**
  * We do a dynamic import of just the catalog that we need

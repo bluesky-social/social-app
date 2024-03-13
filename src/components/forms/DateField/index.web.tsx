@@ -1,11 +1,11 @@
 import React from 'react'
-import {StyleSheet, TextInput, TextInputProps} from 'react-native'
+import {TextInput, TextInputProps, StyleSheet} from 'react-native'
 // @ts-ignore
 import {unstable_createElement} from 'react-native-web'
 
-import {DateFieldProps} from '#/components/forms/DateField/types'
-import {toSimpleDateString} from '#/components/forms/DateField/utils'
 import * as TextField from '#/components/forms/TextField'
+import {toSimpleDateString} from '#/components/forms/DateField/utils'
+import {DateFieldProps} from '#/components/forms/DateField/types'
 
 export * as utils from '#/components/forms/DateField/utils'
 export const Label = TextField.Label

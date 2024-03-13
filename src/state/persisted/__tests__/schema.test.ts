@@ -1,8 +1,8 @@
 import {expect, test} from '@jest/globals'
 
-import * as fixtures from '#/state/persisted/__tests__/fixtures'
 import {transform} from '#/state/persisted/legacy'
 import {defaults, schema} from '#/state/persisted/schema'
+import * as fixtures from '#/state/persisted/__tests__/fixtures'
 
 test('defaults', () => {
   expect(() => schema.parse(defaults)).not.toThrow()

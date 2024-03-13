@@ -1,22 +1,20 @@
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import React, {useEffect, useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {KeyboardAvoidingView} from 'react-native'
+import {useAnalytics} from 'lib/analytics/analytics'
 import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
-
 import {DEFAULT_SERVICE} from '#/lib/constants'
+import {usePalette} from 'lib/hooks/usePalette'
 import {logger} from '#/logger'
-import {useServiceQuery} from '#/state/queries/service'
-import {SessionAccount, useSession} from '#/state/session'
-import {useLoggedOutView} from '#/state/shell/logged-out'
-
 import {ChooseAccountForm} from './ChooseAccountForm'
-import {ForgotPasswordForm} from './ForgotPasswordForm'
 import {LoginForm} from './LoginForm'
-import {PasswordUpdatedForm} from './PasswordUpdatedForm'
+import {ForgotPasswordForm} from './ForgotPasswordForm'
 import {SetNewPasswordForm} from './SetNewPasswordForm'
+import {PasswordUpdatedForm} from './PasswordUpdatedForm'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
+import {useSession, SessionAccount} from '#/state/session'
+import {useServiceQuery} from '#/state/queries/service'
+import {useLoggedOutView} from '#/state/shell/logged-out'
 
 enum Forms {
   Login,

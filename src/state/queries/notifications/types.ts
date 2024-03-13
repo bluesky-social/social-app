@@ -1,6 +1,6 @@
 import {
-  AppBskyFeedDefs,
   AppBskyNotificationListNotifications,
+  AppBskyFeedDefs,
 } from '@atproto/api'
 
 export type NotificationType =

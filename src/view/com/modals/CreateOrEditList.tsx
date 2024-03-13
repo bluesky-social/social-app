@@ -1,19 +1,4 @@
-import {
-  AppBskyGraphDefs,
-  AppBskyRichtextFacet,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {compressIfNeeded} from 'lib/media/manip'
-import {cleanError, isNetworkError} from 'lib/strings/errors'
-import {enforceLen} from 'lib/strings/helpers'
-import {colors, gradients, s} from 'lib/styles'
-import {useTheme} from 'lib/ThemeContext'
-import React, {useCallback, useMemo, useState} from 'react'
+import React, {useState, useCallback, useMemo} from 'react'
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
@@ -23,22 +8,35 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {
+  AppBskyGraphDefs,
+  AppBskyRichtextFacet,
+  RichText as RichTextAPI,
+} from '@atproto/api'
 import LinearGradient from 'react-native-linear-gradient'
-
-import {richTextToString} from '#/lib/strings/rich-text-helpers'
-import {shortenLinks} from '#/lib/strings/rich-text-manip'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {Text} from '../util/text/Text'
+import {ErrorMessage} from '../util/error/ErrorMessage'
+import * as Toast from '../util/Toast'
+import {s, colors, gradients} from 'lib/styles'
+import {enforceLen} from 'lib/strings/helpers'
+import {compressIfNeeded} from 'lib/media/manip'
+import {EditableUserAvatar} from '../util/UserAvatar'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useTheme} from 'lib/ThemeContext'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError, isNetworkError} from 'lib/strings/errors'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {useModalControls} from '#/state/modals'
 import {
   useListCreateMutation,
   useListMetadataMutation,
 } from '#/state/queries/list'
+import {richTextToString} from '#/lib/strings/rich-text-helpers'
+import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {getAgent} from '#/state/session'
-
-import {ErrorMessage} from '../util/error/ErrorMessage'
-import {Text} from '../util/text/Text'
-import * as Toast from '../util/Toast'
-import {EditableUserAvatar} from '../util/UserAvatar'
 
 const MAX_NAME = 64 // todo
 const MAX_DESCRIPTION = 300 // todo

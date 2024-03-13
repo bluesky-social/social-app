@@ -2,10 +2,8 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedGetAuthorFeed as GetAuthorFeed,
 } from '@atproto/api'
-
-import {getAgent} from '#/state/session'
-
 import {FeedAPI, FeedAPIResponse} from './types'
+import {getAgent} from '#/state/session'
 
 export class AuthorFeedAPI implements FeedAPI {
   constructor(public params: GetAuthorFeed.QueryParams) {}

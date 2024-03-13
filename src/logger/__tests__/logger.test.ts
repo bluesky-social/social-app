@@ -1,5 +1,5 @@
-import {beforeAll, describe, expect, jest, test} from '@jest/globals'
 import {nanoid} from 'nanoid/non-secure'
+import {jest, describe, expect, test, beforeAll} from '@jest/globals'
 import {Native as Sentry} from 'sentry-expo'
 
 import {Logger, LogLevel, sentryTransport} from '#/logger'

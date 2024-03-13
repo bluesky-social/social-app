@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   AppBskyActorDefs,
   AppBskyActorGetSuggestions,
@@ -5,18 +6,17 @@ import {
   moderateProfile,
 } from '@atproto/api'
 import {
+  useInfiniteQuery,
+  useQueryClient,
+  useQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
-  useInfiniteQuery,
-  useQuery,
-  useQueryClient,
 } from '@tanstack/react-query'
-import React from 'react'
 
-import {STALE} from '#/state/queries'
+import {useSession, getAgent} from '#/state/session'
 import {useModerationOpts} from '#/state/queries/preferences'
-import {getAgent, useSession} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const suggestedFollowsQueryKey = ['suggested-follows']
 const suggestedFollowsByActorQueryKey = (did: string) => [

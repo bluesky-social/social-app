@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useState, useRef, useEffect, useCallback} from 'react'
 
 type Task<TServerState> = {
   isOn: boolean

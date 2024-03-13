@@ -1,13 +1,12 @@
 import React from 'react'
 import {Dimensions} from 'react-native'
-
 import * as themes from '#/alf/themes'
 
-export {atoms} from '#/alf/atoms'
-export * as tokens from '#/alf/tokens'
 export * from '#/alf/types'
-export * from '#/alf/util/flatten'
+export * as tokens from '#/alf/tokens'
+export {atoms} from '#/alf/atoms'
 export * from '#/alf/util/platform'
+export * from '#/alf/util/flatten'
 
 type BreakpointName = keyof typeof breakpoints
 

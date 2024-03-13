@@ -1,15 +1,13 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
-
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-
-import {Text} from '../util/text/Text'
 import {UserAvatar} from '../util/UserAvatar'
+import {Text} from '../util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useSession} from '#/state/session'
+import {useProfileQuery} from '#/state/queries/profile'
 
 export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
   const {currentAccount} = useSession()

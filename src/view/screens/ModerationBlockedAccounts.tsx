@@ -1,12 +1,3 @@
-import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams} from 'lib/routes/types'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -15,17 +6,24 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {ProfileCard} from 'view/com/profile/ProfileCard'
-import {CenteredView} from 'view/com/util/Views'
-
-import {cleanError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
-import {useSetMinimalShellMode} from '#/state/shell'
-
-import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Text} from '../com/util/text/Text'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {CommonNavigatorParams} from 'lib/routes/types'
+import {useAnalytics} from 'lib/analytics/analytics'
+import {useFocusEffect} from '@react-navigation/native'
 import {ViewHeader} from '../com/util/ViewHeader'
+import {CenteredView} from 'view/com/util/Views'
+import {ErrorScreen} from '../com/util/error/ErrorScreen'
+import {ProfileCard} from 'view/com/profile/ProfileCard'
+import {logger} from '#/logger'
+import {useSetMinimalShellMode} from '#/state/shell'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {useMyBlockedAccountsQuery} from '#/state/queries/my-blocked-accounts'
+import {cleanError} from '#/lib/strings/errors'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,

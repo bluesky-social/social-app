@@ -1,25 +1,26 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
 import React from 'react'
 import {View} from 'react-native'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 
+import {IS_PROD} from '#/env'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Toggle from '#/components/forms/Toggle'
-import {IconCircle} from '#/components/IconCircle'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
-import {IS_PROD} from '#/env'
+import {Loader} from '#/components/Loader'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {useAnalytics} from '#/lib/analytics/analytics'
+
+import {Context} from '#/screens/Onboarding/state'
 import {
+  Title,
   Description,
   OnboardingControls,
-  Title,
 } from '#/screens/Onboarding/Layout'
-import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
+import {IconCircle} from '#/components/IconCircle'
 
 export type FeedConfig = {
   default: boolean

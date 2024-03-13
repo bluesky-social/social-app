@@ -1,85 +1,84 @@
-import {i18n, MessageDescriptor} from '@lingui/core'
-import {msg} from '@lingui/macro'
+import * as React from 'react'
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+  CommonActions,
+  StackActions,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native'
 import {
   BottomTabBarProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs'
 import {
-  CommonActions,
-  createNavigationContainerRef,
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-  StackActions,
-} from '@react-navigation/native'
-import {timeout} from 'lib/async/timeout'
-import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
-import {usePalette} from 'lib/hooks/usePalette'
-import {buildStateObject} from 'lib/routes/helpers'
-import {
-  AllNavigatorParams,
-  BottomTabNavigatorParams,
-  FeedsTabNavigatorParams,
-  FlatNavigatorParams,
   HomeTabNavigatorParams,
-  MyProfileTabNavigatorParams,
-  NotificationsTabNavigatorParams,
   SearchTabNavigatorParams,
+  FeedsTabNavigatorParams,
+  NotificationsTabNavigatorParams,
+  FlatNavigatorParams,
+  AllNavigatorParams,
+  MyProfileTabNavigatorParams,
+  BottomTabNavigatorParams,
 } from 'lib/routes/types'
-import {RouteParams, State} from 'lib/routes/types'
-import {bskyTitle} from 'lib/strings/headings'
+import {BottomBar} from './view/shell/bottom-bar/BottomBar'
+import {buildStateObject} from 'lib/routes/helpers'
+import {State, RouteParams} from 'lib/routes/types'
 import {isAndroid, isNative} from 'platform/detection'
-import * as React from 'react'
-import {JSX} from 'react/jsx-runtime'
-import {AppPasswords} from 'view/screens/AppPasswords'
-import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
-import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
-import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
-import {PreferencesThreads} from 'view/screens/PreferencesThreads'
-import {SavedFeeds} from 'view/screens/SavedFeeds'
-
-import HashtagScreen from '#/screens/Hashtag'
-import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
-
-import {init as initAnalytics} from './lib/analytics/analytics'
-import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
-import {logEvent} from './lib/statsig/statsig'
+import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'
 import {router} from './routes'
-import {useModalControls} from './state/modals'
+import {usePalette} from 'lib/hooks/usePalette'
+import {bskyTitle} from 'lib/strings/headings'
+import {JSX} from 'react/jsx-runtime'
+import {timeout} from 'lib/async/timeout'
 import {useUnreadNotifications} from './state/queries/notifications/unread'
 import {useSession} from './state/session'
+import {useModalControls} from './state/modals'
 import {
-  setEmailConfirmationRequested,
   shouldRequestEmailConfirmation,
+  setEmailConfirmationRequested,
 } from './state/shell/reminders'
-import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
-import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
-import {FeedsScreen} from './view/screens/Feeds'
+import {init as initAnalytics} from './lib/analytics/analytics'
+import {useWebScrollRestoration} from './lib/hooks/useWebScrollRestoration'
+
 import {HomeScreen} from './view/screens/Home'
-import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
+import {SearchScreen} from './view/screens/Search'
+import {FeedsScreen} from './view/screens/Feeds'
+import {NotificationsScreen} from './view/screens/Notifications'
 import {ListsScreen} from './view/screens/Lists'
-import {LogScreen} from './view/screens/Log'
 import {ModerationScreen} from './view/screens/Moderation'
 import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
 import {NotFoundScreen} from './view/screens/NotFound'
-import {NotificationsScreen} from './view/screens/Notifications'
-import {PostLikedByScreen} from './view/screens/PostLikedBy'
-import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
-import {PostThreadScreen} from './view/screens/PostThread'
-import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
+import {SettingsScreen} from './view/screens/Settings'
+import {LanguageSettingsScreen} from './view/screens/LanguageSettings'
 import {ProfileScreen} from './view/screens/Profile'
-import {ProfileFeedScreen} from './view/screens/ProfileFeed'
-import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
 import {ProfileFollowersScreen} from './view/screens/ProfileFollowers'
 import {ProfileFollowsScreen} from './view/screens/ProfileFollows'
+import {ProfileFeedScreen} from './view/screens/ProfileFeed'
+import {ProfileFeedLikedByScreen} from './view/screens/ProfileFeedLikedBy'
 import {ProfileListScreen} from './view/screens/ProfileList'
-import {SearchScreen} from './view/screens/Search'
-import {SettingsScreen} from './view/screens/Settings'
+import {PostThreadScreen} from './view/screens/PostThread'
+import {PostLikedByScreen} from './view/screens/PostLikedBy'
+import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {Storybook} from './view/screens/Storybook'
+import {LogScreen} from './view/screens/Log'
 import {SupportScreen} from './view/screens/Support'
+import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
 import {TermsOfServiceScreen} from './view/screens/TermsOfService'
-import {BottomBar} from './view/shell/bottom-bar/BottomBar'
+import {CommunityGuidelinesScreen} from './view/screens/CommunityGuidelines'
+import {CopyrightPolicyScreen} from './view/screens/CopyrightPolicy'
+import {AppPasswords} from 'view/screens/AppPasswords'
+import {ModerationMutedAccounts} from 'view/screens/ModerationMutedAccounts'
+import {ModerationBlockedAccounts} from 'view/screens/ModerationBlockedAccounts'
+import {SavedFeeds} from 'view/screens/SavedFeeds'
+import {PreferencesFollowingFeed} from 'view/screens/PreferencesFollowingFeed'
+import {PreferencesThreads} from 'view/screens/PreferencesThreads'
+import {PreferencesExternalEmbeds} from '#/view/screens/PreferencesExternalEmbeds'
 import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStackNavigatorWithAuth'
+import {msg} from '@lingui/macro'
+import {i18n, MessageDescriptor} from '@lingui/core'
+import HashtagScreen from '#/screens/Hashtag'
+import {logEvent} from './lib/statsig/statsig'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -671,11 +670,11 @@ function logModuleInitTime() {
 }
 
 export {
-  FlatNavigator,
-  handleLink,
   navigate,
-  reset,
   resetToTab,
-  RoutesContainer,
+  reset,
+  handleLink,
   TabsNavigator,
+  FlatNavigator,
+  RoutesContainer,
 }

@@ -1,6 +1,6 @@
-import {atoms} from '#/alf/atoms'
 import * as tokens from '#/alf/tokens'
 import type {Mutable} from '#/alf/types'
+import {atoms} from '#/alf/atoms'
 import {BLUE_HUE, GREEN_HUE, RED_HUE} from '#/alf/util/colorGeneration'
 
 export type ThemeName = 'light' | 'dim' | 'dark'

@@ -1,13 +1,13 @@
 import {AppBskyActorDefs, AppBskyGraphGetList} from '@atproto/api'
 import {
+  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
-  useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {STALE} from '#/state/queries'
 import {getAgent} from '#/state/session'
+import {STALE} from '#/state/queries'
 
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined

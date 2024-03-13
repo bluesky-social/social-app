@@ -1,28 +1,28 @@
-import {Image} from 'expo-image'
 import React, {useState} from 'react'
+
 import {ActivityIndicator, Dimensions, StyleSheet} from 'react-native'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {Image} from 'expo-image'
 import Animated, {
   runOnJS,
-  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
+  useAnimatedReaction,
   useSharedValue,
   withDecay,
   withSpring,
 } from 'react-native-reanimated'
-
-import type {Dimensions as ImageDimensions, ImageSource} from '../../@types'
+import {GestureDetector, Gesture} from 'react-native-gesture-handler'
 import useImageDimensions from '../../hooks/useImageDimensions'
 import {
-  applyRounding,
   createTransform,
+  readTransform,
+  applyRounding,
   prependPan,
   prependPinch,
   prependTransform,
-  readTransform,
   TransformMatrix,
 } from '../../transforms'
+import type {ImageSource, Dimensions as ImageDimensions} from '../../@types'
 
 const SCREEN = Dimensions.get('window')
 const MIN_DOUBLE_TAP_SCALE = 2

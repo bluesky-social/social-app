@@ -1,12 +1,12 @@
 import {
-  AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
+  moderatePost,
+  AppBskyActorDefs,
   AppBskyFeedPost,
   AppBskyRichtextFacet,
-  moderatePost,
+  AppBskyEmbedImages,
+  AppBskyEmbedExternal,
 } from '@atproto/api'
 
 type ModeratePost = typeof moderatePost

@@ -1,9 +1,9 @@
 import {AppBskyActorDefs, AppBskyGraphGetFollowers} from '@atproto/api'
 import {
+  useInfiniteQuery,
   InfiniteData,
   QueryClient,
   QueryKey,
-  useInfiniteQuery,
 } from '@tanstack/react-query'
 
 import {getAgent} from '#/state/session'

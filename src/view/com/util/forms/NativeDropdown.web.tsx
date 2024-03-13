@@ -1,12 +1,12 @@
-import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import {HITSLOP_10} from 'lib/constants'
+import {Pressable, StyleSheet, View, Text, ViewStyle} from 'react-native'
+import {IconProp} from '@fortawesome/fontawesome-svg-core'
+import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useTheme} from 'lib/ThemeContext'
-import React from 'react'
-import {Pressable, StyleSheet, Text, View, ViewStyle} from 'react-native'
-import {MenuItemCommonProps} from 'zeego/lib/typescript/menu'
+import {HITSLOP_10} from 'lib/constants'
 
 // Custom Dropdown Menu Components
 // ==

@@ -1,14 +1,13 @@
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {ShieldExclamation} from 'lib/icons'
-import {isNative} from 'platform/detection'
 import React from 'react'
 import {Keyboard, StyleSheet} from 'react-native'
 import {Button} from 'view/com/util/forms/Button'
-
+import {usePalette} from 'lib/hooks/usePalette'
+import {ShieldExclamation} from 'lib/icons'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {FontAwesomeIconStyle} from '@fortawesome/react-native-fontawesome'
+import {isNative} from 'platform/detection'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import {useModalControls} from '#/state/modals'
 
 export function LabelsBtn({

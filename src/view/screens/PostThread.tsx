@@ -1,30 +1,28 @@
-import {useFocusEffect} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
-import {makeRecordUri} from 'lib/strings/url-helpers'
-import {s} from 'lib/styles'
-import {clamp} from 'lodash'
 import React from 'react'
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {useFocusEffect} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
+import {NativeStackScreenProps, CommonNavigatorParams} from 'lib/routes/types'
+import {makeRecordUri} from 'lib/strings/url-helpers'
+import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
 import {ComposePrompt} from 'view/com/composer/Prompt'
-
-import {isWeb} from '#/platform/detection'
+import {s} from 'lib/styles'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {
   RQKEY as POST_THREAD_RQKEY,
   ThreadNode,
 } from '#/state/queries/post-thread'
-import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {useSession} from '#/state/session'
+import {clamp} from 'lodash'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
 import {useSetMinimalShellMode} from '#/state/shell'
-import {useComposerControls} from '#/state/shell/composer'
-
-import {PostThread as PostThreadComponent} from '../com/post-thread/PostThread'
+import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ErrorMessage} from '../com/util/error/ErrorMessage'
 import {CenteredView} from '../com/util/Views'
+import {useComposerControls} from '#/state/shell/composer'
+import {useSession} from '#/state/session'
+import {isWeb} from '#/platform/detection'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'PostThread'>
 export function PostThreadScreen({route}: Props) {

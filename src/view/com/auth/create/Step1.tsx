@@ -1,12 +1,3 @@
-import {
-  FontAwesomeIcon,
-  FontAwesomeIconStyle,
-} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {usePalette} from 'lib/hooks/usePalette'
-import {s} from 'lib/styles'
-import {isWeb} from 'platform/detection'
 import React from 'react'
 import {
   ActivityIndicator,
@@ -15,19 +6,27 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {DateInput} from 'view/com/util/forms/DateInput'
+import {CreateAccountState, CreateAccountDispatch, is18} from './state'
 import {Text} from 'view/com/util/text/Text'
-
-import {useDialogControl} from '#/components/Dialog'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {logger} from '#/logger'
-
-import {ServerInputDialog} from '../server-input'
+import {DateInput} from 'view/com/util/forms/DateInput'
+import {StepHeader} from './StepHeader'
+import {s} from 'lib/styles'
+import {usePalette} from 'lib/hooks/usePalette'
 import {TextInput} from '../util/TextInput'
 import {Policies} from './Policies'
-import {CreateAccountDispatch, CreateAccountState, is18} from './state'
-import {StepHeader} from './StepHeader'
+import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
+import {isWeb} from 'platform/detection'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {logger} from '#/logger'
+import {
+  FontAwesomeIcon,
+  FontAwesomeIconStyle,
+} from '@fortawesome/react-native-fontawesome'
+import {useDialogControl} from '#/components/Dialog'
+
+import {ServerInputDialog} from '../server-input'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
