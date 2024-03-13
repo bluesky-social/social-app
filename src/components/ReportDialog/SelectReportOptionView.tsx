@@ -47,6 +47,9 @@ export function SelectReportOptionView({
     } else if (props.params.type === 'list') {
       title = _(msg`Report this list`)
       description = _(msg`Why should this list be reviewed?`)
+    } else if (props.params.type === 'feedgen') {
+      title = _(msg`Report this feed`)
+      description = _(msg`Why should this feed be reviewed?`)
     }
 
     return {

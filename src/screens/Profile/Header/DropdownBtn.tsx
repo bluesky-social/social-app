@@ -19,7 +19,6 @@ import {shareUrl} from 'lib/sharing'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
 import {Shadow} from '#/state/cache/types'
-import {NEW_REPORT_DIALOG_ENABLED} from '#/lib/build-flags'
 
 import {atoms as a, useTheme} from '#/alf'
 import * as Toast from 'view/com/util/Toast'
@@ -40,7 +39,7 @@ export function ProfileHeaderDropdownBtn({
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const queryClient = useQueryClient()
-  const control = useReportDialogControl()
+  const reportDialogControl = useReportDialogControl()
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -137,15 +136,8 @@ export function ProfileHeaderDropdownBtn({
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
-    if (NEW_REPORT_DIALOG_ENABLED) {
-      control.open()
-    } else {
-      openModal({
-        name: 'report',
-        did: profile.did,
-      })
-    }
-  }, [track, openModal, profile, control])
+    reportDialogControl.open()
+  }, [track, reportDialogControl])
 
   const isMe = React.useMemo(
     () => currentAccount?.did === profile.did,
@@ -269,7 +261,7 @@ export function ProfileHeaderDropdownBtn({
   return dropdownItems?.length ? (
     <>
       <ReportDialog
-        control={control}
+        control={reportDialogControl}
         params={{type: 'account', did: profile.did}}
       />
 

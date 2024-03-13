@@ -183,12 +183,12 @@ function ProfileScreenLoaded({
   const sectionTitles = useMemo<string[]>(() => {
     return [
       showFiltersTab ? _(msg`Labels`) : undefined,
-      showListsTab ? _(msg`Lists`) : undefined,
       showPostsTab ? _(msg`Posts`) : undefined,
       showRepliesTab ? _(msg`Replies`) : undefined,
       showMediaTab ? _(msg`Media`) : undefined,
       showLikesTab ? _(msg`Likes`) : undefined,
       showFeedsTab ? _(msg`Feeds`) : undefined,
+      showListsTab ? _(msg`Lists`) : undefined,
     ].filter(Boolean) as string[]
   }, [
     showPostsTab,
@@ -212,9 +212,6 @@ function ProfileScreenLoaded({
   if (showFiltersTab) {
     filtersIndex = nextIndex++
   }
-  if (showListsTab && profile.associated?.labeler) {
-    listsIndex = nextIndex++
-  }
   if (showPostsTab) {
     postsIndex = nextIndex++
   }
@@ -230,7 +227,7 @@ function ProfileScreenLoaded({
   if (showFeedsTab) {
     feedsIndex = nextIndex++
   }
-  if (showListsTab && !profile.associated?.labeler) {
+  if (showListsTab) {
     listsIndex = nextIndex++
   }
 

@@ -83,7 +83,7 @@ let PostDropdownBtn = ({
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
   const openLink = useOpenLink()
-  const control = useReportDialogControl()
+  const reportDialogControl = useReportDialogControl()
   const navigation = useNavigation()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
 
@@ -171,7 +171,7 @@ let PostDropdownBtn = ({
   return (
     <>
       <ReportDialog
-        control={control}
+        control={reportDialogControl}
         params={{
           type: 'post',
           uri: postUri,
@@ -307,13 +307,7 @@ let PostDropdownBtn = ({
                 <Menu.Item
                   testID="postDropdownReportBtn"
                   label={_(msg`Report post`)}
-                  onPress={() => {
-                    openModal({
-                      name: 'report',
-                      uri: postUri,
-                      cid: postCid,
-                    })
-                  }}>
+                  onPress={() => reportDialogControl.open()}>
                   <Menu.ItemText>{_(msg`Report post`)}</Menu.ItemText>
                   <Menu.ItemIcon icon={Warning} position="right" />
                 </Menu.Item>

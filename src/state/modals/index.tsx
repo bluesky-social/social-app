@@ -26,16 +26,6 @@ export interface EditProfileModal {
   onUpdate?: () => void
 }
 
-export type ReportModal = {
-  name: 'report'
-} & (
-  | {
-      uri: string
-      cid: string
-    }
-  | {did: string}
-)
-
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
   purpose?: string
@@ -180,9 +170,6 @@ export type Modal =
   // Curation
   | ContentLanguagesSettingsModal
   | PostLanguagesSettingsModal
-
-  // Moderation
-  | ReportModal
 
   // Lists
   | CreateOrEditListModal

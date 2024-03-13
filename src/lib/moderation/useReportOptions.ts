@@ -79,6 +79,14 @@ export function useReportOptions(): ReportOptions {
         },
         ...common,
       ],
+      feedgen: [
+        {
+          reason: ComAtprotoModerationDefs.REASONVIOLATION,
+          title: _(msg`Name or Description Violates Community Standards`),
+          description: _(msg`Terms used violate community standards`),
+        },
+        ...common,
+      ],
       other: common,
     }
   }, [_])
