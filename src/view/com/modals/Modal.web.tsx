@@ -7,7 +7,6 @@ import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 import {useModals, useModalControls} from '#/state/modals'
 import type {Modal as ModalIface} from '#/state/modals'
-import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ReportModal from './report/Modal'
 import * as AppealLabelModal from './AppealLabel'
@@ -78,9 +77,7 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  if (modal.name === 'confirm') {
-    element = <ConfirmModal.Component {...modal} />
-  } else if (modal.name === 'edit-profile') {
+  if (modal.name === 'edit-profile') {
     element = <EditProfileModal.Component {...modal} />
   } else if (modal.name === 'report') {
     element = <ReportModal.Component {...modal} />

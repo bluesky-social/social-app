@@ -9475,9 +9475,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001517, caniuse-lite@^1.0.30001520:
-  version "1.0.30001522"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001522.tgz#44b87a406c901269adcdb834713e23582dd71856"
-  integrity sha512-TKiyTVZxJGhsTszLuzb+6vUZSjVOAhClszBr2Ta2k9IwtNBT/4dzmL6aywt0HCgEZlmwJzXJd8yNiob6HgwTRg==
+  version "1.0.30001596"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001596.tgz"
+  integrity sha512-zpkZ+kEr6We7w63ORkoJ2pOfBwBkY/bJrG/UZ90qNb45Isblu8wzDgevEOrRL1r9dWayHjYiiyCMEXPn4DweGQ==
 
 case-anything@^2.1.13:
   version "2.1.13"
@@ -15059,11 +15059,6 @@ js-sha256@^0.10.1:
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.10.1.tgz#b40104ba1368e823fdd5f41b66b104b15a0da60d"
   integrity sha512-5obBtsz9301ULlsgggLg542s/jqtddfOpV5KJc4hajc9JV8GeY2gZHSVpYBn4nWqAUTJ9v+xwtbJ1mIBgIH5Vw==
 
-js-sha256@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.11.0.tgz#256a921d9292f7fe98905face82e367abaca9576"
-  integrity sha512-6xNlKayMZvds9h1Y1VWc0fQHQ82BxTXizWPEtEeGvmOUYpBRy4gbWroHLpzowe6xiQhHpelCQiE7HEdznyBL9Q==
-
 js-sha256@^0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/js-sha256/-/js-sha256-0.9.0.tgz#0b89ac166583e91ef9123644bd3c5334ce9d0966"
@@ -20082,14 +20077,6 @@ statsig-js@4.45.1:
     js-sha256 "^0.10.1"
     uuid "^8.3.2"
 
-statsig-js@4.49.0:
-  version "4.49.0"
-  resolved "https://registry.yarnpkg.com/statsig-js/-/statsig-js-4.49.0.tgz#8470a9ac218a93d36f4b7b306ff9377e48064740"
-  integrity sha512-N4drx6fzI168Q4NndFY3IJbSDqpWSBWvS290H/RnT/g3Et58SvtXzG5qqgzmqy4CwcmwH+IL8K15pL7hPnfvUQ==
-  dependencies:
-    js-sha256 "^0.11.0"
-    uuid "^8.3.2"
-
 statsig-react-native-expo@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/statsig-react-native-expo/-/statsig-react-native-expo-4.6.1.tgz#0bdf49fee7112f7f28bff2405f4ba0c1727bb3d6"
@@ -20109,13 +20096,6 @@ statsig-react@^1.21.1:
   integrity sha512-KLN7dhq6FvAl25Z0QN6IINFBgM3yn0GMafoE698tYZqRf911xvevFaR7qUXiTz3W9vmFYrmFRouqVMfCv7DW0A==
   dependencies:
     statsig-js "4.45.1"
-
-statsig-react@^1.36.0:
-  version "1.36.0"
-  resolved "https://registry.yarnpkg.com/statsig-react/-/statsig-react-1.36.0.tgz#c2171268a6c76eee534849ec9556b836baba04b6"
-  integrity sha512-QcTHla3ypfn2RvrnHGNlqWbiC2W/ZjcMM5LT6ExNV4skH7Xhspto3dMS3JVzBhOb74OEDZK4DbxQj9Wdz6XW0w==
-  dependencies:
-    statsig-js "4.49.0"
 
 statuses@2.0.1:
   version "2.0.1"
