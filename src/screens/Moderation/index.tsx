@@ -27,7 +27,7 @@ import {
 } from '#/state/queries/preferences'
 
 import {logger} from '#/logger'
-import {useTheme, atoms as a, useBreakpoints} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints, ViewStyleProp} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleBanSign_Stroke2_Corner0_Rounded as CircleBanSign} from '#/components/icons/CircleBanSign'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
@@ -43,6 +43,7 @@ import * as LabelingService from '#/components/LabelingServiceCard'
 import {GlobalModerationLabelPref} from '#/components/moderation/GlobalModerationLabelPref'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {useModalControls} from '#/state/modals'
+import {Props as SVGIconProps} from '#/components/icons/common'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -120,6 +121,38 @@ export function ModerationScreen(
   )
 }
 
+function SubItem({
+  title,
+  icon: Icon,
+  style,
+}: ViewStyleProp & {
+  title: string
+  icon: React.ComponentType<SVGIconProps>
+}) {
+  const t = useTheme()
+  return (
+    <View
+      style={[
+        a.w_full,
+        a.flex_row,
+        a.align_center,
+        a.justify_between,
+        a.p_lg,
+        a.gap_sm,
+        style,
+      ]}>
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        <Icon size="md" style={[t.atoms.text_contrast_medium]} />
+        <Text style={[a.text_sm, a.font_bold]}>{title}</Text>
+      </View>
+      <ChevronRight
+        size="sm"
+        style={[t.atoms.text_contrast_low, a.self_end, {paddingBottom: 2}]}
+      />
+    </View>
+  )
+}
+
 export function ModerationScreenInner({
   preferences,
 }: {
@@ -193,90 +226,52 @@ export function ModerationScreenInner({
           <Button
             testID="mutedWordsBtn"
             label={_(msg`Open muted words and tags settings`)}
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.justify_between,
-              a.p_lg,
-              a.gap_sm,
-            ]}
             onPress={() => mutedWordsDialogControl.open()}>
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <Filter size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_sm, a.font_bold]}>
-                <Trans>Muted words & tags</Trans>
-              </Text>
-            </View>
-            <ChevronRight
-              size="sm"
-              style={[t.atoms.text_contrast_low, a.self_end]}
-            />
+            {state => (
+              <SubItem
+                title={_(msg`Muted words & tags`)}
+                icon={Filter}
+                style={[
+                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+                ]}
+              />
+            )}
           </Button>
           <Divider />
-          <Link
-            testID="moderationlistsBtn"
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.justify_between,
-              a.p_lg,
-              a.gap_sm,
-            ]}
-            to="/moderation/modlists">
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <Group size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_sm, a.font_bold]}>
-                <Trans>Moderation lists</Trans>
-              </Text>
-            </View>
-            <ChevronRight
-              size="sm"
-              style={[t.atoms.text_contrast_low, a.self_end]}
-            />
+          <Link testID="moderationlistsBtn" to="/moderation/modlists">
+            {state => (
+              <SubItem
+                title={_(msg`Moderation lists`)}
+                icon={Group}
+                style={[
+                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+                ]}
+              />
+            )}
           </Link>
           <Divider />
-          <Link
-            testID="mutedAccountsBtn"
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.justify_between,
-              a.p_lg,
-              a.gap_sm,
-            ]}
-            to="/moderation/muted-accounts">
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <Person size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_sm, a.font_bold]}>
-                <Trans>Muted accounts</Trans>
-              </Text>
-            </View>
-            <ChevronRight
-              size="sm"
-              style={[t.atoms.text_contrast_low, a.self_end]}
-            />
+          <Link testID="mutedAccountsBtn" to="/moderation/muted-accounts">
+            {state => (
+              <SubItem
+                title={_(msg`Muted accounts`)}
+                icon={Person}
+                style={[
+                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+                ]}
+              />
+            )}
           </Link>
           <Divider />
-          <Link
-            testID="blockedAccountsBtn"
-            style={[
-              a.flex_row,
-              a.align_center,
-              a.justify_between,
-              a.p_lg,
-              a.gap_sm,
-            ]}
-            to="/moderation/blocked-accounts">
-            <View style={[a.flex_row, a.align_center, a.gap_md]}>
-              <CircleBanSign size="md" style={[t.atoms.text_contrast_medium]} />
-              <Text style={[a.text_sm, a.font_bold]}>
-                <Trans>Blocked accounts</Trans>
-              </Text>
-            </View>
-            <ChevronRight
-              size="sm"
-              style={[t.atoms.text_contrast_low, a.self_end]}
-            />
+          <Link testID="blockedAccountsBtn" to="/moderation/blocked-accounts">
+            {state => (
+              <SubItem
+                title={_(msg`Blocked accounts`)}
+                icon={CircleBanSign}
+                style={[
+                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+                ]}
+              />
+            )}
           </Link>
         </View>
 
