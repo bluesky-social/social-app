@@ -16,10 +16,10 @@ tar czvf bundle.tar.gz ./*
 
 echo "Deploying to $DEPLOYMENT_URL..."
 
-#curl --form 'bundle=@./bundle.tar.gz' \
-#--user bsky:abc \
-#--basic "$DEPLOYMENT_URL" \
-#/
+curl --form 'bundle=@./bundle.tar.gz' \
+--user "bsky:$DENNIS_API_KEY" \
+--basic "$DEPLOYMENT_URL" \
+/
 
 cd ..
 

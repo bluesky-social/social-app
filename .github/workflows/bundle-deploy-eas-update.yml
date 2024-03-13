@@ -46,3 +46,5 @@ jobs:
 
       - name: 📦 Package Bundle and 🚀 Deploy
         run: yarn make-deploy-bundle
+        env:
+          DENNIS_API_KEY: ${{ secrets.DENNIS_API_KEY }}

@@ -122,7 +122,7 @@ module.exports = function (config) {
         favicon: './assets/favicon.png',
       },
       updates: {
-        url: 'http://localhost:3000/api/manifest',
+        url: 'https://updates.bsky.app/manifest',
         enabled: true,
         fallbackToCacheTimeout: 30000,
         codeSigningCertificate: './code-signing/certificate.pem',
