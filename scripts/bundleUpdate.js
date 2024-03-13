@@ -78,7 +78,7 @@ const moveFiles = async () => {
     await fsp.cp(currPath, path.join(DEST_DIR, withExtPath))
   }
 
-  const runtimeVersion = PACKAGE_JSON.version.split('.')
+  const runtimeVersion = PACKAGE_JSON.version
 
   const result = {
     version: 0,
