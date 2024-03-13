@@ -1,5 +1,9 @@
 import React from 'react'
-import {GestureResponderEvent, PressableProps} from 'react-native'
+import {
+  GestureResponderEvent,
+  PressableProps,
+  AccessibilityProps,
+} from 'react-native'
 
 import {Props as SVGIconProps} from '#/components/icons/common'
 import * as Dialog from '#/components/Dialog'
@@ -9,7 +13,23 @@ export type ContextType = {
   control: Dialog.DialogOuterProps['control']
 }
 
-export type TriggerProps = ViewStyleProp & {
+export type RadixPassThroughTriggerProps = {
+  id: string
+  type: 'button'
+  disabled: boolean
+  ['data-disabled']: boolean
+  ['data-state']: string
+  ['aria-controls']?: string
+  ['aria-haspopup']?: boolean
+  ['aria-expanded']?: AccessibilityProps['aria-expanded']
+  onKeyDown: (e: React.KeyboardEvent) => void
+  /**
+   * Radix provides this, but we override on web to use `onPress` instead,
+   * which is less sensitive while scrolling.
+   */
+  onPointerDown: PressableProps['onPointerDown']
+}
+export type TriggerProps = {
   children(props: TriggerChildProps): React.ReactNode
   label: string
 }
@@ -52,7 +72,14 @@ export type TriggerChildProps =
          */
         pressed: false
       }
-      props: {}
+      props: RadixPassThroughTriggerProps & {
+        onPress: () => void
+        onFocus: () => void
+        onBlur: () => void
+        onMouseEnter: () => void
+        onMouseLeave: () => void
+        accessibilityLabel: string
+      }
     }
 
 export type ItemProps = React.PropsWithChildren<

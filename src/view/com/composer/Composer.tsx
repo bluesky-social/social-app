@@ -49,7 +49,7 @@ import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 import {insertMentionAt} from 'lib/strings/mention-manip'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModals, useModalControls} from '#/state/modals'
+import {useModals} from '#/state/modals'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useLanguagePrefs,
@@ -63,6 +63,8 @@ import {emitPostCreated} from '#/state/events'
 import {ThreadgateSetting} from '#/state/queries/threadgate'
 import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import * as Prompt from '#/components/Prompt'
+import {useDialogStateControlContext} from 'state/dialogs'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -76,8 +78,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
-  const {isModalActive, activeModals} = useModals()
-  const {openModal, closeModal} = useModalControls()
+  const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -87,6 +88,9 @@ export const ComposePost = observer(function ComposePost({
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
+  const discardPromptControl = Prompt.usePromptControl()
+  const {closeAllDialogs} = useDialogStateControlContext()
+
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
@@ -134,27 +138,21 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (activeModals.some(modal => modal.name === 'confirm')) {
-        closeModal()
-      }
+      closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
       }
-      openModal({
-        name: 'confirm',
-        title: _(msg`Discard draft`),
-        onPressConfirm: onClose,
-        onPressCancel: () => {
-          closeModal()
-        },
-        message: _(msg`Are you sure you'd like to discard this draft?`),
-        confirmBtnText: _(msg`Discard`),
-        confirmBtnStyle: {backgroundColor: colors.red4},
-      })
+      discardPromptControl.open()
     } else {
       onClose()
     }
-  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery, _])
+  }, [
+    graphemeLength,
+    gallery.isEmpty,
+    closeAllDialogs,
+    discardPromptControl,
+    onClose,
+  ])
   // android back button
   useEffect(() => {
     if (!isAndroid) {
@@ -488,6 +486,15 @@ export const ComposePost = observer(function ComposePost({
           <CharProgress count={graphemeLength} />
         </View>
       </View>
+
+      <Prompt.Basic
+        control={discardPromptControl}
+        title={_(msg`Discard draft?`)}
+        description={_(msg`Are you sure you'd like to discard this draft?`)}
+        onConfirm={onClose}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
     </KeyboardAvoidingView>
   )
 })

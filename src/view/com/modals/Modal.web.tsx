@@ -7,7 +7,6 @@ import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
 
 import {useModals, useModalControls} from '#/state/modals'
 import type {Modal as ModalIface} from '#/state/modals'
-import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as ReportModal from './report/Modal'
 import * as AppealLabelModal from './AppealLabel'
@@ -22,7 +21,6 @@ import * as CropImageModal from './crop-image/CropImage.web'
 import * as AltTextImageModal from './AltImage'
 import * as EditImageModal from './EditImage'
 import * as ChangeHandleModal from './ChangeHandle'
-import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
@@ -79,9 +77,7 @@ function Modal({modal}: {modal: ModalIface}) {
   }
 
   let element
-  if (modal.name === 'confirm') {
-    element = <ConfirmModal.Component {...modal} />
-  } else if (modal.name === 'edit-profile') {
+  if (modal.name === 'edit-profile') {
     element = <EditProfileModal.Component {...modal} />
   } else if (modal.name === 'report') {
     element = <ReportModal.Component {...modal} />
@@ -105,8 +101,6 @@ function Modal({modal}: {modal: ModalIface}) {
     element = <ThreadgateModal.Component {...modal} />
   } else if (modal.name === 'change-handle') {
     element = <ChangeHandleModal.Component {...modal} />
-  } else if (modal.name === 'waitlist') {
-    element = <WaitlistModal.Component />
   } else if (modal.name === 'invite-codes') {
     element = <InviteCodesModal.Component />
   } else if (modal.name === 'add-app-password') {

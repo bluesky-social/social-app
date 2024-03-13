@@ -8,9 +8,8 @@ import {cleanError} from 'lib/strings/errors'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {StackActions} from '@react-navigation/native'
-import {useNavigation} from '@react-navigation/core'
-import {NavigationProp} from 'lib/routes/types'
 import {router} from '#/routes'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 
 export function ListFooter({
   isFetching,
@@ -142,7 +141,7 @@ export function ListMaybePlaceholder({
   notFoundType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const t = useTheme()
   const {gtMobile, gtTablet} = useBreakpoints()
 
