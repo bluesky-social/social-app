@@ -23,6 +23,10 @@ export type RadixPassThroughTriggerProps = {
   ['aria-haspopup']?: boolean
   ['aria-expanded']?: AccessibilityProps['aria-expanded']
   onKeyDown: (e: React.KeyboardEvent) => void
+  /**
+   * Radix provides this, but we override on web to use `onPress` instead,
+   * which is less sensitive while scrolling.
+   */
   onPointerDown: PressableProps['onPointerDown']
 }
 export type TriggerProps = {
@@ -69,6 +73,7 @@ export type TriggerChildProps =
         pressed: false
       }
       props: RadixPassThroughTriggerProps & {
+        onPress: () => void
         onFocus: () => void
         onBlur: () => void
         onMouseEnter: () => void
