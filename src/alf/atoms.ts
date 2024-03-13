@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {web, native} from '#/alf/util/platform'
 import * as tokens from '#/alf/tokens'
 
@@ -6,7 +7,7 @@ export const atoms = {
    * Positioning
    */
   fixed: {
-    position: 'fixed',
+    position: Platform.select({web: 'fixed', native: 'absolute'}) as 'absolute',
   },
   absolute: {
     position: 'absolute',

@@ -3,6 +3,8 @@
 import React from 'react'
 import {View, Pressable, ViewStyle, StyleProp} from 'react-native'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
@@ -19,6 +21,7 @@ import {
   RadixPassThroughTriggerProps,
 } from '#/components/Menu/types'
 import {Context} from '#/components/Menu/context'
+import {Portal} from '#/components/Portal'
 
 export function useMenuControl(): Dialog.DialogControlProps {
   const id = React.useId()
@@ -50,6 +53,7 @@ export function Root({
 }: React.PropsWithChildren<{
   control?: Dialog.DialogOuterProps['control']
 }>) {
+  const {_} = useLingui()
   const defaultControl = useMenuControl()
   const context = React.useMemo<ContextType>(
     () => ({
@@ -70,6 +74,18 @@ export function Root({
 
   return (
     <Context.Provider value={context}>
+      {context.control.isOpen && (
+        <Portal>
+          <Pressable
+            style={[a.fixed, a.inset_0, a.z_50]}
+            onPress={() => context.control.close()}
+            accessibilityHint=""
+            accessibilityLabel={_(
+              msg`Context menu backdrop, click to close the menu.`,
+            )}
+          />
+        </Portal>
+      )}
       <DropdownMenu.Root
         open={context.control.isOpen}
         onOpenChange={onOpenChange}>
