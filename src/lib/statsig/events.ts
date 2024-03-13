@@ -2,6 +2,10 @@ export type LogEvents = {
   init: {
     initMs: number
   }
+  'feed:endReached': {
+    feedType: string
+    itemCount: number
+  }
   'post:create': {
     imageCount: number
     isReply: boolean
