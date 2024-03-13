@@ -56,7 +56,7 @@ export function GlobalModerationLabelPref({
         a.pr_md,
         a.align_center,
       ]}>
-      <View style={[a.gap_xs, {width: '50%'}]}>
+      <View style={[a.gap_xs, a.flex_1]}>
         <Text style={[a.font_bold]}>{labelStrings.name}</Text>
         <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
           {labelStrings.description}
