@@ -66,7 +66,11 @@ function HomeScreenReady({
     Alert.alert('If you see this, the update worked.')
     ;(async () => {
       try {
+        Alert.alert(Updates.channel?.toString() ?? 'no channel')
+        Alert.alert(Updates.updateId ?? 'none')
         const update = await Updates.checkForUpdateAsync()
+
+        Alert.alert('Update!', JSON.stringify(update))
 
         if (update.isAvailable) {
           Alert.alert(
