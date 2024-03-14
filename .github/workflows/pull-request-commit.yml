@@ -27,31 +27,30 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
+
       - name: ⬇️ Fetch commits from base branch
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
-      - name: ⬢ Setup Node
+
+      - name: 🔧 Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-      - name: ♻️ Restore caches
-        uses: ./.github/actions/expo-caches
-        id: expo-caches
-        with:
-          yarn-workspace: 'true'
-      - name: 🧶 Install node modules in root dir
-        if: steps.expo-caches.outputs.yarn-workspace-hit != 'true'
-        run: yarn install --frozen-lockfile
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: ⚙️ Install Dependencies
+        run: yarn install
+
       - name: Get the base commit
         id: base-commit
         run: |
           # Since we limit this pr-labeler workflow only triggered from limited paths, we should use custom base commit
           echo base-commit=$(git log -n 1 main --pretty=format:'%H' -- .github/workflows/pr-labeler.yml apps/bare-expo apps/test-suite packages yarn.lock) >> "$GITHUB_OUTPUT"
+
       - name: 📷 Check fingerprint
         id: fingerprint
         uses: expo/expo-github-action/fingerprint@main
         with:
-          working-directory: apps/bare-expo
           previous-git-commit: ${{ steps.base-commit.outputs.base-commit }}
 
       - name: 👀 Debug fingerprint
@@ -82,6 +81,7 @@ jobs:
               repo: context.repo.repo,
               labels: ['bot: fingerprint compatible']
             })
+
       - name: 🏷️ Labeling PR
         uses: actions/github-script@v6
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' }}
@@ -114,6 +114,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'expo-bot'
           body-includes: <!-- pr-labeler comment -->
+
       - name: 💬 Add comment with fingerprint
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' && steps.old_comment.outputs.comment-id == '' }}
         uses: actions/github-script@v6
@@ -141,6 +142,7 @@ jobs:
               repo: context.repo.repo,
               body: body,
             });
+
       - name: 💬 Update comment with fingerprint
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' && steps.old_comment.outputs.comment-id != '' }}
         uses: actions/github-script@v6
@@ -169,6 +171,7 @@ jobs:
               repo: context.repo.repo,
               body: body,
             });
+
       - name: 💬 Delete comment with fingerprint
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' && steps.old_comment.outputs.comment-id != '' }}
         uses: actions/github-script@v6
