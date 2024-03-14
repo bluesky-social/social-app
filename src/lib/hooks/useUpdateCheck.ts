@@ -7,6 +7,7 @@ import {logger} from '#/logger'
 export function useUpdateCheck() {
   const appState = React.useRef<AppStateStatus>('active')
   const lastMinimize = React.useRef(0)
+  const ranInitialCheck = React.useRef(false)
   const timeout = React.useRef<NodeJS.Timeout>()
   const {isUpdatePending} = useUpdates()
 
@@ -30,12 +31,18 @@ export function useUpdateCheck() {
     }, 15e3)
   }).current
 
-  // This doesn't need to handle updates on app launch. expo-updates will handle that on its own. The only thing
-  // we have to handle here is checking for new updates on an interval and installing those updates after a 30 minute
-  // period of being outside the app.
+  // This effect runs only on the first app launch. The ref is probably unnecessary but incase of any strange
+  // things possibly in the simulator (shouldn't happen with __DEV__ but just in case) it won't run more than
+  // once
   React.useEffect(() => {
-    if (__DEV__) return
+    if (__DEV__ || ranInitialCheck.current) return
+    setCheckTimeout()
+    ranInitialCheck.current = true
+  }, [setCheckTimeout])
 
+  // After the app has been minimized for 30 minutes, we want to either A. install an update if one has become available
+  // or B check for an update again.
+  React.useEffect(() => {
     const subscription = AppState.addEventListener(
       'change',
       async nextAppState => {
