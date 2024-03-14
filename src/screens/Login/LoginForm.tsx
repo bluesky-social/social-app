@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
+  ScrollView,
   TextInput,
   TouchableOpacity,
   View,
@@ -21,7 +22,7 @@ import {styles} from '../../view/com/auth/login/styles'
 import {useLingui} from '@lingui/react'
 import {useDialogControl} from '#/components/Dialog'
 import {ServerInputDialog} from '../../view/com/auth/server-input'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {isAndroid} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -43,6 +44,7 @@ export const LoginForm = ({
   setServiceUrl,
   onPressRetryConnect,
   onPressBack,
+  onPressForgotPassword,
 }: {
   error: string
   serviceUrl: string
@@ -129,164 +131,171 @@ export const LoginForm = ({
 
   const isReady = !!serviceDescription && !!identifier && !!password
   return (
-    <View testID="loginForm" style={[a.gap_lg, !gtMobile && a.px_lg]}>
-      <ServerInputDialog
-        control={serverInputControl}
-        onSelect={setServiceUrl}
-      />
+    <ScrollView testID="loginForm" style={a.h_full}>
+      <View style={[a.gap_lg, !gtMobile && a.px_lg, a.flex_1]}>
+        <ServerInputDialog
+          control={serverInputControl}
+          onSelect={setServiceUrl}
+        />
 
-      <View>
-        <TextField.Label>
-          <Trans>Hosting provider</Trans>
-        </TextField.Label>
-        <TouchableOpacity
-          accessibilityRole="button"
-          style={[
-            a.w_full,
-            a.flex_row,
-            a.align_center,
-            a.rounded_sm,
-            a.px_md,
-            a.gap_xs,
-            {paddingVertical: isAndroid ? 14 : 9},
-            t.atoms.bg_contrast_25,
-          ]}
-          onPress={onPressSelectService}>
-          <TextField.Icon icon={Globe} />
-          <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
-          <View
-            style={[
-              a.rounded_sm,
-              t.atoms.bg_contrast_100,
-              {marginLeft: 'auto', left: 6, padding: 6},
-            ]}>
-            <Pencil
-              style={{color: t.palette.contrast_500}}
-              height={18}
-              width={18}
-            />
-          </View>
-        </TouchableOpacity>
-      </View>
-      <View>
-        <TextField.Label>
-          <Trans>Account</Trans>
-        </TextField.Label>
-        <TextField.Root>
-          <TextField.Icon icon={At} />
-          <TextField.Input
-            testID="loginUsernameInput"
-            label={_(msg`Username or email address`)}
-            autoCapitalize="none"
-            autoFocus
-            autoCorrect={false}
-            autoComplete="username"
-            returnKeyType="next"
-            textContentType="username"
-            onSubmitEditing={() => {
-              passwordInputRef.current?.focus()
-            }}
-            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-            value={identifier}
-            onChangeText={str =>
-              setIdentifier((str || '').toLowerCase().trim())
-            }
-            editable={!isProcessing}
-            accessibilityHint={_(
-              msg`Input the username or email address you used at signup`,
-            )}
-          />
-        </TextField.Root>
-      </View>
-      <View>
-        <TextField.Root>
-          <TextField.Icon icon={Lock} />
-          <TextField.Input
-            testID="loginPasswordInput"
-            inputRef={passwordInputRef}
-            label={_(msg`Password`)}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="password"
-            returnKeyType="done"
-            enablesReturnKeyAutomatically={true}
-            secureTextEntry={true}
-            textContentType="password"
-            clearButtonMode="while-editing"
-            value={password}
-            onChangeText={setPassword}
-            onSubmitEditing={onPressNext}
-            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-            editable={!isProcessing}
-            accessibilityHint={
-              identifier === ''
-                ? _(msg`Input your password`)
-                : _(msg`Input the password tied to ${identifier}`)
-            }
-          />
-          {/* <TouchableOpacity
-            testID="forgotPasswordButton"
-            style={styles.textInputInnerBtn}
-            onPress={onPressForgotPassword}
+        <View>
+          <TextField.Label>
+            <Trans>Hosting provider</Trans>
+          </TextField.Label>
+          <TouchableOpacity
             accessibilityRole="button"
-            accessibilityLabel={_(msg`Forgot password`)}
-            accessibilityHint={_(msg`Opens password reset form`)}>
-            <Text style={pal.link}>
-              <Trans>Forgot</Trans>
-            </Text>
-          </TouchableOpacity> */}
-        </TextField.Root>
-      </View>
-      {error ? (
-        <View style={[styles.error, {marginHorizontal: 0}]}>
-          <Warning style={s.white} size="sm" />
-          <View style={(a.flex_1, a.ml_sm)}>
-            <Text style={[s.white, s.bold]}>{error}</Text>
-          </View>
+            style={[
+              a.w_full,
+              a.flex_row,
+              a.align_center,
+              a.rounded_sm,
+              a.px_md,
+              a.gap_xs,
+              {paddingVertical: isAndroid ? 14 : 9},
+              t.atoms.bg_contrast_25,
+            ]}
+            onPress={onPressSelectService}>
+            <TextField.Icon icon={Globe} />
+            <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
+            <View
+              style={[
+                a.rounded_sm,
+                t.atoms.bg_contrast_100,
+                {marginLeft: 'auto', left: 6, padding: 6},
+              ]}>
+              <Pencil
+                style={{color: t.palette.contrast_500}}
+                height={18}
+                width={18}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
-      ) : undefined}
-      <View style={[a.flex_row, a.align_center]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="small"
-          onPress={onPressBack}>
-          {_(msg`Back`)}
-        </Button>
-        <View style={s.flex1} />
-        {!serviceDescription && error ? (
+        <View>
+          <TextField.Label>
+            <Trans>Account</Trans>
+          </TextField.Label>
+          <TextField.Root>
+            <TextField.Icon icon={At} />
+            <TextField.Input
+              testID="loginUsernameInput"
+              label={_(msg`Username or email address`)}
+              autoCapitalize="none"
+              autoFocus
+              autoCorrect={false}
+              autoComplete="username"
+              returnKeyType="next"
+              textContentType="username"
+              onSubmitEditing={() => {
+                passwordInputRef.current?.focus()
+              }}
+              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+              value={identifier}
+              onChangeText={str =>
+                setIdentifier((str || '').toLowerCase().trim())
+              }
+              editable={!isProcessing}
+              accessibilityHint={_(
+                msg`Input the username or email address you used at signup`,
+              )}
+            />
+          </TextField.Root>
+        </View>
+        <View>
+          <TextField.Root>
+            <TextField.Icon icon={Lock} />
+            <TextField.Input
+              testID="loginPasswordInput"
+              inputRef={passwordInputRef}
+              label={_(msg`Password`)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="password"
+              returnKeyType="done"
+              enablesReturnKeyAutomatically={true}
+              secureTextEntry={true}
+              textContentType="password"
+              clearButtonMode="while-editing"
+              value={password}
+              onChangeText={setPassword}
+              onSubmitEditing={onPressNext}
+              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+              editable={!isProcessing}
+              accessibilityHint={
+                identifier === ''
+                  ? _(msg`Input your password`)
+                  : _(msg`Input the password tied to ${identifier}`)
+              }
+            />
+            <TouchableOpacity
+              testID="forgotPasswordButton"
+              onPress={onPressForgotPassword}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Forgot password`)}
+              accessibilityHint={_(msg`Opens password reset form`)}
+              style={[
+                a.rounded_sm,
+                t.atoms.bg_contrast_100,
+                {marginLeft: 'auto', left: 6, padding: 6},
+                a.z_10,
+              ]}>
+              <ButtonText style={t.atoms.text_contrast_medium}>
+                <Trans>Forgot?</Trans>
+              </ButtonText>
+            </TouchableOpacity>
+          </TextField.Root>
+        </View>
+        {error ? (
+          <View style={[styles.error, {marginHorizontal: 0}]}>
+            <Warning style={s.white} size="sm" />
+            <View style={(a.flex_1, a.ml_sm)}>
+              <Text style={[s.white, s.bold]}>{error}</Text>
+            </View>
+          </View>
+        ) : undefined}
+        <View style={[a.flex_row, a.align_center]}>
           <Button
-            testID="loginRetryButton"
-            label={_(msg`Retry`)}
-            accessibilityHint={_(msg`Retries login`)}
+            label={_(msg`Back`)}
             variant="solid"
             color="secondary"
             size="small"
-            onPress={onPressRetryConnect}>
-            {_(msg`Retry`)}
+            onPress={onPressBack}>
+            {_(msg`Back`)}
           </Button>
-        ) : !serviceDescription ? (
-          <>
+          <View style={s.flex1} />
+          {!serviceDescription && error ? (
+            <Button
+              testID="loginRetryButton"
+              label={_(msg`Retry`)}
+              accessibilityHint={_(msg`Retries login`)}
+              variant="solid"
+              color="secondary"
+              size="small"
+              onPress={onPressRetryConnect}>
+              {_(msg`Retry`)}
+            </Button>
+          ) : !serviceDescription ? (
+            <>
+              <ActivityIndicator />
+              <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
+                <Trans>Connecting...</Trans>
+              </Text>
+            </>
+          ) : isProcessing ? (
             <ActivityIndicator />
-            <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-              <Trans>Connecting...</Trans>
-            </Text>
-          </>
-        ) : isProcessing ? (
-          <ActivityIndicator />
-        ) : isReady ? (
-          <Button
-            label={_(msg`Next`)}
-            accessibilityHint={_(msg`Navigates to the next screen`)}
-            variant="solid"
-            color="primary"
-            size="small"
-            onPress={onPressNext}>
-            {_(msg`Next`)}
-          </Button>
-        ) : undefined}
+          ) : isReady ? (
+            <Button
+              label={_(msg`Next`)}
+              accessibilityHint={_(msg`Navigates to the next screen`)}
+              variant="solid"
+              color="primary"
+              size="small"
+              onPress={onPressNext}>
+              {_(msg`Next`)}
+            </Button>
+          ) : undefined}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
