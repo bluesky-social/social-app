@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   DEFAULT_LABEL_SETTINGS,
   BskyAgent,
@@ -25,22 +26,28 @@ export function useMyLabelers() {
     ),
   )
   const labelers = useLabelersDetailedInfoQuery({dids})
-  return {
-    isLoading: prefs.isLoading || labelers.isLoading,
-    error: prefs.error || labelers.error,
-    data: labelers.data,
-  }
+  const isLoading = prefs.isLoading || labelers.isLoading
+  const error = prefs.error || labelers.error
+  return React.useMemo(() => {
+    return {
+      isLoading,
+      error,
+      data: labelers.data,
+    }
+  }, [labelers, isLoading, error])
 }
 
 export function useLabelDefinitions() {
   const labelers = useMyLabelers()
-  return {
-    labelDefs: Object.fromEntries(
-      (labelers.data || []).map(labeler => [
-        labeler.creator.did,
-        interpretLabelValueDefinitions(labeler),
-      ]),
-    ),
-    labelers: labelers.data || [],
-  }
+  return React.useMemo(() => {
+    return {
+      labelDefs: Object.fromEntries(
+        (labelers.data || []).map(labeler => [
+          labeler.creator.did,
+          interpretLabelValueDefinitions(labeler),
+        ]),
+      ),
+      labelers: labelers.data || [],
+    }
+  }, [labelers])
 }
