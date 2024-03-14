@@ -59,7 +59,7 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
-  useUpdateCheck()
+  // useUpdateCheck()
 
   // init
   useEffect(() => {

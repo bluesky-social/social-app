@@ -71,6 +71,7 @@ function HomeScreenReady({
         const update = await Updates.checkForUpdateAsync()
 
         Alert.alert('Update!', JSON.stringify(update))
+        Alert.alert('MAnifest:', JSON.stringify(update.manifest))
 
         if (update.isAvailable) {
           Alert.alert(
