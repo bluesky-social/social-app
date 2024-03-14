@@ -42,7 +42,10 @@ function PostThreadFollowBtnLoaded({
   const {isTabletOrDesktop} = useWebMediaQueries()
   const profile: Shadow<AppBskyActorDefs.ProfileViewBasic> =
     useProfileShadow(profileUnshadowed)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'PostThreadItem',
+  )
   const requireAuth = useRequireAuth()
 
   const isFollowing = !!profile.viewer?.following

@@ -57,7 +57,7 @@ export function RecommendedFollowsItem({
   )
 }
 
-export function ProfileCard({
+function ProfileCard({
   profile,
   onFollowStateChange,
   moderation,
@@ -74,7 +74,10 @@ export function ProfileCard({
   const {_} = useLingui()
   const [addingMoreSuggestions, setAddingMoreSuggestions] =
     React.useState(false)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'RecommendedFollowsItem',
+  )
 
   const onToggleFollow = React.useCallback(async () => {
     try {

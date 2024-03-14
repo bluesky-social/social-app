@@ -44,6 +44,7 @@ let PostCtrls = ({
   showAppealLabelItem,
   style,
   onPressReply,
+  logContext,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -52,13 +53,17 @@ let PostCtrls = ({
   showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
 }): React.ReactNode => {
   const theme = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
-  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post)
-  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post)
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
+  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
+    post,
+    logContext,
+  )
   const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(

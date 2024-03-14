@@ -172,7 +172,10 @@ function SuggestedFollow({
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const profile = useProfileShadow(profileUnshadowed)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ProfileHeaderSuggestedFollows',
+  )
 
   const onPressFollow = React.useCallback(async () => {
     try {
