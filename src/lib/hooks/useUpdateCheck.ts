@@ -11,7 +11,7 @@ export function useUpdateCheck() {
   const timeout = React.useRef<NodeJS.Timeout>()
   const {isUpdatePending} = useUpdates()
 
-  const setCheckTimeout = React.useRef(() => {
+  const setCheckTimeout = React.useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
         logger.debug('Checking for update...')
@@ -29,7 +29,7 @@ export function useUpdateCheck() {
         logger.warn('OTA Update Error', {error: `${e}`})
       }
     }, 15e3)
-  }).current
+  }, [])
 
   // This effect runs only on the first app launch. The ref is probably unnecessary but incase of any strange
   // things possibly in the simulator (shouldn't happen with __DEV__ but just in case) it won't run more than
