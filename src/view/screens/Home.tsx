@@ -63,15 +63,9 @@ function HomeScreenReady({
   }, [pinnedFeedInfos])
 
   React.useEffect(() => {
-    Alert.alert('If you see this, the update worked.')
     ;(async () => {
       try {
-        Alert.alert(Updates.channel?.toString() ?? 'no channel')
-        Alert.alert(Updates.updateId ?? 'none')
         const update = await Updates.checkForUpdateAsync()
-
-        Alert.alert('Update!', JSON.stringify(update))
-        Alert.alert('MAnifest:', JSON.stringify(update.manifest))
 
         if (update.isAvailable) {
           Alert.alert(
