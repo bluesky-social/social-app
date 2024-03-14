@@ -169,7 +169,7 @@ export function ProfileLabelsSectionInner({
               <Text
                 style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
                 <Trans>
-                  Blocking does not prevent this user from placing labels on
+                  Blocking does not prevent this labeler from placing labels on
                   your account.
                 </Trans>
               </Text>
