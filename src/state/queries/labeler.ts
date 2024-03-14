@@ -4,6 +4,7 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {preferencesQueryKey} from '#/state/queries/preferences'
+import {STALE} from '#/state/queries'
 
 export const labelerInfoQueryKey = (did: string) => ['labeler-info', did]
 export const labelersInfoQueryKey = (dids: string[]) => [
@@ -51,7 +52,7 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
     enabled: !!dids.length,
     queryKey: labelersDetailedInfoQueryKey(dids),
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
-    staleTime: 1000 * 60 * 60 * 6, // 6 hours
+    staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
       const res = await getAgent().app.bsky.labeler.getServices({
         dids,
