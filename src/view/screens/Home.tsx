@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, ActivityIndicator, StyleSheet, Alert} from 'react-native'
+import {View, ActivityIndicator, StyleSheet} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {NativeStackScreenProps, HomeTabNavigatorParams} from 'lib/routes/types'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -60,13 +60,6 @@ function HomeScreenReady({
     }
     return feeds
   }, [pinnedFeedInfos])
-
-  React.useEffect(() => {
-    Alert.alert(
-      'OTA Update Test',
-      'After seeing this message:\n\n1. Dismiss the alert\n2. Wait 30 seconds. Do not minimize the app.\n3. Force quit and restart the app.\n\nYou should not see this message again.',
-    )
-  }, [])
 
   const rawSelectedFeed = useSelectedFeed()
   const setSelectedFeed = useSetSelectedFeed()
