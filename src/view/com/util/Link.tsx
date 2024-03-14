@@ -19,7 +19,7 @@ import {
   isExternalUrl,
   linkRequiresWarning,
 } from 'lib/strings/url-helpers'
-import {isWeb} from 'platform/detection'
+import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
 import {useModalControls} from '#/state/modals'
@@ -96,7 +96,8 @@ export const Link = memo(function Link({
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
             foreground: true,
-          }}>
+          }}
+          unstable_pressDelay={isAndroid ? 90 : undefined}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
