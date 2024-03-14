@@ -51,6 +51,7 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
     enabled: !!dids.length,
     queryKey: labelersDetailedInfoQueryKey(dids),
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
+    staleTime: 1000 * 60 * 60 * 6, // 6 hours
     queryFn: async () => {
       const res = await getAgent().app.bsky.labeler.getServices({
         dids,
