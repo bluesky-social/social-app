@@ -34,12 +34,6 @@ jobs:
         run: git fetch origin main:main --depth 100
         if: github.event_name == 'pull_request'
 
-      - name: ♻️ Restore caches
-        uses: ./.github/actions/expo-caches
-        id: expo-caches
-        with:
-          yarn-workspace: 'true'
-
       - name: 🔧 Setup Node
         uses: actions/setup-node@v4
         with:
