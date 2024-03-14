@@ -310,6 +310,7 @@ let FeedItemInner = ({
             showAppealLabelItem={
               post.author.did === currentAccount?.did && isModeratedPost
             }
+            logContext="FeedItem"
           />
         </View>
       </View>

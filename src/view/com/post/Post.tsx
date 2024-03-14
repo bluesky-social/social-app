@@ -220,6 +220,7 @@ function PostInner({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
+            logContext="Post"
           />
         </View>
       </View>

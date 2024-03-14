@@ -6,7 +6,9 @@ import {
 } from 'statsig-react-native-expo'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
-import {Events} from './events'
+import {LogEvents} from './events'
+
+export type {LogEvents}
 
 const statsigOptions = {
   environment: {
@@ -31,9 +33,9 @@ export function attachRouteToLogEvents(
   getCurrentRouteName = getRouteName
 }
 
-export function logEvent<E extends keyof Events>(
+export function logEvent<E extends keyof LogEvents>(
   eventName: E & string,
-  rawMetadata?: Events[E] & FlatJSONRecord,
+  rawMetadata: LogEvents[E] & FlatJSONRecord,
 ) {
   const fullMetadata = {
     ...rawMetadata,
