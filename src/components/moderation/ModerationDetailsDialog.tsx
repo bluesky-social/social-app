@@ -131,7 +131,7 @@ function ModerationDetailsDialogInner({
                   to={makeProfileLink({did: modcause.label.src, handle: ''})}
                   onPress={() => control.close()}
                   style={a.text_md}>
-                  @{desc.source}
+                  {desc.source}
                 </InlineLink>
               )}
               .
