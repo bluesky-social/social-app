@@ -5,6 +5,7 @@ module.exports = {
     'de',
     'es',
     'fr',
+    'ga',
     'hi',
     'id',
     'ja',
