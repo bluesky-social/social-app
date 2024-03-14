@@ -21,12 +21,10 @@ export function ProfileHeaderDisplayName({
       <Text
         testID="profileHeaderDisplayName"
         style={[t.atoms.text, a.text_4xl, {fontWeight: '500'}]}>
-        {profile.handle === 'dholms.xyz'
-          ? 'DIPSHIT WILLY'
-          : sanitizeDisplayName(
-              profile.displayName || sanitizeHandle(profile.handle),
-              moderation.ui('displayName'),
-            )}
+        {sanitizeDisplayName(
+          profile.displayName || sanitizeHandle(profile.handle),
+          moderation.ui('displayName'),
+        )}
       </Text>
     </View>
   )
