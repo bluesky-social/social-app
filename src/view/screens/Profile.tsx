@@ -170,7 +170,7 @@ function ProfileScreenLoaded({
   )
 
   const isMe = profile.did === currentAccount?.did
-  const showFiltersTab = hasSession && profile.associated?.labeler
+  const showFiltersTab = profile.associated?.labeler
   const showPostsTab = true
   const showRepliesTab = hasSession
   const showMediaTab = !profile.associated?.labeler
