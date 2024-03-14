@@ -27,17 +27,14 @@ export function Outer({
     <View
       style={[
         a.flex_row,
-        a.align_center,
-        a.gap_sm,
+        a.gap_md,
         a.w_full,
         a.p_lg,
         a.pr_md,
         a.overflow_hidden,
         style,
       ]}>
-      <View style={[a.flex_row, a.align_center, a.w_full, a.gap_md]}>
-        {children}
-      </View>
+      {children}
     </View>
   )
 }
@@ -52,7 +49,9 @@ export function Title({value}: {value: string}) {
 
 export function Description({value, handle}: {value?: string; handle: string}) {
   return value ? (
-    <RichText value={value} style={[]} />
+    <Text numberOfLines={2}>
+      <RichText value={value} style={[]} />
+    </Text>
   ) : (
     <Text>
       <Trans>By {sanitizeHandle(handle, '@')}</Trans>
