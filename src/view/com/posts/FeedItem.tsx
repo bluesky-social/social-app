@@ -305,6 +305,7 @@ let FeedItemInner = ({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
+            logContext="FeedItem"
           />
         </View>
       </View>

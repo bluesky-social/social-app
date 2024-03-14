@@ -81,8 +81,8 @@ export function useModerationCauseDescription(
     } else {
       return {
         icon: EyeSlash,
-        name: _(msg`Muted User`),
-        description: _(msg`You have muted this user`),
+        name: _(msg`Account Muted`),
+        description: _(msg`You have muted this account.`),
       }
     }
   }

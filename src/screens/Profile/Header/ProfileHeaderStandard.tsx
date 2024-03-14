@@ -63,7 +63,10 @@ let ProfileHeaderStandard = ({
     [profile, moderationOpts],
   )
   const [showSuggestedFollows, setShowSuggestedFollows] = React.useState(false)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ProfileHeader',
+  )
   const [_queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
   const unblockPromptControl = Prompt.usePromptControl()
   const requireAuth = useRequireAuth()
