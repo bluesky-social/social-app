@@ -18,7 +18,6 @@ import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
-import * as Updates from 'expo-updates'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home'>
 export function HomeScreen(props: Props) {
@@ -63,35 +62,10 @@ function HomeScreenReady({
   }, [pinnedFeedInfos])
 
   React.useEffect(() => {
-    Alert.alert('Final test. If you see this, it works.')
-    ;(async () => {
-      try {
-        const update = await Updates.checkForUpdateAsync()
-
-        if (update.isAvailable) {
-          Alert.alert(
-            'Update is available!',
-            'Do you want to install it now?',
-            [
-              {
-                text: 'Cancel',
-                style: 'cancel',
-              },
-              {
-                text: 'Install',
-                style: 'default',
-                onPress: async () => {
-                  await Updates.fetchUpdateAsync()
-                  await Updates.reloadAsync()
-                },
-              },
-            ],
-          )
-        }
-      } catch (error) {
-        Alert.alert('Error', `${error}`)
-      }
-    })()
+    Alert.alert(
+      'OTA Update Test',
+      'After seeing this message:\n\n1. Dismiss the alert\n2. Force quit and restart the app.\n\nYou should not see this message again. If you do, then the update failed.',
+    )
   }, [])
 
   const rawSelectedFeed = useSelectedFeed()
