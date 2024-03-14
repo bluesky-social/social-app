@@ -24,7 +24,7 @@ import {Haptics} from '#/lib/haptics'
 import {pluralize} from '#/lib/strings/helpers'
 import {isAppLabeler} from '#/lib/moderation'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, tokens} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import * as Toast from '#/view/com/util/Toast'
@@ -177,25 +177,51 @@ let ProfileHeaderLabeler = ({
             <>
               <Button
                 testID="toggleSubscribeBtn"
-                size="small"
-                color={isSubscribed || !canSubscribe ? 'secondary' : 'primary'}
-                variant="solid"
                 label={
                   isSubscribed
                     ? _(msg`Unsubscribe from this labeler`)
                     : _(msg`Subscribe to this labeler`)
                 }
                 disabled={!hasSession}
-                onPress={onPressSubscribe}
-                style={a.rounded_full}>
-                <ButtonText
-                  style={!canSubscribe && [t.atoms.text_contrast_low]}>
-                  {isSubscribed ? (
-                    <Trans>Unsubscribe</Trans>
-                  ) : (
-                    <Trans>Subscribe to labeler</Trans>
-                  )}
-                </ButtonText>
+                onPress={onPressSubscribe}>
+                {state => (
+                  <View
+                    style={[
+                      {
+                        paddingVertical: 12,
+                        backgroundColor:
+                          isSubscribed || !canSubscribe
+                            ? state.hovered || state.pressed
+                              ? t.palette.contrast_50
+                              : t.palette.contrast_25
+                            : state.hovered || state.pressed
+                            ? tokens.color.temp_purple_dark
+                            : tokens.color.temp_purple,
+                      },
+                      a.px_lg,
+                      a.rounded_sm,
+                      a.gap_sm,
+                    ]}>
+                    <Text
+                      style={[
+                        {
+                          color: canSubscribe
+                            ? isSubscribed
+                              ? t.palette.contrast_700
+                              : t.palette.white
+                            : t.palette.contrast_400,
+                        },
+                        a.font_bold,
+                        a.text_center,
+                      ]}>
+                      {isSubscribed ? (
+                        <Trans>Unsubscribe</Trans>
+                      ) : (
+                        <Trans>Subscribe to labeler</Trans>
+                      )}
+                    </Text>
+                  </View>
+                )}
               </Button>
             </>
           ) : null}

@@ -24,7 +24,7 @@ import {
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {useTheme} from '#/alf'
+import {useTheme, tokens} from '#/alf'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
@@ -112,7 +112,7 @@ let DefaultAvatar = ({
         stroke="none">
         <Path
           d="M28 0H4C1.79086 0 0 1.79086 0 4V28C0 30.2091 1.79086 32 4 32H28C30.2091 32 32 30.2091 32 28V4C32 1.79086 30.2091 0 28 0Z"
-          fill="#0070FF"
+          fill={tokens.color.temp_purple}
         />
         <Path
           d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"

@@ -72,6 +72,7 @@ let ProfileHeaderShell = ({
           />
         ) : (
           <UserBanner
+            type={profile.associated?.labeler ? 'labeler' : 'default'}
             banner={profile.banner}
             moderation={moderation.ui('banner')}
           />
