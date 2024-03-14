@@ -58,6 +58,11 @@ let ProfileMenu = ({
   )
 
   const blockPromptControl = Prompt.usePromptControl()
+  const loggedOutWarningPromptControl = Prompt.usePromptControl()
+
+  const showLoggedOutWarning = React.useMemo(() => {
+    return !!profile.labels?.find(label => label.val === '!no-unauthenticated')
+  }, [profile.labels])
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -192,7 +197,13 @@ let ProfileMenu = ({
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
               label={_(msg`Share`)}
-              onPress={onPressShare}>
+              onPress={() => {
+                if (showLoggedOutWarning) {
+                  loggedOutWarningPromptControl.open()
+                } else {
+                  onPressShare()
+                }
+              }}>
               <Menu.ItemText>
                 <Trans>Share</Trans>
               </Menu.ItemText>
@@ -309,6 +320,16 @@ let ProfileMenu = ({
           profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
         }
         confirmButtonColor={profile.viewer?.blocking ? undefined : 'negative'}
+      />
+
+      <Prompt.Basic
+        control={loggedOutWarningPromptControl}
+        title={_(msg`Note about sharing`)}
+        description={_(
+          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+        )}
+        onConfirm={onPressShare}
+        confirmButtonCta={_(msg`Share anyway`)}
       />
     </EventStopper>
   )
