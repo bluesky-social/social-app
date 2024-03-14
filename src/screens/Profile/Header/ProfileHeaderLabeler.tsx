@@ -32,6 +32,7 @@ import {ProfileHeaderShell} from './Shell'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {ProfileHeaderDisplayName} from './DisplayName'
 import {ProfileHeaderHandle} from './Handle'
+import {ProfileHeaderMetrics} from './Metrics'
 import {
   Heart2_Stroke2_Corner0_Rounded as Heart,
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
@@ -65,6 +66,7 @@ let ProfileHeaderLabeler = ({
   const {openModal} = useModalControls()
   const {track} = useAnalytics()
   const cantSubscribePrompt = Prompt.usePromptControl()
+  const isSelf = currentAccount?.did === profile.did
 
   const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
@@ -207,6 +209,7 @@ let ProfileHeaderLabeler = ({
         </View>
         {!isPlaceholderProfile && (
           <>
+            {isSelf && <ProfileHeaderMetrics profile={profile} />}
             {descriptionRT && !moderation.ui('profileView').blur ? (
               <View pointerEvents="auto">
                 <RichText
