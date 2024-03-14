@@ -15,8 +15,6 @@ const METADATA = require(`../${METADATA_PATH}`)
 const IOS_METADATA_ASSETS = METADATA.fileMetadata.ios.assets
 const ANDROID_METADATA_ASSETS = METADATA.fileMetadata.android.assets
 
-const PACKAGE_JSON = require('../package.json')
-
 const getMd5 = async path => {
   return new Promise(res => {
     const hash = crypto.createHash('md5')
@@ -78,12 +76,9 @@ const moveFiles = async () => {
     await fsp.cp(currPath, path.join(DEST_DIR, withExtPath))
   }
 
-  const runtimeVersion = PACKAGE_JSON.version
-
   const result = {
     version: 0,
     bundler: 'metro',
-    runtimeVersion,
     fileMetadata: {
       ios: {
         bundle: iosNewPath,
