@@ -52,6 +52,10 @@ let ProfileMenu = ({
   const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
   const isSelf = currentAccount?.did === profile.did
+  const isFollowing = profile.viewer?.following
+  const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
+  const isFollowingBlockedAccount = isFollowing && isBlocked
+  const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
@@ -208,22 +212,38 @@ let ProfileMenu = ({
               <Menu.ItemIcon icon={Share} />
             </Menu.Item>
           </Menu.Group>
+
           {hasSession && (
             <>
               <Menu.Divider />
               <Menu.Group>
-                {!!profile.associated?.labeler &&
-                  !(profile.viewer?.blocking || profile.viewer?.blockedBy) && (
-                    <Menu.Item
-                      testID="profileHeaderDropdownFollowBtn"
-                      label={_(msg`Follow Account`)}
-                      onPress={onPressFollowAccount}>
-                      <Menu.ItemText>
-                        <Trans>Follow Account</Trans>
-                      </Menu.ItemText>
-                      <Menu.ItemIcon icon={Plus} />
-                    </Menu.Item>
-                  )}
+                {!isSelf && (
+                  <>
+                    {(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (
+                      <Menu.Item
+                        testID="profileHeaderDropdownFollowBtn"
+                        label={
+                          isFollowing
+                            ? _(msg`Unfollow Account`)
+                            : _(msg`Follow Account`)
+                        }
+                        onPress={
+                          isFollowing
+                            ? onPressUnfollowAccount
+                            : onPressFollowAccount
+                        }>
+                        <Menu.ItemText>
+                          {isFollowing ? (
+                            <Trans>Unfollow Account</Trans>
+                          ) : (
+                            <Trans>Follow Account</Trans>
+                          )}
+                        </Menu.ItemText>
+                        <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
+                      </Menu.Item>
+                    )}
+                  </>
+                )}
                 <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
                   label={_(msg`Add to Lists`)}
@@ -235,18 +255,6 @@ let ProfileMenu = ({
                 </Menu.Item>
                 {!isSelf && (
                   <>
-                    {profile.viewer?.following &&
-                      (profile.viewer.blocking || profile.viewer.blockedBy) && (
-                        <Menu.Item
-                          testID="profileHeaderDropdownUnfollowBtn"
-                          label={_(msg`Unfollow Account`)}
-                          onPress={onPressUnfollowAccount}>
-                          <Menu.ItemText>
-                            <Trans>Unfollow Account</Trans>
-                          </Menu.ItemText>
-                          <Menu.ItemIcon icon={UserMinus} />
-                        </Menu.Item>
-                      )}
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
                         <Menu.Item
