@@ -33,6 +33,7 @@ import {useLingui} from '@lingui/react'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FALLBACK_MARKER_POST} from '#/lib/api/feed/home'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
+import {logEvent} from '#/lib/statsig/statsig'
 
 const LOADING_ITEM = {_reactKey: '__loading__'}
 const EMPTY_FEED_ITEM = {_reactKey: '__empty__'}
@@ -223,16 +224,29 @@ let Feed = ({
     setIsPTRing(false)
   }, [refetch, track, setIsPTRing, onHasNew])
 
+  const feedType = feed.split('|')[0]
   const onEndReached = React.useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
 
+    logEvent('feed:endReached', {
+      feedType: feedType,
+      itemCount: feedItems.length,
+    })
     track('Feed:onEndReached')
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more posts', {message: err})
     }
-  }, [isFetching, hasNextPage, isError, fetchNextPage, track])
+  }, [
+    isFetching,
+    hasNextPage,
+    isError,
+    fetchNextPage,
+    track,
+    feedType,
+    feedItems.length,
+  ])
 
   const onPressTryAgain = React.useCallback(() => {
     refetch()
