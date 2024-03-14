@@ -1625,7 +1625,7 @@
       "reasons": [
         "expoConfigPlugins"
       ],
-      "hash": "f98150e0cb44664fcf600404a62aaf1dc4930738"
+      "hash": "5e670af1bfd790c4332a336286cfed90cafff225"
     },
     {
       "type": "file",
@@ -2502,11 +2502,11 @@
     {
       "type": "contents",
       "id": "packageJson:scripts",
-      "contents": "{\"prepare\":\"is-ci || husky install\",\"postinstall\":\"patch-package && yarn intl:compile\",\"prebuild\":\"expo prebuild --clean\",\"android\":\"expo run:android\",\"ios\":\"expo run:ios\",\"web\":\"expo start --web\",\"use-build-number\":\"./scripts/useBuildNumberEnv.sh\",\"build-web\":\"expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/\",\"build-all\":\"yarn intl:build && yarn use-build-number eas build --platform all\",\"build-ios\":\"yarn use-build-number eas build -p ios\",\"build-android\":\"yarn use-build-number eas build -p android\",\"build\":\"yarn use-build-number eas build\",\"start\":\"expo start --dev-client\",\"start:prod\":\"expo start --dev-client --no-dev --minify\",\"clean-cache\":\"rm -rf node_modules/.cache/babel-loader/*\",\"test\":\"NODE_ENV=test jest --forceExit --testTimeout=20000 --bail\",\"test-watch\":\"NODE_ENV=test jest --watchAll\",\"test-ci\":\"NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit\",\"test-coverage\":\"NODE_ENV=test jest --coverage\",\"lint\":\"eslint ./src --ext .js,.jsx,.ts,.tsx\",\"typecheck\":\"tsc --project ./tsconfig.check.json\",\"e2e:mock-server\":\"./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts\",\"e2e:metro\":\"NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios\",\"e2e:build\":\"NODE_ENV=test detox build -c ios.sim.debug\",\"e2e:run\":\"NODE_ENV=test detox test --configuration ios.sim.debug --take-screenshots all\",\"perf:test\":\"NODE_ENV=test maestro test\",\"perf:test:run\":\"NODE_ENV=test maestro test __e2e__/maestro/scroll.yaml\",\"perf:test:measure\":\"NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json\",\"perf:test:results\":\"NODE_ENV=test flashlight report .perf/results.json\",\"perf:measure\":\"NODE_ENV=test flashlight measure\",\"intl:build\":\"yarn intl:extract && yarn intl:compile\",\"intl:check\":\"yarn intl:extract && git diff-index -G'(^[^\\\\*# /])|(^#\\\\w)|(^\\\\s+[^\\\\*#/])' HEAD || (echo '\\n⚠️ i18n detected un-extracted translations\\n' && exit 1)\",\"intl:extract\":\"lingui extract\",\"intl:compile\":\"lingui compile\",\"nuke\":\"rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android\",\"update-extensions\":\"bash scripts/updateExtensions.sh\",\"export\":\"npx expo export\",\"make-deploy-bundle\":\"bash scripts/bundleUpdate.sh\"}",
+      "contents": "{\"prepare\":\"is-ci || husky install\",\"postinstall\":\"patch-package && yarn intl:compile\",\"prebuild\":\"expo prebuild --clean\",\"android\":\"expo run:android\",\"ios\":\"expo run:ios\",\"web\":\"expo start --web\",\"use-build-number\":\"./scripts/useBuildNumberEnv.sh\",\"build-web\":\"expo export:web && node ./scripts/post-web-build.js && cp -v ./web-build/static/js/*.* ./bskyweb/static/js/\",\"build-all\":\"yarn intl:build && yarn use-build-number eas build --platform all\",\"build-ios\":\"yarn use-build-number eas build -p ios\",\"build-android\":\"yarn use-build-number eas build -p android\",\"build\":\"yarn use-build-number eas build\",\"start\":\"expo start --dev-client\",\"start:prod\":\"expo start --dev-client --no-dev --minify\",\"clean-cache\":\"rm -rf node_modules/.cache/babel-loader/*\",\"test\":\"NODE_ENV=test jest --forceExit --testTimeout=20000 --bail\",\"test-watch\":\"NODE_ENV=test jest --watchAll\",\"test-ci\":\"NODE_ENV=test jest --ci --forceExit --reporters=default --reporters=jest-junit\",\"test-coverage\":\"NODE_ENV=test jest --coverage\",\"lint\":\"eslint ./src --ext .js,.jsx,.ts,.tsx\",\"typecheck\":\"tsc --project ./tsconfig.check.json\",\"e2e:mock-server\":\"./jest/dev-infra/with-test-redis-and-db.sh ts-node --project tsconfig.e2e.json __e2e__/mock-server.ts\",\"e2e:metro\":\"NODE_ENV=test RN_SRC_EXT=e2e.ts,e2e.tsx expo run:ios\",\"e2e:build\":\"NODE_ENV=test detox build -c ios.sim.debug\",\"e2e:run\":\"NODE_ENV=test detox test --configuration ios.sim.debug --take-screenshots all\",\"perf:test\":\"NODE_ENV=test maestro test\",\"perf:test:run\":\"NODE_ENV=test maestro test __e2e__/maestro/scroll.yaml\",\"perf:test:measure\":\"NODE_ENV=test flashlight test --bundleId xyz.blueskyweb.app --testCommand 'yarn perf:test' --duration 150000 --resultsFilePath .perf/results.json\",\"perf:test:results\":\"NODE_ENV=test flashlight report .perf/results.json\",\"perf:measure\":\"NODE_ENV=test flashlight measure\",\"intl:build\":\"yarn intl:extract && yarn intl:compile\",\"intl:check\":\"yarn intl:extract && git diff-index -G'(^[^\\\\*# /])|(^#\\\\w)|(^\\\\s+[^\\\\*#/])' HEAD || (echo '\\n⚠️ i18n detected un-extracted translations\\n' && exit 1)\",\"intl:extract\":\"lingui extract\",\"intl:compile\":\"lingui compile\",\"nuke\":\"rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android\",\"update-extensions\":\"bash scripts/updateExtensions.sh\",\"export\":\"npx expo export\",\"make-deploy-bundle\":\"bash scripts/bundleUpdate.sh\",\"update-fingerprint\":\"npx --yes @expo/fingerprint@latest . > fingerprint.json\",\"diff-fingerprint\":\"npx --yes @expo/fingerprint@latest . fingerprint.json\"}",
       "reasons": [
         "packageJson:scripts"
       ],
-      "hash": "0f9996510f035f972cd8fd300489cb77d61a7fe1"
+      "hash": "9b60cc94cbed3dc7d09e23dac0beb5c0339c1041"
     },
     {
       "type": "contents",
@@ -2518,5 +2518,5 @@
       "hash": "5041e066dbdac275d9d7f9bb5c7d2340ba496f4d"
     }
   ],
-  "hash": "cb173726a5666144fab38179db72612232041931"
+  "hash": "6126610fefa74e60623c70e658bfc2a064a5758b"
 }

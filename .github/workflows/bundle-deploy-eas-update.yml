@@ -18,6 +18,10 @@ jobs:
         run: |
           [[ "${{ github.event.inputs.runtimeVersion }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
 
+      - name: 👆 Validate fingerprint
+        run: |
+          [[ $(npx --yes @expo/fingerprint@latest . fingerprint.json) == "[]" ]] && echo "Fingerprint is valid" || exit 1
+
       - name: ⬇️ Checkout
         uses: actions/checkout@v4
 

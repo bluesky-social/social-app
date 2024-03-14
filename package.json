@@ -43,7 +43,9 @@
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
     "export": "npx expo export",
-    "make-deploy-bundle": "bash scripts/bundleUpdate.sh"
+    "make-deploy-bundle": "bash scripts/bundleUpdate.sh",
+    "update-fingerprint": "npx --yes @expo/fingerprint@latest . > fingerprint.json",
+    "diff-fingerprint": "npx --yes @expo/fingerprint@latest . fingerprint.json"
   },
   "dependencies": {
     "@atproto/api": "^0.10.5",
