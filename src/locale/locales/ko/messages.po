@@ -3552,15 +3552,15 @@ msgstr "인용 게시물 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr "팔로우 중인 피드에 인용 게시물 표시"
+msgstr "팔로우 중 피드에 인용 게시물 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr "팔로우 중인 피드에 인용 표시"
+msgstr "팔로우 중 피드에 인용 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr "팔로우 중인 피드에 재게시 표시"
+msgstr "팔로우 중 피드에 재게시 표시"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 msgid "Show Replies"
@@ -3572,11 +3572,11 @@ msgstr "내가 팔로우하는 사람들의 답글을 다른 모든 답글보다
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr "팔로우 중인 피드에 답글 표시"
+msgstr "팔로우 중 피드에 답글 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr "팔로우 중인 피드에 답글 표시"
+msgstr "팔로우 중 피드에 답글 표시"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3588,7 +3588,7 @@ msgstr "재게시 표시"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr "팔로우 중인 피드에 재게시 표시"
+msgstr "팔로우 중 피드에 재게시 표시"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
