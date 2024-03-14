@@ -24,6 +24,7 @@ import {Divider} from '#/components/Divider'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ErrorState} from '../ErrorState'
 import {ModerationLabelPref} from '#/components/moderation/ModerationLabelPref'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 
 interface LabelsSectionProps {
   isLabelerLoading: boolean
@@ -162,6 +163,18 @@ export function ProfileLabelsSectionInner({
               hide, warn, and categorize the network.
             </Trans>
           </Text>
+          {labelerInfo.creator.viewer?.blocking ? (
+            <View style={[a.flex_row, a.gap_sm, a.align_center, a.mt_md]}>
+              <CircleInfo size="sm" fill={t.atoms.text_contrast_medium.color} />
+              <Text
+                style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
+                <Trans>
+                  Blocking does not prevent this user from placing labels on
+                  your account.
+                </Trans>
+              </Text>
+            </View>
+          ) : null}
           {labelValues.length === 0 ? (
             <Text
               style={[
