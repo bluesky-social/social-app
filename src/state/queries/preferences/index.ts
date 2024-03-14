@@ -22,6 +22,7 @@ import {
 import {STALE} from '#/state/queries'
 import {useLabelDefinitions} from '#/state/queries/preferences/moderation'
 import {useHiddenPosts} from '#/state/preferences'
+import {saveLabelers} from '#/state/session/agent-config'
 
 export * from '#/state/queries/preferences/types'
 export * from '#/state/queries/preferences/moderation'
@@ -42,6 +43,13 @@ export function usePreferencesQuery() {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
         const res = await agent.getPreferences()
+
+        // save to local storage to ensure there are labels on initial requests
+        saveLabelers(
+          agent.session.did,
+          res.moderationPrefs.labelers.map(l => l.did),
+        )
+
         const preferences: UsePreferencesQueryResponse = {
           ...res,
           feeds: {

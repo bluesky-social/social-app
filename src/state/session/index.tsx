@@ -19,6 +19,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
 import {hasProp} from '#/lib/type-guards'
+import {readLabelers} from './agent-config'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -661,12 +662,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
 async function configureModeration(agent: BskyAgent, account: SessionAccount) {
   if (IS_TEST_USER(account.handle)) {
-    console.warn('USING TEST ENV MODERATION')
-    const did = (await agent.resolveHandle({handle: 'mod-authority.test'})).data
-      .did
-    BskyAgent.configure({appLabelers: [did]})
+    const did = (
+      await agent
+        .resolveHandle({handle: 'mod-authority.test'})
+        .catch(_ => undefined)
+    )?.data.did
+    if (did) {
+      console.warn('USING TEST ENV MODERATION')
+      BskyAgent.configure({appLabelers: [did]})
+    }
   } else {
     BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+    const labelerDids = await readLabelers(account.did).catch(_ => {})
+    if (labelerDids) {
+      agent.configureLabelersHeader(
+        labelerDids.filter(did => did !== BSKY_LABELER_DID),
+      )
+    }
   }
 }
 
