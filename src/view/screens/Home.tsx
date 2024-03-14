@@ -63,6 +63,7 @@ function HomeScreenReady({
   }, [pinnedFeedInfos])
 
   React.useEffect(() => {
+    Alert.alert('Final test. If you see this, it works.')
     ;(async () => {
       try {
         const update = await Updates.checkForUpdateAsync()
