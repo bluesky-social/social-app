@@ -8,7 +8,7 @@ import {getLabelingServiceTitle} from '#/lib/moderation'
 import {Link as InternalLink, LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
-import {atoms as a, useTheme, ViewStyleProp, useBreakpoints} from '#/alf'
+import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
 import {RichText} from '#/components/RichText'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -78,7 +78,6 @@ export function LikeCount({count}: {count: number}) {
 
 export function Content({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
 
   return (
     <View
@@ -89,7 +88,7 @@ export function Content({children}: React.PropsWithChildren<{}>) {
         a.align_center,
         a.justify_between,
       ]}>
-      <View style={[a.gap_xs, a.flex_1, gtMobile && a.gap_sm]}>{children}</View>
+      <View style={[a.gap_xs, a.flex_1]}>{children}</View>
 
       <ChevronRight size="md" style={[a.z_10, t.atoms.text_contrast_low]} />
     </View>
