@@ -130,6 +130,7 @@ module.exports = function (config) {
           keyid: 'main',
           alg: 'rsa-v1_5-sha256',
         },
+        checkAutomatically: 'NEVER',
       },
       assetBundlePatterns: ['**/*'],
       plugins: [
