@@ -1,3 +1,5 @@
+# Credit https://github.com/expo/expo
+# https://github.com/expo/expo/blob/main/.github/workflows/pr-labeler.yml
 ---
 name: PR labeler
 
@@ -23,7 +25,7 @@ jobs:
       # REQUIRED: Allow updating fingerprint in acton caches
       actions: write
     steps:
-      - name: 👀 Checkout
+      - name: ⬇️ Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
@@ -45,7 +47,7 @@ jobs:
         id: base-commit
         run: |
           # Since we limit this pr-labeler workflow only triggered from limited paths, we should use custom base commit
-          echo base-commit=$(git log -n 1 main --pretty=format:'%H' -- .github/workflows/pr-labeler.yml apps/bare-expo apps/test-suite packages yarn.lock) >> "$GITHUB_OUTPUT"
+          echo base-commit=$(git log -n 1 main --pretty=format:'%H' -- .github/workflows/pr-labeler.yml packages yarn.lock) >> "$GITHUB_OUTPUT"
 
       - name: 📷 Check fingerprint
         id: fingerprint
@@ -119,7 +121,6 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' && steps.old_comment.outputs.comment-id == '' }}
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.EXPO_BOT_GITHUB_TOKEN }}
           script: |
             const diff = JSON.stringify(${{ steps.fingerprint.outputs.fingerprint-diff}}, null, 2);
             const body = `<!-- pr-labeler comment -->
@@ -147,7 +148,6 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff != '[]' && steps.old_comment.outputs.comment-id != '' }}
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.EXPO_BOT_GITHUB_TOKEN }}
           script: |
             const diff = JSON.stringify(${{ steps.fingerprint.outputs.fingerprint-diff}}, null, 2);
             const body = `<!-- pr-labeler comment -->
@@ -176,7 +176,6 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && steps.fingerprint.outputs.fingerprint-diff == '[]' && steps.old_comment.outputs.comment-id != '' }}
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.EXPO_BOT_GITHUB_TOKEN }}
           script: |
             github.rest.issues.deleteComment({
               issue_number: context.issue.number,
