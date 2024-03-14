@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🧐 Validate version
-        run: >
+        run: |
           [[ "${{ github.event.inputs.runtimeVersion }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
 
       - name: ⬇️ Checkout
