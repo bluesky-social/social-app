@@ -11,7 +11,7 @@ index 189a5f5..8d5b8e6 100644
 +    let dateFormatter = DateFormatter()
 +    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 +    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-+    let date = dateFormatter.date(from:commitTime)!
++    let date = dateFormatter.date(from:commitTime) ?? RCTConvert.nsDate(commitTime)!
 +
      return Update(
        manifest: manifest,
