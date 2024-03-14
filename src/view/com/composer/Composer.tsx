@@ -65,6 +65,7 @@ import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import * as Prompt from '#/components/Prompt'
 import {useDialogStateControlContext} from 'state/dialogs'
+import {logEvent} from '#/lib/statsig/statsig'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -255,6 +256,16 @@ export const ComposePost = observer(function ComposePost({
       setIsProcessing(false)
       return
     } finally {
+      if (postUri) {
+        logEvent('post:create', {
+          imageCount: gallery.size,
+          isReply: replyTo != null,
+          hasLink: extLink != null,
+          hasQuote: quote != null,
+          langs: langPrefs.postLanguage,
+          logContext: 'Composer',
+        })
+      }
       track('Create Post', {
         imageCount: gallery.size,
       })
