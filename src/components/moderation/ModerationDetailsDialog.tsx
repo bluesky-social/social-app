@@ -92,7 +92,7 @@ function ModerationDetailsDialogInner({
       )
     } else {
       name = _(msg`Account Muted`)
-      description = _(msg`You have muted this user.`)
+      description = _(msg`You have muted this account.`)
     }
   } else if (modcause.type === 'mute-word') {
     name = _(msg`Post Hidden by Muted Word`)
