@@ -44,8 +44,6 @@ export const SetNewPasswordForm = ({
   const [password, setPassword] = useState<string>('')
 
   const onPressNext = async () => {
-    onPasswordSet()
-    if (Math.random() > 0) return
     // Check that the code is correct. We do this again just incase the user enters the code after their pw and we
     // don't get to call onBlur first
     const formattedCode = checkAndFormatResetCode(resetCode)
