@@ -21,7 +21,7 @@ export const ProfileFollowersScreen = ({route}: Props) => {
   )
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <ViewHeader title={_(msg`Followers`)} />
       <ProfileFollowersComponent name={name} />
     </View>

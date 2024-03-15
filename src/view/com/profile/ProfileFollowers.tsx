@@ -7,10 +7,15 @@ import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {
+  ListFooter,
+  ListHeaderDesktop,
+  ListMaybePlaceholder,
+} from '#/components/Lists'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from 'state/session'
+import {View} from 'react-native'
 
 function renderItem({item}: {item: ActorDefs.ProfileViewBasic}) {
   return <ProfileCardWithFollowBtn key={item.did} profile={item} />
@@ -26,10 +31,14 @@ export function ProfileFollowers({name}: {name: string}) {
   const {currentAccount} = useSession()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data: resolvedDid, error: resolveError} = useResolveDidQuery(name)
+  const {
+    data: resolvedDid,
+    isLoading: isDidLoading,
+    error: resolveError,
+  } = useResolveDidQuery(name)
   const {
     data,
-    isLoading,
+    isLoading: isFollowersLoading,
     isFetching,
     isFetchingNextPage,
     hasNextPage,
@@ -46,6 +55,7 @@ export function ProfileFollowers({name}: {name: string}) {
     if (data?.pages) {
       return data.pages.flatMap(page => page.followers)
     }
+    return []
   }, [data])
 
   const onRefresh = React.useCallback(async () => {
@@ -67,11 +77,17 @@ export function ProfileFollowers({name}: {name: string}) {
     }
   }
 
+  console.log({
+    isLoading: isDidLoading || isFollowersLoading,
+    isEmpty: !followers,
+    isError: !!resolveError || !!error,
+  })
+
   return (
-    <>
+    <View style={{flex: 1}}>
       <ListMaybePlaceholder
-        isLoading={isLoading}
-        isEmpty={!followers}
+        isLoading={isDidLoading || isFollowersLoading}
+        isEmpty={followers.length < 1}
         isError={!!resolveError || !!error}
         emptyType="results"
         emptyMessage={
@@ -82,7 +98,7 @@ export function ProfileFollowers({name}: {name: string}) {
         errorMessage={cleanError(resolveError || error)}
         onRetry={refetch}
       />
-      {followers && (
+      {followers.length > 0 && (
         <List
           data={followers}
           renderItem={renderItem}
@@ -90,13 +106,15 @@ export function ProfileFollowers({name}: {name: string}) {
           refreshing={isPTRing}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
-          initialNumToRender={initialNumToRender}
           onEndReachedThreshold={4}
+          ListHeaderComponent={<ListHeaderDesktop title={_(msg`Followers`)} />}
           ListFooterComponent={<ListFooter isFetching={isFetchingNextPage} />}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
         />
       )}
-    </>
+    </View>
   )
 }

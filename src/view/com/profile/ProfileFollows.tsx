@@ -6,7 +6,11 @@ import {useProfileFollowsQuery} from '#/state/queries/profile-follows'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {logger} from '#/logger'
 import {cleanError} from '#/lib/strings/errors'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {
+  ListFooter,
+  ListHeaderDesktop,
+  ListMaybePlaceholder,
+} from '#/components/Lists'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
 import {useSession} from 'state/session'
 import {msg} from '@lingui/macro'
@@ -26,10 +30,14 @@ export function ProfileFollows({name}: {name: string}) {
   const {currentAccount} = useSession()
 
   const [isPTRing, setIsPTRing] = React.useState(false)
-  const {data: resolvedDid, error: resolveError} = useResolveDidQuery(name)
+  const {
+    data: resolvedDid,
+    isLoading: isDidLoading,
+    error: resolveError,
+  } = useResolveDidQuery(name)
   const {
     data,
-    isLoading,
+    isLoading: isFollowsLoading,
     isFetching,
     isFetchingNextPage,
     hasNextPage,
@@ -46,6 +54,7 @@ export function ProfileFollows({name}: {name: string}) {
     if (data?.pages) {
       return data.pages.flatMap(page => page.follows)
     }
+    return []
   }, [data])
 
   const onRefresh = React.useCallback(async () => {
@@ -70,8 +79,8 @@ export function ProfileFollows({name}: {name: string}) {
   return (
     <>
       <ListMaybePlaceholder
-        isLoading={isLoading}
-        isEmpty={!follows}
+        isLoading={isDidLoading || isFollowsLoading}
+        isEmpty={follows.length < 1}
         isError={!!resolveError || !!error}
         emptyType="results"
         emptyMessage={
@@ -82,7 +91,7 @@ export function ProfileFollows({name}: {name: string}) {
         errorMessage={cleanError(resolveError || error)}
         onRetry={refetch}
       />
-      {follows && (
+      {follows.length > 0 && (
         <List
           data={follows}
           renderItem={renderItem}
@@ -90,11 +99,13 @@ export function ProfileFollows({name}: {name: string}) {
           refreshing={isPTRing}
           onRefresh={onRefresh}
           onEndReached={onEndReached}
-          initialNumToRender={initialNumToRender}
           onEndReachedThreshold={4}
+          ListHeaderComponent={<ListHeaderDesktop title={_(msg`Following`)} />}
           ListFooterComponent={<ListFooter isFetching={isFetchingNextPage} />}
           // @ts-ignore our .web version only -prf
           desktopFixedHeight
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
         />
       )}
     </>
