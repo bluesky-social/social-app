@@ -27,6 +27,7 @@ import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
+import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -60,21 +61,23 @@ function InnerApp() {
         // Resets the entire tree below when it changes:
         key={currentAccount?.did}>
         <StatsigProvider>
-          <LoggedOutViewProvider>
-            <SelectedFeedProvider>
-              <UnreadNotifsProvider>
-                <ThemeProvider theme={theme}>
-                  {/* All components should be within this provider */}
-                  <RootSiblingParent>
-                    <SafeAreaProvider>
-                      <Shell />
-                    </SafeAreaProvider>
-                  </RootSiblingParent>
-                  <ToastContainer />
-                </ThemeProvider>
-              </UnreadNotifsProvider>
-            </SelectedFeedProvider>
-          </LoggedOutViewProvider>
+          <LabelDefsProvider>
+            <LoggedOutViewProvider>
+              <SelectedFeedProvider>
+                <UnreadNotifsProvider>
+                  <ThemeProvider theme={theme}>
+                    {/* All components should be within this provider */}
+                    <RootSiblingParent>
+                      <SafeAreaProvider>
+                        <Shell />
+                      </SafeAreaProvider>
+                    </RootSiblingParent>
+                    <ToastContainer />
+                  </ThemeProvider>
+                </UnreadNotifsProvider>
+              </SelectedFeedProvider>
+            </LoggedOutViewProvider>
+          </LabelDefsProvider>
         </StatsigProvider>
       </React.Fragment>
     </Alf>

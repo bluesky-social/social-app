@@ -4,7 +4,6 @@ import {Provider as AltTextRequiredProvider} from '../preferences/alt-text-requi
 import {Provider as HiddenPostsProvider} from '../preferences/hidden-posts'
 import {Provider as ExternalEmbedsProvider} from './external-embeds-prefs'
 import {Provider as InAppBrowserProvider} from './in-app-browser'
-import {Provider as LabelDefsProvider} from './label-defs'
 
 export {useLanguagePrefs, useLanguagePrefsApi} from './languages'
 export {
@@ -24,9 +23,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <AltTextRequiredProvider>
         <ExternalEmbedsProvider>
           <HiddenPostsProvider>
-            <InAppBrowserProvider>
-              <LabelDefsProvider>{children}</LabelDefsProvider>
-            </InAppBrowserProvider>
+            <InAppBrowserProvider>{children}</InAppBrowserProvider>
           </HiddenPostsProvider>
         </ExternalEmbedsProvider>
       </AltTextRequiredProvider>
