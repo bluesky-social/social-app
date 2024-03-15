@@ -133,7 +133,7 @@ export function ListMaybePlaceholder({
   emptyMessage,
   errorTitle,
   errorMessage,
-  notFoundType = 'page',
+  emptyType = 'page',
   onRetry,
 }: {
   isLoading: boolean
@@ -143,8 +143,7 @@ export function ListMaybePlaceholder({
   emptyMessage?: string
   errorTitle?: string
   errorMessage?: string
-  notFoundType?: 'page' | 'results'
-  notFound?: string
+  emptyType?: 'page' | 'results'
   onRetry?: () => Promise<unknown>
 }) {
   const t = useTheme()
@@ -156,7 +155,7 @@ export function ListMaybePlaceholder({
       <Error
         title={
           emptyTitle ??
-          (notFoundType === 'results'
+          (emptyType === 'results'
             ? _(msg`No results found`)
             : _(msg`Page not found`))
         }
