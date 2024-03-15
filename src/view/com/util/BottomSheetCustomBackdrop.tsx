@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react'
 import {TouchableWithoutFeedback} from 'react-native'
-import {BottomSheetBackdropProps} from '@gorhom/bottom-sheet'
+import {BottomSheetBackdropProps} from '@discord/bottom-sheet/src'
 import Animated, {
   Extrapolate,
   interpolate,

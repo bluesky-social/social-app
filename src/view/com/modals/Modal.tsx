@@ -1,7 +1,7 @@
 import React, {useRef, useEffect} from 'react'
 import {StyleSheet} from 'react-native'
 import {SafeAreaView} from 'react-native-safe-area-context'
-import BottomSheet from '@gorhom/bottom-sheet'
+import BottomSheet from '@discord/bottom-sheet/src'
 import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
 
