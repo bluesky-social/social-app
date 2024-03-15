@@ -974,3 +974,32 @@ export function ListIcon({
     </Svg>
   )
 }
+
+// Copyright (c) 2020 Refactoring UI Inc.
+// https://github.com/tailwindlabs/heroicons/blob/master/LICENSE
+export function ChevronUpDownIcon({
+  style,
+  size,
+  strokeWidth = 1.5,
+}: {
+  style?: StyleProp<ViewStyle>
+  size?: string | number
+  strokeWidth?: number
+}) {
+  return (
+    <Svg
+      fill="none"
+      viewBox="0 0 24 24"
+      strokeWidth={strokeWidth}
+      stroke="currentColor"
+      width={size}
+      height={size}
+      style={style}>
+      <Path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.25 15 12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9"
+      />
+    </Svg>
+  )
+}
