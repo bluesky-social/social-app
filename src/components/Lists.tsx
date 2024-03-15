@@ -150,24 +150,6 @@ export function ListMaybePlaceholder({
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
 
-  if (isEmpty) {
-    return (
-      <Error
-        title={
-          emptyTitle ??
-          (emptyType === 'results'
-            ? _(msg`No results found`)
-            : _(msg`Page not found`))
-        }
-        message={
-          emptyMessage ??
-          _(msg`We're sorry! We can't find the page you were looking for.`)
-        }
-        onRetry={onRetry}
-      />
-    )
-  }
-
   if (isError) {
     return (
       <Error
@@ -194,6 +176,24 @@ export function ListMaybePlaceholder({
           <Loader size="xl" />
         </View>
       </CenteredView>
+    )
+  }
+
+  if (isEmpty) {
+    return (
+      <Error
+        title={
+          emptyTitle ??
+          (emptyType === 'results'
+            ? _(msg`No results found`)
+            : _(msg`Page not found`))
+        }
+        message={
+          emptyMessage ??
+          _(msg`We're sorry! We can't find the page you were looking for.`)
+        }
+        onRetry={onRetry}
+      />
     )
   }
 }
