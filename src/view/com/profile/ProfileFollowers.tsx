@@ -77,12 +77,6 @@ export function ProfileFollowers({name}: {name: string}) {
     }
   }
 
-  console.log({
-    isLoading: isDidLoading || isFollowersLoading,
-    isEmpty: !followers,
-    isError: !!resolveError || !!error,
-  })
-
   return (
     <View style={{flex: 1}}>
       <ListMaybePlaceholder
