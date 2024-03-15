@@ -2,6 +2,7 @@ import React from 'react'
 import {TextInput, TextInputProps, StyleSheet} from 'react-native'
 // @ts-ignore
 import {unstable_createElement} from 'react-native-web'
+import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
 
 import * as TextField from '#/components/forms/TextField'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
@@ -37,6 +38,7 @@ export function DateField({
   label,
   isInvalid,
   testID,
+  accessibilityHint,
 }: DateFieldProps) {
   const handleOnChange = React.useCallback(
     (e: any) => {
@@ -52,12 +54,14 @@ export function DateField({
 
   return (
     <TextField.Root isInvalid={isInvalid}>
+      <TextField.Icon icon={CalendarDays} />
       <Input
         value={value}
         label={label}
         onChange={handleOnChange}
         onChangeText={() => {}}
         testID={testID}
+        accessibilityHint={accessibilityHint}
       />
     </TextField.Root>
   )
