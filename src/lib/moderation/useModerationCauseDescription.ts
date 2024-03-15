@@ -2,9 +2,9 @@ import React from 'react'
 import {ModerationCause, ModerationCauseSource} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useGlobalLabelStrings} from './useGlobalLabelStrings'
-import {useLabelDefinitions} from '#/state/queries/preferences'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
+import {useLabelDefinitions} from '#/state/preferences'
+import {useGlobalLabelStrings} from './useGlobalLabelStrings'
 
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {Warning_Stroke2_Corner0_Rounded as Warning} from '#/components/icons/Warning'
@@ -24,8 +24,8 @@ export function useModerationCauseDescription(
   cause: ModerationCause | undefined,
 ): ModerationCauseDescription {
   const {_, i18n} = useLingui()
-  const globalLabelStrings = useGlobalLabelStrings()
   const {labelDefs, labelers} = useLabelDefinitions()
+  const globalLabelStrings = useGlobalLabelStrings()
 
   return React.useMemo(() => {
     if (!cause) {

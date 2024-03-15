@@ -9,10 +9,10 @@ import {useLingui} from '@lingui/react'
 import * as bcp47Match from 'bcp-47-match'
 
 import {
-  useGlobalLabelStrings,
   GlobalLabelStrings,
+  useGlobalLabelStrings,
 } from '#/lib/moderation/useGlobalLabelStrings'
-import {useLabelDefinitions} from '#/state/queries/preferences'
+import {useLabelDefinitions} from '#/state/preferences'
 
 export interface LabelInfo {
   label: ComAtprotoLabelDefs.Label
@@ -23,8 +23,8 @@ export interface LabelInfo {
 
 export function useLabelInfo(label: ComAtprotoLabelDefs.Label): LabelInfo {
   const {i18n} = useLingui()
-  const globalLabelStrings = useGlobalLabelStrings()
   const {labelDefs, labelers} = useLabelDefinitions()
+  const globalLabelStrings = useGlobalLabelStrings()
   const def = getDefinition(labelDefs, label)
   return {
     label,

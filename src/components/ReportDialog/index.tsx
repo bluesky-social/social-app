@@ -2,7 +2,7 @@ import React from 'react'
 import {View, Pressable} from 'react-native'
 import {Trans} from '@lingui/macro'
 
-import {useMyLabelers} from '#/state/queries/preferences'
+import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
@@ -27,7 +27,11 @@ export function ReportDialog(props: ReportDialogProps) {
 }
 
 function ReportDialogInner(props: ReportDialogProps) {
-  const {isLoading: isLabelerLoading, data: labelers, error} = useMyLabelers()
+  const {
+    isLoading: isLabelerLoading,
+    data: labelers,
+    error,
+  } = useMyLabelersQuery()
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const [selectedReportOption, setSelectedReportOption] = React.useState<
     ReportOption | undefined

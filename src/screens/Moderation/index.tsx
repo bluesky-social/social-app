@@ -21,7 +21,7 @@ import {ScrollView} from '#/view/com/util/Views'
 
 import {
   UsePreferencesQueryResponse,
-  useMyLabelers,
+  useMyLabelersQuery,
   usePreferencesQuery,
   usePreferencesSetAdultContentMutation,
 } from '#/state/queries/preferences'
@@ -170,7 +170,7 @@ export function ModerationScreenInner({
     isLoading: isLabelersLoading,
     data: labelers,
     error: labelersError,
-  } = useMyLabelers()
+  } = useMyLabelersQuery()
 
   useFocusEffect(
     React.useCallback(() => {

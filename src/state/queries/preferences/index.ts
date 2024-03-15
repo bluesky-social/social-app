@@ -20,8 +20,7 @@ import {
   DEFAULT_LOGGED_OUT_PREFERENCES,
 } from '#/state/queries/preferences/const'
 import {STALE} from '#/state/queries'
-import {useLabelDefinitions} from '#/state/queries/preferences/moderation'
-import {useHiddenPosts} from '#/state/preferences'
+import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {saveLabelers} from '#/state/session/agent-config'
 
 export * from '#/state/queries/preferences/types'

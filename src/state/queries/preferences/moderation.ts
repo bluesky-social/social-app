@@ -16,7 +16,7 @@ export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS
     Object.entries(DEFAULT_LABEL_SETTINGS).map(([key, _pref]) => [key, 'hide']),
   )
 
-export function useMyLabelers() {
+export function useMyLabelersQuery() {
   const prefs = usePreferencesQuery()
   const dids = Array.from(
     new Set(
@@ -37,8 +37,8 @@ export function useMyLabelers() {
   }, [labelers, isLoading, error])
 }
 
-export function useLabelDefinitions() {
-  const labelers = useMyLabelers()
+export function useLabelDefinitionsQuery() {
+  const labelers = useMyLabelersQuery()
   return React.useMemo(() => {
     return {
       labelDefs: Object.fromEntries(
