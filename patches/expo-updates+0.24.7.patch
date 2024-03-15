@@ -7,7 +7,7 @@ index 189a5f5..8d5b8e6 100644
      }
 
 +    // Instead of relying on various hacks to get the correct format for the specific
-+    // platform on the backend, we can just add this little patch.
++    // platform on the backend, we can just add this little patch..
 +    let dateFormatter = DateFormatter()
 +    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
 +    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
