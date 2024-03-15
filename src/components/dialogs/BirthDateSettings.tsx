@@ -31,7 +31,7 @@ export function BirthDateSettingsDialog({
   return (
     <Dialog.Outer control={control}>
       <Dialog.Handle />
-      <Dialog.Inner label={_(msg`My Birthday`)}>
+      <Dialog.ScrollableInner label={_(msg`My Birthday`)}>
         {preferences && !isPending ? (
           <BirthdayInner
             control={control}
@@ -43,7 +43,7 @@ export function BirthDateSettingsDialog({
         ) : (
           <ActivityIndicator size="large" style={a.my_5xl} />
         )}
-      </Dialog.Inner>
+      </Dialog.ScrollableInner>
     </Dialog.Outer>
   )
 }
