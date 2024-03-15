@@ -133,7 +133,7 @@ function PostInner({
   }, [setLimitLines])
 
   return (
-    <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
+    <Link href={itemHref} style={[styles.outer, pal.border, style]}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
@@ -220,6 +220,7 @@ function PostInner({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
+            logContext="Post"
           />
         </View>
       </View>

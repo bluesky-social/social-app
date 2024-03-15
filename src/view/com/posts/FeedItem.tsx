@@ -144,7 +144,6 @@ let FeedItemInner = ({
 
   const outerStyles = [
     styles.outer,
-    pal.view,
     {
       borderColor: pal.colors.border,
       paddingBottom:
@@ -310,6 +309,7 @@ let FeedItemInner = ({
             showAppealLabelItem={
               post.author.did === currentAccount?.did && isModeratedPost
             }
+            logContext="FeedItem"
           />
         </View>
       </View>

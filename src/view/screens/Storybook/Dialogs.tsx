@@ -68,7 +68,7 @@ export function Dialogs() {
         </Prompt.Description>
         <Prompt.Actions>
           <Prompt.Cancel>Cancel</Prompt.Cancel>
-          <Prompt.Action>Confirm</Prompt.Action>
+          <Prompt.Action onPress={() => {}}>Confirm</Prompt.Action>
         </Prompt.Actions>
       </Prompt.Outer>
 
