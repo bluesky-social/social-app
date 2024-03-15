@@ -47,7 +47,7 @@ jobs:
         id: base-commit
         run: |
           # Since we limit this pr-labeler workflow only triggered from limited paths, we should use custom base commit
-          echo base-commit=$(git log -n 1 main --pretty=format:'%H' -- .github/workflows/pr-labeler.yml packages yarn.lock) >> "$GITHUB_OUTPUT"
+          echo base-commit=$(git log -n 1 main --pretty=format:'%H') >> "$GITHUB_OUTPUT"
 
       - name: 📷 Check fingerprint
         id: fingerprint
