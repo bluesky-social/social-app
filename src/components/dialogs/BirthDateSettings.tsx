@@ -89,18 +89,20 @@ function BirthdayInner({
           <Trans>This information is not shared with other users.</Trans>
         </Text>
       </View>
-      <DateInput
-        handleAsUTC
-        testID="birthdayInput"
-        value={date}
-        onChange={setDate}
-        buttonType="default-light"
-        buttonStyle={[a.rounded_sm]}
-        buttonLabelType="lg"
-        accessibilityLabel={_(msg`Birthday`)}
-        accessibilityHint={_(msg`Enter your birth date`)}
-        accessibilityLabelledBy="birthDate"
-      />
+      <View style={[a.w_full, a.align_center]}>
+        <DateInput
+          handleAsUTC
+          testID="birthdayInput"
+          value={date}
+          onChange={setDate}
+          buttonType="default-light"
+          buttonStyle={[a.rounded_sm]}
+          buttonLabelType="lg"
+          accessibilityLabel={_(msg`Birthday`)}
+          accessibilityHint={_(msg`Enter your birth date`)}
+          accessibilityLabelledBy="birthDate"
+        />
+      </View>
       {isError ? (
         <ErrorMessage message={cleanError(error)} style={[a.rounded_sm]} />
       ) : undefined}
