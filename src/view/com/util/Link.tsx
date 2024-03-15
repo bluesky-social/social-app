@@ -95,7 +95,6 @@ export const Link = memo(function Link({
           {...props}
           android_ripple={{
             color: t.atoms.bg_contrast_25.backgroundColor,
-            foreground: true,
           }}
           unstable_pressDelay={isAndroid ? 90 : undefined}>
           {/* @ts-ignore web only -prf */}
