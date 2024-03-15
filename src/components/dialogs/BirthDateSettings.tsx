@@ -16,7 +16,7 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {cleanError} from '#/lib/strings/errors'
 import {ActivityIndicator, View} from 'react-native'
 
-export function BirthdaySettingsDialog({
+export function BirthDateSettingsDialog({
   control,
   preferences,
 }: {

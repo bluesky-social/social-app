@@ -71,7 +71,7 @@ import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {ExportCarDialog} from './ExportCarDialog'
-import {BirthdaySettingsDialog} from '#/components/dialogs/BirthdaySettings'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -291,7 +291,7 @@ export function SettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
-      <BirthdaySettingsDialog
+      <BirthDateSettingsDialog
         control={birthdayControl}
         preferences={preferences}
       />

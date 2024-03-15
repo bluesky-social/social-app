@@ -25,7 +25,7 @@ import {
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {useDialogControl} from '#/components/Dialog'
-import {BirthdaySettingsDialog} from '#/components/dialogs/BirthdaySettings'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 
 export const snapPoints = ['90%']
 
@@ -137,7 +137,7 @@ function AdultContentEnabledPref() {
 
   return (
     <View style={s.mb10}>
-      <BirthdaySettingsDialog
+      <BirthDateSettingsDialog
         control={bithdayDialogControl}
         preferences={preferences}
       />
