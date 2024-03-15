@@ -56,6 +56,8 @@ export function StepInfo() {
         </TextField.Label>
         <TouchableOpacity
           accessibilityRole="button"
+          accessibilityLabel={_(msg`Select service`)}
+          accessibilityHint={_(msg`Sets server for the Bluesky client`)}
           style={[
             a.w_full,
             a.flex_row,
@@ -167,8 +169,8 @@ export function StepInfo() {
                   value: sanitizeDate(new Date(date)),
                 })
               }}
-              accessibilityHint="Select your date of birth"
-              accessibilityLabel="Date of birth"
+              accessibilityHint={_(msg`Select your date of birth`)}
+              accessibilityLabel={_(msg`Date of birth`)}
               buttonStyle={[
                 a.rounded_sm,
                 {paddingVertical: 15},
