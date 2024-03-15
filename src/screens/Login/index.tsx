@@ -2,7 +2,6 @@ import React from 'react'
 import {KeyboardAvoidingView} from 'react-native'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {useLingui} from '@lingui/react'
-import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
 
 import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {SessionAccount, useSession} from '#/state/session'
@@ -17,6 +16,7 @@ import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
 import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
 import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
+import {ScreenTransition} from './ScreenTransition'
 
 enum Forms {
   Login,
@@ -161,12 +161,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   return (
     <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
       <LoggedOutLayout leadin="" title={title} description={description}>
-        <Animated.View
-          entering={FadeInRight}
-          exiting={FadeOutLeft}
-          key={currentForm}>
-          {content}
-        </Animated.View>
+        <ScreenTransition key={currentForm}>{content}</ScreenTransition>
       </LoggedOutLayout>
     </KeyboardAvoidingView>
   )
