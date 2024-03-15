@@ -11,10 +11,11 @@ import {
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
 import {Button, ButtonText} from '../Button'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {cleanError} from '#/lib/strings/errors'
 import {ActivityIndicator, View} from 'react-native'
+import {isIOS, isWeb} from '#/platform/detection'
 
 export function BirthDateSettingsDialog({
   control,
@@ -63,7 +64,6 @@ function BirthdayInner({
   const {_} = useLingui()
   const [date, setDate] = React.useState(preferences.birthDate || new Date())
   const t = useTheme()
-  const {gtMobile} = useBreakpoints()
 
   const hasChanged = date !== preferences.birthDate
 
@@ -80,7 +80,7 @@ function BirthdayInner({
   }, [date, setBirthDate, control, hasChanged])
 
   return (
-    <View style={a.gap_lg}>
+    <View style={a.gap_lg} testID="birthDateSettingsDialog">
       <View style={[a.gap_sm]}>
         <Text style={[a.text_2xl, a.font_bold]}>
           <Trans>My Birthday</Trans>
@@ -89,7 +89,7 @@ function BirthdayInner({
           <Trans>This information is not shared with other users.</Trans>
         </Text>
       </View>
-      <View style={[a.w_full, a.align_center]}>
+      <View style={isIOS && [a.w_full, a.align_center]}>
         <DateInput
           handleAsUTC
           testID="birthdayInput"
@@ -107,10 +107,10 @@ function BirthdayInner({
         <ErrorMessage message={cleanError(error)} style={[a.rounded_sm]} />
       ) : undefined}
 
-      <View style={gtMobile && [a.flex_row, a.justify_end]}>
+      <View style={isWeb && [a.flex_row, a.justify_end]}>
         <Button
           label={hasChanged ? _(msg`Save birthday`) : _(msg`Done`)}
-          size={gtMobile ? 'small' : 'medium'}
+          size={isWeb ? 'small' : 'medium'}
           onPress={onSave}
           variant="solid"
           color="primary">
