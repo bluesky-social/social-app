@@ -47,6 +47,11 @@ export function ProfileFollowers({name}: {name: string}) {
     refetch,
   } = useProfileFollowersQuery(resolvedDid)
 
+  const isError = React.useMemo(
+    () => !!resolveError || !!error,
+    [resolveError, error],
+  )
+
   const isMe = React.useMemo(() => {
     return resolvedDid === currentAccount?.did
   }, [resolvedDid, currentAccount?.did])
@@ -82,7 +87,7 @@ export function ProfileFollowers({name}: {name: string}) {
       <ListMaybePlaceholder
         isLoading={isDidLoading || isFollowersLoading}
         isEmpty={followers.length < 1}
-        isError={!!resolveError || !!error}
+        isError={isError}
         emptyType="results"
         emptyMessage={
           isMe
@@ -90,7 +95,7 @@ export function ProfileFollowers({name}: {name: string}) {
             : _(msg`This user doesn't have any followers.`)
         }
         errorMessage={cleanError(resolveError || error)}
-        onRetry={refetch}
+        onRetry={isError ? refetch : undefined}
       />
       {followers.length > 0 && (
         <List
