@@ -10,7 +10,7 @@ import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticke
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
-import {Label} from '#/components/forms/DateField'
+import * as DateField from '#/components/forms/DateField'
 import {ServerInputDialog} from 'view/com/auth/server-input'
 import {useDialogControl} from '#/components/Dialog'
 import {logger} from '#/logger'
@@ -19,8 +19,7 @@ import {Loader} from '#/components/Loader'
 import {Policies} from 'view/com/auth/create/Policies'
 import {Text} from '#/components/Typography'
 import {toNiceDomain} from 'lib/strings/url-helpers'
-import {DateInput} from 'view/com/util/forms/DateInput'
-import {isAndroid, isIOS} from 'platform/detection'
+import {isAndroid} from 'platform/detection'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -155,27 +154,22 @@ export function StepInfo() {
               />
             </TextField.Root>
           </View>
-          <Label>
-            <Trans>Your birth date</Trans>
-          </Label>
-          <View style={[a.w_full, isIOS && a.align_center]}>
-            <DateInput
+          <View>
+            <DateField.Label>
+              <Trans>Your birth date</Trans>
+            </DateField.Label>
+            <DateField.DateField
               testID="date"
-              value={state.dateOfBirth}
-              onChange={date => {
+              value={DateField.utils.toSimpleDateString(state.dateOfBirth)}
+              onChangeDate={date => {
                 console.log(date)
                 dispatch({
                   type: 'setDateOfBirth',
                   value: sanitizeDate(new Date(date)),
                 })
               }}
+              label={_(msg`Date of birth`)}
               accessibilityHint={_(msg`Select your date of birth`)}
-              accessibilityLabel={_(msg`Date of birth`)}
-              buttonStyle={[
-                a.rounded_sm,
-                {paddingVertical: 15},
-                t.atoms.bg_contrast_25,
-              ]}
             />
           </View>
           <Policies
