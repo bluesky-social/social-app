@@ -1,5 +1,9 @@
 import React from 'react'
-import {ModerationCause, ModerationCauseSource} from '@atproto/api'
+import {
+  BSKY_LABELER_DID,
+  ModerationCause,
+  ModerationCauseSource,
+} from '@atproto/api'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {getDefinition, getLabelStrings} from './useLabelInfo'
@@ -109,6 +113,16 @@ export function useModerationCauseDescription(
       const def = cause.labelDef || getDefinition(labelDefs, cause.label)
       const strings = getLabelStrings(i18n.locale, globalLabelStrings, def)
       const labeler = labelers.find(l => l.creator.did === cause.label.src)
+      let source =
+        labeler?.creator.displayName ||
+        (labeler?.creator.handle ? '@' + labeler?.creator.handle : undefined)
+      if (!source) {
+        if (cause.label.src === BSKY_LABELER_DID) {
+          source = 'Bluesky Moderation'
+        } else {
+          source = cause.label.src
+        }
+      }
       return {
         icon:
           def.identifier === '!no-unauthenticated'
@@ -118,12 +132,7 @@ export function useModerationCauseDescription(
             : CircleInfo,
         name: strings.name,
         description: strings.description,
-        source:
-          labeler?.creator.displayName ||
-          (labeler?.creator.handle
-            ? '@' + labeler?.creator.handle
-            : undefined) ||
-          cause.label.src,
+        source,
         sourceType: cause.source.type,
       }
     }
