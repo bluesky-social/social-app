@@ -23,6 +23,7 @@ export function StepHandle() {
 
   const [validCheck, setValidCheck] = React.useState<IsValidHandle>({
     handleChars: false,
+    hyphenStartOrEnd: false,
     frontLength: false,
     totalLength: true,
     overall: false,
@@ -89,23 +90,32 @@ export function StepHandle() {
             <Text style={[a.text_md, a.flex]}>{state.error}</Text>
           </View>
         ) : undefined}
-        <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-          <IsValidIcon valid={validCheck.handleChars} />
-          <Text style={[a.text_md, a.flex]}>
-            <Trans>May only contain letters and numbers</Trans>
-          </Text>
-        </View>
+        {validCheck.hyphenStartOrEnd ? (
+          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+            <IsValidIcon valid={validCheck.handleChars} />
+            <Text style={[a.text_md, a.flex]}>
+              <Trans>Only contains letters, numbers, and hyphens</Trans>
+            </Text>
+          </View>
+        ) : (
+          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+            <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
+            <Text style={[a.text_md, a.flex]}>
+              <Trans>Doesn't begin or end with a hyphen</Trans>
+            </Text>
+          </View>
+        )}
         <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
           <IsValidIcon
             valid={validCheck.frontLength && validCheck.totalLength}
           />
           {!validCheck.totalLength ? (
             <Text style={[a.text_md]}>
-              <Trans>May not be longer than 253 characters</Trans>
+              <Trans>No longer than 253 characters</Trans>
             </Text>
           ) : (
             <Text style={[a.text_md]}>
-              <Trans>Must be at least 3 characters</Trans>
+              <Trans>At least 3 characters</Trans>
             </Text>
           )}
         </View>
