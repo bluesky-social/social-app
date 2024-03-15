@@ -16,7 +16,7 @@ export function Menus() {
     <View style={[a.gap_md]}>
       <View style={[a.flex_row, a.align_start]}>
         <Menu.Root control={menuControl}>
-          <Menu.Trigger label="Open basic menu" style={[a.flex_1]}>
+          <Menu.Trigger label="Open basic menu">
             {({state, props}) => {
               return (
                 <Text

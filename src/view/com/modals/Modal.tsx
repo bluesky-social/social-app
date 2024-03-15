@@ -6,7 +6,6 @@ import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
 
 import {useModals, useModalControls} from '#/state/modals'
-import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
@@ -66,10 +65,7 @@ export function ModalsContainer() {
 
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
-  if (activeModal?.name === 'confirm') {
-    snapPoints = ConfirmModal.snapPoints
-    element = <ConfirmModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'edit-profile') {
+  if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = <EditProfileModal.Component {...activeModal} />
   } else if (activeModal?.name === 'report') {

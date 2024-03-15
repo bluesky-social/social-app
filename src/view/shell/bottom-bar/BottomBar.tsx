@@ -36,6 +36,7 @@ import {Button} from '#/view/com/util/forms/Button'
 import {s} from 'lib/styles'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
+import {useDedupe} from 'lib/hooks/useDedupe'
 
 type TabOptions = 'Home' | 'Search' | 'Notifications' | 'MyProfile' | 'Feeds'
 
@@ -54,6 +55,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
+  const dedupe = useDedupe()
 
   const showSignIn = React.useCallback(() => {
     closeAllActiveElements()
@@ -74,12 +76,12 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       if (tabState === TabState.InsideAtRoot) {
         emitSoftReset()
       } else if (tabState === TabState.Inside) {
-        navigation.dispatch(StackActions.popToTop())
+        dedupe(() => navigation.dispatch(StackActions.popToTop()))
       } else {
-        navigation.navigate(`${tab}Tab`)
+        dedupe(() => navigation.navigate(`${tab}Tab`))
       }
     },
-    [track, navigation],
+    [track, navigation, dedupe],
   )
   const onPressHome = React.useCallback(() => onPressTab('Home'), [onPressTab])
   const onPressSearch = React.useCallback(
