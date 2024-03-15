@@ -366,6 +366,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (IS_DEV && isWeb) window.agent = agent
       await configureModeration(agent, account)
 
+      /*
       let canReusePrevSession = false
       try {
         if (account.accessJwt) {
@@ -419,7 +420,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             /*
              * Note: `agent.persistSession` is also called when this fails, and
              * we handle that failure via `createPersistSessionHandler`
-             */
+             /
             logger.info(`session: resumeSessionWithFreshAccount failed`, {
               message: e,
             })
@@ -438,7 +439,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           /*
            * Note: `agent.persistSession` is also called when this fails, and
            * we handle that failure via `createPersistSessionHandler`
-           */
+           /
           logger.info(`session: resumeSessionWithFreshAccount failed`, {
             message: e,
           })
@@ -455,7 +456,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         /*
          * If `agent.resumeSession` fails above, it'll throw. This is just to
          * make TypeScript happy.
-         */
+         /
         if (!agent.session) {
           throw new Error(`session: initSession failed to establish a session`)
         }
@@ -472,6 +473,36 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           deactivated: isSessionDeactivated(agent.session.accessJwt),
         }
       }
+      */
+
+      await networkRetry(1, () =>
+        agent.resumeSession({
+          accessJwt: account.accessJwt || '',
+          refreshJwt: account.refreshJwt || '',
+          did: account.did,
+          handle: account.handle,
+        }),
+      )
+
+      if (!agent.session) {
+        throw new Error(`session: initSession failed to establish a session`)
+      }
+
+      // ensure changes in handle/email etc are captured on reload
+      const freshAccount: SessionAccount = {
+        service: agent.service.toString(),
+        did: agent.session.did,
+        handle: agent.session.handle,
+        email: agent.session.email,
+        emailConfirmed: agent.session.emailConfirmed || false,
+        refreshJwt: agent.session.refreshJwt,
+        accessJwt: agent.session.accessJwt,
+        deactivated: isSessionDeactivated(agent.session.accessJwt),
+      }
+
+      __globalAgent = agent
+      queryClient.clear()
+      upsertAccount(freshAccount)
     },
     [upsertAccount, queryClient, clearCurrentAccount],
   )
