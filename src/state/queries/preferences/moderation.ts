@@ -7,6 +7,7 @@ import {
 
 import {usePreferencesQuery} from './index'
 import {useLabelersDetailedInfoQuery} from '../labeler'
+import {listenOnSessionResolved} from '#/state/events'
 
 /**
  * More strict than our default settings for logged in users.
@@ -28,6 +29,13 @@ export function useMyLabelersQuery() {
   const labelers = useLabelersDetailedInfoQuery({dids})
   const isLoading = prefs.isLoading || labelers.isLoading
   const error = prefs.error || labelers.error
+
+  React.useEffect(() => {
+    return listenOnSessionResolved(() => {
+      labelers.refetch()
+    })
+  }, [labelers])
+
   return React.useMemo(() => {
     return {
       isLoading,

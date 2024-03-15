@@ -14,7 +14,7 @@ import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {emitSessionDropped} from '../events'
+import {emitSessionDropped, emitSessionResolved} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
@@ -413,6 +413,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
                 `session: reuse of previous session returned a fresh account, upserting`,
               )
               upsertAccount(freshAccount)
+              emitSessionResolved()
             }
           })
           .catch(e => {

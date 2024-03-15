@@ -29,3 +29,11 @@ export function listenPostCreated(fn: () => void): UnlistenFn {
   emitter.on('post-created', fn)
   return () => emitter.off('post-created', fn)
 }
+
+export function emitSessionResolved() {
+  emitter.emit('session-resolved')
+}
+export function listenOnSessionResolved(fn: () => void): UnlistenFn {
+  emitter.on('session-resolved', fn)
+  return () => emitter.off('session-resolved', fn)
+}
