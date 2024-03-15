@@ -407,6 +407,7 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
+                logContext="PostThreadItem"
               />
             </View>
           </View>
@@ -431,7 +432,6 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
-            style={[pal.view]}
             moderation={moderation.content}
             iconSize={isThreadedChild ? 26 : 38}
             iconStyles={
@@ -560,6 +560,7 @@ let PostThreadItemLoaded = ({
                   record={record}
                   richText={richText}
                   onPressReply={onPressReply}
+                  logContext="PostThreadItem"
                 />
               </View>
             </View>
@@ -620,7 +621,6 @@ function PostOuterWrapper({
     return (
       <View
         style={[
-          pal.view,
           pal.border,
           styles.cursor,
           {
@@ -648,7 +648,6 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         styles.cursor,
