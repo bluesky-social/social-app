@@ -144,7 +144,6 @@ let FeedItemInner = ({
 
   const outerStyles = [
     styles.outer,
-    pal.view,
     {
       borderColor: pal.colors.border,
       paddingBottom:

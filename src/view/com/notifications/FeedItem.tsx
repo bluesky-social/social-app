@@ -182,7 +182,6 @@ let FeedItem = ({
       testID={`feedItem-by-${item.notification.author.handle}`}
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         item.notification.isRead
           ? undefined
