@@ -73,7 +73,9 @@ export const SetNewPasswordForm = ({
       setIsProcessing(false)
       if (isNetworkError(e)) {
         setError(
-          'Unable to contact your service. Please check your Internet connection.',
+          _(
+            msg`Unable to contact your service. Please check your Internet connection.`,
+          ),
         )
       } else {
         setError(cleanError(errMsg))
