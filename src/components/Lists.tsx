@@ -150,7 +150,7 @@ export function ListMaybePlaceholder({
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
 
-  if (isError) {
+  if (!isLoading && isError) {
     return (
       <Error
         title={errorTitle ?? _(msg`Oops!`)}
