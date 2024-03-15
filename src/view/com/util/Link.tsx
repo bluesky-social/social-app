@@ -60,6 +60,7 @@ export const Link = memo(function Link({
   accessible,
   anchorNoUnderline,
   navigationAction,
+  onPress: onPressOuter,
   ...props
 }: Props) {
   const t = useTheme()
@@ -69,8 +70,16 @@ export const Link = memo(function Link({
   const openLink = useOpenLink()
 
   const onPress = React.useCallback(
-    (e?: Event) => {
+    (e: GestureResponderEvent) => {
       if (typeof href === 'string') {
+        if (onPressOuter) {
+          onPressOuter(e)
+
+          if (e.defaultPrevented) {
+            return
+          }
+        }
+
         return onPressInner(
           closeModal,
           navigation,
@@ -81,7 +90,7 @@ export const Link = memo(function Link({
         )
       }
     },
-    [closeModal, navigation, navigationAction, href, openLink],
+    [closeModal, navigation, navigationAction, href, openLink, onPressOuter],
   )
 
   if (noFeedback) {

@@ -6,6 +6,7 @@ import {
   ViewStyle,
   Text,
   InteractionManager,
+  GestureResponderEvent,
 } from 'react-native'
 import {Image} from 'expo-image'
 import {
@@ -17,6 +18,8 @@ import {
   AppBskyGraphDefs,
   ModerationUI,
   PostModeration,
+  AppBskyRichtextFacet,
+  RichText as RichTextAPI,
 } from '@atproto/api'
 import {Link} from '../Link'
 import {ImageLayoutGrid} from '../images/ImageLayoutGrid'
@@ -31,6 +34,8 @@ import {FeedSourceCard} from 'view/com/feeds/FeedSourceCard'
 import {ContentHider} from '../moderation/ContentHider'
 import {isNative} from '#/platform/detection'
 import {shareUrl} from '#/lib/sharing'
+import {useModalControls} from '#/state/modals'
+import {linkRequiresWarning} from '#/lib/strings/url-helpers'
 
 type Embed =
   | AppBskyEmbedRecord.View
@@ -40,17 +45,20 @@ type Embed =
   | {$type: string; [k: string]: unknown}
 
 export function PostEmbeds({
+  record,
   embed,
   moderation,
   moderationDecisions,
   style,
 }: {
+  record: {text: string; facets?: AppBskyRichtextFacet.Main[]}
   embed?: Embed
   moderation: ModerationUI
   moderationDecisions?: PostModeration['decisions']
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
+  const {openModal} = useModalControls()
   const {openLightbox} = useLightboxControls()
 
   const externalUri = AppBskyEmbedExternal.isView(embed)
@@ -63,6 +71,48 @@ export function PostEmbeds({
     }
   }, [externalUri])
 
+  const onExternalPress = useCallback(
+    (e: GestureResponderEvent) => {
+      if (!externalUri || record.text.trim().length === 0) {
+        return
+      }
+
+      const rt = new RichTextAPI({text: record.text, facets: record.facets})
+
+      for (const segment of rt.segments()) {
+        const link = segment.link
+
+        if (link && AppBskyRichtextFacet.validateLink(link).success) {
+          const href = link.uri
+          const text = segment.text
+
+          if (href !== externalUri) {
+            continue
+          }
+
+          const requiresWarning = linkRequiresWarning(href, text)
+          if (requiresWarning) {
+            openModal({
+              name: 'link-warning',
+              text: text,
+              href: href,
+            })
+          }
+
+          return
+        }
+      }
+
+      e.preventDefault()
+      openModal({
+        name: 'link-warning',
+        text: '',
+        href: externalUri,
+      })
+    },
+    [record, externalUri, openModal],
+  )
+
   // quote post with media
   // =
   if (AppBskyEmbedRecordWithMedia.isView(embed)) {
@@ -74,7 +124,11 @@ export function PostEmbeds({
     const quoteModeration = isModOnQuote ? moderation : {}
     return (
       <View style={style}>
-        <PostEmbeds embed={embed.media} moderation={mediaModeration} />
+        <PostEmbeds
+          record={record}
+          embed={embed.media}
+          moderation={mediaModeration}
+        />
         <ContentHider moderation={quoteModeration}>
           <MaybeQuoteEmbed embed={embed.record} moderation={quoteModeration} />
         </ContentHider>
@@ -177,6 +231,7 @@ export function PostEmbeds({
         href={link.uri}
         style={[styles.extOuter, pal.view, pal.borderDark, style]}
         hoverStyle={{borderColor: pal.colors.borderLinkHover}}
+        onPress={onExternalPress}
         onLongPress={onShareExternal}>
         <ExternalLinkEmbed link={link} />
       </Link>

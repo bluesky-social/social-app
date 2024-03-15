@@ -136,7 +136,7 @@ export function QuoteEmbed({
           authorHandle={quote.author.handle}
         />
       ) : null}
-      {embed && <PostEmbeds embed={embed} moderation={{}} />}
+      {embed && <PostEmbeds record={quote} embed={embed} moderation={{}} />}
     </Link>
   )
 }
