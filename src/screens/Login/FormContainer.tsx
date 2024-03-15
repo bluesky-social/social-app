@@ -29,7 +29,8 @@ export function FormContainer({
   return (
     <ScrollView
       testID={testID}
-      style={[styles.maxHeight, contentContainerStyle]}>
+      style={[styles.maxHeight, contentContainerStyle]}
+      keyboardShouldPersistTaps="handled">
       <View
         style={[a.gap_lg, a.flex_1, !gtMobile && [a.px_lg, a.pt_md], style]}>
         {title && !gtMobile && (

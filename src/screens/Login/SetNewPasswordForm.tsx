@@ -113,6 +113,7 @@ export const SetNewPasswordForm = ({
             testID="resetCodeInput"
             label={_(msg`Looks like XXXXX-XXXXX`)}
             autoCapitalize="none"
+            autoFocus={true}
             autoCorrect={false}
             autoComplete="off"
             value={resetCode}
