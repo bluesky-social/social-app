@@ -1022,7 +1022,7 @@ msgstr "新しいアカウントを作成"
 
 #: src/view/screens/AppPasswords.tsx:249
 msgid "Created {0}"
-msgstr "{0}を作成済み"
+msgstr "{0}に作成"
 
 #: src/view/screens/ProfileFeed.tsx:616
 msgid "Created by <0/>"
