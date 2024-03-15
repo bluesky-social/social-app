@@ -7,14 +7,12 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
 
-import {atoms as a, useTheme, tokens, native} from '#/alf'
+import {atoms as a, useTheme, native} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as Dialog from '#/components/Dialog'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft} from '#/components/icons/Chevron'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {GradientFill} from '#/components/GradientFill'
 import * as Toggle from '#/components/forms/Toggle'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Loader} from '#/components/Loader'
@@ -115,7 +113,8 @@ export function SubmitView({
           a.gap_lg,
           a.p_md,
           a.rounded_md,
-          t.atoms.bg_contrast_25,
+          a.border,
+          t.atoms.border_contrast_low,
         ]}>
         <View style={[a.flex_1, a.gap_xs]}>
           <Text style={[a.text_md, a.font_bold]}>
@@ -126,7 +125,7 @@ export function SubmitView({
           </Text>
         </View>
 
-        <Check size="md" style={[a.pr_sm]} />
+        <Check size="md" style={[a.pr_sm, t.atoms.text_contrast_low]} />
       </View>
 
       <View style={[a.gap_md]}>
@@ -138,7 +137,7 @@ export function SubmitView({
           label="Select mod services"
           values={selectedServices}
           onChange={setSelectedServices}>
-          <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
+          <View style={[a.flex_row, a.gap_md, a.flex_wrap]}>
             {labelers.map(labeler => {
               const title = getLabelingServiceTitle({
                 displayName: labeler.creator.displayName,
@@ -209,11 +208,13 @@ export function SubmitView({
         <Button
           size="large"
           variant="solid"
-          color="primary"
-          label={_(msg`Submit`)}
+          color="negative"
+          label={_(msg`Send report`)}
           onPress={submit}
           disabled={!selectedServices.length}>
-          <ButtonText>Submit</ButtonText>
+          <ButtonText>
+            <Trans>Send report</Trans>
+          </ButtonText>
           {submitting && <ButtonIcon icon={Loader} />}
         </Button>
       </View>
@@ -228,13 +229,17 @@ function LabelerToggle({title}: {title: string}) {
   return (
     <View
       style={[
-        a.py_md,
-        a.px_xl,
-        a.rounded_full,
+        a.flex_row,
+        a.align_center,
+        a.gap_md,
+        a.p_md,
+        a.pr_lg,
+        a.rounded_sm,
         a.overflow_hidden,
         t.atoms.bg_contrast_25,
+        ctx.selected && [t.atoms.bg_contrast_50],
       ]}>
-      {ctx.selected && <GradientFill gradient={tokens.gradients.midnight} />}
+      <Toggle.Checkbox />
       <View
         style={[
           a.flex_row,
@@ -246,23 +251,11 @@ function LabelerToggle({title}: {title: string}) {
         <Text
           style={[
             native({marginTop: 2}),
-            {
-              color:
-                t.name === 'light' && ctx.selected
-                  ? t.palette.white
-                  : t.atoms.text.color,
-            },
+            t.atoms.text_contrast_medium,
+            ctx.selected && t.atoms.text,
           ]}>
           {title}
         </Text>
-        <Plus
-          size="sm"
-          fill={
-            ctx.selected
-              ? t.palette.primary_200
-              : t.atoms.text_contrast_low.color
-          }
-        />
       </View>
     </View>
   )
