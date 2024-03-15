@@ -55,6 +55,8 @@ export function StepInfo() {
         </TextField.Label>
         <TouchableOpacity
           accessibilityRole="button"
+          accessibilityLabel={_(msg`Select service`)}
+          accessibilityHint={_(msg`Sets server for the Bluesky client`)}
           style={[
             a.w_full,
             a.flex_row,
