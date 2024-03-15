@@ -23,7 +23,7 @@ import {Celebrate_Stroke2_Corner0_Rounded as Celebrate} from '#/components/icons
 
 /**
  * If you want to add or remove icons from the selection, just add the name to the `emojiNames` array and
- * add the item to the `emojiItems` record.
+ * add the item to the `emojiItems` record..
  */
 
 export const emojiNames = [
