@@ -13,9 +13,9 @@ import {msg} from '@lingui/macro'
 import {logger} from '#/logger'
 import {atoms as a} from '#/alf'
 import {ChooseAccountForm} from './ChooseAccountForm'
-import {ForgotPasswordForm} from '#/view/com/auth/login/ForgotPasswordForm'
-import {SetNewPasswordForm} from '#/view/com/auth/login/SetNewPasswordForm'
-import {PasswordUpdatedForm} from '#/view/com/auth/login/PasswordUpdatedForm'
+import {ForgotPasswordForm} from '#/screens/Login/ForgotPasswordForm'
+import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
+import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
 
 enum Forms {

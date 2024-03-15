@@ -1,5 +1,5 @@
 import React from 'react'
-import {ScrollView, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, View} from 'react-native'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -7,16 +7,17 @@ import flattenReactChildren from 'react-keyed-flatten-children'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAvatar} from '../../view/com/util/UserAvatar'
 import {colors} from 'lib/styles'
-import {styles} from '../../view/com/auth/login/styles'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
 import {Button} from '#/components/Button'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icons/Chevron'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import * as TextField from '#/components/forms/TextField'
+import {FormContainer} from './FormContainer'
 
 function Group({children}: {children: React.ReactNode}) {
   const t = useTheme()
@@ -106,7 +107,6 @@ export const ChooseAccountForm = ({
   const {accounts, currentAccount} = useSession()
   const {initSession} = useSessionApi()
   const {setShowLoggedOut} = useLoggedOutViewControls()
-  const {gtMobile} = useBreakpoints()
 
   React.useEffect(() => {
     screen('Choose Account')
@@ -133,12 +133,13 @@ export const ChooseAccountForm = ({
   )
 
   return (
-    <ScrollView testID="chooseAccountForm" style={styles.maxHeight}>
-      <View style={!gtMobile && a.px_lg}>
-        <Text
-          style={[a.mt_md, a.mb_lg, a.font_bold, t.atoms.text_contrast_medium]}>
+    <FormContainer
+      testID="chooseAccountForm"
+      title={<Trans>Select account</Trans>}>
+      <View>
+        <TextField.Label>
           <Trans>Sign in as...</Trans>
-        </Text>
+        </TextField.Label>
         <Group>
           {accounts.map(account => (
             <AccountItem
@@ -171,18 +172,18 @@ export const ChooseAccountForm = ({
             </View>
           </TouchableOpacity>
         </Group>
-        <View style={[a.flex_row, a.mt_lg]}>
-          <Button
-            label={_(msg`Back`)}
-            variant="solid"
-            color="secondary"
-            size="small"
-            onPress={onPressBack}>
-            {_(msg`Back`)}
-          </Button>
-          <View style={[a.flex_1]} />
-        </View>
       </View>
-    </ScrollView>
+      <View style={[a.flex_row]}>
+        <Button
+          label={_(msg`Back`)}
+          variant="solid"
+          color="secondary"
+          size="small"
+          onPress={onPressBack}>
+          {_(msg`Back`)}
+        </Button>
+        <View style={[a.flex_1]} />
+      </View>
+    </FormContainer>
   )
 }
