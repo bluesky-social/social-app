@@ -30,7 +30,8 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import * as notifications from 'lib/notifications/notifications'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import {MutedWordsDialog} from '#/components/dialogs/MutedWords'
-import {useDialogStateContext} from '#/state/dialogs'
+import {useDialogStateContext} from 'state/dialogs'
+import Animated from 'react-native-reanimated'
 
 function ShellInner() {
   const isDrawerOpen = useIsDrawerOpen()
@@ -54,9 +55,9 @@ function ShellInner() {
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession, currentAccount} = useSession()
   const closeAnyActiveElement = useCloseAnyActiveElement()
+  const {importantForAccessibility} = useDialogStateContext()
   // start undefined
   const currentAccountDid = React.useRef<string | undefined>(undefined)
-  const {openDialogs} = useDialogStateContext()
 
   React.useEffect(() => {
     let listener = {remove() {}}
@@ -80,19 +81,9 @@ function ShellInner() {
     }
   }, [currentAccount])
 
-  /**
-   * The counterpart to `accessibilityViewIsModal` for Android. This property
-   * applies to the parent of all non-modal views, and prevents TalkBack from
-   * navigating within content beneath an open dialog.
-   *
-   * @see https://reactnative.dev/docs/accessibility#importantforaccessibility-android
-   */
-  const importantForAccessibility =
-    openDialogs.length > 0 ? 'no-hide-descendants' : undefined
-
   return (
     <>
-      <View
+      <Animated.View
         style={containerPadding}
         importantForAccessibility={importantForAccessibility}>
         <ErrorBoundary>
@@ -106,7 +97,7 @@ function ShellInner() {
             <TabsNavigator />
           </Drawer>
         </ErrorBoundary>
-      </View>
+      </Animated.View>
       <Composer winHeight={winDim.height} />
       <ModalsContainer />
       <MutedWordsDialog />

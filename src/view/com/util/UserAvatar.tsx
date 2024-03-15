@@ -1,9 +1,13 @@
 import React, {memo, useMemo} from 'react'
-import {Image, StyleSheet, View} from 'react-native'
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native'
 import Svg, {Circle, Rect, Path} from 'react-native-svg'
+import {Image as RNImage} from 'react-native-image-crop-picker'
+import {useLingui} from '@lingui/react'
+import {msg, Trans} from '@lingui/macro'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {HighPriorityImage} from 'view/com/util/images/Image'
 import {ModerationUI} from '@atproto/api'
+
+import {HighPriorityImage} from 'view/com/util/images/Image'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
@@ -11,12 +15,16 @@ import {
 } from 'lib/hooks/usePermissions'
 import {colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb, isAndroid} from 'platform/detection'
-import {Image as RNImage} from 'react-native-image-crop-picker'
+import {isWeb, isAndroid, isNative} from 'platform/detection'
 import {UserPreviewLink} from './UserPreviewLink'
-import {DropdownItem, NativeDropdown} from './forms/NativeDropdown'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import * as Menu from '#/components/Menu'
+import {
+  Camera_Stroke2_Corner0_Rounded as Camera,
+  Camera_Filled_Stroke2_Corner0_Rounded as CameraFilled,
+} from '#/components/icons/Camera'
+import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
+import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {useTheme} from '#/alf'
 
 export type UserAvatarType = 'user' | 'algo' | 'list'
 
@@ -196,6 +204,7 @@ let EditableUserAvatar = ({
   avatar,
   onSelectNewAvatar,
 }: EditableUserAvatarProps): React.ReactNode => {
+  const t = useTheme()
   const pal = usePalette('default')
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
@@ -216,118 +225,115 @@ let EditableUserAvatar = ({
     }
   }, [type, size])
 
-  const dropdownItems = useMemo(
-    () =>
-      [
-        !isWeb && {
-          testID: 'changeAvatarCameraBtn',
-          label: _(msg`Camera`),
-          icon: {
-            ios: {
-              name: 'camera',
-            },
-            android: 'ic_menu_camera',
-            web: 'camera',
-          },
-          onPress: async () => {
-            if (!(await requestCameraAccessIfNeeded())) {
-              return
-            }
+  const onOpenCamera = React.useCallback(async () => {
+    if (!(await requestCameraAccessIfNeeded())) {
+      return
+    }
 
-            onSelectNewAvatar(
-              await openCamera({
-                width: 1000,
-                height: 1000,
-                cropperCircleOverlay: true,
-              }),
-            )
-          },
-        },
-        {
-          testID: 'changeAvatarLibraryBtn',
-          label: _(msg`Library`),
-          icon: {
-            ios: {
-              name: 'photo.on.rectangle.angled',
-            },
-            android: 'ic_menu_gallery',
-            web: 'gallery',
-          },
-          onPress: async () => {
-            if (!(await requestPhotoAccessIfNeeded())) {
-              return
-            }
+    onSelectNewAvatar(
+      await openCamera({
+        width: 1000,
+        height: 1000,
+        cropperCircleOverlay: true,
+      }),
+    )
+  }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
-            const items = await openPicker({
-              aspect: [1, 1],
-            })
-            const item = items[0]
-            if (!item) {
-              return
-            }
+  const onOpenLibrary = React.useCallback(async () => {
+    if (!(await requestPhotoAccessIfNeeded())) {
+      return
+    }
 
-            const croppedImage = await openCropper({
-              mediaType: 'photo',
-              cropperCircleOverlay: true,
-              height: item.height,
-              width: item.width,
-              path: item.path,
-            })
+    const items = await openPicker({
+      aspect: [1, 1],
+    })
+    const item = items[0]
+    if (!item) {
+      return
+    }
 
-            onSelectNewAvatar(croppedImage)
-          },
-        },
-        !!avatar && {
-          label: 'separator',
-        },
-        !!avatar && {
-          testID: 'changeAvatarRemoveBtn',
-          label: _(msg`Remove`),
-          icon: {
-            ios: {
-              name: 'trash',
-            },
-            android: 'ic_delete',
-            web: ['far', 'trash-can'],
-          },
-          onPress: async () => {
-            onSelectNewAvatar(null)
-          },
-        },
-      ].filter(Boolean) as DropdownItem[],
-    [
-      avatar,
-      onSelectNewAvatar,
-      requestCameraAccessIfNeeded,
-      requestPhotoAccessIfNeeded,
-      _,
-    ],
-  )
+    const croppedImage = await openCropper({
+      mediaType: 'photo',
+      cropperCircleOverlay: true,
+      height: item.height,
+      width: item.width,
+      path: item.path,
+    })
+
+    onSelectNewAvatar(croppedImage)
+  }, [onSelectNewAvatar, requestPhotoAccessIfNeeded])
+
+  const onRemoveAvatar = React.useCallback(() => {
+    onSelectNewAvatar(null)
+  }, [onSelectNewAvatar])
 
   return (
-    <NativeDropdown
-      testID="changeAvatarBtn"
-      items={dropdownItems}
-      accessibilityLabel={_(msg`Image options`)}
-      accessibilityHint="">
-      {avatar ? (
-        <HighPriorityImage
-          testID="userAvatarImage"
-          style={aviStyle}
-          source={{uri: avatar}}
-          accessibilityRole="image"
-        />
-      ) : (
-        <DefaultAvatar type={type} size={size} />
-      )}
-      <View style={[styles.editButtonContainer, pal.btn]}>
-        <FontAwesomeIcon
-          icon="camera"
-          size={12}
-          color={pal.text.color as string}
-        />
-      </View>
-    </NativeDropdown>
+    <Menu.Root>
+      <Menu.Trigger label={_(msg`Edit avatar`)}>
+        {({props}) => (
+          <TouchableOpacity {...props} activeOpacity={0.8}>
+            {avatar ? (
+              <HighPriorityImage
+                testID="userAvatarImage"
+                style={aviStyle}
+                source={{uri: avatar}}
+                accessibilityRole="image"
+              />
+            ) : (
+              <DefaultAvatar type={type} size={size} />
+            )}
+            <View style={[styles.editButtonContainer, pal.btn]}>
+              <CameraFilled height={14} width={14} style={t.atoms.text} />
+            </View>
+          </TouchableOpacity>
+        )}
+      </Menu.Trigger>
+      <Menu.Outer showCancel>
+        <Menu.Group>
+          {isNative && (
+            <Menu.Item
+              testID="changeAvatarCameraBtn"
+              label={_(msg`Upload from Camera`)}
+              onPress={onOpenCamera}>
+              <Menu.ItemText>
+                <Trans>Upload from Camera</Trans>
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={Camera} />
+            </Menu.Item>
+          )}
+
+          <Menu.Item
+            testID="changeAvatarLibraryBtn"
+            label={_(msg`Upload from Library`)}
+            onPress={onOpenLibrary}>
+            <Menu.ItemText>
+              {isNative ? (
+                <Trans>Upload from Library</Trans>
+              ) : (
+                <Trans>Upload from Files</Trans>
+              )}
+            </Menu.ItemText>
+            <Menu.ItemIcon icon={Library} />
+          </Menu.Item>
+        </Menu.Group>
+        {!!avatar && (
+          <>
+            <Menu.Divider />
+            <Menu.Group>
+              <Menu.Item
+                testID="changeAvatarRemoveBtn"
+                label={_(`Remove Avatar`)}
+                onPress={onRemoveAvatar}>
+                <Menu.ItemText>
+                  <Trans>Remove Avatar</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Trash} />
+              </Menu.Item>
+            </Menu.Group>
+          </>
+        )}
+      </Menu.Outer>
+    </Menu.Root>
   )
 }
 EditableUserAvatar = memo(EditableUserAvatar)

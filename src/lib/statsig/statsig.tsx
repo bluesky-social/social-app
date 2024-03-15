@@ -6,6 +6,9 @@ import {
 } from 'statsig-react-native-expo'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
+import {LogEvents} from './events'
+
+export type {LogEvents}
 
 const statsigOptions = {
   environment: {
@@ -17,12 +20,28 @@ const statsigOptions = {
   initTimeoutMs: 1,
 }
 
-export function logEvent(
-  eventName: string,
-  value?: string | number | null,
-  metadata?: Record<string, string> | null,
+type FlatJSONRecord = Record<
+  string,
+  string | number | boolean | null | undefined
+>
+
+let getCurrentRouteName: () => string | null | undefined = () => null
+
+export function attachRouteToLogEvents(
+  getRouteName: () => string | null | undefined,
 ) {
-  Statsig.logEvent(eventName, value, metadata)
+  getCurrentRouteName = getRouteName
+}
+
+export function logEvent<E extends keyof LogEvents>(
+  eventName: E & string,
+  rawMetadata: LogEvents[E] & FlatJSONRecord,
+) {
+  const fullMetadata = {
+    ...rawMetadata,
+  } as Record<string, string> // Statsig typings are unnecessarily strict here.
+  fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
+  Statsig.logEvent(eventName, null, fullMetadata)
 }
 
 export function useGate(gateName: string) {
@@ -48,6 +67,18 @@ export function Provider({children}: {children: React.ReactNode}) {
     () => toStatsigUser(currentAccount?.did),
     [currentAccount?.did],
   )
+
+  React.useEffect(() => {
+    function refresh() {
+      // Intentionally refetching the config using the JS SDK rather than React SDK
+      // so that the new config is stored in cache but isn't used during this session.
+      // It will kick in for the next reload.
+      Statsig.updateUser(currentStatsigUser)
+    }
+    const id = setInterval(refresh, 3 * 60e3 /* 3 min */)
+    return () => clearInterval(id)
+  }, [currentStatsigUser])
+
   return (
     <StatsigProvider
       sdkKey="client-SXJakO39w9vIhl3D44u8UupyzFl4oZ2qPIkjwcvuPsV"

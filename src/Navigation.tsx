@@ -78,7 +78,7 @@ import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStack
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import HashtagScreen from '#/screens/Hashtag'
-import {logEvent} from './lib/statsig/statsig'
+import {logEvent, attachRouteToLogEvents} from './lib/statsig/statsig'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -543,12 +543,17 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
       linking={LINKING}
       theme={theme}
       onReady={() => {
+        attachRouteToLogEvents(getCurrentRouteName)
         logModuleInitTime()
         onReady()
       }}>
       {children}
     </NavigationContainer>
   )
+}
+
+function getCurrentRouteName() {
+  return navigationRef.getCurrentRoute()?.name
 }
 
 /**
@@ -656,7 +661,9 @@ function logModuleInitTime() {
     performance.now() - global.__BUNDLE_START_TIME__,
   )
   console.log(`Time to first paint: ${initMs} ms`)
-  logEvent('init', initMs)
+  logEvent('init', {
+    initMs,
+  })
 
   if (__DEV__) {
     // This log is noisy, so keep false committed

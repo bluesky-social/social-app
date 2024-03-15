@@ -13,13 +13,18 @@ export function FollowButton({
   followedType = 'default',
   profile,
   labelStyle,
+  logContext,
 }: {
   unfollowedType?: ButtonType
   followedType?: ButtonType
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
   labelStyle?: StyleProp<TextStyle>
+  logContext: 'ProfileCard'
 }) {
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    logContext,
+  )
   const {_} = useLingui()
 
   const onPressFollow = async () => {

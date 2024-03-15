@@ -22,7 +22,7 @@ export type DialogControlRefProps = {
 export type DialogControlProps = DialogControlRefProps & {
   id: string
   ref: React.RefObject<DialogControlRefProps>
-  isOpen: boolean
+  isOpen?: boolean
 }
 
 export type DialogContextProps = {
@@ -46,6 +46,7 @@ export type DialogOuterProps = {
     sheet?: Omit<BottomSheetProps, 'children'>
   }
   webOptions?: {}
+  testID?: string
 }
 
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> & T

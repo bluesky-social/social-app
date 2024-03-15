@@ -6,7 +6,6 @@ import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
 
 import {useModals, useModalControls} from '#/state/modals'
-import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
@@ -26,7 +25,6 @@ import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
-import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
@@ -66,10 +64,7 @@ export function ModalsContainer() {
 
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
-  if (activeModal?.name === 'confirm') {
-    snapPoints = ConfirmModal.snapPoints
-    element = <ConfirmModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'edit-profile') {
+  if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = <EditProfileModal.Component {...activeModal} />
   } else if (activeModal?.name === 'report') {
@@ -126,9 +121,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'moderation-details') {
     snapPoints = ModerationDetailsModal.snapPoints
     element = <ModerationDetailsModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'birth-date-settings') {
-    snapPoints = BirthDateSettingsModal.snapPoints
-    element = <BirthDateSettingsModal.Component />
   } else if (activeModal?.name === 'verify-email') {
     snapPoints = VerifyEmailModal.snapPoints
     element = <VerifyEmailModal.Component {...activeModal} />
