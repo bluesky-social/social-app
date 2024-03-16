@@ -23,10 +23,10 @@ const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const snapPoints = [575]
 
 const CollectionNames = {
-  [CollectionId.FeedGenerator]: 'Feed',
-  [CollectionId.Profile]: 'Profile',
-  [CollectionId.List]: 'List',
-  [CollectionId.Post]: 'Post',
+  [CollectionId.FeedGenerator]: <Trans>Feed</Trans>,
+  [CollectionId.Profile]: <Trans>Profile</Trans>,
+  [CollectionId.List]: <Trans>List</Trans>,
+  [CollectionId.Post]: <Trans>Post</Trans>,
 }
 
 type ReportComponentProps =
@@ -129,9 +129,9 @@ export function Component(content: ReportComponentProps) {
 
 // If no atUri is passed, that means the reporting collection is account
 const getCollectionNameForReport = (atUri: AtUri | null) => {
-  if (!atUri) return 'Account'
+  if (!atUri) return <Trans>Account</Trans>
   // Generic fallback for any collection being reported
-  return CollectionNames[atUri.collection as CollectionId] || 'Content'
+  return CollectionNames[atUri.collection as CollectionId] || <Trans>Content</Trans>
 }
 
 const SelectIssue = ({
