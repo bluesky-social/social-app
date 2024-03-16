@@ -26,7 +26,7 @@ const CollectionNames = {
   [CollectionId.FeedGenerator]: <Trans>Feed</Trans>,
   [CollectionId.Profile]: <Trans>Profile</Trans>,
   [CollectionId.List]: <Trans>List</Trans>,
-  [CollectionId.Post]: <Trans>Post</Trans>,
+  [CollectionId.Post]: <Trans context="description">Post</Trans>,
 }
 
 type ReportComponentProps =
