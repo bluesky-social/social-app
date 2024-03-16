@@ -4585,7 +4585,7 @@ msgstr "아직 어떤 계정도 뮤트하지 않았습니다. 계정을 뮤트�
 
 #: src/components/dialogs/MutedWords.tsx:250
 msgid "You haven't muted any words or tags yet"
-msgstr "아직 어떤 단어나 태그도 뮤트하지 않았습니다"
+msgstr "아직 어떤 단어나 태그도 뮤트하지 않음"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:181
 msgid "You must be 18 or older to enable adult content."
