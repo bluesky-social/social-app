@@ -131,7 +131,9 @@ export function Component(content: ReportComponentProps) {
 const getCollectionNameForReport = (atUri: AtUri | null) => {
   if (!atUri) return <Trans>Account</Trans>
   // Generic fallback for any collection being reported
-  return CollectionNames[atUri.collection as CollectionId] || <Trans>Content</Trans>
+  return (
+    CollectionNames[atUri.collection as CollectionId] || <Trans>Content</Trans>
+  )
 }
 
 const SelectIssue = ({
