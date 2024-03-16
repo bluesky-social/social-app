@@ -23,6 +23,7 @@ import {
   DialogInnerProps,
 } from '#/components/Dialog/types'
 import {Context} from '#/components/Dialog/context'
+import {isNative} from 'platform/detection'
 
 export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
@@ -221,7 +222,8 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
           borderTopRightRadius: 40,
         },
         flatten(style),
-      ]}>
+      ]}
+      contentContainerStyle={isNative ? a.pb_4xl : undefined}>
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
