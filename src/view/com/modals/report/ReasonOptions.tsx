@@ -70,8 +70,8 @@ const Option = ({
   description,
 }: {
   pal: UsePaletteValue
-  description: string
-  title: string
+  description: JSX.Element
+  title: JSX.Element
 }) => {
   return (
     <View>
