@@ -8,7 +8,6 @@ import {
   View,
   ViewStyle,
   Pressable,
-  TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native'
 import {useLinkProps, StackActions} from '@react-navigation/native'
@@ -23,7 +22,6 @@ import {
 import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
-import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
@@ -31,6 +29,7 @@ import {
   DebouncedNavigationProp,
   useNavigationDeduped,
 } from 'lib/hooks/useNavigationDeduped'
+import {useTheme} from '#/alf'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -63,6 +62,7 @@ export const Link = memo(function Link({
   navigationAction,
   ...props
 }: Props) {
+  const t = useTheme()
   const {closeModal} = useModalControls()
   const navigation = useNavigationDeduped()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
@@ -85,37 +85,23 @@ export const Link = memo(function Link({
   )
 
   if (noFeedback) {
-    if (isAndroid) {
-      // workaround for Android not working well with left/right swipe gestures and TouchableWithoutFeedback
-      // https://github.com/callstack/react-native-pager-view/issues/424
-      return (
-        <FixedTouchableHighlight
-          testID={testID}
-          onPress={onPress}
-          // @ts-ignore web only -prf
-          href={asAnchor ? sanitizeUrl(href) : undefined}
-          accessible={accessible}
-          accessibilityRole="link"
-          {...props}>
-          <View style={style}>
-            {children ? children : <Text>{title || 'link'}</Text>}
-          </View>
-        </FixedTouchableHighlight>
-      )
-    }
     return (
       <WebAuxClickWrapper>
-        <TouchableWithoutFeedback
+        <Pressable
           testID={testID}
           onPress={onPress}
           accessible={accessible}
           accessibilityRole="link"
-          {...props}>
+          {...props}
+          android_ripple={{
+            color: t.atoms.bg_contrast_25.backgroundColor,
+          }}
+          unstable_pressDelay={isAndroid ? 90 : undefined}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
           </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
       </WebAuxClickWrapper>
     )
   }
