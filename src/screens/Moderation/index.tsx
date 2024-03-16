@@ -517,7 +517,7 @@ function PwiOptOut() {
           )}>
           <Toggle.Switch />
           <Toggle.Label style={[a.text_md]}>
-            Discourage apps from showing my account to logged-out users
+            <Trans>Discourage apps from showing my account to logged-out users</Trans>
           </Toggle.Label>
         </Toggle.Item>
 
