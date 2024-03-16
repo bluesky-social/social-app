@@ -112,7 +112,7 @@ export function SelectReportOptionView({
                 size="small"
                 variant="solid"
                 color="secondary">
-                <ButtonText>View details</ButtonText>
+                <ButtonText><Trans>View details</Trans></ButtonText>
                 <ButtonIcon position="right" icon={SquareArrowTopRight} />
               </Link>
             </View>
