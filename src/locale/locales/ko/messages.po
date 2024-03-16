@@ -2431,7 +2431,7 @@ msgstr "결과 없음"
 
 #: src/components/Lists.tsx:191
 msgid "No results found"
-msgstr "결과를 찾을 수 없습니다"
+msgstr "결과를 찾을 수 없음"
 
 #: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
@@ -2675,11 +2675,11 @@ msgstr "기타…"
 #: src/components/Lists.tsx:193
 #: src/view/screens/NotFound.tsx:45
 msgid "Page not found"
-msgstr "페이지를 찾을 수 없습니다"
+msgstr "페이지를 찾을 수 없음"
 
 #: src/view/screens/NotFound.tsx:42
 msgid "Page Not Found"
-msgstr "페이지를 찾을 수 없습니다"
+msgstr "페이지를 찾을 수 없음"
 
 #: src/view/com/auth/create/Step1.tsx:191
 #: src/view/com/auth/create/Step1.tsx:201
