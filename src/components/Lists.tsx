@@ -6,7 +6,7 @@ import {Loader} from '#/components/Loader'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {cleanError} from 'lib/strings/errors'
-import {Button} from '#/components/Button'
+import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {StackActions} from '@react-navigation/native'
 import {router} from '#/routes'
@@ -223,7 +223,7 @@ export function ListMaybePlaceholder({
               <Button
                 variant="solid"
                 color="primary"
-                label={_(msg`Click here`)}
+                label={_(msg`Click here to retry`)}
                 onPress={onRetry}
                 size="large"
                 style={[
@@ -231,17 +231,21 @@ export function ListMaybePlaceholder({
                   a.overflow_hidden,
                   {paddingVertical: 10},
                 ]}>
-                <Trans>Retry</Trans>
+                <ButtonText>
+                  <Trans>Retry</Trans>
+                </ButtonText>
               </Button>
             )}
             <Button
               variant="solid"
               color={isError && onRetry ? 'secondary' : 'primary'}
-              label={_(msg`Click here`)}
+              label={_(msg`Click here to go back`)}
               onPress={onGoBack}
               size="large"
               style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
-              <Trans>Go Back</Trans>
+              <ButtonText>
+                <Trans>Go Back</Trans>
+              </ButtonText>
             </Button>
           </View>
         </>
