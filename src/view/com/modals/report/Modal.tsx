@@ -23,10 +23,10 @@ const DMCA_LINK = 'https://bsky.social/about/support/copyright'
 export const snapPoints = [575]
 
 const CollectionNames = {
-  [CollectionId.FeedGenerator]: 'Feed',
-  [CollectionId.Profile]: 'Profile',
-  [CollectionId.List]: 'List',
-  [CollectionId.Post]: 'Post',
+  [CollectionId.FeedGenerator]: <Trans>Feed</Trans>,
+  [CollectionId.Profile]: <Trans>Profile</Trans>,
+  [CollectionId.List]: <Trans>List</Trans>,
+  [CollectionId.Post]: <Trans>Post</Trans>,
 }
 
 type ReportComponentProps =
@@ -41,6 +41,7 @@ type ReportComponentProps =
 export function Component(content: ReportComponentProps) {
   const {closeModal} = useModalControls()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const {isMobile} = useWebMediaQueries()
   const [isProcessing, setIsProcessing] = useState(false)
   const [showDetailsInput, setShowDetailsInput] = useState(false)
@@ -77,7 +78,9 @@ export function Component(content: ReportComponentProps) {
         },
         reason: details,
       })
-      Toast.show("Thank you for your report! We'll look into it promptly.")
+      Toast.show(
+        _(msg`Thank you for your report! We'll look into it promptly.`),
+      )
 
       closeModal()
       return
@@ -126,9 +129,11 @@ export function Component(content: ReportComponentProps) {
 
 // If no atUri is passed, that means the reporting collection is account
 const getCollectionNameForReport = (atUri: AtUri | null) => {
-  if (!atUri) return 'Account'
+  if (!atUri) return <Trans>Account</Trans>
   // Generic fallback for any collection being reported
-  return CollectionNames[atUri.collection as CollectionId] || 'Content'
+  return (
+    CollectionNames[atUri.collection as CollectionId] || <Trans>Content</Trans>
+  )
 }
 
 const SelectIssue = ({
@@ -189,7 +194,7 @@ const SelectIssue = ({
             onPress={goToDetails}
             accessibilityRole="button"
             accessibilityLabel={_(msg`Add details`)}
-            accessibilityHint="Add more details to your report">
+            accessibilityHint={_(msg`Add more details to your report`)}>
             <Text style={[s.f18, pal.link]}>
               <Trans>Add details to report</Trans>
             </Text>
