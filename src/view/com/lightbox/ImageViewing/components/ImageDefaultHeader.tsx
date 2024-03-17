@@ -7,8 +7,15 @@
  */
 import React from 'react'
 import {createHitslop} from 'lib/constants'
-import {SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
+import {
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native'
 import {t} from '@lingui/macro'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {usePalette} from '#/lib/hooks/usePalette'
 
 type Props = {
   onRequestClose: () => void
@@ -16,20 +23,24 @@ type Props = {
 
 const HIT_SLOP = createHitslop(16)
 
-const ImageDefaultHeader = ({onRequestClose}: Props) => (
-  <SafeAreaView style={styles.root}>
-    <TouchableOpacity
-      style={styles.closeButton}
-      onPress={onRequestClose}
-      hitSlop={HIT_SLOP}
-      accessibilityRole="button"
-      accessibilityLabel={t`Close image`}
-      accessibilityHint={t`Closes viewer for header image`}
-      onAccessibilityEscape={onRequestClose}>
-      <Text style={styles.closeText}>✕</Text>
-    </TouchableOpacity>
-  </SafeAreaView>
-)
+const ImageDefaultHeader = ({onRequestClose}: Props) => {
+  const pal = usePalette('default')
+
+  return (
+    <SafeAreaView style={styles.root}>
+      <TouchableOpacity
+        style={[styles.closeButton, styles.blurredBackground]}
+        onPress={onRequestClose}
+        hitSlop={HIT_SLOP}
+        accessibilityRole="button"
+        accessibilityLabel={t`Close image`}
+        accessibilityHint={t`Closes viewer for header image`}
+        onAccessibilityEscape={onRequestClose}>
+        <FontAwesomeIcon icon="close" color={pal.colors.text} size={22} />
+      </TouchableOpacity>
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
   root: {
@@ -37,8 +48,8 @@ const styles = StyleSheet.create({
     pointerEvents: 'box-none',
   },
   closeButton: {
-    marginRight: 8,
-    marginTop: 8,
+    marginRight: 10,
+    marginTop: 10,
     width: 44,
     height: 44,
     alignItems: 'center',
@@ -53,6 +64,10 @@ const styles = StyleSheet.create({
     color: '#FFF',
     includeFontPadding: false,
   },
+  blurredBackground: {
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+  } as ViewStyle,
 })
 
 export default ImageDefaultHeader
