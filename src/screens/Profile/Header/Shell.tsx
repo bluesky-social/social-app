@@ -159,6 +159,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   aviLabeler: {
-    borderRadius: 12,
+    borderRadius: 10,
   },
 })
