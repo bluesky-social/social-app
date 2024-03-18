@@ -17,6 +17,8 @@ import {
   ComAtprotoLabelDefs,
   interpretLabelValueDefinition,
 } from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {moderationOptsOverrideContext} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {FeedNotification} from '#/state/queries/notifications/types'
