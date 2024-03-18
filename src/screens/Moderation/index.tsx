@@ -308,10 +308,7 @@ export function ModerationScreenInner({
                 </ButtonText>
               </Button>
 
-              <BirthDateSettingsDialog
-                control={birthdateDialogControl}
-                preferences={preferences}
-              />
+              <BirthDateSettingsDialog control={birthdateDialogControl} />
             </>
           )}
           <View
