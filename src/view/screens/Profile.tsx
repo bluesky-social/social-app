@@ -199,6 +199,7 @@ function ProfileScreenLoaded({
     showFeedsTab,
     showListsTab,
     showFiltersTab,
+    profile.associated?.labeler,
     _,
   ])
 
