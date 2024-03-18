@@ -885,7 +885,7 @@ function MockAccountScreen({
     <View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
       <ScreenHider
         style={{}}
-        screenDescription="profile"
+        screenDescription={_(msg`profile`)}
         modui={moderation.ui('profileView')}>
         <ProfileHeaderStandard
           // @ts-ignore ProfileViewBasic is close enough -prf
