@@ -82,7 +82,11 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
       <View style={styles.avi}>
-        <UserAvatar size={40} avatar={profile?.avatar} />
+        <UserAvatar
+          size={40}
+          avatar={profile?.avatar}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        />
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text}>
