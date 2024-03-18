@@ -40,10 +40,7 @@ import {
 } from '#/state/preferences'
 import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
-import {
-  useClearPreferencesMutation,
-  usePreferencesQuery,
-} from '#/state/queries/preferences'
+import {useClearPreferencesMutation} from '#/state/queries/preferences'
 // TODO import {useInviteCodesQuery} from '#/state/queries/invites'
 import {clear as clearStorage} from '#/state/persisted/store'
 import {clearLegacyStorage} from '#/state/persisted/legacy'
@@ -156,7 +153,6 @@ export function SettingsScreen({}: Props) {
   const {screen, track} = useAnalytics()
   const {openModal} = useModalControls()
   const {isSwitchingAccounts, accounts, currentAccount} = useSession()
-  const {data: preferences} = usePreferencesQuery()
   const {mutate: clearPreferences} = useClearPreferencesMutation()
   // TODO
   // const {data: invites} = useInviteCodesQuery()
@@ -295,10 +291,7 @@ export function SettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
-      <BirthDateSettingsDialog
-        control={birthdayControl}
-        preferences={preferences}
-      />
+      <BirthDateSettingsDialog control={birthdayControl} />
 
       <SimpleViewHeader
         showBackButton={isMobile}
