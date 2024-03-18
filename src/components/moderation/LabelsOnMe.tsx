@@ -39,6 +39,7 @@ export function LabelsOnMe({
     return null
   }
 
+const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
   return (
     <View style={[a.flex_row, style]}>
       <LabelsOnMeDialog control={control} subject={details} labels={labels} />
