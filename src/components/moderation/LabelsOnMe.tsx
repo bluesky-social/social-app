@@ -58,9 +58,7 @@ const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
           {labels.length === 1 ? (
             <Trans>label has been placed on this {labelTarget}</Trans>
           ) : (
-            <Trans>
-              labels have been placed on this{' '}
-              {isAccount ? 'account' : 'content'}
+            <Trans>labels have been placed on this {labelTarget}
             </Trans>
           )}
         </ButtonText>
