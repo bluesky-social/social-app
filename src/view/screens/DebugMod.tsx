@@ -880,6 +880,7 @@ function MockAccountScreen({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
+  const {_} = useLingui()
   return (
     <View style={[t.atoms.border_contrast_medium, a.border, a.mb_md]}>
       <ScreenHider
