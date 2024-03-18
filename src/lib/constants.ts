@@ -35,6 +35,10 @@ export const MAX_GRAPHEME_LENGTH = 300
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 1000
 
+export function IS_TEST_USER(handle?: string) {
+  return handle && handle?.endsWith('.test')
+}
+
 export function IS_PROD_SERVICE(url?: string) {
   return url && url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
 }

@@ -45,8 +45,9 @@ function ShellInner() {
       <Composer winHeight={0} />
       <ModalsContainer />
       <MutedWordsDialog />
-      <PortalOutlet />
       <Lightbox />
+      <PortalOutlet />
+
       {!isDesktop && isDrawerOpen && (
         <TouchableOpacity
           onPress={() => setDrawerOpen(false)}

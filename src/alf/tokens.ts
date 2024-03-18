@@ -12,6 +12,9 @@ export const dimScale = generateScale(12, 100)
 export const color = {
   trueBlack: '#000000',
 
+  temp_purple: 'rgb(105 0 255)',
+  temp_purple_dark: 'rgb(83 0 202)',
+
   gray_0: `hsl(${BLUE_HUE}, 20%, ${scale[14]}%)`,
   gray_25: `hsl(${BLUE_HUE}, 20%, ${scale[13]}%)`,
   gray_50: `hsl(${BLUE_HUE}, 20%, ${scale[12]}%)`,

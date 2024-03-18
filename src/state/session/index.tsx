@@ -1,8 +1,15 @@
 import React from 'react'
-import {BskyAgent, AtpPersistSessionHandler} from '@atproto/api'
+import {
+  BskyAgent,
+  AtpPersistSessionHandler,
+  BSKY_LABELER_DID,
+} from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
+import {IS_DEV} from '#/env'
+import {IS_TEST_USER} from '#/lib/constants'
+import {isWeb} from '#/platform/detection'
 import {networkRetry} from '#/lib/async/retry'
 import {logger} from '#/logger'
 import * as persisted from '#/state/persisted'
@@ -12,6 +19,7 @@ import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
 import {track} from '#/lib/analytics/analytics'
 import {hasProp} from '#/lib/type-guards'
+import {readLabelers} from './agent-config'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -255,6 +263,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         deactivated,
       }
 
+      await configureModeration(agent, account)
+
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
           account,
@@ -298,6 +308,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         deactivated: isSessionDeactivated(agent.session.accessJwt),
       }
 
+      await configureModeration(agent, account)
+
       agent.setPersistSessionHandler(
         createPersistSessionHandler(
           account,
@@ -309,6 +321,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
+      // @ts-ignore
+      if (IS_DEV && isWeb) window.agent = agent
       queryClient.clear()
       upsertAccount(account)
 
@@ -348,6 +362,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           {networkErrorCallback: clearCurrentAccount},
         ),
       })
+      // @ts-ignore
+      if (IS_DEV && isWeb) window.agent = agent
+      await configureModeration(agent, account)
 
       let canReusePrevSession = false
       try {
@@ -641,6 +658,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
     </StateContext.Provider>
   )
+}
+
+async function configureModeration(agent: BskyAgent, account: SessionAccount) {
+  if (IS_TEST_USER(account.handle)) {
+    const did = (
+      await agent
+        .resolveHandle({handle: 'mod-authority.test'})
+        .catch(_ => undefined)
+    )?.data.did
+    if (did) {
+      console.warn('USING TEST ENV MODERATION')
+      BskyAgent.configure({appLabelers: [did]})
+    }
+  } else {
+    BskyAgent.configure({appLabelers: [BSKY_LABELER_DID]})
+    const labelerDids = await readLabelers(account.did).catch(_ => {})
+    if (labelerDids) {
+      agent.configureLabelersHeader(
+        labelerDids.filter(did => did !== BSKY_LABELER_DID),
+      )
+    }
+  }
 }
 
 export function useSession() {
