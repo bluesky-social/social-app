@@ -219,7 +219,7 @@ let ProfileHeaderLabeler = ({
                       {isSubscribed ? (
                         <Trans>Unsubscribe</Trans>
                       ) : (
-                        <Trans>Subscribe to labeler</Trans>
+                        <Trans>Subscribe to Labeler</Trans>
                       )}
                     </Text>
                   </View>
