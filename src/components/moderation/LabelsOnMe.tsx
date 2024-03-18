@@ -39,7 +39,7 @@ export function LabelsOnMe({
     return null
   }
 
-const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
+  const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
   return (
     <View style={[a.flex_row, style]}>
       <LabelsOnMeDialog control={control} subject={details} labels={labels} />
@@ -58,8 +58,7 @@ const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
           {labels.length === 1 ? (
             <Trans>label has been placed on this {labelTarget}</Trans>
           ) : (
-            <Trans>labels have been placed on this {labelTarget}
-            </Trans>
+            <Trans>labels have been placed on this {labelTarget}</Trans>
           )}
         </ButtonText>
       </Button>
