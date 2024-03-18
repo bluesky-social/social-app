@@ -409,6 +409,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (canReusePrevSession) {
         logger.debug(`session: attempting to reuse previous session`)
 
+        /**
+         * If session isn't expired, immediately update global agent and session
+         * state so that the app can rerender with new data.
+         */
         agent.session = prevSession
         __globalAgent = agent
         queryClient.clear()
@@ -422,34 +426,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
 
         // Intentionally not awaited to unblock the UI:
-        resumeSessionWithFreshAccount()
-          .then(freshAccount => {
-            if (JSON.stringify(account) !== JSON.stringify(freshAccount)) {
-              logger.info(
-                `session: reuse of previous session returned a fresh account, upserting`,
-              )
-              upsertAccount(freshAccount)
-            }
+        resumeSessionWithFreshAccount().catch(e => {
+          /*
+           * Note: `agent.persistSession` is also called when this fails, and
+           * we handle that failure via `createPersistSessionHandler`
+           */
+          logger.info(`session: resumeSessionWithFreshAccount failed`, {
+            message: e,
           })
-          .catch(e => {
-            /*
-             * Note: `agent.persistSession` is also called when this fails, and
-             * we handle that failure via `createPersistSessionHandler`
-             */
-            logger.info(`session: resumeSessionWithFreshAccount failed`, {
-              message: e,
-            })
 
-            __globalAgent = PUBLIC_BSKY_AGENT
-          })
+          __globalAgent = PUBLIC_BSKY_AGENT
+          queryClient.clear()
+        })
       } else {
         logger.debug(`session: attempting to resume using previous session`)
 
         try {
-          const freshAccount = await resumeSessionWithFreshAccount()
+          // this calls `upsertAccount` via `agent.resumeSession` and persistor
+          await resumeSessionWithFreshAccount()
+          // only update global agen if resumeSessionWithFreshAccount succeeded
           __globalAgent = agent
-          queryClient.clear()
-          upsertAccount(freshAccount)
         } catch (e) {
           /*
            * Note: `agent.persistSession` is also called when this fails, and
@@ -460,6 +456,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
+        } finally {
+          queryClient.clear()
         }
       }
 
@@ -560,6 +558,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => ({...s, isSwitchingAccounts: true}))
       try {
         await initSession(account)
+        if (isWeb) {
+          // We're switching accounts, which remounts the entire app.
+          // On mobile, this gets us Home, but on the web we also need reset the URL.
+          // We can't change the URL via a navigate() call because the navigator
+          // itself is about to unmount, and it calls pushState() too late.
+          // So we change the URL ourselves. The navigator will pick it up on remount.
+          history.pushState(null, '', '/')
+        }
         setState(s => ({...s, isSwitchingAccounts: false}))
         logEvent('account:loggedIn', {logContext, withPassword: false})
       } catch (e) {
