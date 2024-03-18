@@ -114,7 +114,7 @@ jobs:
         id: old_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'expo-bot'
+          comment-author: 'github-actions'
           body-includes: <!-- pr-labeler comment -->
 
       - name: 💬 Add comment with fingerprint
