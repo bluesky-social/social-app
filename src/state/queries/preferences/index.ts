@@ -173,12 +173,9 @@ export function usePreferencesSetAdultContentMutation() {
 export function usePreferencesSetBirthDateMutation() {
   const queryClient = useQueryClient()
 
-  return useMutation<void, unknown, {birthDate: Date | string}>({
-    mutationFn: async ({birthDate}: {birthDate: Date | string}) => {
-      await getAgent().setPersonalDetails({
-        birthDate:
-          typeof birthDate === 'string' ? birthDate : birthDate.toISOString(),
-      })
+  return useMutation<void, unknown, {birthDate: Date}>({
+    mutationFn: async ({birthDate}: {birthDate: Date}) => {
+      await getAgent().setPersonalDetails({birthDate: birthDate.toISOString()})
       // triggers a refetch
       await queryClient.invalidateQueries({
         queryKey: preferencesQueryKey,
