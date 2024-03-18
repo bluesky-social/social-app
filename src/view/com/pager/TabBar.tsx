@@ -4,8 +4,8 @@ import {Text} from '../util/text/Text'
 import {PressableWithHover} from '../util/PressableWithHover'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isWeb} from 'platform/detection'
 import {DraggableScrollView} from './DraggableScrollView'
+import {isNative} from '#/platform/detection'
 
 export interface TabBarProps {
   testID?: string
@@ -15,6 +15,10 @@ export interface TabBarProps {
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
 }
+
+// How much of the previous/next item we're showing
+// to give the user a hint there's more to scroll.
+const OFFSCREEN_ITEM_WIDTH = 20
 
 export function TabBar({
   testID,
@@ -26,19 +30,68 @@ export function TabBar({
 }: TabBarProps) {
   const pal = usePalette('default')
   const scrollElRef = useRef<ScrollView>(null)
+  const itemRefs = useRef<Array<Element>>([])
   const [itemXs, setItemXs] = useState<number[]>([])
   const indicatorStyle = useMemo(
     () => ({borderBottomColor: indicatorColor || pal.colors.link}),
     [indicatorColor, pal],
   )
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
 
-  // scrolls to the selected item when the page changes
   useEffect(() => {
-    scrollElRef.current?.scrollTo({
-      x: itemXs[selectedPage] || 0,
-    })
-  }, [scrollElRef, itemXs, selectedPage])
+    if (isNative) {
+      // On native, the primary interaction is swiping.
+      // We adjust the scroll little by little on every tab change.
+      // Scroll into view but keep the end of the previous item visible.
+      let x = itemXs[selectedPage] || 0
+      x = Math.max(0, x - OFFSCREEN_ITEM_WIDTH)
+      scrollElRef.current?.scrollTo({x})
+    } else {
+      // On the web, the primary interaction is tapping.
+      // Scrolling under tap feels disorienting so only adjust the scroll offset
+      // when tapping on an item out of view--and we adjust by almost an entire page.
+      const parent = scrollElRef?.current?.getScrollableNode?.()
+      if (!parent) {
+        return
+      }
+      const parentRect = parent.getBoundingClientRect()
+      if (!parentRect) {
+        return
+      }
+      const {
+        left: parentLeft,
+        right: parentRight,
+        width: parentWidth,
+      } = parentRect
+      const child = itemRefs.current[selectedPage]
+      if (!child) {
+        return
+      }
+      const childRect = child.getBoundingClientRect?.()
+      if (!childRect) {
+        return
+      }
+      const {left: childLeft, right: childRight, width: childWidth} = childRect
+      let dx = 0
+      if (childRight >= parentRight) {
+        dx += childRight - parentRight
+        dx += parentWidth - childWidth - OFFSCREEN_ITEM_WIDTH
+      } else if (childLeft <= parentLeft) {
+        dx -= parentLeft - childLeft
+        dx -= parentWidth - childWidth - OFFSCREEN_ITEM_WIDTH
+      }
+      let x = parent.scrollLeft + dx
+      x = Math.max(0, x)
+      x = Math.min(x, parent.scrollWidth - parentWidth)
+      if (dx !== 0) {
+        parent.scroll({
+          left: x,
+          behavior: 'smooth',
+        })
+      }
+    }
+  }, [scrollElRef, itemXs, selectedPage, styles])
 
   const onPressItem = useCallback(
     (index: number) => {
@@ -63,8 +116,6 @@ export function TabBar({
     [],
   )
 
-  const styles = isDesktop || isTablet ? desktopStyles : mobileStyles
-
   return (
     <View testID={testID} style={[pal.view, styles.outer]}>
       <DraggableScrollView
@@ -79,20 +130,24 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
+              ref={node => (itemRefs.current[i] = node)}
               onLayout={e => onItemLayout(e, i)}
-              style={[styles.item, selected && indicatorStyle]}
+              style={styles.item}
               hoverStyle={pal.viewLight}
               onPress={() => onPressItem(i)}>
-              <Text
-                type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
-                testID={testID ? `${testID}-${item}` : undefined}
-                style={selected ? pal.text : pal.textLight}>
-                {item}
-              </Text>
+              <View style={[styles.itemInner, selected && indicatorStyle]}>
+                <Text
+                  type={isDesktop || isTablet ? 'xl-bold' : 'lg-bold'}
+                  testID={testID ? `${testID}-${item}` : undefined}
+                  style={selected ? pal.text : pal.textLight}>
+                  {item}
+                </Text>
+              </View>
             </PressableWithHover>
           )
         })}
       </DraggableScrollView>
+      <View style={[pal.border, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -103,18 +158,25 @@ const desktopStyles = StyleSheet.create({
     width: 598,
   },
   contentContainer: {
-    columnGap: 8,
-    marginLeft: 14,
-    paddingRight: 14,
+    paddingHorizontal: 0,
     backgroundColor: 'transparent',
   },
   item: {
     paddingTop: 14,
+    paddingHorizontal: 14,
+    justifyContent: 'center',
+  },
+  itemInner: {
     paddingBottom: 12,
-    paddingHorizontal: 10,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    justifyContent: 'center',
+  },
+  outerBottomBorder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    borderBottomWidth: 1,
   },
 })
 
@@ -123,17 +185,24 @@ const mobileStyles = StyleSheet.create({
     flexDirection: 'row',
   },
   contentContainer: {
-    columnGap: isWeb ? 0 : 20,
-    marginLeft: isWeb ? 0 : 18,
-    paddingRight: isWeb ? 0 : 36,
     backgroundColor: 'transparent',
+    paddingHorizontal: 8,
   },
   item: {
     paddingTop: 10,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+  },
+  itemInner: {
     paddingBottom: 10,
-    paddingHorizontal: isWeb ? 8 : 0,
     borderBottomWidth: 3,
     borderBottomColor: 'transparent',
-    justifyContent: 'center',
+  },
+  outerBottomBorder: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: -1,
+    borderBottomWidth: 1,
   },
 })

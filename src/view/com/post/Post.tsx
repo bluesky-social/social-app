@@ -133,7 +133,7 @@ function PostInner({
   }, [setLimitLines])
 
   return (
-    <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
+    <Link href={itemHref} style={[styles.outer, pal.border, style]}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
@@ -184,10 +184,12 @@ function PostInner({
             {richText.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
+                  enableTags
                   testID="postText"
                   value={richText}
                   numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                   style={[a.flex_1, a.text_md]}
+                  authorHandle={post.author.handle}
                 />
               </View>
             ) : undefined}
@@ -218,6 +220,7 @@ function PostInner({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
+            logContext="Post"
           />
         </View>
       </View>

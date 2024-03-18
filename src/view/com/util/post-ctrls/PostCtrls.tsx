@@ -44,6 +44,7 @@ let PostCtrls = ({
   showAppealLabelItem,
   style,
   onPressReply,
+  logContext,
 }: {
   big?: boolean
   post: Shadow<AppBskyFeedDefs.PostView>
@@ -52,13 +53,17 @@ let PostCtrls = ({
   showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
+  logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
 }): React.ReactNode => {
   const theme = useTheme()
   const {_} = useLingui()
   const {openComposer} = useComposerControls()
   const {closeModal} = useModalControls()
-  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post)
-  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(post)
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(post, logContext)
+  const [queueRepost, queueUnrepost] = usePostRepostMutationQueue(
+    post,
+    logContext,
+  )
   const requireAuth = useRequireAuth()
 
   const defaultCtrlColor = React.useMemo(
@@ -212,9 +217,7 @@ let PostCtrls = ({
             style={[styles.btn]}
             onPress={onShare}
             accessibilityRole="button"
-            accessibilityLabel={`${
-              post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-            } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+            accessibilityLabel={`${_(msg`Share`)}`}
             accessibilityHint=""
             hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
             <ArrowOutOfBox style={[defaultCtrlColor, styles.mt1]} width={22} />
@@ -231,6 +234,7 @@ let PostCtrls = ({
           richText={richText}
           showAppealLabelItem={showAppealLabelItem}
           style={styles.btnPad}
+          hitSlop={big ? HITSLOP_20 : HITSLOP_10}
         />
       </View>
     </View>

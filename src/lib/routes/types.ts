@@ -33,6 +33,8 @@ export type CommonNavigatorParams = {
   PreferencesFollowingFeed: undefined
   PreferencesThreads: undefined
   PreferencesExternalEmbeds: undefined
+  Search: {q?: string}
+  Hashtag: {tag: string; author?: string}
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
@@ -68,6 +70,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
   Search: {q?: string}
   Feeds: undefined
   Notifications: undefined
+  Hashtag: {tag: string; author?: string}
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
@@ -80,6 +83,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   NotificationsTab: undefined
   Notifications: undefined
   MyProfileTab: undefined
+  Hashtag: {tag: string; author?: string}
 }
 
 // NOTE

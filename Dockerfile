@@ -23,7 +23,7 @@ COPY . .
 RUN mkdir --parents $NVM_DIR && \
   wget \
     --output-document=/tmp/nvm-install.sh \
-    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh && \
+    https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh && \
   bash /tmp/nvm-install.sh
 
 RUN \. "$NVM_DIR/nvm.sh" && \
@@ -31,7 +31,7 @@ RUN \. "$NVM_DIR/nvm.sh" && \
   nvm use $NODE_VERSION && \
   npm install --global yarn && \
   yarn && \
-  yarn intl:compile && \
+  yarn intl:build && \
   yarn build-web
 
 # DEBUG

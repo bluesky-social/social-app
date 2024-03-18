@@ -24,6 +24,8 @@ import {
   CONFIGURABLE_LABEL_GROUPS,
   UsePreferencesQueryResponse,
 } from '#/state/queries/preferences'
+import {useDialogControl} from '#/components/Dialog'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 
 export const snapPoints = ['90%']
 
@@ -107,11 +109,11 @@ function AdultContentEnabledPref() {
   const {_} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {mutate, variables} = usePreferencesSetAdultContentMutation()
-  const {openModal} = useModalControls()
+  const bithdayDialogControl = useDialogControl()
 
   const onSetAge = React.useCallback(
-    () => openModal({name: 'birth-date-settings'}),
-    [openModal],
+    () => bithdayDialogControl.open(),
+    [bithdayDialogControl],
   )
 
   const onToggleAdultContent = React.useCallback(async () => {
@@ -135,6 +137,10 @@ function AdultContentEnabledPref() {
 
   return (
     <View style={s.mb10}>
+      <BirthDateSettingsDialog
+        control={bithdayDialogControl}
+        preferences={preferences}
+      />
       {isIOS ? (
         preferences?.adultContentEnabled ? null : (
           <Text type="md" style={pal.textLight}>

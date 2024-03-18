@@ -1,3 +1,5 @@
+import {Platform} from 'react-native'
+import {web, native} from '#/alf/util/platform'
 import * as tokens from '#/alf/tokens'
 
 export const atoms = {
@@ -5,7 +7,7 @@ export const atoms = {
    * Positioning
    */
   fixed: {
-    position: 'fixed',
+    position: Platform.select({web: 'fixed', native: 'absolute'}) as 'absolute',
   },
   absolute: {
     position: 'absolute',
@@ -110,8 +112,17 @@ export const atoms = {
   flex_row: {
     flexDirection: 'row',
   },
+  flex_col_reverse: {
+    flexDirection: 'column-reverse',
+  },
+  flex_row_reverse: {
+    flexDirection: 'row-reverse',
+  },
   flex_wrap: {
     flexWrap: 'wrap',
+  },
+  flex_0: {
+    flex: web('0 0 auto') || (native(0) as number),
   },
   flex_1: {
     flex: 1,

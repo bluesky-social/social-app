@@ -78,11 +78,7 @@ function ViewFullThread({slice}: {slice: FeedPostSlice}) {
   }, [slice.rootUri])
 
   return (
-    <Link
-      style={[pal.view, styles.viewFullThread]}
-      href={itemHref}
-      asAnchor
-      noFeedback>
+    <Link style={[styles.viewFullThread]} href={itemHref} asAnchor noFeedback>
       <View style={styles.viewFullThreadDots}>
         <Svg width="4" height="40">
           <Line

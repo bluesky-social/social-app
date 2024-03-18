@@ -182,7 +182,6 @@ let FeedItem = ({
       testID={`feedItem-by-${item.notification.author.handle}`}
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         item.notification.isRead
           ? undefined
@@ -228,6 +227,7 @@ let FeedItem = ({
               text={sanitizeDisplayName(
                 authors[0].displayName || authors[0].handle,
               )}
+              disableMismatchWarning
             />
             {authors.length > 1 ? (
               <>

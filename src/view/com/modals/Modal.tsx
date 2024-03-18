@@ -6,7 +6,6 @@ import {createCustomBackdrop} from '../util/BottomSheetCustomBackdrop'
 import {usePalette} from 'lib/hooks/usePalette'
 
 import {useModals, useModalControls} from '#/state/modals'
-import * as ConfirmModal from './Confirm'
 import * as EditProfileModal from './EditProfile'
 import * as RepostModal from './Repost'
 import * as SelfLabelModal from './SelfLabel'
@@ -20,14 +19,12 @@ import * as ReportModal from './report/Modal'
 import * as AppealLabelModal from './AppealLabel'
 import * as DeleteAccountModal from './DeleteAccount'
 import * as ChangeHandleModal from './ChangeHandle'
-import * as WaitlistModal from './Waitlist'
 import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentFilteringSettingsModal from './ContentFilteringSettings'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
 import * as ModerationDetailsModal from './ModerationDetails'
-import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
@@ -67,10 +64,7 @@ export function ModalsContainer() {
 
   let snapPoints: (string | number)[] = DEFAULT_SNAPPOINTS
   let element
-  if (activeModal?.name === 'confirm') {
-    snapPoints = ConfirmModal.snapPoints
-    element = <ConfirmModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'edit-profile') {
+  if (activeModal?.name === 'edit-profile') {
     snapPoints = EditProfileModal.snapPoints
     element = <EditProfileModal.Component {...activeModal} />
   } else if (activeModal?.name === 'report') {
@@ -109,9 +103,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'change-handle') {
     snapPoints = ChangeHandleModal.snapPoints
     element = <ChangeHandleModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'waitlist') {
-    snapPoints = WaitlistModal.snapPoints
-    element = <WaitlistModal.Component />
   } else if (activeModal?.name === 'invite-codes') {
     snapPoints = InviteCodesModal.snapPoints
     element = <InviteCodesModal.Component />
@@ -130,9 +121,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'moderation-details') {
     snapPoints = ModerationDetailsModal.snapPoints
     element = <ModerationDetailsModal.Component {...activeModal} />
-  } else if (activeModal?.name === 'birth-date-settings') {
-    snapPoints = BirthDateSettingsModal.snapPoints
-    element = <BirthDateSettingsModal.Component />
   } else if (activeModal?.name === 'verify-email') {
     snapPoints = VerifyEmailModal.snapPoints
     element = <VerifyEmailModal.Component {...activeModal} />

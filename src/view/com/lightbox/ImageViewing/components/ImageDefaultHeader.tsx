@@ -6,9 +6,11 @@
  *
  */
 import React from 'react'
-import {createHitslop} from 'lib/constants'
 import {SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
-import {t} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {createHitslop} from '#/lib/constants'
 
 type Props = {
   onRequestClose: () => void
@@ -16,20 +18,23 @@ type Props = {
 
 const HIT_SLOP = createHitslop(16)
 
-const ImageDefaultHeader = ({onRequestClose}: Props) => (
-  <SafeAreaView style={styles.root}>
-    <TouchableOpacity
-      style={styles.closeButton}
-      onPress={onRequestClose}
-      hitSlop={HIT_SLOP}
-      accessibilityRole="button"
-      accessibilityLabel={t`Close image`}
-      accessibilityHint={t`Closes viewer for header image`}
-      onAccessibilityEscape={onRequestClose}>
-      <Text style={styles.closeText}>✕</Text>
-    </TouchableOpacity>
-  </SafeAreaView>
-)
+const ImageDefaultHeader = ({onRequestClose}: Props) => {
+  const {_} = useLingui()
+  return (
+    <SafeAreaView style={styles.root}>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={onRequestClose}
+        hitSlop={HIT_SLOP}
+        accessibilityRole="button"
+        accessibilityLabel={_(msg`Close image`)}
+        accessibilityHint={_(msg`Closes viewer for header image`)}
+        onAccessibilityEscape={onRequestClose}>
+        <Text style={styles.closeText}>✕</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
   root: {

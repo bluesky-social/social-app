@@ -94,6 +94,8 @@ export function PostThreadItem({
   if (richText && moderation) {
     return (
       <PostThreadItemLoaded
+        // Safeguard from clobbering per-post state below:
+        key={postShadowed.uri}
         post={postShadowed}
         prevPost={prevPost}
         nextPost={nextPost}
@@ -327,9 +329,11 @@ let PostThreadItemLoaded = ({
                     styles.postTextLargeContainer,
                   ]}>
                   <RichText
+                    enableTags
+                    selectable
                     value={richText}
                     style={[a.flex_1, a.text_xl]}
-                    selectable
+                    authorHandle={post.author.handle}
                   />
                 </View>
               ) : undefined}
@@ -403,6 +407,7 @@ let PostThreadItemLoaded = ({
                 record={record}
                 richText={richText}
                 onPressReply={onPressReply}
+                logContext="PostThreadItem"
               />
             </View>
           </View>
@@ -427,7 +432,6 @@ let PostThreadItemLoaded = ({
           <PostHider
             testID={`postThreadItem-by-${post.author.handle}`}
             href={postHref}
-            style={[pal.view]}
             moderation={moderation.content}
             iconSize={isThreadedChild ? 26 : 38}
             iconStyles={
@@ -449,7 +453,7 @@ let PostThreadItemLoaded = ({
                       styles.replyLine,
                       {
                         flexGrow: 1,
-                        backgroundColor: pal.colors.border,
+                        backgroundColor: pal.colors.replyLine,
                         marginBottom: 4,
                       },
                     ]}
@@ -487,7 +491,7 @@ let PostThreadItemLoaded = ({
                         styles.replyLine,
                         {
                           flexGrow: 1,
-                          backgroundColor: pal.colors.border,
+                          backgroundColor: pal.colors.replyLine,
                           marginTop: 4,
                         },
                       ]}
@@ -521,9 +525,11 @@ let PostThreadItemLoaded = ({
                 {richText?.text ? (
                   <View style={styles.postTextContainer}>
                     <RichText
+                      enableTags
                       value={richText}
                       style={[a.flex_1, a.text_md]}
                       numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+                      authorHandle={post.author.handle}
                     />
                   </View>
                 ) : undefined}
@@ -554,6 +560,7 @@ let PostThreadItemLoaded = ({
                   record={record}
                   richText={richText}
                   onPressReply={onPressReply}
+                  logContext="PostThreadItem"
                 />
               </View>
             </View>
@@ -614,7 +621,6 @@ function PostOuterWrapper({
     return (
       <View
         style={[
-          pal.view,
           pal.border,
           styles.cursor,
           {
@@ -642,7 +648,6 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         styles.cursor,

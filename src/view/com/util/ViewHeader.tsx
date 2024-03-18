@@ -13,11 +13,13 @@ import Animated from 'react-native-reanimated'
 import {useSetDrawerOpen} from '#/state/shell'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+import {useTheme} from '#/alf'
 
 const BACK_HITSLOP = {left: 20, top: 20, right: 50, bottom: 20}
 
 export function ViewHeader({
   title,
+  subtitle,
   canGoBack,
   showBackButton = true,
   hideOnScroll,
@@ -26,6 +28,7 @@ export function ViewHeader({
   renderButton,
 }: {
   title: string
+  subtitle?: string
   canGoBack?: boolean
   showBackButton?: boolean
   hideOnScroll?: boolean
@@ -39,6 +42,7 @@ export function ViewHeader({
   const navigation = useNavigation<NavigationProp>()
   const {track} = useAnalytics()
   const {isDesktop, isTablet} = useWebMediaQueries()
+  const t = useTheme()
 
   const onPressBack = React.useCallback(() => {
     if (navigation.canGoBack()) {
@@ -71,42 +75,60 @@ export function ViewHeader({
 
     return (
       <Container hideOnScroll={hideOnScroll || false} showBorder={showBorder}>
-        {showBackButton ? (
-          <TouchableOpacity
-            testID="viewHeaderDrawerBtn"
-            onPress={canGoBack ? onPressBack : onPressMenu}
-            hitSlop={BACK_HITSLOP}
-            style={canGoBack ? styles.backBtn : styles.backBtnWide}
-            accessibilityRole="button"
-            accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
-            accessibilityHint={
-              canGoBack ? '' : _(msg`Access navigation links and settings`)
-            }>
-            {canGoBack ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="angle-left"
-                style={[styles.backIcon, pal.text]}
-              />
-            ) : !isTablet ? (
-              <FontAwesomeIcon
-                size={18}
-                icon="bars"
-                style={[styles.backIcon, pal.textLight]}
-              />
+        <View style={{flex: 1}}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            {showBackButton ? (
+              <TouchableOpacity
+                testID="viewHeaderDrawerBtn"
+                onPress={canGoBack ? onPressBack : onPressMenu}
+                hitSlop={BACK_HITSLOP}
+                style={canGoBack ? styles.backBtn : styles.backBtnWide}
+                accessibilityRole="button"
+                accessibilityLabel={canGoBack ? _(msg`Back`) : _(msg`Menu`)}
+                accessibilityHint={
+                  canGoBack ? '' : _(msg`Access navigation links and settings`)
+                }>
+                {canGoBack ? (
+                  <FontAwesomeIcon
+                    size={18}
+                    icon="angle-left"
+                    style={[styles.backIcon, pal.text]}
+                  />
+                ) : !isTablet ? (
+                  <FontAwesomeIcon
+                    size={18}
+                    icon="bars"
+                    style={[styles.backIcon, pal.textLight]}
+                  />
+                ) : null}
+              </TouchableOpacity>
             ) : null}
-          </TouchableOpacity>
-        ) : null}
-        <View style={styles.titleContainer} pointerEvents="none">
-          <Text type="title" style={[pal.text, styles.title]}>
-            {title}
-          </Text>
+            <View style={styles.titleContainer} pointerEvents="none">
+              <Text type="title" style={[pal.text, styles.title]}>
+                {title}
+              </Text>
+            </View>
+            {renderButton ? (
+              renderButton()
+            ) : showBackButton ? (
+              <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
+            ) : null}
+          </View>
+          {subtitle ? (
+            <View
+              style={[styles.titleContainer, {marginTop: -3}]}
+              pointerEvents="none">
+              <Text
+                style={[
+                  pal.text,
+                  styles.subtitle,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {subtitle}
+              </Text>
+            </View>
+          ) : undefined}
         </View>
-        {renderButton ? (
-          renderButton()
-        ) : showBackButton ? (
-          <View style={canGoBack ? styles.backBtn : styles.backBtnWide} />
-        ) : null}
       </Container>
     )
   }
@@ -185,7 +207,6 @@ function Container({
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
     width: '100%',
@@ -207,12 +228,14 @@ const styles = StyleSheet.create({
   titleContainer: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    paddingRight: 10,
+    alignItems: 'center',
   },
   title: {
     fontWeight: 'bold',
   },
-
+  subtitle: {
+    fontSize: 13,
+  },
   backBtn: {
     width: 30,
     height: 30,

@@ -1,17 +1,13 @@
 import React from 'react'
-import {GestureResponderEvent, Linking} from 'react-native'
-import {
-  useLinkProps,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {GestureResponderEvent} from 'react-native'
+import {useLinkProps, StackActions} from '@react-navigation/native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {isWeb} from '#/platform/detection'
 import {useTheme, web, flatten, TextStyleProp, atoms as a} from '#/alf'
 import {Button, ButtonProps} from '#/components/Button'
-import {AllNavigatorParams, NavigationProp} from '#/lib/routes/types'
+import {AllNavigatorParams} from '#/lib/routes/types'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
@@ -20,6 +16,8 @@ import {
 import {useModalControls} from '#/state/modals'
 import {router} from '#/routes'
 import {Text, TextProps} from '#/components/Typography'
+import {useOpenLink} from 'state/preferences/in-app-browser'
+import {useNavigationDeduped} from 'lib/hooks/useNavigationDeduped'
 
 /**
  * Only available within a `Link`, since that inherits from `Button`.
@@ -48,7 +46,7 @@ type BaseLinkProps = Pick<
    *
    * Note: atm this only works for `InlineLink`s with a string child.
    */
-  warnOnMismatchingTextChild?: boolean
+  disableMismatchWarning?: boolean
 
   /**
    * Callback for when the link is pressed. Prevent default and return `false`
@@ -68,18 +66,19 @@ export function useLink({
   to,
   displayText,
   action = 'push',
-  warnOnMismatchingTextChild,
+  disableMismatchWarning,
   onPress: outerOnPress,
 }: BaseLinkProps & {
   displayText: string
 }) {
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const {href} = useLinkProps<AllNavigatorParams>({
     to:
       typeof to === 'string' ? convertBskyAppUrlIfNeeded(sanitizeUrl(to)) : to,
   })
   const isExternal = isExternalUrl(href)
   const {openModal, closeModal} = useModalControls()
+  const openLink = useOpenLink()
 
   const onPress = React.useCallback(
     (e: GestureResponderEvent) => {
@@ -88,7 +87,7 @@ export function useLink({
       if (exitEarlyIfFalse === false) return
 
       const requiresWarning = Boolean(
-        warnOnMismatchingTextChild &&
+        !disableMismatchWarning &&
           displayText &&
           isExternal &&
           linkRequiresWarning(href, displayText),
@@ -106,7 +105,7 @@ export function useLink({
         e.preventDefault()
 
         if (isExternal) {
-          Linking.openURL(href)
+          openLink(href)
         } else {
           /**
            * A `GestureResponderEvent`, but cast to `any` to avoid using a bunch
@@ -124,7 +123,7 @@ export function useLink({
             href.startsWith('http') ||
             href.startsWith('mailto')
           ) {
-            Linking.openURL(href)
+            openLink(href)
           } else {
             closeModal() // close any active modals
 
@@ -145,15 +144,16 @@ export function useLink({
       }
     },
     [
-      href,
-      isExternal,
-      warnOnMismatchingTextChild,
-      navigation,
-      action,
-      displayText,
-      closeModal,
-      openModal,
       outerOnPress,
+      disableMismatchWarning,
+      displayText,
+      isExternal,
+      href,
+      openModal,
+      openLink,
+      closeModal,
+      action,
+      navigation,
     ],
   )
 
@@ -164,7 +164,7 @@ export function useLink({
   }
 }
 
-export type LinkProps = Omit<BaseLinkProps, 'warnOnMismatchingTextChild'> &
+export type LinkProps = Omit<BaseLinkProps, 'disableMismatchWarning'> &
   Omit<ButtonProps, 'onPress' | 'disabled' | 'label'>
 
 /**
@@ -223,11 +223,12 @@ export function InlineLink({
   children,
   to,
   action = 'push',
-  warnOnMismatchingTextChild,
+  disableMismatchWarning,
   style,
   onPress: outerOnPress,
   download,
   selectable,
+  label,
   ...rest
 }: InlineLinkProps) {
   const t = useTheme()
@@ -236,7 +237,7 @@ export function InlineLink({
     to,
     displayText: stringChildren ? children : '',
     action,
-    warnOnMismatchingTextChild,
+    disableMismatchWarning,
     onPress: outerOnPress,
   })
   const {
@@ -255,12 +256,13 @@ export function InlineLink({
   return (
     <Text
       selectable={selectable}
-      label={href}
+      accessibilityHint=""
+      accessibilityLabel={label || href}
       {...rest}
       style={[
         {color: t.palette.primary_500},
         (hovered || focused || pressed) && {
-          outline: 0,
+          ...web({outline: 0}),
           textDecorationLine: 'underline',
           textDecorationColor: flattenedStyle.color ?? t.palette.primary_500,
         },
