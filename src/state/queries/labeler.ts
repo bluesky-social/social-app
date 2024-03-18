@@ -4,7 +4,7 @@ import {AppBskyLabelerDefs} from '@atproto/api'
 
 import {getAgent} from '#/state/session'
 import {preferencesQueryKey} from '#/state/queries/preferences'
-import {STALE, PUBLIC_BSKY_AGENT} from '#/state/queries'
+import {STALE} from '#/state/queries'
 
 export const labelerInfoQueryKey = (did: string) => ['labeler-info', did]
 export const labelersInfoQueryKey = (dids: string[]) => [
@@ -27,7 +27,7 @@ export function useLabelerInfoQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await PUBLIC_BSKY_AGENT.app.bsky.labeler.getServices({
+      const res = await getAgent().app.bsky.labeler.getServices({
         dids: [did as string],
         detailed: true,
       })
@@ -41,7 +41,7 @@ export function useLabelersInfoQuery({dids}: {dids: string[]}) {
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await PUBLIC_BSKY_AGENT.app.bsky.labeler.getServices({dids})
+      const res = await getAgent().app.bsky.labeler.getServices({dids})
       return res.data.views as AppBskyLabelerDefs.LabelerView[]
     },
   })
@@ -54,7 +54,7 @@ export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
     gcTime: 1000 * 60 * 60 * 6, // 6 hours
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
-      const res = await PUBLIC_BSKY_AGENT.app.bsky.labeler.getServices({
+      const res = await getAgent().app.bsky.labeler.getServices({
         dids,
         detailed: true,
       })
