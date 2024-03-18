@@ -43,8 +43,9 @@ import {Loader} from '#/components/Loader'
 import * as LabelingService from '#/components/LabelingServiceCard'
 import {GlobalModerationLabelPref} from '#/components/moderation/GlobalModerationLabelPref'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
-import {useModalControls} from '#/state/modals'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
+import * as Dialog from '#/components/Dialog'
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -165,7 +166,7 @@ export function ModerationScreenInner({
   const {screen} = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
-  const {openModal} = useModalControls()
+  const birthdateDialogControl = Dialog.useDialogControl()
   const {
     isLoading: isLabelersLoading,
     data: labelers,
@@ -289,22 +290,29 @@ export function ModerationScreenInner({
 
         <View style={[a.gap_md]}>
           {ageNotSet && (
-            <Button
-              label={_(msg`Confirm your birthdate`)}
-              size="small"
-              variant="solid"
-              color="secondary"
-              onPress={() => {
-                openModal({name: 'birth-date-settings'})
-              }}
-              style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
-              <ButtonText>
-                <Trans>Confirm your age:</Trans>
-              </ButtonText>
-              <ButtonText>
-                <Trans>Set birthdate</Trans>
-              </ButtonText>
-            </Button>
+            <>
+              <Button
+                label={_(msg`Confirm your birthdate`)}
+                size="small"
+                variant="solid"
+                color="secondary"
+                onPress={() => {
+                  birthdateDialogControl.open()
+                }}
+                style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
+                <ButtonText>
+                  <Trans>Confirm your age:</Trans>
+                </ButtonText>
+                <ButtonText>
+                  <Trans>Set birthdate</Trans>
+                </ButtonText>
+              </Button>
+
+              <BirthDateSettingsDialog
+                control={birthdateDialogControl}
+                preferences={preferences}
+              />
+            </>
           )}
           <View
             style={[
