@@ -125,7 +125,7 @@ function ModerationDetailsDialogInner({
             <Trans>
               This label was applied by{' '}
               {modcause.source.type === 'user' ? (
-                'the author'
+                <Trans>the author</Trans>
               ) : (
                 <InlineLink
                   to={makeProfileLink({did: modcause.label.src, handle: ''})}
