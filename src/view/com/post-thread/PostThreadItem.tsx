@@ -583,7 +583,6 @@ function PostOuterWrapper({
     return (
       <View
         style={[
-          pal.view,
           pal.border,
           styles.cursor,
           {
@@ -611,7 +610,6 @@ function PostOuterWrapper({
     <View
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         showParentReplyLine && hasPrecedingItem && styles.noTopBorder,
         styles.cursor,

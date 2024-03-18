@@ -21,7 +21,6 @@ import * as InviteCodesModal from './InviteCodes'
 import * as AddAppPassword from './AddAppPasswords'
 import * as ContentLanguagesSettingsModal from './lang-settings/ContentLanguagesSettings'
 import * as PostLanguagesSettingsModal from './lang-settings/PostLanguagesSettings'
-import * as BirthDateSettingsModal from './BirthDateSettings'
 import * as VerifyEmailModal from './VerifyEmail'
 import * as ChangeEmailModal from './ChangeEmail'
 import * as ChangePasswordModal from './ChangePassword'
@@ -106,9 +105,6 @@ export function ModalsContainer() {
   } else if (activeModal?.name === 'post-languages-settings') {
     snapPoints = PostLanguagesSettingsModal.snapPoints
     element = <PostLanguagesSettingsModal.Component />
-  } else if (activeModal?.name === 'birth-date-settings') {
-    snapPoints = BirthDateSettingsModal.snapPoints
-    element = <BirthDateSettingsModal.Component />
   } else if (activeModal?.name === 'verify-email') {
     snapPoints = VerifyEmailModal.snapPoints
     element = <VerifyEmailModal.Component {...activeModal} />

@@ -105,10 +105,6 @@ export interface PostLanguagesSettingsModal {
   name: 'post-languages-settings'
 }
 
-export interface BirthDateSettingsModal {
-  name: 'birth-date-settings'
-}
-
 export interface VerifyEmailModal {
   name: 'verify-email'
   showReminder?: boolean
@@ -149,7 +145,6 @@ export type Modal =
   | ChangeHandleModal
   | DeleteAccountModal
   | EditProfileModal
-  | BirthDateSettingsModal
   | VerifyEmailModal
   | ChangeEmailModal
   | ChangePasswordModal
