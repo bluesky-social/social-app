@@ -34,7 +34,7 @@ index 3f50f8c..ee47fa1 100644
    }
 
 diff --git a/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/contracts/ImageLibraryContract.kt b/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/contracts/ImageLibraryContract.kt
-index ff15c91..2bf86de 100644
+index ff15c91..9763012 100644
 --- a/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/contracts/ImageLibraryContract.kt
 +++ b/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/contracts/ImageLibraryContract.kt
 @@ -5,12 +5,7 @@ import android.content.ContentResolver
@@ -50,7 +50,7 @@ index ff15c91..2bf86de 100644
  import expo.modules.imagepicker.getAllDataUris
  import expo.modules.imagepicker.toMediaType
  import expo.modules.kotlin.activityresult.AppContextActivityResultContract
-@@ -26,79 +21,59 @@ import java.io.Serializable
+@@ -26,51 +21,26 @@ import java.io.Serializable
   * @see [androidx.activity.result.contract.ActivityResultContracts.GetMultipleContents]
   */
  internal class ImageLibraryContract(
@@ -90,14 +90,14 @@ index ff15c91..2bf86de 100644
 -        // If multiple selection is allowed but the limit is 1, we should ignore
 -        // the multiple selection flag and just treat it as a single selection.
 -        return PickVisualMedia().createIntent(context, request)
--      }
--
--      if (selectionLimit > 1) {
--        return PickMultipleVisualMedia(selectionLimit).createIntent(context, request)
 +      if(input.options.selectionLimit == 1) {
 +        return intent
        }
 
+-      if (selectionLimit > 1) {
+-        return PickMultipleVisualMedia(selectionLimit).createIntent(context, request)
+-      }
+-
 -      // If the selection limit is 0, it is the same as unlimited selection.
 -      if (selectionLimit == UNLIMITED_SELECTION) {
 -        return PickMultipleVisualMedia().createIntent(context, request)
@@ -109,47 +109,4 @@ index ff15c91..2bf86de 100644
 +    return intent
    }
 
--  override fun parseResult(input: ImageLibraryContractOptions, resultCode: Int, intent: Intent?) =
-+  override fun parseResult(input: ImageLibraryContractOptions, resultCode: Int, intent: Intent?): ImagePickerContractResult {
-     if (resultCode == Activity.RESULT_CANCELED) {
--      ImagePickerContractResult.Cancelled
-+      return ImagePickerContractResult.Cancelled
-     } else {
-       intent?.takeIf { resultCode == Activity.RESULT_OK }?.getAllDataUris()?.let { uris ->
-         if (input.options.allowsMultipleSelection) {
--          ImagePickerContractResult.Success(
--            uris.map { uri ->
--              uri.toMediaType(contentResolver) to uri
--            }
-+          return ImagePickerContractResult.Success(
-+                  uris.map { uri ->
-+                    uri.toMediaType(contentResolver) to uri
-+                  }
-           )
-         } else {
-           if (intent.data != null) {
-             intent.data?.let { uri ->
-               val type = uri.toMediaType(contentResolver)
--              ImagePickerContractResult.Success(listOf(type to uri))
-+              return ImagePickerContractResult.Success(listOf(type to uri))
-             }
-           } else {
-             uris.firstOrNull()?.let { uri ->
-               val type = uri.toMediaType(contentResolver)
--              ImagePickerContractResult.Success(listOf(type to uri))
--            } ?: ImagePickerContractResult.Error
-+              return ImagePickerContractResult.Success(listOf(type to uri))
-+            }
-+
-+            return ImagePickerContractResult.Error
-           }
-         }
--      } ?: ImagePickerContractResult.Error
-+      }
-+
-+      return ImagePickerContractResult.Error
-     }
-+  }
- }
-
- internal data class ImageLibraryContractOptions(
+   override fun parseResult(input: ImageLibraryContractOptions, resultCode: Int, intent: Intent?) =
