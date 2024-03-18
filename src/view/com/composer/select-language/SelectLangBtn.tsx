@@ -20,7 +20,7 @@ import {
   toPostLanguages,
   hasPostLanguage,
 } from '#/state/preferences/languages'
-import {t, msg} from '@lingui/macro'
+import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 export function SelectLangBtn() {
@@ -84,15 +84,15 @@ export function SelectLangBtn() {
     }
 
     return [
-      {heading: true, label: t`Post language`},
+      {heading: true, label: _(msg`Post language`)},
       ...arr.slice(0, 6),
       {sep: true},
       {
-        label: t`Other...`,
+        label: _(`Other...`),
         onPress: onPressMore,
       },
     ]
-  }, [onPressMore, langPrefs, setLangPrefs, postLanguagesPref])
+  }, [onPressMore, langPrefs, setLangPrefs, postLanguagesPref, _])
 
   return (
     <DropdownButton
