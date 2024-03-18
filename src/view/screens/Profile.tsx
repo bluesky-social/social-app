@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {findNodeHandle, StyleSheet, View} from 'react-native'
 import {useFocusEffect} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
@@ -49,7 +49,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {ScrollForwarder} from 'react-native-scroll-forwarder/src/ScrollForwarder'
+import {ScrollForwarder} from '../../../modules/scroll-forwarder/src/ScrollForwarder'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -457,10 +457,14 @@ const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
     }, [_])
 
     React.useEffect(() => {
-      if (isFocused) {
+      const nativeScrollRef = scrollElRef.current?.getNativeScrollRef()
+
+      if (isFocused && scrollElRef.current && nativeScrollRef) {
+        const nativeTag = findNodeHandle(nativeScrollRef)
+
         setScrollViewTag([
           // @ts-ignore _nativeTag exists on getNativeScrollRef()
-          scrollElRef.current?.getNativeScrollRef()?._nativeTag,
+          nativeTag,
           feed,
         ])
       }
