@@ -5,6 +5,7 @@ import {View} from 'react-native'
 
 import * as Dialog from '#/components/Dialog'
 import {Text} from '../Typography'
+import {DateInput} from '#/view/com/util/forms/DateInput'
 import {logger} from '#/logger'
 import {
   usePreferencesQuery,
@@ -17,7 +18,6 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {cleanError} from '#/lib/strings/errors'
 import {isIOS, isWeb} from '#/platform/detection'
 import {Loader} from '#/components/Loader'
-import {DateField, utils} from '#/components/forms/DateField'
 
 export function BirthDateSettingsDialog({
   control,
@@ -72,26 +72,20 @@ function BirthdayInner({
   preferences: UsePreferencesQueryResponse
 }) {
   const {_} = useLingui()
-  const [date, setDate] = React.useState(
-    utils.toSimpleDateString(preferences.birthDate || new Date()),
-  )
+  const [date, setDate] = React.useState(preferences.birthDate || new Date())
   const {
     isPending,
     isError,
     error,
     mutateAsync: setBirthDate,
   } = usePreferencesSetBirthDateMutation()
-  const hasChanged = React.useMemo(
-    () =>
-      date !== utils.toSimpleDateString(preferences.birthDate || new Date()),
-    [date, preferences.birthDate],
-  )
+  const hasChanged = date !== preferences.birthDate
 
   const onSave = React.useCallback(async () => {
     try {
       // skip if date is the same
       if (hasChanged) {
-        await setBirthDate({birthDate: new Date(date)})
+        await setBirthDate({birthDate: date})
       }
       control.close()
     } catch (e: any) {
@@ -102,10 +96,17 @@ function BirthdayInner({
   return (
     <View style={a.gap_lg} testID="birthDateSettingsDialog">
       <View style={isIOS && [a.w_full, a.align_center]}>
-        <DateField
-          label={_(msg`Enter your birthday`)}
+        <DateInput
+          handleAsUTC
+          testID="birthdayInput"
           value={date}
-          onChangeDate={setDate}
+          onChange={setDate}
+          buttonType="default-light"
+          buttonStyle={[a.rounded_sm]}
+          buttonLabelType="lg"
+          accessibilityLabel={_(msg`Birthday`)}
+          accessibilityHint={_(msg`Enter your birth date`)}
+          accessibilityLabelledBy="birthDate"
         />
       </View>
 
