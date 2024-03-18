@@ -170,10 +170,11 @@ function ProfileScreenLoaded({
   )
 
   const isMe = profile.did === currentAccount?.did
-  const showFiltersTab = profile.associated?.labeler
+  const hasLabeler = !!profile.associated?.labeler
+  const showFiltersTab = hasLabeler
   const showPostsTab = true
   const showRepliesTab = hasSession
-  const showMediaTab = !profile.associated?.labeler
+  const showMediaTab = !hasLabeler
   const showLikesTab = isMe
   const showFeedsTab =
     hasSession && (isMe || (profile.associated?.feedgens || 0) > 0)
@@ -183,13 +184,13 @@ function ProfileScreenLoaded({
   const sectionTitles = useMemo<string[]>(() => {
     return [
       showFiltersTab ? _(msg`Labels`) : undefined,
+      showListsTab && hasLabeler ? _(msg`Lists`) : undefined,
       showPostsTab ? _(msg`Posts`) : undefined,
-      showListsTab && profile.associated?.labeler ? _(msg`Lists`) : undefined,
       showRepliesTab ? _(msg`Replies`) : undefined,
       showMediaTab ? _(msg`Media`) : undefined,
       showLikesTab ? _(msg`Likes`) : undefined,
       showFeedsTab ? _(msg`Feeds`) : undefined,
-      showListsTab ? _(msg`Lists`) : undefined,
+      showListsTab && !hasLabeler ? _(msg`Lists`) : undefined,
     ].filter(Boolean) as string[]
   }, [
     showPostsTab,
@@ -199,7 +200,7 @@ function ProfileScreenLoaded({
     showFeedsTab,
     showListsTab,
     showFiltersTab,
-    profile.associated?.labeler,
+    hasLabeler,
     _,
   ])
 
