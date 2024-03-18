@@ -184,6 +184,7 @@ function ProfileScreenLoaded({
     return [
       showFiltersTab ? _(msg`Labels`) : undefined,
       showPostsTab ? _(msg`Posts`) : undefined,
+      showListsTab && profile.associated?.labeler ? _(msg`Lists`) : undefined,
       showRepliesTab ? _(msg`Replies`) : undefined,
       showMediaTab ? _(msg`Media`) : undefined,
       showLikesTab ? _(msg`Likes`) : undefined,
