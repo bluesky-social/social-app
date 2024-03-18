@@ -86,7 +86,6 @@ export function LikedByList({uri}: {uri: string}) {
       onEndReachedThreshold={3}
       renderItem={renderItem}
       initialNumToRender={initialNumToRender}
-      contentContainerStyle={{borderWidth: 0}}
       ListFooterComponent={() => (
         <ListFooter
           isFetching={isFetching && !isRefetching}
@@ -95,8 +94,6 @@ export function LikedByList({uri}: {uri: string}) {
           onRetry={fetchNextPage}
         />
       )}
-      // @ts-ignore our .web version only -prf
-      desktopFixedHeight
     />
   ) : (
     <View style={[a.p_lg]}>

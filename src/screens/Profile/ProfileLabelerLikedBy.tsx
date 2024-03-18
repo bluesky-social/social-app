@@ -10,7 +10,7 @@ import {LikedByList} from '#/components/LikedByList'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {makeRecordUri} from '#/lib/strings/url-helpers'
 
-import {atoms as a, useTheme, useBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 
 export function ProfileLabelerLikedByScreen({
   route,
@@ -19,7 +19,6 @@ export function ProfileLabelerLikedByScreen({
   const {name: handleOrDid} = route.params
   const uri = makeRecordUri(handleOrDid, 'app.bsky.labeler.service', 'self')
   const {_} = useLingui()
-  const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
   useFocusEffect(
@@ -35,9 +34,6 @@ export function ProfileLabelerLikedByScreen({
         a.w_full,
         a.h_full_vh,
         gtMobile && [
-          a.border_l,
-          a.border_r,
-          t.atoms.border_contrast_low,
           {
             maxWidth: 600,
           },
