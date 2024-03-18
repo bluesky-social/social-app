@@ -43,25 +43,7 @@ export function BirthDateSettingsDialog({
         </View>
 
         {isLoading ? (
-          <View>
-            <View style={[a.w_full, a.align_center, a.pb_lg]}>
-              <Loader size="xl" />
-            </View>
-
-            <View style={isWeb && [a.flex_row, a.justify_end]}>
-              <Button
-                disabled
-                label={_(msg`Data is loading`)}
-                size="medium"
-                onPress={() => {}}
-                variant="solid"
-                color="primary">
-                <ButtonText>
-                  <Trans>Save</Trans>
-                </ButtonText>
-              </Button>
-            </View>
-          </View>
+          <Loader size="xl" />
         ) : error || !preferences ? (
           <ErrorMessage
             message={
