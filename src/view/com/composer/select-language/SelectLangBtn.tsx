@@ -88,7 +88,7 @@ export function SelectLangBtn() {
       ...arr.slice(0, 6),
       {sep: true},
       {
-        label: _(`Other...`),
+        label: _(msg`Other...`),
         onPress: onPressMore,
       },
     ]
