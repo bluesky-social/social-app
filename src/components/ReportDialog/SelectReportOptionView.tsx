@@ -18,7 +18,10 @@ import {
   useButtonContext,
 } from '#/components/Button'
 import {Divider} from '#/components/Divider'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {
+  ChevronRight_Stroke2_Corner0_Rounded as ChevronRight,
+  ChevronLeft_Stroke2_Corner0_Rounded as ChevronLeft,
+} from '#/components/icons/Chevron'
 import {SquareArrowTopRight_Stroke2_Corner0_Rounded as SquareArrowTopRight} from '#/components/icons/SquareArrowTopRight'
 
 import {ReportDialogProps} from './types'
@@ -28,6 +31,7 @@ export function SelectReportOptionView({
 }: ReportDialogProps & {
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
   onSelectReportOption: (reportOption: ReportOption) => void
+  goBack: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -60,6 +64,18 @@ export function SelectReportOptionView({
 
   return (
     <View style={[a.gap_lg]}>
+      {props.labelers?.length > 1 ? (
+        <Button
+          size="small"
+          variant="solid"
+          color="secondary"
+          shape="round"
+          label={_(msg`Go back to previous step`)}
+          onPress={props.goBack}>
+          <ButtonIcon icon={ChevronLeft} />
+        </Button>
+      ) : null}
+
       <View style={[a.justify_center, a.gap_sm]}>
         <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>

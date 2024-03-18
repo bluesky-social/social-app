@@ -12,9 +12,11 @@ import * as Dialog from '#/components/Dialog'
 import {Text} from '#/components/Typography'
 
 import {ReportDialogProps} from './types'
+import {SelectLabelerView} from './SelectLabelerView'
 import {SelectReportOptionView} from './SelectReportOptionView'
 import {SubmitView} from './SubmitView'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
+import {AppBskyLabelerDefs} from '@atproto/api'
 
 export function ReportDialog(props: ReportDialogProps) {
   return (
@@ -33,9 +35,6 @@ function ReportDialogInner(props: ReportDialogProps) {
     error,
   } = useMyLabelersQuery()
   const isLoading = useDelayedLoading(500, isLabelerLoading)
-  const [selectedReportOption, setSelectedReportOption] = React.useState<
-    ReportOption | undefined
-  >()
 
   return (
     <Dialog.ScrollableInner label="Report Dialog">
@@ -51,23 +50,46 @@ function ReportDialogInner(props: ReportDialogProps) {
             <Trans>Something went wrong, please try again.</Trans>
           </Text>
         </View>
-      ) : selectedReportOption ? (
-        <SubmitView
-          {...props}
-          labelers={labelers}
-          selectedReportOption={selectedReportOption}
-          goBack={() => setSelectedReportOption(undefined)}
-          onSubmitComplete={() => props.control.close()}
-        />
       ) : (
-        <SelectReportOptionView
-          {...props}
-          labelers={labelers}
-          onSelectReportOption={setSelectedReportOption}
-        />
+        <ReportDialogLoaded labelers={labelers} {...props} />
       )}
 
       <Dialog.Close />
     </Dialog.ScrollableInner>
   )
+}
+
+function ReportDialogLoaded(
+  props: ReportDialogProps & {
+    labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+  },
+) {
+  const [selectedLabeler, setSelectedLabeler] = React.useState<
+    string | undefined
+  >(props.labelers.length === 1 ? props.labelers[0].creator.did : undefined)
+  const [selectedReportOption, setSelectedReportOption] = React.useState<
+    ReportOption | undefined
+  >()
+
+  if (selectedReportOption && selectedLabeler) {
+    return (
+      <SubmitView
+        {...props}
+        selectedLabeler={selectedLabeler}
+        selectedReportOption={selectedReportOption}
+        goBack={() => setSelectedReportOption(undefined)}
+        onSubmitComplete={() => props.control.close()}
+      />
+    )
+  }
+  if (selectedLabeler) {
+    return (
+      <SelectReportOptionView
+        {...props}
+        goBack={() => setSelectedLabeler(undefined)}
+        onSelectReportOption={setSelectedReportOption}
+      />
+    )
+  }
+  return <SelectLabelerView {...props} onSelectLabeler={setSelectedLabeler} />
 }

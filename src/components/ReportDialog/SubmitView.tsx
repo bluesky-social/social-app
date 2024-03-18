@@ -24,11 +24,13 @@ import {getAgent} from '#/state/session'
 export function SubmitView({
   params,
   labelers,
+  selectedLabeler,
   selectedReportOption,
   goBack,
   onSubmitComplete,
 }: ReportDialogProps & {
   labelers: AppBskyLabelerDefs.LabelerViewDetailed[]
+  selectedLabeler: string
   selectedReportOption: ReportOption
   goBack: () => void
   onSubmitComplete: () => void
@@ -37,9 +39,9 @@ export function SubmitView({
   const {_} = useLingui()
   const [details, setDetails] = React.useState<string>('')
   const [submitting, setSubmitting] = React.useState<boolean>(false)
-  const [selectedServices, setSelectedServices] = React.useState<string[]>(
-    labelers?.map(labeler => labeler.creator.did) || [],
-  )
+  const [selectedServices, setSelectedServices] = React.useState<string[]>([
+    selectedLabeler,
+  ])
   const [error, setError] = React.useState('')
 
   const submit = React.useCallback(async () => {
