@@ -98,6 +98,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
   switch (a.type) {
     case 'prev': {
       if (s.activeStep !== SignupStep.INFO) {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         next.activeStep--
         next.error = ''
       }
@@ -105,6 +106,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     }
     case 'next': {
       if (s.activeStep !== SignupStep.CAPTCHA) {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
         next.activeStep++
         next.error = ''
       }
