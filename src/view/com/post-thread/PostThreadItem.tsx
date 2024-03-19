@@ -252,6 +252,7 @@ let PostThreadItemLoaded = ({
                 handle={post.author.handle}
                 avatar={post.author.avatar}
                 moderation={moderation.ui('avatar')}
+                type={post.author.associated?.labeler ? 'labeler' : 'user'}
               />
             </View>
             <View style={styles.layoutContent}>
@@ -448,6 +449,7 @@ let PostThreadItemLoaded = ({
                     handle={post.author.handle}
                     avatar={post.author.avatar}
                     moderation={moderation.ui('avatar')}
+                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
                   />
 
                   {showChildReplyLine && (
