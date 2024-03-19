@@ -23,6 +23,7 @@ export function HomeHeaderLayoutMobile({
   children,
 }: {
   children: React.ReactNode
+  tabBarAnchor: JSX.Element | null | undefined
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()

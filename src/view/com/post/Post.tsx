@@ -4,7 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  PostModeration,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
@@ -14,8 +14,9 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostEmbeds} from '../util/post-embeds'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {PostAlerts} from '../util/moderation/PostAlerts'
+import {ContentHider} from '../../../components/moderation/ContentHider'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {Text} from '../util/text/Text'
 import {RichText} from '#/components/RichText'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
@@ -93,7 +94,7 @@ function PostInner({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  moderation: PostModeration
+  moderation: ModerationDecision
   showReplyLine?: boolean
   style?: StyleProp<ViewStyle>
 }) {
@@ -117,11 +118,7 @@ function PostInner({
         uri: post.uri,
         cid: post.cid,
         text: record.text,
-        author: {
-          handle: post.author.handle,
-          displayName: post.author.displayName,
-          avatar: post.author.avatar,
-        },
+        author: post.author,
         embed: post.embed,
         moderation,
       },
@@ -133,7 +130,7 @@ function PostInner({
   }, [setLimitLines])
 
   return (
-    <Link href={itemHref} style={[styles.outer, pal.view, pal.border, style]}>
+    <Link href={itemHref} style={[styles.outer, pal.border, style]}>
       {showReplyLine && <View style={styles.replyLine} />}
       <View style={styles.layout}>
         <View style={styles.layoutAvi}>
@@ -142,12 +139,14 @@ function PostInner({
             did={post.author.did}
             handle={post.author.handle}
             avatar={post.author.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
         <View style={styles.layoutContent}>
           <PostMeta
             author={post.author}
+            moderation={moderation}
             authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={itemHref}
@@ -176,11 +175,15 @@ function PostInner({
               </Text>
             </View>
           )}
+          <LabelsOnMyPost post={post} />
           <ContentHider
-            moderation={moderation.content}
+            modui={moderation.ui('contentView')}
             style={styles.contentHider}
             childContainerStyle={styles.contentHiderChild}>
-            <PostAlerts moderation={moderation.content} style={styles.alert} />
+            <PostAlerts
+              modui={moderation.ui('contentView')}
+              style={[a.py_xs]}
+            />
             {richText.text ? (
               <View style={styles.postTextContainer}>
                 <RichText
@@ -202,17 +205,7 @@ function PostInner({
               />
             ) : undefined}
             {post.embed ? (
-              <ContentHider
-                moderation={moderation.embed}
-                moderationDecisions={moderation.decisions}
-                ignoreQuoteDecisions
-                style={styles.contentHider}>
-                <PostEmbeds
-                  embed={post.embed}
-                  moderation={moderation.embed}
-                  moderationDecisions={moderation.decisions}
-                />
-              </ContentHider>
+              <PostEmbeds embed={post.embed} moderation={moderation} />
             ) : null}
           </ContentHider>
           <PostCtrls
@@ -220,6 +213,7 @@ function PostInner({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
+            logContext="Post"
           />
         </View>
       </View>

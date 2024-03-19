@@ -50,7 +50,7 @@ export function TagMenu({
   const {mutateAsync: removeMutedWord, variables: optimisticRemove} =
     useRemoveMutedWordMutation()
   const isMuted = Boolean(
-    (preferences?.mutedWords?.find(
+    (preferences?.moderationPrefs.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(
@@ -66,7 +66,7 @@ export function TagMenu({
         label: _(msg`See ${truncatedTag} posts`),
         onPress() {
           navigation.push('Hashtag', {
-            tag: tag.replaceAll('#', '%23'),
+            tag: encodeURIComponent(tag),
           })
         },
         testID: 'tagMenuSearch',
@@ -83,11 +83,11 @@ export function TagMenu({
           label: _(msg`See ${truncatedTag} posts by user`),
           onPress() {
             navigation.push('Hashtag', {
-              tag: tag.replaceAll('#', '%23'),
+              tag: encodeURIComponent(tag),
               author: authorHandle,
             })
           },
-          testID: 'tagMenuSeachByUser',
+          testID: 'tagMenuSearchByUser',
           icon: {
             ios: {
               name: 'magnifyingglass',

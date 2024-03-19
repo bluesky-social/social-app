@@ -39,6 +39,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {
   useListQuery,
@@ -61,6 +62,8 @@ import {logger} from '#/logger'
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {listenSoftReset} from '#/state/events'
 import {atoms as a, useTheme} from '#/alf'
+import * as Prompt from '#/components/Prompt'
+import {useDialogControl} from '#/components/Dialog'
 
 const SECTION_TITLES_CURATE = ['Posts', 'About']
 const SECTION_TITLES_MOD = ['About']
@@ -234,7 +237,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
-  const {openModal, closeModal} = useModalControls()
+  const reportDialogControl = useReportDialogControl()
+  const {openModal} = useModalControls()
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
   const listDeleteMutation = useListDeleteMutation()
@@ -250,6 +254,10 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {data: preferences} = usePreferencesQuery()
   const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const {track} = useAnalytics()
+
+  const deleteListPromptControl = useDialogControl()
+  const subscribeMutePromptControl = useDialogControl()
+  const subscribeBlockPromptControl = useDialogControl()
 
   const isPinned = preferences?.feeds?.pinned?.includes(list.uri)
   const isSaved = preferences?.feeds?.saved?.includes(list.uri)
@@ -269,32 +277,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list.uri, isPinned, pinFeed, unpinFeed, _])
 
-  const onSubscribeMute = useCallback(() => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Mute these accounts?`),
-      message: _(
-        msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
-      ),
-      confirmBtnText: _(msg`Mute this List`),
-      async onPressConfirm() {
-        try {
-          await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
-          Toast.show(_(msg`List muted`))
-          track('Lists:Mute')
-        } catch {
-          Toast.show(
-            _(
-              msg`There was an issue. Please check your internet connection and try again.`,
-            ),
-          )
-        }
-      },
-      onPressCancel() {
-        closeModal()
-      },
-    })
-  }, [openModal, closeModal, list, listMuteMutation, track, _])
+  const onSubscribeMute = useCallback(async () => {
+    try {
+      await listMuteMutation.mutateAsync({uri: list.uri, mute: true})
+      Toast.show(_(msg`List muted`))
+      track('Lists:Mute')
+    } catch {
+      Toast.show(
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
+      )
+    }
+  }, [list, listMuteMutation, track, _])
 
   const onUnsubscribeMute = useCallback(async () => {
     try {
@@ -310,32 +305,19 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
   }, [list, listMuteMutation, track, _])
 
-  const onSubscribeBlock = useCallback(() => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Block these accounts?`),
-      message: _(
-        msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
-      ),
-      confirmBtnText: _(msg`Block this List`),
-      async onPressConfirm() {
-        try {
-          await listBlockMutation.mutateAsync({uri: list.uri, block: true})
-          Toast.show(_(msg`List blocked`))
-          track('Lists:Block')
-        } catch {
-          Toast.show(
-            _(
-              msg`There was an issue. Please check your internet connection and try again.`,
-            ),
-          )
-        }
-      },
-      onPressCancel() {
-        closeModal()
-      },
-    })
-  }, [openModal, closeModal, list, listBlockMutation, track, _])
+  const onSubscribeBlock = useCallback(async () => {
+    try {
+      await listBlockMutation.mutateAsync({uri: list.uri, block: true})
+      Toast.show(_(msg`List blocked`))
+      track('Lists:Block')
+    } catch {
+      Toast.show(
+        _(
+          msg`There was an issue. Please check your internet connection and try again.`,
+        ),
+      )
+    }
+  }, [list, listBlockMutation, track, _])
 
   const onUnsubscribeBlock = useCallback(async () => {
     try {
@@ -358,34 +340,26 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     })
   }, [openModal, list])
 
-  const onPressDelete = useCallback(() => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Delete List`),
-      message: _(msg`Are you sure?`),
-      async onPressConfirm() {
-        await listDeleteMutation.mutateAsync({uri: list.uri})
+  const onPressDelete = useCallback(async () => {
+    await listDeleteMutation.mutateAsync({uri: list.uri})
 
-        if (isSaved || isPinned) {
-          const {saved, pinned} = preferences!.feeds
+    if (isSaved || isPinned) {
+      const {saved, pinned} = preferences!.feeds
 
-          setSavedFeeds({
-            saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
-            pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
-          })
-        }
+      setSavedFeeds({
+        saved: isSaved ? saved.filter(uri => uri !== list.uri) : saved,
+        pinned: isPinned ? pinned.filter(uri => uri !== list.uri) : pinned,
+      })
+    }
 
-        Toast.show(_(msg`List deleted`))
-        track('Lists:Delete')
-        if (navigation.canGoBack()) {
-          navigation.goBack()
-        } else {
-          navigation.navigate('Home')
-        }
-      },
-    })
+    Toast.show(_(msg`List deleted`))
+    track('Lists:Delete')
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    } else {
+      navigation.navigate('Home')
+    }
   }, [
-    openModal,
     list,
     listDeleteMutation,
     navigation,
@@ -398,12 +372,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   ])
 
   const onPressReport = useCallback(() => {
-    openModal({
-      name: 'report',
-      uri: list.uri,
-      cid: list.cid,
-    })
-  }, [openModal, list])
+    reportDialogControl.open()
+  }, [reportDialogControl])
 
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
@@ -443,7 +413,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       items.push({
         testID: 'listHeaderDropdownDeleteBtn',
         label: _(msg`Delete List`),
-        onPress: onPressDelete,
+        onPress: deleteListPromptControl.open,
         icon: {
           ios: {
             name: 'trash',
@@ -489,7 +459,9 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         items.push({
           testID: 'listHeaderDropdownMuteBtn',
           label: isMuting ? _(msg`Un-mute list`) : _(msg`Mute list`),
-          onPress: isMuting ? onUnsubscribeMute : onSubscribeMute,
+          onPress: isMuting
+            ? onUnsubscribeMute
+            : subscribeMutePromptControl.open,
           icon: {
             ios: {
               name: isMuting ? 'eye' : 'eye.slash',
@@ -504,7 +476,9 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         items.push({
           testID: 'listHeaderDropdownBlockBtn',
           label: isBlocking ? _(msg`Un-block list`) : _(msg`Block list`),
-          onPress: isBlocking ? onUnsubscribeBlock : onSubscribeBlock,
+          onPress: isBlocking
+            ? onUnsubscribeBlock
+            : subscribeBlockPromptControl.open,
           icon: {
             ios: {
               name: 'person.fill.xmark',
@@ -517,24 +491,24 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
     }
     return items
   }, [
-    isOwner,
-    onPressShare,
-    onPressEdit,
-    onPressDelete,
-    onPressReport,
     _,
+    onPressShare,
+    isOwner,
     isModList,
     isPinned,
-    unpinFeed,
-    isPending,
-    list.uri,
     isCurateList,
-    isMuting,
+    onPressEdit,
+    deleteListPromptControl.open,
+    onPressReport,
+    isPending,
+    unpinFeed,
+    list.uri,
     isBlocking,
+    isMuting,
     onUnsubscribeMute,
-    onSubscribeMute,
+    subscribeMutePromptControl.open,
     onUnsubscribeBlock,
-    onSubscribeBlock,
+    subscribeBlockPromptControl.open,
   ])
 
   const subscribeDropdownItems: DropdownItem[] = useMemo(() => {
@@ -542,7 +516,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       {
         testID: 'subscribeDropdownMuteBtn',
         label: _(msg`Mute accounts`),
-        onPress: onSubscribeMute,
+        onPress: subscribeMutePromptControl.open,
         icon: {
           ios: {
             name: 'speaker.slash',
@@ -554,7 +528,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       {
         testID: 'subscribeDropdownBlockBtn',
         label: _(msg`Block accounts`),
-        onPress: onSubscribeBlock,
+        onPress: subscribeBlockPromptControl.open,
         icon: {
           ios: {
             name: 'person.fill.xmark',
@@ -564,7 +538,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
         },
       },
     ]
-  }, [onSubscribeMute, onSubscribeBlock, _])
+  }, [_, subscribeMutePromptControl.open, subscribeBlockPromptControl.open])
 
   return (
     <ProfileSubpageHeader
@@ -574,6 +548,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       isOwner={list.creator.did === currentAccount?.did}
       creator={list.creator}
       avatarType="list">
+      <ReportDialog
+        control={reportDialogControl}
+        params={{
+          type: 'list',
+          uri: list.uri,
+          cid: list.cid,
+        }}
+      />
       {isCurateList || isPinned ? (
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
@@ -620,6 +602,38 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
           <FontAwesomeIcon icon="ellipsis" size={20} color={pal.colors.text} />
         </View>
       </NativeDropdown>
+
+      <Prompt.Basic
+        control={deleteListPromptControl}
+        title={_(msg`Delete this list?`)}
+        description={_(
+          msg`If you delete this list, you won't be able to recover it.`,
+        )}
+        onConfirm={onPressDelete}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
+
+      <Prompt.Basic
+        control={subscribeMutePromptControl}
+        title={_(msg`Mute these accounts?`)}
+        description={_(
+          msg`Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them.`,
+        )}
+        onConfirm={onSubscribeMute}
+        confirmButtonCta={_(msg`Mute list`)}
+      />
+
+      <Prompt.Basic
+        control={subscribeBlockPromptControl}
+        title={_(msg`Block these accounts?`)}
+        description={_(
+          msg`Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
+        )}
+        onConfirm={onSubscribeBlock}
+        confirmButtonCta={_(msg`Block list`)}
+        confirmButtonColor="negative"
+      />
     </ProfileSubpageHeader>
   )
 }
@@ -899,7 +913,7 @@ function ErrorScreen({error}: {error: string}) {
       <View style={{flexDirection: 'row'}}>
         <Button
           type="default"
-          accessibilityLabel={_(msg`Go Back`)}
+          accessibilityLabel={_(msg`Go back`)}
           accessibilityHint={_(msg`Return to previous page`)}
           onPress={onPressBack}
           style={{flexShrink: 1}}>

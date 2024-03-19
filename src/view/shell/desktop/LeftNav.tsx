@@ -64,7 +64,11 @@ function ProfileCard() {
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
       title={_(msg`My Profile`)}
       asAnchor>
-      <UserAvatar avatar={profile.avatar} size={size} />
+      <UserAvatar
+        avatar={profile.avatar}
+        size={size}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
     </Link>
   ) : (
     <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
@@ -391,7 +395,7 @@ export function DesktopLeftNav() {
               <FontAwesomeIcon
                 icon="hand"
                 style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 20 : 26}
+                size={isDesktop ? 23 : 26}
               />
             }
             label={_(msg`Moderation`)}

@@ -47,6 +47,9 @@
         height: calc(100% + env(safe-area-inset-top));
         scrollbar-gutter: stable both-edges;
       }
+      html, body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif;
+      }
 
       /* Buttons and inputs have a font set by UA, so we'll have to reset that */
       button, input, textarea {
@@ -142,7 +145,7 @@
 
       /* ProseMirror */
       .ProseMirror {
-        font: 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font: 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif;
         min-height: 140px;
       }
       .ProseMirror-dark {
@@ -217,6 +220,7 @@
       }
 
       /* NativeDropdown component */
+      .radix-dropdown-item:focus,
       .nativeDropdown-item:focus {
         outline: none;
       }
