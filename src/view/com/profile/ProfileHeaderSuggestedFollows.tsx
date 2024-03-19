@@ -21,7 +21,8 @@ import {useModerationOpts} from '#/state/queries/preferences'
 import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 const OUTER_PADDING = 10
 const INNER_PADDING = 14
@@ -170,6 +171,7 @@ function SuggestedFollow({
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const moderationOpts = useModerationOpts()
   const profile = useProfileShadow(profileUnshadowed)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
@@ -183,20 +185,20 @@ function SuggestedFollow({
       await queueFollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show('An issue occurred, please try again.')
+        Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
-  }, [queueFollow, track])
+  }, [queueFollow, track, _])
 
   const onPressUnfollow = React.useCallback(async () => {
     try {
       await queueUnfollow()
     } catch (e: any) {
       if (e?.name !== 'AbortError') {
-        Toast.show('An issue occurred, please try again.')
+        Toast.show(_(msg`An issue occurred, please try again.`))
       }
     }
-  }, [queueUnfollow])
+  }, [queueUnfollow, _])
 
   if (!moderationOpts) {
     return null
@@ -241,7 +243,7 @@ function SuggestedFollow({
         </View>
 
         <Button
-          label={following ? 'Unfollow' : 'Follow'}
+          label={following ? _(msg`Unfollow`) : _(msg`Follow`)}
           type="inverted"
           labelStyle={{textAlign: 'center'}}
           onPress={following ? onPressUnfollow : onPressFollow}

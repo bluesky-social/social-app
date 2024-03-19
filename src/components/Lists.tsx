@@ -2,10 +2,10 @@ import React from 'react'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 import {CenteredView} from 'view/com/util/Views'
 import {Loader} from '#/components/Loader'
-import {msg, Trans} from '@lingui/macro'
 import {cleanError} from 'lib/strings/errors'
 import {Button} from '#/components/Button'
 import {Text} from '#/components/Typography'
@@ -59,6 +59,7 @@ function ListFooterMaybeError({
   onRetry?: () => Promise<unknown>
 }) {
   const t = useTheme()
+  const {_} = useLingui()
 
   if (!isError) return null
 
@@ -84,7 +85,7 @@ function ListFooterMaybeError({
         </Text>
         <Button
           variant="gradient"
-          label="Press to retry"
+          label={_(msg`Press to retry`)}
           style={[
             a.align_center,
             a.justify_center,
@@ -94,7 +95,7 @@ function ListFooterMaybeError({
             a.py_sm,
           ]}
           onPress={onRetry}>
-          Retry
+          <Trans>Retry</Trans>
         </Button>
       </View>
     </View>
@@ -149,6 +150,7 @@ export function ListMaybePlaceholder({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
+  const {_} = useLingui()
 
   if (!isLoading && isError) {
     return (
