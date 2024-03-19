@@ -162,7 +162,6 @@ export function StepInfo() {
               testID="date"
               value={DateField.utils.toSimpleDateString(state.dateOfBirth)}
               onChangeDate={date => {
-                console.log(date)
                 dispatch({
                   type: 'setDateOfBirth',
                   value: sanitizeDate(new Date(date)),
