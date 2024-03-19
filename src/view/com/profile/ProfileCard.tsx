@@ -225,6 +225,7 @@ function FollowersList({
               avatar={f.avatar}
               size={32}
               moderation={mod.ui('avatar')}
+              type={f.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         </View>
