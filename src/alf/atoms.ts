@@ -1,3 +1,4 @@
+import {Platform} from 'react-native'
 import {web, native} from '#/alf/util/platform'
 import * as tokens from '#/alf/tokens'
 
@@ -6,7 +7,7 @@ export const atoms = {
    * Positioning
    */
   fixed: {
-    position: 'fixed',
+    position: Platform.select({web: 'fixed', native: 'absolute'}) as 'absolute',
   },
   absolute: {
     position: 'absolute',
@@ -49,6 +50,9 @@ export const atoms = {
   h_full: {
     height: '100%',
   },
+  h_full_vh: web({
+    height: '100vh',
+  }),
 
   /*
    * Border radius
@@ -110,6 +114,12 @@ export const atoms = {
   },
   flex_row: {
     flexDirection: 'row',
+  },
+  flex_col_reverse: {
+    flexDirection: 'column-reverse',
+  },
+  flex_row_reverse: {
+    flexDirection: 'row-reverse',
   },
   flex_wrap: {
     flexWrap: 'wrap',
@@ -235,6 +245,9 @@ export const atoms = {
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
+  },
+  font_semibold: {
+    fontWeight: '500',
   },
   font_bold: {
     fontWeight: tokens.fontWeight.semibold,
@@ -521,6 +534,10 @@ export const atoms = {
   /*
    * Margin
    */
+  mx_auto: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
   m_2xs: {
     margin: tokens.space._2xs,
   },

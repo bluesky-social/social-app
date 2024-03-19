@@ -5,7 +5,7 @@ import React, {useState, useEffect} from 'react'
 import {RootSiblingParent} from 'react-native-root-siblings'
 import * as SplashScreen from 'expo-splash-screen'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
-import {QueryClientProvider} from '@tanstack/react-query'
+import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -22,7 +22,11 @@ import {s} from 'lib/styles'
 import {Shell} from 'view/shell'
 import * as notifications from 'lib/notifications/notifications'
 import * as Toast from 'view/com/util/Toast'
-import {queryClient} from 'lib/react-query'
+import {
+  queryClient,
+  asyncStoragePersister,
+  dehydrateOptions,
+} from 'lib/react-query'
 import {TestCtrls} from 'view/com/testing/TestCtrls'
 import {Provider as ShellStateProvider} from 'state/shell'
 import {Provider as ModalStateProvider} from 'state/modals'
@@ -33,6 +37,7 @@ import {Provider as InvitesStateProvider} from 'state/invites'
 import {Provider as PrefsStateProvider} from 'state/preferences'
 import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
 import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
+import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
 import I18nProvider from './locale/i18nProvider'
 import {
   Provider as SessionProvider,
@@ -79,21 +84,23 @@ function InnerApp() {
             // Resets the entire tree below when it changes:
             key={currentAccount?.did}>
             <StatsigProvider>
-              <LoggedOutViewProvider>
-                <SelectedFeedProvider>
-                  <UnreadNotifsProvider>
-                    <ThemeProvider theme={theme}>
-                      {/* All components should be within this provider */}
-                      <RootSiblingParent>
-                        <GestureHandlerRootView style={s.h100pct}>
-                          <TestCtrls />
-                          <Shell />
-                        </GestureHandlerRootView>
-                      </RootSiblingParent>
-                    </ThemeProvider>
-                  </UnreadNotifsProvider>
-                </SelectedFeedProvider>
-              </LoggedOutViewProvider>
+              <LabelDefsProvider>
+                <LoggedOutViewProvider>
+                  <SelectedFeedProvider>
+                    <UnreadNotifsProvider>
+                      <ThemeProvider theme={theme}>
+                        {/* All components should be within this provider */}
+                        <RootSiblingParent>
+                          <GestureHandlerRootView style={s.h100pct}>
+                            <TestCtrls />
+                            <Shell />
+                          </GestureHandlerRootView>
+                        </RootSiblingParent>
+                      </ThemeProvider>
+                    </UnreadNotifsProvider>
+                  </SelectedFeedProvider>
+                </LoggedOutViewProvider>
+              </LabelDefsProvider>
             </StatsigProvider>
           </React.Fragment>
         </Splash>
@@ -118,7 +125,9 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
@@ -140,7 +149,7 @@ function App() {
           </PrefsStateProvider>
         </ShellStateProvider>
       </SessionProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   )
 }
 
