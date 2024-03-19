@@ -35,13 +35,7 @@ function Group({children}: {children: React.ReactNode}) {
             {i > 0 ? (
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
             ) : null}
-            {React.cloneElement(child, {
-              // @ts-ignore
-              style: {
-                borderRadius: 0,
-                borderWidth: 0,
-              },
-            })}
+            {child}
           </React.Fragment>
         ) : null
       })}
@@ -77,14 +71,14 @@ function AccountItem({
           ? _(msg`Continue as ${account.handle} (currently signed in)`)
           : _(msg`Sign in as ${account.handle}`)
       }>
-      {({hovered}) => (
+      {({hovered, pressed}) => (
         <View
           style={[
             a.flex_1,
             a.flex_row,
             a.align_center,
             {height: 48},
-            hovered && t.atoms.bg_contrast_25,
+            (hovered || pressed) && t.atoms.bg_contrast_25,
           ]}>
           <View style={a.p_md}>
             <UserAvatar avatar={profile?.avatar} size={24} />
@@ -165,7 +159,7 @@ export const ChooseAccountForm = ({
             style={[a.flex_1]}
             onPress={() => onSelectAccount(undefined)}
             label={_(msg`Login to account that is not listed`)}>
-            {({hovered}) => (
+            {({hovered, pressed}) => (
               <View
                 style={[
                   a.flex_1,
@@ -173,7 +167,7 @@ export const ChooseAccountForm = ({
                   a.flex_row,
                   a.align_center,
                   {height: 48},
-                  hovered && t.atoms.bg_contrast_25,
+                  (hovered || pressed) && t.atoms.bg_contrast_25,
                 ]}>
                 <Text
                   style={[
