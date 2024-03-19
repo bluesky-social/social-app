@@ -2,6 +2,7 @@ import React, {useState, useRef} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
+  LayoutAnimation,
   TextInput,
   TouchableOpacity,
   View,
@@ -67,6 +68,7 @@ export const LoginForm = ({
   const onPressNext = async () => {
     if (isProcessing) return
     Keyboard.dismiss()
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     setError('')
     setIsProcessing(true)
 
@@ -101,6 +103,7 @@ export const LoginForm = ({
       })
     } catch (e: any) {
       const errMsg = e.toString()
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
         logger.debug('Failed to login due to invalid credentials', {
