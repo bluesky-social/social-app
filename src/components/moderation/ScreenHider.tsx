@@ -56,7 +56,8 @@ export function ScreenHider({
 
   const isNoPwi = !!modui.blurs.find(
     cause =>
-      cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated',
+      cause.type === 'label' &&
+      cause.labelDef.identifier === '!no-unauthenticated',
   )
   return (
     <CenteredView
