@@ -6,12 +6,15 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {t} from '@lingui/macro'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 export function createCustomBackdrop(
   onClose?: (() => void) | undefined,
 ): React.FC<BottomSheetBackdropProps> {
   const CustomBackdrop = ({animatedIndex, style}: BottomSheetBackdropProps) => {
+    const {_} = useLingui()
+
     // animated variables
     const opacity = useAnimatedStyle(() => ({
       opacity: interpolate(
@@ -30,7 +33,7 @@ export function createCustomBackdrop(
     return (
       <TouchableWithoutFeedback
         onPress={onClose}
-        accessibilityLabel={t`Close bottom drawer`}
+        accessibilityLabel={_(msg`Close bottom drawer`)}
         accessibilityHint=""
         onAccessibilityEscape={() => {
           if (onClose !== undefined) {

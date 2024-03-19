@@ -21,7 +21,9 @@ export type CommonNavigatorParams = {
   PostRepostedBy: {name: string; rkey: string}
   ProfileFeed: {name: string; rkey: string}
   ProfileFeedLikedBy: {name: string; rkey: string}
+  ProfileLabelerLikedBy: {name: string}
   Debug: undefined
+  DebugMod: undefined
   Log: undefined
   Support: undefined
   PrivacyPolicy: undefined

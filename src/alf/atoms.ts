@@ -50,6 +50,9 @@ export const atoms = {
   h_full: {
     height: '100%',
   },
+  h_full_vh: web({
+    height: '100vh',
+  }),
 
   /*
    * Border radius
@@ -248,6 +251,9 @@ export const atoms = {
   },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
+  },
+  font_semibold: {
+    fontWeight: '500',
   },
   font_bold: {
     fontWeight: tokens.fontWeight.semibold,

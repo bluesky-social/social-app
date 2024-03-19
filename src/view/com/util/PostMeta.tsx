@@ -11,7 +11,7 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid, isWeb} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
-import {ModerationUI} from '@atproto/api'
+import {ModerationDecision, ModerationUI} from '@atproto/api'
 import {usePrefetchProfileQuery} from '#/state/queries/profile'
 
 interface PostMetaOpts {
@@ -21,6 +21,7 @@ interface PostMetaOpts {
     handle: string
     displayName?: string | undefined
   }
+  moderation: ModerationDecision | undefined
   authorHasWarning: boolean
   postHref: string
   timestamp: string
@@ -55,9 +56,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
           lineHeight={1.2}
+          disableMismatchWarning
           text={
             <>
-              {sanitizeDisplayName(displayName)}&nbsp;
+              {sanitizeDisplayName(
+                displayName,
+                opts.moderation?.ui('displayName'),
+              )}
+              &nbsp;
               <Text
                 type="md"
                 numberOfLines={1}

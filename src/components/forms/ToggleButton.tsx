@@ -8,7 +8,9 @@ import * as Toggle from '#/components/forms/Toggle'
 
 export type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps &
-  React.PropsWithChildren<{testID?: string}>
+  React.PropsWithChildren<{
+    testID?: string
+  }>
 
 export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean
@@ -101,12 +103,12 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
         native({
           paddingBottom: 10,
         }),
-        a.px_sm,
+        a.px_md,
         t.atoms.bg,
         t.atoms.border_contrast_low,
         baseStyles,
         activeStyles,
-        (state.hovered || state.focused || state.pressed) && hoverStyles,
+        (state.hovered || state.pressed) && hoverStyles,
       ]}>
       {typeof children === 'string' ? (
         <Text
