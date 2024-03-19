@@ -1,5 +1,7 @@
 import React from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {isAndroid} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
@@ -9,6 +11,7 @@ import {useDialogControl} from '../Dialog'
 import {Text} from '../Typography'
 import {ServerInputDialog} from '#/view/com/auth/server-input'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {Button} from '../Button'
 
 export function HostingProvider({
   serviceUrl,
@@ -21,6 +24,7 @@ export function HostingProvider({
 }) {
   const serverInputControl = useDialogControl()
   const t = useTheme()
+  const {_} = useLingui()
 
   const onPressSelectService = React.useCallback(() => {
     serverInputControl.open()
@@ -35,8 +39,11 @@ export function HostingProvider({
         control={serverInputControl}
         onSelect={onSelectServiceUrl}
       />
-      <TouchableOpacity
-        accessibilityRole="button"
+      <Button
+        label={toNiceDomain(serviceUrl)}
+        accessibilityHint={_(msg`Press to change hosting provider`)}
+        variant="solid"
+        color="secondary"
         style={[
           a.w_full,
           a.flex_row,
@@ -45,22 +52,35 @@ export function HostingProvider({
           a.px_md,
           a.gap_xs,
           {paddingVertical: isAndroid ? 14 : 9},
-          t.atoms.bg_contrast_25,
         ]}
         onPress={onPressSelectService}>
-        <View style={a.pr_xs}>
-          <Globe size="md" fill={t.palette.contrast_500} />
-        </View>
-        <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
-        <View
-          style={[
-            a.rounded_sm,
-            t.atoms.bg_contrast_100,
-            {marginLeft: 'auto', left: 6, padding: 6},
-          ]}>
-          <Pencil size="sm" style={{color: t.palette.contrast_500}} />
-        </View>
-      </TouchableOpacity>
+        {({hovered}) => (
+          <>
+            <View style={a.pr_xs}>
+              <Globe
+                size="md"
+                fill={hovered ? t.palette.contrast_800 : t.palette.contrast_500}
+              />
+            </View>
+            <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
+            <View
+              style={[
+                a.rounded_sm,
+                hovered ? t.atoms.bg_contrast_300 : t.atoms.bg_contrast_100,
+                {marginLeft: 'auto', left: 6, padding: 6},
+              ]}>
+              <Pencil
+                size="sm"
+                style={{
+                  color: hovered
+                    ? t.palette.contrast_800
+                    : t.palette.contrast_500,
+                }}
+              />
+            </View>
+          </>
+        )}
+      </Button>
     </>
   )
 }

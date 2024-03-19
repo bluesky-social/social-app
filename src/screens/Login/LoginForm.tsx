@@ -4,7 +4,6 @@ import {
   Keyboard,
   LayoutAnimation,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
@@ -193,22 +192,23 @@ export const LoginForm = ({
                 : _(msg`Input the password tied to ${identifier}`)
             }
           />
-          <TouchableOpacity
+          <Button
             testID="forgotPasswordButton"
             onPress={onPressForgotPassword}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Forgot password`)}
+            label={_(msg`Forgot password?`)}
             accessibilityHint={_(msg`Opens password reset form`)}
+            variant="solid"
+            color="secondary"
             style={[
               a.rounded_sm,
               t.atoms.bg_contrast_100,
               {marginLeft: 'auto', left: 6, padding: 6},
               a.z_10,
             ]}>
-            <ButtonText style={t.atoms.text_contrast_medium}>
+            <ButtonText>
               <Trans>Forgot?</Trans>
             </ButtonText>
-          </TouchableOpacity>
+          </Button>
         </TextField.Root>
       </View>
       <FormError error={error} />
