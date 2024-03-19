@@ -11,7 +11,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   ModerationOpts,
-  ProfileModeration,
+  ModerationDecision,
   moderateProfile,
   AppBskyEmbedRecordWithMedia,
 } from '@atproto/api'
@@ -53,7 +53,7 @@ interface Author {
   handle: string
   displayName?: string
   avatar?: string
-  moderation: ProfileModeration
+  moderation: ModerationDecision
 }
 
 let FeedItem = ({
@@ -182,7 +182,6 @@ let FeedItem = ({
       testID={`feedItem-by-${item.notification.author.handle}`}
       style={[
         styles.outer,
-        pal.view,
         pal.border,
         item.notification.isRead
           ? undefined
@@ -339,7 +338,7 @@ function CondensedAuthorsList({
           did={authors[0].did}
           handle={authors[0].handle}
           avatar={authors[0].avatar}
-          moderation={authors[0].moderation.avatar}
+          moderation={authors[0].moderation.ui('avatar')}
         />
       </View>
     )
@@ -357,7 +356,7 @@ function CondensedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              moderation={author.moderation.avatar}
+              moderation={author.moderation.ui('avatar')}
             />
           </View>
         ))}
@@ -415,7 +414,7 @@ function ExpandedAuthorsList({
             <UserAvatar
               size={35}
               avatar={author.avatar}
-              moderation={author.moderation.avatar}
+              moderation={author.moderation.ui('avatar')}
             />
           </View>
           <View style={s.flex1}>

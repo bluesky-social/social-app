@@ -46,7 +46,7 @@ import {SearchScreen} from './view/screens/Search'
 import {FeedsScreen} from './view/screens/Feeds'
 import {NotificationsScreen} from './view/screens/Notifications'
 import {ListsScreen} from './view/screens/Lists'
-import {ModerationScreen} from './view/screens/Moderation'
+import {ModerationScreen} from '#/screens/Moderation'
 import {ModerationModlistsScreen} from './view/screens/ModerationModlists'
 import {NotFoundScreen} from './view/screens/NotFound'
 import {SettingsScreen} from './view/screens/Settings'
@@ -61,6 +61,7 @@ import {PostThreadScreen} from './view/screens/PostThread'
 import {PostLikedByScreen} from './view/screens/PostLikedBy'
 import {PostRepostedByScreen} from './view/screens/PostRepostedBy'
 import {Storybook} from './view/screens/Storybook'
+import {DebugModScreen} from './view/screens/DebugMod'
 import {LogScreen} from './view/screens/Log'
 import {SupportScreen} from './view/screens/Support'
 import {PrivacyPolicyScreen} from './view/screens/PrivacyPolicy'
@@ -78,6 +79,7 @@ import {createNativeStackNavigatorWithAuth} from './view/shell/createNativeStack
 import {msg} from '@lingui/macro'
 import {i18n, MessageDescriptor} from '@lingui/core'
 import HashtagScreen from '#/screens/Hashtag'
+import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
 import {logEvent, attachRouteToLogEvents} from './lib/statsig/statsig'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
@@ -199,9 +201,19 @@ function commonScreens(Stack: typeof HomeTab, unreadCountLabel?: string) {
         options={{title: title(msg`Liked by`)}}
       />
       <Stack.Screen
+        name="ProfileLabelerLikedBy"
+        getComponent={() => ProfileLabelerLikedByScreen}
+        options={{title: title(msg`Liked by`)}}
+      />
+      <Stack.Screen
         name="Debug"
         getComponent={() => Storybook}
         options={{title: title(msg`Storybook`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="DebugMod"
+        getComponent={() => DebugModScreen}
+        options={{title: title(msg`Moderation states`), requireAuth: true}}
       />
       <Stack.Screen
         name="Log"

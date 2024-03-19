@@ -40,7 +40,6 @@ let PostCtrls = ({
   post,
   record,
   richText,
-  showAppealLabelItem,
   style,
   onPressReply,
   logContext,
@@ -49,7 +48,6 @@ let PostCtrls = ({
   post: Shadow<AppBskyFeedDefs.PostView>
   record: AppBskyFeedPost.Record
   richText: RichTextAPI
-  showAppealLabelItem?: boolean
   style?: StyleProp<ViewStyle>
   onPressReply: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post'
@@ -240,7 +238,6 @@ let PostCtrls = ({
           postUri={post.uri}
           record={record}
           richText={richText}
-          showAppealLabelItem={showAppealLabelItem}
           style={styles.btnPad}
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}
         />

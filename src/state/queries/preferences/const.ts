@@ -29,26 +29,20 @@ export const DEFAULT_PROD_FEEDS = {
 
 export const DEFAULT_LOGGED_OUT_PREFERENCES: UsePreferencesQueryResponse = {
   birthDate: new Date('2022-11-17'), // TODO(pwi)
-  adultContentEnabled: false,
   feeds: {
     saved: [],
     pinned: [],
     unpinned: [],
   },
-  // labels are undefined until set by user
-  contentLabels: {
-    nsfw: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.nsfw,
-    nudity: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.nudity,
-    suggestive: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.suggestive,
-    gore: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.gore,
-    hate: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.hate,
-    spam: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.spam,
-    impersonation: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES.impersonation,
+  moderationPrefs: {
+    adultContentEnabled: false,
+    labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
+    labelers: [],
+    mutedWords: [],
+    hiddenPosts: [],
   },
   feedViewPrefs: DEFAULT_HOME_FEED_PREFS,
   threadViewPrefs: DEFAULT_THREAD_VIEW_PREFS,
   userAge: 13, // TODO(pwi)
   interests: {tags: []},
-  mutedWords: [],
-  hiddenPosts: [],
 }
