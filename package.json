@@ -41,7 +41,9 @@
     "intl:extract": "lingui extract",
     "intl:compile": "lingui compile",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
-    "update-extensions": "scripts/updateExtensions.sh"
+    "update-extensions": "bash scripts/updateExtensions.sh",
+    "export": "npx expo export",
+    "make-deploy-bundle": "bash scripts/bundleUpdate.sh"
   },
   "dependencies": {
     "@atproto/api": "^0.12.0",
