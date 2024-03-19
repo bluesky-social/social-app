@@ -65,7 +65,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     setCurrentForm(Forms.Login)
   }
 
-  const gotoForm = (form: Forms) => () => {
+  const gotoForm = (form: Forms) => {
     setError('')
     setCurrentForm(form)
   }
@@ -132,8 +132,8 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           serviceDescription={serviceDescription}
           setError={setError}
           setServiceUrl={setServiceUrl}
-          onPressBack={gotoForm(Forms.Login)}
-          onEmailSent={gotoForm(Forms.SetNewPassword)}
+          onPressBack={() => gotoForm(Forms.Login)}
+          onEmailSent={() => gotoForm(Forms.SetNewPassword)}
         />
       )
       break
@@ -145,15 +145,17 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           error={error}
           serviceUrl={serviceUrl}
           setError={setError}
-          onPressBack={gotoForm(Forms.ForgotPassword)}
-          onPasswordSet={gotoForm(Forms.PasswordUpdated)}
+          onPressBack={() => gotoForm(Forms.ForgotPassword)}
+          onPasswordSet={() => gotoForm(Forms.PasswordUpdated)}
         />
       )
       break
     case Forms.PasswordUpdated:
       title = _(msg`Password updated`)
       description = _(msg`You can now sign in with your new password.`)
-      content = <PasswordUpdatedForm onPressNext={gotoForm(Forms.Login)} />
+      content = (
+        <PasswordUpdatedForm onPressNext={() => gotoForm(Forms.Login)} />
+      )
       break
   }
 
