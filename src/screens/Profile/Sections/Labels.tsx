@@ -48,7 +48,6 @@ export const ProfileLabelsSection = React.forwardRef<
   },
   ref,
 ) {
-  const t = useTheme()
   const {_} = useLingui()
   const {height: minHeight} = useSafeAreaFrame()
 
@@ -66,34 +65,26 @@ export const ProfileLabelsSection = React.forwardRef<
   }))
 
   return (
-    <CenteredView style={{flex: 1}} sideBorders>
-      <View
-        style={[
-          t.atoms.border_contrast_low,
-          {
-            minHeight,
-          },
-        ]}>
-        {isLabelerLoading ? (
-          <View style={[a.w_full, a.align_center]}>
-            <Loader size="xl" />
-          </View>
-        ) : labelerError || !labelerInfo ? (
-          <ErrorState
-            error={
-              labelerError?.toString() ||
-              _(msg`Something went wrong, please try again.`)
-            }
-          />
-        ) : (
-          <ProfileLabelsSectionInner
-            moderationOpts={moderationOpts}
-            labelerInfo={labelerInfo}
-            scrollElRef={scrollElRef}
-            headerHeight={headerHeight}
-          />
-        )}
-      </View>
+    <CenteredView style={{flex: 1, minHeight}} sideBorders>
+      {isLabelerLoading ? (
+        <View style={[a.w_full, a.align_center]}>
+          <Loader size="xl" />
+        </View>
+      ) : labelerError || !labelerInfo ? (
+        <ErrorState
+          error={
+            labelerError?.toString() ||
+            _(msg`Something went wrong, please try again.`)
+          }
+        />
+      ) : (
+        <ProfileLabelsSectionInner
+          moderationOpts={moderationOpts}
+          labelerInfo={labelerInfo}
+          scrollElRef={scrollElRef}
+          headerHeight={headerHeight}
+        />
+      )}
     </CenteredView>
   )
 })
