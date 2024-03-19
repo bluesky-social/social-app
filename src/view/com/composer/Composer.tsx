@@ -447,7 +447,7 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={[s.mt5, isWeb && s.mb10]}>
+            <View style={[s.mt5, isWeb && s.mb10, {pointerEvents: 'none'}]}>
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
