@@ -378,7 +378,9 @@ export function ModerationScreenInner({
       </Text>
 
       {isLabelersLoading ? (
-        <Loader />
+        <View style={[a.w_full, a.align_center, a.p_lg]}>
+          <Loader size="xl" />
+        </View>
       ) : labelersError || !labelers ? (
         <View style={[a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
           <Text>
@@ -513,11 +515,12 @@ function PwiOptOut() {
           value={isOptedOut}
           onChange={onToggleOptOut}
           name="logged_out_visibility"
+          style={a.flex_1}
           label={_(
             msg`Discourage apps from showing my account to logged-out users`,
           )}>
           <Toggle.Switch />
-          <Toggle.Label style={[a.text_md]}>
+          <Toggle.Label style={[a.text_md, a.flex_1]}>
             <Trans>
               Discourage apps from showing my account to logged-out users
             </Trans>
