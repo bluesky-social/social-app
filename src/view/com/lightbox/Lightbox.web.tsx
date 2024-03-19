@@ -7,6 +7,7 @@ import {
   StyleSheet,
   View,
   Pressable,
+  ViewStyle,
 } from 'react-native'
 import {
   FontAwesomeIcon,
@@ -24,6 +25,7 @@ import {
   ProfileImageLightbox,
 } from '#/state/lightbox'
 import {useWebBodyScrollLock} from '#/lib/hooks/useWebBodyScrollLock'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 
 interface Img {
   uri: string
@@ -111,6 +113,14 @@ function LightboxInner({
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [onKeyDown])
 
+  const {isTabletOrDesktop} = useWebMediaQueries()
+  const btnStyle = React.useMemo(() => {
+    return isTabletOrDesktop ? styles.btnTablet : styles.btnMobile
+  }, [isTabletOrDesktop])
+  const iconSize = React.useMemo(() => {
+    return isTabletOrDesktop ? 32 : 24
+  }, [isTabletOrDesktop])
+
   return (
     <View style={styles.mask}>
       <TouchableWithoutFeedback
@@ -130,28 +140,38 @@ function LightboxInner({
           {canGoLeft && (
             <TouchableOpacity
               onPress={onPressLeft}
-              style={[styles.btn, styles.leftBtn]}
+              style={[
+                styles.btn,
+                btnStyle,
+                styles.leftBtn,
+                styles.blurredBackground,
+              ]}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Previous image`)}
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-left"
                 style={styles.icon as FontAwesomeIconStyle}
-                size={40}
+                size={iconSize}
               />
             </TouchableOpacity>
           )}
           {canGoRight && (
             <TouchableOpacity
               onPress={onPressRight}
-              style={[styles.btn, styles.rightBtn]}
+              style={[
+                styles.btn,
+                btnStyle,
+                styles.rightBtn,
+                styles.blurredBackground,
+              ]}
               accessibilityRole="button"
               accessibilityLabel={_(msg`Next image`)}
               accessibilityHint="">
               <FontAwesomeIcon
                 icon="angle-right"
                 style={styles.icon as FontAwesomeIconStyle}
-                size={40}
+                size={iconSize}
               />
             </TouchableOpacity>
           )}
@@ -213,20 +233,30 @@ const styles = StyleSheet.create({
   },
   btn: {
     position: 'absolute',
-    backgroundColor: '#000',
-    width: 50,
-    height: 50,
+    backgroundColor: '#00000077',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  btnTablet: {
+    width: 50,
+    height: 50,
     borderRadius: 25,
+    left: 30,
+    right: 30,
+  },
+  btnMobile: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    left: 20,
+    right: 20,
   },
   leftBtn: {
-    left: 30,
+    right: 'auto',
     top: '50%',
   },
   rightBtn: {
-    position: 'absolute',
-    right: 30,
+    left: 'auto',
     top: '50%',
   },
   footer: {
@@ -234,4 +264,8 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
     backgroundColor: colors.black,
   },
+  blurredBackground: {
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+  } as ViewStyle,
 })
