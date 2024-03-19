@@ -5,7 +5,6 @@ import {isAndroid} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {PencilLine_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
-import * as TextField from './TextField'
 import {useDialogControl} from '../Dialog'
 import {Text} from '../Typography'
 import {ServerInputDialog} from '#/view/com/auth/server-input'
@@ -49,7 +48,9 @@ export function HostingProvider({
           t.atoms.bg_contrast_25,
         ]}
         onPress={onPressSelectService}>
-        <TextField.Icon icon={Globe} />
+        <View style={a.pr_xs}>
+          <Globe size="md" fill={t.palette.contrast_500} />
+        </View>
         <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
         <View
           style={[
@@ -57,7 +58,7 @@ export function HostingProvider({
             t.atoms.bg_contrast_100,
             {marginLeft: 'auto', left: 6, padding: 6},
           ]}>
-          <Pencil style={{color: t.palette.contrast_500}} />
+          <Pencil size="sm" style={{color: t.palette.contrast_500}} />
         </View>
       </TouchableOpacity>
     </>
