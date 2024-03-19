@@ -57,11 +57,7 @@ export function HostingProvider({
             t.atoms.bg_contrast_100,
             {marginLeft: 'auto', left: 6, padding: 6},
           ]}>
-          <Pencil
-            style={{color: t.palette.contrast_500}}
-            height={18}
-            width={18}
-          />
+          <Pencil style={{color: t.palette.contrast_500}} />
         </View>
       </TouchableOpacity>
     </>
