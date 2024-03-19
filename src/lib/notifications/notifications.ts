@@ -7,6 +7,7 @@ import {logger} from '#/logger'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {SessionAccount, getAgent} from '#/state/session'
+import {logEvent} from '../statsig/statsig'
 
 const SERVICE_DID = (serviceUrl?: string) =>
   serviceUrl?.includes('staging')
@@ -123,6 +124,7 @@ export function init(queryClient: QueryClient) {
         logger.DebugContext.notifications,
       )
       track('Notificatons:OpenApp')
+      logEvent('notifications:openApp', {})
       truncateAndInvalidate(queryClient, RQKEY_NOTIFS())
       resetToTab('NotificationsTab') // open notifications tab
     }
