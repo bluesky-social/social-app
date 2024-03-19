@@ -61,7 +61,6 @@ function LabelerButton({
 }) {
   const t = useTheme()
   const {hovered, pressed} = useButtonContext()
-  const {gtMobile} = useBreakpoints()
   const interacted = hovered || pressed
 
   const styles = React.useMemo(() => {
@@ -74,11 +73,7 @@ function LabelerButton({
 
   return (
     <LabelingServiceCard.Outer
-      style={[
-        !gtMobile && a.py_sm,
-        interacted && styles.interacted,
-        a.rounded_sm,
-      ]}>
+      style={[a.p_md, a.rounded_sm, interacted && styles.interacted]}>
       <LabelingServiceCard.Avatar avatar={labeler.creator.avatar} />
       <LabelingServiceCard.Content>
         <LabelingServiceCard.Title
