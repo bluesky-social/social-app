@@ -18,7 +18,7 @@ export function useGlobalDialogsControlContext() {
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const mutedWordsDialogControl = Dialog.useDialogControl()
-  const ctx = React.useMemo(
+  const ctx = React.useMemo<ControlsContext>(
     () => ({mutedWordsDialogControl}),
     [mutedWordsDialogControl],
   )
