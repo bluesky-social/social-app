@@ -130,8 +130,8 @@ export function ModerationMutedAccounts({}: Props) {
               <Text type="lg" style={[pal.text, styles.emptyText]}>
                 <Trans>
                   You have not muted any accounts yet. To mute an account, go to
-                  their profile and selected "Mute account" from the menu on
-                  their account.
+                  their profile and select "Mute account" from the menu on their
+                  account.
                 </Trans>
               </Text>
             </View>

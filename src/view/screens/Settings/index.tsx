@@ -711,7 +711,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
           accessibilityHint={_(
-            msg`Opens modal for choosing or creating a new Bluesky username`,
+            msg`Opens modal for choosing a new Bluesky handle`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
@@ -772,7 +772,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Export my data`)}
           accessibilityHint={_(
-            msg`Opens modal for downloading Bluesky account data (repository)`,
+            msg`Opens modal for downloading your Bluesky account data (repository)`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
