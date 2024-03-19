@@ -10,11 +10,11 @@ import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticke
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import * as DateField from '#/components/forms/DateField'
 import {logger} from '#/logger'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {Loader} from '#/components/Loader'
 import {Policies} from 'view/com/auth/create/Policies'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
+import {FormError} from '#/components/forms/FormError'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -35,10 +35,7 @@ export function StepInfo() {
       style={[a.gap_lg]}
       entering={FadeInRight}
       exiting={FadeOutLeft}>
-      {state.error ? (
-        <ErrorMessage message={state.error} style={[a.rounded_sm]} />
-      ) : undefined}
-
+      <FormError error={state.error} />
       <View>
         <TextField.Label>
           <Trans>Hosting provider</Trans>

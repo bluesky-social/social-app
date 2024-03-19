@@ -5,11 +5,11 @@ import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {createFullHandle} from 'lib/strings/handles'
 import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
+import {FormError} from '#/components/forms/FormError'
 
 const CAPTCHA_PATH = '/gate/signup'
 
@@ -68,10 +68,7 @@ export function StepCaptcha() {
           <ActivityIndicator size="large" />
         )}
       </View>
-
-      {state.error ? (
-        <ErrorMessage message={state.error} style={styles.error} />
-      ) : undefined}
+      <FormError error={state.error} />
     </Animated.View>
   )
 }
