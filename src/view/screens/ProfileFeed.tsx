@@ -35,7 +35,7 @@ import {ComposeIcon2} from 'lib/icons'
 import {logger} from '#/logger'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useModalControls} from '#/state/modals'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {
@@ -155,7 +155,7 @@ export function ProfileFeedScreenInner({
   const {_} = useLingui()
   const t = useTheme()
   const {hasSession, currentAccount} = useSession()
-  const {openModal} = useModalControls()
+  const reportDialogControl = useReportDialogControl()
   const {openComposer} = useComposerControls()
   const {track} = useAnalytics()
   const feedSectionRef = React.useRef<SectionRef>(null)
@@ -253,13 +253,8 @@ export function ProfileFeedScreenInner({
   }, [feedInfo, track])
 
   const onPressReport = React.useCallback(() => {
-    if (!feedInfo) return
-    openModal({
-      name: 'report',
-      uri: feedInfo.uri,
-      cid: feedInfo.cid,
-    })
-  }, [openModal, feedInfo])
+    reportDialogControl.open()
+  }, [reportDialogControl])
 
   const onCurrentPageSelected = React.useCallback(
     (index: number) => {
@@ -400,6 +395,14 @@ export function ProfileFeedScreenInner({
 
   return (
     <View style={s.hContentRegion}>
+      <ReportDialog
+        control={reportDialogControl}
+        params={{
+          type: 'feedgen',
+          uri: feedInfo.uri,
+          cid: feedInfo.cid,
+        }}
+      />
       <PagerWithHeader
         items={SECTION_TITLES}
         isHeaderReady={true}

@@ -12,9 +12,9 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 // TODO refactor invalidate on mutate?
-export const RQKEY = (resolvedUri: string) => ['post-liked-by', resolvedUri]
+export const RQKEY = (resolvedUri: string) => ['liked-by', resolvedUri]
 
-export function usePostLikedByQuery(resolvedUri: string | undefined) {
+export function useLikedByQuery(resolvedUri: string | undefined) {
   return useInfiniteQuery<
     AppBskyFeedGetLikes.OutputSchema,
     Error,

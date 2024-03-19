@@ -56,7 +56,9 @@ export function AdultContentEnabledPref({
 
     try {
       mutate({
-        enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
+        enabled: !(
+          variables?.enabled ?? preferences?.moderationPrefs.adultContentEnabled
+        ),
       })
     } catch (e) {
       Toast.show(
@@ -75,7 +77,10 @@ export function AdultContentEnabledPref({
           <Toggle.Item
             name={_(msg`Enable adult content in your feeds`)}
             label={_(msg`Enable adult content in your feeds`)}
-            value={variables?.enabled ?? preferences?.adultContentEnabled}
+            value={
+              variables?.enabled ??
+              preferences?.moderationPrefs.adultContentEnabled
+            }
             onChange={onToggleAdultContent}>
             <View
               style={[

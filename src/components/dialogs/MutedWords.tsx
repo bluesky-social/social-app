@@ -233,8 +233,8 @@ function MutedWordsInner({}: {control: Dialog.DialogOuterProps['control']}) {
                 </Trans>
               </Text>
             </View>
-          ) : preferences.mutedWords.length ? (
-            [...preferences.mutedWords]
+          ) : preferences.moderationPrefs.mutedWords.length ? (
+            [...preferences.moderationPrefs.mutedWords]
               .reverse()
               .map((word, i) => (
                 <MutedWordRow
