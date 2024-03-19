@@ -5,11 +5,13 @@ import {useLingui} from '@lingui/react'
 import {AppBskyLabelerDefs} from '@atproto/api'
 
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
+import {getLabelingServiceTitle} from '#/lib/moderation'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import {Button, useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
+import * as LabelingServiceCard from '#/components/LabelingServiceCard'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 
 import {ReportDialogProps} from './types'
@@ -22,31 +24,29 @@ export function SelectLabelerView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {gtPhone} = useBreakpoints()
 
   return (
     <View style={[a.gap_lg]}>
-      <View style={[a.justify_center, a.gap_sm]}>
+      <View style={[a.justify_center, gtPhone ? a.gap_sm : a.gap_xs]}>
         <Text style={[a.text_2xl, a.font_bold]}>
-          <Trans>Select moderation service</Trans>
+          <Trans>Select moderator</Trans>
         </Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
-          <Trans>Who do you want to send this report to?</Trans>
+          <Trans>To whom would you like to send this report?</Trans>
         </Text>
       </View>
 
       <Divider />
 
-      <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
+      <View style={[a.gap_xs, {marginHorizontal: a.p_md.padding * -1}]}>
         {props.labelers.map(labeler => {
           return (
             <Button
               key={labeler.creator.did}
               label={_(msg`Send report to ${labeler.creator.displayName}`)}
               onPress={() => props.onSelectLabeler(labeler.creator.did)}>
-              <LabelerButton
-                title={labeler.creator.displayName || labeler.creator.handle}
-                description={labeler.creator.description || ''}
-              />
+              <LabelerButton labeler={labeler} />
             </Button>
           )
         })}
@@ -56,14 +56,13 @@ export function SelectLabelerView({
 }
 
 function LabelerButton({
-  title,
-  description,
+  labeler,
 }: {
-  title: string
-  description: string
+  labeler: AppBskyLabelerDefs.LabelerViewDetailed
 }) {
   const t = useTheme()
   const {hovered, pressed} = useButtonContext()
+  const {gtPhone} = useBreakpoints()
   const interacted = hovered || pressed
 
   const styles = React.useMemo(() => {
@@ -75,41 +74,32 @@ function LabelerButton({
   }, [t])
 
   return (
-    <View
-      style={[
-        a.w_full,
-        a.flex_row,
-        a.align_center,
-        a.justify_between,
-        a.p_md,
-        a.rounded_md,
-        {paddingRight: 70},
-        interacted && styles.interacted,
-      ]}>
-      <View style={[a.flex_1, a.gap_xs]}>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
-          {title}
-        </Text>
-        <Text style={[a.leading_tight, {maxWidth: 400}]} numberOfLines={3}>
-          {description}
-        </Text>
-      </View>
-
+    <LabelingServiceCard.Outer
+      style={[!gtPhone && a.py_sm, interacted && styles.interacted]}>
+      <LabelingServiceCard.Avatar />
       <View
         style={[
-          a.absolute,
-          a.inset_0,
-          a.justify_center,
-          a.pr_md,
-          {left: 'auto'},
+          a.flex_1,
+          a.flex_row,
+          a.gap_md,
+          a.align_center,
+          a.justify_between,
         ]}>
-        <ChevronRight
-          size="md"
-          fill={
-            hovered ? t.palette.primary_500 : t.atoms.text_contrast_low.color
-          }
-        />
+        <View style={[gtPhone && a.gap_xs, a.flex_1]}>
+          <LabelingServiceCard.Title
+            value={getLabelingServiceTitle({
+              displayName: labeler.creator.displayName,
+              handle: labeler.creator.handle,
+            })}
+          />
+          <Text
+            style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semibold]}>
+            @{labeler.creator.handle}
+          </Text>
+        </View>
+
+        <ChevronRight size="md" style={[a.z_10, t.atoms.text_contrast_low]} />
       </View>
-    </View>
+    </LabelingServiceCard.Outer>
   )
 }
