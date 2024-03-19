@@ -15,7 +15,7 @@ import {
   IsValidHandle,
   validateHandle,
 } from 'lib/strings/handles'
-import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 
 export function StepHandle() {
   const {_} = useLingui()
@@ -54,77 +54,76 @@ export function StepHandle() {
   )
 
   return (
-    <Animated.View
-      style={[a.gap_lg]}
-      entering={FadeInRight}
-      exiting={FadeOutLeft}>
-      <View>
-        <TextField.Root>
-          <TextField.Icon icon={At} />
-          <TextField.Input
-            onChangeText={onHandleChange}
-            label={_(msg`Input your user handle`)}
-            defaultValue={state.handle}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus
-            autoComplete="off"
-          />
-        </TextField.Root>
-      </View>
-      <Text style={[a.text_md]}>
-        <Trans>Your full handle will be</Trans>{' '}
-        <Text style={[a.text_md, a.font_bold]}>
-          @{createFullHandle(state.handle, state.userDomain)}
+    <ScreenTransition>
+      <View style={[a.gap_lg]}>
+        <View>
+          <TextField.Root>
+            <TextField.Icon icon={At} />
+            <TextField.Input
+              onChangeText={onHandleChange}
+              label={_(msg`Input your user handle`)}
+              defaultValue={state.handle}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoFocus
+              autoComplete="off"
+            />
+          </TextField.Root>
+        </View>
+        <Text style={[a.text_md]}>
+          <Trans>Your full handle will be</Trans>{' '}
+          <Text style={[a.text_md, a.font_bold]}>
+            @{createFullHandle(state.handle, state.userDomain)}
+          </Text>
         </Text>
-      </Text>
 
-      <View
-        style={[
-          a.w_full,
-          a.rounded_sm,
-          a.border,
-          a.p_md,
-          a.gap_sm,
-          t.atoms.border_contrast_low,
-        ]}>
-        {state.error ? (
-          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-            <IsValidIcon valid={false} />
-            <Text style={[a.text_md, a.flex]}>{state.error}</Text>
-          </View>
-        ) : undefined}
-        {validCheck.hyphenStartOrEnd ? (
-          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-            <IsValidIcon valid={validCheck.handleChars} />
-            <Text style={[a.text_md, a.flex]}>
-              <Trans>Only contains letters, numbers, and hyphens</Trans>
-            </Text>
-          </View>
-        ) : (
-          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-            <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
-            <Text style={[a.text_md, a.flex]}>
-              <Trans>Doesn't begin or end with a hyphen</Trans>
-            </Text>
-          </View>
-        )}
-        <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
-          <IsValidIcon
-            valid={validCheck.frontLength && validCheck.totalLength}
-          />
-          {!validCheck.totalLength ? (
-            <Text style={[a.text_md]}>
-              <Trans>No longer than 253 characters</Trans>
-            </Text>
+        <View
+          style={[
+            a.w_full,
+            a.rounded_sm,
+            a.border,
+            a.p_md,
+            a.gap_sm,
+            t.atoms.border_contrast_low,
+          ]}>
+          {state.error ? (
+            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+              <IsValidIcon valid={false} />
+              <Text style={[a.text_md, a.flex]}>{state.error}</Text>
+            </View>
+          ) : undefined}
+          {validCheck.hyphenStartOrEnd ? (
+            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+              <IsValidIcon valid={validCheck.handleChars} />
+              <Text style={[a.text_md, a.flex]}>
+                <Trans>Only contains letters, numbers, and hyphens</Trans>
+              </Text>
+            </View>
           ) : (
-            <Text style={[a.text_md]}>
-              <Trans>At least 3 characters</Trans>
-            </Text>
+            <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+              <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
+              <Text style={[a.text_md, a.flex]}>
+                <Trans>Doesn't begin or end with a hyphen</Trans>
+              </Text>
+            </View>
           )}
+          <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
+            <IsValidIcon
+              valid={validCheck.frontLength && validCheck.totalLength}
+            />
+            {!validCheck.totalLength ? (
+              <Text style={[a.text_md]}>
+                <Trans>No longer than 253 characters</Trans>
+              </Text>
+            ) : (
+              <Text style={[a.text_md]}>
+                <Trans>At least 3 characters</Trans>
+              </Text>
+            )}
+          </View>
         </View>
       </View>
-    </Animated.View>
+    </ScreenTransition>
   )
 }
 

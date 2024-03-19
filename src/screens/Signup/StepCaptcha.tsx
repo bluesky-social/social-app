@@ -8,8 +8,8 @@ import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
 import {createFullHandle} from 'lib/strings/handles'
 import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
-import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
 import {FormError} from '#/components/forms/FormError'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 
 const CAPTCHA_PATH = '/gate/signup'
 
@@ -51,25 +51,24 @@ export function StepCaptcha() {
   }, [_, dispatch])
 
   return (
-    <Animated.View
-      style={[a.gap_lg]}
-      entering={FadeInRight}
-      exiting={FadeOutLeft}>
-      <View style={[styles.container, completed && styles.center]}>
-        {!completed ? (
-          <CaptchaWebView
-            url={url}
-            stateParam={stateParam}
-            state={state}
-            onSuccess={onSuccess}
-            onError={onError}
-          />
-        ) : (
-          <ActivityIndicator size="large" />
-        )}
+    <ScreenTransition>
+      <View style={[a.gap_lg]}>
+        <View style={[styles.container, completed && styles.center]}>
+          {!completed ? (
+            <CaptchaWebView
+              url={url}
+              stateParam={stateParam}
+              state={state}
+              onSuccess={onSuccess}
+              onError={onError}
+            />
+          ) : (
+            <ActivityIndicator size="large" />
+          )}
+        </View>
+        <FormError error={state.error} />
       </View>
-      <FormError error={state.error} />
-    </Animated.View>
+    </ScreenTransition>
   )
 }
 
