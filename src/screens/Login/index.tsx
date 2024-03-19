@@ -85,7 +85,6 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
     }
   }, [serviceError, serviceUrl, _])
 
-  const onPressRetryConnect = () => refetchService()
   const onPressForgotPassword = () => {
     track('Signin:PressedForgotPassword')
     setCurrentForm(Forms.ForgotPassword)
@@ -109,7 +108,7 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           setServiceUrl={setServiceUrl}
           onPressBack={onPressBack}
           onPressForgotPassword={onPressForgotPassword}
-          onPressRetryConnect={onPressRetryConnect}
+          onPressRetryConnect={refetchService}
         />
       )
       break
