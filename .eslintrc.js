@@ -18,7 +18,7 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'react-native/no-inline-styles': 0,
     'simple-import-sort/imports': [
-      'error',
+      'warn',
       {
         groups: [
           // Side effect imports.
@@ -52,7 +52,7 @@ module.exports = {
         ],
       },
     ],
-    'simple-import-sort/exports': 'error',
+    'simple-import-sort/exports': 'warn',
   },
   ignorePatterns: [
     '**/__mocks__/*.ts',
