@@ -101,13 +101,7 @@ function computeSuggestions(
   }
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
-      items.push({
-        did: item.did,
-        handle: item.handle,
-        displayName: item.displayName,
-        avatar: item.avatar,
-        labels: item.labels,
-      })
+      items.push(item)
     }
   }
   return items.filter(profile => {

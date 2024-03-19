@@ -112,6 +112,7 @@ export function SearchProfileCard({
           size={40}
           avatar={profile.avatar}
           moderation={moderation.ui('avatar')}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
         />
         <View style={{flex: 1}}>
           <Text
