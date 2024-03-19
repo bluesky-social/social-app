@@ -3,7 +3,8 @@ import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {
   AppBskyActorDefs,
   moderateProfile,
-  ProfileModeration,
+  ModerationCause,
+  ModerationDecision,
 } from '@atproto/api'
 import {Link} from '../util/Link'
 import {Text} from '../util/text/Text'
@@ -14,16 +15,13 @@ import {FollowButton} from './FollowButton'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {
-  describeModerationCause,
-  getProfileModerationCauses,
-  getModerationCauseKey,
-} from 'lib/moderation'
+import {getModerationCauseKey, isJustAMute} from 'lib/moderation'
 import {Shadow} from '#/state/cache/types'
 import {useModerationOpts} from '#/state/queries/preferences'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
 import {Trans} from '@lingui/macro'
+import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
 
 export function ProfileCard({
   testID,
@@ -33,6 +31,7 @@ export function ProfileCard({
   noBorder,
   followers,
   renderButton,
+  onPress,
   style,
 }: {
   testID?: string
@@ -44,6 +43,7 @@ export function ProfileCard({
   renderButton?: (
     profile: Shadow<AppBskyActorDefs.ProfileViewBasic>,
   ) => React.ReactNode
+  onPress?: () => void
   style?: StyleProp<ViewStyle>
 }) {
   const pal = usePalette('default')
@@ -53,11 +53,8 @@ export function ProfileCard({
     return null
   }
   const moderation = moderateProfile(profile, moderationOpts)
-  if (
-    !noModFilter &&
-    moderation.account.filter &&
-    moderation.account.cause?.type !== 'muted'
-  ) {
+  const modui = moderation.ui('profileList')
+  if (!noModFilter && modui.filter && !isJustAMute(modui)) {
     return null
   }
 
@@ -73,6 +70,7 @@ export function ProfileCard({
       ]}
       href={makeProfileLink(profile)}
       title={profile.handle}
+      onBeforePress={onPress}
       asAnchor
       anchorNoUnderline>
       <View style={styles.layout}>
@@ -80,7 +78,7 @@ export function ProfileCard({
           <UserAvatar
             size={40}
             avatar={profile.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -91,7 +89,7 @@ export function ProfileCard({
             lineHeight={1.2}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>
@@ -119,17 +117,17 @@ export function ProfileCard({
   )
 }
 
-function ProfileCardPills({
+export function ProfileCardPills({
   followedBy,
   moderation,
 }: {
   followedBy: boolean
-  moderation: ProfileModeration
+  moderation: ModerationDecision
 }) {
   const pal = usePalette('default')
 
-  const causes = getProfileModerationCauses(moderation)
-  if (!followedBy && !causes.length) {
+  const modui = moderation.ui('profileList')
+  if (!followedBy && !modui.inform && !modui.alert) {
     return null
   }
 
@@ -142,19 +140,41 @@ function ProfileCardPills({
           </Text>
         </View>
       )}
-      {causes.map(cause => {
-        const desc = describeModerationCause(cause, 'account')
-        return (
-          <View
-            style={[s.mt5, pal.btn, styles.pill]}
-            key={getModerationCauseKey(cause)}>
-            <Text type="xs" style={pal.text}>
-              {cause?.type === 'label' ? '⚠' : ''}
-              {desc.name}
-            </Text>
-          </View>
-        )
-      })}
+      {modui.alerts.map(alert => (
+        <ProfileCardPillModerationCause
+          key={getModerationCauseKey(alert)}
+          cause={alert}
+          severity="alert"
+        />
+      ))}
+      {modui.informs.map(inform => (
+        <ProfileCardPillModerationCause
+          key={getModerationCauseKey(inform)}
+          cause={inform}
+          severity="inform"
+        />
+      ))}
+    </View>
+  )
+}
+
+function ProfileCardPillModerationCause({
+  cause,
+  severity,
+}: {
+  cause: ModerationCause
+  severity: 'alert' | 'inform'
+}) {
+  const pal = usePalette('default')
+  const {name} = useModerationCauseDescription(cause)
+  return (
+    <View
+      style={[s.mt5, pal.btn, styles.pill]}
+      key={getModerationCauseKey(cause)}>
+      <Text type="xs" style={pal.text}>
+        {severity === 'alert' ? '⚠ ' : ''}
+        {name}
+      </Text>
     </View>
   )
 }
@@ -177,7 +197,7 @@ function FollowersList({
         f,
         mod: moderateProfile(f, moderationOpts),
       }))
-      .filter(({mod}) => !mod.account.filter)
+      .filter(({mod}) => !mod.ui('profileList').filter)
   }, [followers, moderationOpts])
 
   if (!followersWithMods?.length) {
@@ -199,7 +219,11 @@ function FollowersList({
       {followersWithMods.slice(0, 3).map(({f, mod}) => (
         <View key={f.did} style={styles.followedByAviContainer}>
           <View style={[styles.followedByAvi, pal.view]}>
-            <UserAvatar avatar={f.avatar} size={32} moderation={mod.avatar} />
+            <UserAvatar
+              avatar={f.avatar}
+              size={32}
+              moderation={mod.ui('avatar')}
+            />
           </View>
         </View>
       ))}
@@ -212,11 +236,13 @@ export function ProfileCardWithFollowBtn({
   noBg,
   noBorder,
   followers,
+  onPress,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
   noBg?: boolean
   noBorder?: boolean
   followers?: AppBskyActorDefs.ProfileView[] | undefined
+  onPress?: () => void
 }) {
   const {currentAccount} = useSession()
   const isMe = profile.did === currentAccount?.did
@@ -234,6 +260,7 @@ export function ProfileCardWithFollowBtn({
               <FollowButton profile={profileShadow} logContext="ProfileCard" />
             )
       }
+      onPress={onPress}
     />
   )
 }

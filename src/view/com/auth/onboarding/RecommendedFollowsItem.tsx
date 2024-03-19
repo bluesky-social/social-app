@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
-import {ProfileModeration, AppBskyActorDefs} from '@atproto/api'
+import {ModerationDecision, AppBskyActorDefs} from '@atproto/api'
 import {Button} from '#/view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -18,7 +18,7 @@ import {logger} from '#/logger'
 
 type Props = {
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ProfileModeration
+  moderation: ModerationDecision
   onFollowStateChange: (props: {
     did: string
     following: boolean
@@ -62,7 +62,7 @@ function ProfileCard({
   moderation,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
-  moderation: ProfileModeration
+  moderation: ModerationDecision
   onFollowStateChange: (props: {
     did: string
     following: boolean
@@ -113,7 +113,7 @@ function ProfileCard({
           <UserAvatar
             size={40}
             avatar={profile.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -124,7 +124,7 @@ function ProfileCard({
             lineHeight={1.2}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text type="xl" style={[pal.textLight]} numberOfLines={1}>

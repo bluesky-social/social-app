@@ -1,5 +1,5 @@
 import React from 'react'
-import {AppBskyActorDefs, AppBskyGraphDefs, ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
 
 import {ImageModel} from '#/state/models/media/image'
@@ -13,32 +13,6 @@ export interface EditProfileModal {
   profile: AppBskyActorDefs.ProfileViewDetailed
   onUpdate?: () => void
 }
-
-export interface ModerationDetailsModal {
-  name: 'moderation-details'
-  context: 'account' | 'content'
-  moderation: ModerationUI
-}
-
-export type ReportModal = {
-  name: 'report'
-} & (
-  | {
-      uri: string
-      cid: string
-    }
-  | {did: string}
-)
-
-export type AppealLabelModal = {
-  name: 'appeal-label'
-} & (
-  | {
-      uri: string
-      cid: string
-    }
-  | {did: string}
-)
 
 export interface CreateOrEditListModal {
   name: 'create-or-edit-list'
@@ -123,10 +97,6 @@ export interface AddAppPasswordModal {
   name: 'add-app-password'
 }
 
-export interface ContentFilteringSettingsModal {
-  name: 'content-filtering-settings'
-}
-
 export interface ContentLanguagesSettingsModal {
   name: 'content-languages-settings'
 }
@@ -181,14 +151,8 @@ export type Modal =
   | SwitchAccountModal
 
   // Curation
-  | ContentFilteringSettingsModal
   | ContentLanguagesSettingsModal
   | PostLanguagesSettingsModal
-
-  // Moderation
-  | ModerationDetailsModal
-  | ReportModal
-  | AppealLabelModal
 
   // Lists
   | CreateOrEditListModal
