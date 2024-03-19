@@ -3755,7 +3755,7 @@ msgstr "성행위 또는 선정적인 노출."
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:38
 msgid "Sexually Suggestive"
-msgstr "성적인 암시"
+msgstr "외설적"
 
 #: src/view/com/lightbox/Lightbox.tsx:141
 msgctxt "action"
