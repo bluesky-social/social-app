@@ -3,8 +3,8 @@ import {AppState} from 'react-native'
 import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
+  ModerationDecision,
   AtUri,
-  PostModeration,
 } from '@atproto/api'
 import {
   useInfiniteQuery,
@@ -29,7 +29,6 @@ import {STALE} from '#/state/queries'
 import {precacheFeedPostProfiles} from './profile'
 import {getAgent} from '#/state/session'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {getModerationOpts} from '#/state/queries/preferences/moderation'
 import {KnownError} from '#/view/com/posts/FeedErrorMessage'
 import {embedViewRecordToPostView, getEmbeddedPost} from './util'
 import {useModerationOpts} from './preferences'
@@ -69,7 +68,7 @@ export interface FeedPostSliceItem {
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason?: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource
-  moderation: PostModeration
+  moderation: ModerationDecision
 }
 
 export interface FeedPostSlice {
@@ -250,9 +249,17 @@ export function usePostFeedQuery(
 
                   // apply moderation filter
                   for (let i = 0; i < slice.items.length; i++) {
+                    const ignoreFilter =
+                      slice.items[i].post.author.did === ignoreFilterFor
+                    if (ignoreFilter) {
+                      // remove mutes to avoid confused UIs
+                      moderations[i].causes = moderations[i].causes.filter(
+                        cause => cause.type !== 'muted',
+                      )
+                    }
                     if (
-                      moderations[i]?.content.filter &&
-                      slice.items[i].post.author.did !== ignoreFilterFor
+                      !ignoreFilter &&
+                      moderations[i]?.ui('contentList').filter
                     ) {
                       return undefined
                     }
@@ -435,13 +442,12 @@ function assertSomePostsPassModeration(feed: AppBskyFeedDefs.FeedViewPost[]) {
   let somePostsPassModeration = false
 
   for (const item of feed) {
-    const moderationOpts = getModerationOpts({
-      userDid: '',
-      preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
+    const moderation = moderatePost(item.post, {
+      userDid: undefined,
+      prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
     })
-    const moderation = moderatePost(item.post, moderationOpts)
 
-    if (!moderation.content.filter) {
+    if (!moderation.ui('contentList').filter) {
       // we have a sfw post
       somePostsPassModeration = true
     }

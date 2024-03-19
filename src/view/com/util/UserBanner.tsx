@@ -7,7 +7,7 @@ import {msg, Trans} from '@lingui/macro'
 
 import {colors} from 'lib/styles'
 import {useTheme} from 'lib/ThemeContext'
-import {useTheme as useAlfTheme} from '#/alf'
+import {useTheme as useAlfTheme, tokens} from '#/alf'
 import {openCamera, openCropper, openPicker} from '../../../lib/media/picker'
 import {
   usePhotoLibraryPermission,
@@ -26,10 +26,12 @@ import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/ico
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
 
 export function UserBanner({
+  type,
   banner,
   moderation,
   onSelectNewBanner,
 }: {
+  type?: 'labeler' | 'default'
   banner?: string | null
   moderation?: ModerationUI
   onSelectNewBanner?: (img: RNImage | null) => void
@@ -167,7 +169,10 @@ export function UserBanner({
   ) : (
     <View
       testID="userBannerFallback"
-      style={[styles.bannerImage, styles.defaultBanner]}
+      style={[
+        styles.bannerImage,
+        type === 'labeler' ? styles.labelerBanner : styles.defaultBanner,
+      ]}
     />
   )
 }
@@ -190,5 +195,8 @@ const styles = StyleSheet.create({
   },
   defaultBanner: {
     backgroundColor: '#0070ff',
+  },
+  labelerBanner: {
+    backgroundColor: tokens.color.temp_purple,
   },
 })

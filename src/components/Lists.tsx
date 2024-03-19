@@ -33,7 +33,7 @@ export function ListFooter({
         a.border_t,
         a.pb_lg,
         t.atoms.border_contrast_low,
-        {height: 100},
+        {height: 180},
       ]}>
       {isFetching ? (
         <Loader size="xl" />

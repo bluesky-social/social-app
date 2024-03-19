@@ -68,6 +68,7 @@ import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {ExportCarDialog} from './ExportCarDialog'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -159,6 +160,7 @@ export function SettingsScreen({}: Props) {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
+  const birthdayControl = useDialogControl()
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -261,6 +263,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('Debug')
   }, [navigation])
 
+  const onPressDebugModeration = React.useCallback(() => {
+    navigation.navigate('DebugMod')
+  }, [navigation])
+
   const onPressSavedFeeds = React.useCallback(() => {
     navigation.navigate('SavedFeeds')
   }, [navigation])
@@ -268,6 +274,10 @@ export function SettingsScreen({}: Props) {
   const onPressStatusPage = React.useCallback(() => {
     Linking.openURL(STATUS_PAGE_URL)
   }, [])
+
+  const onPressBirthday = React.useCallback(() => {
+    birthdayControl.open()
+  }, [birthdayControl])
 
   const clearAllStorage = React.useCallback(async () => {
     await clearStorage()
@@ -281,6 +291,7 @@ export function SettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
+      <BirthDateSettingsDialog control={birthdayControl} />
 
       <SimpleViewHeader
         showBackButton={isMobile}
@@ -339,7 +350,7 @@ export function SettingsScreen({}: Props) {
               <Text type="lg-medium" style={pal.text}>
                 <Trans>Birthday:</Trans>{' '}
               </Text>
-              <Link onPress={() => openModal({name: 'birth-date-settings'})}>
+              <Link onPress={onPressBirthday}>
                 <Text type="lg" style={pal.link}>
                   <Trans>Show</Trans>
                 </Text>
@@ -805,6 +816,16 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Opens the storybook page`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Storybook</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressDebugModeration}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open storybook page`)}
+              accessibilityHint={_(msg`Opens the storybook page`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Debug Moderation</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
