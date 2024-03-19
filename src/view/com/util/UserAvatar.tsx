@@ -110,8 +110,12 @@ let DefaultAvatar = ({
         viewBox="0 0 32 32"
         fill="none"
         stroke="none">
-        <Path
-          d="M28 0H4C1.79086 0 0 1.79086 0 4V28C0 30.2091 1.79086 32 4 32H28C30.2091 32 32 30.2091 32 28V4C32 1.79086 30.2091 0 28 0Z"
+        <Rect
+          x="0"
+          y="0"
+          width="32"
+          height="32"
+          rx="3"
           fill={tokens.color.temp_purple}
         />
         <Path
