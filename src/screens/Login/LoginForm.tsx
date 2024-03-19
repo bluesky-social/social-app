@@ -16,7 +16,7 @@ import {isNetworkError} from 'lib/strings/errors'
 import {useSessionApi} from '#/state/session'
 import {cleanError} from 'lib/strings/errors'
 import {logger} from '#/logger'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import * as TextField from '#/components/forms/TextField'
@@ -25,6 +25,7 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import {FormContainer} from './FormContainer'
 import {FormError} from '#/components/forms/FormError'
+import {Loader} from '#/components/Loader'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -64,6 +65,7 @@ export const LoginForm = ({
   }, [track])
 
   const onPressNext = async () => {
+    if (isProcessing) return
     Keyboard.dismiss()
     setError('')
     setIsProcessing(true)
@@ -237,8 +239,6 @@ export const LoginForm = ({
               <Trans>Connecting...</Trans>
             </Text>
           </>
-        ) : isProcessing ? (
-          <ActivityIndicator />
         ) : isReady ? (
           <Button
             label={_(msg`Next`)}
@@ -250,6 +250,7 @@ export const LoginForm = ({
             <ButtonText>
               <Trans>Next</Trans>
             </ButtonText>
+            {isProcessing && <ButtonIcon icon={Loader} />}
           </Button>
         ) : undefined}
       </View>
