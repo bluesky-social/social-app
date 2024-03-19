@@ -2,15 +2,10 @@ import React from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
-import Animated, {Easing, Layout} from 'react-native-reanimated'
+import {LABELS} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
-import {
-  configurableAdultLabelGroups,
-  configurableOtherLabelGroups,
-  usePreferencesSetAdultContentMutation,
-} from 'state/queries/preferences'
-import {Divider} from '#/components/Divider'
+import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
@@ -28,14 +23,6 @@ import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/Adult
 import {Context} from '#/screens/Onboarding/state'
 import {IconCircle} from '#/components/IconCircle'
 
-function AnimatedDivider() {
-  return (
-    <Animated.View layout={Layout.easing(Easing.ease).duration(200)}>
-      <Divider />
-    </Animated.View>
-  )
-}
-
 export function StepModeration() {
   const {_} = useLingui()
   const {track} = useAnalytics()
@@ -52,7 +39,7 @@ export function StepModeration() {
 
   const adultContentEnabled = !!(
     (variables && variables.enabled) ||
-    (!variables && preferences?.adultContentEnabled)
+    (!variables && preferences?.moderationPrefs.adultContentEnabled)
   )
 
   const onContinue = React.useCallback(() => {
@@ -86,22 +73,19 @@ export function StepModeration() {
           <AdultContentEnabledPref mutate={mutate} variables={variables} />
 
           <View style={[a.gap_sm, a.w_full]}>
-            {adultContentEnabled &&
-              configurableAdultLabelGroups.map((g, index) => (
-                <React.Fragment key={index}>
-                  {index === 0 && <AnimatedDivider />}
-                  <ModerationOption labelGroup={g} isMounted={isMounted} />
-                  <AnimatedDivider />
-                </React.Fragment>
-              ))}
-
-            {configurableOtherLabelGroups.map((g, index) => (
-              <React.Fragment key={index}>
-                {!adultContentEnabled && index === 0 && <AnimatedDivider />}
-                <ModerationOption labelGroup={g} isMounted={isMounted} />
-                <AnimatedDivider />
-              </React.Fragment>
-            ))}
+            <ModerationOption
+              labelValueDefinition={LABELS.porn}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption
+              labelValueDefinition={LABELS.sexual}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption
+              labelValueDefinition={LABELS['graphic-media']}
+              disabled={!adultContentEnabled}
+            />
+            <ModerationOption labelValueDefinition={LABELS.nudity} />
           </View>
         </>
       )}

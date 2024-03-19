@@ -21,7 +21,7 @@ import {
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
 import {IconCircle} from '#/components/IconCircle'
-import {IS_PROD_SERVICE} from 'lib/constants'
+import {IS_TEST_USER} from 'lib/constants'
 import {useSession} from 'state/session'
 
 export function StepTopicalFeeds() {
@@ -32,14 +32,14 @@ export function StepTopicalFeeds() {
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
   const suggestedFeedUris = React.useMemo(() => {
-    if (!IS_PROD_SERVICE(currentAccount?.service)) return []
+    if (IS_TEST_USER(currentAccount?.handle)) return []
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedFeedUris,
-      state.interestsStepResults.apiResponse.suggestedFeedUris.default,
+      state.interestsStepResults.apiResponse.suggestedFeedUris.default || [],
     ).slice(0, 10)
   }, [
-    currentAccount?.service,
+    currentAccount?.handle,
     state.interestsStepResults.apiResponse.suggestedFeedUris,
     state.interestsStepResults.selectedInterests,
   ])

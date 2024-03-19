@@ -251,7 +251,7 @@ export function InlineLink({
     onIn: onPressIn,
     onOut: onPressOut,
   } = useInteractionState()
-  const flattenedStyle = flatten(style)
+  const flattenedStyle = flatten(style) || {}
 
   return (
     <Text

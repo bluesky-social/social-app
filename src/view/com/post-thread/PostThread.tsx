@@ -106,11 +106,12 @@ export function PostThread({
         ? moderatePost(rootPost, moderationOpts)
         : undefined
 
-    const cause = mod?.content.cause
-
-    return cause
-      ? cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated'
-      : false
+    return !!mod
+      ?.ui('contentList')
+      .blurs.find(
+        cause =>
+          cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated',
+      )
   }, [rootPost, moderationOpts])
 
   useSetTitle(

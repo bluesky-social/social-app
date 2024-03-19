@@ -67,7 +67,7 @@ export function ServerInputDialog({
   return (
     <Dialog.Outer
       control={control}
-      nativeOptions={{sheet: {snapPoints: ['100%']}}}
+      nativeOptions={{sheet: {snapPoints: ['80', '100%']}}}
       onClose={onClose}>
       <Dialog.Handle />
 

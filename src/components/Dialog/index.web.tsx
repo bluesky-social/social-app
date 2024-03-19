@@ -99,7 +99,7 @@ export function Outer({
                     style={[
                       web(a.fixed),
                       a.inset_0,
-                      {opacity: 0.5, backgroundColor: t.palette.black},
+                      {opacity: 0.8, backgroundColor: t.palette.black},
                     ]}
                   />
                 )}
