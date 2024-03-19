@@ -87,6 +87,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         avatar={replyTo.author.avatar}
         size={50}
         moderation={replyTo.moderation?.ui('avatar')}
+        type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
       <View style={styles.replyToPost}>
         <Text type="xl-medium" style={[pal.text]}>

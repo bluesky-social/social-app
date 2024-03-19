@@ -205,11 +205,7 @@ let PostThreadItemLoaded = ({
         uri: post.uri,
         cid: post.cid,
         text: record.text,
-        author: {
-          handle: post.author.handle,
-          displayName: post.author.displayName,
-          avatar: post.author.avatar,
-        },
+        author: post.author,
         embed: post.embed,
         moderation,
       },
@@ -256,6 +252,7 @@ let PostThreadItemLoaded = ({
                 handle={post.author.handle}
                 avatar={post.author.avatar}
                 moderation={moderation.ui('avatar')}
+                type={post.author.associated?.labeler ? 'labeler' : 'user'}
               />
             </View>
             <View style={styles.layoutContent}>
@@ -452,6 +449,7 @@ let PostThreadItemLoaded = ({
                     handle={post.author.handle}
                     avatar={post.author.avatar}
                     moderation={moderation.ui('avatar')}
+                    type={post.author.associated?.labeler ? 'labeler' : 'user'}
                   />
 
                   {showChildReplyLine && (
@@ -540,7 +538,7 @@ let PostThreadItemLoaded = ({
                 title={itemTitle}
                 noFeedback>
                 <Text type="sm-medium" style={pal.textLight}>
-                  More
+                  <Trans>More</Trans>
                 </Text>
                 <FontAwesomeIcon
                   icon="angle-right"

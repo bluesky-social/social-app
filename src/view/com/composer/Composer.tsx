@@ -415,7 +415,11 @@ export const ComposePost = observer(function ComposePost({
               styles.textInputLayout,
               isNative && styles.textInputLayoutMobile,
             ]}>
-            <UserAvatar avatar={currentProfile?.avatar} size={50} />
+            <UserAvatar
+              avatar={currentProfile?.avatar}
+              size={50}
+              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+            />
             <TextInput
               ref={textInput}
               richtext={richtext}

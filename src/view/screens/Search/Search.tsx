@@ -141,6 +141,7 @@ function SearchScreenSuggestedFollows() {
         friends.slice(0, 4).map(friend =>
           getSuggestedFollowsByActor(friend.did).then(foafsRes => {
             for (const user of foafsRes.suggestions) {
+              if (user.associated?.labeler) continue
               friendsOfFriends.set(user.did, user)
             }
           }),
@@ -772,7 +773,7 @@ export function SearchScreen(
             {searchHistory.length > 0 && (
               <View style={styles.searchHistoryContent}>
                 <Text style={[pal.text, styles.searchHistoryTitle]}>
-                  Recent Searches
+                  <Trans>Recent Searches</Trans>
                 </Text>
                 {searchHistory.map((historyItem, index) => (
                   <View key={index} style={styles.historyItemContainer}>

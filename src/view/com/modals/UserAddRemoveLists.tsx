@@ -180,7 +180,7 @@ function ListItem({
         },
       ]}>
       <View style={styles.listItemAvi}>
-        <UserAvatar size={40} avatar={list.avatar} />
+        <UserAvatar size={40} avatar={list.avatar} type="list" />
       </View>
       <View style={styles.listItemContent}>
         <Text

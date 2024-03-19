@@ -115,7 +115,7 @@ export function ServerInputDialog({
                   testID="customServerTextInput"
                   value={customAddress}
                   onChangeText={setCustomAddress}
-                  label={_(msg`my-server.com`)}
+                  label="my-server.com"
                   accessibilityLabelledBy="address-input-label"
                   autoCapitalize="none"
                   keyboardType="url"

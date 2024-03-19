@@ -9,6 +9,8 @@ import {TextLink} from '../../util/Link'
 import {Text} from '../../util/text/Text'
 import {s, colors} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
+import {Trans, msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 
@@ -22,6 +24,7 @@ export const Policies = ({
   under13: boolean
 }) => {
   const pal = usePalette('default')
+  const {_} = useLingui()
   if (!serviceDescription) {
     return <View />
   }
@@ -42,7 +45,9 @@ export const Policies = ({
           />
         </View>
         <Text style={[pal.textLight, s.pl5, s.flex1]}>
-          This service has not provided terms of service or a privacy policy.
+          <Trans>
+            This service has not provided terms of service or a privacy policy.
+          </Trans>
         </Text>
       </View>
     )
@@ -53,7 +58,7 @@ export const Policies = ({
       <TextLink
         key="tos"
         href={tos}
-        text="Terms of Service"
+        text={_(msg`Terms of Service`)}
         style={[pal.link, s.underline]}
         onPress={() => Linking.openURL(tos)}
       />,
@@ -64,7 +69,7 @@ export const Policies = ({
       <TextLink
         key="pp"
         href={pp}
-        text="Privacy Policy"
+        text={_(msg`Privacy Policy`)}
         style={[pal.link, s.underline]}
         onPress={() => Linking.openURL(pp)}
       />,
@@ -83,7 +88,7 @@ export const Policies = ({
   return (
     <View style={styles.policies}>
       <Text style={pal.textLight}>
-        By creating an account you agree to the {els}.
+        <Trans>By creating an account you agree to the {els}.</Trans>
       </Text>
       {under13 ? (
         <Text style={[pal.textLight, s.bold]}>
@@ -91,8 +96,10 @@ export const Policies = ({
         </Text>
       ) : needsGuardian ? (
         <Text style={[pal.textLight, s.bold]}>
-          If you are not yet an adult according to the laws of your country,
-          your parent or legal guardian must read these Terms on your behalf.
+          <Trans>
+            If you are not yet an adult according to the laws of your country,
+            your parent or legal guardian must read these Terms on your behalf.
+          </Trans>
         </Text>
       ) : undefined}
     </View>
