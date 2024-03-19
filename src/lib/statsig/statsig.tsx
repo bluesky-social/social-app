@@ -1,4 +1,5 @@
 import React from 'react'
+import {Platform} from 'react-native'
 import {
   Statsig,
   StatsigProvider,
@@ -58,7 +59,10 @@ function toStatsigUser(did: string | undefined) {
   if (did) {
     userID = sha256(did)
   }
-  return {userID}
+  return {
+    userID,
+    platform: Platform.OS,
+  }
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
