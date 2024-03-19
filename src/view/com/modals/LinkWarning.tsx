@@ -73,8 +73,8 @@ export function Component({text, href}: {text: string; href: string}) {
             type="primary"
             onPress={onPressVisit}
             accessibilityLabel={_(msg`Visit Site`)}
-            accessibilityHint=""
-            label="Visit Site"
+            accessibilityHint={_(msg`Opens the linked website`)}
+            label={_(msg`Visit Site`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />
@@ -85,8 +85,8 @@ export function Component({text, href}: {text: string; href: string}) {
               closeModal()
             }}
             accessibilityLabel={_(msg`Cancel`)}
-            accessibilityHint=""
-            label="Cancel"
+            accessibilityHint={_(msg`Cancels opening the linked website`)}
+            label={_(msg`Cancel`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

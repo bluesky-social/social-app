@@ -4395,8 +4395,8 @@ msgstr ""
 msgid "Unmute thread"
 msgstr ""
 
-#: src/view/screens/ProfileFeed.tsx:354
-#: src/view/screens/ProfileList.tsx:581
+#: src/view/screens/ProfileFeed.tsx:353
+#: src/view/screens/ProfileList.tsx:580
 msgid "Unpin"
 msgstr ""
 

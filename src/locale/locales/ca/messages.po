@@ -244,12 +244,12 @@ msgstr "Avançat"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr ""
+msgstr "Tots els canals que has desat, en un sol lloc."
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Already have a code?"
-msgstr ""
+msgstr "Ja tens un codi?"
 
 #: src/view/com/auth/login/ChooseAccountForm.tsx:98
 msgid "Already signed in as @{0}"
@@ -287,7 +287,7 @@ msgstr "i"
 
 #: src/screens/Onboarding/index.tsx:32
 msgid "Animals"
-msgstr ""
+msgstr "Animals"
 
 #: src/view/screens/LanguageSettings.tsx:95
 msgid "App Language"
@@ -366,7 +366,7 @@ msgstr "Estàs escrivint en <0>{0}</0>?"
 
 #: src/screens/Onboarding/index.tsx:26
 msgid "Art"
-msgstr ""
+msgstr "Art"
 
 #: src/view/com/modals/SelfLabel.tsx:123
 msgid "Artistic or non-erotic nudity."
@@ -393,7 +393,7 @@ msgstr "Endarrere"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Based on your interest in {interestsText}"
-msgstr ""
+msgstr "Segons els teus interessos en {interestsText}"
 
 #: src/view/screens/Settings/index.tsx:523
 msgid "Basics"
@@ -472,7 +472,7 @@ msgstr "Bluesky"
 
 #: src/view/com/auth/server-input/index.tsx:150
 msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
-msgstr ""
+msgstr "Bluesky és una xarxa oberta on pots escollir el teu proveïdor d'allotjament. L'allotjament personalitzat està disponible en beta per a desenvolupadors"
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
@@ -503,7 +503,7 @@ msgstr "Bluesky no mostrarà el teu perfil ni les publicacions als usuaris que n
 
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
-msgstr ""
+msgstr "Llibres"
 
 #: src/view/screens/Settings/index.tsx:859
 msgid "Build version {0} {1}"
@@ -631,11 +631,11 @@ msgstr "Canvia el meu correu"
 
 #: src/view/screens/Settings/index.tsx:732
 msgid "Change password"
-msgstr ""
+msgstr "Canvia la contrasenya"
 
 #: src/view/screens/Settings/index.tsx:741
 msgid "Change Password"
-msgstr ""
+msgstr "Canvia la contrasenya"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
 msgid "Change post language to {0}"
@@ -643,7 +643,7 @@ msgstr "Canvia l'idioma de la publicació a {0}"
 
 #: src/view/screens/Settings/index.tsx:733
 msgid "Change your Bluesky password"
-msgstr ""
+msgstr "Canvia la teva contrasenya de Bluesky"
 
 #: src/view/com/modals/ChangeEmail.tsx:109
 msgid "Change Your Email"
@@ -652,7 +652,7 @@ msgstr "Canvia el teu correu"
 #: src/screens/Deactivated.tsx:72
 #: src/screens/Deactivated.tsx:76
 msgid "Check my status"
-msgstr ""
+msgstr "Comprova el meu estat"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
 msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
@@ -680,7 +680,7 @@ msgstr "Tria un servei"
 
 #: src/screens/Onboarding/StepFinished.tsx:135
 msgid "Choose the algorithms that power your custom feeds."
-msgstr ""
+msgstr "Tria els algoritmes que alimentaran els teus canals personalitzats."
 
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
@@ -689,7 +689,7 @@ msgstr "Tria els algoritmes que potenciaran la teva experiència amb els canals 
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
 msgid "Choose your main feeds"
-msgstr ""
+msgstr "Tria els teus canals principals"
 
 #: src/view/com/auth/create/Step1.tsx:196
 msgid "Choose your password"
@@ -732,12 +732,12 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
-msgstr ""
+msgstr "Clima"
 
 #: src/view/com/modals/ChangePassword.tsx:265
 #: src/view/com/modals/ChangePassword.tsx:268
 msgid "Close"
-msgstr ""
+msgstr "Tanca"
 
 #: src/components/Dialog/index.web.tsx:84
 #: src/components/Dialog/index.web.tsx:198
@@ -790,11 +790,11 @@ msgstr "Plega la llista d'usuaris per una notificació concreta"
 
 #: src/screens/Onboarding/index.tsx:41
 msgid "Comedy"
-msgstr ""
+msgstr "Comèdia"
 
 #: src/screens/Onboarding/index.tsx:27
 msgid "Comics"
-msgstr ""
+msgstr "Còmics"
 
 #: src/Navigation.tsx:229
 #: src/view/screens/CommunityGuidelines.tsx:32
@@ -803,7 +803,7 @@ msgstr "Directrius de la comunitat"
 
 #: src/screens/Onboarding/StepFinished.tsx:148
 msgid "Complete onboarding and start using your account"
-msgstr ""
+msgstr "Finalitza el registre i comença a utilitzar el teu compte"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
@@ -819,7 +819,7 @@ msgstr "Redacta una resposta"
 
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
 msgid "Configure content filtering setting for category: {0}"
-msgstr ""
+msgstr "Configura els filtres de continguts per la categoria: {0}"
 
 #: src/components/Prompt.tsx:124
 #: src/view/com/modals/AppealLabel.tsx:98
@@ -914,19 +914,19 @@ msgstr "Continua"
 #: src/screens/Onboarding/StepModeration/index.tsx:115
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:111
 msgid "Continue to next step"
-msgstr ""
+msgstr "Continua"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:167
 msgid "Continue to the next step"
-msgstr ""
+msgstr "Continua"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:191
 msgid "Continue to the next step without following any accounts"
-msgstr ""
+msgstr "Continua sense seguir cap compte"
 
 #: src/screens/Onboarding/index.tsx:44
 msgid "Cooking"
-msgstr ""
+msgstr "Cuina"
 
 #: src/view/com/modals/AddAppPasswords.tsx:195
 #: src/view/com/modals/InviteCodes.tsx:182
@@ -1027,12 +1027,12 @@ msgstr "Crea una targeta amb una minuatura. La targeta enllaça a {url}"
 
 #: src/screens/Onboarding/index.tsx:29
 msgid "Culture"
-msgstr ""
+msgstr "Cultura"
 
 #: src/view/com/auth/server-input/index.tsx:95
 #: src/view/com/auth/server-input/index.tsx:96
 msgid "Custom"
-msgstr ""
+msgstr "Personalitzat"
 
 #: src/view/com/modals/ChangeHandle.tsx:389
 msgid "Custom domain"
@@ -1041,7 +1041,7 @@ msgstr "Domini personalitzat"
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 #: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr ""
+msgstr "Els canals personalitzats fets per la comunitat et porten noves experiències i t'ajuden a trobar contingut que t'agradarà."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
@@ -1062,7 +1062,7 @@ msgstr "Mode fosc"
 
 #: src/view/screens/Settings/index.tsx:498
 msgid "Dark Theme"
-msgstr ""
+msgstr "Tema fosc"
 
 #: src/view/screens/Debug.tsx:83
 msgid "Debug panel"
@@ -1096,7 +1096,7 @@ msgstr "Elimina el meu compte"
 
 #: src/view/screens/Settings/index.tsx:784
 msgid "Delete My Account…"
-msgstr ""
+msgstr "Elimina el meu compte…"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:317
 #: src/view/com/util/forms/PostDropdownBtn.tsx:326
@@ -1136,7 +1136,7 @@ msgstr "Vols dir alguna cosa?"
 
 #: src/view/screens/Settings/index.tsx:504
 msgid "Dim"
-msgstr ""
+msgstr "Tènue"
 
 #: src/view/com/composer/Composer.tsx:151
 msgid "Discard"
@@ -1161,7 +1161,7 @@ msgstr "Descobreix nous canals personalitzats"
 
 #: src/view/screens/Feeds.tsx:689
 msgid "Discover New Feeds"
-msgstr ""
+msgstr "Descobreix nous canals"
 
 #: src/view/com/modals/EditProfile.tsx:192
 msgid "Display name"
@@ -1218,20 +1218,20 @@ msgstr "Fes doble toc per iniciar la sessió"
 
 #: src/view/screens/Settings/index.tsx:755
 msgid "Download Bluesky account data (repository)"
-msgstr ""
+msgstr "Descarrega les dades del compte de Bluesky (repositori)"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:59
 #: src/view/screens/Settings/ExportCarDialog.tsx:63
 msgid "Download CAR file"
-msgstr ""
+msgstr "Descarrega el fitxer CAR"
 
 #: src/view/com/composer/text-input/TextInput.web.tsx:249
 msgid "Drop to add images"
-msgstr ""
+msgstr "Deixa anar per afegir imatges"
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
 msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
-msgstr ""
+msgstr "Degut a les polítiques d'Apple, el contingut per a adults només es pot habilitar a la web després de registrar-se"
 
 #: src/view/com/modals/EditProfile.tsx:185
 msgid "e.g. Alice Roberts"
@@ -1316,7 +1316,7 @@ msgstr "Edita la descripció del teu perfil"
 
 #: src/screens/Onboarding/index.tsx:34
 msgid "Education"
-msgstr ""
+msgstr "Ensenyament"
 
 #: src/view/com/auth/create/Step1.tsx:176
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:156
@@ -1357,7 +1357,7 @@ msgstr "Habilita el contingut per a adults"
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
 msgid "Enable adult content in your feeds"
-msgstr ""
+msgstr "Habilita veure el contingut per adults als teus canals"
 
 #: src/view/com/modals/EmbedConsent.tsx:97
 msgid "Enable External Media"
@@ -1394,7 +1394,7 @@ msgstr "Entra el codi de confirmació"
 
 #: src/view/com/modals/ChangePassword.tsx:151
 msgid "Enter the code you received to change your password."
-msgstr ""
+msgstr "Introdueix el codi que has rebut per canviar la teva contrasenya."
 
 #: src/view/com/modals/ChangeHandle.tsx:371
 msgid "Enter the domain you want to use"
@@ -1473,12 +1473,12 @@ msgstr "Expandeix o replega la publicació completa a la qual estàs responent"
 
 #: src/view/screens/Settings/index.tsx:753
 msgid "Export my data"
-msgstr ""
+msgstr "Exporta les meves dades"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:44
 #: src/view/screens/Settings/index.tsx:764
 msgid "Export My Data"
-msgstr ""
+msgstr "Exporta les meves dades"
 
 #: src/view/com/modals/EmbedConsent.tsx:64
 msgid "External Media"
@@ -1559,11 +1559,11 @@ msgstr "Els canals són algoritmes personalitzats creats per usuaris que coneixe
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:76
 msgid "Feeds can be topical as well!"
-msgstr ""
+msgstr "Els canals també poden ser d'actualitat!"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Finalizing"
-msgstr ""
+msgstr "Finalitzant"
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:47
 #: src/view/com/posts/FollowingEmptyState.tsx:57
@@ -1597,11 +1597,11 @@ msgstr "Ajusta els fils de debat."
 
 #: src/screens/Onboarding/index.tsx:38
 msgid "Fitness"
-msgstr ""
+msgstr "Exercici"
 
 #: src/screens/Onboarding/StepFinished.tsx:131
 msgid "Flexible"
-msgstr ""
+msgstr "Flexible"
 
 #: src/view/com/modals/EditImage.tsx:115
 msgid "Flip horizontal"
@@ -1631,11 +1631,11 @@ msgstr "Segueix {0}"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:179
 msgid "Follow All"
-msgstr ""
+msgstr "Segueix-los a tots"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
 msgid "Follow selected accounts and continue to the next step"
-msgstr ""
+msgstr "Segueix els comptes seleccionats i continua"
 
 #: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
 msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
@@ -1693,7 +1693,7 @@ msgstr "Et segueix"
 
 #: src/screens/Onboarding/index.tsx:43
 msgid "Food"
-msgstr ""
+msgstr "Menjar"
 
 #: src/view/com/modals/DeleteAccount.tsx:111
 msgid "For security reasons, we'll need to send a confirmation code to your email address."
@@ -1752,7 +1752,7 @@ msgstr "Ves enrere"
 #: src/screens/Onboarding/Layout.tsx:104
 #: src/screens/Onboarding/Layout.tsx:193
 msgid "Go back to previous step"
-msgstr ""
+msgstr "Ves al pas anterior"
 
 #: src/view/screens/Search/Search.tsx:747
 #: src/view/shell/desktop/Search.tsx:262
@@ -1794,15 +1794,15 @@ msgstr "Ajuda"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
 msgid "Here are some accounts for you to follow"
-msgstr ""
+msgstr "Aquí tens uns quants comptes que pots seguir"
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:85
 msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
-msgstr ""
+msgstr "Aquí tens alguns canals d'actualitat populars. Pots seguir-ne tants com vulguis."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:80
 msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
-msgstr ""
+msgstr "Aquí tens uns quants canals d'actualitat basats en els teus interesos: {interestsText}. Pots seguir-ne tants com vulguis."
 
 #: src/view/com/modals/AddAppPasswords.tsx:153
 msgid "Here is your app password."
@@ -1914,7 +1914,7 @@ msgstr "Si no en selecciones cap, és apropiat per a totes les edats."
 
 #: src/view/com/modals/ChangePassword.tsx:146
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
-msgstr ""
+msgstr "Si vols canviar la contrasenya t'enviarem un codi per verificar que aquest compte és teu."
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -2024,7 +2024,7 @@ msgstr "Codis d'invitació: 1 disponible"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:64
 msgid "It shows posts from the people you follow as they happen."
-msgstr ""
+msgstr "Mostra les publicacions de les persones que segueixes cronològicament."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:99
 #: src/view/com/auth/SplashScreen.web.tsx:138
@@ -2046,7 +2046,7 @@ msgstr "Feines"
 
 #: src/screens/Onboarding/index.tsx:24
 msgid "Journalism"
-msgstr ""
+msgstr "Periodisme"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:104
 msgid "Language selection"
@@ -2101,7 +2101,7 @@ msgstr "Sortint de Bluesky"
 
 #: src/screens/Deactivated.tsx:128
 msgid "left to go."
-msgstr ""
+msgstr "queda."
 
 #: src/view/screens/Settings/index.tsx:278
 msgid "Legacy storage cleared, you need to restart the app now."
@@ -2114,7 +2114,7 @@ msgstr "Restablirem la teva contrasenya!"
 
 #: src/screens/Onboarding/StepFinished.tsx:151
 msgid "Let's go!"
-msgstr ""
+msgstr "Som-hi!"
 
 #: src/view/com/util/UserAvatar.tsx:248
 #: src/view/com/util/UserBanner.tsx:62
@@ -2140,7 +2140,7 @@ msgstr "Li ha agradat a"
 #: src/view/screens/PostLikedBy.tsx:27
 #: src/view/screens/ProfileFeedLikedBy.tsx:27
 msgid "Liked By"
-msgstr ""
+msgstr "Li ha agradat a"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:279
 msgid "Liked by {0} {1}"
@@ -2152,7 +2152,7 @@ msgstr "Li ha agradat a {likeCount} {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:170
 msgid "liked your custom feed"
-msgstr ""
+msgstr "els hi ha agradat el teu canal personalitzat"
 
 #: src/view/com/notifications/FeedItem.tsx:171
 #~ msgid "liked your custom feed{0}"
@@ -2247,7 +2247,7 @@ msgstr "Registre"
 #: src/screens/Deactivated.tsx:178
 #: src/screens/Deactivated.tsx:181
 msgid "Log out"
-msgstr ""
+msgstr "Desconnecta"
 
 #: src/view/screens/Moderation.tsx:155
 msgid "Logged-out visibility"
@@ -2477,7 +2477,7 @@ msgstr "Els meus canals desats"
 
 #: src/view/com/auth/server-input/index.tsx:118
 msgid "my-server.com"
-msgstr ""
+msgstr "el-meu-servidor.com"
 
 #: src/view/com/modals/AddAppPasswords.tsx:179
 #: src/view/com/modals/CreateOrEditList.tsx:290
@@ -2490,7 +2490,7 @@ msgstr "Es requereix un nom"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
-msgstr ""
+msgstr "Natura"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:219
@@ -2516,7 +2516,7 @@ msgstr "No perdis mai accés als teus seguidors ni a les teves dades."
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr ""
+msgstr "No perdis mai accés als teus seguidors i les teves dades."
 
 #: src/components/dialogs/MutedWords.tsx:293
 msgid "Nevermind"
@@ -2541,7 +2541,7 @@ msgstr "Nova contrasenya"
 
 #: src/view/com/modals/ChangePassword.tsx:215
 msgid "New Password"
-msgstr ""
+msgstr "Nova contrasenya"
 
 #: src/view/com/feeds/FeedPage.tsx:126
 msgctxt "action"
@@ -2577,7 +2577,7 @@ msgstr "Les respostes més noves primer"
 
 #: src/screens/Onboarding/index.tsx:23
 msgid "News"
-msgstr ""
+msgstr "Notícies"
 
 #: src/view/com/auth/create/CreateAccount.tsx:172
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:182
@@ -2687,7 +2687,7 @@ msgstr "Ostres!"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:128
 msgid "Oh no! Something went wrong."
-msgstr ""
+msgstr "Ostres! Alguna cosa ha fallat."
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
@@ -2721,7 +2721,7 @@ msgstr "Ostres!"
 
 #: src/screens/Onboarding/StepFinished.tsx:115
 msgid "Open"
-msgstr ""
+msgstr "Obre"
 
 #: src/view/screens/Moderation.tsx:75
 msgid "Open content filtering settings"
@@ -2750,7 +2750,7 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:804
 msgid "Open storybook page"
-msgstr ""
+msgstr "Obre la pàgina d'historial"
 
 #: src/view/com/util/forms/DropdownButton.tsx:154
 msgid "Opens {numItems} options"
@@ -2876,7 +2876,7 @@ msgstr "Pàgina no trobada"
 
 #: src/view/screens/NotFound.tsx:42
 msgid "Page Not Found"
-msgstr ""
+msgstr "Pàgina no trobada"
 
 #: src/view/com/auth/create/Step1.tsx:191
 #: src/view/com/auth/create/Step1.tsx:201
@@ -2912,7 +2912,7 @@ msgstr "S'ha denegat el permís per accedir a la càmera. Activa'l a la configur
 
 #: src/screens/Onboarding/index.tsx:31
 msgid "Pets"
-msgstr ""
+msgstr "Mascotes"
 
 #: src/view/com/auth/create/Step2.tsx:183
 #~ msgid "Phone number"
@@ -3010,7 +3010,7 @@ msgstr "Espera que es generi la targeta de l'enllaç"
 
 #: src/screens/Onboarding/index.tsx:37
 msgid "Politics"
-msgstr ""
+msgstr "Política"
 
 #: src/view/com/modals/SelfLabel.tsx:111
 msgid "Porn"
@@ -3129,7 +3129,7 @@ msgstr "Protegeix el teu compte verificant el teu correu."
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
-msgstr ""
+msgstr "Públic"
 
 #: src/view/screens/ModerationModlists.tsx:61
 msgid "Public, shareable lists of users to mute or block in bulk."
@@ -3300,7 +3300,7 @@ msgstr "Informa de la publicació"
 #: src/view/com/util/post-ctrls/RepostButton.tsx:61
 msgctxt "action"
 msgid "Repost"
-msgstr "Respon"
+msgstr "Republica"
 
 #: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
 msgid "Repost"
@@ -3317,11 +3317,11 @@ msgstr "Republica o cita la publicació"
 
 #: src/view/screens/PostRepostedBy.tsx:27
 msgid "Reposted By"
-msgstr ""
+msgstr "Republicat per"
 
 #: src/view/com/posts/FeedItem.tsx:207
 msgid "Reposted by {0}"
-msgstr ""
+msgstr "Republicat per {0}"
 
 #: src/view/com/posts/FeedItem.tsx:206
 #~ msgid "Reposted by {0})"
@@ -3351,7 +3351,7 @@ msgstr "Demana un canvi"
 #: src/view/com/modals/ChangePassword.tsx:239
 #: src/view/com/modals/ChangePassword.tsx:241
 msgid "Request Code"
-msgstr ""
+msgstr "Demana un codi"
 
 #: src/view/screens/Settings/index.tsx:456
 msgid "Require alt text before posting"
@@ -3368,7 +3368,7 @@ msgstr "Codi de restabliment"
 
 #: src/view/com/modals/ChangePassword.tsx:190
 msgid "Reset Code"
-msgstr ""
+msgstr "Codi de restabliment"
 
 #: src/view/screens/Settings/index.tsx:824
 msgid "Reset onboarding"
@@ -3475,7 +3475,7 @@ msgstr "Desa el canvi d'identificador a {handle}"
 
 #: src/screens/Onboarding/index.tsx:36
 msgid "Science"
-msgstr ""
+msgstr "Ciència"
 
 #: src/view/screens/ProfileList.tsx:859
 msgid "Scroll to top"
@@ -3584,19 +3584,19 @@ msgstr "Selecciona el servei"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
 msgid "Select some accounts below to follow"
-msgstr ""
+msgstr "Selecciona alguns d'aquests comptes per seguir-los"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
-msgstr ""
+msgstr "Selecciona el servei que allotja les teves dades."
 
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:96
 msgid "Select topical feeds to follow from the list below"
-msgstr ""
+msgstr "Selecciona els canals d'actualitat per seguir d'aquesta llista"
 
 #: src/screens/Onboarding/StepModeration/index.tsx:75
 msgid "Select what you want to see (or not see), and we’ll handle the rest."
-msgstr ""
+msgstr "Selecciona què vols veure (o què no vols veure) i nosaltres farem la resta."
 
 #: src/view/screens/LanguageSettings.tsx:281
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
@@ -3608,7 +3608,7 @@ msgstr "Selecciona l'idioma de l'aplicació perquè el text predeterminat es mos
 
 #: src/screens/Onboarding/StepInterests/index.tsx:196
 msgid "Select your interests from the options below"
-msgstr ""
+msgstr "Selecciona els teus interesos d'entre aquestes opcions"
 
 #: src/view/com/auth/create/Step2.tsx:155
 #~ msgid "Select your phone's country"
@@ -3620,11 +3620,11 @@ msgstr "Selecciona el teu idioma preferit per a les traduccions al teu canal."
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
 msgid "Select your primary algorithmic feeds"
-msgstr ""
+msgstr "Selecciona els teus canals algorítmics primaris"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:142
 msgid "Select your secondary algorithmic feeds"
-msgstr ""
+msgstr "Selecciona els teus canals algorítmics secundaris"
 
 #: src/view/com/modals/VerifyEmail.tsx:202
 #: src/view/com/modals/VerifyEmail.tsx:204
@@ -3659,7 +3659,7 @@ msgstr "Envia un correu amb el codi de confirmació per l'eliminació del compte
 
 #: src/view/com/auth/server-input/index.tsx:110
 msgid "Server address"
-msgstr ""
+msgstr "Adreça del servidor"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:311
 msgid "Set {value} for {labelGroup} content moderation policy"
@@ -3685,11 +3685,11 @@ msgstr "Estableix el tema de colors a la configuració del sistema"
 
 #: src/view/screens/Settings/index.tsx:514
 msgid "Set dark theme to the dark theme"
-msgstr ""
+msgstr "Posa el tema fosc"
 
 #: src/view/screens/Settings/index.tsx:507
 msgid "Set dark theme to the dim theme"
-msgstr ""
+msgstr "Posa el tema fosc al tema atenuat"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:104
 msgid "Set new password"
@@ -3725,7 +3725,7 @@ msgstr ""
 
 #: src/screens/Onboarding/Layout.tsx:50
 msgid "Set up your account"
-msgstr ""
+msgstr "Configura el teu compte"
 
 #: src/view/com/modals/ChangeHandle.tsx:266
 msgid "Sets Bluesky username"
@@ -3813,15 +3813,15 @@ msgstr "Mostra les publicacions citades"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:118
 msgid "Show quote-posts in Following feed"
-msgstr ""
+msgstr "Mostra les publicacions citades en el canal Seguint"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:134
 msgid "Show quotes in Following"
-msgstr ""
+msgstr "Mostra els citats a Seguint"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:94
 msgid "Show re-posts in Following feed"
-msgstr ""
+msgstr "Mostra les republicacions al canal Seguint"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:119
 msgid "Show Replies"
@@ -3833,11 +3833,11 @@ msgstr "Mostra les respostes dels comptes que segueixes abans que les altres."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:86
 msgid "Show replies in Following"
-msgstr ""
+msgstr "Mostra les respostes a Seguint"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:70
 msgid "Show replies in Following feed"
-msgstr ""
+msgstr "Mostrea les respostes al canal Seguint"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:70
 msgid "Show replies with at least {value} {0}"
@@ -3849,7 +3849,7 @@ msgstr "Mostra republicacions"
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:110
 msgid "Show reposts in Following"
-msgstr ""
+msgstr "Mostra les republicacions al canal Seguint"
 
 #: src/view/com/util/moderation/ContentHider.tsx:67
 #: src/view/com/util/moderation/PostHider.tsx:61
@@ -3949,7 +3949,7 @@ msgstr "Salta aquest pas"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:232
 msgid "Skip this flow"
-msgstr ""
+msgstr "Salta aquest flux"
 
 #: src/view/com/auth/create/Step2.tsx:82
 #~ msgid "SMS verification"
@@ -3957,7 +3957,7 @@ msgstr ""
 
 #: src/screens/Onboarding/index.tsx:40
 msgid "Software Dev"
-msgstr ""
+msgstr "Desenvolupament de programari"
 
 #: src/view/com/modals/ProfilePreview.tsx:62
 #~ msgid "Something went wrong and we're not sure what."
@@ -3985,7 +3985,7 @@ msgstr "Ordena les respostes a la mateixa publicació per:"
 
 #: src/screens/Onboarding/index.tsx:30
 msgid "Sports"
-msgstr ""
+msgstr "Esports"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:122
 msgid "Square"
@@ -4023,7 +4023,7 @@ msgstr "Subscriure's"
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:173
 #: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:308
 msgid "Subscribe to the {0} feed"
-msgstr ""
+msgstr "Subscriu-te al canal {0}"
 
 #: src/view/screens/ProfileList.tsx:604
 msgid "Subscribe to this list"
@@ -4095,7 +4095,7 @@ msgstr "Toca per veure-ho completament"
 
 #: src/screens/Onboarding/index.tsx:39
 msgid "Tech"
-msgstr ""
+msgstr "Tecnologia"
 
 #: src/view/shell/desktop/RightNav.tsx:81
 msgid "Terms"
@@ -4135,7 +4135,7 @@ msgstr "La política de drets d'autoria ha estat traslladada a <0/>"
 
 #: src/screens/Onboarding/Layout.tsx:60
 msgid "The following steps will help customize your Bluesky experience."
-msgstr ""
+msgstr "Els següents passos t'ajudaran a personalitzar la teva experiència a Bluesky."
 
 #: src/view/com/post-thread/PostThread.tsx:517
 msgid "The post may have been deleted."
@@ -4159,7 +4159,7 @@ msgstr "Les condicions del servei han estat traslladades a "
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:150
 msgid "There are many feeds to try:"
-msgstr ""
+msgstr "Hi ha molts canals per provar:"
 
 #: src/view/screens/ProfileFeed.tsx:550
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
@@ -4239,7 +4239,7 @@ msgstr "S'ha produït un problema inesperat a l'aplicació. Fes-nos saber si aix
 
 #: src/screens/Deactivated.tsx:106
 msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
-msgstr ""
+msgstr "Hi ha hagut una gran quantitat d'usuaris nous a Bluesky! Activarem el teu compte tan aviat com puguem."
 
 #: src/view/com/auth/create/Step2.tsx:55
 #~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
@@ -4247,7 +4247,7 @@ msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
 msgid "These are popular accounts you might like:"
-msgstr ""
+msgstr "Aquests són alguns comptes populars que et poden agradar:"
 
 #~ msgid "This {0} has been labeled."
 #~ msgstr "Aquest {0} ha estat etiquetat."
@@ -4274,7 +4274,7 @@ msgstr "Aquest contingut no es pot veure sense un compte de Bluesky."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr ""
+msgstr "Aquesta funcionalitat està en beta. En <0>aquesta entrada al blog</0> tens més informació."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -4328,7 +4328,7 @@ msgstr "Aquest usuari està inclós a la llista <0/> que tens bloquejada"
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 msgid "This user is included in the <0/> list which you have muted."
-msgstr ""
+msgstr "Aquest usuari està inclòs a la llista <0/> que has silenciat."
 
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
@@ -4614,7 +4614,7 @@ msgstr "Verifica el teu correu"
 
 #: src/screens/Onboarding/index.tsx:42
 msgid "Video Games"
-msgstr ""
+msgstr "Videojocs"
 
 #: src/view/com/profile/ProfileHeader.tsx:662
 msgid "View {0}'s avatar"
@@ -4647,7 +4647,7 @@ msgstr "Adverteix"
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
 msgid "We also think you'll like \"For You\" by Skygaze:"
-msgstr ""
+msgstr "També creiem que t'agradarà el canal \"For You\" d'Skygaze:"
 
 #: src/screens/Hashtag.tsx:132
 msgid "We couldn't find any results for that hashtag."
@@ -4655,11 +4655,11 @@ msgstr ""
 
 #: src/screens/Deactivated.tsx:133
 msgid "We estimate {estimatedTime} until your account is ready."
-msgstr ""
+msgstr "Calculem {estimatedTime} fins que el teu compte estigui llest."
 
 #: src/screens/Onboarding/StepFinished.tsx:93
 msgid "We hope you have a wonderful time. Remember, Bluesky is:"
-msgstr ""
+msgstr "Esperem que t'ho passis pipa. Recorda que Bluesky és:"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
@@ -4671,15 +4671,15 @@ msgstr ""
 
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
 msgid "We recommend our \"Discover\" feed:"
-msgstr ""
+msgstr "Et reomanem el nostre canal \"Discover\":"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:133
 msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
-msgstr ""
+msgstr "No ens hem pogut connectar. Torna-ho a provar per continuar configurant el teu compte. Si continua fallant, pots ometre aquest flux."
 
 #: src/screens/Deactivated.tsx:137
 msgid "We will let you know when your account is ready."
-msgstr ""
+msgstr "T'informarem quan el teu compte estigui llest."
 
 #: src/view/com/modals/AppealLabel.tsx:48
 msgid "We'll look into your appeal promptly."
@@ -4687,7 +4687,7 @@ msgstr "Analitzarem la teva apel·lació ràpidament."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:138
 msgid "We'll use this to help customize your experience."
-msgstr ""
+msgstr "Ho farem servir per personalitzar la teva experiència."
 
 #: src/view/com/auth/create/CreateAccount.tsx:134
 msgid "We're so excited to have you join us!"
@@ -4716,7 +4716,7 @@ msgstr "Benvingut a <0>Bluesky</0>"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:130
 msgid "What are your interests?"
-msgstr ""
+msgstr "Quins són els teus interesos?"
 
 #: src/view/com/modals/report/Modal.tsx:169
 msgid "What is the issue with this {collectionName}?"
@@ -4758,7 +4758,7 @@ msgstr "Escriu la teva resposta"
 
 #: src/screens/Onboarding/index.tsx:28
 msgid "Writers"
-msgstr ""
+msgstr "Escriptors"
 
 #: src/view/com/auth/create/Step2.tsx:263
 #~ msgid "XXXXXX"
@@ -4776,7 +4776,7 @@ msgstr "Sí"
 
 #: src/screens/Deactivated.tsx:130
 msgid "You are in line."
-msgstr ""
+msgstr "Estàs a la cua."
 
 #: src/view/com/posts/FollowingEmptyState.tsx:67
 #: src/view/com/posts/FollowingEndOfFeed.tsx:68
@@ -4789,7 +4789,7 @@ msgstr "També pots descobrir nous canals personalitzats per seguir."
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:142
 msgid "You can change these settings later."
-msgstr ""
+msgstr "Pots canviar aquests paràmetres més endavant."
 
 #: src/view/com/auth/login/Login.tsx:158
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
@@ -4825,7 +4825,7 @@ msgstr "Has bloquejat aquest usuari. No pots veure el seu contingut."
 #: src/view/com/modals/ChangePassword.tsx:87
 #: src/view/com/modals/ChangePassword.tsx:121
 msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
-msgstr ""
+msgstr "Has entrat un codi invàlid. Hauria de ser tipus XXXXX-XXXXX."
 
 #: src/view/com/modals/ModerationDetails.tsx:87
 msgid "You have muted this user."
@@ -4862,7 +4862,7 @@ msgstr "Has de tenir 18 anys o més per habilitar el contingut per a adults."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
 msgid "You must be 18 years or older to enable adult content"
-msgstr ""
+msgstr "Has de tenir 18 anys o més per habilitar el contingut per a adults"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:147
 msgid "You will no longer receive notifications for this thread"
@@ -4878,17 +4878,17 @@ msgstr "Rebràs un correu amb un \"codi de restabliment\". Introdueix aquí el c
 
 #: src/screens/Onboarding/StepModeration/index.tsx:72
 msgid "You're in control"
-msgstr ""
+msgstr "Tu tens el control"
 
 #: src/screens/Deactivated.tsx:87
 #: src/screens/Deactivated.tsx:88
 #: src/screens/Deactivated.tsx:103
 msgid "You're in line"
-msgstr ""
+msgstr "Estàs a la cua"
 
 #: src/screens/Onboarding/StepFinished.tsx:90
 msgid "You're ready to go!"
-msgstr ""
+msgstr "Ja està tot llest!"
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:48
 msgid "You've reached the end of your feed! Find some more accounts to follow."
@@ -4904,7 +4904,7 @@ msgstr "El teu compte s'ha eliminat"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:47
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
-msgstr ""
+msgstr "El repositori del teu compte, que conté tots els registres de dades públiques, es pot baixar com a fitxer \"CAR\". Aquest fitxer no inclou incrustacions multimèdia, com ara imatges, ni les teves dades privades, que s'han d'obtenir per separat."
 
 #: src/view/com/auth/create/Step1.tsx:215
 msgid "Your birth date"
@@ -4916,7 +4916,7 @@ msgstr "La teva elecció es desarà, però es pot canviar més endavant a la con
 
 #: src/screens/Onboarding/StepFollowingFeed.tsx:61
 msgid "Your default feed is \"Following\""
-msgstr ""
+msgstr "El teu canal per defecte és \"Seguint\""
 
 #: src/view/com/auth/create/state.ts:110
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
@@ -4964,7 +4964,7 @@ msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:155
 msgid "Your password has been changed successfully!"
-msgstr ""
+msgstr "S'ha canviat la teva contrasenya!"
 
 #: src/view/com/composer/Composer.tsx:274
 msgid "Your post has been published"

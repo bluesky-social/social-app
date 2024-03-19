@@ -24,9 +24,9 @@ import {
 } from '#/components/icons/Camera'
 import {StreamingLive_Stroke2_Corner0_Rounded as Library} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
-import {useTheme} from '#/alf'
+import {useTheme, tokens} from '#/alf'
 
-export type UserAvatarType = 'user' | 'algo' | 'list'
+export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
 
 interface BaseUserAvatarProps {
   type?: UserAvatarType
@@ -101,6 +101,33 @@ let DefaultAvatar = ({
       </Svg>
     )
   }
+  if (type === 'labeler') {
+    return (
+      <Svg
+        testID="userAvatarFallback"
+        width={size}
+        height={size}
+        viewBox="0 0 32 32"
+        fill="none"
+        stroke="none">
+        <Rect
+          x="0"
+          y="0"
+          width="32"
+          height="32"
+          rx="3"
+          fill={tokens.color.temp_purple}
+        />
+        <Path
+          d="M24 9.75L16 7L8 9.75V15.9123C8 20.8848 12 23 16 25.1579C20 23 24 20.8848 24 15.9123V9.75Z"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="square"
+          strokeLinejoin="round"
+        />
+      </Svg>
+    )
+  }
   return (
     <Svg
       testID="userAvatarFallback"
@@ -134,7 +161,7 @@ let UserAvatar = ({
   const backgroundColor = pal.colors.backgroundLight
 
   const aviStyle = useMemo(() => {
-    if (type === 'algo' || type === 'list') {
+    if (type === 'algo' || type === 'list' || type === 'labeler') {
       return {
         width: size,
         height: size,

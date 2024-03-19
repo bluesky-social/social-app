@@ -75,6 +75,7 @@ let DrawerProfileCard = ({
         avatar={profile?.avatar}
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
       <Text
         type="title-lg"
@@ -93,10 +94,12 @@ let DrawerProfileCard = ({
           {formatCountShortOnly(profile?.followersCount ?? 0)}
         </Text>{' '}
         {pluralize(profile?.followersCount || 0, 'follower')} &middot;{' '}
-        <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(profile?.followsCount ?? 0)}
-        </Text>{' '}
-        following
+        <Trans>
+          <Text type="xl-medium" style={pal.text}>
+            {formatCountShortOnly(profile?.followsCount ?? 0)}
+          </Text>{' '}
+          following
+        </Trans>
       </Text>
     </TouchableOpacity>
   )

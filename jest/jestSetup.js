@@ -88,3 +88,5 @@ jest.mock('sentry-expo', () => ({
     ReactNavigationInstrumentation: jest.fn(),
   },
 }))
+
+jest.mock('crypto', () => ({}))

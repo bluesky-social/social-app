@@ -223,7 +223,7 @@ export function Item({children, label, onPress, ...rest}: ItemProps) {
         style={flatten([
           a.flex_row,
           a.align_center,
-          a.gap_sm,
+          a.gap_lg,
           a.py_sm,
           a.rounded_xs,
           {minHeight: 32, paddingHorizontal: 10},

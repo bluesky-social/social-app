@@ -45,7 +45,11 @@ function AccountItem({
       accessibilityHint={_(msg`Double tap to sign in`)}>
       <View style={[pal.borderDark, styles.groupContent, styles.noTopBorder]}>
         <View style={s.p10}>
-          <UserAvatar avatar={profile?.avatar} size={30} />
+          <UserAvatar
+            avatar={profile?.avatar}
+            size={30}
+            type={profile?.associated?.labeler ? 'labeler' : 'user'}
+          />
         </View>
         <Text style={styles.accountText}>
           <Text type="lg-bold" style={pal.text}>

@@ -76,7 +76,7 @@ export function StepSuggestedAccounts() {
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedAccountDids,
-      state.interestsStepResults.apiResponse.suggestedAccountDids.default,
+      state.interestsStepResults.apiResponse.suggestedAccountDids.default || [],
     )
   }, [state.interestsStepResults])
   const moderationOpts = useModerationOpts()
