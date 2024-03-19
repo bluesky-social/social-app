@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {Linking, StyleSheet, View} from 'react-native'
 import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
@@ -15,9 +15,11 @@ type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 export const Policies = ({
   serviceDescription,
   needsGuardian,
+  under13,
 }: {
   serviceDescription: ServiceDescription
   needsGuardian: boolean
+  under13: boolean
 }) => {
   const pal = usePalette('default')
   if (!serviceDescription) {
@@ -53,6 +55,7 @@ export const Policies = ({
         href={tos}
         text="Terms of Service"
         style={[pal.link, s.underline]}
+        onPress={() => Linking.openURL(tos)}
       />,
     )
   }
@@ -63,6 +66,7 @@ export const Policies = ({
         href={pp}
         text="Privacy Policy"
         style={[pal.link, s.underline]}
+        onPress={() => Linking.openURL(pp)}
       />,
     )
   }
@@ -81,12 +85,16 @@ export const Policies = ({
       <Text style={pal.textLight}>
         By creating an account you agree to the {els}.
       </Text>
-      {needsGuardian && (
+      {under13 ? (
+        <Text style={[pal.textLight, s.bold]}>
+          You must be 13 years of age or older to sign up.
+        </Text>
+      ) : needsGuardian ? (
         <Text style={[pal.textLight, s.bold]}>
           If you are not yet an adult according to the laws of your country,
           your parent or legal guardian must read these Terms on your behalf.
         </Text>
-      )}
+      ) : undefined}
     </View>
   )
 }

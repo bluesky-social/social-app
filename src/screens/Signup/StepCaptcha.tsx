@@ -1,57 +1,39 @@
 import React from 'react'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
-import {
-  CreateAccountState,
-  CreateAccountDispatch,
-  useSubmitCreateAccount,
-} from './state'
-import {StepHeader} from './StepHeader'
-import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
-import {isWeb} from 'platform/detection'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-
 import {nanoid} from 'nanoid/non-secure'
+import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
 import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
-import {useTheme} from 'lib/ThemeContext'
 import {createFullHandle} from 'lib/strings/handles'
+import {isWeb} from 'platform/detection'
+import {atoms as a, useTheme} from '#/alf'
+import {FormError} from '#/components/forms/FormError'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 
 const CAPTCHA_PATH = '/gate/signup'
 
-export function Step3({
-  uiState,
-  uiDispatch,
-}: {
-  uiState: CreateAccountState
-  uiDispatch: CreateAccountDispatch
-}) {
+export function StepCaptcha() {
   const {_} = useLingui()
   const theme = useTheme()
-  const submit = useSubmitCreateAccount(uiState, uiDispatch)
+  const {state, dispatch} = useSignupContext()
+  const submit = useSubmitSignup({state, dispatch})
 
   const [completed, setCompleted] = React.useState(false)
 
   const stateParam = React.useMemo(() => nanoid(15), [])
   const url = React.useMemo(() => {
-    const newUrl = new URL(uiState.serviceUrl)
+    const newUrl = new URL(state.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
     newUrl.searchParams.set(
       'handle',
-      createFullHandle(uiState.handle, uiState.userDomain),
+      createFullHandle(state.handle, state.userDomain),
     )
     newUrl.searchParams.set('state', stateParam)
-    newUrl.searchParams.set('colorScheme', theme.colorScheme)
-
-    console.log(newUrl)
+    newUrl.searchParams.set('colorScheme', theme.name)
 
     return newUrl.href
-  }, [
-    uiState.serviceUrl,
-    uiState.handle,
-    uiState.userDomain,
-    stateParam,
-    theme.colorScheme,
-  ])
+  }, [state.serviceUrl, state.handle, state.userDomain, stateParam, theme.name])
 
   const onSuccess = React.useCallback(
     (code: string) => {
@@ -62,33 +44,31 @@ export function Step3({
   )
 
   const onError = React.useCallback(() => {
-    uiDispatch({
-      type: 'set-error',
+    dispatch({
+      type: 'setError',
       value: _(msg`Error receiving captcha response.`),
     })
-  }, [_, uiDispatch])
+  }, [_, dispatch])
 
   return (
-    <View>
-      <StepHeader uiState={uiState} title={_(msg`Complete the challenge`)} />
-      <View style={[styles.container, completed && styles.center]}>
-        {!completed ? (
-          <CaptchaWebView
-            url={url}
-            stateParam={stateParam}
-            uiState={uiState}
-            onSuccess={onSuccess}
-            onError={onError}
-          />
-        ) : (
-          <ActivityIndicator size="large" />
-        )}
+    <ScreenTransition>
+      <View style={[a.gap_lg]}>
+        <View style={[styles.container, completed && styles.center]}>
+          {!completed ? (
+            <CaptchaWebView
+              url={url}
+              stateParam={stateParam}
+              state={state}
+              onSuccess={onSuccess}
+              onError={onError}
+            />
+          ) : (
+            <ActivityIndicator size="large" />
+          )}
+        </View>
+        <FormError error={state.error} />
       </View>
-
-      {uiState.error ? (
-        <ErrorMessage message={uiState.error} style={styles.error} />
-      ) : undefined}
-    </View>
+    </ScreenTransition>
   )
 }
 
