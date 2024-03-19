@@ -15,6 +15,7 @@ import {
   IsValidHandle,
   validateHandle,
 } from 'lib/strings/handles'
+import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
 
 export function StepHandle() {
   const {_} = useLingui()
@@ -53,7 +54,10 @@ export function StepHandle() {
   )
 
   return (
-    <View style={[a.gap_xl]}>
+    <Animated.View
+      style={[a.gap_lg]}
+      entering={FadeInRight}
+      exiting={FadeOutLeft}>
       <View>
         <TextField.Root>
           <TextField.Icon icon={At} />
@@ -120,7 +124,7 @@ export function StepHandle() {
           )}
         </View>
       </View>
-    </View>
+    </Animated.View>
   )
 }
 

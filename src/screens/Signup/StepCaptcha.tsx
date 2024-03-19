@@ -8,7 +8,8 @@ import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {createFullHandle} from 'lib/strings/handles'
 import {isWeb} from 'platform/detection'
-import {useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
 
 const CAPTCHA_PATH = '/gate/signup'
 
@@ -50,7 +51,10 @@ export function StepCaptcha() {
   }, [_, dispatch])
 
   return (
-    <View>
+    <Animated.View
+      style={[a.gap_lg]}
+      entering={FadeInRight}
+      exiting={FadeOutLeft}>
       <View style={[styles.container, completed && styles.center]}>
         {!completed ? (
           <CaptchaWebView
@@ -68,7 +72,7 @@ export function StepCaptcha() {
       {state.error ? (
         <ErrorMessage message={state.error} style={styles.error} />
       ) : undefined}
-    </View>
+    </Animated.View>
   )
 }
 

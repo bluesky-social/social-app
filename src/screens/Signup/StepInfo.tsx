@@ -1,25 +1,20 @@
 import React from 'react'
-import {Keyboard, TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
-import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
-import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import * as DateField from '#/components/forms/DateField'
-import {ServerInputDialog} from 'view/com/auth/server-input'
-import {useDialogControl} from '#/components/Dialog'
 import {logger} from '#/logger'
 import {ErrorMessage} from 'view/com/util/error/ErrorMessage'
 import {Loader} from '#/components/Loader'
 import {Policies} from 'view/com/auth/create/Policies'
-import {Text} from '#/components/Typography'
-import {toNiceDomain} from 'lib/strings/url-helpers'
-import {isAndroid} from 'platform/detection'
+import {HostingProvider} from '#/components/forms/HostingProvider'
+import Animated, {FadeInRight, FadeOutLeft} from 'react-native-reanimated'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -33,18 +28,13 @@ function sanitizeDate(date: Date): Date {
 
 export function StepInfo() {
   const {_} = useLingui()
-  const t = useTheme()
   const {state, dispatch} = useSignupContext()
 
-  const serverInputControl = useDialogControl()
-
-  const onPressSelectService = React.useCallback(() => {
-    serverInputControl.open()
-    Keyboard.dismiss()
-  }, [serverInputControl])
-
   return (
-    <View style={[a.gap_lg]}>
+    <Animated.View
+      style={[a.gap_lg]}
+      entering={FadeInRight}
+      exiting={FadeOutLeft}>
       {state.error ? (
         <ErrorMessage message={state.error} style={[a.rounded_sm]} />
       ) : undefined}
@@ -53,36 +43,10 @@ export function StepInfo() {
         <TextField.Label>
           <Trans>Hosting provider</Trans>
         </TextField.Label>
-        <TouchableOpacity
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`Select service`)}
-          accessibilityHint={_(msg`Sets server for the Bluesky client`)}
-          style={[
-            a.w_full,
-            a.flex_row,
-            a.align_center,
-            a.rounded_sm,
-            a.px_md,
-            a.gap_xs,
-            {paddingVertical: isAndroid ? 14 : 9},
-            t.atoms.bg_contrast_25,
-          ]}
-          onPress={onPressSelectService}>
-          <TextField.Icon icon={Globe} />
-          <Text style={[a.text_md]}>{toNiceDomain(state.serviceUrl)}</Text>
-          <View
-            style={[
-              a.rounded_sm,
-              t.atoms.bg_contrast_100,
-              {marginLeft: 'auto', left: 6, padding: 6},
-            ]}>
-            <Pencil
-              style={{color: t.palette.contrast_500}}
-              height={18}
-              width={18}
-            />
-          </View>
-        </TouchableOpacity>
+        <HostingProvider
+          serviceUrl={state.serviceUrl}
+          onSelectServiceUrl={v => dispatch({type: 'setServiceUrl', value: v})}
+        />
       </View>
       {state.isLoading ? (
         <View style={[a.align_center]}>
@@ -178,11 +142,6 @@ export function StepInfo() {
           />
         </>
       ) : undefined}
-
-      <ServerInputDialog
-        control={serverInputControl}
-        onSelect={url => dispatch({type: 'setServiceUrl', value: url})}
-      />
-    </View>
+    </Animated.View>
   )
 }

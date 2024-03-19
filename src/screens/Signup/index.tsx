@@ -157,6 +157,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                 <StepCaptcha />
               )}
             </View>
+
             <View style={[a.flex_row, a.justify_between]}>
               <Button
                 label="Back"
