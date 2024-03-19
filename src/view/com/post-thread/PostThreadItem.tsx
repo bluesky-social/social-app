@@ -205,11 +205,7 @@ let PostThreadItemLoaded = ({
         uri: post.uri,
         cid: post.cid,
         text: record.text,
-        author: {
-          handle: post.author.handle,
-          displayName: post.author.displayName,
-          avatar: post.author.avatar,
-        },
+        author: post.author,
         embed: post.embed,
         moderation,
       },
