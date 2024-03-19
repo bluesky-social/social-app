@@ -773,7 +773,7 @@ export function SearchScreen(
             {searchHistory.length > 0 && (
               <View style={styles.searchHistoryContent}>
                 <Text style={[pal.text, styles.searchHistoryTitle]}>
-                  Recent Searches
+                  <Trans>Recent Searches</Trans>
                 </Text>
                 {searchHistory.map((historyItem, index) => (
                   <View key={index} style={styles.historyItemContainer}>

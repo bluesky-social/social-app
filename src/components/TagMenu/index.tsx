@@ -264,7 +264,9 @@ export function TagMenu({
                 variant="ghost"
                 color="secondary"
                 onPress={() => control.close()}>
-                <ButtonText>Cancel</ButtonText>
+                <ButtonText>
+                  <Trans>Cancel</Trans>
+                </ButtonText>
               </Button>
             </>
           )}
