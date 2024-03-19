@@ -12,7 +12,6 @@ import {Text} from '#/components/Typography'
 import {Button, useButtonContext} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import * as LabelingServiceCard from '#/components/LabelingServiceCard'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
 
 import {ReportDialogProps} from './types'
 
@@ -75,31 +74,24 @@ function LabelerButton({
 
   return (
     <LabelingServiceCard.Outer
-      style={[!gtMobile && a.py_sm, interacted && styles.interacted]}>
-      <LabelingServiceCard.Avatar />
-      <View
-        style={[
-          a.flex_1,
-          a.flex_row,
-          a.gap_md,
-          a.align_center,
-          a.justify_between,
-        ]}>
-        <View style={[gtMobile && a.gap_xs, a.flex_1]}>
-          <LabelingServiceCard.Title
-            value={getLabelingServiceTitle({
-              displayName: labeler.creator.displayName,
-              handle: labeler.creator.handle,
-            })}
-          />
-          <Text
-            style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semibold]}>
-            @{labeler.creator.handle}
-          </Text>
-        </View>
-
-        <ChevronRight size="md" style={[a.z_10, t.atoms.text_contrast_low]} />
-      </View>
+      style={[
+        !gtMobile && a.py_sm,
+        interacted && styles.interacted,
+        a.rounded_sm,
+      ]}>
+      <LabelingServiceCard.Avatar avatar={labeler.creator.avatar} />
+      <LabelingServiceCard.Content>
+        <LabelingServiceCard.Title
+          value={getLabelingServiceTitle({
+            displayName: labeler.creator.displayName,
+            handle: labeler.creator.handle,
+          })}
+        />
+        <LabelingServiceCard.Description
+          value={labeler.creator.description}
+          handle={labeler.creator.handle}
+        />
+      </LabelingServiceCard.Content>
     </LabelingServiceCard.Outer>
   )
 }

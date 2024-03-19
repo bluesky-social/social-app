@@ -104,7 +104,7 @@ export function Default({
 }: LabelingServiceProps & ViewStyleProp) {
   return (
     <Outer style={style}>
-      <Avatar />
+      <Avatar avatar={labeler.creator.avatar} />
       <Content>
         <Title
           value={getLabelingServiceTitle({

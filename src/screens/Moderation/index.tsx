@@ -411,7 +411,7 @@ export function ModerationScreenInner({
                           t.atoms.bg_contrast_50,
                         ],
                       ]}>
-                      <LabelingService.Avatar />
+                      <LabelingService.Avatar avatar={labeler.creator.avatar} />
                       <LabelingService.Content>
                         <LabelingService.Title
                           value={getLabelingServiceTitle({
