@@ -96,7 +96,9 @@ export function ModerationLabelPref({
         a.flex_wrap,
       ]}>
       <View style={[a.gap_xs, a.flex_1]}>
-        <Text style={[a.font_bold]}>{labelStrings.name}</Text>
+        <Text style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>
+          {labelStrings.name}
+        </Text>
         <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
           {labelStrings.description}
         </Text>
