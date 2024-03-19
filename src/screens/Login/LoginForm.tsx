@@ -24,7 +24,7 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {HostingProvider} from '#/components/forms/HostingProvider'
 import {FormContainer} from './FormContainer'
-import {FormError} from './FormError'
+import {FormError} from '#/components/forms/FormError'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

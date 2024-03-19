@@ -17,7 +17,7 @@ import {logger} from '#/logger'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
-import {FormError} from './FormError'
+import {FormError} from '#/components/forms/FormError'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

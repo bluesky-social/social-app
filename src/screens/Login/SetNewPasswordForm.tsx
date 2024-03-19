@@ -16,7 +16,7 @@ import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
 import {Button, ButtonText} from '#/components/Button'
 import {useTheme, atoms as a} from '#/alf'
-import {FormError} from './FormError'
+import {FormError} from '#/components/forms/FormError'
 
 export const SetNewPasswordForm = ({
   error,
