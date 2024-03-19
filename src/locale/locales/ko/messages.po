@@ -2044,7 +2044,7 @@ msgstr "라벨"
 
 #: src/screens/Profile/Sections/Labels.tsx:161
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr "라벨은 사용자 및 콘텐츠에 대한 주석입니다. 라벨은 네트워크를 숨기고, 경고하고, 분류하는 데 사용할 수 있습니다."
+msgstr "라벨은 사용자 및 콘텐츠에 대한 주석입니다. 네트워크를 숨기고, 경고하고, 분류하는 데 사용할 수 있습니다."
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 msgid "labels have been placed on this {labelTarget}"
