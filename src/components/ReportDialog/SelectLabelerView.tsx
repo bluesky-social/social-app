@@ -82,10 +82,10 @@ function LabelerButton({
             handle: labeler.creator.handle,
           })}
         />
-        <LabelingServiceCard.Description
-          value={labeler.creator.description}
-          handle={labeler.creator.handle}
-        />
+        <Text
+          style={[t.atoms.text_contrast_medium, a.text_sm, a.font_semibold]}>
+          @{labeler.creator.handle}
+        </Text>
       </LabelingServiceCard.Content>
     </LabelingServiceCard.Outer>
   )
