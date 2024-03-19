@@ -15,7 +15,7 @@ import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {UserAvatar} from 'view/com/util/UserAvatar'
 import {Text} from 'view/com/util/text/Text'
-import QuoteEmbed from 'view/com/util/post-embeds/QuoteEmbed'
+import {QuoteEmbed} from 'view/com/util/post-embeds/QuoteEmbed'
 
 export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
   const pal = usePalette('default')
@@ -86,7 +86,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
       <UserAvatar
         avatar={replyTo.author.avatar}
         size={50}
-        moderation={replyTo.moderation?.avatar}
+        moderation={replyTo.moderation?.ui('avatar')}
       />
       <View style={styles.replyToPost}>
         <Text type="xl-medium" style={[pal.text]}>
@@ -103,7 +103,7 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
               {replyTo.text}
             </Text>
           </View>
-          {images && !replyTo.moderation?.embed.blur && (
+          {images && !replyTo.moderation?.ui('contentMedia').blur && (
             <ComposerReplyToImages images={images} showFull={showFull} />
           )}
         </View>

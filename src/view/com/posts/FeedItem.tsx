@@ -4,7 +4,7 @@ import {
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AtUri,
-  PostModeration,
+  ModerationDecision,
   RichText as RichTextAPI,
 } from '@atproto/api'
 import {
@@ -18,8 +18,9 @@ import {UserInfoText} from '../util/UserInfoText'
 import {PostMeta} from '../util/PostMeta'
 import {PostCtrls} from '../util/post-ctrls/PostCtrls'
 import {PostEmbeds} from '../util/post-embeds'
-import {ContentHider} from '../util/moderation/ContentHider'
-import {PostAlerts} from '../util/moderation/PostAlerts'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {PostAlerts} from '../../../components/moderation/PostAlerts'
+import {LabelsOnMyPost} from '../../../components/moderation/LabelsOnMe'
 import {RichText} from '#/components/RichText'
 import {PreviewableUserAvatar} from '../util/UserAvatar'
 import {s} from 'lib/styles'
@@ -27,13 +28,11 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
 import {makeProfileLink} from 'lib/routes/links'
-import {isEmbedByEmbedder} from 'lib/embeds'
 import {MAX_POST_LINES} from 'lib/constants'
 import {countLines} from 'lib/strings/helpers'
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow, usePostShadow, POST_TOMBSTONE} from '#/state/cache/post-shadow'
 import {FeedNameText} from '../util/FeedInfoText'
-import {useSession} from '#/state/session'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {atoms as a} from '#/alf'
@@ -50,7 +49,7 @@ export function FeedItem({
   post: AppBskyFeedDefs.PostView
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
-  moderation: PostModeration
+  moderation: ModerationDecision
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -100,7 +99,7 @@ let FeedItemInner = ({
   record: AppBskyFeedPost.Record
   reason: AppBskyFeedDefs.ReasonRepost | ReasonFeedSource | undefined
   richText: RichTextAPI
-  moderation: PostModeration
+  moderation: ModerationDecision
   isThreadChild?: boolean
   isThreadLastChild?: boolean
   isThreadParent?: boolean
@@ -108,14 +107,10 @@ let FeedItemInner = ({
   const {openComposer} = useComposerControls()
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {currentAccount} = useSession()
   const href = useMemo(() => {
     const urip = new AtUri(post.uri)
     return makeProfileLink(post.author, 'post', urip.rkey)
   }, [post.uri, post.author])
-  const isModeratedPost =
-    moderation.decisions.post.cause?.type === 'label' &&
-    moderation.decisions.post.cause.label.src !== currentAccount?.did
 
   const replyAuthorDid = useMemo(() => {
     if (!record?.reply) {
@@ -148,7 +143,7 @@ let FeedItemInner = ({
       borderColor: pal.colors.border,
       paddingBottom:
         isThreadLastChild || (!isThreadChild && !isThreadParent)
-          ? 6
+          ? 8
           : undefined,
     },
     isThreadChild ? styles.outerSmallTop : undefined,
@@ -229,6 +224,7 @@ let FeedItemInner = ({
                     numberOfLines={1}
                     text={sanitizeDisplayName(
                       reason.by.displayName || sanitizeHandle(reason.by.handle),
+                      moderation.ui('displayName'),
                     )}
                     href={makeProfileLink(reason.by)}
                   />
@@ -246,7 +242,7 @@ let FeedItemInner = ({
             did={post.author.did}
             handle={post.author.handle}
             avatar={post.author.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
           {isThreadParent && (
             <View
@@ -264,6 +260,7 @@ let FeedItemInner = ({
         <View style={styles.layoutContent}>
           <PostMeta
             author={post.author}
+            moderation={moderation}
             authorHasWarning={!!post.author.labels?.length}
             timestamp={post.indexedAt}
             postHref={href}
@@ -295,6 +292,7 @@ let FeedItemInner = ({
               </Text>
             </View>
           )}
+          <LabelsOnMyPost post={post} />
           <PostContent
             moderation={moderation}
             richText={richText}
@@ -306,9 +304,6 @@ let FeedItemInner = ({
             record={record}
             richText={richText}
             onPressReply={onPressReply}
-            showAppealLabelItem={
-              post.author.did === currentAccount?.did && isModeratedPost
-            }
             logContext="FeedItem"
           />
         </View>
@@ -324,7 +319,7 @@ let PostContent = ({
   postEmbed,
   postAuthor,
 }: {
-  moderation: PostModeration
+  moderation: ModerationDecision
   richText: RichTextAPI
   postEmbed: AppBskyFeedDefs.PostView['embed']
   postAuthor: AppBskyFeedDefs.PostView['author']
@@ -342,10 +337,10 @@ let PostContent = ({
   return (
     <ContentHider
       testID="contentHider-post"
-      moderation={moderation.content}
+      modui={moderation.ui('contentList')}
       ignoreMute
       childContainerStyle={styles.contentHiderChild}>
-      <PostAlerts moderation={moderation.content} style={styles.alert} />
+      <PostAlerts modui={moderation.ui('contentList')} style={[a.py_xs]} />
       {richText.text ? (
         <View style={styles.postTextContainer}>
           <RichText
@@ -367,19 +362,9 @@ let PostContent = ({
         />
       ) : undefined}
       {postEmbed ? (
-        <ContentHider
-          testID="contentHider-embed"
-          moderation={moderation.embed}
-          moderationDecisions={moderation.decisions}
-          ignoreMute={isEmbedByEmbedder(postEmbed, postAuthor.did)}
-          ignoreQuoteDecisions
-          style={styles.embed}>
-          <PostEmbeds
-            embed={postEmbed}
-            moderation={moderation.embed}
-            moderationDecisions={moderation.decisions}
-          />
-        </ContentHider>
+        <View style={[a.pb_sm]}>
+          <PostEmbeds embed={postEmbed} moderation={moderation} />
+        </View>
       ) : null}
     </ContentHider>
   )

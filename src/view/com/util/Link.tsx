@@ -47,6 +47,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
+  onBeforePress?: () => void
 }
 
 export const Link = memo(function Link({
@@ -60,6 +61,7 @@ export const Link = memo(function Link({
   accessible,
   anchorNoUnderline,
   navigationAction,
+  onBeforePress,
   ...props
 }: Props) {
   const t = useTheme()
@@ -70,6 +72,7 @@ export const Link = memo(function Link({
 
   const onPress = React.useCallback(
     (e?: Event) => {
+      onBeforePress?.()
       if (typeof href === 'string') {
         return onPressInner(
           closeModal,
@@ -81,7 +84,7 @@ export const Link = memo(function Link({
         )
       }
     },
-    [closeModal, navigation, navigationAction, href, openLink],
+    [closeModal, navigation, navigationAction, href, openLink, onBeforePress],
   )
 
   if (noFeedback) {
@@ -262,6 +265,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   accessibilityHint?: string
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
+  disableMismatchWarning?: boolean
   onPointerEnter?: () => void
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
@@ -273,6 +277,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   numberOfLines,
   lineHeight,
   navigationAction,
+  disableMismatchWarning,
   ...props
 }: TextLinkOnWebOnlyProps) {
   if (isWeb) {
@@ -287,6 +292,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
         lineHeight={lineHeight}
         title={props.title}
         navigationAction={navigationAction}
+        disableMismatchWarning={disableMismatchWarning}
         {...props}
       />
     )
