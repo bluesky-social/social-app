@@ -58,6 +58,7 @@ export function ModerationLabelPref({
     adultOnly && !preferences?.moderationPrefs.adultContentEnabled
   // are there any reasons we cant configure this label here?
   const cantConfigure = isGlobalLabel || adultDisabled
+  const showConfig = !disabled && (gtPhone || !cantConfigure)
 
   // adjust the pref based on whether warn is available
   let prefAdjusted = pref
@@ -125,7 +126,7 @@ export function ModerationLabelPref({
         )}
       </View>
 
-      {!disabled && (
+      {showConfig && (
         <View style={[gtPhone ? undefined : a.w_full]}>
           {cantConfigure ? (
             <View
