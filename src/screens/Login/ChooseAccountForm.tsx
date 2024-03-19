@@ -1,5 +1,5 @@
 import React from 'react'
-import {TouchableOpacity, View} from 'react-native'
+import {View} from 'react-native'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import flattenReactChildren from 'react-keyed-flatten-children'
@@ -67,31 +67,42 @@ function AccountItem({
   }, [account, onSelect])
 
   return (
-    <TouchableOpacity
+    <Button
       testID={`chooseAccountBtn-${account.handle}`}
       key={account.did}
       style={[a.flex_1]}
       onPress={onPress}
-      accessibilityRole="button"
-      accessibilityLabel={_(msg`Sign in as ${account.handle}`)}
-      accessibilityHint={_(msg`Double tap to sign in`)}>
-      <View style={[a.flex_1, a.flex_row, a.align_center, {height: 48}]}>
-        <View style={a.p_md}>
-          <UserAvatar avatar={profile?.avatar} size={24} />
-        </View>
-        <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
-          <Text style={[a.font_bold]}>
-            {profile?.displayName || account.handle}{' '}
+      label={
+        isCurrentAccount
+          ? _(msg`Continue as ${account.handle} (currently signed in)`)
+          : _(msg`Sign in as ${account.handle}`)
+      }>
+      {({hovered}) => (
+        <View
+          style={[
+            a.flex_1,
+            a.flex_row,
+            a.align_center,
+            {height: 48},
+            hovered && t.atoms.bg_contrast_25,
+          ]}>
+          <View style={a.p_md}>
+            <UserAvatar avatar={profile?.avatar} size={24} />
+          </View>
+          <Text style={[a.align_baseline, a.flex_1, a.flex_row, a.py_sm]}>
+            <Text style={[a.font_bold]}>
+              {profile?.displayName || account.handle}{' '}
+            </Text>
+            <Text style={[t.atoms.text_contrast_medium]}>{account.handle}</Text>
           </Text>
-          <Text style={[t.atoms.text_contrast_medium]}>{account.handle}</Text>
-        </Text>
-        {isCurrentAccount ? (
-          <Check size="sm" style={[{color: colors.green3}, a.mr_md]} />
-        ) : (
-          <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
-        )}
-      </View>
-    </TouchableOpacity>
+          {isCurrentAccount ? (
+            <Check size="sm" style={[{color: colors.green3}, a.mr_md]} />
+          ) : (
+            <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+          )}
+        </View>
+      )}
+    </Button>
   )
 }
 export const ChooseAccountForm = ({
@@ -149,28 +160,35 @@ export const ChooseAccountForm = ({
               isCurrentAccount={account.did === currentAccount?.did}
             />
           ))}
-          <TouchableOpacity
+          <Button
             testID="chooseNewAccountBtn"
             style={[a.flex_1]}
             onPress={() => onSelectAccount(undefined)}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`Login to account that is not listed`)}
-            accessibilityHint="">
-            <View
-              style={[a.flex_row, a.flex_row, a.align_center, {height: 48}]}>
-              <Text
+            label={_(msg`Login to account that is not listed`)}>
+            {({hovered}) => (
+              <View
                 style={[
-                  a.align_baseline,
                   a.flex_1,
                   a.flex_row,
-                  a.py_sm,
-                  {paddingLeft: 48},
+                  a.flex_row,
+                  a.align_center,
+                  {height: 48},
+                  hovered && t.atoms.bg_contrast_25,
                 ]}>
-                <Trans>Other account</Trans>
-              </Text>
-              <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
-            </View>
-          </TouchableOpacity>
+                <Text
+                  style={[
+                    a.align_baseline,
+                    a.flex_1,
+                    a.flex_row,
+                    a.py_sm,
+                    {paddingLeft: 48},
+                  ]}>
+                  <Trans>Other account</Trans>
+                </Text>
+                <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
+              </View>
+            )}
+          </Button>
         </Group>
       </View>
       <View style={[a.flex_row]}>
