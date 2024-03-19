@@ -150,7 +150,6 @@ export function ListMaybePlaceholder({
   const t = useTheme()
   const {_} = useLingui()
   const {gtMobile, gtTablet} = useBreakpoints()
-  const {_} = useLingui()
 
   if (!isLoading && isError) {
     return (
