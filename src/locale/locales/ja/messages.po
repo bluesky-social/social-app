@@ -302,7 +302,7 @@ msgstr "以前のメールアドレス{0}にメールが送信されました。
 
 #: src/lib/moderation/useReportOptions.ts:26
 msgid "An issue not included in these options"
-msgstr "これらのオプションに含まれない問題"
+msgstr "他の選択肢にはあてはまらない問題"
 
 #: src/view/com/profile/FollowButton.tsx:35
 #: src/view/com/profile/FollowButton.tsx:45
@@ -2864,7 +2864,7 @@ msgstr "あなたのプロフィールに移動します"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:123
 msgid "Need to report a copyright violation?"
-msgstr "著作権侵害を報告する必要がありますか?"
+msgstr "著作権違反を報告する必要がありますか?"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
@@ -3253,7 +3253,7 @@ msgstr "{numItems}個中{0}目のオプション"
 
 #: src/components/ReportDialog/SubmitView.tsx:162
 msgid "Optionally provide additional information below:"
-msgstr "必要に応じて、以下に追加情報を入力します:"
+msgstr "オプションとして、以下に追加情報をご記入ください："
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
@@ -3773,7 +3773,7 @@ msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:46
 msgid "Report this user"
-msgstr "このユーザを報告する"
+msgstr "このユーザを報告"
 
 #: src/view/com/modals/Repost.tsx:43
 #: src/view/com/modals/Repost.tsx:48
@@ -4088,7 +4088,7 @@ msgstr "次のアカウントを選択してフォローしてください"
 
 #: src/components/ReportDialog/SubmitView.tsx:135
 msgid "Select the moderation service(s) to report to"
-msgstr "報告先のモデレーションサービスを選択します"
+msgstr "報告先のモデレーションサービスを選んでください"
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
@@ -5553,7 +5553,7 @@ msgstr ""
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:47
 msgid "Why should this user be reviewed?"
-msgstr "何故このユーザを審査した方がよいのでしょうか？"
+msgstr "何故このユーザをレビューすべきでしょうか？"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:102
 msgid "Wide"
