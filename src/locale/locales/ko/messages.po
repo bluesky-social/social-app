@@ -148,15 +148,6 @@ msgstr "대체 텍스트 추가하기"
 msgid "Add App Password"
 msgstr "앱 비밀번호 추가"
 
-#: src/view/com/modals/report/InputIssueDetails.tsx:41
-#: src/view/com/modals/report/Modal.tsx:191
-#~ msgid "Add details"
-#~ msgstr "세부 정보 추가"
-
-#: src/view/com/modals/report/Modal.tsx:194
-#~ msgid "Add details to report"
-#~ msgstr "신고 세부 정보 추가"
-
 #: src/view/com/composer/Composer.tsx:462
 msgid "Add link card"
 msgstr "링크 카드 추가"
@@ -1153,19 +1144,6 @@ msgstr "노출을 포함하지 않음."
 msgid "Domain verified!"
 msgstr "도메인을 확인했습니다."
 
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
-#: src/view/com/modals/EditImage.tsx:333
-#: src/view/com/modals/ListAddRemoveUsers.tsx:144
-#: src/view/com/modals/SelfLabel.tsx:157
-#: src/view/com/modals/Threadgate.tsx:129
-#: src/view/com/modals/Threadgate.tsx:132
-#: src/view/com/modals/UserAddRemoveLists.tsx:95
-#: src/view/com/modals/UserAddRemoveLists.tsx:98
-#: src/view/screens/PreferencesThreads.tsx:162
-msgctxt "action"
-msgid "Done"
-msgstr "완료"
-
 #: src/components/dialogs/BirthDateSettings.tsx:112
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/view/com/auth/server-input/index.tsx:165
@@ -1179,6 +1157,19 @@ msgstr "완료"
 #: src/view/screens/PreferencesFollowingFeed.tsx:311
 #: src/view/screens/Settings/ExportCarDialog.tsx:93
 #: src/view/screens/Settings/ExportCarDialog.tsx:94
+msgid "Done"
+msgstr "완료"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/ListAddRemoveUsers.tsx:144
+#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
+#: src/view/com/modals/UserAddRemoveLists.tsx:95
+#: src/view/com/modals/UserAddRemoveLists.tsx:98
+#: src/view/screens/PreferencesThreads.tsx:162
+msgctxt "action"
 msgid "Done"
 msgstr "완료"
 
@@ -1842,10 +1833,6 @@ msgstr "이 게시물을 숨기시겠습니까?"
 #: src/view/com/notifications/FeedItem.tsx:315
 msgid "Hide user list"
 msgstr "사용자 리스트 숨기기"
-
-#: src/view/com/profile/ProfileHeader.tsx:298
-#~ msgid "Hides posts from {0} in your feed"
-#~ msgstr "피드에서 {0} 님의 게시물을 숨깁니다"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:111
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -2816,21 +2803,9 @@ msgstr "구성 가능한 언어 설정을 엽니다"
 msgid "Opens device photo gallery"
 msgstr "기기의 사진 갤러리를 엽니다"
 
-#: src/view/com/profile/ProfileHeader.tsx:231
-#~ msgid "Opens editor for profile display name, avatar, background image, and description"
-#~ msgstr "프로필 표시 이름, 아바타, 배경 이미지 및 설명 편집기를 엽니다"
-
 #: src/view/screens/Settings/index.tsx:667
 msgid "Opens external embeds settings"
 msgstr "외부 임베드 설정을 엽니다"
-
-#: src/view/com/profile/ProfileHeader.tsx:376
-#~ msgid "Opens followers list"
-#~ msgstr "팔로워 목록을 엽니다"
-
-#: src/view/com/profile/ProfileHeader.tsx:395
-#~ msgid "Opens following list"
-#~ msgstr "팔로우 중 목록을 엽니다"
 
 #: src/view/com/modals/InviteCodes.tsx:172
 msgid "Opens list of invite codes"
@@ -3311,10 +3286,6 @@ msgctxt "description"
 msgid "Reply to <0/>"
 msgstr "<0/> 님에게 보내는 답글"
 
-#: src/view/com/modals/report/Modal.tsx:166
-#~ msgid "Report {collectionName}"
-#~ msgstr "{collectionName} 신고"
-
 #: src/view/com/profile/ProfileMenu.tsx:319
 #: src/view/com/profile/ProfileMenu.tsx:322
 msgid "Report Account"
@@ -3470,16 +3441,16 @@ msgstr "다시 시도"
 msgid "Return to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
-#: src/view/com/lightbox/Lightbox.tsx:132
-#: src/view/com/modals/CreateOrEditList.tsx:345
-msgctxt "action"
-msgid "Save"
-msgstr "저장"
-
 #: src/components/dialogs/BirthDateSettings.tsx:118
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:337
 #: src/view/com/modals/EditProfile.tsx:224
+msgid "Save"
+msgstr "저장"
+
+#: src/view/com/lightbox/Lightbox.tsx:132
+#: src/view/com/modals/CreateOrEditList.tsx:345
+msgctxt "action"
 msgid "Save"
 msgstr "저장"
 
