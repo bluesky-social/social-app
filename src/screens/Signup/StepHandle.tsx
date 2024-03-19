@@ -89,20 +89,20 @@ export function StepHandle() {
           {state.error ? (
             <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
               <IsValidIcon valid={false} />
-              <Text style={[a.text_md, a.flex]}>{state.error}</Text>
+              <Text style={[a.text_md, a.flex_1]}>{state.error}</Text>
             </View>
           ) : undefined}
           {validCheck.hyphenStartOrEnd ? (
             <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
               <IsValidIcon valid={validCheck.handleChars} />
-              <Text style={[a.text_md, a.flex]}>
+              <Text style={[a.text_md, a.flex_1]}>
                 <Trans>Only contains letters, numbers, and hyphens</Trans>
               </Text>
             </View>
           ) : (
             <View style={[a.w_full, a.flex_row, a.align_center, a.gap_sm]}>
               <IsValidIcon valid={validCheck.hyphenStartOrEnd} />
-              <Text style={[a.text_md, a.flex]}>
+              <Text style={[a.text_md, a.flex_1]}>
                 <Trans>Doesn't begin or end with a hyphen</Trans>
               </Text>
             </View>
@@ -112,11 +112,11 @@ export function StepHandle() {
               valid={validCheck.frontLength && validCheck.totalLength}
             />
             {!validCheck.totalLength ? (
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_md, a.flex_1]}>
                 <Trans>No longer than 253 characters</Trans>
               </Text>
             ) : (
-              <Text style={[a.text_md]}>
+              <Text style={[a.text_md, a.flex_1]}>
                 <Trans>At least 3 characters</Trans>
               </Text>
             )}
