@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {DesktopSearch} from './Search'
 import {DesktopFeeds} from './Feeds'
@@ -23,7 +23,9 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
   }
 
   return (
-    <View style={[styles.rightNav, pal.view]}>
+    <ScrollView
+      style={[styles.rightNav, pal.view]}
+      showsVerticalScrollIndicator={false}>
       <View style={{paddingVertical: 20}}>
         {routeName === 'Search' ? (
           <View style={{marginBottom: 18}}>
@@ -92,7 +94,7 @@ export function DesktopRightNav({routeName}: {routeName: string}) {
           </View>
         </View>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
