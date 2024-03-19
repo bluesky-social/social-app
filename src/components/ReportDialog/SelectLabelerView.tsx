@@ -24,11 +24,11 @@ export function SelectLabelerView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {gtPhone} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
 
   return (
     <View style={[a.gap_lg]}>
-      <View style={[a.justify_center, gtPhone ? a.gap_sm : a.gap_xs]}>
+      <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
         <Text style={[a.text_2xl, a.font_bold]}>
           <Trans>Select moderator</Trans>
         </Text>
@@ -62,7 +62,7 @@ function LabelerButton({
 }) {
   const t = useTheme()
   const {hovered, pressed} = useButtonContext()
-  const {gtPhone} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
   const interacted = hovered || pressed
 
   const styles = React.useMemo(() => {
@@ -75,7 +75,7 @@ function LabelerButton({
 
   return (
     <LabelingServiceCard.Outer
-      style={[!gtPhone && a.py_sm, interacted && styles.interacted]}>
+      style={[!gtMobile && a.py_sm, interacted && styles.interacted]}>
       <LabelingServiceCard.Avatar />
       <View
         style={[
@@ -85,7 +85,7 @@ function LabelerButton({
           a.align_center,
           a.justify_between,
         ]}>
-        <View style={[gtPhone && a.gap_xs, a.flex_1]}>
+        <View style={[gtMobile && a.gap_xs, a.flex_1]}>
           <LabelingServiceCard.Title
             value={getLabelingServiceTitle({
               displayName: labeler.creator.displayName,

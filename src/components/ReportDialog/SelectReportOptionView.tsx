@@ -35,7 +35,7 @@ export function SelectReportOptionView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const {gtPhone} = useBreakpoints()
+  const {gtMobile} = useBreakpoints()
   const allReportOptions = useReportOptions()
   const reportOptions = allReportOptions[props.params.type]
 
@@ -77,7 +77,7 @@ export function SelectReportOptionView({
         </Button>
       ) : null}
 
-      <View style={[a.justify_center, gtPhone ? a.gap_sm : a.gap_xs]}>
+      <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
         <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {i18n.description}
