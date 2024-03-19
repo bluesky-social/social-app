@@ -41,6 +41,7 @@ module.exports = function (config) {
       : process.env.BSKY_IOS_BUILD_NUMBER
 
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+  const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
 
   return {
     expo: {
@@ -123,7 +124,7 @@ module.exports = function (config) {
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
-        enabled: true,
+        enabled: IS_TESTFLIGHT, // Only enable updates for TestFlight builds for right now
         fallbackToCacheTimeout: 30000,
         codeSigningCertificate: './code-signing/certificate.pem',
         codeSigningMetadata: {
