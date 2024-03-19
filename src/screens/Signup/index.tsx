@@ -14,7 +14,6 @@ import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
 import {FEEDBACK_FORM_URL} from 'lib/constants'
@@ -187,12 +186,15 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     <Button
                       label="Next"
                       variant="solid"
-                      color="primary"
+                      color={
+                        !state.canNext || state.isLoading
+                          ? 'secondary'
+                          : 'primary'
+                      }
                       size="small"
                       disabled={!state.canNext || state.isLoading}
                       onPress={onNextPress}>
                       <ButtonText>Next</ButtonText>
-                      {state.isLoading && <Loader />}
                     </Button>
                   )}
                 </>
