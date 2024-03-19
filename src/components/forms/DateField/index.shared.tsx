@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, Pressable} from 'react-native'
 
-import {atoms as a, useTheme, web} from '#/alf'
+import {atoms as a, android, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import * as TextField from '#/components/forms/TextField'
@@ -67,11 +67,15 @@ export function DateFieldButton({
             borderColor: 'transparent',
             borderWidth: 2,
           },
+          android({
+            minHeight: 57.5,
+          }),
           a.flex_row,
           a.flex_1,
           a.w_full,
           a.rounded_sm,
           t.atoms.bg_contrast_25,
+          a.align_center,
           hovered ? chromeHover : {},
           focused || pressed ? chromeFocus : {},
           isInvalid || isInvalid ? chromeError : {},

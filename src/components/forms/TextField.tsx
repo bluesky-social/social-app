@@ -277,7 +277,7 @@ export function Icon({icon: Comp}: {icon: React.ComponentType<SVGIconProps>}) {
       <Comp
         size="md"
         style={[
-          {color: t.palette.contrast_500, pointerEvents: 'none'},
+          {color: t.palette.contrast_500, pointerEvents: 'none', flexShrink: 0},
           ctx.hovered ? hover : {},
           ctx.focused ? focus : {},
           ctx.isInvalid && ctx.hovered ? errorHover : {},
