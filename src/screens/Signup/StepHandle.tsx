@@ -33,9 +33,7 @@ export function StepHandle() {
   useFocusEffect(
     React.useCallback(() => {
       setValidCheck(validateHandle(state.handle, state.userDomain))
-      // Disabling this, because we only want to run this when we focus the screen
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []),
+    }, [state.handle, state.userDomain]),
   )
 
   const onHandleChange = React.useCallback(
@@ -44,13 +42,12 @@ export function StepHandle() {
         dispatch({type: 'setError', value: ''})
       }
 
-      setValidCheck(validateHandle(value, state.userDomain))
       dispatch({
         type: 'setHandle',
         value,
       })
     },
-    [dispatch, state.error, state.userDomain],
+    [dispatch, state.error],
   )
 
   return (
