@@ -219,7 +219,7 @@ function SuggestedFollow({
         <UserAvatar
           size={60}
           avatar={profile.avatar}
-          moderation={moderation.avatar}
+          moderation={moderation.ui('avatar')}
         />
 
         <View style={{width: '100%', paddingVertical: 12}}>
@@ -229,7 +229,7 @@ function SuggestedFollow({
             numberOfLines={1}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text

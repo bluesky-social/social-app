@@ -267,6 +267,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('Debug')
   }, [navigation])
 
+  const onPressDebugModeration = React.useCallback(() => {
+    navigation.navigate('DebugMod')
+  }, [navigation])
+
   const onPressSavedFeeds = React.useCallback(() => {
     navigation.navigate('SavedFeeds')
   }, [navigation])
@@ -824,6 +828,16 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Opens the storybook page`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Storybook</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressDebugModeration}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open storybook page`)}
+              accessibilityHint={_(msg`Opens the storybook page`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Debug Moderation</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

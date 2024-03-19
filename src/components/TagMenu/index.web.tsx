@@ -50,7 +50,7 @@ export function TagMenu({
   const {mutateAsync: removeMutedWord, variables: optimisticRemove} =
     useRemoveMutedWordMutation()
   const isMuted = Boolean(
-    (preferences?.mutedWords?.find(
+    (preferences?.moderationPrefs.mutedWords?.find(
       m => m.value === tag && m.targets.includes('tag'),
     ) ??
       optimisticUpsert?.find(

@@ -39,6 +39,7 @@ import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetMinimalShellMode} from '#/state/shell'
 import {useModalControls} from '#/state/modals'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {
   useListQuery,
@@ -236,6 +237,7 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const {currentAccount} = useSession()
+  const reportDialogControl = useReportDialogControl()
   const {openModal} = useModalControls()
   const listMuteMutation = useListMuteMutation()
   const listBlockMutation = useListBlockMutation()
@@ -370,12 +372,8 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
   ])
 
   const onPressReport = useCallback(() => {
-    openModal({
-      name: 'report',
-      uri: list.uri,
-      cid: list.cid,
-    })
-  }, [openModal, list])
+    reportDialogControl.open()
+  }, [reportDialogControl])
 
   const onPressShare = useCallback(() => {
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
@@ -550,6 +548,14 @@ function Header({rkey, list}: {rkey: string; list: AppBskyGraphDefs.ListView}) {
       isOwner={list.creator.did === currentAccount?.did}
       creator={list.creator}
       avatarType="list">
+      <ReportDialog
+        control={reportDialogControl}
+        params={{
+          type: 'list',
+          uri: list.uri,
+          cid: list.cid,
+        }}
+      />
       {isCurateList || isPinned ? (
         <Button
           testID={isPinned ? 'unpinBtn' : 'pinBtn'}
