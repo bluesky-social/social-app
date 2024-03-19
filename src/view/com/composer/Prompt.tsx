@@ -23,7 +23,11 @@ export function ComposePrompt({onPressCompose}: {onPressCompose: () => void}) {
       accessibilityRole="button"
       accessibilityLabel={_(msg`Compose reply`)}
       accessibilityHint={_(msg`Opens composer`)}>
-      <UserAvatar avatar={profile?.avatar} size={38} />
+      <UserAvatar
+        avatar={profile?.avatar}
+        size={38}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
       <Text
         type="xl"
         style={[

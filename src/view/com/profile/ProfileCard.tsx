@@ -49,6 +49,7 @@ export function ProfileCard({
   const pal = usePalette('default')
   const profile = useProfileShadow(profileUnshadowed)
   const moderationOpts = useModerationOpts()
+  const isLabeler = profile?.associated?.labeler
   if (!moderationOpts) {
     return null
   }
@@ -79,6 +80,7 @@ export function ProfileCard({
             size={40}
             avatar={profile.avatar}
             moderation={moderation.ui('avatar')}
+            type={isLabeler ? 'labeler' : 'user'}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -101,7 +103,7 @@ export function ProfileCard({
           />
           {!!profile.viewer?.followedBy && <View style={s.flexRow} />}
         </View>
-        {renderButton ? (
+        {renderButton && !isLabeler ? (
           <View style={styles.layoutButton}>{renderButton(profile)}</View>
         ) : undefined}
       </View>
@@ -223,6 +225,7 @@ function FollowersList({
               avatar={f.avatar}
               size={32}
               moderation={mod.ui('avatar')}
+              type={f.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         </View>

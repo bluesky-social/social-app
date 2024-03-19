@@ -75,6 +75,7 @@ let DrawerProfileCard = ({
         avatar={profile?.avatar}
         // See https://github.com/bluesky-social/social-app/pull/1801:
         usePlainRNImage={true}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
       />
       <Text
         type="title-lg"

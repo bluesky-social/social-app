@@ -141,6 +141,7 @@ function SearchScreenSuggestedFollows() {
         friends.slice(0, 4).map(friend =>
           getSuggestedFollowsByActor(friend.did).then(foafsRes => {
             for (const user of foafsRes.suggestions) {
+              if (user.associated?.labeler) continue
               friendsOfFriends.set(user.did, user)
             }
           }),

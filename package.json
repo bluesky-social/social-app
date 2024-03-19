@@ -46,7 +46,7 @@
     "make-deploy-bundle": "bash scripts/bundleUpdate.sh"
   },
   "dependencies": {
-    "@atproto/api": "^0.12.0",
+    "@atproto/api": "^0.12.1",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
     "@emoji-mart/react": "^1.1.1",
