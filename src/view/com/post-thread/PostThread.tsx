@@ -108,7 +108,8 @@ export function PostThread({
       ?.ui('contentList')
       .blurs.find(
         cause =>
-          cause.type === 'label' && cause.labelDef.id === '!no-unauthenticated',
+          cause.type === 'label' &&
+          cause.labelDef.identifier === '!no-unauthenticated',
       )
   }, [rootPost, moderationOpts])
 
