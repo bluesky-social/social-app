@@ -57,13 +57,6 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     backgroundColor: '#00000077',
   },
-  closeText: {
-    lineHeight: 22,
-    fontSize: 19,
-    textAlign: 'center',
-    color: '#FFF',
-    includeFontPadding: false,
-  },
   blurredBackground: {
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
