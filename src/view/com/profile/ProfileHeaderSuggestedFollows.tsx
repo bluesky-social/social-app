@@ -98,9 +98,11 @@ export function ProfileHeaderSuggestedFollows({
               <SuggestedFollowSkeleton />
             </>
           ) : data ? (
-            data.suggestions.map(profile => (
-              <SuggestedFollow key={profile.did} profile={profile} />
-            ))
+            data.suggestions
+              .filter(s => (s.associated?.labeler ? false : true))
+              .map(profile => (
+                <SuggestedFollow key={profile.did} profile={profile} />
+              ))
           ) : (
             <View />
           )}
