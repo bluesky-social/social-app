@@ -15,6 +15,7 @@ import LinearGradient from 'react-native-linear-gradient'
 
 import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
+import {normalizeTextStyles} from '#/components/Typography'
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'gradient'
 export type ButtonColor =
@@ -139,7 +140,7 @@ export function Button({
     }))
   }, [setState])
 
-  const {baseStyles, hoverStyles, focusStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles} = React.useMemo(() => {
     const baseStyles: ViewStyle[] = []
     const hoverStyles: ViewStyle[] = []
     const light = t.name === 'light'
@@ -191,14 +192,14 @@ export function Button({
       if (variant === 'solid') {
         if (!disabled) {
           baseStyles.push({
-            backgroundColor: t.palette.contrast_50,
+            backgroundColor: t.palette.contrast_25,
           })
           hoverStyles.push({
-            backgroundColor: t.palette.contrast_100,
+            backgroundColor: t.palette.contrast_50,
           })
         } else {
           baseStyles.push({
-            backgroundColor: t.palette.contrast_200,
+            backgroundColor: t.palette.contrast_100,
           })
         }
       } else if (variant === 'outline') {
@@ -308,12 +309,6 @@ export function Button({
     return {
       baseStyles,
       hoverStyles,
-      focusStyles: [
-        ...hoverStyles,
-        {
-          outline: 0,
-        } as ViewStyle,
-      ],
     }
   }, [t, variant, color, size, shape, disabled])
 
@@ -376,10 +371,8 @@ export function Button({
         a.flex_row,
         a.align_center,
         a.justify_center,
-        a.justify_center,
         flattenedBaseStyles,
         ...(state.hovered || state.pressed ? hoverStyles : []),
-        ...(state.focused ? focusStyles : []),
         flatten(style),
       ]}
       onPressIn={onPressIn}
@@ -398,7 +391,7 @@ export function Button({
           ]}>
           <LinearGradient
             colors={
-              state.hovered || state.pressed || state.focused
+              state.hovered || state.pressed
                 ? gradientHoverColors
                 : gradientColors
             }
@@ -527,7 +520,14 @@ export function ButtonText({children, style, ...rest}: ButtonTextProps) {
   const textStyles = useSharedButtonTextStyles()
 
   return (
-    <Text {...rest} style={[a.font_bold, a.text_center, textStyles, style]}>
+    <Text
+      {...rest}
+      style={normalizeTextStyles([
+        a.font_bold,
+        a.text_center,
+        textStyles,
+        style,
+      ])}>
       {children}
     </Text>
   )

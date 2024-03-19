@@ -11,16 +11,12 @@ import {sanitizeHandle} from 'lib/strings/handles'
 import {isAndroid, isWeb} from 'platform/detection'
 import {TimeElapsed} from './TimeElapsed'
 import {makeProfileLink} from 'lib/routes/links'
-import {ModerationUI} from '@atproto/api'
+import {AppBskyActorDefs, ModerationDecision, ModerationUI} from '@atproto/api'
 import {usePrefetchProfileQuery} from '#/state/queries/profile'
 
 interface PostMetaOpts {
-  author: {
-    avatar?: string
-    did: string
-    handle: string
-    displayName?: string | undefined
-  }
+  author: AppBskyActorDefs.ProfileViewBasic
+  moderation: ModerationDecision | undefined
   authorHasWarning: boolean
   postHref: string
   timestamp: string
@@ -46,6 +42,7 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
             avatar={opts.author.avatar}
             size={opts.avatarSize || 16}
             moderation={opts.avatarModeration}
+            type={opts.author.associated?.labeler ? 'labeler' : 'user'}
           />
         </View>
       )}
@@ -55,9 +52,14 @@ let PostMeta = (opts: PostMetaOpts): React.ReactNode => {
           style={[pal.text, opts.displayNameStyle]}
           numberOfLines={1}
           lineHeight={1.2}
+          disableMismatchWarning
           text={
             <>
-              {sanitizeDisplayName(displayName)}&nbsp;
+              {sanitizeDisplayName(
+                displayName,
+                opts.moderation?.ui('displayName'),
+              )}
+              &nbsp;
               <Text
                 type="md"
                 numberOfLines={1}

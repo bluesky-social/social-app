@@ -6,7 +6,8 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {Button} from 'view/com/util/forms/Button'
 import {ViewHeader} from 'view/com/util/ViewHeader'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 
 type Props = {
   next: () => void
@@ -15,6 +16,7 @@ type Props = {
 
 export function WelcomeMobile({next, skip}: Props) {
   const pal = usePalette('default')
+  const {_} = useLingui()
 
   return (
     <View style={[styles.container]} testID="welcomeOnboarding">
@@ -91,7 +93,7 @@ export function WelcomeMobile({next, skip}: Props) {
 
       <Button
         onPress={next}
-        label="Continue"
+        label={_(msg`Continue`)}
         testID="continueBtn"
         style={[styles.buttonContainer]}
         labelStyle={styles.buttonText}

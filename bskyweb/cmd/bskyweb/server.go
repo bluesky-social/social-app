@@ -188,6 +188,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/settings/threads", server.WebGeneric)
 	e.GET("/settings/external-embeds", server.WebGeneric)
 	e.GET("/sys/debug", server.WebGeneric)
+	e.GET("/sys/debug-mod", server.WebGeneric)
 	e.GET("/sys/log", server.WebGeneric)
 	e.GET("/support", server.WebGeneric)
 	e.GET("/support/privacy", server.WebGeneric)
@@ -203,6 +204,7 @@ func serve(cctx *cli.Context) error {
 	e.GET("/profile/:handleOrDID/lists/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey", server.WebGeneric)
 	e.GET("/profile/:handleOrDID/feed/:rkey/liked-by", server.WebGeneric)
+	e.GET("/profile/:handleOrDID/labeler/liked-by", server.WebGeneric)
 
 	// profile RSS feed (DID not handle)
 	e.GET("/profile/:ident/rss", server.WebProfileRSS)
