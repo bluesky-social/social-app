@@ -1,9 +1,11 @@
 import React from 'react'
+import {Platform} from 'react-native'
 import {
   Statsig,
   StatsigProvider,
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
+import {AppState, AppStateStatus} from 'react-native'
 import {useSession} from '../../state/session'
 import {sha256} from 'js-sha256'
 import {LogEvents} from './events'
@@ -58,8 +60,24 @@ function toStatsigUser(did: string | undefined) {
   if (did) {
     userID = sha256(did)
   }
-  return {userID}
+  return {
+    userID,
+    platform: Platform.OS,
+  }
 }
+
+let lastState: AppStateStatus = AppState.currentState
+AppState.addEventListener('change', (state: AppStateStatus) => {
+  if (state === lastState) {
+    return
+  }
+  lastState = state
+  if (state === 'active') {
+    logEvent('state:foreground', {})
+  } else {
+    logEvent('state:background', {})
+  }
+})
 
 export function Provider({children}: {children: React.ReactNode}) {
   const {currentAccount} = useSession()
