@@ -1,5 +1,5 @@
 import React from 'react'
-import {View} from 'react-native'
+import {Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -27,6 +27,7 @@ export function HostingProvider({
   const {_} = useLingui()
 
   const onPressSelectService = React.useCallback(() => {
+    Keyboard.dismiss()
     serverInputControl.open()
     if (onOpenDialog) {
       onOpenDialog()
