@@ -298,7 +298,10 @@ let EditableUserAvatar = ({
     <Menu.Root>
       <Menu.Trigger label={_(msg`Edit avatar`)}>
         {({props}) => (
-          <TouchableOpacity {...props} activeOpacity={0.8}>
+          <TouchableOpacity
+            {...props}
+            activeOpacity={0.8}
+            testID="changeAvatarBtn">
             {avatar ? (
               <HighPriorityImage
                 testID="userAvatarImage"
