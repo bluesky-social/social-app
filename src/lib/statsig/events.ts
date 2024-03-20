@@ -9,6 +9,10 @@ export type LogEvents = {
     feedType: string
     itemCount: number
   }
+  'feed:refresh': {
+    feedType: string
+    reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
+  }
   'post:create': {
     imageCount: number
     isReply: boolean
