@@ -67,15 +67,24 @@ function toStatsigUser(did: string | undefined) {
 }
 
 let lastState: AppStateStatus = AppState.currentState
+let lastActive = lastState === 'active' ? performance.now() : null
 AppState.addEventListener('change', (state: AppStateStatus) => {
   if (state === lastState) {
     return
   }
   lastState = state
   if (state === 'active') {
+    lastActive = performance.now()
     logEvent('state:foreground', {})
   } else {
-    logEvent('state:background', {})
+    let secondsActive = 0
+    if (lastActive != null) {
+      secondsActive = Math.round((performance.now() - lastActive) / 1e3)
+    }
+    lastActive = null
+    logEvent('state:background', {
+      secondsActive,
+    })
   }
 })
 
