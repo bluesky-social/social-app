@@ -1,6 +1,7 @@
 import React from 'react'
 import {View, Pressable} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
@@ -29,6 +30,7 @@ export function ReportDialog(props: ReportDialogProps) {
 }
 
 function ReportDialogInner(props: ReportDialogProps) {
+  const {_} = useLingui()
   const {
     isLoading: isLabelerLoading,
     data: labelers,
@@ -38,7 +40,7 @@ function ReportDialogInner(props: ReportDialogProps) {
 
   return (
     <Dialog.ScrollableInner
-      label="Report Dialog"
+      label={_(msg`Report dialog`)}
       keyboardDismissMode="interactive">
       {isLoading ? (
         <View style={[a.align_center, {height: 100}]}>

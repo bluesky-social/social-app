@@ -86,7 +86,7 @@ export function SelectReportOptionView({
 
       <Divider />
 
-      <View style={[a.gap_sm, {marginHorizontal: a.p_md.padding * -1}]}>
+      <View style={[a.gap_sm]}>
         {reportOptions.map(reportOption => {
           return (
             <Button
@@ -102,39 +102,37 @@ export function SelectReportOptionView({
         })}
 
         {(props.params.type === 'post' || props.params.type === 'account') && (
-          <View style={[a.pt_md, a.px_md]}>
-            <View
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.justify_between,
+              a.gap_lg,
+              a.p_md,
+              a.pl_lg,
+              a.rounded_md,
+              t.atoms.bg_contrast_900,
+            ]}>
+            <Text
               style={[
-                a.flex_row,
-                a.align_center,
-                a.justify_between,
-                a.gap_lg,
-                a.p_md,
-                a.pl_lg,
-                a.rounded_md,
-                t.atoms.bg_contrast_900,
+                a.flex_1,
+                t.atoms.text_inverted,
+                a.italic,
+                a.leading_snug,
               ]}>
-              <Text
-                style={[
-                  a.flex_1,
-                  t.atoms.text_inverted,
-                  a.italic,
-                  a.leading_snug,
-                ]}>
-                <Trans>Need to report a copyright violation?</Trans>
-              </Text>
-              <Link
-                to={DMCA_LINK}
-                label={_(msg`View details for reporting a copyright violation`)}
-                size="small"
-                variant="solid"
-                color="secondary">
-                <ButtonText>
-                  <Trans>View details</Trans>
-                </ButtonText>
-                <ButtonIcon position="right" icon={SquareArrowTopRight} />
-              </Link>
-            </View>
+              <Trans>Need to report a copyright violation?</Trans>
+            </Text>
+            <Link
+              to={DMCA_LINK}
+              label={_(msg`View details for reporting a copyright violation`)}
+              size="small"
+              variant="solid"
+              color="secondary">
+              <ButtonText>
+                <Trans>View details</Trans>
+              </ButtonText>
+              <ButtonIcon position="right" icon={SquareArrowTopRight} />
+            </Link>
           </View>
         )}
       </View>
@@ -153,14 +151,6 @@ function ReportOptionButton({
   const {hovered, pressed} = useButtonContext()
   const interacted = hovered || pressed
 
-  const styles = React.useMemo(() => {
-    return {
-      interacted: {
-        backgroundColor: t.palette.contrast_50,
-      },
-    }
-  }, [t])
-
   return (
     <View
       style={[
@@ -171,7 +161,8 @@ function ReportOptionButton({
         a.p_md,
         a.rounded_md,
         {paddingRight: 70},
-        interacted && styles.interacted,
+        t.atoms.bg_contrast_25,
+        interacted && t.atoms.bg_contrast_50,
       ]}>
       <View style={[a.flex_1, a.gap_xs]}>
         <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
@@ -188,12 +179,7 @@ function ReportOptionButton({
           a.pr_md,
           {left: 'auto'},
         ]}>
-        <ChevronRight
-          size="md"
-          fill={
-            hovered ? t.palette.primary_500 : t.atoms.text_contrast_low.color
-          }
-        />
+        <ChevronRight size="md" fill={t.atoms.text_contrast_low.color} />
       </View>
     </View>
   )
