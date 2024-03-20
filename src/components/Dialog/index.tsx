@@ -206,12 +206,16 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export function ScrollableInner({children, style}: DialogInnerProps) {
+export function ScrollableInner({
+  children,
+  keyboardDismissMode,
+  style,
+}: DialogInnerProps) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
+      keyboardDismissMode={keyboardDismissMode || 'on-drag'}
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
