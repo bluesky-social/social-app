@@ -143,84 +143,85 @@ export const LoginForm = ({
         <TextField.Label>
           <Trans>Account</Trans>
         </TextField.Label>
-        <TextField.Root>
-          <TextField.Icon icon={At} />
-          <TextField.Input
-            testID="loginUsernameInput"
-            label={_(msg`Username or email address`)}
-            autoCapitalize="none"
-            autoFocus
-            autoCorrect={false}
-            autoComplete="username"
-            returnKeyType="next"
-            textContentType="username"
-            onSubmitEditing={() => {
-              passwordInputRef.current?.focus()
-            }}
-            blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-            value={identifier}
-            onChangeText={str =>
-              setIdentifier((str || '').toLowerCase().trim())
-            }
-            editable={!isProcessing}
-            accessibilityHint={_(
-              msg`Input the username or email address you used at signup`,
-            )}
-          />
-        </TextField.Root>
-      </View>
-      <View>
-        <TextField.Root>
-          <TextField.Icon icon={Lock} />
-          <TextField.Input
-            testID="loginPasswordInput"
-            inputRef={passwordInputRef}
-            label={_(msg`Password`)}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoComplete="password"
-            returnKeyType="done"
-            enablesReturnKeyAutomatically={true}
-            secureTextEntry={true}
-            textContentType="password"
-            clearButtonMode="while-editing"
-            value={password}
-            onChangeText={setPassword}
-            onSubmitEditing={onPressNext}
-            blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
-            editable={!isProcessing}
-            accessibilityHint={
-              identifier === ''
-                ? _(msg`Input your password`)
-                : _(msg`Input the password tied to ${identifier}`)
-            }
-          />
-          <Button
-            testID="forgotPasswordButton"
-            onPress={onPressForgotPassword}
-            label={_(msg`Forgot password?`)}
-            accessibilityHint={_(msg`Opens password reset form`)}
-            variant="solid"
-            color="secondary"
-            style={[
-              a.rounded_sm,
-              t.atoms.bg_contrast_100,
-              {marginLeft: 'auto', left: 6, padding: 6},
-              a.z_10,
-            ]}>
-            <ButtonText>
-              <Trans>Forgot?</Trans>
-            </ButtonText>
-          </Button>
-        </TextField.Root>
+        <View style={[a.gap_sm]}>
+          <TextField.Root>
+            <TextField.Icon icon={At} />
+            <TextField.Input
+              testID="loginUsernameInput"
+              label={_(msg`Username or email address`)}
+              autoCapitalize="none"
+              autoFocus
+              autoCorrect={false}
+              autoComplete="username"
+              returnKeyType="next"
+              textContentType="username"
+              onSubmitEditing={() => {
+                passwordInputRef.current?.focus()
+              }}
+              blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
+              value={identifier}
+              onChangeText={str =>
+                setIdentifier((str || '').toLowerCase().trim())
+              }
+              editable={!isProcessing}
+              accessibilityHint={_(
+                msg`Input the username or email address you used at signup`,
+              )}
+            />
+          </TextField.Root>
+
+          <TextField.Root>
+            <TextField.Icon icon={Lock} />
+            <TextField.Input
+              testID="loginPasswordInput"
+              inputRef={passwordInputRef}
+              label={_(msg`Password`)}
+              autoCapitalize="none"
+              autoCorrect={false}
+              autoComplete="password"
+              returnKeyType="done"
+              enablesReturnKeyAutomatically={true}
+              secureTextEntry={true}
+              textContentType="password"
+              clearButtonMode="while-editing"
+              value={password}
+              onChangeText={setPassword}
+              onSubmitEditing={onPressNext}
+              blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
+              editable={!isProcessing}
+              accessibilityHint={
+                identifier === ''
+                  ? _(msg`Input your password`)
+                  : _(msg`Input the password tied to ${identifier}`)
+              }
+            />
+            <Button
+              testID="forgotPasswordButton"
+              onPress={onPressForgotPassword}
+              label={_(msg`Forgot password?`)}
+              accessibilityHint={_(msg`Opens password reset form`)}
+              variant="solid"
+              color="secondary"
+              style={[
+                a.rounded_sm,
+                // t.atoms.bg_contrast_100,
+                {marginLeft: 'auto', left: 6, padding: 6},
+                a.z_10,
+              ]}>
+              <ButtonText>
+                <Trans>Forgot?</Trans>
+              </ButtonText>
+            </Button>
+          </TextField.Root>
+        </View>
       </View>
       <FormError error={error} />
-      <View style={[a.flex_row, a.align_center]}>
+      <View style={[a.flex_row, a.align_center, a.pt_md]}>
         <Button
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="small"
+          size="medium"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -234,7 +235,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Retries login`)}
             variant="solid"
             color="secondary"
-            size="small"
+            size="medium"
             onPress={onPressRetryConnect}>
             {_(msg`Retry`)}
           </Button>
@@ -251,7 +252,7 @@ export const LoginForm = ({
             accessibilityHint={_(msg`Navigates to the next screen`)}
             variant="solid"
             color="primary"
-            size="small"
+            size="medium"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
