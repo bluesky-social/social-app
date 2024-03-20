@@ -1,25 +1,25 @@
 import React, {useCallback} from 'react'
 import {LayoutAnimation} from 'react-native'
-import * as EmailValidator from 'email-validator'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
-import {cleanError} from 'lib/strings/errors'
 import {
   ComAtprotoServerCreateAccount,
   ComAtprotoServerDescribeServer,
 } from '@atproto/api'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import * as EmailValidator from 'email-validator'
 
+import {DEFAULT_SERVICE, IS_PROD_SERVICE} from '#/lib/constants'
+import {cleanError} from '#/lib/strings/errors'
+import {createFullHandle, validateHandle} from '#/lib/strings/handles'
+import {getAge} from '#/lib/strings/time'
 import {logger} from '#/logger'
-import {DEFAULT_SERVICE, IS_PROD_SERVICE} from 'lib/constants'
-import {createFullHandle, validateHandle} from 'lib/strings/handles'
-import {getAge} from 'lib/strings/time'
-import {useSessionApi} from 'state/session'
 import {
   DEFAULT_PROD_FEEDS,
   usePreferencesSetBirthDateMutation,
   useSetSaveFeedsMutation,
-} from 'state/queries/preferences'
-import {useOnboardingDispatch} from 'state/shell'
+} from '#/state/queries/preferences'
+import {useSessionApi} from '#/state/session'
+import {useOnboardingDispatch} from '#/state/shell'
 
 export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

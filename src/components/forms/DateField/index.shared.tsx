@@ -1,11 +1,11 @@
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
 
-import {atoms as a, android, useTheme, web} from '#/alf'
-import {Text} from '#/components/Typography'
-import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {android, atoms as a, useTheme, web} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
+import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
+import {Text} from '#/components/Typography'
 import {localizeDate} from './utils'
 
 // looks like a TextField.Input, but is just a button. It'll do something different on each platform on press

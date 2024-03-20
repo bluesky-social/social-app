@@ -1,7 +1,14 @@
 import React from 'react'
 import {ScrollView, View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {FEEDBACK_FORM_URL} from '#/lib/constants'
+import {createFullHandle} from '#/lib/strings/handles'
+import {useServiceQuery} from '#/state/queries/service'
+import {getAgent} from '#/state/session'
+import {LoggedOutLayout} from '#/view/com/util/layouts/LoggedOutLayout'
 import {
   initialState,
   reducer,
@@ -9,19 +16,13 @@ import {
   SignupStep,
   useSubmitSignup,
 } from '#/screens/Signup/state'
-import {StepInfo} from '#/screens/Signup/StepInfo'
-import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
+import {StepHandle} from '#/screens/Signup/StepHandle'
+import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {LoggedOutLayout} from 'view/com/util/layouts/LoggedOutLayout'
-import {FEEDBACK_FORM_URL} from 'lib/constants'
 import {InlineLink} from '#/components/Link'
-import {useServiceQuery} from 'state/queries/service'
-import {getAgent} from 'state/session'
-import {createFullHandle} from 'lib/strings/handles'
-import {useAnalytics} from 'lib/analytics/analytics'
+import {Text} from '#/components/Typography'
 
 export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {_} = useLingui()

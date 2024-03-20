@@ -3,13 +3,14 @@ import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
+
+import {createFullHandle} from '#/lib/strings/handles'
+import {isWeb} from '#/platform/detection'
+import {CaptchaWebView} from '#/view/com/auth/create/CaptchaWebView'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext, useSubmitSignup} from '#/screens/Signup/state'
-import {CaptchaWebView} from 'view/com/auth/create/CaptchaWebView'
-import {createFullHandle} from 'lib/strings/handles'
-import {isWeb} from 'platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {FormError} from '#/components/forms/FormError'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 
 const CAPTCHA_PATH = '/gate/signup'
 

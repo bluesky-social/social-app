@@ -3,15 +3,15 @@ import {Keyboard, View} from 'react-native'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
+import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {isAndroid} from '#/platform/detection'
+import {ServerInputDialog} from '#/view/com/auth/server-input'
 import {atoms as a, useTheme} from '#/alf'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
 import {PencilLine_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
+import {Button} from '../Button'
 import {useDialogControl} from '../Dialog'
 import {Text} from '../Typography'
-import {ServerInputDialog} from '#/view/com/auth/server-input'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {Button} from '../Button'
 
 export function HostingProvider({
   serviceUrl,

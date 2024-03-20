@@ -1,11 +1,11 @@
 import React from 'react'
+import DatePicker from 'react-native-date-picker'
 
+import {isAndroid} from 'platform/detection'
 import {useTheme} from '#/alf'
-import * as TextField from '#/components/forms/TextField'
 import {DateFieldProps} from '#/components/forms/DateField/types'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
-import DatePicker from 'react-native-date-picker'
-import {isAndroid} from 'platform/detection'
+import * as TextField from '#/components/forms/TextField'
 import {DateFieldButton} from './index.shared'
 
 export * as utils from '#/components/forms/DateField/utils'

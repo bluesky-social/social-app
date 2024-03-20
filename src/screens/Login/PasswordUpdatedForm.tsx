@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react'
 import {View} from 'react-native'
-import {useAnalytics} from 'lib/analytics/analytics'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {FormContainer} from './FormContainer'
+
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Text} from '#/components/Typography'
-import {atoms as a, useBreakpoints} from '#/alf'
+import {FormContainer} from './FormContainer'
 
 export const PasswordUpdatedForm = ({
   onPressNext,

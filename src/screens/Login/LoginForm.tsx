@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, {useRef, useState} from 'react'
 import {
   ActivityIndicator,
   Keyboard,
@@ -7,25 +7,25 @@ import {
   View,
 } from 'react-native'
 import {ComAtprotoServerDescribeServer} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useAnalytics} from 'lib/analytics/analytics'
-import {createFullHandle} from 'lib/strings/handles'
-import {isNetworkError} from 'lib/strings/errors'
-import {useSessionApi} from '#/state/session'
-import {cleanError} from 'lib/strings/errors'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {isNetworkError} from '#/lib/strings/errors'
+import {cleanError} from '#/lib/strings/errors'
+import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useSessionApi} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {FormError} from '#/components/forms/FormError'
+import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
-import {HostingProvider} from '#/components/forms/HostingProvider'
-import {FormContainer} from './FormContainer'
-import {FormError} from '#/components/forms/FormError'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import {FormContainer} from './FormContainer'
 
 type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
 

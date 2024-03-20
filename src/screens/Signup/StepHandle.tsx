@@ -1,21 +1,22 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useFocusEffect} from '@react-navigation/native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
-import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
-import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import * as TextField from '#/components/forms/TextField'
-import {useSignupContext} from '#/screens/Signup/state'
-import {Text} from '#/components/Typography'
-import {atoms as a, useTheme} from '#/alf'
+import {useLingui} from '@lingui/react'
+import {useFocusEffect} from '@react-navigation/native'
+
 import {
   createFullHandle,
   IsValidHandle,
   validateHandle,
-} from 'lib/strings/handles'
+} from '#/lib/strings/handles'
 import {ScreenTransition} from '#/screens/Login/ScreenTransition'
+import {useSignupContext} from '#/screens/Signup/state'
+import {atoms as a, useTheme} from '#/alf'
+import * as TextField from '#/components/forms/TextField'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {TimesLarge_Stroke2_Corner0_Rounded as Times} from '#/components/icons/Times'
+import {Text} from '#/components/Typography'
 
 export function StepHandle() {
   const {_} = useLingui()

@@ -1,15 +1,15 @@
 import React from 'react'
 import {
   ScrollView,
+  type StyleProp,
   StyleSheet,
   View,
-  type StyleProp,
   type ViewStyle,
 } from 'react-native'
 
+import {isWeb} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import {isWeb} from '#/platform/detection'
 
 export function FormContainer({
   testID,
