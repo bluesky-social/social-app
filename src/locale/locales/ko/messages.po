@@ -1165,7 +1165,7 @@ msgstr "DNS 패널"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
-msgstr "노출을 포함하지 않음."
+msgstr "노출을 포함하지 않습니다."
 
 #: src/view/com/modals/ChangeHandle.tsx:482
 msgid "Domain Value"
