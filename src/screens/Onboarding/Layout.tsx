@@ -116,8 +116,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         contentContainerStyle={{borderWidth: 0}}
         // @ts-ignore web only --prf
         dataSet={{'stable-gutters': 1}}>
-        <View
-          style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
+        <View style={[a.flex_row, a.justify_center]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View style={[a.w_full, a.align_center, paddingTop]}>
               <View

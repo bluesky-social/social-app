@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText, ButtonIcon} from '#/components/Button'
 import {News2_Stroke2_Corner0_Rounded as News} from '#/components/icons/News2'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
@@ -24,6 +24,7 @@ import {
   OnboardingControls,
 } from '#/screens/Onboarding/Layout'
 import {IconCircle} from '#/components/IconCircle'
+import {uploadBlob} from 'lib/api'
 import {
   bulkWriteFollows,
   sortPrimaryAlgorithmFeeds,
@@ -32,6 +33,7 @@ import {
 export function StepFinished() {
   const {_} = useLingui()
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const onboardDispatch = useOnboardingDispatch()
@@ -41,11 +43,13 @@ export function StepFinished() {
   const finishOnboarding = React.useCallback(async () => {
     setSaving(true)
 
+    // TODO uncomment
     const {
       interestsStepResults,
       suggestedAccountsStepResults,
       algoFeedsStepResults,
       topicalFeedsStepResults,
+      profileStepResults,
     } = state
     const {selectedInterests} = interestsStepResults
     const selectedFeeds = [
@@ -65,6 +69,24 @@ export function StepFinished() {
           })
         })(),
       ])
+
+      await getAgent().upsertProfile(async existing => {
+        existing = existing ?? {}
+
+        if (profileStepResults.imageUri && profileStepResults.imageMime) {
+          const res = await uploadBlob(
+            getAgent(),
+            profileStepResults.imageUri,
+            profileStepResults.imageMime,
+          )
+
+          if (res.data.blob) {
+            existing.avatar = res.data.blob
+          }
+        }
+
+        return existing
+      })
     } catch (e: any) {
       logger.info(`onboarding: bulk save failed`)
       logger.error(e)
@@ -76,14 +98,14 @@ export function StepFinished() {
     onboardDispatch({type: 'finish'})
     track('OnboardingV2:StepFinished:End')
     track('OnboardingV2:Complete')
-  }, [state, dispatch, onboardDispatch, setSaving, saveFeeds, track])
+  }, [dispatch, onboardDispatch, saveFeeds, state, track])
 
   React.useEffect(() => {
     track('OnboardingV2:StepFinished:Start')
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={Check} style={[a.mb_2xl]} />
 
       <Title>

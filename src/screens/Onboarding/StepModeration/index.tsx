@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
 import {LABELS} from '@atproto/api'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, useBreakpoints} from '#/alf'
 import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
@@ -25,6 +25,7 @@ import {IconCircle} from '#/components/IconCircle'
 
 export function StepModeration() {
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const {track} = useAnalytics()
   const {state, dispatch} = React.useContext(Context)
   const {data: preferences} = usePreferencesQuery()
@@ -52,7 +53,7 @@ export function StepModeration() {
   }, [track])
 
   return (
-    <View style={[a.align_start]}>
+    <View style={[a.align_start, gtMobile ? a.px_5xl : a.px_xl]}>
       <IconCircle icon={EyeSlash} style={[a.mb_2xl]} />
 
       <Title>
