@@ -94,26 +94,24 @@ function PrimaryFeedCardInner({
         </View>
 
         <View style={[a.pt_xs, a.flex_grow]}>
-          <Trans>
-            <Text
-              style={[
-                a.text_lg,
-                a.font_bold,
-                ctx.selected && styles.textSelected,
-              ]}>
-              {feed.displayName}
-            </Text>
+          <Text
+            style={[
+              a.text_lg,
+              a.font_bold,
+              ctx.selected && styles.textSelected,
+            ]}>
+            {feed.displayName}
+          </Text>
 
-            <Text
-              style={[
-                {opacity: 0.6},
-                a.text_md,
-                a.py_xs,
-                ctx.selected && styles.textSelected,
-              ]}>
-              by @{feed.creatorHandle}
-            </Text>
-          </Trans>
+          <Text
+            style={[
+              {opacity: 0.6},
+              a.text_md,
+              a.py_xs,
+              ctx.selected && styles.textSelected,
+            ]}>
+            <Trans>by @{feed.creatorHandle}</Trans>
+          </Text>
         </View>
 
         <View
