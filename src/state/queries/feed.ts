@@ -19,8 +19,7 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {getAgent} from '#/state/session'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {t} from '@lingui/macro'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
@@ -200,11 +199,9 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const {_} = useLingui()
-
 const FOLLOWING_FEED_STUB: FeedSourceInfo = {
   type: 'feed',
-  displayName: _(msg`Following`),
+  displayName: t`Following`,
   uri: '',
   route: {
     href: '/',
