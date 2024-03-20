@@ -3,7 +3,9 @@ export type LogEvents = {
     initMs: number
   }
   'notifications:openApp': {}
-  'state:background': {}
+  'state:background': {
+    secondsActive: number
+  }
   'state:foreground': {}
   'feed:endReached': {
     feedType: string
