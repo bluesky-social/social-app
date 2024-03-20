@@ -41,6 +41,7 @@ module.exports = function (config) {
       : process.env.BSKY_IOS_BUILD_NUMBER
 
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+  const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
 
   return {
     expo: {
@@ -122,10 +123,17 @@ module.exports = function (config) {
         favicon: './assets/favicon.png',
       },
       updates: {
-        enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
+        url: 'https://updates.bsky.app/manifest',
+        enabled: IS_TESTFLIGHT, // Only enable updates for TestFlight builds for right now
+        fallbackToCacheTimeout: 30000,
+        codeSigningCertificate: './code-signing/certificate.pem',
+        codeSigningMetadata: {
+          keyid: 'main',
+          alg: 'rsa-v1_5-sha256',
+        },
+        checkAutomatically: 'NEVER',
       },
+      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -143,12 +151,6 @@ module.exports = function (config) {
               kotlinVersion: '1.8.0',
               newArchEnabled: false,
             },
-          },
-        ],
-        [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
           },
         ],
         [

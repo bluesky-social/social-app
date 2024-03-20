@@ -54,6 +54,7 @@ import {useLingui} from '@lingui/react'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {StatusBar} from 'expo-status-bar'
 import {isAndroid} from 'platform/detection'
+import {useUpdateCheck} from 'lib/hooks/useUpdateCheck'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -63,6 +64,7 @@ function InnerApp() {
   const theme = useColorModeTheme()
   const {_} = useLingui()
   useIntentHandler()
+  useUpdateCheck()
 
   // init
   useEffect(() => {
