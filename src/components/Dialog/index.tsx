@@ -3,6 +3,7 @@ import {View, Dimensions, Keyboard, Pressable} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
+  BottomSheetScrollViewMethods,
   BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
@@ -206,11 +207,10 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export function ScrollableInner({
-  children,
-  keyboardDismissMode,
-  style,
-}: DialogInnerProps) {
+export const ScrollableInner = React.forwardRef<
+  BottomSheetScrollViewMethods,
+  DialogInnerProps
+>(function ScrollableInner({children, keyboardDismissMode, style}, ref) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
@@ -227,12 +227,13 @@ export function ScrollableInner({
         },
         flatten(style),
       ]}
-      contentContainerStyle={isNative ? a.pb_4xl : undefined}>
+      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      ref={ref}>
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
-}
+})
 
 export function Handle() {
   const t = useTheme()

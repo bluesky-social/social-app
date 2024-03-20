@@ -18652,6 +18652,11 @@ react-native-ios-context-menu@^1.15.3:
   dependencies:
     "@dominicstop/ts-event-emitter" "^1.1.0"
 
+react-native-keyboard-controller@^1.11.3:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/react-native-keyboard-controller/-/react-native-keyboard-controller-1.11.3.tgz#ed8bc04f8db505f53a94abc637c0b5f8483df613"
+  integrity sha512-ie3wQPRTQXZWGktz45J9SnQ3qzCEz/pxm6xCd1zWzVL6NcVrYq1RDgEy3YEShsVIDZkJor9Nj2WP/cmc9dqzHQ==
+
 react-native-linear-gradient@^2.6.2:
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.2.tgz#9811c91751be673ef928ef4aa3ff3a70b82935d6"
