@@ -25,6 +25,10 @@ export function ProfileHeaderMetrics({
     one: 'follower',
     other: 'followers',
   })
+  const pluralizedFollowings = plural(profile.followsCount || 0, {
+    one: 'following',
+    other: 'followers',
+  })
 
   return (
     <View
@@ -48,7 +52,7 @@ export function ProfileHeaderMetrics({
         <Trans>
           <Text style={[a.font_bold, a.text_md]}>{following} </Text>
           <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-            following
+            {pluralizedFollowings}
           </Text>
         </Trans>
       </InlineLink>
