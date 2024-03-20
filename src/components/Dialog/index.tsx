@@ -211,7 +211,8 @@ export function ScrollableInner({children, style}: DialogInnerProps) {
   return (
     <BottomSheetScrollView
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode="on-drag"
+      // TODO try to get this working with on-drag. Right now, we can't get to some text inputs with that setting
+      keyboardDismissMode="interactive"
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
