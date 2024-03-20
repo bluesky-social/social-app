@@ -71,7 +71,7 @@ msgid "Access profile and other navigation links"
 msgstr "Zugang zum Profil und anderen Navigationslinks"
 
 #: src/view/com/modals/EditImage.tsx:299
-#: src/view/screens/Settings/index.tsx:466
+#: src/view/screens/Settings/index.tsx:470
 msgid "Accessibility"
 msgstr "Barrierefreiheit"
 
@@ -79,9 +79,9 @@ msgstr "Barrierefreiheit"
 msgid "account"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:166
-#: src/view/screens/Settings/index.tsx:323
-#: src/view/screens/Settings/index.tsx:739
+#: src/view/com/auth/login/LoginForm.tsx:169
+#: src/view/screens/Settings/index.tsx:327
+#: src/view/screens/Settings/index.tsx:743
 msgid "Account"
 msgstr "Konto"
 
@@ -143,8 +143,8 @@ msgstr "Eine Inhaltswarnung hinzufügen"
 msgid "Add a user to this list"
 msgstr "Einen Nutzer zu dieser Liste hinzufügen"
 
-#: src/view/screens/Settings/index.tsx:398
-#: src/view/screens/Settings/index.tsx:407
+#: src/view/screens/Settings/index.tsx:402
+#: src/view/screens/Settings/index.tsx:411
 msgid "Add account"
 msgstr "Konto hinzufügen"
 
@@ -229,7 +229,7 @@ msgid "Adult content is disabled."
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:377
-#: src/view/screens/Settings/index.tsx:680
+#: src/view/screens/Settings/index.tsx:684
 msgid "Advanced"
 msgstr "Erweitert"
 
@@ -242,7 +242,7 @@ msgstr "All deine gespeicherten Feeds an einem Ort."
 msgid "Already have a code?"
 msgstr "Hast du bereits einen Code?"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:102
+#: src/view/com/auth/login/ChooseAccountForm.tsx:103
 msgid "Already signed in as @{0}"
 msgstr "Bereits angemeldet als @{0}"
 
@@ -306,13 +306,13 @@ msgstr "App-Passwortnamen dürfen nur Buchstaben, Zahlen, Leerzeichen, Bindestri
 msgid "App Password names must be at least 4 characters long."
 msgstr "App-Passwortnamen müssen mindestens 4 Zeichen lang sein."
 
-#: src/view/screens/Settings/index.tsx:691
+#: src/view/screens/Settings/index.tsx:695
 msgid "App password settings"
 msgstr "App-Passwort-Einstellungen"
 
 #: src/Navigation.tsx:251
 #: src/view/screens/AppPasswords.tsx:189
-#: src/view/screens/Settings/index.tsx:700
+#: src/view/screens/Settings/index.tsx:704
 msgid "App Passwords"
 msgstr "App-Passwörter"
 
@@ -346,7 +346,7 @@ msgstr ""
 #~ msgid "Appeal this decision."
 #~ msgstr "Einspruch gegen diese Entscheidung."
 
-#: src/view/screens/Settings/index.tsx:481
+#: src/view/screens/Settings/index.tsx:485
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
@@ -386,9 +386,9 @@ msgstr "Künstlerische oder nicht-erotische Nacktheit."
 #: src/components/moderation/LabelsOnMeDialog.tsx:248
 #: src/screens/Profile/Header/Shell.tsx:97
 #: src/view/com/auth/create/CreateAccount.tsx:158
-#: src/view/com/auth/login/ChooseAccountForm.tsx:155
+#: src/view/com/auth/login/ChooseAccountForm.tsx:160
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
@@ -403,7 +403,7 @@ msgstr "Zurück"
 msgid "Based on your interest in {interestsText}"
 msgstr "Ausgehend von deinem Interesse an {interestsText}"
 
-#: src/view/screens/Settings/index.tsx:538
+#: src/view/screens/Settings/index.tsx:542
 msgid "Basics"
 msgstr "Grundlagen"
 
@@ -412,7 +412,7 @@ msgstr "Grundlagen"
 msgid "Birthday"
 msgstr "Geburtstag"
 
-#: src/view/screens/Settings/index.tsx:355
+#: src/view/screens/Settings/index.tsx:359
 msgid "Birthday:"
 msgstr "Geburtstag:"
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "Books"
 msgstr "Bücher"
 
-#: src/view/screens/Settings/index.tsx:889
+#: src/view/screens/Settings/index.tsx:893
 msgid "Build version {0} {1}"
 msgstr "Build-Version {0} {1}"
 
@@ -640,17 +640,17 @@ msgstr ""
 msgid "Change"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:349
+#: src/view/screens/Settings/index.tsx:353
 msgctxt "action"
 msgid "Change"
 msgstr "Ändern"
 
-#: src/view/screens/Settings/index.tsx:712
+#: src/view/screens/Settings/index.tsx:716
 msgid "Change handle"
 msgstr "Handle ändern"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
-#: src/view/screens/Settings/index.tsx:723
+#: src/view/screens/Settings/index.tsx:727
 msgid "Change Handle"
 msgstr "Handle ändern"
 
@@ -658,12 +658,12 @@ msgstr "Handle ändern"
 msgid "Change my email"
 msgstr "Meine E-Mail ändern"
 
-#: src/view/screens/Settings/index.tsx:750
+#: src/view/screens/Settings/index.tsx:754
 msgid "Change password"
 msgstr "Passwort ändern"
 
 #: src/view/com/modals/ChangePassword.tsx:141
-#: src/view/screens/Settings/index.tsx:761
+#: src/view/screens/Settings/index.tsx:765
 msgid "Change Password"
 msgstr "Passwort Ändern"
 
@@ -725,19 +725,19 @@ msgstr "Wähle deine Haupt-Feeds"
 msgid "Choose your password"
 msgstr "Wähle dein Passwort"
 
-#: src/view/screens/Settings/index.tsx:864
+#: src/view/screens/Settings/index.tsx:868
 msgid "Clear all legacy storage data"
 msgstr "Alle alten Speicherdaten löschen"
 
-#: src/view/screens/Settings/index.tsx:867
+#: src/view/screens/Settings/index.tsx:871
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "Alle alten Speicherdaten löschen (danach neu starten)"
 
-#: src/view/screens/Settings/index.tsx:876
+#: src/view/screens/Settings/index.tsx:880
 msgid "Clear all storage data"
 msgstr "Alle Speicherdaten löschen"
 
-#: src/view/screens/Settings/index.tsx:879
+#: src/view/screens/Settings/index.tsx:883
 msgid "Clear all storage data (restart after this)"
 msgstr "Alle Speicherdaten löschen (danach neu starten)"
 
@@ -746,11 +746,11 @@ msgstr "Alle Speicherdaten löschen (danach neu starten)"
 msgid "Clear search query"
 msgstr "Suchanfrage löschen"
 
-#: src/view/screens/Settings/index.tsx:865
+#: src/view/screens/Settings/index.tsx:869
 msgid "Clears all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:877
+#: src/view/screens/Settings/index.tsx:881
 msgid "Clears all storage data"
 msgstr ""
 
@@ -913,7 +913,7 @@ msgid "Confirmation code"
 msgstr "Bestätigungscode"
 
 #: src/view/com/auth/create/CreateAccount.tsx:193
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:281
 msgid "Connecting..."
 msgstr "Verbinden..."
 
@@ -1001,7 +1001,7 @@ msgstr "Kochen"
 msgid "Copied"
 msgstr "Kopiert"
 
-#: src/view/screens/Settings/index.tsx:247
+#: src/view/screens/Settings/index.tsx:251
 msgid "Copied build version to clipboard"
 msgstr "Die Build-Version wurde in die Zwischenablage kopiert"
 
@@ -1061,7 +1061,7 @@ msgstr "Liste konnte nicht geladen werden"
 msgid "Create a new account"
 msgstr "Ein neues Konto erstellen"
 
-#: src/view/screens/Settings/index.tsx:399
+#: src/view/screens/Settings/index.tsx:403
 msgid "Create a new Bluesky account"
 msgstr "Erstelle ein neues Bluesky-Konto"
 
@@ -1120,8 +1120,8 @@ msgstr "Benutzerdefinierte Feeds, die von der Community erstellt wurden, bringen
 msgid "Customize media from external sites."
 msgstr "Passe die Einstellungen für Medien von externen Websites an."
 
-#: src/view/screens/Settings/index.tsx:500
-#: src/view/screens/Settings/index.tsx:526
+#: src/view/screens/Settings/index.tsx:504
+#: src/view/screens/Settings/index.tsx:530
 msgid "Dark"
 msgstr "Dunkel"
 
@@ -1129,11 +1129,11 @@ msgstr "Dunkel"
 msgid "Dark mode"
 msgstr "Dunkelmodus"
 
-#: src/view/screens/Settings/index.tsx:513
+#: src/view/screens/Settings/index.tsx:517
 msgid "Dark Theme"
 msgstr "Dunkles Thema"
 
-#: src/view/screens/Settings/index.tsx:837
+#: src/view/screens/Settings/index.tsx:841
 msgid "Debug Moderation"
 msgstr ""
 
@@ -1147,7 +1147,7 @@ msgstr "Debug-Panel"
 msgid "Delete"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:792
+#: src/view/screens/Settings/index.tsx:796
 msgid "Delete account"
 msgstr "Konto löschen"
 
@@ -1171,7 +1171,7 @@ msgstr "Liste löschen"
 msgid "Delete my account"
 msgstr "Mein Konto löschen"
 
-#: src/view/screens/Settings/index.tsx:804
+#: src/view/screens/Settings/index.tsx:808
 msgid "Delete My Account…"
 msgstr "Mein Konto Löschen…"
 
@@ -1207,7 +1207,7 @@ msgstr "Beschreibung"
 msgid "Did you want to say anything?"
 msgstr "Wolltest du etwas sagen?"
 
-#: src/view/screens/Settings/index.tsx:519
+#: src/view/screens/Settings/index.tsx:523
 msgid "Dim"
 msgstr "Dimmen"
 
@@ -1268,19 +1268,6 @@ msgstr ""
 msgid "Domain verified!"
 msgstr "Domain verifiziert!"
 
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
-#: src/view/com/modals/EditImage.tsx:333
-#: src/view/com/modals/ListAddRemoveUsers.tsx:144
-#: src/view/com/modals/SelfLabel.tsx:157
-#: src/view/com/modals/Threadgate.tsx:129
-#: src/view/com/modals/Threadgate.tsx:132
-#: src/view/com/modals/UserAddRemoveLists.tsx:95
-#: src/view/com/modals/UserAddRemoveLists.tsx:98
-#: src/view/screens/PreferencesThreads.tsx:162
-msgctxt "action"
-msgid "Done"
-msgstr "Erledigt"
-
 #: src/components/dialogs/BirthDateSettings.tsx:119
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/auth/server-input/index.tsx:165
@@ -1297,11 +1284,24 @@ msgstr "Erledigt"
 msgid "Done"
 msgstr "Erledigt"
 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/ListAddRemoveUsers.tsx:144
+#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
+#: src/view/com/modals/UserAddRemoveLists.tsx:95
+#: src/view/com/modals/UserAddRemoveLists.tsx:98
+#: src/view/screens/PreferencesThreads.tsx:162
+msgctxt "action"
+msgid "Done"
+msgstr "Erledigt"
+
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
 msgid "Done{extraText}"
 msgstr "Erledigt{extraText}"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:45
+#: src/view/com/auth/login/ChooseAccountForm.tsx:46
 msgid "Double tap to sign in"
 msgstr "Doppeltippen zum Anmelden"
 
@@ -1450,7 +1450,7 @@ msgstr "E-Mail aktualisiert"
 msgid "Email verified"
 msgstr "E-Mail verifiziert"
 
-#: src/view/screens/Settings/index.tsx:327
+#: src/view/screens/Settings/index.tsx:331
 msgid "Email:"
 msgstr "E-Mail:"
 
@@ -1591,12 +1591,12 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:773
+#: src/view/screens/Settings/index.tsx:777
 msgid "Export my data"
 msgstr "Exportiere meine Daten"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:44
-#: src/view/screens/Settings/index.tsx:784
+#: src/view/screens/Settings/index.tsx:788
 msgid "Export My Data"
 msgstr "Exportiere meine Daten"
 
@@ -1611,11 +1611,11 @@ msgstr "Externe Medien können es Websites ermöglichen, Informationen über dic
 
 #: src/Navigation.tsx:275
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
-#: src/view/screens/Settings/index.tsx:673
+#: src/view/screens/Settings/index.tsx:677
 msgid "External Media Preferences"
 msgstr "Externe Medienpräferenzen"
 
-#: src/view/screens/Settings/index.tsx:664
+#: src/view/screens/Settings/index.tsx:668
 msgid "External media settings"
 msgstr "Externe Medienpräferenzen"
 
@@ -1804,7 +1804,7 @@ msgstr "Folge ich"
 msgid "Following {0}"
 msgstr "ich folge {0}"
 
-#: src/view/screens/Settings/index.tsx:549
+#: src/view/screens/Settings/index.tsx:553
 msgid "Following feed preferences"
 msgstr ""
 
@@ -1812,7 +1812,7 @@ msgstr ""
 #: src/view/com/home/HomeHeaderLayout.web.tsx:50
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
-#: src/view/screens/Settings/index.tsx:558
+#: src/view/screens/Settings/index.tsx:562
 msgid "Following Feed Preferences"
 msgstr "Following-Feed-Einstellungen"
 
@@ -1836,11 +1836,11 @@ msgstr "Aus Sicherheitsgründen müssen wir dir einen Bestätigungscode an deine
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Aus Sicherheitsgründen kannst du dies nicht erneut ansehen. Wenn du dieses Passwort verlierst, musst du ein neues generieren."
 
-#: src/view/com/auth/login/LoginForm.tsx:241
+#: src/view/com/auth/login/LoginForm.tsx:244
 msgid "Forgot"
 msgstr "Vergessen"
 
-#: src/view/com/auth/login/LoginForm.tsx:238
+#: src/view/com/auth/login/LoginForm.tsx:241
 msgid "Forgot password"
 msgstr "Passwort vergessen"
 
@@ -1917,7 +1917,7 @@ msgstr "Gehe zu @{queryMaybeHandle}"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:189
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:218
-#: src/view/com/auth/login/LoginForm.tsx:288
+#: src/view/com/auth/login/LoginForm.tsx:291
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:195
 #: src/view/com/modals/ChangePassword.tsx:167
 msgid "Go to next"
@@ -2143,15 +2143,15 @@ msgstr "Neues Passwort eingeben"
 msgid "Input password for account deletion"
 msgstr "Passwort für die Kontolöschung eingeben"
 
-#: src/view/com/auth/login/LoginForm.tsx:230
+#: src/view/com/auth/login/LoginForm.tsx:233
 msgid "Input the password tied to {identifier}"
 msgstr "Passwort, das an {identifier} gebunden ist, eingeben"
 
-#: src/view/com/auth/login/LoginForm.tsx:197
+#: src/view/com/auth/login/LoginForm.tsx:200
 msgid "Input the username or email address you used at signup"
 msgstr "Benutzernamen oder E-Mail-Adresse eingeben, die du bei der Anmeldung verwendet hast"
 
-#: src/view/com/auth/login/LoginForm.tsx:229
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Input your password"
 msgstr "Gib dein Passwort ein"
 
@@ -2167,7 +2167,7 @@ msgstr "Gib deinen Handle ein"
 msgid "Invalid or unsupported post record"
 msgstr "Ungültiger oder nicht unterstützter Beitragrekord"
 
-#: src/view/com/auth/login/LoginForm.tsx:113
+#: src/view/com/auth/login/LoginForm.tsx:116
 msgid "Invalid username or password"
 msgstr "Ungültiger Benutzername oder Passwort"
 
@@ -2241,7 +2241,7 @@ msgstr ""
 msgid "Language selection"
 msgstr "Sprachauswahl"
 
-#: src/view/screens/Settings/index.tsx:610
+#: src/view/screens/Settings/index.tsx:614
 msgid "Language settings"
 msgstr "Spracheinstellungen"
 
@@ -2250,7 +2250,7 @@ msgstr "Spracheinstellungen"
 msgid "Language Settings"
 msgstr "Spracheinstellungen"
 
-#: src/view/screens/Settings/index.tsx:619
+#: src/view/screens/Settings/index.tsx:623
 msgid "Languages"
 msgstr "Sprachen"
 
@@ -2296,7 +2296,7 @@ msgstr "Bluesky verlassen"
 msgid "left to go."
 msgstr "noch übrig."
 
-#: src/view/screens/Settings/index.tsx:292
+#: src/view/screens/Settings/index.tsx:296
 msgid "Legacy storage cleared, you need to restart the app now."
 msgstr "Der Legacy-Speicher wurde gelöscht, du musst die App jetzt neu starten."
 
@@ -2314,7 +2314,7 @@ msgstr "Los geht's!"
 #~ msgid "Library"
 #~ msgstr "Bibliothek"
 
-#: src/view/screens/Settings/index.tsx:494
+#: src/view/screens/Settings/index.tsx:498
 msgid "Light"
 msgstr "Licht"
 
@@ -2449,7 +2449,7 @@ msgstr "Abmelden"
 msgid "Logged-out visibility"
 msgstr "Sichtbarkeit für abgemeldete Benutzer"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:137
+#: src/view/com/auth/login/ChooseAccountForm.tsx:142
 msgid "Login to account that is not listed"
 msgstr "Anmeldung bei einem Konto, das nicht aufgelistet ist"
 
@@ -2496,7 +2496,7 @@ msgstr ""
 
 #: src/Navigation.tsx:119
 #: src/screens/Moderation/index.tsx:106
-#: src/view/screens/Settings/index.tsx:641
+#: src/view/screens/Settings/index.tsx:645
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:514
 #: src/view/shell/Drawer.tsx:515
@@ -2539,7 +2539,7 @@ msgstr "Moderationslisten"
 msgid "Moderation Lists"
 msgstr "Moderationslisten"
 
-#: src/view/screens/Settings/index.tsx:635
+#: src/view/screens/Settings/index.tsx:639
 msgid "Moderation settings"
 msgstr "Moderationseinstellungen"
 
@@ -2678,11 +2678,11 @@ msgstr "Meine Feeds"
 msgid "My Profile"
 msgstr "Mein Profil"
 
-#: src/view/screens/Settings/index.tsx:592
+#: src/view/screens/Settings/index.tsx:596
 msgid "My saved feeds"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:598
+#: src/view/screens/Settings/index.tsx:602
 msgid "My Saved Feeds"
 msgstr "Meine gespeicherten Feeds"
 
@@ -2711,7 +2711,7 @@ msgstr "Natur"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:219
-#: src/view/com/auth/login/LoginForm.tsx:289
+#: src/view/com/auth/login/LoginForm.tsx:292
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:196
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Navigates to the next screen"
@@ -2804,7 +2804,7 @@ msgstr "Aktuelles"
 #: src/view/com/auth/create/CreateAccount.tsx:172
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:182
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:192
-#: src/view/com/auth/login/LoginForm.tsx:291
+#: src/view/com/auth/login/LoginForm.tsx:294
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:187
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:198
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -2949,7 +2949,7 @@ msgstr "Okay"
 msgid "Oldest replies first"
 msgstr "Älteste Antworten zuerst"
 
-#: src/view/screens/Settings/index.tsx:240
+#: src/view/screens/Settings/index.tsx:244
 msgid "Onboarding reset"
 msgstr "Onboarding zurücksetzen"
 
@@ -2988,7 +2988,7 @@ msgstr "Emoji-Picker öffnen"
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:730
+#: src/view/screens/Settings/index.tsx:734
 msgid "Open links with in-app browser"
 msgstr "Links mit In-App-Browser öffnen"
 
@@ -3008,12 +3008,12 @@ msgstr "Navigation öffnen"
 msgid "Open post options menu"
 msgstr "Beitragsoptionsmenü öffnen"
 
-#: src/view/screens/Settings/index.tsx:824
-#: src/view/screens/Settings/index.tsx:834
+#: src/view/screens/Settings/index.tsx:828
+#: src/view/screens/Settings/index.tsx:838
 msgid "Open storybook page"
 msgstr "Geschichtenbuch öffnen"
 
-#: src/view/screens/Settings/index.tsx:812
+#: src/view/screens/Settings/index.tsx:816
 msgid "Open system log"
 msgstr ""
 
@@ -3037,7 +3037,7 @@ msgstr "Öffnet die Kamera auf dem Gerät"
 msgid "Opens composer"
 msgstr "Öffnet den Beitragsverfasser"
 
-#: src/view/screens/Settings/index.tsx:611
+#: src/view/screens/Settings/index.tsx:615
 msgid "Opens configurable language settings"
 msgstr "Öffnet die konfigurierbaren Spracheinstellungen"
 
@@ -3049,7 +3049,7 @@ msgstr "Öffnet die Gerätefotogalerie"
 #~ msgid "Opens editor for profile display name, avatar, background image, and description"
 #~ msgstr "Öffnet den Editor für Profilanzeige, Avatar, Hintergrundbild und Beschreibung"
 
-#: src/view/screens/Settings/index.tsx:665
+#: src/view/screens/Settings/index.tsx:669
 msgid "Opens external embeds settings"
 msgstr "Öffnet die Einstellungen für externe eingebettete Medien"
 
@@ -3075,7 +3075,7 @@ msgstr ""
 msgid "Opens list of invite codes"
 msgstr "Öffnet die Liste der Einladungscodes"
 
-#: src/view/screens/Settings/index.tsx:794
+#: src/view/screens/Settings/index.tsx:798
 msgid "Opens modal for account deletion confirmation. Requires email code"
 msgstr ""
 
@@ -3083,19 +3083,19 @@ msgstr ""
 #~ msgid "Opens modal for account deletion confirmation. Requires email code."
 #~ msgstr "Öffnet ein Modal, um die Löschung des Kontos zu bestätigen. Erfordert einen E-Mail-Code."
 
-#: src/view/screens/Settings/index.tsx:752
+#: src/view/screens/Settings/index.tsx:756
 msgid "Opens modal for changing your Bluesky password"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:714
+#: src/view/screens/Settings/index.tsx:718
 msgid "Opens modal for choosing a new Bluesky handle"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:775
+#: src/view/screens/Settings/index.tsx:779
 msgid "Opens modal for downloading your Bluesky account data (repository)"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:966
+#: src/view/screens/Settings/index.tsx:970
 msgid "Opens modal for email verification"
 msgstr ""
 
@@ -3103,11 +3103,11 @@ msgstr ""
 msgid "Opens modal for using custom domain"
 msgstr "Öffnet das Modal für die Verwendung einer benutzerdefinierten Domain"
 
-#: src/view/screens/Settings/index.tsx:636
+#: src/view/screens/Settings/index.tsx:640
 msgid "Opens moderation settings"
 msgstr "Öffnet die Moderationseinstellungen"
 
-#: src/view/com/auth/login/LoginForm.tsx:239
+#: src/view/com/auth/login/LoginForm.tsx:242
 msgid "Opens password reset form"
 msgstr "Öffnet das Formular zum Zurücksetzen des Passworts"
 
@@ -3116,11 +3116,11 @@ msgstr "Öffnet das Formular zum Zurücksetzen des Passworts"
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Öffnet den Bildschirm zum Bearbeiten gespeicherten Feeds"
 
-#: src/view/screens/Settings/index.tsx:593
+#: src/view/screens/Settings/index.tsx:597
 msgid "Opens screen with all saved feeds"
 msgstr "Öffnet den Bildschirm mit allen gespeicherten Feeds"
 
-#: src/view/screens/Settings/index.tsx:692
+#: src/view/screens/Settings/index.tsx:696
 msgid "Opens the app password settings"
 msgstr ""
 
@@ -3128,7 +3128,7 @@ msgstr ""
 #~ msgid "Opens the app password settings page"
 #~ msgstr "Öffnet die Einstellungsseite für das App-Passwort"
 
-#: src/view/screens/Settings/index.tsx:550
+#: src/view/screens/Settings/index.tsx:554
 msgid "Opens the Following feed preferences"
 msgstr ""
 
@@ -3140,16 +3140,16 @@ msgstr ""
 msgid "Opens the linked website"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:825
-#: src/view/screens/Settings/index.tsx:835
+#: src/view/screens/Settings/index.tsx:829
+#: src/view/screens/Settings/index.tsx:839
 msgid "Opens the storybook page"
 msgstr "Öffnet die Geschichtenbuch"
 
-#: src/view/screens/Settings/index.tsx:813
+#: src/view/screens/Settings/index.tsx:817
 msgid "Opens the system log page"
 msgstr "Öffnet die Systemprotokollseite"
 
-#: src/view/screens/Settings/index.tsx:571
+#: src/view/screens/Settings/index.tsx:575
 msgid "Opens the threads preferences"
 msgstr "Öffnet die Thread-Einstellungen"
 
@@ -3169,7 +3169,7 @@ msgstr "Oder kombiniere diese Optionen:"
 msgid "Other"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:142
+#: src/view/com/auth/login/ChooseAccountForm.tsx:147
 msgid "Other account"
 msgstr "Anderes Konto"
 
@@ -3188,8 +3188,8 @@ msgstr "Seite nicht gefunden"
 
 #: src/view/com/auth/create/Step1.tsx:191
 #: src/view/com/auth/create/Step1.tsx:201
-#: src/view/com/auth/login/LoginForm.tsx:210
-#: src/view/com/auth/login/LoginForm.tsx:226
+#: src/view/com/auth/login/LoginForm.tsx:213
+#: src/view/com/auth/login/LoginForm.tsx:229
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:161
 #: src/view/com/modals/DeleteAccount.tsx:195
 #: src/view/com/modals/DeleteAccount.tsx:202
@@ -3411,7 +3411,7 @@ msgstr "Primäre Sprache"
 msgid "Prioritize Your Follows"
 msgstr "Priorisiere deine Follower"
 
-#: src/view/screens/Settings/index.tsx:648
+#: src/view/screens/Settings/index.tsx:652
 #: src/view/shell/desktop/RightNav.tsx:72
 msgid "Privacy"
 msgstr "Privatsphäre"
@@ -3419,7 +3419,7 @@ msgstr "Privatsphäre"
 #: src/Navigation.tsx:231
 #: src/view/com/auth/create/Policies.tsx:69
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings/index.tsx:921
+#: src/view/screens/Settings/index.tsx:925
 #: src/view/shell/Drawer.tsx:265
 msgid "Privacy Policy"
 msgstr "Datenschutzerklärung"
@@ -3445,7 +3445,7 @@ msgstr "Profil"
 msgid "Profile updated"
 msgstr "Profil aktualisiert"
 
-#: src/view/screens/Settings/index.tsx:979
+#: src/view/screens/Settings/index.tsx:983
 msgid "Protect your account by verifying your email."
 msgstr "Schütze dein Konto, indem du deine E-Mail bestätigst."
 
@@ -3705,7 +3705,7 @@ msgstr "Änderung anfordern"
 msgid "Request Code"
 msgstr "Einen Code anfordern"
 
-#: src/view/screens/Settings/index.tsx:471
+#: src/view/screens/Settings/index.tsx:475
 msgid "Require alt text before posting"
 msgstr "Alt-Text vor der Veröffentlichung erforderlich machen"
 
@@ -3727,8 +3727,8 @@ msgstr "Code zurücksetzen"
 #~ msgid "Reset onboarding"
 #~ msgstr "Onboarding zurücksetzen"
 
-#: src/view/screens/Settings/index.tsx:854
-#: src/view/screens/Settings/index.tsx:857
+#: src/view/screens/Settings/index.tsx:858
+#: src/view/screens/Settings/index.tsx:861
 msgid "Reset onboarding state"
 msgstr "Onboarding-Status zurücksetzen"
 
@@ -3740,20 +3740,20 @@ msgstr "Passwort zurücksetzen"
 #~ msgid "Reset preferences"
 #~ msgstr "Einstellungen zurücksetzen"
 
-#: src/view/screens/Settings/index.tsx:844
-#: src/view/screens/Settings/index.tsx:847
+#: src/view/screens/Settings/index.tsx:848
+#: src/view/screens/Settings/index.tsx:851
 msgid "Reset preferences state"
 msgstr "Einstellungen zurücksetzen"
 
-#: src/view/screens/Settings/index.tsx:855
+#: src/view/screens/Settings/index.tsx:859
 msgid "Resets the onboarding state"
 msgstr "Setzt den Onboarding-Status zurück"
 
-#: src/view/screens/Settings/index.tsx:845
+#: src/view/screens/Settings/index.tsx:849
 msgid "Resets the preferences state"
 msgstr "Einstellungen zurücksetzen"
 
-#: src/view/com/auth/login/LoginForm.tsx:269
+#: src/view/com/auth/login/LoginForm.tsx:272
 msgid "Retries login"
 msgstr "Versucht die Anmeldung erneut"
 
@@ -3767,8 +3767,8 @@ msgstr "Wiederholung der letzten Aktion, bei der ein Fehler aufgetreten ist"
 #: src/screens/Onboarding/StepInterests/index.tsx:224
 #: src/view/com/auth/create/CreateAccount.tsx:181
 #: src/view/com/auth/create/CreateAccount.tsx:186
-#: src/view/com/auth/login/LoginForm.tsx:268
 #: src/view/com/auth/login/LoginForm.tsx:271
+#: src/view/com/auth/login/LoginForm.tsx:274
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
@@ -3787,16 +3787,16 @@ msgstr ""
 msgid "Returns to previous page"
 msgstr ""
 
-#: src/view/com/lightbox/Lightbox.tsx:132
-#: src/view/com/modals/CreateOrEditList.tsx:345
-msgctxt "action"
-msgid "Save"
-msgstr "Speichern"
-
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:337
 #: src/view/com/modals/EditProfile.tsx:224
+msgid "Save"
+msgstr "Speichern"
+
+#: src/view/com/lightbox/Lightbox.tsx:132
+#: src/view/com/modals/CreateOrEditList.tsx:345
+msgctxt "action"
 msgid "Save"
 msgstr "Speichern"
 
@@ -3942,7 +3942,7 @@ msgid "Select option {i} of {numItems}"
 msgstr "Wähle Option {i} von {numItems}"
 
 #: src/view/com/auth/create/Step1.tsx:96
-#: src/view/com/auth/login/LoginForm.tsx:150
+#: src/view/com/auth/login/LoginForm.tsx:153
 msgid "Select service"
 msgstr "Service auswählen"
 
@@ -4104,23 +4104,23 @@ msgstr "Dein Konto einrichten"
 msgid "Sets Bluesky username"
 msgstr "Legt deinen Bluesky-Benutzernamen fest"
 
-#: src/view/screens/Settings/index.tsx:503
+#: src/view/screens/Settings/index.tsx:507
 msgid "Sets color theme to dark"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:496
+#: src/view/screens/Settings/index.tsx:500
 msgid "Sets color theme to light"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:490
+#: src/view/screens/Settings/index.tsx:494
 msgid "Sets color theme to system setting"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:529
+#: src/view/screens/Settings/index.tsx:533
 msgid "Sets dark theme to the dark theme"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:522
+#: src/view/screens/Settings/index.tsx:526
 msgid "Sets dark theme to the dim theme"
 msgstr ""
 
@@ -4145,12 +4145,12 @@ msgid "Sets image aspect ratio to wide"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:97
-#: src/view/com/auth/login/LoginForm.tsx:151
+#: src/view/com/auth/login/LoginForm.tsx:154
 msgid "Sets server for the Bluesky client"
 msgstr "Setzt den Server für den Bluesky-Client"
 
 #: src/Navigation.tsx:139
-#: src/view/screens/Settings/index.tsx:309
+#: src/view/screens/Settings/index.tsx:313
 #: src/view/shell/desktop/LeftNav.tsx:437
 #: src/view/shell/Drawer.tsx:570
 #: src/view/shell/Drawer.tsx:571
@@ -4193,7 +4193,7 @@ msgstr "Feed teilen"
 #: src/components/moderation/GlobalModerationLabelPref.tsx:45
 #: src/components/moderation/PostHider.tsx:107
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
-#: src/view/screens/Settings/index.tsx:359
+#: src/view/screens/Settings/index.tsx:363
 msgid "Show"
 msgstr "Anzeigen"
 
@@ -4323,23 +4323,23 @@ msgstr "Anmelden"
 msgid "Sign In"
 msgstr "Anmelden"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:44
+#: src/view/com/auth/login/ChooseAccountForm.tsx:45
 msgid "Sign in as {0}"
 msgstr "Anmelden als {0}"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:122
+#: src/view/com/auth/login/ChooseAccountForm.tsx:127
 #: src/view/com/auth/login/Login.tsx:116
 msgid "Sign in as..."
 msgstr "Anmelden als..."
 
-#: src/view/com/auth/login/LoginForm.tsx:137
+#: src/view/com/auth/login/LoginForm.tsx:140
 msgid "Sign into"
 msgstr "Anmelden bei"
 
 #: src/view/com/modals/SwitchAccount.tsx:68
 #: src/view/com/modals/SwitchAccount.tsx:73
-#: src/view/screens/Settings/index.tsx:105
-#: src/view/screens/Settings/index.tsx:108
+#: src/view/screens/Settings/index.tsx:107
+#: src/view/screens/Settings/index.tsx:110
 msgid "Sign out"
 msgstr "Abmelden"
 
@@ -4364,11 +4364,11 @@ msgstr "Registriere dich oder melden dich an, um an der Diskussion teilzunehmen"
 msgid "Sign-in Required"
 msgstr "Anmelden erforderlich"
 
-#: src/view/screens/Settings/index.tsx:370
+#: src/view/screens/Settings/index.tsx:374
 msgid "Signed in as"
 msgstr "Angemeldet als"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:107
+#: src/view/com/auth/login/ChooseAccountForm.tsx:112
 msgid "Signed in as @{0}"
 msgstr "Angemeldet als @{0}"
 
@@ -4432,7 +4432,7 @@ msgstr "Sport"
 msgid "Square"
 msgstr "Quadratische"
 
-#: src/view/screens/Settings/index.tsx:901
+#: src/view/screens/Settings/index.tsx:905
 msgid "Status page"
 msgstr "Status-Seite"
 
@@ -4440,12 +4440,12 @@ msgstr "Status-Seite"
 msgid "Step {0} of {numSteps}"
 msgstr "Schritt {0} von {numSteps}"
 
-#: src/view/screens/Settings/index.tsx:288
+#: src/view/screens/Settings/index.tsx:292
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Der Speicher wurde gelöscht, du musst die App jetzt neu starten."
 
 #: src/Navigation.tsx:211
-#: src/view/screens/Settings/index.tsx:827
+#: src/view/screens/Settings/index.tsx:831
 msgid "Storybook"
 msgstr "Geschichtenbuch"
 
@@ -4497,25 +4497,25 @@ msgstr "Suggestiv"
 msgid "Support"
 msgstr "Support"
 
-#: src/view/com/modals/SwitchAccount.tsx:121
+#: src/view/com/modals/SwitchAccount.tsx:123
 msgid "Switch Account"
 msgstr "Konto wechseln"
 
-#: src/view/com/modals/SwitchAccount.tsx:101
-#: src/view/screens/Settings/index.tsx:135
+#: src/view/com/modals/SwitchAccount.tsx:103
+#: src/view/screens/Settings/index.tsx:139
 msgid "Switch to {0}"
 msgstr "Wechseln zu {0}"
 
-#: src/view/com/modals/SwitchAccount.tsx:102
-#: src/view/screens/Settings/index.tsx:136
+#: src/view/com/modals/SwitchAccount.tsx:104
+#: src/view/screens/Settings/index.tsx:140
 msgid "Switches the account you are logged in to"
 msgstr "Wechselt das Konto, in das du eingeloggt bist"
 
-#: src/view/screens/Settings/index.tsx:487
+#: src/view/screens/Settings/index.tsx:491
 msgid "System"
 msgstr "System"
 
-#: src/view/screens/Settings/index.tsx:815
+#: src/view/screens/Settings/index.tsx:819
 msgid "System log"
 msgstr "Systemprotokoll"
 
@@ -4545,7 +4545,7 @@ msgstr "Bedingungen"
 
 #: src/Navigation.tsx:236
 #: src/view/com/auth/create/Policies.tsx:59
-#: src/view/screens/Settings/index.tsx:915
+#: src/view/screens/Settings/index.tsx:919
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:259
 msgid "Terms of Service"
@@ -4873,12 +4873,12 @@ msgstr "Dies wird {0} aus deinen stummgeschalteten Wörtern löschen. Du kannst 
 #~ msgid "This will hide this post from your feeds."
 #~ msgstr "Dadurch wird dieser Beitrag aus deinen Feeds ausgeblendet."
 
-#: src/view/screens/Settings/index.tsx:570
+#: src/view/screens/Settings/index.tsx:574
 msgid "Thread preferences"
 msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings/index.tsx:580
+#: src/view/screens/Settings/index.tsx:584
 msgid "Thread Preferences"
 msgstr "Thread-Einstellungen"
 
@@ -4937,7 +4937,7 @@ msgstr "Stummschaltung von Liste aufheben"
 #: src/view/com/auth/create/CreateAccount.tsx:58
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
 #: src/view/com/auth/login/Login.tsx:76
-#: src/view/com/auth/login/LoginForm.tsx:118
+#: src/view/com/auth/login/LoginForm.tsx:121
 #: src/view/com/modals/ChangePassword.tsx:70
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Es ist uns nicht gelungen, deinen Dienst zu kontaktieren. Bitte überprüfe deine Internetverbindung."
@@ -5183,8 +5183,8 @@ msgstr "Benutzerliste aktualisiert"
 msgid "User Lists"
 msgstr "Benutzerlisten"
 
-#: src/view/com/auth/login/LoginForm.tsx:177
-#: src/view/com/auth/login/LoginForm.tsx:195
+#: src/view/com/auth/login/LoginForm.tsx:180
+#: src/view/com/auth/login/LoginForm.tsx:198
 msgid "Username or email address"
 msgstr "Benutzername oder E-Mail-Adresse"
 
@@ -5212,15 +5212,15 @@ msgstr ""
 msgid "Verify {0}"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:940
+#: src/view/screens/Settings/index.tsx:944
 msgid "Verify email"
 msgstr "E-Mail bestätigen"
 
-#: src/view/screens/Settings/index.tsx:965
+#: src/view/screens/Settings/index.tsx:969
 msgid "Verify my email"
 msgstr "Meine E-Mail bestätigen"
 
-#: src/view/screens/Settings/index.tsx:974
+#: src/view/screens/Settings/index.tsx:978
 msgid "Verify My Email"
 msgstr "Meine E-Mail bestätigen"
 
@@ -5684,7 +5684,7 @@ msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Deine Beiträge, Likes und Blockierungen sind öffentlich. Stummschaltungen sind privat."
 
 #: src/view/com/modals/SwitchAccount.tsx:88
-#: src/view/screens/Settings/index.tsx:123
+#: src/view/screens/Settings/index.tsx:125
 msgid "Your profile"
 msgstr "Dein Profil"
 

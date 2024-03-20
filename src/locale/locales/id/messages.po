@@ -105,7 +105,7 @@ msgid "Access profile and other navigation links"
 msgstr "Akses profil dan tautan navigasi lain"
 
 #: src/view/com/modals/EditImage.tsx:299
-#: src/view/screens/Settings/index.tsx:466
+#: src/view/screens/Settings/index.tsx:470
 msgid "Accessibility"
 msgstr "Aksesibilitas"
 
@@ -113,9 +113,9 @@ msgstr "Aksesibilitas"
 msgid "account"
 msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:166
-#: src/view/screens/Settings/index.tsx:323
-#: src/view/screens/Settings/index.tsx:739
+#: src/view/com/auth/login/LoginForm.tsx:169
+#: src/view/screens/Settings/index.tsx:327
+#: src/view/screens/Settings/index.tsx:743
 msgid "Account"
 msgstr "Akun"
 
@@ -177,8 +177,8 @@ msgstr "Tambahkan peringatan konten"
 msgid "Add a user to this list"
 msgstr "Tambahkan pengguna ke daftar ini"
 
-#: src/view/screens/Settings/index.tsx:398
-#: src/view/screens/Settings/index.tsx:407
+#: src/view/screens/Settings/index.tsx:402
+#: src/view/screens/Settings/index.tsx:411
 msgid "Add account"
 msgstr "Tambahkan akun"
 
@@ -267,7 +267,7 @@ msgid "Adult content is disabled."
 msgstr ""
 
 #: src/screens/Moderation/index.tsx:377
-#: src/view/screens/Settings/index.tsx:680
+#: src/view/screens/Settings/index.tsx:684
 msgid "Advanced"
 msgstr "Lanjutan"
 
@@ -280,7 +280,7 @@ msgstr ""
 msgid "Already have a code?"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:102
+#: src/view/com/auth/login/ChooseAccountForm.tsx:103
 msgid "Already signed in as @{0}"
 msgstr "Sudah masuk sebagai @{0}"
 
@@ -344,7 +344,7 @@ msgstr "Nama Kata Sandi Aplikasi hanya boleh terdiri dari huruf, angka, spasi, t
 msgid "App Password names must be at least 4 characters long."
 msgstr "Nama Kata Sandi Aplikasi harus terdiri dari minimal 4 karakter."
 
-#: src/view/screens/Settings/index.tsx:691
+#: src/view/screens/Settings/index.tsx:695
 msgid "App password settings"
 msgstr "Pengaturan kata sandi aplikasi"
 
@@ -354,7 +354,7 @@ msgstr "Pengaturan kata sandi aplikasi"
 
 #: src/Navigation.tsx:251
 #: src/view/screens/AppPasswords.tsx:189
-#: src/view/screens/Settings/index.tsx:700
+#: src/view/screens/Settings/index.tsx:704
 msgid "App Passwords"
 msgstr "Kata sandi Aplikasi"
 
@@ -391,7 +391,7 @@ msgstr ""
 #~ msgid "Appeal this decision."
 #~ msgstr "Ajukan banding untuk keputusan ini."
 
-#: src/view/screens/Settings/index.tsx:481
+#: src/view/screens/Settings/index.tsx:485
 msgid "Appearance"
 msgstr "Tampilan"
 
@@ -431,9 +431,9 @@ msgstr "Ketelanjangan artistik atau non-erotis."
 #: src/components/moderation/LabelsOnMeDialog.tsx:248
 #: src/screens/Profile/Header/Shell.tsx:97
 #: src/view/com/auth/create/CreateAccount.tsx:158
-#: src/view/com/auth/login/ChooseAccountForm.tsx:155
+#: src/view/com/auth/login/ChooseAccountForm.tsx:160
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:174
-#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/LoginForm.tsx:262
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:179
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
@@ -448,7 +448,7 @@ msgstr "Kembali"
 msgid "Based on your interest in {interestsText}"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:538
+#: src/view/screens/Settings/index.tsx:542
 msgid "Basics"
 msgstr "Dasar"
 
@@ -457,7 +457,7 @@ msgstr "Dasar"
 msgid "Birthday"
 msgstr "Tanggal lahir"
 
-#: src/view/screens/Settings/index.tsx:355
+#: src/view/screens/Settings/index.tsx:359
 msgid "Birthday:"
 msgstr "Tanggal lahir:"
 
@@ -584,7 +584,7 @@ msgstr ""
 msgid "Books"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:889
+#: src/view/screens/Settings/index.tsx:893
 msgid "Build version {0} {1}"
 msgstr "Versi {0} {1}"
 
@@ -700,21 +700,21 @@ msgstr "Batal mencari"
 msgid "Cancels opening the linked website"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:349
-msgctxt "action"
-msgid "Change"
-msgstr "Ubah"
-
 #: src/view/com/modals/VerifyEmail.tsx:152
 msgid "Change"
 msgstr "Ubah"
 
-#: src/view/screens/Settings/index.tsx:712
+#: src/view/screens/Settings/index.tsx:353
+msgctxt "action"
+msgid "Change"
+msgstr "Ubah"
+
+#: src/view/screens/Settings/index.tsx:716
 msgid "Change handle"
 msgstr "Ubah handle"
 
 #: src/view/com/modals/ChangeHandle.tsx:161
-#: src/view/screens/Settings/index.tsx:723
+#: src/view/screens/Settings/index.tsx:727
 msgid "Change Handle"
 msgstr "Ubah Handle"
 
@@ -722,12 +722,12 @@ msgstr "Ubah Handle"
 msgid "Change my email"
 msgstr "Ubah email saya"
 
-#: src/view/screens/Settings/index.tsx:750
+#: src/view/screens/Settings/index.tsx:754
 msgid "Change password"
 msgstr ""
 
 #: src/view/com/modals/ChangePassword.tsx:141
-#: src/view/screens/Settings/index.tsx:761
+#: src/view/screens/Settings/index.tsx:765
 msgid "Change Password"
 msgstr ""
 
@@ -793,19 +793,19 @@ msgstr ""
 msgid "Choose your password"
 msgstr "Pilih kata sandi Anda"
 
-#: src/view/screens/Settings/index.tsx:864
+#: src/view/screens/Settings/index.tsx:868
 msgid "Clear all legacy storage data"
 msgstr "Hapus semua data penyimpanan lama"
 
-#: src/view/screens/Settings/index.tsx:867
+#: src/view/screens/Settings/index.tsx:871
 msgid "Clear all legacy storage data (restart after this)"
 msgstr "Hapus semua data penyimpanan lama (mulai ulang setelah ini)"
 
-#: src/view/screens/Settings/index.tsx:876
+#: src/view/screens/Settings/index.tsx:880
 msgid "Clear all storage data"
 msgstr "Hapus semua data penyimpanan"
 
-#: src/view/screens/Settings/index.tsx:879
+#: src/view/screens/Settings/index.tsx:883
 msgid "Clear all storage data (restart after this)"
 msgstr "Hapus semua data penyimpanan (mulai ulang setelah ini)"
 
@@ -814,11 +814,11 @@ msgstr "Hapus semua data penyimpanan (mulai ulang setelah ini)"
 msgid "Clear search query"
 msgstr "Hapus kueri pencarian"
 
-#: src/view/screens/Settings/index.tsx:865
+#: src/view/screens/Settings/index.tsx:869
 msgid "Clears all legacy storage data"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:877
+#: src/view/screens/Settings/index.tsx:881
 msgid "Clears all storage data"
 msgstr ""
 
@@ -985,7 +985,7 @@ msgstr "Kode konfirmasi"
 #~ msgstr "Konfirmasi pendaftaran {email} ke daftar tunggu"
 
 #: src/view/com/auth/create/CreateAccount.tsx:193
-#: src/view/com/auth/login/LoginForm.tsx:278
+#: src/view/com/auth/login/LoginForm.tsx:281
 msgid "Connecting..."
 msgstr "Menghubungkan..."
 
@@ -1073,7 +1073,7 @@ msgstr ""
 msgid "Copied"
 msgstr "Disalin"
 
-#: src/view/screens/Settings/index.tsx:247
+#: src/view/screens/Settings/index.tsx:251
 msgid "Copied build version to clipboard"
 msgstr "Menyalin versi build ke papan klip"
 
@@ -1137,7 +1137,7 @@ msgstr "Tidak dapat memuat daftar"
 msgid "Create a new account"
 msgstr "Buat akun baru"
 
-#: src/view/screens/Settings/index.tsx:399
+#: src/view/screens/Settings/index.tsx:403
 msgid "Create a new Bluesky account"
 msgstr "Buat akun Bluesky baru"
 
@@ -1200,8 +1200,8 @@ msgstr "Sesuaikan media dari situs eksternal."
 #~ msgid "Danger Zone"
 #~ msgstr "Zona Berbahaya"
 
-#: src/view/screens/Settings/index.tsx:500
-#: src/view/screens/Settings/index.tsx:526
+#: src/view/screens/Settings/index.tsx:504
+#: src/view/screens/Settings/index.tsx:530
 msgid "Dark"
 msgstr "Gelap"
 
@@ -1209,7 +1209,7 @@ msgstr "Gelap"
 msgid "Dark mode"
 msgstr "Mode gelap"
 
-#: src/view/screens/Settings/index.tsx:513
+#: src/view/screens/Settings/index.tsx:517
 msgid "Dark Theme"
 msgstr ""
 
@@ -1217,7 +1217,7 @@ msgstr ""
 #~ msgid "Debug"
 #~ msgstr "Debug"
 
-#: src/view/screens/Settings/index.tsx:837
+#: src/view/screens/Settings/index.tsx:841
 msgid "Debug Moderation"
 msgstr ""
 
@@ -1231,7 +1231,7 @@ msgstr "Panel debug"
 msgid "Delete"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:792
+#: src/view/screens/Settings/index.tsx:796
 msgid "Delete account"
 msgstr "Hapus akun"
 
@@ -1259,7 +1259,7 @@ msgstr "Hapus akun saya"
 #~ msgid "Delete my account…"
 #~ msgstr "Hapus akun saya…"
 
-#: src/view/screens/Settings/index.tsx:804
+#: src/view/screens/Settings/index.tsx:808
 msgid "Delete My Account…"
 msgstr ""
 
@@ -1303,7 +1303,7 @@ msgstr "Deskripsi"
 msgid "Did you want to say anything?"
 msgstr "Apakah Anda ingin mengatakan sesuatu?"
 
-#: src/view/screens/Settings/index.tsx:519
+#: src/view/screens/Settings/index.tsx:523
 msgid "Dim"
 msgstr ""
 
@@ -1372,19 +1372,6 @@ msgstr "Domain terverifikasi!"
 #~ msgid "Don't have an invite code?"
 #~ msgstr "Tidak punya kode undangan?"
 
-#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
-#: src/view/com/modals/EditImage.tsx:333
-#: src/view/com/modals/ListAddRemoveUsers.tsx:144
-#: src/view/com/modals/SelfLabel.tsx:157
-#: src/view/com/modals/Threadgate.tsx:129
-#: src/view/com/modals/Threadgate.tsx:132
-#: src/view/com/modals/UserAddRemoveLists.tsx:95
-#: src/view/com/modals/UserAddRemoveLists.tsx:98
-#: src/view/screens/PreferencesThreads.tsx:162
-msgctxt "action"
-msgid "Done"
-msgstr "Selesai"
-
 #: src/components/dialogs/BirthDateSettings.tsx:119
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/auth/server-input/index.tsx:165
@@ -1401,11 +1388,24 @@ msgstr "Selesai"
 msgid "Done"
 msgstr "Selesai"
 
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/ListAddRemoveUsers.tsx:144
+#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
+#: src/view/com/modals/UserAddRemoveLists.tsx:95
+#: src/view/com/modals/UserAddRemoveLists.tsx:98
+#: src/view/screens/PreferencesThreads.tsx:162
+msgctxt "action"
+msgid "Done"
+msgstr "Selesai"
+
 #: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
 msgid "Done{extraText}"
 msgstr "Selesai{extraText}"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:45
+#: src/view/com/auth/login/ChooseAccountForm.tsx:46
 msgid "Double tap to sign in"
 msgstr "Ketuk dua kali untuk masuk"
 
@@ -1554,7 +1554,7 @@ msgstr "Email Diupdate"
 msgid "Email verified"
 msgstr "Email terverifikasi"
 
-#: src/view/screens/Settings/index.tsx:327
+#: src/view/screens/Settings/index.tsx:331
 msgid "Email:"
 msgstr "Email:"
 
@@ -1711,12 +1711,12 @@ msgstr ""
 msgid "Explicit sexual images."
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:773
+#: src/view/screens/Settings/index.tsx:777
 msgid "Export my data"
 msgstr ""
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:44
-#: src/view/screens/Settings/index.tsx:784
+#: src/view/screens/Settings/index.tsx:788
 msgid "Export My Data"
 msgstr ""
 
@@ -1731,11 +1731,11 @@ msgstr "Media eksternal memungkinkan situs web untuk mengumpulkan informasi tent
 
 #: src/Navigation.tsx:275
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
-#: src/view/screens/Settings/index.tsx:673
+#: src/view/screens/Settings/index.tsx:677
 msgid "External Media Preferences"
 msgstr "Preferensi Media Eksternal"
 
-#: src/view/screens/Settings/index.tsx:664
+#: src/view/screens/Settings/index.tsx:668
 msgid "External media settings"
 msgstr "Pengaturan media eksternal"
 
@@ -1947,7 +1947,7 @@ msgstr "Mengikuti"
 msgid "Following {0}"
 msgstr "Mengikuti {0}"
 
-#: src/view/screens/Settings/index.tsx:549
+#: src/view/screens/Settings/index.tsx:553
 msgid "Following feed preferences"
 msgstr ""
 
@@ -1955,7 +1955,7 @@ msgstr ""
 #: src/view/com/home/HomeHeaderLayout.web.tsx:50
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 #: src/view/screens/PreferencesFollowingFeed.tsx:104
-#: src/view/screens/Settings/index.tsx:558
+#: src/view/screens/Settings/index.tsx:562
 msgid "Following Feed Preferences"
 msgstr ""
 
@@ -1979,11 +1979,11 @@ msgstr "Untuk alasan keamanan, kami akan mengirimkan kode konfirmasi ke alamat e
 msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
 msgstr "Untuk alasan keamanan, Anda tidak akan dapat melihat ini lagi. Jika Anda lupa kata sandi ini, Anda harus membuat yang baru."
 
-#: src/view/com/auth/login/LoginForm.tsx:241
+#: src/view/com/auth/login/LoginForm.tsx:244
 msgid "Forgot"
 msgstr "Lupa"
 
-#: src/view/com/auth/login/LoginForm.tsx:238
+#: src/view/com/auth/login/LoginForm.tsx:241
 msgid "Forgot password"
 msgstr "Lupa kata sandi"
 
@@ -2060,7 +2060,7 @@ msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:189
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:218
-#: src/view/com/auth/login/LoginForm.tsx:288
+#: src/view/com/auth/login/LoginForm.tsx:291
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:195
 #: src/view/com/modals/ChangePassword.tsx:167
 msgid "Go to next"
@@ -2317,11 +2317,11 @@ msgstr "Masukkan kata sandi untuk penghapusan akun"
 #~ msgid "Input phone number for SMS verification"
 #~ msgstr ""
 
-#: src/view/com/auth/login/LoginForm.tsx:230
+#: src/view/com/auth/login/LoginForm.tsx:233
 msgid "Input the password tied to {identifier}"
 msgstr "Masukkan kata sandi yang terkait dengan {identifier}"
 
-#: src/view/com/auth/login/LoginForm.tsx:197
+#: src/view/com/auth/login/LoginForm.tsx:200
 msgid "Input the username or email address you used at signup"
 msgstr "Masukkan nama pengguna atau alamat email yang Anda gunakan saat mendaftar"
 
@@ -2333,7 +2333,7 @@ msgstr "Masukkan nama pengguna atau alamat email yang Anda gunakan saat mendafta
 #~ msgid "Input your email to get on the Bluesky waitlist"
 #~ msgstr "Masukkan email Anda untuk masuk ke daftar tunggu Bluesky"
 
-#: src/view/com/auth/login/LoginForm.tsx:229
+#: src/view/com/auth/login/LoginForm.tsx:232
 msgid "Input your password"
 msgstr "Masukkan kata sandi Anda"
 
@@ -2349,7 +2349,7 @@ msgstr "Masukkan handle pengguna Anda"
 msgid "Invalid or unsupported post record"
 msgstr "Catatan posting tidak valid atau tidak didukung"
 
-#: src/view/com/auth/login/LoginForm.tsx:113
+#: src/view/com/auth/login/LoginForm.tsx:116
 msgid "Invalid username or password"
 msgstr "Username atau kata sandi salah"
 
@@ -2444,7 +2444,7 @@ msgstr ""
 msgid "Language selection"
 msgstr "Pilih bahasa"
 
-#: src/view/screens/Settings/index.tsx:610
+#: src/view/screens/Settings/index.tsx:614
 msgid "Language settings"
 msgstr "Pengaturan bahasa"
 
@@ -2453,7 +2453,7 @@ msgstr "Pengaturan bahasa"
 msgid "Language Settings"
 msgstr "Pengaturan Bahasa"
 
-#: src/view/screens/Settings/index.tsx:619
+#: src/view/screens/Settings/index.tsx:623
 msgid "Languages"
 msgstr "Bahasa"
 
@@ -2499,7 +2499,7 @@ msgstr "Meninggalkan Bluesky"
 msgid "left to go."
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:292
+#: src/view/screens/Settings/index.tsx:296
 msgid "Legacy storage cleared, you need to restart the app now."
 msgstr "Penyimpanan lama dihapus, Anda perlu memulai ulang aplikasi sekarang."
 
@@ -2517,7 +2517,7 @@ msgstr ""
 #~ msgid "Library"
 #~ msgstr "Pustaka"
 
-#: src/view/screens/Settings/index.tsx:494
+#: src/view/screens/Settings/index.tsx:498
 msgid "Light"
 msgstr "Terang"
 
@@ -2664,7 +2664,7 @@ msgstr ""
 msgid "Logged-out visibility"
 msgstr "Visibilitas pengguna yang tidak login"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:137
+#: src/view/com/auth/login/ChooseAccountForm.tsx:142
 msgid "Login to account that is not listed"
 msgstr "Masuk ke akun yang tidak ada di daftar"
 
@@ -2717,7 +2717,7 @@ msgstr ""
 
 #: src/Navigation.tsx:119
 #: src/screens/Moderation/index.tsx:106
-#: src/view/screens/Settings/index.tsx:641
+#: src/view/screens/Settings/index.tsx:645
 #: src/view/shell/desktop/LeftNav.tsx:401
 #: src/view/shell/Drawer.tsx:514
 #: src/view/shell/Drawer.tsx:515
@@ -2760,7 +2760,7 @@ msgstr "Daftar moderasi"
 msgid "Moderation Lists"
 msgstr "Daftar Moderasi"
 
-#: src/view/screens/Settings/index.tsx:635
+#: src/view/screens/Settings/index.tsx:639
 msgid "Moderation settings"
 msgstr "Pengaturan moderasi"
 
@@ -2907,11 +2907,11 @@ msgstr "Feed Saya"
 msgid "My Profile"
 msgstr "Profil Saya"
 
-#: src/view/screens/Settings/index.tsx:592
+#: src/view/screens/Settings/index.tsx:596
 msgid "My saved feeds"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:598
+#: src/view/screens/Settings/index.tsx:602
 msgid "My Saved Feeds"
 msgstr "Feed Tersimpan Saya"
 
@@ -2940,7 +2940,7 @@ msgstr ""
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:190
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:219
-#: src/view/com/auth/login/LoginForm.tsx:289
+#: src/view/com/auth/login/LoginForm.tsx:292
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:196
 #: src/view/com/modals/ChangePassword.tsx:168
 msgid "Navigates to the next screen"
@@ -3036,7 +3036,7 @@ msgstr ""
 #: src/view/com/auth/create/CreateAccount.tsx:172
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:182
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:192
-#: src/view/com/auth/login/LoginForm.tsx:291
+#: src/view/com/auth/login/LoginForm.tsx:294
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:187
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:198
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
@@ -3181,7 +3181,7 @@ msgstr "Baiklah"
 msgid "Oldest replies first"
 msgstr "Balasan terlama terlebih dahulu"
 
-#: src/view/screens/Settings/index.tsx:240
+#: src/view/screens/Settings/index.tsx:244
 msgid "Onboarding reset"
 msgstr "Atur ulang orientasi"
 
@@ -3220,7 +3220,7 @@ msgstr "Buka pemilih emoji"
 msgid "Open feed options menu"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:730
+#: src/view/screens/Settings/index.tsx:734
 msgid "Open links with in-app browser"
 msgstr "Buka tautan dengan browser dalam aplikasi"
 
@@ -3240,12 +3240,12 @@ msgstr "Buka navigasi"
 msgid "Open post options menu"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:824
-#: src/view/screens/Settings/index.tsx:834
+#: src/view/screens/Settings/index.tsx:828
+#: src/view/screens/Settings/index.tsx:838
 msgid "Open storybook page"
 msgstr "Buka halaman buku cerita"
 
-#: src/view/screens/Settings/index.tsx:812
+#: src/view/screens/Settings/index.tsx:816
 msgid "Open system log"
 msgstr ""
 
@@ -3269,7 +3269,7 @@ msgstr "Membuka kamera pada perangkat"
 msgid "Opens composer"
 msgstr "Membuka penyusun postingan"
 
-#: src/view/screens/Settings/index.tsx:611
+#: src/view/screens/Settings/index.tsx:615
 msgid "Opens configurable language settings"
 msgstr "Membuka pengaturan bahasa yang dapat dikonfigurasi"
 
@@ -3281,7 +3281,7 @@ msgstr "Membuka galeri foto perangkat"
 #~ msgid "Opens editor for profile display name, avatar, background image, and description"
 #~ msgstr "Membuka editor untuk nama tampilan profil, avatar, gambar latar belakang, dan deskripsi"
 
-#: src/view/screens/Settings/index.tsx:665
+#: src/view/screens/Settings/index.tsx:669
 msgid "Opens external embeds settings"
 msgstr "Membuka pengaturan penyematan eksternal"
 
@@ -3311,7 +3311,7 @@ msgstr ""
 msgid "Opens list of invite codes"
 msgstr "Membuka daftar kode undangan"
 
-#: src/view/screens/Settings/index.tsx:794
+#: src/view/screens/Settings/index.tsx:798
 msgid "Opens modal for account deletion confirmation. Requires email code"
 msgstr ""
 
@@ -3319,19 +3319,19 @@ msgstr ""
 #~ msgid "Opens modal for account deletion confirmation. Requires email code."
 #~ msgstr "Membuka modal untuk konfirmasi penghapusan akun. Membutuhkan kode email."
 
-#: src/view/screens/Settings/index.tsx:752
+#: src/view/screens/Settings/index.tsx:756
 msgid "Opens modal for changing your Bluesky password"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:714
+#: src/view/screens/Settings/index.tsx:718
 msgid "Opens modal for choosing a new Bluesky handle"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:775
+#: src/view/screens/Settings/index.tsx:779
 msgid "Opens modal for downloading your Bluesky account data (repository)"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:966
+#: src/view/screens/Settings/index.tsx:970
 msgid "Opens modal for email verification"
 msgstr ""
 
@@ -3339,11 +3339,11 @@ msgstr ""
 msgid "Opens modal for using custom domain"
 msgstr "Buka modal untuk menggunakan domain kustom"
 
-#: src/view/screens/Settings/index.tsx:636
+#: src/view/screens/Settings/index.tsx:640
 msgid "Opens moderation settings"
 msgstr "Buka pengaturan moderasi"
 
-#: src/view/com/auth/login/LoginForm.tsx:239
+#: src/view/com/auth/login/LoginForm.tsx:242
 msgid "Opens password reset form"
 msgstr "Membuka formulir pengaturan ulang kata sandi"
 
@@ -3352,11 +3352,11 @@ msgstr "Membuka formulir pengaturan ulang kata sandi"
 msgid "Opens screen to edit Saved Feeds"
 msgstr "Membuka layar untuk mengedit Umpan Tersimpan"
 
-#: src/view/screens/Settings/index.tsx:593
+#: src/view/screens/Settings/index.tsx:597
 msgid "Opens screen with all saved feeds"
 msgstr "Buka halaman dengan semua feed tersimpan"
 
-#: src/view/screens/Settings/index.tsx:692
+#: src/view/screens/Settings/index.tsx:696
 msgid "Opens the app password settings"
 msgstr ""
 
@@ -3364,7 +3364,7 @@ msgstr ""
 #~ msgid "Opens the app password settings page"
 #~ msgstr "Buka halaman pengaturan kata sandi aplikasi"
 
-#: src/view/screens/Settings/index.tsx:550
+#: src/view/screens/Settings/index.tsx:554
 msgid "Opens the Following feed preferences"
 msgstr ""
 
@@ -3376,16 +3376,16 @@ msgstr ""
 msgid "Opens the linked website"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:825
-#: src/view/screens/Settings/index.tsx:835
+#: src/view/screens/Settings/index.tsx:829
+#: src/view/screens/Settings/index.tsx:839
 msgid "Opens the storybook page"
 msgstr "Buka halaman storybook"
 
-#: src/view/screens/Settings/index.tsx:813
+#: src/view/screens/Settings/index.tsx:817
 msgid "Opens the system log page"
 msgstr "Buka halaman log sistem"
 
-#: src/view/screens/Settings/index.tsx:571
+#: src/view/screens/Settings/index.tsx:575
 msgid "Opens the threads preferences"
 msgstr "Buka preferensi utasan"
 
@@ -3409,7 +3409,7 @@ msgstr "Atau gabungkan opsi-opsi berikut:"
 msgid "Other"
 msgstr ""
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:142
+#: src/view/com/auth/login/ChooseAccountForm.tsx:147
 msgid "Other account"
 msgstr "Akun lainnya"
 
@@ -3432,8 +3432,8 @@ msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:191
 #: src/view/com/auth/create/Step1.tsx:201
-#: src/view/com/auth/login/LoginForm.tsx:210
-#: src/view/com/auth/login/LoginForm.tsx:226
+#: src/view/com/auth/login/LoginForm.tsx:213
+#: src/view/com/auth/login/LoginForm.tsx:229
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:161
 #: src/view/com/modals/DeleteAccount.tsx:195
 #: src/view/com/modals/DeleteAccount.tsx:202
@@ -3677,7 +3677,7 @@ msgstr "Bahasa Utama"
 msgid "Prioritize Your Follows"
 msgstr "Prioritaskan Pengikut Anda"
 
-#: src/view/screens/Settings/index.tsx:648
+#: src/view/screens/Settings/index.tsx:652
 #: src/view/shell/desktop/RightNav.tsx:72
 msgid "Privacy"
 msgstr "Privasi"
@@ -3685,7 +3685,7 @@ msgstr "Privasi"
 #: src/Navigation.tsx:231
 #: src/view/com/auth/create/Policies.tsx:69
 #: src/view/screens/PrivacyPolicy.tsx:29
-#: src/view/screens/Settings/index.tsx:921
+#: src/view/screens/Settings/index.tsx:925
 #: src/view/shell/Drawer.tsx:265
 msgid "Privacy Policy"
 msgstr "Kebijakan Privasi"
@@ -3711,7 +3711,7 @@ msgstr "Profil"
 msgid "Profile updated"
 msgstr "Profil diperbarui"
 
-#: src/view/screens/Settings/index.tsx:979
+#: src/view/screens/Settings/index.tsx:983
 msgid "Protect your account by verifying your email."
 msgstr "Amankan akun Anda dengan memverifikasi email Anda."
 
@@ -3986,7 +3986,7 @@ msgstr "Ajukan Perubahan"
 msgid "Request Code"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:471
+#: src/view/screens/Settings/index.tsx:475
 msgid "Require alt text before posting"
 msgstr "Memerlukan teks alt sebelum memposting"
 
@@ -4008,8 +4008,8 @@ msgstr ""
 #~ msgid "Reset onboarding"
 #~ msgstr "Atur ulang onboarding"
 
-#: src/view/screens/Settings/index.tsx:854
-#: src/view/screens/Settings/index.tsx:857
+#: src/view/screens/Settings/index.tsx:858
+#: src/view/screens/Settings/index.tsx:861
 msgid "Reset onboarding state"
 msgstr "Reset status onboarding"
 
@@ -4021,20 +4021,20 @@ msgstr "Reset kata sandi"
 #~ msgid "Reset preferences"
 #~ msgstr "Atur ulang preferensi"
 
-#: src/view/screens/Settings/index.tsx:844
-#: src/view/screens/Settings/index.tsx:847
+#: src/view/screens/Settings/index.tsx:848
+#: src/view/screens/Settings/index.tsx:851
 msgid "Reset preferences state"
 msgstr "Atur ulang status preferensi"
 
-#: src/view/screens/Settings/index.tsx:855
+#: src/view/screens/Settings/index.tsx:859
 msgid "Resets the onboarding state"
 msgstr "Reset status onboarding"
 
-#: src/view/screens/Settings/index.tsx:845
+#: src/view/screens/Settings/index.tsx:849
 msgid "Resets the preferences state"
 msgstr "Reset status preferensi"
 
-#: src/view/com/auth/login/LoginForm.tsx:269
+#: src/view/com/auth/login/LoginForm.tsx:272
 msgid "Retries login"
 msgstr "Mencoba masuk kembali"
 
@@ -4048,8 +4048,8 @@ msgstr "Coba kembali tindakan terakhir, yang gagal"
 #: src/screens/Onboarding/StepInterests/index.tsx:224
 #: src/view/com/auth/create/CreateAccount.tsx:181
 #: src/view/com/auth/create/CreateAccount.tsx:186
-#: src/view/com/auth/login/LoginForm.tsx:268
 #: src/view/com/auth/login/LoginForm.tsx:271
+#: src/view/com/auth/login/LoginForm.tsx:274
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
@@ -4076,16 +4076,16 @@ msgstr ""
 #~ msgid "SANDBOX. Posts and accounts are not permanent."
 #~ msgstr "SANDBOX. Postingan dan akun tidak bersifat permanen."
 
-#: src/view/com/lightbox/Lightbox.tsx:132
-#: src/view/com/modals/CreateOrEditList.tsx:345
-msgctxt "action"
-msgid "Save"
-msgstr "Simpan"
-
 #: src/components/dialogs/BirthDateSettings.tsx:125
 #: src/view/com/modals/ChangeHandle.tsx:173
 #: src/view/com/modals/CreateOrEditList.tsx:337
 #: src/view/com/modals/EditProfile.tsx:224
+msgid "Save"
+msgstr "Simpan"
+
+#: src/view/com/lightbox/Lightbox.tsx:132
+#: src/view/com/modals/CreateOrEditList.tsx:345
+msgctxt "action"
 msgid "Save"
 msgstr "Simpan"
 
@@ -4251,7 +4251,7 @@ msgid "Select option {i} of {numItems}"
 msgstr "Pilih opsi {i} dari {numItems}"
 
 #: src/view/com/auth/create/Step1.tsx:96
-#: src/view/com/auth/login/LoginForm.tsx:150
+#: src/view/com/auth/login/LoginForm.tsx:153
 msgid "Select service"
 msgstr "Pilih layanan"
 
@@ -4428,23 +4428,23 @@ msgstr ""
 msgid "Sets Bluesky username"
 msgstr "Atur nama pengguna Bluesky"
 
-#: src/view/screens/Settings/index.tsx:503
+#: src/view/screens/Settings/index.tsx:507
 msgid "Sets color theme to dark"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:496
+#: src/view/screens/Settings/index.tsx:500
 msgid "Sets color theme to light"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:490
+#: src/view/screens/Settings/index.tsx:494
 msgid "Sets color theme to system setting"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:529
+#: src/view/screens/Settings/index.tsx:533
 msgid "Sets dark theme to the dark theme"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:522
+#: src/view/screens/Settings/index.tsx:526
 msgid "Sets dark theme to the dim theme"
 msgstr ""
 
@@ -4473,12 +4473,12 @@ msgid "Sets image aspect ratio to wide"
 msgstr ""
 
 #: src/view/com/auth/create/Step1.tsx:97
-#: src/view/com/auth/login/LoginForm.tsx:151
+#: src/view/com/auth/login/LoginForm.tsx:154
 msgid "Sets server for the Bluesky client"
 msgstr "Atur server untuk klien Bluesky"
 
 #: src/Navigation.tsx:139
-#: src/view/screens/Settings/index.tsx:309
+#: src/view/screens/Settings/index.tsx:313
 #: src/view/shell/desktop/LeftNav.tsx:437
 #: src/view/shell/Drawer.tsx:570
 #: src/view/shell/Drawer.tsx:571
@@ -4521,7 +4521,7 @@ msgstr "Bagikan feed"
 #: src/components/moderation/GlobalModerationLabelPref.tsx:45
 #: src/components/moderation/PostHider.tsx:107
 #: src/screens/Onboarding/StepModeration/ModerationOption.tsx:54
-#: src/view/screens/Settings/index.tsx:359
+#: src/view/screens/Settings/index.tsx:363
 msgid "Show"
 msgstr "Tampilkan"
 
@@ -4651,23 +4651,23 @@ msgstr "Masuk"
 msgid "Sign In"
 msgstr "Masuk"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:44
+#: src/view/com/auth/login/ChooseAccountForm.tsx:45
 msgid "Sign in as {0}"
 msgstr "Masuk sebagai {0}"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:122
+#: src/view/com/auth/login/ChooseAccountForm.tsx:127
 #: src/view/com/auth/login/Login.tsx:116
 msgid "Sign in as..."
 msgstr "Masuk sebagai..."
 
-#: src/view/com/auth/login/LoginForm.tsx:137
+#: src/view/com/auth/login/LoginForm.tsx:140
 msgid "Sign into"
 msgstr "Masuk ke"
 
 #: src/view/com/modals/SwitchAccount.tsx:68
 #: src/view/com/modals/SwitchAccount.tsx:73
-#: src/view/screens/Settings/index.tsx:105
-#: src/view/screens/Settings/index.tsx:108
+#: src/view/screens/Settings/index.tsx:107
+#: src/view/screens/Settings/index.tsx:110
 msgid "Sign out"
 msgstr "Keluar"
 
@@ -4692,11 +4692,11 @@ msgstr "Daftar atau masuk untuk bergabung dalam obrolan"
 msgid "Sign-in Required"
 msgstr "Dibutuhkan Masuk"
 
-#: src/view/screens/Settings/index.tsx:370
+#: src/view/screens/Settings/index.tsx:374
 msgid "Signed in as"
 msgstr "Masuk sebagai"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:107
+#: src/view/com/auth/login/ChooseAccountForm.tsx:112
 msgid "Signed in as @{0}"
 msgstr "Masuk sebagai @{0}"
 
@@ -4776,7 +4776,7 @@ msgstr "Persegi"
 #~ msgid "Staging"
 #~ msgstr "Staging"
 
-#: src/view/screens/Settings/index.tsx:901
+#: src/view/screens/Settings/index.tsx:905
 msgid "Status page"
 msgstr "Halaman status"
 
@@ -4788,12 +4788,12 @@ msgstr ""
 #~ msgid "Step {step} of 3"
 #~ msgstr "Langkah {step} dari 3"
 
-#: src/view/screens/Settings/index.tsx:288
+#: src/view/screens/Settings/index.tsx:292
 msgid "Storage cleared, you need to restart the app now."
 msgstr "Penyimpanan dihapus, Anda perlu memulai ulang aplikasi sekarang."
 
 #: src/Navigation.tsx:211
-#: src/view/screens/Settings/index.tsx:827
+#: src/view/screens/Settings/index.tsx:831
 msgid "Storybook"
 msgstr "Storybook"
 
@@ -4849,25 +4849,25 @@ msgstr "Dukungan"
 #~ msgid "Swipe up to see more"
 #~ msgstr "Geser ke atas untuk melihat lebih banyak"
 
-#: src/view/com/modals/SwitchAccount.tsx:121
+#: src/view/com/modals/SwitchAccount.tsx:123
 msgid "Switch Account"
 msgstr "Pindah Akun"
 
-#: src/view/com/modals/SwitchAccount.tsx:101
-#: src/view/screens/Settings/index.tsx:135
+#: src/view/com/modals/SwitchAccount.tsx:103
+#: src/view/screens/Settings/index.tsx:139
 msgid "Switch to {0}"
 msgstr "Beralih ke {0}"
 
-#: src/view/com/modals/SwitchAccount.tsx:102
-#: src/view/screens/Settings/index.tsx:136
+#: src/view/com/modals/SwitchAccount.tsx:104
+#: src/view/screens/Settings/index.tsx:140
 msgid "Switches the account you are logged in to"
 msgstr "Mengganti akun yang Anda masuki"
 
-#: src/view/screens/Settings/index.tsx:487
+#: src/view/screens/Settings/index.tsx:491
 msgid "System"
 msgstr "Sistem"
 
-#: src/view/screens/Settings/index.tsx:815
+#: src/view/screens/Settings/index.tsx:819
 msgid "System log"
 msgstr "Log sistem"
 
@@ -4901,7 +4901,7 @@ msgstr "Ketentuan"
 
 #: src/Navigation.tsx:236
 #: src/view/com/auth/create/Policies.tsx:59
-#: src/view/screens/Settings/index.tsx:915
+#: src/view/screens/Settings/index.tsx:919
 #: src/view/screens/TermsOfService.tsx:29
 #: src/view/shell/Drawer.tsx:259
 msgid "Terms of Service"
@@ -5251,12 +5251,12 @@ msgstr ""
 #~ msgid "This will hide this post from your feeds."
 #~ msgstr "Ini akan menyembunyikan postingan ini dari feed Anda."
 
-#: src/view/screens/Settings/index.tsx:570
+#: src/view/screens/Settings/index.tsx:574
 msgid "Thread preferences"
 msgstr ""
 
 #: src/view/screens/PreferencesThreads.tsx:53
-#: src/view/screens/Settings/index.tsx:580
+#: src/view/screens/Settings/index.tsx:584
 msgid "Thread Preferences"
 msgstr "Preferensi Utasan"
 
@@ -5318,7 +5318,7 @@ msgstr "Bunyikan daftar"
 #: src/view/com/auth/create/CreateAccount.tsx:58
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:87
 #: src/view/com/auth/login/Login.tsx:76
-#: src/view/com/auth/login/LoginForm.tsx:118
+#: src/view/com/auth/login/LoginForm.tsx:121
 #: src/view/com/modals/ChangePassword.tsx:70
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Tidak dapat terhubung ke layanan. Mohon periksa koneksi internet Anda."
@@ -5572,8 +5572,8 @@ msgstr "Daftar pengguna diperbarui"
 msgid "User Lists"
 msgstr "Daftar Pengguna"
 
-#: src/view/com/auth/login/LoginForm.tsx:177
-#: src/view/com/auth/login/LoginForm.tsx:195
+#: src/view/com/auth/login/LoginForm.tsx:180
+#: src/view/com/auth/login/LoginForm.tsx:198
 msgid "Username or email address"
 msgstr "Nama pengguna atau alamat email"
 
@@ -5605,15 +5605,15 @@ msgstr ""
 msgid "Verify {0}"
 msgstr ""
 
-#: src/view/screens/Settings/index.tsx:940
+#: src/view/screens/Settings/index.tsx:944
 msgid "Verify email"
 msgstr "Verifikasi email"
 
-#: src/view/screens/Settings/index.tsx:965
+#: src/view/screens/Settings/index.tsx:969
 msgid "Verify my email"
 msgstr "Verifikasi email saya"
 
-#: src/view/screens/Settings/index.tsx:974
+#: src/view/screens/Settings/index.tsx:978
 msgid "Verify My Email"
 msgstr "Verifikasi Email Saya"
 
@@ -6118,7 +6118,7 @@ msgid "Your posts, likes, and blocks are public. Mutes are private."
 msgstr "Postingan, suka, dan blokir Anda bersifat publik. Bisukan bersifat privat."
 
 #: src/view/com/modals/SwitchAccount.tsx:88
-#: src/view/screens/Settings/index.tsx:123
+#: src/view/screens/Settings/index.tsx:125
 msgid "Your profile"
 msgstr "Profil Anda"
 
