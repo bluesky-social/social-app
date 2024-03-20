@@ -1,4 +1,5 @@
-import {t} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 // Regex from the go implementation
 // https://github.com/bluesky-social/indigo/blob/main/atproto/syntax/handle.go#L10
@@ -24,7 +25,8 @@ export function isInvalidHandle(handle: string): boolean {
 }
 
 export function sanitizeHandle(handle: string, prefix = ''): string {
-  return isInvalidHandle(handle) ? t`⚠Invalid Handle` : `${prefix}${handle}`
+  const {_} = useLingui()
+  return isInvalidHandle(handle) ? _(msg`⚠Invalid Handle`) : `${prefix}${handle}`
 }
 
 export interface IsValidHandle {

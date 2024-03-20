@@ -1,4 +1,5 @@
-import {t} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 import * as persisted from '#/state/persisted'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 
@@ -17,19 +18,20 @@ export function ago(date: number | string | Date): string {
   } else {
     ts = date
   }
+  const {_} = useLingui()
   const diffSeconds = Math.floor((Date.now() - ts) / 1e3)
   if (diffSeconds < NOW) {
-    return t`now`
+    return _(msg`now`)
   } else if (diffSeconds < MINUTE) {
-    return t`${diffSeconds}s`
+    return _(msg`${diffSeconds}s`)
   } else if (diffSeconds < HOUR) {
-    return t`${Math.floor(diffSeconds / MINUTE)}m`
+    return _(msg`${Math.floor(diffSeconds / MINUTE)}m`)
   } else if (diffSeconds < DAY) {
-    return t`${Math.floor(diffSeconds / HOUR)}h`
+    return _(msg`${Math.floor(diffSeconds / HOUR)}h`)
   } else if (diffSeconds < MONTH) {
-    return t`${Math.round(diffSeconds / DAY)}d`
+    return _(msg`${Math.round(diffSeconds / DAY)}d`)
   } else if (diffSeconds < YEAR) {
-    return t`${Math.floor(diffSeconds / MONTH)}mo`
+    return _(msg`${Math.floor(diffSeconds / MONTH)}mo`)
   } else {
     return new Date(ts).toLocaleDateString()
   }
@@ -39,7 +41,7 @@ export function niceDate(date: number | string | Date) {
   const d = new Date(date)
   const appLanguage = persisted.get('languagePrefs').appLanguage
   const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
-  return t`${d.toLocaleDateString(sanitizedLanguage, {
+  return msg`${d.toLocaleDateString(sanitizedLanguage, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
