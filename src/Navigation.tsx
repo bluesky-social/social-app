@@ -565,7 +565,11 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 }
 
 function getCurrentRouteName() {
-  return navigationRef.getCurrentRoute()?.name
+  if (navigationRef.isReady()) {
+    return navigationRef.getCurrentRoute()?.name
+  } else {
+    return undefined
+  }
 }
 
 /**
