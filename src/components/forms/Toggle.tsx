@@ -2,9 +2,17 @@ import React from 'react'
 import {Pressable, View, ViewStyle} from 'react-native'
 
 import {HITSLOP_10} from 'lib/constants'
-import {useTheme, atoms as a, web, native, flatten, ViewStyleProp} from '#/alf'
+import {
+  useTheme,
+  atoms as a,
+  native,
+  flatten,
+  ViewStyleProp,
+  TextStyleProp,
+} from '#/alf'
 import {Text} from '#/components/Typography'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {CheckThick_Stroke2_Corner0_Rounded as Checkmark} from '#/components/icons/Check'
 
 export type ItemState = {
   name: string
@@ -219,20 +227,17 @@ export function Item({
         onPressOut={onPressOut}
         onFocus={onFocus}
         onBlur={onBlur}
-        style={[
-          a.flex_row,
-          a.align_center,
-          a.gap_sm,
-          focused ? web({outline: 'none'}) : {},
-          flatten(style),
-        ]}>
+        style={[a.flex_row, a.align_center, a.gap_sm, flatten(style)]}>
         {typeof children === 'function' ? children(state) : children}
       </Pressable>
     </ItemContext.Provider>
   )
 }
 
-export function Label({children}: React.PropsWithChildren<{}>) {
+export function Label({
+  children,
+  style,
+}: React.PropsWithChildren<TextStyleProp>) {
   const t = useTheme()
   const {disabled} = useItemContext()
   return (
@@ -241,11 +246,14 @@ export function Label({children}: React.PropsWithChildren<{}>) {
         a.font_bold,
         {
           userSelect: 'none',
-          color: disabled ? t.palette.contrast_400 : t.palette.contrast_600,
+          color: disabled
+            ? t.atoms.text_contrast_low.color
+            : t.atoms.text_contrast_high.color,
         },
         native({
           paddingTop: 3,
         }),
+        flatten(style),
       ]}>
       {children}
     </Text>
@@ -256,7 +264,6 @@ export function Label({children}: React.PropsWithChildren<{}>) {
 export function createSharedToggleStyles({
   theme: t,
   hovered,
-  focused,
   selected,
   disabled,
   isInvalid,
@@ -279,7 +286,7 @@ export function createSharedToggleStyles({
       borderColor: t.palette.primary_500,
     })
 
-    if (hovered || focused) {
+    if (hovered) {
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.primary_100 : t.palette.primary_800,
@@ -288,7 +295,7 @@ export function createSharedToggleStyles({
       })
     }
   } else {
-    if (hovered || focused) {
+    if (hovered) {
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.contrast_50 : t.palette.contrast_100,
@@ -300,16 +307,16 @@ export function createSharedToggleStyles({
   if (isInvalid) {
     base.push({
       backgroundColor:
-        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
+        t.name === 'light' ? t.palette.negative_25 : t.palette.negative_975,
       borderColor:
         t.name === 'light' ? t.palette.negative_300 : t.palette.negative_800,
     })
 
-    if (hovered || focused) {
+    if (hovered) {
       baseHover.push({
         backgroundColor:
           t.name === 'light' ? t.palette.negative_25 : t.palette.negative_900,
-        borderColor: t.palette.negative_500,
+        borderColor: t.palette.negative_600,
       })
     }
   }
@@ -331,15 +338,14 @@ export function createSharedToggleStyles({
 export function Checkbox() {
   const t = useTheme()
   const {selected, hovered, focused, disabled, isInvalid} = useItemContext()
-  const {baseStyles, baseHoverStyles, indicatorStyles} =
-    createSharedToggleStyles({
-      theme: t,
-      hovered,
-      focused,
-      selected,
-      disabled,
-      isInvalid,
-    })
+  const {baseStyles, baseHoverStyles} = createSharedToggleStyles({
+    theme: t,
+    hovered,
+    focused,
+    selected,
+    disabled,
+    isInvalid,
+  })
   return (
     <View
       style={[
@@ -353,23 +359,9 @@ export function Checkbox() {
           width: 20,
         },
         baseStyles,
-        hovered || focused ? baseHoverStyles : {},
+        hovered ? baseHoverStyles : {},
       ]}>
-      {selected ? (
-        <View
-          style={[
-            a.absolute,
-            a.rounded_2xs,
-            {height: 12, width: 12},
-            selected
-              ? {
-                  backgroundColor: t.palette.primary_500,
-                }
-              : {},
-            indicatorStyles,
-          ]}
-        />
-      ) : null}
+      {selected ? <Checkmark size="xs" fill={t.palette.primary_500} /> : null}
     </View>
   )
 }
@@ -399,7 +391,7 @@ export function Switch() {
           width: 30,
         },
         baseStyles,
-        hovered || focused ? baseHoverStyles : {},
+        hovered ? baseHoverStyles : {},
       ]}>
       <View
         style={[
@@ -451,7 +443,7 @@ export function Radio() {
           width: 20,
         },
         baseStyles,
-        hovered || focused ? baseHoverStyles : {},
+        hovered ? baseHoverStyles : {},
       ]}>
       {selected ? (
         <View

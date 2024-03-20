@@ -64,7 +64,11 @@ function ProfileCard() {
       style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}
       title={_(msg`My Profile`)}
       asAnchor>
-      <UserAvatar avatar={profile.avatar} size={size} />
+      <UserAvatar
+        avatar={profile.avatar}
+        size={size}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+      />
     </Link>
   ) : (
     <View style={[styles.profileCard, !isDesktop && styles.profileCardTablet]}>
@@ -200,10 +204,10 @@ function ComposeBtn() {
   const fetchHandle = useFetchHandle()
 
   const getProfileHandle = async () => {
-    const {routes} = getState()
-    const currentRoute = routes[routes.length - 1]
+    const routes = getState()?.routes
+    const currentRoute = routes?.[routes?.length - 1]
 
-    if (currentRoute.name === 'Profile') {
+    if (currentRoute?.name === 'Profile') {
       let handle: string | undefined = (
         currentRoute.params as CommonNavigatorParams['Profile']
       ).name
@@ -391,7 +395,7 @@ export function DesktopLeftNav() {
               <FontAwesomeIcon
                 icon="hand"
                 style={pal.text as FontAwesomeIconStyle}
-                size={isDesktop ? 20 : 26}
+                size={isDesktop ? 23 : 26}
               />
             }
             label={_(msg`Moderation`)}

@@ -1,3 +1,5 @@
+import {Platform} from 'react-native'
+import {web, native} from '#/alf/util/platform'
 import * as tokens from '#/alf/tokens'
 
 export const atoms = {
@@ -5,7 +7,7 @@ export const atoms = {
    * Positioning
    */
   fixed: {
-    position: 'fixed',
+    position: Platform.select({web: 'fixed', native: 'absolute'}) as 'absolute',
   },
   absolute: {
     position: 'absolute',
@@ -48,6 +50,9 @@ export const atoms = {
   h_full: {
     height: '100%',
   },
+  h_full_vh: web({
+    height: '100vh',
+  }),
 
   /*
    * Border radius
@@ -110,8 +115,17 @@ export const atoms = {
   flex_row: {
     flexDirection: 'row',
   },
+  flex_col_reverse: {
+    flexDirection: 'column-reverse',
+  },
+  flex_row_reverse: {
+    flexDirection: 'row-reverse',
+  },
   flex_wrap: {
     flexWrap: 'wrap',
+  },
+  flex_0: {
+    flex: web('0 0 auto') || (native(0) as number),
   },
   flex_1: {
     flex: 1,
@@ -176,45 +190,64 @@ export const atoms = {
   },
   text_2xs: {
     fontSize: tokens.fontSize._2xs,
+    letterSpacing: 0.25,
   },
   text_xs: {
     fontSize: tokens.fontSize.xs,
+    letterSpacing: 0.25,
   },
   text_sm: {
     fontSize: tokens.fontSize.sm,
+    letterSpacing: 0.25,
   },
   text_md: {
     fontSize: tokens.fontSize.md,
+    letterSpacing: 0.25,
   },
   text_lg: {
     fontSize: tokens.fontSize.lg,
+    letterSpacing: 0.25,
   },
   text_xl: {
     fontSize: tokens.fontSize.xl,
+    letterSpacing: 0.25,
   },
   text_2xl: {
     fontSize: tokens.fontSize._2xl,
+    letterSpacing: 0.25,
   },
   text_3xl: {
     fontSize: tokens.fontSize._3xl,
+    letterSpacing: 0.25,
   },
   text_4xl: {
     fontSize: tokens.fontSize._4xl,
+    letterSpacing: 0.25,
   },
   text_5xl: {
     fontSize: tokens.fontSize._5xl,
+    letterSpacing: 0.25,
   },
   leading_tight: {
     lineHeight: 1.15,
   },
   leading_snug: {
-    lineHeight: 1.25,
+    lineHeight: 1.3,
   },
   leading_normal: {
     lineHeight: 1.5,
   },
+  tracking_normal: {
+    letterSpacing: 0,
+  },
+  tracking_wide: {
+    letterSpacing: 0.25,
+  },
   font_normal: {
     fontWeight: tokens.fontWeight.normal,
+  },
+  font_semibold: {
+    fontWeight: '500',
   },
   font_bold: {
     fontWeight: tokens.fontWeight.semibold,
@@ -501,6 +534,10 @@ export const atoms = {
   /*
    * Margin
    */
+  mx_auto: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+  },
   m_2xs: {
     margin: tokens.space._2xs,
   },

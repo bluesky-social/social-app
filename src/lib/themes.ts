@@ -9,7 +9,7 @@ export const defaultTheme: Theme = {
   palette: {
     default: {
       background: lightPalette.white,
-      backgroundLight: lightPalette.contrast_50,
+      backgroundLight: lightPalette.contrast_25,
       text: lightPalette.black,
       textLight: lightPalette.contrast_700,
       textInverted: lightPalette.white,
@@ -306,7 +306,7 @@ export const darkTheme: Theme = {
 
       // non-standard
       textVeryLight: darkPalette.contrast_400,
-      replyLine: darkPalette.contrast_100,
+      replyLine: darkPalette.contrast_200,
       replyLineDot: darkPalette.contrast_200,
       unreadNotifBg: darkPalette.primary_975,
       unreadNotifBorder: darkPalette.primary_900,
@@ -355,7 +355,7 @@ export const dimTheme: Theme = {
 
       // non-standard
       textVeryLight: dimPalette.contrast_400,
-      replyLine: dimPalette.contrast_100,
+      replyLine: dimPalette.contrast_200,
       replyLineDot: dimPalette.contrast_200,
       unreadNotifBg: dimPalette.primary_975,
       unreadNotifBorder: dimPalette.primary_900,

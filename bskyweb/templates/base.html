@@ -2,7 +2,6 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="theme-color">
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, viewport-fit=cover">
   <meta name="referrer" content="origin-when-cross-origin">
   <!--
@@ -43,6 +42,15 @@
       -webkit-text-size-adjust: 100%;
       height: calc(100% + env(safe-area-inset-top));
       scrollbar-gutter: stable both-edges;
+    }
+    html, body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif;
+    }
+
+    /* Buttons and inputs have a font set by UA, so we'll have to reset that */
+    button, input, textarea {
+      font: inherit;
+      line-height: inherit;
     }
 
     /* Color theming */
@@ -133,7 +141,7 @@
 
     /* ProseMirror */
     .ProseMirror {
-      font: 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font: 18px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif;
       min-height: 140px;
     }
     .ProseMirror-dark {
@@ -206,13 +214,19 @@
     [data-tooltip]:hover::before {
       display:block;
     }
+
+    /* NativeDropdown component */
+    .radix-dropdown-item:focus,
+    .nativeDropdown-item:focus {
+      outline: none;
+    }
   </style>
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
   <link rel="mask-icon" href="/static/safari-pinned-tab.svg" color="#1185fe">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color">
   <meta name="application-name" content="Bluesky">
   <meta name="generator" content="bskyweb">
   <meta property="og:site_name" content="Bluesky Social" />

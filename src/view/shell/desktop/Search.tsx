@@ -11,7 +11,7 @@ import {useNavigation, StackActions} from '@react-navigation/native'
 import {
   AppBskyActorDefs,
   moderateProfile,
-  ProfileModeration,
+  ModerationDecision,
 } from '@atproto/api'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
@@ -86,7 +86,7 @@ export function SearchProfileCard({
   moderation,
 }: {
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ProfileModeration
+  moderation: ModerationDecision
 }) {
   const pal = usePalette('default')
 
@@ -111,7 +111,8 @@ export function SearchProfileCard({
         <UserAvatar
           size={40}
           avatar={profile.avatar}
-          moderation={moderation.avatar}
+          moderation={moderation.ui('avatar')}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
         />
         <View style={{flex: 1}}>
           <Text
@@ -121,7 +122,7 @@ export function SearchProfileCard({
             lineHeight={1.2}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text type="md" style={[pal.textLight]} numberOfLines={1}>

@@ -16,7 +16,7 @@ import {
   FontAwesomeIcon,
   FontAwesomeIconStyle,
 } from '@fortawesome/react-native-fontawesome'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 import {logger} from '#/logger'
 import {
@@ -53,6 +53,7 @@ import {listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
+import {NavigationProp} from '#/lib/routes/types'
 
 function Loader() {
   const pal = usePalette('default')
@@ -140,6 +141,7 @@ function SearchScreenSuggestedFollows() {
         friends.slice(0, 4).map(friend =>
           getSuggestedFollowsByActor(friend.did).then(foafsRes => {
             for (const user of foafsRes.suggestions) {
+              if (user.associated?.labeler) continue
               friendsOfFriends.set(user.did, user)
             }
           }),
@@ -448,6 +450,7 @@ export function SearchScreenInner({
 export function SearchScreen(
   props: NativeStackScreenProps<SearchTabNavigatorParams, 'Search'>,
 ) {
+  const navigation = useNavigation<NavigationProp>()
   const theme = useTheme()
   const textInput = React.useRef<TextInput>(null)
   const {_} = useLingui()
@@ -471,6 +474,27 @@ export function SearchScreen(
   const [showAutocompleteResults, setShowAutocompleteResults] =
     React.useState(false)
   const [searchHistory, setSearchHistory] = React.useState<string[]>([])
+
+  /**
+   * The Search screen's `q` param
+   */
+  const queryParam = props.route?.params?.q
+
+  /**
+   * If `true`, this means we received new instructions from the router. This
+   * is handled in a effect, and used to update the value of `query` locally
+   * within this screen.
+   */
+  const routeParamsMismatch = queryParam && queryParam !== query
+
+  React.useEffect(() => {
+    if (queryParam && routeParamsMismatch) {
+      // reset immediately and let local state take over
+      navigation.setParams({q: ''})
+      // update query for next search
+      setQuery(queryParam)
+    }
+  }, [queryParam, routeParamsMismatch, navigation])
 
   React.useEffect(() => {
     const loadSearchHistory = async () => {
@@ -749,7 +773,7 @@ export function SearchScreen(
             {searchHistory.length > 0 && (
               <View style={styles.searchHistoryContent}>
                 <Text style={[pal.text, styles.searchHistoryTitle]}>
-                  Recent Searches
+                  <Trans>Recent Searches</Trans>
                 </Text>
                 {searchHistory.map((historyItem, index) => (
                   <View key={index} style={styles.historyItemContainer}>
@@ -774,6 +798,8 @@ export function SearchScreen(
             )}
           </View>
         </CenteredView>
+      ) : routeParamsMismatch ? (
+        <ActivityIndicator />
       ) : (
         <SearchScreenInner query={query} />
       )}

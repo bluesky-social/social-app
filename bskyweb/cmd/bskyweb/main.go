@@ -41,18 +41,6 @@ func run(args []string) {
 					EnvVars: []string{"ATP_APPVIEW_HOST", "ATP_PDS_HOST"},
 				},
 				&cli.StringFlag{
-					Name:     "mailmodo-api-key",
-					Usage:    "Mailmodo API key",
-					Required: false,
-					EnvVars:  []string{"MAILMODO_API_KEY"},
-				},
-				&cli.StringFlag{
-					Name:     "mailmodo-list-name",
-					Usage:    "Mailmodo contact list to add email addresses to",
-					Required: false,
-					EnvVars:  []string{"MAILMODO_LIST_NAME"},
-				},
-				&cli.StringFlag{
 					Name:     "http-address",
 					Usage:    "Specify the local IP/port to bind to",
 					Required: false,

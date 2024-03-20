@@ -107,7 +107,7 @@ export const LoginForm = ({
       const errMsg = e.toString()
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
-        logger.info('Failed to login due to invalid credentials', {
+        logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
         setError(_(msg`Invalid username or password`))
@@ -207,7 +207,7 @@ export const LoginForm = ({
             testID="loginPasswordInput"
             ref={passwordInputRef}
             style={[pal.text, styles.textInput]}
-            placeholder="Password"
+            placeholder={_(msg`Password`)}
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoCorrect={false}
