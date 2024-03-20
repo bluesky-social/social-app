@@ -153,7 +153,6 @@ export const ChooseAccountForm = ({
                 style={[
                   a.flex_1,
                   a.flex_row,
-                  a.flex_row,
                   a.align_center,
                   {height: 48},
                   (hovered || pressed) && t.atoms.bg_contrast_25,
