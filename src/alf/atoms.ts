@@ -1,6 +1,7 @@
 import {Platform} from 'react-native'
-import {web, native} from '#/alf/util/platform'
+
 import * as tokens from '#/alf/tokens'
+import {native, web} from '#/alf/util/platform'
 
 export const atoms = {
   /*
@@ -253,10 +254,10 @@ export const atoms = {
     fontWeight: tokens.fontWeight.normal,
   },
   font_semibold: {
-    fontWeight: '500',
+    fontWeight: tokens.fontWeight.semibold,
   },
   font_bold: {
-    fontWeight: tokens.fontWeight.semibold,
+    fontWeight: tokens.fontWeight.bold,
   },
   italic: {
     fontStyle: 'italic',

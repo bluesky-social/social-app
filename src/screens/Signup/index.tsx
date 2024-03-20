@@ -21,6 +21,7 @@ import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
 import {InlineLink} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
@@ -126,16 +127,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
           keyboardShouldPersistTaps="handled"
           style={a.h_full}
           keyboardDismissMode="on-drag">
-          <View
-            style={[
-              a.flex_1,
-              a.px_xl,
-              a.gap_3xl,
-              a.pt_2xl,
-              {paddingBottom: 100},
-            ]}>
-            <View style={[a.gap_sm]}>
-              <Text style={[a.text_lg, t.atoms.text_contrast_medium]}>
+          <View style={[a.flex_1, a.px_xl, a.pt_2xl, {paddingBottom: 100}]}>
+            <View style={[a.gap_sm, a.pb_3xl]}>
+              <Text style={[a.font_semibold, t.atoms.text_contrast_medium]}>
                 <Trans>Step</Trans> {state.activeStep + 1} <Trans>of</Trans>{' '}
                 {state.serviceDescription &&
                 !state.serviceDescription.phoneVerificationRequired
@@ -152,7 +146,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                 )}
               </Text>
             </View>
-            <View>
+
+            <View style={[a.pb_3xl]}>
               {state.activeStep === SignupStep.INFO ? (
                 <StepInfo />
               ) : state.activeStep === SignupStep.HANDLE ? (
@@ -162,12 +157,12 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               )}
             </View>
 
-            <View style={[a.flex_row, a.justify_between]}>
+            <View style={[a.flex_row, a.justify_between, a.pb_lg]}>
               <Button
                 label="Back"
                 variant="solid"
                 color="secondary"
-                size="small"
+                size="medium"
                 onPress={onBackPress}>
                 Back
               </Button>
@@ -178,7 +173,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       label="Retry"
                       variant="solid"
                       color="primary"
-                      size="small"
+                      size="medium"
                       disabled={state.isLoading}
                       onPress={() => refetch()}>
                       Retry
@@ -187,12 +182,8 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                     <Button
                       label="Next"
                       variant="solid"
-                      color={
-                        !state.canNext || state.isLoading
-                          ? 'secondary'
-                          : 'primary'
-                      }
-                      size="small"
+                      color="primary"
+                      size="medium"
                       disabled={!state.canNext || state.isLoading}
                       onPress={onNextPress}>
                       <ButtonText>Next</ButtonText>
@@ -201,19 +192,13 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                 </>
               )}
             </View>
-            <View
-              style={[
-                a.w_full,
-                a.py_lg,
-                a.px_md,
-                a.rounded_sm,
-                t.atoms.bg_contrast_25,
-              ]}>
-              <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+
+            <Divider />
+
+            <View style={[a.w_full, a.py_lg]}>
+              <Text style={[t.atoms.text_contrast_medium]}>
                 <Trans>Having trouble?</Trans>{' '}
-                <InlineLink
-                  style={[a.text_md]}
-                  to={FEEDBACK_FORM_URL({email: state.email})}>
+                <InlineLink to={FEEDBACK_FORM_URL({email: state.email})}>
                   <Trans>Contact support</Trans>
                 </InlineLink>
               </Text>
