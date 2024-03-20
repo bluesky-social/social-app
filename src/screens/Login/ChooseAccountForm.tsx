@@ -2,7 +2,6 @@ import React from 'react'
 import {View} from 'react-native'
 import {Trans, msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import flattenReactChildren from 'react-keyed-flatten-children'
 
 import {useAnalytics} from 'lib/analytics/analytics'
 import {UserAvatar} from '../../view/com/util/UserAvatar'
@@ -19,30 +18,6 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import * as TextField from '#/components/forms/TextField'
 import {FormContainer} from './FormContainer'
 import {logEvent} from '#/lib/statsig/statsig'
-
-function Group({children}: {children: React.ReactNode}) {
-  const t = useTheme()
-  return (
-    <View
-      style={[
-        a.rounded_md,
-        a.overflow_hidden,
-        a.border,
-        t.atoms.border_contrast_low,
-      ]}>
-      {flattenReactChildren(children).map((child, i) => {
-        return React.isValidElement(child) ? (
-          <React.Fragment key={i}>
-            {i > 0 ? (
-              <View style={[a.border_b, t.atoms.border_contrast_low]} />
-            ) : null}
-            {child}
-          </React.Fragment>
-        ) : null
-      })}
-    </View>
-  )
-}
 
 function AccountItem({
   account,
@@ -150,14 +125,23 @@ export const ChooseAccountForm = ({
         <TextField.Label>
           <Trans>Sign in as...</Trans>
         </TextField.Label>
-        <Group>
+        <View
+          style={[
+            a.rounded_md,
+            a.overflow_hidden,
+            a.border,
+            t.atoms.border_contrast_low,
+          ]}>
           {accounts.map(account => (
-            <AccountItem
-              key={account.did}
-              account={account}
-              onSelect={onSelect}
-              isCurrentAccount={account.did === currentAccount?.did}
-            />
+            <>
+              <AccountItem
+                key={account.did}
+                account={account}
+                onSelect={onSelect}
+                isCurrentAccount={account.did === currentAccount?.did}
+              />
+              <View style={[a.border_b, t.atoms.border_contrast_low]} />
+            </>
           ))}
           <Button
             testID="chooseNewAccountBtn"
@@ -188,7 +172,7 @@ export const ChooseAccountForm = ({
               </View>
             )}
           </Button>
-        </Group>
+        </View>
       </View>
       <View style={[a.flex_row]}>
         <Button
