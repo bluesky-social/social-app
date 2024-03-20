@@ -106,7 +106,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
           initialHandle={initialHandle}
           setError={setError}
           setServiceUrl={setServiceUrl}
-          onPressBack={onPressBack}
+          onPressBack={() =>
+            accounts.length ? gotoForm(Forms.ChooseAccount) : onPressBack()
+          }
           onPressForgotPassword={onPressForgotPassword}
           onPressRetryConnect={refetchService}
         />
