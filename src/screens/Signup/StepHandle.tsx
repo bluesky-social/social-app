@@ -33,7 +33,6 @@ export function StepHandle() {
 
   useFocusEffect(
     React.useCallback(() => {
-      console.log('run')
       setValidCheck(validateHandle(state.handle, state.userDomain))
     }, [state.handle, state.userDomain]),
   )
