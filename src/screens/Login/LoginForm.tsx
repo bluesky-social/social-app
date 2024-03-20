@@ -95,11 +95,14 @@ export const LoginForm = ({
       }
 
       // TODO remove double login
-      await login({
-        service: serviceUrl,
-        identifier: fullIdent,
-        password,
-      })
+      await login(
+        {
+          service: serviceUrl,
+          identifier: fullIdent,
+          password,
+        },
+        'LoginForm',
+      )
     } catch (e: any) {
       const errMsg = e.toString()
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

@@ -2,9 +2,25 @@ export type LogEvents = {
   init: {
     initMs: number
   }
+  'account:loggedIn': {
+    logContext: 'LoginForm' | 'SwitchAccount' | 'ChooseAccountForm' | 'Settings'
+    withPassword: boolean
+  }
+  'account:loggedOut': {
+    logContext: 'SwitchAccount' | 'Settings' | 'Deactivated'
+  }
+  'notifications:openApp': {}
+  'state:background': {
+    secondsActive: number
+  }
+  'state:foreground': {}
   'feed:endReached': {
     feedType: string
     itemCount: number
+  }
+  'feed:refresh': {
+    feedType: string
+    reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
   'post:create': {
     imageCount: number

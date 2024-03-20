@@ -100,7 +100,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       {isCurrentAccount ? (
         <TouchableOpacity
           testID="signOutBtn"
-          onPress={logout}
+          onPress={() => {
+            logout('Settings')
+          }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
           accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
@@ -129,7 +131,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+        isSwitchingAccounts
+          ? undefined
+          : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
@@ -711,7 +715,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
           accessibilityHint={_(
-            msg`Opens modal for choosing or creating a new Bluesky username`,
+            msg`Opens modal for choosing a new Bluesky handle`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
@@ -772,7 +776,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Export my data`)}
           accessibilityHint={_(
-            msg`Opens modal for downloading Bluesky account data (repository)`,
+            msg`Opens modal for downloading your Bluesky account data (repository)`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon

@@ -46,7 +46,7 @@ export function FeedErrorMessage({
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
-    feedDesc.startsWith('feedgen')
+    (feedDesc.startsWith('feedgen') || knownError === KnownError.FeedNSFPublic)
   ) {
     return (
       <FeedgenErrorMessage
@@ -240,6 +240,9 @@ function detectKnownError(
   if (typeof error !== 'string') {
     error = error.toString()
   }
+  if (error.includes(KnownError.FeedNSFPublic)) {
+    return KnownError.FeedNSFPublic
+  }
   if (!feedDesc.startsWith('feedgen')) {
     return KnownError.Unknown
   }
@@ -262,9 +265,6 @@ function detectKnownError(
   }
   if (error.includes('feed provided an invalid response')) {
     return KnownError.FeedgenBadResponse
-  }
-  if (error.includes(KnownError.FeedNSFPublic)) {
-    return KnownError.FeedNSFPublic
   }
   return KnownError.FeedgenUnknown
 }
