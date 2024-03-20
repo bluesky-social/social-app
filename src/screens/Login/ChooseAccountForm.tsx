@@ -133,15 +133,14 @@ export const ChooseAccountForm = ({
             t.atoms.border_contrast_low,
           ]}>
           {accounts.map(account => (
-            <>
+            <React.Fragment key={account.did}>
               <AccountItem
-                key={account.did}
                 account={account}
                 onSelect={onSelect}
                 isCurrentAccount={account.did === currentAccount?.did}
               />
               <View style={[a.border_b, t.atoms.border_contrast_low]} />
-            </>
+            </React.Fragment>
           ))}
           <Button
             testID="chooseNewAccountBtn"
