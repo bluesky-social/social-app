@@ -17,6 +17,7 @@ import {SetNewPasswordForm} from '#/screens/Login/SetNewPasswordForm'
 import {PasswordUpdatedForm} from '#/screens/Login/PasswordUpdatedForm'
 import {LoginForm} from '#/screens/Login/LoginForm'
 import {ScreenTransition} from './ScreenTransition'
+import {LayoutAnimationConfig} from 'react-native-reanimated'
 
 enum Forms {
   Login,
@@ -164,7 +165,9 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
   return (
     <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
       <LoggedOutLayout leadin="" title={title} description={description}>
-        <ScreenTransition key={currentForm}>{content}</ScreenTransition>
+        <LayoutAnimationConfig skipEntering skipExiting>
+          <ScreenTransition key={currentForm}>{content}</ScreenTransition>
+        </LayoutAnimationConfig>
       </LoggedOutLayout>
     </KeyboardAvoidingView>
   )
