@@ -8,7 +8,7 @@ import BottomSheet, {
   BottomSheetView,
   useBottomSheet,
   WINDOW_HEIGHT,
-} from '@gorhom/bottom-sheet'
+} from '@discord/bottom-sheet/src'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 
