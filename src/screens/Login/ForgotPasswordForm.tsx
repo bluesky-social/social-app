@@ -114,21 +114,22 @@ export const ForgotPasswordForm = ({
           />
         </TextField.Root>
       </View>
-      <View>
-        <Text style={[t.atoms.text_contrast_high, a.mb_md]}>
-          <Trans>
-            Enter the email you used to create your account. We'll send you a
-            "reset code" so you can set a new password.
-          </Trans>
-        </Text>
-      </View>
+
+      <Text style={[t.atoms.text_contrast_high, a.leading_snug]}>
+        <Trans>
+          Enter the email you used to create your account. We'll send you a
+          "reset code" so you can set a new password.
+        </Trans>
+      </Text>
+
       <FormError error={error} />
-      <View style={[a.flex_row, a.align_center]}>
+
+      <View style={[a.flex_row, a.align_center, a.pt_md]}>
         <Button
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="small"
+          size="medium"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -141,8 +142,8 @@ export const ForgotPasswordForm = ({
           <Button
             label={_(msg`Next`)}
             variant="solid"
-            color={email ? 'primary' : 'secondary'}
-            size="small"
+            color={'primary'}
+            size="medium"
             onPress={onPressNext}
             disabled={!email}>
             <ButtonText>
@@ -170,7 +171,7 @@ export const ForgotPasswordForm = ({
           onPress={onEmailSent}
           label={_(msg`Go to next`)}
           accessibilityHint={_(msg`Navigates to the next screen`)}
-          size="small"
+          size="medium"
           variant="ghost"
           color="secondary">
           <ButtonText>

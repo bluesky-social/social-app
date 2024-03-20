@@ -13,16 +13,17 @@ export function FormError({error}: {error?: string}) {
   return (
     <View
       style={[
-        {backgroundColor: t.palette.negative_600},
+        {backgroundColor: t.palette.negative_400},
         a.flex_row,
-        a.align_center,
-        a.mb_lg,
         a.rounded_sm,
-        a.p_sm,
+        a.p_md,
+        a.gap_sm,
       ]}>
-      <Warning fill={t.palette.white} size="sm" />
-      <View style={(a.flex_1, a.ml_sm)}>
-        <Text style={[{color: t.palette.white}, a.font_bold]}>{error}</Text>
+      <Warning fill={t.palette.white} size="md" />
+      <View>
+        <Text style={[{color: t.palette.white}, a.font_bold, a.leading_snug]}>
+          {error}
+        </Text>
       </View>
     </View>
   )

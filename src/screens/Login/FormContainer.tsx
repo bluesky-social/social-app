@@ -32,7 +32,7 @@ export function FormContainer({
       style={[styles.maxHeight, contentContainerStyle]}
       keyboardShouldPersistTaps="handled">
       <View
-        style={[a.gap_lg, a.flex_1, !gtMobile && [a.px_lg, a.pt_md], style]}>
+        style={[a.gap_md, a.flex_1, !gtMobile && [a.px_lg, a.pt_md], style]}>
         {title && !gtMobile && (
           <Text style={[a.text_xl, a.font_bold, t.atoms.text_contrast_high]}>
             {title}

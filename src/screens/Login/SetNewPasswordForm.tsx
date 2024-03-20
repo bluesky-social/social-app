@@ -100,7 +100,7 @@ export const SetNewPasswordForm = ({
     <FormContainer
       testID="setNewPasswordForm"
       title={<Trans>Set new password</Trans>}>
-      <Text>
+      <Text style={[a.leading_snug, a.mb_sm]}>
         <Trans>
           You will receive an email with a "reset code." Enter that code here,
           then enter your new password.
@@ -152,13 +152,15 @@ export const SetNewPasswordForm = ({
           />
         </TextField.Root>
       </View>
+
       <FormError error={error} />
-      <View style={[a.flex_row, a.align_center]}>
+
+      <View style={[a.flex_row, a.align_center, a.pt_lg]}>
         <Button
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="small"
+          size="medium"
           onPress={onPressBack}>
           <ButtonText>
             <Trans>Back</Trans>
@@ -172,7 +174,7 @@ export const SetNewPasswordForm = ({
             label={_(msg`Next`)}
             variant="solid"
             color="primary"
-            size="small"
+            size="medium"
             onPress={onPressNext}>
             <ButtonText>
               <Trans>Next</Trans>
