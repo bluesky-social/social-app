@@ -51,36 +51,44 @@ export function HostingProvider({
           a.align_center,
           a.rounded_sm,
           a.px_md,
+          a.pr_sm,
           a.gap_xs,
           {paddingVertical: isAndroid ? 14 : 9},
         ]}
         onPress={onPressSelectService}>
-        {({hovered}) => (
-          <>
-            <View style={a.pr_xs}>
-              <Globe
-                size="md"
-                fill={hovered ? t.palette.contrast_800 : t.palette.contrast_500}
-              />
-            </View>
-            <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
-            <View
-              style={[
-                a.rounded_sm,
-                hovered ? t.atoms.bg_contrast_300 : t.atoms.bg_contrast_100,
-                {marginLeft: 'auto', left: 6, padding: 6},
-              ]}>
-              <Pencil
-                size="sm"
-                style={{
-                  color: hovered
-                    ? t.palette.contrast_800
-                    : t.palette.contrast_500,
-                }}
-              />
-            </View>
-          </>
-        )}
+        {({hovered, pressed}) => {
+          const interacted = hovered || pressed
+          return (
+            <>
+              <View style={a.pr_xs}>
+                <Globe
+                  size="md"
+                  fill={
+                    interacted ? t.palette.contrast_800 : t.palette.contrast_500
+                  }
+                />
+              </View>
+              <Text style={[a.text_md]}>{toNiceDomain(serviceUrl)}</Text>
+              <View
+                style={[
+                  a.rounded_sm,
+                  interacted
+                    ? t.atoms.bg_contrast_300
+                    : t.atoms.bg_contrast_100,
+                  {marginLeft: 'auto', padding: 6},
+                ]}>
+                <Pencil
+                  size="sm"
+                  style={{
+                    color: interacted
+                      ? t.palette.contrast_800
+                      : t.palette.contrast_500,
+                  }}
+                />
+              </View>
+            </>
+          )
+        }}
       </Button>
     </>
   )
