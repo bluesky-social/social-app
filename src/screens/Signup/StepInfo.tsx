@@ -2,19 +2,20 @@ import React from 'react'
 import {View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {logger} from '#/logger'
+import {Policies} from 'view/com/auth/create/Policies'
+import {ScreenTransition} from '#/screens/Login/ScreenTransition'
+import {is13, is18, useSignupContext} from '#/screens/Signup/state'
 import {atoms as a} from '#/alf'
+import * as DateField from '#/components/forms/DateField'
+import {FormError} from '#/components/forms/FormError'
+import {HostingProvider} from '#/components/forms/HostingProvider'
 import * as TextField from '#/components/forms/TextField'
 import {Envelope_Stroke2_Corner0_Rounded as Envelope} from '#/components/icons/Envelope'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
-import {is13, is18, useSignupContext} from '#/screens/Signup/state'
-import * as DateField from '#/components/forms/DateField'
-import {logger} from '#/logger'
 import {Loader} from '#/components/Loader'
-import {Policies} from 'view/com/auth/create/Policies'
-import {HostingProvider} from '#/components/forms/HostingProvider'
-import {FormError} from '#/components/forms/FormError'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 
 function sanitizeDate(date: Date): Date {
   if (!date || date.toString() === 'Invalid Date') {
@@ -32,7 +33,7 @@ export function StepInfo() {
 
   return (
     <ScreenTransition>
-      <View style={[a.gap_lg]}>
+      <View style={[a.gap_md]}>
         <FormError error={state.error} />
         <View>
           <TextField.Label>
