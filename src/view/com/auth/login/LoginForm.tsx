@@ -107,7 +107,7 @@ export const LoginForm = ({
       const errMsg = e.toString()
       setIsProcessing(false)
       if (errMsg.includes('Authentication Required')) {
-        logger.info('Failed to login due to invalid credentials', {
+        logger.debug('Failed to login due to invalid credentials', {
           error: errMsg,
         })
         setError(_(msg`Invalid username or password`))

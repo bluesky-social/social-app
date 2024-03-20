@@ -6,17 +6,14 @@ import {logger} from '#/logger'
 import {getAgent} from '#/state/session'
 import {useMyFollowsQuery} from '#/state/queries/my-follows'
 import {STALE} from '#/state/queries'
-import {
-  DEFAULT_LOGGED_OUT_PREFERENCES,
-  getModerationOpts,
-  useModerationOpts,
-} from './preferences'
+import {DEFAULT_LOGGED_OUT_PREFERENCES, useModerationOpts} from './preferences'
 import {isInvalidHandle} from '#/lib/strings/handles'
+import {isJustAMute} from '#/lib/moderation'
 
-const DEFAULT_MOD_OPTS = getModerationOpts({
-  userDid: '',
-  preferences: DEFAULT_LOGGED_OUT_PREFERENCES,
-})
+const DEFAULT_MOD_OPTS = {
+  userDid: undefined,
+  prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+}
 
 export const RQKEY = (prefix: string) => ['actor-autocomplete', prefix]
 
@@ -104,18 +101,12 @@ function computeSuggestions(
   }
   for (const item of searched) {
     if (!items.find(item2 => item2.handle === item.handle)) {
-      items.push({
-        did: item.did,
-        handle: item.handle,
-        displayName: item.displayName,
-        avatar: item.avatar,
-        labels: item.labels,
-      })
+      items.push(item)
     }
   }
   return items.filter(profile => {
-    const mod = moderateProfile(profile, moderationOpts)
-    return !mod.account.filter && mod.account.cause?.type !== 'muted'
+    const modui = moderateProfile(profile, moderationOpts).ui('profileList')
+    return !modui.filter || isJustAMute(modui)
   })
 }
 

@@ -175,7 +175,11 @@ const MentionList = forwardRef<MentionListRef, SuggestionProps>(
                   }}
                   accessibilityRole="button">
                   <View style={styles.avatarAndDisplayName}>
-                    <UserAvatar avatar={item.avatar ?? null} size={26} />
+                    <UserAvatar
+                      avatar={item.avatar ?? null}
+                      size={26}
+                      type={item.associated?.labeler ? 'labeler' : 'user'}
+                    />
                     <Text style={pal.text} numberOfLines={1}>
                       {displayName}
                     </Text>

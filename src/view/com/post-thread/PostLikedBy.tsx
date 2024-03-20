@@ -8,7 +8,7 @@ import {ProfileCardWithFollowBtn} from '../profile/ProfileCard'
 import {logger} from '#/logger'
 import {LoadingScreen} from '../util/LoadingScreen'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
-import {usePostLikedByQuery} from '#/state/queries/post-liked-by'
+import {useLikedByQuery} from '#/state/queries/post-liked-by'
 import {cleanError} from '#/lib/strings/errors'
 
 export function PostLikedBy({uri}: {uri: string}) {
@@ -28,7 +28,7 @@ export function PostLikedBy({uri}: {uri: string}) {
     isError,
     error,
     refetch,
-  } = usePostLikedByQuery(resolvedUri?.uri)
+  } = useLikedByQuery(resolvedUri?.uri)
   const likes = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)

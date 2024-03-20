@@ -9,7 +9,7 @@ export const defaultTheme: Theme = {
   palette: {
     default: {
       background: lightPalette.white,
-      backgroundLight: lightPalette.contrast_50,
+      backgroundLight: lightPalette.contrast_25,
       text: lightPalette.black,
       textLight: lightPalette.contrast_700,
       textInverted: lightPalette.white,
@@ -357,8 +357,8 @@ export const dimTheme: Theme = {
       textVeryLight: dimPalette.contrast_400,
       replyLine: dimPalette.contrast_200,
       replyLineDot: dimPalette.contrast_200,
-      unreadNotifBg: `hsl(211, 48%, 17%)`,
-      unreadNotifBorder: `hsl(211, 48%, 30%)`,
+      unreadNotifBg: dimPalette.primary_975,
+      unreadNotifBorder: dimPalette.primary_900,
       postCtrl: dimPalette.contrast_500,
       brandText: dimPalette.primary_500,
       emptyStateIcon: dimPalette.contrast_300,

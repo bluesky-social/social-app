@@ -68,6 +68,7 @@ import {SelectableBtn} from 'view/com/util/forms/SelectableBtn'
 import {AccountDropdownBtn} from 'view/com/util/AccountDropdownBtn'
 import {SimpleViewHeader} from 'view/com/util/SimpleViewHeader'
 import {ExportCarDialog} from './ExportCarDialog'
+import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 
 function SettingsAccountCard({account}: {account: SessionAccount}) {
   const pal = usePalette('default')
@@ -81,7 +82,11 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
       <View style={styles.avi}>
-        <UserAvatar size={40} avatar={profile?.avatar} />
+        <UserAvatar
+          size={40}
+          avatar={profile?.avatar}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        />
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text}>
@@ -159,6 +164,7 @@ export function SettingsScreen({}: Props) {
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const exportCarControl = useDialogControl()
+  const birthdayControl = useDialogControl()
 
   // const primaryBg = useCustomPalette<ViewStyle>({
   //   light: {backgroundColor: colors.blue0},
@@ -261,6 +267,10 @@ export function SettingsScreen({}: Props) {
     navigation.navigate('Debug')
   }, [navigation])
 
+  const onPressDebugModeration = React.useCallback(() => {
+    navigation.navigate('DebugMod')
+  }, [navigation])
+
   const onPressSavedFeeds = React.useCallback(() => {
     navigation.navigate('SavedFeeds')
   }, [navigation])
@@ -268,6 +278,10 @@ export function SettingsScreen({}: Props) {
   const onPressStatusPage = React.useCallback(() => {
     Linking.openURL(STATUS_PAGE_URL)
   }, [])
+
+  const onPressBirthday = React.useCallback(() => {
+    birthdayControl.open()
+  }, [birthdayControl])
 
   const clearAllStorage = React.useCallback(async () => {
     await clearStorage()
@@ -281,6 +295,7 @@ export function SettingsScreen({}: Props) {
   return (
     <View style={s.hContentRegion} testID="settingsScreen">
       <ExportCarDialog control={exportCarControl} />
+      <BirthDateSettingsDialog control={birthdayControl} />
 
       <SimpleViewHeader
         showBackButton={isMobile}
@@ -336,12 +351,10 @@ export function SettingsScreen({}: Props) {
               </Link>
             </View>
             <View style={[styles.infoLine]}>
-              <Trans>
-                <Text type="lg-medium" style={pal.text}>
-                  Birthday:{' '}
-                </Text>
-              </Trans>
-              <Link onPress={() => openModal({name: 'birth-date-settings'})}>
+              <Text type="lg-medium" style={pal.text}>
+                <Trans>Birthday:</Trans>{' '}
+              </Text>
+              <Link onPress={onPressBirthday}>
                 <Text type="lg" style={pal.link}>
                   <Trans>Show</Trans>
                 </Text>
@@ -474,20 +487,20 @@ export function SettingsScreen({}: Props) {
               label={_(msg`System`)}
               left
               onSelect={() => setColorMode('system')}
-              accessibilityHint={_(msg`Set color theme to system setting`)}
+              accessibilityHint={_(msg`Sets color theme to system setting`)}
             />
             <SelectableBtn
               selected={colorMode === 'light'}
               label={_(msg`Light`)}
               onSelect={() => setColorMode('light')}
-              accessibilityHint={_(msg`Set color theme to light`)}
+              accessibilityHint={_(msg`Sets color theme to light`)}
             />
             <SelectableBtn
               selected={colorMode === 'dark'}
               label={_(msg`Dark`)}
               right
               onSelect={() => setColorMode('dark')}
-              accessibilityHint={_(msg`Set color theme to dark`)}
+              accessibilityHint={_(msg`Sets color theme to dark`)}
             />
           </View>
         </View>
@@ -506,14 +519,14 @@ export function SettingsScreen({}: Props) {
                   label={_(msg`Dim`)}
                   left
                   onSelect={() => setDarkTheme('dim')}
-                  accessibilityHint={_(msg`Set dark theme to the dim theme`)}
+                  accessibilityHint={_(msg`Sets dark theme to the dim theme`)}
                 />
                 <SelectableBtn
                   selected={darkTheme === 'dark'}
                   label={_(msg`Dark`)}
                   right
                   onSelect={() => setDarkTheme('dark')}
-                  accessibilityHint={_(msg`Set dark theme to the dark theme`)}
+                  accessibilityHint={_(msg`Sets dark theme to the dark theme`)}
                 />
               </View>
             </View>
@@ -533,8 +546,8 @@ export function SettingsScreen({}: Props) {
           ]}
           onPress={openFollowingFeedPreferences}
           accessibilityRole="button"
-          accessibilityLabel={_(msg`Home feed preferences`)}
-          accessibilityHint={_(msg`Opens the home feed preferences`)}>
+          accessibilityLabel={_(msg`Following feed preferences`)}
+          accessibilityHint={_(msg`Opens the Following feed preferences`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="sliders"
@@ -574,9 +587,10 @@ export function SettingsScreen({}: Props) {
             pal.view,
             isSwitchingAccounts && styles.dimmed,
           ]}
+          onPress={onPressSavedFeeds}
+          accessibilityRole="button"
           accessibilityLabel={_(msg`My saved feeds`)}
-          accessibilityHint={_(msg`Opens screen with all saved feeds`)}
-          onPress={onPressSavedFeeds}>
+          accessibilityHint={_(msg`Opens screen with all saved feeds`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <HashtagIcon style={pal.text} size={18} strokeWidth={3} />
           </View>
@@ -675,7 +689,7 @@ export function SettingsScreen({}: Props) {
           onPress={onPressAppPasswords}
           accessibilityRole="button"
           accessibilityLabel={_(msg`App password settings`)}
-          accessibilityHint={_(msg`Opens the app password settings page`)}>
+          accessibilityHint={_(msg`Opens the app password settings`)}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="lock"
@@ -696,7 +710,9 @@ export function SettingsScreen({}: Props) {
           onPress={isSwitchingAccounts ? undefined : onPressChangeHandle}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change handle`)}
-          accessibilityHint={_(msg`Choose a new Bluesky username or create`)}>
+          accessibilityHint={_(
+            msg`Opens modal for choosing a new Bluesky handle`,
+          )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
               icon="at"
@@ -733,7 +749,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Change password`)}
           accessibilityHint={_(
-            msg`Opens modal for change your Bluesky password`,
+            msg`Opens modal for changing your Bluesky password`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
@@ -756,7 +772,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Export my data`)}
           accessibilityHint={_(
-            msg`Opens modal for download Bluesky account data (repository)`,
+            msg`Opens modal for downloading your Bluesky account data (repository)`,
           )}>
           <View style={[styles.iconContainer, pal.btn]}>
             <FontAwesomeIcon
@@ -775,7 +791,7 @@ export function SettingsScreen({}: Props) {
           accessibilityRole="button"
           accessibilityLabel={_(msg`Delete account`)}
           accessibilityHint={_(
-            msg`Opens modal for account deletion confirmation. Requires email code.`,
+            msg`Opens modal for account deletion confirmation. Requires email code`,
           )}>
           <View style={[styles.iconContainer, dangerBg]}>
             <FontAwesomeIcon
@@ -809,6 +825,16 @@ export function SettingsScreen({}: Props) {
               accessibilityHint={_(msg`Opens the storybook page`)}>
               <Text type="lg" style={pal.text}>
                 <Trans>Storybook</Trans>
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[pal.view, styles.linkCardNoIcon]}
+              onPress={onPressDebugModeration}
+              accessibilityRole="button"
+              accessibilityLabel={_(msg`Open storybook page`)}
+              accessibilityHint={_(msg`Opens the storybook page`)}>
+              <Text type="lg" style={pal.text}>
+                <Trans>Debug Moderation</Trans>
               </Text>
             </TouchableOpacity>
             <TouchableOpacity

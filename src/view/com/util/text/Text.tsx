@@ -2,7 +2,7 @@ import React from 'react'
 import {Text as RNText, TextProps} from 'react-native'
 import {s, lh} from 'lib/styles'
 import {useTheme, TypographyVariant} from 'lib/ThemeContext'
-import {isIOS} from 'platform/detection'
+import {isIOS, isWeb} from 'platform/detection'
 import {UITextView} from 'react-native-ui-text-view'
 
 export type CustomTextProps = TextProps & {
@@ -11,6 +11,11 @@ export type CustomTextProps = TextProps & {
   title?: string
   dataSet?: Record<string, string | number>
   selectable?: boolean
+}
+
+const fontFamilyStyle = {
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
 }
 
 export function Text({
@@ -39,7 +44,13 @@ export function Text({
 
   return (
     <RNText
-      style={[s.black, typography, lineHeightStyle, style]}
+      style={[
+        s.black,
+        typography,
+        isWeb && fontFamilyStyle,
+        lineHeightStyle,
+        style,
+      ]}
       // @ts-ignore web only -esb
       dataSet={Object.assign({tooltip: title}, dataSet || {})}
       selectable={selectable}

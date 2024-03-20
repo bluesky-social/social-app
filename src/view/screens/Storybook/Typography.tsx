@@ -22,12 +22,14 @@ export function Typography() {
       <Text style={[a.text_2xs]}>atoms.text_2xs</Text>
 
       <RichText
-        resolveFacets
+        // TODO: This only supports already resolved facets.
+        // Resolving them on read is bad anyway.
         value={`This is rich text. It can have mentions like @bsky.app or links like https://bsky.social`}
       />
       <RichText
         selectable
-        resolveFacets
+        // TODO: This only supports already resolved facets.
+        // Resolving them on read is bad anyway.
         value={`This is rich text. It can have mentions like @bsky.app or links like https://bsky.social`}
         style={[a.text_xl]}
       />

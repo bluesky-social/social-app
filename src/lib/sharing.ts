@@ -13,9 +13,9 @@ import {t} from '@lingui/macro'
  */
 export async function shareUrl(url: string) {
   if (isAndroid) {
-    Share.share({message: url})
+    await Share.share({message: url})
   } else if (isIOS) {
-    Share.share({url})
+    await Share.share({url})
   } else {
     // React Native Share is not supported by web. Web Share API
     // has increasing but not full support, so default to clipboard

@@ -103,6 +103,7 @@ import {faUsersSlash} from '@fortawesome/free-solid-svg-icons/faUsersSlash'
 import {faX} from '@fortawesome/free-solid-svg-icons/faX'
 import {faXmark} from '@fortawesome/free-solid-svg-icons/faXmark'
 import {faChevronDown} from '@fortawesome/free-solid-svg-icons/faChevronDown'
+import {faFilter} from '@fortawesome/free-solid-svg-icons/faFilter'
 
 library.add(
   faAddressCard,
@@ -208,4 +209,5 @@ library.add(
   faX,
   faXmark,
   faChevronDown,
+  faFilter,
 )

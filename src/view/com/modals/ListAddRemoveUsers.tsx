@@ -231,7 +231,11 @@ function UserResult({
           width: 54,
           paddingLeft: 4,
         }}>
-        <UserAvatar size={40} avatar={profile.avatar} />
+        <UserAvatar
+          size={40}
+          avatar={profile.avatar}
+          type={profile.associated?.labeler ? 'labeler' : 'user'}
+        />
       </View>
       <View
         style={{

@@ -55,6 +55,8 @@ export const Composer = observer(function ComposerImpl({
         onPost={state.onPost}
         quote={state.quote}
         mention={state.mention}
+        text={state.text}
+        imageUris={state.imageUris}
       />
     </Animated.View>
   )

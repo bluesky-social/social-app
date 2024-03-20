@@ -35,6 +35,10 @@ export const MAX_GRAPHEME_LENGTH = 300
 // but increasing limit per user feedback
 export const MAX_ALT_TEXT = 1000
 
+export function IS_TEST_USER(handle?: string) {
+  return handle && handle?.endsWith('.test')
+}
+
 export function IS_PROD_SERVICE(url?: string) {
   return url && url !== STAGING_SERVICE && url !== LOCAL_DEV_SERVICE
 }
@@ -75,3 +79,9 @@ export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
+
+export const BSKY_FEED_OWNER_DIDS = [
+  'did:plc:z72i7hdynmk6r22z27h6tvur',
+  'did:plc:vpkhqolt662uhesyj6nxm7ys',
+  'did:plc:q6gjnaw2blty4crticxkmujt',
+]

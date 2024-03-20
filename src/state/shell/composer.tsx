@@ -2,7 +2,8 @@ import React from 'react'
 import {
   AppBskyEmbedRecord,
   AppBskyRichtextFacet,
-  PostModeration,
+  ModerationDecision,
+  AppBskyActorDefs,
 } from '@atproto/api'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
@@ -10,13 +11,9 @@ export interface ComposerOptsPostRef {
   uri: string
   cid: string
   text: string
-  author: {
-    handle: string
-    displayName?: string
-    avatar?: string
-  }
+  author: AppBskyActorDefs.ProfileViewBasic
   embed?: AppBskyEmbedRecord.ViewRecord['embed']
-  moderation?: PostModeration
+  moderation?: ModerationDecision
 }
 export interface ComposerOptsQuote {
   uri: string
@@ -38,6 +35,8 @@ export interface ComposerOpts {
   quote?: ComposerOptsQuote
   mention?: string // handle of user to mention
   openPicker?: (pos: DOMRect | undefined) => void
+  text?: string
+  imageUris?: {uri: string; width: number; height: number}[]
 }
 
 type StateContext = ComposerOpts | undefined

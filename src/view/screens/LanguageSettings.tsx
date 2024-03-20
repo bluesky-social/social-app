@@ -296,7 +296,7 @@ export function LanguageSettingsScreen(_props: Props) {
               type="button"
               style={[pal.text, {flexShrink: 1, overflow: 'hidden'}]}
               numberOfLines={1}>
-              {myLanguages.length ? myLanguages : 'Select languages'}
+              {myLanguages.length ? myLanguages : _(msg`Select languages`)}
             </Text>
           </Button>
         </View>
