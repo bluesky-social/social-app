@@ -1,7 +1,6 @@
 import React from 'react'
 import {View, Pressable} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {TextLink} from '../util/Link'
 import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {CenteredView} from '../util/Views'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
@@ -16,6 +15,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
+import {InlineLink} from '#/components/Link'
 
 export const SplashScreen = ({
   onDismiss,
@@ -128,7 +128,6 @@ export const SplashScreen = ({
 }
 
 function Footer() {
-  const {_} = useLingui()
   const t = useTheme()
 
   const langPrefs = useLanguagePrefs()
@@ -162,21 +161,15 @@ function Footer() {
         a.flex_1,
         t.atoms.border_contrast_medium,
       ]}>
-      <TextLink
-        href="https://bsky.social"
-        text={_(msg`Business`)}
-        style={{color: t.palette.primary_500}}
-      />
-      <TextLink
-        href="https://bsky.social/about/blog"
-        text={_(msg`Blog`)}
-        style={{color: t.palette.primary_500}}
-      />
-      <TextLink
-        href="https://bsky.social/about/join"
-        text={_(msg`Jobs`)}
-        style={{color: t.palette.primary_500}}
-      />
+      <InlineLink to="https://bsky.social">
+        <Trans>Business</Trans>
+      </InlineLink>
+      <InlineLink to="https://bsky.social/about/blog">
+        <Trans>Blog</Trans>
+      </InlineLink>
+      <InlineLink to="https://bsky.social/about/join">
+        <Trans>Jobs</Trans>
+      </InlineLink>
 
       <View style={a.flex_1} />
 
