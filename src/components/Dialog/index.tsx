@@ -1,5 +1,5 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions, Keyboard, Pressable} from 'react-native'
+import {View, Dimensions, Pressable} from 'react-native'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
@@ -123,7 +123,6 @@ export function Outer({
   )
 
   const onCloseInner = React.useCallback(() => {
-    Keyboard.dismiss()
     try {
       closeCallback.current?.()
     } catch (e: any) {
@@ -210,12 +209,11 @@ export function Inner({children, style}: DialogInnerProps) {
 export const ScrollableInner = React.forwardRef<
   BottomSheetScrollViewMethods,
   DialogInnerProps
->(function ScrollableInner({children, keyboardDismissMode, style}, ref) {
+>(function ScrollableInner({children, style}, ref) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode={keyboardDismissMode || 'on-drag'}
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
@@ -238,14 +236,8 @@ export const ScrollableInner = React.forwardRef<
 export function Handle() {
   const t = useTheme()
 
-  const onTouchStart = React.useCallback(() => {
-    Keyboard.dismiss()
-  }, [])
-
   return (
-    <View
-      style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}
-      onTouchStart={onTouchStart}>
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
       <View
         style={[
           a.rounded_sm,

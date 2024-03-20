@@ -54,7 +54,6 @@ import {useLingui} from '@lingui/react'
 import {useIntentHandler} from 'lib/hooks/useIntentHandler'
 import {StatusBar} from 'expo-status-bar'
 import {isAndroid} from 'platform/detection'
-import {KeyboardProvider} from 'react-native-keyboard-controller'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -126,33 +125,31 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <KeyboardProvider>
-      <PersistQueryClientProvider
-        client={queryClient}
-        persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
-        <SessionProvider>
-          <ShellStateProvider>
-            <PrefsStateProvider>
-              <MutedThreadsProvider>
-                <InvitesStateProvider>
-                  <ModalStateProvider>
-                    <DialogStateProvider>
-                      <LightboxStateProvider>
-                        <I18nProvider>
-                          <PortalProvider>
-                            <InnerApp />
-                          </PortalProvider>
-                        </I18nProvider>
-                      </LightboxStateProvider>
-                    </DialogStateProvider>
-                  </ModalStateProvider>
-                </InvitesStateProvider>
-              </MutedThreadsProvider>
-            </PrefsStateProvider>
-          </ShellStateProvider>
-        </SessionProvider>
-      </PersistQueryClientProvider>
-    </KeyboardProvider>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
+      <SessionProvider>
+        <ShellStateProvider>
+          <PrefsStateProvider>
+            <MutedThreadsProvider>
+              <InvitesStateProvider>
+                <ModalStateProvider>
+                  <DialogStateProvider>
+                    <LightboxStateProvider>
+                      <I18nProvider>
+                        <PortalProvider>
+                          <InnerApp />
+                        </PortalProvider>
+                      </I18nProvider>
+                    </LightboxStateProvider>
+                  </DialogStateProvider>
+                </ModalStateProvider>
+              </InvitesStateProvider>
+            </MutedThreadsProvider>
+          </PrefsStateProvider>
+        </ShellStateProvider>
+      </SessionProvider>
+    </PersistQueryClientProvider>
   )
 }
 

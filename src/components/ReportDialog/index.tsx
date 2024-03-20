@@ -17,10 +17,8 @@ import {SelectReportOptionView} from './SelectReportOptionView'
 import {SubmitView} from './SubmitView'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {AppBskyLabelerDefs} from '@atproto/api'
-import {useKeyboardHandler} from 'react-native-keyboard-controller'
-import {BottomSheetScrollViewMethods} from '@gorhom/bottom-sheet'
-import {runOnJS, useSharedValue} from 'react-native-reanimated'
-import {useDialogContext} from '#/components/Dialog'
+import {BottomSheetScrollViewMethods} from '@discord/bottom-sheet/src'
+import {useOnKeyboardDidShow} from '#/components/hooks/useOnKeyboard'
 
 export function ReportDialog(props: ReportDialogProps) {
   return (
@@ -38,29 +36,12 @@ function ReportDialogInner(props: ReportDialogProps) {
     data: labelers,
     error,
   } = useMyLabelersQuery()
-  const {close} = useDialogContext()
+  const isLoading = useDelayedLoading(500, isLabelerLoading)
 
   const ref = React.useRef<BottomSheetScrollViewMethods>(null)
-  const prevProgress = useSharedValue(0)
-
-  const scrollToEnd = (opts: {animated: boolean}) => {
-    ref.current?.scrollToEnd(opts)
-  }
-
-  useKeyboardHandler({
-    onMove: e => {
-      'worklet'
-      if (e.progress < prevProgress.value) {
-        runOnJS(close)()
-        return
-      }
-
-      runOnJS(scrollToEnd)({animated: e.progress === 1})
-      prevProgress.value = e.progress
-    },
+  useOnKeyboardDidShow(() => {
+    ref.current?.scrollToEnd({animated: true})
   })
-
-  const isLoading = useDelayedLoading(500, isLabelerLoading)
 
   return (
     <Dialog.ScrollableInner label="Report Dialog" ref={ref}>
@@ -79,8 +60,6 @@ function ReportDialogInner(props: ReportDialogProps) {
       ) : (
         <ReportDialogLoaded labelers={labelers} {...props} />
       )}
-
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
