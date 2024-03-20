@@ -178,7 +178,7 @@ export const ChooseAccountForm = ({
           label={_(msg`Back`)}
           variant="solid"
           color="secondary"
-          size="small"
+          size="medium"
           onPress={onPressBack}>
           {_(msg`Back`)}
         </Button>
