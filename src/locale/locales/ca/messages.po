@@ -2216,15 +2216,15 @@ msgstr "Si no en selecciones cap, és apropiat per a totes les edats."
 
 #: src/view/com/auth/create/Policies.tsx:91
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
-msgstr ""
+msgstr "Si encara no ets un adult segons les lleis del teu país, el teu tutor legal haurà de llegir aquests Termes en el teu lloc."
 
 #: src/view/screens/ProfileList.tsx:610
 msgid "If you delete this list, you won't be able to recover it."
-msgstr ""
+msgstr "Si esborres aquesta llista no la podràs recuperar."
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:316
 msgid "If you remove this post, you won't be able to recover it."
-msgstr ""
+msgstr "Si esborres aquesta publicació no la podràs recuperar."
 
 #: src/view/com/modals/ChangePassword.tsx:148
 msgid "If you want to change your password, we will send you a code to verify that this is your account."
@@ -2232,7 +2232,7 @@ msgstr "Si vols canviar la contrasenya t'enviarem un codi per verificar que aque
 
 #: src/lib/moderation/useReportOptions.ts:36
 msgid "Illegal and Urgent"
-msgstr ""
+msgstr "Il·legal i urgent"
 
 #: src/view/com/util/images/Gallery.tsx:38
 msgid "Image"
@@ -2249,7 +2249,7 @@ msgstr "Text alternatiu de la imatge"
 
 #: src/lib/moderation/useReportOptions.ts:47
 msgid "Impersonation or false claims about identity or affiliation"
-msgstr ""
+msgstr "Suplantació d'identitat o afirmacions falses sobre identitat o afiliació"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:138
 msgid "Input code sent to your email for password reset"
@@ -2305,7 +2305,7 @@ msgstr "Introdueix la teva contrasenya"
 
 #: src/view/com/modals/ChangeHandle.tsx:390
 msgid "Input your preferred hosting provider"
-msgstr ""
+msgstr "Introdeix el teu proveïdor d'allotjament preferit"
 
 #: src/view/com/auth/create/Step2.tsx:80
 msgid "Input your user handle"
@@ -2376,35 +2376,35 @@ msgstr "Periodisme"
 
 #: src/components/moderation/LabelsOnMe.tsx:59
 msgid "label has been placed on this {labelTarget}"
-msgstr ""
+msgstr "S'ha posat l'etiqueta a aquest {labelTarget}"
 
 #: src/components/moderation/ContentHider.tsx:144
 msgid "Labeled by {0}."
-msgstr ""
+msgstr "Etiquetat per {0}."
 
 #: src/components/moderation/ContentHider.tsx:142
 msgid "Labeled by the author."
-msgstr ""
+msgstr "Etiquetat per l'autor."
 
 #: src/view/screens/Profile.tsx:186
 msgid "Labels"
-msgstr ""
+msgstr "Etiquetes"
 
 #: src/screens/Profile/Sections/Labels.tsx:143
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
-msgstr ""
+msgstr "Les etiquetes son anotacions sobre els usuaris i el contingut. Poden ser utilitzades per ocultar, advertir i categoritxar la xarxa."
 
 #: src/components/moderation/LabelsOnMe.tsx:61
 msgid "labels have been placed on this {labelTarget}"
-msgstr ""
+msgstr "S'han posat etiquetes a aquest {labelTarget}"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "Labels on your account"
-msgstr ""
+msgstr "Etiquetes al teu compte"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:65
 msgid "Labels on your content"
-msgstr ""
+msgstr "Etiquetes al teu contingut"
 
 #: src/view/com/composer/select-language/SelectLangBtn.tsx:104
 msgid "Language selection"
@@ -2438,7 +2438,7 @@ msgstr "Més informació"
 #: src/components/moderation/ContentHider.tsx:65
 #: src/components/moderation/ContentHider.tsx:128
 msgid "Learn more about the moderation applied to this content."
-msgstr ""
+msgstr "Més informació sobre la moderació que s'ha aplicat a aquest contingut."
 
 #: src/components/moderation/PostHider.tsx:85
 #: src/components/moderation/ScreenHider.tsx:126
@@ -2451,7 +2451,7 @@ msgstr "Més informació sobre què és públic a Bluesky."
 
 #: src/components/moderation/ContentHider.tsx:152
 msgid "Learn more."
-msgstr ""
+msgstr "Mñes informació."
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -2514,7 +2514,7 @@ msgstr "Li ha agradat a {0} {1}"
 
 #: src/components/LabelingServiceCard/index.tsx:72
 msgid "Liked by {count} {0}"
-msgstr ""
+msgstr "Li ha agradat a {count} {0}"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:277
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:291
@@ -2639,15 +2639,15 @@ msgstr "Assegura't que és aquí on vols anar!"
 
 #: src/components/dialogs/MutedWords.tsx:83
 msgid "Manage your muted words and tags"
-msgstr ""
+msgstr "Gestiona les teves etiquetes i paraules silenciades"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
-msgstr ""
+msgstr "No pot ser més llarg de 253 caràcters"
 
 #: src/view/com/auth/create/Step2.tsx:109
 msgid "May only contain letters and numbers"
-msgstr ""
+msgstr "Només pot tenir lletres i números"
 
 #: src/view/screens/Profile.tsx:190
 msgid "Media"
@@ -2676,7 +2676,7 @@ msgstr "Missatge del servidor: {0}"
 
 #: src/lib/moderation/useReportOptions.ts:45
 msgid "Misleading Account"
-msgstr ""
+msgstr "Compte enganyòs"
 
 #: src/Navigation.tsx:119
 #: src/screens/Moderation/index.tsx:106
@@ -2689,7 +2689,7 @@ msgstr "Moderació"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:113
 msgid "Moderation details"
-msgstr ""
+msgstr "Detalls de la moderació"
 
 #: src/view/com/lists/ListCard.tsx:93
 #: src/view/com/modals/UserAddRemoveLists.tsx:206
@@ -2729,11 +2729,11 @@ msgstr "Configuració de moderació"
 
 #: src/Navigation.tsx:216
 msgid "Moderation states"
-msgstr ""
+msgstr "Estats de moderació"
 
 #: src/screens/Moderation/index.tsx:217
 msgid "Moderation tools"
-msgstr ""
+msgstr "Eines de moderació"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:49
 #: src/lib/moderation/useModerationCauseDescription.ts:40
@@ -2742,7 +2742,7 @@ msgstr "El moderador ha decidit establir un advertiment general sobre el conting
 
 #: src/view/com/post-thread/PostThreadItem.tsx:541
 msgid "More"
-msgstr ""
+msgstr "Més"
 
 #: src/view/shell/desktop/Feeds.tsx:65
 msgid "More feeds"
@@ -2762,15 +2762,15 @@ msgstr "Respostes amb més m'agrada primer"
 
 #: src/view/com/auth/create/Step2.tsx:122
 msgid "Must be at least 3 characters"
-msgstr ""
+msgstr "Ha de tenir almenys 3 caràcters"
 
 #: src/components/TagMenu/index.tsx:249
 msgid "Mute"
-msgstr ""
+msgstr "Silencia"
 
 #: src/components/TagMenu/index.web.tsx:105
 msgid "Mute {truncatedTag}"
-msgstr ""
+msgstr "Silencia {truncatedTag}"
 
 #: src/view/com/profile/ProfileMenu.tsx:279
 #: src/view/com/profile/ProfileMenu.tsx:286
@@ -2783,19 +2783,19 @@ msgstr "Silencia els comptes"
 
 #: src/components/TagMenu/index.tsx:209
 msgid "Mute all {displayTag} posts"
-msgstr ""
+msgstr "Silencia totes les publicacions {displayTag}"
 
 #: src/components/TagMenu/index.tsx:211
 #~ msgid "Mute all {tag} posts"
-#~ msgstr ""
+#~ msgstr "Silencia totes les publicacions {tag}"
 
 #: src/components/dialogs/MutedWords.tsx:149
 msgid "Mute in tags only"
-msgstr ""
+msgstr "Silencia només a les etiquetes"
 
 #: src/components/dialogs/MutedWords.tsx:134
 msgid "Mute in text & tags"
-msgstr ""
+msgstr "Silencia a les etiquetes i al text"
 
 #: src/view/screens/ProfileList.tsx:461
 #: src/view/screens/ProfileList.tsx:624
@@ -2812,11 +2812,11 @@ msgstr "Vols silenciar aquests comptes?"
 
 #: src/components/dialogs/MutedWords.tsx:127
 msgid "Mute this word in post text and tags"
-msgstr ""
+msgstr "Silencia aquesta paraula en el text de les publicacions i a les etiquetes"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Mute this word in tags only"
-msgstr ""
+msgstr "Silencia aquesta paraula només a les etiquetes"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:251
 #: src/view/com/util/forms/PostDropdownBtn.tsx:257
@@ -2826,7 +2826,7 @@ msgstr "Silencia el fil de debat"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:267
 #: src/view/com/util/forms/PostDropdownBtn.tsx:269
 msgid "Mute words & tags"
-msgstr ""
+msgstr "Silencia paraules i etiquetes"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2847,11 +2847,11 @@ msgstr "Les publicacions dels comptes silenciats seran eliminats del teu canal i
 
 #: src/lib/moderation/useModerationCauseDescription.ts:85
 msgid "Muted by \"{0}\""
-msgstr ""
+msgstr "Silenciat per \"{0}\""
 
 #: src/screens/Moderation/index.tsx:233
 msgid "Muted words & tags"
-msgstr ""
+msgstr "Paraules i etiquetes silenciades"
 
 #: src/view/screens/ProfileList.tsx:621
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -2872,7 +2872,7 @@ msgstr "El meu perfil"
 
 #: src/view/screens/Settings/index.tsx:596
 msgid "My saved feeds"
-msgstr ""
+msgstr "Els meus canals desats"
 
 #: src/view/screens/Settings/index.tsx:602
 msgid "My Saved Feeds"
@@ -2895,7 +2895,7 @@ msgstr "Es requereix un nom"
 #: src/lib/moderation/useReportOptions.ts:78
 #: src/lib/moderation/useReportOptions.ts:86
 msgid "Name or Description Violates Community Standards"
-msgstr ""
+msgstr "El nom o la descripció infringeixen els estàndards comunitaris"
 
 #: src/screens/Onboarding/index.tsx:25
 msgid "Nature"
@@ -2915,7 +2915,7 @@ msgstr "Navega al teu perfil"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:124
 msgid "Need to report a copyright violation?"
-msgstr ""
+msgstr "Necessites informar d'una infracció dels drets d'autor?"
 
 #: src/view/com/modals/EmbedConsent.tsx:107
 #: src/view/com/modals/EmbedConsent.tsx:123
@@ -2933,11 +2933,11 @@ msgstr "No perdis mai accés als teus seguidors i les teves dades."
 
 #: src/components/dialogs/MutedWords.tsx:293
 #~ msgid "Nevermind"
-#~ msgstr ""
+#~ msgstr "Tant hi fa"
 
 #: src/view/com/modals/ChangeHandle.tsx:520
 msgid "Nevermind, create a handle for me"
-msgstr ""
+msgstr "Tant hi fa, crea'm un identificador"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -3034,7 +3034,7 @@ msgstr "Cap descripció"
 
 #: src/view/com/modals/ChangeHandle.tsx:406
 msgid "No DNS Panel"
-msgstr ""
+msgstr "No hi ha panell de DNS"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:111
 msgid "No longer following {0}"
@@ -3051,7 +3051,7 @@ msgstr "Cap resultat"
 
 #: src/components/Lists.tsx:189
 msgid "No results found"
-msgstr ""
+msgstr "No s'han trobat resultats"
 
 #: src/view/screens/Feeds.tsx:495
 msgid "No results found for \"{query}\""
@@ -3074,11 +3074,11 @@ msgstr "Ningú"
 #: src/components/LikedByList.tsx:102
 #: src/components/LikesDialog.tsx:99
 msgid "Nobody has liked this yet. Maybe you should be the first!"
-msgstr ""
+msgstr "A ningú encara li ha agradat això. Potser hauries de ser el primer!"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:42
 msgid "Non-sexual Nudity"
-msgstr ""
+msgstr "Nuesa no sexual"
 
 #: src/view/com/modals/SelfLabel.tsx:135
 msgid "Not Applicable."
@@ -3097,7 +3097,7 @@ msgstr "Ara mateix no"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/util/forms/PostDropdownBtn.tsx:342
 msgid "Note about sharing"
-msgstr ""
+msgstr "Nota sobre compartir"
 
 #: src/screens/Moderation/index.tsx:542
 msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
@@ -3119,11 +3119,11 @@ msgstr "Nuesa"
 
 #: src/lib/moderation/useReportOptions.ts:71
 msgid "Nudity or pornography not labeled as such"
-msgstr ""
+msgstr "Nuesa o pornografia no etiquetada com a tal"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:11
 msgid "Off"
-msgstr ""
+msgstr "Apagat"
 
 #: src/view/com/util/ErrorBoundary.tsx:49
 msgid "Oh no!"
@@ -3135,7 +3135,7 @@ msgstr "Ostres! Alguna cosa ha fallat."
 
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:127
 msgid "OK"
-msgstr ""
+msgstr "D'acord"
 
 #: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
 msgid "Okay"
@@ -3159,7 +3159,7 @@ msgstr "Només {0} poden respondre."
 
 #: src/components/Lists.tsx:83
 msgid "Oops, something went wrong!"
-msgstr ""
+msgstr "Ostres, alguna cosa ha anat malament!"
 
 #: src/components/Lists.tsx:157
 #: src/view/screens/AppPasswords.tsx:67
@@ -3173,7 +3173,7 @@ msgstr "Obre"
 
 #: src/view/screens/Moderation.tsx:75
 #~ msgid "Open content filtering settings"
-#~ msgstr ""
+#~ msgstr "Obre la configuració del filtre de contingut"
 
 #: src/view/com/composer/Composer.tsx:490
 #: src/view/com/composer/Composer.tsx:491
@@ -3182,7 +3182,7 @@ msgstr "Obre el selector d'emojis"
 
 #: src/view/screens/ProfileFeed.tsx:299
 msgid "Open feed options menu"
-msgstr ""
+msgstr "Obre el menú de les opcions del canal"
 
 #: src/view/screens/Settings/index.tsx:734
 msgid "Open links with in-app browser"
@@ -3190,11 +3190,11 @@ msgstr "Obre els enllaços al navegador de l'aplicació"
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Open muted words and tags settings"
-msgstr ""
+msgstr "Obre la configuració de les paraules i etiquetes silenciades"
 
 #: src/view/screens/Moderation.tsx:92
 #~ msgid "Open muted words settings"
-#~ msgstr ""
+#~ msgstr "Obre la configuració de les paraules silenciades"
 
 #: src/view/com/home/HomeHeaderLayoutMobile.tsx:50
 msgid "Open navigation"
@@ -3202,7 +3202,7 @@ msgstr "Obre la navegació"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:183
 msgid "Open post options menu"
-msgstr ""
+msgstr "Obre el menú de les opcions de publicació"
 
 #: src/view/screens/Settings/index.tsx:828
 #: src/view/screens/Settings/index.tsx:838
@@ -3211,7 +3211,7 @@ msgstr "Obre la pàgina d'historial"
 
 #: src/view/screens/Settings/index.tsx:816
 msgid "Open system log"
-msgstr ""
+msgstr "Obre el registre del sistema"
 
 #: src/view/com/util/forms/DropdownButton.tsx:154
 msgid "Opens {numItems} options"
@@ -3252,12 +3252,12 @@ msgstr "Obre la configuració per les incrustacions externes"
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:56
 #: src/view/com/auth/SplashScreen.tsx:70
 msgid "Opens flow to create a new Bluesky account"
-msgstr ""
+msgstr "Obre el procés per crear un nou compte de Bluesky"
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:74
 #: src/view/com/auth/SplashScreen.tsx:83
 msgid "Opens flow to sign into your existing Bluesky account"
-msgstr ""
+msgstr "Obre el procés per iniciar sessió a un compte existent de Bluesky"
 
 #: src/view/com/profile/ProfileHeader.tsx:575
 #~ msgid "Opens followers list"
@@ -3277,7 +3277,7 @@ msgstr "Obre la llista de codis d'invitació"
 
 #: src/view/screens/Settings/index.tsx:798
 msgid "Opens modal for account deletion confirmation. Requires email code"
-msgstr ""
+msgstr "Obre el modal per a la confirmació de l'eliminació del compte. Requereix codi de correu electrònic"
 
 #: src/view/screens/Settings/index.tsx:774
 #~ msgid "Opens modal for account deletion confirmation. Requires email code."
@@ -3285,19 +3285,19 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:756
 msgid "Opens modal for changing your Bluesky password"
-msgstr ""
+msgstr "Obre el modal per canviar la contrasenya de Bluesky"
 
 #: src/view/screens/Settings/index.tsx:718
 msgid "Opens modal for choosing a new Bluesky handle"
-msgstr ""
+msgstr "Obre el modal per triar un nou identificador de Bluesky"
 
 #: src/view/screens/Settings/index.tsx:779
 msgid "Opens modal for downloading your Bluesky account data (repository)"
-msgstr ""
+msgstr "Obre el modal per baixar les dades del vostre compte Bluesky (repositori)"
 
 #: src/view/screens/Settings/index.tsx:970
 msgid "Opens modal for email verification"
-msgstr ""
+msgstr "Obre el modal per verificar el correu"
 
 #: src/view/com/modals/ChangeHandle.tsx:281
 msgid "Opens modal for using custom domain"
@@ -3322,7 +3322,7 @@ msgstr "Obre la pantalla amb tots els canals desats"
 
 #: src/view/screens/Settings/index.tsx:696
 msgid "Opens the app password settings"
-msgstr ""
+msgstr "Obre la configuració de les contrasenyes d'apliació"
 
 #: src/view/screens/Settings/index.tsx:676
 #~ msgid "Opens the app password settings page"
@@ -3330,7 +3330,7 @@ msgstr ""
 
 #: src/view/screens/Settings/index.tsx:554
 msgid "Opens the Following feed preferences"
-msgstr ""
+msgstr "Obre les preferències del canal de Seguint"
 
 #: src/view/screens/Settings/index.tsx:535
 #~ msgid "Opens the home feed preferences"
@@ -3338,7 +3338,7 @@ msgstr ""
 
 #: src/view/com/modals/LinkWarning.tsx:76
 msgid "Opens the linked website"
-msgstr ""
+msgstr "Obre la web enllaçada"
 
 #: src/view/screens/Settings/index.tsx:829
 #: src/view/screens/Settings/index.tsx:839
