@@ -59,6 +59,7 @@ export function DateField({
           <View style={a.gap_lg}>
             <View style={[a.relative, a.w_full, a.align_center]}>
               <DatePicker
+                timeZoneOffsetInMinutes={0}
                 theme={t.name === 'light' ? 'light' : 'dark'}
                 date={new Date(value)}
                 onDateChange={onChangeInternal}

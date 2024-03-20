@@ -1,7 +1,6 @@
 import React from 'react'
 import DatePicker from 'react-native-date-picker'
 
-import {isAndroid} from 'platform/detection'
 import {useTheme} from '#/alf'
 import {DateFieldProps} from '#/components/forms/DateField/types'
 import {toSimpleDateString} from '#/components/forms/DateField/utils'
@@ -52,8 +51,9 @@ export function DateField({
 
       {open && (
         <DatePicker
-          modal={isAndroid}
-          open={isAndroid}
+          modal
+          open
+          timeZoneOffsetInMinutes={0}
           theme={t.name === 'light' ? 'light' : 'dark'}
           date={new Date(value)}
           onConfirm={onChangeInternal}
