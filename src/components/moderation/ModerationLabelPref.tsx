@@ -12,7 +12,7 @@ import {
 } from '#/state/queries/preferences'
 import {getLabelStrings} from '#/lib/moderation/useLabelInfo'
 
-import {useTheme, atoms as a} from '#/alf'
+import {useTheme, atoms as a, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '../icons/CircleInfo'
@@ -29,6 +29,7 @@ export function ModerationLabelPref({
 }) {
   const {_, i18n} = useLingui()
   const t = useTheme()
+  const {gtPhone} = useBreakpoints()
 
   const isGlobalLabel = !labelValueDefinition.definedBy
   const {identifier} = labelValueDefinition
@@ -57,6 +58,7 @@ export function ModerationLabelPref({
     adultOnly && !preferences?.moderationPrefs.adultContentEnabled
   // are there any reasons we cant configure this label here?
   const cantConfigure = isGlobalLabel || adultDisabled
+  const showConfig = !disabled && (gtPhone || !cantConfigure)
 
   // adjust the pref based on whether warn is available
   let prefAdjusted = pref
@@ -85,9 +87,19 @@ export function ModerationLabelPref({
   )
 
   return (
-    <View style={[a.flex_row, a.gap_sm, a.px_lg, a.py_lg, a.justify_between]}>
+    <View
+      style={[
+        a.flex_row,
+        a.gap_md,
+        a.px_lg,
+        a.py_lg,
+        a.justify_between,
+        a.flex_wrap,
+      ]}>
       <View style={[a.gap_xs, a.flex_1]}>
-        <Text style={[a.font_bold]}>{labelStrings.name}</Text>
+        <Text style={[a.font_bold, gtPhone ? a.text_sm : a.text_md]}>
+          {labelStrings.name}
+        </Text>
         <Text style={[t.atoms.text_contrast_medium, a.leading_snug]}>
           {labelStrings.description}
         </Text>
@@ -113,40 +125,51 @@ export function ModerationLabelPref({
           </View>
         )}
       </View>
-      {disabled ? (
-        <></>
-      ) : cantConfigure ? (
-        <View style={[{minHeight: 35}, a.px_sm, a.py_md]}>
-          <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
-            {currentPrefLabel}
-          </Text>
-        </View>
-      ) : (
-        <View style={[{minHeight: 35}]}>
-          <ToggleButton.Group
-            label={_(
-              msg`Configure content filtering setting for category: ${labelStrings.name.toLowerCase()}`,
-            )}
-            values={[prefAdjusted]}
-            onChange={newPref =>
-              mutate({
-                label: identifier,
-                visibility: newPref[0] as LabelPreference,
-                labelerDid,
-              })
-            }>
-            <ToggleButton.Button name="ignore" label={ignoreLabel}>
-              {ignoreLabel}
-            </ToggleButton.Button>
-            {canWarn && (
-              <ToggleButton.Button name="warn" label={warnLabel}>
-                {warnLabel}
-              </ToggleButton.Button>
-            )}
-            <ToggleButton.Button name="hide" label={hideLabel}>
-              {hideLabel}
-            </ToggleButton.Button>
-          </ToggleButton.Group>
+
+      {showConfig && (
+        <View style={[gtPhone ? undefined : a.w_full]}>
+          {cantConfigure ? (
+            <View
+              style={[
+                {minHeight: 35},
+                a.px_md,
+                a.py_md,
+                a.rounded_sm,
+                a.border,
+                t.atoms.border_contrast_low,
+              ]}>
+              <Text style={[a.font_bold, t.atoms.text_contrast_low]}>
+                {currentPrefLabel}
+              </Text>
+            </View>
+          ) : (
+            <View style={[{minHeight: 35}]}>
+              <ToggleButton.Group
+                label={_(
+                  msg`Configure content filtering setting for category: ${labelStrings.name.toLowerCase()}`,
+                )}
+                values={[prefAdjusted]}
+                onChange={newPref =>
+                  mutate({
+                    label: identifier,
+                    visibility: newPref[0] as LabelPreference,
+                    labelerDid,
+                  })
+                }>
+                <ToggleButton.Button name="ignore" label={ignoreLabel}>
+                  {ignoreLabel}
+                </ToggleButton.Button>
+                {canWarn && (
+                  <ToggleButton.Button name="warn" label={warnLabel}>
+                    {warnLabel}
+                  </ToggleButton.Button>
+                )}
+                <ToggleButton.Button name="hide" label={hideLabel}>
+                  {hideLabel}
+                </ToggleButton.Button>
+              </ToggleButton.Group>
+            </View>
+          )}
         </View>
       )}
     </View>

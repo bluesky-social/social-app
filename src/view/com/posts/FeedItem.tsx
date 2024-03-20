@@ -126,11 +126,7 @@ let FeedItemInner = ({
         uri: post.uri,
         cid: post.cid,
         text: record.text || '',
-        author: {
-          handle: post.author.handle,
-          displayName: post.author.displayName,
-          avatar: post.author.avatar,
-        },
+        author: post.author,
         embed: post.embed,
         moderation,
       },
@@ -243,6 +239,7 @@ let FeedItemInner = ({
             handle={post.author.handle}
             avatar={post.author.avatar}
             moderation={moderation.ui('avatar')}
+            type={post.author.associated?.labeler ? 'labeler' : 'user'}
           />
           {isThreadParent && (
             <View

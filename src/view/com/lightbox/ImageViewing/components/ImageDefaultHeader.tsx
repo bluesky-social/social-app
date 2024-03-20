@@ -6,7 +6,13 @@
  *
  */
 import React from 'react'
-import {SafeAreaView, Text, TouchableOpacity, StyleSheet} from 'react-native'
+import {
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
 import {msg} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -23,14 +29,14 @@ const ImageDefaultHeader = ({onRequestClose}: Props) => {
   return (
     <SafeAreaView style={styles.root}>
       <TouchableOpacity
-        style={styles.closeButton}
+        style={[styles.closeButton, styles.blurredBackground]}
         onPress={onRequestClose}
         hitSlop={HIT_SLOP}
         accessibilityRole="button"
         accessibilityLabel={_(msg`Close image`)}
         accessibilityHint={_(msg`Closes viewer for header image`)}
         onAccessibilityEscape={onRequestClose}>
-        <Text style={styles.closeText}>✕</Text>
+        <FontAwesomeIcon icon="close" color={'#fff'} size={22} />
       </TouchableOpacity>
     </SafeAreaView>
   )
@@ -42,8 +48,8 @@ const styles = StyleSheet.create({
     pointerEvents: 'box-none',
   },
   closeButton: {
-    marginRight: 8,
-    marginTop: 8,
+    marginRight: 10,
+    marginTop: 10,
     width: 44,
     height: 44,
     alignItems: 'center',
@@ -51,13 +57,10 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     backgroundColor: '#00000077',
   },
-  closeText: {
-    lineHeight: 22,
-    fontSize: 19,
-    textAlign: 'center',
-    color: '#FFF',
-    includeFontPadding: false,
-  },
+  blurredBackground: {
+    backdropFilter: 'blur(10px)',
+    WebkitBackdropFilter: 'blur(10px)',
+  } as ViewStyle,
 })
 
 export default ImageDefaultHeader

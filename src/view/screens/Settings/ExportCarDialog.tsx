@@ -78,8 +78,9 @@ export function ExportCarDialog({
               <InlineLink
                 to="https://docs.bsky.app/blog/repo-export"
                 style={[a.text_sm]}>
-                this blogpost.
+                this blogpost
               </InlineLink>
+              .
             </Trans>
           </P>
 

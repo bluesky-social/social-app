@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     paddingRight: 12,
     borderRadius: 8,
     fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Liberation Sans", Helvetica, Arial, sans-serif',
     outline: 0,
     border: 0,
   },

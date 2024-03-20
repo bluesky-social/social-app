@@ -14,6 +14,7 @@ import {
   ModerationDecision,
   moderateProfile,
   AppBskyEmbedRecordWithMedia,
+  AppBskyActorDefs,
 } from '@atproto/api'
 import {AtUri} from '@atproto/api'
 import {
@@ -54,6 +55,7 @@ interface Author {
   displayName?: string
   avatar?: string
   moderation: ModerationDecision
+  associated?: AppBskyActorDefs.ProfileAssociated
 }
 
 let FeedItem = ({
@@ -99,6 +101,7 @@ let FeedItem = ({
         displayName: item.notification.author.displayName,
         avatar: item.notification.author.avatar,
         moderation: moderateProfile(item.notification.author, moderationOpts),
+        associated: item.notification.author.associated,
       },
       ...(item.additional?.map(({author}) => {
         return {
@@ -108,6 +111,7 @@ let FeedItem = ({
           displayName: author.displayName,
           avatar: author.avatar,
           moderation: moderateProfile(author, moderationOpts),
+          associated: author.associated,
         }
       }) || []),
     ]
@@ -339,6 +343,7 @@ function CondensedAuthorsList({
           handle={authors[0].handle}
           avatar={authors[0].avatar}
           moderation={authors[0].moderation.ui('avatar')}
+          type={authors[0].associated?.labeler ? 'labeler' : 'user'}
         />
       </View>
     )
@@ -357,6 +362,7 @@ function CondensedAuthorsList({
               size={35}
               avatar={author.avatar}
               moderation={author.moderation.ui('avatar')}
+              type={author.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
         ))}
@@ -415,6 +421,7 @@ function ExpandedAuthorsList({
               size={35}
               avatar={author.avatar}
               moderation={author.moderation.ui('avatar')}
+              type={author.associated?.labeler ? 'labeler' : 'user'}
             />
           </View>
           <View style={s.flex1}>

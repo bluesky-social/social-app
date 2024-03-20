@@ -48,7 +48,6 @@ export const ProfileLabelsSection = React.forwardRef<
   },
   ref,
 ) {
-  const t = useTheme()
   const {_} = useLingui()
   const {height: minHeight} = useSafeAreaFrame()
 
@@ -66,37 +65,26 @@ export const ProfileLabelsSection = React.forwardRef<
   }))
 
   return (
-    <CenteredView>
-      <View
-        style={[
-          a.border_l,
-          a.border_r,
-          a.border_t,
-          t.atoms.border_contrast_low,
-          {
-            minHeight,
-          },
-        ]}>
-        {isLabelerLoading ? (
-          <View style={[a.w_full, a.align_center]}>
-            <Loader size="xl" />
-          </View>
-        ) : labelerError || !labelerInfo ? (
-          <ErrorState
-            error={
-              labelerError?.toString() ||
-              _(msg`Something went wrong, please try again.`)
-            }
-          />
-        ) : (
-          <ProfileLabelsSectionInner
-            moderationOpts={moderationOpts}
-            labelerInfo={labelerInfo}
-            scrollElRef={scrollElRef}
-            headerHeight={headerHeight}
-          />
-        )}
-      </View>
+    <CenteredView style={{flex: 1, minHeight}} sideBorders>
+      {isLabelerLoading ? (
+        <View style={[a.w_full, a.align_center]}>
+          <Loader size="xl" />
+        </View>
+      ) : labelerError || !labelerInfo ? (
+        <ErrorState
+          error={
+            labelerError?.toString() ||
+            _(msg`Something went wrong, please try again.`)
+          }
+        />
+      ) : (
+        <ProfileLabelsSectionInner
+          moderationOpts={moderationOpts}
+          labelerInfo={labelerInfo}
+          scrollElRef={scrollElRef}
+          headerHeight={headerHeight}
+        />
+      )}
     </CenteredView>
   )
 })
@@ -149,13 +137,7 @@ export function ProfileLabelsSectionInner({
       }}
       contentOffset={{x: 0, y: headerHeight * -1}}
       onScroll={scrollHandler}>
-      <View
-        style={[
-          a.pt_xl,
-          a.px_lg,
-          isNative && a.border_t,
-          t.atoms.border_contrast_low,
-        ]}>
+      <View style={[a.pt_xl, a.px_lg, a.border_t, t.atoms.border_contrast_low]}>
         <View>
           <Text style={[t.atoms.text_contrast_high, a.leading_snug, a.text_sm]}>
             <Trans>

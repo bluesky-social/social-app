@@ -205,19 +205,111 @@ export function ModerationScreenInner({
   )
 
   return (
-    <View>
-      <ScrollView
-        contentContainerStyle={[
-          a.border_0,
-          a.pt_2xl,
-          a.px_lg,
-          gtMobile && a.px_2xl,
-        ]}>
-        <Text
-          style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
-          <Trans>Moderation tools</Trans>
-        </Text>
+    <ScrollView
+      contentContainerStyle={[
+        a.border_0,
+        a.pt_2xl,
+        a.px_lg,
+        gtMobile && a.px_2xl,
+      ]}>
+      <Text
+        style={[a.text_md, a.font_bold, a.pb_md, t.atoms.text_contrast_high]}>
+        <Trans>Moderation tools</Trans>
+      </Text>
 
+      <View
+        style={[
+          a.w_full,
+          a.rounded_md,
+          a.overflow_hidden,
+          t.atoms.bg_contrast_25,
+        ]}>
+        <Button
+          testID="mutedWordsBtn"
+          label={_(msg`Open muted words and tags settings`)}
+          onPress={() => mutedWordsDialogControl.open()}>
+          {state => (
+            <SubItem
+              title={_(msg`Muted words & tags`)}
+              icon={Filter}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Button>
+        <Divider />
+        <Link testID="moderationlistsBtn" to="/moderation/modlists">
+          {state => (
+            <SubItem
+              title={_(msg`Moderation lists`)}
+              icon={Group}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+        <Divider />
+        <Link testID="mutedAccountsBtn" to="/moderation/muted-accounts">
+          {state => (
+            <SubItem
+              title={_(msg`Muted accounts`)}
+              icon={Person}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+        <Divider />
+        <Link testID="blockedAccountsBtn" to="/moderation/blocked-accounts">
+          {state => (
+            <SubItem
+              title={_(msg`Blocked accounts`)}
+              icon={CircleBanSign}
+              style={[
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
+      </View>
+
+      <Text
+        style={[
+          a.pt_2xl,
+          a.pb_md,
+          a.text_md,
+          a.font_bold,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>Content filters</Trans>
+      </Text>
+
+      <View style={[a.gap_md]}>
+        {ageNotSet && (
+          <>
+            <Button
+              label={_(msg`Confirm your birthdate`)}
+              size="small"
+              variant="solid"
+              color="secondary"
+              onPress={() => {
+                birthdateDialogControl.open()
+              }}
+              style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
+              <ButtonText>
+                <Trans>Confirm your age:</Trans>
+              </ButtonText>
+              <ButtonText>
+                <Trans>Set birthdate</Trans>
+              </ButtonText>
+            </Button>
+
+            <BirthDateSettingsDialog control={birthdateDialogControl} />
+          </>
+        )}
         <View
           style={[
             a.w_full,
@@ -225,234 +317,137 @@ export function ModerationScreenInner({
             a.overflow_hidden,
             t.atoms.bg_contrast_25,
           ]}>
-          <Button
-            testID="mutedWordsBtn"
-            label={_(msg`Open muted words and tags settings`)}
-            onPress={() => mutedWordsDialogControl.open()}>
-            {state => (
-              <SubItem
-                title={_(msg`Muted words & tags`)}
-                icon={Filter}
-                style={[
-                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
-                ]}
-              />
-            )}
-          </Button>
-          <Divider />
-          <Link testID="moderationlistsBtn" to="/moderation/modlists">
-            {state => (
-              <SubItem
-                title={_(msg`Moderation lists`)}
-                icon={Group}
-                style={[
-                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
-                ]}
-              />
-            )}
-          </Link>
-          <Divider />
-          <Link testID="mutedAccountsBtn" to="/moderation/muted-accounts">
-            {state => (
-              <SubItem
-                title={_(msg`Muted accounts`)}
-                icon={Person}
-                style={[
-                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
-                ]}
-              />
-            )}
-          </Link>
-          <Divider />
-          <Link testID="blockedAccountsBtn" to="/moderation/blocked-accounts">
-            {state => (
-              <SubItem
-                title={_(msg`Blocked accounts`)}
-                icon={CircleBanSign}
-                style={[
-                  (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
-                ]}
-              />
-            )}
-          </Link>
-        </View>
-
-        <Text
-          style={[
-            a.pt_2xl,
-            a.pb_md,
-            a.text_md,
-            a.font_bold,
-            t.atoms.text_contrast_high,
-          ]}>
-          <Trans>Content filters</Trans>
-        </Text>
-
-        <View style={[a.gap_md]}>
-          {ageNotSet && (
+          {!ageNotSet && !isUnderage && (
             <>
-              <Button
-                label={_(msg`Confirm your birthdate`)}
-                size="small"
-                variant="solid"
-                color="secondary"
-                onPress={() => {
-                  birthdateDialogControl.open()
-                }}
-                style={[a.justify_between, a.rounded_md, a.px_lg, a.py_lg]}>
-                <ButtonText>
-                  <Trans>Confirm your age:</Trans>
-                </ButtonText>
-                <ButtonText>
-                  <Trans>Set birthdate</Trans>
-                </ButtonText>
-              </Button>
-
-              <BirthDateSettingsDialog
-                control={birthdateDialogControl}
-                preferences={preferences}
-              />
+              <View
+                style={[
+                  a.py_lg,
+                  a.px_lg,
+                  a.flex_row,
+                  a.align_center,
+                  a.justify_between,
+                ]}>
+                <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
+                  <Trans>Enable adult content</Trans>
+                </Text>
+                <Toggle.Item
+                  label={_(msg`Toggle to enable or disable adult content`)}
+                  name="adultContent"
+                  value={adultContentEnabled}
+                  onChange={onToggleAdultContentEnabled}>
+                  <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                    <Text style={[t.atoms.text_contrast_medium]}>
+                      {adultContentEnabled ? (
+                        <Trans>Enabled</Trans>
+                      ) : (
+                        <Trans>Disabled</Trans>
+                      )}
+                    </Text>
+                    <Toggle.Switch />
+                  </View>
+                </Toggle.Item>
+              </View>
+              <Divider />
             </>
           )}
-          <View
-            style={[
-              a.w_full,
-              a.rounded_md,
-              a.overflow_hidden,
-              t.atoms.bg_contrast_25,
-            ]}>
-            {!ageNotSet && !isUnderage && (
-              <>
-                <View
-                  style={[
-                    a.py_lg,
-                    a.px_lg,
-                    a.flex_row,
-                    a.align_center,
-                    a.justify_between,
-                  ]}>
-                  <Text style={[a.font_semibold, t.atoms.text_contrast_high]}>
-                    <Trans>Enable adult content</Trans>
-                  </Text>
-                  <Toggle.Item
-                    label={_(msg`Toggle to enable or disable adult content`)}
-                    name="adultContent"
-                    value={adultContentEnabled}
-                    onChange={onToggleAdultContentEnabled}>
-                    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-                      <Text style={[t.atoms.text_contrast_medium]}>
-                        {adultContentEnabled ? (
-                          <Trans>Enabled</Trans>
-                        ) : (
-                          <Trans>Disabled</Trans>
-                        )}
-                      </Text>
-                      <Toggle.Switch />
-                    </View>
-                  </Toggle.Item>
-                </View>
-                <Divider />
-              </>
-            )}
-            {!isUnderage && adultContentEnabled && (
-              <>
-                <GlobalModerationLabelPref labelValueDefinition={LABELS.porn} />
-                <Divider />
-                <GlobalModerationLabelPref
-                  labelValueDefinition={LABELS.sexual}
-                />
-                <Divider />
-                <GlobalModerationLabelPref
-                  labelValueDefinition={LABELS['graphic-media']}
-                />
-                <Divider />
-              </>
-            )}
-            <GlobalModerationLabelPref labelValueDefinition={LABELS.nudity} />
-          </View>
+          {!isUnderage && adultContentEnabled && (
+            <>
+              <GlobalModerationLabelPref labelValueDefinition={LABELS.porn} />
+              <Divider />
+              <GlobalModerationLabelPref labelValueDefinition={LABELS.sexual} />
+              <Divider />
+              <GlobalModerationLabelPref
+                labelValueDefinition={LABELS['graphic-media']}
+              />
+              <Divider />
+            </>
+          )}
+          <GlobalModerationLabelPref labelValueDefinition={LABELS.nudity} />
         </View>
+      </View>
 
-        <Text
-          style={[
-            a.text_md,
-            a.font_bold,
-            a.pt_2xl,
-            a.pb_md,
-            t.atoms.text_contrast_high,
-          ]}>
-          <Trans>Advanced</Trans>
-        </Text>
+      <Text
+        style={[
+          a.text_md,
+          a.font_bold,
+          a.pt_2xl,
+          a.pb_md,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>Advanced</Trans>
+      </Text>
 
-        {isLabelersLoading ? (
-          <Loader />
-        ) : labelersError || !labelers ? (
-          <View style={[a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
-            <Text>
-              <Trans>
-                We were unable to load your configured labelers at this time.
-              </Trans>
-            </Text>
-          </View>
-        ) : (
-          <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
-            {labelers.map((labeler, i) => {
-              return (
-                <React.Fragment key={labeler.creator.did}>
-                  {i !== 0 && <Divider />}
-                  <LabelingService.Link labeler={labeler}>
-                    {state => (
-                      <LabelingService.Outer
-                        style={[
-                          i === 0 && {
-                            borderTopLeftRadius: a.rounded_sm.borderRadius,
-                            borderTopRightRadius: a.rounded_sm.borderRadius,
-                          },
-                          i === labelers.length - 1 && {
-                            borderBottomLeftRadius: a.rounded_sm.borderRadius,
-                            borderBottomRightRadius: a.rounded_sm.borderRadius,
-                          },
-                          (state.hovered || state.pressed) && [
-                            t.atoms.bg_contrast_50,
-                          ],
-                        ]}>
-                        <LabelingService.Avatar />
-                        <LabelingService.Content>
-                          <LabelingService.Title
-                            value={getLabelingServiceTitle({
-                              displayName: labeler.creator.displayName,
-                              handle: labeler.creator.handle,
-                            })}
-                          />
-                          <LabelingService.Description
-                            value={labeler.creator.description}
-                            handle={labeler.creator.handle}
-                          />
-                        </LabelingService.Content>
-                      </LabelingService.Outer>
-                    )}
-                  </LabelingService.Link>
-                </React.Fragment>
-              )
-            })}
-          </View>
-        )}
+      {isLabelersLoading ? (
+        <View style={[a.w_full, a.align_center, a.p_lg]}>
+          <Loader size="xl" />
+        </View>
+      ) : labelersError || !labelers ? (
+        <View style={[a.p_lg, a.rounded_sm, t.atoms.bg_contrast_25]}>
+          <Text>
+            <Trans>
+              We were unable to load your configured labelers at this time.
+            </Trans>
+          </Text>
+        </View>
+      ) : (
+        <View style={[a.rounded_sm, t.atoms.bg_contrast_25]}>
+          {labelers.map((labeler, i) => {
+            return (
+              <React.Fragment key={labeler.creator.did}>
+                {i !== 0 && <Divider />}
+                <LabelingService.Link labeler={labeler}>
+                  {state => (
+                    <LabelingService.Outer
+                      style={[
+                        i === 0 && {
+                          borderTopLeftRadius: a.rounded_sm.borderRadius,
+                          borderTopRightRadius: a.rounded_sm.borderRadius,
+                        },
+                        i === labelers.length - 1 && {
+                          borderBottomLeftRadius: a.rounded_sm.borderRadius,
+                          borderBottomRightRadius: a.rounded_sm.borderRadius,
+                        },
+                        (state.hovered || state.pressed) && [
+                          t.atoms.bg_contrast_50,
+                        ],
+                      ]}>
+                      <LabelingService.Avatar avatar={labeler.creator.avatar} />
+                      <LabelingService.Content>
+                        <LabelingService.Title
+                          value={getLabelingServiceTitle({
+                            displayName: labeler.creator.displayName,
+                            handle: labeler.creator.handle,
+                          })}
+                        />
+                        <LabelingService.Description
+                          value={labeler.creator.description}
+                          handle={labeler.creator.handle}
+                        />
+                      </LabelingService.Content>
+                    </LabelingService.Outer>
+                  )}
+                </LabelingService.Link>
+              </React.Fragment>
+            )
+          })}
+        </View>
+      )}
 
-        <Text
-          style={[
-            a.text_md,
-            a.font_bold,
-            a.pt_2xl,
-            a.pb_md,
-            t.atoms.text_contrast_high,
-          ]}>
-          <Trans>Logged-out visibility</Trans>
-        </Text>
+      <Text
+        style={[
+          a.text_md,
+          a.font_bold,
+          a.pt_2xl,
+          a.pb_md,
+          t.atoms.text_contrast_high,
+        ]}>
+        <Trans>Logged-out visibility</Trans>
+      </Text>
 
-        <PwiOptOut />
+      <PwiOptOut />
 
-        <View style={{height: 200}} />
-      </ScrollView>
-    </View>
+      <View style={{height: 200}} />
+    </ScrollView>
   )
 }
 
@@ -520,11 +515,12 @@ function PwiOptOut() {
           value={isOptedOut}
           onChange={onToggleOptOut}
           name="logged_out_visibility"
+          style={a.flex_1}
           label={_(
             msg`Discourage apps from showing my account to logged-out users`,
           )}>
           <Toggle.Switch />
-          <Toggle.Label style={[a.text_md]}>
+          <Toggle.Label style={[a.text_md, a.flex_1]}>
             <Trans>
               Discourage apps from showing my account to logged-out users
             </Trans>

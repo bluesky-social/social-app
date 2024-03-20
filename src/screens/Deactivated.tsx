@@ -146,7 +146,7 @@ export function Deactivated() {
                   variant="ghost"
                   size="large"
                   label={_(msg`Log out`)}
-                  onPress={logout}>
+                  onPress={() => logout('Deactivated')}>
                   <ButtonText style={[{color: t.palette.primary_500}]}>
                     <Trans>Log out</Trans>
                   </ButtonText>
@@ -175,7 +175,7 @@ export function Deactivated() {
               variant="ghost"
               size="large"
               label={_(msg`Log out`)}
-              onPress={logout}>
+              onPress={() => logout('Deactivated')}>
               <ButtonText style={[{color: t.palette.primary_500}]}>
                 <Trans>Log out</Trans>
               </ButtonText>

@@ -52,7 +52,9 @@ export function HomeLoggedOutCTA() {
           onPress={showCreateAccount}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Create new account`)}
-          accessibilityHint="Opens flow to create a new Bluesky account">
+          accessibilityHint={_(
+            msg`Opens flow to create a new Bluesky account`,
+          )}>
           <Text
             style={[
               s.white,
@@ -68,7 +70,9 @@ export function HomeLoggedOutCTA() {
           onPress={showSignIn}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign in`)}
-          accessibilityHint="Opens flow to sign into your existing Bluesky account">
+          accessibilityHint={_(
+            msg`Opens flow to sign into your existing Bluesky account`,
+          )}>
           <Text
             style={[
               pal.text,

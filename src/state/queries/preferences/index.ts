@@ -5,6 +5,7 @@ import {
   BskyFeedViewPreference,
   ModerationOpts,
   AppBskyActorDefs,
+  BSKY_LABELER_DID,
 } from '@atproto/api'
 
 import {track} from '#/lib/analytics/analytics'
@@ -19,6 +20,7 @@ import {
   DEFAULT_THREAD_VIEW_PREFS,
   DEFAULT_LOGGED_OUT_PREFERENCES,
 } from '#/state/queries/preferences/const'
+import {DEFAULT_LOGGED_OUT_LABEL_PREFERENCES} from '#/state/queries/preferences/moderation'
 import {STALE} from '#/state/queries'
 import {useHiddenPosts, useLabelDefinitions} from '#/state/preferences'
 import {saveLabelers} from '#/state/session/agent-config'
@@ -95,7 +97,18 @@ export function useModerationOpts() {
     }
     return {
       userDid: currentAccount?.did,
-      prefs: {...prefs.data.moderationPrefs, hiddenPosts: hiddenPosts || []},
+      prefs: {
+        ...prefs.data.moderationPrefs,
+        labelers: prefs.data.moderationPrefs.labelers.length
+          ? prefs.data.moderationPrefs.labelers
+          : [
+              {
+                did: BSKY_LABELER_DID,
+                labels: DEFAULT_LOGGED_OUT_LABEL_PREFERENCES,
+              },
+            ],
+        hiddenPosts: hiddenPosts || [],
+      },
       labelDefs,
     }
   }, [override, currentAccount, labelDefs, prefs.data, hiddenPosts])

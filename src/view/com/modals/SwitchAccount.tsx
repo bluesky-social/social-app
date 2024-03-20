@@ -39,13 +39,17 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
     track('Settings:SignOutButtonClicked')
     closeAllActiveElements()
     // needs to be in timeout or the modal re-opens
-    setTimeout(() => logout(), 0)
+    setTimeout(() => logout('SwitchAccount'), 0)
   }, [track, logout, closeAllActiveElements])
 
   const contents = (
     <View style={[pal.view, styles.linkCard]}>
       <View style={styles.avi}>
-        <UserAvatar size={40} avatar={profile?.avatar} />
+        <UserAvatar
+          size={40}
+          avatar={profile?.avatar}
+          type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        />
       </View>
       <View style={[s.flex1]}>
         <Text type="md-bold" style={pal.text} numberOfLines={1}>
@@ -91,7 +95,9 @@ function SwitchAccountCard({account}: {account: SessionAccount}) {
       key={account.did}
       style={[isSwitchingAccounts && styles.dimmed]}
       onPress={
-        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+        isSwitchingAccounts
+          ? undefined
+          : () => onPressSwitchAccount(account, 'SwitchAccount')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}

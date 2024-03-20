@@ -98,11 +98,14 @@ export const LoginForm = ({
       }
 
       // TODO remove double login
-      await login({
-        service: serviceUrl,
-        identifier: fullIdent,
-        password,
-      })
+      await login(
+        {
+          service: serviceUrl,
+          identifier: fullIdent,
+          password,
+        },
+        'LoginForm',
+      )
     } catch (e: any) {
       const errMsg = e.toString()
       setIsProcessing(false)
@@ -207,7 +210,7 @@ export const LoginForm = ({
             testID="loginPasswordInput"
             ref={passwordInputRef}
             style={[pal.text, styles.textInput]}
-            placeholder="Password"
+            placeholder={_(msg`Password`)}
             placeholderTextColor={pal.colors.textLight}
             autoCapitalize="none"
             autoCorrect={false}
