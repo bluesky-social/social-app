@@ -219,12 +219,9 @@ function AppealForm({
         <Dialog.Input
           label={_(msg`Text input field`)}
           placeholder={_(
-            labeler
-              ? msg`Please explain why you think this label was incorrectly applied by ${sanitizeHandle(
-                  labeler.creator.handle,
-                  '@',
-                )}`
-              : msg`Please explain why you think this label was incorrectly applied by ${label.src}`,
+            msg`Please explain why you think this label was incorrectly applied by ${
+              labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
+            }`,
           )}
           value={details}
           onChangeText={setDetails}
