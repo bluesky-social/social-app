@@ -16,6 +16,7 @@ import {useSession, useSessionApi, SessionAccount} from '#/state/session'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import * as Toast from '#/view/com/util/Toast'
+import {logEvent} from '#/lib/statsig/statsig'
 
 function AccountItem({
   account,
@@ -102,6 +103,10 @@ export const ChooseAccountForm = ({
           Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
           await initSession(account)
+          logEvent('account:loggedIn', {
+            logContext: 'ChooseAccountForm',
+            withPassword: false,
+          })
           track('Sign In', {resumedSession: true})
           setTimeout(() => {
             Toast.show(_(msg`Signed in as @${account.handle}`))

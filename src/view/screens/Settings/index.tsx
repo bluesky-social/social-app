@@ -100,7 +100,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       {isCurrentAccount ? (
         <TouchableOpacity
           testID="signOutBtn"
-          onPress={logout}
+          onPress={() => {
+            logout('Settings')
+          }}
           accessibilityRole="button"
           accessibilityLabel={_(msg`Sign out`)}
           accessibilityHint={`Signs ${profile?.displayName} out of Bluesky`}>
@@ -129,7 +131,9 @@ function SettingsAccountCard({account}: {account: SessionAccount}) {
       testID={`switchToAccountBtn-${account.handle}`}
       key={account.did}
       onPress={
-        isSwitchingAccounts ? undefined : () => onPressSwitchAccount(account)
+        isSwitchingAccounts
+          ? undefined
+          : () => onPressSwitchAccount(account, 'Settings')
       }
       accessibilityRole="button"
       accessibilityLabel={_(msg`Switch to ${account.handle}`)}
