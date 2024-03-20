@@ -18,6 +18,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icon
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import * as TextField from '#/components/forms/TextField'
 import {FormContainer} from './FormContainer'
+import {logEvent} from '#/lib/statsig/statsig'
 
 function Group({children}: {children: React.ReactNode}) {
   const t = useTheme()
@@ -125,6 +126,10 @@ export const ChooseAccountForm = ({
           Toast.show(_(msg`Already signed in as @${account.handle}`))
         } else {
           await initSession(account)
+          logEvent('account:loggedIn', {
+            logContext: 'ChooseAccountForm',
+            withPassword: false,
+          })
           track('Sign In', {resumedSession: true})
           setTimeout(() => {
             Toast.show(_(msg`Signed in as @${account.handle}`))
