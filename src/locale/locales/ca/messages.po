@@ -396,7 +396,7 @@ msgstr "Confirmes que vols eliminar la contrasenya de l'aplicació \"{name}\"?"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:280
 msgid "Are you sure you want to remove {0} from your feeds?"
-msgstr ""
+msgstr "Confirmes que vols eliminar {0} dels teus canals?"
 
 #: src/view/com/composer/Composer.tsx:508
 msgid "Are you sure you'd like to discard this draft?"
@@ -459,7 +459,7 @@ msgstr "Aniversari:"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:278
 #: src/view/com/profile/ProfileMenu.tsx:361
 msgid "Block"
-msgstr ""
+msgstr "Bloqueja"
 
 #: src/view/com/profile/ProfileMenu.tsx:300
 #: src/view/com/profile/ProfileMenu.tsx:307
@@ -468,7 +468,7 @@ msgstr "Bloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:344
 msgid "Block Account?"
-msgstr ""
+msgstr "Bloqueja el compte"
 
 #: src/view/screens/ProfileList.tsx:530
 msgid "Block accounts"
@@ -515,7 +515,7 @@ msgstr "Publicació bloquejada."
 
 #: src/screens/Profile/Sections/Labels.tsx:153
 msgid "Blocking does not prevent this labeler from placing labels on your account."
-msgstr ""
+msgstr "El bloqueig no evita que aquest etiquetador apliqui etiquetes al teu compte."
 
 #: src/view/screens/ProfileList.tsx:631
 msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
@@ -523,7 +523,7 @@ msgstr "El bloqueig és públic. Els comptes bloquejats no poden respondre els t
 
 #: src/view/com/profile/ProfileMenu.tsx:353
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
-msgstr ""
+msgstr "Bloquejar no evitarà que s'apliquin etiquetes al teu compte, però no deixarà que aquest compte respongui els teus fils ni interactui amb tu."
 
 #: src/view/com/auth/HomeLoggedOutCTA.tsx:97
 #: src/view/com/auth/SplashScreen.web.tsx:133
@@ -569,11 +569,11 @@ msgstr "Bluesky no mostrarà el teu perfil ni les publicacions als usuaris que n
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:53
 msgid "Blur images"
-msgstr ""
+msgstr "Difumina les imatges"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:51
 msgid "Blur images and filter from feeds"
-msgstr ""
+msgstr "Difumina les imatges i filtra-ho dels canals"
 
 #: src/screens/Onboarding/index.tsx:33
 msgid "Books"
@@ -602,7 +602,7 @@ msgstr "per {0}"
 
 #: src/components/LabelingServiceCard/index.tsx:57
 msgid "By {0}"
-msgstr ""
+msgstr "Per {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:161
 msgid "by <0/>"
@@ -610,7 +610,7 @@ msgstr "per <0/>"
 
 #: src/view/com/auth/create/Policies.tsx:87
 msgid "By creating an account you agree to the {els}."
-msgstr ""
+msgstr "Creant el compte indiques qu estàs d'acord amb {els},"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
@@ -694,7 +694,7 @@ msgstr "Cancel·la la cerca"
 
 #: src/view/com/modals/LinkWarning.tsx:88
 msgid "Cancels opening the linked website"
-msgstr ""
+msgstr "Cancel·la obrir la web enllaçada"
 
 #: src/view/com/modals/VerifyEmail.tsx:152
 msgid "Change"
@@ -808,11 +808,11 @@ msgstr "Esborra la cerca"
 
 #: src/view/screens/Settings/index.tsx:869
 msgid "Clears all legacy storage data"
-msgstr ""
+msgstr "Esborra totes les dades antigues emmagatzemades"
 
 #: src/view/screens/Settings/index.tsx:881
 msgid "Clears all storage data"
-msgstr ""
+msgstr "Esborra totes les dades emmagatzemades"
 
 #: src/view/screens/Support.tsx:40
 msgid "click here"
@@ -820,11 +820,11 @@ msgstr "clica aquí"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
-msgstr ""
+msgstr "Clica aquí per obrir el menú d'etiquetes per {tag}"
 
 #: src/components/RichText.tsx:191
 msgid "Click here to open tag menu for #{tag}"
-msgstr ""
+msgstr "Clica aquí per obrir el menú d'etiquetes per #{tag}"
 
 #: src/screens/Onboarding/index.tsx:35
 msgid "Climate"
@@ -863,7 +863,7 @@ msgstr "Tanca el peu de la navegació"
 #: src/components/Menu/index.tsx:207
 #: src/components/TagMenu/index.tsx:262
 msgid "Close this dialog"
-msgstr ""
+msgstr "Tanca aquest diàleg"
 
 #: src/view/shell/index.web.tsx:56
 msgid "Closes bottom navigation bar"
@@ -904,7 +904,7 @@ msgstr "Finalitza el registre i comença a utilitzar el teu compte"
 
 #: src/view/com/auth/create/Step3.tsx:73
 msgid "Complete the challenge"
-msgstr ""
+msgstr "Completa la prova"
 
 #: src/view/com/composer/Composer.tsx:437
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
@@ -922,7 +922,7 @@ msgstr "Configura els filtres de continguts per la categoria: {0}"
 
 #: src/components/moderation/ModerationLabelPref.tsx:116
 msgid "Configured in <0>moderation settings</0>."
-msgstr ""
+msgstr "Configurat a <0>configuració de moderació</0>"
 
 #: src/components/Prompt.tsx:152
 #: src/components/Prompt.tsx:155
@@ -959,11 +959,11 @@ msgstr "Confirma l'eliminació del compte"
 
 #: src/screens/Moderation/index.tsx:303
 msgid "Confirm your age:"
-msgstr ""
+msgstr "Confirma la teva edat:"
 
 #: src/screens/Moderation/index.tsx:294
 msgid "Confirm your birthdate"
-msgstr ""
+msgstr "Confirma la teva data de naixement"
 
 #: src/view/com/modals/ChangeEmail.tsx:157
 #: src/view/com/modals/DeleteAccount.tsx:176
@@ -987,11 +987,11 @@ msgstr "Contacta amb suport"
 
 #: src/components/moderation/LabelsOnMe.tsx:42
 msgid "content"
-msgstr ""
+msgstr "contingut"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:18
 msgid "Content Blocked"
-msgstr ""
+msgstr "Contingut bloquejat"
 
 #: src/view/screens/Moderation.tsx:83
 #~ msgid "Content filtering"
@@ -1003,7 +1003,7 @@ msgstr ""
 
 #: src/screens/Moderation/index.tsx:287
 msgid "Content filters"
-msgstr ""
+msgstr "Filtres de contingut"
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
 #: src/view/screens/LanguageSettings.tsx:278
