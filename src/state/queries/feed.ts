@@ -19,7 +19,8 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {getAgent} from '#/state/session'
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {STALE} from '#/state/queries'
-import {t} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {msg} from '@lingui/macro'
 
 export type FeedSourceFeedInfo = {
   type: 'feed'
@@ -199,27 +200,28 @@ export function useSearchPopularFeedsMutation() {
   })
 }
 
-const FOLLOWING_FEED_STUB: FeedSourceInfo = {
-  type: 'feed',
-  displayName: t`Following`,
-  uri: '',
-  route: {
-    href: '/',
-    name: 'Home',
-    params: {},
-  },
-  cid: '',
-  avatar: '',
-  description: new RichText({text: ''}),
-  creatorDid: '',
-  creatorHandle: '',
-  likeCount: 0,
-  likeUri: '',
-}
-
 export function usePinnedFeedsInfos() {
   const {data: preferences, isLoading: isLoadingPrefs} = usePreferencesQuery()
   const pinnedUris = preferences?.feeds?.pinned ?? []
+  const {_} = useLingui()
+
+  const FOLLOWING_FEED_STUB: FeedSourceInfo = {
+    type: 'feed',
+    displayName: _(msg`Following`),
+    uri: '',
+    route: {
+      href: '/',
+      name: 'Home',
+      params: {},
+    },
+    cid: '',
+    avatar: '',
+    description: new RichText({text: ''}),
+    creatorDid: '',
+    creatorHandle: '',
+    likeCount: 0,
+    likeUri: '',
+  }
 
   return useQuery({
     staleTime: STALE.INFINITY,
