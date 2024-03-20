@@ -37,7 +37,9 @@ function ReportDialogInner(props: ReportDialogProps) {
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
   return (
-    <Dialog.ScrollableInner label="Report Dialog">
+    <Dialog.ScrollableInner
+      label="Report Dialog"
+      keyboardDismissMode="interactive">
       {isLoading ? (
         <View style={[a.align_center, {height: 100}]}>
           <Loader size="xl" />
