@@ -123,10 +123,10 @@ export function useModerationCauseDescription(
           source = cause.label.src
         }
       }
-
       if (def.identifier === 'porn' || def.identifier === 'sexual') {
         strings.name = 'Adult Content'
       }
+
       return {
         icon:
           def.identifier === '!no-unauthenticated'
