@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2024-02-18 18:40+0800\n"
+"POT-Creation-Date: 2024-03-20 08:20+0800\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: Frudrax Cheng <i@cynosura.one>\n"
-"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038\n"
+"Language-Team: Frudrax Cheng, Kuwa Lee, noeFly, snowleo208, Kisaragi Hiu, Yi-Jyun Pan, toto6038, cirx1e\n"
 "Plural-Forms: \n"
 
 #: src/view/com/modals/VerifyEmail.tsx:142
@@ -212,7 +212,7 @@ msgstr "成人內容"
 
 #: src/view/com/modals/ContentFilteringSettings.tsx:141
 msgid "Adult content can only be enabled via the Web at <0/>."
-msgstr "成人内容只能在網頁上<0/>啟用。"
+msgstr "成人內容只能在網頁上<0/>啟用。"
 
 #: src/view/screens/Settings/index.tsx:664
 msgid "Advanced"
@@ -220,7 +220,7 @@ msgstr "詳細設定"
 
 #: src/view/screens/Feeds.tsx:666
 msgid "All the feeds you've saved, right in one place."
-msgstr "你已儲存的所有訊息流都集中在一处。"
+msgstr "你已儲存的所有訊息流都集中在一處。"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:221
 #: src/view/com/modals/ChangePassword.tsx:168
@@ -249,7 +249,7 @@ msgstr "一封電子郵件已發送至 {0}。請查閱郵件並在下方輸入�
 
 #: src/view/com/modals/ChangeEmail.tsx:119
 msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
-msgstr "一封電子郵件已發送至先前填寫的電郵地址 {0}。請查閱郵件並在下方輸入驗證碼。"
+msgstr "一封電子郵件已發送至先前填寫的電子郵件地址 {0}。請查閱郵件並在下方輸入驗證碼。"
 
 #: src/view/com/profile/FollowButton.tsx:30
 #: src/view/com/profile/FollowButton.tsx:40
@@ -628,7 +628,7 @@ msgstr "來看看一些推薦的使用者吧。跟隨人來查看類似的使用
 
 #: src/view/com/modals/DeleteAccount.tsx:169
 msgid "Check your inbox for an email with the confirmation code to enter below:"
-msgstr "查看寄送至你電子郵箱的確認郵件，然後在下方輸入收到的驗證碼："
+msgstr "查看寄送至你電子郵件地址的確認郵件，然後在下方輸入收到的驗證碼："
 
 #: src/view/com/modals/Threadgate.tsx:72
 msgid "Choose \"Everybody\" or \"Nobody\""
@@ -1346,19 +1346,19 @@ msgstr "輸入你的出生日期"
 
 #: src/view/com/modals/Waitlist.tsx:78
 msgid "Enter your email"
-msgstr "輸入你的電子郵箱"
+msgstr "輸入你的電子郵件地址"
 
 #: src/view/com/auth/create/Step1.tsx:195
 msgid "Enter your email address"
-msgstr "輸入你的電子郵箱地址"
+msgstr "輸入你的電子郵件地址"
 
 #: src/view/com/modals/ChangeEmail.tsx:41
 msgid "Enter your new email above"
-msgstr "請在上方輸入你的新電子郵箱"
+msgstr "請在上方輸入你的新電子郵件地址"
 
 #: src/view/com/modals/ChangeEmail.tsx:117
 msgid "Enter your new email address below."
-msgstr "請在下方輸入你的新電子郵箱。"
+msgstr "請在下方輸入你的新電子郵件地址。"
 
 #: src/view/com/auth/create/Step2.tsx:188
 #~ msgid "Enter your phone number"
@@ -1445,7 +1445,7 @@ msgstr "無法建立列表。請檢查你的網路連線並重試。"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:88
 msgid "Failed to delete post, please try again"
-msgstr "無法刪除貼文，请重試"
+msgstr "無法刪除貼文，請重試"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
@@ -1831,7 +1831,7 @@ msgstr "圖片選項"
 
 #: src/view/com/auth/login/SetNewPasswordForm.tsx:138
 msgid "Input code sent to your email for password reset"
-msgstr "輸入發送到你電子郵箱的重設碼以重設密碼"
+msgstr "輸入發送到你電子郵件地址的重設碼以重設密碼"
 
 #: src/view/com/modals/DeleteAccount.tsx:184
 msgid "Input confirmation code for account deletion"
@@ -1839,7 +1839,7 @@ msgstr "輸入刪除帳號的驗證碼"
 
 #: src/view/com/auth/create/Step1.tsx:200
 msgid "Input email for Bluesky account"
-msgstr "輸入 Bluesky 帳號的電子郵箱"
+msgstr "輸入 Bluesky 帳號的電子郵件地址"
 
 #: src/view/com/auth/create/Step1.tsx:158
 msgid "Input invite code to proceed"
@@ -1867,7 +1867,7 @@ msgstr "輸入與 {identifier} 關聯的密碼"
 
 #: src/view/com/auth/login/LoginForm.tsx:197
 msgid "Input the username or email address you used at signup"
-msgstr "輸入註冊時使用的使用者名稱或電子郵箱"
+msgstr "輸入註冊時使用的使用者名稱或電子郵件地址"
 
 #: src/view/com/auth/create/Step2.tsx:271
 #~ msgid "Input the verification code we have texted to you"
@@ -1875,7 +1875,7 @@ msgstr "輸入註冊時使用的使用者名稱或電子郵箱"
 
 #: src/view/com/modals/Waitlist.tsx:90
 msgid "Input your email to get on the Bluesky waitlist"
-msgstr "輸入你的電子郵箱以加入 Bluesky 候補列表"
+msgstr "輸入你的電子郵件地址以加入 Bluesky 候補列表"
 
 #: src/view/com/auth/login/LoginForm.tsx:229
 msgid "Input your password"
@@ -2344,11 +2344,11 @@ msgstr "永不載入來自 {0} 的嵌入內容"
 #: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
 #: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
 msgid "Never lose access to your followers and data."
-msgstr "永遠不會失去對你的追隨者和資料的存取權。"
+msgstr "永遠不會失去對你的跟隨者和資料的存取權。"
 
 #: src/screens/Onboarding/StepFinished.tsx:119
 msgid "Never lose access to your followers or data."
-msgstr "永遠不會失去對你的追隨者或資料的存取權。"
+msgstr "永遠不會失去對你的跟隨者或資料的存取權。"
 
 #: src/view/screens/Lists.tsx:76
 msgctxt "action"
@@ -2759,7 +2759,7 @@ msgstr "請完成 Captcha 驗證。"
 
 #: src/view/com/modals/ChangeEmail.tsx:67
 msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
-msgstr "更改前請先確認你的電子郵箱。這是新增電子郵箱更新工具的臨時要求，此限制將很快被移除。"
+msgstr "更改前請先確認你的電子郵件地址。這是電子郵件更新工具的臨時要求，此限制將很快被移除。"
 
 #: src/view/com/modals/AddAppPasswords.tsx:90
 msgid "Please enter a name for your app password. All spaces is not allowed."
@@ -2796,7 +2796,7 @@ msgstr "請告訴我們你認為這個內容警告標示有誤的原因！"
 
 #: src/view/com/modals/VerifyEmail.tsx:101
 msgid "Please Verify Your Email"
-msgstr "請驗證你的電子郵箱"
+msgstr "請驗證你的電子郵件地址"
 
 #: src/view/com/composer/Composer.tsx:215
 msgid "Please wait for your link card to finish loading"
@@ -2905,7 +2905,7 @@ msgstr "個人檔案已更新"
 
 #: src/view/screens/Settings/index.tsx:949
 msgid "Protect your account by verifying your email."
-msgstr "通過驗證電子郵件來保護你的帳號。"
+msgstr "通過驗證電子郵件地址來保護你的帳號。"
 
 #: src/screens/Onboarding/StepFinished.tsx:101
 msgid "Public"
@@ -3981,7 +3981,7 @@ msgstr "此資訊不會分享給其他使用者。"
 
 #: src/view/com/modals/VerifyEmail.tsx:119
 msgid "This is important in case you ever need to change your email or reset your password."
-msgstr "這很重要，以防你將來需要更改電子郵箱或重設密碼。"
+msgstr "這很重要，以防你將來需要更改電子郵件地址或重設密碼。"
 
 #: src/view/com/modals/LinkWarning.tsx:58
 msgid "This link is taking you to the following website:"
@@ -4096,11 +4096,11 @@ msgstr "取消轉發"
 #: src/view/com/profile/FollowButton.tsx:55
 msgctxt "action"
 msgid "Unfollow"
-msgstr "取消關注"
+msgstr "取消跟隨"
 
 #: src/view/com/profile/ProfileHeader.tsx:484
 msgid "Unfollow {0}"
-msgstr "取消關注 {0}"
+msgstr "取消跟隨 {0}"
 
 #: src/view/com/auth/create/state.ts:262
 msgid "Unfortunately, you do not meet the requirements to create an account."
@@ -4553,19 +4553,19 @@ msgstr "你的預設訊息流為「跟隨」"
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:70
 #: src/view/com/modals/ChangePassword.tsx:54
 msgid "Your email appears to be invalid."
-msgstr "你的電子郵箱似乎無效。"
+msgstr "你的電子郵件地址似乎無效。"
 
 #: src/view/com/modals/Waitlist.tsx:109
 msgid "Your email has been saved! We'll be in touch soon."
-msgstr "你的電子郵箱已儲存！我們將很快聯繫你。"
+msgstr "你的電子郵件地址已儲存！我們將很快聯繫你。"
 
 #: src/view/com/modals/ChangeEmail.tsx:125
 msgid "Your email has been updated but not verified. As a next step, please verify your new email."
-msgstr "你的電子郵箱已更新但尚未驗證。作為下一步，請驗證你的新電子郵箱。"
+msgstr "你的電子郵件地址已更新但尚未驗證。作為下一步，請驗證你的新電子郵件地址。"
 
 #: src/view/com/modals/VerifyEmail.tsx:114
 msgid "Your email has not yet been verified. This is an important security step which we recommend."
-msgstr "你的電子郵箱尚未驗證。這是一個我們建議的重要安全步驟。"
+msgstr "你的電子郵件地址尚未驗證。這是一個我們建議的重要安全步驟。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:47
 msgid "Your following feed is empty! Follow more users to see what's happening."
