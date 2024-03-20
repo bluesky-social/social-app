@@ -176,17 +176,19 @@ export function StepInterests() {
               },
             ]}>
             <Text style={[a.text_md]}>
-              <Text
-                style={[
-                  a.text_md,
-                  a.font_bold,
-                  {
-                    color: t.palette.negative_900,
-                  },
-                ]}>
-                Error:{' '}
-              </Text>
-              {error?.message || 'an unknown error occurred'}
+              <Trans>
+                <Text
+                  style={[
+                    a.text_md,
+                    a.font_bold,
+                    {
+                      color: t.palette.negative_900,
+                    },
+                  ]}>
+                  Error:{' '}
+                </Text>
+                {error?.message || _(msg`an unknown error occurred`)}
+              </Trans>
             </Text>
           </View>
         ) : (
