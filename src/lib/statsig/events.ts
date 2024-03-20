@@ -2,6 +2,13 @@ export type LogEvents = {
   init: {
     initMs: number
   }
+  'account:loggedIn': {
+    logContext: 'LoginForm' | 'SwitchAccount' | 'ChooseAccountForm' | 'Settings'
+    withPassword: boolean
+  }
+  'account:loggedOut': {
+    logContext: 'Settings'
+  }
   'notifications:openApp': {}
   'state:background': {}
   'state:foreground': {}
