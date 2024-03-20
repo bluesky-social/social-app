@@ -51,7 +51,7 @@ msgstr "<1>Bluesky</1><0>에 오신 것을 환영합니다</0>"
 
 #: src/screens/Profile/Header/Handle.tsx:42
 msgid "⚠Invalid Handle"
-msgstr "⚠ 잘못된 핸들"
+msgstr "⚠잘못된 핸들"
 
 #: src/view/com/util/ViewHeader.tsx:89
 #: src/view/screens/Search/Search.tsx:648
