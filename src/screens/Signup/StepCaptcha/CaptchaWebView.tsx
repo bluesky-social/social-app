@@ -1,7 +1,8 @@
 import React from 'react'
+import {StyleSheet} from 'react-native'
 import {WebView, WebViewNavigation} from 'react-native-webview'
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
-import {StyleSheet} from 'react-native'
+
 import {SignupState} from '#/screens/Signup/state'
 
 const ALLOWED_HOSTS = [
