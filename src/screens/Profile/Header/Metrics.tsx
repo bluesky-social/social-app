@@ -27,7 +27,7 @@ export function ProfileHeaderMetrics({
   })
   const pluralizedFollowings = plural(profile.followsCount || 0, {
     one: 'following',
-    other: 'followers',
+    other: 'followings',
   })
 
   return (
@@ -39,10 +39,12 @@ export function ProfileHeaderMetrics({
         style={[a.flex_row, t.atoms.text]}
         to={makeProfileLink(profile, 'followers')}
         label={`${followers} ${pluralizedFollowers}`}>
-        <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
-        <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
-          {pluralizedFollowers}
-        </Text>
+        <Trans>
+          <Text style={[a.font_bold, a.text_md]}>{followers} </Text>
+          <Text style={[t.atoms.text_contrast_medium, a.text_md]}>
+            {pluralizedFollowers}
+          </Text>
+        </Trans>
       </InlineLink>
       <InlineLink
         testID="profileHeaderFollowsButton"
@@ -57,10 +59,13 @@ export function ProfileHeaderMetrics({
         </Trans>
       </InlineLink>
       <Text style={[a.font_bold, t.atoms.text, a.text_md]}>
-        {formatCount(profile.postsCount || 0)}{' '}
-        <Text style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
-          {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
-        </Text>
+        <Trans>
+          {formatCount(profile.postsCount || 0)}{' '}
+          <Text
+            style={[t.atoms.text_contrast_medium, a.font_normal, a.text_md]}>
+            {plural(profile.postsCount || 0, {one: 'post', other: 'posts'})}
+          </Text>
+        </Trans>
       </Text>
     </View>
   )
