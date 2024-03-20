@@ -3,7 +3,6 @@ import RNFS from 'react-native-fs'
 import {CropperOptions} from './types'
 import {compressIfNeeded} from './manip'
 
-let _imageCounter = 0
 async function getFile() {
   let files = await RNFS.readDir(
     RNFS.LibraryDirectoryPath.split('/')
@@ -12,7 +11,7 @@ async function getFile() {
       .join('/'),
   )
   files = files.filter(file => file.path.endsWith('.JPG'))
-  const file = files[_imageCounter++ % files.length]
+  const file = files[0]
   return await compressIfNeeded({
     path: file.path,
     mime: 'image/jpeg',
