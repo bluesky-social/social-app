@@ -1,22 +1,32 @@
 import React from 'react'
 import {SafeAreaView, StyleSheet, View} from 'react-native'
-import {ScrollView} from './util'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {Text} from '../util/text/Text'
-import {Button} from '../util/forms/Button'
-import {s, colors} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
-import {isWeb} from 'platform/detection'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {isPossiblyAUrl, splitApexDomain} from 'lib/strings/url-helpers'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {usePalette} from '#/lib/hooks/usePalette'
+import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {shareUrl} from '#/lib/sharing'
+import {isPossiblyAUrl, splitApexDomain} from '#/lib/strings/url-helpers'
+import {colors, s} from '#/lib/styles'
+import {isWeb} from '#/platform/detection'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
+import {ScrollView} from './util'
 
 export const snapPoints = ['50%']
 
-export function Component({text, href}: {text: string; href: string}) {
+export function Component({
+  text,
+  href,
+  share,
+}: {
+  text: string
+  href: string
+  share?: boolean
+}) {
   const pal = usePalette('default')
   const {closeModal} = useModalControls()
   const {isMobile} = useWebMediaQueries()
@@ -26,7 +36,11 @@ export function Component({text, href}: {text: string; href: string}) {
 
   const onPressVisit = () => {
     closeModal()
-    openLink(href)
+    if (share) {
+      shareUrl(href)
+    } else {
+      openLink(href)
+    }
   }
 
   return (
@@ -72,9 +86,13 @@ export function Component({text, href}: {text: string; href: string}) {
             testID="confirmBtn"
             type="primary"
             onPress={onPressVisit}
-            accessibilityLabel={_(msg`Visit Site`)}
-            accessibilityHint={_(msg`Opens the linked website`)}
-            label={_(msg`Visit Site`)}
+            accessibilityLabel={share ? _(msg`Share Link`) : _(msg`Visit Site`)}
+            accessibilityHint={
+              share
+                ? _(msg`Shares the linked website`)
+                : _(msg`Opens the linked website`)
+            }
+            label={share ? _(msg`Share Link`) : _(msg`Visit Site`)}
             labelContainerStyle={{justifyContent: 'center', padding: 4}}
             labelStyle={[s.f18]}
           />

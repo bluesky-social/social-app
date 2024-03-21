@@ -1,11 +1,11 @@
 import React from 'react'
-import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 import {Image as RNImage} from 'react-native-image-crop-picker'
+import {AppBskyActorDefs, AppBskyGraphDefs} from '@atproto/api'
 
-import {ImageModel} from '#/state/models/media/image'
-import {GalleryModel} from '#/state/models/media/gallery'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {EmbedPlayerSource} from '#/lib/strings/embed-player'
+import {GalleryModel} from '#/state/models/media/gallery'
+import {ImageModel} from '#/state/models/media/image'
 import {ThreadgateSetting} from '../queries/threadgate'
 
 export interface EditProfileModal {
@@ -126,6 +126,7 @@ export interface LinkWarningModal {
   name: 'link-warning'
   text: string
   href: string
+  share?: boolean
 }
 
 export interface EmbedConsentModal {
