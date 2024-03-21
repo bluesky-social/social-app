@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React, { ComponentProps, type JSX } from 'react';
 import {GestureResponderEvent, TouchableOpacity, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {StackActions} from '@react-navigation/native'

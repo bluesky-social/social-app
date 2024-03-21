@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useColorSchemeStyle} from 'lib/hooks/useColorSchemeStyle'

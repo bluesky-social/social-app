@@ -1,4 +1,4 @@
-import React, {isValidElement, memo, useRef, startTransition} from 'react'
+import React, { isValidElement, memo, useRef, startTransition, type JSX } from 'react';
 import {FlatListProps, StyleSheet, View, ViewProps} from 'react-native'
 import {addStyle} from 'lib/styles'
 import {usePalette} from 'lib/hooks/usePalette'
@@ -204,7 +204,7 @@ function ListImpl<ItemT>(
 }
 
 function useResizeObserver(
-  ref: React.RefObject<Element>,
+  ref: React.RefObject<Element | null>,
   onResize: undefined | ((w: number, h: number) => void),
 ) {
   const handleResize = useNonReactiveCallback(onResize ?? (() => {}))

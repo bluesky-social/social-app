@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {StyleProp, StyleSheet, TextStyle, View, ViewStyle} from 'react-native'
 import {Text} from '../text/Text'
 import {Button, ButtonType} from './Button'

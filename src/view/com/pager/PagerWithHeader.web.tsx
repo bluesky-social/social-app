@@ -7,6 +7,8 @@ import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {ListMethods} from '../util/List'
 
+import type { JSX } from "react";
+
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {ago} from 'lib/strings/time'
 import {useTickEveryMinute} from '#/state/shell'
 

@@ -17,7 +17,7 @@ import {Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = React.createContext<{
-  inputRef: React.RefObject<TextInput> | null
+  inputRef: React.RefObject<TextInput | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -129,7 +129,7 @@ export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput>
+  inputRef?: React.RefObject<TextInput | null>
 }
 
 export function createInput(Component: typeof TextInput) {

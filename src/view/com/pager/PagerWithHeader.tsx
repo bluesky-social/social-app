@@ -22,6 +22,8 @@ import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {ListMethods} from '../util/List'
 import {ScrollProvider} from '#/lib/ScrollContext'
 
+import type { JSX } from "react";
+
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean

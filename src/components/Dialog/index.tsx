@@ -83,7 +83,7 @@ export function Outer({
   const sheetOptions = nativeOptions?.sheet || {}
   const hasSnapPoints = !!sheetOptions.snapPoints
   const insets = useSafeAreaInsets()
-  const closeCallback = React.useRef<() => void>()
+  const closeCallback = React.useRef<() => void>(undefined)
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   /*

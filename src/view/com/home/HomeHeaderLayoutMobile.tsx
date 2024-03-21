@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {usePalette} from 'lib/hooks/usePalette'
 import {Link} from '../util/Link'

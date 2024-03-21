@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {useNavigation} from '@react-navigation/native'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useQueryClient} from '@tanstack/react-query'

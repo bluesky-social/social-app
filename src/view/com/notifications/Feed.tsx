@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {CenteredView} from '../util/Views'
 import {ActivityIndicator, StyleSheet, View} from 'react-native'
 import {FeedItem} from './FeedItem'

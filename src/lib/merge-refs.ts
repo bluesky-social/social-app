@@ -13,7 +13,7 @@
  * returns a ref callback function that can be used to merge multiple refs into a single ref.
  */
 export function mergeRefs<T = any>(
-  refs: Array<React.MutableRefObject<T> | React.LegacyRef<T>>,
+  refs: Array<React.MutableRefObject<T> | React.Ref<T>>,
 ): React.RefCallback<T> {
   return value => {
     refs.forEach(ref => {

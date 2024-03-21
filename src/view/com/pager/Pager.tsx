@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react'
+import React, { forwardRef, type JSX } from 'react';
 import {Animated, View} from 'react-native'
 import PagerView, {
   PagerViewOnPageSelectedEvent,

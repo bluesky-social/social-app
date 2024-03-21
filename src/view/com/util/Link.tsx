@@ -1,4 +1,4 @@
-import React, {ComponentProps, memo, useMemo} from 'react'
+import React, { ComponentProps, memo, useMemo, type JSX } from 'react';
 import {
   GestureResponderEvent,
   Platform,

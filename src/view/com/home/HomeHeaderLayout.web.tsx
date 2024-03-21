@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {StyleSheet, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {usePalette} from 'lib/hooks/usePalette'

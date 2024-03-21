@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { type JSX } from 'react';
 import {StyleProp, StyleSheet, View, ViewStyle} from 'react-native'
 import {AtUri, AppBskyGraphDefs, RichText} from '@atproto/api'
 import {Link} from '../util/Link'

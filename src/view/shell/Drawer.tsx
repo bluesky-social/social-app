@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React, { ComponentProps, type JSX } from 'react';
 import {
   Linking,
   SafeAreaView,

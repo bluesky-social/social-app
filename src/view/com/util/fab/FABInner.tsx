@@ -1,4 +1,4 @@
-import React, {ComponentProps} from 'react'
+import React, { ComponentProps, type JSX } from 'react';
 import {StyleSheet, TouchableWithoutFeedback} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {gradients} from 'lib/styles'
