@@ -1,15 +1,15 @@
 import React from 'react'
-import {RichText as RichTextAPI, AppBskyRichtextFacet} from '@atproto/api'
-import {useLingui} from '@lingui/react'
+import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
 import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, TextStyleProp, flatten, useTheme, web, native} from '#/alf'
-import {InlineLink} from '#/components/Link'
-import {Text, TextProps} from '#/components/Typography'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {toShortUrl} from '#/lib/strings/url-helpers'
 import {isNative} from '#/platform/detection'
+import {atoms as a, flatten, native, TextStyleProp, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
+import {InlineLink} from '#/components/Link'
+import {TagMenu, useTagMenuControl} from '#/components/TagMenu'
+import {Text, TextProps} from '#/components/Typography'
 
 const WORD_WRAP = {wordWrap: 1}
 
@@ -105,7 +105,8 @@ export function RichText({
             to={link.uri}
             style={[...styles, {pointerEvents: 'auto'}]}
             // @ts-ignore TODO
-            dataSet={WORD_WRAP}>
+            dataSet={WORD_WRAP}
+            shareOnLongPress>
             {toShortUrl(segment.text)}
           </InlineLink>,
         )
