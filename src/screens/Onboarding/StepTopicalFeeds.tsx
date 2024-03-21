@@ -1,28 +1,28 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Toggle from '#/components/forms/Toggle'
-import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
-import {
-  Title,
-  Description,
-  OnboardingControls,
-} from '#/screens/Onboarding/Layout'
-import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
-import {aggregateInterestItems} from '#/screens/Onboarding/util'
-import {IconCircle} from '#/components/IconCircle'
 import {IS_TEST_USER} from 'lib/constants'
 import {useSession} from 'state/session'
+import {
+  Description,
+  OnboardingControls,
+  Title,
+} from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
+import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
+import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
+import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
+import {Loader} from '#/components/Loader'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
@@ -59,6 +59,10 @@ export function StepTopicalFeeds() {
     setSaving(false)
     dispatch({type: 'next'})
     track('OnboardingV2:StepTopicalFeeds:End', {
+      selectedFeeds: selectedFeedUris,
+      selectedFeedsLength: selectedFeedUris.length,
+    })
+    logEvent('onboarding:topicalFeeds:nextPressed', {
       selectedFeeds: selectedFeedUris,
       selectedFeedsLength: selectedFeedUris.length,
     })

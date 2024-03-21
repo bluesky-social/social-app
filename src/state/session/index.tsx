@@ -1,26 +1,26 @@
 import React from 'react'
 import {
-  BskyAgent,
   AtpPersistSessionHandler,
   BSKY_LABELER_DID,
+  BskyAgent,
 } from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
-import {IS_DEV} from '#/env'
-import {IS_TEST_USER} from '#/lib/constants'
-import {isWeb} from '#/platform/detection'
+import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
+import {IS_TEST_USER} from '#/lib/constants'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {track} from '#/lib/analytics/analytics'
-import {hasProp} from '#/lib/type-guards'
+import {IS_DEV} from '#/env'
+import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
-import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
 
@@ -230,6 +230,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }: any) => {
       logger.info(`session: creating account`)
       track('Try Create Account')
+      logEvent('account:create:begin', {})
 
       const agent = new BskyAgent({service})
 
@@ -290,6 +291,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
+      logEvent('account:create:success', {})
     },
     [upsertAccount, queryClient, clearCurrentAccount],
   )
