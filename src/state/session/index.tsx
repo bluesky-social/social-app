@@ -10,6 +10,7 @@ import {jwtDecode} from 'jwt-decode'
 import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
 import {IS_TEST_USER} from '#/lib/constants'
+import {useResetGlobalQueryClient} from '#/lib/react-query'
 import {logEvent, LogEvents} from '#/lib/statsig/statsig'
 import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
@@ -179,6 +180,7 @@ function createPersistSessionHandler(
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
   const queryClient = useQueryClient()
+  const resetGlobalQueryClient = useResetGlobalQueryClient()
   const isDirty = React.useRef(false)
   const [state, setState] = React.useState<SessionState>({
     isInitialLoad: true,
@@ -373,6 +375,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         persistSession: createPersistSessionHandler(
           account,
           ({expired, refreshedAccount}) => {
+            console.log('RESUME: PERSIST')
             upsertAccount(refreshedAccount, expired)
           },
           {networkErrorCallback: clearCurrentAccount},
@@ -414,8 +417,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
          * state so that the app can rerender with new data.
          */
         agent.session = prevSession
+        resetGlobalQueryClient()
         __globalAgent = agent
-        queryClient.clear()
         upsertAccount(account)
 
         if (prevSession.deactivated) {
@@ -444,6 +447,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           // this calls `upsertAccount` via `agent.resumeSession` and persistor
           await resumeSessionWithFreshAccount()
+          console.log('RESUME: DONE')
+          resetGlobalQueryClient()
           // only update global agen if resumeSessionWithFreshAccount succeeded
           __globalAgent = agent
         } catch (e) {
@@ -456,7 +461,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
-        } finally {
           queryClient.clear()
         }
       }
@@ -487,7 +491,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, queryClient, clearCurrentAccount, resetGlobalQueryClient],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
