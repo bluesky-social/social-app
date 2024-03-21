@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-03-21 22:04+0900\n"
+"PO-Revision-Date: 2024-03-22 08:10+0900\n"
 "Last-Translator: Hima-Zinn\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -5162,7 +5162,7 @@ msgstr "このコンテンツはBlueskyのアカウントがないと閲覧で�
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-# msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、<0>このブログ投稿</0>を参照してください。"
+msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、<0>このブログ投稿</0>を参照してください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
