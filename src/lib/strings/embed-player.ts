@@ -1,4 +1,5 @@
 import {Dimensions} from 'react-native'
+
 import {isWeb} from 'platform/detection'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
@@ -360,13 +361,13 @@ export function parseEmbedPlayerFromUrl(
       return {
         type: 'nicovideo_video',
         source: 'nicovideo',
-        playerUri: `https://embed.nicovideo.jp/watch/${videoId}`,
+        playerUri: `https://embed.nicovideo.jp/watch/${videoId}?autoplay=1`,
       }
     } else if (watchOrId) {
       return {
         type: 'nicovideo_video',
         source: 'nicovideo',
-        playerUri: `https://embed.nicovideo.jp/watch/${watchOrId}`,
+        playerUri: `https://embed.nicovideo.jp/watch/${watchOrId}?autoplay=1`,
       }
     }
   }

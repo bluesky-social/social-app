@@ -1,17 +1,18 @@
 import {RichText} from '@atproto/api'
+
+import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
+import {cleanError} from '../../src/lib/strings/errors'
+import {createFullHandle, makeValidHandle} from '../../src/lib/strings/handles'
+import {enforceLen, pluralize} from '../../src/lib/strings/helpers'
+import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
+import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
+import {ago} from '../../src/lib/strings/time'
 import {
   makeRecordUri,
   toNiceDomain,
-  toShortUrl,
   toShareUrl,
+  toShortUrl,
 } from '../../src/lib/strings/url-helpers'
-import {pluralize, enforceLen} from '../../src/lib/strings/helpers'
-import {ago} from '../../src/lib/strings/time'
-import {detectLinkables} from '../../src/lib/strings/rich-text-detection'
-import {shortenLinks} from '../../src/lib/strings/rich-text-manip'
-import {makeValidHandle, createFullHandle} from '../../src/lib/strings/handles'
-import {cleanError} from '../../src/lib/strings/errors'
-import {parseEmbedPlayerFromUrl} from 'lib/strings/embed-player'
 
 describe('detectLinkables', () => {
   const inputs = [
@@ -749,12 +750,12 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'nicovideo_video',
       source: 'nicovideo',
-      playerUri: 'https://embed.nicovideo.jp/watch/videoId',
+      playerUri: 'https://embed.nicovideo.jp/watch/videoId?autoplay=1',
     },
     {
       type: 'nicovideo_video',
       source: 'nicovideo',
-      playerUri: 'https://embed.nicovideo.jp/watch/videoId',
+      playerUri: 'https://embed.nicovideo.jp/watch/videoId?autoplay=1',
     },
   ]
 
