@@ -27,7 +27,6 @@ export function getRootNavigation(
   while (nav.getParent()) {
     nav = nav.getParent()
   }
-  console.log('here', nav)
   return nav
 }
 
