@@ -44,17 +44,17 @@ export function SwitchAccountDialog({
       <Dialog.Handle />
 
       <Dialog.ScrollableInner label={_(msg`Switch Account`)}>
-        <View style={[a.pb_lg]}>
+        <View style={[a.gap_lg]}>
           <Text style={[a.text_2xl, a.font_bold]}>
             <Trans>Switch Account</Trans>
           </Text>
-        </View>
 
-        <AccountList
-          onSelectAccount={onSelectAccount}
-          onSelectOther={onPressAddAccount}
-          otherLabel={_(msg`Add account`)}
-        />
+          <AccountList
+            onSelectAccount={onSelectAccount}
+            onSelectOther={onPressAddAccount}
+            otherLabel={_(msg`Add account`)}
+          />
+        </View>
       </Dialog.ScrollableInner>
     </Dialog.Outer>
   )

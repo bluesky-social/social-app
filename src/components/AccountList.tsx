@@ -129,7 +129,7 @@ function AccountItem({
           {isCurrentAccount ? (
             <Check
               size="sm"
-              style={[{color: t.palette.positive_500}, a.mr_md]}
+              style={[{color: t.palette.positive_600}, a.mr_md]}
             />
           ) : (
             <Chevron size="sm" style={[t.atoms.text, a.mr_md]} />
