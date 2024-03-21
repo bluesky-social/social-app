@@ -2,8 +2,6 @@ import {NavigationProp} from '@react-navigation/native'
 
 import {RouteParams, State} from './types'
 
-// history?: unknown[] | undefined;     routes: NavigationRoute<...>[];     type: string;     stale: false;   }> | undefined;
-
 type NavigationPropWithGetState = Omit<
   NavigationProp<ReactNavigation.RootParamList>,
   'getState'
@@ -31,8 +29,8 @@ export function getRootNavigation(
 }
 
 export function getCurrentRoute(state: State) {
-  let node = state.routes[state.index || 0]
-  while (node.state?.routes && typeof node.state?.index === 'number') {
+  let node = state?.routes[state?.index || 0]
+  while (node?.state?.routes && typeof node.state.index === 'number') {
     node = node.state?.routes[node.state?.index]
   }
   return node
@@ -48,15 +46,15 @@ export function isStateAtTabRoot(state: State | undefined) {
   }
   const currentRoute = getCurrentRoute(state)
   return (
-    isTab(currentRoute.name, 'Home') ||
-    isTab(currentRoute.name, 'Search') ||
-    isTab(currentRoute.name, 'Feeds') ||
-    isTab(currentRoute.name, 'Notifications') ||
-    isTab(currentRoute.name, 'MyProfile')
+    isTab(currentRoute?.name, 'Home') ||
+    isTab(currentRoute?.name, 'Search') ||
+    isTab(currentRoute?.name, 'Feeds') ||
+    isTab(currentRoute?.name, 'Notifications') ||
+    isTab(currentRoute?.name, 'MyProfile')
   )
 }
 
-export function isTab(current: string, route: string) {
+export function isTab(current: string | undefined, route: string) {
   // NOTE
   // our tab routes can be variously referenced by 3 different names
   // this helper deals with that weirdness
@@ -78,7 +76,7 @@ export function getTabState(state: State | undefined, tab: string): TabState {
     return TabState.Outside
   }
   const currentRoute = getCurrentRoute(state)
-  if (isTab(currentRoute.name, tab)) {
+  if (isTab(currentRoute?.name, tab)) {
     return TabState.InsideAtRoot
   } else if (isTab(state.routes[state.index || 0].name, tab)) {
     return TabState.Inside

@@ -96,6 +96,8 @@ export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>
 
 export type State =
   | NavigationState
+  | undefined
+  // | NavigationState
   | Omit<PartialState<NavigationState>, 'stale'>
 
 export type RouteParams = Record<string, string>
