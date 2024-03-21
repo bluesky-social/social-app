@@ -4,7 +4,6 @@ import {
   BSKY_LABELER_DID,
   BskyAgent,
 } from '@atproto/api'
-import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
 import {track} from '#/lib/analytics/analytics'
@@ -178,7 +177,6 @@ function createPersistSessionHandler(
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const queryClient = useQueryClient()
   const isDirty = React.useRef(false)
   const [state, setState] = React.useState<SessionState>({
     isInitialLoad: true,
@@ -211,12 +209,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
-    queryClient.clear()
     setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,
     }))
-  }, [setStateAndPersist, queryClient])
+  }, [setStateAndPersist])
 
   const createAccount = React.useCallback<ApiContext['createAccount']>(
     async ({
@@ -286,14 +283,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
-      queryClient.clear()
       upsertAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
       logEvent('account:create:success', {})
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const login = React.useCallback<ApiContext['login']>(
@@ -334,7 +330,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
-      queryClient.clear()
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -342,7 +337,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       track('Sign In', {resumedSession: false})
       logEvent('account:loggedIn', {logContext, withPassword: true})
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const logout = React.useCallback<ApiContext['logout']>(
@@ -411,7 +406,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         agent.session = prevSession
         __globalAgent = agent
-        queryClient.clear()
         upsertAccount(account)
 
         if (prevSession.deactivated) {
@@ -448,7 +442,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         try {
           const freshAccount = await resumeSessionWithFreshAccount()
           __globalAgent = agent
-          queryClient.clear()
           upsertAccount(freshAccount)
         } catch (e) {
           /*
@@ -489,7 +482,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     },
-    [upsertAccount, queryClient, clearCurrentAccount],
+    [upsertAccount, clearCurrentAccount],
   )
 
   const resumeSession = React.useCallback<ApiContext['resumeSession']>(
