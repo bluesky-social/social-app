@@ -4,4 +4,5 @@ export type DateFieldProps = {
   label: string
   isInvalid?: boolean
   testID?: string
+  accessibilityHint?: string
 }
