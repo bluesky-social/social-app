@@ -1,9 +1,10 @@
 import React from 'react'
-import {GestureResponderEvent, Share} from 'react-native'
+import {GestureResponderEvent} from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {StackActions, useLinkProps} from '@react-navigation/native'
 
 import {AllNavigatorParams} from '#/lib/routes/types'
+import {shareUrl} from '#/lib/sharing'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
@@ -164,8 +165,24 @@ export function useLink({
   )
 
   const handleLongPress = React.useCallback(() => {
-    Share.share({url: href})
-  }, [href])
+    const requiresWarning = Boolean(
+      !disableMismatchWarning &&
+        displayText &&
+        isExternal &&
+        linkRequiresWarning(href, displayText),
+    )
+
+    if (requiresWarning) {
+      openModal({
+        name: 'link-warning',
+        text: displayText,
+        href: href,
+        share: true,
+      })
+    } else {
+      shareUrl(href)
+    }
+  }, [disableMismatchWarning, displayText, href, isExternal, openModal])
 
   const onLongPress =
     isNative && isExternal && shareOnLongPress ? handleLongPress : undefined
