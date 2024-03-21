@@ -19,7 +19,7 @@ import {ChevronRight_Stroke2_Corner0_Rounded as Chevron} from '#/components/icon
 import {Text} from '#/components/Typography'
 import {FormContainer} from './FormContainer'
 
-function AccountItem({
+export function AccountItem({
   account,
   onSelect,
   isCurrentAccount,
