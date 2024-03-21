@@ -54,7 +54,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   >('auto')
 
   const closeAllDialogs = React.useCallback(() => {
-    activeDialogs.current.forEach(dialog => dialog.current.close())
+    openDialogs.current.forEach(id => {
+      const dialog = activeDialogs.current.get(id)
+      if (dialog) dialog.current.close()
+    })
     return openDialogs.current.size > 0
   }, [])
 
