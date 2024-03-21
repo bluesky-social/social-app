@@ -118,11 +118,15 @@ export function useModerationCauseDescription(
         (labeler?.creator.handle ? '@' + labeler?.creator.handle : undefined)
       if (!source) {
         if (cause.label.src === BSKY_LABELER_DID) {
-          source = 'Bluesky Moderation'
+          source = 'Bluesky Moderation Service'
         } else {
           source = cause.label.src
         }
       }
+      if (def.identifier === 'porn' || def.identifier === 'sexual') {
+        strings.name = 'Adult Content'
+      }
+
       return {
         icon:
           def.identifier === '!no-unauthenticated'

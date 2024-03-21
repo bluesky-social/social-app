@@ -1,24 +1,25 @@
 import React from 'react'
 import {
-  BskyAgent,
   AtpPersistSessionHandler,
   BSKY_LABELER_DID,
+  BskyAgent,
 } from '@atproto/api'
 import {useQueryClient} from '@tanstack/react-query'
 import {jwtDecode} from 'jwt-decode'
 
-import {IS_DEV} from '#/env'
-import {IS_TEST_USER} from '#/lib/constants'
-import {isWeb} from '#/platform/detection'
+import {track} from '#/lib/analytics/analytics'
 import {networkRetry} from '#/lib/async/retry'
+import {IS_TEST_USER} from '#/lib/constants'
+import {logEvent, LogEvents} from '#/lib/statsig/statsig'
+import {hasProp} from '#/lib/type-guards'
 import {logger} from '#/logger'
+import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {PUBLIC_BSKY_AGENT} from '#/state/queries'
-import {emitSessionDropped} from '../events'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {track} from '#/lib/analytics/analytics'
-import {hasProp} from '#/lib/type-guards'
+import {IS_DEV} from '#/env'
+import {emitSessionDropped} from '../events'
 import {readLabelers} from './agent-config'
 
 let __globalAgent: BskyAgent = PUBLIC_BSKY_AGENT
@@ -54,17 +55,22 @@ export type ApiContext = {
     verificationPhone?: string
     verificationCode?: string
   }) => Promise<void>
-  login: (props: {
-    service: string
-    identifier: string
-    password: string
-  }) => Promise<void>
+  login: (
+    props: {
+      service: string
+      identifier: string
+      password: string
+    },
+    logContext: LogEvents['account:loggedIn']['logContext'],
+  ) => Promise<void>
   /**
    * A full logout. Clears the `currentAccount` from session, AND removes
    * access tokens from all accounts, so that returning as any user will
    * require a full login.
    */
-  logout: () => Promise<void>
+  logout: (
+    logContext: LogEvents['account:loggedOut']['logContext'],
+  ) => Promise<void>
   /**
    * A partial logout. Clears the `currentAccount` from session, but DOES NOT
    * clear access tokens from accounts, allowing the user to return to their
@@ -76,7 +82,10 @@ export type ApiContext = {
   initSession: (account: SessionAccount) => Promise<void>
   resumeSession: (account?: SessionAccount) => Promise<void>
   removeAccount: (account: SessionAccount) => void
-  selectAccount: (account: SessionAccount) => Promise<void>
+  selectAccount: (
+    account: SessionAccount,
+    logContext: LogEvents['account:loggedIn']['logContext'],
+  ) => Promise<void>
   updateCurrentAccount: (
     account: Partial<
       Pick<SessionAccount, 'handle' | 'email' | 'emailConfirmed'>
@@ -221,6 +230,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }: any) => {
       logger.info(`session: creating account`)
       track('Try Create Account')
+      logEvent('account:create:begin', {})
 
       const agent = new BskyAgent({service})
 
@@ -281,12 +291,13 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
       track('Create Account')
+      logEvent('account:create:success', {})
     },
     [upsertAccount, queryClient, clearCurrentAccount],
   )
 
   const login = React.useCallback<ApiContext['login']>(
-    async ({service, identifier, password}) => {
+    async ({service, identifier, password}, logContext) => {
       logger.debug(`session: login`, {}, logger.DebugContext.session)
 
       const agent = new BskyAgent({service})
@@ -329,24 +340,29 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
 
       track('Sign In', {resumedSession: false})
+      logEvent('account:loggedIn', {logContext, withPassword: true})
     },
     [upsertAccount, queryClient, clearCurrentAccount],
   )
 
-  const logout = React.useCallback<ApiContext['logout']>(async () => {
-    logger.debug(`session: logout`)
-    clearCurrentAccount()
-    setStateAndPersist(s => {
-      return {
-        ...s,
-        accounts: s.accounts.map(a => ({
-          ...a,
-          refreshJwt: undefined,
-          accessJwt: undefined,
-        })),
-      }
-    })
-  }, [clearCurrentAccount, setStateAndPersist])
+  const logout = React.useCallback<ApiContext['logout']>(
+    async logContext => {
+      logger.debug(`session: logout`)
+      clearCurrentAccount()
+      setStateAndPersist(s => {
+        return {
+          ...s,
+          accounts: s.accounts.map(a => ({
+            ...a,
+            refreshJwt: undefined,
+            accessJwt: undefined,
+          })),
+        }
+      })
+      logEvent('account:loggedOut', {logContext})
+    },
+    [clearCurrentAccount, setStateAndPersist],
+  )
 
   const initSession = React.useCallback<ApiContext['initSession']>(
     async account => {
@@ -540,11 +556,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   )
 
   const selectAccount = React.useCallback<ApiContext['selectAccount']>(
-    async account => {
+    async (account, logContext) => {
       setState(s => ({...s, isSwitchingAccounts: true}))
       try {
         await initSession(account)
         setState(s => ({...s, isSwitchingAccounts: false}))
+        logEvent('account:loggedIn', {logContext, withPassword: false})
       } catch (e) {
         // reset this in case of error
         setState(s => ({...s, isSwitchingAccounts: false}))

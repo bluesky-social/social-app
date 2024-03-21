@@ -1,8 +1,8 @@
 import {
   BLUE_HUE,
-  RED_HUE,
-  GREEN_HUE,
   generateScale,
+  GREEN_HUE,
+  RED_HUE,
 } from '#/alf/util/colorGeneration'
 
 export const scale = generateScale(6, 100)
@@ -116,8 +116,8 @@ export const borderRadius = {
 
 export const fontWeight = {
   normal: '400',
-  semibold: '600',
-  bold: '900',
+  semibold: '500',
+  bold: '600',
 } as const
 
 export const gradients = {
