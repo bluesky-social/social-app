@@ -144,7 +144,6 @@ export type Modal =
   | VerifyEmailModal
   | ChangeEmailModal
   | ChangePasswordModal
-  | SwitchAccountModal
 
   // Curation
   | ContentLanguagesSettingsModal
