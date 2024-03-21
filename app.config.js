@@ -41,6 +41,16 @@ module.exports = function (config) {
       : process.env.BSKY_IOS_BUILD_NUMBER
 
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
+  const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
+
+  // This will be changed later, but right now we only want to enable updates for testflight users
+  const IS_UPDATES_ENABLED = IS_TESTFLIGHT
+
+  const UPDATES_CHANNEL = IS_DEV
+    ? 'development'
+    : IS_TESTFLIGHT
+    ? 'testflight'
+    : 'production'
 
   return {
     expo: {
@@ -122,10 +132,19 @@ module.exports = function (config) {
         favicon: './assets/favicon.png',
       },
       updates: {
-        enabled: true,
-        fallbackToCacheTimeout: 1000,
-        url: 'https://u.expo.dev/55bd077a-d905-4184-9c7f-94789ba0f302',
+        url: 'https://updates.bsky.app/manifest',
+        enabled: IS_TESTFLIGHT,
+        fallbackToCacheTimeout: 30000,
+        codeSigningCertificate: './code-signing/certificate.pem',
+        codeSigningMetadata: {
+          keyid: 'main',
+          alg: 'rsa-v1_5-sha256',
+        },
+        checkAutomatically: 'NEVER',
+        // This should be set by the EAS configuration, but to ensure it gets set for now we add it here too
+        channel: UPDATES_CHANNEL,
       },
+      assetBundlePatterns: ['**/*'],
       plugins: [
         'expo-localization',
         Boolean(process.env.SENTRY_AUTH_TOKEN) && 'sentry-expo',
@@ -143,12 +162,6 @@ module.exports = function (config) {
               kotlinVersion: '1.8.0',
               newArchEnabled: false,
             },
-          },
-        ],
-        [
-          'expo-updates',
-          {
-            username: 'blueskysocial',
           },
         ],
         [
