@@ -262,6 +262,12 @@ export function usePostFeedQuery(
                       moderations[i]?.ui('contentList').filter
                     ) {
                       return undefined
+                    } else if (
+                      moderations[i]?.content.filter &&
+                      // @ts-ignore temporary extension
+                      moderations[i]?.content.cause?.type === 'muted-word'
+                    ) {
+                      return undefined
                     }
                   }
 
