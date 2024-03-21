@@ -1707,7 +1707,7 @@ msgstr "返信する投稿全体を展開または折りたたむ"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:47
 msgid "Explicit or potentially disturbing media."
-msgstr "露骨な、あるいは不愉快になる可能性のあるメディア。"
+msgstr "露骨な、または不愉快になる可能性のあるメディア。"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:35
 msgid "Explicit sexual images."
