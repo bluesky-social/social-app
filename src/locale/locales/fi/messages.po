@@ -23,7 +23,7 @@ msgstr "(ei sähköpostiosoitetta)"
 
 #: src/screens/Profile/Header/Metrics.tsx:45
 msgid "{following} following"
-msgstr "{following} seuraajaa"
+msgstr "{following} seurattua"
 
 #: src/view/shell/desktop/RightNav.tsx:151
 #~ msgid "{invitesAvailable, plural, one {Invite codes: # available} other {Invite codes: # available}}"
@@ -49,11 +49,11 @@ msgstr "<0/> jäsentä"
 
 #: src/view/shell/Drawer.tsx:97
 msgid "<0>{0}</0> following"
-msgstr ""
+msgstr "<0>{0}</0> seurattua"
 
 #: src/screens/Profile/Header/Metrics.tsx:46
 msgid "<0>{following} </0><1>following</1>"
-msgstr "<0>{following} </0><1>seuraajaa</1>"
+msgstr "<0>{following} </0><1>seurattua</1>"
 
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
 msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
@@ -1462,11 +1462,11 @@ msgstr "Muokkaa moderaatiolistaa"
 #: src/view/screens/Feeds.tsx:434
 #: src/view/screens/SavedFeeds.tsx:84
 msgid "Edit My Feeds"
-msgstr "Muokkaa syötteitäni"
+msgstr "Muokkaa syötteitä"
 
 #: src/view/com/modals/EditProfile.tsx:152
 msgid "Edit my profile"
-msgstr "Muokkaa profiiliani"
+msgstr "Muokkaa profiilia"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:172
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:161
@@ -1810,7 +1810,7 @@ msgstr "Etsitään samankaltaisia käyttäjätilejä"
 
 #: src/view/screens/PreferencesFollowingFeed.tsx:111
 msgid "Fine-tune the content you see on your Following feed."
-msgstr "Hienosäädä näkemääsi sisältöä Seuraavat-syötteessäsi."
+msgstr "Hienosäädä näkemääsi sisältöä Seuratut-syötteessäsi."
 
 #: src/view/screens/PreferencesHomeFeed.tsx:111
 #~ msgid "Fine-tune the content you see on your home screen."
@@ -1889,7 +1889,7 @@ msgstr "Vain seuratut käyttäjät"
 msgid "followed you"
 msgstr "seurasi sinua"
 
-#: src/view/com/profile/ProfileFollowers.tsx:109
+
 #: src/view/screens/ProfileFollowers.tsx:25
 msgid "Followers"
 msgstr "Seuraajat"
@@ -1899,15 +1899,15 @@ msgstr "Seuraajat"
 #: src/view/com/profile/ProfileFollows.tsx:108
 #: src/view/screens/ProfileFollows.tsx:25
 msgid "Following"
-msgstr "Seuraa"
+msgstr "Seuratut"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:89
 msgid "Following {0}"
-msgstr "Seuraa {0}"
+msgstr "Seuratut {0}"
 
 #: src/view/screens/Settings/index.tsx:553
 msgid "Following feed preferences"
-msgstr ""
+msgstr "Seuratut -syötteen asetukset"
 
 #: src/Navigation.tsx:262
 #: src/view/com/home/HomeHeaderLayout.web.tsx:50
@@ -3030,7 +3030,7 @@ msgstr "Ei kiitos"
 
 #: src/view/com/modals/Threadgate.tsx:82
 msgid "Nobody"
-msgstr "Ei ketään"
+msgstr "Ei kukaan"
 
 #: src/components/LikedByList.tsx:102
 #: src/components/LikesDialog.tsx:99
@@ -4723,7 +4723,7 @@ msgstr "Tilaa tämä lista"
 
 #: src/view/screens/Search/Search.tsx:375
 msgid "Suggested Follows"
-msgstr "Ehdotetut seurattavat"
+msgstr "Mahdollisia seurattavia"
 
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:65
 msgid "Suggested for you"
@@ -5084,7 +5084,7 @@ msgstr ""
 
 #: src/view/com/profile/ProfileFollowers.tsx:95
 msgid "This user doesn't have any followers."
-msgstr ""
+msgstr "Tällä käyttäjällä ei ole yhtään seuraajaa"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:73
 #: src/lib/moderation/useModerationCauseDescription.ts:68
@@ -5093,7 +5093,7 @@ msgstr "Tämä käyttäjä on estänyt sinut. Et voi nähdä heidän sisältöä
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:30
 msgid "This user has requested that their content only be shown to signed-in users."
-msgstr ""
+msgstr "Tämä käyttäjä on pyytänyt, että hänen sisältö näkyy vain kirjautuneille"
 
 #: src/view/com/modals/ModerationDetails.tsx:42
 #~ msgid "This user is included in the <0/> list which you have blocked."
@@ -5464,7 +5464,7 @@ msgstr "käyttäjät, joita <0/> seuraa"
 
 #: src/view/com/modals/Threadgate.tsx:106
 msgid "Users in \"{0}\""
-msgstr "Käyttäjät ryhmässä \"{0}\""
+msgstr "Käyttäjät listassa \"{0}\""
 
 #: src/components/LikesDialog.tsx:85
 msgid "Users that have liked this content or profile"
@@ -5761,7 +5761,7 @@ msgstr "Voit nyt kirjautua sisään uudella salasanallasi."
 
 #: src/view/com/profile/ProfileFollowers.tsx:94
 msgid "You do not have any followers."
-msgstr ""
+msgstr "Sinulla ei ole kyhtään seuraajaa."
 
 #: src/view/com/modals/InviteCodes.tsx:66
 msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
