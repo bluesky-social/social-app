@@ -1795,7 +1795,7 @@ msgstr "시작하기"
 
 #: src/lib/moderation/useReportOptions.ts:37
 msgid "Glaring violations of law or terms of service"
-msgstr "명백한 법률 또는 서비스 약관 위반 행위"
+msgstr "명백한 법률 또는 서비스 이용약관 위반 행위"
 
 #: src/components/moderation/ScreenHider.tsx:144
 #: src/components/moderation/ScreenHider.tsx:153
