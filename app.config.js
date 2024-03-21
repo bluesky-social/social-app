@@ -43,9 +43,6 @@ module.exports = function (config) {
   const IS_DEV = process.env.EXPO_PUBLIC_ENV === 'development'
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
 
-  // This will be changed later, but right now we only want to enable updates for testflight users
-  const IS_UPDATES_ENABLED = IS_TESTFLIGHT
-
   const UPDATES_CHANNEL = IS_DEV
     ? 'development'
     : IS_TESTFLIGHT
