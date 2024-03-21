@@ -3001,7 +3001,7 @@ msgstr "{numItems}개 중 {0}번째 옵션"
 
 #: src/components/ReportDialog/SubmitView.tsx:162
 msgid "Optionally provide additional information below:"
-msgstr "선택 사항으로 아래에 추가 정보를 입력합니다:"
+msgstr "선택 사항으로 아래에 추가 정보를 입력하세요:"
 
 #: src/view/com/modals/Threadgate.tsx:89
 msgid "Or combine these options:"
@@ -3761,7 +3761,7 @@ msgstr "아래에서 팔로우할 계정을 선택하세요"
 
 #: src/components/ReportDialog/SubmitView.tsx:135
 msgid "Select the moderation service(s) to report to"
-msgstr "신고할 검토 서비스를 선택합니다."
+msgstr "신고할 검토 서비스를 선택하세요."
 
 #: src/view/com/auth/server-input/index.tsx:82
 msgid "Select the service that hosts your data."
