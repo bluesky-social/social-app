@@ -84,7 +84,10 @@ export function UserBanner({
       <Menu.Root>
         <Menu.Trigger label={_(msg`Edit avatar`)}>
           {({props}) => (
-            <TouchableOpacity {...props} activeOpacity={0.8}>
+            <TouchableOpacity
+              {...props}
+              activeOpacity={0.8}
+              testID="changeBannerBtn">
               {banner ? (
                 <Image
                   testID="userBannerImage"

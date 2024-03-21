@@ -9,7 +9,7 @@ import {DMCA_LINK} from '#/components/ReportDialog/const'
 import {Link} from '#/components/Link'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, useBreakpoints} from '#/alf'
 import {Text} from '#/components/Typography'
 import {
   Button,
@@ -35,6 +35,7 @@ export function SelectReportOptionView({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const {gtMobile} = useBreakpoints()
   const allReportOptions = useReportOptions()
   const reportOptions = allReportOptions[props.params.type]
 
@@ -76,7 +77,7 @@ export function SelectReportOptionView({
         </Button>
       ) : null}
 
-      <View style={[a.justify_center, a.gap_sm]}>
+      <View style={[a.justify_center, gtMobile ? a.gap_sm : a.gap_xs]}>
         <Text style={[a.text_2xl, a.font_bold]}>{i18n.title}</Text>
         <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
           {i18n.description}

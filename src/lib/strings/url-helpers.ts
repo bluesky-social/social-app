@@ -4,6 +4,23 @@ import TLDs from 'tlds'
 import psl from 'psl'
 
 export const BSKY_APP_HOST = 'https://bsky.app'
+const BSKY_TRUSTED_HOSTS = [
+  'bsky.app',
+  'bsky.social',
+  'blueskyweb.xyz',
+  'blueskyweb.zendesk.com',
+  ...(__DEV__ ? ['localhost:19006', 'localhost:8100'] : []),
+]
+
+/*
+ * This will allow any BSKY_TRUSTED_HOSTS value by itself or with a subdomain.
+ * It will also allow relative paths like /profile as well as #.
+ */
+const TRUSTED_REGEX = new RegExp(
+  `^(http(s)?://(([\\w-]+\\.)?${BSKY_TRUSTED_HOSTS.join(
+    '|([\\w-]+\\.)?',
+  )})|/|#)`,
+)
 
 export function isValidDomain(str: string): boolean {
   return !!TLDs.find(tld => {
@@ -86,6 +103,10 @@ export function isExternalUrl(url: string): boolean {
   return external || rss
 }
 
+export function isTrustedUrl(url: string): boolean {
+  return TRUSTED_REGEX.test(url)
+}
+
 export function isBskyPostUrl(url: string): boolean {
   if (isBskyAppUrl(url)) {
     try {
@@ -163,8 +184,8 @@ export function feedUriToHref(url: string): string {
 export function linkRequiresWarning(uri: string, label: string) {
   const labelDomain = labelToDomain(label)
 
-  // If the uri started with a / we know it is internal.
-  if (isRelativeUrl(uri)) {
+  // We should trust any relative URL or a # since we know it links to internal content
+  if (isRelativeUrl(uri) || uri === '#') {
     return false
   }
 
@@ -176,18 +197,11 @@ export function linkRequiresWarning(uri: string, label: string) {
   }
 
   const host = urip.hostname.toLowerCase()
-  // Hosts that end with bsky.app or bsky.social should be trusted by default.
-  if (
-    host.endsWith('bsky.app') ||
-    host.endsWith('bsky.social') ||
-    host.endsWith('blueskyweb.xyz')
-  ) {
-    // if this is a link to internal content,
-    // warn if it represents itself as a URL to another app
+  if (isTrustedUrl(uri)) {
+    // if this is a link to internal content, warn if it represents itself as a URL to another app
     return !!labelDomain && labelDomain !== host && isPossiblyAUrl(labelDomain)
   } else {
-    // if this is a link to external content,
-    // warn if the label doesnt match the target
+    // if this is a link to external content, warn if the label doesnt match the target
     if (!labelDomain) {
       return true
     }

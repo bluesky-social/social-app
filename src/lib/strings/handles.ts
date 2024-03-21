@@ -27,6 +27,7 @@ export function sanitizeHandle(handle: string, prefix = ''): string {
 
 export interface IsValidHandle {
   handleChars: boolean
+  hyphenStartOrEnd: boolean
   frontLength: boolean
   totalLength: boolean
   overall: boolean
@@ -39,6 +40,7 @@ export function validateHandle(str: string, userDomain: string): IsValidHandle {
   const results = {
     handleChars:
       !str || (VALIDATE_REGEX.test(fullHandle) && !str.includes('.')),
+    hyphenStartOrEnd: !str.startsWith('-') && !str.endsWith('-'),
     frontLength: str.length >= 3,
     totalLength: fullHandle.length <= 253,
   }

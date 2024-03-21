@@ -12,6 +12,7 @@ describe('Create account', () => {
   })
 
   it('I can create a new account with text verification', async () => {
+    console.log('SERVICE IS', service)
     await element(by.id('e2eOpenLoggedOutView')).tap()
 
     await element(by.id('createAccountButton')).tap()
@@ -28,16 +29,17 @@ describe('Create account', () => {
     await device.takeScreenshot('4- entered account details')
     await element(by.id('nextBtn')).tap()
 
-    await element(by.id('phoneInput')).typeText('8042221111')
-    await element(by.id('requestCodeBtn')).tap()
-    await device.takeScreenshot('5- requested code')
-
-    await element(by.id('codeInput')).typeText('000000')
-    await device.takeScreenshot('6- entered code')
+    await element(by.id('handleInput')).typeText('text-verification-test')
+    await device.takeScreenshot('5- entered handle')
     await element(by.id('nextBtn')).tap()
 
-    await element(by.id('handleInput')).typeText('text-verification-test')
-    await device.takeScreenshot('7- entered handle')
+    await element(by.id('phoneInput')).typeText('8042221111')
+    await element(by.id('requestCodeBtn')).tap()
+    await device.takeScreenshot('6- requested code')
+
+    await element(by.id('codeInput')).typeText('000000')
+    await device.takeScreenshot('7- entered code')
+    await element(by.id('nextBtn')).tap()
 
     await element(by.id('nextBtn')).tap()
 
