@@ -456,6 +456,9 @@ describe('parseEmbedPlayerFromUrl', () => {
     'https://tenor.com/view',
     'https://tenor.com/view/gifId.gif',
     'https://tenor.com/intl/view/gifId.gif',
+
+    'https://www.nicovideo.jp/watch/videoId',
+    'https://nico.ms/videoId',
   ]
 
   const outputs = [
@@ -742,6 +745,16 @@ describe('parseEmbedPlayerFromUrl', () => {
       isGif: true,
       hideDetails: true,
       playerUri: 'https://tenor.com/intl/view/gifId.gif',
+    },
+    {
+      type: 'nicovideo_video',
+      source: 'nicovideo',
+      playerUri: 'https://embed.nicovideo.jp/watch/videoId',
+    },
+    {
+      type: 'nicovideo_video',
+      source: 'nicovideo',
+      playerUri: 'https://embed.nicovideo.jp/watch/videoId',
     },
   ]
 

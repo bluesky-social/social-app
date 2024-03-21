@@ -1,5 +1,7 @@
 import {Dimensions} from 'react-native'
 import {isWeb} from 'platform/detection'
+import {msg} from '@lingui/macro'
+
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 const IFRAME_HOST = isWeb
@@ -21,6 +23,7 @@ export const embedPlayerSources = [
   'vimeo',
   'giphy',
   'tenor',
+  'nicovideo',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -40,7 +43,7 @@ export type EmbedPlayerType =
   | 'vimeo_video'
   | 'giphy_gif'
   | 'tenor_gif'
-
+  | 'nicovideo_video'
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
   youtubeShorts: 'YouTube Shorts',
@@ -51,6 +54,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   spotify: 'Spotify',
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
+  nicovideo: msg`NicoVideo`,
 }
 
 export interface EmbedPlayerParams {
@@ -347,6 +351,23 @@ export function parseEmbedPlayerFromUrl(
         isGif: true,
         hideDetails: true,
         playerUri: `${url}${!includesExt ? '.gif' : ''}`,
+      }
+    }
+  }
+
+  if (urlp.hostname === 'nico.ms' || urlp.hostname === 'www.nicovideo.jp') {
+    const [_, watchOrId, videoId] = urlp.pathname.split('/')
+    if (videoId) {
+      return {
+        type: 'nicovideo_video',
+        source: 'nicovideo',
+        playerUri: `https://embed.nicovideo.jp/watch/${videoId}`,
+      }
+    } else if (watchOrId) {
+      return {
+        type: 'nicovideo_video',
+        source: 'nicovideo',
+        playerUri: `https://embed.nicovideo.jp/watch/${watchOrId}`,
       }
     }
   }
