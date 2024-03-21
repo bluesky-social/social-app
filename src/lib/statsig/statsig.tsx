@@ -8,6 +8,7 @@ import {
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
 
+import {logger} from '#/logger'
 import {useSession} from '../../state/session'
 import {LogEvents} from './events'
 
@@ -56,10 +57,7 @@ export function logEvent<E extends keyof LogEvents>(
     }
   } catch (e) {
     // A log should never interrupt the calling code, whatever happens.
-    // Rethrow on a clean stack.
-    setTimeout(() => {
-      throw e
-    })
+    logger.error('Failed to log an event', {message: e})
   }
 }
 
