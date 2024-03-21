@@ -387,6 +387,7 @@ export function getPlayerAspect({
   switch (type) {
     case 'youtube_video':
     case 'twitch_video':
+    case 'nicovideo_video':
     case 'vimeo_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
