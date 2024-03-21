@@ -1,44 +1,38 @@
 import 'lib/sentry' // must be near top
-
-import React, {useState, useEffect} from 'react'
-import {PersistQueryClientProvider} from '@tanstack/react-query-persist-client'
-import {SafeAreaProvider} from 'react-native-safe-area-context'
-import {RootSiblingParent} from 'react-native-root-siblings'
-
 import 'view/icons'
 
-import {ThemeProvider as Alf} from '#/alf'
-import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
+import React, {useEffect, useState} from 'react'
+import {RootSiblingParent} from 'react-native-root-siblings'
+import {SafeAreaProvider} from 'react-native-safe-area-context'
+
+import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
 import {init as initPersistedState} from '#/state/persisted'
-import {Shell} from 'view/shell/index'
-import {ToastContainer} from 'view/com/util/Toast.web'
-import {ThemeProvider} from 'lib/ThemeContext'
-import {
-  queryClient,
-  asyncStoragePersister,
-  dehydrateOptions,
-} from 'lib/react-query'
-import {Provider as ShellStateProvider} from 'state/shell'
-import {Provider as ModalStateProvider} from 'state/modals'
-import {Provider as DialogStateProvider} from 'state/dialogs'
-import {Provider as LightboxStateProvider} from 'state/lightbox'
-import {Provider as MutedThreadsProvider} from 'state/muted-threads'
-import {Provider as InvitesStateProvider} from 'state/invites'
-import {Provider as PrefsStateProvider} from 'state/preferences'
-import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
-import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
+import * as persisted from '#/state/persisted'
 import {Provider as LabelDefsProvider} from '#/state/preferences/label-defs'
-import I18nProvider from './locale/i18nProvider'
+import {useIntentHandler} from 'lib/hooks/useIntentHandler'
+import {QueryProvider} from 'lib/react-query'
+import {ThemeProvider} from 'lib/ThemeContext'
+import {Provider as DialogStateProvider} from 'state/dialogs'
+import {Provider as InvitesStateProvider} from 'state/invites'
+import {Provider as LightboxStateProvider} from 'state/lightbox'
+import {Provider as ModalStateProvider} from 'state/modals'
+import {Provider as MutedThreadsProvider} from 'state/muted-threads'
+import {Provider as PrefsStateProvider} from 'state/preferences'
+import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
 import {
   Provider as SessionProvider,
   useSession,
   useSessionApi,
 } from 'state/session'
-import {Provider as UnreadNotifsProvider} from 'state/queries/notifications/unread'
-import * as persisted from '#/state/persisted'
+import {Provider as ShellStateProvider} from 'state/shell'
+import {Provider as LoggedOutViewProvider} from 'state/shell/logged-out'
+import {Provider as SelectedFeedProvider} from 'state/shell/selected-feed'
+import {ToastContainer} from 'view/com/util/Toast.web'
+import {Shell} from 'view/shell/index'
+import {ThemeProvider as Alf} from '#/alf'
+import {useColorModeTheme} from '#/alf/util/useColorModeTheme'
 import {Provider as PortalProvider} from '#/components/Portal'
-import {Provider as StatsigProvider} from '#/lib/statsig/statsig'
-import {useIntentHandler} from 'lib/hooks/useIntentHandler'
+import I18nProvider from './locale/i18nProvider'
 
 function InnerApp() {
   const {isInitialLoad, currentAccount} = useSession()
@@ -100,9 +94,7 @@ function App() {
    * that is set up in the InnerApp component above.
    */
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{persister: asyncStoragePersister, dehydrateOptions}}>
+    <QueryProvider>
       <SessionProvider>
         <ShellStateProvider>
           <PrefsStateProvider>
@@ -124,7 +116,7 @@ function App() {
           </PrefsStateProvider>
         </ShellStateProvider>
       </SessionProvider>
-    </PersistQueryClientProvider>
+    </QueryProvider>
   )
 }
 
