@@ -76,7 +76,6 @@ function InnerApp() {
 
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      {isAndroid && <StatusBar />}
       <Alf theme={theme}>
         <Splash isReady={!isInitialLoad}>
           <React.Fragment
