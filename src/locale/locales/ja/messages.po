@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-03-21 14:50+0900\n"
+"PO-Revision-Date: 2024-03-21 18:10+0900\n"
 "Last-Translator: Hima-Zinn\n"
 "Language-Team: Hima-Zinn, tkusano, dolciss, oboenikui, noritada, middlingphys, hibiki, reindex-ot, haoyayoi, vyv03354\n"
 "Plural-Forms: \n"
@@ -532,7 +532,7 @@ msgstr "ブロックしたことは公開されます。ブロック中のアカ
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr "ブロックしてもこのラベラーがあなたのアカウントにラベルを貼ることができますが、このアカウントがあなたのスレッドに返信したり、やりとりをしたりといったことはできなくなります。"
 
-#: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:97
 #: src/view/com/auth/SplashScreen.web.tsx:133
 msgid "Blog"
 msgstr "ブログ"
@@ -1572,10 +1572,6 @@ msgstr "成人向けコンテンツを有効にする"
 msgid "Enable Adult Content"
 msgstr "成人向けコンテンツを有効にする"
 
-#: src/view/com/modals/ContentFilteringSettings.tsx:167
-#~ msgid "Enable Adult Content"
-#~ msgstr "成人向けコンテンツを有効にする"
-
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:79
 msgid "Enable adult content in your feeds"
@@ -1741,7 +1737,7 @@ msgstr "外部メディアを有効にすると、それらのメディアのウ
 msgid "External Media Preferences"
 msgstr "外部メディアの設定"
 
-#: src/view/screens/Settings/index.tsx:666
+#: src/view/screens/Settings/index.tsx:668
 msgid "External media settings"
 msgstr "外部メディアの設定"
 
@@ -4726,21 +4722,21 @@ msgstr "サインアップまたはサインインして会話に参加"
 msgid "Sign-in Required"
 msgstr "サインインが必要"
 
-#: src/view/screens/Settings/index.tsx:373
+#: src/view/screens/Settings/index.tsx:374
 msgid "Signed in as"
 msgstr "サインイン済み"
 
-#: src/view/com/auth/login/ChooseAccountForm.tsx:103
+#: src/view/com/auth/login/ChooseAccountForm.tsx:112
 msgid "Signed in as @{0}"
 msgstr "@{0}でサインイン"
 
-#: src/view/com/modals/SwitchAccount.tsx:66
+#: src/view/com/modals/SwitchAccount.tsx:70
 msgid "Signs {0} out of Bluesky"
 msgstr "Blueskyから{0}をサインアウト"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:235
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:195
-#: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:35
 msgid "Skip"
 msgstr "スキップ"
 
@@ -4767,7 +4763,7 @@ msgid "Something went wrong, please try again."
 msgstr "なにか間違っているようなので、もう一度お試しください。"
 
 #: src/components/Lists.tsx:203
-#~ msgid "Something went wrong!"  
+#~ msgid "Something went wrong!"
 #~ msgstr "なにかが間違っているようです！"
 
 #: src/view/com/modals/Waitlist.tsx:51
@@ -5161,8 +5157,12 @@ msgid "This content is not viewable without a Bluesky account."
 msgstr "このコンテンツはBlueskyのアカウントがないと閲覧できません。"
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
-msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
-msgstr "この機能はベータ版です。リポジトリのエクスポートの詳細については、以下を参照してください。<0>このブログの投稿</0>"
+#~ msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
+#~ msgstr "この機能はベータ版です。 リポジトリのエクスポートの詳細については、以下を参照してください。<0>このブログ投稿</0>"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:75
+msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
+#~ msgstr "この機能はベータ版です。 リポジトリのエクスポートの詳細については、<0>このブログ投稿</0>を参照してください。"
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -5802,7 +5802,7 @@ msgstr "大変申し訳ありませんが、現在ミュートされたワード
 msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
 msgstr "大変申し訳ありませんが、検索を完了できませんでした。数分後に再試行してください。"
 
-#: src/components/Lists.tsx:210
+#: src/components/Lists.tsx:194
 #: src/view/screens/NotFound.tsx:48
 msgid "We're sorry! We can't find the page you were looking for."
 msgstr "大変申し訳ありません！お探しのページは見つかりません。"
@@ -5842,7 +5842,6 @@ msgid "Who can reply"
 msgstr "返信できるユーザー"
 
 #: src/components/ReportDialog/SelectReportOptionView.tsx:44
-#: src/components/ReportDialog/SelectReportOptionView.tsx:43
 msgid "Why should this content be reviewed?"
 msgstr "なぜこのコンテンツをレビューする必要がありますか？"
 
@@ -6137,7 +6136,7 @@ msgstr "フルハンドルは<0>@{0}</0>になります"
 msgid "Your muted words"
 msgstr "ミュートしたワード"
 
-#: src/view/com/modals/ChangePassword.tsx:155
+#: src/view/com/modals/ChangePassword.tsx:157
 msgid "Your password has been changed successfully!"
 msgstr "パスワードの変更が完了しました！"
 
