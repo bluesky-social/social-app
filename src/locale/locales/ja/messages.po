@@ -2635,8 +2635,8 @@ msgstr "リスト"
 
 #: src/view/com/post-thread/PostThread.tsx:333
 #: src/view/com/post-thread/PostThread.tsx:341
-msgid "Load more posts"
-msgstr "投稿をさらに読み込む"
+#~ msgid "Load more posts"
+#~ msgstr "投稿をさらに読み込む"
 
 #: src/view/screens/Notifications.tsx:159
 msgid "Load new notifications"
@@ -4280,7 +4280,7 @@ msgid "Select option {i} of {numItems}"
 msgstr "{numItems}個中{i}個目のオプションを選択"
 
 #: src/view/com/auth/create/Step1.tsx:96
-#: src/view/com/auth/login/LoginForm.tsx:150
+#: src/view/com/auth/login/LoginForm.tsx:153
 msgid "Select service"
 msgstr "サービスを選択"
 
@@ -5194,7 +5194,7 @@ msgstr "これは、メールアドレスの変更やパスワードのリセッ
 msgid "This label was applied by {0}."
 msgstr "{0}によって適用されたラベルです。"
 
-#: src/screens/Profile/Sections/Labels.tsx:186
+#: src/screens/Profile/Sections/Labels.tsx:168
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
 msgstr "このラベラーはどのようなラベルを発行しているか宣言しておらず、活動していない可能性もあります。"
 
@@ -5259,10 +5259,6 @@ msgstr "このユーザーは自分のコンテンツをサインインしたユ
 #~ msgid "This user is included in the <0/> list which you have muted."
 #~ msgstr "このユーザーは、あなたがミュートした<0/>リストに含まれています。"
 
-#: src/view/com/profile/ProfileFollows.tsx:94
-msgid "This user isn't following anyone."
-msgstr "このユーザーは誰もフォローしていません。"
-
 #: src/components/moderation/ModerationDetailsDialog.tsx:56
 msgid "This user is included in the <0>{0}</0> list which you have blocked."
 msgstr "このユーザーはブロックした<0>{0}</0>リストに含まれています。"
@@ -5274,6 +5270,10 @@ msgstr "このユーザーはミュートした<0>{0}</0>リストに含まれ�
 #: src/view/com/modals/ModerationDetails.tsx:74
 #~ msgid "This user is included the <0/> list which you have muted."
 #~ msgstr "このユーザーは、あなたがミュートした<0/>リストに含まれています。"
+
+#: src/view/com/profile/ProfileFollows.tsx:94
+msgid "This user isn't following anyone."
+msgstr "このユーザーは誰もフォローしていません。"
 
 #: src/view/com/modals/SelfLabel.tsx:137
 msgid "This warning is only available for posts with media attached."
@@ -5316,7 +5316,7 @@ msgstr "ミュートしたワードのオプションを切り替えます。"
 msgid "Toggle dropdown"
 msgstr "ドロップダウンをトグル"
 
-#: src/screens/Moderation/index.tsx:338
+#: src/screens/Moderation/index.tsx:334
 msgid "Toggle to enable or disable adult content"
 msgstr "成人向けコンテンツの有効もしくは無効の切り替え"
 
@@ -5708,6 +5708,7 @@ msgid "View users who like this feed"
 msgstr "このフィードにいいねしたユーザーを見る"
 
 #: src/view/com/modals/LinkWarning.tsx:75
+#: src/view/com/modals/LinkWarning.tsx:77
 msgid "Visit Site"
 msgstr "サイトへアクセス"
 
