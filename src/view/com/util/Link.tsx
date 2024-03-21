@@ -2,34 +2,35 @@ import React, {ComponentProps, memo, useMemo} from 'react'
 import {
   GestureResponderEvent,
   Platform,
+  Pressable,
   StyleProp,
-  TextStyle,
   TextProps,
+  TextStyle,
+  TouchableOpacity,
   View,
   ViewStyle,
-  Pressable,
-  TouchableOpacity,
 } from 'react-native'
-import {useLinkProps, StackActions} from '@react-navigation/native'
-import {Text} from './text/Text'
-import {TypographyVariant} from 'lib/ThemeContext'
-import {router} from '../../../routes'
+import {sanitizeUrl} from '@braintree/sanitize-url'
+import {StackActions, useLinkProps} from '@react-navigation/native'
+
+import {useModalControls} from '#/state/modals'
+import {useOpenLink} from '#/state/preferences/in-app-browser'
+import {
+  DebouncedNavigationProp,
+  useNavigationDeduped,
+} from 'lib/hooks/useNavigationDeduped'
 import {
   convertBskyAppUrlIfNeeded,
   isExternalUrl,
   linkRequiresWarning,
 } from 'lib/strings/url-helpers'
+import {TypographyVariant} from 'lib/ThemeContext'
 import {isAndroid, isWeb} from 'platform/detection'
-import {sanitizeUrl} from '@braintree/sanitize-url'
-import {PressableWithHover} from './PressableWithHover'
-import {useModalControls} from '#/state/modals'
-import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
-import {
-  DebouncedNavigationProp,
-  useNavigationDeduped,
-} from 'lib/hooks/useNavigationDeduped'
 import {useTheme} from '#/alf'
+import {router} from '../../../routes'
+import {PressableWithHover} from './PressableWithHover'
+import {Text} from './text/Text'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -97,7 +98,7 @@ export const Link = memo(function Link({
           accessibilityRole="link"
           {...props}
           android_ripple={{
-            color: t.atoms.bg_contrast_25.backgroundColor,
+            color: t.atoms.bg_contrast_50.backgroundColor,
           }}
           unstable_pressDelay={isAndroid ? 90 : undefined}>
           {/* @ts-ignore web only -prf */}
