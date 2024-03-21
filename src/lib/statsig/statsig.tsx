@@ -1,13 +1,14 @@
 import React from 'react'
 import {Platform} from 'react-native'
+import {AppState, AppStateStatus} from 'react-native'
+import {sha256} from 'js-sha256'
 import {
   Statsig,
   StatsigProvider,
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
-import {AppState, AppStateStatus} from 'react-native'
+
 import {useSession} from '../../state/session'
-import {sha256} from 'js-sha256'
 import {LogEvents} from './events'
 
 export type {LogEvents}
@@ -43,7 +44,9 @@ export function logEvent<E extends keyof LogEvents>(
     ...rawMetadata,
   } as Record<string, string> // Statsig typings are unnecessarily strict here.
   fullMetadata.routeName = getCurrentRouteName() ?? '(Uninitialized)'
-  Statsig.logEvent(eventName, null, fullMetadata)
+  if (Statsig.initializeCalled()) {
+    Statsig.logEvent(eventName, null, fullMetadata)
+  }
 }
 
 export function useGate(gateName: string) {
