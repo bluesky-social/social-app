@@ -207,8 +207,8 @@ export function useSubmitSignup({
 }) {
   const {_} = useLingui()
   const {createAccount} = useSessionApi()
-  const {mutate: setBirthDate} = usePreferencesSetBirthDateMutation()
-  const {mutateAsync: setSavedFeeds} = useSetSaveFeedsMutation()
+  const {mutateAsync: setBirthDate} = usePreferencesSetBirthDateMutation()
+  const {mutate: setSavedFeeds} = useSetSaveFeedsMutation()
   const onboardingDispatch = useOnboardingDispatch()
 
   return useCallback(
@@ -264,10 +264,10 @@ export function useSubmitSignup({
           inviteCode: state.inviteCode.trim(),
           verificationCode: verificationCode,
         })
+        await setBirthDate({birthDate: state.dateOfBirth})
         if (IS_PROD_SERVICE(state.serviceUrl)) {
-          await setSavedFeeds(DEFAULT_PROD_FEEDS)
+          setSavedFeeds(DEFAULT_PROD_FEEDS)
         }
-        setBirthDate({birthDate: state.dateOfBirth})
       } catch (e: any) {
         onboardingDispatch({type: 'skip'}) // undo starting the onboard
         let errMsg = e.toString()
