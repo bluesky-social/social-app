@@ -211,7 +211,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const clearCurrentAccount = React.useCallback(() => {
     logger.warn(`session: clear current account`)
     __globalAgent = PUBLIC_BSKY_AGENT
-    queryClient.clear()
+    queryClient.resetQueries()
     setStateAndPersist(s => ({
       ...s,
       currentAccount: undefined,
@@ -286,7 +286,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       )
 
       __globalAgent = agent
-      queryClient.clear()
+      queryClient.resetQueries()
       upsertAccount(account)
 
       logger.debug(`session: created account`, {}, logger.DebugContext.session)
@@ -334,7 +334,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       __globalAgent = agent
       // @ts-ignore
       if (IS_DEV && isWeb) window.agent = agent
-      queryClient.clear()
+      queryClient.resetQueries()
       upsertAccount(account)
 
       logger.debug(`session: logged in`, {}, logger.DebugContext.session)
@@ -415,7 +415,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
          */
         agent.session = prevSession
         __globalAgent = agent
-        queryClient.clear()
+        queryClient.resetQueries()
         upsertAccount(account)
 
         if (prevSession.deactivated) {
@@ -436,7 +436,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
 
           __globalAgent = PUBLIC_BSKY_AGENT
-          queryClient.clear()
+          queryClient.resetQueries()
         })
       } else {
         logger.debug(`session: attempting to resume using previous session`)
@@ -457,7 +457,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           __globalAgent = PUBLIC_BSKY_AGENT
         } finally {
-          queryClient.clear()
+          queryClient.resetQueries()
         }
       }
 
@@ -558,14 +558,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       setState(s => ({...s, isSwitchingAccounts: true}))
       try {
         await initSession(account)
-        if (isWeb) {
-          // We're switching accounts, which remounts the entire app.
-          // On mobile, this gets us Home, but on the web we also need reset the URL.
-          // We can't change the URL via a navigate() call because the navigator
-          // itself is about to unmount, and it calls pushState() too late.
-          // So we change the URL ourselves. The navigator will pick it up on remount.
-          history.pushState(null, '', '/')
-        }
         setState(s => ({...s, isSwitchingAccounts: false}))
         logEvent('account:loggedIn', {logContext, withPassword: false})
       } catch (e) {
