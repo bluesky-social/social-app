@@ -1,23 +1,25 @@
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {ReportOption} from '#/lib/moderation/useReportOptions'
+import {useMyLabelersQuery} from '#/state/queries/preferences'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-import {atoms as a} from '#/alf'
-import {Loader} from '#/components/Loader'
-import * as Dialog from '#/components/Dialog'
-import {Text} from '#/components/Typography'
+import {AppBskyLabelerDefs} from '@atproto/api'
+import {BottomSheetScrollViewMethods} from '@discord/bottom-sheet/src'
 
-import {ReportDialogProps} from './types'
+import {atoms as a} from '#/alf'
+import * as Dialog from '#/components/Dialog'
+import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
+import {useOnKeyboardDidShow} from '#/components/hooks/useOnKeyboard'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {SelectLabelerView} from './SelectLabelerView'
 import {SelectReportOptionView} from './SelectReportOptionView'
 import {SubmitView} from './SubmitView'
-import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
-import {AppBskyLabelerDefs} from '@atproto/api'
+import {ReportDialogProps} from './types'
 
 export function ReportDialog(props: ReportDialogProps) {
   return (
@@ -38,10 +40,13 @@ function ReportDialogInner(props: ReportDialogProps) {
   } = useMyLabelersQuery()
   const isLoading = useDelayedLoading(500, isLabelerLoading)
 
+  const ref = React.useRef<BottomSheetScrollViewMethods>(null)
+  useOnKeyboardDidShow(() => {
+    ref.current?.scrollToEnd({animated: true})
+  })
+
   return (
-    <Dialog.ScrollableInner
-      label={_(msg`Report dialog`)}
-      keyboardDismissMode="interactive">
+    <Dialog.ScrollableInner label={_(msg`Report dialog`)} ref={ref}>
       {isLoading ? (
         <View style={[a.align_center, {height: 100}]}>
           <Loader size="xl" />
@@ -57,8 +62,6 @@ function ReportDialogInner(props: ReportDialogProps) {
       ) : (
         <ReportDialogLoaded labelers={labelers} {...props} />
       )}
-
-      <Dialog.Close />
     </Dialog.ScrollableInner>
   )
 }
