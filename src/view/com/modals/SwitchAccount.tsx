@@ -5,22 +5,23 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {Text} from '../util/text/Text'
-import {s} from 'lib/styles'
-import {usePalette} from 'lib/hooks/usePalette'
+import {BottomSheetScrollView} from '@discord/bottom-sheet/src'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {useProfileQuery} from '#/state/queries/profile'
+import {SessionAccount, useSession, useSessionApi} from '#/state/session'
+import {useCloseAllActiveElements} from '#/state/util'
 import {useAnalytics} from 'lib/analytics/analytics'
+import {Haptics} from 'lib/haptics'
 import {useAccountSwitcher} from 'lib/hooks/useAccountSwitcher'
-import {UserAvatar} from '../util/UserAvatar'
+import {usePalette} from 'lib/hooks/usePalette'
+import {makeProfileLink} from 'lib/routes/links'
+import {s} from 'lib/styles'
 import {AccountDropdownBtn} from '../util/AccountDropdownBtn'
 import {Link} from '../util/Link'
-import {makeProfileLink} from 'lib/routes/links'
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet'
-import {Haptics} from 'lib/haptics'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useSession, useSessionApi, SessionAccount} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useCloseAllActiveElements} from '#/state/util'
+import {Text} from '../util/text/Text'
+import {UserAvatar} from '../util/UserAvatar'
 
 export const snapPoints = ['40%', '90%']
 
