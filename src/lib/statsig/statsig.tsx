@@ -1,13 +1,14 @@
 import React from 'react'
 import {Platform} from 'react-native'
+import {AppState, AppStateStatus} from 'react-native'
+import {sha256} from 'js-sha256'
 import {
   Statsig,
   StatsigProvider,
   useGate as useStatsigGate,
 } from 'statsig-react-native-expo'
-import {AppState, AppStateStatus} from 'react-native'
+
 import {useSession} from '../../state/session'
-import {sha256} from 'js-sha256'
 import {LogEvents} from './events'
 
 export type {LogEvents}
@@ -24,7 +25,13 @@ const statsigOptions = {
 
 type FlatJSONRecord = Record<
   string,
-  string | number | boolean | null | undefined
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  // Technically not scalar but Statsig will stringify it which works for us:
+  | string[]
 >
 
 let getCurrentRouteName: () => string | null | undefined = () => null
