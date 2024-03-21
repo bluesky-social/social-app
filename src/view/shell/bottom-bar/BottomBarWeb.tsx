@@ -190,7 +190,7 @@ export function BottomBarWeb() {
 }
 
 const NavItem: React.FC<{
-  children: (props: {isActive: boolean}) => React.ReactChild
+  children: (props: {isActive: boolean}) => React.ReactElement | number | string
   href: string
   routeName: string
 }> = ({children, href, routeName}) => {

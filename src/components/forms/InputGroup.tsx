@@ -13,7 +13,7 @@ export function InputGroup(props: React.PropsWithChildren<{}>) {
   return (
     <View style={[atoms.w_full]}>
       {children.map((child, i) => {
-        return React.isValidElement(child) ? (
+        return React.isValidElement<{style: unknown}>(child) ? (
           <React.Fragment key={i}>
             {i > 0 ? (
               <View
