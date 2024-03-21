@@ -49,7 +49,7 @@ import {
 } from '#/view/shell/desktop/Search'
 import {useSetMinimalShellMode, useSetDrawerSwipeDisabled} from '#/state/shell'
 import {isNative, isWeb} from '#/platform/detection'
-import {listenSoftReset} from '#/state/events'
+import {listenSearchTrigger, listenSoftReset} from '#/state/events'
 import {s} from '#/lib/styles'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {augmentSearchQuery} from '#/lib/strings/helpers'
@@ -530,6 +530,15 @@ export function SearchScreen(
     setQuery('')
     setShowAutocompleteResults(false)
   }, [setQuery])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      return listenSearchTrigger(() => {
+        // This needs to be delayed by one (macro)tick for some reason.
+        setTimeout(() => textInput.current?.focus(), 1)
+      })
+    }, [textInput]),
+  )
 
   const onChangeText = React.useCallback(
     async (text: string) => {
