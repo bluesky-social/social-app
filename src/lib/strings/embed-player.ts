@@ -1,6 +1,5 @@
 import {Dimensions} from 'react-native'
 import {isWeb} from 'platform/detection'
-import {msg} from '@lingui/macro'
 
 const {height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -54,7 +53,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   spotify: 'Spotify',
   appleMusic: 'Apple Music',
   soundcloud: 'SoundCloud',
-  nicovideo: msg`NicoVideo`,
+  nicovideo: 'NicoVideo',
 }
 
 export interface EmbedPlayerParams {
