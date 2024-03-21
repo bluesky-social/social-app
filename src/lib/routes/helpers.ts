@@ -1,12 +1,33 @@
 import {NavigationProp} from '@react-navigation/native'
-import {State, RouteParams} from './types'
 
-export function getRootNavigation<T extends {}>(
-  nav: NavigationProp<T>,
-): NavigationProp<T> {
+import {RouteParams, State} from './types'
+
+// history?: unknown[] | undefined;     routes: NavigationRoute<...>[];     type: string;     stale: false;   }> | undefined;
+
+type NavigationPropWithGetState = Omit<
+  NavigationProp<ReactNavigation.RootParamList>,
+  'getState'
+> & {
+  getState: () =>
+    | Readonly<{
+        key: string
+        index: number
+        routeNames: string[]
+        history?: unknown[] | undefined
+        routes: any[]
+        type: string
+        stale: false
+      }>
+    | undefined
+}
+
+export function getRootNavigation(
+  nav: NavigationPropWithGetState,
+): NavigationPropWithGetState {
   while (nav.getParent()) {
     nav = nav.getParent()
   }
+  console.log('here', nav)
   return nav
 }
 
