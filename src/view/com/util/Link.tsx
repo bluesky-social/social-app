@@ -1,4 +1,4 @@
-import React, { ComponentProps, memo, useMemo, type JSX } from 'react';
+import React, {ComponentProps, memo, useMemo, type JSX} from 'react'
 import {
   GestureResponderEvent,
   Platform,
@@ -35,7 +35,7 @@ type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent
 
-interface Props extends ComponentProps<typeof TouchableOpacity> {
+interface Props extends Omit<ComponentProps<typeof TouchableOpacity>, 'ref'> {
   testID?: string
   style?: StyleProp<ViewStyle>
   href?: string
