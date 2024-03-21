@@ -7,18 +7,12 @@ import {useLingui} from '@lingui/react'
 import {BottomTabBarProps} from '@react-navigation/bottom-tabs'
 import {StackActions} from '@react-navigation/native'
 
-import {emitSoftReset} from '#/state/events'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
-import {useShellLayout} from '#/state/shell/shell-layout'
-import {useCloseAllActiveElements} from '#/state/util'
-import {useAnalytics} from 'lib/analytics/analytics'
-import {useDedupe} from 'lib/hooks/useDedupe'
-import {useMinimalShellMode} from 'lib/hooks/useMinimalShellMode'
-import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
-import {usePalette} from 'lib/hooks/usePalette'
+import {useAnalytics} from '#/lib/analytics/analytics'
+import {Haptics} from '#/lib/haptics'
+import {useDedupe} from '#/lib/hooks/useDedupe'
+import {useMinimalShellMode} from '#/lib/hooks/useMinimalShellMode'
+import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
+import {usePalette} from '#/lib/hooks/usePalette'
 import {
   BellIcon,
   BellIconSolid,
@@ -27,15 +21,22 @@ import {
   HomeIconSolid,
   MagnifyingGlassIcon2,
   MagnifyingGlassIcon2Solid,
-} from 'lib/icons'
-import {clamp} from 'lib/numbers'
-import {getTabState, TabState} from 'lib/routes/helpers'
-import {s} from 'lib/styles'
+} from '#/lib/icons'
+import {clamp} from '#/lib/numbers'
+import {getTabState, TabState} from '#/lib/routes/helpers'
+import {s} from '#/lib/styles'
+import {emitSoftReset} from '#/state/events'
+import {useUnreadNotifications} from '#/state/queries/notifications/unread'
+import {useProfileQuery} from '#/state/queries/profile'
+import {useSession} from '#/state/session'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useShellLayout} from '#/state/shell/shell-layout'
+import {useCloseAllActiveElements} from '#/state/util'
 import {Button} from '#/view/com/util/forms/Button'
+import {Text} from '#/view/com/util/text/Text'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {Text} from 'view/com/util/text/Text'
-import {UserAvatar} from 'view/com/util/UserAvatar'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {styles} from './BottomBarStyles'
@@ -101,7 +102,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const onPressProfile = React.useCallback(() => {
     onPressTab('MyProfile')
   }, [onPressTab])
+
   const onLongPressProfile = React.useCallback(() => {
+    Haptics.default()
     accountSwitchControl.open()
   }, [accountSwitchControl])
 
