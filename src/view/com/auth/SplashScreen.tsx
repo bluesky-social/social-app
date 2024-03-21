@@ -1,21 +1,21 @@
 import React from 'react'
 import {View} from 'react-native'
+import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {CenteredView} from '../util/Views'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
+
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {APP_LANGUAGES} from '#/locale/languages'
+import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select'
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {APP_LANGUAGES} from '#/locale/languages'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
 import {Button, ButtonText} from '#/components/Button'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
+import {Text} from '#/components/Typography'
+import {CenteredView} from '../util/Views'
 
 export const SplashScreen = ({
   onPressSignin,

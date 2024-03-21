@@ -1,36 +1,36 @@
 import React, {useEffect, useRef} from 'react'
 import {StyleSheet, useWindowDimensions, View} from 'react-native'
 import {AppBskyFeedDefs} from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
-import {List, ListMethods} from '../util/List'
-import {PostThreadItem} from './PostThreadItem'
-import {ComposePrompt} from '../composer/Prompt'
-import {ViewHeader} from '../util/ViewHeader'
-import {Text} from '../util/text/Text'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
+import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
-  ThreadNode,
-  ThreadPost,
-  ThreadNotFound,
-  ThreadBlocked,
-  usePostThreadQuery,
   sortThread,
+  ThreadBlocked,
+  ThreadNode,
+  ThreadNotFound,
+  ThreadPost,
+  usePostThreadQuery,
 } from '#/state/queries/post-thread'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {
   useModerationOpts,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import {useInitialNumToRender} from 'lib/hooks/useInitialNumToRender'
-import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useSetTitle} from 'lib/hooks/useSetTitle'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {cleanError} from 'lib/strings/errors'
+import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {ComposePrompt} from '../composer/Prompt'
+import {List, ListMethods} from '../util/List'
+import {Text} from '../util/text/Text'
+import {ViewHeader} from '../util/ViewHeader'
+import {PostThreadItem} from './PostThreadItem'
 
 // FlatList maintainVisibleContentPosition breaks if too many items
 // are prepended. This seems to be an optimal number based on *shrug*.
