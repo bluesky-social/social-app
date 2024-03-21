@@ -2486,17 +2486,17 @@ msgstr "Tykänneet"
 
 #: src/view/com/feeds/FeedSourceCard.tsx:268
 msgid "Liked by {0} {1}"
-msgstr "Tykänneet {0} {1}"
+msgstr "Tykännyt {0} {1}"
 
 #: src/components/LabelingServiceCard/index.tsx:72
 msgid "Liked by {count} {0}"
-msgstr "Tykänneet {count} {0}"
+msgstr "Tykännyt {count} {0}"
 
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:277
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:291
 #: src/view/screens/ProfileFeed.tsx:587
 msgid "Liked by {likeCount} {0}"
-msgstr "Tykkäyksiä {likeCount} {0}"
+msgstr "Tykännyt {likeCount} {0}"
 
 #: src/view/com/notifications/FeedItem.tsx:174
 msgid "liked your custom feed"
