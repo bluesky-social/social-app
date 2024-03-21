@@ -2038,7 +2038,7 @@ msgstr "Häirintä, trollaus tai suvaitsemattomuus"
 
 #: src/Navigation.tsx:282
 msgid "Hashtag"
-msgstr "Aiheunniste"
+msgstr "Aihetunniste"
 
 #: src/components/RichText.tsx:188
 #~ msgid "Hashtag: {tag}"
