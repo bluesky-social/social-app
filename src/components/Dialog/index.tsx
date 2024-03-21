@@ -1,31 +1,31 @@
 import React, {useImperativeHandle} from 'react'
-import {View, Dimensions, Keyboard, Pressable} from 'react-native'
+import {Dimensions, Pressable, View} from 'react-native'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetScrollView,
+  BottomSheetScrollViewMethods,
   BottomSheetTextInput,
   BottomSheetView,
   useBottomSheet,
   WINDOW_HEIGHT,
-} from '@gorhom/bottom-sheet'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
+} from '@discord/bottom-sheet/src'
 
-import {useTheme, atoms as a, flatten} from '#/alf'
-import {Portal} from '#/components/Portal'
-import {createInput} from '#/components/forms/TextField'
 import {logger} from '#/logger'
 import {useDialogStateControlContext} from '#/state/dialogs'
-
+import {isNative} from 'platform/detection'
+import {atoms as a, flatten, useTheme} from '#/alf'
+import {Context} from '#/components/Dialog/context'
 import {
-  DialogOuterProps,
   DialogControlProps,
   DialogInnerProps,
+  DialogOuterProps,
 } from '#/components/Dialog/types'
-import {Context} from '#/components/Dialog/context'
-import {isNative} from 'platform/detection'
+import {createInput} from '#/components/forms/TextField'
+import {Portal} from '#/components/Portal'
 
-export {useDialogControl, useDialogContext} from '#/components/Dialog/context'
+export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/types'
 // @ts-ignore
 export const Input = createInput(BottomSheetTextInput)
@@ -122,7 +122,6 @@ export function Outer({
   )
 
   const onCloseInner = React.useCallback(() => {
-    Keyboard.dismiss()
     try {
       closeCallback.current?.()
     } catch (e: any) {
@@ -206,16 +205,14 @@ export function Inner({children, style}: DialogInnerProps) {
   )
 }
 
-export function ScrollableInner({
-  children,
-  keyboardDismissMode,
-  style,
-}: DialogInnerProps) {
+export const ScrollableInner = React.forwardRef<
+  BottomSheetScrollViewMethods,
+  DialogInnerProps
+>(function ScrollableInner({children, style}, ref) {
   const insets = useSafeAreaInsets()
   return (
     <BottomSheetScrollView
       keyboardShouldPersistTaps="handled"
-      keyboardDismissMode={keyboardDismissMode || 'on-drag'}
       style={[
         a.flex_1, // main diff is this
         a.p_xl,
@@ -227,24 +224,19 @@ export function ScrollableInner({
         },
         flatten(style),
       ]}
-      contentContainerStyle={isNative ? a.pb_4xl : undefined}>
+      contentContainerStyle={isNative ? a.pb_4xl : undefined}
+      ref={ref}>
       {children}
       <View style={{height: insets.bottom + a.pt_5xl.paddingTop}} />
     </BottomSheetScrollView>
   )
-}
+})
 
 export function Handle() {
   const t = useTheme()
 
-  const onTouchStart = React.useCallback(() => {
-    Keyboard.dismiss()
-  }, [])
-
   return (
-    <View
-      style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}
-      onTouchStart={onTouchStart}>
+    <View style={[a.absolute, a.w_full, a.align_center, a.z_10, {height: 40}]}>
       <View
         style={[
           a.rounded_sm,
