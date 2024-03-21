@@ -201,7 +201,7 @@ msgstr "Lisää hiljennetty sana määritettyihin asetuksiin"
 
 #: src/components/dialogs/MutedWords.tsx:87
 msgid "Add muted words and tags"
-msgstr "Lisää hiljennetyt sanat ja tunnisteet"
+msgstr "Lisää hiljennetyt sanat ja aihetunnisteet"
 
 #: src/view/com/modals/ChangeHandle.tsx:417
 msgid "Add the following DNS record to your domain:"
@@ -805,7 +805,7 @@ msgstr "klikkaa tästä"
 
 #: src/components/TagMenu/index.web.tsx:138
 msgid "Click here to open tag menu for {tag}"
-msgstr "Avaa tästä valikko tunnisteelle {tag}"
+msgstr "Avaa tästä valikko aihetunnisteelle {tag}"
 
 #: src/components/RichText.tsx:191
 msgid "Click here to open tag menu for #{tag}"
@@ -1571,7 +1571,7 @@ msgstr "Anna sovellusalasanalle nimi"
 #: src/components/dialogs/MutedWords.tsx:100
 #: src/components/dialogs/MutedWords.tsx:101
 msgid "Enter a word or tag"
-msgstr "Kirjoita sana tai tunniste"
+msgstr "Kirjoita sana tai aihetunniste"
 
 #: src/view/com/modals/VerifyEmail.tsx:105
 msgid "Enter Confirmation Code"
@@ -2038,15 +2038,15 @@ msgstr "Häirintä, trollaus tai suvaitsemattomuus"
 
 #: src/Navigation.tsx:282
 msgid "Hashtag"
-msgstr "Tunniste"
+msgstr "Aiheunniste"
 
 #: src/components/RichText.tsx:188
 #~ msgid "Hashtag: {tag}"
-#~ msgstr "Tunniste: {tag}"
+#~ msgstr "Aihetunniste: {tag}"
 
 #: src/components/RichText.tsx:190
 msgid "Hashtag: #{tag}"
-msgstr "Tunniste #{tag}"
+msgstr "Aihetunniste #{tag}"
 
 #: src/view/com/auth/create/CreateAccount.tsx:208
 msgid "Having trouble?"
@@ -2608,7 +2608,7 @@ msgstr "Varmista, että olet menossa oikeaan paikkaan!"
 
 #: src/components/dialogs/MutedWords.tsx:83
 msgid "Manage your muted words and tags"
-msgstr "Hallinnoi hiljennettyjä sanojasi ja tunnisteitasi"
+msgstr "Hallinnoi hiljennettyjä sanoja ja aihetunnisteita"
 
 #: src/view/com/auth/create/Step2.tsx:118
 msgid "May not be longer than 253 characters"
@@ -2756,11 +2756,11 @@ msgstr "Hiljennä kaikki {displayTag} viestit"
 
 #: src/components/dialogs/MutedWords.tsx:149
 msgid "Mute in tags only"
-msgstr "Hiljennä vain tunnisteissa"
+msgstr "Hiljennä vain aihetunnisteissa"
 
 #: src/components/dialogs/MutedWords.tsx:134
 msgid "Mute in text & tags"
-msgstr "Hiljennä tekstissä ja tunnisteissa"
+msgstr "Hiljennä tekstissä ja aihetunnisteissa"
 
 #: src/view/screens/ProfileList.tsx:461
 #: src/view/screens/ProfileList.tsx:624
@@ -2777,11 +2777,11 @@ msgstr "Hiljennä nämä käyttäjät?"
 
 #: src/components/dialogs/MutedWords.tsx:127
 msgid "Mute this word in post text and tags"
-msgstr "Hiljennä tämä sana viesteissä ja tunnisteissa"
+msgstr "Hiljennä tämä sana viesteissä ja aihetunnisteissa"
 
 #: src/components/dialogs/MutedWords.tsx:142
 msgid "Mute this word in tags only"
-msgstr "Hiljennä tämä sana vain tunnisteissa"
+msgstr "Hiljennä tämä sana vain aihetunnisteissa"
 
 #: src/view/com/util/forms/PostDropdownBtn.tsx:251
 #: src/view/com/util/forms/PostDropdownBtn.tsx:257
@@ -2791,7 +2791,7 @@ msgstr "Hiljennä keskustelu"
 #: src/view/com/util/forms/PostDropdownBtn.tsx:267
 #: src/view/com/util/forms/PostDropdownBtn.tsx:269
 msgid "Mute words & tags"
-msgstr "Hiljennä sanat ja tunnisteet"
+msgstr "Hiljennä sanat ja aihetunnisteet"
 
 #: src/view/com/lists/ListCard.tsx:102
 msgid "Muted"
@@ -2816,7 +2816,7 @@ msgstr "Hiljentäjä: \"{0}\""
 
 #: src/screens/Moderation/index.tsx:233
 msgid "Muted words & tags"
-msgstr "Hiljennetyt sanat ja tunnisteet"
+msgstr "Hiljennetyt sanat ja aihetunnisteet"
 
 #: src/view/screens/ProfileList.tsx:621
 msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
@@ -3151,7 +3151,7 @@ msgstr "Avaa linkit sovelluksen sisäisellä selaimella"
 
 #: src/screens/Moderation/index.tsx:229
 msgid "Open muted words and tags settings"
-msgstr "Avaa hiljennettyjen sanojen ja tunnisteiden asetukset"
+msgstr "Avaa hiljennettyjen sanojen ja aihetunnisteiden asetukset"
 
 #: src/view/screens/Moderation.tsx:92
 #~ msgid "Open muted words settings"
@@ -3457,7 +3457,7 @@ msgstr "Anna uniikki nimi tälle sovellussalasanalle tai käytä satunnaisesti l
 
 #: src/components/dialogs/MutedWords.tsx:68
 msgid "Please enter a valid word, tag, or phrase to mute"
-msgstr "Ole hyvä ja syötä oieka sana, tunniste tai lause hiljennettäväksi."
+msgstr "Ole hyvä ja syötä oikea sana, aihetunniste tai lause hiljennettäväksi."
 
 #: src/view/com/auth/create/state.ts:170
 #~ msgid "Please enter the code you received by SMS."
@@ -3571,7 +3571,7 @@ msgstr "Viestit"
 
 #: src/components/dialogs/MutedWords.tsx:90
 msgid "Posts can be muted based on their text, their tags, or both."
-msgstr "Viestejä voidaan hiljentää niiden tekstin, tunnisteiden tai molempien perusteella."
+msgstr "Viestejä voidaan hiljentää sanojen, aihetunnisteiden tai molempien perusteella."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:64
 msgid "Posts hidden"
@@ -4079,19 +4079,19 @@ msgstr "Haku hakusanalla \"{query}\""
 
 #: src/components/TagMenu/index.tsx:145
 msgid "Search for all posts by @{authorHandle} with tag {displayTag}"
-msgstr "Hae kaikki @{authorHandle}:n julkaisut, joissa on tunniste {displayTag}."
+msgstr "Hae kaikki @{authorHandle}:n julkaisut, joissa on aihetunniste {displayTag}."
 
 #: src/components/TagMenu/index.tsx:145
 #~ msgid "Search for all posts by @{authorHandle} with tag {tag}"
-#~ msgstr "Etsi kaikki viestit käyttäjältä @{authorHandle} tunnisteella {tag}"
+#~ msgstr "Etsi kaikki viestit käyttäjältä @{authorHandle} aihetunnisteella {tag}"
 
 #: src/components/TagMenu/index.tsx:94
 msgid "Search for all posts with tag {displayTag}"
-msgstr "Etsi kaikki viestit tunnisteella {displayTag}."
+msgstr "Etsi kaikki viestit aihetunnisteella {displayTag}."
 
 #: src/components/TagMenu/index.tsx:90
 #~ msgid "Search for all posts with tag {tag}"
-#~ msgstr "Etsi kaikki viestit tunnisteella {tag}"
+#~ msgstr "Etsi kaikki viestit aihetunnisteella {tag}"
 
 #: src/view/com/auth/LoggedOut.tsx:104
 #: src/view/com/auth/LoggedOut.tsx:105
@@ -4767,15 +4767,15 @@ msgstr "Järjestelmäloki"
 
 #: src/components/dialogs/MutedWords.tsx:324
 msgid "tag"
-msgstr "tunniste"
+msgstr "aihetunniste"
 
 #: src/components/TagMenu/index.tsx:78
 msgid "Tag menu: {displayTag}"
-msgstr "Tunnistevalikko: {displayTag}"
+msgstr "Aihetunnistevalikko: {displayTag}"
 
 #: src/components/TagMenu/index.tsx:74
 #~ msgid "Tag menu: {tag}"
-#~ msgstr "Tunnistevalikko: {tag}"
+#~ msgstr "Aihetunnistevalikko: {tag}"
 
 #: src/view/com/modals/crop-image/CropImage.web.tsx:112
 msgid "Tall"
@@ -5848,7 +5848,7 @@ msgstr ""
 
 #: src/components/dialogs/MutedWords.tsx:250
 msgid "You haven't muted any words or tags yet"
-msgstr "Et ole vielä hiljentänyt yhtään sanaa tai tunnistetta"
+msgstr "Et ole vielä hiljentänyt yhtään sanaa tai aihetunnistetta"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:69
 msgid "You may appeal these labels if you feel they were placed in error."
