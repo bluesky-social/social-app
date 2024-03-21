@@ -1,21 +1,22 @@
 import React from 'react'
-import {View, Pressable} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
-import {CenteredView} from '../util/Views'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+import {APP_LANGUAGES} from '#/locale/languages'
+import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
-import {Trans, msg} from '@lingui/macro'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {useLingui} from '@lingui/react'
-import {sanitizeAppLanguageSetting} from '#/locale/helpers'
-import {useLanguagePrefs, useLanguagePrefsApi} from '#/state/preferences'
-import {APP_LANGUAGES} from '#/locale/languages'
+import {ErrorBoundary} from 'view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDown} from '#/components/icons/Chevron'
-import {Text} from '#/components/Typography'
 import {InlineLink} from '#/components/Link'
+import {Text} from '#/components/Typography'
+import {CenteredView} from '../util/Views'
 
 export const SplashScreen = ({
   onDismiss,
@@ -173,20 +174,31 @@ function Footer() {
 
       <View style={a.flex_1} />
 
-      <View style={[a.flex_row, a.gap_sm, a.align_center, a.flex_shrink]}>
-        <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
-          {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
-        </Text>
-        <ChevronDown
-          fill={t.atoms.text.color}
-          size="xs"
-          style={a.flex_shrink}
-        />
+      <View style={a.flex_shrink}>
+        <View
+          style={[
+            t.atoms.bg,
+            a.flex_row,
+            a.gap_sm,
+            a.align_center,
+            a.z_10,
+            {pointerEvents: 'none'},
+          ]}>
+          <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
+            {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
+          </Text>
+          <ChevronDown
+            fill={t.atoms.text.color}
+            size="xs"
+            style={a.flex_shrink}
+          />
+        </View>
 
         <select
           value={sanitizedLang}
           onChange={onChangeAppLanguage}
           style={{
+            outlineOffset: 2,
             cursor: 'pointer',
             MozAppearance: 'none',
             WebkitAppearance: 'none',
@@ -194,8 +206,8 @@ function Footer() {
             position: 'absolute',
             inset: 0,
             width: '100%',
-            color: 'transparent',
-            background: 'transparent',
+            color: t.atoms.text_contrast_medium.color,
+            background: t.atoms.bg.backgroundColor,
             border: 0,
             padding: 0,
           }}>
