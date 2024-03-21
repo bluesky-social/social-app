@@ -17,12 +17,10 @@ export function useUpdateCheck() {
   const setCheckTimeout = React.useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
-        Alert.alert('Try')
         await Updates.setExtraParamAsync(
-          'buildNumber',
+          'build-number',
           app.buildVersion.toString(),
         )
-        Alert.alert('Here')
         await Updates.setExtraParamAsync(
           'channel',
           IS_TESTFLIGHT ? 'testflight' : 'production',
@@ -47,39 +45,40 @@ export function useUpdateCheck() {
 
   const onIsTestFlight = React.useCallback(() => {
     setTimeout(async () => {
-      await Updates.setExtraParamAsync(
-        'buildNumber',
-        app.buildVersion.toString(),
-      )
-      await Updates.setExtraParamAsync(
-        'channel',
-        IS_TESTFLIGHT ? 'testflight' : 'production',
-      )
+      await Updates.setExtraParamAsync('build-number', app.buildVersion)
+      await Updates.setExtraParamAsync('channel', 'testflight')
+      await Updates.getExtraParamsAsync()
 
-      const res = await Updates.checkForUpdateAsync()
-      console.log(res)
-      if (res.isAvailable) {
-        await Updates.fetchUpdateAsync()
+      try {
+        const res = await Updates.checkForUpdateAsync()
+        if (res.isAvailable) {
+          await Updates.fetchUpdateAsync()
 
-        Alert.alert(
-          'Update Available',
-          'A new version of the app is available. Relaunch now?',
-          [
-            {
-              text: 'No',
-              style: 'cancel',
-            },
-            {
-              text: 'Relaunch',
-              style: 'default',
-              onPress: async () => {
-                await Updates.reloadAsync()
+          Alert.alert(
+            'Update Available',
+            'A new version of the app is available. Relaunch now?',
+            [
+              {
+                text: 'No',
+                style: 'cancel',
               },
-            },
-          ],
-        )
-      } else {
-        Alert.alert('No Update Available', 'No update available at this time.')
+              {
+                text: 'Relaunch',
+                style: 'default',
+                onPress: async () => {
+                  await Updates.reloadAsync()
+                },
+              },
+            ],
+          )
+        } else {
+          Alert.alert(
+            'No Update Available',
+            'No update available at this time.',
+          )
+        }
+      } catch (e: any) {
+        Alert.alert('error', e.toString())
       }
     }, 3000)
   }, [])
@@ -94,8 +93,6 @@ export function useUpdateCheck() {
       return
     } else if (__DEV__ || ranInitialCheck.current) {
       return
-    } else {
-      Alert.alert('not testfight')
     }
 
     setCheckTimeout()
