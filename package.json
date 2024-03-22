@@ -1,10 +1,11 @@
 {
   "name": "bsky.app",
-  "version": "1.73.0",
+  "version": "1.74.0",
   "private": true,
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile",
@@ -49,6 +50,7 @@
     "@atproto/api": "^0.12.2",
     "@bam.tech/react-native-image-resizer": "^3.0.4",
     "@braintree/sanitize-url": "^6.0.2",
+    "@discord/bottom-sheet": "https://github.com/bluesky-social/react-native-bottom-sheet.git#discord-fork-4.6.1",
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.4.2",
     "@expo/webpack-config": "^19.0.0",
@@ -56,7 +58,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-native-fontawesome": "^0.3.0",
-    "@gorhom/bottom-sheet": "^4.5.1",
     "@lingui/react": "^4.5.0",
     "@mattermost/react-native-paste-input": "^0.6.4",
     "@miblanchard/react-native-slider": "^2.3.1",
@@ -93,6 +94,7 @@
     "@tiptap/pm": "^2.0.0-beta.220",
     "@tiptap/react": "^2.0.0-beta.220",
     "@tiptap/suggestion": "^2.0.0-beta.220",
+    "@types/invariant": "^2.2.37",
     "@types/node": "^18.16.2",
     "@zxing/text-encoding": "^0.9.0",
     "array.prototype.findlast": "^1.2.3",
@@ -237,6 +239,7 @@
     "eslint-plugin-lingui": "^0.2.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-native-a11y": "^3.3.0",
+    "eslint-plugin-simple-import-sort": "^12.0.0",
     "html-webpack-plugin": "^5.5.0",
     "husky": "^8.0.3",
     "is-ci": "^3.0.1",
