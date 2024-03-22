@@ -12,6 +12,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import {Trans} from '@lingui/macro'
 
 import {logger} from '#/logger'
 import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
@@ -405,7 +406,9 @@ export function Button({
       )}
       <Context.Provider value={context}>
         <ButtonTextErrorBoundary>
-          {typeof children === 'string' ? (
+          {/* @ts-ignore */}
+          {typeof children === 'string' || children?.type === Trans ? (
+            /* @ts-ignore */
             <ButtonText>{children}</ButtonText>
           ) : typeof children === 'function' ? (
             children(context)
