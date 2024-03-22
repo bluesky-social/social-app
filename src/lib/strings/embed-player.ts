@@ -357,17 +357,18 @@ export function parseEmbedPlayerFromUrl(
 
   if (urlp.hostname === 'nico.ms' || urlp.hostname === 'www.nicovideo.jp') {
     const [_, watchOrId, videoId] = urlp.pathname.split('/')
+    const seek = encodeURIComponent(urlp.searchParams.get('from') ?? 0)
     if (videoId) {
       return {
         type: 'nicovideo_video',
         source: 'nicovideo',
-        playerUri: `https://embed.nicovideo.jp/watch/${videoId}?autoplay=1`,
+        playerUri: `https://embed.nicovideo.jp/watch/${videoId}?autoplay=1&from=${seek}&persistence=1&oldScript=1&referer=&allowProgrammaticFullScreen=1`,
       }
     } else if (watchOrId) {
       return {
         type: 'nicovideo_video',
         source: 'nicovideo',
-        playerUri: `https://embed.nicovideo.jp/watch/${watchOrId}?autoplay=1`,
+        playerUri: `https://embed.nicovideo.jp/watch/${watchOrId}?autoplay=1&from=${seek}&persistence=1&oldScript=1&referer=&allowProgrammaticFullScreen=1`,
       }
     }
   }
