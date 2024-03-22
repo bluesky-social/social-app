@@ -175,7 +175,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                 color="secondary"
                 size="medium"
                 onPress={onBackPress}>
-                <Trans>Back</Trans>
+                <ButtonText>
+                  <Trans>Back</Trans>
+                </ButtonText>
               </Button>
               {state.activeStep !== SignupStep.CAPTCHA && (
                 <>
@@ -187,7 +189,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
                       size="medium"
                       disabled={state.isLoading}
                       onPress={() => refetch()}>
-                      <Trans>Retry</Trans>
+                      <ButtonText>
+                        <Trans>Retry</Trans>
+                      </ButtonText>
                     </Button>
                   ) : (
                     <Button
