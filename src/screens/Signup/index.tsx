@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useServiceQuery} from '#/state/queries/service'
 import {getAgent} from '#/state/session'
@@ -99,6 +100,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
 
     dispatch({type: 'next'})
+    logEvent('signup:nextPressed', {
+      activeStep: state.activeStep,
+    })
   }, [
     _,
     state.activeStep,
