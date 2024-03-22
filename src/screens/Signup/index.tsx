@@ -1,5 +1,6 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
+import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
@@ -20,7 +21,7 @@ import {
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {InlineLink} from '#/components/Link'
@@ -32,6 +33,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
+  const {gtMobile} = useBreakpoints()
 
   const {
     data: serviceInfo,
@@ -125,13 +127,16 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       <LoggedOutLayout
         leadin=""
         title={_(msg`Create Account`)}
-        description={_(msg`We're so excited to have you join us!`)}>
-        <ScrollView
-          testID="createAccount"
-          keyboardShouldPersistTaps="handled"
-          style={a.h_full}
-          keyboardDismissMode="on-drag">
-          <View style={[a.flex_1, a.px_xl, a.pt_2xl, {paddingBottom: 100}]}>
+        description={_(msg`We're so excited to have you join us!`)}
+        scrollable>
+        <View testID="createAccount" style={a.flex_1}>
+          <View
+            style={[
+              a.flex_1,
+              a.px_xl,
+              a.pt_2xl,
+              !gtMobile && {paddingBottom: 100},
+            ]}>
             <View style={[a.gap_sm, a.pb_3xl]}>
               <Text style={[a.font_semibold, t.atoms.text_contrast_medium]}>
                 <Trans>Step</Trans> {state.activeStep + 1} <Trans>of</Trans>{' '}
@@ -152,13 +157,15 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             </View>
 
             <View style={[a.pb_3xl]}>
-              {state.activeStep === SignupStep.INFO ? (
-                <StepInfo />
-              ) : state.activeStep === SignupStep.HANDLE ? (
-                <StepHandle />
-              ) : (
-                <StepCaptcha />
-              )}
+              <LayoutAnimationConfig skipEntering skipExiting>
+                {state.activeStep === SignupStep.INFO ? (
+                  <StepInfo />
+                ) : state.activeStep === SignupStep.HANDLE ? (
+                  <StepHandle />
+                ) : (
+                  <StepCaptcha />
+                )}
+              </LayoutAnimationConfig>
             </View>
 
             <View style={[a.flex_row, a.justify_between, a.pb_lg]}>
@@ -208,7 +215,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               </Text>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </LoggedOutLayout>
     </SignupContext.Provider>
   )
