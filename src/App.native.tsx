@@ -77,7 +77,7 @@ function InnerApp() {
           <React.Fragment
             // Resets the entire tree below when it changes:
             key={currentAccount?.did}>
-            <QueryProvider>
+            <QueryProvider currentDid={currentAccount?.did}>
               <PushNotificationsListener>
                 <StatsigProvider>
                   <LabelDefsProvider>
