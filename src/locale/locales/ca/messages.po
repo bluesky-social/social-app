@@ -468,7 +468,7 @@ msgstr "Bloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:344
 msgid "Block Account?"
-msgstr "Bloqueja el compte"
+msgstr "Vols bloqueja el compte?"
 
 #: src/view/screens/ProfileList.tsx:530
 msgid "Block accounts"
@@ -610,7 +610,7 @@ msgstr "per <0/>"
 
 #: src/view/com/auth/create/Policies.tsx:87
 msgid "By creating an account you agree to the {els}."
-msgstr "Creant el compte indiques qu estàs d'acord amb {els},"
+msgstr "Creant el compte indiques que estàs d'acord amb {els}."
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:159
 msgid "by you"
