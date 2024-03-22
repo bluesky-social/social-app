@@ -17,6 +17,7 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {makeProfileLink} from 'lib/routes/links'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {useModalControls} from 'state/modals'
+import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {
   RQKEY as profileQueryKey,
   useProfileBlockMutationQueue,
@@ -31,6 +32,7 @@ import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {PersonCheck_Stroke2_Corner0_Rounded as PersonCheck} from '#/components/icons/PersonCheck'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/PersonX'
 import {PeopleRemove2_Stroke2_Corner0_Rounded as UserMinus} from '#/components/icons/PeopleRemove2'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {logger} from '#/logger'
 import {Shadow} from 'state/cache/types'
 import * as Prompt from '#/components/Prompt'
@@ -47,14 +49,27 @@ let ProfileMenu = ({
   const pal = usePalette('default')
   const {track} = useAnalytics()
   const {openModal} = useModalControls()
+  const reportDialogControl = useReportDialogControl()
   const queryClient = useQueryClient()
   const isSelf = currentAccount?.did === profile.did
+  const isFollowing = profile.viewer?.following
+  const isBlocked = profile.viewer?.blocking || profile.viewer?.blockedBy
+  const isFollowingBlockedAccount = isFollowing && isBlocked
+  const isLabelerAndNotBlocked = !!profile.associated?.labeler && !isBlocked
 
   const [queueMute, queueUnmute] = useProfileMuteMutationQueue(profile)
   const [queueBlock, queueUnblock] = useProfileBlockMutationQueue(profile)
-  const [, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'ProfileMenu',
+  )
 
   const blockPromptControl = Prompt.usePromptControl()
+  const loggedOutWarningPromptControl = Prompt.usePromptControl()
+
+  const showLoggedOutWarning = React.useMemo(() => {
+    return !!profile.labels?.find(label => label.val === '!no-unauthenticated')
+  }, [profile.labels])
 
   const invalidateProfileQuery = React.useCallback(() => {
     queryClient.invalidateQueries({
@@ -131,6 +146,19 @@ let ProfileMenu = ({
     }
   }, [profile.viewer?.blocking, track, _, queueUnblock, queueBlock])
 
+  const onPressFollowAccount = React.useCallback(async () => {
+    track('ProfileHeader:FollowButtonClicked')
+    try {
+      await queueFollow()
+      Toast.show(_(msg`Account followed`))
+    } catch (e: any) {
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to follow account', {message: e})
+        Toast.show(_(msg`There was an issue! ${e.toString()}`))
+      }
+    }
+  }, [_, queueFollow, track])
+
   const onPressUnfollowAccount = React.useCallback(async () => {
     track('ProfileHeader:UnfollowButtonClicked')
     try {
@@ -146,11 +174,8 @@ let ProfileMenu = ({
 
   const onPressReportAccount = React.useCallback(() => {
     track('ProfileHeader:ReportAccountButtonClicked')
-    openModal({
-      name: 'report',
-      did: profile.did,
-    })
-  }, [track, openModal, profile])
+    reportDialogControl.open()
+  }, [track, reportDialogControl])
 
   return (
     <EventStopper onKeyDown={false}>
@@ -167,10 +192,9 @@ let ProfileMenu = ({
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingVertical: 7,
+                    paddingVertical: 10,
                     borderRadius: 50,
-                    marginLeft: 6,
-                    paddingHorizontal: 14,
+                    paddingHorizontal: 16,
                   },
                   pal.btn,
                 ]}>
@@ -189,17 +213,51 @@ let ProfileMenu = ({
             <Menu.Item
               testID="profileHeaderDropdownShareBtn"
               label={_(msg`Share`)}
-              onPress={onPressShare}>
+              onPress={() => {
+                if (showLoggedOutWarning) {
+                  loggedOutWarningPromptControl.open()
+                } else {
+                  onPressShare()
+                }
+              }}>
               <Menu.ItemText>
                 <Trans>Share</Trans>
               </Menu.ItemText>
               <Menu.ItemIcon icon={Share} />
             </Menu.Item>
           </Menu.Group>
+
           {hasSession && (
             <>
               <Menu.Divider />
               <Menu.Group>
+                {!isSelf && (
+                  <>
+                    {(isLabelerAndNotBlocked || isFollowingBlockedAccount) && (
+                      <Menu.Item
+                        testID="profileHeaderDropdownFollowBtn"
+                        label={
+                          isFollowing
+                            ? _(msg`Unfollow Account`)
+                            : _(msg`Follow Account`)
+                        }
+                        onPress={
+                          isFollowing
+                            ? onPressUnfollowAccount
+                            : onPressFollowAccount
+                        }>
+                        <Menu.ItemText>
+                          {isFollowing ? (
+                            <Trans>Unfollow Account</Trans>
+                          ) : (
+                            <Trans>Follow Account</Trans>
+                          )}
+                        </Menu.ItemText>
+                        <Menu.ItemIcon icon={isFollowing ? UserMinus : Plus} />
+                      </Menu.Item>
+                    )}
+                  </>
+                )}
                 <Menu.Item
                   testID="profileHeaderDropdownListAddRemoveBtn"
                   label={_(msg`Add to Lists`)}
@@ -211,18 +269,6 @@ let ProfileMenu = ({
                 </Menu.Item>
                 {!isSelf && (
                   <>
-                    {profile.viewer?.following &&
-                      (profile.viewer.blocking || profile.viewer.blockedBy) && (
-                        <Menu.Item
-                          testID="profileHeaderDropdownUnfollowBtn"
-                          label={_(msg`Unfollow Account`)}
-                          onPress={onPressUnfollowAccount}>
-                          <Menu.ItemText>
-                            <Trans>Unfollow Account</Trans>
-                          </Menu.ItemText>
-                          <Menu.ItemIcon icon={UserMinus} />
-                        </Menu.Item>
-                      )}
                     {!profile.viewer?.blocking &&
                       !profile.viewer?.mutedByList && (
                         <Menu.Item
@@ -285,6 +331,11 @@ let ProfileMenu = ({
         </Menu.Outer>
       </Menu.Root>
 
+      <ReportDialog
+        control={reportDialogControl}
+        params={{type: 'account', did: profile.did}}
+      />
+
       <Prompt.Basic
         control={blockPromptControl}
         title={
@@ -297,6 +348,10 @@ let ProfileMenu = ({
             ? _(
                 msg`The account will be able to interact with you after unblocking.`,
               )
+            : profile.associated?.labeler
+            ? _(
+                msg`Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you.`,
+              )
             : _(
                 msg`Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you.`,
               )
@@ -306,6 +361,16 @@ let ProfileMenu = ({
           profile.viewer?.blocking ? _(msg`Unblock`) : _(msg`Block`)
         }
         confirmButtonColor={profile.viewer?.blocking ? undefined : 'negative'}
+      />
+
+      <Prompt.Basic
+        control={loggedOutWarningPromptControl}
+        title={_(msg`Note about sharing`)}
+        description={_(
+          msg`This profile is only visible to logged-in users. It won't be visible to people who aren't logged in.`,
+        )}
+        onConfirm={onPressShare}
+        confirmButtonCta={_(msg`Share anyway`)}
       />
     </EventStopper>
   )

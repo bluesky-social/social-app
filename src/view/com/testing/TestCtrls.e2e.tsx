@@ -22,18 +22,24 @@ export function TestCtrls() {
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const onPressSignInAlice = async () => {
-    await login({
-      service: 'http://localhost:3000',
-      identifier: 'alice.test',
-      password: 'hunter2',
-    })
+    await login(
+      {
+        service: 'http://localhost:3000',
+        identifier: 'alice.test',
+        password: 'hunter2',
+      },
+      'LoginForm',
+    )
   }
   const onPressSignInBob = async () => {
-    await login({
-      service: 'http://localhost:3000',
-      identifier: 'bob.test',
-      password: 'hunter2',
-    })
+    await login(
+      {
+        service: 'http://localhost:3000',
+        identifier: 'bob.test',
+        password: 'hunter2',
+      },
+      'LoginForm',
+    )
   }
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
@@ -51,7 +57,7 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eSignOut"
-        onPress={() => logout()}
+        onPress={() => logout('Settings')}
         accessibilityRole="button"
         style={BTN}
       />

@@ -1,28 +1,28 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {Divider} from '#/components/Divider'
-import * as Toggle from '#/components/forms/Toggle'
 import {useAnalytics} from '#/lib/analytics/analytics'
-
-import {Context} from '#/screens/Onboarding/state'
-import {
-  Title,
-  Description,
-  OnboardingControls,
-} from '#/screens/Onboarding/Layout'
+import {logEvent} from '#/lib/statsig/statsig'
 import {
   usePreferencesQuery,
   useSetFeedViewPreferencesMutation,
 } from 'state/queries/preferences'
+import {
+  Description,
+  OnboardingControls,
+  Title,
+} from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {Divider} from '#/components/Divider'
+import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {FilterTimeline_Stroke2_Corner0_Rounded as FilterTimeline} from '#/components/icons/FilterTimeline'
+import {Text} from '#/components/Typography'
 
 export function StepFollowingFeed() {
   const {_} = useLingui()
@@ -46,6 +46,7 @@ export function StepFollowingFeed() {
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
     track('OnboardingV2:StepFollowingFeed:End')
+    logEvent('onboarding:followingFeed:nextPressed', {})
   }, [track, dispatch])
 
   React.useEffect(() => {

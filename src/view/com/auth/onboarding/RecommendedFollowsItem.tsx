@@ -1,6 +1,6 @@
 import React from 'react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
-import {ProfileModeration, AppBskyActorDefs} from '@atproto/api'
+import {ModerationDecision, AppBskyActorDefs} from '@atproto/api'
 import {Button} from '#/view/com/util/forms/Button'
 import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
@@ -11,14 +11,15 @@ import {Text} from 'view/com/util/text/Text'
 import Animated, {FadeInRight} from 'react-native-reanimated'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {Trans, msg} from '@lingui/macro'
 import {Shadow, useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {logger} from '#/logger'
 
 type Props = {
   profile: AppBskyActorDefs.ProfileViewBasic
-  moderation: ProfileModeration
+  moderation: ModerationDecision
   onFollowStateChange: (props: {
     did: string
     following: boolean
@@ -56,13 +57,13 @@ export function RecommendedFollowsItem({
   )
 }
 
-export function ProfileCard({
+function ProfileCard({
   profile,
   onFollowStateChange,
   moderation,
 }: {
   profile: Shadow<AppBskyActorDefs.ProfileViewBasic>
-  moderation: ProfileModeration
+  moderation: ModerationDecision
   onFollowStateChange: (props: {
     did: string
     following: boolean
@@ -70,9 +71,13 @@ export function ProfileCard({
 }) {
   const {track} = useAnalytics()
   const pal = usePalette('default')
+  const {_} = useLingui()
   const [addingMoreSuggestions, setAddingMoreSuggestions] =
     React.useState(false)
-  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(profile)
+  const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
+    profile,
+    'RecommendedFollowsItem',
+  )
 
   const onToggleFollow = React.useCallback(async () => {
     try {
@@ -110,7 +115,7 @@ export function ProfileCard({
           <UserAvatar
             size={40}
             avatar={profile.avatar}
-            moderation={moderation.avatar}
+            moderation={moderation.ui('avatar')}
           />
         </View>
         <View style={styles.layoutContent}>
@@ -121,7 +126,7 @@ export function ProfileCard({
             lineHeight={1.2}>
             {sanitizeDisplayName(
               profile.displayName || sanitizeHandle(profile.handle),
-              moderation.profile,
+              moderation.ui('displayName'),
             )}
           </Text>
           <Text type="xl" style={[pal.textLight]} numberOfLines={1}>
@@ -133,7 +138,7 @@ export function ProfileCard({
           type={profile.viewer?.following ? 'default' : 'inverted'}
           labelStyle={styles.followButton}
           onPress={onToggleFollow}
-          label={profile.viewer?.following ? 'Unfollow' : 'Follow'}
+          label={profile.viewer?.following ? _(msg`Unfollow`) : _(msg`Follow`)}
         />
       </View>
       {profile.description ? (

@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - main
-      - traffic-reduction
-      - respect-optout-for-embeds
+      - 3p-moderators
+
 env:
   REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_REGISTRY }}
   USERNAME: ${{ secrets.AWS_ECR_REGISTRY_USEAST2_PACKAGES_USERNAME }}

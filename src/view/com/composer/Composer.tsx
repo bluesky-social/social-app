@@ -39,7 +39,7 @@ import {usePalette} from 'lib/hooks/usePalette'
 import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
 import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
+import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
 import {GalleryModel} from 'state/models/media/gallery'
 import {Gallery} from './photos/Gallery'
 import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
@@ -65,6 +65,7 @@ import {logger} from '#/logger'
 import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 import * as Prompt from '#/components/Prompt'
 import {useDialogStateControlContext} from 'state/dialogs'
+import {logEvent} from '#/lib/statsig/statsig'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -255,6 +256,16 @@ export const ComposePost = observer(function ComposePost({
       setIsProcessing(false)
       return
     } finally {
+      if (postUri) {
+        logEvent('post:create', {
+          imageCount: gallery.size,
+          isReply: replyTo != null,
+          hasLink: extLink != null,
+          hasQuote: quote != null,
+          langs: langPrefs.postLanguage,
+          logContext: 'Composer',
+        })
+      }
       track('Create Post', {
         imageCount: gallery.size,
       })
@@ -404,7 +415,11 @@ export const ComposePost = observer(function ComposePost({
               styles.textInputLayout,
               isNative && styles.textInputLayoutMobile,
             ]}>
-            <UserAvatar avatar={currentProfile?.avatar} size={50} />
+            <UserAvatar
+              avatar={currentProfile?.avatar}
+              size={50}
+              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+            />
             <TextInput
               ref={textInput}
               richtext={richtext}
@@ -432,7 +447,7 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={[s.mt5, isWeb && s.mb10]}>
+            <View style={[s.mt5, isWeb && s.mb10, {pointerEvents: 'none'}]}>
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}

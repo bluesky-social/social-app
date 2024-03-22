@@ -1,14 +1,13 @@
 import {
   AppBskyNotificationListNotifications,
   ModerationOpts,
-  moderateProfile,
+  moderateNotification,
   AppBskyFeedDefs,
   AppBskyFeedPost,
   AppBskyFeedRepost,
   AppBskyFeedLike,
   AppBskyEmbedRecord,
 } from '@atproto/api'
-import {moderatePost_wrapped as moderatePost} from '#/lib/moderatePost_wrapped'
 import chunk from 'lodash.chunk'
 import {QueryClient} from '@tanstack/react-query'
 import {getAgent} from '../../session'
@@ -88,37 +87,20 @@ export async function fetchPage({
 // internal methods
 // =
 
-// TODO this should be in the sdk as moderateNotification -prf
-function shouldFilterNotif(
+export function shouldFilterNotif(
   notif: AppBskyNotificationListNotifications.Notification,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
   if (!moderationOpts) {
     return false
   }
-  const profile = moderateProfile(notif.author, moderationOpts)
-  if (
-    profile.account.filter ||
-    profile.profile.filter ||
-    notif.author.viewer?.muted
-  ) {
-    return true
+  if (notif.author.viewer?.following) {
+    return false
   }
-  if (
-    notif.type === 'reply' ||
-    notif.type === 'quote' ||
-    notif.type === 'mention'
-  ) {
-    // NOTE: the notification overlaps the post enough for this to work
-    const post = moderatePost(notif, moderationOpts)
-    if (post.content.filter) {
-      return true
-    }
-  }
-  return false
+  return moderateNotification(notif, moderationOpts).ui('contentList').filter
 }
 
-function groupNotifications(
+export function groupNotifications(
   notifs: AppBskyNotificationListNotifications.Notification[],
 ): FeedNotification[] {
   const groupedNotifs: FeedNotification[] = []
