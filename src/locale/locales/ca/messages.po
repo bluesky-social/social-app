@@ -468,7 +468,7 @@ msgstr "Bloqueja el compte"
 
 #: src/view/com/profile/ProfileMenu.tsx:344
 msgid "Block Account?"
-msgstr "Vols bloqueja el compte?"
+msgstr "Vols bloquejar el compte?"
 
 #: src/view/screens/ProfileList.tsx:530
 msgid "Block accounts"
