@@ -7,12 +7,11 @@ import {
   ModerationOpts,
   RichText as RichTextAPI,
 } from '@atproto/api'
-import {Plural, Trans, msg, plural} from '@lingui/macro'
+import {msg, Plural, plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {Haptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
-import {pluralize} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
 import {Shadow} from '#/state/cache/types'
 import {useModalControls} from '#/state/modals'
