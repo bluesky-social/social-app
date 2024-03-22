@@ -38,7 +38,7 @@ export function SelectLabelerView({
 
       <Divider />
 
-      <View style={[a.gap_xs, {marginHorizontal: a.p_md.padding * -1}]}>
+      <View style={[a.gap_sm]}>
         {props.labelers.map(labeler => {
           return (
             <Button
@@ -63,17 +63,14 @@ function LabelerButton({
   const {hovered, pressed} = useButtonContext()
   const interacted = hovered || pressed
 
-  const styles = React.useMemo(() => {
-    return {
-      interacted: {
-        backgroundColor: t.palette.contrast_50,
-      },
-    }
-  }, [t])
-
   return (
     <LabelingServiceCard.Outer
-      style={[a.p_md, a.rounded_sm, interacted && styles.interacted]}>
+      style={[
+        a.p_md,
+        a.rounded_sm,
+        t.atoms.bg_contrast_25,
+        interacted && t.atoms.bg_contrast_50,
+      ]}>
       <LabelingServiceCard.Avatar avatar={labeler.creator.avatar} />
       <LabelingServiceCard.Content>
         <LabelingServiceCard.Title

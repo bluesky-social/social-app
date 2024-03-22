@@ -1,27 +1,27 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
-import {msg, Trans} from '@lingui/macro'
 import {LABELS} from '@atproto/api'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/lib/analytics/analytics'
-
+import {logEvent} from '#/lib/statsig/statsig'
+import {usePreferencesQuery} from '#/state/queries/preferences'
+import {usePreferencesSetAdultContentMutation} from 'state/queries/preferences'
 import {
   Description,
   OnboardingControls,
   Title,
 } from '#/screens/Onboarding/Layout'
-import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
-import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
 import {Context} from '#/screens/Onboarding/state'
+import {AdultContentEnabledPref} from '#/screens/Onboarding/StepModeration/AdultContentEnabledPref'
+import {ModerationOption} from '#/screens/Onboarding/StepModeration/ModerationOption'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {IconCircle} from '#/components/IconCircle'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
+import {Loader} from '#/components/Loader'
 
 export function StepModeration() {
   const {_} = useLingui()
@@ -45,6 +45,7 @@ export function StepModeration() {
   const onContinue = React.useCallback(() => {
     dispatch({type: 'next'})
     track('OnboardingV2:StepModeration:End')
+    logEvent('onboarding:moderation:nextPressed', {})
   }, [track, dispatch])
 
   React.useEffect(() => {

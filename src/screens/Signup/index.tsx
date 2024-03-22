@@ -1,10 +1,12 @@
 import React from 'react'
-import {ScrollView, View} from 'react-native'
+import {View} from 'react-native'
+import {LayoutAnimationConfig} from 'react-native-reanimated'
 import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 
 import {useAnalytics} from '#/lib/analytics/analytics'
 import {FEEDBACK_FORM_URL} from '#/lib/constants'
+import {logEvent} from '#/lib/statsig/statsig'
 import {createFullHandle} from '#/lib/strings/handles'
 import {useServiceQuery} from '#/state/queries/service'
 import {getAgent} from '#/state/session'
@@ -19,7 +21,7 @@ import {
 import {StepCaptcha} from '#/screens/Signup/StepCaptcha'
 import {StepHandle} from '#/screens/Signup/StepHandle'
 import {StepInfo} from '#/screens/Signup/StepInfo'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {InlineLink} from '#/components/Link'
@@ -31,6 +33,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
   const {screen} = useAnalytics()
   const [state, dispatch] = React.useReducer(reducer, initialState)
   const submit = useSubmitSignup({state, dispatch})
+  const {gtMobile} = useBreakpoints()
 
   const {
     data: serviceInfo,
@@ -99,6 +102,9 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
     }
 
     dispatch({type: 'next'})
+    logEvent('signup:nextPressed', {
+      activeStep: state.activeStep,
+    })
   }, [
     _,
     state.activeStep,
@@ -121,13 +127,16 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
       <LoggedOutLayout
         leadin=""
         title={_(msg`Create Account`)}
-        description={_(msg`We're so excited to have you join us!`)}>
-        <ScrollView
-          testID="createAccount"
-          keyboardShouldPersistTaps="handled"
-          style={a.h_full}
-          keyboardDismissMode="on-drag">
-          <View style={[a.flex_1, a.px_xl, a.pt_2xl, {paddingBottom: 100}]}>
+        description={_(msg`We're so excited to have you join us!`)}
+        scrollable>
+        <View testID="createAccount" style={a.flex_1}>
+          <View
+            style={[
+              a.flex_1,
+              a.px_xl,
+              a.pt_2xl,
+              !gtMobile && {paddingBottom: 100},
+            ]}>
             <View style={[a.gap_sm, a.pb_3xl]}>
               <Text style={[a.font_semibold, t.atoms.text_contrast_medium]}>
                 <Trans>Step</Trans> {state.activeStep + 1} <Trans>of</Trans>{' '}
@@ -148,45 +157,53 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
             </View>
 
             <View style={[a.pb_3xl]}>
-              {state.activeStep === SignupStep.INFO ? (
-                <StepInfo />
-              ) : state.activeStep === SignupStep.HANDLE ? (
-                <StepHandle />
-              ) : (
-                <StepCaptcha />
-              )}
+              <LayoutAnimationConfig skipEntering skipExiting>
+                {state.activeStep === SignupStep.INFO ? (
+                  <StepInfo />
+                ) : state.activeStep === SignupStep.HANDLE ? (
+                  <StepHandle />
+                ) : (
+                  <StepCaptcha />
+                )}
+              </LayoutAnimationConfig>
             </View>
 
             <View style={[a.flex_row, a.justify_between, a.pb_lg]}>
               <Button
-                label="Back"
+                label={_(msg`Go back to previous step`)}
                 variant="solid"
                 color="secondary"
                 size="medium"
                 onPress={onBackPress}>
-                Back
+                <ButtonText>
+                  <Trans>Back</Trans>
+                </ButtonText>
               </Button>
               {state.activeStep !== SignupStep.CAPTCHA && (
                 <>
                   {isError ? (
                     <Button
-                      label="Retry"
+                      label={_(msg`Press to retry`)}
                       variant="solid"
                       color="primary"
                       size="medium"
                       disabled={state.isLoading}
                       onPress={() => refetch()}>
-                      Retry
+                      <ButtonText>
+                        <Trans>Retry</Trans>
+                      </ButtonText>
                     </Button>
                   ) : (
                     <Button
-                      label="Next"
+                      label={_(msg`Continue to next step`)}
                       variant="solid"
                       color="primary"
                       size="medium"
                       disabled={!state.canNext || state.isLoading}
                       onPress={onNextPress}>
-                      <ButtonText>Next</ButtonText>
+                      <ButtonText>
+                        <Trans>Next</Trans>
+                      </ButtonText>
                     </Button>
                   )}
                 </>
@@ -204,7 +221,7 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
               </Text>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </LoggedOutLayout>
     </SignupContext.Provider>
   )
