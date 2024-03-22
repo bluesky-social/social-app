@@ -170,34 +170,36 @@ export function Signup({onPressBack}: {onPressBack: () => void}) {
 
             <View style={[a.flex_row, a.justify_between, a.pb_lg]}>
               <Button
-                label="Back"
+                label={_(msg`Go back to previous step`)}
                 variant="solid"
                 color="secondary"
                 size="medium"
                 onPress={onBackPress}>
-                Back
+                <Trans>Back</Trans>
               </Button>
               {state.activeStep !== SignupStep.CAPTCHA && (
                 <>
                   {isError ? (
                     <Button
-                      label="Retry"
+                      label={_(msg`Press to retry`)}
                       variant="solid"
                       color="primary"
                       size="medium"
                       disabled={state.isLoading}
                       onPress={() => refetch()}>
-                      Retry
+                      <Trans>Retry</Trans>
                     </Button>
                   ) : (
                     <Button
-                      label="Next"
+                      label={_(msg`Continue to the next step`)}
                       variant="solid"
                       color="primary"
                       size="medium"
                       disabled={!state.canNext || state.isLoading}
                       onPress={onNextPress}>
-                      <ButtonText>Next</ButtonText>
+                      <ButtonText>
+                        <Trans>Next</Trans>
+                      </ButtonText>
                     </Button>
                   )}
                 </>
