@@ -5,6 +5,7 @@ import {
 } from 'expo-image-picker'
 import {getDataUriSize} from './util'
 import * as Toast from 'view/com/util/Toast'
+import {t} from '@lingui/macro'
 
 export async function openPicker(opts?: ImagePickerOptions) {
   const response = await launchImageLibraryAsync({
@@ -15,14 +16,14 @@ export async function openPicker(opts?: ImagePickerOptions) {
   })
 
   if (response.assets && response.assets.length > 4) {
-    Toast.show('You may only select up to 4 images')
+    Toast.show(t`You may only select up to 4 images`)
   }
 
   return (response.assets ?? [])
     .slice(0, 4)
     .filter(asset => {
       if (asset.mimeType?.startsWith('image/')) return true
-      Toast.show('Only image files are supported')
+      Toast.show(t`Only image files are supported`)
       return false
     })
     .map(image => ({
