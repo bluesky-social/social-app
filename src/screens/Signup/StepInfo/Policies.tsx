@@ -76,9 +76,7 @@ export const Policies = ({
 
       {under13 ? (
         <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
-          <Trans>
-          You must be 13 years of age or older to sign up.
-          </Trans>
+          <Trans>You must be 13 years of age or older to sign up.</Trans>
         </Text>
       ) : needsGuardian ? (
         <Text style={[a.font_bold, a.leading_snug, t.atoms.text_contrast_high]}>
