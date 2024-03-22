@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useRef, useState} from 'react'
 import {AppState, AppStateStatus} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
@@ -39,31 +39,27 @@ focusManager.setEventListener(onFocus => {
   }
 })
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // NOTE
-      // refetchOnWindowFocus breaks some UIs (like feeds)
-      // so we only selectively want to enable this
-      // -prf
-      refetchOnWindowFocus: false,
-      // Structural sharing between responses makes it impossible to rely on
-      // "first seen" timestamps on objects to determine if they're fresh.
-      // Disable this optimization so that we can rely on "first seen" timestamps.
-      structuralSharing: false,
-      // We don't want to retry queries by default, because in most cases we
-      // want to fail early and show a response to the user. There are
-      // exceptions, and those can be made on a per-query basis. For others, we
-      // should give users controls to retry.
-      retry: false,
+const createQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        // NOTE
+        // refetchOnWindowFocus breaks some UIs (like feeds)
+        // so we only selectively want to enable this
+        // -prf
+        refetchOnWindowFocus: false,
+        // Structural sharing between responses makes it impossible to rely on
+        // "first seen" timestamps on objects to determine if they're fresh.
+        // Disable this optimization so that we can rely on "first seen" timestamps.
+        structuralSharing: false,
+        // We don't want to retry queries by default, because in most cases we
+        // want to fail early and show a response to the user. There are
+        // exceptions, and those can be made on a per-query basis. For others, we
+        // should give users controls to retry.
+        retry: false,
+      },
     },
-  },
-})
-
-const asyncStoragePersister = createAsyncStoragePersister({
-  storage: AsyncStorage,
-  key: 'queryCache',
-})
+  })
 
 const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
   {
@@ -73,12 +69,50 @@ const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehyd
     },
   }
 
-const persistOptions = {
-  persister: asyncStoragePersister,
-  dehydrateOptions,
+export function QueryProvider({
+  children,
+  currentDid,
+}: {
+  children: React.ReactNode
+  currentDid: string | undefined
+}) {
+  return (
+    <QueryProviderInner
+      // Enforce we never reuse cache between users.
+      // These two props MUST stay in sync.
+      key={currentDid}
+      currentDid={currentDid}>
+      {children}
+    </QueryProviderInner>
+  )
 }
 
-export function QueryProvider({children}: {children: React.ReactNode}) {
+function QueryProviderInner({
+  children,
+  currentDid,
+}: {
+  children: React.ReactNode
+  currentDid: string | undefined
+}) {
+  const initialDid = useRef(currentDid)
+  if (currentDid !== initialDid.current) {
+    throw Error(
+      'Something is very wrong. Expected did to be stable due to key above.',
+    )
+  }
+  // We create the query client here so that it's scoped to a specific DID.
+  // Do not move the query client creation outside of this component.
+  const [queryClient, _setQueryClient] = useState(() => createQueryClient())
+  const [persistOptions, _setPersistOptions] = useState(() => {
+    const asyncPersister = createAsyncStoragePersister({
+      storage: AsyncStorage,
+      key: 'queryClient-' + (currentDid ?? 'logged-out'),
+    })
+    return {
+      persister: asyncPersister,
+      dehydrateOptions,
+    }
+  })
   return (
     <PersistQueryClientProvider
       client={queryClient}
