@@ -174,20 +174,31 @@ function Footer() {
 
       <View style={a.flex_1} />
 
-      <View style={[a.flex_row, a.gap_sm, a.align_center, a.flex_shrink]}>
-        <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
-          {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
-        </Text>
-        <ChevronDown
-          fill={t.atoms.text.color}
-          size="xs"
-          style={a.flex_shrink}
-        />
+      <View style={a.flex_shrink}>
+        <View
+          style={[
+            t.atoms.bg,
+            a.flex_row,
+            a.gap_sm,
+            a.align_center,
+            a.z_10,
+            {pointerEvents: 'none'},
+          ]}>
+          <Text aria-hidden={true} style={t.atoms.text_contrast_medium}>
+            {APP_LANGUAGES.find(l => l.code2 === sanitizedLang)?.name}
+          </Text>
+          <ChevronDown
+            fill={t.atoms.text.color}
+            size="xs"
+            style={a.flex_shrink}
+          />
+        </View>
 
         <select
           value={sanitizedLang}
           onChange={onChangeAppLanguage}
           style={{
+            outlineOffset: 2,
             cursor: 'pointer',
             MozAppearance: 'none',
             WebkitAppearance: 'none',
@@ -195,8 +206,8 @@ function Footer() {
             position: 'absolute',
             inset: 0,
             width: '100%',
-            color: 'transparent',
-            background: 'transparent',
+            color: t.atoms.text_contrast_medium.color,
+            background: t.atoms.bg.backgroundColor,
             border: 0,
             padding: 0,
           }}>
