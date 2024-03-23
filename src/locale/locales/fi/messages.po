@@ -1167,11 +1167,11 @@ msgstr "Mukautettu verkkotunnus"
 #: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
 #: src/view/screens/Feeds.tsx:692
 msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
-msgstr "Yhteisön rakentamat mukautetut syötteet tuovat sinulle uusia kokemuksia ja auttavat löytämään sinulle mieluisaa sisältöä."
+msgstr "Yhteisön rakentamat mukautetut syötteet tuovat sinulle uusia kokemuksia ja auttavat löytämään mieluisaa sisältöä."
 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:55
 msgid "Customize media from external sites."
-msgstr "Muokkaa mediaa ulkoisista sivustoista."
+msgstr "Muokkaa ulkoisten sivustojen mediasisältöjen asetuksia"
 
 #: src/view/screens/Settings.tsx:687
 #~ msgid "Danger Zone"
@@ -1698,11 +1698,11 @@ msgstr "Ulkoiset mediat voivat sallia verkkosivustojen kerätä tietoja sinusta 
 #: src/view/screens/PreferencesExternalEmbeds.tsx:52
 #: src/view/screens/Settings/index.tsx:677
 msgid "External Media Preferences"
-msgstr "Ulkoisten medioiden asetukset"
+msgstr "Ulkoisten mediasoittimien asetukset"
 
 #: src/view/screens/Settings/index.tsx:668
 msgid "External media settings"
-msgstr "Ulkoisten medioiden asetukset"
+msgstr "Ulkoisten mediasoittimien asetukset"
 
 #: src/view/com/modals/AddAppPasswords.tsx:115
 #: src/view/com/modals/AddAppPasswords.tsx:119
@@ -2427,7 +2427,7 @@ msgstr "Lue lisää siitä, mikä on julkista Blueskyssa."
 
 #: src/components/moderation/ContentHider.tsx:152
 msgid "Learn more."
-msgstr ""
+msgstr "Lue lisää."
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -4821,7 +4821,7 @@ msgstr "Kiitos. Raporttisi on lähetetty."
 
 #: src/view/com/modals/ChangeHandle.tsx:466
 msgid "That contains the following:"
-msgstr ""
+msgstr ""Se sisältää seuraavaa:""
 
 #: src/view/com/auth/create/CreateAccount.tsx:94
 msgid "That handle is already taken."
@@ -4830,11 +4830,11 @@ msgstr "Tuo käyttätunnus on jo käytössä."
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:274
 #: src/view/com/profile/ProfileMenu.tsx:349
 msgid "The account will be able to interact with you after unblocking."
-msgstr "Tili voi olla vuorovaikutuksessa kanssasi, kun estäminen on poistettu."
+msgstr "Käyttäjä voi olla vuorovaikutuksessa kanssasi, kun poistat eston."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:128
 msgid "the author"
-msgstr ""
+msgstr "kirjoittaja"
 
 #: src/view/screens/CommunityGuidelines.tsx:36
 msgid "The Community Guidelines have been moved to <0/>"
@@ -5215,12 +5215,12 @@ msgstr "Poista esto"
 #: src/view/com/profile/ProfileMenu.tsx:299
 #: src/view/com/profile/ProfileMenu.tsx:305
 msgid "Unblock Account"
-msgstr "Poista tilin esto"
+msgstr "Poista käyttäjätilin esto"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:272
 #: src/view/com/profile/ProfileMenu.tsx:343
 msgid "Unblock Account?"
-msgstr ""
+msgstr "Poista esto?"
 
 #: src/view/com/modals/Repost.tsx:42
 #: src/view/com/modals/Repost.tsx:55
@@ -5232,7 +5232,7 @@ msgstr "Kumoa uudelleenjako"
 #: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:141
 #: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:246
 msgid "Unfollow"
-msgstr ""
+msgstr "Älä seuraa"
 
 #: src/view/com/profile/FollowButton.tsx:60
 msgctxt "action"
@@ -5341,7 +5341,7 @@ msgstr "Lataa tekstitiedosto kohteeseen:"
 #: src/view/com/util/UserBanner.tsx:116
 #: src/view/com/util/UserBanner.tsx:119
 msgid "Upload from Camera"
-msgstr ""
+msgstr "Lataa kamerasta"
 
 #: src/view/com/util/UserAvatar.tsx:343
 #: src/view/com/util/UserBanner.tsx:133
@@ -5404,11 +5404,11 @@ msgstr "Käyttäjä estetty"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:48
 msgid "User Blocked by \"{0}\""
-msgstr ""
+msgstr "\"{0}\" on estänyt käyttäjän."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:54
 msgid "User Blocked by List"
-msgstr "Käyttäjä estetty listan vuoksi"
+msgstr "Käyttäjä on estetty listalla"
 
 #: src/lib/moderation/useModerationCauseDescription.ts:66
 msgid "User Blocking You"
@@ -5435,7 +5435,7 @@ msgstr "Käyttäjälistan on tehnyt <0/>"
 #: src/view/com/modals/UserAddRemoveLists.tsx:196
 #: src/view/screens/ProfileList.tsx:775
 msgid "User list by you"
-msgstr "Sinun käyttäjälistasi"
+msgstr "Käyttäjälistasi"
 
 #: src/view/com/modals/CreateOrEditList.tsx:196
 msgid "User list created"
