@@ -368,47 +368,52 @@ export function PostThread({
     ],
   )
 
-  return (
-    <>
+  if (error || !thread) {
+    return (
       <ListMaybePlaceholder
         isLoading={(!preferences || !thread) && !error}
         isError={!!error}
+        noEmpty
         onRetry={refetch}
         errorTitle={error?.title}
         errorMessage={error?.message}
       />
-      {!error && thread && (
-        <List
-          ref={ref}
-          data={posts}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
-          onStartReached={onStartReached}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={2}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          onScrollToTop={onScrollToTop}
-          maintainVisibleContentPosition={
-            isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
-          }
-          // @ts-ignore our .web version only -prf
-          desktopFixedHeight
-          removeClippedSubviews={isAndroid ? false : undefined}
-          ListFooterComponent={
-            <ListFooter
-              isFetching={isFetching}
-              onRetry={refetch}
-              // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
-              // work without causing weird jumps on web or glitches on native
-              height={windowHeight - 200}
-            />
-          }
-          initialNumToRender={initialNumToRender}
-          windowSize={11}
+    )
+  }
+
+  return (
+    <List
+      ref={ref}
+      data={posts}
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      onContentSizeChange={isNative ? undefined : onContentSizeChangeWeb}
+      onStartReached={onStartReached}
+      onEndReached={onEndReached}
+      onEndReachedThreshold={2}
+      onMomentumScrollEnd={onMomentumScrollEnd}
+      onScrollToTop={onScrollToTop}
+      maintainVisibleContentPosition={
+        isNative ? MAINTAIN_VISIBLE_CONTENT_POSITION : undefined
+      }
+      // @ts-ignore our .web version only -prf
+      desktopFixedHeight
+      removeClippedSubviews={isAndroid ? false : undefined}
+      ListFooterComponent={
+        <ListFooter
+          // Using `isFetching` over `isFetchingNextPage` is done on purpose here so we get the loader on
+          // initial render
+          isFetchingNextPage={isFetching}
+          error={cleanError(threadError)}
+          onRetry={refetch}
+          // 300 is based on the minimum height of a post. This is enough extra height for the `maintainVisPos` to
+          // work without causing weird jumps on web or glitches on native
+          height={windowHeight - 200}
         />
-      )}
-    </>
+      }
+      initialNumToRender={initialNumToRender}
+      windowSize={11}
+    />
   )
 }
 
