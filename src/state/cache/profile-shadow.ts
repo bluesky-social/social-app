@@ -1,7 +1,10 @@
-import {useEffect, useState, useMemo} from 'react'
-import EventEmitter from 'eventemitter3'
+import {useEffect, useMemo, useState} from 'react'
 import {AppBskyActorDefs} from '@atproto/api'
+import {QueryClient} from '@tanstack/react-query'
+import EventEmitter from 'eventemitter3'
+
 import {batchedUpdates} from '#/lib/batchedUpdates'
+import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
 import {findAllProfilesInQueryData as findAllProfilesInListMembersQueryData} from '../queries/list-members'
 import {findAllProfilesInQueryData as findAllProfilesInMyBlockedAccountsQueryData} from '../queries/my-blocked-accounts'
 import {findAllProfilesInQueryData as findAllProfilesInMyMutedAccountsQueryData} from '../queries/my-muted-accounts'
@@ -11,9 +14,7 @@ import {findAllProfilesInQueryData as findAllProfilesInProfileQueryData} from '.
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowersQueryData} from '../queries/profile-followers'
 import {findAllProfilesInQueryData as findAllProfilesInProfileFollowsQueryData} from '../queries/profile-follows'
 import {findAllProfilesInQueryData as findAllProfilesInSuggestedFollowsQueryData} from '../queries/suggested-follows'
-import {findAllProfilesInQueryData as findAllProfilesInActorSearchQueryData} from '../queries/actor-search'
-import {Shadow, castAsShadow} from './types'
-import {queryClient} from 'lib/react-query'
+import {castAsShadow, Shadow} from './types'
 export type {Shadow} from './types'
 
 export interface ProfileShadow {
@@ -58,10 +59,11 @@ export function useProfileShadow<
 }
 
 export function updateProfileShadow(
+  queryClient: QueryClient,
   did: string,
   value: Partial<ProfileShadow>,
 ) {
-  const cachedProfiles = findProfilesInCache(did)
+  const cachedProfiles = findProfilesInCache(queryClient, did)
   for (let post of cachedProfiles) {
     shadows.set(post, {...shadows.get(post), ...value})
   }
@@ -90,6 +92,7 @@ function mergeShadow<TProfileView extends AppBskyActorDefs.ProfileView>(
 }
 
 function* findProfilesInCache(
+  queryClient: QueryClient,
   did: string,
 ): Generator<AppBskyActorDefs.ProfileView, void> {
   yield* findAllProfilesInListMembersQueryData(queryClient, did)

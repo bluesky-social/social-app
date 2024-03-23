@@ -1,8 +1,12 @@
+import React from 'react'
 import {AppState, AppStateStatus} from 'react-native'
-import {QueryClient, focusManager} from '@tanstack/react-query'
-import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import {PersistQueryClientProviderProps} from '@tanstack/react-query-persist-client'
+import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
+import {focusManager, QueryClient} from '@tanstack/react-query'
+import {
+  PersistQueryClientProvider,
+  PersistQueryClientProviderProps,
+} from '@tanstack/react-query-persist-client'
 
 import {isNative} from '#/platform/detection'
 
@@ -35,7 +39,7 @@ focusManager.setEventListener(onFocus => {
   }
 })
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // NOTE
@@ -56,15 +60,30 @@ export const queryClient = new QueryClient({
   },
 })
 
-export const asyncStoragePersister = createAsyncStoragePersister({
+const asyncStoragePersister = createAsyncStoragePersister({
   storage: AsyncStorage,
   key: 'queryCache',
 })
 
-export const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
+const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
   {
     shouldDehydrateMutation: (_: any) => false,
     shouldDehydrateQuery: query => {
       return STORED_CACHE_QUERY_KEYS.includes(String(query.queryKey[0]))
     },
   }
+
+const persistOptions = {
+  persister: asyncStoragePersister,
+  dehydrateOptions,
+}
+
+export function QueryProvider({children}: {children: React.ReactNode}) {
+  return (
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={persistOptions}>
+      {children}
+    </PersistQueryClientProvider>
+  )
+}
