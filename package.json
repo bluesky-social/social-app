@@ -1,10 +1,11 @@
 {
   "name": "bsky.app",
-  "version": "1.74.0",
+  "version": "1.75.0",
   "private": true,
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "yarn@1.22.19",
   "scripts": {
     "prepare": "is-ci || husky install",
     "postinstall": "patch-package && yarn intl:compile",
