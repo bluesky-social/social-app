@@ -922,7 +922,7 @@ msgstr "Configura els filtres de continguts per la categoria: {0}"
 
 #: src/components/moderation/ModerationLabelPref.tsx:116
 msgid "Configured in <0>moderation settings</0>."
-msgstr "Configurat a <0>configuració de moderació</0>"
+msgstr "Configurat a <0>configuració de moderació</0>."
 
 #: src/components/Prompt.tsx:152
 #: src/components/Prompt.tsx:155
@@ -1312,7 +1312,7 @@ msgstr "Descarta"
 
 #: src/view/com/composer/Composer.tsx:507
 msgid "Discard draft?"
-msgstr "DVols descartar l'esborrany?"
+msgstr "Vols descartar l'esborrany?"
 
 #: src/screens/Moderation/index.tsx:520
 #: src/screens/Moderation/index.tsx:524
@@ -2028,12 +2028,12 @@ msgstr "Ves a l'inici"
 
 #: src/view/screens/NotFound.tsx:54
 msgid "Go Home"
-msgstr "Vés a l'inici"
+msgstr "Ves a l'inici"
 
 #: src/view/screens/Search/Search.tsx:748
 #: src/view/shell/desktop/Search.tsx:263
 msgid "Go to @{queryMaybeHandle}"
-msgstr "Vés a @{queryMaybeHandle}"
+msgstr "Ves a @{queryMaybeHandle}"
 
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:189
 #: src/view/com/auth/login/ForgotPasswordForm.tsx:218
@@ -2053,7 +2053,7 @@ msgstr "Identificador"
 
 #: src/lib/moderation/useReportOptions.ts:32
 msgid "Harassment, trolling, or intolerance"
-msgstr "Assetjament, troleig o intolerància""
+msgstr "Assetjament, troleig o intolerància"
 
 #: src/Navigation.tsx:282
 msgid "Hashtag"
@@ -2451,7 +2451,7 @@ msgstr "Més informació sobre què és públic a Bluesky."
 
 #: src/components/moderation/ContentHider.tsx:152
 msgid "Learn more."
-msgstr "Mñes informació."
+msgstr "Més informació."
 
 #: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
 msgid "Leave them all unchecked to see any language."
@@ -3322,7 +3322,7 @@ msgstr "Obre la pantalla amb tots els canals desats"
 
 #: src/view/screens/Settings/index.tsx:696
 msgid "Opens the app password settings"
-msgstr "Obre la configuració de les contrasenyes d'apliació"
+msgstr "Obre la configuració de les contrasenyes d'aplicació"
 
 #: src/view/screens/Settings/index.tsx:676
 #~ msgid "Opens the app password settings page"
@@ -4719,7 +4719,7 @@ msgstr "Brossa"
 
 #: src/lib/moderation/useReportOptions.ts:53
 msgid "Spam; excessive mentions or replies"
-msgstr "Brosa; excessives mencions o respostes"
+msgstr "Brossa; excessives mencions o respostes"
 
 #: src/screens/Onboarding/index.tsx:30
 msgid "Sports"
@@ -5076,7 +5076,7 @@ msgstr "Aquest contingut no es pot veure sense un compte de Bluesky."
 
 #: src/view/screens/Settings/ExportCarDialog.tsx:75
 msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost</0>."
-msgstr "Aquesta funció està en versió beta. Podeu obtenir més informació sobre les exportacions de repositoris en <0>aquesta entrada de bloc</0>"
+msgstr "Aquesta funció està en versió beta. Podeu obtenir més informació sobre les exportacions de repositoris en <0>aquesta entrada de bloc</0>."
 
 #: src/view/com/posts/FeedErrorMessage.tsx:114
 msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
@@ -5901,7 +5901,7 @@ msgstr "Encara no has bloquejat cap compte. Per bloquejar un compte, ves al seu 
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:132
 #~ msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
-#~ msgstr "Encara no has bloquejat cap compte. Per fer-ho, vés al seu perfil i selecciona \"Bloqueja el compte\" en el menú del seu compte."
+#~ msgstr "Encara no has bloquejat cap compte. Per fer-ho, ves al seu perfil i selecciona \"Bloqueja el compte\" en el menú del seu compte."
 
 #: src/view/screens/AppPasswords.tsx:89
 msgid "You have not created any app passwords yet. You can create one by pressing the button below."
@@ -5913,7 +5913,7 @@ msgstr "Encara no has silenciat cap compte. Per silenciar un compte, ves al seu 
 
 #: src/view/screens/ModerationMutedAccounts.tsx:131
 #~ msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
-#~ msgstr "Encara no has silenciat cap compte. Per fer-ho, vés al seu perfil i selecciona \"Silencia compte\" en el menú del seu compte."
+#~ msgstr "Encara no has silenciat cap compte. Per fer-ho,  al seu perfil i selecciona \"Silencia compte\" en el menú del seu compte."
 
 #: src/components/dialogs/MutedWords.tsx:250
 msgid "You haven't muted any words or tags yet"
