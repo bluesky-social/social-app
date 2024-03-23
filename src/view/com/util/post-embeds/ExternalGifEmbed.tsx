@@ -1,6 +1,4 @@
-import {EmbedPlayerParams, getGifDims} from 'lib/strings/embed-player'
 import React from 'react'
-import {Image, ImageLoadEventData} from 'expo-image'
 import {
   ActivityIndicator,
   GestureResponderEvent,
@@ -9,13 +7,17 @@ import {
   StyleSheet,
   View,
 } from 'react-native'
-import {isIOS, isNative, isWeb} from '#/platform/detection'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {useExternalEmbedsPrefs} from 'state/preferences'
-import {useModalControls} from 'state/modals'
-import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Image, ImageLoadEventData} from 'expo-image'
 import {AppBskyEmbedExternal} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
+import {EmbedPlayerParams, getGifDims} from '#/lib/strings/embed-player'
+import {isIOS, isNative, isWeb} from '#/platform/detection'
+import {useExternalEmbedsPrefs} from '#/state/preferences'
+import {useDialogControl} from '#/components/Dialog'
+import {EmbedConsentDialog} from '#/components/dialogs/EmbedConsent'
 
 export function ExternalGifEmbed({
   link,
@@ -25,8 +27,9 @@ export function ExternalGifEmbed({
   params: EmbedPlayerParams
 }) {
   const externalEmbedsPrefs = useExternalEmbedsPrefs()
-  const {openModal} = useModalControls()
+
   const {_} = useLingui()
+  const consentDialogControl = useDialogControl()
 
   const thumbHasLoaded = React.useRef(false)
   const viewWidth = React.useRef(0)
@@ -57,11 +60,7 @@ export function ExternalGifEmbed({
 
       // Show consent if this is the first load
       if (externalEmbedsPrefs?.[params.source] === undefined) {
-        openModal({
-          name: 'embed-consent',
-          source: params.source,
-          onAccept: load,
-        })
+        consentDialogControl.open()
         return
       }
       // If the player isn't active, we want to activate it and prefetch the gif
@@ -84,7 +83,13 @@ export function ExternalGifEmbed({
         }
       })
     },
-    [externalEmbedsPrefs, isPlayerActive, load, openModal, params.source],
+    [
+      consentDialogControl,
+      externalEmbedsPrefs,
+      isPlayerActive,
+      load,
+      params.source,
+    ],
   )
 
   const onLoad = React.useCallback((e: ImageLoadEventData) => {
@@ -98,47 +103,55 @@ export function ExternalGifEmbed({
   }, [])
 
   return (
-    <Pressable
-      style={[
-        {height: imageDims.height},
-        styles.topRadius,
-        styles.gifContainer,
-      ]}
-      onPress={onPlayPress}
-      onLayout={onLayout}
-      accessibilityRole="button"
-      accessibilityHint={_(msg`Plays the GIF`)}
-      accessibilityLabel={_(msg`Play ${link.title}`)}>
-      {(!isPrefetched || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
-        <View style={[styles.layer, styles.overlayLayer]}>
-          <View style={[styles.overlayContainer, styles.topRadius]}>
-            {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
-              <FontAwesomeIcon icon="play" size={42} color="white" />
-            ) : (
-              // Activity indicator while gif loads
-              <ActivityIndicator size="large" color="white" />
-            )}
-          </View>
-        </View>
-      )}
-      <Image
-        source={{
-          uri:
-            !isPrefetched || (isWeb && !isAnimating)
-              ? link.thumb
-              : params.playerUri,
-        }} // Web uses the thumb to control playback
-        style={{flex: 1}}
-        ref={imageRef}
-        onLoad={onLoad}
-        autoplay={isAnimating}
-        contentFit="contain"
-        accessibilityIgnoresInvertColors
-        accessibilityLabel={link.title}
-        accessibilityHint={link.title}
-        cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+    <>
+      <EmbedConsentDialog
+        control={consentDialogControl}
+        source={params.source}
+        onAccept={load}
       />
-    </Pressable>
+
+      <Pressable
+        style={[
+          {height: imageDims.height},
+          styles.topRadius,
+          styles.gifContainer,
+        ]}
+        onPress={onPlayPress}
+        onLayout={onLayout}
+        accessibilityRole="button"
+        accessibilityHint={_(msg`Plays the GIF`)}
+        accessibilityLabel={_(msg`Play ${link.title}`)}>
+        {(!isPrefetched || !isAnimating) && ( // If we have not loaded or are not animating, show the overlay
+          <View style={[styles.layer, styles.overlayLayer]}>
+            <View style={[styles.overlayContainer, styles.topRadius]}>
+              {!isAnimating || !isPlayerActive ? ( // Play button when not animating or not active
+                <FontAwesomeIcon icon="play" size={42} color="white" />
+              ) : (
+                // Activity indicator while gif loads
+                <ActivityIndicator size="large" color="white" />
+              )}
+            </View>
+          </View>
+        )}
+        <Image
+          source={{
+            uri:
+              !isPrefetched || (isWeb && !isAnimating)
+                ? link.thumb
+                : params.playerUri,
+          }} // Web uses the thumb to control playback
+          style={{flex: 1}}
+          ref={imageRef}
+          onLoad={onLoad}
+          autoplay={isAnimating}
+          contentFit="contain"
+          accessibilityIgnoresInvertColors
+          accessibilityLabel={link.title}
+          accessibilityHint={link.title}
+          cachePolicy={isIOS ? 'disk' : 'memory-disk'} // cant control playback with memory-disk on ios
+        />
+      </Pressable>
+    </>
   )
 }
 
