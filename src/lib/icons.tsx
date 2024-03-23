@@ -141,8 +141,8 @@ export function MagnifyingGlassIcon2({
       width={size || 24}
       height={size || 24}
       style={style}>
-      <Ellipse cx="12" cy="11" rx="9" ry="9" />
-      <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
+      <Ellipse cx="12" cy="10.5" rx="9" ry="9" />
+      <Line x1="18.5" y1="17" x2="22" y2="20.5" strokeLinecap="round" />
     </Svg>
   )
 }
@@ -167,14 +167,14 @@ export function MagnifyingGlassIcon2Solid({
       style={style}>
       <Ellipse
         cx="12"
-        cy="11"
-        rx="7"
-        ry="7"
+        cy="10.5"
+        rx="6.5"
+        ry="6.5"
         stroke="none"
         fill="currentColor"
       />
-      <Ellipse cx="12" cy="11" rx="9" ry="9" />
-      <Line x1="19" y1="17.3" x2="23.5" y2="21" strokeLinecap="round" />
+      <Ellipse cx="12" cy="10.5" rx="9" ry="9" />
+      <Line x1="18.5" y1="17" x2="22" y2="20.5" strokeLinecap="round" />
     </Svg>
   )
 }
