@@ -15,6 +15,7 @@ import {messages as messagesPt_BR} from '#/locale/locales/pt-BR/messages'
 import {messages as messagesUk} from '#/locale/locales/uk/messages'
 import {messages as messagesCa} from '#/locale/locales/ca/messages'
 import {messages as messagesZh_CN} from '#/locale/locales/zh-CN/messages'
+import {messages as messagesZh_TW} from '#/locale/locales/zh-TW/messages'
 import {messages as messagesIt} from '#/locale/locales/it/messages'
 
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
@@ -76,6 +77,9 @@ export async function dynamicActivate(locale: AppLanguage) {
     case AppLanguage.it: {
       i18n.loadAndActivate({locale, messages: messagesIt})
       break
+    }
+    case AppLanguage.zh_TW: {
+      i18n.loadAndActivate({locale, messages: messagesZh_TW})
     }
     default: {
       i18n.loadAndActivate({locale, messages: messagesEn})
