@@ -13,6 +13,7 @@ import {useLingui} from '@lingui/react'
 import {usePalette} from 'lib/hooks/usePalette'
 import {sanitizeDisplayName} from 'lib/strings/display-names'
 import {sanitizeHandle} from 'lib/strings/handles'
+import {isWeb} from 'platform/detection'
 import {ComposerOptsPostRef} from 'state/shell/composer'
 import {QuoteEmbed} from 'view/com/util/post-embeds/QuoteEmbed'
 import {Text} from 'view/com/util/text/Text'
@@ -91,7 +92,14 @@ export function ComposerReplyTo({replyTo}: {replyTo: ComposerOptsPostRef}) {
         moderation={replyTo.moderation?.ui('avatar')}
         type={replyTo.author.associated?.labeler ? 'labeler' : 'user'}
       />
-      <View style={styles.replyToPost}>
+      <View
+        style={[
+          styles.replyToPost,
+          isWeb && {
+            // @ts-ignore web only
+            cursor: 'text',
+          },
+        ]}>
         <Text type="xl-medium" style={[pal.text]}>
           {sanitizeDisplayName(
             replyTo.author.displayName || sanitizeHandle(replyTo.author.handle),
