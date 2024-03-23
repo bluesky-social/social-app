@@ -15,6 +15,7 @@ import {LogEvents} from './events'
 export type {LogEvents}
 
 const statsigOptions = {
+  eventLoggingApi: 'https://api.events.bsky.app/v2',
   environment: {
     tier: process.env.NODE_ENV === 'development' ? 'development' : 'production',
   },
