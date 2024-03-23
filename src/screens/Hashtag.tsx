@@ -128,7 +128,7 @@ export default function HashtagScreen({
         isError={isError}
         isEmpty={posts.length < 1}
         onRetry={refetch}
-        emptyTitle="results"
+        emptyTitle={_(msg`No results found`)}
         emptyMessage={_(msg`We couldn't find any results for that hashtag.`)}
       />
       {!isLoading && posts.length > 0 && (
