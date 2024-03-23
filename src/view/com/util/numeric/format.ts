@@ -1,8 +1,14 @@
-export const formatCount = (num: number) =>
-  Intl.NumberFormat('en-US', {
+import * as persisted from '#/state/persisted'
+import {sanitizeAppLanguageSetting} from '#/locale/helpers'
+
+export const formatCount = (num: number) => {
+  const appLanguage = persisted.get('languagePrefs').appLanguage
+  const sanitizedLanguage = sanitizeAppLanguageSetting(appLanguage)
+  return Intl.NumberFormat(sanitizedLanguage, {
     notation: 'compact',
     maximumFractionDigits: 1,
   }).format(num)
+}
 
 export function formatCountShortOnly(num: number): string {
   if (num >= 1000000) {

@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react'
-import {msg} from '@lingui/macro'
+import {Trans, msg} from '@lingui/macro'
 
 import {useTheme, atoms as a} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -110,7 +110,7 @@ function PrimaryFeedCardInner({
               a.py_xs,
               ctx.selected && styles.textSelected,
             ]}>
-            by @{feed.creatorHandle}
+            <Trans>by @{feed.creatorHandle}</Trans>
           </Text>
         </View>
 
