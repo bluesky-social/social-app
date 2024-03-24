@@ -1,4 +1,5 @@
 import {StyleSheet} from 'react-native'
+
 import {colors} from 'lib/styles'
 
 export const styles = StyleSheet.create({
@@ -66,7 +67,7 @@ export const styles = StyleSheet.create({
     top: -4,
   },
   onProfile: {
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 100,
   },
 })
