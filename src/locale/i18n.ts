@@ -25,6 +25,10 @@ import {AppLanguage} from '#/locale/languages'
  */
 export async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
+    case AppLanguage.ca: {
+      i18n.loadAndActivate({locale, messages: messagesCa})
+      break
+    }
     case AppLanguage.de: {
       i18n.loadAndActivate({locale, messages: messagesDe})
       break
@@ -49,6 +53,10 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesId})
       break
     }
+    case AppLanguage.it: {
+      i18n.loadAndActivate({locale, messages: messagesIt})
+      break
+    }
     case AppLanguage.ja: {
       i18n.loadAndActivate({locale, messages: messagesJa})
       break
@@ -65,16 +73,8 @@ export async function dynamicActivate(locale: AppLanguage) {
       i18n.loadAndActivate({locale, messages: messagesUk})
       break
     }
-    case AppLanguage.ca: {
-      i18n.loadAndActivate({locale, messages: messagesCa})
-      break
-    }
     case AppLanguage.zh_CN: {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
-      break
-    }
-    case AppLanguage.it: {
-      i18n.loadAndActivate({locale, messages: messagesIt})
       break
     }
     default: {
