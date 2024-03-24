@@ -1,0 +1,4637 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: bsky\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-05 16:01-0800\n"
+"PO-Revision-Date: 2023-11-05 16:01-0800\n"
+"Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
+"Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
+"Language: ga\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? 3 : 4\n"
+
+#: src/view/com/modals/VerifyEmail.tsx:142
+msgid "(no email)"
+msgstr "(gan ríomhphost)"
+
+#: src/view/com/profile/ProfileHeader.tsx:592
+msgid "{following} following"
+msgstr "{following} á leanúint"
+
+#: src/view/screens/Settings.tsx:NaN
+#~ msgid "{invitesAvailable} invite code available"
+#~ msgstr "{invitesAvailable} chód cuiridh ar fáil"
+
+#: src/view/screens/Settings.tsx:NaN
+#~ msgid "{invitesAvailable} invite codes available"
+#~ msgstr "{invitesAvailable} cód cuiridh ar fáil"
+
+#: src/view/shell/Drawer.tsx:440
+msgid "{numUnreadNotifications} unread"
+msgstr "{numUnreadNotifications} gan léamh"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:158
+msgid "<0/> members"
+msgstr "<0/> ball"
+
+#: src/view/com/profile/ProfileHeader.tsx:594
+msgid "<0>{following} </0><1>following</1>"
+msgstr "<0>{following} </0><1>á leanúint</1>"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:30
+msgid "<0>Choose your</0><1>Recommended</1><2>Feeds</2>"
+msgstr "<0>Roghnaigh do chuid</0><1>Fothaí</1><2>Molta</2>"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:37
+msgid "<0>Follow some</0><1>Recommended</1><2>Users</2>"
+msgstr "<0>Lean cúpla</0><1>Úsáideoirí</1><2>Molta</2>"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:21
+msgid "<0>Welcome to</0><1>Bluesky</1>"
+msgstr "<0>Fáilte go</0><1>Bluesky</1>"
+
+#: src/view/com/profile/ProfileHeader.tsx:557
+msgid "⚠Invalid Handle"
+msgstr "⚠Leasainm Neamhbhailí"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:45
+msgid "A content warning has been applied to this {0}."
+msgstr "Cuireadh rabhadh ábhair leis an {0} seo."
+
+#: src/lib/hooks/useOTAUpdate.ts:16
+msgid "A new version of the app is available. Please update to continue using the app."
+msgstr "Tá leagan nua den aip ar fáil. Uasdátaigh leis an aip a úsáid anois."
+
+#: src/view/com/util/ViewHeader.tsx:83
+#: src/view/screens/Search/Search.tsx:624
+msgid "Access navigation links and settings"
+msgstr "Oscail nascanna agus socruithe"
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:89
+msgid "Access profile and other navigation links"
+msgstr "Oscail próifíl agus nascanna eile"
+
+#: src/view/com/modals/EditImage.tsx:299
+#: src/view/screens/Settings/index.tsx:451
+msgid "Accessibility"
+msgstr "Inrochtaineacht"
+
+#: src/view/com/auth/login/LoginForm.tsx:166
+#: src/view/screens/Settings/index.tsx:308
+#: src/view/screens/Settings/index.tsx:721
+msgid "Account"
+msgstr "Cuntas"
+
+#: src/view/com/profile/ProfileHeader.tsx:245
+msgid "Account blocked"
+msgstr "Cuntas blocáilte"
+
+#: src/view/com/profile/ProfileHeader.tsx:212
+msgid "Account muted"
+msgstr "Cuireadh an cuntas i bhfolach"
+
+#: src/view/com/modals/ModerationDetails.tsx:86
+msgid "Account Muted"
+msgstr "Cuireadh an cuntas i bhfolach"
+
+#: src/view/com/modals/ModerationDetails.tsx:72
+msgid "Account Muted by List"
+msgstr "Cuireadh an cuntas i bhfolach trí liosta"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:41
+msgid "Account options"
+msgstr "Roghanna cuntais"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:25
+msgid "Account removed from quick access"
+msgstr "Baineadh an cuntas ón mearliosta"
+
+#: src/view/com/profile/ProfileHeader.tsx:267
+msgid "Account unblocked"
+msgstr "Cuntas díbhlocáilte"
+
+#: src/view/com/profile/ProfileHeader.tsx:225
+msgid "Account unmuted"
+msgstr "Níl an cuntas i bhfolach a thuilleadh"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:150
+#: src/view/com/modals/ListAddRemoveUsers.tsx:264
+#: src/view/com/modals/UserAddRemoveLists.tsx:219
+#: src/view/screens/ProfileList.tsx:812
+msgid "Add"
+msgstr "Cuir leis"
+
+#: src/view/com/modals/SelfLabel.tsx:56
+msgid "Add a content warning"
+msgstr "Cuir rabhadh faoin ábhar leis"
+
+#: src/view/screens/ProfileList.tsx:802
+msgid "Add a user to this list"
+msgstr "Cuir cuntas leis an liosta seo"
+
+#: src/view/screens/Settings/index.tsx:383
+#: src/view/screens/Settings/index.tsx:392
+msgid "Add account"
+msgstr "Cuir cuntas leis seo"
+
+#: src/view/com/composer/photos/Gallery.tsx:119
+#: src/view/com/composer/photos/Gallery.tsx:180
+#: src/view/com/modals/AltImage.tsx:116
+msgid "Add alt text"
+msgstr "Cuir téacs malartach leis seo"
+
+#: src/view/screens/AppPasswords.tsx:102
+#: src/view/screens/AppPasswords.tsx:143
+#: src/view/screens/AppPasswords.tsx:156
+msgid "Add App Password"
+msgstr "Cuir pasfhocal aipe leis seo"
+
+#: src/view/com/modals/report/InputIssueDetails.tsx:41
+#: src/view/com/modals/report/Modal.tsx:191
+msgid "Add details"
+msgstr "Cuir mionsonraí leis seo"
+
+#: src/view/com/modals/report/Modal.tsx:194
+msgid "Add details to report"
+msgstr "Cuir mionsonraí leis an tuairisc"
+
+#: src/view/com/composer/Composer.tsx:446
+msgid "Add link card"
+msgstr "Cuir cárta leanúna leis seo"
+
+#: src/view/com/composer/Composer.tsx:451
+msgid "Add link card:"
+msgstr "Cuir cárta leanúna leis seo:"
+
+#: src/view/com/modals/ChangeHandle.tsx:417
+msgid "Add the following DNS record to your domain:"
+msgstr "Cuir an taifead DNS seo a leanas le d'fhearann:"
+
+#: src/view/com/profile/ProfileHeader.tsx:309
+msgid "Add to Lists"
+msgstr "Cuir le liostaí"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:243
+#: src/view/screens/ProfileFeed.tsx:272
+msgid "Add to my feeds"
+msgstr "Cuir le mo chuid fothaí"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:139
+msgid "Added"
+msgstr "Curtha leis"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:191
+#: src/view/com/modals/UserAddRemoveLists.tsx:144
+msgid "Added to list"
+msgstr "Curtha leis an liosta"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:125
+msgid "Added to my feeds"
+msgstr "Curtha le mo chuid fothaí"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:173
+msgid "Adjust the number of likes a reply must have to be shown in your feed."
+msgstr "Sonraigh an méid moltaí ar fhreagra atá de dhíth le bheith le feiceáil i d'fhotha."
+
+#: src/view/com/modals/SelfLabel.tsx:75
+msgid "Adult Content"
+msgstr "Ábhar do dhaoine fásta"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:141
+msgid "Adult content can only be enabled via the Web at <0/>."
+msgstr "Ní féidir ábhar do dhaoine fásta a chur ar fáil ach tríd an nGréasán ag <0/>."
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:78
+#~ msgid "Adult content can only be enabled via the Web at <0>bsky.app</0>."
+#~ msgstr "Ní féidir ábhar do dhaoine fásta a chur ar fáil ach tríd an nGréasán ag <0>bsky.app</0>."
+
+#: src/view/screens/Settings/index.tsx:664
+msgid "Advanced"
+msgstr "Ardleibhéal"
+
+#: src/view/screens/Feeds.tsx:666
+msgid "All the feeds you've saved, right in one place."
+msgstr "Na fothaí go léir a shábháil tú, in áit amháin."
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:221
+#: src/view/com/modals/ChangePassword.tsx:168
+msgid "Already have a code?"
+msgstr "An bhfuil cód agat cheana?"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:98
+msgid "Already signed in as @{0}"
+msgstr "Logáilte isteach cheana mar @{0}"
+
+#: src/view/com/composer/photos/Gallery.tsx:130
+msgid "ALT"
+msgstr "ALT"
+
+#: src/view/com/modals/EditImage.tsx:315
+msgid "Alt text"
+msgstr "Téacs malartach"
+
+#: src/view/com/composer/photos/Gallery.tsx:209
+msgid "Alt text describes images for blind and low-vision users, and helps give context to everyone."
+msgstr "Cuireann an téacs malartach síos ar na híomhánna do dhaoine atá dall nó a bhfuil lagú radhairc orthu agus cuireann sé an comhthéacs ar fáil do chuile dhuine."
+
+#: src/view/com/modals/VerifyEmail.tsx:124
+msgid "An email has been sent to {0}. It includes a confirmation code which you can enter below."
+msgstr "Cuireadh teachtaireacht ríomhphoist chuig {0}. Tá cód dearbhaithe faoi iamh. Is féidir leat an cód a chur isteach thíos anseo."
+
+#: src/view/com/modals/ChangeEmail.tsx:119
+msgid "An email has been sent to your previous address, {0}. It includes a confirmation code which you can enter below."
+msgstr "Cuireadh teachtaireacht ríomhphoist chuig do sheanseoladh. {0}. Tá cód dearbhaithe faoi iamh."
+
+#: src/view/com/profile/FollowButton.tsx:30
+#: src/view/com/profile/FollowButton.tsx:40
+msgid "An issue occurred, please try again."
+msgstr "Tharla fadhb. Déan iarracht eile, le do thoil."
+
+#: src/view/com/notifications/FeedItem.tsx:236
+#: src/view/com/threadgate/WhoCanReply.tsx:178
+msgid "and"
+msgstr "agus"
+
+#: src/screens/Onboarding/index.tsx:32
+msgid "Animals"
+msgstr "Ainmhithe"
+
+#: src/view/screens/LanguageSettings.tsx:95
+msgid "App Language"
+msgstr "Teanga na haipe"
+
+#: src/view/screens/AppPasswords.tsx:228
+msgid "App password deleted"
+msgstr "Pasfhocal na haipe scriosta"
+
+#: src/view/com/modals/AddAppPasswords.tsx:134
+msgid "App Password names can only contain letters, numbers, spaces, dashes, and underscores."
+msgstr "Ní féidir ach litreacha, uimhreacha, spásanna, daiseanna agus fostríocanna a bheith in ainmneacha phasfhocal na haipe."
+
+#: src/view/com/modals/AddAppPasswords.tsx:99
+msgid "App Password names must be at least 4 characters long."
+msgstr "Caithfear 4 charachtar ar a laghad a bheith in ainmneacha phasfhocal na haipe."
+
+#: src/view/screens/Settings/index.tsx:675
+msgid "App password settings"
+msgstr "Socruithe phasfhocal na haipe"
+
+#: src/view/screens/Settings.tsx:650
+#~ msgid "App passwords"
+#~ msgstr "Pasfhocal na haipe"
+
+#: src/Navigation.tsx:237
+#: src/view/screens/AppPasswords.tsx:187
+#: src/view/screens/Settings/index.tsx:684
+msgid "App Passwords"
+msgstr "Pasfhocal na haipe"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:250
+msgid "Appeal content warning"
+msgstr "Déan achomharc in aghaidh rabhadh ábhair."
+
+#: src/view/com/modals/AppealLabel.tsx:65
+msgid "Appeal Content Warning"
+msgstr "Achomharc in aghaidh rabhadh ábhair"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:52
+msgid "Appeal this decision"
+msgstr "Dean achomharc in aghaidh an chinnidh seo"
+
+#: src/view/com/util/moderation/LabelInfo.tsx:56
+msgid "Appeal this decision."
+msgstr "Dean achomharc in aghaidh an chinnidh seo."
+
+#: src/view/screens/Settings/index.tsx:466
+msgid "Appearance"
+msgstr "Cuma"
+
+#: src/view/screens/AppPasswords.tsx:224
+msgid "Are you sure you want to delete the app password \"{name}\"?"
+msgstr "An bhfuil tú cinnte gur mhaith leat pasfhocal na haipe “{name}” a scriosadh?"
+
+#: src/view/com/composer/Composer.tsx:143
+msgid "Are you sure you'd like to discard this draft?"
+msgstr "An bhfuil tú cinnte gur mhaith leat an dréacht seo a scriosadh?"
+
+#: src/view/screens/ProfileList.tsx:364
+msgid "Are you sure?"
+msgstr "Lánchinnte?"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:233
+msgid "Are you sure? This cannot be undone."
+msgstr "An bhfuil tú cinnte? Ní féidir é seo a chealú."
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:60
+msgid "Are you writing in <0>{0}</0>?"
+msgstr "An bhfuil tú ag scríobh sa teanga <0>{0}</0>?"
+
+#: src/screens/Onboarding/index.tsx:26
+msgid "Art"
+msgstr "Ealaín"
+
+#: src/view/com/modals/SelfLabel.tsx:123
+msgid "Artistic or non-erotic nudity."
+msgstr "Lomnochtacht ealaíonta nó gan a bheith gáirsiúil."
+
+#: src/view/com/auth/create/CreateAccount.tsx:154
+#: src/view/com/auth/login/ChooseAccountForm.tsx:151
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:174
+#: src/view/com/auth/login/LoginForm.tsx:259
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:179
+#: src/view/com/modals/report/InputIssueDetails.tsx:46
+#: src/view/com/post-thread/PostThread.tsx:471
+#: src/view/com/post-thread/PostThread.tsx:521
+#: src/view/com/post-thread/PostThread.tsx:529
+#: src/view/com/profile/ProfileHeader.tsx:648
+#: src/view/com/util/ViewHeader.tsx:81
+msgid "Back"
+msgstr "Ar ais"
+
+#: src/view/com/post-thread/PostThread.tsx:479
+msgctxt "action"
+msgid "Back"
+msgstr "Ar ais"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
+msgid "Based on your interest in {interestsText}"
+msgstr "Toisc go bhfuil suim agat in {interestsText}"
+
+#: src/view/screens/Settings/index.tsx:523
+msgid "Basics"
+msgstr "Bunrudaí"
+
+#: src/view/com/auth/create/Step1.tsx:250
+#: src/view/com/modals/BirthDateSettings.tsx:73
+msgid "Birthday"
+msgstr "Breithlá"
+
+#: src/view/screens/Settings/index.tsx:340
+msgid "Birthday:"
+msgstr "Breithlá:"
+
+#: src/view/com/profile/ProfileHeader.tsx:238
+#: src/view/com/profile/ProfileHeader.tsx:345
+msgid "Block Account"
+msgstr "Blocáil an cuntas seo"
+
+#: src/view/screens/ProfileList.tsx:555
+msgid "Block accounts"
+msgstr "Blocáil na cuntais seo"
+
+#: src/view/screens/ProfileList.tsx:505
+msgid "Block list"
+msgstr "Liosta blocála"
+
+#: src/view/screens/ProfileList.tsx:315
+msgid "Block these accounts?"
+msgstr "An bhfuil fonn ort na cuntais seo a bhlocáil?"
+
+#: src/view/screens/ProfileList.tsx:319
+msgid "Block this List"
+msgstr "Blocáil an liosta seo"
+
+#: src/view/com/lists/ListCard.tsx:109
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:60
+msgid "Blocked"
+msgstr "Blocáilte"
+
+#: src/view/screens/Moderation.tsx:123
+msgid "Blocked accounts"
+msgstr "Cuntais bhlocáilte"
+
+#: src/Navigation.tsx:130
+#: src/view/screens/ModerationBlockedAccounts.tsx:107
+msgid "Blocked Accounts"
+msgstr "Cuntais bhlocáilte"
+
+#: src/view/com/profile/ProfileHeader.tsx:240
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
+msgstr "Ní féidir leis na cuntais bhlocáilte freagra a thabhairt ar do chomhráite, tagairt a dhéanamh duit, ná aon phlé eile a bheith acu leat."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:115
+msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
+msgstr "Ní féidir leis na cuntais bhlocáilte freagra a thabhairt ar do chomhráite, tagairt a dhéanamh duit, ná aon phlé eile a bheith acu leat. Ní fheicfidh tú a gcuid ábhair agus ní fheicfidh siad do chuid ábhair."
+
+#: src/view/com/post-thread/PostThread.tsx:324
+msgid "Blocked post."
+msgstr "Postáil bhlocáilte."
+
+#: src/view/screens/ProfileList.tsx:317
+msgid "Blocking is public. Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you."
+msgstr "Tá an bhlocáil poiblí. Ní féidir leis na cuntais bhlocáilte freagra a thabhairt ar do chomhráite, tagairt a dhéanamh duit, ná aon phlé eile a bheith acu leat."
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:93
+#: src/view/com/auth/SplashScreen.web.tsx:133
+msgid "Blog"
+msgstr "Blag"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:31
+#: src/view/com/auth/server-input/index.tsx:89
+#: src/view/com/auth/server-input/index.tsx:90
+msgid "Bluesky"
+msgstr "Bluesky"
+
+#: src/view/com/auth/server-input/index.tsx:150
+msgid "Bluesky is an open network where you can choose your hosting provider. Custom hosting is now available in beta for developers."
+msgstr "Is líonra oscailte é Bluesky, lenar féidir leat do sholáthraí óstála féin a roghnú. Tá leagan béite d'óstáil shaincheaptha ar fáil d'fhorbróirí anois."
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:80
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:80
+msgid "Bluesky is flexible."
+msgstr "Tá Bluesky solúbtha."
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:69
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:69
+msgid "Bluesky is open."
+msgstr "Tá Bluesky oscailte."
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:56
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:56
+msgid "Bluesky is public."
+msgstr "Tá Bluesky poiblí."
+
+#: src/view/com/modals/Waitlist.tsx:70
+msgid "Bluesky uses invites to build a healthier community. If you don't know anybody with an invite, you can sign up for the waitlist and we'll send one soon."
+msgstr "Baineann Bluesky úsáid as cuirí le pobal níos sláintiúla a thógáil. Mura bhfuil aithne agat ar dhuine a bhfuil cuireadh acu is féidir leat d’ainm a chur ar an liosta feithimh agus cuirfidh muid cuireadh chugat roimh i bhfad."
+
+#: src/view/screens/Moderation.tsx:226
+msgid "Bluesky will not show your profile and posts to logged-out users. Other apps may not honor this request. This does not make your account private."
+msgstr "Ní thaispeánfaidh Bluesky do phróifíl ná do chuid postálacha d’úsáideoirí atá logáilte amach. Is féidir nach gcloífidh aipeanna eile leis an iarratas seo. I bhfocail eile, ní bheidh do chuntas anseo príobháideach."
+
+#: src/view/com/modals/ServerInput.tsx:78
+#~ msgid "Bluesky.Social"
+#~ msgstr "Bluesky.Social"
+
+#: src/screens/Onboarding/index.tsx:33
+msgid "Books"
+msgstr "Leabhair"
+
+#: src/view/screens/Settings/index.tsx:859
+msgid "Build version {0} {1}"
+msgstr "Leagan {0} {1}"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:87
+#: src/view/com/auth/SplashScreen.web.tsx:128
+msgid "Business"
+msgstr "Gnó"
+
+#: src/view/com/modals/ServerInput.tsx:115
+#~ msgid "Button disabled. Input custom domain to proceed."
+#~ msgstr "Cnaipe as feidhm. Úsáid sainfhearann le leanúint ar aghaidh."
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:157
+msgid "by —"
+msgstr "le —"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:100
+msgid "by {0}"
+msgstr "le {0}"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:161
+msgid "by <0/>"
+msgstr "le <0/>"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:159
+msgid "by you"
+msgstr "leat"
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:60
+#: src/view/com/util/UserAvatar.tsx:224
+#: src/view/com/util/UserBanner.tsx:40
+msgid "Camera"
+msgstr "Ceamara"
+
+#: src/view/com/modals/AddAppPasswords.tsx:216
+msgid "Can only contain letters, numbers, spaces, dashes, and underscores. Must be at least 4 characters long, but no more than 32 characters long."
+msgstr "Ní féidir ach litreacha, uimhreacha, spásanna, daiseanna agus fostríocanna a bheith ann. Caithfear 4 charachtar ar a laghad a bheith ann agus gan níos mó ná 32 charachtar."
+
+#: src/components/Prompt.tsx:91
+#: src/view/com/composer/Composer.tsx:300
+#: src/view/com/composer/Composer.tsx:305
+#: src/view/com/modals/ChangeEmail.tsx:218
+#: src/view/com/modals/ChangeEmail.tsx:220
+#: src/view/com/modals/ChangePassword.tsx:265
+#: src/view/com/modals/ChangePassword.tsx:268
+#: src/view/com/modals/CreateOrEditList.tsx:355
+#: src/view/com/modals/EditImage.tsx:323
+#: src/view/com/modals/EditProfile.tsx:249
+#: src/view/com/modals/InAppBrowserConsent.tsx:78
+#: src/view/com/modals/LinkWarning.tsx:87
+#: src/view/com/modals/Repost.tsx:87
+#: src/view/com/modals/VerifyEmail.tsx:247
+#: src/view/com/modals/VerifyEmail.tsx:253
+#: src/view/com/modals/Waitlist.tsx:142
+#: src/view/screens/Search/Search.tsx:693
+#: src/view/shell/desktop/Search.tsx:238
+msgid "Cancel"
+msgstr "Cealaigh"
+
+#: src/view/com/modals/Confirm.tsx:88
+#: src/view/com/modals/Confirm.tsx:91
+#: src/view/com/modals/CreateOrEditList.tsx:360
+#: src/view/com/modals/DeleteAccount.tsx:156
+#: src/view/com/modals/DeleteAccount.tsx:234
+msgctxt "action"
+msgid "Cancel"
+msgstr "Cealaigh"
+
+#: src/view/com/modals/DeleteAccount.tsx:152
+#: src/view/com/modals/DeleteAccount.tsx:230
+msgid "Cancel account deletion"
+msgstr "Ná scrios an chuntas"
+
+#: src/view/com/modals/ChangeHandle.tsx:149
+msgid "Cancel change handle"
+msgstr "Ná hathraigh an leasainm"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:134
+msgid "Cancel image crop"
+msgstr "Cealaigh bearradh na híomhá"
+
+#: src/view/com/modals/EditProfile.tsx:244
+msgid "Cancel profile editing"
+msgstr "Cealaigh eagarthóireacht na próifíle"
+
+#: src/view/com/modals/Repost.tsx:78
+msgid "Cancel quote post"
+msgstr "Ná déan athlua na postála"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:87
+#: src/view/shell/desktop/Search.tsx:234
+msgid "Cancel search"
+msgstr "Cealaigh an cuardach"
+
+#: src/view/com/modals/Waitlist.tsx:136
+msgid "Cancel waitlist signup"
+msgstr "Ná sábháil d’ainm ar an liosta feithimh"
+
+#: src/view/screens/Settings/index.tsx:334
+msgctxt "action"
+msgid "Change"
+msgstr "Athraigh"
+
+#: src/view/screens/Settings/index.tsx:696
+msgid "Change handle"
+msgstr "Athraigh mo leasainm"
+
+#: src/view/com/modals/ChangeHandle.tsx:161
+#: src/view/screens/Settings/index.tsx:705
+msgid "Change Handle"
+msgstr "Athraigh mo leasainm"
+
+#: src/view/com/modals/VerifyEmail.tsx:147
+msgid "Change my email"
+msgstr "Athraigh mo ríomhphost"
+
+#: src/view/screens/Settings/index.tsx:732
+msgid "Change password"
+msgstr "Athraigh mo phasfhocal"
+
+#: src/view/screens/Settings/index.tsx:741
+msgid "Change Password"
+msgstr "Athraigh mo phasfhocal"
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:73
+msgid "Change post language to {0}"
+msgstr "Athraigh an teanga phostála go {0}"
+
+#: src/view/screens/Settings/index.tsx:733
+msgid "Change your Bluesky password"
+msgstr "Athraigh do phasfhocal Bluesky"
+
+#: src/view/com/modals/ChangeEmail.tsx:109
+msgid "Change Your Email"
+msgstr "Athraigh do ríomhphost"
+
+#: src/screens/Deactivated.tsx:72
+#: src/screens/Deactivated.tsx:76
+msgid "Check my status"
+msgstr "Seiceáil mo stádas"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:121
+msgid "Check out some recommended feeds. Tap + to add them to your list of pinned feeds."
+msgstr "Cuir súil ar na fothaí seo. Brúigh + len iad a chur le liosta na bhfothaí atá greamaithe agat."
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:185
+msgid "Check out some recommended users. Follow them to see similar users."
+msgstr "Cuir súil ar na húsáideoirí seo. Lean iad le húsáideoirí atá cosúil leo a fheiceáil."
+
+#: src/view/com/modals/DeleteAccount.tsx:169
+msgid "Check your inbox for an email with the confirmation code to enter below:"
+msgstr "Féach ar do bhosca ríomhphoist le haghaidh teachtaireachta leis an gcód dearbhaithe atá le cur isteach thíos."
+
+#: src/view/com/modals/Threadgate.tsx:72
+msgid "Choose \"Everybody\" or \"Nobody\""
+msgstr "Roghnaigh “Chuile Dhuine” nó “Duine Ar Bith”"
+
+#: src/view/screens/Settings/index.tsx:697
+msgid "Choose a new Bluesky username or create"
+msgstr "Roghnaigh leasainm Bluesky nua nó cruthaigh leasainm"
+
+#: src/view/com/auth/server-input/index.tsx:79
+msgid "Choose Service"
+msgstr "Roghnaigh Seirbhís"
+
+#: src/screens/Onboarding/StepFinished.tsx:135
+msgid "Choose the algorithms that power your custom feeds."
+msgstr "Roghnaigh na halgartaim le haghaidh do chuid sainfhothaí."
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:83
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:83
+msgid "Choose the algorithms that power your experience with custom feeds."
+msgstr "Roghnaigh na halgartaim a shainíonn an dóigh a n-oibríonn do chuid sainfhothaí."
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
+#~ msgid "Choose your algorithmic feeds"
+#~ msgstr "Roghnaigh do chuid fothaí algartamacha"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:103
+msgid "Choose your main feeds"
+msgstr "Roghnaigh do phríomhfhothaí"
+
+#: src/view/com/auth/create/Step1.tsx:219
+msgid "Choose your password"
+msgstr "Roghnaigh do phasfhocal"
+
+#: src/view/screens/Settings/index.tsx:834
+#: src/view/screens/Settings/index.tsx:835
+msgid "Clear all legacy storage data"
+msgstr "Glan na sonraí oidhreachta ar fad atá i dtaisce."
+
+#: src/view/screens/Settings/index.tsx:837
+msgid "Clear all legacy storage data (restart after this)"
+msgstr "Glan na sonraí oidhreachta ar fad atá i dtaisce. Ansin atosaigh."
+
+#: src/view/screens/Settings/index.tsx:846
+#: src/view/screens/Settings/index.tsx:847
+msgid "Clear all storage data"
+msgstr "Glan na sonraí ar fad atá i dtaisce."
+
+#: src/view/screens/Settings/index.tsx:849
+msgid "Clear all storage data (restart after this)"
+msgstr "Glan na sonraí ar fad atá i dtaisce. Ansin atosaigh."
+
+#: src/view/com/util/forms/SearchInput.tsx:88
+#: src/view/screens/Search/Search.tsx:674
+msgid "Clear search query"
+msgstr "Glan an cuardach"
+
+#: src/view/screens/Support.tsx:40
+msgid "click here"
+msgstr "cliceáil anseo"
+
+#: src/screens/Onboarding/index.tsx:35
+msgid "Climate"
+msgstr "Aeráid"
+
+#: src/view/com/modals/ChangePassword.tsx:265
+#: src/view/com/modals/ChangePassword.tsx:268
+msgid "Close"
+msgstr "Dún"
+
+#: src/components/Dialog/index.web.tsx:78
+msgid "Close active dialog"
+msgstr "Dún an dialóg oscailte"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:38
+msgid "Close alert"
+msgstr "Dún an rabhadh"
+
+#: src/view/com/util/BottomSheetCustomBackdrop.tsx:33
+msgid "Close bottom drawer"
+msgstr "Dún an tarraiceán íochtair"
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:26
+msgid "Close image"
+msgstr "Dún an íomhá"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:119
+msgid "Close image viewer"
+msgstr "Dún amharcóir na n-íomhánna"
+
+#: src/view/shell/index.web.tsx:49
+msgid "Close navigation footer"
+msgstr "Dún an buntásc"
+
+#: src/view/shell/index.web.tsx:50
+msgid "Closes bottom navigation bar"
+msgstr "Dúnann sé seo an barra nascleanúna ag an mbun"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:39
+msgid "Closes password update alert"
+msgstr "Dúnann sé seo an rabhadh faoi uasdátú an phasfhocail"
+
+#: src/view/com/composer/Composer.tsx:302
+msgid "Closes post composer and discards post draft"
+msgstr "Dúnann sé seo cumadóir na postálacha agus ní shábhálann sé an dréacht"
+
+#: src/view/com/lightbox/ImageViewing/components/ImageDefaultHeader.tsx:27
+msgid "Closes viewer for header image"
+msgstr "Dúnann sé seo an t-amharcóir le haghaidh íomhá an cheanntáisc"
+
+#: src/view/com/notifications/FeedItem.tsx:317
+msgid "Collapses list of users for a given notification"
+msgstr "Laghdaíonn sé seo liosta na n-úsáideoirí le haghaidh an fhógra sin"
+
+#: src/screens/Onboarding/index.tsx:41
+msgid "Comedy"
+msgstr "Greann"
+
+#: src/screens/Onboarding/index.tsx:27
+msgid "Comics"
+msgstr "Greannáin"
+
+#: src/Navigation.tsx:227
+#: src/view/screens/CommunityGuidelines.tsx:32
+msgid "Community Guidelines"
+msgstr "Treoirlínte an phobail"
+
+#: src/screens/Onboarding/StepFinished.tsx:148
+msgid "Complete onboarding and start using your account"
+msgstr "Críochnaigh agus tosaigh ag baint úsáide as do chuntas."
+
+#: src/view/com/auth/create/Step3.tsx:73
+msgid "Complete the challenge"
+msgstr "Freagair an dúshlán"
+
+#: src/view/com/composer/Composer.tsx:417
+msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
+msgstr "Scríobh postálacha chomh fada le {MAX_GRAPHEME_LENGTH} litir agus carachtair eile"
+
+#: src/view/com/composer/Prompt.tsx:24
+msgid "Compose reply"
+msgstr "Scríobh freagra"
+
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:67
+msgid "Configure content filtering setting for category: {0}"
+msgstr "Socraigh scagadh an ábhair le haghaidh catagóir: {0}"
+
+#: src/components/Prompt.tsx:113
+#: src/view/com/modals/AppealLabel.tsx:98
+#: src/view/com/modals/SelfLabel.tsx:154
+#: src/view/com/modals/VerifyEmail.tsx:231
+#: src/view/com/modals/VerifyEmail.tsx:233
+#: src/view/screens/PreferencesHomeFeed.tsx:308
+#: src/view/screens/PreferencesThreads.tsx:159
+msgid "Confirm"
+msgstr "Dearbhaigh"
+
+#: src/view/com/modals/Confirm.tsx:75
+#: src/view/com/modals/Confirm.tsx:78
+msgctxt "action"
+msgid "Confirm"
+msgstr "Dearbhaigh"
+
+#: src/view/com/modals/ChangeEmail.tsx:193
+#: src/view/com/modals/ChangeEmail.tsx:195
+msgid "Confirm Change"
+msgstr "Dearbhaigh an t-athrú"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:34
+msgid "Confirm content language settings"
+msgstr "Dearbhaigh socruithe le haghaidh teanga an ábhair"
+
+#: src/view/com/modals/DeleteAccount.tsx:220
+msgid "Confirm delete account"
+msgstr "Dearbhaigh scriosadh an chuntais"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:156
+msgid "Confirm your age to enable adult content."
+msgstr "Dearbhaigh d’aois chun ábhar do dhaoine fásta a fháil."
+
+#: src/view/com/modals/ChangeEmail.tsx:157
+#: src/view/com/modals/DeleteAccount.tsx:182
+#: src/view/com/modals/VerifyEmail.tsx:165
+msgid "Confirmation code"
+msgstr "Cód dearbhaithe"
+
+#: src/view/com/modals/Waitlist.tsx:120
+msgid "Confirms signing up {email} to the waitlist"
+msgstr "Dearbhaíonn sé seo go gcuirfear {email} leis an liosta feithimh"
+
+#: src/view/com/auth/create/CreateAccount.tsx:189
+#: src/view/com/auth/login/LoginForm.tsx:278
+msgid "Connecting..."
+msgstr "Ag nascadh…"
+
+#: src/view/com/auth/create/CreateAccount.tsx:209
+msgid "Contact support"
+msgstr "Teagmháil le Support"
+
+#: src/view/screens/Moderation.tsx:81
+msgid "Content filtering"
+msgstr "Scagadh ábhair"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:44
+msgid "Content Filtering"
+msgstr "Scagadh Ábhair"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:74
+#: src/view/screens/LanguageSettings.tsx:278
+msgid "Content Languages"
+msgstr "Teangacha ábhair"
+
+#: src/view/com/modals/ModerationDetails.tsx:65
+msgid "Content Not Available"
+msgstr "Ábhar nach bhfuil ar fáil"
+
+#: src/view/com/modals/ModerationDetails.tsx:33
+#: src/view/com/util/moderation/ScreenHider.tsx:78
+msgid "Content Warning"
+msgstr "Rabhadh ábhair"
+
+#: src/view/com/composer/labels/LabelsBtn.tsx:31
+msgid "Content warnings"
+msgstr "Rabhadh ábhair"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:170
+#: src/screens/Onboarding/StepFollowingFeed.tsx:153
+#: src/screens/Onboarding/StepInterests/index.tsx:248
+#: src/screens/Onboarding/StepModeration/index.tsx:118
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:108
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:148
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:209
+msgid "Continue"
+msgstr "Lean ar aghaidh"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:150
+#: src/screens/Onboarding/StepInterests/index.tsx:245
+#: src/screens/Onboarding/StepModeration/index.tsx:115
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:105
+msgid "Continue to next step"
+msgstr "Lean ar aghaidh go dtí an chéad chéim eile"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:167
+msgid "Continue to the next step"
+msgstr "Lean ar aghaidh go dtí an chéad chéim eile"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:191
+msgid "Continue to the next step without following any accounts"
+msgstr "Lean ar aghaidh go dtí an chéad chéim eile gan aon chuntas a leanúint"
+
+#: src/screens/Onboarding/index.tsx:44
+msgid "Cooking"
+msgstr "Cócaireacht"
+
+#: src/view/com/modals/AddAppPasswords.tsx:195
+#: src/view/com/modals/InviteCodes.tsx:182
+msgid "Copied"
+msgstr "Cóipeáilte"
+
+#: src/view/screens/Settings/index.tsx:241
+msgid "Copied build version to clipboard"
+msgstr "Leagan cóipeáilte sa ghearrthaisce"
+
+#: src/view/com/modals/AddAppPasswords.tsx:76
+#: src/view/com/modals/InviteCodes.tsx:152
+#: src/view/com/util/forms/PostDropdownBtn.tsx:112
+msgid "Copied to clipboard"
+msgstr "Cóipeáilte sa ghearrthaisce"
+
+#: src/view/com/modals/AddAppPasswords.tsx:189
+msgid "Copies app password"
+msgstr "Cóipeálann sé seo pasfhocal na haipe"
+
+#: src/view/com/modals/AddAppPasswords.tsx:188
+msgid "Copy"
+msgstr "Cóipeáil"
+
+#: src/view/screens/ProfileList.tsx:417
+msgid "Copy link to list"
+msgstr "Cóipeáil an nasc leis an liosta"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:153
+msgid "Copy link to post"
+msgstr "Cóipeáil an nasc leis an bpostáil"
+
+#: src/view/com/profile/ProfileHeader.tsx:294
+msgid "Copy link to profile"
+msgstr "Cóipeáil an nasc leis an bpróifíl"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:139
+msgid "Copy post text"
+msgstr "Cóipeáil téacs na postála"
+
+#: src/Navigation.tsx:232
+#: src/view/screens/CopyrightPolicy.tsx:29
+msgid "Copyright Policy"
+msgstr "An polasaí maidir le cóipcheart"
+
+#: src/view/screens/ProfileFeed.tsx:96
+msgid "Could not load feed"
+msgstr "Ní féidir an fotha a lódáil"
+
+#: src/view/screens/ProfileList.tsx:888
+msgid "Could not load list"
+msgstr "Ní féidir an liosta a lódáil"
+
+#: src/view/com/auth/create/Step2.tsx:91
+#~ msgid "Country"
+#~ msgstr "Tír"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:62
+#: src/view/com/auth/SplashScreen.tsx:71
+#: src/view/com/auth/SplashScreen.web.tsx:81
+msgid "Create a new account"
+msgstr "Cruthaigh cuntas nua"
+
+#: src/view/screens/Settings/index.tsx:384
+msgid "Create a new Bluesky account"
+msgstr "Cruthaigh cuntas nua Bluesky"
+
+#: src/view/com/auth/create/CreateAccount.tsx:129
+msgid "Create Account"
+msgstr "Cruthaigh cuntas"
+
+#: src/view/com/modals/AddAppPasswords.tsx:226
+msgid "Create App Password"
+msgstr "Cruthaigh pasfhocal aipe"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:54
+#: src/view/com/auth/SplashScreen.tsx:68
+msgid "Create new account"
+msgstr "Cruthaigh cuntas nua"
+
+#: src/view/screens/AppPasswords.tsx:249
+msgid "Created {0}"
+msgstr "Cruthaíodh {0}"
+
+#: src/view/screens/ProfileFeed.tsx:616
+msgid "Created by <0/>"
+msgstr "Cruthaithe ag <0/>"
+
+#: src/view/screens/ProfileFeed.tsx:614
+msgid "Created by you"
+msgstr "Cruthaithe agat"
+
+#: src/view/com/composer/Composer.tsx:448
+msgid "Creates a card with a thumbnail. The card links to {url}"
+msgstr "Cruthaíonn sé seo cárta le mionsamhail. Nascann an cárta le {url}."
+
+#: src/screens/Onboarding/index.tsx:29
+msgid "Culture"
+msgstr "Cultúr"
+
+#: src/view/com/auth/server-input/index.tsx:95
+#: src/view/com/auth/server-input/index.tsx:96
+msgid "Custom"
+msgstr "Saincheaptha"
+
+#: src/view/com/modals/ChangeHandle.tsx:389
+msgid "Custom domain"
+msgstr "Sainfhearann"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#: src/view/screens/Feeds.tsx:692
+msgid "Custom feeds built by the community bring you new experiences and help you find the content you love."
+msgstr "Cruthaíonn an pobal fothaí chun eispéiris nua a chur ar fáil duit, agus chun cabhrú leat teacht ar an ábhar a thaitníonn leat"
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:55
+msgid "Customize media from external sites."
+msgstr "Oiriúnaigh na meáin ó shuíomhanna seachtracha"
+
+#: src/view/screens/Settings.tsx:687
+#~ msgid "Danger Zone"
+#~ msgstr "Limistéar Contúirte"
+
+#: src/view/screens/Settings/index.tsx:485
+#: src/view/screens/Settings/index.tsx:511
+msgid "Dark"
+msgstr "Dorcha"
+
+#: src/view/screens/Debug.tsx:63
+msgid "Dark mode"
+msgstr "Modh dorcha"
+
+#: src/view/screens/Settings/index.tsx:498
+msgid "Dark Theme"
+msgstr "Téama Dorcha"
+
+#: src/view/screens/Debug.tsx:83
+msgid "Debug panel"
+msgstr "Painéal dífhabhtaithe"
+
+#: src/view/screens/Settings/index.tsx:772
+msgid "Delete account"
+msgstr "Scrios an cuntas"
+
+#: src/view/com/modals/DeleteAccount.tsx:87
+msgid "Delete Account"
+msgstr "Scrios an Cuntas"
+
+#: src/view/screens/AppPasswords.tsx:222
+#: src/view/screens/AppPasswords.tsx:242
+msgid "Delete app password"
+msgstr "Scrios pasfhocal na haipe"
+
+#: src/view/screens/ProfileList.tsx:363
+#: src/view/screens/ProfileList.tsx:444
+msgid "Delete List"
+msgstr "Scrios an liosta"
+
+#: src/view/com/modals/DeleteAccount.tsx:223
+msgid "Delete my account"
+msgstr "Scrios mo chuntas"
+
+#: src/view/screens/Settings.tsx:706
+#~ msgid "Delete my account…"
+#~ msgstr "Scrios mo chuntas"
+
+#: src/view/screens/Settings/index.tsx:784
+msgid "Delete My Account…"
+msgstr "Scrios mo chuntas…"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:228
+msgid "Delete post"
+msgstr "Scrios an phostáil"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:232
+msgid "Delete this post?"
+msgstr "An bhfuil fonn ort an phostáil seo a scriosadh?"
+
+#: src/view/com/util/post-embeds/QuoteEmbed.tsx:69
+msgid "Deleted"
+msgstr "Scriosta"
+
+#: src/view/com/post-thread/PostThread.tsx:316
+msgid "Deleted post."
+msgstr "Scriosadh an phostáil."
+
+#: src/view/com/modals/CreateOrEditList.tsx:300
+#: src/view/com/modals/CreateOrEditList.tsx:321
+#: src/view/com/modals/EditProfile.tsx:198
+#: src/view/com/modals/EditProfile.tsx:210
+msgid "Description"
+msgstr "Cur síos"
+
+#: src/view/screens/Settings.tsx:760
+#~ msgid "Developer Tools"
+#~ msgstr "Áiseanna forbróra"
+
+#: src/view/com/composer/Composer.tsx:211
+msgid "Did you want to say anything?"
+msgstr "Ar mhaith leat rud éigin a rá?"
+
+#: src/view/screens/Settings/index.tsx:504
+msgid "Dim"
+msgstr "Breacdhorcha"
+
+#: src/view/com/composer/Composer.tsx:144
+msgid "Discard"
+msgstr "Ná sábháil"
+
+#: src/view/com/composer/Composer.tsx:138
+msgid "Discard draft"
+msgstr "Ná sábháil an dréacht"
+
+#: src/view/screens/Moderation.tsx:207
+msgid "Discourage apps from showing my account to logged-out users"
+msgstr "Cuir ina luí ar aipeanna gan mo chuntas a thaispeáint d'úsáideoirí atá logáilte amach"
+
+#: src/view/com/posts/FollowingEmptyState.tsx:74
+#: src/view/com/posts/FollowingEndOfFeed.tsx:75
+msgid "Discover new custom feeds"
+msgstr "Aimsigh sainfhothaí nua"
+
+#: src/view/screens/Feeds.tsx:473
+#~ msgid "Discover new feeds"
+#~ msgstr "Aimsigh fothaí nua"
+
+#: src/view/screens/Feeds.tsx:689
+msgid "Discover New Feeds"
+msgstr "Aimsigh Fothaí Nua"
+
+#: src/view/com/modals/EditProfile.tsx:192
+msgid "Display name"
+msgstr "Ainm taispeána"
+
+#: src/view/com/modals/EditProfile.tsx:180
+msgid "Display Name"
+msgstr "Ainm Taispeána"
+
+#: src/view/com/modals/ChangeHandle.tsx:487
+msgid "Domain verified!"
+msgstr "Fearann dearbhaithe!"
+
+#: src/view/com/auth/create/Step1.tsx:170
+msgid "Don't have an invite code?"
+msgstr "Níl cód cuiridh agat?"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:86
+#: src/view/com/modals/EditImage.tsx:333
+#: src/view/com/modals/ListAddRemoveUsers.tsx:144
+#: src/view/com/modals/SelfLabel.tsx:157
+#: src/view/com/modals/Threadgate.tsx:129
+#: src/view/com/modals/Threadgate.tsx:132
+#: src/view/com/modals/UserAddRemoveLists.tsx:95
+#: src/view/com/modals/UserAddRemoveLists.tsx:98
+#: src/view/screens/PreferencesThreads.tsx:162
+msgctxt "action"
+msgid "Done"
+msgstr "Déanta"
+
+#: src/view/com/auth/server-input/index.tsx:165
+#: src/view/com/auth/server-input/index.tsx:166
+#: src/view/com/modals/AddAppPasswords.tsx:226
+#: src/view/com/modals/AltImage.tsx:139
+#: src/view/com/modals/ContentFilteringSettings.tsx:88
+#: src/view/com/modals/ContentFilteringSettings.tsx:96
+#: src/view/com/modals/crop-image/CropImage.web.tsx:152
+#: src/view/com/modals/InviteCodes.tsx:80
+#: src/view/com/modals/InviteCodes.tsx:123
+#: src/view/com/modals/ListAddRemoveUsers.tsx:142
+#: src/view/screens/PreferencesHomeFeed.tsx:311
+#: src/view/screens/Settings/ExportCarDialog.tsx:93
+#: src/view/screens/Settings/ExportCarDialog.tsx:94
+msgid "Done"
+msgstr "Déanta"
+
+#: src/view/com/modals/lang-settings/ConfirmLanguagesButton.tsx:42
+msgid "Done{extraText}"
+msgstr "Déanta{extraText}"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:45
+msgid "Double tap to sign in"
+msgstr "Tapáil faoi dhó le logáil isteach"
+
+#: src/view/screens/Settings/index.tsx:755
+msgid "Download Bluesky account data (repository)"
+msgstr "Íoslódáil na sonraí ó do chuntas Bluesky (cartlann)"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:59
+#: src/view/screens/Settings/ExportCarDialog.tsx:63
+msgid "Download CAR file"
+msgstr "Íoslódáil comhad CAR"
+
+#: src/view/com/composer/text-input/TextInput.web.tsx:247
+msgid "Drop to add images"
+msgstr "Scaoil anseo chun íomhánna a chur leis"
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:111
+msgid "Due to Apple policies, adult content can only be enabled on the web after completing sign up."
+msgstr "De bharr pholasaí Apple, ní féidir ábhar do dhaoine fásta ar an nGréasán a fháil roimh an logáil isteach a chríochnú."
+
+#: src/view/com/modals/EditProfile.tsx:185
+msgid "e.g. Alice Roberts"
+msgstr "m.sh. Cáit Ní Dhuibhir"
+
+#: src/view/com/modals/EditProfile.tsx:203
+msgid "e.g. Artist, dog-lover, and avid reader."
+msgstr "m.sh. Ealaíontóir, File, Eolaí"
+
+#: src/view/com/modals/CreateOrEditList.tsx:283
+msgid "e.g. Great Posters"
+msgstr "m.sh. Na cuntais is fearr"
+
+#: src/view/com/modals/CreateOrEditList.tsx:284
+msgid "e.g. Spammers"
+msgstr "m.sh. Seoltóirí turscair"
+
+#: src/view/com/modals/CreateOrEditList.tsx:312
+msgid "e.g. The posters who never miss."
+msgstr "m.sh. Na cuntais nach dteipeann orthu riamh"
+
+#: src/view/com/modals/CreateOrEditList.tsx:313
+msgid "e.g. Users that repeatedly reply with ads."
+msgstr "m.sh. Úsáideoirí a fhreagraíonn le fógraí"
+
+#: src/view/com/modals/InviteCodes.tsx:96
+msgid "Each code works once. You'll receive more invite codes periodically."
+msgstr "Oibríonn gach cód uair amháin. Gheobhaidh tú tuilleadh cód go tráthrialta."
+
+#: src/view/com/lists/ListMembers.tsx:149
+msgctxt "action"
+msgid "Edit"
+msgstr "Eagar"
+
+#: src/view/com/composer/photos/Gallery.tsx:144
+#: src/view/com/modals/EditImage.tsx:207
+msgid "Edit image"
+msgstr "Cuir an íomhá seo in eagar"
+
+#: src/view/screens/ProfileList.tsx:432
+msgid "Edit list details"
+msgstr "Athraigh mionsonraí an liosta"
+
+#: src/view/com/modals/CreateOrEditList.tsx:250
+msgid "Edit Moderation List"
+msgstr "Athraigh liosta na modhnóireachta"
+
+#: src/Navigation.tsx:242
+#: src/view/screens/Feeds.tsx:434
+#: src/view/screens/SavedFeeds.tsx:84
+msgid "Edit My Feeds"
+msgstr "Athraigh mo chuid fothaí"
+
+#: src/view/com/modals/EditProfile.tsx:152
+msgid "Edit my profile"
+msgstr "Athraigh mo phróifíl"
+
+#: src/view/com/profile/ProfileHeader.tsx:417
+msgid "Edit profile"
+msgstr "Athraigh an phróifíl"
+
+#: src/view/com/profile/ProfileHeader.tsx:422
+msgid "Edit Profile"
+msgstr "Athraigh an Phróifíl"
+
+#: src/view/screens/Feeds.tsx:355
+msgid "Edit Saved Feeds"
+msgstr "Athraigh na fothaí sábháilte"
+
+#: src/view/com/modals/CreateOrEditList.tsx:245
+msgid "Edit User List"
+msgstr "Athraigh an liosta d’úsáideoirí"
+
+#: src/view/com/modals/EditProfile.tsx:193
+msgid "Edit your display name"
+msgstr "Athraigh d’ainm taispeána"
+
+#: src/view/com/modals/EditProfile.tsx:211
+msgid "Edit your profile description"
+msgstr "Athraigh an cur síos ort sa phróifíl"
+
+#: src/screens/Onboarding/index.tsx:34
+msgid "Education"
+msgstr "Oideachas"
+
+#: src/view/com/auth/create/Step1.tsx:199
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:156
+#: src/view/com/modals/ChangeEmail.tsx:141
+#: src/view/com/modals/Waitlist.tsx:88
+msgid "Email"
+msgstr "Ríomhphost"
+
+#: src/view/com/auth/create/Step1.tsx:190
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:147
+msgid "Email address"
+msgstr "Seoladh ríomhphoist"
+
+#: src/view/com/modals/ChangeEmail.tsx:56
+#: src/view/com/modals/ChangeEmail.tsx:88
+msgid "Email updated"
+msgstr "Seoladh ríomhphoist uasdátaithe"
+
+#: src/view/com/modals/ChangeEmail.tsx:111
+msgid "Email Updated"
+msgstr "Seoladh ríomhphoist uasdátaithe"
+
+#: src/view/com/modals/VerifyEmail.tsx:78
+msgid "Email verified"
+msgstr "Ríomhphost dearbhaithe"
+
+#: src/view/screens/Settings/index.tsx:312
+msgid "Email:"
+msgstr "Ríomhphost:"
+
+#: src/view/com/modals/EmbedConsent.tsx:113
+msgid "Enable {0} only"
+msgstr "Cuir {0} amháin ar fáil"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:167
+msgid "Enable Adult Content"
+msgstr "Cuir ábhar do dhaoine fásta ar fáil"
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:76
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:77
+msgid "Enable adult content in your feeds"
+msgstr "Cuir ábhar do dhaoine fásta ar fáil i do chuid fothaí"
+
+#: src/view/com/modals/EmbedConsent.tsx:97
+msgid "Enable External Media"
+msgstr "Cuir meáin sheachtracha ar fáil"
+
+#: src/view/screens/PreferencesExternalEmbeds.tsx:75
+msgid "Enable media players for"
+msgstr "Cuir seinnteoirí na meán ar fáil le haghaidh"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:147
+msgid "Enable this setting to only see replies between people you follow."
+msgstr "Cuir an socrú seo ar siúl le gan ach freagraí i measc na ndaoine a leanann tú a fheiceáil."
+
+#: src/view/screens/Profile.tsx:455
+msgid "End of feed"
+msgstr "Deireadh an fhotha"
+
+#: src/view/com/modals/AddAppPasswords.tsx:166
+msgid "Enter a name for this App Password"
+msgstr "Cuir isteach ainm don phasfhocal aipe seo"
+
+#: src/view/com/modals/VerifyEmail.tsx:105
+msgid "Enter Confirmation Code"
+msgstr "Cuir isteach an cód dearbhaithe"
+
+#: src/view/com/modals/ChangePassword.tsx:151
+msgid "Enter the code you received to change your password."
+msgstr "Cuir isteach an cód a fuair tú chun do phasfhocal a athrú."
+
+#: src/view/com/modals/ChangeHandle.tsx:371
+msgid "Enter the domain you want to use"
+msgstr "Cuir isteach an fearann is maith leat a úsáid"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:107
+msgid "Enter the email you used to create your account. We'll send you a \"reset code\" so you can set a new password."
+msgstr "Cuir isteach an seoladh ríomhphoist a d’úsáid tú le do chuntas a chruthú. Cuirfidh muid “cód athshocraithe” chugat le go mbeidh tú in ann do phasfhocal a athrú."
+
+#: src/view/com/auth/create/Step1.tsx:251
+#: src/view/com/modals/BirthDateSettings.tsx:74
+msgid "Enter your birth date"
+msgstr "Cuir isteach do bhreithlá"
+
+#: src/view/com/modals/Waitlist.tsx:78
+msgid "Enter your email"
+msgstr "Cuir isteach do sheoladh ríomhphoist"
+
+#: src/view/com/auth/create/Step1.tsx:195
+msgid "Enter your email address"
+msgstr "Cuir isteach do sheoladh ríomhphoist"
+
+#: src/view/com/modals/ChangeEmail.tsx:41
+msgid "Enter your new email above"
+msgstr "Cuir isteach do sheoladh ríomhphoist nua thuas"
+
+#: src/view/com/modals/ChangeEmail.tsx:117
+msgid "Enter your new email address below."
+msgstr "Cuir isteach do sheoladh ríomhphoist nua thíos."
+
+#: src/view/com/auth/create/Step2.tsx:188
+#~ msgid "Enter your phone number"
+#~ msgstr "Cuir isteach d’uimhir ghutháin"
+
+#: src/view/com/auth/login/Login.tsx:99
+msgid "Enter your username and password"
+msgstr "Cuir isteach do leasainm agus do phasfhocal"
+
+#: src/view/com/auth/create/Step3.tsx:67
+msgid "Error receiving captcha response."
+msgstr "Earráid agus an freagra ar an captcha á phróiseáil."
+
+#: src/view/screens/Search/Search.tsx:109
+msgid "Error:"
+msgstr "Earráid:"
+
+#: src/view/com/modals/Threadgate.tsx:76
+msgid "Everybody"
+msgstr "Chuile dhuine"
+
+#: src/view/com/modals/ChangeHandle.tsx:150
+msgid "Exits handle change process"
+msgstr "Fágann sé seo athrú do leasainm"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:120
+msgid "Exits image view"
+msgstr "Fágann sé seo an radharc ar an íomhá"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:88
+#: src/view/shell/desktop/Search.tsx:235
+msgid "Exits inputting search query"
+msgstr "Fágann sé seo an cuardach"
+
+#: src/view/com/modals/Waitlist.tsx:138
+msgid "Exits signing up for waitlist with {email}"
+msgstr "Fágann sé seo an síniú ar an liosta feithimh le {email}"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:163
+msgid "Expand alt text"
+msgstr "Taispeáin an téacs malartach ina iomláine"
+
+#: src/view/com/composer/ComposerReplyTo.tsx:81
+#: src/view/com/composer/ComposerReplyTo.tsx:84
+msgid "Expand or collapse the full post you are replying to"
+msgstr "Leathnaigh nó laghdaigh an téacs iomlán a bhfuil tú ag freagairt"
+
+#: src/view/screens/Settings/index.tsx:753
+msgid "Export my data"
+msgstr "Easpórtáil mo chuid sonraí"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:44
+#: src/view/screens/Settings/index.tsx:764
+msgid "Export My Data"
+msgstr "Easpórtáil mo chuid sonraí"
+
+#: src/view/com/modals/EmbedConsent.tsx:64
+msgid "External Media"
+msgstr "Meáin sheachtracha"
+
+#: src/view/com/modals/EmbedConsent.tsx:75
+#: src/view/screens/PreferencesExternalEmbeds.tsx:66
+msgid "External media may allow websites to collect information about you and your device. No information is sent or requested until you press the \"play\" button."
+msgstr "Is féidir le meáin sheachtracha cumas a thabhairt do shuíomhanna ar an nGréasán eolas fútsa agus faoi do ghléas a chnuasach. Ní sheoltar ná iarrtar aon eolas go dtí go mbrúnn tú an cnaipe “play”."
+
+#: src/Navigation.tsx:258
+#: src/view/screens/PreferencesExternalEmbeds.tsx:52
+#: src/view/screens/Settings/index.tsx:657
+msgid "External Media Preferences"
+msgstr "Roghanna maidir le meáin sheachtracha"
+
+#: src/view/screens/Settings/index.tsx:648
+msgid "External media settings"
+msgstr "Socruithe maidir le meáin sheachtracha"
+
+#: src/view/com/modals/AddAppPasswords.tsx:115
+#: src/view/com/modals/AddAppPasswords.tsx:119
+msgid "Failed to create app password."
+msgstr "Teip ar phasfhocal aipe a chruthú."
+
+#: src/view/com/modals/CreateOrEditList.tsx:206
+msgid "Failed to create the list. Check your internet connection and try again."
+msgstr "Teip ar chruthú an liosta. Seiceáil do nasc leis an idirlíon agus déan iarracht eile."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:88
+msgid "Failed to delete post, please try again"
+msgstr "Teip ar scriosadh na postála. Déan iarracht eile."
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:109
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:141
+msgid "Failed to load recommended feeds"
+msgstr "Teip ar lódáil na bhfothaí molta"
+
+#: src/Navigation.tsx:192
+msgid "Feed"
+msgstr "Fotha"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:229
+msgid "Feed by {0}"
+msgstr "Fotha le {0}"
+
+#: src/view/screens/Feeds.tsx:605
+msgid "Feed offline"
+msgstr "Fotha as líne"
+
+#: src/view/com/feeds/FeedPage.tsx:143
+msgid "Feed Preferences"
+msgstr "Roghanna fotha"
+
+#: src/view/shell/desktop/RightNav.tsx:61
+#: src/view/shell/Drawer.tsx:311
+msgid "Feedback"
+msgstr "Aiseolas"
+
+#: src/Navigation.tsx:442
+#: src/view/screens/Feeds.tsx:419
+#: src/view/screens/Feeds.tsx:524
+#: src/view/screens/Profile.tsx:184
+#: src/view/shell/bottom-bar/BottomBar.tsx:181
+#: src/view/shell/desktop/LeftNav.tsx:342
+#: src/view/shell/Drawer.tsx:476
+#: src/view/shell/Drawer.tsx:477
+msgid "Feeds"
+msgstr "Fothaí"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#~ msgid "Feeds are created by users and can give you entirely new experiences."
+#~ msgstr "Cruthaíonn úsáideoirí fothaí a d'fhéadfadh eispéiris úrnua a thabhairt duit."
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:106
+#~ msgid "Feeds are created by users and organizations. They offer you varied experiences and suggest content you may like using algorithms."
+#~ msgstr "Is iad úsáideoirí agus eagraíochtaí a chruthaíonn na fothaí. Is féidir leo radharcanna úrnua a oscailt duit."
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:57
+msgid "Feeds are created by users to curate content. Choose some feeds that you find interesting."
+msgstr "Is iad na húsáideoirí a chruthaíonn na fothaí le hábhar is spéis leo a chur ar fáil. Roghnaigh cúpla fotha a bhfuil suim agat iontu."
+
+#: src/view/screens/SavedFeeds.tsx:156
+msgid "Feeds are custom algorithms that users build with a little coding expertise. <0/> for more information."
+msgstr "Is sainalgartaim iad na fothaí. Cruthaíonn úsáideoirí a bhfuil beagán taithí acu ar chódáil iad. <0/> le tuilleadh eolais a fháil."
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:70
+msgid "Feeds can be topical as well!"
+msgstr "Is féidir le fothaí a bheith bunaithe ar chúrsaí reatha freisin!"
+
+#: src/screens/Onboarding/StepFinished.tsx:151
+msgid "Finalizing"
+msgstr "Ag cur crích air"
+
+#: src/view/com/posts/CustomFeedEmptyState.tsx:47
+#: src/view/com/posts/FollowingEmptyState.tsx:57
+#: src/view/com/posts/FollowingEndOfFeed.tsx:58
+msgid "Find accounts to follow"
+msgstr "Aimsigh fothaí le leanúint"
+
+#: src/view/screens/Search/Search.tsx:439
+msgid "Find users on Bluesky"
+msgstr "Aimsigh úsáideoirí ar Bluesky"
+
+#: src/view/screens/Search/Search.tsx:437
+msgid "Find users with the search tool on the right"
+msgstr "Aimsigh úsáideoirí leis an uirlis chuardaigh ar dheis"
+
+#: src/view/com/auth/onboarding/RecommendedFollowsItem.tsx:150
+msgid "Finding similar accounts..."
+msgstr "Cuntais eile atá cosúil leis seo á n-aimsiú..."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:111
+msgid "Fine-tune the content you see on your home screen."
+msgstr "Mionathraigh an t-ábhar a fheiceann tú ar do scáileán baile."
+
+#: src/view/screens/PreferencesThreads.tsx:60
+msgid "Fine-tune the discussion threads."
+msgstr "Mionathraigh na snáitheanna chomhrá"
+
+#: src/screens/Onboarding/index.tsx:38
+msgid "Fitness"
+msgstr "Folláine"
+
+#: src/screens/Onboarding/StepFinished.tsx:131
+msgid "Flexible"
+msgstr "Solúbtha"
+
+#: src/view/com/modals/EditImage.tsx:115
+msgid "Flip horizontal"
+msgstr "Iompaigh go cothrománach é"
+
+#: src/view/com/modals/EditImage.tsx:120
+#: src/view/com/modals/EditImage.tsx:287
+msgid "Flip vertically"
+msgstr "Iompaigh go hingearach é"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:181
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:136
+#: src/view/com/profile/ProfileHeader.tsx:512
+msgid "Follow"
+msgstr "Lean"
+
+#: src/view/com/profile/FollowButton.tsx:64
+msgctxt "action"
+msgid "Follow"
+msgstr "Lean"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:58
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:122
+#: src/view/com/profile/ProfileHeader.tsx:503
+msgid "Follow {0}"
+msgstr "Lean {0}"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:179
+msgid "Follow All"
+msgstr "Lean iad uile"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:174
+msgid "Follow selected accounts and continue to the next step"
+msgstr "Lean na cuntais roghnaithe agus téigh ar aghaidh go dtí an chéad chéim eile"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:64
+msgid "Follow some users to get started. We can recommend you more users based on who you find interesting."
+msgstr "Lean cúpla cuntas mar thosú. Tig linn níos mó úsáideoirí a mholadh duit a mbeadh suim agat iontu."
+
+#: src/view/com/profile/ProfileCard.tsx:194
+msgid "Followed by {0}"
+msgstr "Leanta ag {0}"
+
+#: src/view/com/modals/Threadgate.tsx:98
+msgid "Followed users"
+msgstr "Cuntais a leanann tú"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:154
+msgid "Followed users only"
+msgstr "Cuntais a leanann tú amháin"
+
+#: src/view/com/notifications/FeedItem.tsx:166
+msgid "followed you"
+msgstr "— lean sé/sí thú"
+
+#: src/view/screens/ProfileFollowers.tsx:25
+msgid "Followers"
+msgstr "Leantóirí"
+
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:136
+#: src/view/com/profile/ProfileHeader.tsx:494
+#: src/view/screens/ProfileFollows.tsx:25
+msgid "Following"
+msgstr "Á leanúint"
+
+#: src/view/com/profile/ProfileHeader.tsx:148
+msgid "Following {0}"
+msgstr "Ag leanúint {0}"
+
+#: src/view/com/profile/ProfileHeader.tsx:545
+msgid "Follows you"
+msgstr "Leanann sé/sí thú"
+
+#: src/view/com/profile/ProfileCard.tsx:141
+msgid "Follows You"
+msgstr "Leanann sé/sí thú"
+
+#: src/screens/Onboarding/index.tsx:43
+msgid "Food"
+msgstr "Bia"
+
+#: src/view/com/modals/DeleteAccount.tsx:111
+msgid "For security reasons, we'll need to send a confirmation code to your email address."
+msgstr "Ar chúiseanna slándála, beidh orainn cód dearbhaithe a chur chuig do sheoladh ríomhphoist."
+
+#: src/view/com/modals/AddAppPasswords.tsx:209
+msgid "For security reasons, you won't be able to view this again. If you lose this password, you'll need to generate a new one."
+msgstr "Ar chúiseanna slándála, ní bheidh tú in ann é seo a fheiceáil arís. Má chailleann tú an pasfhocal seo beidh ort ceann nua a chruthú."
+
+#: src/view/com/auth/login/LoginForm.tsx:241
+msgid "Forgot"
+msgstr "Dearmadta"
+
+#: src/view/com/auth/login/LoginForm.tsx:238
+msgid "Forgot password"
+msgstr "Pasfhocal dearmadta"
+
+#: src/view/com/auth/login/Login.tsx:127
+#: src/view/com/auth/login/Login.tsx:143
+msgid "Forgot Password"
+msgstr "Pasfhocal dearmadta"
+
+#: src/view/com/posts/FeedItem.tsx:186
+msgctxt "from-feed"
+msgid "From <0/>"
+msgstr "Ó <0/>"
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:43
+msgid "Gallery"
+msgstr "Gailearaí"
+
+#: src/view/com/modals/VerifyEmail.tsx:189
+#: src/view/com/modals/VerifyEmail.tsx:191
+msgid "Get Started"
+msgstr "Ar aghaidh leat anois!"
+
+#: src/view/com/auth/LoggedOut.tsx:81
+#: src/view/com/auth/LoggedOut.tsx:82
+#: src/view/com/util/moderation/ScreenHider.tsx:123
+#: src/view/shell/desktop/LeftNav.tsx:104
+msgid "Go back"
+msgstr "Ar ais"
+
+#: src/view/screens/ProfileFeed.tsx:105
+#: src/view/screens/ProfileFeed.tsx:110
+#: src/view/screens/ProfileList.tsx:897
+#: src/view/screens/ProfileList.tsx:902
+msgid "Go Back"
+msgstr "Ar ais"
+
+#: src/screens/Onboarding/Layout.tsx:104
+#: src/screens/Onboarding/Layout.tsx:193
+msgid "Go back to previous step"
+msgstr "Fill ar an gcéim roimhe seo"
+
+#: src/view/screens/Search/Search.tsx:724
+#: src/view/shell/desktop/Search.tsx:262
+msgid "Go to @{queryMaybeHandle}"
+msgstr "Téigh go dtí @{queryMaybeHandle}"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:189
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:218
+#: src/view/com/auth/login/LoginForm.tsx:288
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:195
+#: src/view/com/modals/ChangePassword.tsx:165
+msgid "Go to next"
+msgstr "Téigh go dtí an chéad rud eile"
+
+#: src/view/com/modals/ChangeHandle.tsx:265
+msgid "Handle"
+msgstr "Leasainm"
+
+#: src/view/com/auth/create/CreateAccount.tsx:204
+msgid "Having trouble?"
+msgstr "Fadhb ort?"
+
+#: src/view/shell/desktop/RightNav.tsx:90
+#: src/view/shell/Drawer.tsx:321
+msgid "Help"
+msgstr "Cúnamh"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:132
+msgid "Here are some accounts for you to follow"
+msgstr "Seo cúpla cuntas le leanúint duit"
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:79
+msgid "Here are some popular topical feeds. You can choose to follow as many as you like."
+msgstr "Seo cúpla fotha a bhfuil ráchairt orthu. Is féidir leat an méid acu is mian leat a leanúint."
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:74
+msgid "Here are some topical feeds based on your interests: {interestsText}. You can choose to follow as many as you like."
+msgstr "Seo cúpla fotha a phléann le rudaí a bhfuil suim agat iontu: {interestsText}. Is féidir leat an méid acu is mian leat a leanúint."
+
+#: src/view/com/modals/AddAppPasswords.tsx:153
+msgid "Here is your app password."
+msgstr "Seo é do phasfhocal aipe."
+
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:41
+#: src/view/com/modals/ContentFilteringSettings.tsx:251
+#: src/view/com/util/moderation/ContentHider.tsx:105
+#: src/view/com/util/moderation/PostHider.tsx:108
+msgid "Hide"
+msgstr "Cuir i bhfolach"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:224
+#: src/view/com/notifications/FeedItem.tsx:325
+msgctxt "action"
+msgid "Hide"
+msgstr "Cuir i bhfolach"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:187
+msgid "Hide post"
+msgstr "Cuir an phostáil seo i bhfolach"
+
+#: src/view/com/util/moderation/ContentHider.tsx:67
+#: src/view/com/util/moderation/PostHider.tsx:61
+msgid "Hide the content"
+msgstr "Cuir an t-ábhar seo i bhfolach"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:191
+msgid "Hide this post?"
+msgstr "An bhfuil fonn ort an phostáil seo a chur i bhfolach?"
+
+#: src/view/com/notifications/FeedItem.tsx:315
+msgid "Hide user list"
+msgstr "Cuir liosta na gcuntas i bhfolach"
+
+#: src/view/com/profile/ProfileHeader.tsx:486
+msgid "Hides posts from {0} in your feed"
+msgstr "Cuireann sé seo na postálacha ó {0} i d’fhotha i bhfolach"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:111
+msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
+msgstr "Hmm. Tharla fadhb éigin sa dul i dteagmháil le freastalaí an fhotha seo. Cuir é seo in iúl d’úinéir an fhotha, le do thoil."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:99
+msgid "Hmm, the feed server appears to be misconfigured. Please let the feed owner know about this issue."
+msgstr "Hmm. Is cosúil nach bhfuil freastalaí an fhotha seo curtha le chéile i gceart. Cuir é seo in iúl d’úinéir an fhotha, le do thoil."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:105
+msgid "Hmm, the feed server appears to be offline. Please let the feed owner know about this issue."
+msgstr "Hmm. Is cosúil go bhfuil freastalaí an fhotha as líne. Cuir é seo in iúl d’úinéir an fhotha, le do thoil."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:102
+msgid "Hmm, the feed server gave a bad response. Please let the feed owner know about this issue."
+msgstr "Hmm. Thug freastalaí an fhotha drochfhreagra. Cuir é seo in iúl d’úinéir an fhotha, le do thoil."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:96
+msgid "Hmm, we're having trouble finding this feed. It may have been deleted."
+msgstr "Hmm. Ní féidir linn an fotha seo a aimsiú. Is féidir gur scriosadh é."
+
+#: src/Navigation.tsx:432
+#: src/view/shell/bottom-bar/BottomBar.tsx:137
+#: src/view/shell/desktop/LeftNav.tsx:306
+#: src/view/shell/Drawer.tsx:398
+#: src/view/shell/Drawer.tsx:399
+msgid "Home"
+msgstr "Baile"
+
+#: src/Navigation.tsx:247
+#: src/view/com/pager/FeedsTabBarMobile.tsx:123
+#: src/view/screens/PreferencesHomeFeed.tsx:104
+#: src/view/screens/Settings/index.tsx:543
+msgid "Home Feed Preferences"
+msgstr "Roghanna le haghaidh an fhotha baile"
+
+#: src/view/com/auth/create/Step1.tsx:82
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:120
+msgid "Hosting provider"
+msgstr "Soláthraí óstála"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:44
+msgid "How should we open this link?"
+msgstr "Conas ar cheart dúinn an nasc seo a oscailt?"
+
+#: src/view/com/modals/VerifyEmail.tsx:214
+msgid "I have a code"
+msgstr "Tá cód agam"
+
+#: src/view/com/modals/VerifyEmail.tsx:216
+msgid "I have a confirmation code"
+msgstr "Tá cód dearbhaithe agam"
+
+#: src/view/com/modals/ChangeHandle.tsx:283
+msgid "I have my own domain"
+msgstr "Tá fearann de mo chuid féin agam"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:165
+msgid "If alt text is long, toggles alt text expanded state"
+msgstr "Má tá an téacs malartach rófhada, athraíonn sé seo go téacs leathnaithe"
+
+#: src/view/com/modals/SelfLabel.tsx:127
+msgid "If none are selected, suitable for all ages."
+msgstr "Mura roghnaítear tada, tá sé oiriúnach do gach aois."
+
+#: src/view/com/modals/ChangePassword.tsx:146
+msgid "If you want to change your password, we will send you a code to verify that this is your account."
+msgstr "Más mian leat do phasfhocal a athrú, seolfaimid cód duit chun dearbhú gur leatsa an cuntas seo."
+
+#: src/view/com/util/images/Gallery.tsx:38
+msgid "Image"
+msgstr "Íomhá"
+
+#: src/view/com/modals/AltImage.tsx:120
+msgid "Image alt text"
+msgstr "Téacs malartach le híomhá"
+
+#: src/view/com/util/UserAvatar.tsx:311
+#: src/view/com/util/UserBanner.tsx:118
+msgid "Image options"
+msgstr "Roghanna maidir leis an íomhá"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:138
+msgid "Input code sent to your email for password reset"
+msgstr "Cuir isteach an cód a seoladh chuig do ríomhphost leis an bpasfhocal a athrú"
+
+#: src/view/com/modals/DeleteAccount.tsx:184
+msgid "Input confirmation code for account deletion"
+msgstr "Cuir isteach an cód dearbhaithe leis an gcuntas a scriosadh"
+
+#: src/view/com/auth/create/Step1.tsx:200
+msgid "Input email for Bluesky account"
+msgstr "Cuir isteach an ríomhphost don chuntas Bluesky"
+
+#: src/view/com/auth/create/Step1.tsx:158
+msgid "Input invite code to proceed"
+msgstr "Cuir isteach an cód cuiridh le dul ar aghaidh"
+
+#: src/view/com/modals/AddAppPasswords.tsx:180
+msgid "Input name for app password"
+msgstr "Cuir isteach an t-ainm le haghaidh phasfhocal na haipe"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:162
+msgid "Input new password"
+msgstr "Cuir isteach an pasfhocal nua"
+
+#: src/view/com/modals/DeleteAccount.tsx:203
+msgid "Input password for account deletion"
+msgstr "Cuir isteach an pasfhocal chun an cuntas a scriosadh"
+
+#: src/view/com/auth/create/Step2.tsx:196
+#~ msgid "Input phone number for SMS verification"
+#~ msgstr "Cuir isteach an uimhir ghutháin le haghaidh dhearbhú SMS"
+
+#: src/view/com/auth/login/LoginForm.tsx:230
+msgid "Input the password tied to {identifier}"
+msgstr "Cuir isteach an pasfhocal ceangailte le {identifier}"
+
+#: src/view/com/auth/login/LoginForm.tsx:197
+msgid "Input the username or email address you used at signup"
+msgstr "Cuir isteach an leasainm nó an seoladh ríomhphoist a d’úsáid tú nuair a chláraigh tú"
+
+#: src/view/com/auth/create/Step2.tsx:271
+#~ msgid "Input the verification code we have texted to you"
+#~ msgstr "Cuir isteach an cód dearbhaithe a chuir muid chugat i dteachtaireacht téacs"
+
+#: src/view/com/modals/Waitlist.tsx:90
+msgid "Input your email to get on the Bluesky waitlist"
+msgstr "Cuir isteach do ríomhphost le bheith ar an liosta feithimh"
+
+#: src/view/com/auth/login/LoginForm.tsx:229
+msgid "Input your password"
+msgstr "Cuir isteach do phasfhocal"
+
+#: src/view/com/auth/create/Step2.tsx:45
+msgid "Input your user handle"
+msgstr "Cuir isteach do leasainm"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:223
+msgid "Invalid or unsupported post record"
+msgstr "Taifead postála atá neamhbhailí nó gan bhunús"
+
+#: src/view/com/auth/login/LoginForm.tsx:113
+msgid "Invalid username or password"
+msgstr "Leasainm nó pasfhocal míchruinn"
+
+#: src/view/screens/Settings.tsx:411
+#~ msgid "Invite"
+#~ msgstr "Cuireadh"
+
+#: src/view/com/modals/InviteCodes.tsx:93
+msgid "Invite a Friend"
+msgstr "Tabhair cuireadh chuig cara leat"
+
+#: src/view/com/auth/create/Step1.tsx:148
+#: src/view/com/auth/create/Step1.tsx:157
+msgid "Invite code"
+msgstr "Cód cuiridh"
+
+#: src/view/com/auth/create/state.ts:158
+msgid "Invite code not accepted. Check that you input it correctly and try again."
+msgstr "Níor glacadh leis an gcód cuiridh. Bí cinnte gur scríobh tú i gceart é agus bain triail eile as."
+
+#: src/view/com/modals/InviteCodes.tsx:170
+msgid "Invite codes: {0} available"
+msgstr "Cóid chuiridh: {0} ar fáil"
+
+#: src/view/shell/Drawer.tsx:645
+#~ msgid "Invite codes: {invitesAvailable} available"
+#~ msgstr "Cóid chuiridh: {invitesAvailable} ar fáil"
+
+#: src/view/com/modals/InviteCodes.tsx:169
+msgid "Invite codes: 1 available"
+msgstr "Cóid chuiridh: 1 ar fáil"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:64
+msgid "It shows posts from the people you follow as they happen."
+msgstr "Taispeánann sé postálacha ó na daoine a leanann tú nuair a fhoilsítear iad."
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:138
+msgid "Jobs"
+msgstr "Jabanna"
+
+#: src/view/com/modals/Waitlist.tsx:67
+msgid "Join the waitlist"
+msgstr "Cuir d’ainm ar an liosta feithimh"
+
+#: src/view/com/auth/create/Step1.tsx:174
+#: src/view/com/auth/create/Step1.tsx:178
+msgid "Join the waitlist."
+msgstr "Cuir d’ainm ar an liosta feithimh."
+
+#: src/view/com/modals/Waitlist.tsx:128
+msgid "Join Waitlist"
+msgstr "Cuir d’ainm ar an liosta feithimh"
+
+#: src/screens/Onboarding/index.tsx:24
+msgid "Journalism"
+msgstr "Iriseoireacht"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:104
+msgid "Language selection"
+msgstr "Rogha teanga"
+
+#: src/view/screens/Settings/index.tsx:594
+msgid "Language settings"
+msgstr "Socruithe teanga"
+
+#: src/Navigation.tsx:140
+#: src/view/screens/LanguageSettings.tsx:89
+msgid "Language Settings"
+msgstr "Socruithe teanga"
+
+#: src/view/screens/Settings/index.tsx:603
+msgid "Languages"
+msgstr "Teangacha"
+
+#: src/view/com/auth/create/StepHeader.tsx:20
+msgid "Last step!"
+msgstr "An chéim dheireanach!"
+
+#: src/view/com/util/moderation/ContentHider.tsx:103
+msgid "Learn more"
+msgstr "Le tuilleadh a fhoghlaim"
+
+#: src/view/com/util/moderation/PostAlerts.tsx:47
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:65
+#: src/view/com/util/moderation/ScreenHider.tsx:104
+msgid "Learn More"
+msgstr "Le tuilleadh a fhoghlaim"
+
+#: src/view/com/util/moderation/ContentHider.tsx:85
+#: src/view/com/util/moderation/PostAlerts.tsx:40
+#: src/view/com/util/moderation/PostHider.tsx:78
+#: src/view/com/util/moderation/ProfileHeaderAlerts.tsx:49
+#: src/view/com/util/moderation/ScreenHider.tsx:101
+msgid "Learn more about this warning"
+msgstr "Le tuilleadh a fhoghlaim faoin rabhadh seo"
+
+#: src/view/screens/Moderation.tsx:243
+msgid "Learn more about what is public on Bluesky."
+msgstr "Le tuilleadh a fhoghlaim faoi céard atá poiblí ar Bluesky"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:82
+msgid "Leave them all unchecked to see any language."
+msgstr "Fág iad uile gan tic le teanga ar bith a fheiceáil."
+
+#: src/view/com/modals/LinkWarning.tsx:51
+msgid "Leaving Bluesky"
+msgstr "Ag fágáil slán ag Bluesky"
+
+#: src/screens/Deactivated.tsx:128
+msgid "left to go."
+msgstr "le déanamh fós."
+
+#: src/view/screens/Settings/index.tsx:278
+msgid "Legacy storage cleared, you need to restart the app now."
+msgstr "Stóráil oidhreachta scriosta, tá ort an aip a atosú anois."
+
+#: src/view/com/auth/login/Login.tsx:128
+#: src/view/com/auth/login/Login.tsx:144
+msgid "Let's get your password reset!"
+msgstr "Socraímis do phasfhocal arís!"
+
+#: src/screens/Onboarding/StepFinished.tsx:151
+msgid "Let's go!"
+msgstr "Ar aghaidh linn!"
+
+#: src/view/com/util/UserAvatar.tsx:248
+#: src/view/com/util/UserBanner.tsx:62
+msgid "Library"
+msgstr "Leabharlann"
+
+#: src/view/screens/Settings/index.tsx:479
+msgid "Light"
+msgstr "Sorcha"
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:182
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:216
+msgid "Like"
+msgstr "Mol"
+
+#: src/view/screens/ProfileFeed.tsx:591
+msgid "Like this feed"
+msgstr "Mol an fotha seo"
+
+#: src/Navigation.tsx:197
+msgid "Liked by"
+msgstr "Molta ag"
+
+#: src/view/screens/PostLikedBy.tsx:27
+#: src/view/screens/ProfileFeedLikedBy.tsx:27
+msgid "Liked By"
+msgstr "Molta ag"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:277
+msgid "Liked by {0} {1}"
+msgstr "Molta ag {0} {1}"
+
+#: src/view/screens/ProfileFeed.tsx:606
+msgid "Liked by {likeCount} {0}"
+msgstr "Molta ag {likeCount} {0}"
+
+#: src/view/com/notifications/FeedItem.tsx:170
+msgid "liked your custom feed"
+msgstr "a mhol do shainfhotha"
+
+#: src/view/com/notifications/FeedItem.tsx:155
+msgid "liked your post"
+msgstr "a mhol do phostáil"
+
+#: src/view/screens/Profile.tsx:183
+msgid "Likes"
+msgstr "Moltaí"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:180
+msgid "Likes on this post"
+msgstr "Moltaí don phostáil seo"
+
+#: src/Navigation.tsx:166
+msgid "List"
+msgstr "Liosta"
+
+#: src/view/com/modals/CreateOrEditList.tsx:261
+msgid "List Avatar"
+msgstr "Abhatár an Liosta"
+
+#: src/view/screens/ProfileList.tsx:323
+msgid "List blocked"
+msgstr "Liosta blocáilte"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:231
+msgid "List by {0}"
+msgstr "Liosta le {0}"
+
+#: src/view/screens/ProfileList.tsx:377
+msgid "List deleted"
+msgstr "Scriosadh an liosta"
+
+#: src/view/screens/ProfileList.tsx:282
+msgid "List muted"
+msgstr "Balbhaíodh an liosta"
+
+#: src/view/com/modals/CreateOrEditList.tsx:275
+msgid "List Name"
+msgstr "Ainm an liosta"
+
+#: src/view/screens/ProfileList.tsx:342
+msgid "List unblocked"
+msgstr "Liosta díbhlocáilte"
+
+#: src/view/screens/ProfileList.tsx:301
+msgid "List unmuted"
+msgstr "Liosta nach bhfuil balbhaithe níos mó"
+
+#: src/Navigation.tsx:110
+#: src/view/screens/Profile.tsx:185
+#: src/view/shell/desktop/LeftNav.tsx:379
+#: src/view/shell/Drawer.tsx:492
+#: src/view/shell/Drawer.tsx:493
+msgid "Lists"
+msgstr "Liostaí"
+
+#: src/view/com/post-thread/PostThread.tsx:333
+#: src/view/com/post-thread/PostThread.tsx:341
+msgid "Load more posts"
+msgstr "Lódáil tuilleadh postálacha"
+
+#: src/view/screens/Notifications.tsx:159
+msgid "Load new notifications"
+msgstr "Lódáil fógraí nua"
+
+#: src/view/com/feeds/FeedPage.tsx:181
+#: src/view/screens/Profile.tsx:440
+#: src/view/screens/ProfileFeed.tsx:494
+#: src/view/screens/ProfileList.tsx:680
+msgid "Load new posts"
+msgstr "Lódáil postálacha nua"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:95
+msgid "Loading..."
+msgstr "Ag lódáil …"
+
+#: src/view/com/modals/ServerInput.tsx:50
+#~ msgid "Local dev server"
+#~ msgstr "Freastálaí forbróra áitiúil"
+
+#: src/Navigation.tsx:207
+msgid "Log"
+msgstr "Logleabhar"
+
+#: src/screens/Deactivated.tsx:149
+#: src/screens/Deactivated.tsx:152
+#: src/screens/Deactivated.tsx:178
+#: src/screens/Deactivated.tsx:181
+msgid "Log out"
+msgstr "Logáil amach"
+
+#: src/view/screens/Moderation.tsx:136
+msgid "Logged-out visibility"
+msgstr "Feiceálacht le linn a bheith logáilte amach"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:133
+msgid "Login to account that is not listed"
+msgstr "Logáil isteach ar chuntas nach bhfuil liostáilte"
+
+#: src/view/com/modals/LinkWarning.tsx:65
+msgid "Make sure this is where you intend to go!"
+msgstr "Bí cinnte go bhfuil tú ag iarraidh cuairt a thabhairt ar an áit sin!"
+
+#: src/view/screens/Profile.tsx:182
+msgid "Media"
+msgstr "Meáin"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:139
+msgid "mentioned users"
+msgstr "úsáideoirí luaite"
+
+#: src/view/com/modals/Threadgate.tsx:93
+msgid "Mentioned users"
+msgstr "Úsáideoirí luaite"
+
+#: src/view/com/util/ViewHeader.tsx:81
+#: src/view/screens/Search/Search.tsx:623
+msgid "Menu"
+msgstr "Clár"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:197
+msgid "Message from server: {0}"
+msgstr "Teachtaireacht ón bhfreastalaí: {0}"
+
+#: src/Navigation.tsx:115
+#: src/view/screens/Moderation.tsx:64
+#: src/view/screens/Settings/index.tsx:625
+#: src/view/shell/desktop/LeftNav.tsx:397
+#: src/view/shell/Drawer.tsx:511
+#: src/view/shell/Drawer.tsx:512
+msgid "Moderation"
+msgstr "Modhnóireacht"
+
+#: src/view/com/lists/ListCard.tsx:92
+#: src/view/com/modals/UserAddRemoveLists.tsx:206
+msgid "Moderation list by {0}"
+msgstr "Liosta modhnóireachta le {0}"
+
+#: src/view/screens/ProfileList.tsx:774
+msgid "Moderation list by <0/>"
+msgstr "Liosta modhnóireachta le <0/>"
+
+#: src/view/com/lists/ListCard.tsx:90
+#: src/view/com/modals/UserAddRemoveLists.tsx:204
+#: src/view/screens/ProfileList.tsx:772
+msgid "Moderation list by you"
+msgstr "Liosta modhnóireachta leat"
+
+#: src/view/com/modals/CreateOrEditList.tsx:197
+msgid "Moderation list created"
+msgstr "Liosta modhnóireachta cruthaithe"
+
+#: src/view/com/modals/CreateOrEditList.tsx:183
+msgid "Moderation list updated"
+msgstr "Liosta modhnóireachta uasdátaithe"
+
+#: src/view/screens/Moderation.tsx:95
+msgid "Moderation lists"
+msgstr "Liostaí modhnóireachta"
+
+#: src/Navigation.tsx:120
+#: src/view/screens/ModerationModlists.tsx:58
+msgid "Moderation Lists"
+msgstr "Liostaí modhnóireachta"
+
+#: src/view/screens/Settings/index.tsx:619
+msgid "Moderation settings"
+msgstr "Socruithe modhnóireachta"
+
+#: src/view/com/modals/ModerationDetails.tsx:35
+msgid "Moderator has chosen to set a general warning on the content."
+msgstr "Chuir an modhnóir rabhadh ginearálta ar an ábhar."
+
+#: src/view/shell/desktop/Feeds.tsx:63
+msgid "More feeds"
+msgstr "Tuilleadh fothaí"
+
+#: src/view/com/profile/ProfileHeader.tsx:522
+#: src/view/screens/ProfileFeed.tsx:362
+#: src/view/screens/ProfileList.tsx:616
+msgid "More options"
+msgstr "Tuilleadh roghanna"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:270
+msgid "More post options"
+msgstr "Tuilleadh roghanna postála"
+
+#: src/view/screens/PreferencesThreads.tsx:82
+msgid "Most-liked replies first"
+msgstr "Freagraí a fuair an méid is mó moltaí ar dtús"
+
+#: src/view/com/profile/ProfileHeader.tsx:326
+msgid "Mute Account"
+msgstr "Cuir an cuntas i bhfolach"
+
+#: src/view/screens/ProfileList.tsx:543
+msgid "Mute accounts"
+msgstr "Cuir na cuntais i bhfolach"
+
+#: src/view/screens/ProfileList.tsx:490
+msgid "Mute list"
+msgstr "Cuir an liosta i bhfolach"
+
+#: src/view/screens/ProfileList.tsx:274
+msgid "Mute these accounts?"
+msgstr "An bhfuil fonn ort na cuntais seo a chur i bhfolach"
+
+#: src/view/screens/ProfileList.tsx:278
+msgid "Mute this List"
+msgstr "Cuir an liosta seo i bhfolach"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:171
+msgid "Mute thread"
+msgstr "Cuir an snáithe seo i bhfolach"
+
+#: src/view/com/lists/ListCard.tsx:101
+msgid "Muted"
+msgstr "Curtha i bhfolach"
+
+#: src/view/screens/Moderation.tsx:109
+msgid "Muted accounts"
+msgstr "Cuntais a cuireadh i bhfolach"
+
+#: src/Navigation.tsx:125
+#: src/view/screens/ModerationMutedAccounts.tsx:107
+msgid "Muted Accounts"
+msgstr "Cuntais a Cuireadh i bhFolach"
+
+#: src/view/screens/ModerationMutedAccounts.tsx:115
+msgid "Muted accounts have their posts removed from your feed and from your notifications. Mutes are completely private."
+msgstr "Baintear na postálacha ó na cuntais a chuir tú i bhfolach as d’fhotha agus as do chuid fógraí. Is príobháideach ar fad é an cur i bhfolach."
+
+#: src/view/screens/ProfileList.tsx:276
+msgid "Muting is private. Muted accounts can interact with you, but you will not see their posts or receive notifications from them."
+msgstr "Tá an cur i bhfolach príobháideach. Is féidir leis na cuntais a chuir tú i bhfolach do chuid postálacha a fheiceáil agus is féidir leo scríobh chugat ach ní fheicfidh tú a gcuid postálacha eile ná aon fhógraí uathu."
+
+#: src/view/com/modals/BirthDateSettings.tsx:56
+msgid "My Birthday"
+msgstr "Mo Bhreithlá"
+
+#: src/view/screens/Feeds.tsx:663
+msgid "My Feeds"
+msgstr "Mo Chuid Fothaí"
+
+#: src/view/shell/desktop/LeftNav.tsx:65
+msgid "My Profile"
+msgstr "Mo Phróifíl"
+
+#: src/view/screens/Settings/index.tsx:582
+msgid "My Saved Feeds"
+msgstr "Na Fothaí a Shábháil Mé"
+
+#: src/view/com/auth/server-input/index.tsx:118
+msgid "my-server.com"
+msgstr "my-server.com"
+
+#~ msgid "Ná bíodh gan fáil ar do chuid leantóirí ná ar do chuid dáta go deo."
+#~ msgstr "Cuir an comhrá seo i bhfolach"
+
+#: src/view/com/modals/AddAppPasswords.tsx:179
+#: src/view/com/modals/CreateOrEditList.tsx:290
+msgid "Name"
+msgstr "Ainm"
+
+#: src/view/com/modals/CreateOrEditList.tsx:145
+msgid "Name is required"
+msgstr "Tá an t-ainm riachtanach"
+
+#: src/screens/Onboarding/index.tsx:25
+msgid "Nature"
+msgstr "Nádúr"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:190
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:219
+#: src/view/com/auth/login/LoginForm.tsx:289
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:196
+#: src/view/com/modals/ChangePassword.tsx:166
+msgid "Navigates to the next screen"
+msgstr "Téann sé seo chuig an gcéad scáileán eile"
+
+#: src/view/shell/Drawer.tsx:71
+msgid "Navigates to your profile"
+msgstr "Téann sé seo chuig do phróifíl"
+
+#: src/view/com/modals/EmbedConsent.tsx:107
+#: src/view/com/modals/EmbedConsent.tsx:123
+msgid "Never load embeds from {0}"
+msgstr "Ná lódáil ábhar leabaithe ó {0} go deo"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:72
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:72
+msgid "Never lose access to your followers and data."
+msgstr "Ná bíodh gan fáil ar do chuid leantóirí ná ar do chuid dáta go deo."
+
+#: src/screens/Onboarding/StepFinished.tsx:119
+msgid "Never lose access to your followers or data."
+msgstr "Ná bíodh gan fáil ar do chuid leantóirí ná ar do chuid dáta go deo."
+
+#: src/view/screens/Lists.tsx:76
+msgctxt "action"
+msgid "New"
+msgstr "Nua"
+
+#: src/view/screens/ModerationModlists.tsx:78
+msgid "New"
+msgstr "Nua"
+
+#: src/view/com/modals/CreateOrEditList.tsx:252
+msgid "New Moderation List"
+msgstr "Liosta modhnóireachta nua"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:150
+msgid "New password"
+msgstr "Pasfhocal Nua"
+
+#: src/view/com/modals/ChangePassword.tsx:215
+msgid "New Password"
+msgstr "Pasfhocal Nua"
+
+#: src/view/com/feeds/FeedPage.tsx:192
+msgctxt "action"
+msgid "New post"
+msgstr "Postáil nua"
+
+#: src/view/screens/Feeds.tsx:555
+#: src/view/screens/Notifications.tsx:168
+#: src/view/screens/Profile.tsx:382
+#: src/view/screens/ProfileFeed.tsx:432
+#: src/view/screens/ProfileList.tsx:195
+#: src/view/screens/ProfileList.tsx:223
+#: src/view/shell/desktop/LeftNav.tsx:248
+msgid "New post"
+msgstr "Postáil nua"
+
+#: src/view/shell/desktop/LeftNav.tsx:258
+msgctxt "action"
+msgid "New Post"
+msgstr "Postáil nua"
+
+#: src/view/com/modals/CreateOrEditList.tsx:247
+msgid "New User List"
+msgstr "Liosta Nua d’Úsáideoirí"
+
+#: src/view/screens/PreferencesThreads.tsx:79
+msgid "Newest replies first"
+msgstr "Na freagraí is déanaí ar dtús"
+
+#: src/screens/Onboarding/index.tsx:23
+msgid "News"
+msgstr "Nuacht"
+
+#: src/view/com/auth/create/CreateAccount.tsx:168
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:182
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:192
+#: src/view/com/auth/login/LoginForm.tsx:291
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:187
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:198
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
+#: src/view/com/modals/ChangePassword.tsx:251
+#: src/view/com/modals/ChangePassword.tsx:253
+msgid "Next"
+msgstr "Ar aghaidh"
+
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:103
+msgctxt "action"
+msgid "Next"
+msgstr "Ar aghaidh"
+
+#: src/view/com/lightbox/Lightbox.web.tsx:149
+msgid "Next image"
+msgstr "An chéad íomhá eile"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:129
+#: src/view/screens/PreferencesHomeFeed.tsx:200
+#: src/view/screens/PreferencesHomeFeed.tsx:235
+#: src/view/screens/PreferencesHomeFeed.tsx:272
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
+msgid "No"
+msgstr "Níl"
+
+#: src/view/screens/ProfileFeed.tsx:584
+#: src/view/screens/ProfileList.tsx:754
+msgid "No description"
+msgstr "Gan chur síos"
+
+#: src/view/com/profile/ProfileHeader.tsx:169
+msgid "No longer following {0}"
+msgstr "Ní leantar {0} níos mó"
+
+#: src/view/com/notifications/Feed.tsx:109
+msgid "No notifications yet!"
+msgstr "Níl aon fhógra ann fós!"
+
+#: src/view/com/composer/text-input/mobile/Autocomplete.tsx:97
+#: src/view/com/composer/text-input/web/Autocomplete.tsx:191
+msgid "No result"
+msgstr "Gan torthaí"
+
+#: src/view/screens/Feeds.tsx:495
+msgid "No results found for \"{query}\""
+msgstr "Gan torthaí ar “{query}”"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:127
+#: src/view/screens/Search/Search.tsx:280
+#: src/view/screens/Search/Search.tsx:308
+msgid "No results found for {query}"
+msgstr "Gan torthaí ar {query}"
+
+#: src/view/com/modals/EmbedConsent.tsx:129
+msgid "No thanks"
+msgstr "Níor mhaith liom é sin."
+
+#: src/view/com/modals/Threadgate.tsx:82
+msgid "Nobody"
+msgstr "Duine ar bith"
+
+#: src/view/com/modals/SelfLabel.tsx:135
+msgid "Not Applicable."
+msgstr "Ní bhaineann sé sin le hábhar."
+
+#: src/Navigation.tsx:105
+#: src/view/screens/Profile.tsx:106
+msgid "Not Found"
+msgstr "Ní bhfuarthas é sin"
+
+#: src/view/com/modals/VerifyEmail.tsx:246
+#: src/view/com/modals/VerifyEmail.tsx:252
+msgid "Not right now"
+msgstr "Ní anois"
+
+#: src/view/screens/Moderation.tsx:233
+msgid "Note: Bluesky is an open and public network. This setting only limits the visibility of your content on the Bluesky app and website, and other apps may not respect this setting. Your content may still be shown to logged-out users by other apps and websites."
+msgstr "Nod leat: is gréasán oscailte poiblí Bluesky. Ní chuireann an socrú seo srian ar fheiceálacht do chuid ábhair ach amháin ar aip agus suíomh Bluesky. Is féidir nach gcloífidh aipeanna eile leis an socrú seo. Is féidir go dtaispeánfar do chuid ábhair d’úsáideoirí atá lógáilte amach ar aipeanna agus suíomhanna eile."
+
+#: src/Navigation.tsx:447
+#: src/view/screens/Notifications.tsx:124
+#: src/view/screens/Notifications.tsx:148
+#: src/view/shell/bottom-bar/BottomBar.tsx:205
+#: src/view/shell/desktop/LeftNav.tsx:361
+#: src/view/shell/Drawer.tsx:435
+#: src/view/shell/Drawer.tsx:436
+msgid "Notifications"
+msgstr "Fógraí"
+
+#: src/view/com/modals/SelfLabel.tsx:103
+msgid "Nudity"
+msgstr "Lomnochtacht"
+
+#: src/view/com/util/ErrorBoundary.tsx:35
+msgid "Oh no!"
+msgstr "Úps!"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:128
+msgid "Oh no! Something went wrong."
+msgstr "Úps! Theip ar rud éigin."
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:41
+msgid "Okay"
+msgstr "Maith go leor"
+
+#: src/view/screens/PreferencesThreads.tsx:78
+msgid "Oldest replies first"
+msgstr "Na freagraí is sine ar dtús"
+
+#: src/view/screens/Settings/index.tsx:234
+msgid "Onboarding reset"
+msgstr "Atosú an chláraithe"
+
+#: src/view/com/composer/Composer.tsx:375
+msgid "One or more images is missing alt text."
+msgstr "Tá téacs malartach de dhíth ar íomhá amháin nó níos mó acu."
+
+#: src/view/com/threadgate/WhoCanReply.tsx:100
+msgid "Only {0} can reply."
+msgstr "Ní féidir ach le {0} freagra a thabhairt."
+
+#: src/view/screens/AppPasswords.tsx:65
+#: src/view/screens/Profile.tsx:106
+msgid "Oops!"
+msgstr "Úps!"
+
+#: src/screens/Onboarding/StepFinished.tsx:115
+msgid "Open"
+msgstr "Oscail"
+
+#: src/view/com/composer/Composer.tsx:470
+#: src/view/com/composer/Composer.tsx:471
+msgid "Open emoji picker"
+msgstr "Oscail roghnóir na n-emoji"
+
+#: src/view/screens/Settings/index.tsx:712
+msgid "Open links with in-app browser"
+msgstr "Oscail nascanna leis an mbrabhsálaí san aip"
+
+#: src/view/com/pager/FeedsTabBarMobile.tsx:87
+msgid "Open navigation"
+msgstr "Oscail an nascleanúint"
+
+#: src/view/screens/Settings/index.tsx:804
+msgid "Open storybook page"
+msgstr "Oscail leathanach an Storybook"
+
+#: src/view/com/util/forms/DropdownButton.tsx:154
+msgid "Opens {numItems} options"
+msgstr "Osclaíonn sé seo {numItems} rogha"
+
+#: src/view/screens/Log.tsx:54
+msgid "Opens additional details for a debug entry"
+msgstr "Osclaíonn sé seo tuilleadh sonraí le haghaidh iontráil dífhabhtaithe"
+
+#: src/view/com/notifications/FeedItem.tsx:348
+msgid "Opens an expanded list of users in this notification"
+msgstr "Osclaíonn sé seo liosta méadaithe d’úsáideoirí san fhógra seo"
+
+#: src/view/com/composer/photos/OpenCameraBtn.tsx:61
+msgid "Opens camera on device"
+msgstr "Osclaíonn sé seo an ceamara ar an ngléas"
+
+#: src/view/com/composer/Prompt.tsx:25
+msgid "Opens composer"
+msgstr "Osclaíonn sé seo an t-eagarthóir"
+
+#: src/view/screens/Settings/index.tsx:595
+msgid "Opens configurable language settings"
+msgstr "Osclaíonn sé seo na socruithe teanga is féidir a dhéanamh"
+
+#: src/view/com/composer/photos/SelectPhotoBtn.tsx:44
+msgid "Opens device photo gallery"
+msgstr "Osclaíonn sé seo gailearaí na ngrianghraf ar an ngléas"
+
+#: src/view/com/profile/ProfileHeader.tsx:419
+msgid "Opens editor for profile display name, avatar, background image, and description"
+msgstr "Osclaíonn sé seo an t-eagarthóir le haghaidh gach a bhfuil i do phróifíl: an t-ainm, an t-abhatár, an íomhá sa chúlra, agus an cur síos."
+
+#: src/view/screens/Settings/index.tsx:649
+msgid "Opens external embeds settings"
+msgstr "Osclaíonn sé seo na socruithe le haghaidh leabuithe seachtracha"
+
+#: src/view/com/profile/ProfileHeader.tsx:574
+msgid "Opens followers list"
+msgstr "Osclaíonn sé seo liosta na leantóirí"
+
+#: src/view/com/profile/ProfileHeader.tsx:593
+msgid "Opens following list"
+msgstr "Osclaíonn sé seo liosta na ndaoine a leanann tú"
+
+#: src/view/screens/Settings.tsx:412
+#~ msgid "Opens invite code list"
+#~ msgstr "Osclaíonn sé seo liosta na gcód cuiridh"
+
+#: src/view/com/modals/InviteCodes.tsx:172
+msgid "Opens list of invite codes"
+msgstr "Osclaíonn sé seo liosta na gcód cuiridh"
+
+#: src/view/screens/Settings/index.tsx:774
+msgid "Opens modal for account deletion confirmation. Requires email code."
+msgstr "Osclaíonn sé seo an fhuinneog le scriosadh an chuntais a dhearbhú. Tá cód ríomhphoist riachtanach."
+
+#: src/view/com/modals/ChangeHandle.tsx:281
+msgid "Opens modal for using custom domain"
+msgstr "Osclaíonn sé seo an fhuinneog le sainfhearann a úsáid"
+
+#: src/view/screens/Settings/index.tsx:620
+msgid "Opens moderation settings"
+msgstr "Osclaíonn sé seo socruithe na modhnóireachta"
+
+#: src/view/com/auth/login/LoginForm.tsx:239
+msgid "Opens password reset form"
+msgstr "Osclaíonn sé seo an fhoirm leis an bpasfhocal a athrú"
+
+#: src/view/screens/Feeds.tsx:356
+msgid "Opens screen to edit Saved Feeds"
+msgstr "Osclaíonn sé seo an scáileán leis na fothaí sábháilte a athrú"
+
+#: src/view/screens/Settings/index.tsx:576
+msgid "Opens screen with all saved feeds"
+msgstr "Osclaíonn sé seo an scáileán leis na fothaí sábháilte go léir"
+
+#: src/view/screens/Settings/index.tsx:676
+msgid "Opens the app password settings page"
+msgstr "Osclaíonn sé seo an leathanach a bhfuil socruithe phasfhocal na haipe air"
+
+#: src/view/screens/Settings/index.tsx:535
+msgid "Opens the home feed preferences"
+msgstr "Osclaíonn sé seo roghanna fhotha an bhaile"
+
+#: src/view/screens/Settings/index.tsx:805
+msgid "Opens the storybook page"
+msgstr "Osclaíonn sé seo leathanach an Storybook"
+
+#: src/view/screens/Settings/index.tsx:793
+msgid "Opens the system log page"
+msgstr "Osclaíonn sé seo logleabhar an chórais"
+
+#: src/view/screens/Settings/index.tsx:556
+msgid "Opens the threads preferences"
+msgstr "Osclaíonn sé seo roghanna na snáitheanna"
+
+#: src/view/com/util/forms/DropdownButton.tsx:280
+msgid "Option {0} of {numItems}"
+msgstr "Rogha {0} as {numItems}"
+
+#: src/view/com/modals/Threadgate.tsx:89
+msgid "Or combine these options:"
+msgstr "Nó cuir na roghanna seo le chéile:"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:138
+msgid "Other account"
+msgstr "Cuntas eile"
+
+#: src/view/com/modals/ServerInput.tsx:88
+#~ msgid "Other service"
+#~ msgstr "Seirbhís eile"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:91
+msgid "Other..."
+msgstr "Eile…"
+
+#: src/view/screens/NotFound.tsx:45
+msgid "Page not found"
+msgstr "Leathanach gan aimsiú"
+
+#: src/view/screens/NotFound.tsx:42
+msgid "Page Not Found"
+msgstr "Leathanach gan aimsiú"
+
+#: src/view/com/auth/create/Step1.tsx:214
+#: src/view/com/auth/create/Step1.tsx:224
+#: src/view/com/auth/login/LoginForm.tsx:226
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:161
+#: src/view/com/modals/DeleteAccount.tsx:202
+msgid "Password"
+msgstr "Pasfhocal"
+
+#: src/view/com/auth/login/Login.tsx:157
+msgid "Password updated"
+msgstr "Pasfhocal uasdátaithe"
+
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:28
+msgid "Password updated!"
+msgstr "Pasfhocal uasdátaithe!"
+
+#: src/Navigation.tsx:160
+msgid "People followed by @{0}"
+msgstr "Na daoine atá leanta ag @{0}"
+
+#: src/Navigation.tsx:153
+msgid "People following @{0}"
+msgstr "Na leantóirí atá ag @{0}"
+
+#: src/view/com/lightbox/Lightbox.tsx:66
+msgid "Permission to access camera roll is required."
+msgstr "Tá cead de dhíth le rolla an cheamara a oscailt."
+
+#: src/view/com/lightbox/Lightbox.tsx:72
+msgid "Permission to access camera roll was denied. Please enable it in your system settings."
+msgstr "Ní bhfuarthas cead le rolla an cheamara a oscailt. Athraigh socruithe an chórais len é seo a chur ar fáil, le do thoil."
+
+#: src/screens/Onboarding/index.tsx:31
+msgid "Pets"
+msgstr "Peataí"
+
+#: src/view/com/auth/create/Step2.tsx:183
+#~ msgid "Phone number"
+#~ msgstr "Uimhir ghutháin"
+
+#: src/view/com/modals/SelfLabel.tsx:121
+msgid "Pictures meant for adults."
+msgstr "Pictiúir le haghaidh daoine fásta."
+
+#: src/view/screens/ProfileFeed.tsx:353
+#: src/view/screens/ProfileList.tsx:580
+msgid "Pin to home"
+msgstr "Greamaigh le baile"
+
+#: src/view/screens/SavedFeeds.tsx:88
+msgid "Pinned Feeds"
+msgstr "Fothaí greamaithe"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:111
+msgid "Play {0}"
+msgstr "Seinn {0}"
+
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:54
+#: src/view/com/util/post-embeds/ExternalPlayerEmbed.tsx:55
+msgid "Play Video"
+msgstr "Seinn an físeán"
+
+#: src/view/com/util/post-embeds/ExternalGifEmbed.tsx:110
+msgid "Plays the GIF"
+msgstr "Seinneann sé seo an GIF"
+
+#: src/view/com/auth/create/state.ts:124
+msgid "Please choose your handle."
+msgstr "Roghnaigh do leasainm, le do thoil."
+
+#: src/view/com/auth/create/state.ts:117
+msgid "Please choose your password."
+msgstr "Roghnaigh do phasfhocal, le do thoil."
+
+#: src/view/com/auth/create/state.ts:131
+msgid "Please complete the verification captcha."
+msgstr "Déan an captcha, le do thoil."
+
+#: src/view/com/modals/ChangeEmail.tsx:67
+msgid "Please confirm your email before changing it. This is a temporary requirement while email-updating tools are added, and it will soon be removed."
+msgstr "Dearbhaigh do ríomhphost roimh é a athrú. Riachtanas sealadach é seo le linn dúinn acmhainní a chur isteach le haghaidh uasdátú an ríomhphoist. Scriosfar é seo roimh i bhfad."
+
+#: src/view/com/modals/AddAppPasswords.tsx:90
+msgid "Please enter a name for your app password. All spaces is not allowed."
+msgstr "Cuir isteach ainm le haghaidh phasfhocal na haipe, le do thoil. Ní cheadaítear spásanna gan aon rud eile ann."
+
+#: src/view/com/auth/create/Step2.tsx:206
+#~ msgid "Please enter a phone number that can receive SMS text messages."
+#~ msgstr "Cuir isteach uimhir ghutháin atá in ann teachtaireachtaí SMS a fháil, le do thoil."
+
+#: src/view/com/modals/AddAppPasswords.tsx:145
+msgid "Please enter a unique name for this App Password or use our randomly generated one."
+msgstr "Cuir isteach ainm nach bhfuil in úsáid cheana féin le haghaidh Phasfhocal na hAipe nó bain úsáid as an gceann a chruthóidh muid go randamach."
+
+#: src/view/com/auth/create/state.ts:170
+#~ msgid "Please enter the code you received by SMS."
+#~ msgstr "Cuir isteach an cód a fuair tú trí SMS, le do thoil."
+
+#: src/view/com/auth/create/Step2.tsx:282
+#~ msgid "Please enter the verification code sent to {phoneNumberFormatted}."
+#~ msgstr "Cuir isteach an cód dearbhaithe a cuireadh chuig {phoneNumberFormatted}, le do thoil."
+
+#: src/view/com/auth/create/state.ts:103
+msgid "Please enter your email."
+msgstr "Cuir isteach do sheoladh ríomhphoist, le do thoil."
+
+#: src/view/com/modals/DeleteAccount.tsx:191
+msgid "Please enter your password as well:"
+msgstr "Cuir isteach do phasfhocal freisin, le do thoil."
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+msgid "Please tell us why you think this content warning was incorrectly applied!"
+msgstr "Abair linn, le do thoil, cén fáth a gcreideann tú gur cuireadh an rabhadh ábhair seo i bhfeidhm go mícheart."
+
+#: src/view/com/modals/AppealLabel.tsx:72
+#: src/view/com/modals/AppealLabel.tsx:75
+#~ msgid "Please tell us why you think this decision was incorrect."
+#~ msgstr "Abair linn, le do thoil, cén fáth a gcreideann tú go bhfuil an cinneadh seo mícheart."
+
+#: src/view/com/modals/VerifyEmail.tsx:101
+msgid "Please Verify Your Email"
+msgstr "Dearbhaigh do ríomhphost, le do thoil."
+
+#: src/view/com/composer/Composer.tsx:215
+msgid "Please wait for your link card to finish loading"
+msgstr "Fan le lódáil ar fad do chárta naisc, le do thoil."
+
+#: src/screens/Onboarding/index.tsx:37
+msgid "Politics"
+msgstr "Polaitíocht"
+
+#: src/view/com/modals/SelfLabel.tsx:111
+msgid "Porn"
+msgstr "Pornagrafaíocht"
+
+#: src/view/com/composer/Composer.tsx:350
+#: src/view/com/composer/Composer.tsx:358
+msgctxt "action"
+msgid "Post"
+msgstr "Postáil"
+
+#: src/view/com/post-thread/PostThread.tsx:303
+msgctxt "description"
+msgid "Post"
+msgstr "Postáil"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:172
+msgid "Post by {0}"
+msgstr "Postáil ó {0}"
+
+#: src/Navigation.tsx:172
+#: src/Navigation.tsx:179
+#: src/Navigation.tsx:186
+msgid "Post by @{0}"
+msgstr "Postáil ó @{0}"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:84
+msgid "Post deleted"
+msgstr "Scriosadh an phostáil"
+
+#: src/view/com/post-thread/PostThread.tsx:461
+msgid "Post hidden"
+msgstr "Cuireadh an phostáil i bhfolach"
+
+#: src/view/com/composer/select-language/SelectLangBtn.tsx:87
+msgid "Post language"
+msgstr "Teanga postála"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:75
+msgid "Post Languages"
+msgstr "Teangacha postála"
+
+#: src/view/com/post-thread/PostThread.tsx:513
+msgid "Post not found"
+msgstr "Ní bhfuarthas an phostáil"
+
+#: src/view/screens/Profile.tsx:180
+msgid "Posts"
+msgstr "Postálacha"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:64
+msgid "Posts hidden"
+msgstr "Cuireadh na postálacha i bhfolach"
+
+#: src/view/com/modals/LinkWarning.tsx:46
+msgid "Potentially Misleading Link"
+msgstr "Is féidir go bhfuil an nasc seo míthreorach."
+
+#: src/view/com/lightbox/Lightbox.web.tsx:135
+msgid "Previous image"
+msgstr "An íomhá roimhe seo"
+
+#: src/view/screens/LanguageSettings.tsx:187
+msgid "Primary Language"
+msgstr "Príomhtheanga"
+
+#: src/view/screens/PreferencesThreads.tsx:97
+msgid "Prioritize Your Follows"
+msgstr "Tabhair Tosaíocht do Do Chuid Leantóirí"
+
+#: src/view/screens/Settings/index.tsx:632
+#: src/view/shell/desktop/RightNav.tsx:72
+msgid "Privacy"
+msgstr "Príobháideacht"
+
+#: src/Navigation.tsx:217
+#: src/view/screens/PrivacyPolicy.tsx:29
+#: src/view/screens/Settings/index.tsx:891
+#: src/view/shell/Drawer.tsx:262
+msgid "Privacy Policy"
+msgstr "Polasaí príobháideachta"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:198
+msgid "Processing..."
+msgstr "Á phróiseáil..."
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:247
+#: src/view/shell/desktop/LeftNav.tsx:415
+#: src/view/shell/Drawer.tsx:70
+#: src/view/shell/Drawer.tsx:546
+#: src/view/shell/Drawer.tsx:547
+msgid "Profile"
+msgstr "Próifíl"
+
+#: src/view/com/modals/EditProfile.tsx:128
+msgid "Profile updated"
+msgstr "Próifíl uasdátaithe"
+
+#: src/view/screens/Settings/index.tsx:949
+msgid "Protect your account by verifying your email."
+msgstr "Dearbhaigh do ríomhphost le do chuntas a chosaint."
+
+#: src/screens/Onboarding/StepFinished.tsx:101
+msgid "Public"
+msgstr "Poiblí"
+
+#: src/view/screens/ModerationModlists.tsx:61
+msgid "Public, shareable lists of users to mute or block in bulk."
+msgstr "Liostaí poiblí agus inroinnte d’úsáideoirí le cur i bhfolach nó le blocáil ar an mórchóir"
+
+#: src/view/screens/Lists.tsx:61
+msgid "Public, shareable lists which can drive feeds."
+msgstr "Liostaí poiblí agus inroinnte atá in ann fothaí a bheathú"
+
+#: src/view/com/composer/Composer.tsx:335
+msgid "Publish post"
+msgstr "Foilsigh an phostáil"
+
+#: src/view/com/composer/Composer.tsx:335
+msgid "Publish reply"
+msgstr "Foilsigh an freagra"
+
+#: src/view/com/modals/Repost.tsx:65
+msgctxt "action"
+msgid "Quote post"
+msgstr "Luaigh an phostáil seo"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:58
+msgid "Quote post"
+msgstr "Postáil athluaite"
+
+#: src/view/com/modals/Repost.tsx:70
+msgctxt "action"
+msgid "Quote Post"
+msgstr "Luaigh an phostáil seo"
+
+#: src/view/screens/PreferencesThreads.tsx:86
+msgid "Random (aka \"Poster's Roulette\")"
+msgstr "Randamach"
+
+#: src/view/com/modals/EditImage.tsx:236
+msgid "Ratios"
+msgstr "Cóimheasa"
+
+#: src/view/com/auth/onboarding/RecommendedFeeds.tsx:116
+msgid "Recommended Feeds"
+msgstr "Fothaí molta"
+
+#: src/view/com/auth/onboarding/RecommendedFollows.tsx:180
+msgid "Recommended Users"
+msgstr "Cuntais mholta"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:264
+#: src/view/com/modals/SelfLabel.tsx:83
+#: src/view/com/modals/UserAddRemoveLists.tsx:219
+#: src/view/com/util/UserAvatar.tsx:285
+#: src/view/com/util/UserBanner.tsx:91
+msgid "Remove"
+msgstr "Scrios"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:106
+msgid "Remove {0} from my feeds?"
+msgstr "An bhfuil fonn ort {0} a bhaint de do chuid fothaí?"
+
+#: src/view/com/util/AccountDropdownBtn.tsx:22
+msgid "Remove account"
+msgstr "Bain an cuntas de"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:131
+#: src/view/com/posts/FeedErrorMessage.tsx:166
+msgid "Remove feed"
+msgstr "Bain an fotha de"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:105
+#: src/view/com/feeds/FeedSourceCard.tsx:167
+#: src/view/com/feeds/FeedSourceCard.tsx:172
+#: src/view/com/feeds/FeedSourceCard.tsx:243
+#: src/view/screens/ProfileFeed.tsx:272
+msgid "Remove from my feeds"
+msgstr "Bain de mo chuid fothaí"
+
+#: src/view/com/composer/photos/Gallery.tsx:167
+msgid "Remove image"
+msgstr "Bain an íomhá de"
+
+#: src/view/com/composer/ExternalEmbed.tsx:70
+msgid "Remove image preview"
+msgstr "Bain réamhléiriú den íomhá"
+
+#: src/view/com/modals/Repost.tsx:47
+msgid "Remove repost"
+msgstr "Scrios an athphostáil"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:173
+msgid "Remove this feed from my feeds?"
+msgstr "An bhfuil fonn ort an fotha seo a bhaint de do chuid fothaí?"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:132
+msgid "Remove this feed from your saved feeds?"
+msgstr "An bhfuil fonn ort an fotha seo a bhaint de do chuid fothaí sábháilte?"
+
+#: src/view/com/modals/ListAddRemoveUsers.tsx:199
+#: src/view/com/modals/UserAddRemoveLists.tsx:152
+msgid "Removed from list"
+msgstr "Baineadh den liosta é"
+
+#: src/view/com/feeds/FeedSourceCard.tsx:111
+#: src/view/com/feeds/FeedSourceCard.tsx:178
+msgid "Removed from my feeds"
+msgstr "Baineadh de do chuid fothaí é"
+
+#: src/view/com/composer/ExternalEmbed.tsx:71
+msgid "Removes default thumbnail from {0}"
+msgstr "Baineann sé seo an mhionsamhail réamhshocraithe de {0}"
+
+#: src/view/screens/Profile.tsx:181
+msgid "Replies"
+msgstr "Freagraí"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:98
+msgid "Replies to this thread are disabled"
+msgstr "Ní féidir freagraí a thabhairt ar an gcomhrá seo"
+
+#: src/view/com/composer/Composer.tsx:348
+msgctxt "action"
+msgid "Reply"
+msgstr "Freagair"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:144
+msgid "Reply Filters"
+msgstr "Scagairí freagra"
+
+#: src/view/com/post/Post.tsx:166
+#: src/view/com/posts/FeedItem.tsx:284
+msgctxt "description"
+msgid "Reply to <0/>"
+msgstr "Freagra ar <0/>"
+
+#: src/view/com/modals/report/Modal.tsx:166
+msgid "Report {collectionName}"
+msgstr "Déan gearán faoi {collectionName}"
+
+#: src/view/com/profile/ProfileHeader.tsx:360
+msgid "Report Account"
+msgstr "Déan gearán faoi chuntas"
+
+#: src/view/screens/ProfileFeed.tsx:292
+msgid "Report feed"
+msgstr "Déan gearán faoi fhotha"
+
+#: src/view/screens/ProfileList.tsx:458
+msgid "Report List"
+msgstr "Déan gearán faoi liosta"
+
+#: src/view/com/modals/report/SendReportButton.tsx:37
+#: src/view/com/util/forms/PostDropdownBtn.tsx:210
+msgid "Report post"
+msgstr "Déan gearán faoi phostáil"
+
+#: src/view/com/modals/Repost.tsx:43
+#: src/view/com/modals/Repost.tsx:48
+#: src/view/com/modals/Repost.tsx:53
+#: src/view/com/util/post-ctrls/RepostButton.tsx:61
+msgctxt "action"
+msgid "Repost"
+msgstr "Athphostáil"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Repost"
+msgstr "Athphostáil"
+
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:94
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:105
+msgid "Repost or quote post"
+msgstr "Athphostáil nó luaigh postáil"
+
+#: src/view/screens/PostRepostedBy.tsx:27
+msgid "Reposted By"
+msgstr "Athphostáilte ag"
+
+#: src/view/com/posts/FeedItem.tsx:204
+msgid "Reposted by {0}"
+msgstr "Athphostáilte ag {0}"
+
+#: src/view/com/posts/FeedItem.tsx:221
+msgid "Reposted by <0/>"
+msgstr "Athphostáilte ag <0/>"
+
+#: src/view/com/notifications/FeedItem.tsx:162
+msgid "reposted your post"
+msgstr "— d'athphostáil sé/sí do phostáil"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:185
+msgid "Reposts of this post"
+msgstr "Athphostálacha den phostáil seo"
+
+#: src/view/com/modals/ChangeEmail.tsx:181
+#: src/view/com/modals/ChangeEmail.tsx:183
+msgid "Request Change"
+msgstr "Iarr Athrú"
+
+#: src/view/com/auth/create/Step2.tsx:219
+#~ msgid "Request code"
+#~ msgstr "Iarr cód"
+
+#: src/view/com/modals/ChangePassword.tsx:239
+#: src/view/com/modals/ChangePassword.tsx:241
+msgid "Request Code"
+msgstr "Iarr Cód"
+
+#: src/view/screens/Settings/index.tsx:456
+msgid "Require alt text before posting"
+msgstr "Bíodh téacs malartach ann roimh phostáil i gcónaí"
+
+#: src/view/com/auth/create/Step1.tsx:153
+msgid "Required for this provider"
+msgstr "Riachtanach don soláthraí seo"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:124
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:136
+msgid "Reset code"
+msgstr "Cód athshocraithe"
+
+#: src/view/com/modals/ChangePassword.tsx:190
+msgid "Reset Code"
+msgstr "Cód Athshocraithe"
+
+#: src/view/screens/Settings/index.tsx:824
+msgid "Reset onboarding"
+msgstr "Athshocraigh an próiseas cláraithe"
+
+#: src/view/screens/Settings/index.tsx:827
+msgid "Reset onboarding state"
+msgstr "Athshocraigh an próiseas cláraithe"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:104
+msgid "Reset password"
+msgstr "Athshocraigh an pasfhocal"
+
+#: src/view/screens/Settings/index.tsx:814
+msgid "Reset preferences"
+msgstr "Athshocraigh na roghanna"
+
+#: src/view/screens/Settings/index.tsx:817
+msgid "Reset preferences state"
+msgstr "Athshocraigh na roghanna"
+
+#: src/view/screens/Settings/index.tsx:825
+msgid "Resets the onboarding state"
+msgstr "Athshocraíonn sé seo an clárú"
+
+#: src/view/screens/Settings/index.tsx:815
+msgid "Resets the preferences state"
+msgstr "Athshocraíonn sé seo na roghanna"
+
+#: src/view/com/auth/login/LoginForm.tsx:269
+msgid "Retries login"
+msgstr "Baineann sé seo triail eile as an logáil isteach"
+
+#: src/view/com/util/error/ErrorMessage.tsx:57
+#: src/view/com/util/error/ErrorScreen.tsx:74
+msgid "Retries the last action, which errored out"
+msgstr "Baineann sé seo triail eile as an ngníomh is déanaí, ar theip air"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:221
+#: src/screens/Onboarding/StepInterests/index.tsx:224
+#: src/view/com/auth/create/CreateAccount.tsx:177
+#: src/view/com/auth/create/CreateAccount.tsx:182
+#: src/view/com/auth/login/LoginForm.tsx:268
+#: src/view/com/auth/login/LoginForm.tsx:271
+#: src/view/com/util/error/ErrorMessage.tsx:55
+#: src/view/com/util/error/ErrorScreen.tsx:72
+msgid "Retry"
+msgstr "Bain triail eile as"
+
+#: src/view/com/auth/create/Step2.tsx:247
+#~ msgid "Retry."
+#~ msgstr "Bain triail eile as."
+
+#: src/view/screens/ProfileList.tsx:898
+msgid "Return to previous page"
+msgstr "Fill ar an leathanach roimhe seo"
+
+#: src/view/shell/desktop/RightNav.tsx:55
+#~ msgid "SANDBOX. Posts and accounts are not permanent."
+#~ msgstr "BOSCA GAINIMH. Ní choinneofar póstálacha ná cuntais."
+
+#: src/view/com/lightbox/Lightbox.tsx:132
+#: src/view/com/modals/CreateOrEditList.tsx:345
+msgctxt "action"
+msgid "Save"
+msgstr "Sábháil"
+
+#: src/view/com/modals/BirthDateSettings.tsx:94
+#: src/view/com/modals/BirthDateSettings.tsx:97
+#: src/view/com/modals/ChangeHandle.tsx:173
+#: src/view/com/modals/CreateOrEditList.tsx:337
+#: src/view/com/modals/EditProfile.tsx:224
+#: src/view/screens/ProfileFeed.tsx:345
+msgid "Save"
+msgstr "Sábháil"
+
+#: src/view/com/modals/AltImage.tsx:130
+msgid "Save alt text"
+msgstr "Sábháil an téacs malartach"
+
+#: src/view/com/modals/EditProfile.tsx:232
+msgid "Save Changes"
+msgstr "Sábháil na hathruithe"
+
+#: src/view/com/modals/ChangeHandle.tsx:170
+msgid "Save handle change"
+msgstr "Sábháil an leasainm nua"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:144
+msgid "Save image crop"
+msgstr "Sábháil an pictiúr bearrtha"
+
+#: src/view/screens/SavedFeeds.tsx:122
+msgid "Saved Feeds"
+msgstr "Fothaí Sábháilte"
+
+#: src/view/com/modals/EditProfile.tsx:225
+msgid "Saves any changes to your profile"
+msgstr "Sábhálann sé seo na hathruithe a rinne tú ar do phróifíl"
+
+#: src/view/com/modals/ChangeHandle.tsx:171
+msgid "Saves handle change to {handle}"
+msgstr "Sábhálann sé seo athrú an leasainm go {handle}"
+
+#: src/screens/Onboarding/index.tsx:36
+msgid "Science"
+msgstr "Eolaíocht"
+
+#: src/view/screens/ProfileList.tsx:854
+msgid "Scroll to top"
+msgstr "Fill ar an mbarr"
+
+#: src/Navigation.tsx:437
+#: src/view/com/auth/LoggedOut.tsx:122
+#: src/view/com/modals/ListAddRemoveUsers.tsx:75
+#: src/view/com/util/forms/SearchInput.tsx:67
+#: src/view/com/util/forms/SearchInput.tsx:79
+#: src/view/screens/Search/Search.tsx:418
+#: src/view/screens/Search/Search.tsx:645
+#: src/view/screens/Search/Search.tsx:663
+#: src/view/shell/bottom-bar/BottomBar.tsx:159
+#: src/view/shell/desktop/LeftNav.tsx:324
+#: src/view/shell/desktop/Search.tsx:214
+#: src/view/shell/desktop/Search.tsx:223
+#: src/view/shell/Drawer.tsx:362
+#: src/view/shell/Drawer.tsx:363
+msgid "Search"
+msgstr "Cuardaigh"
+
+#: src/view/screens/Search/Search.tsx:712
+#: src/view/shell/desktop/Search.tsx:255
+msgid "Search for \"{query}\""
+msgstr "Déan cuardach ar “{query}”"
+
+#: src/view/com/auth/LoggedOut.tsx:104
+#: src/view/com/auth/LoggedOut.tsx:105
+#: src/view/com/modals/ListAddRemoveUsers.tsx:70
+msgid "Search for users"
+msgstr "Cuardaigh úsáideoirí"
+
+#: src/view/com/modals/ChangeEmail.tsx:110
+msgid "Security Step Required"
+msgstr "Céim Slándála de dhíth"
+
+#: src/view/screens/SavedFeeds.tsx:163
+msgid "See this guide"
+msgstr "Féach ar an treoirleabhar seo"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:39
+msgid "See what's next"
+msgstr "Féach an chéad rud eile"
+
+#: src/view/com/util/Selector.tsx:106
+msgid "Select {item}"
+msgstr "Roghnaigh {item}"
+
+#: src/view/com/modals/ServerInput.tsx:75
+#~ msgid "Select Bluesky Social"
+#~ msgstr "Roghnaigh Bluesky Social"
+
+#: src/view/com/auth/login/Login.tsx:117
+msgid "Select from an existing account"
+msgstr "Roghnaigh ó chuntas atá ann"
+
+#: src/view/com/util/Selector.tsx:107
+msgid "Select option {i} of {numItems}"
+msgstr "Roghnaigh rogha {i} as {numItems}"
+
+#: src/view/com/auth/create/Step1.tsx:103
+#: src/view/com/auth/login/LoginForm.tsx:150
+msgid "Select service"
+msgstr "Roghnaigh seirbhís"
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:52
+msgid "Select some accounts below to follow"
+msgstr "Roghnaigh cúpla cuntas le leanúint"
+
+#: src/view/com/auth/server-input/index.tsx:82
+msgid "Select the service that hosts your data."
+msgstr "Roghnaigh an tseirbhís a óstálann do chuid sonraí."
+
+#: src/screens/Onboarding/StepModeration/index.tsx:49
+#~ msgid "Select the types of content that you want to see (or not see), and we'll handle the rest."
+#~ msgstr "Roghnaigh na rudaí ba mhaith leat a fheiceáil (nó gan a fheiceáil), agus leanfaimid ar aghaidh as sin."
+
+#: src/screens/Onboarding/StepTopicalFeeds.tsx:90
+msgid "Select topical feeds to follow from the list below"
+msgstr "Roghnaigh fothaí le leanúint ón liosta thíos"
+
+#: src/screens/Onboarding/StepModeration/index.tsx:75
+msgid "Select what you want to see (or not see), and we’ll handle the rest."
+msgstr "Roghnaigh na rudaí ba mhaith leat a fheiceáil (nó gan a fheiceáil), agus leanfaimid ar aghaidh as sin"
+
+#: src/view/screens/LanguageSettings.tsx:281
+msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
+msgstr "Roghnaigh na teangacha ba mhaith leat a fheiceáil i do chuid fothaí. Mura roghnaíonn tú, taispeánfar ábhar i ngach teanga duit."
+
+#: src/view/screens/LanguageSettings.tsx:98
+msgid "Select your app language for the default text to display in the app"
+msgstr "Roghnaigh teanga na roghchlár a fheicfidh tú san aip"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:196
+msgid "Select your interests from the options below"
+msgstr "Roghnaigh na rudaí a bhfuil suim agat iontu as na roghanna thíos"
+
+#: src/view/com/auth/create/Step2.tsx:155
+#~ msgid "Select your phone's country"
+#~ msgstr "Roghnaigh tír do ghutháin"
+
+#: src/view/screens/LanguageSettings.tsx:190
+msgid "Select your preferred language for translations in your feed."
+msgstr "Do rogha teanga nuair a dhéanfar aistriúchán ar ábhar i d'fhotha."
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:116
+msgid "Select your primary algorithmic feeds"
+msgstr "Roghnaigh do phríomhfhothaí algartamacha"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:142
+msgid "Select your secondary algorithmic feeds"
+msgstr "Roghnaigh do chuid fothaí algartamacha tánaisteacha"
+
+#: src/view/com/modals/VerifyEmail.tsx:202
+#: src/view/com/modals/VerifyEmail.tsx:204
+msgid "Send Confirmation Email"
+msgstr "Seol ríomhphost dearbhaithe"
+
+#: src/view/com/modals/DeleteAccount.tsx:131
+msgid "Send email"
+msgstr "Seol ríomhphost"
+
+#: src/view/com/modals/DeleteAccount.tsx:144
+msgctxt "action"
+msgid "Send Email"
+msgstr "Seol ríomhphost"
+
+#: src/view/shell/Drawer.tsx:295
+#: src/view/shell/Drawer.tsx:316
+msgid "Send feedback"
+msgstr "Seol aiseolas"
+
+#: src/view/com/modals/report/SendReportButton.tsx:45
+msgid "Send Report"
+msgstr "Seol an tuairisc"
+
+#: src/view/com/modals/DeleteAccount.tsx:133
+msgid "Sends email with confirmation code for account deletion"
+msgstr "Seolann sé seo ríomhphost ina bhfuil cód dearbhaithe chun an cuntas a scriosadh"
+
+#: src/view/com/auth/server-input/index.tsx:110
+msgid "Server address"
+msgstr "Seoladh an fhreastalaí"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:311
+msgid "Set {value} for {labelGroup} content moderation policy"
+msgstr "Socraigh {value} le haghaidh polasaí modhnóireachta {labelGroup}"
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:160
+#: src/view/com/modals/ContentFilteringSettings.tsx:179
+msgctxt "action"
+msgid "Set Age"
+msgstr "Cén aois thú?"
+
+#: src/view/screens/Settings/index.tsx:488
+msgid "Set color theme to dark"
+msgstr "Roghnaigh an modh dorcha"
+
+#: src/view/screens/Settings/index.tsx:481
+msgid "Set color theme to light"
+msgstr "Roghnaigh an modh sorcha"
+
+#: src/view/screens/Settings/index.tsx:475
+msgid "Set color theme to system setting"
+msgstr "Úsáid scéim dathanna an chórais"
+
+#: src/view/screens/Settings/index.tsx:514
+msgid "Set dark theme to the dark theme"
+msgstr "Úsáid an téama dorcha mar théama dorcha"
+
+#: src/view/screens/Settings/index.tsx:507
+msgid "Set dark theme to the dim theme"
+msgstr "Úsáid an téama breacdhorcha mar théama dorcha"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:104
+msgid "Set new password"
+msgstr "Socraigh pasfhocal nua"
+
+#: src/view/com/auth/create/Step1.tsx:225
+msgid "Set password"
+msgstr "Socraigh pasfhocal"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:225
+msgid "Set this setting to \"No\" to hide all quote posts from your feed. Reposts will still be visible."
+msgstr "Roghnaigh “Níl” chun postálacha athluaite a chur i bhfolach i d'fhotha. Feicfidh tú athphostálacha fós."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:122
+msgid "Set this setting to \"No\" to hide all replies from your feed."
+msgstr "Roghnaigh “Níl” chun freagraí a chur i bhfolach i d'fhotha."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:191
+msgid "Set this setting to \"No\" to hide all reposts from your feed."
+msgstr "Roghnaigh “Níl” chun athphostálacha a chur i bhfolach i d'fhotha."
+
+#: src/view/screens/PreferencesThreads.tsx:122
+msgid "Set this setting to \"Yes\" to show replies in a threaded view. This is an experimental feature."
+msgstr "Roghnaigh “Tá” le freagraí a thaispeáint i snáitheanna. Is gné thurgnamhach é seo."
+
+#: src/view/screens/PreferencesHomeFeed.tsx:261
+msgid "Set this setting to \"Yes\" to show samples of your saved feeds in your following feed. This is an experimental feature."
+msgstr "Roghnaigh “Tá” le samplaí ó do chuid fothaí sábháilte a thaispeáint in ”Á Leanúint”. Is gné thurgnamhach é seo."
+
+#: src/screens/Onboarding/Layout.tsx:50
+msgid "Set up your account"
+msgstr "Socraigh do chuntas"
+
+#: src/view/com/modals/ChangeHandle.tsx:266
+msgid "Sets Bluesky username"
+msgstr "Socraíonn sé seo d'ainm úsáideora ar Bluesky"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:157
+msgid "Sets email for password reset"
+msgstr "Socraíonn sé seo an seoladh ríomhphoist le haghaidh athshocrú an phasfhocail"
+
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:122
+msgid "Sets hosting provider for password reset"
+msgstr "Socraíonn sé seo an soláthraí óstála le haghaidh athshocrú an phasfhocail"
+
+#: src/view/com/auth/create/Step1.tsx:104
+#: src/view/com/auth/login/LoginForm.tsx:151
+msgid "Sets server for the Bluesky client"
+msgstr "Socraíonn sé seo freastalaí an chliaint Bluesky"
+
+#: src/Navigation.tsx:135
+#: src/view/screens/Settings/index.tsx:294
+#: src/view/shell/desktop/LeftNav.tsx:433
+#: src/view/shell/Drawer.tsx:567
+#: src/view/shell/Drawer.tsx:568
+msgid "Settings"
+msgstr "Socruithe"
+
+#: src/view/com/modals/SelfLabel.tsx:125
+msgid "Sexual activity or erotic nudity."
+msgstr "Gníomhaíocht ghnéasach nó lomnochtacht gháirsiúil."
+
+#: src/view/com/lightbox/Lightbox.tsx:141
+msgctxt "action"
+msgid "Share"
+msgstr "Comhroinn"
+
+#: src/view/com/profile/ProfileHeader.tsx:294
+#: src/view/com/util/forms/PostDropdownBtn.tsx:153
+#: src/view/screens/ProfileList.tsx:417
+msgid "Share"
+msgstr "Comhroinn"
+
+#: src/view/screens/ProfileFeed.tsx:304
+msgid "Share feed"
+msgstr "Comhroinn an fotha"
+
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:43
+#: src/view/com/modals/ContentFilteringSettings.tsx:266
+#: src/view/com/util/moderation/ContentHider.tsx:107
+#: src/view/com/util/moderation/PostHider.tsx:108
+#: src/view/screens/Settings/index.tsx:344
+msgid "Show"
+msgstr "Taispeáin"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:68
+msgid "Show all replies"
+msgstr "Taispeáin gach freagra"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:132
+msgid "Show anyway"
+msgstr "Taispeáin mar sin féin"
+
+#: src/view/com/modals/EmbedConsent.tsx:87
+msgid "Show embeds from {0}"
+msgstr "Taispeáin ábhar leabaithe ó {0}"
+
+#: src/view/com/profile/ProfileHeader.tsx:458
+msgid "Show follows similar to {0}"
+msgstr "Taispeáin cuntais cosúil le {0}"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:535
+#: src/view/com/post/Post.tsx:197
+#: src/view/com/posts/FeedItem.tsx:360
+msgid "Show More"
+msgstr "Tuilleadh"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:258
+msgid "Show Posts from My Feeds"
+msgstr "Taispeáin postálacha ó mo chuid fothaí"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:222
+msgid "Show Quote Posts"
+msgstr "Taispeáin postálacha athluaite"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:118
+msgid "Show quote-posts in Following feed"
+msgstr "Taispeáin postálacha athluaite san fhotha “Á Leanúint”"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:134
+msgid "Show quotes in Following"
+msgstr "Taispeáin postálacha athluaite san fhotha “Á Leanúint”"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:94
+msgid "Show re-posts in Following feed"
+msgstr "Taispeáin athphostálacha san fhotha “Á Leanúint”"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:119
+msgid "Show Replies"
+msgstr "Taispeáin freagraí"
+
+#: src/view/screens/PreferencesThreads.tsx:100
+msgid "Show replies by people you follow before all other replies."
+msgstr "Taispeáin freagraí ó na daoine a leanann tú roimh aon fhreagra eile."
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:86
+msgid "Show replies in Following"
+msgstr "Taispeáin freagraí san fhotha “Á Leanúint”"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:70
+msgid "Show replies in Following feed"
+msgstr "Taispeáin freagraí san fhotha “Á Leanúint”"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:70
+msgid "Show replies with at least {value} {0}"
+msgstr "Taispeáin freagraí a bhfuil ar a laghad {value} {0} acu"
+
+#: src/view/screens/PreferencesHomeFeed.tsx:188
+msgid "Show Reposts"
+msgstr "Taispeáin athphostálacha"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:110
+msgid "Show reposts in Following"
+msgstr "Taispeáin athphostálacha san fhotha “Á Leanúint”"
+
+#: src/view/com/util/moderation/ContentHider.tsx:67
+#: src/view/com/util/moderation/PostHider.tsx:61
+msgid "Show the content"
+msgstr "Taispeáin an t-ábhar"
+
+#: src/view/com/notifications/FeedItem.tsx:346
+msgid "Show users"
+msgstr "Taispeáin úsáideoirí"
+
+#: src/view/com/profile/ProfileHeader.tsx:461
+msgid "Shows a list of users similar to this user."
+msgstr "Taispeánann sé seo liosta úsáideoirí cosúil leis an úsáideoir seo."
+
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:124
+#: src/view/com/profile/ProfileHeader.tsx:505
+msgid "Shows posts from {0} in your feed"
+msgstr "Taispeánann sé seo postálacha ó {0} i d'fhotha"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:70
+#: src/view/com/auth/login/Login.tsx:98
+#: src/view/com/auth/SplashScreen.tsx:79
+#: src/view/shell/bottom-bar/BottomBar.tsx:285
+#: src/view/shell/bottom-bar/BottomBar.tsx:286
+#: src/view/shell/bottom-bar/BottomBar.tsx:288
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:178
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:179
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:181
+#: src/view/shell/NavSignupCard.tsx:58
+#: src/view/shell/NavSignupCard.tsx:59
+msgid "Sign in"
+msgstr "Logáil isteach"
+
+#: src/view/com/auth/HomeLoggedOutCTA.tsx:78
+#: src/view/com/auth/SplashScreen.tsx:82
+#: src/view/com/auth/SplashScreen.web.tsx:91
+msgid "Sign In"
+msgstr "Logáil isteach"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:44
+msgid "Sign in as {0}"
+msgstr "Logáil isteach mar {0}"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:118
+#: src/view/com/auth/login/Login.tsx:116
+msgid "Sign in as..."
+msgstr "Logáil isteach mar..."
+
+#: src/view/com/auth/login/LoginForm.tsx:137
+msgid "Sign into"
+msgstr "Logáil isteach i"
+
+#: src/view/com/modals/SwitchAccount.tsx:64
+#: src/view/com/modals/SwitchAccount.tsx:69
+#: src/view/screens/Settings/index.tsx:100
+#: src/view/screens/Settings/index.tsx:103
+msgid "Sign out"
+msgstr "Logáil amach"
+
+#: src/view/shell/bottom-bar/BottomBar.tsx:275
+#: src/view/shell/bottom-bar/BottomBar.tsx:276
+#: src/view/shell/bottom-bar/BottomBar.tsx:278
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:168
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:169
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:171
+#: src/view/shell/NavSignupCard.tsx:49
+#: src/view/shell/NavSignupCard.tsx:50
+#: src/view/shell/NavSignupCard.tsx:52
+msgid "Sign up"
+msgstr "Cláraigh"
+
+#: src/view/shell/NavSignupCard.tsx:42
+msgid "Sign up or sign in to join the conversation"
+msgstr "Cláraigh nó logáil isteach chun páirt a ghlacadh sa chomhrá"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:76
+msgid "Sign-in Required"
+msgstr "Caithfidh tú logáil isteach"
+
+#: src/view/screens/Settings/index.tsx:355
+msgid "Signed in as"
+msgstr "Logáilte isteach mar"
+
+#: src/view/com/auth/login/ChooseAccountForm.tsx:103
+msgid "Signed in as @{0}"
+msgstr "Logáilte isteach mar @{0}"
+
+#: src/view/com/modals/SwitchAccount.tsx:66
+msgid "Signs {0} out of Bluesky"
+msgstr "Logálann sé seo {0} amach as Bluesky"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:235
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:195
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:33
+msgid "Skip"
+msgstr "Ná bac leis"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:232
+msgid "Skip this flow"
+msgstr "Ná bac leis an bpróiseas seo"
+
+#: src/view/com/auth/create/Step2.tsx:82
+#~ msgid "SMS verification"
+#~ msgstr "Dearbhú SMS"
+
+#: src/screens/Onboarding/index.tsx:40
+msgid "Software Dev"
+msgstr "Forbairt Bogearraí"
+
+#: src/view/com/modals/ProfilePreview.tsx:62
+#~ msgid "Something went wrong and we're not sure what."
+#~ msgstr "Chuaigh rud éigin ó rath, agus nílimid cinnte céard a bhí ann."
+
+#: src/view/com/modals/Waitlist.tsx:51
+msgid "Something went wrong. Check your email and try again."
+msgstr "Chuaigh rud éigin ó rath. Féach ar do ríomhphost agus bain triail eile as."
+
+#: src/App.native.tsx:61
+msgid "Sorry! Your session expired. Please log in again."
+msgstr "Ár leithscéal. Chuaigh do sheisiún i léig. Ní mór duit logáil isteach arís."
+
+#: src/view/screens/PreferencesThreads.tsx:69
+msgid "Sort Replies"
+msgstr "Sórtáil freagraí"
+
+#: src/view/screens/PreferencesThreads.tsx:72
+msgid "Sort replies to the same post by:"
+msgstr "Sórtáil freagraí ar an bpostáil chéanna de réir:"
+
+#: src/screens/Onboarding/index.tsx:30
+msgid "Sports"
+msgstr "Spórt"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:122
+msgid "Square"
+msgstr "Cearnóg"
+
+#: src/view/com/modals/ServerInput.tsx:62
+#~ msgid "Staging"
+#~ msgstr "Freastalaí tástála"
+
+#: src/view/screens/Settings/index.tsx:871
+msgid "Status page"
+msgstr "Leathanach stádais"
+
+#: src/view/com/auth/create/StepHeader.tsx:22
+msgid "Step {0} of {numSteps}"
+msgstr "Céim {0} as {numSteps}"
+
+#: src/view/screens/Settings/index.tsx:274
+msgid "Storage cleared, you need to restart the app now."
+msgstr "Stóráil scriosta, tá ort an aip a atosú anois."
+
+#: src/Navigation.tsx:202
+#: src/view/screens/Settings/index.tsx:807
+msgid "Storybook"
+msgstr "Storybook"
+
+#: src/view/com/modals/AppealLabel.tsx:101
+msgid "Submit"
+msgstr "Seol"
+
+#: src/view/screens/ProfileList.tsx:607
+msgid "Subscribe"
+msgstr "Liostáil"
+
+#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:173
+#: src/screens/Onboarding/StepAlgoFeeds/FeedCard.tsx:307
+msgid "Subscribe to the {0} feed"
+msgstr "Liostáil leis an bhfotha {0}"
+
+#: src/view/screens/ProfileList.tsx:603
+msgid "Subscribe to this list"
+msgstr "Liostáil leis an liosta seo"
+
+#: src/view/screens/Search/Search.tsx:373
+msgid "Suggested Follows"
+msgstr "Cuntais le leanúint"
+
+#: src/view/com/profile/ProfileHeaderSuggestedFollows.tsx:64
+msgid "Suggested for you"
+msgstr "Molta duit"
+
+#: src/view/com/modals/SelfLabel.tsx:95
+msgid "Suggestive"
+msgstr "Gáirsiúil"
+
+#: src/Navigation.tsx:212
+#: src/view/screens/Support.tsx:30
+#: src/view/screens/Support.tsx:33
+msgid "Support"
+msgstr "Tacaíocht"
+
+#: src/view/com/modals/ProfilePreview.tsx:110
+#~ msgid "Swipe up to see more"
+#~ msgstr "Svaidhpeáil aníos le tuilleadh a fheiceáil"
+
+#: src/view/com/modals/SwitchAccount.tsx:117
+msgid "Switch Account"
+msgstr "Athraigh an cuntas"
+
+#: src/view/com/modals/SwitchAccount.tsx:97
+#: src/view/screens/Settings/index.tsx:130
+msgid "Switch to {0}"
+msgstr "Athraigh go {0}"
+
+#: src/view/com/modals/SwitchAccount.tsx:98
+#: src/view/screens/Settings/index.tsx:131
+msgid "Switches the account you are logged in to"
+msgstr "Athraíonn sé seo an cuntas beo"
+
+#: src/view/screens/Settings/index.tsx:472
+msgid "System"
+msgstr "Córas"
+
+#: src/view/screens/Settings/index.tsx:795
+msgid "System log"
+msgstr "Logleabhar an chórais"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:112
+msgid "Tall"
+msgstr "Ard"
+
+#: src/view/com/util/images/AutoSizedImage.tsx:70
+msgid "Tap to view fully"
+msgstr "Tapáil leis an rud iomlán a fheiceáil"
+
+#: src/screens/Onboarding/index.tsx:39
+msgid "Tech"
+msgstr "Teic"
+
+#: src/view/shell/desktop/RightNav.tsx:81
+msgid "Terms"
+msgstr "Téarmaí"
+
+#: src/Navigation.tsx:222
+#: src/view/screens/Settings/index.tsx:885
+#: src/view/screens/TermsOfService.tsx:29
+#: src/view/shell/Drawer.tsx:256
+msgid "Terms of Service"
+msgstr "Téarmaí Seirbhíse"
+
+#: src/view/com/modals/AppealLabel.tsx:70
+#: src/view/com/modals/report/InputIssueDetails.tsx:51
+msgid "Text input field"
+msgstr "Réimse téacs"
+
+#: src/view/com/auth/create/CreateAccount.tsx:90
+msgid "That handle is already taken."
+msgstr "Tá an leasainm sin in úsáid cheana féin."
+
+#: src/view/com/profile/ProfileHeader.tsx:262
+msgid "The account will be able to interact with you after unblocking."
+msgstr "Beidh an cuntas seo in ann caidreamh a dhéanamh leat tar éis duit é a dhíbhlocáil"
+
+#: src/view/screens/CommunityGuidelines.tsx:36
+msgid "The Community Guidelines have been moved to <0/>"
+msgstr "Bogadh Treoirlínte an Phobail go dtí <0/>"
+
+#: src/view/screens/CopyrightPolicy.tsx:33
+msgid "The Copyright Policy has been moved to <0/>"
+msgstr "Bogadh an Polasaí Cóipchirt go dtí <0/>"
+
+#: src/screens/Onboarding/Layout.tsx:60
+msgid "The following steps will help customize your Bluesky experience."
+msgstr "Cuideoidh na céimeanna seo a leanas leat Bluesky a chur in oiriúint duit féin."
+
+#: src/view/com/post-thread/PostThread.tsx:516
+msgid "The post may have been deleted."
+msgstr "Is féidir gur scriosadh an phostáil seo."
+
+#: src/view/screens/PrivacyPolicy.tsx:33
+msgid "The Privacy Policy has been moved to <0/>"
+msgstr "Bogadh Polasaí na Príobháideachta go dtí <0/>"
+
+#: src/view/screens/Support.tsx:36
+msgid "The support form has been moved. If you need help, please <0/> or visit {HELP_DESK_URL} to get in touch with us."
+msgstr "Bogadh an fhoirm tacaíochta go dtí <0/>. Má tá cuidiú ag teastáil uait, <0/> le do thoil, nó tabhair cuairt ar {HELP_DESK_URL} le dul i dteagmháil linn."
+
+#: src/view/screens/TermsOfService.tsx:33
+msgid "The Terms of Service have been moved to"
+msgstr "Bogadh ár dTéarmaí Seirbhíse go dtí"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:150
+msgid "There are many feeds to try:"
+msgstr "Tá a lán fothaí ann le blaiseadh:"
+
+#: src/view/screens/ProfileFeed.tsx:549
+msgid "There was an an issue contacting the server, please check your internet connection and try again."
+msgstr "Bhí fadhb ann maidir le dul i dteagmháil leis an bhfreastalaí. Seiceáil do cheangal leis an idirlíon agus bain triail eile as, le do thoil."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:139
+msgid "There was an an issue removing this feed. Please check your internet connection and try again."
+msgstr "Bhí fadhb ann maidir leis an bhfotha seo a bhaint. Seiceáil do cheangal leis an idirlíon agus bain triail eile as, le do thoil."
+
+#: src/view/screens/ProfileFeed.tsx:209
+msgid "There was an an issue updating your feeds, please check your internet connection and try again."
+msgstr "Bhí fadhb ann maidir le huasdátú do chuid fothaí. Seiceáil do cheangal leis an idirlíon agus bain triail eile as, le do thoil."
+
+#: src/view/screens/ProfileFeed.tsx:236
+#: src/view/screens/ProfileList.tsx:266
+#: src/view/screens/SavedFeeds.tsx:209
+#: src/view/screens/SavedFeeds.tsx:231
+#: src/view/screens/SavedFeeds.tsx:252
+msgid "There was an issue contacting the server"
+msgstr "Bhí fadhb ann maidir le teagmháil a dhéanamh leis an bhfreastalaí"
+
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:57
+#: src/view/com/auth/onboarding/RecommendedFeedsItem.tsx:66
+#: src/view/com/feeds/FeedSourceCard.tsx:113
+#: src/view/com/feeds/FeedSourceCard.tsx:127
+#: src/view/com/feeds/FeedSourceCard.tsx:181
+msgid "There was an issue contacting your server"
+msgstr "Bhí fadhb ann maidir le teagmháil a dhéanamh le do fhreastálaí"
+
+#: src/view/com/notifications/Feed.tsx:117
+msgid "There was an issue fetching notifications. Tap here to try again."
+msgstr "Bhí fadhb ann maidir le fógraí a fháil. Tapáil anseo le triail eile a bhaint as."
+
+#: src/view/com/posts/Feed.tsx:263
+msgid "There was an issue fetching posts. Tap here to try again."
+msgstr "Bhí fadhb ann maidir le postálacha a fháil. Tapáil anseo le triail eile a bhaint as."
+
+#: src/view/com/lists/ListMembers.tsx:172
+msgid "There was an issue fetching the list. Tap here to try again."
+msgstr "Bhí fadhb ann maidir leis an liosta a fháil. Tapáil anseo le triail eile a bhaint as."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:148
+#: src/view/com/lists/ProfileLists.tsx:155
+msgid "There was an issue fetching your lists. Tap here to try again."
+msgstr "Bhí fadhb ann maidir le do chuid liostaí a fháil. Tapáil anseo le triail eile a bhaint as."
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:63
+#: src/view/com/modals/ContentFilteringSettings.tsx:126
+msgid "There was an issue syncing your preferences with the server"
+msgstr "Bhí fadhb ann maidir le do chuid roghanna a shioncronú leis an bhfreastalaí"
+
+#: src/view/screens/AppPasswords.tsx:66
+msgid "There was an issue with fetching your app passwords"
+msgstr "Bhí fadhb ann maidir le do chuid pasfhocal don aip a fháil"
+
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:93
+#: src/view/com/post-thread/PostThreadFollowBtn.tsx:105
+#: src/view/com/profile/ProfileHeader.tsx:156
+#: src/view/com/profile/ProfileHeader.tsx:177
+#: src/view/com/profile/ProfileHeader.tsx:216
+#: src/view/com/profile/ProfileHeader.tsx:229
+#: src/view/com/profile/ProfileHeader.tsx:249
+#: src/view/com/profile/ProfileHeader.tsx:271
+msgid "There was an issue! {0}"
+msgstr "Bhí fadhb ann! {0}"
+
+#: src/view/screens/ProfileList.tsx:287
+#: src/view/screens/ProfileList.tsx:306
+#: src/view/screens/ProfileList.tsx:328
+#: src/view/screens/ProfileList.tsx:347
+msgid "There was an issue. Please check your internet connection and try again."
+msgstr "Bhí fadhb ann. Seiceáil do cheangal leis an idirlíon, le do thoil, agus bain triail eile as."
+
+#: src/view/com/util/ErrorBoundary.tsx:36
+msgid "There was an unexpected issue in the application. Please let us know if this happened to you!"
+msgstr "D’éirigh fadhb gan choinne leis an aip. Abair linn, le do thoil, má tharla sé sin duit!"
+
+#: src/screens/Deactivated.tsx:106
+msgid "There's been a rush of new users to Bluesky! We'll activate your account as soon as we can."
+msgstr "Tá ráchairt ar Bluesky le déanaí! Cuirfidh muid do chuntas ag obair chomh luath agus is féidir."
+
+#: src/view/com/auth/create/Step2.tsx:55
+#~ msgid "There's something wrong with this number. Please choose your country and enter your full phone number!"
+#~ msgstr "Tá rud éigin mícheart leis an uimhir seo. Roghnaigh do thír, le do thoil, agus cuir d’uimhir ghutháin iomlán isteach."
+
+#: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:138
+msgid "These are popular accounts you might like:"
+msgstr "Is cuntais iad seo a bhfuil a lán leantóirí acu. Is féidir go dtaitneoidh siad leat."
+
+#: src/view/com/util/moderation/ScreenHider.tsx:88
+msgid "This {screenDescription} has been flagged:"
+msgstr "Cuireadh bratach leis an {screenDescription} seo:"
+
+#: src/view/com/util/moderation/ScreenHider.tsx:83
+msgid "This account has requested that users sign in to view their profile."
+msgstr "Ní mór duit logáil isteach le próifíl an chuntais seo a fheiceáil."
+
+#: src/view/com/modals/EmbedConsent.tsx:68
+msgid "This content is hosted by {0}. Do you want to enable external media?"
+msgstr "Tá an t-ábhar seo ar fáil ó {0}. An bhfuil fonn ort na meáin sheachtracha a thaispeáint?"
+
+#: src/view/com/modals/ModerationDetails.tsx:67
+msgid "This content is not available because one of the users involved has blocked the other."
+msgstr "Níl an t-ábhar seo le feiceáil toisc gur bhlocáil duine de na húsáideoirí an duine eile."
+
+#: src/view/com/posts/FeedErrorMessage.tsx:108
+msgid "This content is not viewable without a Bluesky account."
+msgstr "Níl an t-ábhar seo le feiceáil gan chuntas Bluesky."
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:75
+msgid "This feature is in beta. You can read more about repository exports in <0>this blogpost.</0>"
+msgstr "Tá an ghné seo á tástáil fós. Tig leat níos mó faoi chartlanna easpórtáilte a léamh sa <0>bhlagphost seo.</0>"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:114
+msgid "This feed is currently receiving high traffic and is temporarily unavailable. Please try again later."
+msgstr "Tá ráchairt an-mhór ar an bhfotha seo faoi láthair. Níl sé ar fáil anois díreach dá bhrí sin. Bain triail eile as níos déanaí, le do thoil."
+
+#: src/view/screens/Profile.tsx:420
+#: src/view/screens/ProfileFeed.tsx:475
+#: src/view/screens/ProfileList.tsx:660
+msgid "This feed is empty!"
+msgstr "Tá an fotha seo folamh!"
+
+#: src/view/com/posts/CustomFeedEmptyState.tsx:37
+msgid "This feed is empty! You may need to follow more users or tune your language settings."
+msgstr "Tá an fotha seo folamh! Is féidir go mbeidh ort tuilleadh úsáideoirí a leanúint nó do shocruithe teanga a athrú."
+
+#: src/view/com/modals/BirthDateSettings.tsx:61
+msgid "This information is not shared with other users."
+msgstr "Ní roinntear an t-eolas seo le húsáideoirí eile."
+
+#: src/view/com/modals/VerifyEmail.tsx:119
+msgid "This is important in case you ever need to change your email or reset your password."
+msgstr "Tá sé seo tábhachtach má bhíonn ort do ríomhphost nó do phasfhocal a athrú."
+
+#: src/view/com/modals/LinkWarning.tsx:58
+msgid "This link is taking you to the following website:"
+msgstr "Téann an nasc seo go dtí an suíomh idirlín seo:"
+
+#: src/view/screens/ProfileList.tsx:834
+msgid "This list is empty!"
+msgstr "Tá an liosta seo folamh!"
+
+#: src/view/com/modals/AddAppPasswords.tsx:106
+msgid "This name is already in use"
+msgstr "Tá an t-ainm seo in úsáid cheana féin"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:122
+msgid "This post has been deleted."
+msgstr "Scriosadh an phostáil seo."
+
+#: src/view/com/modals/ModerationDetails.tsx:62
+msgid "This user has blocked you. You cannot view their content."
+msgstr "Tá an t-úsáideoir seo tar éis thú a bhlocáil. Ní féidir leat a gcuid ábhair a fheiceáil."
+
+#: src/view/com/modals/ModerationDetails.tsx:42
+msgid "This user is included in the <0/> list which you have blocked."
+msgstr "Tá an t-úsáideoir seo ar an liosta <0/> a bhlocáil tú."
+
+#: src/view/com/modals/ModerationDetails.tsx:74
+msgid "This user is included in the <0/> list which you have muted."
+msgstr "Tá an t-úsáideoir seo ar an liosta <0/> a chuir tú i bhfolach."
+
+#: src/view/com/modals/ModerationDetails.tsx:74
+#~ msgid "This user is included the <0/> list which you have muted."
+#~ msgstr "Tá an t-úsáideoir seo ar an liosta <0/> a chuir tú i bhfolach."
+
+#: src/view/com/modals/SelfLabel.tsx:137
+msgid "This warning is only available for posts with media attached."
+msgstr "Níl an rabhadh seo ar fáil ach le haghaidh postálacha a bhfuil meáin ceangailte leo."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:192
+msgid "This will hide this post from your feeds."
+msgstr "Leis seo ní bheidh an phostáil seo le feiceáil ar do chuid fothaí."
+
+#: src/view/screens/PreferencesThreads.tsx:53
+#: src/view/screens/Settings/index.tsx:565
+msgid "Thread Preferences"
+msgstr "Roghanna Snáitheanna"
+
+#: src/view/screens/PreferencesThreads.tsx:119
+msgid "Threaded Mode"
+msgstr "Modh Snáithithe"
+
+#: src/Navigation.tsx:252
+msgid "Threads Preferences"
+msgstr "Roghanna Snáitheanna"
+
+#: src/view/com/util/forms/DropdownButton.tsx:246
+msgid "Toggle dropdown"
+msgstr "Scoránaigh an bosca anuas"
+
+#: src/view/com/modals/EditImage.tsx:271
+msgid "Transformations"
+msgstr "Trasfhoirmithe"
+
+#: src/view/com/post-thread/PostThreadItem.tsx:682
+#: src/view/com/post-thread/PostThreadItem.tsx:684
+#: src/view/com/util/forms/PostDropdownBtn.tsx:125
+msgid "Translate"
+msgstr "Aistrigh"
+
+#: src/view/com/util/error/ErrorScreen.tsx:82
+msgctxt "action"
+msgid "Try again"
+msgstr "Bain triail eile as"
+
+#: src/view/screens/ProfileList.tsx:505
+msgid "Un-block list"
+msgstr "Díbhlocáil an liosta"
+
+#: src/view/screens/ProfileList.tsx:490
+msgid "Un-mute list"
+msgstr "Ná coinnigh an liosta sin i bhfolach níos mó"
+
+#: src/view/com/auth/create/CreateAccount.tsx:58
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:87
+#: src/view/com/auth/login/Login.tsx:76
+#: src/view/com/auth/login/LoginForm.tsx:118
+#: src/view/com/modals/ChangePassword.tsx:70
+msgid "Unable to contact your service. Please check your Internet connection."
+msgstr "Ní féidir teagmháil a dhéanamh le do sheirbhís. Seiceáil do cheangal leis an idirlíon, le do thoil."
+
+#: src/view/com/profile/ProfileHeader.tsx:432
+#: src/view/screens/ProfileList.tsx:589
+msgid "Unblock"
+msgstr "Díbhlocáil"
+
+#: src/view/com/profile/ProfileHeader.tsx:435
+msgctxt "action"
+msgid "Unblock"
+msgstr "Díbhlocáil"
+
+#: src/view/com/profile/ProfileHeader.tsx:260
+#: src/view/com/profile/ProfileHeader.tsx:344
+msgid "Unblock Account"
+msgstr "Díbhlocáil an cuntas"
+
+#: src/view/com/modals/Repost.tsx:42
+#: src/view/com/modals/Repost.tsx:55
+#: src/view/com/util/post-ctrls/RepostButton.tsx:60
+#: src/view/com/util/post-ctrls/RepostButton.web.tsx:48
+msgid "Undo repost"
+msgstr "Cuir stop leis an athphostáil"
+
+#: src/view/com/profile/FollowButton.tsx:55
+msgctxt "action"
+msgid "Unfollow"
+msgstr "Dílean"
+
+#: src/view/com/profile/ProfileHeader.tsx:484
+msgid "Unfollow {0}"
+msgstr "Dílean {0}"
+
+#: src/view/com/auth/create/state.ts:262
+msgid "Unfortunately, you do not meet the requirements to create an account."
+msgstr "Ar an drochuair, ní chomhlíonann tú na riachtanais le cuntas a chruthú."
+
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:182
+#: src/view/com/util/post-ctrls/PostCtrls.tsx:216
+msgid "Unlike"
+msgstr "Dímhol"
+
+#: src/view/screens/ProfileList.tsx:596
+msgid "Unmute"
+msgstr "Ná coinnigh i bhfolach"
+
+#: src/view/com/profile/ProfileHeader.tsx:325
+msgid "Unmute Account"
+msgstr "Ná coinnigh an cuntas seo i bhfolach níos mó"
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:171
+msgid "Unmute thread"
+msgstr "Ná coinnigh an snáithe seo i bhfolach níos mó"
+
+#: src/view/screens/ProfileFeed.tsx:353
+#: src/view/screens/ProfileList.tsx:580
+msgid "Unpin"
+msgstr "Díghreamaigh"
+
+#: src/view/screens/ProfileList.tsx:473
+msgid "Unpin moderation list"
+msgstr "Díghreamaigh an liosta modhnóireachta"
+
+#: src/view/screens/ProfileFeed.tsx:345
+msgid "Unsave"
+msgstr "Díshábháil"
+
+#: src/view/com/modals/UserAddRemoveLists.tsx:70
+msgid "Update {displayName} in Lists"
+msgstr "Uasdátú {displayName} sna Liostaí"
+
+#: src/lib/hooks/useOTAUpdate.ts:15
+msgid "Update Available"
+msgstr "Uasdátú ar fáil"
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:204
+msgid "Updating..."
+msgstr "Á uasdátú…"
+
+#: src/view/com/modals/ChangeHandle.tsx:455
+msgid "Upload a text file to:"
+msgstr "Uaslódáil comhad téacs chuig:"
+
+#: src/view/screens/AppPasswords.tsx:195
+msgid "Use app passwords to login to other Bluesky clients without giving full access to your account or password."
+msgstr "Bain úsáid as pasfhocail na haipe le logáil isteach ar chliaint eile de chuid Bluesky gan fáil iomlán ar do chuntas ná do phasfhocal a thabhairt dóibh."
+
+#: src/view/com/modals/ChangeHandle.tsx:515
+msgid "Use default provider"
+msgstr "Úsáid an soláthraí réamhshocraithe"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:56
+#: src/view/com/modals/InAppBrowserConsent.tsx:58
+msgid "Use in-app browser"
+msgstr "Úsáid an brabhsálaí san aip seo"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:66
+#: src/view/com/modals/InAppBrowserConsent.tsx:68
+msgid "Use my default browser"
+msgstr "Úsáid an brabhsálaí réamhshocraithe atá agam"
+
+#: src/view/com/modals/AddAppPasswords.tsx:155
+msgid "Use this to sign into the other app along with your handle."
+msgstr "Úsáid é seo le logáil isteach ar an aip eile in éindí le do leasainm."
+
+#: src/view/com/modals/ServerInput.tsx:105
+#~ msgid "Use your domain as your Bluesky client service provider"
+#~ msgstr "Úsáid d’fhearann féin mar sholáthraí seirbhíse cliaint Bluesky"
+
+#: src/view/com/modals/InviteCodes.tsx:200
+msgid "Used by:"
+msgstr "In úsáid ag:"
+
+#: src/view/com/modals/ModerationDetails.tsx:54
+msgid "User Blocked"
+msgstr "Úsáideoir blocáilte"
+
+#: src/view/com/modals/ModerationDetails.tsx:40
+msgid "User Blocked by List"
+msgstr "Úsáideoir blocáilte le liosta"
+
+#: src/view/com/modals/ModerationDetails.tsx:60
+msgid "User Blocks You"
+msgstr "Blocálann an t-úsáideoir seo thú"
+
+#: src/view/com/auth/create/Step2.tsx:44
+msgid "User handle"
+msgstr "Leasainm"
+
+#: src/view/com/lists/ListCard.tsx:84
+#: src/view/com/modals/UserAddRemoveLists.tsx:198
+msgid "User list by {0}"
+msgstr "Liosta úsáideoirí le {0}"
+
+#: src/view/screens/ProfileList.tsx:762
+msgid "User list by <0/>"
+msgstr "Liosta úsáideoirí le <0/>"
+
+#: src/view/com/lists/ListCard.tsx:82
+#: src/view/com/modals/UserAddRemoveLists.tsx:196
+#: src/view/screens/ProfileList.tsx:760
+msgid "User list by you"
+msgstr "Liosta úsáideoirí leat"
+
+#: src/view/com/modals/CreateOrEditList.tsx:196
+msgid "User list created"
+msgstr "Liosta úsáideoirí cruthaithe"
+
+#: src/view/com/modals/CreateOrEditList.tsx:182
+msgid "User list updated"
+msgstr "Liosta úsáideoirí uasdátaithe"
+
+#: src/view/screens/Lists.tsx:58
+msgid "User Lists"
+msgstr "Liostaí Úsáideoirí"
+
+#: src/view/com/auth/login/LoginForm.tsx:177
+#: src/view/com/auth/login/LoginForm.tsx:195
+msgid "Username or email address"
+msgstr "Ainm úsáideora nó ríomhphost"
+
+#: src/view/screens/ProfileList.tsx:796
+msgid "Users"
+msgstr "Úsáideoirí"
+
+#: src/view/com/threadgate/WhoCanReply.tsx:143
+msgid "users followed by <0/>"
+msgstr "Úsáideoirí a bhfuil <0/> á leanúint"
+
+#: src/view/com/modals/Threadgate.tsx:106
+msgid "Users in \"{0}\""
+msgstr "Úsáideoirí in ”{0}“"
+
+#: src/view/com/auth/create/Step2.tsx:243
+#~ msgid "Verification code"
+#~ msgstr "Cód dearbhaithe"
+
+#: src/view/screens/Settings/index.tsx:910
+msgid "Verify email"
+msgstr "Dearbhaigh ríomhphost"
+
+#: src/view/screens/Settings/index.tsx:935
+msgid "Verify my email"
+msgstr "Dearbhaigh mo ríomhphost"
+
+#: src/view/screens/Settings/index.tsx:944
+msgid "Verify My Email"
+msgstr "Dearbhaigh Mo Ríomhphost"
+
+#: src/view/com/modals/ChangeEmail.tsx:205
+#: src/view/com/modals/ChangeEmail.tsx:207
+msgid "Verify New Email"
+msgstr "Dearbhaigh an Ríomhphost Nua"
+
+#: src/view/com/modals/VerifyEmail.tsx:103
+msgid "Verify Your Email"
+msgstr "Dearbhaigh Do Ríomhphost"
+
+#: src/screens/Onboarding/index.tsx:42
+msgid "Video Games"
+msgstr "Físchluichí"
+
+#: src/view/com/profile/ProfileHeader.tsx:661
+msgid "View {0}'s avatar"
+msgstr "Féach ar an abhatár atá ag {0}"
+
+#: src/view/screens/Log.tsx:52
+msgid "View debug entry"
+msgstr "Féach ar an iontráil dífhabhtaithe"
+
+#: src/view/com/posts/FeedSlice.tsx:103
+msgid "View full thread"
+msgstr "Féach ar an snáithe iomlán"
+
+#: src/view/com/posts/FeedErrorMessage.tsx:172
+msgid "View profile"
+msgstr "Féach ar an bpróifíl"
+
+#: src/view/com/profile/ProfileSubpageHeader.tsx:128
+msgid "View the avatar"
+msgstr "Féach ar an abhatár"
+
+#: src/view/com/modals/LinkWarning.tsx:75
+msgid "Visit Site"
+msgstr "Tabhair cuairt ar an suíomh"
+
+#: src/screens/Onboarding/StepModeration/ModerationOption.tsx:42
+#: src/view/com/modals/ContentFilteringSettings.tsx:259
+msgid "Warn"
+msgstr "Rabhadh"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:134
+msgid "We also think you'll like \"For You\" by Skygaze:"
+msgstr "Creidimid go dtaitneoidh “For You” le Skygaze leat:"
+
+#: src/screens/Deactivated.tsx:133
+msgid "We estimate {estimatedTime} until your account is ready."
+msgstr "Measaimid go mbeidh do chuntas réidh i gceann {estimatedTime}"
+
+#: src/screens/Onboarding/StepFinished.tsx:93
+msgid "We hope you have a wonderful time. Remember, Bluesky is:"
+msgstr "Tá súil againn go mbeidh an-chraic agat anseo. Ná déan dearmad go bhfuil Bluesky:"
+
+#: src/view/com/posts/DiscoverFallbackHeader.tsx:29
+msgid "We ran out of posts from your follows. Here's the latest from <0/>."
+msgstr "Níl aon ábhar nua le taispeáint ó na cuntais a leanann tú. Seo duit an t-ábhar is déanaí ó <0/>."
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:118
+#~ msgid "We recommend \"For You\" by Skygaze:"
+#~ msgstr "Creidimid go dtaitneoidh “For You” le Skygaze leat:"
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:124
+msgid "We recommend our \"Discover\" feed:"
+msgstr "Molaimid an fotha “Discover”."
+
+#: src/screens/Onboarding/StepInterests/index.tsx:133
+msgid "We weren't able to connect. Please try again to continue setting up your account. If it continues to fail, you can skip this flow."
+msgstr "Níorbh fhéidir linn ceangal a bhunú. Bain triail eile as do chuntas a shocrú. Má mhaireann an fhadhb, ní gá duit an próiseas seo a chur i gcrích."
+
+#: src/screens/Deactivated.tsx:137
+msgid "We will let you know when your account is ready."
+msgstr "Déarfaidh muid leat nuair a bheidh do chuntas réidh."
+
+#: src/view/com/modals/AppealLabel.tsx:48
+msgid "We'll look into your appeal promptly."
+msgstr "Fiosróimid d'achomharc gan mhoill."
+
+#: src/screens/Onboarding/StepInterests/index.tsx:138
+msgid "We'll use this to help customize your experience."
+msgstr "Bainfimid úsáid as seo chun an suíomh a chur in oiriúint duit."
+
+#: src/view/com/auth/create/CreateAccount.tsx:130
+msgid "We're so excited to have you join us!"
+msgstr "Tá muid an-sásta go bhfuil tú linn!"
+
+#: src/view/screens/ProfileList.tsx:85
+msgid "We're sorry, but we were unable to resolve this list. If this persists, please contact the list creator, @{handleOrDid}."
+msgstr "Ár leithscéal, ach ní féidir linn an liosta seo a thaispeáint. Má mhaireann an fhadhb, déan teagmháil leis an duine a chruthaigh an liosta, @{handleOrDid}."
+
+#: src/view/screens/Search/Search.tsx:253
+msgid "We're sorry, but your search could not be completed. Please try again in a few minutes."
+msgstr "Ár leithscéal, ach níorbh fhéidir linn do chuardach a chur i gcrích. Bain triail eile as i gceann cúpla nóiméad."
+
+#: src/view/screens/NotFound.tsx:48
+msgid "We're sorry! We can't find the page you were looking for."
+msgstr "Ár leithscéal, ach ní féidir linn an leathanach atá tú ag lorg a aimsiú."
+
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:46
+msgid "Welcome to <0>Bluesky</0>"
+msgstr "Fáilte go <0>Bluesky</0>"
+
+#: src/screens/Onboarding/StepInterests/index.tsx:130
+msgid "What are your interests?"
+msgstr "Cad iad na rudaí a bhfuil suim agat iontu?"
+
+#: src/view/com/modals/report/Modal.tsx:169
+msgid "What is the issue with this {collectionName}?"
+msgstr "Cad é an fhadhb le {collectionName}?"
+
+#: src/view/com/auth/SplashScreen.tsx:59
+#: src/view/com/composer/Composer.tsx:279
+msgid "What's up?"
+msgstr "Aon scéal?"
+
+#: src/view/com/modals/lang-settings/PostLanguagesSettings.tsx:78
+msgid "Which languages are used in this post?"
+msgstr "Cad iad na teangacha sa phostáil seo?"
+
+#: src/view/com/modals/lang-settings/ContentLanguagesSettings.tsx:77
+msgid "Which languages would you like to see in your algorithmic feeds?"
+msgstr "Cad iad na teangacha ba mhaith leat a fheiceáil i do chuid fothaí algartamacha?"
+
+#: src/view/com/composer/threadgate/ThreadgateBtn.tsx:47
+#: src/view/com/modals/Threadgate.tsx:66
+msgid "Who can reply"
+msgstr "Cé atá in ann freagra a thabhairt"
+
+#: src/view/com/modals/crop-image/CropImage.web.tsx:102
+msgid "Wide"
+msgstr "Leathan"
+
+#: src/view/com/composer/Composer.tsx:415
+msgid "Write post"
+msgstr "Scríobh postáil"
+
+#: src/view/com/composer/Composer.tsx:278
+#: src/view/com/composer/Prompt.tsx:33
+msgid "Write your reply"
+msgstr "Scríobh freagra"
+
+#: src/screens/Onboarding/index.tsx:28
+msgid "Writers"
+msgstr "Scríbhneoirí"
+
+#: src/view/com/auth/create/Step2.tsx:263
+#~ msgid "XXXXXX"
+#~ msgstr "XXXXXX"
+
+#: src/view/com/composer/select-language/SuggestedLanguage.tsx:77
+#: src/view/screens/PreferencesHomeFeed.tsx:129
+#: src/view/screens/PreferencesHomeFeed.tsx:201
+#: src/view/screens/PreferencesHomeFeed.tsx:236
+#: src/view/screens/PreferencesHomeFeed.tsx:271
+#: src/view/screens/PreferencesThreads.tsx:106
+#: src/view/screens/PreferencesThreads.tsx:129
+msgid "Yes"
+msgstr "Tá"
+
+#: src/screens/Onboarding/StepModeration/index.tsx:46
+#~ msgid "You are in control"
+#~ msgstr "Tá sé faoi do stiúir"
+
+#: src/screens/Deactivated.tsx:130
+msgid "You are in line."
+msgstr "Tá tú sa scuaine."
+
+#: src/view/com/posts/FollowingEmptyState.tsx:67
+#: src/view/com/posts/FollowingEndOfFeed.tsx:68
+msgid "You can also discover new Custom Feeds to follow."
+msgstr "Is féidir leat sainfhothaí nua a aimsiú le leanúint."
+
+#: src/screens/Onboarding/StepAlgoFeeds/index.tsx:123
+#~ msgid "You can also try our \"Discover\" algorithm:"
+#~ msgstr "Tig leat freisin triail a bhaint as ár n-algartam “Discover”:"
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:142
+msgid "You can change these settings later."
+msgstr "Is féidir leat na socruithe seo a athrú níos déanaí."
+
+#: src/view/com/auth/login/Login.tsx:158
+#: src/view/com/auth/login/PasswordUpdatedForm.tsx:31
+msgid "You can now sign in with your new password."
+msgstr "Is féidir leat logáil isteach le do phasfhocal nua anois."
+
+#: src/view/com/modals/InviteCodes.tsx:66
+msgid "You don't have any invite codes yet! We'll send you some when you've been on Bluesky for a little longer."
+msgstr "Níl aon chóid chuiridh agat fós! Cuirfidh muid cúpla cód chugat tar éis duit beagán ama a chaitheamh anseo."
+
+#: src/view/screens/SavedFeeds.tsx:102
+msgid "You don't have any pinned feeds."
+msgstr "Níl aon fhothaí greamaithe agat."
+
+#: src/view/screens/Feeds.tsx:452
+msgid "You don't have any saved feeds!"
+msgstr "Níl aon fhothaí sábháilte agat!"
+
+#: src/view/screens/SavedFeeds.tsx:135
+msgid "You don't have any saved feeds."
+msgstr "Níl aon fhothaí sábháilte agat."
+
+#: src/view/com/post-thread/PostThread.tsx:464
+msgid "You have blocked the author or you have been blocked by the author."
+msgstr "Bhlocáil tú an t-údar nó tá tú blocáilte ag an údar."
+
+#: src/view/com/modals/ModerationDetails.tsx:56
+msgid "You have blocked this user. You cannot view their content."
+msgstr "Bhlocáil tú an cuntas seo. Ní féidir leat a gcuid ábhar a fheiceáil."
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:57
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:92
+#: src/view/com/modals/ChangePassword.tsx:87
+#: src/view/com/modals/ChangePassword.tsx:121
+msgid "You have entered an invalid code. It should look like XXXXX-XXXXX."
+msgstr "Tá tú tar éis cód míchruinn a chur isteach. Ba cheart an cruth seo a bheith air: XXXXX-XXXXX."
+
+#: src/view/com/modals/ModerationDetails.tsx:87
+msgid "You have muted this user."
+msgstr "Chuir tú an cuntas seo i bhfolach."
+
+#: src/view/com/feeds/ProfileFeedgens.tsx:136
+msgid "You have no feeds."
+msgstr "Níl aon fhothaí agat."
+
+#: src/view/com/lists/MyLists.tsx:89
+#: src/view/com/lists/ProfileLists.tsx:140
+msgid "You have no lists."
+msgstr "Níl aon liostaí agat."
+
+#: src/view/screens/ModerationBlockedAccounts.tsx:132
+msgid "You have not blocked any accounts yet. To block an account, go to their profile and selected \"Block account\" from the menu on their account."
+msgstr "Níor bhlocáil tú aon chuntas fós. Le cuntas a bhlocáil, téigh go dtí a bpróifíl agus roghnaigh “Blocáil an cuntas seo” ar an gclár ansin."
+
+#: src/view/screens/AppPasswords.tsx:87
+msgid "You have not created any app passwords yet. You can create one by pressing the button below."
+msgstr "Níor chruthaigh tú aon phasfhocal aipe fós. Is féidir leat ceann a chruthú ach brú ar an gcnaipe thíos."
+
+#: src/view/screens/ModerationMutedAccounts.tsx:131
+msgid "You have not muted any accounts yet. To mute an account, go to their profile and selected \"Mute account\" from the menu on their account."
+msgstr "Níor chuir tú aon chuntas i bhfolach fós. Le cuntas a chur i bhfolach, téigh go dtí a bpróifíl agus roghnaigh “Cuir an cuntas i bhfolach” ar an gclár ansin."
+
+#: src/view/com/modals/ContentFilteringSettings.tsx:175
+msgid "You must be 18 or older to enable adult content."
+msgstr "Caithfidh tú a bheith 18 mbliana d’aois nó níos sine le hábhar do dhaoine fásta a fháil."
+
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:103
+msgid "You must be 18 years or older to enable adult content"
+msgstr "Caithfidh tú a bheith 18 mbliana d’aois nó níos sine le hábhar do dhaoine fásta a fháil."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:98
+msgid "You will no longer receive notifications for this thread"
+msgstr "Ní bhfaighidh tú fógraí don snáithe seo a thuilleadh."
+
+#: src/view/com/util/forms/PostDropdownBtn.tsx:101
+msgid "You will now receive notifications for this thread"
+msgstr "Gheobhaidh tú fógraí don snáithe seo anois."
+
+#: src/view/com/auth/login/SetNewPasswordForm.tsx:107
+msgid "You will receive an email with a \"reset code.\" Enter that code here, then enter your new password."
+msgstr "Gheobhaidh tú teachtaireacht ríomhphoist le “cód athshocraithe” ann. Cuir an cód sin isteach anseo, ansin cuir do phasfhocal nua isteach."
+
+#: src/screens/Onboarding/StepModeration/index.tsx:72
+msgid "You're in control"
+msgstr "Tá sé faoi do stiúir"
+
+#: src/screens/Deactivated.tsx:87
+#: src/screens/Deactivated.tsx:88
+#: src/screens/Deactivated.tsx:103
+msgid "You're in line"
+msgstr "Tá tú sa scuaine"
+
+#: src/screens/Onboarding/StepFinished.tsx:90
+msgid "You're ready to go!"
+msgstr "Tá tú réidh!"
+
+#: src/view/com/posts/FollowingEndOfFeed.tsx:48
+msgid "You've reached the end of your feed! Find some more accounts to follow."
+msgstr "Tháinig tú go deireadh d’fhotha! Aimsigh cuntais eile le leanúint."
+
+#: src/view/com/auth/create/Step1.tsx:74
+msgid "Your account"
+msgstr "Do chuntas"
+
+#: src/view/com/modals/DeleteAccount.tsx:67
+msgid "Your account has been deleted"
+msgstr "Scriosadh do chuntas"
+
+#: src/view/screens/Settings/ExportCarDialog.tsx:47
+msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
+msgstr "Is féidir cartlann do chuntais, a bhfuil na taifid phoiblí uile inti, a íoslódáil mar chomhad “CAR”. Ní bheidh aon mheáin leabaithe (íomhánna, mar shampla) ná do shonraí príobháideacha inti. Ní mór iad a fháil ar dhóigh eile."
+
+#: src/view/com/auth/create/Step1.tsx:238
+msgid "Your birth date"
+msgstr "Do bhreithlá"
+
+#: src/view/com/modals/InAppBrowserConsent.tsx:47
+msgid "Your choice will be saved, but can be changed later in settings."
+msgstr "Sábhálfar do rogha, ach is féidir é athrú níos déanaí sna socruithe."
+
+#: src/screens/Onboarding/StepFollowingFeed.tsx:61
+msgid "Your default feed is \"Following\""
+msgstr "Is é “Following” d’fhotha réamhshocraithe"
+
+#: src/view/com/auth/create/state.ts:110
+#: src/view/com/auth/login/ForgotPasswordForm.tsx:70
+#: src/view/com/modals/ChangePassword.tsx:54
+msgid "Your email appears to be invalid."
+msgstr "Is cosúil go bhfuil do ríomhphost neamhbhailí."
+
+#: src/view/com/modals/Waitlist.tsx:109
+msgid "Your email has been saved! We'll be in touch soon."
+msgstr "Cláraíodh do sheoladh ríomhphost! Beidh muid i dteagmháil leat go luath."
+
+#: src/view/com/modals/ChangeEmail.tsx:125
+msgid "Your email has been updated but not verified. As a next step, please verify your new email."
+msgstr "Uasdátaíodh do sheoladh ríomhphoist ach níor dearbhaíodh é. An chéad chéim eile anois ná do sheoladh nua a dhearbhú, le do thoil."
+
+#: src/view/com/modals/VerifyEmail.tsx:114
+msgid "Your email has not yet been verified. This is an important security step which we recommend."
+msgstr "Níor dearbhaíodh do sheoladh ríomhphoist fós. Is tábhachtach an chéim shábháilteachta é sin agus molaimid é."
+
+#: src/view/com/posts/FollowingEmptyState.tsx:47
+msgid "Your following feed is empty! Follow more users to see what's happening."
+msgstr "Tá an fotha de na daoine a leanann tú folamh! Lean tuilleadh úsáideoirí le feiceáil céard atá ar siúl."
+
+#: src/view/com/auth/create/Step2.tsx:48
+msgid "Your full handle will be"
+msgstr "Do leasainm iomlán anseo:"
+
+#: src/view/com/modals/ChangeHandle.tsx:270
+msgid "Your full handle will be <0>@{0}</0>"
+msgstr "Do leasainm iomlán anseo: <0>@{0}</0>"
+
+#: src/view/screens/Settings.tsx:NaN
+#: src/view/shell/Drawer.tsx:660
+#~ msgid "Your invite codes are hidden when logged in using an App Password"
+#~ msgstr "Níl do chuid cód cuiridh le feiceáil nuair atá tú logáilte isteach le pasfhocal aipe"
+
+#: src/view/com/modals/ChangePassword.tsx:155
+msgid "Your password has been changed successfully!"
+msgstr "Athraíodh do phasfhocal!"
+
+#: src/view/com/composer/Composer.tsx:267
+msgid "Your post has been published"
+msgstr "Foilsíodh do phostáil"
+
+#: src/screens/Onboarding/StepFinished.tsx:105
+#: src/view/com/auth/onboarding/WelcomeDesktop.tsx:59
+#: src/view/com/auth/onboarding/WelcomeMobile.tsx:59
+msgid "Your posts, likes, and blocks are public. Mutes are private."
+msgstr "Tá do chuid postálacha, moltaí, agus blocálacha poiblí. Is príobháideach iad na cuntais a chuireann tú i bhfolach."
+
+#: src/view/com/modals/SwitchAccount.tsx:84
+#: src/view/screens/Settings/index.tsx:118
+msgid "Your profile"
+msgstr "Do phróifíl"
+
+#: src/view/com/composer/Composer.tsx:266
+msgid "Your reply has been published"
+msgstr "Foilsíodh do fhreagra"
+
+#: src/view/com/auth/create/Step2.tsx:28
+msgid "Your user handle"
+msgstr "Do leasainm"
