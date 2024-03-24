@@ -71,11 +71,9 @@ export function BottomBarWeb() {
             {({isActive}) => {
               const Icon = isActive ? HomeIconSolid : HomeIcon
               return (
-                <Icon
-                  strokeWidth={4}
-                  size={24}
-                  style={[styles.ctrlIcon, pal.text, styles.homeIcon]}
-                />
+                <View style={[styles.ctrlIcon, pal.text, styles.homeIcon]}>
+                  <Icon strokeWidth={4} size={24} />
+                </View>
               )
             }}
           </NavItem>
@@ -85,54 +83,44 @@ export function BottomBarWeb() {
                 ? MagnifyingGlassIcon2Solid
                 : MagnifyingGlassIcon2
               return (
-                <Icon
-                  size={25}
-                  style={[styles.ctrlIcon, pal.text, styles.searchIcon]}
-                  strokeWidth={1.8}
-                />
+                <View style={[styles.ctrlIcon, pal.text, styles.searchIcon]}>
+                  <Icon size={25} strokeWidth={1.8} />
+                </View>
               )
             }}
           </NavItem>
 
-          {hasSession && (
-            <>
-              <NavItem routeName="Feeds" href="/feeds">
-                {({isActive}) => {
-                  return (
-                    <HashtagIcon
-                      size={22}
-                      style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}
-                      strokeWidth={isActive ? 4 : 2.5}
-                    />
-                  )
-                }}
-              </NavItem>
-              <NavItem routeName="Notifications" href="/notifications">
-                {({isActive}) => {
-                  const Icon = isActive ? BellIconSolid : BellIcon
-                  return (
-                    <Icon
-                      size={24}
-                      strokeWidth={1.9}
-                      style={[styles.ctrlIcon, pal.text, styles.bellIcon]}
-                    />
-                  )
-                }}
-              </NavItem>
-              <NavItem
-                routeName="Profile"
-                href={
-                  currentAccount
-                    ? makeProfileLink({
-                        did: currentAccount.did,
-                        handle: currentAccount.handle,
-                      })
-                    : '/'
-                }>
-                {({isActive}) => <ProfileIcon isActive={isActive} />}
-              </NavItem>
-            </>
-          )}
+          <NavItem routeName="Feeds" href="/feeds">
+            {({isActive}) => {
+              return (
+                <View style={[styles.ctrlIcon, pal.text, styles.feedsIcon]}>
+                  <HashtagIcon size={22} strokeWidth={isActive ? 4 : 2.5} />
+                </View>
+              )
+            }}
+          </NavItem>
+          <NavItem routeName="Notifications" href="/notifications">
+            {({isActive}) => {
+              const Icon = isActive ? BellIconSolid : BellIcon
+              return (
+                <View style={[styles.ctrlIcon, pal.text, styles.bellIcon]}>
+                  <Icon size={24} strokeWidth={1.9} />
+                </View>
+              )
+            }}
+          </NavItem>
+          <NavItem
+            routeName="Profile"
+            href={
+              currentAccount
+                ? makeProfileLink({
+                    did: currentAccount.did,
+                    handle: currentAccount.handle,
+                  })
+                : '/'
+            }>
+            {({isActive}) => <ProfileIcon isActive={isActive} />}
+          </NavItem>
         </>
       ) : (
         <>

@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
   bottomBarWeb: {
     // @ts-ignore web-only
     position: 'fixed',
+    height: 60,
   },
   ctrl: {
     flex: 1,
