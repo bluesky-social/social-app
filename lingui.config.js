@@ -2,19 +2,19 @@
 module.exports = {
   locales: [
     'en',
+    'ca',
     'de',
     'es',
     'fi',
     'fr',
     'hi',
     'id',
+    'it',
     'ja',
     'ko',
     'pt-BR',
     'uk',
-    'ca',
     'zh-CN',
-    'it',
   ],
   catalogs: [
     {
