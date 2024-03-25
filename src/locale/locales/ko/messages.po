@@ -152,11 +152,11 @@ msgstr "대체 텍스트 추가하기"
 msgid "Add App Password"
 msgstr "앱 비밀번호 추가"
 
-#: src/view/com/composer/Composer.tsx:466
+#: src/view/com/composer/Composer.tsx:467
 msgid "Add link card"
 msgstr "링크 카드 추가"
 
-#: src/view/com/composer/Composer.tsx:471
+#: src/view/com/composer/Composer.tsx:472
 msgid "Add link card:"
 msgstr "링크 카드 추가:"
 
@@ -320,7 +320,7 @@ msgstr "앱 비밀번호 \"{name}\"을(를) 삭제하시겠습니까?"
 msgid "Are you sure you want to remove {0} from your feeds?"
 msgstr "피드에서 {0}을(를) 제거하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:508
+#: src/view/com/composer/Composer.tsx:509
 msgid "Are you sure you'd like to discard this draft?"
 msgstr "이 초안을 삭제하시겠습니까?"
 
@@ -355,6 +355,7 @@ msgstr "3자 이상"
 #: src/screens/Login/SetNewPasswordForm.tsx:160
 #: src/screens/Login/SetNewPasswordForm.tsx:166
 #: src/screens/Profile/Header/Shell.tsx:97
+#: src/screens/Signup/index.tsx:179
 #: src/view/com/util/ViewHeader.tsx:87
 msgid "Back"
 msgstr "뒤로"
@@ -531,8 +532,8 @@ msgstr "글자, 숫자, 공백, 대시, 밑줄만 포함할 수 있습니다. �
 #: src/components/Prompt.tsx:116
 #: src/components/Prompt.tsx:118
 #: src/components/TagMenu/index.tsx:268
-#: src/view/com/composer/Composer.tsx:316
-#: src/view/com/composer/Composer.tsx:321
+#: src/view/com/composer/Composer.tsx:317
+#: src/view/com/composer/Composer.tsx:322
 #: src/view/com/modals/ChangeEmail.tsx:218
 #: src/view/com/modals/ChangeEmail.tsx:220
 #: src/view/com/modals/ChangeHandle.tsx:153
@@ -760,7 +761,7 @@ msgstr "하단 탐색 막대를 닫습니다"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:318
+#: src/view/com/composer/Composer.tsx:319
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성 상자를 닫고 게시물 초안을 삭제합니다"
 
@@ -789,11 +790,11 @@ msgstr "커뮤니티 가이드라인"
 msgid "Complete onboarding and start using your account"
 msgstr "온보딩 완료 후 계정 사용 시작"
 
-#: src/screens/Signup/index.tsx:149
+#: src/screens/Signup/index.tsx:154
 msgid "Complete the challenge"
 msgstr "챌린지 완료하기"
 
-#: src/view/com/composer/Composer.tsx:437
+#: src/view/com/composer/Composer.tsx:438
 msgid "Compose posts up to {MAX_GRAPHEME_LENGTH} characters in length"
 msgstr "최대 {MAX_GRAPHEME_LENGTH}자 길이까지 글을 작성할 수 있습니다"
 
@@ -855,7 +856,7 @@ msgstr "확인 코드"
 msgid "Connecting..."
 msgstr "연결 중…"
 
-#: src/screens/Signup/index.tsx:206
+#: src/screens/Signup/index.tsx:219
 msgid "Contact support"
 msgstr "지원에 연락하기"
 
@@ -915,6 +916,7 @@ msgstr "{0}(으)로 계속하기 (현재 로그인)"
 #: src/screens/Onboarding/StepInterests/index.tsx:249
 #: src/screens/Onboarding/StepModeration/index.tsx:100
 #: src/screens/Onboarding/StepTopicalFeeds.tsx:115
+#: src/screens/Signup/index.tsx:198
 msgid "Continue to next step"
 msgstr "다음 단계로 계속하기"
 
@@ -995,7 +997,7 @@ msgstr "새 계정 만들기"
 msgid "Create a new Bluesky account"
 msgstr "새 Bluesky 계정을 만듭니다"
 
-#: src/screens/Signup/index.tsx:127
+#: src/screens/Signup/index.tsx:129
 msgid "Create Account"
 msgstr "계정 만들기"
 
@@ -1017,7 +1019,7 @@ msgstr "{0}에 대한 신고 작성하기"
 msgid "Created {0}"
 msgstr "{0}에 생성됨"
 
-#: src/view/com/composer/Composer.tsx:468
+#: src/view/com/composer/Composer.tsx:469
 msgid "Creates a card with a thumbnail. The card links to {url}"
 msgstr "미리보기 이미지가 있는 카드를 만듭니다. 카드가 {url}(으)로 연결됩니다"
 
@@ -1130,7 +1132,7 @@ msgstr "삭제된 게시물."
 msgid "Description"
 msgstr "설명"
 
-#: src/view/com/composer/Composer.tsx:217
+#: src/view/com/composer/Composer.tsx:218
 msgid "Did you want to say anything?"
 msgstr "하고 싶은 말이 있나요?"
 
@@ -1145,11 +1147,11 @@ msgstr "어둑함"
 msgid "Disabled"
 msgstr "비활성화됨"
 
-#: src/view/com/composer/Composer.tsx:510
+#: src/view/com/composer/Composer.tsx:517
 msgid "Discard"
 msgstr "삭제"
 
-#: src/view/com/composer/Composer.tsx:507
+#: src/view/com/composer/Composer.tsx:508
 msgid "Discard draft?"
 msgstr "초안 삭제"
 
@@ -1316,12 +1318,12 @@ msgstr "내 피드 편집"
 msgid "Edit my profile"
 msgstr "내 프로필 편집"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:172
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:171
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:161
 msgid "Edit profile"
 msgstr "프로필 편집"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:175
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:174
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:164
 msgid "Edit Profile"
 msgstr "프로필 편집"
@@ -1460,7 +1462,7 @@ msgstr "아래에 새 이메일 주소를 입력하세요."
 msgid "Enter your username and password"
 msgstr "사용자 이름 및 비밀번호 입력"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:50
+#: src/screens/Signup/StepCaptcha/index.tsx:49
 msgid "Error receiving captcha response."
 msgstr "캡차 응답을 수신하는 동안 오류가 발생했습니다."
 
@@ -1822,6 +1824,7 @@ msgstr "뒤로"
 #: src/components/ReportDialog/SubmitView.tsx:104
 #: src/screens/Onboarding/Layout.tsx:104
 #: src/screens/Onboarding/Layout.tsx:193
+#: src/screens/Signup/index.tsx:173
 msgid "Go back to previous step"
 msgstr "이전 단계로 돌아가기"
 
@@ -1863,7 +1866,7 @@ msgstr "해시태그"
 msgid "Hashtag: #{tag}"
 msgstr "해시태그: #{tag}"
 
-#: src/screens/Signup/index.tsx:204
+#: src/screens/Signup/index.tsx:217
 msgid "Having trouble?"
 msgstr "문제가 있나요?"
 
@@ -2212,7 +2215,7 @@ msgstr "밝음"
 msgid "Like"
 msgstr "좋아요"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:257
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:256
 #: src/view/screens/ProfileFeed.tsx:572
 msgid "Like this feed"
 msgstr "이 피드에 좋아요 표시"
@@ -2237,8 +2240,8 @@ msgstr "{0}명의 사용자가 좋아함"
 msgid "Liked by {count} {0}"
 msgstr "{count}명의 사용자가 좋아함"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:277
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:291
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:276
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:290
 #: src/view/screens/ProfileFeed.tsx:587
 msgid "Liked by {likeCount} {0}"
 msgstr "{likeCount}명의 사용자가 좋아함"
@@ -2669,6 +2672,7 @@ msgstr "뉴스"
 #: src/screens/Login/LoginForm.tsx:258
 #: src/screens/Login/SetNewPasswordForm.tsx:174
 #: src/screens/Login/SetNewPasswordForm.tsx:180
+#: src/screens/Signup/index.tsx:205
 #: src/view/com/auth/onboarding/RecommendedFeeds.tsx:79
 #: src/view/com/modals/ChangePassword.tsx:253
 #: src/view/com/modals/ChangePassword.tsx:255
@@ -2791,7 +2795,7 @@ msgstr "노출"
 msgid "Nudity or pornography not labeled as such"
 msgstr "누드 또는 음란물로 설정되지 않은 콘텐츠"
 
-#: src/screens/Signup/index.tsx:137
+#: src/screens/Signup/index.tsx:142
 msgid "of"
 msgstr ""
 
@@ -2807,7 +2811,8 @@ msgstr "이런!"
 msgid "Oh no! Something went wrong."
 msgstr "이런! 뭔가 잘못되었습니다."
 
-#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:127
+#: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:126
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:325
 msgid "OK"
 msgstr "확인"
 
@@ -2823,7 +2828,7 @@ msgstr "오래된 순"
 msgid "Onboarding reset"
 msgstr "온보딩 재설정"
 
-#: src/view/com/composer/Composer.tsx:391
+#: src/view/com/composer/Composer.tsx:392
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
@@ -2849,8 +2854,8 @@ msgstr "이런!"
 msgid "Open"
 msgstr "공개성"
 
-#: src/view/com/composer/Composer.tsx:490
 #: src/view/com/composer/Composer.tsx:491
+#: src/view/com/composer/Composer.tsx:492
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -3143,7 +3148,7 @@ msgstr "{0} 님이 이 라벨을 잘못 적용했다고 생각하는 이유를 �
 msgid "Please Verify Your Email"
 msgstr "이메일 인증하기"
 
-#: src/view/com/composer/Composer.tsx:221
+#: src/view/com/composer/Composer.tsx:222
 msgid "Please wait for your link card to finish loading"
 msgstr "링크 카드를 완전히 불러올 때까지 기다려주세요"
 
@@ -3159,8 +3164,8 @@ msgstr "음란물"
 msgid "Pornography"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:366
-#: src/view/com/composer/Composer.tsx:374
+#: src/view/com/composer/Composer.tsx:367
+#: src/view/com/composer/Composer.tsx:375
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -3236,6 +3241,7 @@ msgid "Press to change hosting provider"
 msgstr "호스팅 제공자를 변경하려면 누릅니다"
 
 #: src/components/Lists.tsx:88
+#: src/screens/Signup/index.tsx:186
 msgid "Press to retry"
 msgstr "눌러서 다시 시도하기"
 
@@ -3301,11 +3307,11 @@ msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가�
 msgid "Public, shareable lists which can drive feeds."
 msgstr "피드를 탐색할 수 있는 공개적이고 공유 가능한 목록입니다."
 
-#: src/view/com/composer/Composer.tsx:351
+#: src/view/com/composer/Composer.tsx:352
 msgid "Publish post"
 msgstr "게시물 게시하기"
 
-#: src/view/com/composer/Composer.tsx:351
+#: src/view/com/composer/Composer.tsx:352
 msgid "Publish reply"
 msgstr "답글 게시하기"
 
@@ -3428,7 +3434,7 @@ msgstr "답글"
 msgid "Replies to this thread are disabled"
 msgstr "이 스레드에 대한 답글이 비활성화됩니다."
 
-#: src/view/com/composer/Composer.tsx:364
+#: src/view/com/composer/Composer.tsx:365
 msgctxt "action"
 msgid "Reply"
 msgstr "답글"
@@ -3585,6 +3591,7 @@ msgstr "오류가 발생한 마지막 작업을 다시 시도합니다"
 #: src/screens/Login/LoginForm.tsx:240
 #: src/screens/Onboarding/StepInterests/index.tsx:225
 #: src/screens/Onboarding/StepInterests/index.tsx:228
+#: src/screens/Signup/index.tsx:193
 #: src/view/com/util/error/ErrorMessage.tsx:55
 #: src/view/com/util/error/ErrorScreen.tsx:72
 msgid "Retry"
@@ -4197,7 +4204,7 @@ msgstr "정사각형"
 msgid "Status page"
 msgstr "상태 페이지"
 
-#: src/screens/Signup/index.tsx:137
+#: src/screens/Signup/index.tsx:142
 msgid "Step"
 msgstr ""
 
@@ -4223,7 +4230,7 @@ msgstr "구독"
 msgid "Subscribe to @{0} to use these labels:"
 msgstr "이 라벨을 사용하려면 @{0} 님을 구독하세요:"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:222
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:221
 msgid "Subscribe to Labeler"
 msgstr "라벨러 구독"
 
@@ -4232,7 +4239,7 @@ msgstr "라벨러 구독"
 msgid "Subscribe to the {0} feed"
 msgstr "{0} 피드 구독하기"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:185
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
 msgid "Subscribe to this labeler"
 msgstr "이 라벨러 구독하기"
 
@@ -4334,7 +4341,7 @@ msgstr "감사합니다. 신고를 전송했습니다."
 msgid "That contains the following:"
 msgstr "텍스트 파일 내용:"
 
-#: src/screens/Signup/index.tsx:82
+#: src/screens/Signup/index.tsx:84
 msgid "That handle is already taken."
 msgstr "이 핸들은 이미 사용 중입니다."
 
@@ -4388,7 +4395,7 @@ msgstr "서비스 이용약관을 다음으로 이동했습니다:"
 msgid "There are many feeds to try:"
 msgstr "시도해 볼 만한 피드:"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:113
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:112
 #: src/view/screens/ProfileFeed.tsx:543
 msgid "There was an an issue contacting the server, please check your internet connection and try again."
 msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 연결을 확인한 후 다시 시도하세요."
@@ -4683,7 +4690,7 @@ msgstr "리스트 언뮤트"
 #: src/screens/Login/index.tsx:78
 #: src/screens/Login/LoginForm.tsx:119
 #: src/screens/Login/SetNewPasswordForm.tsx:77
-#: src/screens/Signup/index.tsx:61
+#: src/screens/Signup/index.tsx:63
 #: src/view/com/modals/ChangePassword.tsx:70
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "서비스에 연결할 수 없습니다. 인터넷 연결을 확인하세요."
@@ -4780,11 +4787,11 @@ msgstr "홈에서 고정 해제"
 msgid "Unpin moderation list"
 msgstr "검토 리스트 고정 해제"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:220
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:219
 msgid "Unsubscribe"
 msgstr "구독 취소"
 
-#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:184
+#: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:183
 msgid "Unsubscribe from this labeler"
 msgstr "이 라벨러 구독 취소하기"
 
@@ -5074,7 +5081,7 @@ msgstr "계정이 준비되면 알려드리겠습니다."
 msgid "We'll use this to help customize your experience."
 msgstr "이를 통해 사용자 환경을 맞춤 설정할 수 있습니다."
 
-#: src/screens/Signup/index.tsx:128
+#: src/screens/Signup/index.tsx:130
 msgid "We're so excited to have you join us!"
 msgstr "함께하게 되어 정말 기뻐요!"
 
@@ -5109,7 +5116,7 @@ msgstr "어떤 관심사가 있으신가요?"
 
 #: src/view/com/auth/SplashScreen.tsx:58
 #: src/view/com/auth/SplashScreen.web.tsx:84
-#: src/view/com/composer/Composer.tsx:295
+#: src/view/com/composer/Composer.tsx:296
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
 
@@ -5150,11 +5157,11 @@ msgstr "이 사용자를 검토해야 하는 이유는 무엇인가요?"
 msgid "Wide"
 msgstr "가로"
 
-#: src/view/com/composer/Composer.tsx:435
+#: src/view/com/composer/Composer.tsx:436
 msgid "Write post"
 msgstr "게시물 작성"
 
-#: src/view/com/composer/Composer.tsx:294
+#: src/view/com/composer/Composer.tsx:295
 #: src/view/com/composer/Prompt.tsx:37
 msgid "Write your reply"
 msgstr "답글 작성하기"
@@ -5278,6 +5285,10 @@ msgstr "아직 어떤 단어나 태그도 뮤트하지 않았습니다"
 msgid "You may appeal these labels if you feel they were placed in error."
 msgstr "이 라벨이 잘못 지정되었다고 생각되면 이의신청할 수 있습니다."
 
+#: src/screens/Signup/StepInfo/Policies.tsx:79
+msgid "You must be 13 years of age or older to sign up."
+msgstr "가입하려면 만 13세 이상이어야 합니다."
+
 #: src/screens/Onboarding/StepModeration/AdultContentEnabledPref.tsx:110
 msgid "You must be 18 years or older to enable adult content"
 msgstr "성인 콘텐츠를 사용하려면 만 18세 이상이어야 합니다."
@@ -5321,7 +5332,7 @@ msgstr "이 글에서 단어 또는 태그를 숨기도록 설정했습니다."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보세요."
 
-#: src/screens/Signup/index.tsx:145
+#: src/screens/Signup/index.tsx:150
 msgid "Your account"
 msgstr "내 계정"
 
@@ -5379,7 +5390,7 @@ msgstr "뮤트한 단어"
 msgid "Your password has been changed successfully!"
 msgstr "비밀번호를 성공적으로 변경했습니다."
 
-#: src/view/com/composer/Composer.tsx:283
+#: src/view/com/composer/Composer.tsx:284
 msgid "Your post has been published"
 msgstr "게시물을 게시했습니다"
 
@@ -5394,10 +5405,10 @@ msgstr "게시물, 좋아요, 차단 목록은 공개됩니다. 뮤트 목록은
 msgid "Your profile"
 msgstr "내 프로필"
 
-#: src/view/com/composer/Composer.tsx:282
+#: src/view/com/composer/Composer.tsx:283
 msgid "Your reply has been published"
 msgstr "내 답글을 게시했습니다"
 
-#: src/screens/Signup/index.tsx:147
+#: src/screens/Signup/index.tsx:152
 msgid "Your user handle"
 msgstr "내 사용자 핸들"
