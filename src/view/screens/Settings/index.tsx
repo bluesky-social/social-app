@@ -835,18 +835,18 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressDebugModeration}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Open storybook page`)}
-              accessibilityHint={_(msg`Opens the storybook page`)}>
+              accessibilityLabel="Open debug moderation page"
+              accessibilityHint="Opens the debug moderation page"
               <Text type="lg" style={pal.text}>
-                <Trans>Debug Moderation</Trans>
+                Debug Moderation
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetPreferences}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset preferences state`)}
-              accessibilityHint={_(msg`Resets the preferences state`)}>
+              accessibilityLabel="Reset preferences state"
+              accessibilityHint="Resets the preferences state"
               <Text type="lg" style={pal.text}>
                 Reset preferences state
               </Text>
@@ -855,8 +855,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Reset onboarding state`)}
-              accessibilityHint={_(msg`Resets the onboarding state`)}>
+              accessibilityLabel="Reset onboarding state"
+              accessibilityHint="Resets the onboarding state"
               <Text type="lg" style={pal.text}>
                 Reset onboarding state
               </Text>
@@ -865,8 +865,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={clearAllLegacyStorage}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all legacy storage data`)}
-              accessibilityHint={_(msg`Clears all legacy storage data`)}>
+              accessibilityLabel="Clear all legacy storage data"
+              accessibilityHint="Clears all legacy storage data"
               <Text type="lg" style={pal.text}>
                 Clear all legacy storage data (restart after this)
               </Text>
@@ -875,8 +875,8 @@ export function SettingsScreen({}: Props) {
               style={[pal.view, styles.linkCardNoIcon]}
               onPress={clearAllStorage}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Clear all storage data`)}
-              accessibilityHint={_(msg`Clears all storage data`)}>
+              accessibilityLabel="Clear all storage data"
+              accessibilityHint="Clears all storage data"
               <Text type="lg" style={pal.text}>
                 Clear all storage data (restart after this)
               </Text>
