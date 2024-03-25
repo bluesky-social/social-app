@@ -66,7 +66,7 @@ export const SearchInput = React.forwardRef<SearchInputRef, Props>(
           ref={textInput}
           placeholder={_(msg`Search`)}
           placeholderTextColor={pal.colors.textLight}
-          selectTextOnFocus
+          // selectTextOnFocus
           returnKeyType="search"
           value={query}
           style={[pal.text, styles.input]}
