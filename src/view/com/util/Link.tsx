@@ -8,17 +8,11 @@ import {
   View,
   ViewStyle,
   Pressable,
-  TouchableWithoutFeedback,
   TouchableOpacity,
 } from 'react-native'
-import {
-  useLinkProps,
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native'
+import {useLinkProps, StackActions} from '@react-navigation/native'
 import {Text} from './text/Text'
 import {TypographyVariant} from 'lib/ThemeContext'
-import {NavigationProp} from 'lib/routes/types'
 import {router} from '../../../routes'
 import {
   convertBskyAppUrlIfNeeded,
@@ -28,10 +22,14 @@ import {
 import {isAndroid, isWeb} from 'platform/detection'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {PressableWithHover} from './PressableWithHover'
-import FixedTouchableHighlight from '../pager/FixedTouchableHighlight'
 import {useModalControls} from '#/state/modals'
 import {useOpenLink} from '#/state/preferences/in-app-browser'
 import {WebAuxClickWrapper} from 'view/com/util/WebAuxClickWrapper'
+import {
+  DebouncedNavigationProp,
+  useNavigationDeduped,
+} from 'lib/hooks/useNavigationDeduped'
+import {useTheme} from '#/alf'
 
 type Event =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -49,6 +47,7 @@ interface Props extends ComponentProps<typeof TouchableOpacity> {
   anchorNoUnderline?: boolean
   navigationAction?: 'push' | 'replace' | 'navigate'
   onPointerEnter?: () => void
+  onBeforePress?: () => void
 }
 
 export const Link = memo(function Link({
@@ -62,15 +61,18 @@ export const Link = memo(function Link({
   accessible,
   anchorNoUnderline,
   navigationAction,
+  onBeforePress,
   ...props
 }: Props) {
+  const t = useTheme()
   const {closeModal} = useModalControls()
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const anchorHref = asAnchor ? sanitizeUrl(href) : undefined
   const openLink = useOpenLink()
 
   const onPress = React.useCallback(
     (e?: Event) => {
+      onBeforePress?.()
       if (typeof href === 'string') {
         return onPressInner(
           closeModal,
@@ -82,41 +84,27 @@ export const Link = memo(function Link({
         )
       }
     },
-    [closeModal, navigation, navigationAction, href, openLink],
+    [closeModal, navigation, navigationAction, href, openLink, onBeforePress],
   )
 
   if (noFeedback) {
-    if (isAndroid) {
-      // workaround for Android not working well with left/right swipe gestures and TouchableWithoutFeedback
-      // https://github.com/callstack/react-native-pager-view/issues/424
-      return (
-        <FixedTouchableHighlight
-          testID={testID}
-          onPress={onPress}
-          // @ts-ignore web only -prf
-          href={asAnchor ? sanitizeUrl(href) : undefined}
-          accessible={accessible}
-          accessibilityRole="link"
-          {...props}>
-          <View style={style}>
-            {children ? children : <Text>{title || 'link'}</Text>}
-          </View>
-        </FixedTouchableHighlight>
-      )
-    }
     return (
       <WebAuxClickWrapper>
-        <TouchableWithoutFeedback
+        <Pressable
           testID={testID}
           onPress={onPress}
           accessible={accessible}
           accessibilityRole="link"
-          {...props}>
+          {...props}
+          android_ripple={{
+            color: t.atoms.bg_contrast_25.backgroundColor,
+          }}
+          unstable_pressDelay={isAndroid ? 90 : undefined}>
           {/* @ts-ignore web only -prf */}
           <View style={style} href={anchorHref}>
             {children ? children : <Text>{title || 'link'}</Text>}
           </View>
-        </TouchableWithoutFeedback>
+        </Pressable>
       </WebAuxClickWrapper>
     )
   }
@@ -176,7 +164,7 @@ export const TextLink = memo(function TextLink({
   navigationAction?: 'push' | 'replace' | 'navigate'
 } & TextProps) {
   const {...props} = useLinkProps({to: sanitizeUrl(href)})
-  const navigation = useNavigation<NavigationProp>()
+  const navigation = useNavigationDeduped()
   const {openModal, closeModal} = useModalControls()
   const openLink = useOpenLink()
 
@@ -277,6 +265,7 @@ interface TextLinkOnWebOnlyProps extends TextProps {
   accessibilityHint?: string
   title?: string
   navigationAction?: 'push' | 'replace' | 'navigate'
+  disableMismatchWarning?: boolean
   onPointerEnter?: () => void
 }
 export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
@@ -288,6 +277,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
   numberOfLines,
   lineHeight,
   navigationAction,
+  disableMismatchWarning,
   ...props
 }: TextLinkOnWebOnlyProps) {
   if (isWeb) {
@@ -302,6 +292,7 @@ export const TextLinkOnWebOnly = memo(function DesktopWebTextLink({
         lineHeight={lineHeight}
         title={props.title}
         navigationAction={navigationAction}
+        disableMismatchWarning={disableMismatchWarning}
         {...props}
       />
     )
@@ -335,7 +326,7 @@ const EXEMPT_PATHS = ['/robots.txt', '/security.txt', '/.well-known/']
 // -prf
 function onPressInner(
   closeModal = () => {},
-  navigation: NavigationProp,
+  navigation: DebouncedNavigationProp,
   href: string,
   navigationAction: 'push' | 'replace' | 'navigate' = 'push',
   openLink: (href: string) => void,

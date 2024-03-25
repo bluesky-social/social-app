@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {observer} from 'mobx-react-lite'
 import {
   ActivityIndicator,
   BackHandler,
@@ -12,57 +11,62 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import LinearGradient from 'react-native-linear-gradient'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {RichText} from '@atproto/api'
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+import {observer} from 'mobx-react-lite'
+
+import {logEvent} from '#/lib/statsig/statsig'
+import {logger} from '#/logger'
+import {emitPostCreated} from '#/state/events'
+import {useModals} from '#/state/modals'
+import {useRequireAltTextEnabled} from '#/state/preferences'
+import {
+  toPostLanguages,
+  useLanguagePrefs,
+  useLanguagePrefsApi,
+} from '#/state/preferences/languages'
+import {useProfileQuery} from '#/state/queries/profile'
+import {ThreadgateSetting} from '#/state/queries/threadgate'
+import {getAgent, useSession} from '#/state/session'
+import {useComposerControls} from '#/state/shell/composer'
 import {useAnalytics} from 'lib/analytics/analytics'
+import * as apilib from 'lib/api/index'
+import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
 import {useIsKeyboardVisible} from 'lib/hooks/useIsKeyboardVisible'
-import {ExternalEmbed} from './ExternalEmbed'
+import {usePalette} from 'lib/hooks/usePalette'
+import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
+import {cleanError} from 'lib/strings/errors'
+import {insertMentionAt} from 'lib/strings/mention-manip'
+import {shortenLinks} from 'lib/strings/rich-text-manip'
+import {toShortUrl} from 'lib/strings/url-helpers'
+import {colors, gradients, s} from 'lib/styles'
+import {isAndroid, isIOS, isNative, isWeb} from 'platform/detection'
+import {useDialogStateControlContext} from 'state/dialogs'
+import {GalleryModel} from 'state/models/media/gallery'
+import {ComposerOpts} from 'state/shell/composer'
+import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
+import * as Prompt from '#/components/Prompt'
+import {QuoteEmbed} from '../util/post-embeds/QuoteEmbed'
 import {Text} from '../util/text/Text'
 import * as Toast from '../util/Toast'
+import {UserAvatar} from '../util/UserAvatar'
+import {CharProgress} from './char-progress/CharProgress'
+import {ExternalEmbed} from './ExternalEmbed'
+import {LabelsBtn} from './labels/LabelsBtn'
+import {Gallery} from './photos/Gallery'
+import {OpenCameraBtn} from './photos/OpenCameraBtn'
+import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
+import {SelectLangBtn} from './select-language/SelectLangBtn'
+import {SuggestedLanguage} from './select-language/SuggestedLanguage'
 // TODO: Prevent naming components that coincide with RN primitives
 // due to linting false positives
 import {TextInput, TextInputRef} from './text-input/TextInput'
-import {CharProgress} from './char-progress/CharProgress'
-import {UserAvatar} from '../util/UserAvatar'
-import * as apilib from 'lib/api/index'
-import {ComposerOpts} from 'state/shell/composer'
-import {s, colors, gradients} from 'lib/styles'
-import {cleanError} from 'lib/strings/errors'
-import {shortenLinks} from 'lib/strings/rich-text-manip'
-import {toShortUrl} from 'lib/strings/url-helpers'
-import {SelectPhotoBtn} from './photos/SelectPhotoBtn'
-import {OpenCameraBtn} from './photos/OpenCameraBtn'
 import {ThreadgateBtn} from './threadgate/ThreadgateBtn'
-import {usePalette} from 'lib/hooks/usePalette'
-import {useWebMediaQueries} from 'lib/hooks/useWebMediaQueries'
 import {useExternalLinkFetch} from './useExternalLinkFetch'
-import {isWeb, isNative, isAndroid, isIOS} from 'platform/detection'
-import QuoteEmbed from '../util/post-embeds/QuoteEmbed'
-import {GalleryModel} from 'state/models/media/gallery'
-import {Gallery} from './photos/Gallery'
-import {MAX_GRAPHEME_LENGTH} from 'lib/constants'
-import {LabelsBtn} from './labels/LabelsBtn'
-import {SelectLangBtn} from './select-language/SelectLangBtn'
-import {SuggestedLanguage} from './select-language/SuggestedLanguage'
-import {insertMentionAt} from 'lib/strings/mention-manip'
-import {Trans, msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useModals, useModalControls} from '#/state/modals'
-import {useRequireAltTextEnabled} from '#/state/preferences'
-import {
-  useLanguagePrefs,
-  useLanguagePrefsApi,
-  toPostLanguages,
-} from '#/state/preferences/languages'
-import {useSession, getAgent} from '#/state/session'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useComposerControls} from '#/state/shell/composer'
-import {emitPostCreated} from '#/state/events'
-import {ThreadgateSetting} from '#/state/queries/threadgate'
-import {logger} from '#/logger'
-import {ComposerReplyTo} from 'view/com/composer/ComposerReplyTo'
 
 type Props = ComposerOpts
 export const ComposePost = observer(function ComposePost({
@@ -76,8 +80,7 @@ export const ComposePost = observer(function ComposePost({
 }: Props) {
   const {currentAccount} = useSession()
   const {data: currentProfile} = useProfileQuery({did: currentAccount!.did})
-  const {isModalActive, activeModals} = useModals()
-  const {openModal, closeModal} = useModalControls()
+  const {isModalActive} = useModals()
   const {closeComposer} = useComposerControls()
   const {track} = useAnalytics()
   const pal = usePalette('default')
@@ -87,6 +90,9 @@ export const ComposePost = observer(function ComposePost({
   const langPrefs = useLanguagePrefs()
   const setLangPrefs = useLanguagePrefsApi()
   const textInput = useRef<TextInputRef>(null)
+  const discardPromptControl = Prompt.usePromptControl()
+  const {closeAllDialogs} = useDialogStateControlContext()
+
   const [isKeyboardVisible] = useIsKeyboardVisible({iosUseWillEvents: true})
   const [isProcessing, setIsProcessing] = useState(false)
   const [processingState, setProcessingState] = useState('')
@@ -134,27 +140,21 @@ export const ComposePost = observer(function ComposePost({
 
   const onPressCancel = useCallback(() => {
     if (graphemeLength > 0 || !gallery.isEmpty) {
-      if (activeModals.some(modal => modal.name === 'confirm')) {
-        closeModal()
-      }
+      closeAllDialogs()
       if (Keyboard) {
         Keyboard.dismiss()
       }
-      openModal({
-        name: 'confirm',
-        title: _(msg`Discard draft`),
-        onPressConfirm: onClose,
-        onPressCancel: () => {
-          closeModal()
-        },
-        message: _(msg`Are you sure you'd like to discard this draft?`),
-        confirmBtnText: _(msg`Discard`),
-        confirmBtnStyle: {backgroundColor: colors.red4},
-      })
+      discardPromptControl.open()
     } else {
       onClose()
     }
-  }, [openModal, closeModal, activeModals, onClose, graphemeLength, gallery, _])
+  }, [
+    graphemeLength,
+    gallery.isEmpty,
+    closeAllDialogs,
+    discardPromptControl,
+    onClose,
+  ])
   // android back button
   useEffect(() => {
     if (!isAndroid) {
@@ -257,6 +257,16 @@ export const ComposePost = observer(function ComposePost({
       setIsProcessing(false)
       return
     } finally {
+      if (postUri) {
+        logEvent('post:create', {
+          imageCount: gallery.size,
+          isReply: replyTo != null,
+          hasLink: extLink != null,
+          hasQuote: quote != null,
+          langs: langPrefs.postLanguage,
+          logContext: 'Composer',
+        })
+      }
       track('Create Post', {
         imageCount: gallery.size,
       })
@@ -406,7 +416,11 @@ export const ComposePost = observer(function ComposePost({
               styles.textInputLayout,
               isNative && styles.textInputLayoutMobile,
             ]}>
-            <UserAvatar avatar={currentProfile?.avatar} size={50} />
+            <UserAvatar
+              avatar={currentProfile?.avatar}
+              size={50}
+              type={currentProfile?.associated?.labeler ? 'labeler' : 'user'}
+            />
             <TextInput
               ref={textInput}
               richtext={richtext}
@@ -434,7 +448,7 @@ export const ComposePost = observer(function ComposePost({
             />
           )}
           {quote ? (
-            <View style={[s.mt5, isWeb && s.mb10]}>
+            <View style={[s.mt5, isWeb && s.mb10, {pointerEvents: 'none'}]}>
               <QuoteEmbed quote={quote} />
             </View>
           ) : undefined}
@@ -488,6 +502,21 @@ export const ComposePost = observer(function ComposePost({
           <CharProgress count={graphemeLength} />
         </View>
       </View>
+
+      <Prompt.Basic
+        control={discardPromptControl}
+        title={_(msg`Discard draft?`)}
+        description={_(msg`Are you sure you'd like to discard this draft?`)}
+        onConfirm={() => {
+          if (isWeb) {
+            onClose()
+          } else {
+            discardPromptControl.close(onClose)
+          }
+        }}
+        confirmButtonCta={_(msg`Discard`)}
+        confirmButtonColor="negative"
+      />
     </KeyboardAvoidingView>
   )
 })

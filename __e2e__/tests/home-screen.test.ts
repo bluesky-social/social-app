@@ -17,7 +17,7 @@ describe('Home screen', () => {
 
   it('Can go to feeds page using feeds button in tab bar', async () => {
     await element(by.id('homeScreenFeedTabs-Feeds ✨')).tap()
-    await expect(element(by.text('Discover new feeds'))).toBeVisible()
+    await expect(element(by.text('Discover New Feeds'))).toBeVisible()
   })
 
   it('Feeds button disappears after pinning a feed', async () => {

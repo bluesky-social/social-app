@@ -1,33 +1,33 @@
 import React from 'react'
 import {View} from 'react-native'
 import {AppBskyActorDefs} from '@atproto/api'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a, useBreakpoints} from '#/alf'
-import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {Text} from '#/components/Typography'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {Loader} from '#/components/Loader'
-import * as Toggle from '#/components/forms/Toggle'
-import {useModerationOpts} from '#/state/queries/preferences'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
+import {useModerationOpts} from '#/state/queries/preferences'
+import {useProfilesQuery} from '#/state/queries/profile'
 import {
-  Title,
   Description,
   OnboardingControls,
+  Title,
 } from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
 import {
   SuggestedAccountCard,
   SuggestedAccountCardPlaceholder,
 } from '#/screens/Onboarding/StepSuggestedAccounts/SuggestedAccountCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {atoms as a, useBreakpoints} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
+import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
+import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 
 export function Inner({
   profiles,
@@ -76,7 +76,7 @@ export function StepSuggestedAccounts() {
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedAccountDids,
-      state.interestsStepResults.apiResponse.suggestedAccountDids.default,
+      state.interestsStepResults.apiResponse.suggestedAccountDids.default || [],
     )
   }, [state.interestsStepResults])
   const moderationOpts = useModerationOpts()
@@ -110,12 +110,20 @@ export function StepSuggestedAccounts() {
     track('OnboardingV2:StepSuggestedAccounts:End', {
       selectedAccountsLength: dids.length,
     })
+    logEvent('onboarding:suggestedAccounts:nextPressed', {
+      selectedAccountsLength: dids.length,
+      skipped: false,
+    })
   }, [dids, setSaving, dispatch, track])
 
   const handleSkip = React.useCallback(() => {
     // if a user comes back and clicks skip, erase follows
     dispatch({type: 'setSuggestedAccountsStepResults', accountDids: []})
     dispatch({type: 'next'})
+    logEvent('onboarding:suggestedAccounts:nextPressed', {
+      selectedAccountsLength: 0,
+      skipped: true,
+    })
   }, [dispatch])
 
   const isLoading = isProfilesLoading && moderationOpts

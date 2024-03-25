@@ -9,7 +9,7 @@ export const defaultTheme: Theme = {
   palette: {
     default: {
       background: lightPalette.white,
-      backgroundLight: lightPalette.contrast_50,
+      backgroundLight: lightPalette.contrast_25,
       text: lightPalette.black,
       textLight: lightPalette.contrast_700,
       textInverted: lightPalette.white,

@@ -97,7 +97,7 @@ export function LanguageSettingsScreen(_props: Props) {
           <Text style={[pal.text, s.pb10]}>
             <Trans>
               Select your app language for the default text to display in the
-              app
+              app.
             </Trans>
           </Text>
 
@@ -296,7 +296,7 @@ export function LanguageSettingsScreen(_props: Props) {
               type="button"
               style={[pal.text, {flexShrink: 1, overflow: 'hidden'}]}
               numberOfLines={1}>
-              {myLanguages.length ? myLanguages : 'Select languages'}
+              {myLanguages.length ? myLanguages : _(msg`Select languages`)}
             </Text>
           </Button>
         </View>

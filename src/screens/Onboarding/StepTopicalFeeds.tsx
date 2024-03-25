@@ -1,28 +1,28 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 
-import {atoms as a} from '#/alf'
-import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import * as Toggle from '#/components/forms/Toggle'
-import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/lib/analytics/analytics'
+import {logEvent} from '#/lib/statsig/statsig'
 import {capitalize} from '#/lib/strings/capitalize'
-
-import {Context} from '#/screens/Onboarding/state'
+import {IS_TEST_USER} from 'lib/constants'
+import {useSession} from 'state/session'
 import {
-  Title,
   Description,
   OnboardingControls,
+  Title,
 } from '#/screens/Onboarding/Layout'
+import {Context} from '#/screens/Onboarding/state'
 import {FeedCard} from '#/screens/Onboarding/StepAlgoFeeds/FeedCard'
 import {aggregateInterestItems} from '#/screens/Onboarding/util'
+import {atoms as a} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Toggle from '#/components/forms/Toggle'
 import {IconCircle} from '#/components/IconCircle'
-import {IS_PROD_SERVICE} from 'lib/constants'
-import {useSession} from 'state/session'
+import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
+import {ListMagnifyingGlass_Stroke2_Corner0_Rounded as ListMagnifyingGlass} from '#/components/icons/ListMagnifyingGlass'
+import {Loader} from '#/components/Loader'
 
 export function StepTopicalFeeds() {
   const {_} = useLingui()
@@ -32,14 +32,14 @@ export function StepTopicalFeeds() {
   const [selectedFeedUris, setSelectedFeedUris] = React.useState<string[]>([])
   const [saving, setSaving] = React.useState(false)
   const suggestedFeedUris = React.useMemo(() => {
-    if (!IS_PROD_SERVICE(currentAccount?.service)) return []
+    if (IS_TEST_USER(currentAccount?.handle)) return []
     return aggregateInterestItems(
       state.interestsStepResults.selectedInterests,
       state.interestsStepResults.apiResponse.suggestedFeedUris,
-      state.interestsStepResults.apiResponse.suggestedFeedUris.default,
+      state.interestsStepResults.apiResponse.suggestedFeedUris.default || [],
     ).slice(0, 10)
   }, [
-    currentAccount?.service,
+    currentAccount?.handle,
     state.interestsStepResults.apiResponse.suggestedFeedUris,
     state.interestsStepResults.selectedInterests,
   ])
@@ -59,6 +59,10 @@ export function StepTopicalFeeds() {
     setSaving(false)
     dispatch({type: 'next'})
     track('OnboardingV2:StepTopicalFeeds:End', {
+      selectedFeeds: selectedFeedUris,
+      selectedFeedsLength: selectedFeedUris.length,
+    })
+    logEvent('onboarding:topicalFeeds:nextPressed', {
       selectedFeeds: selectedFeedUris,
       selectedFeedsLength: selectedFeedUris.length,
     })

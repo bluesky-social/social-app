@@ -1,18 +1,18 @@
 import React from 'react'
 import {View} from 'react-native'
-import {useLingui} from '@lingui/react'
 import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
 import {UseMutateFunction} from '@tanstack/react-query'
 
+import {logger} from '#/logger'
+import {isIOS} from '#/platform/detection'
+import {usePreferencesQuery} from '#/state/queries/preferences'
 import * as Toast from '#/view/com/util/Toast'
 import {atoms as a, useTheme} from '#/alf'
-import {usePreferencesQuery} from '#/state/queries/preferences'
-import {logger} from '#/logger'
-import {Text} from '#/components/Typography'
 import * as Toggle from '#/components/forms/Toggle'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import * as Prompt from '#/components/Prompt'
-import {isIOS} from '#/platform/detection'
+import {Text} from '#/components/Typography'
 
 function Card({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
@@ -56,7 +56,9 @@ export function AdultContentEnabledPref({
 
     try {
       mutate({
-        enabled: !(variables?.enabled ?? preferences?.adultContentEnabled),
+        enabled: !(
+          variables?.enabled ?? preferences?.moderationPrefs.adultContentEnabled
+        ),
       })
     } catch (e) {
       Toast.show(
@@ -75,7 +77,10 @@ export function AdultContentEnabledPref({
           <Toggle.Item
             name={_(msg`Enable adult content in your feeds`)}
             label={_(msg`Enable adult content in your feeds`)}
-            value={variables?.enabled ?? preferences?.adultContentEnabled}
+            value={
+              variables?.enabled ??
+              preferences?.moderationPrefs.adultContentEnabled
+            }
             onChange={onToggleAdultContent}>
             <View
               style={[
@@ -85,7 +90,9 @@ export function AdultContentEnabledPref({
                 a.align_center,
                 a.py_md,
               ]}>
-              <Text style={[a.font_bold]}>Enable Adult Content</Text>
+              <Text style={[a.font_bold]}>
+                <Trans>Enable Adult Content</Trans>
+              </Text>
               <Toggle.Switch />
             </View>
           </Toggle.Item>
@@ -106,7 +113,9 @@ export function AdultContentEnabledPref({
       )}
 
       <Prompt.Outer control={prompt}>
-        <Prompt.Title>Adult Content</Prompt.Title>
+        <Prompt.Title>
+          <Trans>Adult Content</Trans>
+        </Prompt.Title>
         <Prompt.Description>
           <Trans>
             Due to Apple policies, adult content can only be enabled on the web
@@ -114,7 +123,7 @@ export function AdultContentEnabledPref({
           </Trans>
         </Prompt.Description>
         <Prompt.Actions>
-          <Prompt.Action onPress={() => prompt.close()}>OK</Prompt.Action>
+          <Prompt.Action onPress={() => prompt.close()} cta={_(msg`OK`)} />
         </Prompt.Actions>
       </Prompt.Outer>
     </>

@@ -59,11 +59,7 @@ export function PostThreadScreen({route}: Props) {
         uri: thread.post.uri,
         cid: thread.post.cid,
         text: thread.record.text,
-        author: {
-          handle: thread.post.author.handle,
-          displayName: thread.post.author.displayName,
-          avatar: thread.post.author.avatar,
-        },
+        author: thread.post.author,
         embed: thread.post.embed,
       },
       onPost: () =>

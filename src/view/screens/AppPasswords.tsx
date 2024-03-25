@@ -29,6 +29,8 @@ import {
 } from '#/state/queries/app-passwords'
 import {ErrorScreen} from '../com/util/error/ErrorScreen'
 import {cleanError} from '#/lib/strings/errors'
+import * as Prompt from '#/components/Prompt'
+import {useDialogControl} from '#/components/Dialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AppPasswords'>
 export function AppPasswords({}: Props) {
@@ -212,23 +214,18 @@ function AppPassword({
 }) {
   const pal = usePalette('default')
   const {_} = useLingui()
-  const {openModal} = useModalControls()
+  const control = useDialogControl()
   const {contentLanguages} = useLanguagePrefs()
   const deleteMutation = useAppPasswordDeleteMutation()
 
   const onDelete = React.useCallback(async () => {
-    openModal({
-      name: 'confirm',
-      title: _(msg`Delete app password`),
-      message: _(
-        msg`Are you sure you want to delete the app password "${name}"?`,
-      ),
-      async onPressConfirm() {
-        await deleteMutation.mutateAsync({name})
-        Toast.show(_(msg`App password deleted`))
-      },
-    })
-  }, [deleteMutation, openModal, name, _])
+    await deleteMutation.mutateAsync({name})
+    Toast.show(_(msg`App password deleted`))
+  }, [deleteMutation, name, _])
+
+  const onPress = React.useCallback(() => {
+    control.open()
+  }, [control])
 
   const primaryLocale =
     contentLanguages.length > 0 ? contentLanguages[0] : 'en-US'
@@ -237,7 +234,7 @@ function AppPassword({
     <TouchableOpacity
       testID={testID}
       style={[styles.item, pal.border]}
-      onPress={onDelete}
+      onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Delete app password`)}
       accessibilityHint="">
@@ -260,6 +257,17 @@ function AppPassword({
         </Text>
       </View>
       <FontAwesomeIcon icon={['far', 'trash-can']} style={styles.trashIcon} />
+
+      <Prompt.Basic
+        control={control}
+        title={_(msg`Delete app password?`)}
+        description={_(
+          msg`Are you sure you want to delete the app password "${name}"?`,
+        )}
+        onConfirm={onDelete}
+        confirmButtonCta={_(msg`Delete`)}
+        confirmButtonColor="negative"
+      />
     </TouchableOpacity>
   )
 }
