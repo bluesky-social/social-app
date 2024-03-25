@@ -1,19 +1,21 @@
 import React from 'react'
 import {
-  Pressable,
-  Text,
-  PressableProps,
-  TextProps,
-  ViewStyle,
   AccessibilityProps,
-  View,
-  TextStyle,
-  StyleSheet,
+  Pressable,
+  PressableProps,
   StyleProp,
+  StyleSheet,
+  Text,
+  TextProps,
+  TextStyle,
+  View,
+  ViewStyle,
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import {Trans} from '@lingui/macro'
 
-import {useTheme, atoms as a, tokens, android, flatten} from '#/alf'
+import {logger} from '#/logger'
+import {android, atoms as a, flatten, tokens, useTheme} from '#/alf'
 import {Props as SVGIconProps} from '#/components/icons/common'
 import {normalizeTextStyles} from '#/components/Typography'
 
@@ -403,16 +405,49 @@ export function Button({
         </View>
       )}
       <Context.Provider value={context}>
-        {typeof children === 'string' ? (
-          <ButtonText>{children}</ButtonText>
-        ) : typeof children === 'function' ? (
-          children(context)
-        ) : (
-          children
-        )}
+        <ButtonTextErrorBoundary>
+          {/* @ts-ignore */}
+          {typeof children === 'string' || children?.type === Trans ? (
+            /* @ts-ignore */
+            <ButtonText>{children}</ButtonText>
+          ) : typeof children === 'function' ? (
+            children(context)
+          ) : (
+            children
+          )}
+        </ButtonTextErrorBoundary>
       </Context.Provider>
     </Pressable>
   )
+}
+
+export class ButtonTextErrorBoundary extends React.Component<
+  React.PropsWithChildren<{}>,
+  {hasError: boolean; error: Error | undefined}
+> {
+  public state = {
+    hasError: false,
+    error: undefined,
+  }
+
+  public static getDerivedStateFromError(error: Error) {
+    return {hasError: true, error}
+  }
+
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    logger.error('ButtonTextErrorBoundary caught an error', {
+      message: error.message,
+      errorInfo,
+    })
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return <ButtonText>ERROR</ButtonText>
+    }
+
+    return this.props.children
+  }
 }
 
 export function useSharedButtonTextStyles() {
