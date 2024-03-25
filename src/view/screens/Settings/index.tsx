@@ -836,7 +836,7 @@ export function SettingsScreen({}: Props) {
               onPress={onPressDebugModeration}
               accessibilityRole="button"
               accessibilityLabel="Open debug moderation page"
-              accessibilityHint="Opens the debug moderation page"
+              accessibilityHint="Opens the debug moderation page">
               <Text type="lg" style={pal.text}>
                 Debug Moderation
               </Text>
@@ -846,7 +846,7 @@ export function SettingsScreen({}: Props) {
               onPress={onPressResetPreferences}
               accessibilityRole="button"
               accessibilityLabel="Reset preferences state"
-              accessibilityHint="Resets the preferences state"
+              accessibilityHint="Resets the preferences state">
               <Text type="lg" style={pal.text}>
                 Reset preferences state
               </Text>
@@ -856,7 +856,7 @@ export function SettingsScreen({}: Props) {
               onPress={onPressResetOnboarding}
               accessibilityRole="button"
               accessibilityLabel="Reset onboarding state"
-              accessibilityHint="Resets the onboarding state"
+              accessibilityHint="Resets the onboarding state">
               <Text type="lg" style={pal.text}>
                 Reset onboarding state
               </Text>
@@ -866,7 +866,7 @@ export function SettingsScreen({}: Props) {
               onPress={clearAllLegacyStorage}
               accessibilityRole="button"
               accessibilityLabel="Clear all legacy storage data"
-              accessibilityHint="Clears all legacy storage data"
+              accessibilityHint="Clears all legacy storage data">
               <Text type="lg" style={pal.text}>
                 Clear all legacy storage data (restart after this)
               </Text>
@@ -876,7 +876,7 @@ export function SettingsScreen({}: Props) {
               onPress={clearAllStorage}
               accessibilityRole="button"
               accessibilityLabel="Clear all storage data"
-              accessibilityHint="Clears all storage data"
+              accessibilityHint="Clears all storage data">
               <Text type="lg" style={pal.text}>
                 Clear all storage data (restart after this)
               </Text>
