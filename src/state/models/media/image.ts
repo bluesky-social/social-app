@@ -21,7 +21,11 @@ export interface ImageManipulationAttributes {
 
 const MAX_IMAGE_SIZE_IN_BYTES = 976560
 
-export class ImageModel implements Omit<RNImage, 'size'> {
+interface Image extends Omit<RNImage, 'size'> {
+  hash?: string
+}
+
+export class ImageModel implements Image {
   path: string
   mime = 'image/jpeg'
   width: number
@@ -29,6 +33,7 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   altText = ''
   cropped?: RNImage = undefined
   compressed?: RNImage = undefined
+  hash?: string = ''
 
   // Web manipulation
   prev?: RNImage
@@ -41,12 +46,13 @@ export class ImageModel implements Omit<RNImage, 'size'> {
   }
   prevAttributes: ImageManipulationAttributes = {}
 
-  constructor(image: Omit<RNImage, 'size'>) {
+  constructor(image: Image) {
     makeAutoObservable(this)
 
     this.path = image.path
     this.width = image.width
     this.height = image.height
+    this.hash = image.hash
   }
 
   setRatio(aspectRatio: ImageManipulationAttributes['aspectRatio']) {
