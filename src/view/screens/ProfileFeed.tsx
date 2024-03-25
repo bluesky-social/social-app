@@ -28,12 +28,11 @@ import {toShareUrl} from 'lib/strings/url-helpers'
 import {Haptics} from 'lib/haptics'
 import {useAnalytics} from 'lib/analytics/analytics'
 import {makeCustomFeedLink} from 'lib/routes/links'
-import {pluralize} from 'lib/strings/helpers'
 import {CenteredView} from 'view/com/util/Views'
 import {NavigationProp} from 'lib/routes/types'
 import {ComposeIcon2} from 'lib/icons'
 import {logger} from '#/logger'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ReportDialog, useReportDialogControl} from '#/components/ReportDialog'
 import {useFeedSourceInfoQuery, FeedSourceFeedInfo} from '#/state/queries/feed'
@@ -584,7 +583,11 @@ function AboutSection({
             label={_(msg`View users who like this feed`)}
             to={makeCustomFeedLink(feedOwnerDid, feedRkey, 'liked-by')}
             style={[t.atoms.text_contrast_medium, a.font_bold]}>
-            {_(msg`Liked by ${likeCount} ${pluralize(likeCount, 'user')}`)}
+            <Plural
+              value={likeCount}
+              one="Liked by # user"
+              other="Liked by # users"
+            />
           </InlineLink>
         )}
       </View>

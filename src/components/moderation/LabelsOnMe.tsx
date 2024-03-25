@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleProp, View, ViewStyle} from 'react-native'
 import {AppBskyFeedDefs, ComAtprotoLabelDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSession} from '#/state/session'
 
@@ -39,7 +39,6 @@ export function LabelsOnMe({
     return null
   }
 
-  const labelTarget = isAccount ? _(msg`account`) : _(msg`content`)
   return (
     <View style={[a.flex_row, style]}>
       <LabelsOnMeDialog control={control} subject={details} labels={labels} />
@@ -54,11 +53,18 @@ export function LabelsOnMe({
         }}>
         <ButtonIcon position="left" icon={CircleInfo} />
         <ButtonText style={[a.leading_snug]}>
-          {labels.length}{' '}
-          {labels.length === 1 ? (
-            <Trans>label has been placed on this {labelTarget}</Trans>
+          {isAccount ? (
+            <Plural
+              value={labels.length}
+              one="# label has been placed on this account"
+              other="# labels has been placed on this account"
+            />
           ) : (
-            <Trans>labels have been placed on this {labelTarget}</Trans>
+            <Plural
+              value={labels.length}
+              one="# label has been placed on this content"
+              other="# labels has been placed on this content"
+            />
           )}
         </ButtonText>
       </Button>

@@ -16,7 +16,6 @@ import {Text} from '../text/Text'
 import {PostDropdownBtn} from '../forms/PostDropdownBtn'
 import {HeartIcon, HeartIconSolid, CommentBottomArrow} from 'lib/icons'
 import {s} from 'lib/styles'
-import {pluralize} from 'lib/strings/helpers'
 import {useTheme} from 'lib/ThemeContext'
 import {RepostButton} from './RepostButton'
 import {Haptics} from 'lib/haptics'
@@ -29,7 +28,7 @@ import {
 import {useComposerControls} from '#/state/shell/composer'
 import {Shadow} from '#/state/cache/types'
 import {useRequireAuth} from '#/state/session'
-import {msg} from '@lingui/macro'
+import {msg, plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ArrowOutOfBox} from '#/components/icons/ArrowOutOfBox'
 import {toShareUrl} from 'lib/strings/url-helpers'
@@ -147,9 +146,10 @@ let PostCtrls = ({
             }
           }}
           accessibilityRole="button"
-          accessibilityLabel={`Reply (${post.replyCount} ${
-            post.replyCount === 1 ? 'reply' : 'replies'
-          })`}
+          accessibilityLabel={plural(post.replyCount || 0, {
+            one: 'Reply (# reply)',
+            other: 'Reply (# replies)',
+          })}
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           <CommentBottomArrow
@@ -181,9 +181,17 @@ let PostCtrls = ({
             requireAuth(() => onPressToggleLike())
           }}
           accessibilityRole="button"
-          accessibilityLabel={`${
-            post.viewer?.like ? _(msg`Unlike`) : _(msg`Like`)
-          } (${post.likeCount} ${pluralize(post.likeCount || 0, 'like')})`}
+          accessibilityLabel={
+            post.viewer?.like
+              ? plural(post.likeCount || 0, {
+                  one: 'Unlike (# like)',
+                  other: 'Unlike (# likes)',
+                })
+              : plural(post.likeCount || 0, {
+                  one: 'Like (# like)',
+                  other: 'Like (# likes)',
+                })
+          }
           accessibilityHint=""
           hitSlop={big ? HITSLOP_20 : HITSLOP_10}>
           {post.viewer?.like ? (

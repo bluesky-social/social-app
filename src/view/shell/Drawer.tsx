@@ -35,13 +35,12 @@ import {Text} from 'view/com/util/text/Text'
 import {useTheme} from 'lib/ThemeContext'
 import {usePalette} from 'lib/hooks/usePalette'
 import {useAnalytics} from 'lib/analytics/analytics'
-import {pluralize} from 'lib/strings/helpers'
 import {getTabState, TabState} from 'lib/routes/helpers'
 import {NavigationProp} from 'lib/routes/types'
 import {useNavigationTabState} from 'lib/hooks/useNavigationTabState'
 import {isWeb} from 'platform/detection'
 import {formatCountShortOnly} from 'view/com/util/numeric/format'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {useSetDrawerOpen} from '#/state/shell'
 import {useSession, SessionAccount} from '#/state/session'
@@ -90,15 +89,26 @@ let DrawerProfileCard = ({
         @{account.handle}
       </Text>
       <Text type="xl" style={[pal.textLight, styles.profileCardFollowers]}>
-        <Text type="xl-medium" style={pal.text}>
-          {formatCountShortOnly(profile?.followersCount ?? 0)}
-        </Text>{' '}
-        {pluralize(profile?.followersCount || 0, 'follower')} &middot;{' '}
+        <Trans>
+          <Text type="xl-medium" style={pal.text}>
+            {formatCountShortOnly(profile?.followersCount ?? 0)}
+          </Text>{' '}
+          <Plural
+            value={profile?.followersCount || 0}
+            one="follower"
+            other="followers"
+          />{' '}
+          &middot;{' '}
+        </Trans>
         <Trans>
           <Text type="xl-medium" style={pal.text}>
             {formatCountShortOnly(profile?.followsCount ?? 0)}
           </Text>{' '}
-          following
+          <Plural
+            value={profile?.followsCount || 0}
+            one="following"
+            other="followings"
+          />
         </Trans>
       </Text>
     </TouchableOpacity>

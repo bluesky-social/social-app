@@ -20,6 +20,10 @@ import {messages as messagesIt} from '#/locale/locales/it/messages'
 import {sanitizeAppLanguageSetting} from '#/locale/helpers'
 import {AppLanguage} from '#/locale/languages'
 
+import '@formatjs/intl-locale/polyfill'
+import '@formatjs/intl-pluralrules/polyfill'
+import '@formatjs/intl-pluralrules/locale-data/en'
+
 /**
  * We do a dynamic import of just the catalog that we need
  */
@@ -27,10 +31,12 @@ export async function dynamicActivate(locale: AppLanguage) {
   switch (locale) {
     case AppLanguage.de: {
       i18n.loadAndActivate({locale, messages: messagesDe})
+      await import('@formatjs/intl-pluralrules/locale-data/de')
       break
     }
     case AppLanguage.es: {
       i18n.loadAndActivate({locale, messages: messagesEs})
+      await import('@formatjs/intl-pluralrules/locale-data/es')
       break
     }
     case AppLanguage.fi: {
@@ -39,42 +45,52 @@ export async function dynamicActivate(locale: AppLanguage) {
     }
     case AppLanguage.fr: {
       i18n.loadAndActivate({locale, messages: messagesFr})
+      await import('@formatjs/intl-pluralrules/locale-data/fr')
       break
     }
     case AppLanguage.hi: {
       i18n.loadAndActivate({locale, messages: messagesHi})
+      await import('@formatjs/intl-pluralrules/locale-data/hi')
       break
     }
     case AppLanguage.id: {
       i18n.loadAndActivate({locale, messages: messagesId})
+      await import('@formatjs/intl-pluralrules/locale-data/id')
       break
     }
     case AppLanguage.ja: {
       i18n.loadAndActivate({locale, messages: messagesJa})
+      await import('@formatjs/intl-pluralrules/locale-data/ja')
       break
     }
     case AppLanguage.ko: {
       i18n.loadAndActivate({locale, messages: messagesKo})
+      await import('@formatjs/intl-pluralrules/locale-data/ko')
       break
     }
     case AppLanguage.pt_BR: {
       i18n.loadAndActivate({locale, messages: messagesPt_BR})
+      await import('@formatjs/intl-pluralrules/locale-data/pt')
       break
     }
     case AppLanguage.uk: {
       i18n.loadAndActivate({locale, messages: messagesUk})
+      await import('@formatjs/intl-pluralrules/locale-data/uk')
       break
     }
     case AppLanguage.ca: {
       i18n.loadAndActivate({locale, messages: messagesCa})
+      await import('@formatjs/intl-pluralrules/locale-data/ca')
       break
     }
     case AppLanguage.zh_CN: {
       i18n.loadAndActivate({locale, messages: messagesZh_CN})
+      await import('@formatjs/intl-pluralrules/locale-data/zh')
       break
     }
     case AppLanguage.it: {
       i18n.loadAndActivate({locale, messages: messagesIt})
+      await import('@formatjs/intl-pluralrules/locale-data/it')
       break
     }
     default: {

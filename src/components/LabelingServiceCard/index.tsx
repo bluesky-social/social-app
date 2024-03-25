@@ -1,6 +1,6 @@
 import React from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg, Plural, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {AppBskyLabelerDefs} from '@atproto/api'
 
@@ -13,7 +13,6 @@ import {RichText} from '#/components/RichText'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {pluralize} from '#/lib/strings/helpers'
 
 type LabelingServiceProps = {
   labeler: AppBskyLabelerDefs.LabelerViewDetailed
@@ -69,9 +68,7 @@ export function LikeCount({count}: {count: number}) {
         t.atoms.text_contrast_medium,
         {fontWeight: '500'},
       ]}>
-      <Trans>
-        Liked by {count} {pluralize(count, 'user')}
-      </Trans>
+      <Plural value={count} one="Liked by # user" other="Liked by # users" />
     </Text>
   )
 }

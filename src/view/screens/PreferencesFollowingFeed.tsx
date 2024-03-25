@@ -12,7 +12,7 @@ import {CommonNavigatorParams, NativeStackScreenProps} from 'lib/routes/types'
 import {ViewHeader} from 'view/com/util/ViewHeader'
 import {CenteredView} from 'view/com/util/Views'
 import debounce from 'lodash.debounce'
-import {Trans, msg} from '@lingui/macro'
+import {Trans, msg, Plural} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
 import {
   usePreferencesQuery,
@@ -27,7 +27,6 @@ function RepliesThresholdInput({
   initialValue: number
 }) {
   const pal = usePalette('default')
-  const {_} = useLingui()
   const [value, setValue] = useState(initialValue)
   const {mutate: setFeedViewPref} = useSetFeedViewPreferencesMutation()
   const preValue = React.useRef(initialValue)
@@ -64,13 +63,12 @@ function RepliesThresholdInput({
         thumbTintColor={colors.blue3}
       />
       <Text type="xs" style={pal.text}>
-        {value === 0
-          ? _(msg`Show all replies`)
-          : _(
-              msg`Show replies with at least ${value} ${
-                value > 1 ? `likes` : `like`
-              }`,
-            )}
+        <Plural
+          value={value}
+          _0="Show all replies"
+          one="Show replies with at least # like"
+          other="Show replies with at least # likes"
+        />
       </Text>
     </View>
   )
