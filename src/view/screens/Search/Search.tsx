@@ -533,9 +533,13 @@ export function SearchScreen(
 
   const onChangeText = React.useCallback(
     async (text: string) => {
-      scrollToTopWeb()
-
       setQuery(text)
+      text = text.trim()
+      let trimmedQuery = query.trim()
+
+      if (text === trimmedQuery && trimmedQuery.length) return
+
+      scrollToTopWeb()
 
       if (text.length > 0) {
         setIsFetching(true)
@@ -562,7 +566,7 @@ export function SearchScreen(
         setShowAutocompleteResults(false)
       }
     },
-    [setQuery, search, setSearchResults],
+    [query, setQuery, search, setSearchResults],
   )
 
   const updateSearchHistory = React.useCallback(
@@ -738,7 +742,7 @@ export function SearchScreen(
                 to={
                   isNative
                     ? undefined
-                    : `/search?q=${encodeURIComponent(query)}`
+                    : `/search?q=${encodeURIComponent(query.trim())}`
                 }
                 style={{borderBottomWidth: 1}}
               />
@@ -762,7 +766,7 @@ export function SearchScreen(
             </ScrollView>
           )}
         </>
-      ) : !query && inputIsFocused ? (
+      ) : !query.trim() && inputIsFocused ? (
         <CenteredView
           sideBorders={isTabletOrDesktop}
           // @ts-ignore web only -prf
@@ -801,7 +805,7 @@ export function SearchScreen(
       ) : routeParamsMismatch ? (
         <ActivityIndicator />
       ) : (
-        <SearchScreenInner query={query} />
+        <SearchScreenInner query={query.trim()} />
       )}
     </View>
   )
