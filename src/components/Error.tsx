@@ -1,14 +1,16 @@
 import React from 'react'
-
-import {CenteredView} from 'view/com/util/Views'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Text} from '#/components/Typography'
 import {View} from 'react-native'
-import {Button} from '#/components/Button'
+import {msg, Trans} from '@lingui/macro'
+import {useLingui} from '@lingui/react'
+
 import {useNavigation} from '@react-navigation/core'
-import {NavigationProp} from 'lib/routes/types'
 import {StackActions} from '@react-navigation/native'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {Text} from '#/components/Typography'
 import {router} from '#/routes'
+import {NavigationProp} from 'lib/routes/types'
+import {CenteredView} from 'view/com/util/Views'
 
 export function Error({
   title,
@@ -20,6 +22,7 @@ export function Error({
   onRetry?: () => unknown
 }) {
   const navigation = useNavigation<NavigationProp>()
+  const {_} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
 
