@@ -68,21 +68,25 @@ export function Error({
           <Button
             variant="solid"
             color="primary"
-            label="Click here"
+            label={_(msg`Press to retry`)}
             onPress={onRetry}
             size="large"
             style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
-            Retry
+            <ButtonText>
+              <Trans>Retry</Trans>
+            </ButtonText>
           </Button>
         )}
         <Button
           variant="solid"
           color={onRetry ? 'secondary' : 'primary'}
-          label="Click here"
+          label={_(msg`Return to previous page`)}
           onPress={onGoBack}
           size="large"
           style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}>
-          Go Back
+          <ButtonText>
+            <Trans>Go Back</Trans>
+          </ButtonText>
         </Button>
       </View>
     </CenteredView>
