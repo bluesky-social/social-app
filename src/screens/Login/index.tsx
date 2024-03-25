@@ -164,7 +164,11 @@ export const Login = ({onPressBack}: {onPressBack: () => void}) => {
 
   return (
     <KeyboardAvoidingView testID="signIn" behavior="padding" style={a.flex_1}>
-      <LoggedOutLayout leadin="" title={title} description={description}>
+      <LoggedOutLayout
+        leadin=""
+        title={title}
+        description={description}
+        scrollable>
         <LayoutAnimationConfig skipEntering skipExiting>
           <ScreenTransition key={currentForm}>{content}</ScreenTransition>
         </LayoutAnimationConfig>
