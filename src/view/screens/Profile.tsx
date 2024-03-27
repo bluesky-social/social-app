@@ -49,7 +49,7 @@ import {Text} from '#/view/com/util/text/Text'
 import {usePalette} from 'lib/hooks/usePalette'
 import {isNative} from '#/platform/detection'
 import {isInvalidHandle} from '#/lib/strings/handles'
-import {ScrollForwarder} from '../../../modules/scroll-forwarder/src/ScrollForwarder'
+import {ExpoScrollForwarderView} from '../../../modules/expo-scroll-forwarder'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -157,7 +157,7 @@ function ProfileScreenLoaded({
   const extraInfoQuery = useProfileExtraInfoQuery(profile.did)
 
   const [scrollViewTag, setScrollViewTag] =
-    React.useState<[string, FeedDescriptor]>()
+    React.useState<[number, FeedDescriptor]>()
   const [refreshing, setRefreshing] = React.useState(false)
 
   const postsSectionRef = React.useRef<SectionRef>(null)
@@ -292,7 +292,7 @@ function ProfileScreenLoaded({
 
   const renderHeader = React.useCallback(() => {
     return (
-      <ScrollForwarder
+      <ExpoScrollForwarderView
         scrollViewTag={scrollViewTag?.[0]}
         onScrollViewRefresh={onRefresh}
         scrollViewRefreshing={refreshing}>
@@ -303,7 +303,7 @@ function ProfileScreenLoaded({
           hideBackButton={hideBackButton}
           isPlaceholderProfile={showPlaceholder}
         />
-      </ScrollForwarder>
+      </ExpoScrollForwarderView>
     )
   }, [
     scrollViewTag,
@@ -421,7 +421,7 @@ interface FeedSectionProps {
   isFocused: boolean
   scrollElRef: ListRef
   ignoreFilterFor?: string
-  setScrollViewTag: (val: [string, FeedDescriptor]) => void
+  setScrollViewTag: (val: [number, FeedDescriptor]) => void
 }
 const FeedSection = React.forwardRef<SectionRef, FeedSectionProps>(
   function FeedSectionImpl(

@@ -5,9 +5,8 @@ public class ExpoScrollForwarderModule: Module {
     Name("ExpoScrollForwarder")
     
     View(ExpoScrollForwarderView.self) {
-      // Defines a setter for the `name` prop.
       Prop("scrollViewTag") { (view: ExpoScrollForwarderView, prop: Int) in
-        view.
+        view.scrollViewTag = prop
       }
     }
   }

@@ -130,7 +130,9 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     // Otherwise we might end up with duplicates when we switch back to that scrollview.
     self.removeCancelGestureRecognizers()
     
-    self.scrollView = self.appContext?.findView(withTag: scrollViewTag, ofType: UIScrollView.self)
+    self.scrollView = self.appContext?
+      .findView(withTag: scrollViewTag, ofType: RCTScrollView.self)?
+      .scrollView
     self.addCancelGestureRecognizers()
   }
   
