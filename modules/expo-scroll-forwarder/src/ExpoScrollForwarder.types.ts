@@ -1,7 +1,8 @@
-export type ChangeEventPayload = {
-  value: string
-}
+import React from 'react'
 
-export type ExpoScrollForwarderViewProps = {
-  name: string
+export interface ExpoScrollForwarderViewProps {
+  scrollViewTag?: string
+  onScrollViewRefresh?: () => Promise<void>
+  scrollViewRefreshing?: boolean
+  children: React.ReactNode
 }
