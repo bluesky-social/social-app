@@ -9,7 +9,8 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     }
   }
   
-  private var scrollView: UIScrollView?
+  private var rctScrollView: RCTScrollView?
+  private var rctRefreshCtrl: RCTRefreshControl?
   private var cancelGestureRecognizers: [UIGestureRecognizer]?
   private var animTimer: Timer?
   private var initialOffset: CGFloat = 0.0
@@ -46,7 +47,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   }
   
   @IBAction func callOnPan(_ sender: UIPanGestureRecognizer) -> Void {
-    guard let sv = self.scrollView else {
+    guard let rctsv = self.rctScrollView, let sv = rctsv.scrollView else {
       return
     }
 
@@ -67,10 +68,13 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
       } else if sv.contentOffset.y <= -130 {
         let generator = UIImpactFeedbackGenerator(style: .light)
         generator.impactOccurred()
-
-//        onScrollViewRefresh?([:])
-        sv.refreshControl?.beginRefreshing()
-        self.scrollToOffset(-75)
+        
+        if self.rctRefreshCtrl?.onRefresh != nil {
+//          self.scrollToOffset(-75)
+//          self.rctRefreshCtrl?.beginRefreshing()
+//          self.rctRefreshCtrl?.onRefresh(nil)
+          
+        }
       } else {
         var currentVelocity = sender.velocity(in: self).y
 
@@ -130,21 +134,22 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
     // Otherwise we might end up with duplicates when we switch back to that scrollview.
     self.removeCancelGestureRecognizers()
     
-    self.scrollView = self.appContext?
-      .findView(withTag: scrollViewTag, ofType: RCTScrollView.self)?
-      .scrollView
+    self.rctScrollView = self.appContext?
+      .findView(withTag: scrollViewTag, ofType: RCTScrollView.self)
+    self.rctRefreshCtrl = self.rctScrollView?.scrollView.refreshControl as? RCTRefreshControl
+    
     self.addCancelGestureRecognizers()
   }
   
-  func removeCancelGestureRecognizers() {    
+  func removeCancelGestureRecognizers() {
     self.cancelGestureRecognizers?.forEach { r in
-      self.scrollView?.removeGestureRecognizer(r)
+      self.rctScrollView?.scrollView?.removeGestureRecognizer(r)
     }
   }
   
   func addCancelGestureRecognizers() {
     self.cancelGestureRecognizers?.forEach { r in
-      self.scrollView?.addGestureRecognizer(r)
+      self.rctScrollView?.scrollView?.addGestureRecognizer(r)
     }
   }
   
@@ -161,7 +166,7 @@ class ExpoScrollForwarderView: ExpoView, UIGestureRecognizerDelegate {
   }
   
   func scrollToOffset(_ offset: Int) -> Void {
-    self.scrollView?.setContentOffset(CGPoint(x: 0, y: offset), animated: true)
+    self.rctScrollView?.scroll(toOffset: CGPoint(x: 0, y: offset), animated: true)
   }
 
   func stopTimer() -> Void {

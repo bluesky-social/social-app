@@ -294,7 +294,6 @@ function ProfileScreenLoaded({
     return (
       <ExpoScrollForwarderView
         scrollViewTag={scrollViewTag?.[0]}
-        onScrollViewRefresh={onRefresh}
         scrollViewRefreshing={refreshing}>
         <ProfileHeader
           profile={profile}
