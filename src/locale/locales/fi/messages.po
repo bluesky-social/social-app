@@ -1899,11 +1899,11 @@ msgstr "Seuraajat"
 #: src/view/com/profile/ProfileFollows.tsx:108
 #: src/view/screens/ProfileFollows.tsx:25
 msgid "Following"
-msgstr "Seuratut"
+msgstr "Seurataan"
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:89
 msgid "Following {0}"
-msgstr "Seuratut {0}"
+msgstr "Seurataan {0}"
 
 #: src/view/screens/Settings/index.tsx:553
 msgid "Following feed preferences"
