@@ -177,10 +177,9 @@ function ProfileIcon({isActive}: {isActive: boolean}) {
       style={[
         styles.ctrlIcon,
         styles.profileIcon,
-        styles.onProfile,
         {borderColor: pal.text.color},
       ]}>
-      <ProfileIconInner size={24} />
+      <ProfileIconInner size={28} />
     </View>
   ) : (
     <View style={[styles.ctrlIcon, styles.profileIcon]}>

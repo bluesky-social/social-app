@@ -16,7 +16,6 @@ export const styles = StyleSheet.create({
   bottomBarWeb: {
     // @ts-ignore web-only
     position: 'fixed',
-    height: 60,
   },
   ctrl: {
     flex: 1,
@@ -65,10 +64,9 @@ export const styles = StyleSheet.create({
     top: -2.5,
   },
   profileIcon: {
-    top: -4,
-  },
-  onProfile: {
+    top: -6,
     borderWidth: 2,
     borderRadius: 100,
+    borderColor: 'transparent',
   },
 })
