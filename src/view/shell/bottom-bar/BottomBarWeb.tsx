@@ -172,18 +172,22 @@ export function BottomBarWeb() {
 
 function ProfileIcon({isActive}: {isActive: boolean}) {
   const pal = usePalette('default')
-  return isActive ? (
-    <View
-      style={[
-        styles.ctrlIcon,
-        styles.profileIcon,
-        {borderColor: pal.text.color},
-      ]}>
-      <ProfileIconInner size={28} />
-    </View>
-  ) : (
-    <View style={[styles.ctrlIcon, styles.profileIcon]}>
-      <ProfileIconInner size={28} />
+  return (
+    <View style={styles.ctrlIconSizingWrapper}>
+      {isActive ? (
+        <View
+          style={[
+            styles.ctrlIcon,
+            styles.profileIcon,
+            {borderColor: pal.text.color},
+          ]}>
+          <ProfileIconInner size={28} />
+        </View>
+      ) : (
+        <View style={[styles.ctrlIcon, styles.profileIcon]}>
+          <ProfileIconInner size={28} />
+        </View>
+      )}
     </View>
   )
 }
