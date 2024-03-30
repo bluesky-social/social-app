@@ -2,8 +2,6 @@
 name: Build and Submit iOS
 
 on:
-  schedule:
-    - cron: '0 5 * * *'
   workflow_dispatch:
     inputs:
       profile:
@@ -12,6 +10,11 @@ on:
         options:
           - testflight
           - production
+  workflow_call:
+    inputs:
+      profile:
+        required: true
+        type: string
 
 jobs:
   build:

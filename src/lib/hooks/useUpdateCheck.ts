@@ -1,12 +1,29 @@
 import React from 'react'
 import {Alert, AppState, AppStateStatus} from 'react-native'
 import app from 'react-native-version-number'
-import * as Updates from 'expo-updates'
-import {useUpdates} from 'expo-updates'
+import {
+  checkForUpdateAsync,
+  fetchUpdateAsync,
+  isEnabled,
+  reloadAsync,
+  setExtraParamAsync,
+  useUpdates,
+} from 'expo-updates'
 
 import {logger} from '#/logger'
 import {isIOS} from 'platform/detection'
 import {IS_TESTFLIGHT} from '#/env'
+
+async function setExtraParams() {
+  await setExtraParamAsync(
+    isIOS ? 'ios-build-number' : 'android-build-number',
+    app.buildVersion,
+  )
+  await setExtraParamAsync(
+    'channel',
+    IS_TESTFLIGHT ? 'testflight' : 'production',
+  )
+}
 
 export function useUpdateCheck() {
   const appState = React.useRef<AppStateStatus>('active')
@@ -18,17 +35,10 @@ export function useUpdateCheck() {
   const setCheckTimeout = React.useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
-        await Updates.setExtraParamAsync(
-          isIOS ? 'build-number' : 'android-build-number',
-          app.buildVersion,
-        )
-        await Updates.setExtraParamAsync(
-          'channel',
-          IS_TESTFLIGHT ? 'testflight' : 'production',
-        )
+        await setExtraParams()
 
         logger.debug('Checking for update...')
-        const res = await Updates.checkForUpdateAsync()
+        const res = await checkForUpdateAsync()
 
         if (!res.isAvailable) {
           logger.debug('No update available.')
@@ -36,28 +46,22 @@ export function useUpdateCheck() {
         }
 
         logger.debug('Attempting to fetch update...')
-        await Updates.fetchUpdateAsync()
+        await fetchUpdateAsync()
         logger.debug('Successfully fetched update')
       } catch (e) {
         logger.warn('OTA Update Error', {error: `${e}`})
       }
-    }, 15e3)
+    }, 10e3)
   }, [])
 
   const onIsTestFlight = React.useCallback(() => {
     setTimeout(async () => {
-      await Updates.setExtraParamAsync('build-number', null)
-      await Updates.setExtraParamAsync(
-        isIOS ? 'ios-build-number' : 'android-build-number',
-        app.buildVersion,
-      )
-      await Updates.setExtraParamAsync('channel', 'testflight')
-      await Updates.getExtraParamsAsync()
+      await setExtraParams()
 
       try {
-        const res = await Updates.checkForUpdateAsync()
+        const res = await checkForUpdateAsync()
         if (res.isAvailable) {
-          await Updates.fetchUpdateAsync()
+          await fetchUpdateAsync()
 
           Alert.alert(
             'Update Available',
@@ -71,19 +75,14 @@ export function useUpdateCheck() {
                 text: 'Relaunch',
                 style: 'default',
                 onPress: async () => {
-                  await Updates.reloadAsync()
+                  await reloadAsync()
                 },
               },
             ],
           )
-        } else {
-          Alert.alert(
-            'No Update Available',
-            'No update available at this time.',
-          )
         }
       } catch (e: any) {
-        Alert.alert('error', e.toString())
+        // No need to handle
       }
     }, 3000)
   }, [])
@@ -92,11 +91,11 @@ export function useUpdateCheck() {
     // For Testflight users, we can prompt the user to update immediately whenever there's an available update. This
     // is suspect however with the Apple App Store guidelines, so we don't want to prompt production users to update
     // immediately.
-
     if (IS_TESTFLIGHT) {
       onIsTestFlight()
       return
-    } else if (__DEV__ || ranInitialCheck.current) {
+    } else if (!isEnabled || __DEV__ || ranInitialCheck.current) {
+      // Development client shouldn't check for updates at all, so we skip that here.
       return
     }
 
@@ -107,6 +106,8 @@ export function useUpdateCheck() {
   // After the app has been minimized for 30 minutes, we want to either A. install an update if one has become available
   // or B check for an update again.
   React.useEffect(() => {
+    if (!isEnabled) return
+
     const subscription = AppState.addEventListener(
       'change',
       async nextAppState => {
@@ -114,11 +115,11 @@ export function useUpdateCheck() {
           appState.current.match(/inactive|background/) &&
           nextAppState === 'active'
         ) {
-          // If it's been 30 minutes since the last "minimize", we should feel comfortable updating the client now if
-          // necessary, otherwise we can check for another update.
-          if (lastMinimize.current <= Date.now() - 30 * 60e3) {
+          // If it's been 15 minutes since the last "minimize", we should feel comfortable updating the client since
+          // chances are that there isn't anything important going on in the current session.
+          if (lastMinimize.current <= Date.now() - 15 * 60e3) {
             if (isUpdatePending) {
-              await Updates.reloadAsync()
+              await reloadAsync()
             } else {
               setCheckTimeout()
             }

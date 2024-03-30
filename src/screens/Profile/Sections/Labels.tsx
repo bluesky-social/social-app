@@ -1,30 +1,29 @@
 import React from 'react'
 import {View} from 'react-native'
+import {useSafeAreaFrame} from 'react-native-safe-area-context'
 import {
   AppBskyLabelerDefs,
-  ModerationOpts,
-  interpretLabelValueDefinitions,
   InterpretedLabelValueDefinition,
+  interpretLabelValueDefinitions,
+  ModerationOpts,
 } from '@atproto/api'
-import {Trans, msg} from '@lingui/macro'
+import {msg, Trans} from '@lingui/macro'
 import {useLingui} from '@lingui/react'
-import {useSafeAreaFrame} from 'react-native-safe-area-context'
 
-import {useScrollHandlers} from '#/lib/ScrollContext'
 import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
-import {ListRef} from '#/view/com/util/List'
-import {SectionRef} from './types'
+import {useScrollHandlers} from '#/lib/ScrollContext'
 import {isNative} from '#/platform/detection'
-
-import {useTheme, atoms as a} from '#/alf'
-import {Text} from '#/components/Typography'
-import {Loader} from '#/components/Loader'
-import {Divider} from '#/components/Divider'
+import {ListRef} from '#/view/com/util/List'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
-import {ErrorState} from '../ErrorState'
-import {ModerationLabelPref} from '#/components/moderation/ModerationLabelPref'
+import {atoms as a, useTheme} from '#/alf'
+import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
+import {Loader} from '#/components/Loader'
+import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
+import {Text} from '#/components/Typography'
+import {ErrorState} from '../ErrorState'
+import {SectionRef} from './types'
 
 interface LabelsSectionProps {
   isLabelerLoading: boolean
@@ -197,9 +196,9 @@ export function ProfileLabelsSectionInner({
               return (
                 <React.Fragment key={labelDef.identifier}>
                   {i !== 0 && <Divider />}
-                  <ModerationLabelPref
+                  <LabelerLabelPreference
                     disabled={isSubscribed ? undefined : true}
-                    labelValueDefinition={labelDef}
+                    labelDefinition={labelDef}
                     labelerDid={labelerInfo.creator.did}
                   />
                 </React.Fragment>

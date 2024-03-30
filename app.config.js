@@ -130,6 +130,8 @@ module.exports = function (config) {
       },
       updates: {
         url: 'https://updates.bsky.app/manifest',
+        // TODO Eventually we want to enable this for all environments, but for now it will only be used for
+        // TestFlight builds
         enabled: IS_TESTFLIGHT,
         fallbackToCacheTimeout: 30000,
         codeSigningCertificate: './code-signing/certificate.pem',
@@ -138,7 +140,6 @@ module.exports = function (config) {
           alg: 'rsa-v1_5-sha256',
         },
         checkAutomatically: 'NEVER',
-        // This should be set by the EAS configuration, but to ensure it gets set for now we add it here too
         channel: UPDATES_CHANNEL,
       },
       assetBundlePatterns: ['**/*'],
@@ -171,6 +172,7 @@ module.exports = function (config) {
         './plugins/withAndroidManifestPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidStylesWindowBackgroundPlugin.js',
+        './plugins/withAndroidSplashScreenStatusBarTranslucentPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
       ].filter(Boolean),
       extra: {
