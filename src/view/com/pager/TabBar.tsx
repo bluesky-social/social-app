@@ -1,5 +1,5 @@
-import React, {useCallback,useEffect, useMemo, useRef, useState} from 'react'
-import {LayoutChangeEvent,ScrollView, StyleSheet, View} from 'react-native'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {LayoutChangeEvent, ScrollView, StyleSheet, View} from 'react-native'
 
 import {isNative, isNativeTablet} from '#/platform/detection'
 import {usePalette} from 'lib/hooks/usePalette'
