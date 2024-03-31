@@ -7,7 +7,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {getRootNavigation,getTabState, TabState} from '#/lib/routes/helpers'
 import {logEvent} from '#/lib/statsig/statsig'
-import {isNative} from '#/platform/detection'
+import {isNative, isNativeTablet} from '#/platform/detection'
 import {listenSoftReset} from '#/state/events'
 import {RQKEY as FEED_RQKEY} from '#/state/queries/post-feed'
 import {FeedDescriptor, FeedParams} from '#/state/queries/post-feed'
@@ -155,9 +155,9 @@ export function FeedPage({
 }
 
 function useHeaderOffset() {
-  const {isDesktop, isTablet} = useWebMediaQueries()
+  const {isTabletOrDesktop} = useWebMediaQueries()
   const {fontScale} = useWindowDimensions()
-  if (isDesktop || isTablet) {
+  if (isTabletOrDesktop && !isNativeTablet) {
     return 0
   }
   const navBarHeight = 42
